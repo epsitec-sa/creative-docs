@@ -54,13 +54,16 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
       var columnId = this.ownerCt.columnId;
       var columnMgr = Ext.getCmp('columnmgr');
       
-      var callback = function ()
-      {
-        columnMgr.selectEntity(columnId, entityId);
-      };
-      var callbackContext = this;
+      var callbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create
+      (
+        function ()
+        {
+          columnMgr.selectEntity(columnId, entityId);
+        },
+        this
+      );
       
-      this.showEntityColumnAndRefresh(subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext);
+      this.showEntityColumnAndRefresh(subViewControllerMode, subViewControllerSubTypeId, entityId, callbackQueue);
     },
     
     removePanel : function ()

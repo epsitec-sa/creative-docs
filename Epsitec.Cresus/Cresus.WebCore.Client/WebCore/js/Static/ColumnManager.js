@@ -29,65 +29,70 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       this.removeColumnsFromIndex(0)
     },
     
-    // The arguments parentPanel, callback and callbackContext are optional.
-    addEntityColumn : function(controllerMode, controllerSubTypeId, entityId, parentPanel, callback, callbackContext)
+    // The arguments parentPanel and callbackQueue.
+    addEntityColumn : function(controllerMode, controllerSubTypeId, entityId, parentPanel, callbackQueue)
     {
       parentPanel = Epsitec.Cresus.Core.Static.Tools.getValueOrNull(parentPanel);
-       
-      var callback1 = function (config)
-      {
-        this.addNewColumn(config)
-        
-        Epsitec.Cresus.Core.Static.Tools.doCallback(callback, callbackContext);
-      };
-      callbackContext1 = this;
+      callbackQueue = Epsitec.Cresus.Core.Static.Tools.getValueOrDefault(callbackQueue, Epsitec.Cresus.Core.Static.CallbackQueue.empty());
       
-      var callback2 = null;
-      var callbackContext2 = null;
+      var newCallbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.empty();
       
-      if (parentPanel === null)
-      {
-        callback2 = callback1;
-        callbackContext2 = callbackContext1;
-      }
-      else
+      if (parentPanel !== null)
       {
         var parentColumnId = parentPanel.ownerCt.columnId;
         
         this.removeColumnsFromIndex(parentColumnId + 1);
         
-        callback2 = function (config)
-        {
-          this.selectPanel(parentColumnId, parentPanel);
-          
-          Epsitec.Cresus.Core.Static.Tools.doCallback(callback1, callbackContext1, [config]);
-        };
-        callbackContext2 = this;
+        newCallbackQueue = newCallbackQueue.enqueueCallback
+        (
+          function (config)
+          {
+            this.selectPanel(parentColumnId, parentPanel);
+          },
+          this
+        );
       }
       
-      this.execute(controllerMode, controllerSubTypeId, entityId, parentPanel, callback2, callbackContext2);
+      newCallbackQueue = newCallbackQueue.enqueueCallback
+      (
+        function (config)
+        {
+          this.addNewColumn(config)
+        },
+        this
+      );
+      
+      newCallbackQueue = newCallbackQueue.merge(callbackQueue);
+       
+      this.execute(controllerMode, controllerSubTypeId, entityId, parentPanel, newCallbackQueue);
     },
     
-    // The arguments callback and callbackContext are optional.
-    refreshColumns : function(firstColumnId, lastColumnId, callback, callbackContext)
+    // The arguments callbackQueue is optional.
+    refreshColumns : function(firstColumnId, lastColumnId, callbackQueue)
     {
+      callbackQueue = Epsitec.Cresus.Core.Static.Tools.getValueOrDefault(callbackQueue, Epsitec.Cresus.Core.Static.CallbackQueue.empty());
+      
       var configArray = [];
       var configArrayCount = 0;
       
-      var callbackCreator = function (index)
+      var callbackQueueCreator = function (index)
       {
-        return function (config)
-        {
-          configArrayCount++;
-          configArray[index] = config;
-          
-          if (configArrayCount == lastColumnId - firstColumnId + 1)
+        return Epsitec.Cresus.Core.Static.CallbackQueue.create
+        (
+          function (config)
           {
-            this.replaceExistingColumns(firstColumnId, lastColumnId, configArray)
+            configArrayCount++;
+            configArray[index] = config;
             
-            Epsitec.Cresus.Core.Static.Tools.doCallback(callback, callbackContext, configArray);
-          }
-        };
+            if (configArrayCount == lastColumnId - firstColumnId + 1)
+            {
+              this.replaceExistingColumns(firstColumnId, lastColumnId, configArray)
+              
+              callbackQueue.execute(configArray);
+            }
+          },
+          this
+        );
       };
       
       for (var i = firstColumnId; i <= lastColumnId; i++)
@@ -97,14 +102,14 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
         var controllerSubTypeId = columnPanel.controllerSubTypeId;
         var entityId = columnPanel.parentEntity;
         
-        var callback1 = callbackCreator(i);
-        var callbackContext1 = this;
+        var index = i - firstColumnId;        
+        var newCallbackQueue = callbackQueueCreator.call(this, index);
         
-        this.execute(controllerMode, controllerSubTypeId, entityId, columnPanel, callback1, callbackContext1); 
+        this.execute(controllerMode, controllerSubTypeId, entityId, columnPanel, newCallbackQueue); 
       }
     },
     
-    execute : function(controllerMode, controllerSubTypeId, entityId, loadingPanel, callback, callbackContext)
+    execute : function(controllerMode, controllerSubTypeId, entityId, loadingPanel, callbackQueue)
     {
       if (loadingPanel !== null)
       {
@@ -133,7 +138,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
             
             var callbackArguments = [ config.content ];
             
-            Epsitec.Cresus.Core.Static.Tools.doCallback(callback, callbackContext, callbackArguments);
+            callbackQueue.execute(callbackArguments);
           },
           failure : function (response, options)
           {

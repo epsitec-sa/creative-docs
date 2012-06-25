@@ -73,30 +73,33 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       }
     },
 
-    showEntityColumn : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext)
+    showEntityColumn : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callbackQueue)
     {
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.addEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, this, callback, callbackContext);
+      columnMgr.addEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, this, callbackQueue);
     },
     
-    showEntityColumnAndRefresh : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext)
+    showEntityColumnAndRefresh : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callbackQueue)
     {
-      var callback1 = function()
-      {
-        this.refreshEntity(true, callback, callbackContext);
-      };
-      var callbackContext1 = this;
+      var newCallbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create
+      (
+        function ()
+        {
+          this.refreshEntity(true, callbackQueue);
+        },
+        this
+      );
       
-      this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, callback1, callbackContext1);
+      this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, newCallbackQueue);
     },
     
-    refreshEntity : function (refreshAll, callback, callbackContext)
+    refreshEntity : function (refreshAll, callbackQueue)
     {
       var firstColumnId = refreshAll ? 0 : this.ownerCt.columnId;
       var lastColumnId = this.ownerCt.columnId;
       
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.refreshColumns(firstColumnId, lastColumnId, callback, callbackContext);
+      columnMgr.refreshColumns(firstColumnId, lastColumnId, callbackQueue);
     },
     
     autoCreateNullEntity : function()

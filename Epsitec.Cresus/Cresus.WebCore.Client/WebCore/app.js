@@ -16,6 +16,8 @@ Ext.application(
     
     requires :
     [
+      'Epsitec.Cresus.Core.Static.Callback',
+      'Epsitec.Cresus.Core.Static.CallbackQueue',
       'Epsitec.Cresus.Core.Static.Checkboxes',
       'Epsitec.Cresus.Core.Static.ColumnManager',
       'Epsitec.Cresus.Core.Static.ColumnPanel',
