@@ -36,14 +36,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public override AbstractEditionTilePart ToAbstractEditionTilePart(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			var group = new HorizontalGroup ()
 			{
 				Title = this.Title.ToString (),
 			};
 
-			var abstractFields = this.Fields.Select (f => f.ToAbstractField (entity, entityIdGetter, entitiesGetter));
+			var abstractFields = this.Fields.Select (f => f.ToAbstractField (panelBuilder, entity));
 
 			group.Fields.AddRange (abstractFields);
 

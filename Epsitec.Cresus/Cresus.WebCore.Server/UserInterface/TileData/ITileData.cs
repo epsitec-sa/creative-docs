@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<Type, string> typeGetter, Func<AbstractEntity, IEnumerable<AbstractTile>> editionTileBuilder, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter);
+		IEnumerable<AbstractTile> ToTiles(PanelBuilder panelBuilder, AbstractEntity entity);
 
 
 	}

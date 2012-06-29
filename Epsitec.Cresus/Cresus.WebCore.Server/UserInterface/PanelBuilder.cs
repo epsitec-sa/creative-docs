@@ -79,40 +79,29 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private IEnumerable<AbstractTile> GetTiles(IEnumerable<ITileData> tileData, AbstractEntity entity)
 		{
-			return tileData.SelectMany
-			(
-				td => td.ToTiles
-				(
-					entity,
-					this.GetEntityId,
-					this.GetIconClass,
-					this.GetTypeName,
-					this.BuildEditionTiles,
-					this.GetEntities
-				)
-			);
+			return tileData.SelectMany (td => td.ToTiles (this, entity));
 		}
 
 
-		private string GetEntityId(AbstractEntity entity)
+		public string GetEntityId(AbstractEntity entity)
 		{
 			return Tools.GetEntityId (this.businessContext, entity);
 		}
 
 
-		private string GetIconClass(Type entityType, string uri)
+		public string GetIconClass(Type entityType, string uri)
 		{
 			return IconManager.GetCssClassName (entityType, uri, IconSize.Sixteen);
 		}
 
 
-		private string GetTypeName(Type type)
+		public string GetTypeName(Type type)
 		{
 			return type.AssemblyQualifiedName;
 		}
 
 
-		private IEnumerable<AbstractTile> BuildEditionTiles(AbstractEntity entity)
+		public IEnumerable<AbstractTile> BuildEditionTiles(AbstractEntity entity)
 		{
 			var brickWall = this.GetBrickWall (entity, ViewControllerMode.Edition, null);
 			var tileData = this.GetTileData (brickWall);
@@ -121,7 +110,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private IEnumerable<AbstractEntity> GetEntities(Type entityType)
+		public IEnumerable<AbstractEntity> GetEntities(Type entityType)
 		{
 			var mode = DataExtractionMode.Sorted;
 			var dataContext = this.businessContext.DataContext;

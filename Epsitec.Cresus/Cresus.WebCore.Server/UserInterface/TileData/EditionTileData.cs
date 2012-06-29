@@ -65,18 +65,18 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#region ITileData Members
 
 
-		public IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<Type, string> typeGetter, Func<AbstractEntity, IEnumerable<AbstractTile>> editionTileBuilder, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public IEnumerable<AbstractTile> ToTiles(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			if (this.Items.Count > 0)
 			{
-				yield return this.ToTile (entity, entityIdGetter, iconClassGetter, typeGetter, entitiesGetter);
+				yield return this.ToTile (panelBuilder, entity);
 			}
 
 			foreach (var include in this.Includes)
 			{
 				var includedEntity = include.EntityGetter (entity);
 
-				foreach (var tile in editionTileBuilder (includedEntity))
+				foreach (var tile in panelBuilder.BuildEditionTiles (includedEntity))
 				{
 					yield return tile;
 				}
@@ -87,24 +87,24 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#endregion
 
 
-		private AbstractTile ToTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<Type, string> typeGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		private AbstractTile ToTile(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			var editionTile = new EditionTile ()
 			{
-				EntityId = entityIdGetter (entity),
-				IconClass = iconClassGetter (this.EntityType, this.Icon),
+				EntityId = panelBuilder.GetEntityId (entity),
+				IconClass = panelBuilder.GetIconClass (this.EntityType, this.Icon),
 				Title = this.TitleGetter (entity).ToString (),		
 			};
 
-			editionTile.Items.AddRange (this.GetEditionTileParts (entity, entityIdGetter, entitiesGetter));
+			editionTile.Items.AddRange (this.GetEditionTileParts (panelBuilder, entity));
 
 			return editionTile;
 		}
 
 
-		private IEnumerable<AbstractEditionTilePart> GetEditionTileParts(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		private IEnumerable<AbstractEditionTilePart> GetEditionTileParts(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
-			return this.Items.Select (i => i.ToAbstractEditionTilePart (entity, entityIdGetter, entitiesGetter));
+			return this.Items.Select (i => i.ToAbstractEditionTilePart (panelBuilder, entity));
 		}
 
 

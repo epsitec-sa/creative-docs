@@ -80,11 +80,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#region ITileData Members
 
 
-		public IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<Type, string> typeGetter, Func<AbstractEntity, IEnumerable<AbstractTile>> editionTileBuilder, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public IEnumerable<AbstractTile> ToTiles(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			if (this.Template == null)
 			{
-				yield return this.ToSummaryTile (entity, entityIdGetter, iconClassGetter);
+				yield return this.ToSummaryTile (panelBuilder, entity);
 			}
 			else
 			{
@@ -94,12 +94,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				{
 					foreach (var target in targets)
 					{
-						yield return this.ToCollectionSummaryTile (target, entityIdGetter, iconClassGetter, typeGetter);
+						yield return this.ToCollectionSummaryTile (panelBuilder, target);
 					}
 				}
 				else
 				{
-					yield return this.ToEmptySummaryTile (typeGetter);
+					yield return this.ToEmptySummaryTile (panelBuilder);
 				}
 			}
 		}
@@ -108,13 +108,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#endregion
 
 
-		public AbstractTile ToSummaryTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter)
+		public AbstractTile ToSummaryTile(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			return new SummaryTile ()
 			{
 				IsRoot = this.IsRoot,
-				EntityId = entityIdGetter (this.EntityGetter(entity)),
-				IconClass = iconClassGetter (this.EntityType, this.Icon),
+				EntityId = panelBuilder.GetEntityId (this.EntityGetter(entity)),
+				IconClass = panelBuilder.GetIconClass (this.EntityType, this.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
 				Text = this.TextGetter (entity).ToString (),
@@ -124,29 +124,29 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public AbstractTile ToEmptySummaryTile(Func<Type, string> typeGetter)
+		public AbstractTile ToEmptySummaryTile(PanelBuilder panelBuilder)
 		{
 			return new EmptySummaryTile ()
 			{
-				EntityType = typeGetter (this.Template.EntityType),
+				EntityType = panelBuilder.GetTypeName (this.Template.EntityType),
 				PropertyAccessorId = this.Template.PropertyAccessor.Id,
 			};
 		}
 
 
-		public AbstractTile ToCollectionSummaryTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<Type, string> typeGetter)
+		public AbstractTile ToCollectionSummaryTile(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			CollectionTileData template = this.Template;
 
 			return new CollectionSummaryTile ()
 			{
-				EntityId = entityIdGetter (entity),
-				IconClass = iconClassGetter (template.EntityType, template.Icon),
+				EntityId = panelBuilder.GetEntityId (entity),
+				IconClass = panelBuilder.GetIconClass (template.EntityType, template.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
 				Text = template.TextGetter (entity).ToString (),
 				Title = template.TitleGetter (entity).ToString (),
-				EntityType = typeGetter (template.EntityType),
+				EntityType = panelBuilder.GetTypeName (template.EntityType),
 				PropertyAccessorId = template.PropertyAccessor.Id,
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,

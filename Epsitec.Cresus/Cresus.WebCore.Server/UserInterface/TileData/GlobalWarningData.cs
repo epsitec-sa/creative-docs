@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public override AbstractEditionTilePart ToAbstractEditionTilePart(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			return new GlobalWarning ();
 		}

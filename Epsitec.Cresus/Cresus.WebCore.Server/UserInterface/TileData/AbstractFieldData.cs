@@ -43,13 +43,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public override sealed AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public override sealed AbstractEditionTilePart ToAbstractEditionTilePart(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
-			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter);
+			return this.ToAbstractField (panelBuilder, entity);
 		}
 
 
-		public abstract AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter);
+		public abstract AbstractField ToAbstractField(PanelBuilder panelBuilder, AbstractEntity entity);
 
 
 	}

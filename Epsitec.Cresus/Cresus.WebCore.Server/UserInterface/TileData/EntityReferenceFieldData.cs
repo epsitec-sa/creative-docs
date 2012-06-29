@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		public override AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public override AbstractField ToAbstractField(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			var entityReferencePropertyAccessor = (EntityReferencePropertyAccessor) this.PropertyAccessor;
 
@@ -31,10 +31,10 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				PropertyAccessorId = entityReferencePropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = entityIdGetter (target) ?? "null",
+				Value = panelBuilder.GetEntityId (target) ?? "null",
 			};
 
-			var possibleValues = this.GetPossibleValues (entityIdGetter, entitiesGetter);
+			var possibleValues = this.GetPossibleValues (panelBuilder);
 
 			entityField.PossibleValues.AddRange (possibleValues);
 
@@ -42,16 +42,16 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		private IEnumerable<Tuple<string, string>> GetPossibleValues(Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		private IEnumerable<Tuple<string, string>> GetPossibleValues(PanelBuilder panelBuilder)
 		{
 			if (this.PropertyAccessor.Property.IsNullable)
 			{
 				yield return Tuple.Create (Constants.KeyForNullValue, Constants.TextForNullValue);
 			}
 
-			foreach (var entity in entitiesGetter (this.PropertyAccessor.Type))
+			foreach (var entity in panelBuilder.GetEntities (this.PropertyAccessor.Type))
 			{
-				var entityId = entityIdGetter (entity);
+				var entityId = panelBuilder.GetEntityId (entity);
 				var entitySummary = entity.GetCompactSummary ().ToString ();
 
 				yield return Tuple.Create (entityId, entitySummary);

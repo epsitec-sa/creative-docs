@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		public override AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		public override AbstractField ToAbstractField(PanelBuilder panelBuilder, AbstractEntity entity)
 		{
 			var entityCollectionPropertyAccessor = (EntityCollectionPropertyAccessor) this.PropertyAccessor;
 
@@ -32,13 +32,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				IsReadOnly = this.IsReadOnly,
 			};
 
-			var possibleValues = entitiesGetter (entityCollectionPropertyAccessor.CollectionType);
+			var possibleValues = panelBuilder.GetEntities (entityCollectionPropertyAccessor.CollectionType);
 			var checkedValues = entityCollectionPropertyAccessor.GetEntityCollection (entity);
 
 			var checkBoxFields = possibleValues.Select ((v, i) => new EntityCollectionCheckBoxField ()
 			{
 				Value = checkedValues.Contains (v),
-				InputValue = entityIdGetter (v),
+				InputValue = panelBuilder.GetEntityId (v),
 				Label = v.GetSummary ().ToString (),
 				Index = i
 			});
