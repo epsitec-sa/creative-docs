@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
+﻿using Epsitec.Cresus.WebCore.Server.Core;
 
 using Nancy;
 using Nancy.Bootstrapper;
@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	{
 
 
-		public CoreServerBootstrapper(ServerContext serverContext)
+		public CoreServerBootstrapper(CoreServer coreServer)
 		{
-			this.serverContext = serverContext;
+			this.coreServer = coreServer;
 		}
 
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			base.ConfigureApplicationContainer (container);
 
 			container.Register<IErrorHandler> (new CoreErrorHandler ());
-			container.Register<ServerContext> (this.serverContext);
+			container.Register<CoreServer> (this.coreServer);
 		}
 
 
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		private readonly ServerContext serverContext;
+		private readonly CoreServer coreServer;
 
 
 		

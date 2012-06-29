@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
+﻿using Epsitec.Cresus.WebCore.Server.Core;
 
 using Nancy;
 
@@ -7,36 +7,34 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
-	/// <summary>
-	/// Base module thats allows to easly get the CoreSession for a defined user,
-	/// and that requires the user to be logged in.
-	/// </summary>
 	public abstract class AbstractCoreModule : NancyModule
 	{
-		
-		
-		protected AbstractCoreModule(ServerContext serverContext): base()
+
+
+		protected AbstractCoreModule(CoreServer coreServer)
+			: base ()
 		{
-			this.serverContext = serverContext;			
+			this.coreServer = coreServer;			
 		}
 
 
-		protected AbstractCoreModule(ServerContext serverContext, string modulePath) : base (modulePath)
+		protected AbstractCoreModule(CoreServer coreServer, string modulePath)
+			: base (modulePath)
 		{
-			this.serverContext = serverContext;
+			this.coreServer = coreServer;
 		}
 
 
-		internal ServerContext ServerContext
+		protected CoreServer CoreServer
 		{
 			get
 			{
-				return this.serverContext;
+				return this.coreServer;
 			}
 		}
 
 
-		private readonly ServerContext serverContext;
+		private readonly CoreServer coreServer;
 
 
 	}

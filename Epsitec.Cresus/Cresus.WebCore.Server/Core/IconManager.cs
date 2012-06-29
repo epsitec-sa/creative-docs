@@ -11,7 +11,7 @@ using System.Globalization;
 using System.IO;
 
 
-namespace Epsitec.Cresus.WebCore.Server.CoreServer
+namespace Epsitec.Cresus.WebCore.Server.Core
 {
 	
 	

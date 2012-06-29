@@ -2,7 +2,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;

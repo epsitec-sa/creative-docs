@@ -1,6 +1,8 @@
-﻿using Epsitec.Cresus.Core.Controllers;
+﻿using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.Core.Controllers;
+
+using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Epsitec.Cresus.WebCore.Server.UserInterface;
 
@@ -11,7 +13,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
-	public class LayoutModule : AbstractCoreSessionModule
+	public class LayoutModule : AbstractBusinessContextModule
 	{
 
 
@@ -19,23 +21,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		/// Call the <see cref="PanelBuilder"/> to create the ExtJS interface.
 		/// It is called to show the summary of the edition interface.
 		/// </summary>
-		public LayoutModule(ServerContext serverContext)
-			: base (serverContext, "/layout")
+		public LayoutModule(CoreServer coreServer)
+			: base (coreServer, "/layout")
 		{
-			Get["/{mode}/{controllerSubTypeId}/{id}"] = p => this.ExecuteWithCoreSession (cs => this.GetLayout (cs, p));
+			Get["/{mode}/{controllerSubTypeId}/{id}"] = p => this.Execute (b => this.GetLayout (b, p));
 		}
 
 
-		private Response GetLayout(CoreSession coreSession, dynamic parameters)
+		private Response GetLayout(BusinessContext businessContext, dynamic parameters)
 		{
-			var context = coreSession.GetBusinessContext ();
-
-			var entity = Tools.ResolveEntity (context, (string) parameters.id);
+			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
 
 			ViewControllerMode mode = Tools.ParseViewControllerMode (parameters.mode);
 			int? controllerSubTypeId = Tools.ParseControllerSubTypeId (parameters.controllerSubTypeId);
 
-			var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, coreSession);
+			var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, businessContext, this.CoreServer.PropertyAccessorCache, this.CoreServer.AutoCreatorCache);
 
 			return CoreResponse.AsSuccess (s);
 		}

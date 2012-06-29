@@ -1,7 +1,9 @@
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
 using Epsitec.Cresus.WebCore.Server.NancyModules;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;

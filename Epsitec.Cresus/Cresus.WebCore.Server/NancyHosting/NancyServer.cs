@@ -1,7 +1,9 @@
 ﻿using Epsitec.Common.IO;
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
 
 using Nancy;
 using Nancy.Extensions;
@@ -12,14 +14,11 @@ using System;
 
 using System.Collections.Generic;
 
-using System.Diagnostics;
-
 using System.Globalization;
 
 using System.Linq;
 
 using System.Net;
-
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
@@ -33,28 +32,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		// This class has been largely inspired by the source code of the official Nancy self host.
 
 
-		public NancyServer(ServerContext serverContext, Uri uri, int nbThreads)
+		public NancyServer(CoreServer coreServer, Uri uri)
 		{
 			this.baseUri = uri;
-			this.nbThreads = nbThreads;
-			this.httpServer = new HttpServer (uri);
+			this.httpServer = new HttpServer (uri, this.ProcessRequest);
 
-			var bootStrapper = new CoreServerBootstrapper (serverContext);
+			var bootStrapper = new CoreServerBootstrapper (coreServer);
 
 			bootStrapper.Initialise ();
 			this.engine = bootStrapper.GetEngine ();
-		}
-
-
-		public void Start()
-		{
-			this.httpServer.Start (r => this.ProcessRequest (r), this.nbThreads);
-		}
-
-
-		public void Stop()
-		{
-			this.httpServer.Stop ();
 		}
 
 
@@ -64,24 +50,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		private void ProcessRequest(HttpListenerContext requestContext)
+		private void ProcessRequest(HttpListenerRequest httpRequest, HttpListenerResponse httpResponse)
 		{
 			try
 			{
-				HttpListenerRequest httpRequest = requestContext.Request;
-
 				Logger.LogToConsole ("Received http request: " + httpRequest.Url);
 
-				using (HttpListenerResponse httpResponse = requestContext.Response)
+				var nancyRequest = this.ConvertHttpRequestToNancyRequest (httpRequest);
+
+				using (var nancyContext = this.engine.HandleRequest (nancyRequest))
 				{
-					var nancyRequest = ConvertHttpRequestToNancyRequest (httpRequest);
+					var nancyResponse = nancyContext.Response;
 
-					using (var nancyContext = this.engine.HandleRequest (nancyRequest))
-					{
-						var nancyResponse = nancyContext.Response;
-
-						NancyServer.ConvertNancyResponseToHttpResponse (nancyResponse, httpResponse);
-					}
+					NancyServer.ConvertNancyResponseToHttpResponse (nancyResponse, httpResponse);
 				}
 
 				Logger.LogToConsole ("Answered http request: " + httpRequest.Url);
@@ -192,9 +173,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 
 		private readonly INancyEngine engine;
-
-
-		private readonly int nbThreads;
 
 
 		private readonly Uri baseUri;

@@ -1,6 +1,6 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
 

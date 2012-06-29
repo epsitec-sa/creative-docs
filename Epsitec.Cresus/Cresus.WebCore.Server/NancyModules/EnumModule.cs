@@ -1,7 +1,7 @@
 ﻿using Epsitec.Common.Types;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
@@ -18,14 +18,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Used to provide Enum values to the ExtJS store
 	/// </summary>
-	public class EnumModule : AbstractCoreSessionModule
+	public class EnumModule : AbstractBusinessContextModule
 	{
 
 
-		public EnumModule(ServerContext serverContext)
-			: base (serverContext, "/enum")
+		public EnumModule(CoreServer coreServer)
+			: base (coreServer, "/enum")
 		{
-			Get["/get/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetEnum (p));
+			Get["/get/{name}"] = p => this.Execute (b => this.GetEnum (p));
 		}
 
 

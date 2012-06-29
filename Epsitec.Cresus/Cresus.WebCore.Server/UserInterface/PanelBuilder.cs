@@ -8,7 +8,10 @@ using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
+
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
@@ -31,12 +34,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 	{
 
 
-		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
+		private PanelBuilder(AbstractEntity rootEntity, ViewControllerMode controllerMode, int? controllerSubTypeId, BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
-			this.rootEntity = entity;
-			this.controllerMode = mode;
+			this.rootEntity = rootEntity;
+			this.controllerMode = controllerMode;
 			this.controllerSubTypeId = controllerSubTypeId;
-			this.coreSession = coreSession;
+			this.businessContext = businessContext;
+			this.propertyAccessorCache = propertyAccessorCache;
+			this.autoCreatorCache = autoCreatorCache;
 		}
 
 
@@ -44,16 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			get
 			{
-				return this.BusinessContext.DataContext;
-			}
-		}
-
-
-		private BusinessContext BusinessContext
-		{
-			get
-			{
-				return this.coreSession.GetBusinessContext ();
+				return this.businessContext.DataContext;
 			}
 		}
 
@@ -91,10 +87,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private IEnumerable<ITileData> GetTileData(BrickWall brickWall)
 		{
-			var propertyAccessorCache = this.coreSession.PropertyAccessorCache;
-			var autoCreatorCache = this.coreSession.AutoCreatorCache;
-
-			return Carpenter.BuildTileData(brickWall, propertyAccessorCache, autoCreatorCache);
+			return Carpenter.BuildTileData(brickWall, this.propertyAccessorCache, this.autoCreatorCache);
 		}
 
 
@@ -117,7 +110,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private string GetEntityId(AbstractEntity entity)
 		{
-			return Tools.GetEntityId (this.BusinessContext, entity);
+			return Tools.GetEntityId (this.businessContext, entity);
 		}
 
 
@@ -144,13 +137,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private IEnumerable<AbstractEntity> GetEntities(Type entityType)
 		{
-			return this.BusinessContext.Data.GetAllEntities (entityType, DataExtractionMode.Sorted, this.DataContext);
+			return this.businessContext.Data.GetAllEntities (entityType, DataExtractionMode.Sorted, this.DataContext);
 		}
 
 
-		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
+		public static Dictionary<string, object> BuildController(AbstractEntity rootEntity, ViewControllerMode controllerMode, int? controllerSubTypeId, BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
-			return new PanelBuilder (entity, mode, controllerSubTypeId, coreSession).Run ();
+			return new PanelBuilder (rootEntity, controllerMode, controllerSubTypeId, businessContext, propertyAccessorCache, autoCreatorCache).Run ();
 		}
 
 
@@ -163,7 +156,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		private readonly int? controllerSubTypeId;
 
 
-		private readonly CoreSession coreSession;
+		private readonly BusinessContext businessContext;
+
+
+		private readonly PropertyAccessorCache propertyAccessorCache;
+
+
+		private readonly AutoCreatorCache autoCreatorCache;
 
 
 	}

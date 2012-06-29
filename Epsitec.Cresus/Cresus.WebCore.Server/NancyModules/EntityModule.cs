@@ -2,9 +2,10 @@
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 using Nancy;
 
@@ -22,22 +23,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Used to update value of an existing entity
 	/// </summary>
-	public class EntityModule : AbstractCoreSessionModule
+	public class EntityModule : AbstractBusinessContextModule
 	{
 
 
-		public EntityModule(ServerContext serverContext)
-			: base (serverContext, "/entity")
+		public EntityModule(CoreServer coreServer)
+			: base (coreServer, "/entity")
 		{
-			Post["/edit/{id}"] = p => this.ExecuteWithCoreSession (cs => this.Edit (cs, p));
-			Post["/autoCreate"] = _ => this.ExecuteWithCoreSession (cs => this.AutoCreateNullEntity (cs));
+			Post["/edit/{id}"] = p => this.Execute (b => this.Edit (b, p));
+			Post["/autoCreate"] = _ => this.Execute (b => this.AutoCreateNullEntity (b));
 		}
 
 
-		private Response Edit(CoreSession coreSession, dynamic parameters)
+		private Response Edit(BusinessContext businessContext, dynamic parameters)
 		{
-			var businessContext = coreSession.GetBusinessContext ();
-			var propertyAccessorCache = coreSession.PropertyAccessorCache;
+			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
 			DynamicDictionary form = Request.Form;
 			var propertyAccessorsWithValues = EntityModule.GetPropertyAccessorsWithValues (businessContext, propertyAccessorCache, form)
@@ -74,13 +74,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response AutoCreateNullEntity(CoreSession coreSession)
+		private Response AutoCreateNullEntity(BusinessContext businessContext)
 		{
 			// NOTE Should we add some locking here in order to ensure that we don't have two
 			// clients that auto create an entity at the same time ?
 
-			var businessContext = coreSession.GetBusinessContext ();
-			var autoCreatorCache = coreSession.AutoCreatorCache;
+			var autoCreatorCache = this.CoreServer.AutoCreatorCache;
 
 			var entity = Tools.ResolveEntity (businessContext, (string) Request.Form.entityId);
 			var autoCreator = autoCreatorCache.Get ((string) Request.Form.autoCreatorId);

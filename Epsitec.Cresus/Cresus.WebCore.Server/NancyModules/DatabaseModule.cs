@@ -1,8 +1,9 @@
 ﻿using Epsitec.Aider.Entities;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
@@ -23,7 +24,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// It is then able to retrieve a list of entities based on the request.
 	/// It is also able to add or delete an entity within the selected database.
 	/// </summary>
-	public class DatabasesModule : AbstractCoreSessionModule
+	public class DatabasesModule : AbstractBusinessContextModule
 	{
 
 
@@ -106,17 +107,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		public DatabasesModule(ServerContext serverContext)
-			: base (serverContext, "/database")
+		public DatabasesModule(CoreServer coreServer)
+			: base (coreServer, "/database")
 		{
-			Get["/list"] = p => this.ExecuteWithCoreSession (cs => this.GetDatabaseList (cs));
-			Get["/get/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetDatabase (cs, p));
-			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.DeleteEntity (cs));
-			Post["/create/{name}"] = p => this.ExecuteWithCoreSession (cs => this.CreateEntity (cs, p));
+			Get["/list"] = p => this.Execute (b => this.GetDatabaseList (b));
+			Get["/get/{name}"] = p => this.Execute (b => this.GetDatabase (b, p));
+			Post["/delete"] = p => this.Execute (b => this.DeleteEntity (b));
+			Post["/create/{name}"] = p => this.Execute (b => this.CreateEntity (b, p));
 		}
 
 
-		private Response GetDatabaseList(CoreSession coreSession)
+		private Response GetDatabaseList(BusinessContext businessContext)
 		{
 			var content = from database in DatabasesModule.databases.Values
 			              select new Dictionary<string, object> ()
@@ -130,13 +131,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetDatabase(CoreSession coreSession, dynamic parameters)
+		private Response GetDatabase(BusinessContext businessContext, dynamic parameters)
 		{
-			// NOTE Should we use a RequestView here, in order to maintain consistency between each
- 			// calls ?
-
-			var businessContext = coreSession.GetBusinessContext ();
-
 			string databaseName = parameters.name;
 
 			int start = Request.Query.start;
@@ -165,21 +161,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response DeleteEntity(CoreSession coreSession)
+		private Response DeleteEntity(BusinessContext businessContext)
 		{
-			var context = coreSession.GetBusinessContext ();
-
 			string entityId = Request.Form.entityId;
 
-			var entity = Tools.ResolveEntity (context, entityId);
+			var entity = Tools.ResolveEntity (businessContext, entityId);
 
 			var ok = false;
 
-			using (context.Bind (entity))
+			using (businessContext.Bind (entity))
 			{
-				ok = context.DeleteEntity (entity);
+				ok = businessContext.DeleteEntity (entity);
 
-				context.SaveChanges ();
+				businessContext.SaveChanges ();
 			}
 
 			return ok
@@ -188,20 +182,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response CreateEntity(CoreSession coreSession, dynamic parameters)
+		private Response CreateEntity(BusinessContext businessContext, dynamic parameters)
 		{
 			// TODO This implementation is very simple and will only work if the entity that will be
 			// created is not of an abstract type. If it is an abstract entity, probable that an
 			// entity of the wrong type will be created. Probably that we should implement something
 			// with the CreationControllers.
 
-			var context = coreSession.GetBusinessContext ();
-
 			string databaseName = parameters.name;
 			var database = DatabasesModule.databases[databaseName];
 
-			var entity = database.Create (context);
-			var entityId = Tools.GetEntityId (context, entity);
+			var entity = database.Create (businessContext);
+			var entityId = Tools.GetEntityId (businessContext, entity);
 
 			return CoreResponse.AsSuccess (entityId);
 		}

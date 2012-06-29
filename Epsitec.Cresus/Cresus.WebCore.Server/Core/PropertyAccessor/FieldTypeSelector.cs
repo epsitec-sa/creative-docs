@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 using System;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
+namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 

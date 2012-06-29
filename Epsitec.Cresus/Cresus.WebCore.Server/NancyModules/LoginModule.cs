@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
+﻿using Epsitec.Cresus.WebCore.Server.Core;
 
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	{
 
 
-		public LoginModule(ServerContext serverContext)
-			: base (serverContext, "/log")
+		public LoginModule(CoreServer coreServer)
+			: base (coreServer, "/log")
 		{
 			Post["/in"] = p => this.Login ();
 			Post["/out"] = p => this.Logout ();
@@ -30,20 +30,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		public Response Login()
 		{
-			if (this.CheckCredentials (this.Request.Form))
+			bool loggedIn = this.CheckCredentials (this.Request.Form);
+
+			this.Session[LoginModule.LoggedInName] = loggedIn;
+
+			if (loggedIn)
 			{
-				var session = this.ServerContext.CoreSessionManager.CreateSession ();
-
-				this.Session[LoginModule.LoggedInName] = true;
-				this.Session[LoginModule.CoreSessionName] = session.Id;
-
 				return CoreResponse.AsSuccess ();
 			}
 			else
 			{
-				var dic = new Dictionary<string, object> ();
-				dic["username"] = "Incorrect username";
-
+				var dic = new Dictionary<string, object> ()
+				{
+					{ "username" , "Incorrect username" },
+				};
+				
 				return CoreResponse.AsError (dic);
 			}
 		}
@@ -51,22 +52,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		public Response Logout()
 		{
-			// TODO I think that this way of doing things might be wrong. This call is not
-			// executed on the worker thread of the SafeCoreSession, therefor, this call might
-			// cancel other operations that are being executed by the same SafeCoreSession and there
-			// might also be requests still pending. The DeleteSession call should be executed with
-			// a call to SafeCoreSession.Execute(...). But then we can't dispose the SafeCoreSession
-			// on this thread, because the worker thread can't dispose itself. We would need to 
-			// remove the SafeCoreSession from the CoreSessionManager, and dispose it afterwards,
-			// only when it has no more job to do.
-
-			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
-
-			if (!string.IsNullOrEmpty(sessionId))
-			{
-				this.ServerContext.CoreSessionManager.DeleteSession (sessionId);
-			}
-
 			this.Session[LoginModule.LoggedInName] = false;
 
 			var response = "logout";
@@ -82,7 +67,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string username = form.username;
 			string password = form.password;
 
-			return this.ServerContext.AuthenticationManager.CheckCredentials (username, password);
+			return this.CoreServer.AuthenticationManager.CheckCredentials (username, password);
 		}
 
 
@@ -112,10 +97,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		public static readonly string LoggedInName = "LOGGED_IN";
-
-
-		public static readonly string CoreSessionName = "CoreSession";
+		public static readonly string LoggedInName = "LoggedIn";
 
 
 	}

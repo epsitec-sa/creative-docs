@@ -8,8 +8,9 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAutoCreator;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
+
 using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
 using System;

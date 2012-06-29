@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface
+namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 

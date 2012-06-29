@@ -3,7 +3,7 @@
 
 using Epsitec.Common.IO;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using System;
@@ -29,10 +29,7 @@ namespace Epsitec.Cresus.WebCore.Server
 					nGinxAutorun: CoreServerProgram.nGinxAutorun,
 					nGinxPath: CoreServerProgram.nGinxPath,
 					uri: CoreServerProgram.baseUri,
-					nbThreads: CoreServerProgram.nbThreads,
-					maxNbSessions: CoreServerProgram.maxNbSessions,
-					sessionTimeout: CoreServerProgram.sessionTimeout,
-					sessionCleanupInterval: CoreServerProgram.sessionCleanupInterval
+					nbCoreWorkers: CoreServerProgram.nbCoreWorkers
 				);
 			});
 		}
@@ -48,16 +45,14 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbThreads, int maxNbSessions, TimeSpan sessionTimeout, TimeSpan sessionCleanupInterval)
+		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers)
 		{		
 			Logger.LogToConsole ("Launching server...");
 
-			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)		
-			using (var serverContext = new ServerContext (maxNbSessions, sessionTimeout, sessionCleanupInterval))
-			using (var nancyServer = new NancyServer (serverContext, uri, nbThreads))
+			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
+			using (var coreServer = new CoreServer (nbCoreWorkers))
+			using (var nancyServer = new NancyServer (coreServer, uri))
 			{
-				nancyServer.Start ();
-
 				Dumper.Instance.IsEnabled = CoreServerProgram.enableDumper;
 
 				Logger.LogToConsole ("Server launched");
@@ -65,8 +60,6 @@ namespace Epsitec.Cresus.WebCore.Server
 				Console.ReadLine ();
 
 				Logger.LogToConsole ("Shutting down server...");
-
-				nancyServer.Stop ();
 			}
 
 			Logger.LogToConsole ("Server shut down");
@@ -87,16 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		private static readonly Uri baseUri = new Uri ("http://localhost:12345/");
 
 
-		private static readonly int nbThreads = 3;
-
-
-		private static readonly int maxNbSessions = 10;
-
-
-		private static readonly TimeSpan sessionTimeout = TimeSpan.FromMinutes (5);
-
-
-		private static readonly TimeSpan sessionCleanupInterval = TimeSpan.FromMinutes (1);
+		private static readonly int nbCoreWorkers = 3;
 
 
 		private static readonly bool enableDumper = false;

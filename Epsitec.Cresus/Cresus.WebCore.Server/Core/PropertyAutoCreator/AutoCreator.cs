@@ -3,14 +3,14 @@
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
 
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAutoCreator
+namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 {
 	
 	

@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
+namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 

@@ -5,9 +5,9 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 using Nancy;
 
@@ -23,31 +23,29 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Allows to add or delete an entity within a collection
 	/// </summary>
-	public class CollectionManagerModule : AbstractCoreSessionModule
+	public class CollectionManagerModule : AbstractBusinessContextModule
 	{
 
 
-		public CollectionManagerModule(ServerContext serverContext)
-			: base (serverContext, "/collection")
+		public CollectionManagerModule(CoreServer coreServer)
+			: base (coreServer, "/collection")
 		{
-			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.DeleteEntity (cs));
-			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.CreateEntity (cs));
+			Post["/delete"] = p => this.Execute (b => this.DeleteEntity (b));
+			Post["/create"] = p => this.Execute (b => this.CreateEntity (b));
 		}
 
 
-		private Response DeleteEntity(CoreSession coreSession)
+		private Response DeleteEntity(BusinessContext businessContext)
 		{
-			var context = coreSession.GetBusinessContext ();
-
 			string parentEntityId = Request.Form.parentEntity;
 
-			AbstractEntity parentEntity = Tools.ResolveEntity (context, parentEntityId);
+			AbstractEntity parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
 
 			string deleteEntity = Request.Form.deleteEntity;
 			var deleteKey = EntityKey.Parse (deleteEntity);
 
 			string propertyAccessorId = Request.Form.propertyAccessorId;
-			var propartyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
+			var propartyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propartyAccessor == null)
 			{
@@ -56,58 +54,56 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var collection = propartyAccessor.GetCollection (parentEntity);
 
-			var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
+			var toDelete = collection.Cast<AbstractEntity> ().Where (c => businessContext.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
 			if (toDelete.IsEmpty ())
 			{
 				return CoreResponse.AsError ();
 			}
 
-			using (context.Bind (parentEntity))
+			using (businessContext.Bind (parentEntity))
 			{
 				var d = toDelete.First ();
 
 				collection.Remove (d);
-				context.DeleteEntity (d);
+				businessContext.DeleteEntity (d);
 
-				context.SaveChanges ();
+				businessContext.SaveChanges ();
 			}
 
 			return CoreResponse.AsSuccess ();
 		}
 
 
-		private Response CreateEntity(CoreSession coreSession)
+		private Response CreateEntity(BusinessContext businessContext)
 		{
-			var context = coreSession.GetBusinessContext ();
-
 			string parentEntityId = Request.Form.parentEntity;
-			AbstractEntity parentEntity = Tools.ResolveEntity (context, parentEntityId);
+			AbstractEntity parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
 
 			string typeName = Request.Form.entityType;
 			var type = Type.GetType (typeName);
 			var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
 			var m = method.MakeGenericMethod (type);
-			var o = m.Invoke (context, new object[0]);
+			var o = m.Invoke (businessContext, new object[0]);
 			var newEntity = o as AbstractEntity;
 
 			string propertyAccessorId = Request.Form.propertyAccessorId;
-			var propertyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
+			var propertyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propertyAccessor == null)
 			{
 				return CoreResponse.AsError ();
 			}
 
-			using (context.Bind (parentEntity, newEntity))
+			using (businessContext.Bind (parentEntity, newEntity))
 			{
 				var collection = propertyAccessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
 
-				context.SaveChanges (EntitySaveMode.IncludeEmpty);
+				businessContext.SaveChanges (EntitySaveMode.IncludeEmpty);
 			}
 
-			var key = Tools.GetEntityId (context, newEntity);
+			var key = Tools.GetEntityId (businessContext, newEntity);
 
 			return CoreResponse.AsSuccess (key);
 		}

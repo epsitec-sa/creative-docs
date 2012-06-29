@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
+namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 

@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAutoCreator
+namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 {
 
 

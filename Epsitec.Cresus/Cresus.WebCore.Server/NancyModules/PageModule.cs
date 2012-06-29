@@ -1,4 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
+﻿using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
@@ -11,14 +11,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Proxy to retrieve a page stored in the Views folder
 	/// </summary>
-	public class PageModule : AbstractCoreSessionModule
+	public class PageModule : AbstractBusinessContextModule
 	{
 
 
-		public PageModule(ServerContext serverContext)
-			: base (serverContext, "/page/")
+		public PageModule(CoreServer coreServer)
+			: base (coreServer, "/page/")
 		{
-			Get["/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetPageView (p));
+			Get["/{name}"] = p => this.Execute (b => this.GetPageView (b));
 		}
 
 
