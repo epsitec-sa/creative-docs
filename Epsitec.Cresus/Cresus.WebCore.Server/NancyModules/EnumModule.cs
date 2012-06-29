@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public EnumModule(CoreServer coreServer)
 			: base (coreServer, "/enum")
 		{
-			Get["/get/{name}"] = p => this.Execute (b => this.GetEnum (p));
+			Get["/get/{name}"] = p => this.GetEnum (p);
 		}
 
 

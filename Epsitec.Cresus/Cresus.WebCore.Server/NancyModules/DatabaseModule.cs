@@ -110,14 +110,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public DatabasesModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
-			Get["/list"] = p => this.Execute (b => this.GetDatabaseList (b));
+			Get["/list"] = p => this.GetDatabaseList ();
 			Get["/get/{name}"] = p => this.Execute (b => this.GetDatabase (b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntity (b));
 			Post["/create/{name}"] = p => this.Execute (b => this.CreateEntity (b, p));
 		}
 
 
-		private Response GetDatabaseList(BusinessContext businessContext)
+		private Response GetDatabaseList()
 		{
 			var content = from database in DatabasesModule.databases.Values
 			              select new Dictionary<string, object> ()

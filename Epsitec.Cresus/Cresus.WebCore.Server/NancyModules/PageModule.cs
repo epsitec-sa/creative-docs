@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public PageModule(CoreServer coreServer)
 			: base (coreServer, "/page/")
 		{
-			Get["/{name}"] = p => this.Execute (b => this.GetPageView (b));
+			Get["/{name}"] = p => this.GetPageView (p);
 		}
 
 
