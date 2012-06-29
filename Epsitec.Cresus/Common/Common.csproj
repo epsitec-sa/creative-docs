@@ -872,6 +872,7 @@
     <Compile Include="Types\Collections\Concurrent\BlockingQueue.cs" />
     <Compile Include="Types\Collections\CircularBuffer.cs" />
     <Compile Include="Types\Collections\CircularList.cs" />
+    <Compile Include="Types\Collections\Concurrent\BlockingBag.cs" />
     <Compile Include="Types\Collections\CountedStringDictionary.cs" />
     <Compile Include="Types\Collections\EmptyEnumerable.cs" />
     <Compile Include="Types\Collections\EmptyEnumerator.cs" />
