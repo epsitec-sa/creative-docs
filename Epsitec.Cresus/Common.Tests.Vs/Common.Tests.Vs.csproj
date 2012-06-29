@@ -73,6 +73,7 @@
     <Compile Include="Support\UnitTestSafeSectionManager.cs" />
     <Compile Include="Support\UnitTestStringUtils.cs" />
     <Compile Include="Support\UnitTestTimedReaderWriterLock.cs" />
+    <Compile Include="Support\UnitTestWorkerThread.cs" />
     <Compile Include="Support\UnitTestXmlValidator.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
