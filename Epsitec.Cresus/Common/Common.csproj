@@ -444,6 +444,7 @@
     <Compile Include="Support\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Support\FormatTokenFormatterResolver.cs" />
     <Compile Include="Support\InterfaceImplementationResolver.cs" />
+    <Compile Include="Support\SafeSectionManager.cs" />
     <Compile Include="Support\StringArray.cs" />
     <Compile Include="Support\TextFormat.cs" />
     <Compile Include="Support\TextValue.cs" />
