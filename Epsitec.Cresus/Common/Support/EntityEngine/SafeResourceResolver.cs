@@ -2,6 +2,8 @@
 
 using Epsitec.Common.Types;
 
+using System;
+
 using System.Collections.Generic;
 
 
@@ -9,7 +11,7 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 
 
-	public sealed class SafeResourceResolver : IStructuredTypeResolver, ICaptionResolver
+	public sealed class SafeResourceResolver : IStructuredTypeResolver, ICaptionResolver, IDisposable
 	{
 
 
@@ -52,6 +54,19 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+
+		#region IDisposable Members
+
+
+		public void Dispose()
+		{
+			this.captions.Dispose ();
+			this.structuredTypes.Dispose ();
+		}
+
+
+		#endregion
+		
 
 		private Caption ComputeCaption(ICaptionResolver resolver, Druid captionId)
 		{

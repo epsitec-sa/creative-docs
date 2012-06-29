@@ -4,8 +4,6 @@ using System;
 
 using System.Collections.Generic;
 
-using System.Threading;
-
 
 namespace Epsitec.Common.Support
 {
@@ -28,7 +26,7 @@ namespace Epsitec.Common.Support
 	/// </remarks>
 	/// <typeparam name="TKey">The type of the function argument.</typeparam>
 	/// <typeparam name="TValue">The type of the function result.</typeparam>
-	public sealed class AutoCache<TKey, TValue>
+	public sealed class AutoCache<TKey, TValue> : IDisposable
 	{
 
 
@@ -50,8 +48,7 @@ namespace Epsitec.Common.Support
 		{
 			computer.ThrowIfNull ("computer");
 
-			this.timeOut = System.TimeSpan.FromSeconds (15);
-			this.rwLock = new ReaderWriterLockSlim ();
+			this.rwLock = new ReaderWriterLockWrapper ();
 
 			this.resultOfCallWithNull = default (TValue);
 			this.resultOfCallWithNullComputed = false;
@@ -88,7 +85,7 @@ namespace Epsitec.Common.Support
 			TValue result = default (TValue);
 			bool done = false;
 
-			using (this.LockRead ())
+			using (this.rwLock.LockRead ())
 			{
 				done = this.resultOfCallWithNullComputed;
 
@@ -100,7 +97,7 @@ namespace Epsitec.Common.Support
 
 			if (!done)
 			{
-				using (this.LockWrite ())
+				using (this.rwLock.LockWrite ())
 				{
 					if (!this.resultOfCallWithNullComputed)
 					{
@@ -121,14 +118,14 @@ namespace Epsitec.Common.Support
 			TValue result = default (TValue);
 			bool done = false;
 
-			using (this.LockRead ())
+			using (this.rwLock.LockRead ())
 			{
 				done = this.cache.TryGetValue (key, out result);
 			}
 
 			if (!done)
 			{
-				using (this.LockWrite ())
+				using (this.rwLock.LockWrite ())
 				{
 					done = this.cache.TryGetValue (key, out result);
 
@@ -150,7 +147,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		public void Clear()
 		{
-			using (this.LockWrite ())
+			using (this.rwLock.LockWrite ())
 			{
 				this.cache.Clear ();
 
@@ -158,24 +155,22 @@ namespace Epsitec.Common.Support
 				this.resultOfCallWithNullComputed = false;
 			}
 		}
+		
+		
+		#region IDisposable Members
 
 
-		private IDisposable LockRead()
+		public void Dispose()
 		{
-			return TimedReaderWriterLock.LockRead (this.rwLock, this.timeOut);
+			this.rwLock.Dispose ();
 		}
 
 
-		private IDisposable LockWrite()
-		{
-			return TimedReaderWriterLock.LockWrite (this.rwLock, this.timeOut);
-		}
+		#endregion
+	
 
 
-		private readonly ReaderWriterLockSlim rwLock;
-
-
-		private readonly System.TimeSpan timeOut;
+		private readonly ReaderWriterLockWrapper rwLock;
 
 
 		private readonly Func<TKey, TValue> computer;
