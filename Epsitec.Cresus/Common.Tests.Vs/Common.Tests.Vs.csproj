@@ -69,6 +69,7 @@
     <Compile Include="Support\Extensions\UnitTestStringExtensions.cs" />
     <Compile Include="Support\UnitTestAutoCache.cs" />
     <Compile Include="Support\UnitTestDisposableWrapper.cs" />
+    <Compile Include="Support\UnitTestHttpServer.cs" />
     <Compile Include="Support\UnitTestSafeCounter.cs" />
     <Compile Include="Support\UnitTestSafeSectionManager.cs" />
     <Compile Include="Support\UnitTestStringUtils.cs" />

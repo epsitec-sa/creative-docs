@@ -360,6 +360,7 @@
     <Compile Include="FormEngine\IFormResourceProvider.cs" />
     <Compile Include="FormEngine\Serialization.cs" />
     <Compile Include="FormEngine\Xml.cs" />
+    <Compile Include="Support\HttpServer.cs" />
     <Compile Include="IO\AbstractStream.cs" />
     <Compile Include="IO\Ascii85.cs" />
     <Compile Include="IO\Checksum.cs" />
