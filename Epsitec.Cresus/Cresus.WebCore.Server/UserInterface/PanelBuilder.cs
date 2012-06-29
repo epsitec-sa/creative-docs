@@ -6,8 +6,6 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 
-using Epsitec.Cresus.DataLayer.Context;
-
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
@@ -27,41 +25,29 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 
 	/// <summary>
-	/// Allow to create an ExtJS 4 panel by inferring the layout using
-	/// AbstractEntities 
+	/// Allow to create an ExtJS 4 panel by inferring the layout using AbstractEntities and their
+	/// ViewControllers.
 	/// </summary>
 	internal sealed class PanelBuilder
 	{
 
 
-		private PanelBuilder(AbstractEntity rootEntity, ViewControllerMode controllerMode, int? controllerSubTypeId, BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
+		public PanelBuilder(BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
-			this.rootEntity = rootEntity;
-			this.controllerMode = controllerMode;
-			this.controllerSubTypeId = controllerSubTypeId;
 			this.businessContext = businessContext;
 			this.propertyAccessorCache = propertyAccessorCache;
 			this.autoCreatorCache = autoCreatorCache;
 		}
 
 
-		private DataContext DataContext
-		{
-			get
-			{
-				return this.businessContext.DataContext;
-			}
-		}
-
-
-		private Dictionary<string, object> Run()
+		public Dictionary<string, object> Build(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
 		{
 			var panel = new Dictionary<string, object> ();
 
-			panel["parentEntity"] = this.GetEntityId (this.rootEntity);
-			panel["controllerMode"] = Tools.ViewControllerModeToString (this.controllerMode);
-			panel["controllerSubTypeId"] = Tools.ControllerSubTypeIdToString (this.controllerSubTypeId);
-			panel["items"] = this.GetPanels (this.rootEntity, this.controllerMode, this.controllerSubTypeId);
+			panel["parentEntity"] = this.GetEntityId (entity);
+			panel["controllerMode"] = Tools.ViewControllerModeToString (controllerMode);
+			panel["controllerSubTypeId"] = Tools.ControllerSubTypeIdToString (controllerSubTypeId);
+			panel["items"] = this.GetPanels (entity, controllerMode, controllerSubTypeId);
 
 			return panel;
 		}
@@ -137,25 +123,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private IEnumerable<AbstractEntity> GetEntities(Type entityType)
 		{
-			return this.businessContext.Data.GetAllEntities (entityType, DataExtractionMode.Sorted, this.DataContext);
+			var mode = DataExtractionMode.Sorted;
+			var dataContext = this.businessContext.DataContext;
+
+			return this.businessContext.Data.GetAllEntities (entityType, mode, dataContext);
 		}
-
-
-		public static Dictionary<string, object> BuildController(AbstractEntity rootEntity, ViewControllerMode controllerMode, int? controllerSubTypeId, BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
-		{
-			return new PanelBuilder (rootEntity, controllerMode, controllerSubTypeId, businessContext, propertyAccessorCache, autoCreatorCache).Run ();
-		}
-
-
-		private readonly AbstractEntity rootEntity;
-
-
-		private readonly ViewControllerMode controllerMode;
-
-
-		private readonly int? controllerSubTypeId;
-
-
+		
+		
 		private readonly BusinessContext businessContext;
 
 

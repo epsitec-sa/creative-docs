@@ -1,7 +1,5 @@
 ﻿using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.Core.Controllers;
-
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Epsitec.Cresus.WebCore.Server.UserInterface;
@@ -30,14 +28,22 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetLayout(BusinessContext businessContext, dynamic parameters)
 		{
-			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
+			var propertyAccessors = this.CoreServer.PropertyAccessorCache;
+			var autoCreators = this.CoreServer.AutoCreatorCache;
 
-			ViewControllerMode mode = Tools.ParseViewControllerMode (parameters.mode);
-			int? controllerSubTypeId = Tools.ParseControllerSubTypeId (parameters.controllerSubTypeId);
+			var panelBuilder = new PanelBuilder (businessContext, propertyAccessors, autoCreators);
+			
+			string rawEntityId = parameters.id;
+			string rawControllerMode = parameters.mode;
+			string rawControllerSubTypeId = parameters.controllerSubTypeId;
 
-			var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, businessContext, this.CoreServer.PropertyAccessorCache, this.CoreServer.AutoCreatorCache);
+			var entity = Tools.ResolveEntity (businessContext, rawEntityId);
+			var controllerMode = Tools.ParseViewControllerMode (rawControllerMode);
+			var controllerSubTypeId = Tools.ParseControllerSubTypeId (rawControllerSubTypeId);
 
-			return CoreResponse.AsSuccess (s);
+			var panels = panelBuilder.Build (entity, controllerMode, controllerSubTypeId);
+
+			return CoreResponse.AsSuccess (panels);
 		}
 		
 
