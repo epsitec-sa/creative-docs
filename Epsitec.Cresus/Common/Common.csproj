@@ -653,7 +653,6 @@
     <Compile Include="Support\Tasklet.cs" />
     <Compile Include="Support\TaskletJob.cs" />
     <Compile Include="Support\TaskletRunMode.cs" />
-    <Compile Include="Support\TimedLock.cs" />
     <Compile Include="Support\TransformCallback.cs" />
     <Compile Include="Support\UrlNavigator.cs" />
     <Compile Include="Support\Utilities.cs" />
