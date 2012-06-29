@@ -6,7 +6,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Repositories;
-using Epsitec.Cresus.WebCore.Server.CoreServer;
 
 using Epsitec.Data.Platform;
 
@@ -27,10 +26,10 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 		private void Refresh()
 		{
-			using (this.session = new CoreSession ("maintenance session"))
+			using (this.app = new MaintenanceApp ())
 			{
-				this.context    = this.session.GetBusinessContext ();
-				this.data       = this.session.CoreData;
+				this.context    = this.app.BusinessContext;
+				this.data       = this.app.CoreData;
 
 				this.cantonRepository   = this.context.GetRepository<StateProvinceCountyEntity> ();
 				this.locationRepository = this.context.GetRepository<LocationEntity> ();
@@ -158,7 +157,6 @@ namespace Epsitec.Cresus.Core.Maintenance
 		{
 			//	The language code is expressed as "1:de" for instance (key "1", ISO-631 language code "de").
 
-			var context    = this.session.GetBusinessContext ();
 			var languages  = new Dictionary<SwissPostLanguageCode, LanguageEntity> ();
 
 			foreach (var languageCode in languageCodes)
@@ -287,7 +285,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 			}
 		}
 
-		private CoreSession session;
+		private MaintenanceApp app;
 		private BusinessContext context;
 		private CoreData data;
 		private Repository<StateProvinceCountyEntity> cantonRepository;
