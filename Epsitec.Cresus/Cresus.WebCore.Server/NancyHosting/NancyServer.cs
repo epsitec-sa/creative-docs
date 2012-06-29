@@ -14,6 +14,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Diagnostics;
+
 using System.Globalization;
 
 using System.Linq;
@@ -56,6 +58,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			{
 				Logger.LogToConsole ("Received http request: " + httpRequest.Url);
 
+				var stopwatch = Stopwatch.StartNew ();
+
 				var nancyRequest = this.ConvertHttpRequestToNancyRequest (httpRequest);
 
 				using (var nancyContext = this.engine.HandleRequest (nancyRequest))
@@ -65,7 +69,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 					NancyServer.ConvertNancyResponseToHttpResponse (nancyResponse, httpResponse);
 				}
 
-				Logger.LogToConsole ("Answered http request: " + httpRequest.Url);
+				stopwatch.Stop ();
+
+				var message = "Answered http request: " + httpRequest.Url
+					+ " in " + stopwatch.ElapsedMilliseconds + " ms";
+
+				Logger.LogToConsole (message);
 			}
 			catch (Exception e)
 			{
