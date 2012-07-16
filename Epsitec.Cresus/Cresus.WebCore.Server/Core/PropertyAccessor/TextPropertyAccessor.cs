@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		// validator. This implies that the value is being converted twice, which is stupid.
 
 
-		public TextPropertyAccessor(LambdaExpression lambda, string id)
+		public TextPropertyAccessor(LambdaExpression lambda, int id)
 			: base (lambda, id)
 		{
 			this.isTextProperty = this.IsTextProperty ();

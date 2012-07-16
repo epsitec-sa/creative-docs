@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		protected AbstractLambdaCache()
 		{
 			this.lambdaToElement = new Dictionary<string, T> ();
-			this.idToElement = new Dictionary<string, T> ();
+			this.idToElement = new Dictionary<int, T> ();
 
 			this.rwLock = new ReaderWriterLockWrapper ();
 		}
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 					if (!done)
 					{
-						var id = InvariantConverter.ToString (this.lambdaToElement.Count);
+						var id = this.lambdaToElement.Count;
 
 						element = this.Create (lambda, id);
 
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public T Get(string id)
+		public T Get(int id)
 		{
 			using (this.rwLock.LockRead ())
 			{
@@ -85,13 +85,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	
 
 
-		protected abstract T Create(LambdaExpression lambda, string id);
+		protected abstract T Create(LambdaExpression lambda, int id);
 
 
 		private readonly Dictionary<string, T> lambdaToElement;
 
 
-		private readonly Dictionary<string, T> idToElement;
+		private readonly Dictionary<int, T> idToElement;
 
 
 		private readonly ReaderWriterLockWrapper rwLock;

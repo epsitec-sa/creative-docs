@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.WebCore.Server.Core;
@@ -82,7 +84,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var autoCreatorCache = this.CoreServer.AutoCreatorCache;
 
 			var entity = Tools.ResolveEntity (businessContext, (string) Request.Form.entityId);
-			var autoCreator = autoCreatorCache.Get ((string) Request.Form.autoCreatorId);
+			var autoCreatorId = InvariantConverter.ParseInt ((string) Request.Form.autoCreatorId);
+			var autoCreator = autoCreatorCache.Get (autoCreatorId);
 
 			var child = autoCreator.Execute (businessContext, entity);
 
@@ -101,10 +104,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var processedForm = FormCollectionEmbedder.DecodeFormWithCollections (form);
 
-			foreach (var propertyAccessorId in processedForm.GetDynamicMemberNames ())
+			foreach (var rawPropertyAccessorId in processedForm.GetDynamicMemberNames ())
 			{
+				var propertyAccessorId = InvariantConverter.ParseInt (rawPropertyAccessorId);
 				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
-				DynamicDictionaryValue value = processedForm[propertyAccessorId];
+				DynamicDictionaryValue value = processedForm[rawPropertyAccessorId];
 
 				var convertedValue = EntityModule.ConvertValue (businessContext, propertyAccessor, value);
 

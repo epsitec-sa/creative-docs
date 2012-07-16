@@ -1,5 +1,7 @@
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
@@ -129,7 +131,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			return new EmptySummaryTile ()
 			{
 				EntityType = panelBuilder.GetTypeName (this.Template.EntityType),
-				PropertyAccessorId = this.Template.PropertyAccessor.Id,
+				PropertyAccessorId = InvariantConverter.ToString (this.Template.PropertyAccessor.Id),
 			};
 		}
 
@@ -147,7 +149,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				Text = template.TextGetter (entity).ToString (),
 				Title = template.TitleGetter (entity).ToString (),
 				EntityType = panelBuilder.GetTypeName (template.EntityType),
-				PropertyAccessorId = template.PropertyAccessor.Id,
+				PropertyAccessorId = InvariantConverter.ToString (template.PropertyAccessor.Id),
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,
 			};
@@ -158,7 +160,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		{
 			return this.AutoCreator == null
 				? null
-				: this.AutoCreator.Id;
+				: InvariantConverter.ToString (this.AutoCreator.Id);
 		}
 
 

@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 
 			return new CheckBoxField ()
 			{
-				PropertyAccessorId = textPropertyAccessor.Id,
+				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = bool.Parse (textPropertyAccessor.GetString (entity))

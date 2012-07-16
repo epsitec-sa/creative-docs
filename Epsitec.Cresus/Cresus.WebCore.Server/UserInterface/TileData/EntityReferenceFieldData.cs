@@ -1,6 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.NancyModules;
@@ -28,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 
 			var entityField = new EntityReferenceField ()
 			{
-				PropertyAccessorId = entityReferencePropertyAccessor.Id,
+				PropertyAccessorId = InvariantConverter.ToString (entityReferencePropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = panelBuilder.GetEntityId (target) ?? "null",

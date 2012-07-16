@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -44,7 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string deleteEntity = Request.Form.deleteEntity;
 			var deleteKey = EntityKey.Parse (deleteEntity);
 
-			string propertyAccessorId = Request.Form.propertyAccessorId;
+			var propertyAccessorId = InvariantConverter.ParseInt ((string) Request.Form.propertyAccessorId);
 			var propartyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propartyAccessor == null)
@@ -87,7 +89,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var o = m.Invoke (businessContext, new object[0]);
 			var newEntity = o as AbstractEntity;
 
-			string propertyAccessorId = Request.Form.propertyAccessorId;
+			var propertyAccessorId = InvariantConverter.ParseInt ((string) Request.Form.propertyAccessorId);
 			var propertyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propertyAccessor == null)

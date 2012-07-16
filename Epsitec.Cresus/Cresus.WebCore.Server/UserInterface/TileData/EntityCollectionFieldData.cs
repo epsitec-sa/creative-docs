@@ -2,6 +2,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
@@ -27,7 +29,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 
 			var collectionField = new EntityCollectionField ()
 			{
-				PropertyAccessorId = entityCollectionPropertyAccessor.Id,
+				PropertyAccessorId = InvariantConverter.ToString (entityCollectionPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 			};

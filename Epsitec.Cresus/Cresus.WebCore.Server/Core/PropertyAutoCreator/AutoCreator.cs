@@ -18,14 +18,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 	{
 
 
-		public AutoCreator(LambdaExpression lambda, string id)
+		public AutoCreator(LambdaExpression lambda, int id)
 		{
 			this.id = id;
 			this.autoCreator = this.GetAutoCreator (lambda);
 		}
 
 
-		public string Id
+		public int Id
 		{
 			get
 			{
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 
 		private Func<BusinessContext, AbstractEntity, AbstractEntity> GetAutoCreator(LambdaExpression lambda)
 		{
-			var accessor = new EntityReferencePropertyAccessor (lambda, null);
+			var accessor = new EntityReferencePropertyAccessor (lambda, 0);
 
 			var childType = accessor.Type;
 			var childTypeId = EntityInfo.GetTypeId (childType);
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 		}
 
 
-		private readonly string id;
+		private readonly int id;
 
 
 		private readonly Func<BusinessContext, AbstractEntity, AbstractEntity> autoCreator;

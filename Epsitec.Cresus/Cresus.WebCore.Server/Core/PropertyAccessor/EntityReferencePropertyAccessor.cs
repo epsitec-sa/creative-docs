@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 	{
 
 
-		public EntityReferencePropertyAccessor(LambdaExpression lambda, string id)
+		public EntityReferencePropertyAccessor(LambdaExpression lambda, int id)
 			: base (lambda, id)
 		{
 		}
