@@ -88,6 +88,7 @@
     <Compile Include="UserInterface\TileData\EnumerationFieldData.cs" />
     <Compile Include="UserInterface\TileData\HorizontalGroupData.cs" />
     <Compile Include="UserInterface\TileData\IncludeData.cs" />
+    <Compile Include="UserInterface\TileData\PanelData.cs" />
     <Compile Include="UserInterface\TileData\TextFieldData.cs" />
     <Compile Include="UserInterface\Tile\AbstractEditionTilePart.cs" />
     <Compile Include="UserInterface\Tile\AbstractTile.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="UserInterface\Tile\EnumerationField.cs" />
     <Compile Include="UserInterface\Tile\GlobalWarning.cs" />
     <Compile Include="UserInterface\Tile\HorizontalGroup.cs" />
+    <Compile Include="UserInterface\Tile\Panel.cs" />
     <Compile Include="UserInterface\Tile\Separator.cs" />
     <Compile Include="UserInterface\Tile\SummaryTile.cs" />
     <Compile Include="UserInterface\TileData\SummaryTileData.cs" />

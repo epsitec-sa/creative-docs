@@ -42,42 +42,27 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		public Dictionary<string, object> Build(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
 		{
-			var panel = new Dictionary<string, object> ();
+			var panelData = new PanelData ()
+			{
+				ViewControllerMode = controllerMode,
+				ControllerSubTypeId = controllerSubTypeId,
+				Tiles = this.GetTileData (entity, controllerMode, controllerSubTypeId).ToList (),
+			};
 
-			panel["parentEntity"] = this.GetEntityId (entity);
-			panel["controllerMode"] = Tools.ViewControllerModeToString (controllerMode);
-			panel["controllerSubTypeId"] = Tools.ControllerSubTypeIdToString (controllerSubTypeId);
-			panel["items"] = this.GetPanels (entity, controllerMode, controllerSubTypeId);
-
-			return panel;
+			return panelData
+				.ToPanel (this, entity)
+				.ToDictionary ();
 		}
 
-
-		private List<Dictionary<string, object>> GetPanels(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
+		private IEnumerable<ITileData> GetTileData(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
 		{
-			var brickWall = this.GetBrickWall (entity, controllerMode, controllerSubTypeId);
-
-			var tileData = this.GetTileData (brickWall);
-			var tiles = this.GetTiles (tileData, entity);
-			var items = tiles.Select (t => t.ToDictionary ());
-
-			return items.ToList ();
+			var brickWall = Mason.BuildBrickWall (entity, controllerMode, controllerSubTypeId);
+			
+			return Carpenter.BuildTileData (brickWall, this.propertyAccessorCache, this.autoCreatorCache);
 		}
 
 
-		private BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
-		{
-			return Mason.BuildBrickWall (entity, controllerMode, controllerSubTypeId);
-		}
-
-
-		private IEnumerable<ITileData> GetTileData(BrickWall brickWall)
-		{
-			return Carpenter.BuildTileData(brickWall, this.propertyAccessorCache, this.autoCreatorCache);
-		}
-
-
-		private IEnumerable<AbstractTile> GetTiles(IEnumerable<ITileData> tileData, AbstractEntity entity)
+		public IEnumerable<AbstractTile> GetTiles(IEnumerable<ITileData> tileData, AbstractEntity entity)
 		{
 			return tileData.SelectMany (td => td.ToTiles (this, entity));
 		}
@@ -103,8 +88,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		public IEnumerable<AbstractTile> BuildEditionTiles(AbstractEntity entity)
 		{
-			var brickWall = this.GetBrickWall (entity, ViewControllerMode.Edition, null);
-			var tileData = this.GetTileData (brickWall);
+			var tileData = this.GetTileData (entity, ViewControllerMode.Edition, null);
 
 			return this.GetTiles (tileData, entity);
 		}
