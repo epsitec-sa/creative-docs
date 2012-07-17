@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.WallPanelEmptySummary',
+Ext.define('Epsitec.Cresus.Core.Static.EmptySummaryTile',
   {
-    extend : 'Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
-    alias : 'widget.emptysummary',
+    extend : 'Epsitec.Cresus.Core.Static.CollectionSummaryTile',
+    alias : 'widget.emptysummarytile',
     
     /* Config */
     html : 'Empty',

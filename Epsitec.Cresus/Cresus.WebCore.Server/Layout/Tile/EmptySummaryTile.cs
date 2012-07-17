@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var panel = new Dictionary<string, object> ();
 
-			panel["xtype"] = "emptysummary";
+			panel["xtype"] = "emptysummarytile";
 			panel["propertyAccessorId"] = this.PropertyAccessorId;
 			panel["entityType"] = this.EntityType;
 

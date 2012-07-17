@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
+Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
   {
     extend : 'Ext.Panel',
-    alias : 'widget.summary',
+    alias : 'widget.summarytile',
     
     /* Config */
     margin : '0 0 5 0',
@@ -60,7 +60,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       }
     },
     
-    // Overriden by WallPanelEmptySummary
+    // Overriden by EmptySummaryTile
     bodyClicked : function ()
     {
       if (this.autoCreatorId !== null)

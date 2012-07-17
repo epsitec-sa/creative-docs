@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var panel = base.ToDictionary ();
 
-			panel["xtype"] = "collectionsummary";
+			panel["xtype"] = "collectionsummarytile";
 
 			panel["hideRemoveButton"] = this.HideRemoveButton;
 			panel["hideAddButton"] = this.HideAddButton;

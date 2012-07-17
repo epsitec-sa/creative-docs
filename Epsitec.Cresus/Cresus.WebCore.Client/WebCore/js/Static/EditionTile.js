@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.WallPanelEdition',
+Ext.define('Epsitec.Cresus.Core.Static.EditionTile',
   {
     extend : 'Ext.form.Panel',
-    alias : 'widget.edition',
+    alias : 'widget.editiontile',
     
     /* Config */
     border : false,

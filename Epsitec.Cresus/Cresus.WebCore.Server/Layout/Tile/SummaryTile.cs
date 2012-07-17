@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var panel = new Dictionary<string, object> ();
 
-			panel["xtype"] = "summary";
+			panel["xtype"] = "summarytile";
 
 			if (this.IconClass != null)
 			{
