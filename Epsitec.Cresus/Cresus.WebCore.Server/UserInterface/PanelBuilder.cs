@@ -40,13 +40,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		public Dictionary<string, object> Build(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
+		public Dictionary<string, object> Build(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
 			var panelData = new PanelData ()
 			{
-				ViewControllerMode = controllerMode,
-				ControllerSubTypeId = controllerSubTypeId,
-				Tiles = this.GetTileData (entity, controllerMode, controllerSubTypeId).ToList (),
+				ViewMode = viewMode,
+				ViewId = viewId,
+				Tiles = this.GetTileData (entity, viewMode, viewId).ToList (),
 			};
 
 			return panelData
@@ -54,9 +54,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				.ToDictionary ();
 		}
 
-		private IEnumerable<ITileData> GetTileData(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
+		private IEnumerable<ITileData> GetTileData(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			var brickWall = Mason.BuildBrickWall (entity, controllerMode, controllerSubTypeId);
+			var brickWall = Mason.BuildBrickWall (entity, viewMode, viewId);
 			
 			return Carpenter.BuildTileData (brickWall, this.propertyAccessorCache, this.autoCreatorCache);
 		}
