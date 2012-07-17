@@ -48,8 +48,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Tiles = layoutBuilder.GetTiles (this.Tiles, entity).ToList (),
 			};
 		}
-
-
+		
 
 	}
 
