@@ -1,8 +1,8 @@
 ﻿using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Layout;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface;
 
 using Nancy;
 
@@ -31,15 +31,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var propertyAccessors = this.CoreServer.PropertyAccessorCache;
 			var autoCreators = this.CoreServer.AutoCreatorCache;
 
-			var panelBuilder = new PanelBuilder (businessContext, propertyAccessors, autoCreators);
-			
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
 			var viewMode = Tools.ParseViewMode ((string) parameters.viewMode);
 			var viewId = Tools.ParseViewId ((string) parameters.viewId);
 
-			var panels = panelBuilder.Build (entity, viewMode, viewId);
+			var layoutBuilder = new LayoutBuilder (businessContext, propertyAccessors, autoCreators);
+			var layout = layoutBuilder.Build (entity, viewMode, viewId);
 
-			return CoreResponse.AsSuccess (panels);
+			return CoreResponse.AsSuccess (layout);
 		}
 		
 

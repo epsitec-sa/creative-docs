@@ -1,0 +1,171 @@
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Controllers;
+
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
+
+using Epsitec.Cresus.WebCore.Server.Layout.Tile;
+
+using System;
+
+using System.Collections.Generic;
+
+using System.Linq;
+
+
+namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
+{
+
+
+	internal sealed class SummaryTileData : AbstractSummaryTileData, ITileData
+	{
+
+
+		public Func<AbstractEntity, AbstractEntity> EntityGetter
+		{
+			get;
+			set;
+		}
+
+
+		public ViewControllerMode SubViewMode
+		{
+			get;
+			set;
+		}
+
+
+		public int? SubViewId
+		{
+			get;
+			set;
+		}
+
+
+		public bool HideAddButton
+		{
+			get;
+			set;
+		}
+
+
+		public bool HideRemoveButton
+		{
+			get;
+			set;
+		}
+
+
+		public bool IsRoot
+		{
+			get;
+			set;
+		}
+
+
+		public AutoCreator AutoCreator
+		{
+			get;
+			set;
+		}
+
+
+		public CollectionTileData Template
+		{
+			get;
+			set;
+		}
+
+
+		#region ITileData Members
+
+
+		public IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		{
+			if (this.Template == null)
+			{
+				yield return this.ToSummaryTile (layoutBuilder, entity);
+			}
+			else
+			{
+				var targets = this.Template.EntitiesGetter (entity).ToList ();
+
+				if (targets.Count > 0)
+				{
+					foreach (var target in targets)
+					{
+						yield return this.ToCollectionSummaryTile (layoutBuilder, target);
+					}
+				}
+				else
+				{
+					yield return this.ToEmptySummaryTile (layoutBuilder);
+				}
+			}
+		}
+
+
+		#endregion
+
+
+		public AbstractTile ToSummaryTile(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		{
+			return new SummaryTile ()
+			{
+				IsRoot = this.IsRoot,
+				EntityId = layoutBuilder.GetEntityId (this.EntityGetter(entity)),
+				IconClass = layoutBuilder.GetIconClass (this.EntityType, this.Icon),
+				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
+				SubViewId = Tools.ViewIdToString (this.SubViewId),
+				Text = this.TextGetter (entity).ToString (),
+				Title = this.TitleGetter (entity).ToString (),
+				AutoCreatorId = this.GetAutoCreatorId ()
+			};
+		}
+
+
+		public AbstractTile ToEmptySummaryTile(LayoutBuilder layoutBuilder)
+		{
+			return new EmptySummaryTile ()
+			{
+				EntityType = layoutBuilder.GetTypeName (this.Template.EntityType),
+				PropertyAccessorId = InvariantConverter.ToString (this.Template.PropertyAccessor.Id),
+			};
+		}
+
+
+		public AbstractTile ToCollectionSummaryTile(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		{
+			CollectionTileData template = this.Template;
+
+			return new CollectionSummaryTile ()
+			{
+				EntityId = layoutBuilder.GetEntityId (entity),
+				IconClass = layoutBuilder.GetIconClass (template.EntityType, template.Icon),
+				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
+				SubViewId = Tools.ViewIdToString (this.SubViewId),
+				Text = template.TextGetter (entity).ToString (),
+				Title = template.TitleGetter (entity).ToString (),
+				EntityType = layoutBuilder.GetTypeName (template.EntityType),
+				PropertyAccessorId = InvariantConverter.ToString (template.PropertyAccessor.Id),
+				HideAddButton = this.HideAddButton,
+				HideRemoveButton = this.HideRemoveButton,
+			};
+		}
+
+
+		private string GetAutoCreatorId()
+		{
+			return this.AutoCreator == null
+				? null
+				: InvariantConverter.ToString (this.AutoCreator.Id);
+		}
+
+
+	}
+
+
+}
+

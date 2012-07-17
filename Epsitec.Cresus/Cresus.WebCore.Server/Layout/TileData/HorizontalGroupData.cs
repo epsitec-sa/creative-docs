@@ -1,0 +1,58 @@
+﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.WebCore.Server.Layout.Tile;
+
+using System;
+
+using System.Collections.Generic;
+
+using System.Linq;
+
+
+namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
+{
+
+
+	internal sealed class HorizontalGroupData : AbstractEditionTilePartData
+	{
+
+
+		public FormattedText Title
+		{
+			get;
+			set;
+		}
+
+
+		public IList<AbstractFieldData> Fields
+		{
+			get
+			{
+				return this.fields;
+			}
+		}
+
+
+		public override AbstractEditionTilePart ToAbstractEditionTilePart(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		{
+			var group = new HorizontalGroup ()
+			{
+				Title = this.Title.ToString (),
+			};
+
+			var abstractFields = this.Fields.Select (f => f.ToAbstractField (layoutBuilder, entity));
+
+			group.Fields.AddRange (abstractFields);
+
+			return group;
+		}
+
+
+		private readonly IList<AbstractFieldData> fields = new List<AbstractFieldData> ();
+	}
+
+
+}
