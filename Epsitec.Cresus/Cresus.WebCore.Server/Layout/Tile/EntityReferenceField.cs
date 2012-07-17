@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			var fieldDictionary = base.ToDictionary ();
 
 			fieldDictionary["value"] = this.Value;
-			fieldDictionary["xtype"] = "epsitec.entity";
+			fieldDictionary["xtype"] = "epsitec.entityreferencefield";
 			fieldDictionary["store"] = this.PossibleValues.Select (t => new object[] { t.Item1, t.Item2 }).ToList ();
 
 			return fieldDictionary;
