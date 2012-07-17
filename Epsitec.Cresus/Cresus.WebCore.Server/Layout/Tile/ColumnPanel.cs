@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 {
 
 
-	internal sealed class Panel
+	internal sealed class ColumnPanel
 	{
 
 
