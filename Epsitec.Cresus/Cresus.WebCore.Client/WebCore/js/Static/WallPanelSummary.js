@@ -112,7 +112,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
           method : "POST",
           params :
           {
-            entityId : this.ownerCt.parentEntity,
+            entityId : this.ownerCt.entityId,
             autoCreatorId : this.autoCreatorId,
           },
           success : function (response, options)

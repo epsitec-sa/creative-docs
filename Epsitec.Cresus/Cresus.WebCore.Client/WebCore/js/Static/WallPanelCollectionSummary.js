@@ -95,7 +95,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
           method : 'POST',
           params :
           {
-            parentEntity : this.ownerCt.parentEntity,
+            parentEntityId : this.ownerCt.entityId,
             entityType : this.entityType,
             propertyAccessorId : this.propertyAccessorId
           },
@@ -137,8 +137,8 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
           method : 'POST',
           params :
           {
-            parentEntity : this.ownerCt.parentEntity,
-            deleteEntity : this.entityId,
+            parentEntityId : this.ownerCt.entityId,
+            deletedEntityId : this.entityId,
             propertyAccessorId : this.propertyAccessorId
           },
           success : function (response, options)

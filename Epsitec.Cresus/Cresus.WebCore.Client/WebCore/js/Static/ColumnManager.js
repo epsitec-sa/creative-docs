@@ -100,7 +100,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
         var columnPanel = this.columns[i];
         var viewMode = columnPanel.viewMode;
         var viewId = columnPanel.viewId;
-        var entityId = columnPanel.parentEntity;
+        var entityId = columnPanel.entityId;
         
         var index = i - firstColumnId;        
         var newCallbackQueue = callbackQueueCreator.call(this, index);

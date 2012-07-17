@@ -39,12 +39,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response DeleteEntity(BusinessContext businessContext)
 		{
-			string parentEntityId = Request.Form.parentEntity;
+			string parentEntityId = Request.Form.parentEntityId;
 
 			AbstractEntity parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
 
-			string deleteEntity = Request.Form.deleteEntity;
-			var deleteKey = EntityKey.Parse (deleteEntity);
+			string deletedEntityId = Request.Form.deletedEntityId;
+			var deletedKey = EntityKey.Parse (deletedEntityId);
 
 			var propertyAccessorId = InvariantConverter.ParseInt ((string) Request.Form.propertyAccessorId);
 			var propartyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var collection = propartyAccessor.GetCollection (parentEntity);
 
-			var toDelete = collection.Cast<AbstractEntity> ().Where (c => businessContext.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
+			var toDelete = collection.Cast<AbstractEntity> ().Where (c => businessContext.DataContext.GetNormalizedEntityKey (c).Equals (deletedKey));
 
 			if (toDelete.IsEmpty ())
 			{
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response CreateEntity(BusinessContext businessContext)
 		{
-			string parentEntityId = Request.Form.parentEntity;
+			string parentEntityId = Request.Form.parentEntityId;
 			AbstractEntity parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
 
 			string typeName = Request.Form.entityType;

@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		{
 			var panel = new Dictionary<string, object> ();
 
-			panel["parentEntity"] = this.EntityId;
+			panel["entityId"] = this.EntityId;
 			panel["viewMode"] = this.ViewMode;
 			panel["viewId"] = this.ViewId;
 			panel["items"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();

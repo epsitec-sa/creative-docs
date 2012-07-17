@@ -8,7 +8,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnPanel',
     
     /* Properties */
     columnId : null,
-    parentEntity : null,
+    entityId : null,
     viewMode : 'summary',
     viewId : 'null'
   }
