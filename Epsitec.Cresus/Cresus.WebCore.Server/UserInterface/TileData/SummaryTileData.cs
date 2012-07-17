@@ -30,14 +30,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public ViewControllerMode SubViewControllerMode
+		public ViewControllerMode SubViewMode
 		{
 			get;
 			set;
 		}
 
 
-		public int? SubViewControllerSubTypeId
+		public int? SubViewId
 		{
 			get;
 			set;
@@ -117,8 +117,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				IsRoot = this.IsRoot,
 				EntityId = panelBuilder.GetEntityId (this.EntityGetter(entity)),
 				IconClass = panelBuilder.GetIconClass (this.EntityType, this.Icon),
-				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
-				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
+				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
+				SubViewId = Tools.ViewIdToString (this.SubViewId),
 				Text = this.TextGetter (entity).ToString (),
 				Title = this.TitleGetter (entity).ToString (),
 				AutoCreatorId = this.GetAutoCreatorId ()
@@ -144,8 +144,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			{
 				EntityId = panelBuilder.GetEntityId (entity),
 				IconClass = panelBuilder.GetIconClass (template.EntityType, template.Icon),
-				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
-				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
+				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
+				SubViewId = Tools.ViewIdToString (this.SubViewId),
 				Text = template.TextGetter (entity).ToString (),
 				Title = template.TitleGetter (entity).ToString (),
 				EntityType = panelBuilder.GetTypeName (template.EntityType),

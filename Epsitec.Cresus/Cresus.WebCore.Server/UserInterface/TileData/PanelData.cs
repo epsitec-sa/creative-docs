@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		public ViewControllerMode ViewControllerMode
+		public ViewControllerMode ViewMode
 		{
 			get;
 			set;
 		}
 
 
-		public int? ControllerSubTypeId
+		public int? ViewId
 		{
 			get;
 			set;
@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			return new Panel ()
 			{
 				EntityId = panelBuilder.GetEntityId (entity),
-				ViewControllerMode = Tools.ViewControllerModeToString (this.ViewControllerMode),
-				ControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.ControllerSubTypeId),
+				ViewMode = Tools.ViewModeToString (this.ViewMode),
+				ViewId = Tools.ViewIdToString (this.ViewId),
 				Tiles = panelBuilder.GetTiles (this.Tiles, entity).ToList (),
 			};
 		}
