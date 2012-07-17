@@ -11,8 +11,8 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     /* Properties */
     entityId : null,
     isRoot : false,
-    subViewControllerMode : 'edition',
-    subViewControllerSubTypeId : 'null',
+    subViewMode : 'edition',
+    subViewId : 'null',
     autoCreatorId : null,
     selectedPanelCls : 'selected-entity',
     
@@ -69,17 +69,17 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       }
       else
       {
-        this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, this.entityId);
+        this.showEntityColumn(this.subViewMode, this.subViewId, this.entityId);
       }
     },
 
-    showEntityColumn : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callbackQueue)
+    showEntityColumn : function (subViewMode, subViewId, entityId, callbackQueue)
     {
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.addEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, this, callbackQueue);
+      columnMgr.addEntityColumn(subViewMode, subViewId, entityId, this, callbackQueue);
     },
     
-    showEntityColumnAndRefresh : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callbackQueue)
+    showEntityColumnAndRefresh : function (subViewMode, subViewId, entityId, callbackQueue)
     {
       var newCallbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create
       (
@@ -90,7 +90,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
         this
       );
       
-      this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, newCallbackQueue);
+      this.showEntityColumn(subViewMode, subViewId, entityId, newCallbackQueue);
     },
     
     refreshEntity : function (refreshAll, callbackQueue)
@@ -140,11 +140,11 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
             
             if (this.entityId !== newEntityId)
             {
-              this.showEntityColumnAndRefresh(this.subViewControllerMode, this.subViewControllerSubTypeId, newEntityId);
+              this.showEntityColumnAndRefresh(this.subViewMode, this.subViewId, newEntityId);
             }
             else
             {
-              this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, newEntityId);
+              this.showEntityColumn(this.subViewMode, this.subViewId, newEntityId);
             }
           },
           failure : function ()

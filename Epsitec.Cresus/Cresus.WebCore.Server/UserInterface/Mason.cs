@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 	{
 
 
-		public static BrickWall BuildBrickWall(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId)
+		public static BrickWall BuildBrickWall(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			using (var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, controllerSubTypeId, null, ResolutionMode.InspectOnly))
+			using (var controller = EntityViewControllerFactory.Create ("js", entity, viewMode, null, null, viewId, null, ResolutionMode.InspectOnly))
 			{
 				var brickWall = controller.CreateBrickWallForInspection ();
 

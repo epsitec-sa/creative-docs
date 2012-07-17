@@ -18,14 +18,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public string ViewControllerMode
+		public string ViewMode
 		{
 			get;
 			set;
 		}
 
 
-		public string ControllerSubTypeId
+		public string ViewId
 		{
 			get;
 			set;
@@ -44,8 +44,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			var panel = new Dictionary<string, object> ();
 
 			panel["parentEntity"] = this.EntityId;
-			panel["controllerMode"] = this.ViewControllerMode;
-			panel["controllerSubTypeId"] = this.ControllerSubTypeId;
+			panel["viewMode"] = this.ViewMode;
+			panel["viewId"] = this.ViewId;
 			panel["items"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();
 
 			return panel;

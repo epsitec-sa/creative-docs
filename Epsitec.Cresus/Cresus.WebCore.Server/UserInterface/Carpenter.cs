@@ -50,9 +50,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static ITileData BuildTileData(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache, bool isFirst)
 		{
-			var mode = Carpenter.GetTileMode (brick);
+			var viewMode = Carpenter.GetTileViewMode (brick);
 
-			switch (mode)
+			switch (viewMode)
 			{
 				case ViewControllerMode.Creation:
 					throw new NotImplementedException ();
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static ViewControllerMode GetTileMode(Brick brick)
+		private static ViewControllerMode GetTileViewMode(Brick brick)
 		{
 			var edition = Brick.ContainsProperty (brick, BrickPropertyKey.Include)
 					   || Brick.ContainsProperty (brick, BrickPropertyKey.Input);
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			return new SummaryTileData ()
 			{
-				SubViewControllerMode = ViewControllerMode.Edition
+				SubViewMode = ViewControllerMode.Edition
 			};
 		}
 
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			switch (brickMode)
 			{
 				case BrickMode.DefaultToSummarySubView:
-					summaryTileData.SubViewControllerMode = ViewControllerMode.Summary;
+					summaryTileData.SubViewMode = ViewControllerMode.Summary;
 					break;
 
 				case BrickMode.HideAddButton:
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				default:
 					if (brickMode.IsSpecialController ())
 					{
-						summaryTileData.SubViewControllerSubTypeId = brickMode.GetControllerSubTypeId ();
+						summaryTileData.SubViewId = brickMode.GetControllerSubTypeId ();
 					}
 					break;
 			}

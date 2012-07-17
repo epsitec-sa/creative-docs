@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public LayoutModule(CoreServer coreServer)
 			: base (coreServer, "/layout")
 		{
-			Get["/{mode}/{controllerSubTypeId}/{id}"] = p => this.Execute (b => this.GetLayout (b, p));
+			Get["/{viewMode}/{viewId}/{entityId}"] = p => this.Execute (b => this.GetLayout (b, p));
 		}
 
 
@@ -33,15 +33,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var panelBuilder = new PanelBuilder (businessContext, propertyAccessors, autoCreators);
 			
-			string rawEntityId = parameters.id;
-			string rawControllerMode = parameters.mode;
-			string rawControllerSubTypeId = parameters.controllerSubTypeId;
+			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
+			var viewMode = Tools.ParseViewMode ((string) parameters.viewMode);
+			var viewId = Tools.ParseViewId ((string) parameters.viewId);
 
-			var entity = Tools.ResolveEntity (businessContext, rawEntityId);
-			var controllerMode = Tools.ParseViewControllerMode (rawControllerMode);
-			var controllerSubTypeId = Tools.ParseControllerSubTypeId (rawControllerSubTypeId);
-
-			var panels = panelBuilder.Build (entity, controllerMode, controllerSubTypeId);
+			var panels = panelBuilder.Build (entity, viewMode, viewId);
 
 			return CoreResponse.AsSuccess (panels);
 		}

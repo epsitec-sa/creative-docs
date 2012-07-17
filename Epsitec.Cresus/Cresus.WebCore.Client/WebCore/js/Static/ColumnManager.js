@@ -30,7 +30,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     },
     
     // The arguments parentPanel and callbackQueue.
-    addEntityColumn : function(controllerMode, controllerSubTypeId, entityId, parentPanel, callbackQueue)
+    addEntityColumn : function(viewMode, viewId, entityId, parentPanel, callbackQueue)
     {
       parentPanel = Epsitec.Cresus.Core.Static.Tools.getValueOrNull(parentPanel);
       callbackQueue = Epsitec.Cresus.Core.Static.Tools.getValueOrDefault(callbackQueue, Epsitec.Cresus.Core.Static.CallbackQueue.empty());
@@ -64,7 +64,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       newCallbackQueue = newCallbackQueue.merge(callbackQueue);
        
-      this.execute(controllerMode, controllerSubTypeId, entityId, parentPanel, newCallbackQueue);
+      this.execute(viewMode, viewId, entityId, parentPanel, newCallbackQueue);
     },
     
     // The arguments callbackQueue is optional.
@@ -98,18 +98,18 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       for (var i = firstColumnId; i <= lastColumnId; i++)
       {
         var columnPanel = this.columns[i];
-        var controllerMode = columnPanel.controllerMode;
-        var controllerSubTypeId = columnPanel.controllerSubTypeId;
+        var viewMode = columnPanel.viewMode;
+        var viewId = columnPanel.viewId;
         var entityId = columnPanel.parentEntity;
         
         var index = i - firstColumnId;        
         var newCallbackQueue = callbackQueueCreator.call(this, index);
         
-        this.execute(controllerMode, controllerSubTypeId, entityId, columnPanel, newCallbackQueue); 
+        this.execute(viewMode, viewId, entityId, columnPanel, newCallbackQueue); 
       }
     },
     
-    execute : function(controllerMode, controllerSubTypeId, entityId, loadingPanel, callbackQueue)
+    execute : function(viewMode, viewId, entityId, loadingPanel, callbackQueue)
     {
       if (loadingPanel !== null)
       {
@@ -118,7 +118,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       Ext.Ajax.request(
         {
-          url : 'proxy/layout/' + controllerMode + '/' + controllerSubTypeId + '/' + entityId,
+          url : 'proxy/layout/' + viewMode + '/' + viewId + '/' + entityId,
           success : function (response, options)
           {
             if (loadingPanel !== null)

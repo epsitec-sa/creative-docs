@@ -21,27 +21,27 @@ namespace Epsitec.Cresus.WebCore.Server
 	{
 
 
-		public static ViewControllerMode ParseViewControllerMode(string value)
+		public static ViewControllerMode ParseViewMode(string value)
 		{
-			object mode = Enum.Parse (typeof (ViewControllerMode), value, true);
+			object viewMode = Enum.Parse (typeof (ViewControllerMode), value, true);
 
-			return (ViewControllerMode) mode;
+			return (ViewControllerMode) viewMode;
 		}
 
 
-		public static string ViewControllerModeToString(ViewControllerMode mode)
+		public static string ViewModeToString(ViewControllerMode mode)
 		{
 			return InvariantConverter.ToString (mode);
 		}
 
 
-		public static int? ParseControllerSubTypeId(string value)
+		public static int? ParseViewId(string value)
 		{
-			int controllerSubTypeId;
+			int viewId;
 
-			if (value != "null" && int.TryParse (value, out controllerSubTypeId))
+			if (value != "null" && int.TryParse (value, out viewId))
 			{
-				return controllerSubTypeId;
+				return viewId;
 			}
 			else
 			{
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		public static string ControllerSubTypeIdToString(int? id)
+		public static string ViewIdToString(int? id)
 		{
 			if (id.HasValue)
 			{

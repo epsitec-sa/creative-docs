@@ -37,14 +37,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public string SubViewControllerMode
+		public string SubViewMode
 		{
 			get;
 			set;
 		}
 
 
-		public string SubViewControllerSubTypeId
+		public string SubViewId
 		{
 			get;
 			set;
@@ -81,8 +81,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 
 			panel["isRoot"] = this.IsRoot;
 			panel["entityId"] = this.EntityId;
-			panel["subViewControllerMode"] = this.SubViewControllerMode;
-			panel["subViewControllerSubTypeId"] = this.SubViewControllerSubTypeId;
+			panel["subViewMode"] = this.SubViewMode;
+			panel["subViewId"] = this.SubViewId;
 
 			panel["autoCreatorId"] = this.AutoCreatorId;
 
