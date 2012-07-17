@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.Enum',
+Ext.define('Epsitec.Cresus.Core.Static.EnumerationField',
   {
     extend : 'Ext.container.Container',
-    alias : 'widget.epsitec.enum',
+    alias : 'widget.epsitec.enumerationfield',
     
     /* Config */
     layout : 'column',
@@ -11,7 +11,7 @@ Ext.define('Epsitec.Cresus.Core.Static.Enum',
     {
       options.columnWidth = 1;
       
-      var combo = Ext.create('Epsitec.Cresus.Core.Static.EnumComboBox', options);
+      var combo = Ext.create('Epsitec.Cresus.Core.Static.EnumerationComboBox', options);
       
       this.items = this.items || new Array();
       this.items.push(combo);

@@ -1,13 +1,13 @@
 // This class uses Stores to keep the possible values for the enums and share them between
-// instances. That is, all the EnumComboBoxes that target the same enum will share the same store.
-// This means that the data for the enum is loaded only once. The place where the Stores are created
-// or retrieved is the getStore(...) method, which creates it if it does not exists or retrieves it
-// if it does exists.
+// instances. That is, all the EnumerationComboBoxes that target the same enum will share the same
+// store. This means that the data for the enum is loaded only once. The place where the Stores
+// are created or retrieved is the getStore(...) method, which creates it if it does not exists or
+// retrieves it if it does exists.
 
-Ext.define('Epsitec.Cresus.Core.Static.EnumComboBox',
+Ext.define('Epsitec.Cresus.Core.Static.EnumerationComboBox',
   {
     extend : 'Ext.form.field.ComboBox',
-    alias : 'widget.epsitec.enumcombo',
+    alias : 'widget.epsitec.enumerationcombobox',
     
     /* Config */
     forceSelection : true,
@@ -22,7 +22,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumComboBox',
     {
       // We need to pass the options.value parameter because the parent constructor has not yet been
       // called and thus this.value is undefined at this time and we might require it in this call.
-      this.store = Epsitec.Cresus.Core.Static.EnumComboBox.getStore(options.storeClass, this, options.value);
+      this.store = Epsitec.Cresus.Core.Static.EnumerationComboBox.getStore(options.storeClass, this, options.value);
       
       this.valueField = 'id';
       this.displayField = 'name';
@@ -66,10 +66,10 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumComboBox',
               proxy : proxy,
               listeners :
               {
-                // This callback will be called only once, for the first EnumComboBox that creates
-                // the store, in order to assign it its value. The callback is not neccary for the
-                // following EnumComboBoxes, as the store will already be populated and the value
-                // of the ComboBox will be automatically set.
+                // This callback will be called only once, for the first EnumerationComboBox that
+                // creates the store, in order to assign it its value. The callback is not neccary
+                // for the following EnumerationComboBoxes, as the store will already be populated
+                // and the value of the ComboBox will be automatically set.
                 load :
                 {
                   fn : function (store)

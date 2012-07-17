@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var fieldDictionary = base.ToDictionary ();
 
-			fieldDictionary["xtype"] = "epsitec.enum";
+			fieldDictionary["xtype"] = "epsitec.enumerationfield";
 			fieldDictionary["value"] = this.Value;
 			fieldDictionary["storeClass"] = this.TypeName;
 
