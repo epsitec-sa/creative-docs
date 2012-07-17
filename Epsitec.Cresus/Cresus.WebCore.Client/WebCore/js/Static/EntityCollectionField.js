@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.Checkboxes',
+Ext.define('Epsitec.Cresus.Core.Static.EntityCollectionField',
   {
     extend : 'Ext.container.Container',
-    alias : 'widget.epsitec.checkboxes',
+    alias : 'widget.epsitec.entitycollectionfield',
     
     /* Config */
     layout : 'column',

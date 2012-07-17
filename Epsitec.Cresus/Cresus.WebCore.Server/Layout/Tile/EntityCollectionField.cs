@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			// Here we don't set the PropertyAccessorId on the container directly but in the
 			// individual check boxes.
 
-			fieldDictionary["xtype"] = "epsitec.checkboxes";
+			fieldDictionary["xtype"] = "epsitec.entitycollectionfield";
 			fieldDictionary["defaultType"] = "checkboxfield";
 			fieldDictionary["labelAlign"] = "left";
 			fieldDictionary["items"] = this.CheckBoxFields.Select (c => c.ToDictionary (this.PropertyAccessorId, this.IsReadOnly)).ToList ();
