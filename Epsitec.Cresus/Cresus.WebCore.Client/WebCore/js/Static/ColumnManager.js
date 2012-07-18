@@ -1,7 +1,7 @@
 Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
   {
     extend : 'Ext.panel.Panel',
-    id : 'columnmgr',
+    id : 'columnmanager',
     
     /* Config */
     title : "Entity edition",

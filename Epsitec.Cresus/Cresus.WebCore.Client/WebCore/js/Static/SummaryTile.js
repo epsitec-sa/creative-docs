@@ -75,8 +75,8 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
 
     showEntityColumn : function (subViewMode, subViewId, entityId, callbackQueue)
     {
-      var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.addEntityColumn(subViewMode, subViewId, entityId, this, callbackQueue);
+      var columnManager = Ext.getCmp('columnmanager');
+      columnManager.addEntityColumn(subViewMode, subViewId, entityId, this, callbackQueue);
     },
     
     showEntityColumnAndRefresh : function (subViewMode, subViewId, entityId, callbackQueue)
@@ -98,8 +98,8 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
       var firstColumnId = refreshAll ? 0 : this.ownerCt.columnId;
       var lastColumnId = this.ownerCt.columnId;
       
-      var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.refreshColumns(firstColumnId, lastColumnId, callbackQueue);
+      var columnManager = Ext.getCmp('columnmanager');
+      columnManager.refreshColumns(firstColumnId, lastColumnId, callbackQueue);
     },
     
     autoCreateNullEntity : function()

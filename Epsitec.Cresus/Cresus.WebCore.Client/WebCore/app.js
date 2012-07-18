@@ -40,7 +40,7 @@ Ext.application(
       'Epsitec.Cresus.Core.Static.Tools',
     ],
     
-    columnmgr : null,
+    columnManager : null,
     tabmgr : null,
     menu : null,
     entityListPanel : null,
@@ -61,10 +61,10 @@ Ext.application(
     
     runApp : function ()
     {
-      this.columnmgr = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
+      this.columnManager = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
       this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
       this.entityListPanel = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel');
-      this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnmgr);
+      this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnManager);
       
       this.viewport = Ext.create('Ext.container.Viewport',
         {

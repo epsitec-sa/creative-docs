@@ -38,8 +38,8 @@ Ext.define('Epsitec.Cresus.Core.Static.EditionTile',
                 success : function (form, action)
                 {
                   this.setLoading(false);
-                  var columnMgr = Ext.getCmp('columnmgr');
-                  columnMgr.refreshColumns(0, this.ownerCt.columnId - 1);
+                  var columnManager = Ext.getCmp('columnmanager');
+                  columnManager.refreshColumns(0, this.ownerCt.columnId - 1);
                 },
                 failure : function (form, action)
                 {
