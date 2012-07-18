@@ -1,7 +1,6 @@
 Ext.Loader.setConfig(
   {
     enabled : true,
-    //disableCaching : false,
     paths :
     {
       'Epsitec.Cresus.Core' : 'js'
@@ -62,30 +61,21 @@ Ext.application(
     
     runApp : function ()
     {
-      // This feature could be cool, but does not work with Firefox 4+
-      // The message is not shown
-      /*
-      window.onbeforeunload = function ()
-      {
-      return 'Please exit the application by clicking the "logout" button';
-      }
-       */
-      
       this.columnmgr = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
       this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
       this.entityListPanel = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel');
       this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnmgr);
       
       this.viewport = Ext.create('Ext.container.Viewport',
-          {
-            layout : 'border',
-            items : [
-              this.menu,
-              this.entityListPanel,
-              this.tabmgr
-            ]
-          }
-        );
+        {
+          layout : 'border',
+          items : [
+            this.menu,
+            this.entityListPanel,
+            this.tabmgr
+          ]
+        }
+      );
     }
   }
 );
