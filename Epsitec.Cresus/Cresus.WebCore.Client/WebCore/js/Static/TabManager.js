@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.TabMgr',
+Ext.define('Epsitec.Cresus.Core.Static.TabManager',
   {
     extend : 'Ext.tab.Panel',
-    id : 'tabmgr',
+    id : 'tabmanager',
     
     /* Config */
     activeTab : 0,

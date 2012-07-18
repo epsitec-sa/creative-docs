@@ -109,8 +109,8 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList',
         columnManager.clearColumns();
         columnManager.addEntityColumn('summary', 'null', entityId);
         
-        var tabMgr = Ext.getCmp('tabmgr');
-        tabMgr.showEntityTab();
+        var tabManager = Ext.getCmp('tabmanager');
+        tabManager.showEntityTab();
       }
     },
     

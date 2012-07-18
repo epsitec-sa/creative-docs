@@ -19,8 +19,8 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
             text : 'About',
             handler : function ()
             {
-              var tabMgr = Ext.getCmp('tabmgr');
-              tabMgr.createPage("About box", "proxy/page/about");
+              var tabManager = Ext.getCmp('tabmanager');
+              tabManager.createPage("About box", "proxy/page/about");
             },
             scale : 'large',
             iconAlign : 'top',

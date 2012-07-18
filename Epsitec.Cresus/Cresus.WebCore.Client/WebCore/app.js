@@ -36,12 +36,12 @@ Ext.application(
       'Epsitec.Cresus.Core.Static.Menu',
       'Epsitec.Cresus.Core.Static.SummaryTile',
       'Epsitec.Cresus.Core.Static.TabbedPage',
-      'Epsitec.Cresus.Core.Static.TabMgr',
+      'Epsitec.Cresus.Core.Static.TabManager',
       'Epsitec.Cresus.Core.Static.Tools',
     ],
     
     columnManager : null,
-    tabmgr : null,
+    tabManager : null,
     menu : null,
     entityListPanel : null,
     viewport : null,
@@ -64,7 +64,7 @@ Ext.application(
       this.columnManager = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
       this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
       this.entityListPanel = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel');
-      this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnManager);
+      this.tabManager = Ext.create('Epsitec.Cresus.Core.Static.TabManager', this.columnManager);
       
       this.viewport = Ext.create('Ext.container.Viewport',
         {
@@ -72,7 +72,7 @@ Ext.application(
           items : [
             this.menu,
             this.entityListPanel,
-            this.tabmgr
+            this.tabManager
           ]
         }
       );

@@ -23,10 +23,10 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityListPanel',
       var columnManager = Ext.getCmp('columnmanager');
       columnManager.clearColumns();
       
-      var tabMgr = Ext.getCmp('tabmgr');
-      if (tabMgr != null)
+      var tabManager = Ext.getCmp('tabmanager');
+      if (tabManager != null)
       {
-        tabMgr.showEntityTab();
+        tabManager.showEntityTab();
       }
     }
   }
