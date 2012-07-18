@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.ListItem',
+Ext.define('Epsitec.Cresus.Core.Static.EntityListItem',
   {
     extend : 'Ext.data.Model',
     fields : [

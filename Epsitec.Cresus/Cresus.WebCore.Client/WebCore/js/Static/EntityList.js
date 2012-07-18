@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.List',
+Ext.define('Epsitec.Cresus.Core.Static.EntityList',
   {
     extend : 'Ext.grid.Panel',
     id : 'list',
@@ -83,7 +83,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
     /* Constructor */
     constructor : function (databaseName)
     {
-      this.store = Epsitec.Cresus.Core.Static.List.getStore(databaseName);
+      this.store = Epsitec.Cresus.Core.Static.EntityList.getStore(databaseName);
       this.store.guaranteeRange(0, 100);
       
       this.databaseName = databaseName;
@@ -170,7 +170,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
       getStore: function(databaseName) {
         var store = Ext.create('Ext.data.Store',
           {
-            model : 'Epsitec.Cresus.Core.Static.ListItem',
+            model : 'Epsitec.Cresus.Core.Static.EntityListItem',
             storeId : 'persons',
             pageSize : 100,
             remoteSort : true,

@@ -158,7 +158,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     {
       config.columnId = this.columns.length;
       
-      var column = Ext.create('Epsitec.Cresus.Core.Static.ColumnPanel', config);
+      var column = Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config);
       
       this.addExistingColumn(column)
       
@@ -229,7 +229,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
         var config = configArray[index];
         
         config.columnId = i;
-        var column = Ext.create('Epsitec.Cresus.Core.Static.ColumnPanel', config);
+        var column = Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config);
         
         this.addExistingColumn(column);
       }

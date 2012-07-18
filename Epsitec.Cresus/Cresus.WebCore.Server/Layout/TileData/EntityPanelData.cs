@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
 
 
-	internal sealed class ColumnPanelData
+	internal sealed class EntityPanelData
 	{
 
 
@@ -38,9 +38,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		}
 
 
-		public ColumnPanel ToColumnPanel(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		public EntityPanel ToEntityPanel(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			return new ColumnPanel ()
+			return new EntityPanel ()
 			{
 				EntityId = layoutBuilder.GetEntityId (entity),
 				ViewMode = Tools.ViewModeToString (this.ViewMode),

@@ -1,7 +1,7 @@
-Ext.define('Epsitec.Cresus.Core.Static.ListContainer',
+Ext.define('Epsitec.Cresus.Core.Static.EntityListPanel',
   {
     extend : 'Ext.panel.Panel',
-    id : 'listContainer',
+    id : 'entitylistPanel',
     
     /* Config */
     title : 'Selection',
@@ -17,7 +17,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ListContainer',
     /* Additional methods */ 
     showList: function(databaseName) {
       this.removeAll();
-      var list = Ext.create('Epsitec.Cresus.Core.Static.List', databaseName);
+      var list = Ext.create('Epsitec.Cresus.Core.Static.EntityList', databaseName);
       this.add(list);
       
       var columnMgr = Ext.getCmp('columnmgr');

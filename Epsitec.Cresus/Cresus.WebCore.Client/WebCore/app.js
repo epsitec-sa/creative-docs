@@ -24,14 +24,15 @@ Ext.application(
       'Epsitec.Cresus.Core.Static.EditionTile',
       'Epsitec.Cresus.Core.Static.EmptySummaryTile',
       'Epsitec.Cresus.Core.Static.EntityCollectionField',
+      'Epsitec.Cresus.Core.Static.EntityList',
+      'Epsitec.Cresus.Core.Static.EntityListItem',
+      'Epsitec.Cresus.Core.Static.EntityListPanel',
+      'Epsitec.Cresus.Core.Static.EntityPanel',
       'Epsitec.Cresus.Core.Static.EntityReferenceComboBox',
       'Epsitec.Cresus.Core.Static.EntityReferenceField',
       'Epsitec.Cresus.Core.Static.EnumerationComboBox',
       'Epsitec.Cresus.Core.Static.EnumerationField',
       'Epsitec.Cresus.Core.Static.ErrorHandler',
-      'Epsitec.Cresus.Core.Static.List',
-      'Epsitec.Cresus.Core.Static.ListContainer',
-      'Epsitec.Cresus.Core.Static.ListItem',
       'Epsitec.Cresus.Core.Static.LoginPanel',
       'Epsitec.Cresus.Core.Static.Menu',
       'Epsitec.Cresus.Core.Static.SummaryTile',
@@ -43,7 +44,7 @@ Ext.application(
     columnmgr : null,
     tabmgr : null,
     menu : null,
-    listContainer : null,
+    entityListPanel : null,
     viewport : null,
     launch : function ()
     {
@@ -72,7 +73,7 @@ Ext.application(
       
       this.columnmgr = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
       this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
-      this.listContainer = Ext.create('Epsitec.Cresus.Core.Static.ListContainer');
+      this.entityListPanel = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel');
       this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnmgr);
       
       this.viewport = Ext.create('Ext.container.Viewport',
@@ -80,7 +81,7 @@ Ext.application(
             layout : 'border',
             items : [
               this.menu,
-              this.listContainer,
+              this.entityListPanel,
               this.tabmgr
             ]
           }

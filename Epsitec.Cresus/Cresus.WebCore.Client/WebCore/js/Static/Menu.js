@@ -116,7 +116,7 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
                 text : menu.Title,
                 handler : function ()
                 {
-                  var l = Ext.getCmp('listContainer');
+                  var l = Ext.getCmp('entitylistPanel');
                   l.showList(menu.DatabaseName);
                 },
                 scale : 'large',
