@@ -1,6 +1,6 @@
 Ext.define('Epsitec.Cresus.Core.Static.EntityListPanel',
   {
-    extend : 'Ext.panel.Panel',
+    extend : 'Epsitec.Cresus.Core.Static.ColumnPanel',
     id : 'entitylistPanel',
     
     /* Config */
