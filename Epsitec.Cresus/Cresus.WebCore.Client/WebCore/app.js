@@ -65,15 +65,14 @@ Ext.application(
       // The message is not shown
       /*
       window.onbeforeunload = function ()
-    {
+      {
       return 'Please exit the application by clicking the "logout" button';
       }
        */
       
       this.columnmgr = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
       this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
-      var list = Ext.create('Epsitec.Cresus.Core.Static.List', 'customers');
-      this.listContainer = Ext.create('Epsitec.Cresus.Core.Static.ListContainer', list);
+      this.listContainer = Ext.create('Epsitec.Cresus.Core.Static.ListContainer');
       this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnmgr);
       
       this.viewport = Ext.create('Ext.container.Viewport',
