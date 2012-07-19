@@ -68,7 +68,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       if (parentPanel !== null)
       {
-        var parentColumnId = parentPanel.ownerCt.columnId;
+        var parentColumnId = parentPanel.entityPanel.columnId;
         
         this.removeColumnsFromIndex(parentColumnId + 1);
         

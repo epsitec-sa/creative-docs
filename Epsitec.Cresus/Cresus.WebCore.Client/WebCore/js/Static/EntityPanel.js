@@ -9,6 +9,19 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityPanel',
     /* Properties */
     entityId : null,
     viewMode : 'summary',
-    viewId : 'null'
+    viewId : 'null',
+    
+    /* Constructor */
+    constructor : function(options)
+    {
+      Ext.Array.forEach(options.items,
+        function (item) {
+          item.entityPanel = this;
+        },
+        this
+      );
+      
+      this.callParent(arguments);
+    }
   }
 );

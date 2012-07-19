@@ -1,6 +1,6 @@
 Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
   {
-    extend : 'Ext.Panel',
+    extend : 'Epsitec.Cresus.Core.Static.Tile',
     alias : 'widget.summarytile',
     
     /* Config */
@@ -75,8 +75,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
 
     showEntityColumn : function (subViewMode, subViewId, entityId, callbackQueue)
     {
-      var columnManager = this.ownerCt.columnManager;
-      columnManager.addEntityColumn(subViewMode, subViewId, entityId, this, callbackQueue);
+      this.entityPanel.columnManager.addEntityColumn(subViewMode, subViewId, entityId, this, callbackQueue);
     },
     
     showEntityColumnAndRefresh : function (subViewMode, subViewId, entityId, callbackQueue)
@@ -95,11 +94,10 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
     
     refreshEntity : function (refreshAll, callbackQueue)
     {
-      var firstColumnId = refreshAll ? 0 : this.ownerCt.columnId;
-      var lastColumnId = this.ownerCt.columnId;
+      var firstColumnId = refreshAll ? 0 : this.entityPanel.columnId;
+      var lastColumnId = this.entityPanel.columnId;
       
-      var columnManager = this.ownerCt.columnManager;
-      columnManager.refreshColumns(firstColumnId, lastColumnId, callbackQueue);
+      this.entityPanel.columnManager.refreshColumns(firstColumnId, lastColumnId, callbackQueue);
     },
     
     autoCreateNullEntity : function()
@@ -112,7 +110,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile',
           method : "POST",
           params :
           {
-            entityId : this.ownerCt.entityId,
+            entityId : this.entityPanel.entityId,
             autoCreatorId : this.autoCreatorId,
           },
           success : function (response, options)

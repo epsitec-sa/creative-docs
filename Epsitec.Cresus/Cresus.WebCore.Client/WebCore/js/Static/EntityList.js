@@ -78,11 +78,13 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList',
     
     /* Properties */
     databaseName : null,
+    columnManager : null,
     
     /* Constructor */
-    constructor : function (databaseName)
+    constructor : function (databaseName, columnManager)
     {
       this.databaseName = databaseName;
+      this.columnManager = columnManager;
       
       this.store = this.getStore(this.databaseName);
       this.store.guaranteeRange(0, 100);
@@ -106,9 +108,8 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList',
       var record = selections[0];
       var entityId = record.get('uniqueId');
       
-      var columnManager = this.ownerCt.columnManager;
-      columnManager.clearColumns();
-      columnManager.addEntityColumn('summary', 'null', entityId);
+      this.columnManager.clearColumns();
+      this.columnManager.addEntityColumn('summary', 'null', entityId);
     },
     
     deleteEntity : function (id)

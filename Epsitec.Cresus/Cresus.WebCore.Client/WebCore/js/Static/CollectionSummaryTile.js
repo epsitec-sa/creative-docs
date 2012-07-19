@@ -51,14 +51,11 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
     
     showEntityColumnRefreshAndSelect : function (subViewMode, subViewId, entityId)
     {
-      var columnId = this.ownerCt.columnId;
-      var columnManager = this.ownerCt.columnManager;
-      
       var callbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create
       (
         function ()
         {
-          columnManager.selectEntity(columnId, entityId);
+          this.entityPanel.columnManager.selectEntity(this.entityPanel.columnId, entityId);
         },
         this
       );
@@ -68,11 +65,11 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
     
     removePanel : function ()
     {
-      var columnManager = this.ownerCt.columnManager;
+      var columnManager = this.entityPanel.columnManager;
       
       // If this panel is currently selected, we must remove all the columns to the
       // right of this one.
-      var columnId = this.ownerCt.columnId;
+      var columnId = this.entityPanel.columnId;
       var selectedEntityId = columnManager.getSelectedEntity(columnId);
       
       if (selectedEntityId == this.entityId)
@@ -95,7 +92,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
           method : 'POST',
           params :
           {
-            parentEntityId : this.ownerCt.entityId,
+            parentEntityId : this.entityPanel.entityId,
             entityType : this.entityType,
             propertyAccessorId : this.propertyAccessorId
           },
@@ -137,7 +134,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
           method : 'POST',
           params :
           {
-            parentEntityId : this.ownerCt.entityId,
+            parentEntityId : this.entityPanel.entityId,
             deletedEntityId : this.entityId,
             propertyAccessorId : this.propertyAccessorId
           },

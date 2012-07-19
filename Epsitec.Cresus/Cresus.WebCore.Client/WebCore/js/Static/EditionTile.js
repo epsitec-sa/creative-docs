@@ -1,6 +1,6 @@
 Ext.define('Epsitec.Cresus.Core.Static.EditionTile',
   {
-    extend : 'Ext.form.Panel',
+    extend : 'Epsitec.Cresus.Core.Static.Tile',
     alias : 'widget.editiontile',
     
     /* Config */
@@ -38,8 +38,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EditionTile',
                 success : function (form, action)
                 {
                   this.setLoading(false);
-                  var columnManager = this.ownerCt.columnManager;
-                  columnManager.refreshColumns(0, this.ownerCt.columnId - 1);
+                  this.entityPanel.columnManager.refreshColumns(0, this.entityPanel.columnId - 1);
                 },
                 failure : function (form, action)
                 {
