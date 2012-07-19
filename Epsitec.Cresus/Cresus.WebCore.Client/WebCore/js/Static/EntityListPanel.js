@@ -1,33 +1,22 @@
 Ext.define('Epsitec.Cresus.Core.Static.EntityListPanel',
   {
     extend : 'Epsitec.Cresus.Core.Static.ColumnPanel',
-    id : 'entitylistPanel',
     
     /* Config */
-    title : 'Selection',
-    region : 'west',
-    width : 200,
-    minWidth : 175,
-    maxWidth : 400,
-    margins : '0 0 5 5',
-    collapsible : true,
-    split : true,
     layout : 'fit',
     
-    /* Additional methods */ 
-    showList: function(databaseName) {
-      this.removeAll();
-      var list = Ext.create('Epsitec.Cresus.Core.Static.EntityList', databaseName);
-      this.add(list);
+    /* Constructor */ 
+    constructor : function(options)
+    {
+      this.callParent(arguments);
       
-      var columnManager = Ext.getCmp('columnmanager');
-      columnManager.clearColumns();
+      var databaseName = options.databaseName;
       
-      var tabManager = Ext.getCmp('tabmanager');
-      if (tabManager != null)
-      {
-        tabManager.showEntityTab();
-      }
+      var entityList = Ext.create('Epsitec.Cresus.Core.Static.EntityList', databaseName);    
+      
+      this.add(entityList);
+      
+      return this;
     }
   }
 );

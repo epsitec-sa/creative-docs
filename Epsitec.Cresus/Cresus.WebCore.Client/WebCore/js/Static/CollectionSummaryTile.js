@@ -52,7 +52,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
     showEntityColumnRefreshAndSelect : function (subViewControllerMode, subViewControllerSubTypeId, entityId)
     {
       var columnId = this.ownerCt.columnId;
-      var columnManager = Ext.getCmp('columnmanager');
+      var columnManager = this.ownerCt.columnManager;
       
       var callbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create
       (
@@ -68,7 +68,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
     
     removePanel : function ()
     {
-      var columnManager = Ext.getCmp('columnmanager');
+      var columnManager = this.ownerCt.columnManager;
       
       // If this panel is currently selected, we must remove all the columns to the
       // right of this one.

@@ -1,67 +1,18 @@
 Ext.define('Epsitec.Cresus.Core.Static.Menu',
   {
     extend : 'Ext.Toolbar',
-    id : 'menu',
     
-    /* Config */
-    region : 'north',
-    margins : 5,
+    /* Properties */
+    application : null,
     
     /* Constructor */
     constructor : function (options)
     {
-      this.items = this.items || new Array();
+      this.application = options.application;
+      this.items = this.items || [];
       
-      this.downloadMenus();
-      
-      var about = Ext.create('Ext.Action',
-          {
-            text : 'About',
-            handler : function ()
-            {
-              var tabManager = Ext.getCmp('tabmanager');
-              tabManager.createPage("About box", "proxy/page/about");
-            },
-            scale : 'large',
-            iconAlign : 'top',
-            iconCls : 'epsitec-cresus-core-images-base-softwareuserrole-icon32'
-          }
-        );
-      
-      var logout = Ext.create('Ext.Action',
-          {
-            text : 'Logout',
-            handler : function ()
-            {
-              Ext.Ajax.request(
-                {
-                  url : 'proxy/log/out',
-                  method : 'POST',
-                  callback : function ()
-                  {
-                    window.location.reload();
-                  }
-                }
-              );
-            },
-            scale : 'large',
-            iconAlign : 'top',
-            iconCls : 'epsitec-cresus-core-images-usermanager-icon32'
-          }
-        );
-      
-      this.items.push(
-        '->',
-        {
-          xtype : 'buttongroup',
-          title : 'Options',
-          headerPosition : 'bottom',
-          items : [
-            about,
-            logout
-          ]
-        }
-      );
+      this.setupDatabases();
+      this.setupTools();
       
       this.callParent(arguments);
       return this;
@@ -69,7 +20,7 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
     
     /* Additional methods */
     
-    downloadMenus : function ()
+    setupDatabases : function ()
     {
       Ext.Ajax.request(
         {
@@ -87,7 +38,6 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
             }
             
             this.handleMenus(config.content);
-            
           },
           failure : function (response, options)
           {
@@ -99,38 +49,91 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
       );
     },
     
-    handleMenus : function (menus)
-    {
-      
+    handleMenus : function (databases)
+    {  
       var group = Ext.create('Ext.container.ButtonGroup',
-          {
-            title : 'Databases',
-            headerPosition : 'bottom'
-          }
-        );
-      
-      Ext.Array.each(menus, function (menu)
         {
-          var m = Ext.create('Ext.Action',
-              {
-                text : menu.Title,
-                handler : function ()
-                {
-                  var l = Ext.getCmp('entitylistPanel');
-                  l.showList(menu.DatabaseName);
-                },
-                scale : 'large',
-                iconAlign : 'top',
-                iconCls : menu.CssClass
-              }
-            );
-          
-          group.add(m);
+          title : 'Databases',
+          headerPosition : 'bottom'
         }
       );
       
+      Ext.Array.forEach(databases, function (database)
+        {
+          var databaseAction = Ext.create('Ext.Action',
+            {
+              text : database.Title,
+              handler : function ()
+              {
+                this.application.tabManager.showEntityTab(database);
+              },
+              scale : 'large',
+              scope : this,
+              iconAlign : 'top',
+              iconCls : database.CssClass
+            }
+          );
+          
+          group.add(databaseAction);
+        },
+        this
+      );
+      
       this.insert(0, group);
+    },
+    
+    setupTools : function ()
+    {
+      var aboutAction = Ext.create('Ext.Action',
+        {
+          text : 'About',
+          handler : function ()
+          {
+            this.application.tabManager.showPageTab("About box", "proxy/page/about");
+          },
+          scale : 'large',
+          scope : this,
+          iconAlign : 'top',
+          iconCls : 'epsitec-cresus-core-images-base-softwareuserrole-icon32'
+        }
+      );
+      
+      var logoutAction = Ext.create('Ext.Action',
+        {
+          text : 'Logout',
+          handler : function ()
+          {
+            Ext.Ajax.request(
+              {
+                url : 'proxy/log/out',
+                method : 'POST',
+                callback : function ()
+                {
+                  window.location.reload();
+                }
+              }
+            );
+          },
+          scale : 'large',
+          iconAlign : 'top',
+          iconCls : 'epsitec-cresus-core-images-usermanager-icon32'
+        }
+      );
+      
+      this.items.push(
+        '->',
+        {
+          xtype : 'buttongroup',
+          title : 'Options',
+          headerPosition : 'bottom',
+          items : [
+            aboutAction,
+            logoutAction
+          ]
+        }
+      );
     }
+    
   }
 );
  

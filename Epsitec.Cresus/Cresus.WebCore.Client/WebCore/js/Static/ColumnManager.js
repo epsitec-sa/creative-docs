@@ -1,27 +1,56 @@
 Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
   {
     extend : 'Ext.panel.Panel',
-    id : 'columnmanager',
     
     /* Config */
-    title : "Entity edition",
-    layout :
-    {
-      type : 'table',
-      tdAttrs :
-      {
-        valign : 'top'
-      }
-    },
-    defaults :
-    {
-      width : 350
-    },
-    autoScroll : true,
+    layout : 'border',
     
     /* Properties */
+    leftList : null,
+    rightPanel : null,
     columns : [],
     selectedPanels : [],
+    
+    /* Constructor */
+    constructor : function(options)
+    {
+      this.callParent(arguments);
+      
+      var database = options.database;
+      
+      this.title = database.Title;
+      
+      this.leftList = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel', {
+        databaseName : database.DatabaseName,
+        region : 'west',
+        margin : 5,
+        width : 250,
+        columnManager : this,
+        columnId : null,
+      });
+      
+      this.rightPanel = Ext.create('Ext.panel.Panel', {
+        region : 'center',
+        margin : '5',
+        layout :
+        {
+          type : 'table',
+          tdAttrs :
+          {
+            valign : 'top'
+          }
+        },
+        defaults :
+        {
+          width : 350
+        },
+        autoScroll : true,
+      });
+      
+      this.add([this.leftList, this.rightPanel]);
+      
+      return this;
+    },    
     
     /* Additional methods */
     clearColumns : function()
@@ -29,7 +58,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       this.removeColumnsFromIndex(0)
     },
     
-    // The arguments parentPanel and callbackQueue.
+    // The arguments parentPanel and callbackQueue are optional.
     addEntityColumn : function(viewMode, viewId, entityId, parentPanel, callbackQueue)
     {
       parentPanel = Epsitec.Cresus.Core.Static.Tools.getValueOrNull(parentPanel);
@@ -57,7 +86,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       (
         function (config)
         {
-          this.addNewColumn(config)
+          this.addNewColumn(config);
         },
         this
       );
@@ -157,6 +186,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     addNewColumn : function(config)
     {
       config.columnId = this.columns.length;
+      config.columnManager = this;
       
       var column = Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config);
       
@@ -164,14 +194,14 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       // Scroll all the way to the right, in case there are more panel than the screeen
       // is able to show
-      var dom = this.getEl().child('.x-panel-body').dom;
+      var dom = this.rightPanel.getEl().child('.x-panel-body').dom;
       dom.scrollLeft = 1000000;
       dom.scrollTop = 0;
     },
     
     addExistingColumn : function(column)
     {
-      this.add(column);
+      this.rightPanel.add(column);
       
       this.columns.push(column);
       this.selectedPanels.push(null);
@@ -200,7 +230,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       // Since the layout is completely rebuilt, we also have to remember the scroll.
       
       // Remember the scroll position.
-      var dom = this.getEl().child('.x-panel-body').dom;
+      var dom = this.rightPanel.getEl().child('.x-panel-body').dom;
       var scrollLeft = dom.scrollLeft;
       var scrollTop = dom.scrollTop;
       
@@ -229,6 +259,8 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
         var config = configArray[index];
         
         config.columnId = i;
+        config.columnManager = this;
+        
         var column = Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config);
         
         this.addExistingColumn(column);
@@ -272,7 +304,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     {
       var column = this.columns[index];
       
-      this.remove(column, autoDestroy);
+      this.rightPanel.remove(column, autoDestroy);
       
       this.columns.splice(index, 1);
       this.selectedPanels.splice(index, 1);

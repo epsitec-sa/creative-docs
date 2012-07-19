@@ -1,63 +1,62 @@
 Ext.define('Epsitec.Cresus.Core.Static.TabManager',
   {
     extend : 'Ext.tab.Panel',
-    id : 'tabmanager',
     
     /* Config */
-    activeTab : 0,
     plain : true,
-    region : 'center',
-    margins : '0 5 5 0',
     
     /* Properties */
-    pages : null,
-    
-    /* Constructor */
-    constructor : function (list)
-    {
-      this.items = this.items || [];
-      this.items.push(list);
-    
-      this.callParent();
-      return this;
-    },
+    application : null,
+    entityTabs : {},
+    pageTabs : {},
     
     /* Additional methods */
-    showEntityTab : function ()
+    
+    showEntityTab : function (database)
     {
-      this.setActiveTab(0);
+      var key = database.DatabaseName;
+      var entityTab = this.entityTabs[key] || null;
+      
+      if (entityTab === null || entityTab.isDestroyed)
+      {
+        entityTab = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager',
+          {
+            database : database,
+            closable : true,
+          }
+        );
+        
+        this.add(entityTab);
+        this.entityTabs[key] = entityTab;
+      }
+      
+      this.setActiveTab(entityTab);
     },
     
-    createPage : function (title, url)
+    showPageTab : function (title, url)
     {
+      var pageTab = this.pageTabs[url] || null;
       
-      this.pages = this.pages || {};
-      
-      var panel = this.pages[url];
-      
-      if (panel == null || panel.isDestroyed)
+      if (pageTab === null || pageTab.isDestroyed)
       {
-        var tab = Ext.create('Epsitec.Cresus.Core.Static.TabbedPage',
+        pageTab = Ext.create('Ext.panel.Panel',
+          {
+            title : title,
+            closable : true,
+            id : url,
+            loader :
             {
-              title : title,
-              id : url,
-              loader :
-              {
-                url : url,
-                autoLoad : true
-              }
+              url : url,
+              autoLoad : true
             }
-          );
+          }
+        );
         
-        this.add(tab);
-        this.setActiveTab(tab);
-        
-        this.pages[url] = tab;
+        this.add(pageTab);
+        this.pageTabs[url] = pageTab;
       }
-      else
-      {
-        panel.show();
-      }
+      
+      this.setActiveTab(pageTab);
     }
   }
 );

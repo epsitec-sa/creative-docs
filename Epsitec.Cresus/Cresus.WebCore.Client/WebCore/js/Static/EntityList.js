@@ -1,7 +1,6 @@
 Ext.define('Epsitec.Cresus.Core.Static.EntityList',
   {
     extend : 'Ext.grid.Panel',
-    id : 'list',
     
     /* Config */
     
@@ -83,38 +82,34 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList',
     /* Constructor */
     constructor : function (databaseName)
     {
-      this.store = Epsitec.Cresus.Core.Static.EntityList.getStore(databaseName);
-      this.store.guaranteeRange(0, 100);
-      
       this.databaseName = databaseName;
       
+      this.store = this.getStore(this.databaseName);
+      this.store.guaranteeRange(0, 100);
+      
       this.callParent(arguments);
+      
+      this.addListener('selectionchange', this.onSelectionChange, this);
+      
       return this;
     },
     
-    /* Listeners */
-    listeners :
-    {
-      selectionchange : function (view, selections, options)
-      {
-        if (selections.length != 1)
-        {
-          return;
-        }
-        
-        var record = selections[0];
-        var entityId = record.get('uniqueId');
-        
-        var columnManager = Ext.getCmp('columnmanager');
-        columnManager.clearColumns();
-        columnManager.addEntityColumn('summary', 'null', entityId);
-        
-        var tabManager = Ext.getCmp('tabmanager');
-        tabManager.showEntityTab();
-      }
-    },
-    
     /* Additional methods */
+    
+    onSelectionChange : function (view, selections, options)
+    {
+      if (selections.length != 1)
+      {
+        return;
+      }
+      
+      var record = selections[0];
+      var entityId = record.get('uniqueId');
+      
+      var columnManager = this.ownerCt.columnManager;
+      columnManager.clearColumns();
+      columnManager.addEntityColumn('summary', 'null', entityId);
+    },
     
     deleteEntity : function (id)
     {
@@ -166,32 +161,29 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList',
       );
     },
     
-    statics : {
-      getStore: function(databaseName) {
-        var store = Ext.create('Ext.data.Store',
+    getStore: function(databaseName)
+    {
+      return Ext.create('Ext.data.Store',
+        {
+          model : 'Epsitec.Cresus.Core.Static.EntityListItem',
+          storeId : 'persons',
+          pageSize : 100,
+          remoteSort : true,
+          buffered : true,
+          proxy :
           {
-            model : 'Epsitec.Cresus.Core.Static.EntityListItem',
-            storeId : 'persons',
-            pageSize : 100,
-            remoteSort : true,
-            buffered : true,
-            proxy :
+            type : 'ajax',
+            url : 'proxy/database/get/' + databaseName,
+            reader :
             {
-              type : 'ajax',
-              url : 'proxy/database/get/' + databaseName,
-              reader :
-              {
-                type : 'json',
-                root : 'entities',
-                totalProperty : 'total'
-              }
+              type : 'json',
+              root : 'entities',
+              totalProperty : 'total'
             }
           }
-        );
-        
-        return store;
-      }
-    },
+        }
+      );
+    }
   }
 );
  

@@ -35,43 +35,53 @@ Ext.application(
       'Epsitec.Cresus.Core.Static.LoginPanel',
       'Epsitec.Cresus.Core.Static.Menu',
       'Epsitec.Cresus.Core.Static.SummaryTile',
-      'Epsitec.Cresus.Core.Static.TabbedPage',
       'Epsitec.Cresus.Core.Static.TabManager',
       'Epsitec.Cresus.Core.Static.Tools',
     ],
     
-    columnManager : null,
-    tabManager : null,
+    /* Properties */
     menu : null,
-    entityListPanel : null,
-    viewport : null,
+    tabManager : null,
+    
     launch : function ()
     {
       this.doLogin();
     },
     
+    /* Additional methods */
+    
     doLogin : function ()
     {
-      var win = Ext.create('Epsitec.Cresus.Core.Static.LoginPanel',
-          {
-            application : this
-          }
-        );
+      Ext.create('Epsitec.Cresus.Core.Static.LoginPanel',
+        {
+          application : this
+        }
+      );
     },
     
     runApp : function ()
     {
-      this.columnManager = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
-      this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
-      this.entityListPanel = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel');
-      this.tabManager = Ext.create('Epsitec.Cresus.Core.Static.TabManager', this.columnManager);
+      this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu',
+        {
+          application : this,
+          region : 'north',
+          margin : 5,
+        }
+      );
       
-      this.viewport = Ext.create('Ext.container.Viewport',
+      this.tabManager = Ext.create('Epsitec.Cresus.Core.Static.TabManager',
+        {
+          application : this,
+          region : 'center',
+          margin : 5,
+        }
+      );
+      
+      Ext.create('Ext.container.Viewport',
         {
           layout : 'border',
           items : [
             this.menu,
-            this.entityListPanel,
             this.tabManager
           ]
         }
