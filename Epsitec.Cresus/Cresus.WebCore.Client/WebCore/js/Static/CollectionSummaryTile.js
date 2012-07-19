@@ -49,7 +49,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
       }
     },
     
-    showEntityColumnRefreshAndSelect : function (subViewControllerMode, subViewControllerSubTypeId, entityId)
+    showEntityColumnRefreshAndSelect : function (subViewMode, subViewId, entityId)
     {
       var columnId = this.ownerCt.columnId;
       var columnManager = this.ownerCt.columnManager;
@@ -63,7 +63,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
         this
       );
       
-      this.showEntityColumnAndRefresh(subViewControllerMode, subViewControllerSubTypeId, entityId, callbackQueue);
+      this.showEntityColumnAndRefresh(subViewMode, subViewId, entityId, callbackQueue);
     },
     
     removePanel : function ()
@@ -115,7 +115,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile',
             
             var newEntityId = json.content;
             
-            this.showEntityColumnRefreshAndSelect(this.subViewControllerMode, this.subViewControllerSubTypeId, newEntityId);
+            this.showEntityColumnRefreshAndSelect(this.subViewMode, this.subViewId, newEntityId);
           },
           failure : function ()
           {
