@@ -23,7 +23,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
     var options = o || {};
     this.addRefreshButton(options);
 
-    this.callParent(new Array(options));
+    this.callParent([options]);
     return this;
   },
 
@@ -44,7 +44,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
   /* Additional methods */
 
   addRefreshButton: function(options)  {
-    options.tools = options.tools || new Array();
+    options.tools = options.tools || [];
 
     if (options.isRoot) {
       options.tools.push({
@@ -112,8 +112,10 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
       success: function(response, options) {
         this.setLoading(false);
 
+        var json;
+
         try {
-          var json = Ext.decode(response.responseText);
+          json = Ext.decode(response.responseText);
         }
         catch (err) {
           options.failure.apply(arguments);
@@ -140,7 +142,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
           this.showEntityColumn(this.subViewMode, this.subViewId, newEntityId);
         }
       },
-      failure: function() {
+      failure: function(response, options) {
         this.setLoading(false);
         Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
       },

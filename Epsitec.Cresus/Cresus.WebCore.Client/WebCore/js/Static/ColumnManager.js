@@ -76,7 +76,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
       this.removeColumnsFromIndex(parentColumnId + 1);
 
       newCallbackQueue = newCallbackQueue.enqueueCallback(
-          function(config) {
+          function() {
             this.selectPanel(parentColumnId, parentPanel);
           },
           this
@@ -107,10 +107,10 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
     var callbackQueueCreator = function(index) {
       return Epsitec.Cresus.Core.Static.CallbackQueue.create(
           function(config) {
-            configArrayCount++;
+            configArrayCount += 1;
             configArray[index] = config;
 
-            if (configArrayCount == lastColumnId - firstColumnId + 1) {
+            if (configArrayCount === lastColumnId - firstColumnId + 1) {
               this.replaceExistingColumns(
                   firstColumnId, lastColumnId, configArray
               );
@@ -122,7 +122,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
       );
     };
 
-    for (var i = firstColumnId; i <= lastColumnId; i++) {
+    for (var i = firstColumnId; i <= lastColumnId; i += 1) {
       var columnPanel = this.columns[i];
       var viewMode = columnPanel.viewMode;
       var viewId = columnPanel.viewId;
@@ -147,8 +147,10 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
           loadingPanel.setLoading(false);
         }
 
+        var config;
+
         try {
-          var config = Ext.decode(response.responseText);
+          config = Ext.decode(response.responseText);
         }
         catch (err) {
           options.failure.apply(arguments);
@@ -216,6 +218,9 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
     // Since the layout is completely rebuilt, we also have to remember the
     // scroll.
 
+    // Used in the for loops to iterate.
+    var i;
+
     // Remember the scroll position.
     var dom = this.rightPanel.getEl().child('.x-panel-body').dom;
     var scrollLeft = dom.scrollLeft;
@@ -224,7 +229,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
     // Copy the current columns and the selection state.
     var clonedColumns = Ext.Array.clone(this.columns);
     var selectedEntityIds = this.selectedPanels.map(
-        function(p) { return p == null ? null : p.entityId; }
+        function(p) { return p === null ? null : p.entityId; }
         );
 
     // Remove the columns at the right ot the ones that we want to replace, but
@@ -233,34 +238,34 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
 
     // Removes the columns that we will replace later on and deletes thems as we
     // won't need them later.
-    for (var i = lastColumnId; i >= firstColumnId; i--) {
+    for (i = lastColumnId; i >= firstColumnId; i -= 1) {
       this.removeColumn(i, true);
     }
 
     // Adds the new version of the columns that we want to replace.
-    for (var i = firstColumnId; i <= lastColumnId; i++) {
+    for (i = firstColumnId; i <= lastColumnId; i += 1) {
       var index = i - firstColumnId;
       var config = configArray[index];
 
       config.columnId = i;
       config.columnManager = this;
 
-      var column = Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config);
-
-      this.addExistingColumn(column);
+      this.addExistingColumn(
+          Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config)
+      );
     }
 
     var nbColumns = clonedColumns.length;
 
     // Add the column that we removed before so that they are displayed again.
-    for (var i = lastColumnId + 1; i < nbColumns; i++) {
+    for (i = lastColumnId + 1; i < nbColumns; i += 1) {
       var column = clonedColumns[i];
 
       this.addExistingColumn(column);
     }
 
     // Reapply the selection on the columns that we have just added.
-    for (var i = firstColumnId; i < nbColumns; i++) {
+    for (i = firstColumnId; i < nbColumns; i += 1) {
       var selectedEntityId = selectedEntityIds[i];
 
       if (selectedEntityId !== null) {
@@ -274,7 +279,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
   },
 
   removeColumnsFromIndex: function(index, autoDestroy) {
-    for (var i = this.columns.length - 1; i >= index; i--) {
+    for (var i = this.columns.length - 1; i >= index; i -= 1) {
       this.removeColumn(i, autoDestroy);
     }
   },
@@ -292,7 +297,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
     var column = this.columns[columnId];
     var panels = column.items.items;
 
-    for (var i = 0; i < panels.length; ++i) {
+    for (var i = 0; i < panels.length; i += 1) {
       var panel = panels[i];
 
       if (panel.entityId === entityId) {
@@ -305,7 +310,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
 
   selectPanel: function(columnId, panel) {
     var oldPanel = this.getSelectedPanel(columnId);
-    if (oldPanel != null) {
+    if (oldPanel !== null) {
       oldPanel.unselect();
     }
 
@@ -317,11 +322,11 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
   getSelectedEntity: function(columnId) {
     var selectedPanel = this.getSelectedPanel(columnId);
 
-    return selectedPanel == null ?
+    return selectedPanel === null ?
         null : selectedPanel.entityId;
   },
 
   getSelectedPanel: function(columnId) {
-    return this.selectedPanels[columnId];
+    return this.selectedPanels[columnId] || null;
   }
 });

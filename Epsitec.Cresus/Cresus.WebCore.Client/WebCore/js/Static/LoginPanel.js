@@ -36,7 +36,7 @@ Ext.define('Epsitec.Cresus.Core.Static.LoginPanel', {
       allowBlank: false,
       listeners: {
         specialkey: function(field, e) {
-          if (e.getKey() == e.ENTER) {
+          if (e.getKey() === e.ENTER) {
             var form = Ext.getCmp('loginwindow');
             form.submitLogin();
           }
@@ -51,7 +51,7 @@ Ext.define('Epsitec.Cresus.Core.Static.LoginPanel', {
       allowBlank: false,
       listeners: {
         specialkey: function(field, e) {
-          if (e.getKey() == e.ENTER) {
+          if (e.getKey() === e.ENTER) {
             var form = Ext.getCmp('loginwindow');
             form.submitLogin();
           }
@@ -89,7 +89,7 @@ Ext.define('Epsitec.Cresus.Core.Static.LoginPanel', {
     options.url = 'proxy/log/in';
     this.application = options.application;
 
-    this.callParent(new Array(options));
+    this.callParent([options]);
 
     return this;
   },
@@ -103,7 +103,7 @@ Ext.define('Epsitec.Cresus.Core.Static.LoginPanel', {
       form.submit({
         success: function(form, action) {
           try {
-            var config = Ext.decode(action.response.responseText);
+            Ext.decode(action.response.responseText);
           }
           catch (err) {
             this.failure.apply(arguments);

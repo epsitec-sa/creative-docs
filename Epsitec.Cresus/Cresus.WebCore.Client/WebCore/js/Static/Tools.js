@@ -19,9 +19,8 @@ Ext.define('Epsitec.Cresus.Core.Static.Tools', {
       if (this.isUndefined(callback) || callback === null) {
         return;
       }
-      else {
-        callback.apply(context, callbackArguments);
-      }
+
+      callback.apply(context, callbackArguments);
     }
   }
 });

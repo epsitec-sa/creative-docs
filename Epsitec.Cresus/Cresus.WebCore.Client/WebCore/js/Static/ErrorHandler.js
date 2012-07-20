@@ -3,18 +3,16 @@ Ext.define('Epsitec.Cresus.Core.Static.ErrorHandler', {
     handleError: function(response) {
 
       var responseData = Ext.decode(response.responseText);
-      var errors = responseData['errors'];
+      var errors = responseData.errors;
 
-      if ('code' in errors) {
-        var code = errors['code'];
+      var code = errors.code || null;
+      var title = errors.title || null;
+      var message = errors.message || null;
 
+      if (code !== null) {
         Epsitec.Cresus.Core.Static.ErrorHandler.handleErrorCode(code);
       }
-      else if ('title' in errors && 'message' in errors) {
-
-        var title = errors['title'];
-        var message = errors['message'];
-
+      else if (title !== null && message !== null) {
         Epsitec.Cresus.Core.Static.ErrorHandler.handleErrorTitleAndMessage(
             title, message
         );

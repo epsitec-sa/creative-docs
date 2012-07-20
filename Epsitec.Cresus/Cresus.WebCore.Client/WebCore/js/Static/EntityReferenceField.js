@@ -30,7 +30,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityReferenceField', {
       margin: '19 0 0 5'
     });
 
-    this.items = this.items || new Array();
+    this.items = this.items || [];
     this.items.push(combo);
     this.items.push(button);
 

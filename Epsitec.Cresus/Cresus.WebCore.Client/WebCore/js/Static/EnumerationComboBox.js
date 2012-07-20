@@ -41,10 +41,10 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumerationComboBox', {
 
   statics: {
     getStore: function(name, combo, value) {
-      this.stores = this.stores || new Array();
-      var store = this.stores[name];
+      this.stores = this.stores || [];
+      var store = this.stores[name] || null;
 
-      if (store != null) {
+      if (store !== null) {
         return store;
       }
 
@@ -69,7 +69,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumerationComboBox', {
           // EnumerationComboBoxes, as the store will already be populated and
           // the value of the ComboBox will be automatically set.
           load: {
-            fn: function(store) {
+            fn: function() {
               this.select(value);
               this.setLoading(false);
             },

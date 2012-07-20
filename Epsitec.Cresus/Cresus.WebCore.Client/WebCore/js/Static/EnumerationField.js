@@ -15,7 +15,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumerationField', {
         'Epsitec.Cresus.Core.Static.EnumerationComboBox', options
         );
 
-    this.items = this.items || new Array();
+    this.items = this.items || [];
     this.items.push(combo);
 
     this.callParent();

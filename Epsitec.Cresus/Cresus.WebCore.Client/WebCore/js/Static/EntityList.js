@@ -47,7 +47,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
         var list = this.up('panel');
         var selected = list.getSelectionModel().selected.items;
 
-        if (selected.length != 1) {
+        if (selected.length !== 1) {
           var title = 'Not selected';
           var content = 'You need to selected an entity to perfom this action';
           Ext.Msg.alert(title, content);
@@ -97,7 +97,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
   /* Additional methods */
 
   onSelectionChange: function(view, selections, options) {
-    if (selections.length != 1) {
+    if (selections.length !== 1) {
       return;
     }
 

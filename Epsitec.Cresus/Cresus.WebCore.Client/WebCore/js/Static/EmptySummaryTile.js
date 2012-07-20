@@ -13,7 +13,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EmptySummaryTile', {
 
     options.hideRemoveButton = true;
 
-    this.callParent(new Array(options));
+    this.callParent([options]);
     return this;
   },
 

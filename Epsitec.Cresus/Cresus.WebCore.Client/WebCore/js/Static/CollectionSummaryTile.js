@@ -15,14 +15,14 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile', {
     var options = o || {};
     this.addPlusMinusButtons(options);
 
-    this.callParent(new Array(options));
+    this.callParent([options]);
     return this;
   },
 
   /* Additional methods */
 
   addPlusMinusButtons: function(options) {
-    options.tools = options.tools || new Array();
+    options.tools = options.tools || [];
 
     if (!options.hideAddButton) {
       options.tools.push({
@@ -66,7 +66,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile', {
     var columnId = this.entityPanel.columnId;
     var selectedEntityId = columnManager.getSelectedEntity(columnId);
 
-    if (selectedEntityId == this.entityId) {
+    if (selectedEntityId === this.entityId) {
       columnManager.removeColumnsFromIndex(columnId + 1);
     }
 
@@ -89,8 +89,10 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile', {
       success: function(response, options) {
         this.setLoading(false);
 
+        var json;
+
         try {
-          var json = Ext.decode(response.responseText);
+          json = Ext.decode(response.responseText);
         }
         catch (err) {
           options.failure.apply(arguments);
@@ -103,7 +105,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile', {
             this.subViewMode, this.subViewId, newEntityId
         );
       },
-      failure: function() {
+      failure: function(response, options) {
         this.setLoading(false);
         Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
       },
@@ -127,7 +129,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile', {
 
         this.removePanel();
       },
-      failure: function() {
+      failure: function(response, options) {
         this.setLoading(false);
         Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
       },

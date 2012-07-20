@@ -24,8 +24,10 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu', {
     Ext.Ajax.request({
       url: 'proxy/database/list',
       success: function(response, options) {
+        var config;
+
         try {
-          var config = Ext.decode(response.responseText);
+          config = Ext.decode(response.responseText);
         }
         catch (err) {
           options.failure.apply(arguments);
@@ -35,7 +37,6 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu', {
         this.handleMenus(config.content);
       },
       failure: function(response, options) {
-        panel.setLoading(false);
         Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
       },
       scope: this

@@ -43,9 +43,8 @@ Ext.define('Epsitec.Cresus.Core.Static.CallbackQueue', {
     if (queue.isEmpty()) {
       return this;
     }
-    else {
-      return this.merge(queue.tail).enqueue(queue.head);
-    }
+
+    return this.merge(queue.tail).enqueue(queue.head);
   },
 
   execute: function(callbackArguments) {

@@ -27,11 +27,11 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityCollectionField', {
       margin: '0 0 0 5'
     });
 
-    this.items = this.items || new Array();
+    this.items = this.items || [];
     this.items.push(combo);
     this.items.push(button);
 
-    this.callParent();
+    this.callParent(arguments);
 
     return this;
   }
