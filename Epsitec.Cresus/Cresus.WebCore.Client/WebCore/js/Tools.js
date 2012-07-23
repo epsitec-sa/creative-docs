@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.Tools', {
+Ext.define('Epsitec.cresus.webcore.Tools', {
   alternateClassName: ['Epsitec.Tools'],
 
   statics: {

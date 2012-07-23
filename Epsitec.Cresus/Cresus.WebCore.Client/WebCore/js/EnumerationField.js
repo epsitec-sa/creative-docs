@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.EnumerationField', {
+Ext.define('Epsitec.cresus.webcore.EnumerationField', {
   extend: 'Ext.container.Container',
   alias: 'widget.epsitec.enumerationfield',
 
@@ -12,7 +12,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumerationField', {
     options.columnWidth = 1;
 
     var combo = Ext.create(
-        'Epsitec.Cresus.Core.Static.EnumerationComboBox', options
+        'Epsitec.cresus.webcore.EnumerationComboBox', options
         );
 
     this.items = this.items || [];

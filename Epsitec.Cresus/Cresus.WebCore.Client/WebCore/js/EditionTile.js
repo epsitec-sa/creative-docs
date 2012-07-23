@@ -1,5 +1,5 @@
-Ext.define('Epsitec.Cresus.Core.Static.EditionTile', {
-  extend: 'Epsitec.Cresus.Core.Static.Tile',
+Ext.define('Epsitec.cresus.webcore.EditionTile', {
+  extend: 'Epsitec.cresus.webcore.Tile',
   alias: 'widget.editiontile',
 
   /* Config */

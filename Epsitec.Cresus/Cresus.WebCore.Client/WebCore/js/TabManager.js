@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.TabManager', {
+Ext.define('Epsitec.cresus.webcore.TabManager', {
   extend: 'Ext.tab.Panel',
 
   /* Config */
@@ -17,7 +17,7 @@ Ext.define('Epsitec.Cresus.Core.Static.TabManager', {
     var entityTab = this.entityTabs[key] || null;
 
     if (entityTab === null || entityTab.isDestroyed) {
-      entityTab = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager', {
+      entityTab = Ext.create('Epsitec.cresus.webcore.ColumnManager', {
         database: database,
         closable: true
       });

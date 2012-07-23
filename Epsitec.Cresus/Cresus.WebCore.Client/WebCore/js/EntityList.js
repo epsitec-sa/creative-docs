@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
+Ext.define('Epsitec.cresus.webcore.EntityList', {
   extend: 'Ext.grid.Panel',
 
   /* Config */
@@ -123,7 +123,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
       },
       failure: function(response, options) {
         this.setLoading(false);
-        Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
+        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
       },
       scope: this
     });
@@ -141,7 +141,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
       },
       failure: function(response, options)  {
         this.setLoading(false);
-        Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
+        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
       },
       scope: this
     });
@@ -149,7 +149,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
 
   getStore: function(databaseName) {
     return Ext.create('Ext.data.Store', {
-      model: 'Epsitec.Cresus.Core.Static.EntityListItem',
+      model: 'Epsitec.cresus.webcore.EntityListItem',
       pageSize: 100,
       remoteSort: true,
       buffered: true,

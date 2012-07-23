@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.ColumnPanel', {
+Ext.define('Epsitec.cresus.webcore.ColumnPanel', {
   extend: 'Ext.Panel',
 
   /* Properties */

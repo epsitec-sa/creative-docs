@@ -1,5 +1,5 @@
-Ext.define('Epsitec.Cresus.Core.Static.EntityListPanel', {
-  extend: 'Epsitec.Cresus.Core.Static.ColumnPanel',
+Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
+  extend: 'Epsitec.cresus.webcore.ColumnPanel',
 
   /* Config */
 
@@ -14,7 +14,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityListPanel', {
     var columnManager = options.columnManager;
 
     var entityList = Ext.create(
-        'Epsitec.Cresus.Core.Static.EntityList', databaseName, columnManager
+        'Epsitec.cresus.webcore.EntityList', databaseName, columnManager
         );
 
     this.add(entityList);

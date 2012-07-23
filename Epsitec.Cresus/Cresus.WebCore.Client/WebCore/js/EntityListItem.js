@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.EntityListItem', {
+Ext.define('Epsitec.cresus.webcore.EntityListItem', {
   extend: 'Ext.data.Model',
   fields: [
     {

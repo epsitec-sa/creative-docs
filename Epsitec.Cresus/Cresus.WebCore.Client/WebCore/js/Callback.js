@@ -2,7 +2,7 @@
 // basically a function with a context that represent the 'this' in the
 // function, in order to make it easier to pass callbacks in functions.
 
-Ext.define('Epsitec.Cresus.Core.Static.Callback', {
+Ext.define('Epsitec.cresus.webcore.Callback', {
   alternateClassName: ['Epsitec.Callback'],
 
   /* Properties */

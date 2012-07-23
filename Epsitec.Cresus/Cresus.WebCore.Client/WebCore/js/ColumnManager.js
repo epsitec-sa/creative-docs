@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
+Ext.define('Epsitec.cresus.webcore.ColumnManager', {
   extend: 'Ext.panel.Panel',
 
   /* Config */
@@ -21,7 +21,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
 
     this.title = database.Title;
 
-    this.leftList = Ext.create('Epsitec.Cresus.Core.Static.EntityListPanel', {
+    this.leftList = Ext.create('Epsitec.cresus.webcore.EntityListPanel', {
       databaseName: database.DatabaseName,
       region: 'west',
       margin: 5,
@@ -166,7 +166,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
           loadingPanel.setLoading(false);
         }
 
-        Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
+        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
       },
       scope: this
     });
@@ -176,7 +176,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
     config.columnId = this.columns.length;
     config.columnManager = this;
 
-    var column = Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config);
+    var column = Ext.create('Epsitec.cresus.webcore.EntityPanel', config);
 
     this.addExistingColumn(column);
 
@@ -251,7 +251,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
       config.columnManager = this;
 
       this.addExistingColumn(
-          Ext.create('Epsitec.Cresus.Core.Static.EntityPanel', config)
+          Ext.create('Epsitec.cresus.webcore.EntityPanel', config)
       );
     }
 

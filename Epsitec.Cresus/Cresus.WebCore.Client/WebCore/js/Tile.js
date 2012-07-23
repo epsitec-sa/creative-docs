@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.Tile', {
+Ext.define('Epsitec.cresus.webcore.Tile', {
   extend: 'Ext.form.Panel',
 
   /* Properties */

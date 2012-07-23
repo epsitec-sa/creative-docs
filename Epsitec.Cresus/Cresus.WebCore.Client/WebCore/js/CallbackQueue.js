@@ -8,7 +8,7 @@
 // executed before the asynchronous operation terminates. Keep that in mind when
 // dealing with this class.
 
-Ext.define('Epsitec.Cresus.Core.Static.CallbackQueue', {
+Ext.define('Epsitec.cresus.webcore.CallbackQueue', {
   alternateClassName: ['Epsitec.CallbackQueue'],
 
   /* Properties */

@@ -1,5 +1,5 @@
-Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
-  extend: 'Epsitec.Cresus.Core.Static.Tile',
+Ext.define('Epsitec.cresus.webcore.SummaryTile', {
+  extend: 'Epsitec.cresus.webcore.Tile',
   alias: 'widget.summarytile',
 
   /* Config */
@@ -144,7 +144,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
       },
       failure: function(response, options) {
         this.setLoading(false);
-        Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
+        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
       },
       scope: this
     }

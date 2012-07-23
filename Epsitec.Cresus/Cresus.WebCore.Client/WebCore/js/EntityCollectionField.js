@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.EntityCollectionField', {
+Ext.define('Epsitec.cresus.webcore.EntityCollectionField', {
   extend: 'Ext.container.Container',
   alias: 'widget.epsitec.entitycollectionfield',
 

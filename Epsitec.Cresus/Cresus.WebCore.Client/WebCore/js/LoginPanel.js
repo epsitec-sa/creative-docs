@@ -1,4 +1,4 @@
-Ext.define('Epsitec.Cresus.Core.Static.LoginPanel', {
+Ext.define('Epsitec.cresus.webcore.LoginPanel', {
   extend: 'Ext.form.Panel',
   renderTo: document.body,
 

@@ -1,5 +1,5 @@
-Ext.define('Epsitec.Cresus.Core.Static.EntityPanel', {
-  extend: 'Epsitec.Cresus.Core.Static.ColumnPanel',
+Ext.define('Epsitec.cresus.webcore.EntityPanel', {
+  extend: 'Epsitec.cresus.webcore.ColumnPanel',
 
   /* Config */
 

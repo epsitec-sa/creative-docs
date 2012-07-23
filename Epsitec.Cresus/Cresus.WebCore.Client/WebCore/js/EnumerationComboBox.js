@@ -5,7 +5,7 @@
 // is the getStore(...) method, which creates it if it does not exists or
 // retrieves it if it does exists.
 
-Ext.define('Epsitec.Cresus.Core.Static.EnumerationComboBox', {
+Ext.define('Epsitec.cresus.webcore.EnumerationComboBox', {
   extend: 'Ext.form.field.ComboBox',
   alias: 'widget.epsitec.enumerationcombobox',
 
@@ -24,7 +24,7 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumerationComboBox', {
     // We need to pass the options.value parameter because the parent
     // constructor has not yet been called and thus this.value is undefined at
     // this time and we might require it in this call.
-    this.store = Epsitec.Cresus.Core.Static.EnumerationComboBox.getStore(
+    this.store = Epsitec.cresus.webcore.EnumerationComboBox.getStore(
         options.storeClass, this, options.value
         );
 
