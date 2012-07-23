@@ -21,7 +21,7 @@ namespace Aider.Tests.Vs
 		{
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (this.GroupDefinitionFile).ToList ();
 
-			Assert.AreEqual (568, groupDefinitions.Count);
+			Assert.AreEqual (552, groupDefinitions.Count);
 
 			var g1 = new EervGroupDefinition ("0100000000", "Paramètres transversaux")
 			{
@@ -39,19 +39,19 @@ namespace Aider.Tests.Vs
 			{
 				Parent = new EervGroupDefinition ("0301000000", null),
 			};
-			this.CheckForEquality (g3, groupDefinitions[250]);
+			this.CheckForEquality (g3, groupDefinitions[241]);
 
 			var g4 = new EervGroupDefinition ("0303030100", "Catéchumènes 2007-09-11")
 			{
 				Parent = new EervGroupDefinition ("0303030000", null),
 			};
-			this.CheckForEquality (g4, groupDefinitions[285]);
+			this.CheckForEquality (g4, groupDefinitions[273]);
 
 			var g5 = new EervGroupDefinition ("0604010203", "Délégués CER")
 			{
 				Parent = new EervGroupDefinition ("0604010200", null),
 			};
-			this.CheckForEquality (g5, groupDefinitions[509]);
+			this.CheckForEquality (g5, groupDefinitions[495]);
 		}
 
 
