@@ -7,8 +7,18 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
   /* Properties */
 
   application: null,
-  entityTabs: {},
-  pageTabs: {},
+  entityTabs: null,
+  pageTabs: null,
+
+  /* Constructor */
+  constructor: function(options) {
+
+    this.entityTabs = [];
+    this.pageTabs = [];
+
+    this.callParent(arguments);
+    return this;
+  },
 
   /* Additional methods */
 

@@ -9,13 +9,16 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
 
   leftList: null,
   rightPanel: null,
-  columns: [],
-  selectedPanels: [],
+  columns: null,
+  selectedPanels: null,
 
   /* Constructor */
 
   constructor: function(options) {
     this.callParent(arguments);
+
+    this.columns = [];
+    this.selectedPanels = [];
 
     var database = options.database;
 
