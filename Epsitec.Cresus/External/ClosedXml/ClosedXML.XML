@@ -4,86 +4,6 @@
         <name>ClosedXML</name>
     </assembly>
     <members>
-        <member name="T:ClosedXML.PathHelper">
-            <summary>
-              Help methods for work with files
-            </summary>
-        </member>
-        <member name="F:ClosedXML.PathHelper.ms_checkValidRelativePathRegEx">
-            <summary>
-              Can check only .\dfdfd\dfdf\dfdf or ..\..\gfhfgh\fghfh
-            </summary>
-        </member>
-        <member name="M:ClosedXML.PathHelper.GetTimeStamp">
-            <summary>
-              Gets data and time string stamp for file name
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.PathHelper.GetTimeStamp(System.DateTime)">
-            <summary>
-              Gets data and time string stamp for file name
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.PathHelper.SafetyDeleteFile(System.String)">
-            <summary>
-              Safety delete file(with try block)
-            </summary>
-            <param name = "fileName">file name</param>
-        </member>
-        <member name="M:ClosedXML.PathHelper.NormalizeFileName(System.String)">
-            <summary>
-              Replace all not implemented symbols to '_'
-            </summary>
-            <param name = "fileName">input filename</param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.PathHelper.ValidatePath(System.String,ClosedXML.PathHelper.PathTypes)">
-            <summary>
-              ValidatePath file or diretory path
-            </summary>
-            <param name = "path"></param>
-            <param name = "type">path type</param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.PathHelper.ValidateFileName(System.String)">
-            <summary>
-              ValidatePath file or diretory path
-            </summary>
-            <param name = "fileName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLHFItem.GetText(ClosedXML.Excel.XLHFOccurrence)">
-            <summary>
-            Gets the text of the specified header/footer occurrence.
-            </summary>
-            <param name="occurrence">The occurrence.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLHFItem.AddText(ClosedXML.Excel.XLHFPredefinedText)">
-            <summary>
-            Adds the given predefined text to this header/footer item.
-            </summary>
-            <param name="predefinedText">The predefined text to add to this header/footer item.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLHFItem.AddText(System.String,ClosedXML.Excel.XLHFOccurrence)">
-            <summary>
-            Adds the given text to this header/footer item.
-            </summary>
-            <param name="text">The text to add to this header/footer item.</param>
-            <param name="occurrence">The occurrence for the text.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLHFItem.AddText(ClosedXML.Excel.XLHFPredefinedText,ClosedXML.Excel.XLHFOccurrence)">
-            <summary>
-            Adds the given predefined text to this header/footer item.
-            </summary>
-            <param name="predefinedText">The predefined text to add to this header/footer item.</param>
-            <param name="occurrence">The occurrence for the predefined text.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLHFItem.Clear(ClosedXML.Excel.XLHFOccurrence)">
-            <summary>Clears the text/formats of this header/footer item.</summary>
-            <param name="occurrence">The occurrence to clear.</param>
-        </member>
         <member name="M:ClosedXML.Excel.IXLRangeBase.Cells">
             <summary>
               Returns the collection of cells.
@@ -276,338 +196,100 @@
               If false the cell's text will not be shared and stored as an inline value.
             </value>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Delete">
-            <summary>
-            Deletes this row and shifts the rows below this one accordingly.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.RowNumber">
-            <summary>
-            Gets this row's number
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.InsertRowsBelow(System.Int32)">
-            <summary>
-            Inserts X number of rows below this one.
-            <para>All rows below will be shifted accordingly.</para>
-            </summary>
-            <param name="numberOfRows">The number of rows to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.InsertRowsAbove(System.Int32)">
-            <summary>
-            Inserts X number of rows above this one.
-            <para>This row and all below will be shifted accordingly.</para>
-            </summary>
-            <param name="numberOfRows">The number of rows to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.AdjustToContents(System.Int32)">
-            <summary>
-            Adjusts the height of the row based on its contents, starting from the startColumn.
-            </summary>
-            <param name="startColumn">The column to start calculating the row height.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.AdjustToContents(System.Int32,System.Int32)">
-            <summary>
-            Adjusts the height of the row based on its contents, starting from the startColumn and ending at endColumn.
-            </summary>
-            <param name="startColumn">The column to start calculating the row height.</param>
-            <param name="endColumn">The column to end calculating the row height.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Hide">
-            <summary>Hides this row.</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Unhide">
-            <summary>Unhides this row.</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Group">
-            <summary>
-            Adds this row to the next outline level (Increments the outline level for this row by 1).
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Group(System.Boolean)">
-            <summary>
-            Adds this row to the next outline level (Increments the outline level for this row by 1).
-            </summary>
-            <param name="collapse">If set to <c>true</c> the row will be shown collapsed.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Group(System.Int32)">
-            <summary>
-            Sets outline level for this row.
-            </summary>
-            <param name="outlineLevel">The outline level.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Group(System.Int32,System.Boolean)">
-            <summary>
-            Sets outline level for this row.
-            </summary>
-            <param name="outlineLevel">The outline level.</param>
-            <param name="collapse">If set to <c>true</c> the row will be shown collapsed.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Ungroup">
-            <summary>
-            Adds this row to the previous outline level (decrements the outline level for this row by 1).
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Ungroup(System.Boolean)">
-            <summary>
-            Adds this row to the previous outline level (decrements the outline level for this row by 1).
-            </summary>
-            <param name="fromAll">If set to <c>true</c> it will remove this row from all outline levels.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Collapse">
-            <summary>
-            Show this row as collapsed.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Cell(System.Int32)">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Cell(System.Int32)">
             <summary>
             Gets the cell in the specified column.
             </summary>
             <param name="columnNumber">The cell's column.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Cell(System.String)">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Cell(System.String)">
             <summary>
             Gets the cell in the specified column.
             </summary>
             <param name="columnLetter">The cell's column.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Cells(System.String)">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Cells(System.String)">
             <summary>
             Returns the specified group of cells, separated by commas.
-            <para>e.g. Cells("1"), Cells("1:5"), Cells("1,3:5")</para>
+            <para>e.g. Cells("1"), Cells("1:5"), Cells("1:2,4:5")</para>
             </summary>
             <param name="cellsInRow">The row's cells to return.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Cells(System.Int32,System.Int32)">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Cells(System.Int32,System.Int32)">
             <summary>
             Returns the specified group of cells.
             </summary>
             <param name="firstColumn">The first column in the group of cells to return.</param>
             <param name="lastColumn">The last column in the group of cells to return.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Cells(System.String,System.String)">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Cells(System.String,System.String)">
             <summary>
             Returns the specified group of cells.
             </summary>
             <param name="firstColumn">The first column in the group of cells to return.</param>
             <param name="lastColumn">The last column in the group of cells to return.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Expand">
-            <summary>Expands this row (if it's collapsed).</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRow.AddHorizontalPageBreak">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertCellsAfter(System.Int32)">
             <summary>
-            Adds a horizontal page break after this row.
+            Inserts X number of cells to the right of this row.
+            <para>All cells to the right of this row will be shifted X number of columns.</para>
+            </summary>
+            <param name="numberOfColumns">Number of cells to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertCellsBefore(System.Int32)">
+            <summary>
+            Inserts X number of cells to the left of this row.
+            <para>This row and all cells to the right of it will be shifted X number of columns.</para>
+            </summary>
+            <param name="numberOfColumns">Number of cells to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertRowsAbove(System.Int32)">
+            <summary>
+            Inserts X number of rows on top of this row.
+            <para>This row and all cells below it will be shifted X number of rows.</para>
+            </summary>
+            <param name="numberOfRows">Number of rows to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertRowsBelow(System.Int32)">
+            <summary>
+            Inserts X number of rows below this row.
+            <para>All cells below this row will be shifted X number of rows.</para>
+            </summary>
+            <param name="numberOfRows">Number of rows to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Delete">
+            <summary>
+            Deletes this range and shifts the cells below.
             </summary>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRow.Clear(ClosedXML.Excel.XLClearOptions)">
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Delete(ClosedXML.Excel.XLShiftDeletedCells)">
+            <summary>
+            Deletes this range and shifts the surrounding cells accordingly.
+            </summary>
+            <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRow.RowNumber">
+            <summary>
+            Gets this row's number in the range
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRow.Clear(ClosedXML.Excel.XLClearOptions)">
             <summary>
             Clears the contents of this row.
             </summary>
             <param name="clearOptions">Specify what you want to clear.</param>
         </member>
-        <member name="P:ClosedXML.Excel.IXLRow.Height">
+        <member name="M:ClosedXML.Excel.IXLTables.Clear(ClosedXML.Excel.XLClearOptions)">
             <summary>
-            Gets or sets the height of this row.
-            </summary>
-            <value>
-            The width of this row.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLRow.IsHidden">
-            <summary>
-            Gets a value indicating whether this row is hidden or not.
-            </summary>
-            <value>
-              <c>true</c> if this row is hidden; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLRow.OutlineLevel">
-            <summary>
-            Gets or sets the outline level of this row.
-            </summary>
-            <value>
-            The outline level of this row.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.Horizontal">
-            <summary>
-            Gets or sets the cell's horizontal alignment.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.Vertical">
-            <summary>
-            Gets or sets the cell's vertical alignment.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.Indent">
-            <summary>
-            Gets or sets the cell's text indentation.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.JustifyLastLine">
-            <summary>
-            Gets or sets whether the cell's last line is justified or not.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.ReadingOrder">
-            <summary>
-            Gets or sets the cell's reading order.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.RelativeIndent">
-            <summary>
-            Gets or sets the cell's relative indent.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.ShrinkToFit">
-            <summary>
-            Gets or sets whether the cell's font size should decrease to fit the contents.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.TextRotation">
-            <summary>
-            Gets or sets the cell's text rotation.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.WrapText">
-            <summary>
-            Gets or sets whether the cell's text should wrap if it doesn't fit.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLAlignment.TopToBottom">
-            <summary>
-            Gets or sets wheter the cell's text should be displayed from to to bottom
-            <para>(as opposed to the normal left to right).</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLMargins.Left">
-            <summary>Gets or sets the Left margin.</summary>
-            <value>The Left margin.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLMargins.Right">
-            <summary>Gets or sets the Right margin.</summary>
-            <value>The Right margin.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLMargins.Top">
-            <summary>Gets or sets the Top margin.</summary>
-            <value>The Top margin.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLMargins.Bottom">
-            <summary>Gets or sets the Bottom margin.</summary>
-            <value>The Bottom margin.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLMargins.Header">
-            <summary>Gets or sets the Header margin.</summary>
-            <value>The Header margin.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLMargins.Footer">
-            <summary>Gets or sets the Footer margin.</summary>
-            <value>The Footer margin.</value>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTableRows.Add(ClosedXML.Excel.IXLTableRow)">
-            <summary>
-            Adds a table row to this group.
-            </summary>
-            <param name="tableRow">The row table to add.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTableRows.Cells">
-            <summary>
-            Returns the collection of cells.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTableRows.CellsUsed">
-            <summary>
-            Returns the collection of cells that have a value.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTableRows.CellsUsed(System.Boolean)">
-            <summary>
-            Returns the collection of cells that have a value.
-            </summary>
-            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTableRows.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of these rows.
+            Clears the contents of these tables.
             </summary>
             <param name="clearOptions">Specify what you want to clear.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Add(ClosedXML.Excel.XLWorkbook,System.String)">
+        <member name="M:ClosedXML.Excel.IXLTableRow.Clear(ClosedXML.Excel.XLClearOptions)">
             <summary>
-            Adds the specified range to this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
+            Clears the contents of this row.
             </summary>
-            <param name="workbook">Workbook containing the range</param>
-            <param name="rangeAddress">The range address to add.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Add(ClosedXML.Excel.IXLRange)">
-            <summary>
-            Adds the specified range to this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
-            </summary>
-            <param name="range">The range to add.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Add(ClosedXML.Excel.IXLRanges)">
-            <summary>
-            Adds the specified ranges to this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
-            </summary>
-            <param name="ranges">The ranges to add.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Delete">
-            <summary>
-            Deletes this named range (not the cells).
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Clear">
-            <summary>
-            Clears the list of ranges associated with this named range.
-            <para>(it does not clear the cells)</para>
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Remove(System.String)">
-            <summary>
-            Removes the specified range from this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
-            </summary>
-            <param name="rangeAddress">The range address to remove.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Remove(ClosedXML.Excel.IXLRange)">
-            <summary>
-            Removes the specified range from this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
-            </summary>
-            <param name="rangeAddress">The range to remove.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRange.Remove(ClosedXML.Excel.IXLRanges)">
-            <summary>
-            Removes the specified ranges from this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
-            </summary>
-            <param name="rangeAddress">The ranges to remove.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLNamedRange.Name">
-            <summary>
-            Gets or sets the name of the range.
-            </summary>
-            <value>
-            The name of the range.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLNamedRange.Ranges">
-            <summary>
-            Gets the ranges associated with this named range.
-            <para>Note: A named range can point to multiple ranges.</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLNamedRange.Comment">
-            <summary>
-            Gets or sets the comment for this named range.
-            </summary>
-            <value>
-            The comment for this named range.
-            </value>
+            <param name="clearOptions">Specify what you want to clear.</param>
         </member>
         <member name="M:ClosedXML.Excel.IXLRange.Cell(System.Int32,System.Int32)">
             <summary>
@@ -825,20 +507,863 @@
             </summary>
             <param name="clearOptions">Specify what you want to clear.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLComment.SetAuthor(System.String)">
+        <member name="M:ClosedXML.Excel.XLWorkbook.Save">
             <summary>
-            Sets the name of the comment's author
-            </summary>
-            <param name="value">Author's name</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLComment.AddSignature">
-            <summary>
-            Adds a bolded line with the author's name
+              Saves the current workbook.
             </summary>
         </member>
-        <member name="P:ClosedXML.Excel.IXLComment.Author">
+        <member name="M:ClosedXML.Excel.XLWorkbook.SaveAs(System.String)">
             <summary>
-            Gets or sets this comment's author's name
+              Saves the current workbook to a file.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.XLWorkbook.SaveAs(System.IO.Stream)">
+            <summary>
+              Saves the current workbook to a stream.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.XLWorkbook.#ctor">
+            <summary>
+              Creates a new Excel workbook.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.XLWorkbook.#ctor(System.String)">
+            <summary>
+              Opens an existing workbook from a file.
+            </summary>
+            <param name = "file">The file to open.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.XLWorkbook.#ctor(System.IO.Stream)">
+            <summary>
+              Opens an existing workbook from a stream.
+            </summary>
+            <param name = "stream">The stream to open.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.CellSetValueBehavior">
+            <summary>
+              Behavior for <see cref="M:ClosedXML.Excel.IXLCell.set_Value(System.Object)"/>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.Worksheets">
+            <summary>
+              Gets an object to manipulate the worksheets.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.NamedRanges">
+            <summary>
+              Gets an object to manipulate this workbook's named ranges.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.Theme">
+            <summary>
+              Gets an object to manipulate this workbook's theme.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.Style">
+            <summary>
+              Gets or sets the default style for the workbook.
+              <para>All new worksheets will use this style.</para>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.RowHeight">
+            <summary>
+              Gets or sets the default row height for the workbook.
+              <para>All new worksheets will use this row height.</para>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.ColumnWidth">
+            <summary>
+              Gets or sets the default column width for the workbook.
+              <para>All new worksheets will use this column width.</para>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.PageOptions">
+            <summary>
+              Gets or sets the default page options for the workbook.
+              <para>All new worksheets will use these page options.</para>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.Outline">
+            <summary>
+              Gets or sets the default outline options for the workbook.
+              <para>All new worksheets will use these outline options.</para>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.Properties">
+            <summary>
+              Gets or sets the workbook's properties.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.CalculateMode">
+            <summary>
+              Gets or sets the workbook's calculation mode.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.XLWorkbook.ReferenceStyle">
+            <summary>
+              Gets or sets the workbook's reference style.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.Add(ClosedXML.Excel.IXLRangeBase)">
+            <summary>
+            Adds the specified range to this group.
+            </summary>
+            <param name="range">The range to add to this group.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.Remove(ClosedXML.Excel.IXLRange)">
+            <summary>
+            Removes the specified range from this group.
+            </summary>
+            <param name="range">The range to remove from this group.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.AddToNamed(System.String)">
+            <summary>
+            Creates a named range out of these ranges. 
+            <para>If the named range exists, it will add these ranges to that named range.</para>
+            <para>The default scope for the named range is Workbook.</para>
+            </summary>
+            <param name="rangeName">Name of the range.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.AddToNamed(System.String,ClosedXML.Excel.XLScope)">
+            <summary>
+            Creates a named range out of these ranges. 
+            <para>If the named range exists, it will add these ranges to that named range.</para>
+            <param name="rangeName">Name of the range.</param>
+            <param name="scope">The scope for the named range.</param>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.AddToNamed(System.String,ClosedXML.Excel.XLScope,System.String)">
+            <summary>
+            Creates a named range out of these ranges. 
+            <para>If the named range exists, it will add these ranges to that named range.</para>
+            <param name="rangeName">Name of the range.</param>
+            <param name="scope">The scope for the named range.</param>
+            <param name="comment">The comments for the named range.</param>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.Cells">
+            <summary>
+            Returns the collection of cells.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.CellsUsed">
+            <summary>
+            Returns the collection of cells that have a value.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.CellsUsed(System.Boolean)">
+            <summary>
+            Returns the collection of cells that have a value.
+            </summary>
+            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRanges.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of these ranges.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRanges.Value">
+            <summary>
+            Sets the cells' value.
+            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from each cell.</para>
+            <para>If the object is a range ClosedXML will copy the range starting from each cell.</para>
+            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
+            </summary>
+            <value>
+            The object containing the value(s) to set.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRangeAddress.FirstAddress">
+            <summary>
+            Gets or sets the first address in the range.
+            </summary>
+            <value>
+            The first address.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRangeAddress.LastAddress">
+            <summary>
+            Gets or sets the last address in the range.
+            </summary>
+            <value>
+            The last address.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRangeAddress.IsInvalid">
+            <summary>
+            Gets or sets a value indicating whether this range is invalid.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is invalid; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Delete">
+            <summary>
+            Deletes all columns and shifts the columns at the right of them accordingly.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.AdjustToContents">
+            <summary>
+            Adjusts the width of all columns based on its contents.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.AdjustToContents(System.Int32)">
+            <summary>
+            Adjusts the width of all columns based on its contents, starting from the startRow.
+            </summary>
+            <param name="startRow">The row to start calculating the column width.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.AdjustToContents(System.Int32,System.Int32)">
+            <summary>
+            Adjusts the width of all columns based on its contents, starting from the startRow and ending at endRow.
+            </summary>
+            <param name="startRow">The row to start calculating the column width.</param>
+            <param name="endRow">The row to end calculating the column width.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Hide">
+            <summary>
+            Hides all columns.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Unhide">
+            <summary>Unhides all columns.</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Group">
+            <summary>
+            Increments the outline level of all columns by 1.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Group(System.Boolean)">
+            <summary>
+            Increments the outline level of all columns by 1.
+            </summary>
+            <param name="collapse">If set to <c>true</c> the columns will be shown collapsed.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Group(System.Int32)">
+            <summary>
+            Sets outline level for all columns.
+            </summary>
+            <param name="outlineLevel">The outline level.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Group(System.Int32,System.Boolean)">
+            <summary>
+            Sets outline level for all columns.
+            </summary>
+            <param name="outlineLevel">The outline level.</param>
+            <param name="collapse">If set to <c>true</c> the columns will be shown collapsed.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Ungroup">
+            <summary>
+            Decrements the outline level of all columns by 1.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Ungroup(System.Boolean)">
+            <summary>
+            Decrements the outline level of all columns by 1.
+            </summary>
+            <param name="fromAll">If set to <c>true</c> it will remove the columns from all outline levels.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Collapse">
+            <summary>
+            Show all columns as collapsed.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Expand">
+            <summary>Expands all columns (if they're collapsed).</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Cells">
+            <summary>
+            Returns the collection of cells.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.CellsUsed">
+            <summary>
+            Returns the collection of cells that have a value.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.CellsUsed(System.Boolean)">
+            <summary>
+            Returns the collection of cells that have a value.
+            </summary>
+            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.AddVerticalPageBreaks">
+            <summary>
+            Adds a vertical page break after these columns.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumns.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of these columns.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLColumns.Width">
+            <summary>
+            Sets the width of all columns.
+            </summary>
+            <value>
+            The width of all columns.
+            </value>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Delete">
+            <summary>
+            Deletes this row and shifts the rows below this one accordingly.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.RowNumber">
+            <summary>
+            Gets this row's number
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.InsertRowsBelow(System.Int32)">
+            <summary>
+            Inserts X number of rows below this one.
+            <para>All rows below will be shifted accordingly.</para>
+            </summary>
+            <param name="numberOfRows">The number of rows to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.InsertRowsAbove(System.Int32)">
+            <summary>
+            Inserts X number of rows above this one.
+            <para>This row and all below will be shifted accordingly.</para>
+            </summary>
+            <param name="numberOfRows">The number of rows to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.AdjustToContents(System.Int32)">
+            <summary>
+            Adjusts the height of the row based on its contents, starting from the startColumn.
+            </summary>
+            <param name="startColumn">The column to start calculating the row height.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.AdjustToContents(System.Int32,System.Int32)">
+            <summary>
+            Adjusts the height of the row based on its contents, starting from the startColumn and ending at endColumn.
+            </summary>
+            <param name="startColumn">The column to start calculating the row height.</param>
+            <param name="endColumn">The column to end calculating the row height.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Hide">
+            <summary>Hides this row.</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Unhide">
+            <summary>Unhides this row.</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Group">
+            <summary>
+            Adds this row to the next outline level (Increments the outline level for this row by 1).
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Group(System.Boolean)">
+            <summary>
+            Adds this row to the next outline level (Increments the outline level for this row by 1).
+            </summary>
+            <param name="collapse">If set to <c>true</c> the row will be shown collapsed.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Group(System.Int32)">
+            <summary>
+            Sets outline level for this row.
+            </summary>
+            <param name="outlineLevel">The outline level.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Group(System.Int32,System.Boolean)">
+            <summary>
+            Sets outline level for this row.
+            </summary>
+            <param name="outlineLevel">The outline level.</param>
+            <param name="collapse">If set to <c>true</c> the row will be shown collapsed.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Ungroup">
+            <summary>
+            Adds this row to the previous outline level (decrements the outline level for this row by 1).
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Ungroup(System.Boolean)">
+            <summary>
+            Adds this row to the previous outline level (decrements the outline level for this row by 1).
+            </summary>
+            <param name="fromAll">If set to <c>true</c> it will remove this row from all outline levels.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Collapse">
+            <summary>
+            Show this row as collapsed.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Cell(System.Int32)">
+            <summary>
+            Gets the cell in the specified column.
+            </summary>
+            <param name="columnNumber">The cell's column.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Cell(System.String)">
+            <summary>
+            Gets the cell in the specified column.
+            </summary>
+            <param name="columnLetter">The cell's column.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Cells(System.String)">
+            <summary>
+            Returns the specified group of cells, separated by commas.
+            <para>e.g. Cells("1"), Cells("1:5"), Cells("1,3:5")</para>
+            </summary>
+            <param name="cellsInRow">The row's cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Cells(System.Int32,System.Int32)">
+            <summary>
+            Returns the specified group of cells.
+            </summary>
+            <param name="firstColumn">The first column in the group of cells to return.</param>
+            <param name="lastColumn">The last column in the group of cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Cells(System.String,System.String)">
+            <summary>
+            Returns the specified group of cells.
+            </summary>
+            <param name="firstColumn">The first column in the group of cells to return.</param>
+            <param name="lastColumn">The last column in the group of cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Expand">
+            <summary>Expands this row (if it's collapsed).</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.AddHorizontalPageBreak">
+            <summary>
+            Adds a horizontal page break after this row.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRow.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of this row.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRow.Height">
+            <summary>
+            Gets or sets the height of this row.
+            </summary>
+            <value>
+            The width of this row.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRow.IsHidden">
+            <summary>
+            Gets a value indicating whether this row is hidden or not.
+            </summary>
+            <value>
+              <c>true</c> if this row is hidden; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLRow.OutlineLevel">
+            <summary>
+            Gets or sets the outline level of this row.
+            </summary>
+            <value>
+            The outline level of this row.
+            </value>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Delete">
+            <summary>
+            Deletes this column and shifts the columns at the right of this one accordingly.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.ColumnNumber">
+            <summary>
+            Gets this column's number
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.ColumnLetter">
+            <summary>
+            Gets this column's letter
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.InsertColumnsAfter(System.Int32)">
+            <summary>
+            Inserts X number of columns at the right of this one.
+            <para>All columns at the right will be shifted accordingly.</para>
+            </summary>
+            <param name="numberOfColumns">The number of columns to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.InsertColumnsBefore(System.Int32)">
+            <summary>
+            Inserts X number of columns at the left of this one.
+            <para>This column and all at the right will be shifted accordingly.</para>
+            </summary>
+            <param name="numberOfColumns">The number of columns to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Cell(System.Int32)">
+            <summary>
+            Gets the cell in the specified row.
+            </summary>
+            <param name="rowNumber">The cell's row.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Cells(System.String)">
+            <summary>
+            Returns the specified group of cells, separated by commas.
+            <para>e.g. Cells("1"), Cells("1:5"), Cells("1,3:5")</para>
+            </summary>
+            <param name="cellsInColumn">The column cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Cells(System.Int32,System.Int32)">
+            <summary>
+            Returns the specified group of cells.
+            </summary>
+            <param name="firstRow">The first row in the group of cells to return.</param>
+            <param name="lastRow">The last row in the group of cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.AdjustToContents">
+            <summary>
+            Adjusts the width of the column based on its contents.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.AdjustToContents(System.Int32)">
+            <summary>
+            Adjusts the width of the column based on its contents, starting from the startRow.
+            </summary>
+            <param name="startRow">The row to start calculating the column width.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.AdjustToContents(System.Int32,System.Int32)">
+            <summary>
+            Adjusts the width of the column based on its contents, starting from the startRow and ending at endRow.
+            </summary>
+            <param name="startRow">The row to start calculating the column width.</param>
+            <param name="endRow">The row to end calculating the column width.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Hide">
+            <summary>
+            Hides this column.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Unhide">
+            <summary>Unhides this column.</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Group">
+            <summary>
+            Adds this column to the next outline level (Increments the outline level for this column by 1).
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Group(System.Boolean)">
+            <summary>
+            Adds this column to the next outline level (Increments the outline level for this column by 1).
+            </summary>
+            <param name="collapse">If set to <c>true</c> the column will be shown collapsed.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Group(System.Int32)">
+            <summary>
+            Sets outline level for this column.
+            </summary>
+            <param name="outlineLevel">The outline level.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Group(System.Int32,System.Boolean)">
+            <summary>
+            Sets outline level for this column.
+            </summary>
+            <param name="outlineLevel">The outline level.</param>
+            <param name="collapse">If set to <c>true</c> the column will be shown collapsed.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Ungroup">
+            <summary>
+            Adds this column to the previous outline level (decrements the outline level for this column by 1).
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Ungroup(System.Boolean)">
+            <summary>
+            Adds this column to the previous outline level (decrements the outline level for this column by 1).
+            </summary>
+            <param name="fromAll">If set to <c>true</c> it will remove this column from all outline levels.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Collapse">
+            <summary>
+            Show this column as collapsed.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Expand">
+            <summary>Expands this column (if it's collapsed).</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.AddVerticalPageBreak">
+            <summary>
+            Adds a vertical page break after this column.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLColumn.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of this column.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLColumn.Width">
+            <summary>
+            Gets or sets the width of this column.
+            </summary>
+            <value>
+            The width of this column.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLColumn.IsHidden">
+            <summary>
+            Gets a value indicating whether this column is hidden or not.
+            </summary>
+            <value>
+              <c>true</c> if this column is hidden; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLColumn.OutlineLevel">
+            <summary>
+            Gets or sets the outline level of this column.
+            </summary>
+            <value>
+            The outline level of this column.
+            </value>
+        </member>
+        <member name="M:ClosedXML.Excel.XLColumn.AddVerticalPageBreak">
+            <summary>
+              Adds a vertical page break after this column.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLPrintAreas.Clear">
+            <summary>Removes the print areas from the worksheet.</summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>Adds a range to the print areas.</summary>
+            <param name="firstCellRow">   The first cell row.</param>
+            <param name="firstCellColumn">The first cell column.</param>
+            <param name="lastCellRow">    The last cell row.</param>
+            <param name="lastCellColumn"> The last cell column.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(System.String)">
+            <summary>Adds a range to the print areas.</summary>
+            <param name="rangeAddress">The range address to add.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(System.String,System.String)">
+            <summary>Adds a range to the print areas.</summary>
+            <param name="firstCellAddress">The first cell address.</param>
+            <param name="lastCellAddress"> The last cell address.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(ClosedXML.Excel.IXLAddress,ClosedXML.Excel.IXLAddress)">
+            <summary>Adds a range to the print areas.</summary>
+            <param name="firstCellAddress">The first cell address.</param>
+            <param name="lastCellAddress"> The last cell address.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLMargins.Left">
+            <summary>Gets or sets the Left margin.</summary>
+            <value>The Left margin.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLMargins.Right">
+            <summary>Gets or sets the Right margin.</summary>
+            <value>The Right margin.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLMargins.Top">
+            <summary>Gets or sets the Top margin.</summary>
+            <value>The Top margin.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLMargins.Bottom">
+            <summary>Gets or sets the Bottom margin.</summary>
+            <value>The Bottom margin.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLMargins.Header">
+            <summary>Gets or sets the Header margin.</summary>
+            <value>The Header margin.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLMargins.Footer">
+            <summary>Gets or sets the Footer margin.</summary>
+            <value>The Footer margin.</value>
+        </member>
+        <member name="M:ClosedXML.Excel.XLColumns.AddVerticalPageBreaks">
+            <summary>
+              Adds a vertical page break after this column.
+            </summary>
+        </member>
+        <member name="T:ClosedXML.Excel.XLHelper">
+            <summary>
+              Common methods
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.XLHelper.GetColumnNumberFromLetter(System.String)">
+            <summary>
+              Gets the column number of a given column letter.
+            </summary>
+            <param name = "columnLetter">The column letter to translate into a column number.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.XLHelper.GetColumnLetterFromNumber(System.Int32)">
+            <summary>
+              Gets the column letter of a given column number.
+            </summary>
+            <param name = "column">The column number to translate into a column letter.</param>
+        </member>
+        <member name="T:ClosedXML.PathHelper">
+            <summary>
+              Help methods for work with files
+            </summary>
+        </member>
+        <member name="F:ClosedXML.PathHelper.ms_checkValidRelativePathRegEx">
+            <summary>
+              Can check only .\dfdfd\dfdf\dfdf or ..\..\gfhfgh\fghfh
+            </summary>
+        </member>
+        <member name="M:ClosedXML.PathHelper.GetTimeStamp">
+            <summary>
+              Gets data and time string stamp for file name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.PathHelper.GetTimeStamp(System.DateTime)">
+            <summary>
+              Gets data and time string stamp for file name
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.PathHelper.SafetyDeleteFile(System.String)">
+            <summary>
+              Safety delete file(with try block)
+            </summary>
+            <param name = "fileName">file name</param>
+        </member>
+        <member name="M:ClosedXML.PathHelper.NormalizeFileName(System.String)">
+            <summary>
+              Replace all not implemented symbols to '_'
+            </summary>
+            <param name = "fileName">input filename</param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.PathHelper.ValidatePath(System.String,ClosedXML.PathHelper.PathTypes)">
+            <summary>
+              ValidatePath file or diretory path
+            </summary>
+            <param name = "path"></param>
+            <param name = "type">path type</param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.PathHelper.ValidateFileName(System.String)">
+            <summary>
+              ValidatePath file or diretory path
+            </summary>
+            <param name = "fileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.Cell(System.Int32)">
+            <summary>
+            Gets the cell in the specified row.
+            </summary>
+            <param name="rowNumber">The cell's row.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.Cells(System.String)">
+            <summary>
+            Returns the specified group of cells, separated by commas.
+            <para>e.g. Cells("1"), Cells("1:5"), Cells("1:2,4:5")</para>
+            </summary>
+            <param name="cellsInColumn">The column cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.Cells(System.Int32,System.Int32)">
+            <summary>
+            Returns the specified group of cells.
+            </summary>
+            <param name="firstRow">The first row in the group of cells to return.</param>
+            <param name="lastRow">The last row in the group of cells to return.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertColumnsAfter(System.Int32)">
+            <summary>
+            Inserts X number of columns to the right of this range.
+            <para>All cells to the right of this range will be shifted X number of columns.</para>
+            </summary>
+            <param name="numberOfColumns">Number of columns to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertColumnsBefore(System.Int32)">
+            <summary>
+            Inserts X number of columns to the left of this range.
+            <para>This range and all cells to the right of this range will be shifted X number of columns.</para>
+            </summary>
+            <param name="numberOfColumns">Number of columns to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertCellsAbove(System.Int32)">
+            <summary>
+            Inserts X number of cells on top of this column.
+            <para>This column and all cells below it will be shifted X number of rows.</para>
+            </summary>
+            <param name="numberOfRows">Number of cells to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertCellsBelow(System.Int32)">
+            <summary>
+            Inserts X number of cells below this range.
+            <para>All cells below this column will be shifted X number of rows.</para>
+            </summary>
+            <param name="numberOfRows">Number of cells to insert.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.Delete">
+            <summary>
+            Deletes this range and shifts the cells at the right.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.Delete(ClosedXML.Excel.XLShiftDeletedCells)">
+            <summary>
+            Deletes this range and shifts the surrounding cells accordingly.
+            </summary>
+            <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.ColumnNumber">
+            <summary>
+            Gets this column's number in the range
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.ColumnLetter">
+            <summary>
+            Gets this column's letter in the range
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeColumn.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of this column.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.Horizontal">
+            <summary>
+            Gets or sets the cell's horizontal alignment.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.Vertical">
+            <summary>
+            Gets or sets the cell's vertical alignment.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.Indent">
+            <summary>
+            Gets or sets the cell's text indentation.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.JustifyLastLine">
+            <summary>
+            Gets or sets whether the cell's last line is justified or not.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.ReadingOrder">
+            <summary>
+            Gets or sets the cell's reading order.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.RelativeIndent">
+            <summary>
+            Gets or sets the cell's relative indent.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.ShrinkToFit">
+            <summary>
+            Gets or sets whether the cell's font size should decrease to fit the contents.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.TextRotation">
+            <summary>
+            Gets or sets the cell's text rotation.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.WrapText">
+            <summary>
+            Gets or sets whether the cell's text should wrap if it doesn't fit.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLAlignment.TopToBottom">
+            <summary>
+            Gets or sets wheter the cell's text should be displayed from to to bottom
+            <para>(as opposed to the normal left to right).</para>
             </summary>
         </member>
         <member name="M:ClosedXML.Excel.IXLRows.Delete">
@@ -950,89 +1475,6 @@
             The height of all rows.
             </value>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Cell(System.Int32)">
-            <summary>
-            Gets the cell in the specified column.
-            </summary>
-            <param name="columnNumber">The cell's column.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Cell(System.String)">
-            <summary>
-            Gets the cell in the specified column.
-            </summary>
-            <param name="columnLetter">The cell's column.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Cells(System.String)">
-            <summary>
-            Returns the specified group of cells, separated by commas.
-            <para>e.g. Cells("1"), Cells("1:5"), Cells("1:2,4:5")</para>
-            </summary>
-            <param name="cellsInRow">The row's cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Cells(System.Int32,System.Int32)">
-            <summary>
-            Returns the specified group of cells.
-            </summary>
-            <param name="firstColumn">The first column in the group of cells to return.</param>
-            <param name="lastColumn">The last column in the group of cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Cells(System.String,System.String)">
-            <summary>
-            Returns the specified group of cells.
-            </summary>
-            <param name="firstColumn">The first column in the group of cells to return.</param>
-            <param name="lastColumn">The last column in the group of cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertCellsAfter(System.Int32)">
-            <summary>
-            Inserts X number of cells to the right of this row.
-            <para>All cells to the right of this row will be shifted X number of columns.</para>
-            </summary>
-            <param name="numberOfColumns">Number of cells to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertCellsBefore(System.Int32)">
-            <summary>
-            Inserts X number of cells to the left of this row.
-            <para>This row and all cells to the right of it will be shifted X number of columns.</para>
-            </summary>
-            <param name="numberOfColumns">Number of cells to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertRowsAbove(System.Int32)">
-            <summary>
-            Inserts X number of rows on top of this row.
-            <para>This row and all cells below it will be shifted X number of rows.</para>
-            </summary>
-            <param name="numberOfRows">Number of rows to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.InsertRowsBelow(System.Int32)">
-            <summary>
-            Inserts X number of rows below this row.
-            <para>All cells below this row will be shifted X number of rows.</para>
-            </summary>
-            <param name="numberOfRows">Number of rows to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Delete">
-            <summary>
-            Deletes this range and shifts the cells below.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Delete(ClosedXML.Excel.XLShiftDeletedCells)">
-            <summary>
-            Deletes this range and shifts the surrounding cells accordingly.
-            </summary>
-            <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.RowNumber">
-            <summary>
-            Gets this row's number in the range
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRow.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of this row.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
         <member name="M:ClosedXML.Excel.IXLBaseCollection`2.AddToNamed(System.String)">
             <summary>
             Creates a named range out of these ranges. 
@@ -1090,6 +1532,275 @@
             </summary>
             <value>
             The object containing the value(s) to set.
+            </value>
+        </member>
+        <member name="F:ClosedXML.Excel.XLCellSetValueBehavior.Smart">
+            <summary>
+              Analyze input string and convert value. For avoid analyzing use escape symbol '
+            </summary>
+        </member>
+        <member name="F:ClosedXML.Excel.XLCellSetValueBehavior.Simple">
+            <summary>
+              Direct set value. If value has unsupported type - value will be stored as string returned by <see cref="M:System.Object.ToString"/>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRows.Add(ClosedXML.Excel.IXLRangeRow)">
+            <summary>
+            Adds a row range to this group.
+            </summary>
+            <param name="rowRange">The row range to add.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRows.Cells">
+            <summary>
+            Returns the collection of cells.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRows.CellsUsed">
+            <summary>
+            Returns the collection of cells that have a value.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRows.CellsUsed(System.Boolean)">
+            <summary>
+            Returns the collection of cells that have a value.
+            </summary>
+            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRows.Delete">
+            <summary>
+            Deletes all rows and shifts the rows below them accordingly.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLRangeRows.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of these rows.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLTable.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of this table.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLComment.SetAuthor(System.String)">
+            <summary>
+            Sets the name of the comment's author
+            </summary>
+            <param name="value">Author's name</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLComment.AddSignature">
+            <summary>
+            Adds a bolded line with the author's name
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLComment.Author">
+            <summary>
+            Gets or sets this comment's author's name
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.SetDataType(ClosedXML.Excel.XLCellValues)">
+            <summary>
+            Sets the type of this cell's data.
+            <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
+            <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
+            </summary>
+            <param name="dataType">Type of the data.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.SetValue``1(``0)">
+            <summary>
+            Sets the cell's value.
+            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
+            <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
+            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
+            </summary>
+            <value>
+            The object containing the value(s) to set.
+            </value>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetValue``1">
+            <summary>
+            Gets the cell's value converted to the T type.
+            <para>ClosedXML will try to covert the current value to the T type.</para>
+            <para>An exception will be thrown if the current value cannot be converted to the T type.</para>
+            </summary>
+            <typeparam name="T">The return type.</typeparam>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetString">
+            <summary>
+            Gets the cell's value converted to a String.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetFormattedString">
+            <summary>
+            Gets the cell's value formatted depending on the cell's data type and style.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetDouble">
+            <summary>
+            Gets the cell's value converted to Double.
+            <para>ClosedXML will try to covert the current value to Double.</para>
+            <para>An exception will be thrown if the current value cannot be converted to Double.</para>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetBoolean">
+            <summary>
+            Gets the cell's value converted to Boolean.
+            <para>ClosedXML will try to covert the current value to Boolean.</para>
+            <para>An exception will be thrown if the current value cannot be converted to Boolean.</para>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetDateTime">
+            <summary>
+            Gets the cell's value converted to DateTime.
+            <para>ClosedXML will try to covert the current value to DateTime.</para>
+            <para>An exception will be thrown if the current value cannot be converted to DateTime.</para>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.GetTimeSpan">
+            <summary>
+            Gets the cell's value converted to TimeSpan.
+            <para>ClosedXML will try to covert the current value to TimeSpan.</para>
+            <para>An exception will be thrown if the current value cannot be converted to TimeSpan.</para>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of this cell.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.Delete(ClosedXML.Excel.XLShiftDeletedCells)">
+            <summary>
+            Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.
+            </summary>
+            <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.AsRange">
+            <summary>
+            Returns this cell as an IXLRange.
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.InsertData(System.Collections.IEnumerable)">
+            <summary>
+            Inserts the IEnumerable data elements and returns the range it occupies.
+            </summary>
+            <param name="data">The IEnumerable data.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable)">
+            <summary>
+            Inserts the IEnumerable data elements as a table and returns it.
+            <para>The new table will receive a generic name: Table#</para>
+            </summary>
+            <param name="data">The table data.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable,System.Boolean)">
+            <summary>
+            Inserts the IEnumerable data elements as a table and returns it.
+            <para>The new table will receive a generic name: Table#</para>
+            </summary>
+            <param name="data">The table data.</param>
+            <param name="createTable">
+            if set to <c>true</c> it will create an Excel table.
+            <para>if set to <c>false</c> the table will be created in memory.</para>
+            </param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable,System.String)">
+            <summary>
+            Creates an Excel table from the given IEnumerable data elements.
+            </summary>
+            <param name="data">The table data.</param>
+            <param name="tableName">Name of the table.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable,System.String,System.Boolean)">
+            <summary>
+            Inserts the IEnumerable data elements as a table and returns it.
+            </summary>
+            <param name="data">The table data.</param>
+            <param name="tableName">Name of the table.</param>
+            <param name="createTable">
+            if set to <c>true</c> it will create an Excel table.
+            <para>if set to <c>false</c> the table will be created in memory.</para>
+            </param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.AddToNamed(System.String)">
+            <summary>
+            Creates a named range out of this cell. 
+            <para>If the named range exists, it will add this range to that named range.</para>
+            <para>The default scope for the named range is Workbook.</para>
+            </summary>
+            <param name="rangeName">Name of the range.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.AddToNamed(System.String,ClosedXML.Excel.XLScope)">
+            <summary>
+            Creates a named range out of this cell. 
+            <para>If the named range exists, it will add this range to that named range.</para>
+            <param name="rangeName">Name of the range.</param>
+            <param name="scope">The scope for the named range.</param>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCell.AddToNamed(System.String,ClosedXML.Excel.XLScope,System.String)">
+            <summary>
+            Creates a named range out of this cell. 
+            <para>If the named range exists, it will add this range to that named range.</para>
+            <param name="rangeName">Name of the range.</param>
+            <param name="scope">The scope for the named range.</param>
+            <param name="comment">The comments for the named range.</param>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.Value">
+            <summary>
+            Gets or sets the cell's value. To get a strongly typed object use the method GetValue&lt;T&gt;.
+            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
+            <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
+            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
+            </summary>
+            <value>
+            The object containing the value(s) to set.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.Address">
+            <summary>Gets this cell's address, relative to the worksheet.</summary>
+            <value>The cell's address.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.DataType">
+            <summary>
+            Gets or sets the type of this cell's data.
+            <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
+            <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
+            </summary>
+            <value>
+            The type of the cell's data.
+            </value>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.FormulaA1">
+            <summary>
+            Gets or sets the cell's formula with A1 references.
+            </summary>
+            <value>The formula with A1 references.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.FormulaR1C1">
+            <summary>
+            Gets or sets the cell's formula with R1C1 references.
+            </summary>
+            <value>The formula with R1C1 references.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.Style">
+            <summary>
+            Gets or sets the cell's style.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCell.ShareString">
+            <summary>
+            Gets or sets a value indicating whether this cell's text should be shared or not.
+            </summary>
+            <value>
+              If false the cell's text will not be shared and stored as an inline value.
             </value>
         </member>
         <member name="M:ClosedXML.Excel.IXLPageSetup.SetRowsToRepeatAtTop(System.String)">
@@ -1324,282 +2035,6 @@
             Gets or sets how error values will be printed.
             </summary>
         </member>
-        <member name="M:ClosedXML.Excel.IXLTable.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of this table.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.NamedRange(System.String)">
-            <summary>
-            Gets the specified named range.
-            </summary>
-            <param name="rangeName">Name of the range.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,System.String)">
-            <summary>
-            Adds a new named range.
-            </summary>
-            <param name="rangeName">Name of the range to add.</param>
-            <param name="rangeAddress">The range address to add.</param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRange)">
-            <summary>
-            Adds a new named range.
-            </summary>
-            <param name="rangeName">Name of the range to add.</param>
-            <param name="range">The range to add.</param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRanges)">
-            <summary>
-            Adds a new named range.
-            </summary>
-            <param name="rangeName">Name of the range to add.</param>
-            <param name="ranges">The ranges to add.</param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,System.String,System.String)">
-            <summary>
-            Adds a new named range.
-            </summary>
-            <param name="rangeName">Name of the ranges to add.</param>
-            <param name="rangeAddress">The range address to add.</param>
-            <param name="comment">The comment for the new named range.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRange,System.String)">
-            <summary>
-            Adds a new named range.
-            </summary>
-            <param name="rangeName">Name of the ranges to add.</param>
-            <param name="range">The range to add.</param>
-            <param name="comment">The comment for the new named range.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRanges,System.String)">
-            <summary>
-            Adds a new named range.
-            </summary>
-            <param name="rangeName">Name of the ranges to add.</param>
-            <param name="ranges">The ranges to add.</param>
-            <param name="comment">The comment for the new named range.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Delete(System.String)">
-            <summary>
-            Deletes the specified named range (not the cells).
-            </summary>
-            <param name="rangeName">Name of the range to delete.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.Delete(System.Int32)">
-            <summary>
-            Deletes the specified named range's index (not the cells).
-            </summary>
-            <param name="rangeIndex">Index of the named range to delete.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLNamedRanges.DeleteAll">
-            <summary>
-            Deletes all named ranges (not the cells).
-            </summary>
-        </member>
-        <member name="T:ClosedXML.Excel.XLHelper">
-            <summary>
-              Common methods
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.XLHelper.GetColumnNumberFromLetter(System.String)">
-            <summary>
-              Gets the column number of a given column letter.
-            </summary>
-            <param name = "columnLetter">The column letter to translate into a column number.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.XLHelper.GetColumnLetterFromNumber(System.Int32)">
-            <summary>
-              Gets the column letter of a given column number.
-            </summary>
-            <param name = "column">The column number to translate into a column letter.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Delete">
-            <summary>
-            Deletes this column and shifts the columns at the right of this one accordingly.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.ColumnNumber">
-            <summary>
-            Gets this column's number
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.ColumnLetter">
-            <summary>
-            Gets this column's letter
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.InsertColumnsAfter(System.Int32)">
-            <summary>
-            Inserts X number of columns at the right of this one.
-            <para>All columns at the right will be shifted accordingly.</para>
-            </summary>
-            <param name="numberOfColumns">The number of columns to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.InsertColumnsBefore(System.Int32)">
-            <summary>
-            Inserts X number of columns at the left of this one.
-            <para>This column and all at the right will be shifted accordingly.</para>
-            </summary>
-            <param name="numberOfColumns">The number of columns to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Cell(System.Int32)">
-            <summary>
-            Gets the cell in the specified row.
-            </summary>
-            <param name="rowNumber">The cell's row.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Cells(System.String)">
-            <summary>
-            Returns the specified group of cells, separated by commas.
-            <para>e.g. Cells("1"), Cells("1:5"), Cells("1,3:5")</para>
-            </summary>
-            <param name="cellsInColumn">The column cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Cells(System.Int32,System.Int32)">
-            <summary>
-            Returns the specified group of cells.
-            </summary>
-            <param name="firstRow">The first row in the group of cells to return.</param>
-            <param name="lastRow">The last row in the group of cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.AdjustToContents">
-            <summary>
-            Adjusts the width of the column based on its contents.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.AdjustToContents(System.Int32)">
-            <summary>
-            Adjusts the width of the column based on its contents, starting from the startRow.
-            </summary>
-            <param name="startRow">The row to start calculating the column width.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.AdjustToContents(System.Int32,System.Int32)">
-            <summary>
-            Adjusts the width of the column based on its contents, starting from the startRow and ending at endRow.
-            </summary>
-            <param name="startRow">The row to start calculating the column width.</param>
-            <param name="endRow">The row to end calculating the column width.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Hide">
-            <summary>
-            Hides this column.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Unhide">
-            <summary>Unhides this column.</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Group">
-            <summary>
-            Adds this column to the next outline level (Increments the outline level for this column by 1).
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Group(System.Boolean)">
-            <summary>
-            Adds this column to the next outline level (Increments the outline level for this column by 1).
-            </summary>
-            <param name="collapse">If set to <c>true</c> the column will be shown collapsed.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Group(System.Int32)">
-            <summary>
-            Sets outline level for this column.
-            </summary>
-            <param name="outlineLevel">The outline level.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Group(System.Int32,System.Boolean)">
-            <summary>
-            Sets outline level for this column.
-            </summary>
-            <param name="outlineLevel">The outline level.</param>
-            <param name="collapse">If set to <c>true</c> the column will be shown collapsed.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Ungroup">
-            <summary>
-            Adds this column to the previous outline level (decrements the outline level for this column by 1).
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Ungroup(System.Boolean)">
-            <summary>
-            Adds this column to the previous outline level (decrements the outline level for this column by 1).
-            </summary>
-            <param name="fromAll">If set to <c>true</c> it will remove this column from all outline levels.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Collapse">
-            <summary>
-            Show this column as collapsed.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Expand">
-            <summary>Expands this column (if it's collapsed).</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.AddVerticalPageBreak">
-            <summary>
-            Adds a vertical page break after this column.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumn.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of this column.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLColumn.Width">
-            <summary>
-            Gets or sets the width of this column.
-            </summary>
-            <value>
-            The width of this column.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLColumn.IsHidden">
-            <summary>
-            Gets a value indicating whether this column is hidden or not.
-            </summary>
-            <value>
-              <c>true</c> if this column is hidden; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLColumn.OutlineLevel">
-            <summary>
-            Gets or sets the outline level of this column.
-            </summary>
-            <value>
-            The outline level of this column.
-            </value>
-        </member>
-        <member name="M:ClosedXML.Excel.XLColumn.AddVerticalPageBreak">
-            <summary>
-              Adds a vertical page break after this column.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLPrintAreas.Clear">
-            <summary>Removes the print areas from the worksheet.</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(System.Int32,System.Int32,System.Int32,System.Int32)">
-            <summary>Adds a range to the print areas.</summary>
-            <param name="firstCellRow">   The first cell row.</param>
-            <param name="firstCellColumn">The first cell column.</param>
-            <param name="lastCellRow">    The last cell row.</param>
-            <param name="lastCellColumn"> The last cell column.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(System.String)">
-            <summary>Adds a range to the print areas.</summary>
-            <param name="rangeAddress">The range address to add.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(System.String,System.String)">
-            <summary>Adds a range to the print areas.</summary>
-            <param name="firstCellAddress">The first cell address.</param>
-            <param name="lastCellAddress"> The last cell address.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLPrintAreas.Add(ClosedXML.Excel.IXLAddress,ClosedXML.Excel.IXLAddress)">
-            <summary>Adds a range to the print areas.</summary>
-            <param name="firstCellAddress">The first cell address.</param>
-            <param name="lastCellAddress"> The last cell address.</param>
-        </member>
         <member name="M:ClosedXML.Excel.IXLHeaderFooter.GetText(ClosedXML.Excel.XLHFOccurrence)">
             <summary>
             Gets the text of the specified header/footer occurrence.
@@ -1620,6 +2055,128 @@
             <summary>
             Gets the right header/footer item.
             </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Add(ClosedXML.Excel.XLWorkbook,System.String)">
+            <summary>
+            Adds the specified range to this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+            <param name="workbook">Workbook containing the range</param>
+            <param name="rangeAddress">The range address to add.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Add(ClosedXML.Excel.IXLRange)">
+            <summary>
+            Adds the specified range to this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+            <param name="range">The range to add.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Add(ClosedXML.Excel.IXLRanges)">
+            <summary>
+            Adds the specified ranges to this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+            <param name="ranges">The ranges to add.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Delete">
+            <summary>
+            Deletes this named range (not the cells).
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Clear">
+            <summary>
+            Clears the list of ranges associated with this named range.
+            <para>(it does not clear the cells)</para>
+            </summary>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Remove(System.String)">
+            <summary>
+            Removes the specified range from this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+            <param name="rangeAddress">The range address to remove.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Remove(ClosedXML.Excel.IXLRange)">
+            <summary>
+            Removes the specified range from this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+            <param name="rangeAddress">The range to remove.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRange.Remove(ClosedXML.Excel.IXLRanges)">
+            <summary>
+            Removes the specified ranges from this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+            <param name="rangeAddress">The ranges to remove.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLNamedRange.Name">
+            <summary>
+            Gets or sets the name of the range.
+            </summary>
+            <value>
+            The name of the range.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLNamedRange.Ranges">
+            <summary>
+            Gets the ranges associated with this named range.
+            <para>Note: A named range can point to multiple ranges.</para>
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLNamedRange.Comment">
+            <summary>
+            Gets or sets the comment for this named range.
+            </summary>
+            <value>
+            The comment for this named range.
+            </value>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCells.Clear(ClosedXML.Excel.XLClearOptions)">
+            <summary>
+            Clears the contents of these cells.
+            </summary>
+            <param name="clearOptions">Specify what you want to clear.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLCells.DeleteComments">
+            <summary>
+            Delete the comments of these cells.
+            </summary>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCells.Value">
+            <summary>
+            Sets the cells' value.
+            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from each cell.</para>
+            <para>If the object is a range ClosedXML will copy the range starting from each cell.</para>
+            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
+            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
+            </summary>
+            <value>
+            The object containing the value(s) to set.
+            </value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCells.DataType">
+            <summary>
+            Sets the type of the cells' data.
+            <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
+            <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
+            </summary>
+            <value>
+            The type of the cell's data.
+            </value>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCells.FormulaA1">
+            <summary>
+            Sets the cells' formula with A1 references.
+            </summary>
+            <value>The formula with A1 references.</value>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLCells.FormulaR1C1">
+            <summary>
+            Sets the cells' formula with R1C1 references.
+            </summary>
+            <value>The formula with R1C1 references.</value>
         </member>
         <member name="M:ClosedXML.Excel.IXLWorksheet.FirstRow">
             <summary>
@@ -1942,115 +2499,6 @@
             Gets an object to manage this worksheet's Excel tables
             </summary>
         </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Delete">
-            <summary>
-            Deletes all columns and shifts the columns at the right of them accordingly.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.AdjustToContents">
-            <summary>
-            Adjusts the width of all columns based on its contents.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.AdjustToContents(System.Int32)">
-            <summary>
-            Adjusts the width of all columns based on its contents, starting from the startRow.
-            </summary>
-            <param name="startRow">The row to start calculating the column width.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.AdjustToContents(System.Int32,System.Int32)">
-            <summary>
-            Adjusts the width of all columns based on its contents, starting from the startRow and ending at endRow.
-            </summary>
-            <param name="startRow">The row to start calculating the column width.</param>
-            <param name="endRow">The row to end calculating the column width.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Hide">
-            <summary>
-            Hides all columns.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Unhide">
-            <summary>Unhides all columns.</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Group">
-            <summary>
-            Increments the outline level of all columns by 1.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Group(System.Boolean)">
-            <summary>
-            Increments the outline level of all columns by 1.
-            </summary>
-            <param name="collapse">If set to <c>true</c> the columns will be shown collapsed.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Group(System.Int32)">
-            <summary>
-            Sets outline level for all columns.
-            </summary>
-            <param name="outlineLevel">The outline level.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Group(System.Int32,System.Boolean)">
-            <summary>
-            Sets outline level for all columns.
-            </summary>
-            <param name="outlineLevel">The outline level.</param>
-            <param name="collapse">If set to <c>true</c> the columns will be shown collapsed.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Ungroup">
-            <summary>
-            Decrements the outline level of all columns by 1.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Ungroup(System.Boolean)">
-            <summary>
-            Decrements the outline level of all columns by 1.
-            </summary>
-            <param name="fromAll">If set to <c>true</c> it will remove the columns from all outline levels.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Collapse">
-            <summary>
-            Show all columns as collapsed.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Expand">
-            <summary>Expands all columns (if they're collapsed).</summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Cells">
-            <summary>
-            Returns the collection of cells.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.CellsUsed">
-            <summary>
-            Returns the collection of cells that have a value.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.CellsUsed(System.Boolean)">
-            <summary>
-            Returns the collection of cells that have a value.
-            </summary>
-            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.AddVerticalPageBreaks">
-            <summary>
-            Adds a vertical page break after these columns.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLColumns.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of these columns.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLColumns.Width">
-            <summary>
-            Sets the width of all columns.
-            </summary>
-            <value>
-            The width of all columns.
-            </value>
-        </member>
         <member name="M:ClosedXML.Excel.IXLRangeColumns.Add(ClosedXML.Excel.IXLRangeColumn)">
             <summary>
             Adds a column range to this group.
@@ -2084,424 +2532,31 @@
             </summary>
             <param name="clearOptions">Specify what you want to clear.</param>
         </member>
-        <member name="F:ClosedXML.Excel.XLCellSetValueBehavior.Smart">
+        <member name="M:ClosedXML.Excel.IXLTableRows.Add(ClosedXML.Excel.IXLTableRow)">
             <summary>
-              Analyze input string and convert value. For avoid analyzing use escape symbol '
+            Adds a table row to this group.
+            </summary>
+            <param name="tableRow">The row table to add.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLTableRows.Cells">
+            <summary>
+            Returns the collection of cells.
             </summary>
         </member>
-        <member name="F:ClosedXML.Excel.XLCellSetValueBehavior.Simple">
+        <member name="M:ClosedXML.Excel.IXLTableRows.CellsUsed">
             <summary>
-              Direct set value. If value has unsupported type - value will be stored as string returned by <see cref="M:System.Object.ToString"/>
+            Returns the collection of cells that have a value.
             </summary>
         </member>
-        <member name="M:ClosedXML.Excel.XLWorkbook.Save">
+        <member name="M:ClosedXML.Excel.IXLTableRows.CellsUsed(System.Boolean)">
             <summary>
-              Saves the current workbook.
+            Returns the collection of cells that have a value.
             </summary>
+            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
         </member>
-        <member name="M:ClosedXML.Excel.XLWorkbook.SaveAs(System.String)">
+        <member name="M:ClosedXML.Excel.IXLTableRows.Clear(ClosedXML.Excel.XLClearOptions)">
             <summary>
-              Saves the current workbook to a file.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.XLWorkbook.SaveAs(System.IO.Stream)">
-            <summary>
-              Saves the current workbook to a stream.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.XLWorkbook.#ctor">
-            <summary>
-              Creates a new Excel workbook.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.XLWorkbook.#ctor(System.String)">
-            <summary>
-              Opens an existing workbook from a file.
-            </summary>
-            <param name = "file">The file to open.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.XLWorkbook.#ctor(System.IO.Stream)">
-            <summary>
-              Opens an existing workbook from a stream.
-            </summary>
-            <param name = "stream">The stream to open.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.CellSetValueBehavior">
-            <summary>
-              Behavior for <see cref="M:ClosedXML.Excel.IXLCell.set_Value(System.Object)"/>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.Worksheets">
-            <summary>
-              Gets an object to manipulate the worksheets.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.NamedRanges">
-            <summary>
-              Gets an object to manipulate this workbook's named ranges.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.Theme">
-            <summary>
-              Gets an object to manipulate this workbook's theme.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.Style">
-            <summary>
-              Gets or sets the default style for the workbook.
-              <para>All new worksheets will use this style.</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.RowHeight">
-            <summary>
-              Gets or sets the default row height for the workbook.
-              <para>All new worksheets will use this row height.</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.ColumnWidth">
-            <summary>
-              Gets or sets the default column width for the workbook.
-              <para>All new worksheets will use this column width.</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.PageOptions">
-            <summary>
-              Gets or sets the default page options for the workbook.
-              <para>All new worksheets will use these page options.</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.Outline">
-            <summary>
-              Gets or sets the default outline options for the workbook.
-              <para>All new worksheets will use these outline options.</para>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.Properties">
-            <summary>
-              Gets or sets the workbook's properties.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.CalculateMode">
-            <summary>
-              Gets or sets the workbook's calculation mode.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.XLWorkbook.ReferenceStyle">
-            <summary>
-              Gets or sets the workbook's reference style.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.SetDataType(ClosedXML.Excel.XLCellValues)">
-            <summary>
-            Sets the type of this cell's data.
-            <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
-            <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
-            </summary>
-            <param name="dataType">Type of the data.</param>
-            <returns></returns>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.SetValue``1(``0)">
-            <summary>
-            Sets the cell's value.
-            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
-            <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
-            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
-            </summary>
-            <value>
-            The object containing the value(s) to set.
-            </value>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetValue``1">
-            <summary>
-            Gets the cell's value converted to the T type.
-            <para>ClosedXML will try to covert the current value to the T type.</para>
-            <para>An exception will be thrown if the current value cannot be converted to the T type.</para>
-            </summary>
-            <typeparam name="T">The return type.</typeparam>
-            <exception cref="T:System.ArgumentException"></exception>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetString">
-            <summary>
-            Gets the cell's value converted to a String.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetFormattedString">
-            <summary>
-            Gets the cell's value formatted depending on the cell's data type and style.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetDouble">
-            <summary>
-            Gets the cell's value converted to Double.
-            <para>ClosedXML will try to covert the current value to Double.</para>
-            <para>An exception will be thrown if the current value cannot be converted to Double.</para>
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetBoolean">
-            <summary>
-            Gets the cell's value converted to Boolean.
-            <para>ClosedXML will try to covert the current value to Boolean.</para>
-            <para>An exception will be thrown if the current value cannot be converted to Boolean.</para>
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetDateTime">
-            <summary>
-            Gets the cell's value converted to DateTime.
-            <para>ClosedXML will try to covert the current value to DateTime.</para>
-            <para>An exception will be thrown if the current value cannot be converted to DateTime.</para>
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.GetTimeSpan">
-            <summary>
-            Gets the cell's value converted to TimeSpan.
-            <para>ClosedXML will try to covert the current value to TimeSpan.</para>
-            <para>An exception will be thrown if the current value cannot be converted to TimeSpan.</para>
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of this cell.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.Delete(ClosedXML.Excel.XLShiftDeletedCells)">
-            <summary>
-            Deletes the current cell and shifts the surrounding cells according to the shiftDeleteCells parameter.
-            </summary>
-            <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.AsRange">
-            <summary>
-            Returns this cell as an IXLRange.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.InsertData(System.Collections.IEnumerable)">
-            <summary>
-            Inserts the IEnumerable data elements and returns the range it occupies.
-            </summary>
-            <param name="data">The IEnumerable data.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable)">
-            <summary>
-            Inserts the IEnumerable data elements as a table and returns it.
-            <para>The new table will receive a generic name: Table#</para>
-            </summary>
-            <param name="data">The table data.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable,System.Boolean)">
-            <summary>
-            Inserts the IEnumerable data elements as a table and returns it.
-            <para>The new table will receive a generic name: Table#</para>
-            </summary>
-            <param name="data">The table data.</param>
-            <param name="createTable">
-            if set to <c>true</c> it will create an Excel table.
-            <para>if set to <c>false</c> the table will be created in memory.</para>
-            </param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable,System.String)">
-            <summary>
-            Creates an Excel table from the given IEnumerable data elements.
-            </summary>
-            <param name="data">The table data.</param>
-            <param name="tableName">Name of the table.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.InsertTable(System.Collections.IEnumerable,System.String,System.Boolean)">
-            <summary>
-            Inserts the IEnumerable data elements as a table and returns it.
-            </summary>
-            <param name="data">The table data.</param>
-            <param name="tableName">Name of the table.</param>
-            <param name="createTable">
-            if set to <c>true</c> it will create an Excel table.
-            <para>if set to <c>false</c> the table will be created in memory.</para>
-            </param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.AddToNamed(System.String)">
-            <summary>
-            Creates a named range out of this cell. 
-            <para>If the named range exists, it will add this range to that named range.</para>
-            <para>The default scope for the named range is Workbook.</para>
-            </summary>
-            <param name="rangeName">Name of the range.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.AddToNamed(System.String,ClosedXML.Excel.XLScope)">
-            <summary>
-            Creates a named range out of this cell. 
-            <para>If the named range exists, it will add this range to that named range.</para>
-            <param name="rangeName">Name of the range.</param>
-            <param name="scope">The scope for the named range.</param>
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLCell.AddToNamed(System.String,ClosedXML.Excel.XLScope,System.String)">
-            <summary>
-            Creates a named range out of this cell. 
-            <para>If the named range exists, it will add this range to that named range.</para>
-            <param name="rangeName">Name of the range.</param>
-            <param name="scope">The scope for the named range.</param>
-            <param name="comment">The comments for the named range.</param>
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.Value">
-            <summary>
-            Gets or sets the cell's value. To get a strongly typed object use the method GetValue&lt;T&gt;.
-            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from this cell.</para>
-            <para>If the object is a range ClosedXML will copy the range starting from this cell.</para>
-            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
-            </summary>
-            <value>
-            The object containing the value(s) to set.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.Address">
-            <summary>Gets this cell's address, relative to the worksheet.</summary>
-            <value>The cell's address.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.DataType">
-            <summary>
-            Gets or sets the type of this cell's data.
-            <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
-            <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
-            </summary>
-            <value>
-            The type of the cell's data.
-            </value>
-            <exception cref="T:System.ArgumentException"></exception>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.FormulaA1">
-            <summary>
-            Gets or sets the cell's formula with A1 references.
-            </summary>
-            <value>The formula with A1 references.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.FormulaR1C1">
-            <summary>
-            Gets or sets the cell's formula with R1C1 references.
-            </summary>
-            <value>The formula with R1C1 references.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.Style">
-            <summary>
-            Gets or sets the cell's style.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCell.ShareString">
-            <summary>
-            Gets or sets a value indicating whether this cell's text should be shared or not.
-            </summary>
-            <value>
-              If false the cell's text will not be shared and stored as an inline value.
-            </value>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLSheetView.FreezeRows(System.Int32)">
-            <summary>
-            Freezes the top X rows.
-            </summary>
-            <param name="rows">The rows to freeze.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLSheetView.FreezeColumns(System.Int32)">
-            <summary>
-            Freezes the left X columns.
-            </summary>
-            <param name="columns">The columns to freeze.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLSheetView.Freeze(System.Int32,System.Int32)">
-            <summary>
-            Freezes the specified rows and columns.
-            </summary>
-            <param name="rows">The rows to freeze.</param>
-            <param name="columns">The columns to freeze.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLSheetView.SplitRow">
-            <summary>
-            Gets or sets the row after which the vertical split should take place.
-            </summary>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLSheetView.SplitColumn">
-            <summary>
-            Gets or sets the column after which the horizontal split should take place.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.Cell(System.Int32)">
-            <summary>
-            Gets the cell in the specified row.
-            </summary>
-            <param name="rowNumber">The cell's row.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.Cells(System.String)">
-            <summary>
-            Returns the specified group of cells, separated by commas.
-            <para>e.g. Cells("1"), Cells("1:5"), Cells("1:2,4:5")</para>
-            </summary>
-            <param name="cellsInColumn">The column cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.Cells(System.Int32,System.Int32)">
-            <summary>
-            Returns the specified group of cells.
-            </summary>
-            <param name="firstRow">The first row in the group of cells to return.</param>
-            <param name="lastRow">The last row in the group of cells to return.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertColumnsAfter(System.Int32)">
-            <summary>
-            Inserts X number of columns to the right of this range.
-            <para>All cells to the right of this range will be shifted X number of columns.</para>
-            </summary>
-            <param name="numberOfColumns">Number of columns to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertColumnsBefore(System.Int32)">
-            <summary>
-            Inserts X number of columns to the left of this range.
-            <para>This range and all cells to the right of this range will be shifted X number of columns.</para>
-            </summary>
-            <param name="numberOfColumns">Number of columns to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertCellsAbove(System.Int32)">
-            <summary>
-            Inserts X number of cells on top of this column.
-            <para>This column and all cells below it will be shifted X number of rows.</para>
-            </summary>
-            <param name="numberOfRows">Number of cells to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.InsertCellsBelow(System.Int32)">
-            <summary>
-            Inserts X number of cells below this range.
-            <para>All cells below this column will be shifted X number of rows.</para>
-            </summary>
-            <param name="numberOfRows">Number of cells to insert.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.Delete">
-            <summary>
-            Deletes this range and shifts the cells at the right.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.Delete(ClosedXML.Excel.XLShiftDeletedCells)">
-            <summary>
-            Deletes this range and shifts the surrounding cells accordingly.
-            </summary>
-            <param name="shiftDeleteCells">How to shift the surrounding cells.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.ColumnNumber">
-            <summary>
-            Gets this column's number in the range
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.ColumnLetter">
-            <summary>
-            Gets this column's letter in the range
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeColumn.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of this column.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTables.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of these tables.
+            Clears the contents of these rows.
             </summary>
             <param name="clearOptions">Specify what you want to clear.</param>
         </member>
@@ -2565,190 +2620,135 @@
             	Gets the column letter(s) of this address.
             </summary>
         </member>
-        <member name="M:ClosedXML.Excel.IXLCells.Clear(ClosedXML.Excel.XLClearOptions)">
+        <member name="M:ClosedXML.Excel.IXLSheetView.FreezeRows(System.Int32)">
             <summary>
-            Clears the contents of these cells.
+            Freezes the top X rows.
             </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
+            <param name="rows">The rows to freeze.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLCells.DeleteComments">
+        <member name="M:ClosedXML.Excel.IXLSheetView.FreezeColumns(System.Int32)">
             <summary>
-            Delete the comments of these cells.
+            Freezes the left X columns.
+            </summary>
+            <param name="columns">The columns to freeze.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLSheetView.Freeze(System.Int32,System.Int32)">
+            <summary>
+            Freezes the specified rows and columns.
+            </summary>
+            <param name="rows">The rows to freeze.</param>
+            <param name="columns">The columns to freeze.</param>
+        </member>
+        <member name="P:ClosedXML.Excel.IXLSheetView.SplitRow">
+            <summary>
+            Gets or sets the row after which the vertical split should take place.
             </summary>
         </member>
-        <member name="P:ClosedXML.Excel.IXLCells.Value">
+        <member name="P:ClosedXML.Excel.IXLSheetView.SplitColumn">
             <summary>
-            Sets the cells' value.
-            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from each cell.</para>
-            <para>If the object is a range ClosedXML will copy the range starting from each cell.</para>
-            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
+            Gets or sets the column after which the horizontal split should take place.
             </summary>
-            <value>
-            The object containing the value(s) to set.
-            </value>
         </member>
-        <member name="P:ClosedXML.Excel.IXLCells.DataType">
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.NamedRange(System.String)">
             <summary>
-            Sets the type of the cells' data.
-            <para>Changing the data type will cause ClosedXML to covert the current value to the new data type.</para>
-            <para>An exception will be thrown if the current value cannot be converted to the new data type.</para>
-            </summary>
-            <value>
-            The type of the cell's data.
-            </value>
-            <exception cref="T:System.ArgumentException"></exception>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCells.FormulaA1">
-            <summary>
-            Sets the cells' formula with A1 references.
-            </summary>
-            <value>The formula with A1 references.</value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLCells.FormulaR1C1">
-            <summary>
-            Sets the cells' formula with R1C1 references.
-            </summary>
-            <value>The formula with R1C1 references.</value>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.Add(ClosedXML.Excel.IXLRangeBase)">
-            <summary>
-            Adds the specified range to this group.
-            </summary>
-            <param name="range">The range to add to this group.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.Remove(ClosedXML.Excel.IXLRange)">
-            <summary>
-            Removes the specified range from this group.
-            </summary>
-            <param name="range">The range to remove from this group.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.AddToNamed(System.String)">
-            <summary>
-            Creates a named range out of these ranges. 
-            <para>If the named range exists, it will add these ranges to that named range.</para>
-            <para>The default scope for the named range is Workbook.</para>
+            Gets the specified named range.
             </summary>
             <param name="rangeName">Name of the range.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.AddToNamed(System.String,ClosedXML.Excel.XLScope)">
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,System.String)">
             <summary>
-            Creates a named range out of these ranges. 
-            <para>If the named range exists, it will add these ranges to that named range.</para>
-            <param name="rangeName">Name of the range.</param>
-            <param name="scope">The scope for the named range.</param>
+            Adds a new named range.
+            </summary>
+            <param name="rangeName">Name of the range to add.</param>
+            <param name="rangeAddress">The range address to add.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRange)">
+            <summary>
+            Adds a new named range.
+            </summary>
+            <param name="rangeName">Name of the range to add.</param>
+            <param name="range">The range to add.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRanges)">
+            <summary>
+            Adds a new named range.
+            </summary>
+            <param name="rangeName">Name of the range to add.</param>
+            <param name="ranges">The ranges to add.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,System.String,System.String)">
+            <summary>
+            Adds a new named range.
+            </summary>
+            <param name="rangeName">Name of the ranges to add.</param>
+            <param name="rangeAddress">The range address to add.</param>
+            <param name="comment">The comment for the new named range.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRange,System.String)">
+            <summary>
+            Adds a new named range.
+            </summary>
+            <param name="rangeName">Name of the ranges to add.</param>
+            <param name="range">The range to add.</param>
+            <param name="comment">The comment for the new named range.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Add(System.String,ClosedXML.Excel.IXLRanges,System.String)">
+            <summary>
+            Adds a new named range.
+            </summary>
+            <param name="rangeName">Name of the ranges to add.</param>
+            <param name="ranges">The ranges to add.</param>
+            <param name="comment">The comment for the new named range.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Delete(System.String)">
+            <summary>
+            Deletes the specified named range (not the cells).
+            </summary>
+            <param name="rangeName">Name of the range to delete.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.Delete(System.Int32)">
+            <summary>
+            Deletes the specified named range's index (not the cells).
+            </summary>
+            <param name="rangeIndex">Index of the named range to delete.</param>
+        </member>
+        <member name="M:ClosedXML.Excel.IXLNamedRanges.DeleteAll">
+            <summary>
+            Deletes all named ranges (not the cells).
             </summary>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.AddToNamed(System.String,ClosedXML.Excel.XLScope,System.String)">
+        <member name="M:ClosedXML.Excel.IXLHFItem.GetText(ClosedXML.Excel.XLHFOccurrence)">
             <summary>
-            Creates a named range out of these ranges. 
-            <para>If the named range exists, it will add these ranges to that named range.</para>
-            <param name="rangeName">Name of the range.</param>
-            <param name="scope">The scope for the named range.</param>
-            <param name="comment">The comments for the named range.</param>
+            Gets the text of the specified header/footer occurrence.
             </summary>
+            <param name="occurrence">The occurrence.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.Cells">
+        <member name="M:ClosedXML.Excel.IXLHFItem.AddText(ClosedXML.Excel.XLHFPredefinedText)">
             <summary>
-            Returns the collection of cells.
+            Adds the given predefined text to this header/footer item.
             </summary>
+            <param name="predefinedText">The predefined text to add to this header/footer item.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.CellsUsed">
+        <member name="M:ClosedXML.Excel.IXLHFItem.AddText(System.String,ClosedXML.Excel.XLHFOccurrence)">
             <summary>
-            Returns the collection of cells that have a value.
+            Adds the given text to this header/footer item.
             </summary>
+            <param name="text">The text to add to this header/footer item.</param>
+            <param name="occurrence">The occurrence for the text.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.CellsUsed(System.Boolean)">
+        <member name="M:ClosedXML.Excel.IXLHFItem.AddText(ClosedXML.Excel.XLHFPredefinedText,ClosedXML.Excel.XLHFOccurrence)">
             <summary>
-            Returns the collection of cells that have a value.
+            Adds the given predefined text to this header/footer item.
             </summary>
-            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
+            <param name="predefinedText">The predefined text to add to this header/footer item.</param>
+            <param name="occurrence">The occurrence for the predefined text.</param>
         </member>
-        <member name="M:ClosedXML.Excel.IXLRanges.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of these ranges.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLRanges.Value">
-            <summary>
-            Sets the cells' value.
-            <para>If the object is an IEnumerable ClosedXML will copy the collection's data into a table starting from each cell.</para>
-            <para>If the object is a range ClosedXML will copy the range starting from each cell.</para>
-            <para>Setting the value to an object (not IEnumerable/range) will call the object's ToString() method.</para>
-            <para>ClosedXML will try to translate it to the corresponding type, if it can't then the value will be left as a string.</para>
-            </summary>
-            <value>
-            The object containing the value(s) to set.
-            </value>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLTableRow.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of this row.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLRangeAddress.FirstAddress">
-            <summary>
-            Gets or sets the first address in the range.
-            </summary>
-            <value>
-            The first address.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLRangeAddress.LastAddress">
-            <summary>
-            Gets or sets the last address in the range.
-            </summary>
-            <value>
-            The last address.
-            </value>
-        </member>
-        <member name="P:ClosedXML.Excel.IXLRangeAddress.IsInvalid">
-            <summary>
-            Gets or sets a value indicating whether this range is invalid.
-            </summary>
-            <value>
-            	<c>true</c> if this instance is invalid; otherwise, <c>false</c>.
-            </value>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRows.Add(ClosedXML.Excel.IXLRangeRow)">
-            <summary>
-            Adds a row range to this group.
-            </summary>
-            <param name="rowRange">The row range to add.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRows.Cells">
-            <summary>
-            Returns the collection of cells.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRows.CellsUsed">
-            <summary>
-            Returns the collection of cells that have a value.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRows.CellsUsed(System.Boolean)">
-            <summary>
-            Returns the collection of cells that have a value.
-            </summary>
-            <param name="includeFormats">if set to <c>true</c> will return all cells with a value or a style different than the default.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRows.Delete">
-            <summary>
-            Deletes all rows and shifts the rows below them accordingly.
-            </summary>
-        </member>
-        <member name="M:ClosedXML.Excel.IXLRangeRows.Clear(ClosedXML.Excel.XLClearOptions)">
-            <summary>
-            Clears the contents of these rows.
-            </summary>
-            <param name="clearOptions">Specify what you want to clear.</param>
-        </member>
-        <member name="M:ClosedXML.Excel.XLColumns.AddVerticalPageBreaks">
-            <summary>
-              Adds a vertical page break after this column.
-            </summary>
+        <member name="M:ClosedXML.Excel.IXLHFItem.Clear(ClosedXML.Excel.XLHFOccurrence)">
+            <summary>Clears the text/formats of this header/footer item.</summary>
+            <param name="occurrence">The occurrence to clear.</param>
         </member>
     </members>
 </doc>
