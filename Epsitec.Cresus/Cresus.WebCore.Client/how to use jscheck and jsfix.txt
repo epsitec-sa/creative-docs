@@ -1,0 +1,31 @@
+There are two .bat scripts in this project :
+
+- jscheck.bat whose purpose is to staticaly analyse the javacript files in this
+  project, in order to check if they are properly formatted and if they contain
+  simple mistakes or dangerous code.
+
+- jsfix.bat whose purpose is to automatically correct potential mistakes that
+  are found by jscheck.bat.
+
+These scripts need two external tools:
+
+- google closure linter. This tool is available here :
+  https://developers.google.com/closure/utilities/. There are instructions
+  somewhere on this website to install it. Basically the involve the following
+  steps:
+  1) install python. I installed the 32 bits version as it makes the following
+     step easier. It can be downloaded here :
+     http://www.python.org/download/windows/.
+  2) install the easy_install module for python. It can be downloaded here :
+     http://peak.telecommunity.com/DevCenter/EasyInstall#installing-easy-install.
+  3) install google closure linter using the easy_install module. I installed
+     the version 2.3.5 as the last one (2.3.6) does not work on windows.
+  
+- jshint. This tool is available here : http://www.jshint.com/. To install it,
+  to the following steps:
+  1) download the tools somewhere on your machine.
+  2) create a .bat file called jshint.bat in the directory where it is installed
+    with the following content: @CScript //NoLogo "%~dp0\env\wsh.js" %*
+
+Finaly, you must add the two directories where google closure linter and where
+jshint are installed to you PATH environment variable.
