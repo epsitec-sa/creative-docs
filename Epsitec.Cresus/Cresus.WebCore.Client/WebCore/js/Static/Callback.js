@@ -3,7 +3,7 @@
 // function, in order to make it easier to pass callbacks in functions.
 
 Ext.define('Epsitec.Cresus.Core.Static.Callback', {
-  alias: 'epsitec.callback',
+  alternateClassName: ['Epsitec.Callback'],
 
   /* Properties */
 

@@ -9,7 +9,7 @@
 // dealing with this class.
 
 Ext.define('Epsitec.Cresus.Core.Static.CallbackQueue', {
-  alias: 'epsitec.callbackqueue',
+  alternateClassName: ['Epsitec.CallbackQueue'],
 
   /* Properties */
 
@@ -31,12 +31,12 @@ Ext.define('Epsitec.Cresus.Core.Static.CallbackQueue', {
 
   enqueue: function(callback) {
     return Ext.create(
-        'Epsitec.Cresus.Core.Static.CallbackQueue', callback, this
+        'Epsitec.CallbackQueue', callback, this
     );
   },
 
   enqueueCallback: function(func, context) {
-    return this.enqueue(Ext.create('epsitec.callback', func, context));
+    return this.enqueue(Ext.create('Epsitec.Callback', func, context));
   },
 
   merge: function(queue) {
@@ -57,7 +57,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CallbackQueue', {
 
   statics: {
     empty: function() {
-      return Ext.create('Epsitec.Cresus.Core.Static.CallbackQueue', null, null);
+      return Ext.create('Epsitec.CallbackQueue', null, null);
     },
 
     create: function(func, context) {

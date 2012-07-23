@@ -80,7 +80,7 @@ Ext.define('Epsitec.Cresus.Core.Static.SummaryTile', {
       subViewId,
       entityId,
       callbackQueue) {
-    var newCallbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create(
+    var newCallbackQueue = Epsitec.CallbackQueue.create(
         function() {
           this.refreshEntity(true, callbackQueue);
         },

@@ -44,7 +44,7 @@ Ext.define('Epsitec.Cresus.Core.Static.CollectionSummaryTile', {
   },
 
   showEntityColumnRefreshAndSelect: function(subViewMode, subViewId, entityId) {
-    var callbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.create(
+    var callbackQueue = Epsitec.CallbackQueue.create(
         function() {
           this.entityPanel.columnManager.selectEntity(
               this.entityPanel.columnId, entityId

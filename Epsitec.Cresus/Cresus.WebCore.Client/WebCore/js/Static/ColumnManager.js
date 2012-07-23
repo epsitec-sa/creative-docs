@@ -63,12 +63,12 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
       entityId,
       parentPanel,
       callbackQueue) {
-    parentPanel = Epsitec.Cresus.Core.Static.Tools.getValueOrNull(parentPanel);
-    callbackQueue = Epsitec.Cresus.Core.Static.Tools.getValueOrDefault(
-        callbackQueue, Epsitec.Cresus.Core.Static.CallbackQueue.empty()
+    parentPanel = Epsitec.Tools.getValueOrNull(parentPanel);
+    callbackQueue = Epsitec.Tools.getValueOrDefault(
+        callbackQueue, Epsitec.CallbackQueue.empty()
         );
 
-    var newCallbackQueue = Epsitec.Cresus.Core.Static.CallbackQueue.empty();
+    var newCallbackQueue = Epsitec.CallbackQueue.empty();
 
     if (parentPanel !== null) {
       var parentColumnId = parentPanel.entityPanel.columnId;
@@ -97,15 +97,15 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager', {
 
   // The arguments callbackQueue is optional.
   refreshColumns: function(firstColumnId, lastColumnId, callbackQueue) {
-    callbackQueue = Epsitec.Cresus.Core.Static.Tools.getValueOrDefault(
-        callbackQueue, Epsitec.Cresus.Core.Static.CallbackQueue.empty()
+    callbackQueue = Epsitec.Tools.getValueOrDefault(
+        callbackQueue, Epsitec.CallbackQueue.empty()
         );
 
     var configArray = [];
     var configArrayCount = 0;
 
     var callbackQueueCreator = function(index) {
-      return Epsitec.Cresus.Core.Static.CallbackQueue.create(
+      return Epsitec.CallbackQueue.create(
           function(config) {
             configArrayCount += 1;
             configArray[index] = config;

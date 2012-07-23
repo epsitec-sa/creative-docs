@@ -1,5 +1,5 @@
 Ext.define('Epsitec.Cresus.Core.Static.Tools', {
-  alias: 'epsitec.tools',
+  alternateClassName: ['Epsitec.Tools'],
 
   statics: {
     isUndefined: function(item) {
