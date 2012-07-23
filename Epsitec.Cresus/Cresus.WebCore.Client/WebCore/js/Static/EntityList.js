@@ -150,7 +150,6 @@ Ext.define('Epsitec.Cresus.Core.Static.EntityList', {
   getStore: function(databaseName) {
     return Ext.create('Ext.data.Store', {
       model: 'Epsitec.Cresus.Core.Static.EntityListItem',
-      storeId: 'persons',
       pageSize: 100,
       remoteSort: true,
       buffered: true,
