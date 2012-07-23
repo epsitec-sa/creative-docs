@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
   extend: 'Ext.container.Container',
+  alternateClassName: ['EntityReferenceField.Callback'],
   alias: 'widget.epsitec.entityreferencefield',
 
   /* Config */
@@ -12,9 +13,7 @@ Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
   {
     options.columnWidth = 1;
 
-    var combo = Ext.create(
-        'Epsitec.cresus.webcore.EntityReferenceComboBox', options
-        );
+    var combo = Ext.create('Epsitec.EntityReferenceComboBox', options);
 
     var button = Ext.create('Ext.Button', {
       text: '>',

@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.TabManager', {
   extend: 'Ext.tab.Panel',
+  alternateClassName: ['Epsitec.TabManager'],
 
   /* Config */
   plain: true,
@@ -27,7 +28,7 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
     var entityTab = this.entityTabs[key] || null;
 
     if (entityTab === null || entityTab.isDestroyed) {
-      entityTab = Ext.create('Epsitec.cresus.webcore.ColumnManager', {
+      entityTab = Ext.create('Epsitec.ColumnManager', {
         database: database,
         closable: true
       });

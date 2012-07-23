@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.SummaryTile', {
   extend: 'Epsitec.cresus.webcore.Tile',
+  alternateClassName: ['Epsitec.SummaryTile'],
   alias: 'widget.summarytile',
 
   /* Config */
@@ -144,7 +145,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
       },
       failure: function(response, options) {
         this.setLoading(false);
-        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
+        Epsitec.ErrorHandler.handleError(response);
       },
       scope: this
     }

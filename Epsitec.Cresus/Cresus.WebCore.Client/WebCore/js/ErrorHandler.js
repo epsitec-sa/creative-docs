@@ -1,4 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
+  alternateClassName: ['Epsitec.ErrorHandler'],
+
   statics: {
     handleError: function(response) {
 
@@ -10,26 +12,26 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
       var message = errors.message || null;
 
       if (code !== null) {
-        Epsitec.cresus.webcore.ErrorHandler.handleErrorCode(code);
+        Epsitec.ErrorHandler.handleErrorCode(code);
       }
       else if (title !== null && message !== null) {
-        Epsitec.cresus.webcore.ErrorHandler.handleErrorTitleAndMessage(
+        Epsitec.ErrorHandler.handleErrorTitleAndMessage(
             title, message
         );
       }
       else {
-        Epsitec.cresus.webcore.ErrorHandler.handleErrorDefault();
+        Epsitec.ErrorHandler.handleErrorDefault();
       }
     },
 
     handleErrorCode: function(code) {
       switch (code) {
         case '0':
-          Epsitec.cresus.webcore.ErrorHandler.handleSessionTimeout();
+          Epsitec.ErrorHandler.handleSessionTimeout();
           break;
 
         default:
-          Epsitec.cresus.webcore.ErrorHandler.handleErrorDefault();
+          Epsitec.ErrorHandler.handleErrorDefault();
       }
     },
 

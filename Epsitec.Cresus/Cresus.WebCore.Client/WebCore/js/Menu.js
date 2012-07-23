@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.Menu', {
   extend: 'Ext.Toolbar',
+  alternateClassName: ['Epsitec.Menu'],
 
   /* Properties */
 
@@ -37,7 +38,7 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
         this.handleMenus(config.content);
       },
       failure: function(response, options) {
-        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
+        Epsitec.ErrorHandler.handleError(response);
       },
       scope: this
     });

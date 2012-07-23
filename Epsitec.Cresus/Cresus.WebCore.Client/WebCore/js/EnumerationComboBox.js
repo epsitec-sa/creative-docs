@@ -7,6 +7,7 @@
 
 Ext.define('Epsitec.cresus.webcore.EnumerationComboBox', {
   extend: 'Ext.form.field.ComboBox',
+  alternateClassName: ['Epsitec.EnumerationComboBox'],
   alias: 'widget.epsitec.enumerationcombobox',
 
   /* Config */
@@ -24,7 +25,7 @@ Ext.define('Epsitec.cresus.webcore.EnumerationComboBox', {
     // We need to pass the options.value parameter because the parent
     // constructor has not yet been called and thus this.value is undefined at
     // this time and we might require it in this call.
-    this.store = Epsitec.cresus.webcore.EnumerationComboBox.getStore(
+    this.store = Epsitec.EnumerationComboBox.getStore(
         options.storeClass, this, options.value
         );
 

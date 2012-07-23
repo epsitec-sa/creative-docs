@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.EntityList', {
   extend: 'Ext.grid.Panel',
+  alternateClassName: ['Epsitec.EntityList'],
 
   /* Config */
 
@@ -123,7 +124,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       },
       failure: function(response, options) {
         this.setLoading(false);
-        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
+        Epsitec.ErrorHandler.handleError(response);
       },
       scope: this
     });
@@ -141,7 +142,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       },
       failure: function(response, options)  {
         this.setLoading(false);
-        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
+        Epsitec.ErrorHandler.handleError(response);
       },
       scope: this
     });

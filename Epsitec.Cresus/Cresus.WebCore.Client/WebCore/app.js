@@ -46,19 +46,19 @@ Ext.application({
   /* Additional methods */
 
   doLogin: function() {
-    Ext.create('Epsitec.cresus.webcore.LoginPanel', {
+    Ext.create('Epsitec.LoginPanel', {
       application: this
     });
   },
 
   runApp: function() {
-    this.menu = Ext.create('Epsitec.cresus.webcore.Menu', {
+    this.menu = Ext.create('Epsitec.Menu', {
       application: this,
       region: 'north',
       margin: 5
     });
 
-    this.tabManager = Ext.create('Epsitec.cresus.webcore.TabManager', {
+    this.tabManager = Ext.create('Epsitec.TabManager', {
       application: this,
       region: 'center',
       margin: 5

@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
   extend: 'Epsitec.cresus.webcore.ColumnPanel',
+  alternateClassName: ['Epsitec.EntityListPanel'],
 
   /* Config */
 
@@ -13,11 +14,7 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
     var databaseName = options.databaseName;
     var columnManager = options.columnManager;
 
-    var entityList = Ext.create(
-        'Epsitec.cresus.webcore.EntityList', databaseName, columnManager
-        );
-
-    this.add(entityList);
+    this.add(Ext.create('Epsitec.EntityList', databaseName, columnManager));
 
     return this;
   }

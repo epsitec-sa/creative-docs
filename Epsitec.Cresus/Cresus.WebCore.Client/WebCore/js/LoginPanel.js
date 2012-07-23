@@ -1,5 +1,7 @@
 Ext.define('Epsitec.cresus.webcore.LoginPanel', {
   extend: 'Ext.form.Panel',
+  alternateClassName: ['Epsitec.LoginPanel'],
+
   renderTo: document.body,
 
   /* Config */

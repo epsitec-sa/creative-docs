@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
   extend: 'Epsitec.cresus.webcore.SummaryTile',
+  alternateClassName: ['Epsitec.CollectionSummaryTile'],
   alias: 'widget.collectionsummarytile',
 
   /* Properties */
@@ -107,7 +108,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
       },
       failure: function(response, options) {
         this.setLoading(false);
-        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
+        Epsitec.ErrorHandler.handleError(response);
       },
       scope: this
     });
@@ -131,7 +132,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
       },
       failure: function(response, options) {
         this.setLoading(false);
-        Epsitec.cresus.webcore.ErrorHandler.handleError(response);
+        Epsitec.ErrorHandler.handleError(response);
       },
       scope: this
     });

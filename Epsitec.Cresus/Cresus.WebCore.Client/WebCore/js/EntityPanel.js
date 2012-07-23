@@ -1,5 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.EntityPanel', {
   extend: 'Epsitec.cresus.webcore.ColumnPanel',
+  alternateClassName: ['Epsitec.EntityPanel'],
 
   /* Config */
 
