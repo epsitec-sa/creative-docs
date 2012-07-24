@@ -36,7 +36,7 @@ Ext.define('Epsitec.cresus.webcore.CallbackQueue', {
   },
 
   enqueueCallback: function(func, context) {
-    return this.enqueue(Ext.create('Epsitec.Callback', func, context));
+    return this.enqueue(Epsitec.Callback.create(func, context));
   },
 
   merge: function(queue) {

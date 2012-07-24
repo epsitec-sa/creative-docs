@@ -21,5 +21,11 @@ Ext.define('Epsitec.cresus.webcore.Callback', {
 
   execute: function(callbackArguments) {
     this.callback.apply(this.context, callbackArguments);
+  },
+
+  statics: {
+    create: function(func, context) {
+      return Ext.create('Epsitec.Callback', func, context);
+    }
   }
 });
