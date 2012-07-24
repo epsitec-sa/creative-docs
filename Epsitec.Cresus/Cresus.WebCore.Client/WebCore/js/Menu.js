@@ -31,7 +31,7 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
           config = Ext.decode(response.responseText);
         }
         catch (err) {
-          options.failure.apply(arguments);
+          options.failure.apply(this, arguments);
           return;
         }
 

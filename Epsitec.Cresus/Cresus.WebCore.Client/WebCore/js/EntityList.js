@@ -126,7 +126,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
           callback.execute([entityId]);
         }
         catch (err) {
-          options.failure.apply(arguments);
+          options.failure.apply(this, arguments);
         }
       },
       failure: function(response, options) {

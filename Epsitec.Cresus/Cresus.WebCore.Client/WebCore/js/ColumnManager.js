@@ -157,7 +157,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
           config = Ext.decode(response.responseText);
         }
         catch (err) {
-          options.failure.apply(arguments);
+          options.failure.apply(this, arguments);
           return;
         }
 

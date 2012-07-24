@@ -119,7 +119,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
           json = Ext.decode(response.responseText);
         }
         catch (err) {
-          options.failure.apply(arguments);
+          options.failure.apply(this, arguments);
           return;
         }
 

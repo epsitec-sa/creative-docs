@@ -121,7 +121,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
             Ext.decode(action.response.responseText);
           }
           catch (err) {
-            this.failure.apply(arguments);
+            Epsitec.ErrorHandler.handleErrorDefault();
             return;
           }
 
