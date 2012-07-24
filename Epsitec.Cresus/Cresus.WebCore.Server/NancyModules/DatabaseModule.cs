@@ -1,5 +1,7 @@
 ﻿using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -112,7 +114,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Get["/list"] = p => this.GetDatabaseList ();
 			Get["/get/{name}"] = p => this.Execute (b => this.GetDatabase (b, p));
-			Post["/delete"] = p => this.Execute (b => this.DeleteEntity (b));
+			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/{name}"] = p => this.Execute (b => this.CreateEntity (b, p));
 		}
 
@@ -161,22 +163,34 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response DeleteEntity(BusinessContext businessContext)
+		private Response DeleteEntities(BusinessContext businessContext)
 		{
-			string entityId = Request.Form.entityId;
+			string rawEntityIds = Request.Form.entityIds;
+			var entityIds = rawEntityIds.Split (";");
 
-			var entity = Tools.ResolveEntity (businessContext, entityId);
+			var sucess = true;
 
-			var ok = false;
-
-			using (businessContext.Bind (entity))
+			foreach (var entityId in entityIds)
 			{
-				ok = businessContext.DeleteEntity (entity);
+				var entity = Tools.ResolveEntity (businessContext, entityId);
 
-				businessContext.SaveChanges ();
+				using (businessContext.Bind (entity))
+				{
+					sucess = businessContext.DeleteEntity (entity);
+				}
+
+				if (!sucess)
+				{
+					break;
+				}
 			}
 
-			return ok
+			if (sucess)
+			{
+				businessContext.SaveChanges ();
+			}
+			
+			return sucess
 				? CoreResponse.AsSuccess ()
 				: CoreResponse.AsError ();
 		}
