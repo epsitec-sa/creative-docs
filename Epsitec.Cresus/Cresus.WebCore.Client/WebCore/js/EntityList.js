@@ -81,7 +81,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   },
 
   onRefreshClick: function() {
-    this.store.load();
+    this.store.reload();
     this.entityListPanel.onRefresh();
   },
 
