@@ -31,14 +31,8 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
   /* Listeners */
 
   listeners: {
-    render: function(c) {
-      c.body.on(
-          'click',
-          function() {
-            this.bodyClicked();
-          },
-          this
-      );
+    render: function() {
+      this.body.on('click', this.bodyClicked, this);
     }
   },
 

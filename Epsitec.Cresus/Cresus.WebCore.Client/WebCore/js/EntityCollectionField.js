@@ -17,6 +17,7 @@ Ext.define('Epsitec.cresus.webcore.EntityCollectionField', {
     var button = Ext.create('Ext.Button', {
       text: '>',
       renderTo: Ext.getBody(),
+      margin: '0 0 0 5',
       handler: function() {
         var title = 'Cannot edit this enumeration';
         var content = 'You cannot directly edit this enumeration. You will ' +
@@ -25,7 +26,7 @@ Ext.define('Epsitec.cresus.webcore.EntityCollectionField', {
                       'back to this entity to edit it.';
         Ext.Msg.alert(title, content);
       },
-      margin: '0 0 0 5'
+      scope: this
     });
 
     this.items = this.items || [];

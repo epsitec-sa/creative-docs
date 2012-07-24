@@ -163,35 +163,37 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     var buttonCreate = this.getTBarButton({
       tooltip: 'Create',
       iconCls: 'epsitec-cresus-core-images-edition-new-icon32',
-      handler: this.onCreateClick
+      listeners: {
+        click: this.onCreateClick,
+        scope: this
+      }
     });
 
     var buttonDelete = this.getTBarButton({
       tooltip: 'Delete',
       iconCls: 'epsitec-cresus-core-images-edition-cancel-icon32',
-      handler: this.onDeleteClick
+      listeners: {
+        click: this.onDeleteClick,
+        scope: this
+      }
     });
 
     var buttonRefresh = this.getTBarButton({
       tooltip: 'Refresh',
       iconCls: 'epsitec-cresus-core-images-data-workflowevent-icon32',
-      handler: this.onRefreshClick
+      listeners: {
+        click: this.onRefreshClick,
+        scope: this
+      }
     });
 
     return [buttonCreate, buttonDelete, buttonRefresh];
   },
 
   getTBarButton: function(options) {
-    var button = Ext.create('Ext.Button', {
-      xtype: 'button',
-      scale: 'large',
-      iconAlign: 'top',
-      tooltip: options.tooltip,
-      iconCls: options.iconCls
-    });
+    options.scale = 'large';
+    options.iconAlign = 'top';
 
-    button.setHandler(options.handler, this);
-
-    return button;
+    return Ext.create('Ext.Button', options);
   }
 });

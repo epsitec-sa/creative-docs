@@ -98,6 +98,7 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
         });
       },
       scale: 'large',
+      scope: this,
       iconAlign: 'top',
       iconCls: 'epsitec-cresus-core-images-usermanager-icon32'
     });

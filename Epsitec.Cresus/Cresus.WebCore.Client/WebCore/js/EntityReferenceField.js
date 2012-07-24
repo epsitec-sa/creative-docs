@@ -18,7 +18,8 @@ Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
     var button = Ext.create('Ext.Button', {
       text: '>',
       renderTo: Ext.getBody(),
-      handler: function()  {
+      margin: '19 0 0 5',
+      handler: function() {
         var title = 'Cannot edit this list';
         var content = 'You cannot directly edit this list. You will need to ' +
                       'save the current changes, click the header menu to ' +
@@ -26,7 +27,7 @@ Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
                       'entity to edit it.';
         Ext.Msg.alert(title, content);
       },
-      margin: '19 0 0 5'
+      scope: this
     });
 
     this.items = this.items || [];
