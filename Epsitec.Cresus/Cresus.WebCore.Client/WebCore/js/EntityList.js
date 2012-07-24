@@ -24,69 +24,22 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       dataIndex: 'name'
     }
   ],
-  tbar: [
-    {
-      xtype: 'button',
-      scale: 'large',
-      iconAlign: 'top',
-      tooltip: 'New',
-      iconCls: 'epsitec-cresus-core-images-edition-new-icon32',
-      handler: function()
-      {
-        var list = this.up('panel');
-
-        list.createEntity();
-      }
-    },
-    {
-      xtype: 'button',
-      scale: 'large',
-      iconAlign: 'top',
-      tooltip: 'Delete',
-      iconCls: 'epsitec-cresus-core-images-edition-cancel-icon32',
-      handler: function() {
-        var list = this.up('panel');
-        var selected = list.getSelectionModel().selected.items;
-
-        if (selected.length !== 1) {
-          var title = 'Not selected';
-          var content = 'You need to selected an entity to perfom this action';
-          Ext.Msg.alert(title, content);
-          return;
-        }
-
-        var item = selected[0];
-        var id = item.get('uniqueId');
-
-        list.deleteEntity(id);
-      }
-    },
-    {
-      xtype: 'button',
-      scale: 'large',
-      iconAlign: 'top',
-      tooltip: 'Refresh',
-      iconCls: 'epsitec-cresus-core-images-data-workflowevent-icon32',
-      handler: function() {
-        var list = this.up('panel');
-        list.store.load();
-      }
-    }
-  ],
 
   /* Properties */
 
+  entityListPanel: null,
   databaseName: null,
-  columnManager: null,
 
   /* Constructor */
 
-  constructor: function(databaseName, columnManager) {
+  constructor: function(entityListPanel, databaseName) {
+    this.entityListPanel = entityListPanel;
     this.databaseName = databaseName;
-    this.columnManager = columnManager;
 
     this.store = this.getStore(this.databaseName);
     this.store.guaranteeRange(0, 100);
+
+    this.tbar = this.getTBar();
 
     this.callParent(arguments);
 
@@ -97,55 +50,44 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Additional methods */
 
-  onSelectionChange: function(view, selections, options) {
-    if (selections.length !== 1) {
+  onCreateClick: function() {
+    var callback = Epsitec.Callback.create(
+        function(entityId) {
+          this.entityListPanel.onCreate(entityId);
+        },
+        this
+        );
+
+    this.createEntity(callback);
+  },
+
+  onDeleteClick: function() {
+    var selection = this.getSelectionModel().selected.items;
+
+    if (selection.length === 0) {
       return;
     }
 
-    var record = selections[0];
-    var entityId = record.get('uniqueId');
+    var entityIds = this.getEntityIds(selection);
 
-    this.columnManager.clearColumns();
-    this.columnManager.addEntityColumn('summary', 'null', entityId);
+    var callback = Epsitec.Callback.create(
+        function(entityIds) {
+          this.entityListPanel.onDelete(entityIds);
+        },
+        this
+        );
+
+    this.deleteEntities(entityIds, callback);
   },
 
-  deleteEntity: function(id) {
-    this.setLoading();
-
-    Ext.Ajax.request({
-      url: 'proxy/database/delete',
-      method: 'POST',
-      params: {
-        entityId: id
-      },
-      success: function(response, options) {
-        this.setLoading(false);
-        this.store.load();
-      },
-      failure: function(response, options) {
-        this.setLoading(false);
-        Epsitec.ErrorHandler.handleError(response);
-      },
-      scope: this
-    });
+  onRefreshClick: function() {
+    this.store.load();
+    this.entityListPanel.onRefresh();
   },
 
-  createEntity: function() {
-    this.setLoading();
-
-    Ext.Ajax.request({
-      url: 'proxy/database/create/' + this.databaseName,
-      method: 'POST',
-      success: function(response, options) {
-        this.setLoading(false);
-        this.store.load();
-      },
-      failure: function(response, options)  {
-        this.setLoading(false);
-        Epsitec.ErrorHandler.handleError(response);
-      },
-      scope: this
-    });
+  onSelectionChange: function(view, selection, options) {
+    var entityIds = this.getEntityIds(selection);
+    this.entityListPanel.onSelectionChange(entityIds);
   },
 
   getStore: function(databaseName) {
@@ -164,5 +106,92 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         }
       }
     });
+  },
+
+  getEntityIds: function(selection) {
+    return selection.map(function(e) { return e.get('uniqueId'); });
+  },
+
+  createEntity: function(callback) {
+    this.setLoading();
+    Ext.Ajax.request({
+      url: 'proxy/database/create/' + this.databaseName,
+      method: 'POST',
+      success: function(response, options) {
+        this.setLoading(false);
+        this.store.load();
+        try {
+          var json = Ext.decode(response.responseText);
+          var entityId = json.content;
+          callback.execute([entityId]);
+        }
+        catch (err) {
+          options.failure.apply(arguments);
+        }
+      },
+      failure: function(response, options) {
+        this.setLoading(false);
+        Epsitec.ErrorHandler.handleError(response);
+      },
+      scope: this
+    });
+  },
+
+  deleteEntities: function(entityIds, callback) {
+    this.setLoading();
+    Ext.Ajax.request({
+      url: 'proxy/database/delete',
+      method: 'POST',
+      params: {
+        entityIds: entityIds.join(';')
+      },
+      success: function(response, options) {
+        this.setLoading(false);
+        this.store.load();
+        callback.execute([entityIds]);
+      },
+      failure: function(response, options) {
+        this.setLoading(false);
+        Epsitec.ErrorHandler.handleError(response);
+      },
+      scope: this
+    });
+  },
+
+  getTBar: function() {
+
+    var buttonCreate = this.getTBarButton({
+      tooltip: 'Create',
+      iconCls: 'epsitec-cresus-core-images-edition-new-icon32',
+      handler: this.onCreateClick
+    });
+
+    var buttonDelete = this.getTBarButton({
+      tooltip: 'Delete',
+      iconCls: 'epsitec-cresus-core-images-edition-cancel-icon32',
+      handler: this.onDeleteClick
+    });
+
+    var buttonRefresh = this.getTBarButton({
+      tooltip: 'Refresh',
+      iconCls: 'epsitec-cresus-core-images-data-workflowevent-icon32',
+      handler: this.onRefreshClick
+    });
+
+    return [buttonCreate, buttonDelete, buttonRefresh];
+  },
+
+  getTBarButton: function(options) {
+    var button = Ext.create('Ext.Button', {
+      xtype: 'button',
+      scale: 'large',
+      iconAlign: 'top',
+      tooltip: options.tooltip,
+      iconCls: options.iconCls
+    });
+
+    button.setHandler(options.handler, this);
+
+    return button;
   }
 });
