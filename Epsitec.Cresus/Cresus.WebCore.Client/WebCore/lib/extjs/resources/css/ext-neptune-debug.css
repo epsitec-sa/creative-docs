@@ -13,8 +13,9 @@ terms contained in a written agreement between you and Sencha.
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2012-04-20 14:10:47 (19f55ab932145a3443b228045fa80950dfeaf9cc)
+Build date: 2012-07-04 21:23:42 (65ff594cd80b9bad45df640c22cc0adb52c95a7b)
 */
+@import url("//fonts.googleapis.com/css?family=false:false");
 /**
  * @var {string} $prefix
  * The prefix to be applied to all CSS selectors. If this is changed, it must also be changed in your
@@ -104,11 +105,8 @@ Build date: 2012-04-20 14:10:47 (19f55ab932145a3443b228045fa80950dfeaf9cc)
 .base-pictos, .forbidden:after, .forbidden:before, .people:after, .people:before, .information:after, .information:before, .link:after, .link:before, .love:after, .love:before, .list:after, .list:before, .music:after, .music:before, .edit2:after, .edit2:before, .chat2:after, .chat2:before, .retweet:after, .retweet:before, .search:after, .search:before, .time:after, .time:before, .photo:after, .photo:before, .chat:after, .chat:before, .settings:after, .settings:before, .settings2:after, .settings2:before, .bookmark:after, .bookmark:before, .link2:after, .link2:before, .tweet:after, .tweet:before, .cloud:after, .cloud:before, .close:after, .close:before, .home:after, .home:before, .key:after, .key:before, .mail:after, .mail:before, .paste:after, .paste:before, .power:after, .power:before, .open:after, .open:before, .star:after, .star:before, .person:after, .person:before, .video:after, .video:before, .edit:after, .edit:before, .charts:after, .charts:before, .expand:after, .expand:before, .refresh:after, .refresh:before, .tick:after, .tick:before, .tick2:after, .tick2:before, .play:after, .play:before, .pause:after, .pause:before, .stop:after, .stop:before, .forward:after, .forward:before, .rewind:after, .rewind:before, .play2:after, .play2:before, .refresh2:after, .refresh2:before, .minus:after, .minus:before, .left:after, .left:before, .right:after, .right:before, .date:after, .date:before, .shuffle:after, .shuffle:before, .wifi:after, .wifi:before, .speed:after, .speed:before, .more:after, .more:before, .print:after, .print:before, .warning:after, .warning:before, .location:after, .location:before, .trash:after, .trash:before, .cart:after, .cart:before, .flag:after, .flag:before, .add:after, .add:before, .lock:after, .lock:before, .unlock:after, .unlock:before, .remove:after, .remove:before, .add2:after, .add2:before, .up:after, .up:before, .down:after, .down:before, .bell:after, .bell:before, .quote:after, .quote:before, .novolume:after, .novolume:before, .volume:after, .volume:before, .question:after, .question:before, .x-form-invalid-icon ul:after, .x-form-invalid-icon ul:before, .x-tab-close-btn:after, .x-tab-close-btn:before {
   font-family: Pictos;
   color: transparent;
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   position: absolute;
   top: 0;
@@ -132,7 +130,6 @@ Build date: 2012-04-20 14:10:47 (19f55ab932145a3443b228045fa80950dfeaf9cc)
   font-weight: normal;
   font-style: normal; }
 
-@import url("//fonts.googleapis.com/css?family=false:false");
 /* line 3, ../themes/stylesheets/neptune/default/accessories/scss/_shapes.scss */
 .base-shape {
   display: block;
@@ -358,15 +355,13 @@ input, textarea, select {
   position: absolute;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
-  -o-border-bottom-left-radius: 4px;
   -ms-border-bottom-left-radius: 4px;
-  -khtml-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
-  -o-border-bottom-right-radius: 4px;
   -ms-border-bottom-right-radius: 4px;
-  -khtml-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px; }
 
 /* line 92, ../themes/stylesheets/neptune/default/core/_core.scss */
@@ -757,16 +752,14 @@ input, textarea, select {
   position: absolute;
   top: 0;
   left: 0;
-  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px;
-  -o-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px;
   box-shadow: rgba(0, 0, 0, 0.2) 0 1px 2px;
   padding: 2px;
-  -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
-  -o-border-radius: 6px;
+  -moz-border-radius: 6px;
   -ms-border-radius: 6px;
-  -khtml-border-radius: 6px;
+  -o-border-radius: 6px;
   border-radius: 6px;
   background-image: none;
   background-color: white;
@@ -813,15 +806,13 @@ input, textarea, select {
   .x-boundlist-item:last-child {
     -moz-border-radius-bottomleft: 4px;
     -webkit-border-bottom-left-radius: 4px;
-    -o-border-bottom-left-radius: 4px;
     -ms-border-bottom-left-radius: 4px;
-    -khtml-border-bottom-left-radius: 4px;
+    -o-border-bottom-left-radius: 4px;
     border-bottom-left-radius: 4px;
     -moz-border-radius-bottomright: 4px;
     -webkit-border-bottom-right-radius: 4px;
-    -o-border-bottom-right-radius: 4px;
     -ms-border-bottom-right-radius: 4px;
-    -khtml-border-bottom-right-radius: 4px;
+    -o-border-bottom-right-radius: 4px;
     border-bottom-right-radius: 4px; }
 
 /* line 31, ../themes/stylesheets/neptune/default/widgets/_boundlist.scss */
@@ -845,15 +836,13 @@ input, textarea, select {
   border-top-width: 0;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
-  -o-border-bottom-left-radius: 4px;
   -ms-border-bottom-left-radius: 4px;
-  -khtml-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
-  -o-border-bottom-right-radius: 4px;
   -ms-border-bottom-right-radius: 4px;
-  -khtml-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px; }
 
 /* line 53, ../themes/stylesheets/neptune/default/widgets/_boundlist.scss */
@@ -862,64 +851,53 @@ input, textarea, select {
   border-bottom-width: 0;
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
-  -o-border-top-left-radius: 4px;
   -ms-border-top-left-radius: 4px;
-  -khtml-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   -ms-border-top-right-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
   /* line 60, ../themes/stylesheets/neptune/default/widgets/_boundlist.scss */
   .x-boundlist-above:first-child {
     -moz-border-radius-topleft: 4px;
     -webkit-border-top-left-radius: 4px;
-    -o-border-top-left-radius: 4px;
     -ms-border-top-left-radius: 4px;
-    -khtml-border-top-left-radius: 4px;
+    -o-border-top-left-radius: 4px;
     border-top-left-radius: 4px;
     -moz-border-radius-topright: 4px;
     -webkit-border-top-right-radius: 4px;
-    -o-border-top-right-radius: 4px;
     -ms-border-top-right-radius: 4px;
-    -khtml-border-top-right-radius: 4px;
+    -o-border-top-right-radius: 4px;
     border-top-right-radius: 4px; }
   /* line 64, ../themes/stylesheets/neptune/default/widgets/_boundlist.scss */
   .x-boundlist-above:last-child {
     -moz-border-radius-bottomleft: 4px;
     -webkit-border-bottom-left-radius: 4px;
-    -o-border-bottom-left-radius: 4px;
     -ms-border-bottom-left-radius: 4px;
-    -khtml-border-bottom-left-radius: 4px;
+    -o-border-bottom-left-radius: 4px;
     border-bottom-left-radius: 4px;
     -moz-border-radius-bottomright: 4px;
     -webkit-border-bottom-right-radius: 4px;
-    -o-border-bottom-right-radius: 4px;
     -ms-border-bottom-right-radius: 4px;
-    -khtml-border-bottom-right-radius: 4px;
+    -o-border-bottom-right-radius: 4px;
     border-bottom-right-radius: 4px; }
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .forbidden {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -941,11 +919,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .forbidden:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -955,11 +930,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .people {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -981,11 +953,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .people:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -995,11 +964,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .information {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1021,11 +987,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .information:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1035,11 +998,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .link {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1061,11 +1021,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .link:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1075,11 +1032,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .love {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1101,11 +1055,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .love:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1115,11 +1066,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .list {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1141,11 +1089,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .list:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1155,11 +1100,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .music {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1181,11 +1123,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .music:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1195,11 +1134,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .edit2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1221,11 +1157,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .edit2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1235,11 +1168,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .chat2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1261,11 +1191,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .chat2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1275,11 +1202,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .retweet {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1301,11 +1225,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .retweet:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1315,11 +1236,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .search {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1341,11 +1259,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .search:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1355,11 +1270,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .time {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1381,11 +1293,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .time:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1395,11 +1304,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .photo {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1421,11 +1327,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .photo:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1435,11 +1338,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .chat {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1461,11 +1361,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .chat:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1475,11 +1372,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .settings {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1501,11 +1395,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .settings:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1515,11 +1406,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .settings2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1541,11 +1429,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .settings2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1555,11 +1440,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .bookmark {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1581,11 +1463,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .bookmark:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1595,11 +1474,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .link2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1621,11 +1497,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .link2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1635,11 +1508,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .tweet {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1661,11 +1531,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .tweet:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1675,11 +1542,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .cloud {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1701,11 +1565,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .cloud:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1715,11 +1576,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .close {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1741,11 +1599,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .close:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1755,11 +1610,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .home {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1781,11 +1633,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .home:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1795,11 +1644,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .key {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1821,11 +1667,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .key:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1835,11 +1678,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .mail {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1861,11 +1701,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .mail:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1875,11 +1712,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .paste {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1901,11 +1735,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .paste:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1915,11 +1746,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .power {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1941,11 +1769,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .power:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1955,11 +1780,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .open {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -1981,11 +1803,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .open:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -1995,11 +1814,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .star {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2021,11 +1837,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .star:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2035,11 +1848,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .person {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2061,11 +1871,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .person:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2075,11 +1882,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .video {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2101,11 +1905,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .video:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2115,11 +1916,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .edit {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2141,11 +1939,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .edit:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2155,11 +1950,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .charts {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2181,11 +1973,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .charts:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2195,11 +1984,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .expand {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2221,11 +2007,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .expand:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2235,11 +2018,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .refresh {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2261,11 +2041,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .refresh:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2275,11 +2052,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .tick {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2301,11 +2075,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .tick:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2315,11 +2086,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .tick2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2341,11 +2109,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .tick2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2355,11 +2120,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .play {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2381,11 +2143,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .play:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2395,11 +2154,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .pause {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2421,11 +2177,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .pause:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2435,11 +2188,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .stop {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2461,11 +2211,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .stop:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2475,11 +2222,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .forward {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2501,11 +2245,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .forward:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2515,11 +2256,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .rewind {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2541,11 +2279,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .rewind:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2555,11 +2290,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .play2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2581,11 +2313,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .play2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2595,11 +2324,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .refresh2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2621,11 +2347,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .refresh2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2635,11 +2358,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .minus {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2661,11 +2381,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .minus:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2675,11 +2392,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .power {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2701,11 +2415,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .power:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2715,11 +2426,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .left {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2741,11 +2449,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .left:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2755,11 +2460,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .right {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2781,11 +2483,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .right:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2795,11 +2494,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .date {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2821,11 +2517,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .date:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2835,11 +2528,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .shuffle {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2861,11 +2551,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .shuffle:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2875,11 +2562,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .wifi {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2901,11 +2585,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .wifi:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2915,11 +2596,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .speed {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2941,11 +2619,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .speed:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2955,11 +2630,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .more {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -2981,11 +2653,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .more:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -2995,11 +2664,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .print {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3021,11 +2687,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .print:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3035,11 +2698,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .warning {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3061,11 +2721,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .warning:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3075,11 +2732,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .location {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3101,11 +2755,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .location:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3115,11 +2766,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .trash {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3141,11 +2789,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .trash:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3155,11 +2800,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .cart {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3181,11 +2823,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .cart:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3195,11 +2834,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .flag {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3221,11 +2857,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .flag:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3235,11 +2868,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .add {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3261,11 +2891,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .add:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3275,11 +2902,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .close {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3301,11 +2925,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .close:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3315,11 +2936,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .lock {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3341,11 +2959,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .lock:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3355,11 +2970,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .unlock {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3381,11 +2993,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .unlock:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3395,11 +3004,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .remove {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3421,11 +3027,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .remove:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3435,11 +3038,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .add2 {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3461,11 +3061,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .add2:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3475,11 +3072,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .up {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3501,11 +3095,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .up:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3515,11 +3106,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .down {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3541,11 +3129,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .down:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3555,11 +3140,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .bell {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3581,11 +3163,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .bell:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3595,11 +3174,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .quote {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3621,11 +3197,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .quote:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3635,11 +3208,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .novolume {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3661,11 +3231,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .novolume:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3675,11 +3242,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .volume {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3701,11 +3265,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .volume:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3715,11 +3276,8 @@ input, textarea, select {
 
 /* line 914, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .question {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -3741,11 +3299,8 @@ input, textarea, select {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .question:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
   /* line 917, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3800,8 +3355,9 @@ input, textarea, select {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: left center;
-    -moz-transition: color;
     -webkit-transition: color;
+    -moz-transition: color;
+    -ms-transition: color;
     -o-transition: color;
     transition: color; }
   /* line 151, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -3982,11 +3538,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-default-small {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 6px 4px 6px;
   border-width: 1px;
@@ -4009,11 +3564,10 @@ input, textarea, select {
 .x-nbr .x-btn-default-small {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -4190,9 +3744,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-default-small-menu-active,
 .x-btn-default-small-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #0e4d80;
@@ -4212,15 +3765,13 @@ input, textarea, select {
 .x-btn-default-small-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -4361,11 +3912,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-default-medium {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -4388,11 +3938,10 @@ input, textarea, select {
 .x-nbr .x-btn-default-medium {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -4569,9 +4118,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-default-medium-menu-active,
 .x-btn-default-medium-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #0e4d80;
@@ -4591,15 +4139,13 @@ input, textarea, select {
 .x-btn-default-medium-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -4740,11 +4286,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-default-large {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -4767,11 +4312,10 @@ input, textarea, select {
 .x-nbr .x-btn-default-large {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -4948,9 +4492,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-default-large-menu-active,
 .x-btn-default-large-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #0e4d80;
@@ -4970,15 +4513,13 @@ input, textarea, select {
 .x-btn-default-large-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -5119,11 +4660,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-confirm-small {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -5146,11 +4686,10 @@ input, textarea, select {
 .x-nbr .x-btn-confirm-small {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -5327,9 +4866,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-confirm-small-menu-active,
 .x-btn-confirm-small-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #6b7e07;
@@ -5349,15 +4887,13 @@ input, textarea, select {
 .x-btn-confirm-small-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -5498,11 +5034,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-confirm-medium {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -5525,11 +5060,10 @@ input, textarea, select {
 .x-nbr .x-btn-confirm-medium {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -5706,9 +5240,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-confirm-medium-menu-active,
 .x-btn-confirm-medium-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #6b7e07;
@@ -5728,15 +5261,13 @@ input, textarea, select {
 .x-btn-confirm-medium-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -5877,11 +5408,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-drastic-medium {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -5904,11 +5434,10 @@ input, textarea, select {
 .x-nbr .x-btn-drastic-medium {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -6085,9 +5614,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-drastic-medium-menu-active,
 .x-btn-drastic-medium-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #780c17;
@@ -6107,15 +5635,13 @@ input, textarea, select {
 .x-btn-drastic-medium-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -6256,11 +5782,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-action-medium {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -6283,11 +5808,10 @@ input, textarea, select {
 .x-nbr .x-btn-action-medium {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -6452,9 +5976,8 @@ input, textarea, select {
 /* line 685, ../themes/stylesheets/neptune/default/widgets/_button.scss */
 .x-btn-action-medium-menu-active,
 .x-btn-action-medium-pressed {
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #1160a0;
@@ -6473,15 +5996,13 @@ input, textarea, select {
 .x-btn-action-medium-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -6611,11 +6132,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-default-toolbar-small {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -6630,11 +6150,10 @@ input, textarea, select {
 .x-nbr .x-btn-default-toolbar-small {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -6814,9 +6333,8 @@ input, textarea, select {
 .x-btn-default-toolbar-small-menu-active,
 .x-btn-default-toolbar-small-pressed {
   border-color: #002d71;
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #0e4dad;
@@ -6836,15 +6354,13 @@ input, textarea, select {
 .x-btn-default-toolbar-small-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -6980,11 +6496,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-default-toolbar-medium {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -6999,11 +6514,10 @@ input, textarea, select {
 .x-nbr .x-btn-default-toolbar-medium {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -7183,9 +6697,8 @@ input, textarea, select {
 .x-btn-default-toolbar-medium-menu-active,
 .x-btn-default-toolbar-medium-pressed {
   border-color: #002d71;
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #0e4dad;
@@ -7205,15 +6718,13 @@ input, textarea, select {
 .x-btn-default-toolbar-medium-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -7349,11 +6860,10 @@ input, textarea, select {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-btn-default-toolbar-large {
-  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -ms-border-radius: 3px;
-  -khtml-border-radius: 3px;
+  -o-border-radius: 3px;
   border-radius: 3px;
   padding: 3px 3px 3px 3px;
   border-width: 1px;
@@ -7368,11 +6878,10 @@ input, textarea, select {
 .x-nbr .x-btn-default-toolbar-large {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100303px 1000303px; }
@@ -7552,9 +7061,8 @@ input, textarea, select {
 .x-btn-default-toolbar-large-menu-active,
 .x-btn-default-toolbar-large-pressed {
   border-color: #002d71;
-  -moz-box-shadow: none;
   -webkit-box-shadow: none;
-  -o-box-shadow: none;
+  -moz-box-shadow: none;
   box-shadow: none;
   background-image: none;
   background-color: #0e4dad;
@@ -7574,15 +7082,13 @@ input, textarea, select {
 .x-btn-default-toolbar-large-menu-active {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 735, ../themes/stylesheets/neptune/default/widgets/_button.scss */
@@ -7740,15 +7246,13 @@ input, textarea, select {
   background: transparent;
   -moz-border-radius-topleft: 2px;
   -webkit-border-top-left-radius: 2px;
-  -o-border-top-left-radius: 2px;
   -ms-border-top-left-radius: 2px;
-  -khtml-border-top-left-radius: 2px;
+  -o-border-top-left-radius: 2px;
   border-top-left-radius: 2px;
   -moz-border-radius-topright: 2px;
   -webkit-border-top-right-radius: 2px;
-  -o-border-top-right-radius: 2px;
   -ms-border-top-right-radius: 2px;
-  -khtml-border-top-right-radius: 2px;
+  -o-border-top-right-radius: 2px;
   border-top-right-radius: 2px; }
 
 /* line 87, ../themes/stylesheets/neptune/default/widgets/_btn-group.scss */
@@ -7909,11 +7413,10 @@ table.x-datepicker-inner {
   table.x-datepicker-inner .x-datepicker-selected a {
     color: #fff;
     background-color: #0E56B0;
-    -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
     -ms-border-radius: 4px;
-    -khtml-border-radius: 4px;
+    -o-border-radius: 4px;
     border-radius: 4px; }
   /* line 208, ../themes/stylesheets/neptune/default/widgets/_datepicker.scss */
   table.x-datepicker-inner .x-datepicker-today a {
@@ -7924,21 +7427,19 @@ table.x-datepicker-inner {
     table.x-datepicker-inner .x-datepicker-today a:hover {
       background: #28A02A;
       color: #fff;
-      -moz-border-radius: 4px;
       -webkit-border-radius: 4px;
-      -o-border-radius: 4px;
+      -moz-border-radius: 4px;
       -ms-border-radius: 4px;
-      -khtml-border-radius: 4px;
+      -o-border-radius: 4px;
       border-radius: 4px; }
   /* line 225, ../themes/stylesheets/neptune/default/widgets/_datepicker.scss */
   table.x-datepicker-inner .x-datepicker-today.x-datepicker-selected a {
     background: #28A02A;
     color: #fff;
-    -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    -o-border-radius: 4px;
+    -moz-border-radius: 4px;
     -ms-border-radius: 4px;
-    -khtml-border-radius: 4px;
+    -o-border-radius: 4px;
     border-radius: 4px; }
   /* line 231, ../themes/stylesheets/neptune/default/widgets/_datepicker.scss */
   table.x-datepicker-inner .x-datepicker-today span {
@@ -8128,21 +7629,18 @@ table.x-datepicker-inner {
 .x-menu {
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   -ms-border-top-right-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
-  -o-border-bottom-right-radius: 4px;
   -ms-border-bottom-right-radius: 4px;
-  -khtml-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
-  -o-border-bottom-left-radius: 4px;
   -ms-border-bottom-left-radius: 4px;
-  -khtml-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   background: white !important; }
 
@@ -8187,15 +7685,13 @@ table.x-datepicker-inner {
   .x-menu-item:last-child .x-menu-item-link {
     -moz-border-radius-bottomleft: 4px;
     -webkit-border-bottom-left-radius: 4px;
-    -o-border-bottom-left-radius: 4px;
     -ms-border-bottom-left-radius: 4px;
-    -khtml-border-bottom-left-radius: 4px;
+    -o-border-bottom-left-radius: 4px;
     border-bottom-left-radius: 4px;
     -moz-border-radius-bottomright: 4px;
     -webkit-border-bottom-right-radius: 4px;
-    -o-border-bottom-right-radius: 4px;
     -ms-border-bottom-right-radius: 4px;
-    -khtml-border-bottom-right-radius: 4px;
+    -o-border-bottom-right-radius: 4px;
     border-bottom-right-radius: 4px; }
 
 /* line 80, ../themes/stylesheets/neptune/default/widgets/_menu.scss */
@@ -9076,11 +8572,8 @@ td.x-form-item-pad {
   overflow: hidden; }
   /* line 67, ../themes/stylesheets/neptune/default/widgets/form/_all.scss */
   .x-form-invalid-icon ul {
-    -moz-background-clip: text;
     -webkit-background-clip: text;
-    -o-background-clip: text;
-    -ms-background-clip: text;
-    -khtml-background-clip: text;
+    -moz-background-clip: text;
     background-clip: text;
     overflow: visible;
     text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -9104,11 +8597,8 @@ td.x-form-item-pad {
       background-image: linear-gradient(top, #fd5962, #fc212e 3%, #f20311); }
     /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
     .x-form-invalid-icon ul:before {
-      -moz-background-clip: padding;
       -webkit-background-clip: padding;
-      -o-background-clip: padding-box;
-      -ms-background-clip: padding-box;
-      -khtml-background-clip: padding-box;
+      -moz-background-clip: padding;
       background-clip: padding-box;
       background: none; }
     /* line 72, ../themes/stylesheets/neptune/default/widgets/form/_all.scss */
@@ -9136,23 +8626,23 @@ textarea.x-form-field {
           }*/
   border-color: #BEC0C0 #E0E1E2 #E0E1E2 #E0E1E2; }
 
-/* line 31, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 32, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-form-text {
   height: 19px;
-  line-height: 19px;
+  line-height: 16px;
   vertical-align: middle; }
 
-/* line 40, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 41, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-ie6 .x-form-text,
 .x-ie7 .x-form-text,
 .x-ie8 .x-form-text {
   line-height: 16px; }
 
-/* line 45, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 46, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-border-box .x-form-text {
   height: 23px; }
 
-/* line 49, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 50, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 textarea.x-form-field {
   color: #22262a;
   overflow: auto;
@@ -9165,21 +8655,21 @@ textarea.x-form-field {
           }*/
   resize: none; }
 
-/* line 64, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 65, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-border-box textarea.x-form-field {
   height: auto; }
 
-/* line 69, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 70, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-safari.x-mac textarea.x-form-field {
   margin-bottom: -2px; }
 
-/* line 75, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 76, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-form-focus,
 textarea.x-form-focus {
   border-color: #C0BCA7 #E7E3C8 #E7E3C8 #E7E3C8;
   background: #FFFBE6; }
 
-/* line 81, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 82, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-form-invalid-field,
 textarea.x-form-invalid-field {
   background-color: #ffede9;
@@ -9189,38 +8679,38 @@ textarea.x-form-invalid-field {
   border-color: #DFCCC5;
   border-top-color: #BEAAA3; }
 
-/* line 92, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 93, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-form-item {
   font: normal 12px "Helvetica Neue", Arial, Verdana, sans-serif;
   text-shadow: white 0 1px 0; }
 
-/* line 98, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 99, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-form-empty-field, textarea.x-form-empty-field {
   color: #b8bfc6; }
 
-/* line 103, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 104, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-webkit .x-form-empty-field {
-  line-height: 15px; }
+  line-height: 16px; }
 
-/* line 108, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 109, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-form-display-field {
   padding-top: 3px; }
 
-/* line 113, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 114, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-ie .x-form-file {
   height: 24px;
   line-height: 18px;
   vertical-align: middle; }
 
-/* line 122, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 123, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-field-default-toolbar .x-form-text {
   height: 18px; }
 
-/* line 126, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 127, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-border-box .x-field-default-toolbar .x-form-text {
   height: 22px; }
 
-/* line 130, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
+/* line 131, ../themes/stylesheets/neptune/default/widgets/form/_field.scss */
 .x-field-default-toolbar .x-form-item-label-left {
   padding-left: 4px; }
 
@@ -9451,11 +8941,10 @@ textarea.x-form-invalid-field {
 /* line 51, ../themes/stylesheets/neptune/default/widgets/form/_triggerfield.scss */
 .x-form-trigger-over,
 .x-pickerfield-open .x-form-trigger {
-  -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
-  -o-border-radius: 2px;
+  -moz-border-radius: 2px;
   -ms-border-radius: 2px;
-  -khtml-border-radius: 2px;
+  -o-border-radius: 2px;
   border-radius: 2px;
   border: 1px solid #C7DBEE;
   background-image: none;
@@ -9593,38 +9082,31 @@ textarea.x-form-invalid-field {
 .x-panel {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0;
   border: 0 solid #a8b0b8;
   background-color: white;
-  -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  -o-border-radius: 0;
+  -moz-border-radius: 0;
   -ms-border-radius: 0;
-  -khtml-border-radius: 0;
+  -o-border-radius: 0;
   border-radius: 0;
-  -moz-background-clip: padding;
   -webkit-background-clip: padding;
-  -o-background-clip: padding-box;
-  -ms-background-clip: padding-box;
-  -khtml-background-clip: padding-box;
+  -moz-background-clip: padding;
   background-clip: padding-box; }
 
 /* line 46, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-default.x-tab-panel {
-  -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  -o-border-radius: 0;
+  -moz-border-radius: 0;
   -ms-border-radius: 0;
-  -khtml-border-radius: 0;
+  -o-border-radius: 0;
   border-radius: 0; }
 
 /* line 51, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
@@ -9679,11 +9161,8 @@ textarea.x-form-invalid-field {
 .x-panel-body {
   overflow: hidden;
   position: relative;
-  -moz-background-clip: padding;
   -webkit-background-clip: padding;
-  -o-background-clip: padding-box;
-  -ms-background-clip: padding-box;
-  -khtml-background-clip: padding-box;
+  -moz-background-clip: padding;
   background-clip: padding-box; }
 
 /* line 124, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
@@ -9691,11 +9170,10 @@ textarea.x-form-invalid-field {
   padding: 4px; }
   /* line 126, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
   .x-panel-default-framed .x-panel-body {
-    -moz-border-radius: 0;
     -webkit-border-radius: 0;
-    -o-border-radius: 0;
+    -moz-border-radius: 0;
     -ms-border-radius: 0;
-    -khtml-border-radius: 0;
+    -o-border-radius: 0;
     border-radius: 0;
     border: 0; }
 
@@ -9735,11 +9213,10 @@ textarea.x-form-invalid-field {
 .x-panel-default {
   border-color: #167cce;
   background: #167cce;
-  -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  -o-border-radius: 0;
+  -moz-border-radius: 0;
   -ms-border-radius: 0;
-  -khtml-border-radius: 0;
+  -o-border-radius: 0;
   border-radius: 0; }
   /* line 289, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
   .x-panel-default .x-panel-header-collapsed-border-top {
@@ -9797,72 +9274,62 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-top {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
-  -o-border-top-left-radius: 0;
   -ms-border-top-left-radius: 0;
-  -khtml-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
-  -o-border-top-right-radius: 0;
   -ms-border-top-right-radius: 0;
-  -khtml-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
   border-top-right-radius: 0; }
 
 /* line 433, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-top {
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 /* line 437, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-right {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
-  -o-border-top-left-radius: 0;
   -ms-border-top-left-radius: 0;
-  -khtml-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-bottomleft: 0;
   -webkit-border-bottom-left-radius: 0;
-  -o-border-bottom-left-radius: 0;
   -ms-border-bottom-left-radius: 0;
-  -khtml-border-bottom-left-radius: 0;
+  -o-border-bottom-left-radius: 0;
   border-bottom-left-radius: 0; }
 /* line 441, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-bottom {
   -moz-border-radius-topleft: 0;
   -webkit-border-top-left-radius: 0;
-  -o-border-top-left-radius: 0;
   -ms-border-top-left-radius: 0;
-  -khtml-border-top-left-radius: 0;
+  -o-border-top-left-radius: 0;
   border-top-left-radius: 0;
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
-  -o-border-top-right-radius: 0;
   -ms-border-top-right-radius: 0;
-  -khtml-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
   border-top-right-radius: 0; }
 /* line 445, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-left {
   -moz-border-radius-topright: 0;
   -webkit-border-top-right-radius: 0;
-  -o-border-top-right-radius: 0;
   -ms-border-top-right-radius: 0;
-  -khtml-border-top-right-radius: 0;
+  -o-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -moz-border-radius-bottomright: 0;
   -webkit-border-bottom-right-radius: 0;
-  -o-border-bottom-right-radius: 0;
   -ms-border-bottom-right-radius: 0;
-  -khtml-border-bottom-right-radius: 0;
+  -o-border-bottom-right-radius: 0;
   border-bottom-right-radius: 0; }
 
 /* line 490, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
@@ -9871,22 +9338,20 @@ textarea.x-form-invalid-field {
 
 /* line 514, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-header-default-collapsed {
-  -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  -o-border-radius: 0;
+  -moz-border-radius: 0;
   -ms-border-radius: 0;
-  -khtml-border-radius: 0;
+  -o-border-radius: 0;
   border-radius: 0; }
 
 /* line 280, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-default-framed {
   border-color: #a8b0b8;
   background: #167cce;
-  -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
   -ms-border-radius: 4px;
-  -khtml-border-radius: 4px;
+  -o-border-radius: 4px;
   border-radius: 4px; }
   /* line 289, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
   .x-panel-default-framed .x-panel-header-collapsed-border-top {
@@ -9943,72 +9408,62 @@ textarea.x-form-invalid-field {
 .x-panel-header-default-framed-top {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
-  -o-border-top-left-radius: 4px;
   -ms-border-top-left-radius: 4px;
-  -khtml-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   -ms-border-top-right-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px; }
 
 /* line 433, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-framed-top {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
-  -o-border-bottom-left-radius: 4px;
   -ms-border-bottom-left-radius: 4px;
-  -khtml-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
-  -o-border-bottom-right-radius: 4px;
   -ms-border-bottom-right-radius: 4px;
-  -khtml-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px; }
 /* line 437, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-framed-right {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
-  -o-border-top-left-radius: 4px;
   -ms-border-top-left-radius: 4px;
-  -khtml-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
-  -o-border-bottom-left-radius: 4px;
   -ms-border-bottom-left-radius: 4px;
-  -khtml-border-bottom-left-radius: 4px;
+  -o-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px; }
 /* line 441, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-framed-bottom {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
-  -o-border-top-left-radius: 4px;
   -ms-border-top-left-radius: 4px;
-  -khtml-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   -ms-border-top-right-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px; }
 /* line 445, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-collapsed .x-panel-header-default-framed-left {
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   -ms-border-top-right-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
-  -o-border-bottom-right-radius: 4px;
   -ms-border-bottom-right-radius: 4px;
-  -khtml-border-bottom-right-radius: 4px;
+  -o-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px; }
 
 /* line 490, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
@@ -10017,11 +9472,10 @@ textarea.x-form-invalid-field {
 
 /* line 514, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
 .x-panel-header-default-framed-collapsed {
-  -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
   -ms-border-radius: 4px;
-  -khtml-border-radius: 4px;
+  -o-border-radius: 4px;
   border-radius: 4px; }
 
 /* line 232, ../themes/stylesheets/neptune/default/widgets/_panel.scss */
@@ -10045,11 +9499,10 @@ textarea.x-form-invalid-field {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-tip {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
+  -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 5px 5px 5px 5px;
   border-width: 0;
@@ -10064,11 +9517,10 @@ textarea.x-form-invalid-field {
 .x-nbr .x-tip {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100505px 1000505px; }
@@ -10181,9 +9633,8 @@ textarea.x-form-invalid-field {
 /* line 131, ../themes/stylesheets/neptune/default/widgets/_qtip.scss */
 .x-form-invalid-tip {
   border-color: #a1311f;
-  -moz-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
   -webkit-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
-  -o-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
+  -moz-box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset;
   box-shadow: #d87166 0 1px 0px 0 inset, #d87166 0 -1px 0px 0 inset, #d87166 -1px 0 0px 0 inset, #d87166 1px 0 0px 0 inset; }
 
 /* line 140, ../themes/stylesheets/neptune/default/widgets/_qtip.scss */
@@ -10200,11 +9651,10 @@ textarea.x-form-invalid-field {
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-form-invalid-tip-default {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
+  -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 4px 4px 4px 4px;
   border-width: 1px;
@@ -10219,11 +9669,10 @@ textarea.x-form-invalid-field {
 .x-nbr .x-form-invalid-tip-default {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1100505px 1000505px; }
@@ -10376,11 +9825,10 @@ textarea.x-form-invalid-field {
 .x-progress {
   border-width: 1px;
   border-style: solid;
-  -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  -o-border-radius: 0;
+  -moz-border-radius: 0;
   -ms-border-radius: 0;
-  -khtml-border-radius: 0;
+  -o-border-radius: 0;
   border-radius: 0;
   overflow: hidden;
   height: 20px; }
@@ -10391,11 +9839,10 @@ textarea.x-form-invalid-field {
   overflow: hidden;
   position: absolute;
   width: 0;
-  -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  -o-border-radius: 0;
+  -moz-border-radius: 0;
   -ms-border-radius: 0;
-  -khtml-border-radius: 0;
+  -o-border-radius: 0;
   border-radius: 0;
   border-right: 1px solid;
   border-top: 1px solid; }
@@ -10587,11 +10034,10 @@ textarea.x-form-invalid-field {
 
 /* line 28, ../themes/stylesheets/neptune/default/widgets/_window.scss */
 .x-window-collapsed .x-window-header-vertical, .x-window-collapsed .x-window-header-horizontal {
-  -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
   -ms-border-radius: 4px;
-  -khtml-border-radius: 4px;
+  -o-border-radius: 4px;
   border-radius: 4px; }
 
 /* line 52, ../themes/stylesheets/neptune/default/widgets/_window.scss */
@@ -10616,20 +10062,18 @@ textarea.x-form-invalid-field {
 /* line 101, ../themes/stylesheets/neptune/default/widgets/_window.scss */
 .x-window-default {
   border-color: #1058a6;
-  -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
   -ms-border-radius: 4px;
-  -khtml-border-radius: 4px;
+  -o-border-radius: 4px;
   border-radius: 4px; }
 
 /* line 69, ../themes/stylesheets/neptune/default/mixins/_frame.scss */
 .x-window-default {
-  -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
   -ms-border-radius: 4px;
-  -khtml-border-radius: 4px;
+  -o-border-radius: 4px;
   border-radius: 4px;
   padding: 4px 4px 4px 4px;
   border-width: 0;
@@ -10644,11 +10088,10 @@ textarea.x-form-invalid-field {
 .x-nbr .x-window-default {
   padding: 0 !important;
   border-width: 0 !important;
-  -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  -o-border-radius: 0px;
+  -moz-border-radius: 0px;
   -ms-border-radius: 0px;
-  -khtml-border-radius: 0px;
+  -o-border-radius: 0px;
   border-radius: 0px;
   background-color: transparent;
   background-position: 1000404px 1000404px; }
@@ -10700,15 +10143,13 @@ textarea.x-form-invalid-field {
 .x-window-header-default-top {
   -moz-border-radius-topleft: 4px;
   -webkit-border-top-left-radius: 4px;
-  -o-border-top-left-radius: 4px;
   -ms-border-top-left-radius: 4px;
-  -khtml-border-top-left-radius: 4px;
+  -o-border-top-left-radius: 4px;
   border-top-left-radius: 4px;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
-  -o-border-top-right-radius: 4px;
   -ms-border-top-right-radius: 4px;
-  -khtml-border-top-right-radius: 4px;
+  -o-border-top-right-radius: 4px;
   border-top-right-radius: 4px; }
 
 /* line 2, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
@@ -10727,30 +10168,35 @@ textarea.x-form-invalid-field {
   width: 47px;
   height: 32px; }
 
-/* line 21, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+/* line 18, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+.x-message-box .x-form-item .x-form-display-field {
+  color: white;
+  text-shadow: #0e4b8e 0 -1px 0; }
+
+/* line 25, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
 .x-message-box-info,
 .x-message-box-warning,
 .x-message-box-question,
 .x-message-box-error {
   background: transparent no-repeat top left; }
 
-/* line 25, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+/* line 29, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
 .x-message-box .x-msg-box-wait {
   background-image: url('../../resources/themes/images/neptune/shared/blue-loading.gif'); }
 
-/* line 29, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+/* line 33, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
 .x-message-box-info {
   background-image: url('../../resources/themes/images/neptune/shared/icon-info.gif'); }
 
-/* line 33, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+/* line 37, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
 .x-message-box-warning {
   background-image: url('../../resources/themes/images/neptune/shared/icon-warning.gif'); }
 
-/* line 37, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+/* line 41, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
 .x-message-box-question {
   background-image: url('../../resources/themes/images/neptune/shared/icon-question.gif'); }
 
-/* line 41, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
+/* line 45, ../themes/stylesheets/neptune/default/util/_messagebox.scss */
 .x-message-box-error {
   background-image: url('../../resources/themes/images/neptune/shared/icon-error.gif'); }
 
@@ -10827,11 +10273,8 @@ textarea.x-form-invalid-field {
 
 /* line 87, ../themes/stylesheets/neptune/default/widgets/_tab.scss */
 .x-tab-close-btn {
-  -moz-background-clip: text;
   -webkit-background-clip: text;
-  -o-background-clip: text;
-  -ms-background-clip: text;
-  -khtml-background-clip: text;
+  -moz-background-clip: text;
   background-clip: text;
   overflow: visible;
   text-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
@@ -10861,11 +10304,8 @@ textarea.x-form-invalid-field {
     background-image: linear-gradient(top, #ffffff, #ffffff 3%, #f5f5f5); }
   /* line 38, ../themes/stylesheets/neptune/default/accessories/scss/_pictos.scss */
   .x-tab-close-btn:before {
-    -moz-background-clip: padding;
     -webkit-background-clip: padding;
-    -o-background-clip: padding-box;
-    -ms-background-clip: padding-box;
-    -khtml-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     background: none; }
 
@@ -10876,20 +10316,18 @@ textarea.x-form-invalid-field {
 
 /* line 107, ../themes/stylesheets/neptune/default/widgets/_tab.scss */
 .x-panel-default-framed .x-tab-default-top {
-  -moz-border-radius: 3px 3px 0 0;
   -webkit-border-radius: 3px 3px 0 0;
-  -o-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
   -ms-border-radius: 3px 3px 0 0;
-  -khtml-border-radius: 3px 3px 0 0;
+  -o-border-radius: 3px 3px 0 0;
   border-radius: 3px 3px 0 0; }
 
 /* line 111, ../themes/stylesheets/neptune/default/widgets/_tab.scss */
 .x-panel-default-framed .x-tab-default-bottom {
-  -moz-border-radius: 0 0 3px 3px;
   -webkit-border-radius: 0 0 3px 3px;
-  -o-border-radius: 0 0 3px 3px;
+  -moz-border-radius: 0 0 3px 3px;
   -ms-border-radius: 0 0 3px 3px;
-  -khtml-border-radius: 0 0 3px 3px;
+  -o-border-radius: 0 0 3px 3px;
   border-radius: 0 0 3px 3px; }
 
 /* line 115, ../themes/stylesheets/neptune/default/widgets/_tab.scss */
@@ -11358,7 +10796,7 @@ textarea.x-form-invalid-field {
   vertical-align: middle;
   *vertical-align: auto;
   overflow: hidden; }
-  /* line 7, ../../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
+  /* line 7, ../../../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.1/frameworks/compass/stylesheets/compass/css3/_inline-block.scss */
   .x-surface {
     *display: inline; }
 
@@ -11741,7 +11179,7 @@ textarea.x-form-invalid-field {
 /* line 106, ../themes/stylesheets/neptune/default/util/_splitter.scss */
 .x-proxy-el {
   position: absolute;
-  background: #000; }
+  background: black; }
 
 /* line 6, ../themes/stylesheets/neptune/default/layout/_layout.scss */
 .x-docked {
