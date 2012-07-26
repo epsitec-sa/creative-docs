@@ -13,7 +13,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
 
   entityId: null,
   isRoot: false,
-  subViewMode: 'edition',
+  subViewMode: '2',
   subViewId: 'null',
   autoCreatorId: null,
   selectedPanelCls: 'selected-entity',

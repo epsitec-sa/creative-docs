@@ -33,7 +33,7 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
     this.columnManager.clearColumns();
 
     if (entityIds.length === 1) {
-      this.columnManager.addEntityColumn('summary', 'null', entityIds[0]);
+      this.columnManager.addEntityColumn('1', 'null', entityIds[0]);
     }
   }
 

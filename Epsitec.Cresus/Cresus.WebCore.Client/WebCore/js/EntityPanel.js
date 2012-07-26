@@ -10,7 +10,7 @@ Ext.define('Epsitec.cresus.webcore.EntityPanel', {
   /* Properties */
 
   entityId: null,
-  viewMode: 'summary',
+  viewMode: '1',
   viewId: 'null',
 
   /* Constructor */
