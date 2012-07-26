@@ -17,9 +17,7 @@ Ext.define('Epsitec.cresus.webcore.EnumerationField', {
     this.items = this.items || [];
     this.items.push(combo);
 
-    this.callParent();
-
+    this.callParent(arguments);
     return this;
   }
 });
-
