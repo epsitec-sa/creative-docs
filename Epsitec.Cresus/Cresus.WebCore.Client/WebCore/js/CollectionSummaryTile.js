@@ -46,7 +46,6 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
 
   addEntity: function() {
     this.setLoading();
-
     Ext.Ajax.request({
       url: 'proxy/collection/create',
       method: 'POST',
@@ -55,35 +54,34 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
         entityType: this.entityType,
         propertyAccessorId: this.propertyAccessorId
       },
-      success: function(response, options) {
-        this.setLoading(false);
-
-        var json;
-
-        try {
-          json = Ext.decode(response.responseText);
-        }
-        catch (err) {
-          options.failure.apply(this, arguments);
-          return;
-        }
-
-        var newEntityId = json.content;
-        this.column.addEntityColumn(
-            this.subViewMode, this.subViewId, newEntityId, true
-        );
-      },
-      failure: function(response, options) {
-        this.setLoading(false);
-        Epsitec.ErrorHandler.handleError(response);
-      },
+      callback: this.addEntityCallback,
       scope: this
     });
   },
 
+  addEntityCallback: function(options, success, response) {
+    var json, entityId;
+
+    this.setLoading(false);
+
+    if (!success) {
+      Epsitec.ErrorHandler.handleError(response);
+      return;
+    }
+
+    json = Epsitec.Tools.decodeJson(response.responseText);
+    if (json === null) {
+      return;
+    }
+
+    entityId = json.content;
+    this.column.addEntityColumn(
+        this.subViewMode, this.subViewId, entityId, true
+    );
+  },
+
   deleteEntity: function() {
     this.setLoading();
-
     Ext.Ajax.request({
       url: 'proxy/collection/delete',
       method: 'POST',
@@ -92,18 +90,22 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
         deletedEntityId: this.entityId,
         propertyAccessorId: this.propertyAccessorId
       },
-      success: function(response, options) {
-        this.setLoading(false);
-        if (this.isSelected()) {
-          this.column.removeToRight();
-        }
-        this.column.refreshToLeft(true);
-      },
-      failure: function(response, options) {
-        this.setLoading(false);
-        Epsitec.ErrorHandler.handleError(response);
-      },
+      callback: this.deleteEntityCallback,
       scope: this
     });
+  },
+
+  deleteEntityCallback: function(options, sucess, response) {
+    this.setLoading(false);
+
+    if (!sucess) {
+      Epsitec.ErrorHandler.handleError(response);
+      return;
+    }
+
+    if (this.isSelected()) {
+      this.column.removeToRight();
+    }
+    this.column.refreshToLeft(true);
   }
 });
