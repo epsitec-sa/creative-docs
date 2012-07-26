@@ -23,9 +23,14 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public static ViewControllerMode ParseViewMode(string value)
 		{
-			object viewMode = Enum.Parse (typeof (ViewControllerMode), value, true);
+			var viewMode = InvariantConverter.ToEnum<ViewControllerMode> (value);
 
-			return (ViewControllerMode) viewMode;
+			if (!Enum.IsDefined (typeof (ViewControllerMode), viewMode))
+			{
+				throw new ArgumentException ();
+			}
+
+			return viewMode;
 		}
 
 
