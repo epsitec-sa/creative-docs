@@ -57,22 +57,32 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
     if (this.form.isValid()) {
       this.setLoading();
       form.submit({
-        success: function(form, action) {
-          this.setLoading(false);
-          this.column.refreshToLeft(false);
-        },
-        failure: function(form, action) {
-          this.setLoading(false);
-          try {
-            var config = Ext.decode(action.response.responseText);
-            form.markInvalid(config.errors);
-          }
-          catch (err) {
-            Epsitec.ErrorHandler.handleErrorDefault();
-          }
-        },
+        success: this.onSaveClickSucess,
+        failure: this.onSaveClickFailure,
         scope: this
       });
+    }
+  },
+
+  onSaveClickSucess: function() {
+    this.setLoading(false);
+    this.column.refreshToLeft(false);
+  },
+
+  onSaveClickFailure: function(form, action) {
+    var json;
+
+    this.setLoading(false);
+
+    json = Epsitec.Tools.decodeJson(action.response.responseText);
+    if (json === null) {
+      return;
+    }
+
+    form.markInvalid(json.errors);
+
+    if (!json.success) {
+      Epsitec.ErrorHandler.handleErrorDefault();
     }
   }
 });
