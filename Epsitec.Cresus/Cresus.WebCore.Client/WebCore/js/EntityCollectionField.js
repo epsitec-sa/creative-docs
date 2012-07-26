@@ -10,31 +10,34 @@ Ext.define('Epsitec.cresus.webcore.EntityCollectionField', {
   /* Constructor */
 
   constructor: function(options) {
+    var fields, button;
+
     options.columnWidth = 1;
 
-    var combo = Ext.widget('fieldcontainer', options);
-
-    var button = Ext.create('Ext.Button', {
+    fields = Ext.widget('fieldcontainer', options);
+    button = Ext.create('Ext.Button', {
       text: '>',
       renderTo: Ext.getBody(),
       margin: '0 0 0 5',
-      handler: function() {
-        var title = 'Cannot edit this enumeration';
-        var content = 'You cannot directly edit this enumeration. You will ' +
-                      'need to save the current changes, click the header ' +
-                      'menu to edit the corresponding enumeration, and come ' +
-                      'back to this entity to edit it.';
-        Ext.Msg.alert(title, content);
-      },
+      handler: this.buttonHandler,
       scope: this
     });
 
     this.items = this.items || [];
-    this.items.push(combo);
+    this.items.push(fields);
     this.items.push(button);
 
     this.callParent(arguments);
 
     return this;
+  },
+
+  buttonHandler: function() {
+    var title = 'Cannot edit this enumeration',
+        content = 'You cannot directly edit this enumeration. You will need ' +
+                  'to save the current changes, click the header menu to ' +
+                  'edit the corresponding enumeration, and come back to this ' +
+                  'entity to edit it.';
+    Ext.Msg.alert(title, content);
   }
 });
