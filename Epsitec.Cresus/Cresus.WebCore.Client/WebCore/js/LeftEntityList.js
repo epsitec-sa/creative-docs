@@ -1,6 +1,6 @@
-Ext.define('Epsitec.cresus.webcore.LeftEntityListPanel', {
-  extend: 'Epsitec.cresus.webcore.EntityListPanel',
-  alternateClassName: ['Epsitec.LeftEntityListPanel'],
+Ext.define('Epsitec.cresus.webcore.LeftEntityList', {
+  extend: 'Epsitec.cresus.webcore.EntityList',
+  alternateClassName: ['Epsitec.LeftEntityList'],
 
   /* Config */
 
@@ -8,7 +8,7 @@ Ext.define('Epsitec.cresus.webcore.LeftEntityListPanel', {
 
   /* Additional methods */
 
-  // Overrides Epsitec.EntityListPanel.onSelectionChange.
+  // Overrides Epsitec.EntityList.onSelectionChange.
   onSelectionChange: function(entityIds) {
     this.columnManager.removeAllColumns();
     if (entityIds.length === 1) {

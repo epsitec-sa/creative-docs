@@ -4,8 +4,8 @@ Ext.define('Epsitec.cresus.webcore.Tile', {
 
   /* Properties */
 
+  column: null,
   entityId: null,
-  entityPanel: null,
   selected: false,
   selectedClass: 'selected-entity',
 

@@ -88,7 +88,7 @@
     <Compile Include="Layout\TileData\EnumerationFieldData.cs" />
     <Compile Include="Layout\TileData\HorizontalGroupData.cs" />
     <Compile Include="Layout\TileData\IncludeData.cs" />
-    <Compile Include="Layout\TileData\EntityPanelData.cs" />
+    <Compile Include="Layout\TileData\EntityColumnData.cs" />
     <Compile Include="Layout\TileData\TextFieldData.cs" />
     <Compile Include="Layout\Tile\AbstractEditionTilePart.cs" />
     <Compile Include="Layout\Tile\AbstractTile.cs" />
@@ -110,7 +110,7 @@
     <Compile Include="Layout\Tile\EnumerationField.cs" />
     <Compile Include="Layout\Tile\GlobalWarning.cs" />
     <Compile Include="Layout\Tile\HorizontalGroup.cs" />
-    <Compile Include="Layout\Tile\EntityPanel.cs" />
+    <Compile Include="Layout\Tile\EntityColumn.cs" />
     <Compile Include="Layout\Tile\Separator.cs" />
     <Compile Include="Layout\Tile\SummaryTile.cs" />
     <Compile Include="Layout\TileData\SummaryTileData.cs" />

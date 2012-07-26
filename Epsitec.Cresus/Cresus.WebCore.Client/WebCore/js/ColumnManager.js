@@ -23,7 +23,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
 
     this.title = database.Title;
 
-    this.leftList = Ext.create('Epsitec.LeftEntityListPanel', {
+    this.leftList = Ext.create('Epsitec.LeftEntityList', {
       databaseName: database.DatabaseName,
       region: 'west',
       margin: 5,
@@ -125,16 +125,16 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
     }
   },
 
-  execute: function(viewMode, viewId, entityId, loadingPanel, callbackQueue) {
-    if (loadingPanel !== null) {
-      loadingPanel.setLoading();
+  execute: function(viewMode, viewId, entityId, loadingColumn, callbackQueue) {
+    if (loadingColumn !== null) {
+      loadingColumn.setLoading();
     }
 
     Ext.Ajax.request({
       url: 'proxy/layout/' + viewMode + '/' + viewId + '/' + entityId,
       success: function(response, options) {
-        if (loadingPanel !== null) {
-          loadingPanel.setLoading(false);
+        if (loadingColumn !== null) {
+          loadingColumn.setLoading(false);
         }
 
         var config;
@@ -152,8 +152,8 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
         callbackQueue.execute(callbackArguments);
       },
       failure: function(response, options) {
-        if (loadingPanel !== null) {
-          loadingPanel.setLoading(false);
+        if (loadingColumn !== null) {
+          loadingColumn.setLoading(false);
         }
 
         Epsitec.ErrorHandler.handleError(response);
@@ -166,11 +166,11 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
     config.columnId = this.columns.length;
     config.columnManager = this;
 
-    var column = Ext.create('Epsitec.EntityPanel', config);
+    var column = Ext.create('Epsitec.EntityColumn', config);
 
     this.addExistingColumn(column);
 
-    // Scroll all the way to the right, in case there are more panel than the
+    // Scroll all the way to the right, in case there are more columns than the
     // screen is able to show
     var dom = this.rightPanel.getEl().child('.x-panel-body').dom;
     dom.scrollLeft = 1000000;
@@ -232,7 +232,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
       config.columnId = i;
       config.columnManager = this;
 
-      this.addExistingColumn(Ext.create('Epsitec.EntityPanel', config));
+      this.addExistingColumn(Ext.create('Epsitec.EntityColumn', config));
     }
 
     var nbColumns = clonedColumns.length;

@@ -59,7 +59,7 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
       form.submit({
         success: function(form, action) {
           this.setLoading(false);
-          this.entityPanel.refreshToLeft(false);
+          this.column.refreshToLeft(false);
         },
         failure: function(form, action) {
           this.setLoading(false);

@@ -1,6 +1,6 @@
-Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
+Ext.define('Epsitec.cresus.webcore.EntityList', {
   extend: 'Ext.grid.Panel',
-  alternateClassName: ['Epsitec.EntityListPanel'],
+  alternateClassName: ['Epsitec.EntityList'],
 
   /* Config */
 

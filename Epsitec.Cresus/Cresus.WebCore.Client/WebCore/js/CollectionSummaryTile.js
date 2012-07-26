@@ -44,13 +44,6 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     }
   },
 
-  removePanel: function() {
-    if (this.isSelected()) {
-      this.entityPanel.removeToRight();
-    }
-    this.entityPanel.refreshToLeft(true);
-  },
-
   addEntity: function() {
     this.setLoading();
 
@@ -58,7 +51,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
       url: 'proxy/collection/create',
       method: 'POST',
       params: {
-        parentEntityId: this.entityPanel.entityId,
+        parentEntityId: this.column.entityId,
         entityType: this.entityType,
         propertyAccessorId: this.propertyAccessorId
       },
@@ -76,7 +69,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
         }
 
         var newEntityId = json.content;
-        this.entityPanel.addEntityColumn(
+        this.column.addEntityColumn(
             this.subViewMode, this.subViewId, newEntityId, true
         );
       },
@@ -95,14 +88,16 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
       url: 'proxy/collection/delete',
       method: 'POST',
       params: {
-        parentEntityId: this.entityPanel.entityId,
+        parentEntityId: this.column.entityId,
         deletedEntityId: this.entityId,
         propertyAccessorId: this.propertyAccessorId
       },
       success: function(response, options) {
         this.setLoading(false);
-
-        this.removePanel();
+        if (this.isSelected()) {
+          this.column.removeToRight();
+        }
+        this.column.refreshToLeft(true);
       },
       failure: function(response, options) {
         this.setLoading(false);

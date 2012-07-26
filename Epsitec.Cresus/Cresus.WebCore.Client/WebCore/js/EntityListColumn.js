@@ -1,6 +1,6 @@
-Ext.define('Epsitec.cresus.webcore.SelectionEntityListPanel', {
-  extend: 'Epsitec.cresus.webcore.EntityListPanel',
-  alternateClassName: ['Epsitec.SelectionEntityListPanel'],
+Ext.define('Epsitec.cresus.webcore.EntityListColumn', {
+  extend: 'Epsitec.cresus.webcore.EntityList',
+  alternateClassName: ['Epsitec.EntityListColumn'],
 
   /* Properties */
   columnId: null,

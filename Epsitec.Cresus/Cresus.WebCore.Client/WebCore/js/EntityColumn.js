@@ -1,6 +1,6 @@
-Ext.define('Epsitec.cresus.webcore.EntityPanel', {
+Ext.define('Epsitec.cresus.webcore.EntityColumn', {
   extend: 'Ext.Panel',
-  alternateClassName: ['Epsitec.EntityPanel'],
+  alternateClassName: ['Epsitec.EntityColumn'],
 
   /* Config */
 
@@ -21,8 +21,8 @@ Ext.define('Epsitec.cresus.webcore.EntityPanel', {
 
   constructor: function(options) {
     Ext.Array.forEach(options.items,
-        function(item) {
-          item.entityPanel = this;
+        function(tile) {
+          tile.column = this;
         },
         this
     );

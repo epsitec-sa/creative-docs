@@ -43,7 +43,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
       options.tools.push({
         type: 'refresh',
         tooltip: 'Refresh entity',
-        handler: function() { this.entityPanel.refresh(); },
+        handler: function() { this.column.refresh(); },
         scope: this
       });
     }
@@ -54,7 +54,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
       this.autoCreateNullEntity();
     }
     else {
-      this.entityPanel.addEntityColumn(
+      this.column.addEntityColumn(
           this.subViewMode, this.subViewId, this.entityId, false
       );
     }
@@ -67,7 +67,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
       url: 'proxy/entity/autoCreate',
       method: 'POST',
       params: {
-        entityId: this.entityPanel.entityId,
+        entityId: this.column.entityId,
         autoCreatorId: this.autoCreatorId
       },
       success: function(response, options) {
@@ -86,7 +86,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
         var newEntityId = json.content;
         var refresh = this.entityId !== newEntityId;
 
-        this.entityPanel.addEntityColumn(
+        this.column.addEntityColumn(
             this.subViewMode, this.subViewId, newEntityId, refresh
         );
       },

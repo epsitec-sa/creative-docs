@@ -42,15 +42,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public Dictionary<string, object> Build(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			var entityPanelData = new EntityPanelData ()
+			var entityColumnData = new EntityColumnData ()
 			{
 				ViewMode = viewMode,
 				ViewId = viewId,
 				Tiles = this.GetTileData (entity, viewMode, viewId).ToList (),
 			};
 
-			return entityPanelData
-				.ToEntityPanel (this, entity)
+			return entityColumnData
+				.ToEntityColumn (this, entity)
 				.ToDictionary ();
 		}
 
