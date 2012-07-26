@@ -59,9 +59,7 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
       form.submit({
         success: function(form, action) {
           this.setLoading(false);
-          this.entityPanel.columnManager.refreshColumns(
-              0, this.entityPanel.columnId - 1
-          );
+          this.entityPanel.refreshToLeft(false);
         },
         failure: function(form, action) {
           this.setLoading(false);

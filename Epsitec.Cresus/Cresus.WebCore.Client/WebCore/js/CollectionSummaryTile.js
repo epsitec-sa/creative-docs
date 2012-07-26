@@ -44,36 +44,11 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     }
   },
 
-  showEntityColumnRefreshAndSelect: function(subViewMode, subViewId, entityId) {
-    var callbackQueue = Epsitec.CallbackQueue.create(
-        function() {
-          this.entityPanel.columnManager.selectEntity(
-              this.entityPanel.columnId, entityId
-          );
-        },
-        this
-        );
-
-    this.showEntityColumnAndRefresh(
-        subViewMode, subViewId, entityId, callbackQueue
-    );
-  },
-
   removePanel: function() {
-    var columnManager = this.entityPanel.columnManager;
-
-    // If this panel is currently selected, we must remove all the columns to
-    // the right of this one.
-    var columnId = this.entityPanel.columnId;
-    var selectedEntityId = columnManager.getSelectedEntity(columnId);
-
-    if (selectedEntityId === this.entityId) {
-      columnManager.removeColumnsFromIndex(columnId + 1);
+    if (this.isSelected()) {
+      this.entityPanel.removeToRight();
     }
-
-    // Now we refresh the current column in order to update the UI with any
-    // modification that the deletion might have done to summaries.
-    this.refreshEntity(true);
+    this.entityPanel.refreshToLeft(true);
   },
 
   addEntity: function() {
@@ -101,9 +76,8 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
         }
 
         var newEntityId = json.content;
-
-        this.showEntityColumnRefreshAndSelect(
-            this.subViewMode, this.subViewId, newEntityId
+        this.entityPanel.addEntityColumn(
+            this.subViewMode, this.subViewId, newEntityId, true
         );
       },
       failure: function(response, options) {
