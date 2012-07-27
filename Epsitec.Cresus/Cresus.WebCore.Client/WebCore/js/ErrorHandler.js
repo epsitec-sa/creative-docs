@@ -8,7 +8,7 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
       try {
         json = Ext.decode(response.responseText);
       }
-      catch(e) {
+      catch (e) {
         json = null;
       }
 
