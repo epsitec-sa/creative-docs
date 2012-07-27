@@ -80,9 +80,5 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
     }
 
     form.markInvalid(json.errors);
-
-    if (!json.success) {
-      Epsitec.ErrorHandler.handleErrorDefault();
-    }
   }
 });
