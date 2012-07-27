@@ -69,11 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			foreach (var enumKeyValues in EnumKeyValues.FromEnum<T> ())
 			{
-				// NOTE Here we need the double cast because the compiler won't let us cast from
-				// T to int directly, so we cast T to object because this is allowed and then we
-				// unbox object to the real type.
-
-				var id = (int) (object) enumKeyValues.Key;
+				var id = InvariantConverter.ToString (enumKeyValues.Key);
 				var values = enumKeyValues.Values;
 
 				if (values.Any ())
