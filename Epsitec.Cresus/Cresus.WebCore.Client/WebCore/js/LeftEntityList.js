@@ -8,7 +8,6 @@ Ext.define('Epsitec.cresus.webcore.LeftEntityList', {
 
   /* Additional methods */
 
-  // Overrides Epsitec.EntityList.onSelectionChange.
   onSelectionChange: function(entityIds) {
     this.columnManager.removeAllColumns();
     if (entityIds.length === 1) {
