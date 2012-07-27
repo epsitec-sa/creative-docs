@@ -3,25 +3,34 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
 
   statics: {
     handleError: function(response) {
+      var json, errors, code, title, message;
 
-      var responseData = Ext.decode(response.responseText);
-      var errors = responseData.errors;
+      try {
+        json = Ext.decode(response.responseText);
+      }
+      catch(e) {
+        json = null;
+      }
 
-      var code = errors.code || null;
-      var title = errors.title || null;
-      var message = errors.message || null;
+      errors = json !== null ? json.errors : null;
 
-      if (code !== null) {
-        Epsitec.ErrorHandler.handleErrorCode(code);
+      if (errors !== null)
+      {
+        code = errors.code || null;
+        if (code !== null) {
+          Epsitec.ErrorHandler.handleErrorCode(code);
+          return;
+        }
+
+        title = errors.title || null;
+        message = errors.message || null;
+        if (title !== null && message !== null) {
+          Epsitec.ErrorHandler.handleErrorTitleAndMessage(title, message);
+          return;
+        }
       }
-      else if (title !== null && message !== null) {
-        Epsitec.ErrorHandler.handleErrorTitleAndMessage(
-            title, message
-        );
-      }
-      else {
-        Epsitec.ErrorHandler.handleErrorDefault();
-      }
+
+      Epsitec.ErrorHandler.handleErrorDefault();
     },
 
     handleErrorCode: function(code) {
@@ -40,18 +49,17 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
     },
 
     handleErrorDefault: function() {
-      var title = 'Error';
-      var content = 'Something wrong happened and you shouldn\'t have seen ' +
+      var title = 'Error',
+          content = 'Something wrong happened and you shouldn\'t have seen ' +
                     'this message if only I did my job properly!';
       Ext.Msg.alert(title, content);
     },
 
     handleSessionTimeout: function() {
-      Ext.Msg.alert(
-          'Session timout.',
-          'Your session has timed out. Please log in again.',
-          function() { window.location.reload(); }
-      );
+      var title = 'Session timout.',
+          content = 'Your session has timed out. Please log in again.',
+          callback = function() { window.location.reload(); };
+      Ext.Msg.alert(title, content, callback);
     }
   }
 });
