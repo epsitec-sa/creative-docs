@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 			fieldDictionary["xtype"] = "epsitec.enumerationfield";
 			fieldDictionary["value"] = this.Value;
-			fieldDictionary["storeClass"] = this.TypeName;
+			fieldDictionary["enumerationName"] = this.TypeName;
 
 			return fieldDictionary;
 		}
