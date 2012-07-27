@@ -37,21 +37,25 @@ Ext.application({
   /* Properties */
 
   menu: null,
+  loginPanel: null,
   tabManager: null,
 
   launch: function() {
-    this.doLogin();
+    this.showLoginPanel();
   },
 
   /* Additional methods */
 
-  doLogin: function() {
-    Ext.create('Epsitec.LoginPanel', {
+  showLoginPanel: function() {
+    this.loginPanel = Ext.create('Epsitec.LoginPanel', {
       application: this
     });
   },
 
-  runApp: function() {
+  showMainPanel: function() {
+    this.loginPanel.close();
+    this.loginPanel = null;
+
     this.menu = Ext.create('Epsitec.Menu', {
       application: this,
       region: 'north',

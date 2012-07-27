@@ -29,14 +29,10 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
 
   constructor: function(options) {
     options.url = 'proxy/log/in';
+    options.items = this.getItems();
+    options.buttons = this.getButtons();
 
-    this.application = options.application;
-
-    this.items = this.getItems();
-    this.buttons = this.getButtons();
-
-    this.callParent([options]);
-
+    this.callParent(arguments);
     return this;
   },
 
@@ -85,7 +81,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
     resetButton = Ext.create('Ext.button.Button', {
       text: 'Reset',
       listeners: {
-        click: this.onResetPressed,
+        click: this.onResetClick,
         scope: this
       }
     });
@@ -93,7 +89,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
     loginButton = Ext.create('Ext.button.Button', {
       text: 'Log in',
       listeners: {
-        click: this.onLoginPressed,
+        click: this.onLoginClick,
         scope: this
       }
     });
@@ -103,45 +99,40 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
 
   onSpecialKeyPressed: function(field, e) {
     if (e.getKey() === e.ENTER) {
-      this.onLoginPressed();
+      this.onLoginClick();
     }
   },
 
-  onResetPressed: function() {
+  onResetClick: function() {
     this.getForm().reset();
   },
 
-  onLoginPressed: function() {
+  onLoginClick: function() {
     var form = this.getForm();
     if (form.isValid()) {
       this.setLoading();
       form.submit({
-        success: function(form, action) {
-          try {
-            Ext.decode(action.response.responseText);
-          }
-          catch (err) {
-            Epsitec.ErrorHandler.handleErrorDefault();
-            return;
-          }
-
-          this.close();
-          this.application.runApp();
-        },
-        failure: function(form, action) {
-          this.setLoading(false);
-
-          try {
-            var config = Ext.decode(action.response.responseText);
-            this.getForm().markInvalid(config.errors);
-            Ext.Msg.alert('Failed', 'Could not login. Please try again');
-          }
-          catch (err) {
-            Epsitec.ErrorHandler.handleErrorDefault();
-          }
-        },
+        success: this.onLoginClickSuccess,
+        failure: this.onLoginClickFailure,
         scope: this
       });
     }
+  },
+
+  onLoginClickSuccess: function() {
+    this.application.showMainPanel();
+  },
+
+  onLoginClickFailure: function(form, action) {
+    var json;
+
+    this.setLoading(false);
+
+    json = Epsitec.Tools.decodeJson(action.response.responseText);
+    if (json === null) {
+      return;
+    }
+
+    form.markInvalid(json.errors);
   }
 });
