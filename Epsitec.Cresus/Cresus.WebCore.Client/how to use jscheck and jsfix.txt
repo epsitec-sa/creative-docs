@@ -18,8 +18,10 @@ These scripts need two external tools:
      http://www.python.org/download/windows/.
   2) install the easy_install module for python. It can be downloaded here :
      http://peak.telecommunity.com/DevCenter/EasyInstall#installing-easy-install.
-  3) install google closure linter using the easy_install module.
-  
+  3) install google closure linter using the easy_install module. Use version
+    2.3.6.1 or more recent, as there is a nasty bug in 2.3.6 that will force you
+    to restart your machine.
+
 - jshint. This tool is available here : http://www.jshint.com/. To install it,
   to the following steps:
   1) download the tools somewhere on your machine.
