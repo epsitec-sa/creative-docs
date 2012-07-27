@@ -29,7 +29,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
       options.tools.push({
         type: 'plus',
         tooltip: 'Add a new item',
-        handler: this.addEntity,
+        handler: this.addEntityHandler,
         scope: this
       });
     }
@@ -38,13 +38,13 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
       options.tools.push({
         type: 'minus',
         tooltip: 'Remove this item',
-        handler: this.deleteEntity,
+        handler: this.deleteEntityHandler,
         scope: this
       });
     }
   },
 
-  addEntity: function() {
+  addEntityHandler: function() {
     this.setLoading();
     Ext.Ajax.request({
       url: 'proxy/collection/create',
@@ -75,12 +75,10 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     }
 
     entityId = json.content;
-    this.column.addEntityColumn(
-        this.subViewMode, this.subViewId, entityId, true
-    );
+    this.addEntityColumn(entityId, true);
   },
 
-  deleteEntity: function() {
+  deleteEntityHandler: function() {
     this.setLoading();
     Ext.Ajax.request({
       url: 'proxy/collection/delete',

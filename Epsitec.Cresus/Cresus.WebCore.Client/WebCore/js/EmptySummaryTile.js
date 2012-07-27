@@ -20,8 +20,7 @@ Ext.define('Epsitec.cresus.webcore.EmptySummaryTile', {
 
   /* Additional methods */
 
-  // Overrides Epsitec.SummaryTile.bodyClicked.
-  bodyClicked: function() {
-    this.addEntity();
+  bodyClickHandler: function() {
+    this.addEntityHandler();
   }
 });

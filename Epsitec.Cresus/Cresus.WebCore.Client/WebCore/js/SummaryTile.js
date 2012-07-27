@@ -18,11 +18,9 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
 
   /* Constructor */
 
-  constructor: function(o)  {
-    var options = o || {};
+  constructor: function(options)  {
     this.addRefreshButton(options);
-
-    this.callParent([options]);
+    this.callParent(arguments);
     return this;
   },
 
@@ -30,16 +28,24 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
 
   listeners: {
     render: function() {
-      this.body.on('click', this.bodyClicked, this);
+      this.body.on('click', this.bodyClickHandler, this);
+    }
+  },
+
+  bodyClickHandler: function() {
+    if (this.autoCreatorId !== null) {
+      this.autoCreateNullEntity();
+    }
+    else {
+      this.addEntityColumn(this.entityId, false);
     }
   },
 
   /* Additional methods */
 
   addRefreshButton: function(options)  {
-    options.tools = options.tools || [];
-
     if (options.isRoot) {
+      options.tools = options.tools || [];
       options.tools.push({
         type: 'refresh',
         tooltip: 'Refresh entity',
@@ -49,15 +55,10 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
     }
   },
 
-  bodyClicked: function() {
-    if (this.autoCreatorId !== null) {
-      this.autoCreateNullEntity();
-    }
-    else {
-      this.column.addEntityColumn(
-          this.subViewMode, this.subViewId, this.entityId, false
-      );
-    }
+  addEntityColumn: function(entityId, refresh) {
+    this.column.addEntityColumn(
+        this.subViewMode, this.subViewId, entityId, refresh
+    );
   },
 
   autoCreateNullEntity: function()  {
@@ -70,32 +71,27 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
         entityId: this.column.entityId,
         autoCreatorId: this.autoCreatorId
       },
-      success: function(response, options) {
-        this.setLoading(false);
-
-        var json;
-
-        try {
-          json = Ext.decode(response.responseText);
-        }
-        catch (err) {
-          options.failure.apply(this, arguments);
-          return;
-        }
-
-        var newEntityId = json.content;
-        var refresh = this.entityId !== newEntityId;
-
-        this.column.addEntityColumn(
-            this.subViewMode, this.subViewId, newEntityId, refresh
-        );
-      },
-      failure: function(response, options) {
-        this.setLoading(false);
-        Epsitec.ErrorHandler.handleError(response);
-      },
+      callback: this.autoCreateNullEntityCallback,
       scope: this
+    });
+  },
+
+  autoCreateNullEntityCallback: function(options, success, response) {
+    var json, newEntityId, refresh;
+
+    this.setLoading(false);
+
+    if (!success) {
+      Epsitec.ErrorHandler.handleError(response);
     }
-    );
+
+    json = Epsitec.Tools.decodeJson(response.responseText);
+    if (json === null) {
+      return;
+    }
+
+    newEntityId = json.content;
+    refresh = this.entityId !== newEntityId;
+    this.addEntityColumn(newEntityId, refresh);
   }
 });
