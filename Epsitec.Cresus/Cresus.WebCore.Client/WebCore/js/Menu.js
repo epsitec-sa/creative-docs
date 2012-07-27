@@ -8,112 +8,106 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
 
   /* Constructor */
 
-  constructor: function(options) {
-    this.application = options.application;
-    this.items = this.items || [];
-
-    this.setupDatabases();
-    this.setupTools();
-
+  constructor: function() {
     this.callParent(arguments);
+    this.add(this.createDatabasesGroup(), '->', this.createToolsGroup());
     return this;
   },
 
   /* Additional methods */
 
-  setupDatabases: function() {
-    Ext.Ajax.request({
-      url: 'proxy/database/list',
-      success: function(response, options) {
-        var config;
-
-        try {
-          config = Ext.decode(response.responseText);
-        }
-        catch (err) {
-          options.failure.apply(this, arguments);
-          return;
-        }
-
-        this.handleMenus(config.content);
-      },
-      failure: function(response, options) {
-        Epsitec.ErrorHandler.handleError(response);
-      },
-      scope: this
-    });
-  },
-
-  handleMenus: function(databases) {
+  createDatabasesGroup: function() {
     var group = Ext.create('Ext.container.ButtonGroup', {
       title: 'Databases',
       headerPosition: 'bottom'
     });
 
-    Ext.Array.forEach(
-        databases,
-        function(database) {
-          var databaseAction = Ext.create('Ext.Action', {
-            text: database.Title,
-            handler: function() {
-              this.application.tabManager.showEntityTab(database);
-            },
-            scale: 'large',
-            scope: this,
-            iconAlign: 'top',
-            iconCls: database.CssClass
-          });
+    Ext.Ajax.request({
+      url: 'proxy/database/list',
+      callback: function(options, success, response) {
+        this.createDatabasesGroupCallback(success, response, group);
+      },
+      scope: this
+    });
 
-          group.add(databaseAction);
-        },
-        this
-    );
-
-    this.insert(0, group);
+    return group;
   },
 
-  setupTools: function() {
-    var aboutAction = Ext.create('Ext.Action', {
+  createDatabasesGroupCallback: function(success, response, group) {
+    var json, databases, i;
+
+    if (!success) {
+      Epsitec.ErrorHandler.handleError(response);
+      return;
+    }
+
+    json = Epsitec.Tools.decodeJson(response.responseText);
+    if (json === null) {
+      return;
+    }
+
+    databases = json.content;
+
+    for (i = 0; i < databases.length; i += 1) {
+      this.createDatabaseButton(group, databases[i]);
+    }
+  },
+
+  createDatabaseButton: function(group, database) {
+    var databaseButton = this.createButton({
+      text: database.Title,
+      handler: function() { this.databaseClickCallback(database); },
+      iconCls: database.CssClass
+    });
+    group.add(databaseButton);
+  },
+
+  databaseClickCallback: function(database) {
+    this.application.tabManager.showEntityTab(database);
+  },
+
+  createToolsGroup: function() {
+    var aboutButton, logoutButton;
+
+    aboutButton = this.createButton({
       text: 'About',
-      handler: function() {
-        var title = 'About box';
-        var url = 'proxy/page/about';
-        this.application.tabManager.showPageTab(title, url);
-      },
-      scale: 'large',
-      scope: this,
-      iconAlign: 'top',
+      handler: this.aboutButtonHandler,
       iconCls: 'epsitec-cresus-core-images-base-softwareuserrole-icon32'
     });
 
-    var logoutAction = Ext.create('Ext.Action', {
+    logoutButton = this.createButton({
       text: 'Logout',
-      handler: function() {
-        Ext.Ajax.request({
-          url: 'proxy/log/out',
-          method: 'POST',
-          callback: function() {
-            window.location.reload();
-          }
-        });
-      },
-      scale: 'large',
-      scope: this,
-      iconAlign: 'top',
+      handler: this.logoutButtonHandler,
       iconCls: 'epsitec-cresus-core-images-usermanager-icon32'
     });
 
-    this.items.push(
-        '->',
-        {
-          xtype: 'buttongroup',
-          title: 'Options',
-          headerPosition: 'bottom',
-          items: [
-            aboutAction,
-            logoutAction
-          ]
-        }
-    );
+    return Ext.create('Ext.container.ButtonGroup', {
+      title: 'Options',
+      headerPosition: 'bottom',
+      items: [aboutButton, logoutButton]
+    });
+  },
+
+  aboutButtonHandler: function() {
+    this.application.tabManager.showPageTab('About box', 'proxy/page/about');
+  },
+
+  logoutButtonHandler: function() {
+    Ext.Ajax.request({
+      url: 'proxy/log/out',
+      method: 'POST',
+      callback: function() { window.location.reload(); }
+    });
+  },
+
+  createButton: function(options) {
+    return Ext.create('Ext.Action', {
+      text: options.text,
+      handler: options.handler,
+      scale: 'large',
+      scope: this,
+      iconAlign: 'top',
+      iconCls: options.iconCls
+    });
   }
 });
