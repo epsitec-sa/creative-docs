@@ -3,6 +3,7 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
   alternateClassName: ['Epsitec.TabManager'],
 
   /* Config */
+
   plain: true,
 
   /* Properties */
@@ -12,8 +13,8 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
   pageTabs: null,
 
   /* Constructor */
-  constructor: function(options) {
 
+  constructor: function() {
     this.entityTabs = [];
     this.pageTabs = [];
 
@@ -24,8 +25,10 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
   /* Additional methods */
 
   showEntityTab: function(database) {
-    var key = database.DatabaseName;
-    var entityTab = this.entityTabs[key] || null;
+    var key, entityTab;
+
+    key = database.DatabaseName;
+    entityTab = this.entityTabs[key] || null;
 
     if (entityTab === null || entityTab.isDestroyed) {
       entityTab = Ext.create('Epsitec.ColumnManager', {
