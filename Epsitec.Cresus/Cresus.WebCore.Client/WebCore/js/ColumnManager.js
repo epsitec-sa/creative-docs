@@ -21,10 +21,10 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
 
     var database = options.database;
 
-    this.title = database.Title;
+    this.title = database.title;
 
     this.leftList = Ext.create('Epsitec.LeftEntityList', {
-      databaseName: database.DatabaseName,
+      databaseName: database.name,
       region: 'west',
       margin: 5,
       width: 250,

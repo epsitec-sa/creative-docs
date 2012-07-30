@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		public string DatabaseName
+		public string Name
 		{
 			get;
 			set;

@@ -27,7 +27,7 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
   showEntityTab: function(database) {
     var key, entityTab;
 
-    key = database.DatabaseName;
+    key = database.name;
     entityTab = this.entityTabs[key] || null;
 
     if (entityTab === null || entityTab.isDestroyed) {

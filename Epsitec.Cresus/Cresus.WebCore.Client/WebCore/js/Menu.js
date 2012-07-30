@@ -55,9 +55,9 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
 
   createDatabaseButton: function(group, database) {
     var databaseButton = this.createButton({
-      text: database.Title,
+      text: database.title,
       handler: function() { this.databaseClickCallback(database); },
-      iconCls: database.CssClass
+      iconCls: database.cssClass
     });
     group.add(databaseButton);
   },

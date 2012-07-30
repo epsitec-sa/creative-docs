@@ -44,42 +44,42 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				DatabasesModule.databases["countries"] = new Database<AiderCountryEntity>
 				{
 					Title = "Countries",
-					DatabaseName = "countries",
+					Name = "countries",
 					CssClass = IconManager.GetCssClassName (typeof (CountryEntity), "Base.Country", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["towns"] = new Database<AiderTownEntity>
 				{
 					Title = "Towns",
-					DatabaseName = "towns",
+					Name = "towns",
 					CssClass = IconManager.GetCssClassName (typeof (LocationEntity), "Base.Location", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["addresses"] = new Database<AiderAddressEntity>
 				{
 					Title = "Addresses",
-					DatabaseName = "addresses",
+					Name = "addresses",
 					CssClass = IconManager.GetCssClassName (typeof (AiderAddressEntity), "Data.AiderAddress", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["households"] = new Database<AiderHouseholdEntity>
 				{
 					Title = "Households",
-					DatabaseName = "households",
+					Name = "households",
 					CssClass = IconManager.GetCssClassName (typeof (AiderHouseholdEntity), "Data.AiderHousehold", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["persons"] = new Database<AiderPersonEntity>
 				{
 					Title = "Persons",
-					DatabaseName = "persons",
+					Name = "persons",
 					CssClass = IconManager.GetCssClassName (typeof (AiderPersonEntity), "Base.AiderPerson", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["relationships"] = new Database<AiderPersonRelationshipEntity>
 				{
 					Title = "Relationships",
-					DatabaseName = "relationships",
+					Name = "relationships",
 					CssClass = IconManager.GetCssClassName (typeof (AiderPersonRelationshipEntity), "Base.AiderPersonRelationship", IconSize.ThirtyTwo)
 				};
 			}
@@ -88,21 +88,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				DatabasesModule.databases["customers"] = new Database<CustomerEntity>
 				{
 					Title = "Clients",
-					DatabaseName = "customers",
+					Name = "customers",
 					CssClass = IconManager.GetCssClassName (typeof (CustomerEntity), "Base.Customer", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["articles"] = new Database<ArticleDefinitionEntity>
 				{
 					Title = "Articles",
-					DatabaseName = "articles",
+					Name = "articles",
 					CssClass = IconManager.GetCssClassName (typeof (ArticleDefinitionEntity), "Base.ArticleDefinition", IconSize.ThirtyTwo)
 				};
 
 				DatabasesModule.databases["genders"] = new Database<PersonGenderEntity>
 				{
 					Title = "Genres",
-					DatabaseName = "genders",
+					Name = "genders",
 					CssClass = IconManager.GetCssClassName (typeof (PersonGenderEntity), "Base.PersonGender", IconSize.ThirtyTwo)
 				};
 			}
@@ -124,9 +124,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var content = from database in DatabasesModule.databases.Values
 			              select new Dictionary<string, object> ()
 			              {
-			              	  { "Title", database.Title },
-			              	  { "DatabaseName", database.DatabaseName },
-			              	  { "CssClass", database.CssClass },
+			              	  { "title", database.Title },
+			              	  { "name", database.Name },
+			              	  { "cssClass", database.CssClass },
 			              };
 
 			return CoreResponse.AsSuccess (content.ToList ());
