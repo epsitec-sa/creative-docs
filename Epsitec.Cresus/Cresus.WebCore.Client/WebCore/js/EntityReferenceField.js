@@ -1,6 +1,6 @@
 Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
   extend: 'Ext.container.Container',
-  alternateClassName: ['EntityReferenceField.Callback'],
+  alternateClassName: ['Epsitec.EntityReferenceField'],
   alias: 'widget.epsitec.entityreferencefield',
 
   /* Config */
