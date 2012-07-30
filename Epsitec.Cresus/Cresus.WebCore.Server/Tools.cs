@@ -21,6 +21,25 @@ namespace Epsitec.Cresus.WebCore.Server
 	{
 
 
+		public static Type ParseType(string value)
+		{
+			var type = Type.GetType (value, throwOnError: false, ignoreCase: false);
+
+			if (type == null)
+			{
+				throw new ArgumentException ();
+			}
+
+			return type;
+		}
+
+
+		public static string TypeToString(Type type)
+		{
+			return type.AssemblyQualifiedName;
+		}
+
+		
 		public static ViewControllerMode ParseViewMode(string value)
 		{
 			var viewMode = InvariantConverter.ToEnum<ViewControllerMode> (value);

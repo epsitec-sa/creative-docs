@@ -16,6 +16,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	{
 
 
+		public Database()
+		{
+			this.Name = Tools.TypeToString (typeof (T));
+		}
+
+
 		public override int GetCount(BusinessContext businessContext)
 		{
 			return businessContext.DataContext.GetCount (new T ());

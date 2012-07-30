@@ -80,10 +80,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response CreateEntity(BusinessContext businessContext)
 		{
 			string parentEntityId = Request.Form.parentEntityId;
-			AbstractEntity parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
+			var parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
 
 			string typeName = Request.Form.entityType;
-			var type = Type.GetType (typeName);
+			var type = Tools.ParseType (typeName);
 			var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
 			var m = method.MakeGenericMethod (type);
 			var o = m.Invoke (businessContext, new object[0]);

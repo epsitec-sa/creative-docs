@@ -1,5 +1,6 @@
 ﻿using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
@@ -9,6 +10,8 @@ using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
+
+using System;
 
 using System.Collections.Generic;
 
@@ -37,75 +40,34 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// configuration file or something to do it properly, so we could have different
 			// configurations for different applications.
 
-			DatabasesModule.databases = new Dictionary<string, Database> ();
+			DatabasesModule.databases = new Dictionary<Type, Database> ();
 
-			if (System.AppDomain.CurrentDomain.FriendlyName == "App.Aider.vshost.exe" || System.AppDomain.CurrentDomain.FriendlyName == "App.Aider.exe")
+			if (AppDomain.CurrentDomain.FriendlyName == "App.Aider.vshost.exe" || AppDomain.CurrentDomain.FriendlyName == "App.Aider.exe")
 			{
-				DatabasesModule.databases["countries"] = new Database<AiderCountryEntity>
-				{
-					Title = "Countries",
-					Name = "countries",
-					CssClass = IconManager.GetCssClassName (typeof (CountryEntity), "Base.Country", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["towns"] = new Database<AiderTownEntity>
-				{
-					Title = "Towns",
-					Name = "towns",
-					CssClass = IconManager.GetCssClassName (typeof (LocationEntity), "Base.Location", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["addresses"] = new Database<AiderAddressEntity>
-				{
-					Title = "Addresses",
-					Name = "addresses",
-					CssClass = IconManager.GetCssClassName (typeof (AiderAddressEntity), "Data.AiderAddress", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["households"] = new Database<AiderHouseholdEntity>
-				{
-					Title = "Households",
-					Name = "households",
-					CssClass = IconManager.GetCssClassName (typeof (AiderHouseholdEntity), "Data.AiderHousehold", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["persons"] = new Database<AiderPersonEntity>
-				{
-					Title = "Persons",
-					Name = "persons",
-					CssClass = IconManager.GetCssClassName (typeof (AiderPersonEntity), "Base.AiderPerson", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["relationships"] = new Database<AiderPersonRelationshipEntity>
-				{
-					Title = "Relationships",
-					Name = "relationships",
-					CssClass = IconManager.GetCssClassName (typeof (AiderPersonRelationshipEntity), "Base.AiderPersonRelationship", IconSize.ThirtyTwo)
-				};
+				DatabasesModule.SetupDatabase<AiderCountryEntity> ("Countries", "Base.Country", typeof (CountryEntity));
+				DatabasesModule.SetupDatabase<AiderTownEntity> ("Towns", "Base.Location", typeof (LocationEntity));
+				DatabasesModule.SetupDatabase<AiderAddressEntity> ("Addresses", "Data.AiderAddress", typeof (AiderAddressEntity));
+				DatabasesModule.SetupDatabase<AiderHouseholdEntity> ("Households", "Data.AiderHousehold", typeof (AiderHouseholdEntity));
+				DatabasesModule.SetupDatabase<AiderPersonEntity> ("Persons", "Base.AiderPerson", typeof (AiderPersonEntity));
+				DatabasesModule.SetupDatabase<AiderPersonRelationshipEntity> ("Relationships", "Base.AiderPersonRelationship", typeof (AiderPersonRelationshipEntity));
 			}
 			else
 			{
-				DatabasesModule.databases["customers"] = new Database<CustomerEntity>
-				{
-					Title = "Clients",
-					Name = "customers",
-					CssClass = IconManager.GetCssClassName (typeof (CustomerEntity), "Base.Customer", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["articles"] = new Database<ArticleDefinitionEntity>
-				{
-					Title = "Articles",
-					Name = "articles",
-					CssClass = IconManager.GetCssClassName (typeof (ArticleDefinitionEntity), "Base.ArticleDefinition", IconSize.ThirtyTwo)
-				};
-
-				DatabasesModule.databases["genders"] = new Database<PersonGenderEntity>
-				{
-					Title = "Genres",
-					Name = "genders",
-					CssClass = IconManager.GetCssClassName (typeof (PersonGenderEntity), "Base.PersonGender", IconSize.ThirtyTwo)
-				};
+				DatabasesModule.SetupDatabase<CustomerEntity> ("Clients", "Base.Customer", typeof (CustomerEntity));
+				DatabasesModule.SetupDatabase<ArticleDefinitionEntity> ("Articles", "Base.ArticleDefinition", typeof (ArticleDefinitionEntity));
+				DatabasesModule.SetupDatabase<PersonGenderEntity> ("Genres", "Base.PersonGender", typeof (PersonGenderEntity));
 			}
+		}
+
+
+		private static void SetupDatabase<T>(string title, string iconUri, Type iconType) 
+			where T : AbstractEntity, new ()
+		{
+			DatabasesModule.databases[typeof (T)] = new Database<T>
+			{
+				Title = title,
+				CssClass = IconManager.GetCssClassName (iconType, iconUri, IconSize.ThirtyTwo)
+			};
 		}
 
 
@@ -140,7 +102,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
-			var database = DatabasesModule.databases[databaseName];
+			var databaseType = Tools.ParseType (databaseName);
+			var database = DatabasesModule.databases[databaseType];
 
 			var total = database.GetCount (businessContext);
 
@@ -204,7 +167,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// with the CreationControllers.
 
 			string databaseName = parameters.name;
-			var database = DatabasesModule.databases[databaseName];
+			var databaseType = Tools.ParseType (databaseName);
+			var database = DatabasesModule.databases[databaseType];
 
 			var entity = database.Create (businessContext);
 			var entityId = Tools.GetEntityId (businessContext, entity);
@@ -213,7 +177,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private readonly static Dictionary<string, Database> databases;
+		private readonly static Dictionary<Type, Database> databases;
 
 
 	}

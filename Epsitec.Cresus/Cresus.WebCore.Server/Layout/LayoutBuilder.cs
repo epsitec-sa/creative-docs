@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public string GetTypeName(Type type)
 		{
-			return type.AssemblyQualifiedName;
+			return Tools.TypeToString (type);
 		}
 
 

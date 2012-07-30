@@ -6,6 +6,7 @@ using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -32,17 +33,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEnum(dynamic parameters)
 		{
 			string typeName = parameters.name;
+			var type = Tools.ParseType (typeName);
 
-			var list = EnumModule.GetValues (typeName).ToList ();
+			var list = EnumModule.GetValues (type).ToList ();
 
 			return CoreResponse.AsJson (list);
 		}
 
 
-		private static IEnumerable<object> GetValues(string typeName)
+		private static IEnumerable<object> GetValues(Type type)
 		{
-			var type = System.Type.GetType (typeName);
-
 			var isNullable = type.IsNullable ();
 
 			var enumType = isNullable

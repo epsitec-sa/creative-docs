@@ -6,8 +6,8 @@ using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 
-
 using Epsitec.Cresus.WebCore.Server.NancyModules;
+
 using System;
 
 using System.Collections.Generic;
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = textPropertyAccessor.GetString (entity) ?? Constants.KeyForNullValue,
-				TypeName = textPropertyAccessor.Type.AssemblyQualifiedName,
+				TypeName = layoutBuilder.GetTypeName (textPropertyAccessor.Type),
 			};
 		}
 
