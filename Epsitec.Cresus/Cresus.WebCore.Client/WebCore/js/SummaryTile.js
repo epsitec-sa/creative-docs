@@ -1,7 +1,7 @@
 Ext.define('Epsitec.cresus.webcore.SummaryTile', {
   extend: 'Epsitec.cresus.webcore.Tile',
   alternateClassName: ['Epsitec.SummaryTile'],
-  alias: 'widget.summarytile',
+  alias: 'widget.epsitec.summarytile',
 
   /* Config */
 

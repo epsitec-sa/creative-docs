@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var panel = new Dictionary<string, object> ();
 
-			panel["xtype"] = "editiontile";
+			panel["xtype"] = "epsitec.editiontile";
 			panel["entityId"] = this.EntityId;
 
 			if (this.IconClass != null)

@@ -1,7 +1,7 @@
 Ext.define('Epsitec.cresus.webcore.EditionTile', {
   extend: 'Epsitec.cresus.webcore.Tile',
   alternateClassName: ['Epsitec.EditionTile'],
-  alias: 'widget.editiontile',
+  alias: 'widget.epsitec.editiontile',
 
   /* Config */
 
