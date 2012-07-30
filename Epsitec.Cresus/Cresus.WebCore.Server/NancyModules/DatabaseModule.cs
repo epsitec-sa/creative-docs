@@ -6,6 +6,8 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -16,6 +18,9 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -33,44 +38,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	{
 
 
-		static DatabasesModule()
-		{
-			// HACK This is an ugly hack and we should not initialize this from here like that, with
-			// static texts and entities and whatever. We should read the menu description from a
-			// configuration file or something to do it properly, so we could have different
-			// configurations for different applications.
-
-			DatabasesModule.databases = new Dictionary<Type, Database> ();
-
-			if (AppDomain.CurrentDomain.FriendlyName == "App.Aider.vshost.exe" || AppDomain.CurrentDomain.FriendlyName == "App.Aider.exe")
-			{
-				DatabasesModule.SetupDatabase<AiderCountryEntity> ("Countries", "Base.Country", typeof (CountryEntity));
-				DatabasesModule.SetupDatabase<AiderTownEntity> ("Towns", "Base.Location", typeof (LocationEntity));
-				DatabasesModule.SetupDatabase<AiderAddressEntity> ("Addresses", "Data.AiderAddress", typeof (AiderAddressEntity));
-				DatabasesModule.SetupDatabase<AiderHouseholdEntity> ("Households", "Data.AiderHousehold", typeof (AiderHouseholdEntity));
-				DatabasesModule.SetupDatabase<AiderPersonEntity> ("Persons", "Base.AiderPerson", typeof (AiderPersonEntity));
-				DatabasesModule.SetupDatabase<AiderPersonRelationshipEntity> ("Relationships", "Base.AiderPersonRelationship", typeof (AiderPersonRelationshipEntity));
-			}
-			else
-			{
-				DatabasesModule.SetupDatabase<CustomerEntity> ("Clients", "Base.Customer", typeof (CustomerEntity));
-				DatabasesModule.SetupDatabase<ArticleDefinitionEntity> ("Articles", "Base.ArticleDefinition", typeof (ArticleDefinitionEntity));
-				DatabasesModule.SetupDatabase<PersonGenderEntity> ("Genres", "Base.PersonGender", typeof (PersonGenderEntity));
-			}
-		}
-
-
-		private static void SetupDatabase<T>(string title, string iconUri, Type iconType) 
-			where T : AbstractEntity, new ()
-		{
-			DatabasesModule.databases[typeof (T)] = new Database<T>
-			{
-				Title = title,
-				CssClass = IconManager.GetCssClassName (iconType, iconUri, IconSize.ThirtyTwo)
-			};
-		}
-
-
 		public DatabasesModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
@@ -83,15 +50,65 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetDatabaseList()
 		{
-			var content = from database in DatabasesModule.databases.Values
-			              select new Dictionary<string, object> ()
-			              {
-			              	  { "title", database.Title },
-			              	  { "name", database.Name },
-			              	  { "cssClass", database.CssClass },
-			              };
+			return CoreResponse.AsSuccess (DatabasesModule.GetDatabases ());
+		}
 
-			return CoreResponse.AsSuccess (content.ToList ());
+
+		private static List<Dictionary<string, object>> GetDatabases()
+		{
+			// HACK This is an ugly hack and we should not initialize this from here like that, with
+			// static texts and entities and whatever. We should read the menu description from a
+			// configuration file or something to do it properly, so we could have different
+			// configurations for different applications.
+
+			var appDomainName = AppDomain.CurrentDomain.FriendlyName;
+
+			if (appDomainName == "App.Aider.vshost.exe" || appDomainName == "App.Aider.exe")
+			{
+				return DatabasesModule.GetAiderDatabases ();
+			}
+			else
+			{
+				return DatabasesModule.GetCoreDatabases ();
+			}
+		}
+
+
+		private static List<Dictionary<string, object>> GetAiderDatabases()
+		{
+			return new List<Dictionary<string, object>> ()
+			{
+				DatabasesModule.GetDatabase<AiderCountryEntity, CountryEntity> ("Countries", "Base.Country"),
+				DatabasesModule.GetDatabase<AiderTownEntity, LocationEntity> ("Towns", "Base.Location"),
+				DatabasesModule.GetDatabase<AiderAddressEntity, AiderAddressEntity> ("Addresses", "Data.AiderAddress"),
+				DatabasesModule.GetDatabase<AiderHouseholdEntity, AiderHouseholdEntity> ("Households", "Data.AiderHousehold"),
+				DatabasesModule.GetDatabase<AiderPersonEntity, AiderPersonEntity> ("Persons", "Base.AiderPerson"),
+				DatabasesModule.GetDatabase<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity> ("Relationships", "Base.AiderPersonRelationship"),
+			};
+		}
+
+
+		private static List<Dictionary<string, object>> GetCoreDatabases()
+		{
+			return new List<Dictionary<string, object>> ()
+			{
+				DatabasesModule.GetDatabase<CustomerEntity, CustomerEntity> ("Clients", "Base.Customer"),
+				DatabasesModule.GetDatabase<ArticleDefinitionEntity, ArticleDefinitionEntity> ("Articles", "Base.ArticleDefinition"),
+				DatabasesModule.GetDatabase<PersonGenderEntity, PersonGenderEntity> ("Genres", "Base.PersonGender"),
+			};
+		}
+
+
+		private static Dictionary<string, object> GetDatabase<T1, T2>(string title, string iconUri)
+			where T1 : AbstractEntity, new ()
+			where T2 : AbstractEntity, new ()
+		{
+			return new Dictionary<string, object> ()
+			{
+			    { "title", title },
+			    { "name", Tools.TypeToString (typeof (T1)) },
+			    { "cssClass", IconManager.GetCssClassName (typeof (T2), iconUri, IconSize.ThirtyTwo) },
+			};
 		}
 
 
@@ -103,11 +120,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int limit = Request.Query.limit;
 
 			var databaseType = Tools.ParseType (databaseName);
-			var database = DatabasesModule.databases[databaseType];
 
-			var total = database.GetCount (businessContext);
+			var total = DatabasesModule.GetEntitiesCount (businessContext, databaseType);
 
-			var entities = from entity in database.GetEntities (businessContext, start, limit)
+			var entities = from entity in DatabasesModule.GetEntities (businessContext, databaseType, start, limit)
 			               let summary = entity.GetCompactSummary ().ToSimpleText ()
 			               let id = Tools.GetEntityId (businessContext, entity)
 			               select new
@@ -168,16 +184,95 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string databaseName = parameters.name;
 			var databaseType = Tools.ParseType (databaseName);
-			var database = DatabasesModule.databases[databaseType];
 
-			var entity = database.Create (businessContext);
+			var entity = DatabasesModule.CreateEntity (businessContext, databaseType);
 			var entityId = Tools.GetEntityId (businessContext, entity);
 
 			return CoreResponse.AsSuccess (entityId);
 		}
 
 
-		private readonly static Dictionary<Type, Database> databases;
+		private static IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, Type entityType, int skip, int take)
+		{
+			var methodName = "GetEntitiesImplementation";
+			var arguments = new object[] { businessContext, skip, take };
+
+			return DatabasesModule.InvokeGenericMethod<IEnumerable<AbstractEntity>> (methodName, entityType, arguments);
+		}
+
+
+		private static IEnumerable<AbstractEntity> GetEntitiesImplementation<T>(BusinessContext businessContext, int skip, int take)
+			where T : AbstractEntity, new()
+		{
+			var example = new T ();
+
+			var request = new DataLayer.Loader.Request ()
+			{
+				RootEntity = example,
+				Skip = skip,
+				Take = take,
+			};
+
+			request.AddSortClause
+			(
+				InternalField.CreateId (example),
+				SortOrder.Ascending
+			);
+
+			return businessContext.DataContext.GetByRequest<T> (request);
+		}
+
+
+		private static int GetEntitiesCount(BusinessContext businessContext, Type entityType)
+		{
+			var methodName = "GetEntitiesCountImplementation";
+			var arguments = new object[] { businessContext };
+
+			return DatabasesModule.InvokeGenericMethod<int> (methodName, entityType, arguments);
+		}
+
+
+		private static int GetEntitiesCountImplementation<T>(BusinessContext businessContext)
+			where T : AbstractEntity, new()
+		{
+			return businessContext.DataContext.GetCount (new T ());
+		}
+
+
+		private static AbstractEntity CreateEntity(BusinessContext businessContext, Type entityType)
+		{
+			var methodName = "CreateEntityImplementation";
+			var arguments = new object[] { businessContext };
+
+			return DatabasesModule.InvokeGenericMethod<AbstractEntity> (methodName, entityType, arguments);
+		}
+
+
+		private static AbstractEntity CreateEntityImplementation<T>(BusinessContext businessContext)
+			where T : AbstractEntity, new()
+		{
+			var entity = businessContext.CreateEntity<T> ();
+
+			// NOTE Here we need to include the empty entities, otherwise we might be in the case
+			// where the entity that we just have created will be empty and thus not saved and this
+			// will lead the user to click like a maniac on the "create" button without noticeable
+			// result other than him becoming mad :-P
+
+			businessContext.SaveChanges (EntitySaveMode.IncludeEmpty);
+
+			return entity;
+		}
+
+
+		private static T InvokeGenericMethod<T>(string methodName, Type genericArgument, object[] arguments)
+		{
+			var flags = BindingFlags.NonPublic | BindingFlags.Static;
+			var type = typeof (DatabasesModule);
+			var method = type.GetMethod (methodName, flags);
+			var genericMethod = method.MakeGenericMethod (genericArgument);
+
+			return (T) genericMethod.Invoke (null, arguments);
+		}
 
 
 	}
