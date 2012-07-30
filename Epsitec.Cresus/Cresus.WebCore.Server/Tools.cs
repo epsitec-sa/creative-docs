@@ -12,6 +12,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.WebCore.Server
 {
@@ -23,20 +25,20 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public static Type ParseType(string value)
 		{
-			var type = Type.GetType (value, throwOnError: false, ignoreCase: false);
+			var types = TypeEnumerator.Instance.GetTypesFromName (value).ToList ();
 
-			if (type == null)
+			if (types.Count != 1)
 			{
 				throw new ArgumentException ();
 			}
 
-			return type;
+			return types[0];
 		}
 
 
 		public static string TypeToString(Type type)
 		{
-			return type.AssemblyQualifiedName;
+			return type.FullName;
 		}
 
 		
