@@ -78,12 +78,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			return new List<Dictionary<string, object>> ()
 			{
-				DatabasesModule.GetDatabase<AiderCountryEntity, CountryEntity> ("Countries", "Base.Country"),
-				DatabasesModule.GetDatabase<AiderTownEntity, LocationEntity> ("Towns", "Base.Location"),
-				DatabasesModule.GetDatabase<AiderAddressEntity, AiderAddressEntity> ("Addresses", "Data.AiderAddress"),
-				DatabasesModule.GetDatabase<AiderHouseholdEntity, AiderHouseholdEntity> ("Households", "Data.AiderHousehold"),
-				DatabasesModule.GetDatabase<AiderPersonEntity, AiderPersonEntity> ("Persons", "Base.AiderPerson"),
-				DatabasesModule.GetDatabase<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity> ("Relationships", "Base.AiderPersonRelationship"),
+				DatabasesModule.GetDatabaseData<AiderCountryEntity, CountryEntity> ("Countries", "Base.Country"),
+				DatabasesModule.GetDatabaseData<AiderTownEntity, LocationEntity> ("Towns", "Base.Location"),
+				DatabasesModule.GetDatabaseData<AiderAddressEntity, AiderAddressEntity> ("Addresses", "Data.AiderAddress"),
+				DatabasesModule.GetDatabaseData<AiderHouseholdEntity, AiderHouseholdEntity> ("Households", "Data.AiderHousehold"),
+				DatabasesModule.GetDatabaseData<AiderPersonEntity, AiderPersonEntity> ("Persons", "Base.AiderPerson"),
+				DatabasesModule.GetDatabaseData<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity> ("Relationships", "Base.AiderPersonRelationship"),
 			};
 		}
 
@@ -92,14 +92,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			return new List<Dictionary<string, object>> ()
 			{
-				DatabasesModule.GetDatabase<CustomerEntity, CustomerEntity> ("Clients", "Base.Customer"),
-				DatabasesModule.GetDatabase<ArticleDefinitionEntity, ArticleDefinitionEntity> ("Articles", "Base.ArticleDefinition"),
-				DatabasesModule.GetDatabase<PersonGenderEntity, PersonGenderEntity> ("Genres", "Base.PersonGender"),
+				DatabasesModule.GetDatabaseData<CustomerEntity, CustomerEntity> ("Clients", "Base.Customer"),
+				DatabasesModule.GetDatabaseData<ArticleDefinitionEntity, ArticleDefinitionEntity> ("Articles", "Base.ArticleDefinition"),
+				DatabasesModule.GetDatabaseData<PersonGenderEntity, PersonGenderEntity> ("Genres", "Base.PersonGender"),
 			};
 		}
 
 
-		private static Dictionary<string, object> GetDatabase<T1, T2>(string title, string iconUri)
+		private static Dictionary<string, object> GetDatabaseData<T1, T2>(string title, string iconUri)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 		{
