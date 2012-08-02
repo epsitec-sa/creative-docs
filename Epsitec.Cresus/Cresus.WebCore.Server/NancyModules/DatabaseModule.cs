@@ -122,23 +122,30 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var databaseType = Tools.ParseType (databaseName);
 
 			var total = DatabasesModule.GetEntitiesCount (businessContext, databaseType);
-
-			var entities = from entity in DatabasesModule.GetEntities (businessContext, databaseType, start, limit)
-			               let summary = entity.GetCompactSummary ().ToSimpleText ()
-			               let id = Tools.GetEntityId (businessContext, entity)
-			               select new
-						   {
-							   name = summary,
-							   uniqueId = id,
-						   };
+			var entities = DatabasesModule.GetEntities (businessContext, databaseType, start, limit)
+				.Select(e => DatabasesModule.GetEntityData(businessContext, e))
+				.ToList();
 
 			var content = new Dictionary<string, object> ()
 			{
 				{ "total", total },
-				{ "entities", entities.ToList () },
+				{ "entities", entities },
 			};
 
 			return CoreResponse.AsJson (content);
+		}
+
+
+		private static Dictionary<string, string> GetEntityData(BusinessContext businessContext, AbstractEntity entity)
+		{
+			var id = Tools.GetEntityId (businessContext, entity);
+			var summary = entity.GetCompactSummary ().ToSimpleText ();
+			
+			return new Dictionary<string, string> ()
+			{
+				{ "id", id },
+				{ "summary", summary },
+			};
 		}
 
 
@@ -186,9 +193,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var databaseType = Tools.ParseType (databaseName);
 
 			var entity = DatabasesModule.CreateEntity (businessContext, databaseType);
-			var entityId = Tools.GetEntityId (businessContext, entity);
+			var entityData = DatabasesModule.GetEntityData (businessContext, entity);
 
-			return CoreResponse.AsSuccess (entityId);
+			return CoreResponse.AsSuccess (entityData);
 		}
 
 

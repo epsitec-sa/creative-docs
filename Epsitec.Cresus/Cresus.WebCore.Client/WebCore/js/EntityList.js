@@ -20,7 +20,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     {
       text: 'Name',
       flex: 1,
-      dataIndex: 'name'
+      dataIndex: 'summary'
     }
   ],
 
@@ -43,33 +43,33 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   onCreateHandler: function() {
     var callback = Epsitec.Callback.create(
-        function(entityId) { this.onCreate(entityId); },
+        function(entityItem) { this.onCreate(entityItem); },
         this
         );
     this.createEntity(callback);
   },
 
   // To be overriden in derived classes.
-  onCreate: function(entityId) { },
+  onCreate: function(entityItem) { },
 
   onDeleteHandler: function() {
-    var selection, entityIds, callback;
+    var selection, entityItems, callback;
 
     selection = this.getSelectionModel().selected.items;
     if (selection.length === 0) {
       return;
     }
 
-    entityIds = this.getEntityIds(selection);
+    entityItems = this.getItems(selection);
     callback = Epsitec.Callback.create(
-        function(entityIds) { this.onDelete(entityIds); },
+        function(items) { this.onDelete(items); },
         this
         );
-    this.deleteEntities(entityIds, callback);
+    this.deleteEntities(entityItems, callback);
   },
 
   // To be overriden in derived classes.
-  onDelete: function(entityIds) { },
+  onDelete: function(entityItems) { },
 
   onRefreshHandler: function() {
     this.store.reload();
@@ -80,12 +80,16 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   onRefresh: function() { },
 
   onSelectionChangeHandler: function(view, selection, options) {
-    var entityIds = this.getEntityIds(selection);
-    this.onSelectionChange(entityIds);
+    var entityItems = this.getItems(selection);
+    this.onSelectionChange(entityItems);
   },
 
   // To be overriden in derived classes.
-  onSelectionChange: function(entityIds) { },
+  onSelectionChange: function(entityItems) { },
+
+  getItems: function(selection) {
+    return selection.map(function(e) { return e.toItem(); });
+  },
 
   getStore: function(databaseName) {
     var store, pageSize;
@@ -112,10 +116,6 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     return store;
   },
 
-  getEntityIds: function(selection) {
-    return selection.map(function(e) { return e.get('uniqueId'); });
-  },
-
   createEntity: function(callback) {
     this.setLoading();
     Ext.Ajax.request({
@@ -129,7 +129,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   },
 
   createEntityCallback: function(success, response, callback) {
-    var json, entityId;
+    var json, entityItem;
 
     this.setLoading(false);
 
@@ -145,26 +145,26 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       return;
     }
 
-    entityId = json.content;
-    callback.execute([entityId]);
+    entityItem = json.content;
+    callback.execute([entityItem]);
   },
 
-  deleteEntities: function(entityIds, callback) {
+  deleteEntities: function(entityItems, callback) {
     this.setLoading();
     Ext.Ajax.request({
       url: 'proxy/database/delete',
       method: 'POST',
       params: {
-        entityIds: entityIds.join(';')
+        entityIds: entityItems.map(function(e) { return e.id; }).join(';')
       },
       callback: function(options, success, response) {
-        this.deleteEntitiesCallback(success, response, callback, entityIds);
+        this.deleteEntitiesCallback(success, response, callback, entityItems);
       },
       scope: this
     });
   },
 
-  deleteEntitiesCallback: function(success, response, callback, entityIds) {
+  deleteEntitiesCallback: function(success, response, callback, entityItems) {
     this.setLoading(false);
 
     if (!success) {
@@ -173,7 +173,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     }
 
     this.store.load();
-    callback.execute([entityIds]);
+    callback.execute([entityItems]);
   },
 
   getTBar: function() {

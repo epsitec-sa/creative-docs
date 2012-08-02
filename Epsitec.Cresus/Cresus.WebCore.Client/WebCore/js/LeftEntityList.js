@@ -8,10 +8,10 @@ Ext.define('Epsitec.cresus.webcore.LeftEntityList', {
 
   /* Additional methods */
 
-  onSelectionChange: function(entityIds) {
+  onSelectionChange: function(entityItems) {
     this.columnManager.removeAllColumns();
-    if (entityIds.length === 1) {
-      this.columnManager.addEntityColumn('1', 'null', entityIds[0]);
+    if (entityItems.length === 1) {
+      this.columnManager.addEntityColumn('1', 'null', entityItems[0].id);
     }
   }
 });
