@@ -4,6 +4,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Config */
 
+  allowDeselect: true,
   hideHeaders: true,
   border: false,
   viewConfig: {
