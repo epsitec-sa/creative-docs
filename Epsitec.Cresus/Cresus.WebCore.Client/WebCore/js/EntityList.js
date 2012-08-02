@@ -73,7 +73,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   onDelete: function(entityItems) { },
 
   onRefreshHandler: function() {
-    this.store.reload();
+    this.reloadStore();
     this.onRefresh();
   },
 
@@ -117,6 +117,10 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     return store;
   },
 
+  reloadStore: function() {
+    this.store.reload();
+  },
+
   createEntity: function(callback) {
     this.setLoading();
     Ext.Ajax.request({
@@ -139,7 +143,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       return;
     }
 
-    this.store.load();
+    this.reloadStore();
 
     json = Epsitec.Tools.decodeJson(response.responseText);
     if (json === null) {
@@ -173,7 +177,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       return;
     }
 
-    this.store.load();
+    this.reloadStore();
     callback.execute([entityItems]);
   },
 
