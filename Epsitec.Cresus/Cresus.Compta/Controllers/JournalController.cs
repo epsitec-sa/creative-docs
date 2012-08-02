@@ -116,24 +116,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateCombo()
 		{
-			using (this.ignoreChanges.Enter ())
+			this.comboJournaux.Items.Clear ();
+			FormattedText sel = JournalController.AllJournaux;
+
+			foreach (var journal in this.compta.Journaux)
 			{
-				this.comboJournaux.Items.Clear ();
-				FormattedText sel = JournalController.AllJournaux;
+				this.comboJournaux.Items.Add (journal.Nom);
 
-				foreach (var journal in this.compta.Journaux)
+				if (journal.Id ==  this.Options.JournalId)
 				{
-					this.comboJournaux.Items.Add (journal.Nom);
-
-					if (journal.Id ==  this.Options.JournalId)
-					{
-						sel = journal.Nom;
-					}
+					sel = journal.Nom;
 				}
-
-				this.comboJournaux.Items.Add (JournalController.AllJournaux);
-				this.comboJournaux.FormattedText = sel;
 			}
+
+			this.comboJournaux.Items.Add (JournalController.AllJournaux);
+			this.comboJournaux.FormattedText = sel;
 		}
 
 		private void UpdateSummary()
@@ -155,11 +152,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Retourne le texte contenu dans une cellule.
 			var text = this.dataAccessor.GetText (row, columnType);
-			var écriture = this.dataAccessor.GetEditionEntity (row) as ComptaEcritureEntity;
 
-			if (columnType == ColumnType.Date && écriture.MultiId != 0 && !écriture.TotalAutomatique)
+			if (columnType == ColumnType.Date)
 			{
-				text = FormattedText.Empty;
+				var accessor = this.dataAccessor as JournalDataAccessor;
+				if (accessor.HasEmptyDate (row))
+				{
+					text = FormattedText.Empty;
+				}
 			}
 
 			return text;

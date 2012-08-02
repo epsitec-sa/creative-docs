@@ -663,10 +663,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[0].Prepare ();
 		}
 
-		public virtual void StartModificationLine(int row)
+		public virtual int StartModificationLine(int row)
 		{
 			this.firstEditedRow = row;
 			this.countEditedRow = 1;
+
+			return row;
 		}
 
 		public virtual void UpdateEditionLine()

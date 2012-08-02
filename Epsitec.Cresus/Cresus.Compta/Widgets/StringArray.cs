@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public Color ColorSelection
 		{
-			//	Couleur utilisée pour les lignes sélectionnées..
+			//	Couleur utilisée pour les lignes sélectionnées.
 			get
 			{
 				if (this.columns == null)
@@ -218,6 +218,36 @@ namespace Epsitec.Cresus.Compta.Widgets
 					for (int i=0; i<this.columns.Length; i++)
 					{
 						this.columns[i].ColorSelection = value;
+					}
+				}
+			}
+		}
+
+		public Color ColorHilite
+		{
+			//	Couleur utilisée pour les lignes mises en évidence.
+			get
+			{
+				if (this.columns == null)
+				{
+					return Color.Empty;
+				}
+
+				return this.columns[0].ColorHilite;
+			}
+
+			set
+			{
+				if (this.columns == null)
+				{
+					return;
+				}
+
+				if (this.columns[0].ColorHilite != value)
+				{
+					for (int i=0; i<this.columns.Length; i++)
+					{
+						this.columns[i].ColorHilite = value;
 					}
 				}
 			}
@@ -491,7 +521,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			//	Il faut envoyer l'événement même si la ligne n'a pas changé !
-			this.OnSelectedRowChanged();
+			//?this.OnSelectedRowChanged();
 		}
 
 		public int SelectedColumn
@@ -823,6 +853,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.SelectedRow--;
 						this.ShowSelectedRow();
+						this.OnSelectedRowChanged ();
 					}
 				}
 
@@ -836,6 +867,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.SelectedRow++;
 						this.ShowSelectedRow();
+						this.OnSelectedRowChanged ();
 					}
 				}
 
@@ -849,6 +881,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.SelectedRow = this.SelectedRow-this.LineCount;
 						this.ShowSelectedRow();
+						this.OnSelectedRowChanged ();
 					}
 				}
 
@@ -862,6 +895,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.SelectedRow = this.SelectedRow+this.LineCount;
 						this.ShowSelectedRow();
+						this.OnSelectedRowChanged ();
 					}
 				}
 
@@ -875,6 +909,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.SelectedRow = 0;
 						this.ShowSelectedRow();
+						this.OnSelectedRowChanged ();
 					}
 				}
 
@@ -888,6 +923,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.SelectedRow = 100000;
 						this.ShowSelectedRow();
+						this.OnSelectedRowChanged ();
 					}
 				}
 			}
@@ -1129,11 +1165,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 
 					this.SetSelectedRow (this.firstVisibleRow+sel, column);
+					this.OnSelectedRowChanged ();
 				}
 				else
 				{
 					this.selectedRow = -2;  // pour forcer la mise à jour !
 					this.SetSelectedRow (-1, -1);
+					this.OnSelectedRowChanged ();
 				}
 			}
 

@@ -80,14 +80,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override void UpdateEditorContent()
+		public override void UpdateEditorContent(int? column = null, int? line = null)
 		{
 			foreach (var field in this.fieldControllers[0])
 			{
 				field.EditWidget.Visibility = this.dataAccessor.IsModification;
 			}
 
-			base.UpdateEditorContent ();
+			base.UpdateEditorContent (column, line);
 		}
 	}
 }

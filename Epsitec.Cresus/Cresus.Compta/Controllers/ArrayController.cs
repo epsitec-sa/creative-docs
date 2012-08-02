@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.controller = controller;
 			this.columnMappers = this.controller.ColumnMappers;
-			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -67,11 +66,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.array.SelectedRowChanged += delegate
 			{
-				if (this.ignoreChanges.IsZero && this.controller.IgnoreChanges.IsZero)
-				{
-					selectedRowChanged ();
-					this.UpdateCommands ();
-				}
+				selectedRowChanged ();
+				this.UpdateCommands ();
 			};
 
 			this.array.SelectionClicked += new EventHandler<MessageEventArgs> (this.HandleArraySelectionClicked);
@@ -269,10 +265,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (adjustedSel != sel)
 				{
-					using (this.ignoreChanges.Enter ())
-					{
-						this.SelectedRow = sel;
-					}
+					this.SelectedRow = sel;
 				}
 			}
 
@@ -313,7 +306,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public Color ColorSelection
 		{
-			//	Couleur utilisée pour les lignes sélectionnées..
+			//	Couleur utilisée pour les lignes sélectionnées.
 			get
 			{
 				return this.array.ColorSelection;
@@ -321,6 +314,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.array.ColorSelection = value;
+			}
+		}
+
+		public Color ColorHilite
+		{
+			//	Couleur utilisée pour les lignes mises en évidence.
+			get
+			{
+				return this.array.ColorHilite;
+			}
+			set
+			{
+				this.array.ColorHilite = value;
 			}
 		}
 
@@ -403,7 +409,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly AbstractController		controller;
 		private readonly List<ColumnMapper>		columnMappers;
-		private readonly SafeCounter			ignoreChanges;
 
 		private FrameBox						mainFrame;
 		private System.Action<Point>			rightClick;

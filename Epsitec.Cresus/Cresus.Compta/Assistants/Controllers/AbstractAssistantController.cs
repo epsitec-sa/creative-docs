@@ -99,24 +99,21 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 		private void EditionDataToWidgets(bool ignoreFocusField)
 		{
 			//	Effectue le transfert this.dataAccessor.EditionData -> widgets éditables.
-			using (this.controller.IgnoreChanges.Enter ())
+			foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 			{
-				foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+				var controller = this.GetFieldController (mapper.Column);
+
+				if (controller != null)
 				{
-					var controller = this.GetFieldController (mapper.Column);
+					controller.EditionData = this.editionLine.GetData (mapper.Column);
 
-					if (controller != null)
+					//	Le widget en cours d'édition ne doit absolument pas être modifié.
+					//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
+					//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
+					//	catastrophe !
+					if (!ignoreFocusField || !controller.HasFocus)
 					{
-						controller.EditionData = this.editionLine.GetData (mapper.Column);
-
-						//	Le widget en cours d'édition ne doit absolument pas être modifié.
-						//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
-						//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
-						//	catastrophe !
-						if (!ignoreFocusField || !controller.HasFocus)
-						{
-							controller.EditionDataToWidget ();
-						}
+						controller.EditionDataToWidget ();
 					}
 				}
 			}

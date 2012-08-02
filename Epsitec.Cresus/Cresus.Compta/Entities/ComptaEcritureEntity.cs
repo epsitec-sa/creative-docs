@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
-		private static FormattedText GetLibelléTVA(FormattedText code, decimal? taux)
+		public static FormattedText GetLibelléTVA(FormattedText code, decimal? taux)
 		{
 			//	Retourne par exemple "TVA 8.0% (IPM)".
 			if (!code.IsNullOrEmpty () && taux.HasValue)

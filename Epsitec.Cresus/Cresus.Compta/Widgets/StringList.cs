@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public Color ColorSelection
 		{
-			//	Couleur utilisée pour les lignes sélectionnées..
+			//	Couleur utilisée pour les lignes sélectionnées.
 			get
 			{
 				return this.colorSelection;
@@ -87,6 +87,24 @@ namespace Epsitec.Cresus.Compta.Widgets
 				if (this.colorSelection != value)
 				{
 					this.colorSelection = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public Color ColorHilite
+		{
+			//	Couleur utilisée pour les lignes mises en évidence.
+			get
+			{
+				return this.colorHilite;
+			}
+
+			set
+			{
+				if (this.colorHilite != value)
+				{
+					this.colorHilite = value;
 					this.Invalidate ();
 				}
 			}
@@ -629,7 +647,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				Rectangle cell = graphics.Align (rect);
 
-				if (i >= this.hilitedFirstLine && i < this.hilitedFirstLine+this.hilitedCountLine)
+#if false
+				if (i == this.selectedLine)
+				{
+					graphics.AddFilledRectangle (cell);
+					graphics.RenderSolid (Color.FromHexa ("ffa800"));  // TODO: provisoire
+				}
+				else if (i >= this.hilitedFirstLine && i < this.hilitedFirstLine+this.hilitedCountLine)
 				{
 					graphics.AddFilledRectangle (cell);
 					graphics.RenderSolid (this.colorSelection);
@@ -639,9 +663,22 @@ namespace Epsitec.Cresus.Compta.Widgets
 					if (this.cells[i].Selected)
 					{
 						graphics.AddFilledRectangle (cell);
-						graphics.RenderSolid (this.colorSelection);
+						//?graphics.RenderSolid (this.colorSelection);
+						graphics.RenderSolid (Color.FromHexa ("ff0000"));  // TODO: provisoire
 					}
 				}
+#else
+				if (this.cells[i].Selected)
+				{
+					graphics.AddFilledRectangle (cell);
+					graphics.RenderSolid (this.colorSelection);
+				}
+				else if (i >= this.hilitedFirstLine && i < this.hilitedFirstLine+this.hilitedCountLine)
+				{
+					graphics.AddFilledRectangle (cell);
+					graphics.RenderSolid (this.colorHilite);
+				}
+#endif
 
 				if (this.cells[i].Color != Color.Empty && i != this.searchLocatorLine)
 				{
@@ -891,6 +928,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private Cube						cube;
 		private GraphOptions				graphOptions;
 		private Color						colorSelection = UIBuilder.SelectionColor;
+		private Color						colorHilite = UIBuilder.HiliteColor;
 		private double						lineHeight = 14;
 		private double						relativeWidth = 0;
 		private ContentAlignment			alignment = ContentAlignment.MiddleLeft;

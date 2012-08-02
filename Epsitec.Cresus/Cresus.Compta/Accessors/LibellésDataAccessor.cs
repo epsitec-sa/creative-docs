@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			base.PrepareEditionLine (line);
 		}
 
-		public override void StartModificationLine(int row)
+		public override int StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();
 
@@ -163,6 +163,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 
 			this.controller.EditorController.UpdateFieldsEditionData ();
+
+			return row;
 		}
 
 		public override void UpdateEditionLine()

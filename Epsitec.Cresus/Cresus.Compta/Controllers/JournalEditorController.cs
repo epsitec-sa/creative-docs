@@ -74,18 +74,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 
 				this.linesContainer.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
-
-				this.scroller = new VScroller
-				{
-					Parent     = linesBox,
-					IsInverted = true,  // zéro en haut
-					Dock       = DockStyle.Right,
-				};
-
-				this.scroller.ValueChanged += delegate
-				{
-					this.ChangeScroller ();
-				};
 			}
 
 			//	Crée les lignes éditables.
@@ -151,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = hilitableFrame,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 1, 1),
+				Margins         = new Margins (0, 0, 1, 0),
 			};
 
 			this.linesFrames.Add (hilitableFrame);
@@ -251,14 +239,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ResetLineUI()
 		{
 			//	Recrée une seule ligne.
-			using (this.controller.IgnoreChanges.Enter ())
-			{
-				this.linesContainer.Children.Clear ();
-				this.fieldControllers.Clear ();
-				this.linesFrames.Clear ();
+			this.linesContainer.Children.Clear ();
+			this.fieldControllers.Clear ();
+			this.linesFrames.Clear ();
 
-				this.CreateLineUI (this.linesContainer);
-			}
+			this.CreateLineUI (this.linesContainer);
 		}
 
 		private void CreateCommandsUI(Widget parent)
@@ -611,56 +596,57 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void InsertEmptyLine(bool before)
 		{
 			//	Insère une nouvelle ligne vide avant/après la ligne courante.
-			bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
+			int selectedLine = this.selectedLine;
+			bool isDébitMulti = this.IsDébitMulti (selectedLine);
 			var multiActiveColumn = isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 
 			if (before)
 			{
 				//	N'insère jamais entre BaseTVA et CodeTVA !
-				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+				if (this.GetTypeEcriture (selectedLine) == TypeEcriture.CodeTVA)
 				{
-					this.selectedLine--;
+					selectedLine--;
 				}
 			}
 			else
 			{
-				this.selectedLine++;
+				selectedLine++;
 
 				//	N'insère jamais entre BaseTVA et CodeTVA !
-				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+				if (this.GetTypeEcriture (selectedLine) == TypeEcriture.CodeTVA)
 				{
-					this.selectedLine++;
+					selectedLine++;
 				}
 			}
 
-			this.dataAccessor.InsertEditionLine (this.selectedLine);
-			this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
+			this.dataAccessor.InsertEditionLine (selectedLine);
+			this.SetTypeEcriture (selectedLine, TypeEcriture.Vide);
 
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0, this.GetMonnaie (this.selectedLine)));
+				this.dataAccessor.EditionLine[selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+				this.dataAccessor.EditionLine[selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
+				this.dataAccessor.EditionLine[selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0, this.GetMonnaie (selectedLine)));
 
 				if (this.PlusieursPièces)
 				{
 					var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
 					var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
 
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
+					this.dataAccessor.EditionLine[selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
 				}
 				else
 				{
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+					this.dataAccessor.EditionLine[selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 				}
 
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Monnaie));
+				this.dataAccessor.EditionLine[selectedLine].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Monnaie));
 			}
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
-			this.SelectedLineChanged ();
+			this.SelectedLine = selectedLine;
 			this.EditorSelect (multiActiveColumn, this.selectedLine);
 		}
 
@@ -674,7 +660,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (line < this.selectedLine)
 				{
-					this.selectedLine--;
+					this.SelectedLine--;
 				}
 			}
 		}
@@ -743,7 +729,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dirty = true;
 			this.UpdateEditorContent ();
 
-			this.selectedLine = this.selectedLine+1;
+			this.SelectedLine = this.selectedLine+1;
 			this.EditorSelect (ColumnType.CodeTVA);
 		}
 
@@ -779,11 +765,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
 			}
 
-			this.selectedLine = System.Math.Min (this.selectedLine, this.dataAccessor.CountEditedRow-1);
+			this.SelectedLine = System.Math.Min (this.selectedLine, this.dataAccessor.CountEditedRow-1);
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
-			this.SelectedLineChanged ();
 			this.EditorSelect (this.selectedColumn, this.selectedLine);
 		}
 
@@ -832,11 +817,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.EditionLine.Insert (dstIndex+i, deleted[i]);
 			}
 
-			this.selectedLine = dstIndex;
+			this.SelectedLine = dstIndex;
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
-			this.SelectedLineChanged ();
 			this.EditorSelect (this.selectedColumn, this.selectedLine);
 		}
 
@@ -978,7 +962,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Appelé lorsqu'un champ prend le focus. C'est ici qu'on complète l'écriture, lorsqu'on crée
 			//	une écriture multiple, qu'on a donné un compte avec code TVA, etc.
 			base.HandleSetFocus (line, columnType);
-			this.HiliteCurrentLine ();
 
 			bool changed = false;
 
@@ -1058,7 +1041,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateEditorContent ();
 
 				this.AdjustLineColumn (ref line, ref columnType);
-				this.selectedLine = line;
+				this.SelectedLine = line;
 				this.EditorSelect (columnType);
 			}
 		}
@@ -1127,7 +1110,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
 		{
 			//	Met à jour toutes les données en édition.
-			if (this.controller.IgnoreChanges.IsNotZero || !this.dataAccessor.EditionLine.Any ())
+			if (!this.dataAccessor.EditionLine.Any ())
 			{
 				return;
 			}
@@ -1724,25 +1707,61 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void UpdateAfterSelectedLineChanged()
+		public override void UpdateEditorContent(int? column = null, int? line = null)
 		{
+			//	Nouvelle méthode qui met à jour toute l'interface d'édition. A tester...
+			this.UpdateUI ();
 
-			this.UpdateToolbar ();
-			this.UpdateInsertionRow ();
-			this.UpdateEditorInfo ();
+			if (!column.HasValue)
+			{
+				column = this.arrayController.SelectedColumn;
+			}
+
+			if (!line.HasValue)
+			{
+				line = this.selectedLine;
+			}
+
+			line = System.Math.Max (line.Value, 0);
+			line = System.Math.Min (line.Value, this.fieldControllers.Count-1);
+
+			this.firstVisibleLine = line.Value;
+			this.UpdateAfterFirstLineChanged ();
+
+			this.selectedLine = line.Value;
+
+			if (this.selectedLine >= 0 && this.selectedLine < this.fieldControllers.Count && 
+				column >= 0 && column < this.fieldControllers[this.selectedLine].Count &&
+				this.dataAccessor.IsActive)
+			{
+				//	Normalement, le SetFocus va provoquer l'appel de HandleSetFocus. Mais, si le focus est
+				//	déjà présent dans le widget, l'appel n'a pas lieu (c'est sans doute une optimisation de
+				//	Widgets). D'où le code ci-dessous qui met d'abord le focus à un parent bidon.
+
+				this.editorFrameBox.ClearFocus ();
+				this.editorFrameBox.Focus ();  // met le focus à un parent bidon
+				this.fieldControllers[this.selectedLine][column.Value].SetFocus ();
+			}
+
+			this.isMulti = (this.dataAccessor.CountEditedRow > 1);
+
+			base.UpdateEditorContent (column, line);
 		}
 
-
+#if false
 		public override void UpdateEditorContent()
 		{
-			this.UpdateArrayColumns ();
+			//	OBSOLETE
+			this.UpdateUI ();
+			this.controller.UpdateEditionArray ();
 
 			int count = this.dataAccessor.CountEditedRow;
-			this.selectedLine = System.Math.Min (this.selectedLine, count-1);
+			this.SelectedLine = System.Math.Min (this.selectedLine, count-1);
 			this.isMulti = (count > 1);
 
 			base.UpdateEditorContent ();
 		}
+#endif
 
 
 		public override void UpdateEditorGeometry()
@@ -1819,7 +1838,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected override void UpdateArrayColumns()
+		private void UpdateUI()
 		{
 			//	Si nécessaire, adapte l'interface pour accueillir le nombre de lignes et de colonnes requis.
 			int count = this.dataAccessor.CountEditedRow;
@@ -1836,50 +1855,61 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.UpdateEditorGeometry ();
 			}
-
-			this.UpdateAfterFirstLineChanged ();
 		}
 
-		protected override void SelectedLineChanged()
+		public override int SelectedLine
 		{
-			//	Appelé lorsque la ligne sélectionnée a changé. On détermine ici la première ligne affichée,
-			//	afin de montrer la ligne sélectionnée au mieux.
-			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
-
-			int first = this.selectedLine;
-			first = System.Math.Min (first + visibleLines/2, this.dataAccessor.CountEditedRow-1);
-			first = System.Math.Max (first - (visibleLines-1), 0);
-
-			if (this.firstLine != first)
+			get
 			{
-				this.firstLine = first;
-				this.UpdateAfterFirstLineChanged ();
+				return this.selectedLine;
+			}
+			set
+			{
+				this.UpdateEditorContent (this.arrayController.SelectedColumn, value);
+
+#if false
+				this.selectedLine = value;
+
+				this.UpdateUI ();
+				this.UpdateToolbar ();
+				this.UpdateInsertionRow ();
+				this.UpdateEditorInfo ();
+#endif
 			}
 		}
 
-		private void ChangeScroller()
-		{
-			//	Appelé lorsque l'ascenseur a été bougé.
-			int value = (int) this.scroller.Value;
-
-			if (this.firstLine != value)
-			{
-				this.firstLine = value;
-				this.UpdateAfterFirstLineChanged ();
-			}
-		}
-
-		protected override void UpdateAfterFirstLineChanged()
+		private void UpdateAfterFirstLineChanged()
 		{
 			//	Met à jour les lignes visibles.
-			this.firstLine = System.Math.Min (this.firstLine, this.dataAccessor.CountEditedRow - this.maxLines);
-			this.firstLine = System.Math.Max (this.firstLine, 0);
+			this.maxVisibleLines = 1;
+
+			var dataType = this.dataAccessor.GetEditionData (this.firstVisibleLine, ColumnType.Type);
+			if (dataType != null)
+			{
+				if (dataType.Text == "BaseTVA")
+				{
+					this.maxVisibleLines = 2;
+				}
+
+				if (dataType.Text == "CodeTVA")
+				{
+					this.firstVisibleLine--;
+					this.maxVisibleLines = 2;
+				}
+			}
+
+			this.firstVisibleLine = System.Math.Min (this.firstVisibleLine, this.dataAccessor.CountEditedRow - this.maxVisibleLines);
+			this.firstVisibleLine = System.Math.Max (this.firstVisibleLine, 0);
 
 			for (int i = 0; i < this.linesFrames.Count; i++)
 			{
-				this.linesFrames[i].Visibility = (i >= this.firstLine && i < this.firstLine+this.maxLines);
+				this.linesFrames[i].Visibility = (i >= this.firstVisibleLine && i < this.firstVisibleLine+this.maxVisibleLines);
 			}
 
+			int column = this.controller.ArrayController.SelectedColumn;
+			this.controller.ArrayController.SetSelectedRow (this.dataAccessor.FirstEditedRow + this.firstVisibleLine, column);
+
+#if false
 			//	Met à jour l'ascenseur.
 			if (this.dataAccessor.CountEditedRow > this.maxLines)
 			{
@@ -1898,18 +1928,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.scroller.Visibility = false;
 			}
-		}
-
-		private void HiliteCurrentLine()
-		{
-			//	Met en évidence la ligne contenant le curseur (focus).
-			for (int i = 0; i < this.linesFrames.Count; i++)
-			{
-				var box = this.linesFrames[i] as CustomFrameBox;
-
-				box.HilitedFrame = (i == this.selectedLine);
-				box.FrameColor = this.dataAccessor.IsCreation ? UIBuilder.CreationHiliteBackColor : UIBuilder.ModificationHiliteBackColor;
-			}
+#endif
 		}
 
 
@@ -2448,11 +2467,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Separator							créditInfoSeparator;
 		private FrameBox							débitInfoFrame;
 		private FrameBox							créditInfoFrame;
-		private VScroller							scroller;
 
 		private bool								isMulti;
 		private IEnumerable<ComptaCompteEntity>		allComptes;
 		private IEnumerable<ComptaCompteEntity>		TVAComptes;
 		private decimal								multiSubtotal;
+		private int									maxVisibleLines;
+		private int									firstVisibleLine;
 	}
 }

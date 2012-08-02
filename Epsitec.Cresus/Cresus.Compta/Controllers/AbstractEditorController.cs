@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.linesFrames      = new List<FrameBox> ();
 			this.fieldControllers = new List<List<AbstractFieldController>> ();
 
-			this.maxLines = this.controller.SettingsList.GetInt (SettingsType.EcritureMultiEditionLineCount).GetValueOrDefault (5);
+			//?this.maxLines = this.controller.SettingsList.GetInt (SettingsType.EcritureMultiEditionLineCount).GetValueOrDefault (5);
 		}
 
 
@@ -75,11 +75,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public void Dispose()
-		{
-		}
-
-
-		protected virtual void UpdateAfterSelectedLineChanged()
 		{
 		}
 
@@ -257,6 +252,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.StartCreationLine ();
 				this.UpdateToolbar ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+				this.arrayController.ColorHilite = UIBuilder.HiliteColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 				this.UpdateInsertionRow (forceUpdate: true);
 				this.UpdateEditorContent ();
@@ -286,22 +282,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.updateArrayContentAction ();
 			this.UpdateInsertionRow (forceUpdate: true);
 
-			using (this.controller.IgnoreChanges.Enter ())  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
+			int firstRow = this.dataAccessor.FirstEditedRow;
+			int countRow = this.dataAccessor.CountEditedRow;
+
+			this.arrayController.SelectedRow = this.dataAccessor.FirstEditedRow;
+
+			if (this.dataAccessor.JustCreated)
 			{
-				this.arrayController.SelectedRow = this.dataAccessor.FirstEditedRow;
-
-				if (this.dataAccessor.JustCreated)
-				{
-					this.arrayController.ColorSelection = UIBuilder.JustCreatedColor;
-				}
-				else
-				{
-					this.arrayController.ColorSelection = UIBuilder.SelectionColor;
-				}
-
-				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRowWithoutEmpty);
-				this.dataAccessor.ResetCreationLine ();
+				this.arrayController.ColorSelection = UIBuilder.JustCreatedColor;
+				this.arrayController.ColorHilite = UIBuilder.JustCreatedHiliteColor;
 			}
+			else
+			{
+				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+				this.arrayController.ColorHilite = UIBuilder.HiliteColor;
+			}
+
+			//?this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+			this.dataAccessor.ResetCreationLine ();
 
 			if (this.controller.OptionsController != null)
 			{
@@ -312,6 +310,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.EditorSelect (this.arrayController.SelectedColumnType);
 			this.ShowSelection ();
 			this.EditorSelect (0);
+
+			this.arrayController.SetHilitedRows (firstRow, countRow);
 		}
 
 		public void CancelAction()
@@ -328,6 +328,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.StartDefaultLine ();
 				this.UpdateToolbar ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+				this.arrayController.ColorHilite = UIBuilder.HiliteColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 				this.UpdateEditorContent ();
 				this.EditorSelect (0);
@@ -360,6 +361,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dataAccessor.DuplicateModificationLine ();
 			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+			this.arrayController.ColorHilite = UIBuilder.HiliteColor;
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
 			this.UpdateInsertionRow (forceUpdate: true);
@@ -465,26 +467,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void EditionDataToWidgets(bool ignoreFocusField)
 		{
 			//	Effectue le transfert this.dataAccessor.EditionData -> widgets éditables.
-			using (this.controller.IgnoreChanges.Enter ())
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
-				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+				foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 				{
-					foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+					var controller = this.GetFieldController (mapper.Column, line);
+
+					if (controller != null)
 					{
-						var controller = this.GetFieldController (mapper.Column, line);
+						controller.EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
 
-						if (controller != null)
+						//	Le widget en cours d'édition ne doit absolument pas être modifié.
+						//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
+						//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
+						//	catastrophe !
+						if (!ignoreFocusField || !controller.HasFocus)
 						{
-							controller.EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
-
-							//	Le widget en cours d'édition ne doit absolument pas être modifié.
-							//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
-							//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
-							//	catastrophe !
-							if (!ignoreFocusField || !controller.HasFocus)
-							{
-								controller.EditionDataToWidget ();
-							}
+							controller.EditionDataToWidget ();
 						}
 					}
 				}
@@ -498,19 +497,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected void EditorTextChanged(int line, ColumnType columnType)
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
-			if (this.controller.IgnoreChanges.IsZero)
-			{
-				this.dirty = true;
-				//?this.WidgetToEditionData ();
+			this.dirty = true;
+			//?this.WidgetToEditionData ();
 
-				this.UpdateEditionWidgets (line, columnType);
-				this.EditionDataToWidgets (ignoreFocusField: true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
+			this.UpdateEditionWidgets (line, columnType);
+			this.EditionDataToWidgets (ignoreFocusField: true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
 
-				this.EditorValidate ();
-				this.UpdateToolbar ();
-				this.UpdateEditorInfo ();
-				this.UpdateInsertionRow ();
-			}
+			this.EditorValidate ();
+			this.UpdateToolbar ();
+			this.UpdateEditorInfo ();
+			this.UpdateInsertionRow ();
 		}
 
 #if false
@@ -549,12 +545,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.selectedLine != line)
 			{
-				this.selectedLine = line;
-
-				if (this.selectedLine != -1)
-				{
-					this.UpdateAfterSelectedLineChanged ();
-				}
+				this.SelectedLine = line;
 			}
 		}
 
@@ -613,13 +604,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public void UpdateEditorContent(ColumnType columnType, int line)
+		{
+			var column = this.GetMapperColumnRank (columnType);
+			this.UpdateEditorContent (column, line);
+		}
+
+		public virtual void UpdateEditorContent(int? column = null, int? line = null)
+		{
+			this.EditionDataToWidgets (ignoreFocusField: false);
+			this.EditorValidate ();
+			this.UpdateToolbar ();
+			this.UpdateInsertionRow ();
+			this.UpdateEditorInfo ();
+		}
+
+#if false
 		public virtual void UpdateEditorContent()
 		{
+			//	OBSOLETE
 			this.UpdateEditionWidgets (0, ColumnType.None);
 			this.EditionDataToWidgets (ignoreFocusField: false);
 			this.EditorValidate ();
 			this.UpdateEditorInfo ();
 		}
+#endif
 
 		protected virtual void UpdateEditorInfo()
 		{
@@ -684,19 +693,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected virtual void UpdateArrayColumns()
+		public void EditorSelect(ColumnType columnType, int? line = null)
 		{
-		}
-
-
-		public void EditorSelect(ColumnType columnType, int? line = null, bool selectedLineChanged = true)
-		{
+			//	OBSOLETE
 			var column = this.GetMapperColumnRank (columnType);
-			this.EditorSelect (column, line, selectedLineChanged);
+			this.EditorSelect (column, line);
 		}
 
-		public void EditorSelect(int column, int? line = null, bool selectedLineChanged = true)
+		public void EditorSelect(int column, int? line = null)
 		{
+			//	OBSOLETE
 			if (column != -1)
 			{
 				if (line.HasValue)
@@ -706,14 +712,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (this.selectedLine != line.Value)
 					{
-						this.selectedLine = line.Value;
-
-						this.UpdateToolbar ();
-
-						if (selectedLineChanged)
-						{
-							this.SelectedLineChanged ();
-						}
+						this.SelectedLine = line.Value;
 					}
 				}
 
@@ -734,8 +733,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected virtual void SelectedLineChanged()
+		public virtual int SelectedLine
 		{
+			get
+			{
+				return this.selectedLine;
+			}
+			set
+			{
+				this.selectedLine = value;
+			}
 		}
 
 
@@ -808,9 +815,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			while (!this.GetWidgetVisibility (column, line) || this.GetTextFieldReadonly (column, line));
 
+#if false
 			//	Effectue éventuellement un scroll vertical.
-			int first  = this.firstLine;
-			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
+			int first  = this.firstVisibleLine;
+			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxVisibleLines);
 
 			if (line < first)  // première ligne invisible car trop haute ?
 			{
@@ -822,14 +830,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				first = line - visibleLines + 1;
 			}
 
-			if (this.firstLine != first)
+			if (this.firstVisibleLine != first)
 			{
-				this.firstLine = first;
+				this.firstVisibleLine = first;
 
 				this.UpdateAfterFirstLineChanged ();
 			}
+#endif
 
-			this.EditorSelect (column, line, selectedLineChanged: false);
+			this.UpdateEditorContent ();
+			this.EditorSelect (column, line);
 		}
 
 		private bool GetNextPrevColumn(int line, ref ColumnType columnType, int direction)
@@ -874,11 +884,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return false;
 			}
-		}
-
-
-		protected virtual void UpdateAfterFirstLineChanged()
-		{
 		}
 
 
@@ -1066,8 +1071,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected BottomToolbarController						bottomToolbarController;
 		protected ColumnType									selectedColumn;
 		protected int											selectedLine;
-		protected int											maxLines;
-		protected int											firstLine;
 		protected bool											dirty;
 		protected int											errorCount;
 		protected bool											duplicate;

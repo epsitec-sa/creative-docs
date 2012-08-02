@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeCodeTVA,     true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeTauxTVA,     true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantTVA,  true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureProposeVide,      true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureProposeVide,      false));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreType,       false));  // true pour le debug
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreOrigineTVA, false));  // true pour le debug
 

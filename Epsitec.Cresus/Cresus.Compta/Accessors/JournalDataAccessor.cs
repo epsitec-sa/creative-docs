@@ -125,7 +125,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.journal.Count;
+				int count = this.journal.Count;
+
+				if (this.isCreation)
+				{
+					count += this.editionLine.Count;
+				}
+
+				if (this.isModification)
+				{
+					count -= this.initialCountEditedRow;
+					count += this.editionLine.Count;
+				}
+
+				return count;
 			}
 		}
 
@@ -138,12 +151,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.journal.Count)
+			if (row < 0)
+			{
+				return null;
+			}
+
+			int firstRow, initialCount, actualCount;
+			this.GetEditionValues (out firstRow, out initialCount, out actualCount);
+
+			if (row >= firstRow && row < firstRow+actualCount)
 			{
 				return null;
 			}
 			else
 			{
+				if (row >= firstRow)
+				{
+					row -= actualCount;
+					row += initialCount;
+				}
+
 				return this.journal[row];
 			}
 		}
@@ -163,14 +190,81 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var journal = all ? this.journalAll : this.journal;
-
-			if (row < 0 || row >= journal.Count)
+			if (row < 0)
 			{
 				return FormattedText.Null;
 			}
 
-			var écriture = journal[row];
+			ComptaEcritureEntity écriture;
+			
+			if (all)
+			{
+				if (row >= this.journalAll.Count)
+				{
+					return FormattedText.Null;
+				}
+
+				écriture = this.journalAll[row];
+			}
+			else
+			{
+				int firstRow, initialCount, actualCount;
+				this.GetEditionValues (out firstRow, out initialCount, out actualCount);
+
+				if (row >= firstRow && row < firstRow+actualCount)
+				{
+					//	Si la ligne correspond à une ligne de l'écriture en édition, il faut retourner les textes correspondants.
+					if (column == ColumnType.Libellé)
+					{
+						//	Une ligne 'CodeTVA' suit toujours une ligne 'BaseTVA'. Son champ Libellé est toujours
+						//	identique au champ libellé de la ligne précédente 'BaseTVA'. Mais dans le journal, ce
+						//	n'est pas ce qu'on désire afficher. On calcule donc un texte mieux adapté.
+						var dataType = this.GetEditionData (row-firstRow, ColumnType.Type);
+
+						if (dataType != null && dataType.Text == "CodeTVA")
+						{
+							var dataCode = this.GetEditionData (row-firstRow, ColumnType.CodeTVA);
+							var dataTaux = this.GetEditionData (row-firstRow, ColumnType.TauxTVA);
+
+							var taux = Converters.ParsePercent (dataTaux.Text);
+
+							return StringArray.SpecialContentRightAlignment + ComptaEcritureEntity.GetLibelléTVA (dataCode.Text, taux);
+						}
+					}
+
+					if (column == ColumnType.MontantTTC)
+					{
+						//	Le montant TTC n'apparaît que sur les lignes 'BaseTVA'.
+						var dataType = this.GetEditionData (row-firstRow, ColumnType.Type);
+
+						if (dataType != null && dataType.Text != "BaseTVA")
+						{
+							return FormattedText.Null;
+						}
+					}
+
+					var data = this.GetEditionData (row-firstRow, column);
+
+					if (data == null)
+					{
+						return FormattedText.Null;
+					}
+					else
+					{
+						return data.Text;
+					}
+				}
+				else
+				{
+					if (row >= firstRow)
+					{
+						row -= actualCount;
+						row += initialCount;
+					}
+
+					écriture = this.journal[row];
+				}
+			}
 
 			switch (column)
 			{
@@ -198,6 +292,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return montantTTC;
 
 				case ColumnType.MontantTTC:
+					//	Le montant TTC n'apparaît que sur les lignes 'BaseTVA'.
 					if (écriture.Type == (int) TypeEcriture.BaseTVA)
 					{
 						return Converters.MontantToString (écriture.Montant + écriture.MontantComplément, écriture.Monnaie);
@@ -256,15 +351,105 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override bool HasBottomSeparator(int row)
 		{
-			if (row < 0 || row >= this.Count-1)
+			if (row < 0)
 			{
 				return false;
 			}
 
-			var écriture1 = this.journal[row];
-			var écriture2 = this.journal[row+1];
+			int firstRow, initialCount, actualCount;
+			this.GetEditionValues (out firstRow, out initialCount, out actualCount);
 
-			return écriture1.MultiId != écriture2.MultiId;
+			if (row >= firstRow && row < firstRow+actualCount)
+			{
+				return row == firstRow+actualCount-1;
+			}
+			else
+			{
+				if (row >= firstRow)
+				{
+					row -= actualCount;
+					row += initialCount;
+				}
+
+				if (row >= this.journal.Count-1)
+				{
+					return false;
+				}
+
+				var écriture1 = this.journal[row];
+				var écriture2 = this.journal[row+1];
+
+				return écriture1.MultiId != écriture2.MultiId;
+			}
+		}
+
+		public bool HasEmptyDate(int row)
+		{
+			//	Retourne true s'il ne faut pas afficher la date dans le tableau, pour cette écriture.
+			if (row < 0)
+			{
+				return false;
+			}
+
+			int firstRow, initialCount, actualCount;
+			this.GetEditionValues (out firstRow, out initialCount, out actualCount);
+
+			if (row >= firstRow && row < firstRow+actualCount)
+			{
+				var dataDébit  = this.GetEditionData (row-firstRow, ColumnType.Débit);
+				var dataCrédit = this.GetEditionData (row-firstRow, ColumnType.Crédit);
+
+				if ((dataDébit  != null && dataDébit.Text  == JournalDataAccessor.multi) ||
+					(dataCrédit != null && dataCrédit.Text == JournalDataAccessor.multi))  // écriture multiple ?
+				{
+					var dataTA = this.GetEditionData (row-firstRow, ColumnType.TotalAutomatique);
+
+					if (dataTA == null)
+					{
+						return false;
+					}
+					else
+					{
+						return dataTA.Text != "1";
+					}
+				}
+
+				return false;
+			}
+			else
+			{
+				if (row >= firstRow)
+				{
+					row -= actualCount;
+					row += initialCount;
+				}
+
+				var écriture = this.journal[row];
+				return écriture.MultiId != 0 && !écriture.TotalAutomatique;
+			}
+		}
+
+
+		private void GetEditionValues(out int firstRow, out int initialCount, out int actualCount)
+		{
+			if (this.isCreation)
+			{
+				firstRow     = this.InsertionPointRow;
+				initialCount = 0;
+				actualCount  = this.editionLine.Count;
+			}
+			else if (this.isModification)
+			{
+				firstRow     = this.firstEditedRow;
+				initialCount = this.initialCountEditedRow;
+				actualCount  = this.editionLine.Count;
+			}
+			else
+			{
+				firstRow     = int.MaxValue;
+				initialCount = 0;
+				actualCount  = 0;
+			}
 		}
 
 
@@ -373,7 +558,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			base.PrepareEditionLine (line);
 		}
 
-		public override void StartModificationLine(int row)
+		public override int StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();
 
@@ -400,7 +585,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 				//	ligne à son écriture multiple sans utiliser le bouton "+".
 				if (isMulti && this.controller.SettingsList.GetBool (SettingsType.EcritureProposeVide))
 				{
-					this.CreateEmptyLine (-1);
+					int index = this.CreateEmptyLine (-1);
+
+					if (row >= this.firstEditedRow+index)
+					{
+						row++;
+					}
 				}
 			}
 
@@ -410,9 +600,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 
 			this.controller.EditorController.UpdateFieldsEditionData ();
+
+			return row;
 		}
 
-		public void CreateEmptyLine(int index)
+		public int CreateEmptyLine(int index)
 		{
 			//	Crée une ligne vide à l'avant-dernière position.
 			var écriture = new ComptaEcritureEntity ()
@@ -456,8 +648,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.editionLine.Insert (index, data);  // insère à l'avant-dernière position
-
 			this.countEditedRow++;
+
+			return index;
 		}
 
 		public override void UpdateEditionLine()

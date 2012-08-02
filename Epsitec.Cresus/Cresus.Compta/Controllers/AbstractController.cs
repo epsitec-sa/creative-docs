@@ -48,8 +48,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.columnMappers = mappers.ToList ();
 			}
 
-			this.ignoreChanges = new SafeCounter ();
-
 			this.app.CommandDispatcher.RegisterController (this);
 		}
 
@@ -615,7 +613,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.arrayController.SelectedRow = -1;
 				this.dataAccessor.StartDefaultLine ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
-				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRowWithoutEmpty);
+				this.arrayController.ColorHilite = UIBuilder.HiliteColor;
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
 				this.dataAccessor.UpdateFilter ();
 				this.dataAccessor.SearchUpdate ();
@@ -813,13 +812,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ArraySelectedRowChanged()
 		{
 			//	Appelé lorsque la ligne sélectionnée a changé.
-			if (this.ignoreChanges.IsNotZero || this.editorController == null)
+			if (this.editorController == null)
 			{
 				return;
 			}
 
 			int row    = this.arrayController.SelectedRow;
 			int column = this.arrayController.SelectedColumn;
+
+			//	Si on sélectionne une ligne dans le tableau appartenant à l'écriture multiple en cours
+			//	de modification, il faut simplement éditer la ligne cliquée.
+			if (this.editorController != null &&
+				this.dataAccessor.IsModification &&
+				row >= this.dataAccessor.FirstEditedRow &&
+				row < this.dataAccessor.FirstEditedRow+this.dataAccessor.CountEditedRow)
+			{
+				//?this.editorController.UpdateEditorContent ();
+				//?this.editorController.EditorSelect (this.arrayController.SelectedColumnType, row - this.dataAccessor.FirstEditedRow);
+				this.editorController.UpdateEditorContent (this.arrayController.SelectedColumnType, row - this.dataAccessor.FirstEditedRow);
+				return;
+			}
 
 			if (this.editorController.Dirty)
 			{
@@ -841,27 +853,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						row = adjustedRow;
 
-						using (this.ignoreChanges.Enter ())
-						{
-							this.arrayController.SelectedRow = -1;
-							this.arrayController.SetSelectedRow (row, column);
-						}
+						this.arrayController.SelectedRow = -1;
+						this.arrayController.SetSelectedRow (row, column);
 					}
 				}
 			}
 
 			if (row != -1)
 			{
-				this.dataAccessor.StartModificationLine (row);
+				//	Dans le journal des écritures, l'insertion d'une ligne vide peut modifier le row !
+				row = this.dataAccessor.StartModificationLine (row);
 			}
 
 			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
-			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRowWithoutEmpty);
+			this.arrayController.ColorHilite = UIBuilder.HiliteColor;
+			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
 			if (this.editorController != null)
 			{
-				this.editorController.UpdateEditorContent ();
-				this.editorController.EditorSelect (this.arrayController.SelectedColumnType, row - this.dataAccessor.FirstEditedRow);
+				//?this.editorController.UpdateEditorContent ();
+				//?this.editorController.EditorSelect (this.arrayController.SelectedColumnType, row - this.dataAccessor.FirstEditedRow);
+				this.editorController.UpdateEditorContent (this.arrayController.SelectedColumnType, row - this.dataAccessor.FirstEditedRow);
 				this.editorController.ShowSelection ();
 			}
 		}
@@ -919,13 +931,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void ClearHilite()
 		{
-			using (this.ignoreChanges.Enter ())
+			if (this.arrayController != null)
 			{
-				if (this.arrayController != null)
-				{
-					this.arrayController.SelectedRow = -1;
-					this.arrayController.SetHilitedRows (-1, 0);
-				}
+				this.arrayController.SelectedRow = -1;
+				this.arrayController.SetHilitedRows (-1, 0);
 			}
 
 			this.dataAccessor.StartDefaultLine ();
@@ -943,6 +952,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//?this.parentWindow.Text = this.mainWindowController.GetTitle (this.commandDocument);
+		}
+
+		public void UpdateEditionArray()
+		{
+			//	Met à jour le contenu du tableau pendant l'édition.
+			if (this.arrayController != null)
+			{
+				this.arrayController.UpdateArrayContent (this.dataAccessor.Count, this.GetSearchArrayText, this.GetArrayBottomSeparator);
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+			}
 		}
 
 		protected void UpdateArrayContent()
@@ -1201,22 +1220,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public SafeCounter IgnoreChanges
-		{
-			get
-			{
-				return this.ignoreChanges;
-			}
-		}
-
-
 		protected readonly ComptaApplication					app;
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptaEntity							compta;
 		protected readonly ComptaPériodeEntity					période;
 		protected readonly SettingsList							settingsList;
 		protected readonly List<ColumnMapper>					columnMappers;
-		protected readonly SafeCounter							ignoreChanges;
 
 		protected MainWindowController							mainWindowController;
 
