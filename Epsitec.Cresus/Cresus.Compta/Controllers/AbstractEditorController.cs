@@ -542,11 +542,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.arrayController.HiliteHeaderColumn (columnType);
 			this.selectedColumn = columnType;
-
-			if (this.selectedLine != line)
-			{
-				this.SelectedLine = line;
-			}
+			this.selectedLine = line;  // il ne faut surtout pas utiliser la propriété this.SelectedLine !
 		}
 
 		public void EditorValidate()
@@ -612,11 +608,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateEditorContent(int? column = null, int? line = null)
 		{
+			this.UpdateEditionWidgets (line.GetValueOrDefault (), ColumnType.None);
 			this.EditionDataToWidgets (ignoreFocusField: false);
 			this.EditorValidate ();
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
 			this.UpdateEditorInfo ();
+
+			if (this.selectedLine >= 0 && this.selectedLine < this.fieldControllers.Count && 
+				column >= 0 && column < this.fieldControllers[this.selectedLine].Count &&
+				this.dataAccessor.IsActive)
+			{
+				//	Normalement, le SetFocus va provoquer l'appel de HandleSetFocus. Mais, si le focus est
+				//	déjà présent dans le widget, l'appel n'a pas lieu (c'est sans doute une optimisation de
+				//	Widgets). D'où le code ci-dessous qui met d'abord le focus à un parent bidon.
+
+				this.editorFrameBox.ClearFocus ();
+				this.editorFrameBox.Focus ();  // met le focus à un parent bidon
+				this.fieldControllers[this.selectedLine][column.Value].SetFocus ();
+			}
 		}
 
 #if false

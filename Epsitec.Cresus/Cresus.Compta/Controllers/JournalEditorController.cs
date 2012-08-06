@@ -1729,20 +1729,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateAfterFirstLineChanged ();
 
 			this.selectedLine = line.Value;
-
-			if (this.selectedLine >= 0 && this.selectedLine < this.fieldControllers.Count && 
-				column >= 0 && column < this.fieldControllers[this.selectedLine].Count &&
-				this.dataAccessor.IsActive)
-			{
-				//	Normalement, le SetFocus va provoquer l'appel de HandleSetFocus. Mais, si le focus est
-				//	déjà présent dans le widget, l'appel n'a pas lieu (c'est sans doute une optimisation de
-				//	Widgets). D'où le code ci-dessous qui met d'abord le focus à un parent bidon.
-
-				this.editorFrameBox.ClearFocus ();
-				this.editorFrameBox.Focus ();  // met le focus à un parent bidon
-				this.fieldControllers[this.selectedLine][column.Value].SetFocus ();
-			}
-
 			this.isMulti = (this.dataAccessor.CountEditedRow > 1);
 
 			base.UpdateEditorContent (column, line);
