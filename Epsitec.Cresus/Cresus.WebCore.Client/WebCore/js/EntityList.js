@@ -48,12 +48,10 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   /* Additional methods */
 
   getStore: function(databaseName) {
-    var store, pageSize;
-
-    pageSize = 100;
-    store = Ext.create('Ext.data.Store', {
+    return Ext.create('Ext.data.Store', {
       model: 'Epsitec.cresus.webcore.EntityListItem',
-      pageSize: pageSize,
+      autoLoad: true,
+      pageSize: 100,
       remoteSort: true,
       buffered: true,
       proxy: {
@@ -66,10 +64,6 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         }
       }
     });
-
-    store.guaranteeRange(0, pageSize);
-
-    return store;
   },
 
   onSelectionChangeHandler: function(view, selection, options) {
