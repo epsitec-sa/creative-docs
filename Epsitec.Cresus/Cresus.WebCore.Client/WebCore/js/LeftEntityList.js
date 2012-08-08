@@ -1,5 +1,5 @@
 Ext.define('Epsitec.cresus.webcore.LeftEntityList', {
-  extend: 'Epsitec.cresus.webcore.EntityList',
+  extend: 'Epsitec.cresus.webcore.EditableEntityList',
   alternateClassName: ['Epsitec.LeftEntityList'],
 
   /* Config */

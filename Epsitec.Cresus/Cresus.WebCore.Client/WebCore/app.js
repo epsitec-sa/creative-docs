@@ -14,6 +14,7 @@ Ext.application({
     'Epsitec.cresus.webcore.CallbackQueue',
     'Epsitec.cresus.webcore.CollectionSummaryTile',
     'Epsitec.cresus.webcore.ColumnManager',
+    'Epsitec.cresus.webcore.EditableEntityList',
     'Epsitec.cresus.webcore.EditionTile',
     'Epsitec.cresus.webcore.EmptySummaryTile',
     'Epsitec.cresus.webcore.EntityCollectionField',
