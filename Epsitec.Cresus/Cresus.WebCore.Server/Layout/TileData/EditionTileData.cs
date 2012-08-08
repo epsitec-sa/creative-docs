@@ -89,16 +89,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 		private AbstractTile ToTile(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var editionTile = new EditionTile ()
+			return new EditionTile ()
 			{
 				EntityId = layoutBuilder.GetEntityId (entity),
 				IconClass = layoutBuilder.GetIconClass (this.EntityType, this.Icon),
-				Title = this.TitleGetter (entity).ToString (),		
+				Title = this.TitleGetter (entity).ToString (),
+				Items = this.GetEditionTileParts (layoutBuilder, entity).ToList ()
 			};
-
-			editionTile.Items.AddRange (this.GetEditionTileParts (layoutBuilder, entity));
-
-			return editionTile;
 		}
 
 

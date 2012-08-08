@@ -34,10 +34,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public IList<AbstractEditionTilePart> Items
 		{
-			get
-			{
-				return this.items;
-			}
+			get;
+			set;
 		}
 
 
@@ -58,9 +56,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 			return panel;
 		}
-
-
-		private readonly IList<AbstractEditionTilePart> items = new List<AbstractEditionTilePart> ();
 
 
 	}
