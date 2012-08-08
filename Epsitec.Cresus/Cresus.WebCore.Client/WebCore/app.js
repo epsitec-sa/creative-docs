@@ -20,7 +20,7 @@ Ext.application({
     'Epsitec.cresus.webcore.EntityColumn',
     'Epsitec.cresus.webcore.EntityList',
     'Epsitec.cresus.webcore.EntityListItem',
-    'Epsitec.cresus.webcore.EntityReferenceComboBox',
+    'Epsitec.cresus.webcore.EntityPicker',
     'Epsitec.cresus.webcore.EntityReferenceField',
     'Epsitec.cresus.webcore.EnumerationComboBox',
     'Epsitec.cresus.webcore.EnumerationField',

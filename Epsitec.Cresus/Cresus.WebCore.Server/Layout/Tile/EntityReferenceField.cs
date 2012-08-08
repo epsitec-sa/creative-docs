@@ -13,19 +13,24 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public string Value
+		public string DisplayedValue
 		{
 			get;
 			set;
 		}
 
 
-		public IList<Tuple<string, string>> PossibleValues
+		public string InputValue
 		{
-			get
-			{
-				return this.possibleValues;
-			}
+			get;
+			set;
+		}
+
+
+		public string TypeName
+		{
+			get;
+			set;
 		}
 
 
@@ -33,19 +38,19 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var fieldDictionary = base.ToDictionary ();
 
-			fieldDictionary["value"] = this.Value;
+			fieldDictionary["value"] = new Dictionary<string, string> ()
+			{
+				{ "displayed", this.DisplayedValue },
+				{ "submitted", this.InputValue },
+			};
 			fieldDictionary["xtype"] = "epsitec.entityreferencefield";
-			fieldDictionary["store"] = this.PossibleValues.Select (t => new object[] { t.Item1, t.Item2 }).ToList ();
+			fieldDictionary["entityName"] = this.TypeName;
 
 			return fieldDictionary;
 		}
-
-
-		private readonly IList<Tuple<string, string>> possibleValues = new List<Tuple<string, string>> ();
 
 
 	}
 
 
 }
-

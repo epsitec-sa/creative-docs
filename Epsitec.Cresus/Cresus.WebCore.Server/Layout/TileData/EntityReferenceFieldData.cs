@@ -1,5 +1,4 @@
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -28,36 +27,29 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			var target = entityReferencePropertyAccessor.GetEntity (entity);
 
-			var entityField = new EntityReferenceField ()
+			string displayedValue;
+			string inputValue;
+
+			if (target != null)
+			{
+				displayedValue = target.GetCompactSummary ().ToString ();
+				inputValue = layoutBuilder.GetEntityId (target);
+			}
+			else
+			{
+				displayedValue = Constants.TextForNullValue;
+				inputValue = Constants.KeyForNullValue;
+			}
+
+			return new EntityReferenceField ()
 			{
 				PropertyAccessorId = InvariantConverter.ToString (entityReferencePropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = layoutBuilder.GetEntityId (target) ?? "null",
+				DisplayedValue = displayedValue,
+				InputValue = inputValue,
+				TypeName = layoutBuilder.GetTypeName (entityReferencePropertyAccessor.Type),
 			};
-
-			var possibleValues = this.GetPossibleValues (layoutBuilder);
-
-			entityField.PossibleValues.AddRange (possibleValues);
-
-			return entityField;
-		}
-
-
-		private IEnumerable<Tuple<string, string>> GetPossibleValues(LayoutBuilder layoutBuilder)
-		{
-			if (this.PropertyAccessor.Property.IsNullable)
-			{
-				yield return Tuple.Create (Constants.KeyForNullValue, Constants.TextForNullValue);
-			}
-
-			foreach (var entity in layoutBuilder.GetEntities (this.PropertyAccessor.Type))
-			{
-				var entityId = layoutBuilder.GetEntityId (entity);
-				var entitySummary = entity.GetCompactSummary ().ToString ();
-
-				yield return Tuple.Create (entityId, entitySummary);
-			}
 		}
 
 
