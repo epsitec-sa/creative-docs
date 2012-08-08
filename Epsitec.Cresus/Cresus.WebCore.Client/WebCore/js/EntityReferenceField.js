@@ -31,7 +31,6 @@ Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
     Ext.applyIf(newOptions, options);
 
     this.callParent([newOptions]);
-
     return this;
   },
 
