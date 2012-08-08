@@ -6,6 +6,10 @@ Ext.define('Epsitec.cresus.webcore.LeftEntityList', {
 
   multiSelect: false,
 
+  /* Properties */
+
+  columnManager: null,
+
   /* Additional methods */
 
   onSelectionChange: function(entityItems) {

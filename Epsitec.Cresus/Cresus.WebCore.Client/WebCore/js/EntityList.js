@@ -27,7 +27,6 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Properties */
 
-  columnManager: null,
   databaseName: null,
 
   /* Constructor */
