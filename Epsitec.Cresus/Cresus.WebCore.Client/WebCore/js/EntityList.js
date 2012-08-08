@@ -5,18 +5,18 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   /* Config */
 
   allowDeselect: true,
-  hideHeaders: true,
   border: false,
   viewConfig: {
     emptyText: 'Nothing to display'
   },
+  sortableColumns: false,
   columns: [
     {
       xtype: 'rownumberer',
       width: 35
     },
     {
-      text: 'Name',
+      text: 'Summary',
       flex: 1,
       dataIndex: 'summary'
     }
