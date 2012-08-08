@@ -59,6 +59,7 @@
     <Compile Include="Core\CoreWorkerPool.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
+    <Compile Include="Layout\Tile\EntityValue.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="Core\AuthenticationManager.cs" />
     <Compile Include="NancyModules\Constants.cs" />

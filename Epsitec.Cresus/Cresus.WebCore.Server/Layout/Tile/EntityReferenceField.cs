@@ -13,21 +13,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public string DisplayedValue
-		{
-			get;
-			set;
-		}
-
-
-		public string InputValue
-		{
-			get;
-			set;
-		}
-
-
 		public string TypeName
+		{
+			get;
+			set;
+		}
+
+
+		public EntityValue Value
 		{
 			get;
 			set;
@@ -38,11 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var fieldDictionary = base.ToDictionary ();
 
-			fieldDictionary["value"] = new Dictionary<string, string> ()
-			{
-				{ "displayed", this.DisplayedValue },
-				{ "submitted", this.InputValue },
-			};
+			fieldDictionary["value"] = this.Value.ToDictionary ();
 			fieldDictionary["xtype"] = "epsitec.entityreferencefield";
 			fieldDictionary["entityName"] = this.TypeName;
 
