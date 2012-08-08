@@ -16,7 +16,7 @@ html, body {
 }
 
 .selected-entity .summary {
-  background: #ebf4ff url( ../images/Static/star.png ) bottom right no-repeat;
+  background: #ebf4ff url('../images/Static/star.png') bottom right no-repeat;
 }
 
 .global-warning {
