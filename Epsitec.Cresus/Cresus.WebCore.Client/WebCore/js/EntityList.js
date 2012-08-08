@@ -10,9 +10,6 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   viewConfig: {
     emptyText: 'Nothing to display'
   },
-  verticalScrollerType: 'paginggridscroller',
-  loadMask: false,
-  invalidateScrollerOnRefresh: false,
   columns: [
     {
       xtype: 'rownumberer',
