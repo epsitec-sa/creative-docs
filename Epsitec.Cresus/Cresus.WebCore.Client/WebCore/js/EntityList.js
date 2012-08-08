@@ -54,14 +54,13 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   onCreate: function(entityItem) { },
 
   onDeleteHandler: function() {
-    var selection, entityItems, callback;
+    var entityItems, callback;
 
-    selection = this.getSelectionModel().selected.items;
-    if (selection.length === 0) {
+    entityItems = this.getSelectedItems();
+    if (entityItems.length === 0) {
       return;
     }
 
-    entityItems = this.getItems(selection);
     callback = Epsitec.Callback.create(
         function(items) { this.onDelete(items); },
         this
@@ -87,6 +86,11 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   // To be overriden in derived classes.
   onSelectionChange: function(entityItems) { },
+
+  getSelectedItems: function() {
+    var selection = this.getSelectionModel().selected.items;
+    return this.getItems(selection);
+  },
 
   getItems: function(selection) {
     return selection.map(function(e) { return e.toItem(); });
