@@ -20,10 +20,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public IList<AbstractField> Fields
 		{
-			get
-			{
-				return this.fields;
-			}
+			get;
+			set;
 		}
 
 
@@ -49,9 +47,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 			yield return item;
 		}
-
-
-		private readonly IList<AbstractField> fields = new List<AbstractField> ();
 
 
 	}

@@ -38,16 +38,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 		public override AbstractEditionTilePart ToAbstractEditionTilePart(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var group = new HorizontalGroup ()
+			return new HorizontalGroup ()
 			{
 				Title = this.Title.ToString (),
+				Fields = this.Fields
+					.Select (f => f.ToAbstractField (layoutBuilder, entity))
+					.ToList (),
 			};
-
-			var abstractFields = this.Fields.Select (f => f.ToAbstractField (layoutBuilder, entity));
-
-			group.Fields.AddRange (abstractFields);
-
-			return group;
 		}
 
 
