@@ -25,20 +25,20 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public static Type ParseType(string value)
 		{
-			var types = TypeEnumerator.Instance.GetTypesFromName (value).ToList ();
+			var type = Type.GetType (value, throwOnError: false, ignoreCase: false);
 
-			if (types.Count != 1)
+			if (type == null)
 			{
 				throw new ArgumentException ();
 			}
 
-			return types[0];
+			return type;
 		}
 
 
 		public static string TypeToString(Type type)
 		{
-			return type.FullName;
+			return type.AssemblyQualifiedName;
 		}
 
 		
