@@ -4,8 +4,12 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Config */
 
-  allowDeselect: true,
   border: true,
+  selModel: {
+    selType: 'rowmodel',
+    allowDeselect: true,
+    mode: 'SINGLE'
+  },
   viewConfig: {
     emptyText: 'Nothing to display'
   },

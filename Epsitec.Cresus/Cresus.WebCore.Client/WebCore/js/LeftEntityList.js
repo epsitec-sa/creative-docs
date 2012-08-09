@@ -2,10 +2,6 @@ Ext.define('Epsitec.cresus.webcore.LeftEntityList', {
   extend: 'Epsitec.cresus.webcore.EditableEntityList',
   alternateClassName: ['Epsitec.LeftEntityList'],
 
-  /* Config */
-
-  multiSelect: false,
-
   /* Properties */
 
   columnManager: null,
