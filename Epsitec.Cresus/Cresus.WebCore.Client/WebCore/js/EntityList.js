@@ -76,7 +76,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   onSelectionChange: function(entityItems) { },
 
   getSelectedItems: function() {
-    var selection = this.getSelectionModel().selected.items;
+    var selection = this.getSelectionModel().getSelection();
     return this.getItems(selection);
   },
 
