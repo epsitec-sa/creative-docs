@@ -29,20 +29,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		public static Response AsError(ErrorCode errorCode)
-		{
-			// NOTE: This method will return the custom error code and the client should behave
-			// accordingly.
-
-			var errors = new Dictionary<string, string> ()
-			{
-				{ "code", ((int) errorCode).ToString (CultureInfo.InvariantCulture) }
-			};
-
-			return CoreResponse.AsError (errors);
-		}
-
-
 		public static Response AsError(string title, string message)
 		{
 			// NOTE: This method will return a title and a message that the client will use to
@@ -111,16 +97,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			parent[key] = content;
 
 			return parent;
-		}
-
-
-		public enum ErrorCode
-		{
-
-
-			SessionTimeout = 0,
-
-
 		}
 
 
