@@ -15,25 +15,40 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
 
   /* Constructor */
   constructor: function(options) {
-    this.entityList = this.createEntityList(options.databaseName);
+    var newOptions;
 
-    options.items = [this.entityList];
-    options.buttons = [
-      this.createCancelButton(),
-      this.createOkButton()
-    ];
+    this.entityList = this.createEntityList(options);
 
-    this.callParent(arguments);
+    newOptions = {
+      items: [this.entityList],
+      buttons: [
+        this.createCancelButton(),
+        this.createOkButton()
+      ]
+    };
+    Ext.applyIf(newOptions, options);
+
+    this.callParent([newOptions]);
     return this;
   },
 
   /* Additional methods */
 
-  createEntityList: function(databaseName) {
-    return Ext.create('Epsitec.EntityList', {
-      databaseName: databaseName
-    });
+  createEntityList: function(options) {
+    var config = {
+      databaseName: options.databaseName
+    };
+
+    if (options.multiSelect) {
+      config.selModel = {
+        type: 'rowmodel',
+        mode: 'MULTI'
+      };
+    }
+
+    return Ext.create('Epsitec.EntityList', config);
   },
+
 
   createCancelButton: function() {
     return Ext.create('Ext.Button', {
@@ -62,9 +77,10 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
   },
 
   statics: {
-    show: function(databaseName, callback) {
+    show: function(databaseName, multiSelect, callback) {
       var entityPicker = Ext.create('Epsitec.EntityPicker', {
         databaseName: databaseName,
+        multiSelect: multiSelect,
         callback: callback
       });
       entityPicker.show();

@@ -40,7 +40,7 @@ Ext.define('Epsitec.cresus.webcore.EntityReferenceField', {
 
   onPickClick: function() {
     var callback = Epsitec.Callback.create(this.entityPickerCallback, this);
-    Epsitec.EntityPicker.show(this.databaseName, callback);
+    Epsitec.EntityPicker.show(this.databaseName, false, callback);
   },
 
   entityPickerCallback: function(selectedItems) {
