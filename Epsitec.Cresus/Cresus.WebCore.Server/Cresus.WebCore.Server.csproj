@@ -132,7 +132,6 @@
     <Compile Include="NancyModules\LoginModule.cs" />
     <Compile Include="NancyHosting\NancyServer.cs" />
     <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
-    <Compile Include="FormCollectionEmbedder.cs" />
     <Compile Include="Layout\LayoutBuilder.cs" />
     <Compile Include="Core\PropertyAccessor\AbstractPropertyAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
