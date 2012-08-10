@@ -1,43 +1,67 @@
 Ext.define('Epsitec.cresus.webcore.EntityCollectionField', {
-  extend: 'Ext.container.Container',
+  extend: 'Ext.form.FieldContainer',
   alternateClassName: ['Epsitec.EntityCollectionField'],
   alias: 'widget.epsitec.entitycollectionfield',
 
   /* Config */
 
-  layout: 'column',
+  layout: 'vbox',
+
+  /* Properties */
+
+  entityFieldList: null,
+  hiddenField: null,
+  originalValues: null,
 
   /* Constructor */
 
   constructor: function(options) {
-    var fields, button;
+    var newOptions;
 
-    options.columnWidth = 1;
+    this.entityFieldList = this.createEntityFieldList(options);
+    this.hiddenField = this.createHiddenField(options);
 
-    fields = Ext.widget('fieldcontainer', options);
-    button = Ext.create('Ext.Button', {
-      text: '>',
-      renderTo: Ext.getBody(),
-      margin: '0 0 0 5',
-      handler: this.buttonHandler,
-      scope: this
-    });
+    newOptions = {
+      fieldLabel: options.fieldLabel,
+      items: [this.entityFieldList, this.hiddenField],
+      originalValues: options.values
+    };
 
-    this.items = this.items || [];
-    this.items.push(fields);
-    this.items.push(button);
-
-    this.callParent(arguments);
-
+    this.callParent([newOptions]);
     return this;
   },
 
-  buttonHandler: function() {
-    var title = 'Cannot edit this enumeration',
-        content = 'You cannot directly edit this enumeration. You will need ' +
-                  'to save the current changes, click the header menu to ' +
-                  'edit the corresponding enumeration, and come back to this ' +
-                  'entity to edit it.';
-    Ext.Msg.alert(title, content);
+  /* Additional methods */
+
+  createEntityFieldList: function(options) {
+    var values = options.values,
+        readOnly = options.readOnly;
+
+    return Ext.create('Epsitec.EntityFieldList', values, readOnly, {
+      width: '100%',
+      minHeight: '50',
+      maxHeight: '150',
+      databaseName: options.entityName
+    });
+  },
+
+  createHiddenField: function(options) {
+    var me = this;
+    return Ext.create('Epsitec.EntityCollectionHiddenField', {
+      name: options.name,
+      submitValueGetter: function() { return me.getSubmitValue(); },
+      onReset: function() { me.resetEntityFieldList(); }
+    });
+  },
+
+  getSubmitValue: function() {
+    return this.entityFieldList
+        .getItems()
+        .map(function(item) { return item.submitted; })
+        .join(';');
+  },
+
+  resetEntityFieldList: function() {
+    this.entityFieldList.resetContent();
   }
 });

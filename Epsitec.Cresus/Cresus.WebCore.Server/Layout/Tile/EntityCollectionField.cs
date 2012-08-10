@@ -11,12 +11,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public IList<EntityCollectionCheckBoxField> CheckBoxFields
+		public string TypeName
 		{
-			get
-			{
-				return this.checkBoxFields;
-			}
+			get;
+			set;
+		}
+
+
+		public IList<EntityValue> Values
+		{
+			get;
+			set;
 		}
 
 
@@ -24,23 +29,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		{
 			var fieldDictionary = base.ToDictionary ();
 
-			// Here we don't set the readOnly property on the container directly but in the
-			// individual check boxes.
-			fieldDictionary.Remove ("readOnly");
-
-			// Here we don't set the PropertyAccessorId on the container directly but in the
-			// individual check boxes.
-
 			fieldDictionary["xtype"] = "epsitec.entitycollectionfield";
-			fieldDictionary["defaultType"] = "checkboxfield";
-			fieldDictionary["labelAlign"] = "left";
-			fieldDictionary["items"] = this.CheckBoxFields.Select (c => c.ToDictionary (this.PropertyAccessorId, this.IsReadOnly)).ToList ();
+			fieldDictionary["values"] = this.Values.Select (v => v.ToDictionary ()).ToList ();
+			fieldDictionary["entityName"] = this.TypeName;
 
 			return fieldDictionary;
 		}
-
-
-		private readonly IList<EntityCollectionCheckBoxField> checkBoxFields = new List<EntityCollectionCheckBoxField> ();
 
 
 	}

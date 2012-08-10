@@ -18,7 +18,7 @@ using System.Linq;
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
 
-	
+
 	internal sealed class EntityCollectionFieldData : AbstractFieldData
 	{
 
@@ -26,28 +26,24 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
 			var entityCollectionPropertyAccessor = (EntityCollectionPropertyAccessor) this.PropertyAccessor;
+			var targets = entityCollectionPropertyAccessor.GetEntityCollection (entity);
 
-			var collectionField = new EntityCollectionField ()
+			return new EntityCollectionField ()
 			{
 				PropertyAccessorId = InvariantConverter.ToString (entityCollectionPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
+				TypeName = this.GetTypeName (layoutBuilder, entityCollectionPropertyAccessor.Type),
+				Values = targets.Select (t => EntityValue.Create (layoutBuilder, t)).ToList ()
 			};
+		}
 
-			var possibleValues = layoutBuilder.GetEntities (entityCollectionPropertyAccessor.CollectionType);
-			var checkedValues = entityCollectionPropertyAccessor.GetEntityCollection (entity);
 
-			var checkBoxFields = possibleValues.Select ((v, i) => new EntityCollectionCheckBoxField ()
-			{
-				Value = checkedValues.Contains (v),
-				InputValue = layoutBuilder.GetEntityId (v),
-				Label = v.GetSummary ().ToString (),
-				Index = i
-			});
-
-			collectionField.CheckBoxFields.AddRange (checkBoxFields);
-
-			return collectionField;
+		private string GetTypeName(LayoutBuilder layoutBuilder, Type collectionType)
+		{
+			var entityType = collectionType.GetGenericArguments ()[0];
+			
+			return layoutBuilder.GetTypeName (entityType);
 		}
 
 

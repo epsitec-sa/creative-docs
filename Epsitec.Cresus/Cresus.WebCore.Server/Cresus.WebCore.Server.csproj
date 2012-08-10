@@ -92,7 +92,6 @@
     <Compile Include="Layout\Tile\AbstractEditionTilePart.cs" />
     <Compile Include="Layout\Tile\AbstractTile.cs" />
     <Compile Include="Layout\Carpenter.cs" />
-    <Compile Include="Layout\Tile\EntityCollectionCheckBoxField.cs" />
     <Compile Include="Layout\Tile\CheckBoxField.cs" />
     <Compile Include="Layout\Tile\EntityCollectionField.cs" />
     <Compile Include="Layout\Tile\CollectionSummaryTile.cs" />

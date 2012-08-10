@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -102,16 +103,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, DynamicDictionary form)
 		{
-			// NOTE Here we need to process the form to transform the arrays which are in separated
-			// fields to put them back in the same field.
-
-			var processedForm = FormCollectionEmbedder.DecodeFormWithCollections (form);
-
-			foreach (var rawPropertyAccessorId in processedForm.GetDynamicMemberNames ())
+			foreach (var rawPropertyAccessorId in form.GetDynamicMemberNames ())
 			{
 				var propertyAccessorId = InvariantConverter.ParseInt (rawPropertyAccessorId);
 				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
-				DynamicDictionaryValue value = processedForm[rawPropertyAccessorId];
+				var value = (DynamicDictionaryValue) form[rawPropertyAccessorId];
 
 				var convertedValue = EntityModule.ConvertValue (businessContext, propertyAccessor, value);
 
@@ -159,7 +155,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static object ConvertForEntityCollection(BusinessContext businessContext, DynamicDictionaryValue value)
 		{
-			var sequence = (IEnumerable<string>) value.Value;
+			var rawValue = (string) value.Value;
+			var sequence = rawValue.Split (";");
 
 			return sequence
 				.Where (id => !string.IsNullOrEmpty (id))
