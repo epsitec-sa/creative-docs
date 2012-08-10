@@ -21,8 +21,13 @@ namespace Epsitec.Common.Debug
 			System.Windows.Forms.Application.ThreadException += (sender, e) => GeneralExceptionCatcher.ProcessException (e.Exception);
 			System.AppDomain.CurrentDomain.UnhandledException += (sender, e) => GeneralExceptionCatcher.ProcessException (e.ExceptionObject as System.Exception);
 
+#if NO_TASK
+			//	Compiling without support for System.Threading.Tasks.
+			//	This is the case for Cresus Updater, which includes this source file.
+#else
 			//	See http://blog.cincura.net/232922-unobserved-tasks-in-net-4-5/ and http://msdn.microsoft.com/en-us/library/system.threading.tasks.taskscheduler.unobservedtaskexception.aspx
 			System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (sender, e) => GeneralExceptionCatcher.ProcessException (e.Exception);
+#endif
 
 			System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.CatchException);
 			
