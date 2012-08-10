@@ -24,3 +24,15 @@ html, body {
   padding: 5px;
   border: 1px solid #a1b6d2;
 }
+
+.icon-add {
+  background-image: url('../images/Static/add.png') !important;
+}
+
+.icon-remove {
+  background-image: url('../images/Static/remove.png') !important;
+}
+
+.icon-refresh {
+  background-image: url('../images/Static/refresh.png') !important;
+}
