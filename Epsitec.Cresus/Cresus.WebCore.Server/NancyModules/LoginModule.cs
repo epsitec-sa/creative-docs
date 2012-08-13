@@ -36,16 +36,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (loggedIn)
 			{
-				return CoreResponse.AsSuccess ();
+				return CoreResponse.FormSuccess ();
 			}
 			else
 			{
-				var dic = new Dictionary<string, object> ()
+				var errors = new Dictionary<string, object> ()
 				{
 					{ "username" , "Incorrect username" },
+					{ "password" , "Incorrect password" },
 				};
 				
-				return CoreResponse.AsError (dic);
+				return CoreResponse.FormFailure (errors);
 			}
 		}
 
@@ -54,11 +55,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			this.Session[LoginModule.LoggedInName] = false;
 
-			var response = "logout";
+			var content = new Dictionary<string, object> ()
+			{ 
+				{ "logout", true }
+			};
 
-			Dumper.Instance.Dump (response);
-
-			return response;
+			return CoreResponse.Success (content);
 		}
 
 

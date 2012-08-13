@@ -107,17 +107,12 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
 
     this.setLoading(false);
 
-    if (!success) {
-      Epsitec.ErrorHandler.handleError(response);
+    json = Epsitec.Tools.processResponse(success, response);
+    if (json === null) {
       return;
     }
 
     this.reloadStore();
-
-    json = Epsitec.Tools.decodeJson(response.responseText);
-    if (json === null) {
-      return;
-    }
 
     entityItem = json.content;
     callback.execute([entityItem]);
@@ -139,14 +134,17 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
   },
 
   deleteEntitiesCallback: function(success, response, callback, entityItems) {
+    var json;
+
     this.setLoading(false);
 
-    if (!success) {
-      Epsitec.ErrorHandler.handleError(response);
+    json = Epsitec.Tools.processResponse(success, response);
+    if (json === null) {
       return;
     }
 
     this.reloadStore();
+
     callback.execute([entityItems]);
   }
 });

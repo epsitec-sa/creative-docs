@@ -112,27 +112,25 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
     if (form.isValid()) {
       this.setLoading();
       form.submit({
-        success: this.onLoginClickSuccess,
-        failure: this.onLoginClickFailure,
+        success: function(form, action) {
+          this.onLoginClickCallback(true, form, action);
+        },
+        failure: function(form, action) {
+          this.onLoginClickCallback(false, form, action);
+        },
         scope: this
       });
     }
   },
 
-  onLoginClickSuccess: function() {
-    this.application.showMainPanel();
-  },
-
-  onLoginClickFailure: function(form, action) {
-    var json;
-
+  onLoginClickCallback: function(success, form, action) {
     this.setLoading(false);
 
-    json = Epsitec.Tools.decodeJson(action.response.responseText);
-    if (json === null) {
+    if (!success) {
+      Epsitec.ErrorHandler.handleFormError(action);
       return;
     }
 
-    form.markInvalid(json.errors);
+    this.application.showMainPanel();
   }
 });

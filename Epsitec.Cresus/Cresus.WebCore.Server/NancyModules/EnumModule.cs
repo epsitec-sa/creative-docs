@@ -35,9 +35,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string typeName = parameters.name;
 			var type = Tools.ParseType (typeName);
 
-			var list = EnumModule.GetValues (type).ToList ();
+			var values = EnumModule.GetValues (type).ToList ();
 
-			return CoreResponse.AsJson (list);
+			var content = new Dictionary<string, object> ()
+			{
+				{ "values", values },
+			};
+
+			return CoreResponse.Success (content);
 		}
 
 

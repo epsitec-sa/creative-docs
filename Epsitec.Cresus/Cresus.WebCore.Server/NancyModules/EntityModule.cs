@@ -56,10 +56,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var errors = invalidItems.ToDictionary (
 					i => InvariantConverter.ToString (i.Item1.Id),
-					i => "Invalid value"
+					i => (object) "Invalid value"
 				);
 
-				return CoreResponse.AsError (errors);
+				return CoreResponse.FormFailure (errors);
 			}
 			else
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					}
 
 					businessContext.SaveChanges ();
-					return CoreResponse.AsSuccess ();
+					return CoreResponse.FormSuccess ();
 				}
 			}
 		}
@@ -97,7 +97,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var entityId = Tools.GetEntityId (businessContext, child);
 
-			return CoreResponse.AsSuccess (entityId);
+			var content = new Dictionary<string, object> ()
+			{
+				{ "entityId", entityId },
+			};
+
+			return CoreResponse.Success (content);
 		}
 
 

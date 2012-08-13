@@ -3,8 +3,6 @@ using Nancy.Responses;
 
 using System.Collections.Generic;
 
-using System.Globalization;
-
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
@@ -19,84 +17,109 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	{
 
 
-		public static Response AsError()
+		public static Response InternalServerError()
 		{
-			// NOTE: This method will return a generic error to the client.
+			var jsonData = new Dictionary<string, object> ();
 
-			var errors = new Dictionary<string, object> ();
+			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
+			{
+				StatusCode = HttpStatusCode.BadRequest,
+			};
+		}
+		
+		
+		public static Response Failure()
+		{
+			var content = new Dictionary<string, object> ();
 
-			return CoreResponse.AsError (errors);
+			return CoreResponse.Failure (content);
 		}
 
 
-		public static Response AsError(string title, string message)
+		public static Response Failure(string title, string message)
 		{
-			// NOTE: This method will return a title and a message that the client will use to
-			// display a dialog box.
-
-			var errors = new Dictionary<string, string> ()
+			var content = new Dictionary<string, object> ()
 			{
 				{ "title", title },
 				{ "message", message },
 			};
 
-			return CoreResponse.AsError (errors);
+			return CoreResponse.Failure (content);
 		}
 
 
-		public static Response AsError(object errors)
+		public static Response Failure(Dictionary<string, object> content)
 		{
-			var response = CoreResponse.GetResponse (false, errors);
-
-			return CoreResponse.AsJson (response, HttpStatusCode.BadRequest);
+			return CoreResponse.CreateResponse (false, content);
 		}
 
 
-		public static Response AsSuccess()
+		public static Response Success()
 		{
 			var content = new Dictionary<string, object> ();
 			
-			return CoreResponse.AsSuccess (content);
+			return CoreResponse.Success (content);
 		}
 
 
-		public static Response AsSuccess(object content)
+		public static Response Success(Dictionary<string, object> content)
 		{
-			var response = CoreResponse.GetResponse (true, content);
-
-			return CoreResponse.AsJson (response, HttpStatusCode.OK);
+			return CoreResponse.CreateResponse (true, content);
 		}
 
 
-		public static Response AsJson(object content)
+		private static Response CreateResponse(bool success, object content)
 		{
-			return CoreResponse.AsJson (content, HttpStatusCode.OK);
-		}
-
-
-		public static Response AsJson(object content, HttpStatusCode httpStatusCode)
-		{
-			Dumper.Instance.Dump (content);
-
-			return new JsonResponse (content, new DefaultJsonSerializer ())
+			var jsonData = new Dictionary<string, object> ()
 			{
-				StatusCode = httpStatusCode,
+				{ "success", success },
+				{ "content", content },
 			};
+
+			return CoreResponse.CreateResponse (jsonData, HttpStatusCode.OK);
 		}
 
 
-		private static Dictionary<string, object> GetResponse(bool success, object content)
+		public static Response FormSuccess()
 		{
-			var parent = new Dictionary<string, object> ();
+			return CoreResponse.CreateFormResponse (true, null);
+		}
 
-			var key = success
-				? "content"
-				: "errors";
-			
-			parent["success"] = success;
-			parent[key] = content;
 
-			return parent;
+		public static Response FormFailure(Dictionary<string, object> errors)
+		{
+			return CoreResponse.CreateFormResponse (false, errors);
+		}
+
+
+		private static Response CreateFormResponse(bool success, object errors)
+		{
+			// NOTE ExtJs uses the 'success' and 'errors' properties of the returned object in order
+			// to know if the form submit is a success or not and which fields are invalid. This is
+			// why we need a dedicated method for this.
+
+			var jsonData = new Dictionary<string, object> ()
+			{
+				{ "success", success },
+			};
+
+			if (errors != null)
+			{
+				jsonData["errors"] = errors;
+			}
+
+			return CoreResponse.CreateResponse (jsonData, HttpStatusCode.OK);
+		}
+
+
+		private static Response CreateResponse(Dictionary<string, object> jsonData, HttpStatusCode code)
+		{
+			Dumper.Instance.Dump (code, jsonData);
+
+			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
+			{
+				StatusCode = HttpStatusCode.OK,
+			};
 		}
 
 

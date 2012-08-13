@@ -139,12 +139,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
       loadingColumn.setLoading(false);
     }
 
-    if (!success) {
-      Epsitec.ErrorHandler.handleError(response);
-      return;
-    }
-
-    json = Epsitec.Tools.decodeJson(response.responseText);
+    json = Epsitec.Tools.processResponse(success, response);
     if (json === null) {
       return;
     }

@@ -60,8 +60,8 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         url: 'proxy/database/get/' + databaseName,
         reader: {
           type: 'json',
-          root: 'entities',
-          totalProperty: 'total'
+          root: 'content.entities',
+          totalProperty: 'content.total'
         }
       }
     });

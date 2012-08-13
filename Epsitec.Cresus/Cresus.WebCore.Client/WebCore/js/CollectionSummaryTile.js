@@ -64,17 +64,12 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
 
     this.setLoading(false);
 
-    if (!success) {
-      Epsitec.ErrorHandler.handleError(response);
-      return;
-    }
-
-    json = Epsitec.Tools.decodeJson(response.responseText);
+    json = Epsitec.Tools.processResponse(success, response);
     if (json === null) {
       return;
     }
 
-    entityId = json.content;
+    entityId = json.content.key;
     this.addEntityColumn(entityId, true);
   },
 
@@ -93,11 +88,13 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     });
   },
 
-  deleteEntityCallback: function(options, sucess, response) {
+  deleteEntityCallback: function(options, success, response) {
+    var json;
+
     this.setLoading(false);
 
-    if (!sucess) {
-      Epsitec.ErrorHandler.handleError(response);
+    json = Epsitec.Tools.processResponse(success, response);
+    if (json === null) {
       return;
     }
 

@@ -36,17 +36,12 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
   createDatabasesGroupCallback: function(success, response, group) {
     var json, databases, i;
 
-    if (!success) {
-      Epsitec.ErrorHandler.handleError(response);
-      return;
-    }
-
-    json = Epsitec.Tools.decodeJson(response.responseText);
+    json = Epsitec.Tools.processResponse(success, response);
     if (json === null) {
       return;
     }
 
-    databases = json.content;
+    databases = json.content.databases;
 
     for (i = 0; i < databases.length; i += 1) {
       this.createDatabaseButton(group, databases[i]);
@@ -96,8 +91,20 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
     Ext.Ajax.request({
       url: 'proxy/log/out',
       method: 'POST',
-      callback: function() { window.location.reload(); }
+      callback: this.logoutCallback,
+      scope: this
     });
+  },
+
+  logoutCallback: function(options, success, response) {
+    var json;
+
+    json = Epsitec.Tools.processResponse(success, response);
+    if (json === null) {
+      return;
+    }
+
+    window.location.reload();
   },
 
   createButton: function(options) {

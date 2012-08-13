@@ -47,7 +47,8 @@ Ext.define('Epsitec.cresus.webcore.EnumerationComboBox', {
           type: 'ajax',
           url: 'proxy/enum/get/' + enumerationName,
           reader: {
-            type: 'json'
+            type: 'json',
+            root: 'content.values'
           }
         }),
         listeners: {

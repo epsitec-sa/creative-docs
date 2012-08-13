@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var layoutBuilder = new LayoutBuilder (businessContext, propertyAccessors, autoCreators);
 			var layout = layoutBuilder.Build (entity, viewMode, viewId);
 
-			return CoreResponse.AsSuccess (layout);
+			return CoreResponse.Success (layout);
 		}
 		
 

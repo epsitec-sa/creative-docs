@@ -81,17 +81,12 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
 
     this.setLoading(false);
 
-    if (!success) {
-      Epsitec.ErrorHandler.handleError(response);
-      return;
-    }
-
-    json = Epsitec.Tools.decodeJson(response.responseText);
+    json = Epsitec.Tools.processResponse(success, response);
     if (json === null) {
       return;
     }
 
-    newEntityId = json.content;
+    newEntityId = json.content.entityId;
     refresh = this.entityId !== newEntityId;
     this.addEntityColumn(newEntityId, refresh);
   }

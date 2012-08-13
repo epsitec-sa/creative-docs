@@ -23,15 +23,28 @@ Ext.define('Epsitec.cresus.webcore.Tools', {
       callback.apply(context, callbackArguments);
     },
 
-    decodeJson: function(encodedJson) {
-      var decodedJson = null;
+    processResponse: function(success, response) {
+      var json;
+
+      if (!success) {
+        Epsitec.ErrorHandler.handleError();
+        return null;
+      }
+
       try {
-        decodedJson = Ext.decode(encodedJson);
+        json = Ext.decode(response.responseText);
       }
       catch (e) {
-        Epsitec.ErrorHandler.handleErrorDefault();
+        Epsitec.ErrorHandler.handleJsonError();
+        return null;
       }
-      return decodedJson;
+
+      if (!json.success) {
+        Epsitec.ErrorHandler.handleFailure(json.content);
+        return null;
+      }
+
+      return json;
     }
   }
 });

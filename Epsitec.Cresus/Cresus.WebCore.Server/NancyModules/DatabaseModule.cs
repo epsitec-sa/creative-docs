@@ -50,7 +50,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetDatabaseList()
 		{
-			return CoreResponse.AsSuccess (DatabasesModule.GetDatabases ());
+			var databases = DatabasesModule.GetDatabases ();
+
+			var content = new Dictionary<string, object> ()
+			{
+				{ "databases", databases },
+			};
+
+			return CoreResponse.Success (content);
 		}
 
 
@@ -132,16 +139,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				{ "entities", entities },
 			};
 
-			return CoreResponse.AsJson (content);
+			return CoreResponse.Success (content);
 		}
 
 
-		private static Dictionary<string, string> GetEntityData(BusinessContext businessContext, AbstractEntity entity)
+		private static Dictionary<string, object> GetEntityData(BusinessContext businessContext, AbstractEntity entity)
 		{
 			var id = Tools.GetEntityId (businessContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
 			
-			return new Dictionary<string, string> ()
+			return new Dictionary<string, object> ()
 			{
 				{ "id", id },
 				{ "summary", summary },
@@ -177,8 +184,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 			
 			return sucess
-				? CoreResponse.AsSuccess ()
-				: CoreResponse.AsError ();
+				? CoreResponse.Success ()
+				: CoreResponse.Failure ();
 		}
 
 
@@ -195,7 +202,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entity = DatabasesModule.CreateEntity (businessContext, databaseType);
 			var entityData = DatabasesModule.GetEntityData (businessContext, entity);
 
-			return CoreResponse.AsSuccess (entityData);
+			return CoreResponse.Success (entityData);
 		}
 
 

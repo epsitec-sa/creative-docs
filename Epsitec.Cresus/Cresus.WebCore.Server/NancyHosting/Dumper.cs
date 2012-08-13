@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.IO;
 using Epsitec.Common.Support.Extensions;
 
+using Nancy;
+
 using System;
 
 using System.Collections;
@@ -29,13 +31,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		public void Dump(object element)
+		public void Dump(HttpStatusCode code, object element)
 		{
 			if (this.IsEnabled)
 			{
+				var statusCode = "Http response code: " + code + "\n";
 				var dump = Dumper.DumpElement (element);
 
-				Logger.LogToConsole (dump);
+				Logger.LogToConsole (statusCode + dump);
 			}
 		}
 
