@@ -57,6 +57,8 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Core\CoreWorkerPool.cs" />
+    <Compile Include="Core\Databases\DatabaseManager.cs" />
+    <Compile Include="Core\Databases\Database`1.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
     <Compile Include="Layout\Tile\EntityValue.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Core\AuthenticationManager.cs" />
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="NancyHosting\Dumper.cs" />
+    <Compile Include="Core\Databases\Database.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache.cs" />

@@ -1,4 +1,5 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+﻿using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
 
 using System;
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.authenticationManager = new AuthenticationManager (coreWorkerPool);
 			this.propertyAccessorCache = new PropertyAccessorCache ();
 			this.autoCreatorCache = new AutoCreatorCache ();
+			this.databaseManager = new DatabaseManager ();
 		}
 
 
@@ -59,6 +61,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		internal DatabaseManager DatabaseManager
+		{
+			get
+			{
+				return this.databaseManager;
+			}
+		}
+
+
 		public void Dispose()
 		{
 			this.coreWorkerPool.Dispose ();
@@ -77,6 +88,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 
 		private readonly AutoCreatorCache autoCreatorCache;
+
+
+		private readonly DatabaseManager databaseManager;
 
 
 	}
