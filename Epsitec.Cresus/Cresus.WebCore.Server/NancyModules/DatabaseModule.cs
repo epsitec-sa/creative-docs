@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var entity = Tools.ResolveEntity (businessContext, entityId);
 
-				DatabasesModule.DeleteEntity (businessContext, entity, databaseType);
+				sucess = DatabasesModule.DeleteEntity (businessContext, entity, databaseType);
 
 				if (!sucess)
 				{
