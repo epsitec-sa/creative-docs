@@ -93,8 +93,11 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
   createEntity: function(callback) {
     this.setLoading();
     Ext.Ajax.request({
-      url: 'proxy/database/create/' + this.databaseName,
+      url: 'proxy/database/create',
       method: 'POST',
+      params: {
+        databaseName: this.databaseName
+      },
       callback: function(options, success, response) {
         this.createEntityCallback(success, response, callback);
       },
@@ -124,6 +127,7 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
       url: 'proxy/database/delete',
       method: 'POST',
       params: {
+        databaseName: this.databaseName,
         entityIds: entityItems.map(function(e) { return e.id; }).join(';')
       },
       callback: function(options, success, response) {

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/list"] = p => this.GetDatabaseList ();
 			Get["/get/{name}"] = p => this.Execute (b => this.GetDatabase (b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
-			Post["/create/{name}"] = p => this.Execute (b => this.CreateEntity (b, p));
+			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
 
 
@@ -158,6 +158,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response DeleteEntities(BusinessContext businessContext)
 		{
+			string databaseName = Request.Form.databaseName;
+			var databaseType = Tools.ParseType (databaseName);
+
 			string rawEntityIds = Request.Form.entityIds;
 			var entityIds = rawEntityIds.Split (";");
 
@@ -167,10 +170,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var entity = Tools.ResolveEntity (businessContext, entityId);
 
-				using (businessContext.Bind (entity))
-				{
-					sucess = businessContext.DeleteEntity (entity);
-				}
+				DatabasesModule.DeleteEntity (businessContext, entity, databaseType);
 
 				if (!sucess)
 				{
@@ -189,14 +189,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response CreateEntity(BusinessContext businessContext, dynamic parameters)
+		private Response CreateEntity(BusinessContext businessContext)
 		{
 			// TODO This implementation is very simple and will only work if the entity that will be
 			// created is not of an abstract type. If it is an abstract entity, probable that an
 			// entity of the wrong type will be created. Probably that we should implement something
 			// with the CreationControllers.
 
-			string databaseName = parameters.name;
+			string databaseName = Request.Form.databaseName;
 			var databaseType = Tools.ParseType (databaseName);
 
 			var entity = DatabasesModule.CreateEntity (businessContext, databaseType);
@@ -250,6 +250,25 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			where T : AbstractEntity, new()
 		{
 			return businessContext.DataContext.GetCount (new T ());
+		}
+
+
+		private static bool DeleteEntity(BusinessContext businessContext, AbstractEntity entity, Type entityType)
+		{
+			var methodName = "DeleteEntityImplementation";
+			var arguments = new object[] { businessContext, entity };
+
+			return DatabasesModule.InvokeGenericMethod<bool> (methodName, entityType, arguments);
+		}
+
+
+		private static bool DeleteEntityImplementation<T>(BusinessContext businessContext, AbstractEntity entity)
+			where T : AbstractEntity, new ()
+		{
+			using (businessContext.Bind (entity))
+			{
+				return businessContext.DeleteEntity (entity);
+			}
 		}
 
 
