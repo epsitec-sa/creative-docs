@@ -18,6 +18,13 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 	/// </summary>
 	public sealed class EntityDataColumn
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityDataColumn"/> class. This should
+		/// not be called directly. Use <see cref="EntityDataMetadataRecorder.Column"/> instead.
+		/// </summary>
+		/// <param name="lambda">The lambda expression (as an expression, not as compiled code).</param>
+		/// <param name="converter">The converter.</param>
+		/// <param name="sortOrder">The sort order.</param>
 		internal EntityDataColumn(LambdaExpression lambda, EntityDataColumnConverter converter, SortOrder sortOrder)
 		{
 			this.lambda    = lambda;
