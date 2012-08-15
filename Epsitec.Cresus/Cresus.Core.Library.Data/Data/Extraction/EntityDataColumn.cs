@@ -22,13 +22,13 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// Initializes a new instance of the <see cref="EntityDataColumn"/> class. This should
 		/// not be called directly. Use <see cref="EntityDataMetadataRecorder.Column"/> instead.
 		/// </summary>
-		/// <param name="lambda">The lambda expression (as an expression, not as compiled code).</param>
+		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="sortOrder">The sort order.</param>
-		internal EntityDataColumn(LambdaExpression lambda, SortOrder sortOrder)
+		internal EntityDataColumn(LambdaExpression expression, SortOrder sortOrder)
 		{
-			this.lambda    = lambda;
-			this.sortOrder = sortOrder;
-			this.name      = TextFormatter.FormatText (EntityInfo.GetFieldCaption (lambda));
+			this.expression = expression;
+			this.sortOrder  = sortOrder;
+			this.name       = TextFormatter.FormatText (EntityInfo.GetFieldCaption (expression));
 		}
 
 
@@ -42,16 +42,16 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 		
-		public LambdaExpression					Lambda
+		public LambdaExpression					Expression
 		{
 			get
 			{
-				return this.lambda;
+				return this.expression;
 			}
 		}
 
 
-		private readonly LambdaExpression		lambda;
+		private readonly LambdaExpression		expression;
 		private readonly FormattedText			name;
 		private readonly SortOrder				sortOrder;
 	}

@@ -157,9 +157,9 @@ namespace Epsitec.Cresus.Core.Data
 
 			foreach (var column in this.sortColumns)
 			{
-				var fieldPath   = ExpressionAnalyzer.ExplodeLambda (column.Lambda, trimCount: 1);
+				var fieldPath   = ExpressionAnalyzer.ExplodeLambda (column.Expression, trimCount: 1);
 				var fieldEntity = EntityInfo.WalkEntityGraph (example, fieldPath, NullNodeAction.CreateMissing);
-				var fieldId     = EntityInfo.GetFieldCaption (column.Lambda).Id;
+				var fieldId     = EntityInfo.GetFieldCaption (column.Expression).Id;
 				
 				var fieldNode = new ValueField (fieldEntity, fieldId);
 				
