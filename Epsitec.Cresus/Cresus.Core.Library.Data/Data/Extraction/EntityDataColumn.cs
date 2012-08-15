@@ -24,11 +24,12 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// </summary>
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="sortOrder">The sort order.</param>
-		internal EntityDataColumn(LambdaExpression expression, SortOrder sortOrder)
+		/// <param name="name">The name associated with the column.</param>
+		internal EntityDataColumn(LambdaExpression expression, SortOrder sortOrder, FormattedText name)
 		{
 			this.expression = expression;
 			this.sortOrder  = sortOrder;
-			this.name       = TextFormatter.FormatText (EntityInfo.GetFieldCaption (expression));
+			this.name       = name.IsNotNull () ? name : TextFormatter.FormatText (EntityInfo.GetFieldCaption (expression));
 		}
 
 

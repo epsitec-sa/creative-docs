@@ -9,6 +9,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
@@ -41,13 +42,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <typeparam name="TField">The type of the field.</typeparam>
 		/// <param name="expression">The expression.</param>
 		/// <param name="sortOrder">The sort order.</param>
+		/// <param name="name">The user-friendly name of the column.</param>
 		/// <returns>
 		/// Self, so that fluent interfaces can be used.
 		/// </returns>
-		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending)
+		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 			where TField : struct
 		{
-			this.Add (new EntityDataColumn (expression, sortOrder));
+			this.Add (new EntityDataColumn (expression, sortOrder, name));
 			return this;
 		}
 
@@ -57,13 +59,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <typeparam name="TField">The type of the field.</typeparam>
 		/// <param name="expression">The expression.</param>
 		/// <param name="sortOrder">The sort order.</param>
+		/// <param name="name">The user-friendly name of the column.</param>
 		/// <returns>
 		/// Self, so that fluent interfaces can be used.
 		/// </returns>
-		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending)
+		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 			where TField : struct
 		{
-			this.Add (new EntityDataColumn (expression, sortOrder));
+			this.Add (new EntityDataColumn (expression, sortOrder, name));
 			return this;
 		}
 
@@ -71,10 +74,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// Declares a column accessor.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
-		/// <returns>Self, so that fluent interfaces can be used.</returns>
-		public EntityDataMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending)
+		/// <param name="sortOrder">The sort order.</param>
+		/// <param name="name">The user-friendly name of the column.</param>
+		/// <returns>
+		/// Self, so that fluent interfaces can be used.
+		/// </returns>
+		public EntityDataMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 		{
-			this.Add (new EntityDataColumn (expression, sortOrder));
+			this.Add (new EntityDataColumn (expression, sortOrder, name));
 			return this;
 		}
 

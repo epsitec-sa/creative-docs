@@ -105,6 +105,16 @@ namespace Epsitec.Common.Types
 			return this.text.IsNullOrWhiteSpace ();
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance represents a non-null
+		/// text.
+		/// </summary>
+		/// <value><c>false</c> if this instance represents a null text; otherwise, <c>true</c>.</value>
+		public bool IsNotNull()
+		{
+			return this.text != null;
+		}
+
 		
 		public FormattedText GetValueOrDefault(params FormattedText[] defaultTexts)
 		{
