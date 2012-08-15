@@ -23,41 +23,15 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// not be called directly. Use <see cref="EntityDataMetadataRecorder.Column"/> instead.
 		/// </summary>
 		/// <param name="lambda">The lambda expression (as an expression, not as compiled code).</param>
-		/// <param name="converter">The converter.</param>
 		/// <param name="sortOrder">The sort order.</param>
-		internal EntityDataColumn(LambdaExpression lambda, EntityDataColumnConverter converter, SortOrder sortOrder)
+		internal EntityDataColumn(LambdaExpression lambda, SortOrder sortOrder)
 		{
 			this.lambda    = lambda;
-			this.converter = converter;
 			this.sortOrder = sortOrder;
 			this.name      = TextFormatter.FormatText (EntityInfo.GetFieldCaption (lambda));
 		}
 
 
-
-		public EntityDataColumnConverter		Converter
-		{
-			get
-			{
-				return this.converter;
-			}
-		}
-
-		public EntityDataType					DataType
-		{
-			get
-			{
-				return this.converter.DataType;
-			}
-		}
-
-		public bool								IsNumeric
-		{
-			get
-			{
-				return this.converter.IsNumeric;
-			}
-		}
 
 		public SortOrder						SortOrder
 		{
@@ -68,30 +42,6 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 		
-		public int								TextualIndex
-		{
-			get
-			{
-				return this.textualIndex;
-			}
-			internal set
-			{
-				this.textualIndex = value;
-			}
-		}
-		
-		public int								NumericIndex
-		{
-			get
-			{
-				return this.numericIndex;
-			}
-			internal set
-			{
-				this.numericIndex = value;
-			}
-		}
-
 		public LambdaExpression					Lambda
 		{
 			get
@@ -101,12 +51,8 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 
-		private readonly LambdaExpression			lambda;
-		private readonly EntityDataColumnConverter	converter;
-		private readonly FormattedText				name;
-		private readonly SortOrder					sortOrder;
-		
-		private int								textualIndex;
-		private int								numericIndex;
+		private readonly LambdaExpression		lambda;
+		private readonly FormattedText			name;
+		private readonly SortOrder				sortOrder;
 	}
 }

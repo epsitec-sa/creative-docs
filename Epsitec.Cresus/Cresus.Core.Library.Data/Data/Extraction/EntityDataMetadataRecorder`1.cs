@@ -47,8 +47,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending)
 			where TField : struct
 		{
-			var func = expression.Compile ();
-			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func), sortOrder));
+			this.Add (new EntityDataColumn (expression, sortOrder));
 			return this;
 		}
 
@@ -64,8 +63,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending)
 			where TField : struct
 		{
-			var func = expression.Compile ();
-			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func), sortOrder));
+			this.Add (new EntityDataColumn (expression, sortOrder));
 			return this;
 		}
 
@@ -76,8 +74,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <returns>Self, so that fluent interfaces can be used.</returns>
 		public EntityDataMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending)
 		{
-			var func = expression.Compile ();
-			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func), sortOrder));
+			this.Add (new EntityDataColumn (expression, sortOrder));
 			return this;
 		}
 
