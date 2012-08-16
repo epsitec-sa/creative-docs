@@ -5,36 +5,23 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   /* Config */
 
   border: true,
-  selModel: {
-    selType: 'rowmodel',
-    allowDeselect: true,
-    mode: 'SINGLE'
-  },
   viewConfig: {
     emptyText: 'Nothing to display'
   },
   sortableColumns: false,
-  columns: [
-    {
-      xtype: 'rownumberer',
-      width: 35
-    },
-    {
-      text: 'Summary',
-      flex: 1,
-      dataIndex: 'summary'
-    }
-  ],
 
   /* Properties */
 
   databaseName: null,
+  onSelectionChangeCallback: null,
 
   /* Constructor */
 
   constructor: function(options) {
     var newOptions = {
-      store: this.getStore(options.databaseName),
+      store: this.getStore(options.databaseName, options.fields),
+      selModel: this.getSelModel(options),
+      onSelectionChangeCallback: options.onSelectionChange,
       listeners: {
         selectionchange: this.onSelectionChangeHandler,
         scope: this
@@ -48,9 +35,25 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Additional methods */
 
-  getStore: function(databaseName) {
+  getSelModel: function(options) {
+    if (options.multiSelect) {
+      return {
+        type: 'rowmodel',
+        mode: 'MULTI'
+      };
+    }
+    else {
+      return {
+        selType: 'rowmodel',
+        allowDeselect: true,
+        mode: 'SINGLE'
+      };
+    }
+  },
+
+  getStore: function(databaseName, fields) {
     return Ext.create('Ext.data.Store', {
-      model: 'Epsitec.cresus.webcore.EntityListItem',
+      fields: fields,
       autoLoad: true,
       pageSize: 100,
       remoteSort: true,
@@ -69,11 +72,11 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   onSelectionChangeHandler: function(view, selection, options) {
     var entityItems = this.getItems(selection);
-    this.onSelectionChange(entityItems);
-  },
 
-  // To be overriden in derived classes.
-  onSelectionChange: function(entityItems) { },
+    if (this.onSelectionChangeCallback !== null) {
+      this.onSelectionChangeCallback.execute([entityItems]);
+    }
+  },
 
   getSelectedItems: function() {
     var selection = this.getSelectionModel().getSelection();
@@ -81,6 +84,13 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   },
 
   getItems: function(selection) {
-    return selection.map(function(e) { return e.toItem(); });
+    return selection.map(this.getItem);
+  },
+
+  getItem: function(row) {
+    return {
+      id: row.get('id'),
+      summary: row.get('summary')
+    };
   }
 });

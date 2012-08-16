@@ -11,27 +11,55 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
   leftList: null,
   rightPanel: null,
   columns: null,
+  database: null,
 
   /* Constructor */
 
   constructor: function(options) {
-    this.callParent(arguments);
+    this.callParent([options]);
 
     this.columns = [];
+    this.title = this.database.title;
+    this.leftList = this.createLeftList(this.database);
+    this.rightPanel = this.createRightPanel();
 
-    var database = options.database;
+    this.add([this.leftList, this.rightPanel]);
 
-    this.title = database.title;
+    return this;
+  },
 
-    this.leftList = Ext.create('Epsitec.LeftEntityList', {
+  /* Additional methods */
+
+  createLeftList: function(database) {
+    var callback, listOptions, containerOptions;
+
+    callback = Epsitec.Callback.create(this.onEntityListSelectionChange, this);
+
+    listOptions = {
       databaseName: database.name,
+      editable: true,
+      multiSelect: false,
+      onSelectionChange: callback
+    };
+
+    containerOptions = {
       region: 'west',
       margin: 5,
-      width: 250,
-      columnManager: this
-    });
+      width: 250
+    };
 
-    this.rightPanel = Ext.create('Ext.panel.Panel', {
+    return Epsitec.EntityListPanel.create(listOptions, containerOptions);
+  },
+
+  onEntityListSelectionChange: function(entityItems) {
+    this.removeAllColumns();
+    if (entityItems.length === 1) {
+      this.addEntityColumn('1', 'null', entityItems[0].id);
+    }
+  },
+
+  createRightPanel: function() {
+    return Ext.create('Ext.panel.Panel', {
       region: 'center',
       margin: '5',
       layout: {
@@ -45,13 +73,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
       },
       autoScroll: true
     });
-
-    this.add([this.leftList, this.rightPanel]);
-
-    return this;
   },
-
-  /* Additional methods */
 
   // The arguments parentColumn and callbackQueue are optional.
   addEntityColumn: function(
