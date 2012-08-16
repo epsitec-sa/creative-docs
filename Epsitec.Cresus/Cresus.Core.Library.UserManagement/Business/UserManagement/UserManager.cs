@@ -58,7 +58,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
-
+		
+		/// <summary>
+		/// Gets the user manager instance for the executing thread.
+		/// </summary>
 		public static UserManager				Current
 		{
 			get
