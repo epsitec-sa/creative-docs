@@ -19,8 +19,8 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   constructor: function(options) {
     var newOptions = {
-      store: this.getStore(options.databaseName, options.fields),
-      selModel: this.getSelModel(options),
+      store: this.createStore(options.databaseName, options.fields),
+      selModel: this.createSelModel(options),
       onSelectionChangeCallback: options.onSelectionChange,
       listeners: {
         selectionchange: this.onSelectionChangeHandler,
@@ -35,7 +35,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Additional methods */
 
-  getSelModel: function(options) {
+  createSelModel: function(options) {
     if (options.multiSelect) {
       return {
         type: 'rowmodel',
@@ -51,7 +51,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     }
   },
 
-  getStore: function(databaseName, fields) {
+  createStore: function(databaseName, fields) {
     return Ext.create('Ext.data.Store', {
       fields: fields,
       autoLoad: true,
