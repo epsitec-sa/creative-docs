@@ -3,6 +3,8 @@
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
+
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
@@ -12,6 +14,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using System.Collections;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -31,6 +34,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (coreServer, "/database")
 		{
 			Get["/list"] = p => this.GetDatabaseList ();
+			Get["/columns/{name}"] = p => this.GetColumnList(p);
 			Get["/get/{name}"] = p => this.Execute (b => this.GetDatabase (b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
@@ -52,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Dictionary<string, object> GetDatabaseData(Epsitec.Cresus.WebCore.Server.Core.Databases.Database database)
+		private Dictionary<string, object> GetDatabaseData(Core.Databases.Database database)
 		{
 			return new Dictionary<string, object> ()
 			{
@@ -60,6 +64,61 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			    { "name", database.Name },
 			    { "cssClass", database.IconClass },
 			};
+		}
+
+
+		private Response GetColumnList(dynamic parameters)
+		{
+			string databaseName = parameters.name;
+			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
+
+			var columns = database.Columns
+				.Select (c => this.GetColumnData (c))
+				.ToList ();
+
+			var content = new Dictionary<string, object> ()
+			{
+				{ "columns", columns },
+			};
+
+			return CoreResponse.Success (content);
+		}
+
+
+
+		private Dictionary<string, object> GetColumnData(Column column)
+		{
+			return new Dictionary<string, object> ()
+			{
+				{ "title", column.Title },
+				{ "name", column.Name },
+				{ "type", this.GetColumnTypeData(column.Type) },
+			};
+		}
+
+
+		private string GetColumnTypeData(ColumnType type)
+		{
+			switch (type)
+			{
+				case ColumnType.Boolean:
+					return "boolean";
+
+				case ColumnType.Date:
+					return "date";
+
+				case ColumnType.Integer:
+					return "int";
+
+				case ColumnType.Number:
+					return "float";
+
+				case ColumnType.String:
+					return "string";
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 

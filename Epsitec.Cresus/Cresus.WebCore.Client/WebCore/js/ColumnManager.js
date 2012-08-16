@@ -31,24 +31,22 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
   /* Additional methods */
 
   createLeftList: function(database) {
-    var callback, listOptions, containerOptions;
-
-    callback = Epsitec.Callback.create(this.onEntityListSelectionChange, this);
-
-    listOptions = {
-      databaseName: database.name,
-      editable: true,
-      multiSelect: false,
-      onSelectionChange: callback
-    };
-
-    containerOptions = {
-      region: 'west',
-      margin: 5,
-      width: 250
-    };
-
-    return Epsitec.EntityListPanel.create(listOptions, containerOptions);
+    return Ext.create('Epsitec.EntityListPanel', {
+      list: {
+        databaseName: database.name,
+        editable: true,
+        multiSelect: false,
+        onSelectionChange: Epsitec.Callback.create(
+            this.onEntityListSelectionChange,
+            this
+        )
+      },
+      container: {
+        region: 'west',
+        margin: 5,
+        width: 250
+      }
+    });
   },
 
   onEntityListSelectionChange: function(entityItems) {

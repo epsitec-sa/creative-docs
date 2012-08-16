@@ -6,6 +6,10 @@ Ext.define('Epsitec.cresus.webcore.Tools', {
       return typeof item === 'undefined';
     },
 
+    isArrayEmpty: function(array) {
+      return array && array.length === 0;
+    },
+
     getValueOrDefault: function(value, defaultValue) {
       return this.isUndefined(value) ?
           defaultValue : value;

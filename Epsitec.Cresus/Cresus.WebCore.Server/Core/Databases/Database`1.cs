@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(string title, string name, string iconClass)
-			: base (title, name, iconClass)
+		public Database(string title, string name, string iconClass, IEnumerable<Column> columns)
+			: base (title, name, iconClass, columns)
 		{
 		}
 
@@ -29,11 +29,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			var id = Tools.GetEntityId (businessContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
 
-			return new Dictionary<string, object> ()
+			var data = new Dictionary<string, object> ()
 			{
 				{ "id", id },
 				{ "summary", summary },
 			};
+
+			foreach (var column in this.Columns)
+			{
+				var name = column.Name;
+				var value = column.GetValue (entity);
+
+				data[name] = value;
+			}
+
+			return data;
 		}
 
 

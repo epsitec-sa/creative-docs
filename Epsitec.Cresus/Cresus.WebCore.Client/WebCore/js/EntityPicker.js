@@ -35,14 +35,15 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
   /* Additional methods */
 
   createEntityListPanel: function(options) {
-    var listOptions = {
-      databaseName: options.databaseName,
-      editable: false,
-      multiSelect: options.multiSelect,
-      onSelectionChange: null
-    };
-
-    return Epsitec.EntityListPanel.create(listOptions, []);
+    return Ext.create('Epsitec.EntityListPanel', {
+      container: {},
+      list: {
+        databaseName: options.databaseName,
+        editable: false,
+        multiSelect: options.multiSelect,
+        onSelectionChange: null
+      }
+    });
   },
 
   createCancelButton: function() {

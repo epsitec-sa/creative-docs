@@ -49,20 +49,120 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private IEnumerable<Database> CreateAiderDatabases()
 		{
-			yield return Database.Create<AiderCountryEntity, CountryEntity> ("Countries", "Base.Country");
-			yield return Database.Create<AiderTownEntity, LocationEntity> ("Towns", "Base.Location");
-			yield return Database.Create<AiderAddressEntity, AiderAddressEntity> ("Addresses", "Data.AiderAddress");
-			yield return Database.Create<AiderHouseholdEntity, AiderHouseholdEntity> ("Households", "Data.AiderHousehold");
-			yield return Database.Create<AiderPersonEntity, AiderPersonEntity> ("Persons", "Base.AiderPerson");
-			yield return Database.Create<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity> ("Relationships", "Base.AiderPersonRelationship");
+			yield return Database.Create<AiderCountryEntity, CountryEntity>
+			(
+				title: "Countries",
+				iconUri: "Base.Country",
+				columns: new List<Column> ()
+				{
+					new Column
+					(
+						title: "Name",
+						name: "Name",
+						type: ColumnType.String ,
+						valueGetter: x => ((AiderCountryEntity) x).Name
+					),
+					new Column
+					(
+						title: "Code",
+						name: "Code",
+						type: ColumnType.String ,
+						valueGetter: x => ((AiderCountryEntity) x).IsoCode
+					),
+				}
+			);
+
+			yield return Database.Create<AiderTownEntity, LocationEntity>
+			(
+				title: "Towns",
+				iconUri: "Base.Location",
+				columns: new List<Column> ()
+				{
+					new Column
+					(
+						title: "Name",
+						name: "Name",
+						type: ColumnType.String ,
+						valueGetter: x => ((AiderTownEntity) x).Name
+					),
+					new Column
+					(
+						title: "Country",
+						name: "Country",
+						type: ColumnType.String ,
+						valueGetter: x => ((AiderTownEntity) x).Country.Name
+					),
+				}
+			);
+
+			yield return Database.Create<AiderAddressEntity, AiderAddressEntity>
+			(
+				title: "Addresses",
+				iconUri: "Data.AiderAddress",
+				columns: new List<Column> ()
+			);
+
+			yield return Database.Create<AiderHouseholdEntity, AiderHouseholdEntity>
+			(
+				title: "Households",
+				iconUri: "Data.AiderHousehold",
+				columns: new List<Column> ()
+			);
+
+			yield return Database.Create<AiderPersonEntity, AiderPersonEntity>
+			(
+				title: "Persons",
+				iconUri: "Base.AiderPerson",
+				columns: new List<Column> ()
+				{
+					new Column
+					(
+						title: "FirstName",
+						name: "FirstName",
+						type: ColumnType.String ,
+						valueGetter: x => ((AiderPersonEntity) x).eCH_Person.PersonFirstNames
+					),
+					new Column
+					(
+						title: "LastName",
+						name: "LastName",
+						type: ColumnType.String ,
+						valueGetter: x => ((AiderPersonEntity) x).eCH_Person.PersonOfficialName
+					),
+				}
+			);
+
+			yield return Database.Create<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity>
+			(
+				title: "Relationships",
+				iconUri: "Base.AiderPersonRelationship",
+				columns: new List<Column> ()
+			);
 		}
 
 
 		private IEnumerable<Database> CreateCoreDatabases()
 		{
-			yield return Database.Create<CustomerEntity, CustomerEntity> ("Clients", "Base.Customer");
-			yield return Database.Create<ArticleDefinitionEntity, ArticleDefinitionEntity> ("Articles", "Base.ArticleDefinition");
-			yield return Database.Create<PersonGenderEntity, PersonGenderEntity> ("Genres", "Base.PersonGender");
+			yield return Database.Create<CustomerEntity, CustomerEntity> 
+			(
+				title: "Clients",
+				iconUri: "Base.Customer",
+				columns: new List<Column> ()
+			);
+
+			yield return Database.Create<ArticleDefinitionEntity, ArticleDefinitionEntity> 
+			(
+				title: "Articles",
+				iconUri: "Base.ArticleDefinition",
+				columns: new List<Column> ()
+			);
+
+			yield return Database.Create<PersonGenderEntity, PersonGenderEntity> 
+			(
+				title: "Genres",
+				iconUri: "Base.PersonGender",
+				columns: new List<Column> ()
+			);
 		}
 
 
