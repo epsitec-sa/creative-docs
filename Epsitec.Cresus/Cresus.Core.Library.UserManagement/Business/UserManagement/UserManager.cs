@@ -81,16 +81,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			//	Si on est dans le dialogue initial (celui qui s'affiche à l'exécution du logiciel),
 			//	et que l'utilisateur correspond à celui de la session Windows, on effectue le login
 			//	sans afficher le dialogue.
-			if (softwareStartup && user != null && user == this.FindActiveSystemUser ())
+			if ((softwareStartup) &&
+				(user != null) &&
+				(user == this.FindActiveSystemUser ()))
 			{
-				this.OnAuthenticatedUserChanging ();
-				this.authenticatedUser = user;
-				this.OnAuthenticatedUserChanged ();
-
+				this.SetAuthenticatedUser (user);
 				return true;
 			}
 
 			var dialog = new Dialogs.LoginDialog (application, user, softwareStartup);
+			
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
@@ -99,10 +99,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return false;
 			}
 
-			this.OnAuthenticatedUserChanging ();
-			this.authenticatedUser = dialog.SelectedUser;
-			this.OnAuthenticatedUserChanged ();
-
+			this.SetAuthenticatedUser (dialog.SelectedUser);
 			return true;
 		}
 
@@ -115,12 +112,30 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			if (user != null)
 			{
-				user = this.FindActiveUser (user.Code);
-
-				this.OnAuthenticatedUserChanging ();
-				this.authenticatedUser = user;
-				this.OnAuthenticatedUserChanged ();
+				this.SetAuthenticatedUser (user.Code);
 			}
+		}
+
+		/// <summary>
+		/// Sets the authenticated user, based on the user code.
+		/// </summary>
+		/// <param name="userCode">The user code.</param>
+		public void SetAuthenticatedUser(string userCode)
+		{
+			var user = this.FindActiveUser (userCode);
+			this.SetAuthenticatedUser (user);
+		}
+
+		/// <summary>
+		/// Sets the authenticated user, based on the user entity (which must belong to the user
+		/// manager's business context).
+		/// </summary>
+		/// <param name="user">The user.</param>
+		private void SetAuthenticatedUser(SoftwareUserEntity user)
+		{
+			this.OnAuthenticatedUserChanging ();
+			this.authenticatedUser = user;
+			this.OnAuthenticatedUserChanged ();
 		}
 
 

@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -14,6 +14,22 @@ namespace Epsitec.Cresus.Core.Data
 	{
 		public ItemCode(string code)
 		{
+			if (string.IsNullOrEmpty (code))
+			{
+				code = "";
+			}
+			else
+			{
+				if (code.IndexOf (' ') < 0)
+				{
+					//	OK, no space found in code or name.
+				}
+				else
+				{
+					throw new System.FormatException ("ItemCode may not contain spaces");
+				}
+			}
+
 			this.code = code;
 		}
 

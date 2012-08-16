@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Data
 	/// The <c>ConnectionUserIdentity</c> class represents the user identity attached to a
 	/// database connection.
 	/// </summary>
-	public class ConnectionUserIdentity : System.IEquatable<ConnectionUserIdentity>
+	public sealed class ConnectionUserIdentity : System.IEquatable<ConnectionUserIdentity>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ConnectionUserIdentity"/> class
@@ -32,7 +32,11 @@ namespace Epsitec.Cresus.Core.Data
 			var coreVersion = typeof (CoreData).Assembly.GetVersionString ();
 			var processId   = System.Diagnostics.Process.GetCurrentProcess ().Id.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-			this.data = string.Concat (userCode, " ", userName, "@", machineName, "/pid={", processId, "}/OS={", osVersion, "}/CLR={", clrVersion, "}/Core={", coreVersion, "}");
+			this.data = string.Concat (userCode, " ", userName, "@", machineName,
+				/**/				   "/pid={", processId, "}",
+				/**/				   "/OS={", osVersion, "}",
+				/**/				   "/CLR={", clrVersion, "}",
+				/**/				   "/Core={", coreVersion, "}");
 		}
 
 		private ConnectionUserIdentity(string data)
@@ -54,6 +58,8 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
+				//	"code user@machine/..."
+				//	      ^^^^
 				return this.data.Split (' ')[1].Split ('/')[0].Split ('@')[0];
 			}
 		}
@@ -62,6 +68,8 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
+				//	"code user@machine/..."
+				//	           ^^^^^^^
 				return this.data.Split (' ')[1].Split ('/')[0].Split ('@')[1];
 			}
 		}
@@ -78,9 +86,9 @@ namespace Epsitec.Cresus.Core.Data
 				(value.Contains (" ") == false) ||
 				(value.Contains ("@") == false) ||
 				(value.Contains ("/") == false))
-            {
+			{
 				throw new System.FormatException ("Invalid connection user identity format");
-            }
+			}
 
 			return new ConnectionUserIdentity (value);
 		}
