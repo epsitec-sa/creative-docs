@@ -4,7 +4,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   /* Config */
 
-  border: true,
+  border: false,
   viewConfig: {
     emptyText: 'Nothing to display'
   },
