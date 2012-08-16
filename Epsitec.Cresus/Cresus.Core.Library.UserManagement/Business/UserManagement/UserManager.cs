@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				(user != null) &&
 				(user == this.FindActiveSystemUser ()))
 			{
-				this.SetAuthenticatedUser (user);
+				this.SetAuthenticatedUser (user, NotificationMode.OnChange);
 				return true;
 			}
 
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return false;
 			}
 
-			this.SetAuthenticatedUser (dialog.SelectedUser);
+			this.SetAuthenticatedUser (dialog.SelectedUser, NotificationMode.OnChange);
 			return true;
 		}
 
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			if (user != null)
 			{
-				this.SetAuthenticatedUser (user.Code);
+				this.SetAuthenticatedUser (user.Code, NotificationMode.Always);
 			}
 		}
 
@@ -122,8 +122,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <param name="userCode">The user code.</param>
 		public void SetAuthenticatedUser(string userCode)
 		{
+			this.SetAuthenticatedUser (userCode, NotificationMode.OnChange);
+		}
+
+		private void SetAuthenticatedUser(string userCode, NotificationMode notificationMode)
+		{
 			var user = this.FindActiveUser (userCode);
-			this.SetAuthenticatedUser (user);
+			this.SetAuthenticatedUser (user, notificationMode);
 		}
 
 		/// <summary>
@@ -131,13 +136,18 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// manager's business context).
 		/// </summary>
 		/// <param name="user">The user.</param>
-		private void SetAuthenticatedUser(SoftwareUserEntity user)
+		private void SetAuthenticatedUser(SoftwareUserEntity user, NotificationMode notificationMode)
 		{
+			if ((this.authenticatedUser == user) &&
+				(notificationMode == NotificationMode.OnChange))
+			{
+				return;
+			}
+
 			this.OnAuthenticatedUserChanging ();
 			this.authenticatedUser = user;
 			this.OnAuthenticatedUserChanged ();
 		}
-
 
 		/// <summary>
 		/// Indicates whether the authenticated user has the required power level.
@@ -260,23 +270,41 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
-		public SoftwareUserEntity FindUser(string username)
+		/// <summary>
+		/// Finds the user based on his login name.
+		/// </summary>
+		/// <param name="loginName">The user name.</param>
+		/// <returns></returns>
+		public SoftwareUserEntity FindUser(string loginName)
 		{
 			var softwareUserRepository = this.Host.GetRepository<SoftwareUserEntity> ();
 
 			var example = softwareUserRepository.CreateExample();
-			example.LoginName = username;
+			example.LoginName = loginName;
 
 			return softwareUserRepository.GetByExample (example).FirstOrDefault ();
 		}
 
-
+		/// <summary>
+		/// Gets the user summary for the authenticated user.
+		/// </summary>
+		/// <returns>The <see cref="UserSummary"/>.</returns>
 		public UserSummary GetUserSummary()
 		{
 			return new UserSummary (this.AuthenticatedUser);
 		}
 
-		
+
+		#region NotificationMode Enumeration
+
+		private enum NotificationMode
+		{
+			OnChange,
+			Always,
+		}
+
+		#endregion
+
 		
 		private SoftwareUserEntity FindActiveUser(string userCode)
 		{
@@ -284,13 +312,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
-		public bool CheckUserAuthentication(string username, string password)
+		public bool CheckUserAuthentication(string loginName, string password)
 		{
 			bool isValid = false;
 
-			if (!string.IsNullOrEmpty (username) && !string.IsNullOrEmpty (password))
+			if (!string.IsNullOrEmpty (loginName) && !string.IsNullOrEmpty (password))
 			{
-				var user = this.FindUser (username);
+				var user = this.FindUser (loginName);
 
 				if (user != null)
 				{
@@ -387,11 +415,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		#endregion
 
-		public event EventHandler AuthenticatedUserChanging;
-		public event EventHandler AuthenticatedUserChanged;
+		public event EventHandler				AuthenticatedUserChanging;
+		public event EventHandler				AuthenticatedUserChanged;
 
 
-		private SoftwareUserEntity			authenticatedUser;
-		private IBusinessContext			businessContext;
+		private SoftwareUserEntity				authenticatedUser;
+		private IBusinessContext				businessContext;
 	}
 }
