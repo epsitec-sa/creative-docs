@@ -50,47 +50,29 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
   },
 
   onCreateHandler: function() {
-    var callback = Epsitec.Callback.create(
-        function(entityItem) { this.onCreate(entityItem); },
-        this
-        );
-    this.createEntity(callback);
+    this.createEntity();
   },
 
-  // To be overriden in derived classes.
-  onCreate: function(entityItem) { },
-
   onDeleteHandler: function() {
-    var entityItems, callback;
+    var entityItems;
 
     entityItems = this.getSelectedItems();
     if (entityItems.length === 0) {
       return;
     }
 
-    callback = Epsitec.Callback.create(
-        function(items) { this.onDelete(items); },
-        this
-        );
-    this.deleteEntities(entityItems, callback);
+    this.deleteEntities(entityItems);
   },
-
-  // To be overriden in derived classes.
-  onDelete: function(entityItems) { },
 
   onRefreshHandler: function() {
     this.reloadStore();
-    this.onRefresh();
   },
-
-  // To be overriden in derived classes.
-  onRefresh: function() { },
 
   reloadStore: function() {
     this.store.reload();
   },
 
-  createEntity: function(callback) {
+  createEntity: function() {
     this.setLoading();
     Ext.Ajax.request({
       url: 'proxy/database/create',
@@ -98,46 +80,12 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
       params: {
         databaseName: this.databaseName
       },
-      callback: function(options, success, response) {
-        this.createEntityCallback(success, response, callback);
-      },
+      callback: this.createEntityCallback,
       scope: this
     });
   },
 
-  createEntityCallback: function(success, response, callback) {
-    var json, entityItem;
-
-    this.setLoading(false);
-
-    json = Epsitec.Tools.processResponse(success, response);
-    if (json === null) {
-      return;
-    }
-
-    this.reloadStore();
-
-    entityItem = json.content;
-    callback.execute([entityItem]);
-  },
-
-  deleteEntities: function(entityItems, callback) {
-    this.setLoading();
-    Ext.Ajax.request({
-      url: 'proxy/database/delete',
-      method: 'POST',
-      params: {
-        databaseName: this.databaseName,
-        entityIds: entityItems.map(function(e) { return e.id; }).join(';')
-      },
-      callback: function(options, success, response) {
-        this.deleteEntitiesCallback(success, response, callback, entityItems);
-      },
-      scope: this
-    });
-  },
-
-  deleteEntitiesCallback: function(success, response, callback, entityItems) {
+  createEntityCallback: function(options, success, response) {
     var json;
 
     this.setLoading(false);
@@ -148,7 +96,32 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
     }
 
     this.reloadStore();
+  },
 
-    callback.execute([entityItems]);
+  deleteEntities: function(entityItems) {
+    this.setLoading();
+    Ext.Ajax.request({
+      url: 'proxy/database/delete',
+      method: 'POST',
+      params: {
+        databaseName: this.databaseName,
+        entityIds: entityItems.map(function(e) { return e.id; }).join(';')
+      },
+      callback: this.deleteEntitiesCallback,
+      scope: this
+    });
+  },
+
+  deleteEntitiesCallback: function(options, success, response) {
+    var json;
+
+    this.setLoading(false);
+
+    json = Epsitec.Tools.processResponse(success, response);
+    if (json === null) {
+      return;
+    }
+
+    this.reloadStore();
   }
 });
