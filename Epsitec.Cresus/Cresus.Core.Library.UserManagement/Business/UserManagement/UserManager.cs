@@ -59,6 +59,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+		public static UserManager				Current
+		{
+			get
+			{
+				var coreData = CoreApp.FindCurrentAppSessionComponent<CoreData> ();
+				var userManager = coreData.GetComponent<UserManager> ();
+				return userManager;
+			}
+		}
+
 		/// <summary>
 		/// Authenticates the specified user. This will display a dialog to query for the
 		/// user name and/or password.
