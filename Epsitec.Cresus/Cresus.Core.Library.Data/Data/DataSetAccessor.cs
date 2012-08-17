@@ -145,26 +145,14 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
-
-			this.CreateSortRequest (request);
+			request.SortClauses.AddRange (this.CreateSortClauses (example));
 
 			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);
 		}
 
-		private void CreateSortRequest(Request request)
+		private IEnumerable<SortClause> CreateSortClauses(AbstractEntity example)
 		{
-			var example = request.RootEntity;
-
-			foreach (var column in this.sortColumns)
-			{
-				var fieldPath   = ExpressionAnalyzer.ExplodeLambda (column.Expression, trimCount: 1);
-				var fieldEntity = EntityInfo.WalkEntityGraph (example, fieldPath, NullNodeAction.CreateMissing);
-				var fieldId     = EntityInfo.GetFieldCaption (column.Expression).Id;
-				
-				var fieldNode = new ValueField (fieldEntity, fieldId);
-				
-				request.AddSortClause (fieldNode, column.SortOrder);
-			}
+			return this.sortColumns.Select (c => c.ToSortClause (example));
 		}
 
 		private int RetrieveItemCount()

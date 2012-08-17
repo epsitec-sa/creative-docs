@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="name">The name associated with the column.</param>
-		internal EntityDataColumn(LambdaExpression expression, SortOrder sortOrder, FormattedText name)
+		public EntityDataColumn(LambdaExpression expression, SortOrder sortOrder, FormattedText name)
 		{
 			this.expression = expression;
 			this.sortOrder  = sortOrder;
@@ -49,6 +49,18 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			{
 				return this.expression;
 			}
+		}
+
+
+		public SortClause ToSortClause(AbstractEntity example)
+		{
+			var fieldPath   = ExpressionAnalyzer.ExplodeLambda (this.Expression, trimCount: 1);
+			var fieldEntity = EntityInfo.WalkEntityGraph (example, fieldPath, NullNodeAction.CreateMissing);
+			var fieldId     = EntityInfo.GetFieldCaption (this.Expression).Id;
+
+			var fieldNode = new ValueField (fieldEntity, fieldId);
+
+			return new SortClause (fieldNode, sortOrder);
 		}
 
 
