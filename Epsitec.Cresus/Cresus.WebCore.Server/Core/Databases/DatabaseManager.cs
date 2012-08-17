@@ -4,6 +4,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using System;
 
 using System.Collections.Generic;
@@ -62,6 +64,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Name",
 						name: "Name",
 						type: ColumnType.String,
+						sortable: true,
+						sortOrder: SortOrder.Descending,
 						lambdaExpression: x => x.Name
 					),
 					Column.Create<AiderCountryEntity, string>
@@ -69,6 +73,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Code",
 						name: "Code",
 						type: ColumnType.String,
+						sortable: false,
+						sortOrder: null,
 						lambdaExpression: x => x.IsoCode
 					),
 				}
@@ -85,6 +91,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Name",
 						name: "Name",
 						type: ColumnType.String,
+						sortable: true,
+						sortOrder: null,
 						lambdaExpression: x => x.Name
 					),
 					Column.Create<AiderTownEntity, string>
@@ -92,6 +100,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Country",
 						name: "Country",
 						type: ColumnType.String,
+						sortable: true,
+						sortOrder: null,
 						lambdaExpression: x => x.Country.Name
 					),
 				}
@@ -122,6 +132,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "FirstName",
 						name: "FirstName",
 						type: ColumnType.String,
+						sortable: true,
+						sortOrder: null,
 						lambdaExpression: x => x.eCH_Person.PersonFirstNames
 					),
 					Column.Create<AiderPersonEntity, string>
@@ -129,6 +141,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "LastName",
 						name: "LastName",
 						type: ColumnType.String,
+						sortable: true,
+						sortOrder: null,
 						lambdaExpression: x => x.eCH_Person.PersonOfficialName
 					),
 				}

@@ -2,6 +2,8 @@
 
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.Core.Data.Extraction;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
@@ -9,6 +11,8 @@ using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using System;
 
 using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
@@ -51,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, int skip, int take)
+		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Tuple<string, SortOrder>> sortCriteria, int skip, int take)
 		{
 			var example = new T ();
 
@@ -62,13 +66,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				Take = take,
 			};
 
-			request.AddSortClause
-			(
-				InternalField.CreateId (example),
-				SortOrder.Ascending
-			);
+			request.SortClauses.AddRange (this.CreateSortClauses (example, sortCriteria));
 
 			return businessContext.DataContext.GetByRequest<T> (request);
+		}
+
+
+		private IEnumerable<SortClause> CreateSortClauses(T example, IEnumerable<Tuple<string, SortOrder>> sortCriteria)
+		{
+			foreach (var sortCriterium in sortCriteria)
+			{
+				var name = sortCriterium.Item1;
+				var sortOrder = sortCriterium.Item2;
+
+				var column = this.Columns.First (c => c.Name == name);
+				var entityDataColumn = new EntityDataColumn (column.LambdaExpression, sortOrder, column.Title);
+
+				yield return entityDataColumn.ToSortClause (example);
+			}
+
+			yield return new SortClause (InternalField.CreateId (example), SortOrder.Ascending);
 		}
 
 

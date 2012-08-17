@@ -2,6 +2,8 @@
 
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
 
@@ -84,7 +86,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-
 		private Dictionary<string, object> GetColumnData(Column column)
 		{
 			return new Dictionary<string, object> ()
@@ -92,6 +93,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				{ "title", column.Title },
 				{ "name", column.Name },
 				{ "type", this.GetColumnTypeData(column.Type) },
+				{ "sortable", column.Sortable },
+				{ "sortDirection", this.GetSortOrder (column.SortOrder) } 
 			};
 		}
 
@@ -121,6 +124,25 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		private string GetSortOrder(SortOrder? sortOrder)
+		{
+			switch (sortOrder)
+			{
+				case null:
+					return null;
+
+				case SortOrder.Ascending:
+					return "ASC";
+
+				case SortOrder.Descending:
+					return "DESC";
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
 		private Response GetDatabase(BusinessContext businessContext, dynamic parameters)
 		{
 			string databaseName = parameters.name;
@@ -128,12 +150,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
-			
+
+			string sort = Request.Query.sort;
+			var sortCriteria = this.ParseSortCriteria (sort);
 
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
 			var total = database.GetCount (businessContext);
-			var entities = database.GetEntities (businessContext, start, limit)
+			var entities = database.GetEntities (businessContext, sortCriteria, start, limit)
 				.Select (e => database.GetEntityData (businessContext, e, propertyAccessorCache))
 				.ToList ();
 
@@ -144,6 +168,42 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 
 			return CoreResponse.Success (content);
+		}
+
+
+		private IEnumerable<Tuple<string, SortOrder>> ParseSortCriteria(string sortParameter)
+		{
+			if (sortParameter != null)
+			{
+				foreach (var sortCriterium in sortParameter.Split (";"))
+				{
+					var data = sortCriterium.Split (":");
+
+					if (data.Length == 2)
+					{
+						var name = data[0];
+						var direction = this.ParseSortOrder (data[1]);
+
+						yield return Tuple.Create (name, direction);
+					}
+				}
+			}
+		}
+
+
+		private SortOrder ParseSortOrder(string sortOrder)
+		{
+			switch (sortOrder)
+			{
+				case "ASC":
+					return SortOrder.Ascending;
+
+				case "DESC":
+					return SortOrder.Descending;
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 

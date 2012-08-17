@@ -8,7 +8,6 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   viewConfig: {
     emptyText: 'Nothing to display'
   },
-  sortableColumns: false,
 
   /* Properties */
 
@@ -19,7 +18,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   constructor: function(options) {
     var newOptions = {
-      store: this.createStore(options.databaseName, options.fields),
+      store: this.createStore(options),
       selModel: this.createSelModel(options),
       onSelectionChangeCallback: options.onSelectionChange,
       listeners: {
@@ -51,23 +50,33 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     }
   },
 
-  createStore: function(databaseName, fields) {
+  createStore: function(options) {
     return Ext.create('Ext.data.Store', {
-      fields: fields,
+      fields: options.fields,
+      sorters: options.sorters,
       autoLoad: true,
       pageSize: 100,
       remoteSort: true,
       buffered: true,
       proxy: {
         type: 'ajax',
-        url: 'proxy/database/get/' + databaseName,
+        url: 'proxy/database/get/' + options.databaseName,
         reader: {
           type: 'json',
           root: 'content.entities',
           totalProperty: 'content.total'
-        }
+        },
+        encodeSorters: this.encodeSorters
       }
     });
+  },
+
+  encodeSorters: function(sorters) {
+    var sorterStrings = sorters.map(function(s) {
+      return s.property + ':' + s.direction;
+    });
+
+    return sorterStrings.join(';');
   },
 
   onSelectionChangeHandler: function(view, selection, options) {

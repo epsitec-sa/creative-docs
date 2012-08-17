@@ -1,5 +1,7 @@
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using System;
 
 using System.Collections.Generic;
@@ -15,11 +17,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Column(string title, string name, ColumnType type, LambdaExpression lambdaExpression)
+		public Column(string title, string name, ColumnType type, bool sortable, SortOrder? sortOrder, LambdaExpression lambdaExpression)
 		{
 			this.title = title;
 			this.name = name;
 			this.type = type;
+			this.sortable = sortable;
+			this.sortOrder = sortOrder;
 			this.lambdaExpression = lambdaExpression;
 		}
 
@@ -51,6 +55,24 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
+		public bool Sortable
+		{
+			get
+			{
+				return this.sortable;
+			}
+		}
+
+
+		public SortOrder? SortOrder
+		{
+			get
+			{
+				return this.sortOrder;
+			}
+		}
+
+
 		public LambdaExpression LambdaExpression
 		{
 			get
@@ -60,9 +82,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public static Column Create<T1, T2>(string title, string name, ColumnType type, Expression<Func<T1, T2>> lambdaExpression)
+		public static Column Create<T1, T2>(string title, string name, ColumnType type, bool sortable, SortOrder? sortOrder, Expression<Func<T1, T2>> lambdaExpression)
 		{
-			return new Column(title, name, type, lambdaExpression);
+			return new Column(title, name, type, sortable, sortOrder, lambdaExpression);
 		}
 
 
@@ -73,6 +95,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly ColumnType type;
+
+
+		private readonly bool sortable;
+
+
+		private readonly SortOrder? sortOrder;
 
 
 		private readonly LambdaExpression lambdaExpression;

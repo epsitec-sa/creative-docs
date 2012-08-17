@@ -53,6 +53,7 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
     return Ext.create(type, {
       databaseName: options.databaseName,
       fields: this.createFields(columnDefinitions),
+      sorters: this.createSorters(columnDefinitions),
       columns: this.createColumns(columnDefinitions),
       multiSelect: options.multiSelect,
       onSelectionChange: options.onSelectionChange
@@ -88,6 +89,18 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
     });
   },
 
+  createSorters: function(columnDefinitions) {
+    return columnDefinitions
+        .filter(function(c) {
+          return c.sortDirection !== null;
+        }).map(function(c) {
+          return {
+            property: c.name,
+            direction: c.sortDirection
+          };
+        });
+  },
+
   createColumns: function(columnDefinitions) {
     var basicColumns = this.createBasicColumns(columnDefinitions),
         dynamicColumns = this.createDynamicColumns(columnDefinitions);
@@ -99,7 +112,8 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
     var basicColumns = [
       {
         xtype: 'rownumberer',
-        width: 35
+        width: 35,
+        sortable: false
       }
     ];
 
@@ -107,7 +121,8 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
       basicColumns.push({
         text: 'Summary',
         flex: 1,
-        dataIndex: 'summary'
+        dataIndex: 'summary',
+        sortable: false
       });
     }
 
@@ -119,7 +134,8 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
       return {
         text: c.title,
         flex: 1,
-        dataIndex: c.name
+        dataIndex: c.name,
+        sortable: c.sortable
       };
     });
   },

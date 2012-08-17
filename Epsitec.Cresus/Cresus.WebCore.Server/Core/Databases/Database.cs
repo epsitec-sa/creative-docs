@@ -2,6 +2,8 @@
 
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		public abstract Dictionary<string, object> GetEntityData(BusinessContext businessContext, AbstractEntity entity, PropertyAccessorCache propertyAccessorCache);
 
 
-		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, int skip, int take);
+		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Tuple<string, SortOrder>> sortCriteria, int skip, int take);
 
 
 		public abstract int GetCount(BusinessContext businessContext);
