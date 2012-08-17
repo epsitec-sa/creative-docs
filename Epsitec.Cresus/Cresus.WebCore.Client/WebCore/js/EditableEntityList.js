@@ -6,7 +6,7 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
 
   constructor: function(options) {
     var newOptions = {
-      tbar: this.getTBar()
+      tbar: this.createEditionButtons()
     };
     Ext.applyIf(newOptions, options);
 
@@ -16,8 +16,8 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
 
   /* Additional methods */
 
-  getTBar: function() {
-    var buttonCreate, buttonDelete, buttonRefresh;
+  createEditionButtons: function() {
+    var buttonCreate, buttonDelete;
 
     buttonCreate = Ext.create('Ext.Button', {
       text: 'Create',
@@ -37,16 +37,7 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
       }
     });
 
-    buttonRefresh = Ext.create('Ext.Button', {
-      text: 'Refresh',
-      iconCls: 'icon-refresh',
-      listeners: {
-        click: this.onRefreshHandler,
-        scope: this
-      }
-    });
-
-    return [buttonCreate, buttonDelete, buttonRefresh];
+    return [buttonCreate, buttonDelete];
   },
 
   onCreateHandler: function() {
@@ -62,32 +53,6 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
     }
 
     this.deleteEntities(entityItems);
-  },
-
-  onRefreshHandler: function() {
-    this.reloadStore();
-  },
-
-  reloadStore: function() {
-
-    // A call to this.store.reload() should work here, but it has a bug. It is
-    // complicated, but if there are not enough rows of data, and a new row is
-    // added, this row is not displayed, even with several calls to this
-    // method.
-    //this.store.reload();
-
-    // A call to this.store.load() should work here, but it has two bugs. It is
-    // also complicated, but if there are enough rows of data, and a new row is
-    // added, the scroll bar will bump when it reaches the bottom and we can
-    // never see the last row. And if we delete an row and click where it was,
-    // it is the deleted element that is selected internally, instead of being
-    // the one that is displayed. A call to this.store.removeAll() corrects
-    // those 2 bugs. But there is a third one. A call to this.store.load()
-    // resets the position of the scroll bar to the top, whereas a call to
-    // this.store.reload() would keep it. I did not find any workaround for this
-    // yet.
-    this.store.removeAll();
-    this.store.load();
   },
 
   createEntity: function() {
