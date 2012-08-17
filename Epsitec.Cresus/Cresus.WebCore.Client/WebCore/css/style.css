@@ -36,3 +36,17 @@ html, body {
 .icon-refresh {
   background-image: url('../images/Static/refresh.png') !important;
 }
+
+.border-right {
+  border-top-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+}
+
+.border-bottom {
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+}

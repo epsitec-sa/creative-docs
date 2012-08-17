@@ -43,8 +43,10 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
       },
       container: {
         region: 'west',
-        margin: 5,
-        width: 250
+        bodyCls: 'border-right',
+        width: 250,
+        resizable: true,
+        resizeHandles: 'e'
       }
     });
   },
@@ -59,7 +61,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
   createRightPanel: function() {
     return Ext.create('Ext.panel.Panel', {
       region: 'center',
-      margin: '5',
+      border: false,
       layout: {
         type: 'table',
         tdAttrs: {

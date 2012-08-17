@@ -33,7 +33,8 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
     if (entityTab === null || entityTab.isDestroyed) {
       entityTab = Ext.create('Epsitec.ColumnManager', {
         database: database,
-        closable: true
+        closable: true,
+        border: false
       });
 
       this.add(entityTab);
@@ -50,6 +51,7 @@ Ext.define('Epsitec.cresus.webcore.TabManager', {
       pageTab = Ext.create('Ext.panel.Panel', {
         title: title,
         closable: true,
+        border: false,
         id: url,
         loader: {
           url: url,

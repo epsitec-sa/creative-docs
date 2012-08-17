@@ -61,13 +61,14 @@ Ext.application({
     this.menu = Ext.create('Epsitec.Menu', {
       application: this,
       region: 'north',
-      margin: 5
+      cls: 'border-bottom',
+      margin: '0 0 5 0'
     });
 
     this.tabManager = Ext.create('Epsitec.TabManager', {
       application: this,
       region: 'center',
-      margin: 5
+      border: false
     });
 
     Ext.create('Ext.container.Viewport', {
