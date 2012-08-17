@@ -36,7 +36,8 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Explodes the lambda into a sequence of properties.
+		/// Explodes the lambda into a sequence of properties. For instance, <c>x => x.A.B</c>
+		/// would return a list with properties <c>A</c> and <c>B</c>.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
 		/// <param name="trimCount">The trim count (<c>1</c> means don't include the last property).</param>
@@ -71,6 +72,25 @@ namespace Epsitec.Common.Types
 			return list;
 		}
 
+
+		/// <summary>
+		/// Builds the expression tree based on a collection of properties.
+		/// </summary>
+		/// <param name="properties">The properties.</param>
+		/// <returns></returns>
+		public static Expression BuildExpression(IEnumerable<PropertyInfo> properties)
+		{
+			var root = properties.First ();
+			var item = Expression.Parameter (root.ReflectedType, "x");
+			var expr = item as Expression;
+
+			foreach (var property in properties)
+			{
+				expr = Expression.Property (expr, property);
+			}
+
+			return Expression.Lambda (expr, item);
+		}
 
 		/// <summary>
 		/// Creates a setter expression based on a getter expression.
