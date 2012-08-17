@@ -4,6 +4,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Linq.Expressions;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
@@ -13,12 +15,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Column(string title, string name, ColumnType type, Func<AbstractEntity, object> valueGetter)
+		public Column(string title, string name, ColumnType type, LambdaExpression lambdaExpression)
 		{
 			this.title = title;
 			this.name = name;
 			this.type = type;
-			this.valueGetter = valueGetter;
+			this.lambdaExpression = lambdaExpression;
 		}
 
 
@@ -49,9 +51,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public object GetValue(AbstractEntity entity)
+		public LambdaExpression LambdaExpression
 		{
-			return this.valueGetter (entity);
+			get
+			{
+				return this.lambdaExpression;
+			}
+		}
+
+
+		public static Column Create<T1, T2>(string title, string name, ColumnType type, Expression<Func<T1, T2>> lambdaExpression)
+		{
+			return new Column(title, name, type, lambdaExpression);
 		}
 
 
@@ -64,7 +75,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		private readonly ColumnType type;
 
 
-		private readonly Func<AbstractEntity, object> valueGetter;
+		private readonly LambdaExpression lambdaExpression;
 
 
 	}

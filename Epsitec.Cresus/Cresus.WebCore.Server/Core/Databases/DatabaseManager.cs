@@ -1,5 +1,7 @@
 ﻿using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Entities;
 
 using System;
@@ -55,19 +57,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				iconUri: "Base.Country",
 				columns: new List<Column> ()
 				{
-					new Column
+					Column.Create<AiderCountryEntity, string>
 					(
 						title: "Name",
 						name: "Name",
-						type: ColumnType.String ,
-						valueGetter: x => ((AiderCountryEntity) x).Name
+						type: ColumnType.String,
+						lambdaExpression: x => x.Name
 					),
-					new Column
+					Column.Create<AiderCountryEntity, string>
 					(
 						title: "Code",
 						name: "Code",
-						type: ColumnType.String ,
-						valueGetter: x => ((AiderCountryEntity) x).IsoCode
+						type: ColumnType.String,
+						lambdaExpression: x => x.IsoCode
 					),
 				}
 			);
@@ -78,19 +80,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				iconUri: "Base.Location",
 				columns: new List<Column> ()
 				{
-					new Column
+					Column.Create<AiderTownEntity, string>
 					(
 						title: "Name",
 						name: "Name",
-						type: ColumnType.String ,
-						valueGetter: x => ((AiderTownEntity) x).Name
+						type: ColumnType.String,
+						lambdaExpression: x => x.Name
 					),
-					new Column
+					Column.Create<AiderTownEntity, string>
 					(
 						title: "Country",
 						name: "Country",
-						type: ColumnType.String ,
-						valueGetter: x => ((AiderTownEntity) x).Country.Name
+						type: ColumnType.String,
+						lambdaExpression: x => x.Country.Name
 					),
 				}
 			);
@@ -115,19 +117,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				iconUri: "Base.AiderPerson",
 				columns: new List<Column> ()
 				{
-					new Column
+					Column.Create<AiderPersonEntity, string>
 					(
 						title: "FirstName",
 						name: "FirstName",
-						type: ColumnType.String ,
-						valueGetter: x => ((AiderPersonEntity) x).eCH_Person.PersonFirstNames
+						type: ColumnType.String,
+						lambdaExpression: x => x.eCH_Person.PersonFirstNames
 					),
-					new Column
+					Column.Create<AiderPersonEntity, string>
 					(
 						title: "LastName",
 						name: "LastName",
-						type: ColumnType.String ,
-						valueGetter: x => ((AiderPersonEntity) x).eCH_Person.PersonOfficialName
+						type: ColumnType.String,
+						lambdaExpression: x => x.eCH_Person.PersonOfficialName
 					),
 				}
 			);

@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using System.Collections;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -129,10 +128,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
+			
+
+			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
 			var total = database.GetCount (businessContext);
 			var entities = database.GetEntities (businessContext, start, limit)
-				.Select (e => database.GetEntityData (businessContext, e))
+				.Select (e => database.GetEntityData (businessContext, e, propertyAccessorCache))
 				.ToList ();
 
 			var content = new Dictionary<string, object> ()
@@ -180,16 +182,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response CreateEntity(BusinessContext businessContext)
 		{
-			// TODO This implementation is very simple and will only work if the entity that will be
-			// created is not of an abstract type. If it is an abstract entity, probable that an
-			// entity of the wrong type will be created. Probably that we should implement something
-			// with the CreationControllers.
-
 			string databaseName = Request.Form.databaseName;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
+			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+
 			var entity = database.CreateEntity (businessContext);
-			var entityData = database.GetEntityData (businessContext, entity);
+			var entityData = database.GetEntityData (businessContext, entity, propertyAccessorCache);
 
 			return CoreResponse.Success (entityData);
 		}

@@ -4,6 +4,8 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
 using System;
 
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public override Dictionary<string, object> GetEntityData(BusinessContext businessContext, AbstractEntity entity)
+		public override Dictionary<string, object> GetEntityData(BusinessContext businessContext, AbstractEntity entity, PropertyAccessorCache propertyAccessorCache)
 		{
 			var id = Tools.GetEntityId (businessContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
@@ -37,8 +39,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			foreach (var column in this.Columns)
 			{
+				var propertyAccessor = propertyAccessorCache.Get (column.LambdaExpression);
+				var textPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 				var name = column.Name;
-				var value = column.GetValue (entity);
+				var value = textPropertyAccessor.GetString (entity);
 
 				data[name] = value;
 			}
