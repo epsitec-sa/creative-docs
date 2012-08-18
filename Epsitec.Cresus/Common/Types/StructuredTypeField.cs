@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -712,6 +712,6 @@ namespace Epsitec.Common.Types
 		private readonly FieldMembership		membership;
 		private readonly FieldSource			source;
 		private readonly FieldOptions			options;
-		private string							expression;
+		private readonly string					expression;
 	}
 }

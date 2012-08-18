@@ -1,5 +1,5 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types.Collections
 	/// The <c>HostedStructuredTypeFieldDictionary</c> stores <see cref="StructuredTypeField"/>
 	/// instances.
 	/// </summary>
-	public class HostedStructuredTypeFieldDictionary : HostedDictionary<string, StructuredTypeField>
+	public sealed class HostedStructuredTypeFieldDictionary : HostedDictionary<string, StructuredTypeField>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:HostedStructuredTypeFieldDictionary"/> class.

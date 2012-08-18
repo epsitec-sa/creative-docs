@@ -445,6 +445,13 @@
     <Compile Include="Support\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Support\FormatTokenFormatterResolver.cs" />
     <Compile Include="Support\InterfaceImplementationResolver.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.FieldUpdater.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.AccessorsCollection.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.InterfaceIdBroker.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.FieldBroker.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.InterfaceListener.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.FieldListener.cs" />
+    <Compile Include="Support\ResourceAccessors\StructuredTypeResourceAccessor.CustomField.cs" />
     <Compile Include="Support\SafeSectionManager.cs" />
     <Compile Include="Support\StringArray.cs" />
     <Compile Include="Support\TextFormat.cs" />

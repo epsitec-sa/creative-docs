@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -65,18 +65,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the type code for the type.
 		/// </summary>
 		/// <value>The type code.</value>
-		public override TypeCode TypeCode
+		public override TypeCode				TypeCode
 		{
 			get
 			{
 				return TypeCode.Structured;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the field definition dictionary. This instance is writable.
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Types
 		/// Gets the structured type class (e.g. <c>Entity</c> or <c>View</c>).
 		/// </summary>
 		/// <value>The class for this structured type.</value>
-		public StructuredTypeClass Class
+		public StructuredTypeClass				Class
 		{
 			get
 			{
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Types
 		/// its base type).
 		/// </summary>
 		/// <value>The structured type id this instance extends or <c>Druid.Empty</c>.</value>
-		public Druid BaseTypeId
+		public Druid							BaseTypeId
 		{
 			get
 			{
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public StructuredTypeFlags Flags
+		public StructuredTypeFlags				Flags
 		{
 			get
 			{
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public DataLifetimeExpectancy DefaultLifetimeExpectancy
+		public DataLifetimeExpectancy			DefaultLifetimeExpectancy
 		{
 			get
 			{
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Types
 		/// complete list of interfaces associated with this structured type.
 		/// </summary>
 		/// <value>The interface ids.</value>
-		public IList<Druid> InterfaceIds
+		public IList<Druid>						InterfaceIds
 		{
 			get
 			{
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Types
 		/// the resource manager to resolve the structured type.
 		/// </summary>
 		/// <value>The structured type this instance extends or <c>null</c>.</value>
-		public StructuredType BaseType
+		public StructuredType					BaseType
 		{
 			get
 			{
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Types
 		/// Gets or sets the serialized designer layouts.
 		/// </summary>
 		/// <value>The serialized designer layouts.</value>
-		public string SerializedDesignerLayouts
+		public string							SerializedDesignerLayouts
 		{
 			get
 			{
@@ -787,8 +787,6 @@ namespace Epsitec.Common.Types
 			this.IncludeInheritedFields ();
 		}
 
-		#region Private and Protected Methods
-		
 		protected override void OnCaptionDefined()
 		{
 			base.OnCaptionDefined ();
@@ -1108,8 +1106,6 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		#endregion
-
 		#region Static Dependency Property Support Methods
 
 		private static object GetFieldsValue(DependencyObject obj)
@@ -1166,8 +1162,8 @@ namespace Epsitec.Common.Types
 
 		private readonly Collections.HostedStructuredTypeFieldDictionary fields;
 		
-		private InheritanceMode fieldInheritance;
-		private InheritanceMode interfaceInheritance;
-		private Collections.HostedList<Druid> interfaces;
+		private InheritanceMode					fieldInheritance;
+		private InheritanceMode					interfaceInheritance;
+		private Collections.HostedList<Druid>	interfaces;
 	}
 }

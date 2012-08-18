@@ -159,7 +159,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		/// <summary>
 		/// Walks through the entity graph, starting from the specified root, following the
-		/// edges defined by collection of properties.
+		/// edges defined by the collection of properties.
 		/// </summary>
 		/// <param name="rootEntity">The example.</param>
 		/// <param name="fieldPath">The field path.</param>
