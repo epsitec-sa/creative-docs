@@ -35,6 +35,23 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 
+		public static Expression<System.Func<TEntity, TField>> Expression<TField>(Expression<System.Func<TEntity, TField>> expression)
+			where TField : struct
+		{
+			return expression;
+		}
+
+		public static Expression<System.Func<TEntity, TField?>> Expression<TField>(Expression<System.Func<TEntity, TField?>> expression)
+			where TField : struct
+		{
+			return expression;
+		}
+
+		public static Expression<System.Func<TEntity, string>> Expression(Expression<System.Func<TEntity, string>> expression)
+		{
+			return expression;
+		}
+
 		/// <summary>
 		/// Declares a column accessor.
 		/// </summary>

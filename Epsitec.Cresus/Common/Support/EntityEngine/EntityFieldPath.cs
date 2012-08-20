@@ -10,6 +10,7 @@ using System.Linq;
 
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq.Expressions;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -646,7 +647,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return EntityFieldPath.CreateAbsolutePath (properties.Select (x => (EntityField) x));
 		}
-		
+
+		public static EntityFieldPath CreateAbsolutePath(Expression lambda)
+		{
+			return EntityFieldPath.CreateAbsolutePath (ExpressionAnalyzer.ExplodeLambda (lambda));
+		}
 
 		/// <summary>
 		/// Creates a relative path.
