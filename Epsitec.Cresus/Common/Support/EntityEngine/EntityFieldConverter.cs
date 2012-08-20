@@ -12,8 +12,17 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityFieldConverter</c> class is used to efficiently map <see cref="EntityField"/>
+	/// and <see cref="PropertyInfo"/> instances, by using internal caches.
+	/// </summary>
 	internal static class EntityFieldConverter
 	{
+		/// <summary>
+		/// Converts the field to the corresponding property info.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <returns>The property info.</returns>
 		public static PropertyInfo ConvertToProperty(EntityField field)
 		{
 			PropertyInfo match;
@@ -23,11 +32,10 @@ namespace Epsitec.Common.Support.EntityEngine
 				return match;
 			}
 
-			var entityType = EntityInfo.GetStructuredType (field.EntityId);
-			var systemType = entityType.SystemType;
+			var entityType = EntityInfo.GetType (field.EntityId);
 			var fieldId    = field.FieldId;
 
-			var properties = from property in systemType.GetProperties ()
+			var properties = from property in entityType.GetProperties ()
 							 where property.GetCustomAttributes<EntityFieldAttribute> (true).Any (a => a.FieldId == fieldId)
 							 select property;
 
@@ -38,7 +46,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return match;
 		}
 
-		public static EntityField ConvertToEntityInfo(PropertyInfo propertyInfo)
+		/// <summary>
+		/// Converts the property info to the corresponding field.
+		/// </summary>
+		/// <param name="propertyInfo">The property info.</param>
+		/// <returns>The field.</returns>
+		public static EntityField ConvertToEntityField(PropertyInfo propertyInfo)
 		{
 			EntityField match;
 

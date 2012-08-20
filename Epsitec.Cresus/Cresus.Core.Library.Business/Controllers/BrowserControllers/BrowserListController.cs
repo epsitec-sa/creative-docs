@@ -258,6 +258,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var efExpl = efPath.ExplodeFields ().ToArray ();
 				var absPath = EntityFieldPath.CreateAbsolutePath (EntityDataMetadataRecorder<CustomerEntity>.Expression (x => x.MainRelation.DefaultMailContact.Location.PostalCode));
 
+
+				var xml = column.Save ("column");
+				var col = EntityColumn.Restore (xml);
 			}
 		}
 

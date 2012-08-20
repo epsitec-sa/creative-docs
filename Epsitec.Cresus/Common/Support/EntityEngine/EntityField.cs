@@ -11,6 +11,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityField</c> class defines an entity field based on the entity's DRUID
+	/// and the field's ID. <c>EntityField</c> can be mapped to a <see cref="PropertyInfo"/>.
+	/// See also <see cref="EntityFieldPath"/>.
+	/// </summary>
 	public sealed class EntityField : System.IEquatable<EntityField>
 	{
 		public EntityField()
@@ -72,7 +77,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public static explicit operator EntityField(PropertyInfo propertyInfo)
 		{
-			return EntityFieldConverter.ConvertToEntityInfo (propertyInfo);
+			return EntityFieldConverter.ConvertToEntityField (propertyInfo);
 		}
 
 
@@ -111,6 +116,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return this.Equals (obj as EntityField);
 		}
+
 
 		#region IEquatable<EntityField> Members
 

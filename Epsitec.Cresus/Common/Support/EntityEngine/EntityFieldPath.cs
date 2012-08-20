@@ -179,6 +179,28 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public string GetLeafFieldId()
+		{
+			int pos = this.path.LastIndexOf ('.');
+
+			if (pos < 0)
+			{
+				return this.path;
+			}
+			else
+			{
+				return this.path.Substring (pos+1);
+			}
+		}
+
+		public Expression CreateLambda()
+		{
+			var fields    = this.ExplodeFields ();
+			var propInfos = fields.Select (x => (PropertyInfo) x);
+			
+			return ExpressionAnalyzer.BuildExpression (propInfos);
+		}
+
 
 		/// <summary>
 		/// Navigates from the specified root entity to the leaf entity.

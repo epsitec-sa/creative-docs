@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
-
+	using EntityColumn = Epsitec.Cresus.WebCore.Server.Layout.Tile.EntityColumn;
 
 	internal sealed class EntityColumnData
 	{

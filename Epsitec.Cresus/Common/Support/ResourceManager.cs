@@ -1200,6 +1200,11 @@ namespace Epsitec.Common.Support
 		
 		public string GetText(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
+			if (druid.IsEmpty)
+			{
+				return null;
+			}
+
 			return this.GetText (druid.ToResourceId (), level, culture);
 		}
 		
@@ -1247,6 +1252,11 @@ namespace Epsitec.Common.Support
 		
 		public object GetData(string id, ResourceLevel level, CultureInfo culture)
 		{
+			if (string.IsNullOrEmpty (id))
+			{
+				return null;
+			}
+
 			culture = culture ?? this.culture;
 			
 			string bundleName;

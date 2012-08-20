@@ -9,14 +9,15 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
 	/// <summary>
-	/// The <c>EntityDataColumn</c> class defines a column (i.e. a field transformed to simple
-	/// data) of an entity.
+	/// The <c>EntityDataColumn</c> class defines a column (i.e. a direct or indirect field
+	/// of an entity).
 	/// </summary>
-	public sealed class EntityDataColumn
+	public sealed class EntityDataColumn : EntityColumn
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityDataColumn"/> class. This should
@@ -26,12 +27,16 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="name">The name associated with the column.</param>
 		public EntityDataColumn(LambdaExpression expression, SortOrder sortOrder, FormattedText name)
+			: base (expression, name)
 		{
-			this.expression = expression;
 			this.sortOrder  = sortOrder;
-			this.name       = name.IsNotNull () ? name : TextFormatter.FormatText (EntityInfo.GetFieldCaption (expression));
 		}
 
+		public EntityDataColumn(IDictionary<string, string> data)
+			: base (data)
+		{
+			this.sortOrder = data["sort"].ToEnum<SortOrder> ();
+		}
 
 
 		public SortOrder						SortOrder
@@ -43,29 +48,24 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 		
-		public LambdaExpression					Expression
-		{
-			get
-			{
-				return this.expression;
-			}
-		}
-
-
 		public SortClause ToSortClause(AbstractEntity example)
 		{
-			var fieldPath   = ExpressionAnalyzer.ExplodeLambda (this.Expression, trimCount: 1);
-			var fieldEntity = EntityInfo.WalkEntityGraph (example, fieldPath, NullNodeAction.CreateMissing);
-			var fieldId     = EntityInfo.GetFieldCaption (this.Expression).Id;
+			var fieldEntity = this.GetLeafEntity (example, NullNodeAction.CreateMissing);
+			var fieldId     = this.GetLeafFieldId ();
 
 			var fieldNode = new ValueField (fieldEntity, fieldId);
 
 			return new SortClause (fieldNode, sortOrder);
 		}
 
+		protected override void Serialize(List<XAttribute> attributes)
+		{
+			base.Serialize (attributes);
 
-		private readonly LambdaExpression		expression;
-		private readonly FormattedText			name;
+			attributes.Add (new XAttribute ("sort", this.sortOrder.ToString ()));
+		}
+
+
 		private readonly SortOrder				sortOrder;
 	}
 }

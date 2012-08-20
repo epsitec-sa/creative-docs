@@ -92,6 +92,8 @@ namespace Epsitec.Common.Types
 			return Expression.Lambda (expr, item);
 		}
 
+
+
 		/// <summary>
 		/// Creates a setter expression based on a getter expression.
 		/// </summary>

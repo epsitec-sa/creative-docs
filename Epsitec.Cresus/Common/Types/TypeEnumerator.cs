@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -54,6 +55,33 @@ namespace Epsitec.Common.Types
 			else
 			{
 				return Epsitec.Common.Types.Collections.EmptyEnumerable<System.Type>.Instance;
+			}
+		}
+
+		/// <summary>
+		/// Finds the type for the given name. If the type cannot be resolved unambiguously,
+		/// an exception will be thrown.
+		/// </summary>
+		/// <param name="typeName">Name of the type.</param>
+		/// <returns>The type.</returns>
+		/// <exception cref="System.ArgumentException">If type is ambiguous or cannot be resolved.</exception>
+		public System.Type FindType(string typeName)
+		{
+			var types = this.GetTypesFromName (typeName);
+			int count = types.Count ();
+
+			if (count == 1)
+			{
+				return types.First ();
+			}
+
+			if (count == 0)
+			{
+				throw new System.ArgumentException ("Cannot resolve type name");
+			}
+			else
+			{
+				throw new System.ArgumentException (string.Format ("Ambiguous type name: found {0} matches", count));
 			}
 		}
 

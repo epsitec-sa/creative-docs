@@ -99,6 +99,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		
 		public static StructuredTypeField GetStructuredTypeField(Expression propertyLambdaExpression)
 		{
 			return EntityInfo.GetStructuredTypeField (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));
@@ -144,17 +145,17 @@ namespace Epsitec.Common.Support.EntityEngine
 			return structuredType.GetField (fieldId);
 		}
 
-		
-		public static Caption GetFieldCaption(Expression propertyLambdaExpression)
+
+		public static Druid GetFieldCaptionId(Expression propertyLambdaExpression)
 		{
-			return EntityInfo.GetFieldCaption (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));
+			return EntityInfo.GetFieldCaptionId (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));
 		}
 
-		public static Caption GetFieldCaption(PropertyInfo propertyInfo)
+		public static Druid GetFieldCaptionId(PropertyInfo propertyInfo)
 		{
 			if (propertyInfo == null)
 			{
-				return null;
+				return Druid.Empty;
 			}
 
 			var fieldAttribute = propertyInfo.GetCustomAttributes (true).OfType<EntityFieldAttribute> ().FirstOrDefault ();
@@ -162,16 +163,31 @@ namespace Epsitec.Common.Support.EntityEngine
 			if ((fieldAttribute == null) &&
 				(propertyInfo.Name.EndsWith ("ForEdition")))
 			{
-				return EntityInfo.GetFieldCaption (propertyInfo.DeclaringType.GetProperty (propertyInfo.Name.StripSuffix ("ForEdition")));
+				return EntityInfo.GetFieldCaptionId (propertyInfo.DeclaringType.GetProperty (propertyInfo.Name.StripSuffix ("ForEdition")));
 			}
 
 			if ((fieldAttribute == null) ||
 				(fieldAttribute.FieldId == null))
 			{
-				return null;
+				return Druid.Empty;
 			}
 
-			Druid id = Druid.Parse (fieldAttribute.FieldId);
+			return Druid.Parse (fieldAttribute.FieldId);
+		}
+
+		public static Caption GetFieldCaption(Expression propertyLambdaExpression)
+		{
+			return EntityInfo.GetFieldCaption (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));
+		}
+
+		public static Caption GetFieldCaption(PropertyInfo propertyInfo)
+		{
+			var id = EntityInfo.GetFieldCaptionId (propertyInfo);
+
+			if (id.IsEmpty)
+			{
+				return null;
+			}
 
 			return SafeResourceResolver.Instance.GetCaption (id);
 		}
