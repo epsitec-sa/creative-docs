@@ -60,5 +60,11 @@ namespace Epsitec.Common.Support.Extensions
 				}
 			}
 		}
+		
+		public static IEnumerable<T> GetCustomAttributes<T>(this Assembly assembly, bool inherit = false)
+			where T : System.Attribute
+		{
+			return assembly.GetCustomAttributes (typeof (T), inherit).Cast<T> ();
+		}
 	}
 }

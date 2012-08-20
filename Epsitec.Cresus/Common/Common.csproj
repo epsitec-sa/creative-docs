@@ -1054,6 +1054,7 @@
     <Compile Include="Types\MimeTypeDictionary.cs" />
     <Compile Include="Types\MultilingualText.cs" />
     <Compile Include="Types\NamedDependencyObject.cs" />
+    <Compile Include="Types\NamespaceShortcutAttribute.cs" />
     <Compile Include="Types\NotAnEnum.cs" />
     <Compile Include="Types\Numeric.cs" />
     <Compile Include="Types\OpenEnumType.cs" />

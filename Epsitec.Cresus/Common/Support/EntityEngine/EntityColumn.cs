@@ -123,7 +123,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns></returns>
 		public static EntityColumn Restore(XElement xml)
 		{
-			var typeName = xml.Attribute (Strings.Type).Value;
+			var typeName = TypeEnumerator.Instance.UnshrinkTypeName (xml.Attribute (Strings.Type).Value);
 			var sysType  = TypeEnumerator.Instance.FindType (typeName);
 			var arg      = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
 			var instance = System.Activator.CreateInstance (sysType, arg) as EntityColumn;
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="attributes">The attributes.</param>
 		protected virtual void Serialize(List<XAttribute> attributes)
 		{
-			attributes.Add (new XAttribute (Strings.Type, this.GetType ().FullName));
+			attributes.Add (new XAttribute (Strings.Type, TypeEnumerator.Instance.ShrinkTypeName (this.GetType ().FullName)));
 			attributes.Add (new XAttribute (Strings.Path, this.path.ToString ()));
 			attributes.Add (new XAttribute (Strings.CaptionId, this.captionId.ToCompactString ()));
 		}

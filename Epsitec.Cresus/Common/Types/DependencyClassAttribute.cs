@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -15,18 +15,16 @@ namespace Epsitec.Common.Types
 			this.type = type;
 		}
 		
+		
 		public System.Type						Type
 		{
 			get
 			{
 				return this.type;
 			}
-			set
-			{
-				this.type = value;
-			}
 		}
 
+		
 		/// <summary>
 		/// Gets or sets the converter associated with the class.
 		/// </summary>
@@ -62,7 +60,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private System.Type						type;
+		private readonly System.Type			type;
 		private System.Type						converter;
 	}
 }

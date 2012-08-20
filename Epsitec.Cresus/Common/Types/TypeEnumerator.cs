@@ -1,7 +1,10 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Linq;
 
@@ -21,6 +24,9 @@ namespace Epsitec.Common.Types
 			this.typeNames     = new HashSet<string> ();
 			this.typeMap       = new Dictionary<string, List<System.Type>> ();
 			this.assemblyNames = new HashSet<string> ();
+			
+			this.namespaceShortcutsShortToFull = new ConcurrentDictionary<string, string> ();
+			this.namespaceShortcutsFullToShort = new ConcurrentDictionary<string, string> ();
 
 			Epsitec.Common.Support.AssemblyLoader.AssemblyLoaded += this.HandleCurrentDomainAssemblyLoaded;
 
@@ -120,6 +126,64 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+		public string ShrinkTypeName(string name)
+		{
+			var keys = this.namespaceShortcutsFullToShort.Keys.ToArray ();
+			
+			int    length = 0;
+			string shortName = "";
+
+			foreach (var key in keys)
+			{
+				if (name.StartsWith (key))
+				{
+					if ((key.Length > length) &&
+						(name.Length == key.Length || name[key.Length] == '.'))
+					{
+						length = key.Length;
+						shortName = this.namespaceShortcutsFullToShort[key];
+					}
+				}
+			}
+
+			if (name.Length == length)
+			{
+				return "@" + shortName;
+			}
+			else
+			{
+				return string.Concat ("@", shortName, name.Substring (length));
+			}
+		}
+
+		public string UnshrinkTypeName(string name)
+		{
+			if (string.IsNullOrEmpty (name))
+			{
+				return name;
+			}
+
+			if (name[0] != '@')
+			{
+				return name;
+			}
+
+			int pos = name.IndexOf ('.');
+
+			if (pos < 0)
+			{
+				pos = name.Length;
+			}
+
+			var shortName = name.Substring (1, pos-1);
+			var otherName = name.Substring (pos);
+			var fullName  = this.namespaceShortcutsShortToFull[shortName];
+
+			return fullName + otherName;
+		}
+
+
 		private void HandleCurrentDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
 			//	An additional assembly was just loaded; analyze it and update the cache
@@ -128,6 +192,10 @@ namespace Epsitec.Common.Types
 			this.AnalyseAssembly (args.LoadedAssembly);
 		}
 
+		/// <summary>
+		/// Analyses the assembly.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
 		private void AnalyseAssembly(Assembly assembly)
 		{
 #if DOTNET35
@@ -182,6 +250,29 @@ namespace Epsitec.Common.Types
 						}
 					}
 				}
+
+				var shortcuts = assembly.GetCustomAttributes<NamespaceShortcutAttribute> ();
+
+				lock (this.namespaceShortcutsShortToFull)
+				{
+					foreach (var shortcut in shortcuts)
+					{
+						string shortName;
+						string fullName;
+
+						if (this.namespaceShortcutsFullToShort.TryGetValue (shortcut.FullName, out shortName))
+						{
+							System.Diagnostics.Debug.Assert (shortName == shortcut.ShortName);
+						}
+						if (this.namespaceShortcutsShortToFull.TryGetValue (shortcut.ShortName, out fullName))
+						{
+							System.Diagnostics.Debug.Assert (fullName == shortcut.FullName);
+						}
+
+						this.namespaceShortcutsShortToFull[shortcut.ShortName] = shortcut.FullName;
+						this.namespaceShortcutsFullToShort[shortcut.FullName]  = shortcut.ShortName;
+					}
+				}
 			}
 		}
 
@@ -192,5 +283,7 @@ namespace Epsitec.Common.Types
 		private readonly HashSet<string>		assemblyNames;
 		private readonly HashSet<string>		typeNames;
 		private readonly Dictionary<string, List<System.Type>> typeMap;
+		private readonly ConcurrentDictionary<string, string> namespaceShortcutsShortToFull;
+		private readonly ConcurrentDictionary<string, string> namespaceShortcutsFullToShort;
 	}
 }
