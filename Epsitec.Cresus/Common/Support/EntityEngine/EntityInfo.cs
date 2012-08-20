@@ -112,7 +112,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			var structuredType = EntityInfo.GetStructuredType (propertyInfo.DeclaringType);
-			var fieldAttribute = propertyInfo.GetCustomAttributes (true).OfType<EntityFieldAttribute> ().FirstOrDefault ();
+			var fieldAttribute = propertyInfo.GetCustomAttributes<EntityFieldAttribute> (true).FirstOrDefault ();
 
 			if ((structuredType == null) ||
 				(fieldAttribute == null) ||
@@ -126,6 +126,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public static StructuredTypeField GetStructuredTypeField(Druid entityId, string fieldId)
+		{
+			if ((entityId.IsEmpty) ||
+				(string.IsNullOrEmpty (fieldId)))
+			{
+				return null;
+			}
+
+			var structuredType = EntityInfo.GetStructuredType (entityId);
+			
+			if (structuredType == null)
+			{
+				return null;
+			}
+			
+			return structuredType.GetField (fieldId);
+		}
+
+		
 		public static Caption GetFieldCaption(Expression propertyLambdaExpression)
 		{
 			return EntityInfo.GetFieldCaption (ExpressionAnalyzer.GetLambdaPropertyInfo (propertyLambdaExpression));

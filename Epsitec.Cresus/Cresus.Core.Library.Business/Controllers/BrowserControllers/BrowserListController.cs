@@ -251,6 +251,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 							;
 
 				this.context.Accessor.SetSortOrder (recorder.Columns);
+
+				var column = recorder.Columns.First ();
+				var props  = ExpressionAnalyzer.ExplodeLambda (column.Expression);
+				var efPath = EntityFieldPath.CreateAbsolutePath (props);
+				var efExpl = efPath.ExplodeFields ().ToArray ();
+
 			}
 		}
 

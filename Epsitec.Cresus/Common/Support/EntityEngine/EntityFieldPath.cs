@@ -6,7 +6,10 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
+using System.Linq;
+
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
@@ -156,6 +159,22 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					return this.path.Split ('.');
 				}
+			}
+		}
+
+
+		public IEnumerable<EntityField> ExplodeFields()
+		{
+			var entityId = this.EntityId;
+			var fieldIds = this.FieldIds;
+
+			foreach (var fieldId in fieldIds)
+			{
+				var field = new EntityField (entityId, fieldId);
+
+				yield return field;
+
+				entityId = EntityInfo.GetStructuredTypeField (entityId, fieldId).TypeId;
 			}
 		}
 
@@ -488,7 +507,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (fields.Length == 0)
 			{
-				return null;
+				return this;
 			}
 			else
 			{
@@ -569,6 +588,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		
 		/// <summary>
 		/// Creates an absolute path.
 		/// </summary>
@@ -588,7 +608,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateAbsolutePath(Druid entityId, IEnumerable<string> fields)
 		{
-			return new EntityFieldPath (entityId, string.Join (".", Collection.ToArray (fields)));
+			return new EntityFieldPath (entityId, string.Join (".", fields.ToArray ()));
 		}
 
 		/// <summary>
@@ -611,6 +631,24 @@ namespace Epsitec.Common.Support.EntityEngine
 			return EntityFieldPath.CreateAbsolutePath (entityId, relativePath.path);
 		}
 
+		public static EntityFieldPath CreateAbsolutePath(IEnumerable<EntityField> fieldCollection)
+		{
+			var fields = fieldCollection.ToArray ();
+
+			if (fields.Length == 0)
+			{
+				return new EntityFieldPath ();
+			}
+
+			return EntityFieldPath.CreateAbsolutePath (fields[0].EntityId, fields.Select (x => x.FieldId));
+		}
+
+		public static EntityFieldPath CreateAbsolutePath(IEnumerable<PropertyInfo> properties)
+		{
+			return EntityFieldPath.CreateAbsolutePath (properties.Select (x => (EntityField) x));
+		}
+		
+
 		/// <summary>
 		/// Creates a relative path.
 		/// </summary>
@@ -628,7 +666,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The path instance.</returns>
 		public static EntityFieldPath CreateRelativePath(IEnumerable<string> fields)
 		{
-			return new EntityFieldPath (Druid.Empty, string.Join (".", Collection.ToArray (fields)));
+			return new EntityFieldPath (Druid.Empty, string.Join (".", fields.ToArray ()));
 		}
 
 		/// <summary>
@@ -653,6 +691,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		
 		/// <summary>
 		/// Parses the specified path.
 		/// </summary>
@@ -660,7 +699,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The path instance.</returns>
 		public static EntityFieldPath Parse(string path)
 		{
-			if (path == null)
+			if (string.IsNullOrEmpty (path))
 			{
 				return new EntityFieldPath ();
 			}
@@ -674,10 +713,14 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 				else
 				{
-					return new EntityFieldPath (Druid.Parse (path.Substring (0, pos)), path.Substring (pos+1));
+					string entityId = path.Substring (0, pos);
+					string fieldIds = path.Substring (pos+1);
+					
+					return new EntityFieldPath (Druid.Parse (entityId), fieldIds);
 				}
 			}
 		}
+
 
 		#region IEquatable<EntityFieldPath> Members
 
@@ -735,6 +778,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		
 		public override bool Equals(object obj)
 		{
 			return this.Equals (obj as EntityFieldPath);
@@ -750,6 +794,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.path;
 		}
 
+		
 		public static bool operator==(EntityFieldPath a, EntityFieldPath b)
 		{
 			if (object.ReferenceEquals (a, b))

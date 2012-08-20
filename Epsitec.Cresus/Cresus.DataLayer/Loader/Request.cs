@@ -10,12 +10,10 @@ using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
 
-using System;
-
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
-
+	using EntityField = Epsitec.Cresus.DataLayer.Expressions.EntityField;
 
 	/// <summary>
 	/// A <c>Request</c> object represent a high level query that can be executed against the database
@@ -204,7 +202,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			if (this.RootEntity == null)
 			{
-				throw new ArgumentException ("RootEntity is null");
+				throw new System.ArgumentException ("RootEntity is null");
 			}
 
 			var nonPersistentEntities = this.GetNonPersistentEntities (dataContext);
@@ -291,7 +289,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 						{
 							var message = "Cycles are not allowed in entity graph";
 
-							throw new ArgumentException (message);
+							throw new System.ArgumentException (message);
 						}
 
 						todo.Push (parent);
@@ -307,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				if (!entities.Contains (requestedEntity))
 				{
-					throw new ArgumentException ("RequestedEntity is not reachable from RootEntity.");
+					throw new System.ArgumentException ("RequestedEntity is not reachable from RootEntity.");
 				}
 			}
 		}
@@ -319,7 +317,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				if (dataContext.IsForeignEntity (entity))
 				{
-					throw new ArgumentException ("Foreign entities are not allowed.");
+					throw new System.ArgumentException ("Foreign entities are not allowed.");
 				}
 			}
 		}
@@ -329,12 +327,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			if (this.Skip.HasValue && this.Skip < 0)
 			{
-				throw new ArgumentException ("Skip is lower than zero");
+				throw new System.ArgumentException ("Skip is lower than zero");
 			}
 
 			if (this.Take.HasValue && this.Take < 0)
 			{
-				throw new ArgumentException ("Take is lower than zero");
+				throw new System.ArgumentException ("Take is lower than zero");
 			}
 		}
 
@@ -353,7 +351,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				if (condition == null)
 				{
-					throw new ArgumentException ("A condition is null");
+					throw new System.ArgumentException ("A condition is null");
 				}
 
 				condition.CheckFields (checker);
@@ -367,7 +365,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				if (sortClause == null)
 				{
-					throw new ArgumentException ("A sort clause is null");
+					throw new System.ArgumentException ("A sort clause is null");
 				}
 
 				sortClause.CheckField (checker);
@@ -381,7 +379,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				if (field == null)
 				{
-					throw new ArgumentException ("A significant field is null");
+					throw new System.ArgumentException ("A significant field is null");
 				}
 
 				field.CheckField (checker);
