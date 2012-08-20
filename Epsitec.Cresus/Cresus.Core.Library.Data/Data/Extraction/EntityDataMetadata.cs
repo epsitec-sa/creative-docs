@@ -17,13 +17,30 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 	/// </summary>
 	public sealed class EntityDataMetadata
 	{
-		internal EntityDataMetadata(IEnumerable<EntityDataColumn> columns)
+		internal EntityDataMetadata(Druid entityId, IEnumerable<EntityDataColumn> columns)
 		{
+			this.entityId = entityId;
 			this.columns = columns.ToArray ();
 		}
 
+
+		public Druid							EntityId
+		{
+			get
+			{
+				return this.entityId;
+			}
+		}
+
+		public IEnumerable<EntityDataColumn>	Columns
+		{
+			get
+			{
+				return this.columns;
+			}
+		}
 		
-		public int							TotalColumnCount
+		public int								ColumnCount
 		{
 			get
 			{
@@ -31,6 +48,8 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
-		private readonly EntityDataColumn[] columns;
+
+		private readonly Druid					entityId;
+		private readonly EntityDataColumn[]		columns;
 	}
 }

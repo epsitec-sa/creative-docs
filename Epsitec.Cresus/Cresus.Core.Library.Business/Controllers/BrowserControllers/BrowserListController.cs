@@ -250,7 +250,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					//	.Column (x => x.MainRelation.DefaultMailContact.HouseNumber, SortOrder.Ascending)
 							;
 
-				this.context.Accessor.SetSortOrder (recorder.Columns);
+				var metadata = recorder.GetMetadata ();
+
+
+				this.context.Accessor.SetSortOrder (metadata.Columns);
 
 				var column = recorder.Columns.First ();
 				var props  = ExpressionAnalyzer.ExplodeLambda (column.Expression);

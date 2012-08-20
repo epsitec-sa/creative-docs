@@ -18,9 +18,10 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 	/// </summary>
 	/// <typeparam name="TEntity">The type of the entity.</typeparam>
 	public sealed class EntityDataMetadataRecorder<TEntity> : EntityDataMetadataRecorder
-			where TEntity : AbstractEntity
+			where TEntity : AbstractEntity, new()
 	{
 		public EntityDataMetadataRecorder()
+			: base (EntityInfo<TEntity>.GetTypeId ())
 		{
 			this.columns = new List<EntityDataColumn> ();
 		}
@@ -31,6 +32,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			get
 			{
 				return this.columns;
+			}
+		}
+
+		public override int						ColumnCount
+		{
+			get
+			{
+				return this.columns.Count;
 			}
 		}
 
@@ -52,6 +61,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			return expression;
 		}
 
+		
 		/// <summary>
 		/// Declares a column accessor.
 		/// </summary>
