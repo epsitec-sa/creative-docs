@@ -61,11 +61,10 @@
     <Compile Include="Data\DataSetAccessor.cs" />
     <Compile Include="Data\DataSetCollectionGetter.cs" />
     <Compile Include="Data\DataSetGetter.cs" />
-    <Compile Include="Data\Extraction\EntityDataColumn.cs" />
-    <Compile Include="Data\Extraction\EntityDataMetadata.cs" />
-    <Compile Include="Data\Extraction\EntityDataMetadataRecorder.cs" />
-    <Compile Include="Data\Extraction\EntityDataMetadataRecorder`1.cs" />
-    <Compile Include="Data\Extraction\EntityDataType.cs" />
+    <Compile Include="Data\Extraction\EntitySortedColumn.cs" />
+    <Compile Include="Data\Extraction\EntityMetadata.cs" />
+    <Compile Include="Data\Extraction\EntityMetadataRecorder.cs" />
+    <Compile Include="Data\Extraction\EntityMetadataRecorder`1.cs" />
     <Compile Include="Data\Infrastructure.cs" />
     <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Data\ConnectionManager.cs" />

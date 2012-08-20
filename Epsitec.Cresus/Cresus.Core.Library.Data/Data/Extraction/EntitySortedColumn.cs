@@ -14,25 +14,25 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
 	/// <summary>
-	/// The <c>EntityDataColumn</c> class defines a column (i.e. a direct or indirect field
+	/// The <c>EntitySortedColumn</c> class defines a column (i.e. a direct or indirect field
 	/// of an entity).
 	/// </summary>
-	public sealed class EntityDataColumn : EntityColumn
+	public sealed class EntitySortedColumn : EntityColumn
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityDataColumn"/> class. This should
-		/// not be called directly. Use <see cref="EntityDataMetadataRecorder.Column"/> instead.
+		/// Initializes a new instance of the <see cref="EntitySortedColumn"/> class. This should
+		/// not be called directly. Use <see cref="EntityMetadataRecorder.Column"/> instead.
 		/// </summary>
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="name">The name associated with the column.</param>
-		public EntityDataColumn(LambdaExpression expression, SortOrder sortOrder, FormattedText name)
+		public EntitySortedColumn(LambdaExpression expression, SortOrder sortOrder, FormattedText name)
 			: base (expression, name)
 		{
 			this.sortOrder  = sortOrder;
 		}
 
-		public EntityDataColumn(IDictionary<string, string> data)
+		public EntitySortedColumn(IDictionary<string, string> data)
 			: base (data)
 		{
 			this.sortOrder = data[Strings.Sort].ToEnum<SortOrder> ();

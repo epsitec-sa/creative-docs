@@ -20,8 +20,8 @@ namespace Epsitec.Common.Support.EntityEngine
 	public class EntityColumn
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="EntityDataColumn"/> class. This should
-		/// not be called directly. Use <see cref="EntityDataMetadataRecorder.Column"/> instead.
+		/// Initializes a new instance of the <see cref="EntityColumn"/> class. This should
+		/// not be called directly. Use <see cref="EntityMetadataRecorder.Column"/> instead.
 		/// </summary>
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="name">The name associated with the column.</param>

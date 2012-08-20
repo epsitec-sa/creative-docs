@@ -13,18 +13,18 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
 	/// <summary>
-	/// The <c>EntityDataMetadata</c> class is a collection of <see cref="EntityDataColum"/>
+	/// The <c>EntityMetadata</c> class is a collection of <see cref="EntityDataColum"/>
 	/// instances.
 	/// </summary>
-	public sealed class EntityDataMetadata
+	public sealed class EntityMetadata
 	{
-		internal EntityDataMetadata(Druid entityId, IEnumerable<EntityDataColumn> columns)
+		internal EntityMetadata(Druid entityId, IEnumerable<EntitySortedColumn> columns)
 		{
 			this.entityId = entityId;
 			this.columns = columns.ToArray ();
 		}
 
-		private EntityDataMetadata(IDictionary<string, string> data, IEnumerable<EntityDataColumn> columns)
+		private EntityMetadata(IDictionary<string, string> data, IEnumerable<EntitySortedColumn> columns)
 		{
 			this.entityId = Druid.Parse (data[Strings.EntityId]);
 			this.columns = columns.ToArray ();
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
-		public IEnumerable<EntityDataColumn>	Columns
+		public IEnumerable<EntitySortedColumn>	Columns
 		{
 			get
 			{
@@ -77,12 +77,12 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// </summary>
 		/// <param name="xml">The XML tree.</param>
 		/// <returns>The metadata.</returns>
-		public static EntityDataMetadata Restore(XElement xml)
+		public static EntityMetadata Restore(XElement xml)
 		{
 			var data    = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
-			var columns = xml.Elements (Strings.Column).Select (x => EntityColumn.Restore (x)).Cast<EntityDataColumn> ();
+			var columns = xml.Elements (Strings.Column).Select (x => EntityColumn.Restore (x)).Cast<EntitySortedColumn> ();
 
-			return new EntityDataMetadata (data, columns);
+			return new EntityMetadata (data, columns);
 		}
 
 		
@@ -111,6 +111,6 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		#endregion
 
 		private readonly Druid					entityId;
-		private readonly EntityDataColumn[]		columns;
+		private readonly EntitySortedColumn[]		columns;
 	}
 }

@@ -9,12 +9,12 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
 	/// <summary>
-	/// The <c>EntityDataMetadataRecorder</c> class is used to record column definitions. See
+	/// The <c>EntityMetadataRecorder</c> class is used to record column definitions. See
 	/// the generic type for more details.
 	/// </summary>
-	public abstract class EntityDataMetadataRecorder
+	public abstract class EntityMetadataRecorder
 	{
-		protected EntityDataMetadataRecorder(Druid entityId)
+		protected EntityMetadataRecorder(Druid entityId)
 		{
 			this.entityId = entityId;
 		}
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <summary>
 		/// Gets the columns.
 		/// </summary>
-		public abstract IEnumerable<EntityDataColumn> Columns
+		public abstract IEnumerable<EntitySortedColumn> Columns
 		{
 			get;
 		}
@@ -53,9 +53,9 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// been added to the recorder.
 		/// </summary>
 		/// <returns>The metadata information.</returns>
-		public EntityDataMetadata GetMetadata()
+		public EntityMetadata GetMetadata()
 		{
-			return new EntityDataMetadata (this.EntityId, this.Columns);
+			return new EntityMetadata (this.EntityId, this.Columns);
 		}
 
 

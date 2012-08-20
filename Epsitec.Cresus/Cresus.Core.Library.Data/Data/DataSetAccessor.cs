@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Data
 			this.dataContext = this.data.CreateIsolatedDataContext ("DataSetAccessor");
 
 			this.isolatedTransaction = isolatedTransaction;
-			this.sortColumns = new List<EntityDataColumn> ();
+			this.sortColumns = new List<EntitySortedColumn> ();
 		}
 
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Data
 				.ToArray ();
 		}
 
-		public void SetSortOrder(IEnumerable<EntityDataColumn> columns)
+		public void SetSortOrder(IEnumerable<EntitySortedColumn> columns)
 		{
 			this.sortColumns.Clear ();
 
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly DataContext			dataContext;
 		private readonly System.Type			entityType;
 		private readonly IsolatedTransaction	isolatedTransaction;
-		private readonly List<EntityDataColumn>	sortColumns;
+		private readonly List<EntitySortedColumn>	sortColumns;
 		
 		private RequestView						requestView;
 		private int?							itemCount;

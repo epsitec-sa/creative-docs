@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				var sortOrder = sortCriterium.Item2;
 
 				var column = this.Columns.First (c => c.Name == name);
-				var entityDataColumn = new EntityDataColumn (column.LambdaExpression, sortOrder, column.Title);
+				var entityDataColumn = new EntitySortedColumn (column.LambdaExpression, sortOrder, column.Title);
 
 				yield return entityDataColumn.ToSortClause (example);
 			}

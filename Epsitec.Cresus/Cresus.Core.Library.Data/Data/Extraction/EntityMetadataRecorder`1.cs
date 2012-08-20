@@ -13,21 +13,21 @@ using System.Linq.Expressions;
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
 	/// <summary>
-	/// The <c>EntityDataMetadataRecorder</c> class is used to record column definitions for
+	/// The <c>EntityMetadataRecorder</c> class is used to record column definitions for
 	/// an entity of type <typeparamref name="TEntity"/>.
 	/// </summary>
 	/// <typeparam name="TEntity">The type of the entity.</typeparam>
-	public sealed class EntityDataMetadataRecorder<TEntity> : EntityDataMetadataRecorder
+	public sealed class EntityMetadataRecorder<TEntity> : EntityMetadataRecorder
 			where TEntity : AbstractEntity, new()
 	{
-		public EntityDataMetadataRecorder()
+		public EntityMetadataRecorder()
 			: base (EntityInfo<TEntity>.GetTypeId ())
 		{
-			this.columns = new List<EntityDataColumn> ();
+			this.columns = new List<EntitySortedColumn> ();
 		}
 
 
-		public override IEnumerable<EntityDataColumn> Columns
+		public override IEnumerable<EntitySortedColumn> Columns
 		{
 			get
 			{
@@ -72,10 +72,10 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <returns>
 		/// Self, so that fluent interfaces can be used.
 		/// </returns>
-		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
+		public EntityMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 			where TField : struct
 		{
-			this.Add (new EntityDataColumn (expression, sortOrder, name));
+			this.Add (new EntitySortedColumn (expression, sortOrder, name));
 			return this;
 		}
 
@@ -89,10 +89,10 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <returns>
 		/// Self, so that fluent interfaces can be used.
 		/// </returns>
-		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
+		public EntityMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 			where TField : struct
 		{
-			this.Add (new EntityDataColumn (expression, sortOrder, name));
+			this.Add (new EntitySortedColumn (expression, sortOrder, name));
 			return this;
 		}
 
@@ -105,19 +105,19 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// <returns>
 		/// Self, so that fluent interfaces can be used.
 		/// </returns>
-		public EntityDataMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
+		public EntityMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 		{
-			this.Add (new EntityDataColumn (expression, sortOrder, name));
+			this.Add (new EntitySortedColumn (expression, sortOrder, name));
 			return this;
 		}
 
 
-		private void Add(EntityDataColumn column)
+		private void Add(EntitySortedColumn column)
 		{
 			this.columns.Add (column);
 		}
 
 
-		private readonly List<EntityDataColumn> columns;
+		private readonly List<EntitySortedColumn> columns;
 	}
 }
