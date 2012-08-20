@@ -244,8 +244,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				var recorder = new EntityDataMetadataRecorder<CustomerEntity> ()
 							.Column (x => x.MainRelation.Person.DisplayName2, SortOrder.Ascending)
-					//	.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode, SortOrder.Ascending)
-					//	.Column (x => x.MainRelation.DefaultMailContact.Location.Name, SortOrder.Ascending)
+							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode, SortOrder.Ascending)
+							.Column (x => x.MainRelation.DefaultMailContact.Location.Name, SortOrder.Ascending)
 					//	.Column (x => x.MainRelation.DefaultMailContact.StreetName, SortOrder.Ascending)
 					//	.Column (x => x.MainRelation.DefaultMailContact.HouseNumber, SortOrder.Ascending)
 							;
@@ -261,9 +261,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var efExpl = efPath.ExplodeFields ().ToArray ();
 				var absPath = EntityFieldPath.CreateAbsolutePath (EntityDataMetadataRecorder<CustomerEntity>.Expression (x => x.MainRelation.DefaultMailContact.Location.PostalCode));
 
-
-				var xml = column.Save ("column");
-				var col = EntityColumn.Restore (xml);
+				var xml  = metadata.Save ("entity");
+				var meta = EntityDataMetadata.Restore (xml);
 			}
 		}
 

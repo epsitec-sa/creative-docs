@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -60,11 +60,11 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (string.IsNullOrEmpty (suffix))
 			{
-				return entityId.ToString ();
+				return entityId.ToCompactString ();
 			}
 			else
 			{
-				return string.Concat (entityId.ToString (), ".", suffix);
+				return string.Concat (entityId.ToCompactString (), ".", suffix);
 			}
 		}
 

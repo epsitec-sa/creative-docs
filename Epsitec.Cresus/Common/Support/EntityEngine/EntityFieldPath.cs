@@ -817,14 +817,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public override string ToString()
 		{
-			if (this.entityId.IsEmpty)
-			{
-				return string.Concat (":", this.path);
-			}
-			else
-			{
-				return string.Concat (this.entityId.ToString (), ":", this.path);
-			}
+			return string.Concat (this.entityId.ToCompactString (), ":", this.path);
 		}
 
 		

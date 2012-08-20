@@ -369,7 +369,7 @@ namespace Epsitec.Common.Support
 			switch (this.Type)
 			{
 				case DruidType.Invalid:
-					return "<invalid>";
+					return Strings.Invalid;
 				
 				case DruidType.ModuleRelative:
 					return Druid.ToPrefixedModuleString (Resources.FieldIdPrefix, this.DeveloperAndPatchLevel, this.Local);
@@ -378,7 +378,24 @@ namespace Epsitec.Common.Support
 					return string.Concat ("[", Druid.ToFullString (this.Module, this.DeveloperAndPatchLevel, this.Local), "]");
 				
 				default:
-					return "<not supported>";
+					return Strings.NotSupported;
+			}
+		}
+
+		/// <summary>
+		/// Same as <see cref="ToString()"/>, with the difference that instead of returning
+		/// <c>"&lt;invalid&gt;"</c>, it returns an empty string.
+		/// </summary>
+		/// <returns>The string representation of this DRUID.</returns>
+		public string ToCompactString()
+		{
+			if (this.IsEmpty)
+			{
+				return "";
+			}
+			else
+			{
+				return this.ToString ();
 			}
 		}
 
@@ -394,7 +411,7 @@ namespace Epsitec.Common.Support
 		public static Druid Parse(string value)
 		{
 			if ((string.IsNullOrEmpty (value)) ||
-				(value == "<invalid>"))
+				(value == Strings.Invalid))
 			{
 				return new Druid ();
 			}
@@ -1165,6 +1182,14 @@ namespace Epsitec.Common.Support
 		}
 		
 		#endregion
+
+
+		private static class Strings
+		{
+			public static readonly string		Invalid = "<invalid>";
+			public static readonly string		NotSupported = "<not supported>";
+		}
+
 
 		public static readonly Druid			Empty = new Druid ();
 		public const int						DeveloperIdMultiplier	= 10;

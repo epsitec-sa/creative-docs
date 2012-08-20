@@ -141,7 +141,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			attributes.Add (new XAttribute (Strings.Type, this.GetType ().FullName));
 			attributes.Add (new XAttribute (Strings.Path, this.path.ToString ()));
-			attributes.Add (new XAttribute (Strings.CaptionId, this.captionId.ToString ()));
+			attributes.Add (new XAttribute (Strings.CaptionId, this.captionId.ToCompactString ()));
 		}
 
 
