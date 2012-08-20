@@ -44,7 +44,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private EntityFieldPath(Druid entityId, string path)
 		{
 			this.entityId = entityId;
-			this.path = path;
+			this.path = path ?? "";
 		}
 
 
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			get
 			{
-				if (string.IsNullOrEmpty (this.path))
+				if (this.path.Length == 0)
 				{
 					return 0;
 				}
@@ -459,7 +459,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public string GetRoot()
 		{
-			if (string.IsNullOrEmpty (this.path))
+			if (this.path.Length == 0)
 			{
 				return null;
 			}
@@ -563,8 +563,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			string search = path.path;
 			int    length = search.Length;
 
-			if ((this.path == null) ||
-				(this.path.Length < length))
+			if (this.path.Length < length)
 			{
 				return false;
 			}
@@ -707,7 +706,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				int pos = path.IndexOf (':');
 
-				if (pos < 0)
+				if (pos < 1)
 				{
 					return new EntityFieldPath (Druid.Empty, path);
 				}
@@ -786,12 +785,19 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public override int GetHashCode()
 		{
-			return this.path.GetHashCode ();
+			return this.entityId.GetHashCode () ^ this.path.GetHashCode ();
 		}
 
 		public override string ToString()
 		{
-			return this.path;
+			if (this.entityId.IsEmpty)
+			{
+				return string.Concat (":", this.path);
+			}
+			else
+			{
+				return string.Concat (this.entityId.ToString (), ":", this.path);
+			}
 		}
 
 		
