@@ -127,6 +127,12 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Shrinks the name of the type, by replacing part of the assembly name by its
+		/// shortcut, if one has been defined using an <see cref="NamespaceShortcutAttribute"/>.
+		/// </summary>
+		/// <param name="name">The full type name.</param>
+		/// <returns>The shortened name.</returns>
 		public string ShrinkTypeName(string name)
 		{
 			var keys = this.namespaceShortcutsFullToShort.Keys.ToArray ();
@@ -157,6 +163,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Unshrinks the name of the type, if it was shortened by <see cref="ShrinkTypeName"/>.
+		/// </summary>
+		/// <param name="name">The (possibly shortened) name.</param>
+		/// <returns>The full name.</returns>
 		public string UnshrinkTypeName(string name)
 		{
 			if (string.IsNullOrEmpty (name))
