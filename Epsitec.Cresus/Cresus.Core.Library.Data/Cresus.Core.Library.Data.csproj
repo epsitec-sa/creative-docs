@@ -80,6 +80,7 @@
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Data\LockTransaction.cs" />
+    <Compile Include="Data\Metadata\StoreMetadata.cs" />
     <Compile Include="Entities\AbstractEntityExtension.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\EntityClonerExtensions.cs" />
