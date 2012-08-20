@@ -252,17 +252,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				var metadata = recorder.GetMetadata ();
 
-
 				this.context.Accessor.SetSortOrder (metadata.Columns);
-
-				var column = recorder.Columns.First ();
-				var props  = ExpressionAnalyzer.ExplodeLambda (column.Expression);
-				var efPath = EntityFieldPath.CreateAbsolutePath (props);
-				var efExpl = efPath.ExplodeFields ().ToArray ();
-				var absPath = EntityFieldPath.CreateAbsolutePath (EntityDataMetadataRecorder<CustomerEntity>.Expression (x => x.MainRelation.DefaultMailContact.Location.PostalCode));
-
-				var xml  = metadata.Save ("entity");
-				var meta = EntityDataMetadata.Restore (xml);
 			}
 		}
 
