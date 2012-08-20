@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 {
 
 
+	using EntityField = Epsitec.Cresus.DataLayer.Expressions.EntityField;
+	
+	
 	[TestClass]
 	public sealed class UnitTestRequest
 	{
