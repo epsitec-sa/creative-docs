@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
 {
@@ -108,8 +108,8 @@ namespace Epsitec.Common.Text.Wrappers
 		{
 			int defines = 0;
 			int changes = 0;
-			
-			string[] font_features = new string[0];
+
+			string[] font_features = Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 			
 			if (this.defined_state.IsValueFlagged (State.FontFeaturesProperty))
 			{
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Text.Wrappers
 					{
 						if (this.defined_state.InvertBold)
 						{
-							Property p_font = new Properties.FontProperty (null, "!Bold", new string[0]);
+							Property p_font = new Properties.FontProperty (null, "!Bold", Epsitec.Common.Types.Collections.EmptyArray<string>.Instance);
 							this.DefineMetaProperty (TextWrapper.InvertBold, 1, p_font);
 						}
 						else
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Text.Wrappers
 					{
 						if (this.defined_state.InvertItalic)
 						{
-							Property p_font = new Properties.FontProperty (null, "!Italic", new string[0]);
+							Property p_font = new Properties.FontProperty (null, "!Italic", Epsitec.Common.Types.Collections.EmptyArray<string>.Instance);
 							this.DefineMetaProperty (TextWrapper.InvertItalic, 1, p_font);
 						}
 						else
@@ -1643,7 +1643,7 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	FontStyleProperty = new StateProperty (typeof (State), "FontStyle", null);
 			public static readonly StateProperty	FontSizeProperty = new StateProperty (typeof (State), "FontSize", double.NaN);
 			public static readonly StateProperty	FontGlueProperty = new StateProperty (typeof (State), "FontGlue", double.NaN);
-			public static readonly StateProperty	FontFeaturesProperty = new StateProperty (typeof (State), "FontFeatures", new string[0]);
+			public static readonly StateProperty	FontFeaturesProperty = new StateProperty (typeof (State), "FontFeatures", Epsitec.Common.Types.Collections.EmptyArray<string>.Instance);
 			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
 			public static readonly StateProperty	InvertBoldProperty = new StateProperty (typeof (State), "InvertBold", false);
 			public static readonly StateProperty	InvertItalicProperty = new StateProperty (typeof (State), "InvertItalic", false);
@@ -1657,8 +1657,8 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	TextBoxProperty = new StateProperty (typeof (State), "TextBox", null);
 			public static readonly StateProperty	TextMarkerProperty = new StateProperty (typeof (State), "TextMarker", null);
 			public static readonly StateProperty	LinkProperty = new StateProperty (typeof (State), "Link", null);
-			public static readonly StateProperty	ConditionsProperty = new StateProperty (typeof (State), "Conditions", new string[0]);
-			public static readonly StateProperty	UserTagsProperty = new StateProperty (typeof (State), "UserTags", new string[0]);
+			public static readonly StateProperty	ConditionsProperty = new StateProperty (typeof (State), "Conditions", Epsitec.Common.Types.Collections.EmptyArray<string>.Instance);
+			public static readonly StateProperty	UserTagsProperty = new StateProperty (typeof (State), "UserTags", Epsitec.Common.Types.Collections.EmptyArray<string>.Instance);
 			#endregion
 		}
 		

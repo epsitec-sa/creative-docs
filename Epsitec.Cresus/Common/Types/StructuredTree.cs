@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -9,6 +9,7 @@ namespace Epsitec.Common.Types
 	/// The <c>StructuredTree</c> class is used to walk through a tree built
 	/// with <c>IStructuredData</c> and <c>IStructuredType</c> objects.
 	/// </summary>
+	[System.Obsolete ("The StructuredTree class should no longer be used. It will be removed.")]
 	public static class StructuredTree
 	{
 		public static string[] SplitPath(string path)
@@ -322,7 +323,7 @@ namespace Epsitec.Common.Types
 				yield return StructuredTree.CreatePath (path, id);
 			}
 		}
-		
-		public static readonly string[] EmptyPath = new string[0];
+
+		public static readonly string[] EmptyPath = Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 	}
 }

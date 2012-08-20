@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -11,7 +11,7 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public PropertiesProperty()
 		{
-			this.serializedProperties = new string[0];
+			this.serializedProperties = Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 		}
 		
 		public PropertiesProperty(string[] serializedProperties)
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Text.Properties
 			if ((properties == null) ||
 				(properties.Length == 0))
 			{
-				return new string[0];
+				return Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 			}
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();

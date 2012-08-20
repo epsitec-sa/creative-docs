@@ -1,4 +1,4 @@
-﻿//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -20,9 +20,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Initializes a new instance of the <see cref="EntityFieldPath"/> class.
 		/// </summary>
 		public EntityFieldPath()
+			: this (Druid.Empty, "")
 		{
-			this.entityId = Druid.Empty;
-			this.path = "";
 		}
 
 		/// <summary>
@@ -30,9 +29,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="path">The path.</param>
 		public EntityFieldPath(EntityFieldPath path)
+			: this (path.EntityId, path.path)
 		{
-			this.entityId = path.entityId;
-			this.path = path.path;
 		}
 
 		/// <summary>
@@ -51,7 +49,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets a value indicating whether the path is empty.
 		/// </summary>
 		/// <value><c>true</c> if the path is empty; otherwise, <c>false</c>.</value>
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -66,7 +64,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <value>
 		/// 	<c>true</c> if the path is relative; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsRelative
+		public bool								IsRelative
 		{
 			get
 			{
@@ -81,7 +79,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <value>
 		/// 	<c>true</c> if the path is absolute; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsAbsolute
+		public bool								IsAbsolute
 		{
 			get
 			{
@@ -93,7 +91,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets a value indicating whether the path contains an index.
 		/// </summary>
 		/// <value><c>true</c> if the path contains an index; otherwise, <c>false</c>.</value>
-		public bool ContainsIndex
+		public bool								ContainsIndex
 		{
 			get
 			{
@@ -105,7 +103,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets the field count. An empty path will return zero.
 		/// </summary>
 		/// <value>The count.</value>
-		public int Count
+		public int								Count
 		{
 			get
 			{
@@ -134,7 +132,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets the entity id if the path is an absolute (rooted) path.
 		/// </summary>
 		/// <value>The entity id.</value>
-		public Druid EntityId
+		public Druid							EntityId
 		{
 			get
 			{
@@ -146,7 +144,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Gets the fields relative to the root entity.
 		/// </summary>
 		/// <value>The fields or an empty array.</value>
-		public string[] Fields
+		public string[]							FieldIds
 		{
 			get
 			{
@@ -171,7 +169,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns><c>true</c> if the path could be resolved; otherwise, <c>false</c>.</returns>
 		public bool Navigate(AbstractEntity root, out AbstractEntity leaf, out string id)
 		{
-			string[] fields = this.Fields;
+			string[] fields = this.FieldIds;
 			int      last   = fields.Length - 1;
 
 			leaf = null;
@@ -274,7 +272,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				throw new System.ArgumentException ("Invalid root");
 			}
 
-			string[] fields = this.Fields;
+			string[] fields = this.FieldIds;
 			int      last   = fields.Length - 1;
 
 			leaf = Druid.Empty;
@@ -396,7 +394,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			bool disableCalculations = root.CalculationsDisabled;
 
-			string[] fields = this.Fields;
+			string[] fields = this.FieldIds;
 			int      last   = fields.Length - 1;
 
 			AbstractEntity node = root;
@@ -467,7 +465,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The parent path or <c>null</c> if the path is empty.</returns>
 		public EntityFieldPath GetParentPath()
 		{
-			string[] fields = this.Fields;
+			string[] fields = this.FieldIds;
 
 			switch (fields.Length)
 			{
@@ -486,7 +484,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The root path or <c>null</c> if the path is empty.</returns>
 		public EntityFieldPath GetRootPath()
 		{
-			string[] fields = this.Fields;
+			string[] fields = this.FieldIds;
 
 			if (fields.Length == 0)
 			{
@@ -853,7 +851,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		
 
-		private readonly Druid entityId;
-		private readonly string path;
+		private readonly Druid					entityId;
+		private readonly string					path;
 	}
 }

@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -17,7 +17,9 @@ namespace Epsitec.Common.Text.Properties
 		public ManagedParagraphProperty(string managerName, string[] managerParameters)
 		{
 			this.managerName       = managerName;
-			this.managerParameters = managerParameters == null ? new string[0] : (managerParameters.Clone () as string[]);
+			this.managerParameters = managerParameters == null
+				? Epsitec.Common.Types.Collections.EmptyArray<string>.Instance
+				: (managerParameters.Clone () as string[]);
 		}
 		
 		

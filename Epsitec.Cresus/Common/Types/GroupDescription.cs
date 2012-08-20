@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Types
 				(UnknownValue.IsUnknownValue (value)) ||
 				(UndefinedValue.IsUndefinedValue (value)))
 			{
-				return new string[0];
+				return Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 			}
 
 			string group;
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Types
 				group = value.ToString ();
 			}
 
-			return string.IsNullOrEmpty (group) ? new string[0] : new string[] { group };
+			return string.IsNullOrEmpty (group) ? Epsitec.Common.Types.Collections.EmptyArray<string>.Instance : new string[] { group };
 		}
 
 		/// <summary>

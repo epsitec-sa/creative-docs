@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Properties
 {
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			if (features == null)
 			{
-				features = new string[0];
+				features = Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 			}
 			
 			this.faceName   = face;

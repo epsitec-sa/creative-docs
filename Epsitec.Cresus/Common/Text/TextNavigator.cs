@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -791,7 +791,7 @@ namespace Epsitec.Common.Text
 			
 			if (this.selectionCursors == null)
 			{
-				texts = new string[0];
+				texts = Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 			}
 			else
 			{

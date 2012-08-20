@@ -587,7 +587,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (string.IsNullOrEmpty (groups))
 			{
-				return new string[0];
+				return Epsitec.Common.Types.Collections.EmptyArray<string>.Instance;
 			}
 			else
 			{
