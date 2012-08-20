@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Extraction
+namespace Epsitec.Cresus.Core.Data.Metadata
 {
 	/// <summary>
 	/// The <c>EntityMetadata</c> class is a collection of <see cref="EntityDataColum"/>

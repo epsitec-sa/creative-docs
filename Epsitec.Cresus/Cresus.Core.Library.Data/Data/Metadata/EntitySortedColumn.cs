@@ -11,7 +11,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Extraction
+namespace Epsitec.Cresus.Core.Data.Metadata
 {
 	/// <summary>
 	/// The <c>EntitySortedColumn</c> class defines a column (i.e. a direct or indirect field

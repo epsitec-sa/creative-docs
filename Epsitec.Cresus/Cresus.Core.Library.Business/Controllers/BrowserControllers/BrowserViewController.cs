@@ -3,6 +3,7 @@
 
 using Epsitec.Common.BigList;
 using Epsitec.Common.BigList.Widgets;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -11,6 +12,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Data.Metadata;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators;
@@ -21,8 +23,6 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Data.Extraction;
-using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {

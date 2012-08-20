@@ -2,7 +2,7 @@
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.Core.Data.Extraction;
+using Epsitec.Cresus.Core.Data.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 

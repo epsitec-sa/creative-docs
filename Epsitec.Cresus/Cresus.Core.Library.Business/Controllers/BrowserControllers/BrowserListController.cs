@@ -10,7 +10,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Data.Extraction;
+using Epsitec.Cresus.Core.Data.Metadata;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 

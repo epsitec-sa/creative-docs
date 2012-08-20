@@ -6,7 +6,7 @@ using Epsitec.Common.Support;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Extraction
+namespace Epsitec.Cresus.Core.Data.Metadata
 {
 	/// <summary>
 	/// The <c>EntityMetadataRecorder</c> class is used to record column definitions. See
