@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		public EntityDataColumn(IDictionary<string, string> data)
 			: base (data)
 		{
-			this.sortOrder = data["sort"].ToEnum<SortOrder> ();
+			this.sortOrder = data[Strings.Sort].ToEnum<SortOrder> ();
 		}
 
 
@@ -62,9 +62,17 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		{
 			base.Serialize (attributes);
 
-			attributes.Add (new XAttribute ("sort", this.sortOrder.ToString ()));
+			attributes.Add (new XAttribute (Strings.Sort, this.sortOrder.ToString ()));
 		}
 
+		#region Strings Class
+
+		private static class Strings
+		{
+			public static readonly string		Sort = "sort";
+		}
+
+		#endregion
 
 		private readonly SortOrder				sortOrder;
 	}

@@ -12,6 +12,11 @@ using System.Xml.Linq;
 
 namespace Epsitec.Common.Support.EntityEngine
 {
+	/// <summary>
+	/// The <c>EntityColumn</c> class is used to represent a column, related to
+	/// an entity; the column is reached through an <see cref="EntityFieldPath"/>
+	/// expressed as an expression.
+	/// </summary>
 	public class EntityColumn
 	{
 		/// <summary>
@@ -34,8 +39,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="data">The data.</param>
 		public EntityColumn(IDictionary<string, string> data)
 		{
-			this.path       = EntityFieldPath.Parse (data["path"]);
-			this.captionId  = Druid.Parse (data["cap"]);
+			this.path       = EntityFieldPath.Parse (data[Strings.Path]);
+			this.captionId  = Druid.Parse (data[Strings.CaptionId]);
 			this.expression = this.path.CreateLambda () as LambdaExpression;
 		}
 
@@ -118,7 +123,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns></returns>
 		public static EntityColumn Restore(XElement xml)
 		{
-			var typeName = xml.Attribute ("type").Value;
+			var typeName = xml.Attribute (Strings.Type).Value;
 			var sysType  = TypeEnumerator.Instance.FindType (typeName);
 			var arg      = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
 			var instance = System.Activator.CreateInstance (sysType, arg) as EntityColumn;
@@ -134,11 +139,22 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="attributes">The attributes.</param>
 		protected virtual void Serialize(List<XAttribute> attributes)
 		{
-			attributes.Add (new XAttribute ("type", this.GetType ().FullName));
-			attributes.Add (new XAttribute ("path", this.path.ToString ()));
-			attributes.Add (new XAttribute ("cap", this.captionId.ToString ()));
+			attributes.Add (new XAttribute (Strings.Type, this.GetType ().FullName));
+			attributes.Add (new XAttribute (Strings.Path, this.path.ToString ()));
+			attributes.Add (new XAttribute (Strings.CaptionId, this.captionId.ToString ()));
 		}
 
+
+		#region Strings Class
+
+		private static class Strings
+		{
+			public static readonly string		Type = "type";
+			public static readonly string		Path = "path";
+			public static readonly string		CaptionId = "cid";
+		}
+
+		#endregion
 
 		private readonly LambdaExpression		expression;
 		private readonly EntityFieldPath		path;

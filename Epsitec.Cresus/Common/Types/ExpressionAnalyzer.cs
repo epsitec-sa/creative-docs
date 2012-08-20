@@ -78,7 +78,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="properties">The properties.</param>
 		/// <returns></returns>
-		public static Expression BuildExpression(IEnumerable<PropertyInfo> properties)
+		public static LambdaExpression BuildLambdaExpression(IEnumerable<PropertyInfo> properties)
 		{
 			var root = properties.First ();
 			var item = Expression.Parameter (root.ReflectedType, "x");

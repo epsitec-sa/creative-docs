@@ -193,12 +193,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public Expression CreateLambda()
+		public LambdaExpression CreateLambda()
 		{
 			var fields    = this.ExplodeFields ();
 			var propInfos = fields.Select (x => (PropertyInfo) x);
 			
-			return ExpressionAnalyzer.BuildExpression (propInfos);
+			return ExpressionAnalyzer.BuildLambdaExpression (propInfos);
 		}
 
 
