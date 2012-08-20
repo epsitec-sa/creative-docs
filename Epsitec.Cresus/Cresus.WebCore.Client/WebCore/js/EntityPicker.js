@@ -7,6 +7,7 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
   height: 480,
   layout: 'fit',
   modal: true,
+  border: false,
   title: 'Entity selection',
 
   /* Properties */
