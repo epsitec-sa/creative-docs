@@ -179,6 +179,15 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     var buttons = options.toolbarButtons || [];
 
     buttons.push(Ext.create('Ext.Button', {
+      text: 'Sort',
+      iconCls: 'icon-sort',
+      listeners: {
+        click: this.onSortHandler,
+        scope: this
+      }
+    }));
+
+    buttons.push(Ext.create('Ext.Button', {
       text: 'Refresh',
       iconCls: 'icon-refresh',
       listeners: {
@@ -214,6 +223,81 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     // yet.
     this.store.removeAll();
     this.store.load();
+  },
+
+  onSortHandler: function() {
+    var sortWindow = Ext.create('Epsitec.SortWindow', {
+      callback: Epsitec.Callback.create(this.setSorters, this),
+      sorters: this.getCurrentSorters(),
+      initialSorters: this.getInitialSorters()
+    });
+
+    sortWindow.show();
+  },
+
+  getCurrentSorters: function() {
+    var usedSorters, unusedSorters;
+
+    usedSorters = this.store.getSorters().map(
+        function(s1) {
+          return {
+            title: this.columnDefinitions.filter(function(s2) {
+              return s1.property === s2.name;
+            })[0].title,
+            name: s1.property,
+            sortDirection: s1.direction
+          };
+        },
+        this
+        );
+
+    unusedSorters = this.getInitialSorters().filter(function(s1) {
+      return !usedSorters.some(function(s2) {
+        return s1.name === s2.name;
+      });
+    });
+
+    unusedSorters.forEach(function(s) {
+      s.sortDirection = null;
+    });
+
+    return usedSorters.concat(unusedSorters);
+  },
+
+  getInitialSorters: function() {
+    return this.columnDefinitions
+        .filter(function(c) {
+          return c.sortable === true;
+        })
+        .map(function(c) {
+          return {
+            title: c.title,
+            name: c.name,
+            sortDirection: c.sortDirection
+          };
+        });
+  },
+
+  setSorters: function(sorters) {
+    var newSorters = sorters.map(function(s) {
+      return {
+        property: s.name,
+        direction: s.sortDirection
+      };
+    });
+
+    // The store.sort(...) method requires at least one sorter to do its job. So
+    // if the user has removed all the sort criteria, we must do the job by
+    // ourselves.
+
+    if (sorters.length === 0)
+    {
+      this.store.sorters.clear();
+      this.reloadStore();
+    }
+    else {
+      this.store.sort(newSorters);
+    }
   },
 
   onSelectionChangeHandler: function(view, selection, options) {
