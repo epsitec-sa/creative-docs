@@ -1,4 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
 
@@ -64,6 +65,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Name",
 						name: "Name",
 						type: ColumnType.String,
+						hidden: false,
 						sortable: true,
 						sortOrder: SortOrder.Descending,
 						lambdaExpression: x => x.Name
@@ -73,6 +75,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Code",
 						name: "Code",
 						type: ColumnType.String,
+						hidden: false,
 						sortable: false,
 						sortOrder: null,
 						lambdaExpression: x => x.IsoCode
@@ -91,18 +94,40 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "Name",
 						name: "Name",
 						type: ColumnType.String,
+						hidden: false,
 						sortable: true,
 						sortOrder: null,
 						lambdaExpression: x => x.Name
 					),
 					Column.Create<AiderTownEntity, string>
 					(
-						title: "Country",
-						name: "Country",
+						title: "ZipCode",
+						name: "ZipCode",
 						type: ColumnType.String,
+						hidden: false,
+						sortable: true,
+						sortOrder: null,
+						lambdaExpression: x => x.ZipCode
+					),
+					Column.Create<AiderTownEntity, string>
+					(
+						title: "CountryName",
+						name: "CountryName",
+						type: ColumnType.String,
+						hidden: false,
 						sortable: true,
 						sortOrder: null,
 						lambdaExpression: x => x.Country.Name
+					),
+					Column.Create<AiderTownEntity, string>
+					(
+						title: "CountryCode",
+						name: "CountryCode",
+						type: ColumnType.String,
+						hidden: true,
+						sortable: true,
+						sortOrder: null,
+						lambdaExpression: x => x.Country.IsoCode
 					),
 				}
 			);
@@ -132,6 +157,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "FirstName",
 						name: "FirstName",
 						type: ColumnType.String,
+						hidden: false,
 						sortable: true,
 						sortOrder: null,
 						lambdaExpression: x => x.eCH_Person.PersonFirstNames
@@ -141,6 +167,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 						title: "LastName",
 						name: "LastName",
 						type: ColumnType.String,
+						hidden: false,
 						sortable: true,
 						sortOrder: null,
 						lambdaExpression: x => x.eCH_Person.PersonOfficialName

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "summary", summary },
 			};
 
-			foreach (var column in this.Columns)
+			foreach (var column in this.Columns.Where (c => !c.Hidden))
 			{
 				var propertyAccessor = propertyAccessorCache.Get (column.LambdaExpression);
 				var textPropertyAccessor = (TextPropertyAccessor) propertyAccessor;

@@ -17,11 +17,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Column(string title, string name, ColumnType type, bool sortable, SortOrder? sortOrder, LambdaExpression lambdaExpression)
+		public Column(string title, string name, ColumnType type, bool hidden, bool sortable, SortOrder? sortOrder, LambdaExpression lambdaExpression)
 		{
 			this.title = title;
 			this.name = name;
 			this.type = type;
+			this.hidden = hidden;
 			this.sortable = sortable;
 			this.sortOrder = sortOrder;
 			this.lambdaExpression = lambdaExpression;
@@ -55,6 +56,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
+		public bool Hidden
+		{
+			get
+			{
+				return this.hidden;
+			}
+		}
+
+
 		public bool Sortable
 		{
 			get
@@ -82,9 +92,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public static Column Create<T1, T2>(string title, string name, ColumnType type, bool sortable, SortOrder? sortOrder, Expression<Func<T1, T2>> lambdaExpression)
+		public static Column Create<T1, T2>(string title, string name, ColumnType type, bool hidden, bool sortable, SortOrder? sortOrder, Expression<Func<T1, T2>> lambdaExpression)
 		{
-			return new Column(title, name, type, sortable, sortOrder, lambdaExpression);
+			return new Column(title, name, type, hidden, sortable, sortOrder, lambdaExpression);
 		}
 
 
@@ -95,6 +105,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly ColumnType type;
+
+
+		private readonly bool hidden;
 
 
 		private readonly bool sortable;

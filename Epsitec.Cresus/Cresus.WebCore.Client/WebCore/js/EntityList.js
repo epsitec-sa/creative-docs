@@ -68,14 +68,18 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   },
 
   createDynamicColumns: function(columnDefinitions) {
-    return columnDefinitions.map(function(c) {
-      return {
-        text: c.title,
-        flex: 1,
-        dataIndex: c.name,
-        sortable: c.sortable
-      };
-    });
+    return columnDefinitions
+        .filter(function(c) {
+          return c.hidden === false;
+        })
+        .map(function(c) {
+          return {
+            text: c.title,
+            flex: 1,
+            dataIndex: c.name,
+            sortable: c.sortable
+          };
+        });
   },
 
   createSelModel: function(options) {

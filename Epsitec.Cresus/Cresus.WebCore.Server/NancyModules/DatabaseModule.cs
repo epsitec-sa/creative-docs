@@ -93,6 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				{ "title", column.Title },
 				{ "name", column.Name },
 				{ "type", this.GetColumnTypeData(column.Type) },
+				{ "hidden", column.Hidden },
 				{ "sortable", column.Sortable },
 				{ "sortDirection", this.GetSortOrder (column.SortOrder) } 
 			};
