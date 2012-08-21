@@ -125,8 +125,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			var typeName = TypeEnumerator.Instance.UnshrinkTypeName (xml.Attribute (Strings.Type).Value);
 			var sysType  = TypeEnumerator.Instance.FindType (typeName);
-			var arg      = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
-			var instance = System.Activator.CreateInstance (sysType, arg) as EntityColumn;
+			var data     = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
+			var instance = System.Activator.CreateInstance (sysType, data) as EntityColumn;
 			
 			return instance;
 		}
