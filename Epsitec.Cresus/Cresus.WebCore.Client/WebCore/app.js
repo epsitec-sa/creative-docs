@@ -31,6 +31,8 @@ Ext.application({
     'Epsitec.cresus.webcore.ErrorHandler',
     'Epsitec.cresus.webcore.LoginPanel',
     'Epsitec.cresus.webcore.Menu',
+    'Epsitec.cresus.webcore.SortItem',
+    'Epsitec.cresus.webcore.SortWindow',
     'Epsitec.cresus.webcore.SummaryTile',
     'Epsitec.cresus.webcore.TabManager',
     'Epsitec.cresus.webcore.Tools'
