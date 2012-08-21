@@ -52,91 +52,9 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
 
     return Ext.create(type, {
       databaseName: options.databaseName,
-      fields: this.createFields(columnDefinitions),
-      sorters: this.createSorters(columnDefinitions),
-      columns: this.createColumns(columnDefinitions),
+      columnDefinitions: columnDefinitions,
       multiSelect: options.multiSelect,
       onSelectionChange: options.onSelectionChange
-    });
-  },
-
-  createFields: function(columnDefinitions) {
-    var basicFields = this.createBasicFields(),
-        dynamicFields = this.createDynamicFields(columnDefinitions);
-
-    return basicFields.concat(dynamicFields);
-  },
-
-  createBasicFields: function() {
-    return [
-      {
-        name: 'id',
-        type: 'string'
-      },
-      {
-        name: 'summary',
-        type: 'string'
-      }
-    ];
-  },
-
-  createDynamicFields: function(columnDefinitions) {
-    return columnDefinitions.map(function(c) {
-      return {
-        name: c.name,
-        type: c.type
-      };
-    });
-  },
-
-  createSorters: function(columnDefinitions) {
-    return columnDefinitions
-        .filter(function(c) {
-          return c.sortDirection !== null;
-        }).map(function(c) {
-          return {
-            property: c.name,
-            direction: c.sortDirection
-          };
-        });
-  },
-
-  createColumns: function(columnDefinitions) {
-    var basicColumns = this.createBasicColumns(columnDefinitions),
-        dynamicColumns = this.createDynamicColumns(columnDefinitions);
-
-    return basicColumns.concat(dynamicColumns);
-  },
-
-  createBasicColumns: function(columnDefinitions) {
-    var basicColumns = [
-      {
-        xtype: 'rownumberer',
-        width: 35,
-        sortable: false
-      }
-    ];
-
-    if (Epsitec.Tools.isArrayEmpty(columnDefinitions)) {
-      basicColumns.push({
-        text: 'Summary',
-        flex: 1,
-        dataIndex: 'summary',
-        sortable: false
-      });
-    }
-
-    return basicColumns;
-  },
-
-  createDynamicColumns: function(columnDefinitions) {
-    return columnDefinitions.map(function(c) {
-      return {
-        text: c.title,
-        flex: 1,
-        dataIndex: c.name,
-        sortable: c.sortable
-      };
     });
   },
 

@@ -13,6 +13,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   databaseName: null,
   onSelectionChangeCallback: null,
+  columnDefinitions: null,
 
   /* Constructor */
 
@@ -21,6 +22,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       dockedItems: [
         this.createToolbar(options)
       ],
+      columns: this.createColumns(options),
       store: this.createStore(options),
       selModel: this.createSelModel(options),
       onSelectionChangeCallback: options.onSelectionChange,
@@ -36,6 +38,45 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   },
 
   /* Additional methods */
+
+  createColumns: function(options) {
+    var basicColumns = this.createBasicColumns(options.columnDefinitions),
+        dynamicColumns = this.createDynamicColumns(options.columnDefinitions);
+
+    return basicColumns.concat(dynamicColumns);
+  },
+
+  createBasicColumns: function(columnDefinitions) {
+    var basicColumns = [
+      {
+        xtype: 'rownumberer',
+        width: 35,
+        sortable: false
+      }
+    ];
+
+    if (Epsitec.Tools.isArrayEmpty(columnDefinitions)) {
+      basicColumns.push({
+        text: 'Summary',
+        flex: 1,
+        dataIndex: 'summary',
+        sortable: false
+      });
+    }
+
+    return basicColumns;
+  },
+
+  createDynamicColumns: function(columnDefinitions) {
+    return columnDefinitions.map(function(c) {
+      return {
+        text: c.title,
+        flex: 1,
+        dataIndex: c.name,
+        sortable: c.sortable
+      };
+    });
+  },
 
   createSelModel: function(options) {
     if (options.multiSelect) {
@@ -55,8 +96,8 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   createStore: function(options) {
     return Ext.create('Ext.data.Store', {
-      fields: options.fields,
-      sorters: options.sorters,
+      fields: this.createFields(options.columnDefinitions),
+      sorters: this.createSorters(options.columnDefinitions),
       autoLoad: true,
       pageSize: 100,
       remoteSort: true,
@@ -72,6 +113,47 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         encodeSorters: this.encodeSorters
       }
     });
+  },
+
+  createFields: function(columnDefinitions) {
+    var basicFields = this.createBasicFields(),
+        dynamicFields = this.createDynamicFields(columnDefinitions);
+
+    return basicFields.concat(dynamicFields);
+  },
+
+  createBasicFields: function() {
+    return [
+      {
+        name: 'id',
+        type: 'string'
+      },
+      {
+        name: 'summary',
+        type: 'string'
+      }
+    ];
+  },
+
+  createDynamicFields: function(columnDefinitions) {
+    return columnDefinitions.map(function(c) {
+      return {
+        name: c.name,
+        type: c.type
+      };
+    });
+  },
+
+  createSorters: function(columnDefinitions) {
+    return columnDefinitions
+        .filter(function(c) {
+          return c.sortDirection !== null;
+        }).map(function(c) {
+          return {
+            property: c.name,
+            direction: c.sortDirection
+          };
+        });
   },
 
   encodeSorters: function(sorters) {
