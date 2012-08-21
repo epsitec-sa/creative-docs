@@ -6,7 +6,7 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
 
   constructor: function(options) {
     var newOptions = {
-      tbar: this.createEditionButtons()
+      toolbarButtons: this.createEditionButtons()
     };
     Ext.applyIf(newOptions, options);
 

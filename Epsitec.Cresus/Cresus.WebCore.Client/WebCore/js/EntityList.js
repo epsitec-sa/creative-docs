@@ -18,7 +18,9 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   constructor: function(options) {
     var newOptions = {
-      tbar: this.createButtons(options),
+      dockedItems: [
+        this.createToolbar(options)
+      ],
       store: this.createStore(options),
       selModel: this.createSelModel(options),
       onSelectionChangeCallback: options.onSelectionChange,
@@ -80,21 +82,26 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     return sorterStrings.join(';');
   },
 
+  createToolbar: function(options) {
+    return Ext.create('Ext.Toolbar', {
+      dock: 'top',
+      items: this.createButtons(options)
+    });
+  },
+
   createButtons: function(options) {
-    var buttons, buttonRefresh;
+    var buttons = options.toolbarButtons || [];
 
-    buttons = options.tbar || [];
-
-    buttonRefresh = Ext.create('Ext.Button', {
+    buttons.push(Ext.create('Ext.Button', {
       text: 'Refresh',
       iconCls: 'icon-refresh',
       listeners: {
         click: this.onRefreshHandler,
         scope: this
       }
-    });
+    }));
 
-    return buttons.concat(buttonRefresh);
+    return buttons;
   },
 
   onRefreshHandler: function() {
