@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Crée le bouton permettant de choisir une action pour créer un nouveau document dans l'affaire en cours,
 			//	par le biais d'un menu.
 			this.workflowTransitionButton = this.CreateButton ();
-			this.workflowTransitionButton.IconUri = Misc.GetResourceIconUri ("WorkflowTransition");
+			this.workflowTransitionButton.IconUri = Misc.IconProvider.GetResourceIconUri ("WorkflowTransition");
 			this.workflowTransitionButton.Enable = false;
 
 			ToolTip.Default.SetToolTip (this.workflowTransitionButton, "Crée une nouvelle affaire ou un nouveau document");
@@ -587,7 +587,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Crée le bouton 'utilisateur', qui affiche l'utilisateur en cours et permet d'en changer.
 			this.authenticateUserButton = RibbonViewController.CreateIconOrImageButton (Res.Commands.Global.ShowUserManager);
 			this.authenticateUserButton.CoreData = this.Orchestrator.Data;
-			this.authenticateUserButton.IconUri = Misc.GetResourceIconUri ("UserManager");
+			this.authenticateUserButton.IconUri = Misc.IconProvider.GetResourceIconUri ("UserManager");
 			this.authenticateUserButton.IconPreferredSize = new Size (31, 31);
 
 			section.Children.Add (this.authenticateUserButton);
@@ -712,7 +712,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (commands.Length > 0)
 				{
-					var icon = Misc.GetResourceIconUri (RibbonViewController.GetSubMenuIcon (type));
+					var icon = Misc.IconProvider.GetResourceIconUri (RibbonViewController.GetSubMenuIcon (type));
 					menu.Items.Add (new MenuItem (type.ToString (), icon, RibbonViewController.GetSubMenuName (type), ""));
 
 					var subMenu = new VMenu ();
@@ -1024,7 +1024,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var item = new MenuItem ()
 			{
-				IconUri       = Misc.GetResourceIconUri(selected ? "Button.RadioYes" : "Button.RadioNo"),
+				IconUri       = Misc.IconProvider.GetResourceIconUri(selected ? "Button.RadioYes" : "Button.RadioNo"),
 				FormattedText = text,
 				Name          = mode.ToString (),
 			};

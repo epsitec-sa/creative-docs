@@ -422,6 +422,7 @@
     <Compile Include="Printing\Win32Caps.cs" />
     <Compile Include="Printing\XmlPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Support\IconProvider.cs" />
     <Compile Include="Support\ReaderWriterLockWrapper.cs" />
     <Compile Include="Resources\Common.Dialogs\SourceCode\Entities.cs" />
     <Compile Include="Resources\Common.Dialogs\SourceCode\Forms.cs" />

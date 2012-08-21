@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Core
 		/// <returns></returns>
 		public static string GetResourceIconImageTag(string icon, double verticalOffset)
 		{
-			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", Misc.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", Misc.IconProvider.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
 		}
 
 		/// <summary>
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Core
 		/// <returns></returns>
 		public static string GetResourceIconImageTag(string icon, double verticalOffset, Size iconSize)
 		{
-			return string.Format (@"<img src=""{0}"" voff=""{1}"" dx=""{2}"" dy=""{3}""/>", Misc.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			return string.Format (@"<img src=""{0}"" voff=""{1}"" dx=""{2}"" dy=""{3}""/>", Misc.IconProvider.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
 		}
 
 		/// <summary>
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Core
 		/// </summary>
 		/// <param name="icon">Nom brut de l'icône, sans extension; accepte aussi un nom complet avec procole et extension.</param>
 		/// <returns></returns>
-		public static string GetResourceIconUri(string icon)
+		public static string XYZFOOBAR(string icon)
 		{
 			if (icon.Contains (':'))
 			{
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (marshaler == null)
 			{
-				return Misc.GetResourceIconUri (icon);
+				return Misc.IconProvider.GetResourceIconUri (icon);
 			}
 			else
 			{
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (type == null)
 			{
-				return Misc.GetResourceIconUri (icon);
+				return Misc.IconProvider.GetResourceIconUri (icon);
 			}
 
 			var typeName    = type.FullName;
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core
 
 			if (entitiesPos < 0)
 			{
-				return Misc.GetResourceIconUri (icon);
+				return Misc.IconProvider.GetResourceIconUri (icon);
 			}
 
 			if (icon.Contains (':'))
@@ -333,17 +333,8 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		/// <summary>
-		/// Retourne le nom complet d'une image contenue dans les ressources.
-		/// </summary>
-		/// <param name="icon">Nom de l'image, avec extension.</param>
-		/// <returns></returns>
-		public static string GetResourceImage(string filename)
-		{
-			return string.Format ("manifest:Epsitec.Cresus.Core.Images.{0}", filename);
-		}
 
-
+		public static readonly IconProvider		IconProvider = new IconProvider ("Epsitec.Cresus.Core");
 
 		private static readonly decimal maxValue = 1000000000;  // en francs, 1'000'000'000.-, soit 1 milliard
 

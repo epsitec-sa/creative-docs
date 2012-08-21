@@ -993,7 +993,7 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		private void AddItemToMenu(VMenu menu, bool check, string name, string text)
 		{
 			string icon = check ? "ActiveYes" : "ActiveNo";
-			var item = new MenuItem (name, Misc.GetResourceIconUri (icon), text, null, name);
+			var item = new MenuItem (name, Misc.IconProvider.GetResourceIconUri (icon), text, null, name);
 
 			item.Clicked += delegate
 			{

@@ -463,7 +463,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				for (int i = count-1; i >= 0; i--)
 				{
-					string icon = Misc.GetResourceIconUri ((i == index) ? "Button.RadioYes" : "Button.RadioNo");
+					string icon = Misc.IconProvider.GetResourceIconUri ((i == index) ? "Button.RadioYes" : "Button.RadioNo");
 					string text = string.Format ("Priorité {0}", (count-i).ToString ());
 
 					if (i == count-1)
@@ -630,7 +630,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				if (info.PrintingOptionDictionary.Options.Contains (verboseOption.Option))
 				{
 					if (this.errorOptions.Contains (verboseOption.Option) ||
-                        !this.RequiredDocumentOptionsContains (verboseOption.Option))
+						!this.RequiredDocumentOptionsContains (verboseOption.Option))
 					{
 						hasBullet = true;
 					}

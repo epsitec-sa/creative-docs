@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 
 			// Get the ressource from the icon name
-			var iconResource = Misc.GetResourceIconUri (iconUri);
+			var iconResource = Misc.IconProvider.GetResourceIconUri (iconUri);
 			var iconName = iconResource.Substring (9); // remove "manifest:"
 			var icon = ImageProvider.Instance.GetImage (iconResource, Resources.DefaultManager) as Canvas;
 

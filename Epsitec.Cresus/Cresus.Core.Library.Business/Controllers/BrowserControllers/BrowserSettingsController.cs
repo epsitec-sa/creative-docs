@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				PreferredSize = new Size (40, 28),
 				PreferredIconSize = new Size (32, 24),
 				Dock = DockStyle.Left,
-				IconUri = Misc.GetResourceIconUri ("Edition.NewRecord"),
+				IconUri = Misc.IconProvider.GetResourceIconUri ("Edition.NewRecord"),
 			};
 		}
 
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				PreferredSize = new Size (40, 28),
 				PreferredIconSize = new Size (32, 24),
 				Dock = DockStyle.Left,
-				IconUri = Misc.GetResourceIconUri ("Edition.DeleteRecord"),
+				IconUri = Misc.IconProvider.GetResourceIconUri ("Edition.DeleteRecord"),
 			};
 		}
 
@@ -111,11 +111,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.newItemIconButton.ClearOverlays ();
 			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri (name, type), new Size (20, 20));
-			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri ("Edition.NewRecord.Overlay"), new Size (32, 24));
+			this.newItemIconButton.AddOverlay (Misc.IconProvider.GetResourceIconUri ("Edition.NewRecord.Overlay"), new Size (32, 24));
 
 			this.deleteItemIconButton.ClearOverlays ();
 			this.deleteItemIconButton.AddOverlay (Misc.GetResourceIconUri (name, type), new Size (20, 20));
-			this.deleteItemIconButton.AddOverlay (Misc.GetResourceIconUri ("Edition.DeleteRecord.Overlay"), new Size (32, 24));
+			this.deleteItemIconButton.AddOverlay (Misc.IconProvider.GetResourceIconUri ("Edition.DeleteRecord.Overlay"), new Size (32, 24));
 		}
 
 		private readonly BrowserViewController browser;

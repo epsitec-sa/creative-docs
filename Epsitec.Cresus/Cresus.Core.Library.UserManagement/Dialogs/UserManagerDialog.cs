@@ -801,7 +801,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				{
 					CoreData = this.data,
 					PreferredSize = new Size (Library.UI.Constants.ButtonLargeWidth, Library.UI.Constants.ButtonLargeWidth),
-					IconUri = Misc.GetResourceIconUri ("UserManager"),
+					IconUri = Misc.IconProvider.GetResourceIconUri ("UserManager"),
 					IconPreferredSize = new Size (31, 31),
 					Enable = false,
 					Dock = DockStyle.Fill,
