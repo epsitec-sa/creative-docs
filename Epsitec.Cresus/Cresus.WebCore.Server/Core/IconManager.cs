@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			File.Delete (this.cssFileName);
 
-			var iconUris = ImageProvider.Default.GetImageNames ("manifest", null);
+			var iconUris = ImageProvider.Instance.GetImageNames ("manifest", null);
 
 			foreach (var iconUri in iconUris)
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			// Get the ressource from the icon name
 			var iconResource = Misc.GetResourceIconUri (iconUri);
 			var iconName = iconResource.Substring (9); // remove "manifest:"
-			var icon = ImageProvider.Default.GetImage (iconResource, Resources.DefaultManager) as Canvas;
+			var icon = ImageProvider.Instance.GetImage (iconResource, Resources.DefaultManager) as Canvas;
 
 			if (icon == null)
 			{

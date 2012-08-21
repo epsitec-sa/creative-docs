@@ -31,8 +31,8 @@ namespace Epsitec.Common.DocumentEditor
 			
 			Epsitec.Common.Document.Engine.Initialize();
 			
-			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
-			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
+			Common.Support.ImageProvider.Instance.EnableLongLifeCache = true;
+			Common.Support.ImageProvider.Instance.PrefillManifestIconCache();
 
 			switch (mode.Substring (1))
 			{

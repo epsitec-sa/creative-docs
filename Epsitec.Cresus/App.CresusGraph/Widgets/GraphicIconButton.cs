@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 				}
 			}
 
-			var image = ImageProvider.Default.GetImage (icon, Resources.DefaultManager);
+			var image = ImageProvider.Instance.GetImage (icon, Resources.DefaultManager);
 			graphics.PaintImage (image, rectangle);
 		}
 	}

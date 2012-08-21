@@ -17,9 +17,9 @@ namespace Epsitec.Common.Tests.Support
 		[Test]
 		public void CheckGetImage()
 		{
-			Image im1 = ImageProvider.Default.GetImage ("file:images/open.png", Resources.DefaultManager);
-			Image im2 = ImageProvider.Default.GetImage ("file:images/open.icon", Resources.DefaultManager);
-			Image im3 = ImageProvider.Default.GetImage ("file:images/non-existing-image.png", Resources.DefaultManager);
+			Image im1 = ImageProvider.Instance.GetImage ("file:images/open.png", Resources.DefaultManager);
+			Image im2 = ImageProvider.Instance.GetImage ("file:images/open.icon", Resources.DefaultManager);
+			Image im3 = ImageProvider.Instance.GetImage ("file:images/non-existing-image.png", Resources.DefaultManager);
 
 			Assert.IsNotNull (im1);
 			Assert.IsNotNull (im2);
@@ -31,13 +31,13 @@ namespace Epsitec.Common.Tests.Support
 		{
 			List<string> names = new List<string> ();
 
-			names.AddRange (ImageProvider.Default.GetImageNames ("file", Resources.DefaultManager));
+			names.AddRange (ImageProvider.Instance.GetImageNames ("file", Resources.DefaultManager));
 
 			Assert.AreEqual (@"file:Images\About.icon", names[0]);
 			Assert.AreEqual (@"file:Images\Down.icon", names[1]);
 			
 			names.Clear ();
-			names.AddRange (ImageProvider.Default.GetImageNames ("manifest", Resources.DefaultManager));
+			names.AddRange (ImageProvider.Instance.GetImageNames ("manifest", Resources.DefaultManager));
 
 			Assert.AreEqual (@"manifest:Epsitec.Common.Dialogs.Images.FavoritesAdd.icon", names[0]);
 		}
@@ -58,22 +58,22 @@ namespace Epsitec.Common.Tests.Support
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx1()
 		{
-			Image im1 = ImageProvider.Default.GetImage ("file:../open.png", Resources.DefaultManager);
+			Image im1 = ImageProvider.Instance.GetImage ("file:../open.png", Resources.DefaultManager);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx2()
 		{
-			Image im1 = ImageProvider.Default.GetImage ("file:/open.png", Resources.DefaultManager);
+			Image im1 = ImageProvider.Instance.GetImage ("file:/open.png", Resources.DefaultManager);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx3()
 		{
-			Image im1 = ImageProvider.Default.GetImage ("file:C:/open.png", Resources.DefaultManager);
+			Image im1 = ImageProvider.Instance.GetImage ("file:C:/open.png", Resources.DefaultManager);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx4()
 		{
-			Image im1 = ImageProvider.Default.GetImage ("file:\\open.png", Resources.DefaultManager);
+			Image im1 = ImageProvider.Instance.GetImage ("file:\\open.png", Resources.DefaultManager);
 		}
 	}
 }

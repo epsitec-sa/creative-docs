@@ -30,8 +30,8 @@ namespace Epsitec.Common.Designer
 		{
 			Res.Initialize();
 
-			ImageProvider.Default.EnableLongLifeCache = true;
-			ImageProvider.Default.PrefillManifestIconCache();
+			ImageProvider.Instance.EnableLongLifeCache = true;
+			ImageProvider.Instance.PrefillManifestIconCache();
 		}
 
 		public DesignerApplication() : this(new ResourceManagerPool("Common.Designer"))

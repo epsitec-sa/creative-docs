@@ -506,7 +506,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 		private static void PaintPaperClipAdorner(Graphics graphics, Rectangle rectangle)
 		{
-			var image = Epsitec.Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Graph.Images.PaperClip.icon", Support.Resources.DefaultManager);
+			var image = Epsitec.Common.Support.ImageProvider.Instance.GetImage ("manifest:Epsitec.Common.Graph.Images.PaperClip.icon", Support.Resources.DefaultManager);
 			graphics.PaintImage (image, new Rectangle (rectangle.X + 10, rectangle.Top - 34, 20, 40));
 		}
 

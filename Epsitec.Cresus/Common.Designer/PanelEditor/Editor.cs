@@ -4901,7 +4901,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Choix du sprite de la souris.
 			if (image == null)
 			{
-				image = Support.ImageProvider.Default.GetImage(name, Support.Resources.DefaultManager);
+				image = Support.ImageProvider.Instance.GetImage(name, Support.Resources.DefaultManager);
 			}
 
 			this.MouseCursor = MouseCursor.FromImage(image);

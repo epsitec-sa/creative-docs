@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.modules.Clear();
 			this.modules.Add(Res.Strings.Dialog.Icon.Filter.All);
 
-			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
+			string[] names = ImageProvider.Instance.GetImageNames("manifest", this.manager);
 			for (int i=0; i<names.Length; i++)
 			{
 				string module, name;
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.icons = new List<string>();
-			string[] names = ImageProvider.Default.GetImageNames("manifest", this.manager);
+			string[] names = ImageProvider.Instance.GetImageNames("manifest", this.manager);
 
 			for (int i=0; i<names.Length; i++)
 			{

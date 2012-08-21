@@ -163,7 +163,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			if (!string.IsNullOrEmpty (this.IconUri))
 			{
-				Image image = ImageProvider.Default.GetImage (this.IconUri, Resources.DefaultManager);
+				Image image = ImageProvider.Instance.GetImage (this.IconUri, Resources.DefaultManager);
 				Canvas canvas = image as Canvas;
 
 				if (canvas != null)

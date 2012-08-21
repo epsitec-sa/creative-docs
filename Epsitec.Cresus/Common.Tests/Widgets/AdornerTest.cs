@@ -20,7 +20,7 @@ namespace Epsitec.Common.Tests.Widgets
 			
 			image.IsCacheEnabled = false;
 			
-			Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage ("Xyz", image);
+			Epsitec.Common.Support.ImageProvider.Instance.AddDynamicImage ("Xyz", image);
 		}
 
 		private bool DynamicImageXyz(Graphics graphics, Size size, string argument, GlyphPaintStyle style, Color color, object adorner)

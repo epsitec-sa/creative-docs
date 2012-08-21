@@ -696,7 +696,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.mouseCursorHand == null)
 						{
-							this.mouseCursorHand = MouseCursor.FromImage (Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon", Support.Resources.DefaultManager));
+							this.mouseCursorHand = MouseCursor.FromImage (Support.ImageProvider.Instance.GetImage ("manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon", Support.Resources.DefaultManager));
 						}
 
 						this.MouseCursor = this.mouseCursorHand;

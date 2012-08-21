@@ -2321,7 +2321,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Choix du sprite de la souris.
 			if (image == null)
 			{
-				image = ImageProvider.Default.GetImage(name, Resources.DefaultManager);
+				image = ImageProvider.Instance.GetImage(name, Resources.DefaultManager);
 			}
 			
 			this.MouseCursor = MouseCursor.FromImage(image);

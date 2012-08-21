@@ -1,5 +1,8 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -50,12 +53,12 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static ImageProvider		Default
+		public static ImageProvider				Instance
 		{
 			get { return ImageProvider.defaultProvider; }
 		}
 		
-		public bool						CheckFilePath
+		public bool								CheckFilePath
 		{
 			get
 			{
@@ -67,7 +70,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public bool						EnableLongLifeCache
+		public bool								EnableLongLifeCache
 		{
 			get
 			{
@@ -84,7 +87,7 @@ namespace Epsitec.Common.Support
 				{
 					if (value)
 					{
-						this.keepAliveImages = new List<Drawing.Image> ();
+						this.keepAliveImages = new List<Image> ();
 					}
 					else
 					{
@@ -95,7 +98,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public Drawing.Image GetImage(string name, Support.ResourceManager resourceManager)
+		public Image GetImage(string name, ResourceManager resourceManager)
 		{
 			if (string.IsNullOrEmpty (name))
 			{
@@ -107,9 +110,9 @@ namespace Epsitec.Common.Support
 				switch (name)
 				{
 					case "stockicon:shield":
-						return PrivilegeManager.Current.GetShieldIcon (Epsitec.Common.Drawing.IconSize.Normal);
+						return PrivilegeManager.Current.GetShieldIcon (IconSize.Normal);
 					case "stockicon:shield.small":
-						return PrivilegeManager.Current.GetShieldIcon (Epsitec.Common.Drawing.IconSize.Small);
+						return PrivilegeManager.Current.GetShieldIcon (IconSize.Small);
 
 					default:
 						break;
@@ -139,7 +142,7 @@ namespace Epsitec.Common.Support
 				string baseName = fullName.Substring (0, pos);
 				string argument = fullName.Substring (pos+1);
 
-				Drawing.DynamicImage image;
+				DynamicImage image;
 
 				if (this.dynamicImages.TryGetValue (baseName, out image))
 				{
@@ -151,8 +154,8 @@ namespace Epsitec.Common.Support
 			
 			if (this.images.ContainsKey (name))
 			{
-				Types.Weak<Drawing.Image> weakRef = this.images[name];
-				Drawing.Image image = weakRef.Target;
+				Weak<Image> weakRef = this.images[name];
+				Image image = weakRef.Target;
 				
 				if (weakRef.IsAlive)
 				{
@@ -167,7 +170,7 @@ namespace Epsitec.Common.Support
 				//	TODO: vérifier le nom du fichier pour éviter de faire des bêtises ici
 				//	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
 				
-				Drawing.Image                image     = null;
+				Image                image     = null;
 				string                       baseName = name.Remove (0, 5);
 				System.Collections.ArrayList attempts  = new System.Collections.ArrayList ();
 				
@@ -206,7 +209,7 @@ namespace Epsitec.Common.Support
 					
 					try
 					{
-						image = Drawing.Bitmap.FromFile (fileName);
+						image = Bitmap.FromFile (fileName);
 						break;
 					}
 					catch
@@ -226,7 +229,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					this.images[name] = new Types.Weak<Drawing.Image> (image);
+					this.images[name] = new Weak<Image> (image);
 					
 					if (this.keepAliveImages != null)
 					{
@@ -258,10 +261,10 @@ namespace Epsitec.Common.Support
 				
 				if (resFull.IndexOf (':') < 0)
 				{
-					resFull = this.defaultResourceProvider + resFull;
+					resFull = this.providerPrefix + resFull;
 				}
 				
-				Drawing.Image image = null;
+				Image image = null;
 
 				if (Resources.SplitFieldId (resFull, out resBundle, out resField))
 				{
@@ -275,12 +278,12 @@ namespace Epsitec.Common.Support
 				else
 				{
 					byte[] data = resourceManager.GetBinaryData (resFull);
-					image = Drawing.Bitmap.FromData (data);
+					image = Bitmap.FromData (data);
 				}
 				
 				if (image != null)
 				{
-					this.images[name] = new Types.Weak<Drawing.Image> (image);
+					this.images[name] = new Weak<Image> (image);
 					
 					if (this.keepAliveImages != null)
 					{
@@ -300,18 +303,18 @@ namespace Epsitec.Common.Support
 				var assemblies   = ImageProvider.GetAssemblies ();
 				var resourceName = name.Remove (0, 9).ToLowerInvariant ();
 
-				Drawing.Image image = null;
+				Image image = null;
 				
 				foreach (var assembly in assemblies)
 				{
 					var resourceNames = assembly.GetManifestResourceNames ();
 					var matchingName  = resourceNames.Where (x => x.ToLowerInvariant () == resourceName).FirstOrDefault ();
 
-					image = Drawing.Bitmap.FromManifestResource (matchingName, assembly);
+					image = Bitmap.FromManifestResource (matchingName, assembly);
 
 					if (image != null)
 					{
-						this.images[name] = new Types.Weak<Drawing.Image> (image);
+						this.images[name] = new Weak<Image> (image);
 
 						if (this.keepAliveImages != null)
 						{
@@ -328,7 +331,7 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
-		public string[] GetImageNames(string provider, Support.ResourceManager resourceManager)
+		public string[] GetImageNames(string provider, ResourceManager resourceManager)
 		{
 			if (string.IsNullOrEmpty (provider))
 			{
@@ -379,11 +382,11 @@ namespace Epsitec.Common.Support
 			return list.ToArray ();
 		}
 
-		public Drawing.Image[] GetLongLifeCacheContents()
+		public Image[] GetLongLifeCacheContents()
 		{
 			if (this.keepAliveImages == null)
 			{
-				return new Drawing.Image[0];
+				return new Image[0];
 			}
 			else
 			{
@@ -392,7 +395,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void AddDynamicImage(string tag, Drawing.DynamicImage image)
+		public void AddDynamicImage(string tag, DynamicImage image)
 		{
 			this.dynamicImages[tag] = image;
 		}
@@ -420,7 +423,7 @@ namespace Epsitec.Common.Support
 				argument = fullName.Substring (pos+1);
 			}
 			
-			Drawing.DynamicImage image;
+			DynamicImage image;
 			
 			if (this.dynamicImages.TryGetValue (baseName, out image))
 			{
@@ -442,19 +445,19 @@ namespace Epsitec.Common.Support
 
 					if (this.images.ContainsKey (name))
 					{
-						Types.Weak<Drawing.Image> weakRef = this.images[name];
+						Weak<Image> weakRef = this.images[name];
 
 						if (weakRef.IsAlive == false)
 						{
 							try
 							{
-								Drawing.Image image = Drawing.Bitmap.FromManifestResource (resName, assemblyObject);
+								Image image = Bitmap.FromManifestResource (resName, assemblyObject);
 
 								if (image != null)
 								{
 									System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + resName + " from assembly " + assemblyObject.GetName ());
 
-									this.images[name] = new Types.Weak<Drawing.Image> (image);
+									this.images[name] = new Weak<Image> (image);
 
 									if (this.keepAliveImages != null)
 									{
@@ -475,7 +478,7 @@ namespace Epsitec.Common.Support
 		{
 			if (name == null)
 			{
-				string[] names = new string[this.images.Count];
+				var names = new string[this.images.Count];
 				
 				this.images.Keys.CopyTo (names, 0);
 				
@@ -486,8 +489,8 @@ namespace Epsitec.Common.Support
 			}
 			else if (this.images.ContainsKey (name))
 			{
-				Types.Weak<Drawing.Image> weakRef = this.images[name];
-				Drawing.Image             image    = weakRef.Target;
+				var weakRef = this.images[name];
+				var image = weakRef.Target;
 				
 				this.images.Remove (name);
 				
@@ -519,11 +522,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		private Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string imageName)
+		private Image CreateBitmapFromBundle(ResourceBundle bundle, string imageName)
 		{
 			string fieldName = "i." + imageName;
 			
-			Drawing.Image cache = this.bundleImages[bundle];
+			Image cache = this.bundleImages[bundle];
 			
 			if (cache == null)
 			{
@@ -535,9 +538,9 @@ namespace Epsitec.Common.Support
 				byte[] imageData = bundle["image.data"].AsBinary;
 				string imageArgs = bundle["image.size"].AsString;
 				
-				Drawing.Size size = Drawing.Size.Parse (imageArgs);
+				Size size = Size.Parse (imageArgs);
 				
-				cache = Drawing.Bitmap.FromData (imageData, Drawing.Point.Zero, size);
+				cache = Bitmap.FromData (imageData, Point.Zero, size);
 				
 				this.bundleImages[bundle] = cache;
 			}
@@ -556,17 +559,17 @@ namespace Epsitec.Common.Support
 				{
 					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", imageName, args.Length));
 				}
-				
-				Drawing.Point rectPos  = Drawing.Point.Parse (args[0] + ";" + args[1]);
-				Drawing.Size  rectSize = Drawing.Size.Parse (args[2] + ";" + args[3]);
-				Drawing.Point origin   = Drawing.Point.Zero;
+
+				var rectPos  = Point.Parse (args[0] + ";" + args[1]);
+				var rectSize = Size.Parse (args[2] + ";" + args[3]);
+				var origin   = Point.Zero;
 				
 				if (args.Length >= 6)
 				{
-					origin = Drawing.Point.Parse (args[4] + ";" + args[5]);
+					origin = Point.Parse (args[4] + ";" + args[5]);
 				}
 				
-				return Drawing.Bitmap.FromLargerImage (cache, new Drawing.Rectangle (rectPos, rectSize), origin);
+				return Bitmap.FromLargerImage (cache, new Rectangle (rectPos, rectSize), origin);
 			}
 			
 			return null;
@@ -585,14 +588,16 @@ namespace Epsitec.Common.Support
 		}
 
 
-		private Dictionary<string, Types.Weak<Drawing.Image>>	images = new Dictionary<string, Types.Weak<Drawing.Image>> ();
-		private Dictionary<string, Drawing.DynamicImage>		dynamicImages = new Dictionary<string, Drawing.DynamicImage> ();
-		private List<Drawing.Image>								keepAliveImages;
-		private Dictionary<ResourceBundle, Drawing.Image>		bundleImages = new Dictionary<ResourceBundle, Drawing.Image> ();
-		private string											defaultResourceProvider = "file:";
-		private bool											checkPath = true;
+		private readonly Dictionary<string, Weak<Image>>	images = new Dictionary<string, Weak<Image>> ();
+		private readonly Dictionary<string, DynamicImage>	dynamicImages = new Dictionary<string, DynamicImage> ();
+		private readonly Dictionary<ResourceBundle, Image>	bundleImages = new Dictionary<ResourceBundle, Image> ();
+
+		private List<Image>						keepAliveImages;
+
+		private readonly string					providerPrefix	= "file:";
+		private bool							checkPath		= true;
 		
-		private static ImageProvider							defaultProvider;
-		private static string[]									defaultPaths;
+		private static readonly ImageProvider	defaultProvider;
+		private static readonly string[]		defaultPaths;
 	}
 }

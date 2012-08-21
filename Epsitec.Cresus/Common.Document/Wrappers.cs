@@ -36,22 +36,22 @@ namespace Epsitec.Common.Document
 				tag = string.Concat(this.document.UniqueName, ".TextFontBrief");
 				image = new Drawing.DynamicImage(new Drawing.Size(140, 16), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontBrief));
 				image.IsCacheEnabled = true;
-				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+				Epsitec.Common.Support.ImageProvider.Instance.AddDynamicImage(tag, image);
 
 				tag = string.Concat(this.document.UniqueName, ".TextFontMenu");
 				image = new Drawing.DynamicImage(new Drawing.Size(200, 30), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageFontMenu));
 				image.IsCacheEnabled = true;
-				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+				Epsitec.Common.Support.ImageProvider.Instance.AddDynamicImage(tag, image);
 
 				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
 				image = new Drawing.DynamicImage(new Drawing.Size(53, 45), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleBrief));
 				image.IsCacheEnabled = true;
-				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+				Epsitec.Common.Support.ImageProvider.Instance.AddDynamicImage(tag, image);
 
 				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
 				image = new Drawing.DynamicImage(new Drawing.Size(200, 32), new Drawing.DynamicImagePaintCallback(this.DrawDynamicImageStyleMenu));
 				image.IsCacheEnabled = true;
-				Epsitec.Common.Support.ImageProvider.Default.AddDynamicImage(tag, image);
+				Epsitec.Common.Support.ImageProvider.Instance.AddDynamicImage(tag, image);
 			}
 		}
 
@@ -62,16 +62,16 @@ namespace Epsitec.Common.Document
 				string tag;
 				
 				tag = string.Concat(this.document.UniqueName, ".TextFontBrief");
-				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+				Epsitec.Common.Support.ImageProvider.Instance.RemoveDynamicImage(tag);
 				
 				tag = string.Concat(this.document.UniqueName, ".TextFontMenu");
-				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+				Epsitec.Common.Support.ImageProvider.Instance.RemoveDynamicImage(tag);
 				
 				tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+				Epsitec.Common.Support.ImageProvider.Instance.RemoveDynamicImage(tag);
 				
 				tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
-				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
+				Epsitec.Common.Support.ImageProvider.Instance.RemoveDynamicImage(tag);
 			}
 
 			this.textWrapper.Active.Changed  -= this.HandleTextWrapperChanged;
@@ -89,10 +89,10 @@ namespace Epsitec.Common.Document
 			string tag;
 
 			tag = string.Concat(this.document.UniqueName, ".TextStyleBrief");
-			Epsitec.Common.Support.ImageProvider.Default.ClearDynamicImageCache(tag);
+			Epsitec.Common.Support.ImageProvider.Instance.ClearDynamicImageCache(tag);
 
 			tag = string.Concat(this.document.UniqueName, ".TextStyleMenu");
-			Epsitec.Common.Support.ImageProvider.Default.ClearDynamicImageCache(tag);
+			Epsitec.Common.Support.ImageProvider.Instance.ClearDynamicImageCache(tag);
 		}
 
 		public void TextContextChangedDisconnect()

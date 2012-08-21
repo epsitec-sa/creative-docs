@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (this.mouseCursorHand == null)
 				{
-					this.mouseCursorHand = MouseCursor.FromImage (Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon", Common.Support.Resources.DefaultManager));
+					this.mouseCursorHand = MouseCursor.FromImage (Common.Support.ImageProvider.Instance.GetImage ("manifest:Epsitec.Common.Widgets.Images.Cursor.Hand.icon", Common.Support.Resources.DefaultManager));
 				}
 
 				this.MouseCursor = this.mouseCursorHand;

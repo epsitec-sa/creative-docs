@@ -5140,12 +5140,12 @@ noText:
 			}
 			else
 			{
-				image = Support.ImageProvider.Default.GetImage (imageName, this.ResourceManager);
+				image = Support.ImageProvider.Instance.GetImage (imageName, this.ResourceManager);
 			}
 
 			if (image == null)
 			{
-				image = Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
+				image = Support.ImageProvider.Instance.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
 				System.Diagnostics.Debug.WriteLine (string.Format ("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory ()));
 			}
 

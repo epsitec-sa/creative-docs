@@ -388,7 +388,7 @@ namespace Epsitec.Common.UI
 			else
 			{
 				var rect = this.GetInnerBounds ();
-				var image = Support.ImageProvider.Default.GetImage (this.IconUri, Support.Resources.DefaultManager);
+				var image = Support.ImageProvider.Instance.GetImage (this.IconUri, Support.Resources.DefaultManager);
 				var size  = image.Size;
 
 				if (this.ContainsValue (MetaButton.PreferredIconSizeProperty))

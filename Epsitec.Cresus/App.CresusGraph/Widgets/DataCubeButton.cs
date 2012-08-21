@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 				adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, ButtonStyle.ToolItem);
 			}
 
-			var image = ImageProvider.Default.GetImage ("manifest:Epsitec.Cresus.Graph.Images.DataCube.icon", Resources.DefaultManager);
+			var image = ImageProvider.Instance.GetImage ("manifest:Epsitec.Cresus.Graph.Images.DataCube.icon", Resources.DefaultManager);
 			var bounds = new Rectangle (System.Math.Floor ((rect.Width - image.Size.Width) / 2),
 										System.Math.Floor ((rect.Height - image.Size.Height) / 2),
 										image.Size.Width, image.Size.Height);
