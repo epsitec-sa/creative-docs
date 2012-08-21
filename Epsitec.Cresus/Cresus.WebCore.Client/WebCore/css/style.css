@@ -37,6 +37,26 @@ html, body {
   background-image: url('../images/Static/refresh.png') !important;
 }
 
+.icon-sort {
+  background-image: url('../images/Static/sort.png') !important;
+}
+
+.icon-sort-ascending {
+  height: 16px;
+  width: 16px;
+  background-image: url('../images/Static/sort-ascending.png') !important;
+}
+
+.icon-sort-descending {
+  height: 16px;
+  width: 16px;
+  background-image: url('../images/Static/sort-descending.png') !important;
+}
+
+.icon-filter {
+  background-image: url('../images/Static/filter.png') !important;
+}
+
 .border-right {
   border-top-width: 0px;
   border-right-width: 1px;
