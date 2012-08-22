@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public DataSetMetadata(IDictionary<string, string> data)
 			: this (data[Strings.Name])
 		{
+			this.DefineDisplayGroup (Druid.Parse (data[Strings.DisplayGroup]));
 		}
 
 		
@@ -66,6 +67,21 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
+		public Druid							DisplayGroupId
+		{
+			get
+			{
+				return this.displayGroupCaptionId;
+			}
+		}
+
+
+
+		public void DefineDisplayGroup(Druid captionId)
+		{
+			this.displayGroupCaptionId = captionId;
+		}
+
 		
 		public XElement Save(string xmlNodeName)
 		{
@@ -87,6 +103,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private void Serialize(List<XAttribute> attributes)
 		{
 			attributes.Add (new XAttribute (Strings.Name, this.dataSetName));
+			attributes.Add (new XAttribute (Strings.DisplayGroup, this.displayGroupCaptionId.ToCompactString ()));
 		}
 
 
@@ -106,6 +123,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private static class Strings
 		{
 			public static readonly string		Name = "name";
+			public static readonly string		DisplayGroup = "disp.grp";
 		}
 
 		#endregion
@@ -114,5 +132,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private readonly string dataSetName;
 		private readonly Command baseShowCommand;
 		private readonly System.Type dataSetEntityType;
+
+		private Druid displayGroupCaptionId;
 	}
 }

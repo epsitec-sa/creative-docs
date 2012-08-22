@@ -20,8 +20,9 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	{
 		public DataStoreMetadata()
 		{
-			this.tables = new List<EntityMetadata> ();
-			this.dataSets = new List<DataSetMetadata> ();
+			this.tables          = new List<EntityMetadata> ();
+			this.dataSets        = new List<DataSetMetadata> ();
+			this.displayGroupIds = new List<Druid> ();
 		}
 
 
@@ -41,23 +42,52 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
+		public IList<Druid>						DisplayGroupIds
+		{
+			get
+			{
+				return this.displayGroupIds;
+			}
+		}
+
+
+		public IEnumerable<DataSetDisplayGroup> GetSortedDisplayGroups()
+		{
+			var groups = new Dictionary<Druid, DataSetDisplayGroup> ();
+
+			foreach (var dataSet in this.dataSets)
+			{
+				DataSetDisplayGroup group;
+				if (groups.TryGetValue (dataSet.DisplayGroupId, out group) == false)
+				{
+					group = new DataSetDisplayGroup (dataSet.DisplayGroupId);
+					groups[dataSet.DisplayGroupId] = group;
+				}
+			}
+			
+			return this.DisplayGroupIds.Where (x => groups.ContainsKey (x)).Select (x => groups[x]);
+		}
+
 
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
 								 this.SerializeTables (),
-								 this.SerializeDataSets ());
+								 this.SerializeDataSets (),
+								 this.SerializeDisplayGroupIds ());
 		}
 
 		public static DataStoreMetadata Restore(XElement xml)
 		{
 			var xmlTables   = xml.Element (Strings.Tables).Elements ();
 			var xmlDataSets = xml.Element (Strings.DataSets).Elements ();
+			var xmlGroupIds = xml.Element (Strings.DisplayGroups).Elements ();
 			
 			var metadata  = new DataStoreMetadata ();
 
 			metadata.tables.AddRange (xmlTables.Select (x => EntityMetadata.Restore (x)));
 			metadata.dataSets.AddRange (xmlDataSets.Select (x => DataSetMetadata.Restore (x)));
+			metadata.displayGroupIds.AddRange (xmlGroupIds.Select (x => Druid.Parse (x.Attribute (Strings.Id).Value)));
 
 			return metadata;
 		}
@@ -73,6 +103,15 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			return new XElement (Strings.DataSets, this.dataSets.Select (x => x.Save (Strings.DataSet)));
 		}
 
+		private XElement SerializeDisplayGroupIds()
+		{
+			return new XElement (Strings.DisplayGroups,
+				this.displayGroupIds.Select (x =>
+					new XElement (Strings.Group,
+						new XAttribute (Strings.Id,
+							x.ToCompactString ()))));
+		}
+
 
 		#region Strings Class
 
@@ -80,9 +119,12 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		{
 			public static readonly string		Tables   = "tables";
 			public static readonly string		DataSets = "dataSets";
+			public static readonly string		DisplayGroups = "displayGroups";
 
 			public static readonly string		Table   = "table";
 			public static readonly string		DataSet = "dataSet";
+			public static readonly string		Group = "group";
+			public static readonly string		Id = "id";
 		}
 
 		#endregion
@@ -90,5 +132,6 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 		private readonly List<EntityMetadata>	tables;
 		private readonly List<DataSetMetadata>	dataSets;
+		private readonly List<Druid>			displayGroupIds;
 	}
 }

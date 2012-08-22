@@ -61,6 +61,7 @@
     <Compile Include="Data\DataSetAccessor.cs" />
     <Compile Include="Data\DataSetCollectionGetter.cs" />
     <Compile Include="Data\DataSetGetter.cs" />
+    <Compile Include="Data\Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Data\Metadata\DataSetMetadata.cs" />
     <Compile Include="Data\Metadata\EntitySortedColumn.cs" />
     <Compile Include="Data\Metadata\EntityMetadata.cs" />
