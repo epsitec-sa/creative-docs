@@ -10,7 +10,10 @@ using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Common.Support
 {
-	public class IconProvider
+	/// <summary>
+	/// The <c>IconProvider</c> class provides URIs for icons, and related services.
+	/// </summary>
+	public sealed class IconProvider
 	{
 		public IconProvider(string @namespace)
 		{
