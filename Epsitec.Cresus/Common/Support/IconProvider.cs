@@ -17,6 +17,29 @@ namespace Epsitec.Common.Support
 			this.@namespace = @namespace;
 		}
 
+
+		public string GetRichTextImg(string iconName, double verticalOffset, Size iconSize = default (Size))
+		{
+			if (iconSize == Size.Zero)
+			{
+				return string.Concat (@"<img src=""",
+					/**/			  this.GetResourceIconUri (iconName),
+					/**/			  @""" voff=""",
+					/**/			  verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
+					/**/			  @"""/>");
+			}
+
+			return string.Concat (@"<img src=""",
+				/**/			  this.GetResourceIconUri (iconName),
+				/**/			  @""" voff=""",
+				/**/			  verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				/**/			  @""" dx=""",
+				/**/			  iconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				/**/			  @""" dy=""",
+				/**/			  iconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				/**/			  @"""/>");
+		}
+
 		
 		public string GetResourceIconUri(string icon, string namespaceOverride = null)
 		{

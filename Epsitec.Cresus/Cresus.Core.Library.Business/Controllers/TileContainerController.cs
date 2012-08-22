@@ -709,7 +709,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static void SetTileContent(TileDataItem item)
 		{
-			string iconUri = Misc.GetResourceIconUri (item.IconUri, item.EntityMarshaler);
+			string iconUri = Misc.IconProvider.GetResourceIconUri (item.IconUri, item.EntityMarshaler);
 			
 			item.TitleTile.IconUri = iconUri;
 

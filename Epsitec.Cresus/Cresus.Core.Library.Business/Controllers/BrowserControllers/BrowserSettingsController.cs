@@ -110,11 +110,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			var name = "Base." + this.browser.DataSetName;
 
 			this.newItemIconButton.ClearOverlays ();
-			this.newItemIconButton.AddOverlay (Misc.GetResourceIconUri (name, type), new Size (20, 20));
+			this.newItemIconButton.AddOverlay (Misc.IconProvider.GetResourceIconUri (name, type), new Size (20, 20));
 			this.newItemIconButton.AddOverlay (Misc.IconProvider.GetResourceIconUri ("Edition.NewRecord.Overlay"), new Size (32, 24));
 
 			this.deleteItemIconButton.ClearOverlays ();
-			this.deleteItemIconButton.AddOverlay (Misc.GetResourceIconUri (name, type), new Size (20, 20));
+			this.deleteItemIconButton.AddOverlay (Misc.IconProvider.GetResourceIconUri (name, type), new Size (20, 20));
 			this.deleteItemIconButton.AddOverlay (Misc.IconProvider.GetResourceIconUri ("Edition.DeleteRecord.Overlay"), new Size (32, 24));
 		}
 

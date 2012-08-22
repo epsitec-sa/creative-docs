@@ -186,10 +186,10 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		public static readonly Color			uselessColor   = Color.FromHexa ("999999");  // gris,  selon l'icône DocumentOptions.Useless
 		public static readonly Color			missingColor   = Color.FromHexa ("0000d8");  // bleu,  selon l'icône DocumentOptions.Missing
 
-		public static readonly FormattedText	normalBullet  = Misc.GetResourceIconImageTag ("DocumentOptions.Normal",  -2, new Size (13, 13));
-		public static readonly FormattedText	errorBullet   = Misc.GetResourceIconImageTag ("DocumentOptions.Error",   -2, new Size (13, 13));
-		public static readonly FormattedText	uselessBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Useless", -2, new Size (13, 13));
-		public static readonly FormattedText	missingBullet = Misc.GetResourceIconImageTag ("DocumentOptions.Missing", -2, new Size (13, 13));
+		public static readonly FormattedText	normalBullet  = Misc.IconProvider.GetRichTextImg ("DocumentOptions.Normal",  -2, new Size (13, 13));
+		public static readonly FormattedText	errorBullet   = Misc.IconProvider.GetRichTextImg ("DocumentOptions.Error", -2, new Size (13, 13));
+		public static readonly FormattedText	uselessBullet = Misc.IconProvider.GetRichTextImg ("DocumentOptions.Useless", -2, new Size (13, 13));
+		public static readonly FormattedText	missingBullet = Misc.IconProvider.GetRichTextImg ("DocumentOptions.Missing", -2, new Size (13, 13));
 
 		private readonly IBusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;

@@ -616,7 +616,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private string GetIconTag(bool isSelected)
 		{
-			return Misc.GetResourceIconImageTag (this.GetIcon (isSelected), -4);
+			return Misc.IconProvider.GetRichTextImg (this.GetIcon (isSelected), -4);
 		}
 
 		private string GetIcon(bool isSelected)

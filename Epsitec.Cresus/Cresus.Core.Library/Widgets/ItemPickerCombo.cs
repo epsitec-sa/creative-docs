@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					icon = "Button.RadioNo";
 				}
 
-				list.Add (null, string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", "Aucun"));
+				list.Add (null, string.Concat (Misc.IconProvider.GetRichTextImg (icon, -4), " ", "Aucun"));
 			}
 
 			for (int i = 0; i < this.items.Count; i++)
@@ -469,7 +469,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					}
 				}
 
-				list.Add (name, string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text));
+				list.Add (name, string.Concat (Misc.IconProvider.GetRichTextImg (icon, -4), " ", text));
 			}
 		}
 

@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +19,19 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// </summary>
 	public class DataSetMetadata
 	{
-		public DataSetMetadata(string dataSetName)
+		public DataSetMetadata(string dataSetName, Druid baseShowCommandId)
 		{
 			this.name = dataSetName;
+			this.baseShowCommandId = baseShowCommandId;
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
 		{
 			this.name = data[Strings.Name];
+			this.baseShowCommandId = Druid.Parse (data[Strings.BaseShowCommandId]);
 		}
 
+		
 		public string Name
 		{
 			get
@@ -35,6 +39,23 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 				return this.name;
 			}
 		}
+
+		public Command BaseShowCommand
+		{
+			get
+			{
+				return Command.Find (this.baseShowCommandId);
+			}
+		}
+
+		public string IconOverlayUri
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
 		
 		public XElement Save(string xmlNodeName)
 		{
@@ -56,6 +77,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private void Serialize(List<XAttribute> attributes)
 		{
 			attributes.Add (new XAttribute (Strings.Name, this.name));
+			attributes.Add (new XAttribute (Strings.BaseShowCommandId, this.baseShowCommandId.ToCompactString ()));
 		}
 
 
@@ -64,11 +86,13 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private static class Strings
 		{
 			public static readonly string		Name = "name";
+			public static readonly string		BaseShowCommandId = "CMD.show";
 		}
 
 		#endregion
 
 
 		private readonly string name;
+		private readonly Druid baseShowCommandId;
 	}
 }

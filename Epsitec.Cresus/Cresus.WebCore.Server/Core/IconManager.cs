@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				return null;
 			}
 
-			var iconResource = Misc.GetResourceIconUri (iconUri, entityType);
+			var iconResource = Misc.IconProvider.GetResourceIconUri (iconUri, entityType);
 
 			return IconManager.GetCssClassName (iconResource, size);
 		}

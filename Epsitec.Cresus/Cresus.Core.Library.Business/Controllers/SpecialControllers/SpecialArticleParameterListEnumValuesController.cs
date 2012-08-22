@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				text = TextFormatter.FormatText (enumValue.Value, "(", sd, ",~", ld, ")");
 			}
 
-			return string.Concat (Misc.GetResourceIconImageTag (icon, -4), " ", text);
+			return string.Concat (Misc.IconProvider.GetRichTextImg (icon, -4), " ", text);
 		}
 
 		private FormattedText ListControllerGetTextInfo(int count)
