@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct ("Crésus")]
 [assembly: AssemblyCopyright ("Copyright © 2010-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
 
+[assembly: Namespace ("Epsitec.Cresus.Core.Data")]
 [assembly: NamespaceShortcut ("Epsitec.Cresus.Core.Data", "CorDt")]
 [assembly: NamespaceShortcut ("Epsitec.Cresus.Core.Data.Metadata", "CorDtMta")]
 

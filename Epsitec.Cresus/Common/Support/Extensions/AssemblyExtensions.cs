@@ -1,5 +1,7 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.IO;
@@ -65,6 +67,25 @@ namespace Epsitec.Common.Support.Extensions
 			where T : System.Attribute
 		{
 			return assembly.GetCustomAttributes (typeof (T), inherit).Cast<T> ();
+		}
+
+		/// <summary>
+		/// Gets the default namespace for the specified assembly. This information is only
+		/// available if the assembly was decorated with the <see cref="NamespaceAttribute"/>
+		/// at the <c>assembly:</c> level.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <returns>The default namespace or <c>null</c>.</returns>
+		public static string GetDefaultNamespace(this Assembly assembly)
+		{
+			var attribute = assembly.GetCustomAttributes<NamespaceAttribute> ().FirstOrDefault ();
+
+			if (attribute == null)
+			{
+				return null;
+			}
+
+			return attribute.AssemblyNamespace;
 		}
 	}
 }

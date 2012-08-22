@@ -52,15 +52,18 @@ namespace Epsitec.Common.Types
 		/// <returns>The collection of types, which will be empty if none was found.</returns>
 		public IEnumerable<System.Type> GetTypesFromName(string typeName)
 		{
-			List<System.Type> list;
+			lock (this.types)
+			{
+				List<System.Type> list;
 
-			if (this.typeMap.TryGetValue (typeName, out list))
-			{
-				return list.AsReadOnly ();
-			}
-			else
-			{
-				return Epsitec.Common.Types.Collections.EmptyEnumerable<System.Type>.Instance;
+				if (this.typeMap.TryGetValue (typeName, out list))
+				{
+					return list.ToArray ();
+				}
+				else
+				{
+					return Epsitec.Common.Types.Collections.EmptyEnumerable<System.Type>.Instance;
+				}
 			}
 		}
 
@@ -97,7 +100,10 @@ namespace Epsitec.Common.Types
 		/// <returns>The collection of loaded assemblies.</returns>
 		public IEnumerable<Assembly> GetLoadedAssemblies()
 		{
-			return this.assemblies.AsReadOnly ();
+			lock (this.assemblies)
+			{
+				return this.assemblies.ToArray ();
+			}
 		}
 
 		/// <summary>
