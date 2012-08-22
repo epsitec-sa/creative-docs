@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
@@ -78,6 +79,25 @@ namespace Epsitec.Common.Support
 			var namespaceOverride = entitiesPos < 0 ? null : typeName.Substring (0, entitiesPos);
 
 			return this.GetResourceIconUri (icon, namespaceOverride);
+		}
+
+
+		public static string GetEntityIconUri(string iconName, System.Type type)
+		{
+			iconName.ThrowIfNullOrEmpty ("iconName");
+			type.ThrowIfNull ("type");
+
+			var typeName    = type.FullName;
+			int entitiesPos = typeName.IndexOf (".Entities.");
+
+			if (entitiesPos < 0)
+			{
+				throw new System.ArgumentException ("The type does not belong to the 'Entities' namespace");
+			}
+			
+			var typePrefix = typeName.Substring (0, entitiesPos);
+
+			return string.Concat ("manifest:", typePrefix, ".Images.", FormattedText.Escape (iconName), ".icon");
 		}
 
 		

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -54,6 +54,22 @@ namespace Epsitec.Common.Widgets
 			}
 
 			return copy;
+		}
+
+		public static Command FindCommand(System.Predicate<Command> predicate)
+		{
+			lock (CommandPool.exclusion)
+			{
+				foreach (var command in CommandPool.commandList)
+				{
+					if (predicate (command))
+					{
+						return command;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		public static Command FindCommand(string id, System.Func<Command> commandResolver)

@@ -318,6 +318,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 		/// <summary>
+		/// Finds the command matching the specified name.
+		/// </summary>
+		/// <param name="name">The command name.</param>
+		/// <returns>The command or <c>null</c> if none can be found.</returns>
+		public static Command FindByName(string name)
+		{
+			return CommandPool.FindCommand (c => c.Name == name);
+		}
+
+		/// <summary>
 		/// Determines whether the specified command is defined.
 		/// </summary>
 		/// <param name="id">The command id.</param>
