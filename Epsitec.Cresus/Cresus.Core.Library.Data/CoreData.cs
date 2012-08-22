@@ -1,7 +1,7 @@
-﻿//	copyright © 2008-2012, epsitec sa, 1400 yverdon-les-bains, switzerland
-//	author: pierre arnaud, maintainer: pierre arnaud
+﻿//	Copyright © 2008-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-//#define rebuild_database			//	uncomment this line to force database creation
+//#define REBUILD_DATABASE			//	uncomment this line to force database creation
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
