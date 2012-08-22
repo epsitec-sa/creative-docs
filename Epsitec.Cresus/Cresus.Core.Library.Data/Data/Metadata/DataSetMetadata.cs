@@ -6,9 +6,10 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Metadata
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// The <c>DataSetMetadata</c> class defines metadata for a data set (which is what the
 	/// user understands as a database, such as "customers", "invoices", etc.).
 	/// </summary>
-	public class DataSetMetadata
+	public class DataSetMetadata : CoreMetadata
 	{
 		public DataSetMetadata(string dataSetName)
 		{

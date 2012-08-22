@@ -3,11 +3,11 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Metadata
@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// The <c>EntityMetadata</c> class is a collection of <see cref="EntityDataColum"/>
 	/// instances.
 	/// </summary>
-	public sealed class EntityMetadata
+	public sealed class EntityMetadata : CoreMetadata
 	{
 		internal EntityMetadata(Druid entityId, IEnumerable<EntitySortedColumn> columns)
 		{

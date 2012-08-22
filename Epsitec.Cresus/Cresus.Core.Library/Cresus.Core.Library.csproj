@@ -63,6 +63,7 @@
     <Compile Include="Library\CoreComponent.cs" />
     <Compile Include="Library\CoreContext.cs" />
     <Compile Include="Library\CoreDatabaseType.cs" />
+    <Compile Include="Library\CoreMetadata.cs" />
     <Compile Include="Library\ICoreComponent`2.cs" />
     <Compile Include="Library\Settings\IUserIdentity.cs" />
     <Compile Include="Library\Settings\UserCommandSetSettings.cs" />

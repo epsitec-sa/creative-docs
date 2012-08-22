@@ -5,9 +5,10 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Metadata
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// The <c>DataStoreMetadata</c> class defines metadata at the global level: tables,
 	/// data sets, etc.
 	/// </summary>
-	public class DataStoreMetadata
+	public class DataStoreMetadata : CoreMetadata
 	{
 		public DataStoreMetadata()
 		{

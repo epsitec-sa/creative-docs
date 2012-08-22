@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -114,7 +114,12 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			var assembly = System.Reflection.Assembly.LoadFrom (assemblyName);
 			CoreContext.applicationType = assembly.GetType (typeName);
-		}			
+		}
+
+		public static void DefineMetadata(CoreMetadata metadata)
+		{
+
+		}
 
 		/// <summary>
 		/// Parses the optional settings file. Every line in the file can specify a
@@ -125,11 +130,18 @@ namespace Epsitec.Cresus.Core.Library
 		/// <param name="lines">The source lines from the settings file.</param>
 		public static void ParseOptionalSettingsFile(IEnumerable<string> lines)
 		{
+			bool parsingXml = false;
+
 			foreach (var line in lines)
 			{
 				int pos1 = line.IndexOf ('(');
 				int pos2 = line.IndexOf (')', pos1+1);
 				int len  = pos2-pos1-1;
+
+				if (line.StartsWith ("<"))
+				{
+					//	Found some inline XML: parse it and store it for future reference
+				}
 
 				if ((pos1 > 0) &&
 					(len >= 0))
@@ -171,6 +183,25 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
+		/// <summary>
+		/// Gets the metadata of the specified type.
+		/// </summary>
+		/// <typeparam name="T">The type of metadata which is requested.</typeparam>
+		/// <returns>The metadata of type <paramref name="T"/>.</returns>
+		/// <exception cref="System.ArgumentException">If the metadata cannot be found.</exception>
+		public static T GetMetadata<T>()
+			where T : CoreMetadata
+		{
+			CoreMetadata metadata;
+
+			if (CoreContext.metadata.TryGetValue (typeof (T), out metadata))
+			{
+				return metadata as T;
+			}
+
+			throw new System.ArgumentException ("Cannot find metadata of type " + typeof (T).FullName);
+		}
+
 		private static object ParseArg(string arg)
 		{
 			if ((arg.Length > 1) &&
@@ -202,6 +233,13 @@ namespace Epsitec.Cresus.Core.Library
 			throw new System.FormatException (string.Format ("The argument '{0}' could not be parsed", arg));
 		}
 
+
+
+		static CoreContext()
+		{
+			CoreContext.metadata = new Dictionary<System.Type, CoreMetadata> ();
+		}
+
 		
 		private static bool						startupCalled;
 		private static bool						isInteractive;
@@ -212,5 +250,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static string					databaseHost;
 
 		private static System.Type				applicationType;
+		
+		private static readonly Dictionary<System.Type, CoreMetadata> metadata;
 	}
 }
