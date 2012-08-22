@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		}
 
 		
-		public string DataSetName
+		public string							DataSetName
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
-		public System.Type DataSetEntityType
+		public System.Type						DataSetEntityType
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		}
 
 
-		public Command BaseShowCommand
+		public Command							BaseShowCommand
 		{
 			get
 			{
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
-		public string EntityIconUri
+		public string							EntityIconUri
 		{
 			get
 			{
