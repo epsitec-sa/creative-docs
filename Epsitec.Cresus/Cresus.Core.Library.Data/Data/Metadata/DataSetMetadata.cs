@@ -19,40 +19,50 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// </summary>
 	public class DataSetMetadata
 	{
-		public DataSetMetadata(string dataSetName, Druid baseShowCommandId)
+		public DataSetMetadata(string dataSetName)
 		{
-			this.name = dataSetName;
-			this.baseShowCommandId = baseShowCommandId;
+			this.dataSetName = dataSetName;
+			this.dataSetEntityType = DataSetGetter.GetRootEntityType (this.dataSetName);
+			this.baseShowCommand = DataSetMetadata.ResolveShowCommand (this.dataSetName);
+
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
+			: this (data[Strings.Name])
 		{
-			this.name = data[Strings.Name];
-			this.baseShowCommandId = Druid.Parse (data[Strings.BaseShowCommandId]);
 		}
 
 		
-		public string Name
+		public string DataSetName
 		{
 			get
 			{
-				return this.name;
+				return this.dataSetName;
 			}
 		}
+
+		public System.Type DataSetEntityType
+		{
+			get
+			{
+				return this.dataSetEntityType;
+			}
+		}
+
 
 		public Command BaseShowCommand
 		{
 			get
 			{
-				return Command.Find (this.baseShowCommandId);
+				return this.baseShowCommand;
 			}
 		}
 
-		public string IconOverlayUri
+		public string EntityIconUri
 		{
 			get
 			{
-				throw new System.NotImplementedException ();
+				return IconProvider.GetEntityIconUri ("Base." + this.DataSetName, this.DataSetEntityType);
 			}
 		}
 
@@ -76,8 +86,18 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 		private void Serialize(List<XAttribute> attributes)
 		{
-			attributes.Add (new XAttribute (Strings.Name, this.name));
-			attributes.Add (new XAttribute (Strings.BaseShowCommandId, this.baseShowCommandId.ToCompactString ()));
+			attributes.Add (new XAttribute (Strings.Name, this.dataSetName));
+		}
+
+
+		private static Command ResolveShowCommand(string dataSetName)
+		{
+			var showName = "Base.Show" + dataSetName;
+			var showCmd  = Command.FindByName (showName);
+
+			System.Diagnostics.Debug.Assert (showCmd != null, string.Format ("Show command could not be located for data set '{0}'", dataSetName));
+
+			return showCmd;
 		}
 
 
@@ -86,13 +106,13 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private static class Strings
 		{
 			public static readonly string		Name = "name";
-			public static readonly string		BaseShowCommandId = "CMD.show";
 		}
 
 		#endregion
 
 
-		private readonly string name;
-		private readonly Druid baseShowCommandId;
+		private readonly string dataSetName;
+		private readonly Command baseShowCommand;
+		private readonly System.Type dataSetEntityType;
 	}
 }
