@@ -25,36 +25,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			this.ConstructorTest ((short) 0, Type.Int16, v => new Constant (v));
-			this.ConstructorTest ((int) 0, Type.Int32, v => new Constant (v));
-			this.ConstructorTest ((long) 0, Type.Int64, v => new Constant (v));
-			this.ConstructorTest ((decimal) 0, Type.Decimal, v => new Constant (v));
-			this.ConstructorTest (true, Type.Boolean, v => new Constant (v));
-			this.ConstructorTest ("test", Type.String, v => new Constant (v));
-			this.ConstructorTest (new byte[] { 0x00 }, Type.ByteArray, v => new Constant (v));
-			this.ConstructorTest (Date.Today, Type.Date, v => new Constant (v));
-			this.ConstructorTest (Time.Now, Type.Time, v => new Constant (v));
-			this.ConstructorTest (System.DateTime.Now, Type.DateTime, v => new Constant (v));
-			this.ConstructorTest (SimpleEnum.Value1, Type.Enum, v => new Constant (v));
+			this.ConstructorTest ((short) 0);
+			this.ConstructorTest ((int) 0);
+			this.ConstructorTest ((long) 0);
+			this.ConstructorTest ((decimal) 0);
+			this.ConstructorTest (true);
+			this.ConstructorTest ("test");
+			this.ConstructorTest (new byte[] { 0x00 });
+			this.ConstructorTest (Date.Today);
+			this.ConstructorTest (Time.Now);
+			this.ConstructorTest (System.DateTime.Now);
+			this.ConstructorTest (SimpleEnum.Value1);
 		}
 
 
-		private void ConstructorTest<T>(T value, Type type, System.Func<T, Constant> constructor)
+		private void ConstructorTest<T>(T value)
 		{
-			var constant = constructor (value);
+			var constant = new Constant (value);
 
 			Assert.AreEqual (value, constant.Value);
-			Assert.AreEqual (type, constant.Type);
-		}
-
-
-		[TestMethod]
-		public void ConstructorArgumentCheck()
-		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => new Constant ((string) null)
-			);
 		}
 
 

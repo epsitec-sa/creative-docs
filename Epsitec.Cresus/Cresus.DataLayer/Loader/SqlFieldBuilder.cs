@@ -1,10 +1,15 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Schema;
+
+using System;
 
 
 namespace Epsitec.Cresus.DataLayer.Loader
@@ -74,6 +79,102 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var value = entity.InternalGetValue (fieldName);
 
 			return this.BuildConstantForField (dbRawType, dbSimpleType, dbNumDef, value);
+		}
+
+
+		public SqlField BuildConstantForField(object value)
+		{
+			// NOTE If value is null, we can't call GetType() on it so we return a null constant and
+			// skip everything else.
+
+			if (value == null)
+			{
+				return this.BuildConstant (null, DbRawType.Unknown);
+			}
+
+			var typeInfo = SqlFieldBuilder.GetTypeInfo (value.GetType ());
+
+			var dbRawType = typeInfo.Item1;
+			var dbSimpleType = typeInfo.Item2;
+			var dbNumDef = typeInfo.Item3;
+
+			return this.BuildConstantForField (dbRawType, dbSimpleType, dbNumDef, value);
+		}
+
+
+		private static Tuple<DbRawType, DbSimpleType, DbNumDef> GetTypeInfo(Type systemType)
+		{
+			if (systemType.IsNullable ())
+			{
+				systemType = systemType.GetNullableTypeUnderlyingType ();
+			}
+
+			DbRawType dbRawType;
+			DbSimpleType dbSimpleType;
+			
+			if (systemType == typeof (string) || systemType == typeof (FormattedText))
+			{
+				dbRawType = DbRawType.String;
+				dbSimpleType = DbSimpleType.String;
+			}
+			else if (systemType == typeof (bool))
+			{
+				dbRawType = DbRawType.Boolean;
+				dbSimpleType = DbSimpleType.Decimal;
+			}
+			else if (systemType == typeof (short))
+			{
+				dbRawType = DbRawType.Int16;
+				dbSimpleType = DbSimpleType.Decimal;
+			}
+			else if (systemType == typeof (int))
+			{
+				dbRawType = DbRawType.Int32;
+				dbSimpleType = DbSimpleType.Decimal;
+			}
+			else if (systemType == typeof (long))
+			{
+				dbRawType = DbRawType.Int64;
+				dbSimpleType = DbSimpleType.Decimal;
+			}
+			else if (systemType == typeof (decimal))
+			{
+				dbRawType = DbRawType.LargeDecimal;
+				dbSimpleType = DbSimpleType.Decimal;
+			}
+			else if (systemType.IsEnum)
+			{
+				dbRawType = DbRawType.Int32;
+				dbSimpleType = DbSimpleType.Decimal;
+			}
+			else if (systemType == typeof (Date))
+			{
+				dbRawType = DbRawType.Date;
+				dbSimpleType = DbSimpleType.Date;
+			}
+			else if (systemType == typeof (Time))
+			{
+				dbRawType = DbRawType.Time;
+				dbSimpleType = DbSimpleType.Time;
+			}
+			else if (systemType == typeof (DateTime))
+			{
+				dbRawType = DbRawType.DateTime;
+				dbSimpleType = DbSimpleType.DateTime;
+			}
+			else if (systemType == typeof (byte[]))
+			{
+				dbRawType = DbRawType.ByteArray;
+				dbSimpleType = DbSimpleType.ByteArray;
+			}
+			else
+			{
+				throw new ArgumentException ();
+			}
+
+			var dbNumDef = DbNumDef.FromRawType (dbRawType);
+
+			return Tuple.Create (dbRawType, dbSimpleType, dbNumDef);
 		}
 
 

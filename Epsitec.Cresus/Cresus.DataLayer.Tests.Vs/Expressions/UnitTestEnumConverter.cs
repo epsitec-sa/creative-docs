@@ -73,50 +73,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 			this.Check (matches, EnumConverter.ToSqlFunctionCode);
 		}
-		
-
-		[TestMethod]
-		public void ToDbRawTypeTest()
-		{
-			var matches = new Dictionary<Type, DbRawType> ()
-			{
-				{ Type.Boolean, DbRawType.Boolean },
-				{ Type.Int16, DbRawType.Int16 },
-				{ Type.Int32, DbRawType.Int32 },
-				{ Type.Int64, DbRawType.Int64 },
-				{ Type.Decimal, DbRawType.LargeDecimal },
-				{ Type.Date, DbRawType.Date },
-				{ Type.Time, DbRawType.Time },
-				{ Type.DateTime, DbRawType.DateTime },
-				{ Type.String, DbRawType.String },
-				{ Type.ByteArray, DbRawType.ByteArray },
-				{ Type.Enum, DbRawType.Int32 },
-			};
-
-			this.Check (matches, EnumConverter.ToDbRawType);
-		}
-
-
-		[TestMethod]
-		public void ToDbSimpleTypeTest()
-		{
-			var matches = new Dictionary<Type, DbSimpleType> ()
-			{
-				{ Type.Boolean, DbSimpleType.Decimal },
-				{ Type.Int16, DbSimpleType.Decimal },
-				{ Type.Int32, DbSimpleType.Decimal },
-				{ Type.Int64, DbSimpleType.Decimal },
-				{ Type.Decimal, DbSimpleType.Decimal },
-				{ Type.Date, DbSimpleType.Date },
-				{ Type.Time, DbSimpleType.Time },
-				{ Type.DateTime, DbSimpleType.DateTime },
-				{ Type.String, DbSimpleType.String },
-				{ Type.ByteArray, DbSimpleType.ByteArray },
-				{ Type.Enum, DbSimpleType.Decimal },
-			};
-
-			this.Check (matches, EnumConverter.ToDbSimpleType);
-		}
 
 
 		[TestMethod]
@@ -129,28 +85,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 			};
 
 			this.Check (matches, EnumConverter.ToSqlSortOrder);
-		}
-
-
-		[TestMethod]
-		public void ToDbNumDefTest()
-		{
-			var matches = new Dictionary<Type, DbNumDef> ()
-			{
-				{ Type.Boolean, DbNumDef.FromRawType (DbRawType.Boolean) },
-				{ Type.Int16, DbNumDef.FromRawType (DbRawType.Int16) },
-				{ Type.Int32, DbNumDef.FromRawType (DbRawType.Int32) },
-				{ Type.Int64, DbNumDef.FromRawType (DbRawType.Int64) },
-				{ Type.Decimal, DbNumDef.FromRawType (DbRawType.LargeDecimal) },
-				{ Type.Date, DbNumDef.FromRawType (DbRawType.Date) },
-				{ Type.Time, DbNumDef.FromRawType (DbRawType.Time) },
-				{ Type.DateTime, DbNumDef.FromRawType (DbRawType.DateTime) },
-				{ Type.String, DbNumDef.FromRawType (DbRawType.String) },
-				{ Type.ByteArray, DbNumDef.FromRawType (DbRawType.ByteArray) },
-				{ Type.Enum, DbNumDef.FromRawType (DbRawType.Int32) },
-			};
-
-			this.Check (matches, EnumConverter.ToDbNumDef);
 		}
 
 

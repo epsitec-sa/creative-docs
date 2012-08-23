@@ -108,77 +108,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// Converts an <see cref="Type"/> to the corresponding <see cref="DbRawType"/>.
-		/// </summary>
-		/// <param name="type">The <see cref="Type"/> to convert.</param>
-		/// <returns>The corresponding <see cref="DbRawType"/>.</returns>
-		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
-		public static DbRawType ToDbRawType(Type type)
-		{
-			switch (type)
-			{
-				case Type.Boolean:
-					return DbRawType.Boolean;
-				case Type.Int16:
-					return DbRawType.Int16;
-				case Type.Int32:
-					return DbRawType.Int32;
-				case Type.Int64:
-					return DbRawType.Int64;
-				case Type.Enum:
-					return DbRawType.Int32;
-				case Type.Decimal:
-					return DbRawType.LargeDecimal;
-				case Type.Date:
-					return DbRawType.Date;
-				case Type.Time:
-					return DbRawType.Time;
-				case Type.DateTime:
-					return DbRawType.DateTime;
-				case Type.String:
-					return DbRawType.String;
-				case Type.ByteArray:
-					return DbRawType.ByteArray;
-				default:
-					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
-			}
-		}
-
-
-		/// <summary>
-		/// Converts a <see cref="Type"/> to the corresponding <see cref="DbSimpleType"/>.
-		/// </summary>
-		/// <param name="type">The <see cref="Type"/> to convert.</param>
-		/// <returns>The corresponding <see cref="DbSimpleType"/>.</returns>
-		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
-		public static DbSimpleType ToDbSimpleType(Type type)
-		{
-			switch (type)
-			{
-				case Type.Boolean:
-				case Type.Int16:
-				case Type.Int32:
-				case Type.Int64:
-				case Type.Decimal:
-				case Type.Enum:
-					return DbSimpleType.Decimal;
-				case Type.Date:
-					return DbSimpleType.Date;
-				case Type.Time:
-					return DbSimpleType.Time;
-				case Type.DateTime:
-					return DbSimpleType.DateTime;
-				case Type.String:
-					return DbSimpleType.String;
-				case Type.ByteArray:
-					return DbSimpleType.ByteArray;
-				default:
-					throw new System.NotSupportedException ("Conversion of '" + type + "' is not supported");
-			}
-		}
-
-
-		/// <summary>
 		/// Converts a <see cref="SortOrder"/> to the corresponding <see cref="SqlSortOrder"/>.
 		/// </summary>
 		/// <param name="sortOrder">The <see cref="SortOrder"/> to convert.</param>
@@ -197,20 +126,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + sortOrder + "' is not supported");
 			}
-		}
-
-
-		/// <summary>
-		/// Converts a <see cref="Type"/> to the corresponding <see cref="DbNumDef"/>.
-		/// </summary>
-		/// <param name="type">The <see cref="Type"/> to convert.</param>
-		/// <returns>The corresponding <see cref="DbNumDef"/>.</returns>
-		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
-		public static DbNumDef ToDbNumDef(Type type)
-		{
-			DbRawType rawType = EnumConverter.ToDbRawType (type);
-
-			return DbNumDef.FromRawType (rawType);
 		}
 
 

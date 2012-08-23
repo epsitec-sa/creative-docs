@@ -202,7 +202,6 @@
     <Compile Include="Expressions\BinaryComparator.cs" />
     <Compile Include="Expressions\Comparison.cs" />
     <Compile Include="Expressions\Constant.cs" />
-    <Compile Include="Expressions\Type.cs" />
     <Compile Include="Expressions\EnumConverter.cs" />
     <Compile Include="Expressions\Expression.cs" />
     <Compile Include="Expressions\UnaryComparator.cs" />
