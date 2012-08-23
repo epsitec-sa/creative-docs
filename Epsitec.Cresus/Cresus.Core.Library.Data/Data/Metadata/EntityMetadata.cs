@@ -21,13 +21,12 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		internal EntityMetadata(Druid entityId, IEnumerable<EntityColumnMetadata> columns)
 		{
 			this.entityId = entityId;
-			this.columns = columns.ToArray ();
+			this.columns  = new List<EntityColumnMetadata> (columns);
 		}
 
 		private EntityMetadata(IDictionary<string, string> data, IEnumerable<EntityColumnMetadata> columns)
+			: this (Druid.Parse (data[Strings.EntityId]), columns)
 		{
-			this.entityId = Druid.Parse (data[Strings.EntityId]);
-			this.columns = columns.ToArray ();
 		}
 
 
@@ -39,7 +38,15 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
-		public IEnumerable<EntityColumnMetadata>	Columns
+		public System.Type						DataSetEntityType
+		{
+			get
+			{
+				return EntityInfo.GetType (this.entityId);
+			}
+		}
+
+		public IList<EntityColumnMetadata>		Columns
 		{
 			get
 			{
@@ -51,7 +58,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		{
 			get
 			{
-				return this.columns.Length;
+				return this.columns.Count;
 			}
 		}
 
@@ -111,6 +118,6 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		#endregion
 
 		private readonly Druid					entityId;
-		private readonly EntityColumnMetadata[]	columns;
+		private readonly List<EntityColumnMetadata>	columns;
 	}
 }
