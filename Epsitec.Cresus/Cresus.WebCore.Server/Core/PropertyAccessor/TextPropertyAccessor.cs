@@ -107,15 +107,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				var conversionResult = converter.ConvertFromString (value);
 
-				var success = conversionResult.HasValue;		
-				object result = success ? conversionResult.Value : default(T);
+				var success = conversionResult.HasValue;
+				object result = success ? conversionResult.Value : default (T);
 
 				return Tuple.Create (success, result);
 			};
-
-
-			throw new NotImplementedException ();
-		}	
+		}
 
 
 		public string GetString(AbstractEntity entity)
