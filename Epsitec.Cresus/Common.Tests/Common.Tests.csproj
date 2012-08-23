@@ -100,6 +100,7 @@
     <Compile Include="Support\CodeGeneratorTest.cs" />
     <Compile Include="Support\CommandDispatcherTest.cs" />
     <Compile Include="Support\CommandTest.cs" />
+    <Compile Include="Support\XmlExtractorTest.cs" />
     <Compile Include="Support\CultureMapListTest.cs" />
     <Compile Include="Support\DocumentTest.cs" />
     <Compile Include="Support\DruidTest.cs" />
