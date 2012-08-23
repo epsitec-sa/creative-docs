@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		/// <param name="sortOrder">The sort order.</param>
 		/// <param name="displayMode">The display mode.</param>
 		/// <param name="sortIndex">The sort index (0 = most important criterion).</param>
-		public EntityColumnMetadata(LambdaExpression expression, FormattedText name, SortOrder sortOrder = SortOrder.None, ColumnDisplayMode displayMode = ColumnDisplayMode.Visible, int sortIndex = 0)
+		public EntityColumnMetadata(LambdaExpression expression, FormattedText name, ColumnSortOrder sortOrder = ColumnSortOrder.None, ColumnDisplayMode displayMode = ColumnDisplayMode.Visible, int sortIndex = 0)
 			: base (expression, name)
 		{
 			this.sortOrder   = sortOrder;
@@ -39,13 +40,13 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public EntityColumnMetadata(IDictionary<string, string> data)
 			: base (data)
 		{
-			this.sortOrder   = data[Strings.SortOrder].ToEnum<SortOrder> ();
+			this.sortOrder   = data[Strings.SortOrder].ToEnum<ColumnSortOrder> ();
 			this.sortIndex   = InvariantConverter.ToInt (data[Strings.SortIndex]);
 			this.displayMode = data[Strings.DisplayMode].ToEnum<ColumnDisplayMode> ();
 		}
 
 
-		public SortOrder						SortOrder
+		public ColumnSortOrder					SortOrder
 		{
 			get
 			{
@@ -84,10 +85,16 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		
 		public SortClause ToSortClause(AbstractEntity example)
 		{
+			if (this.SortOrder == ColumnSortOrder.None)
+			{
+				return null;
+			}
+
 			var fieldEntity = this.GetLeafEntity (example, NullNodeAction.CreateMissing);
 			var fieldId     = this.GetLeafFieldId ();
 
 			var fieldNode = new ValueField (fieldEntity, fieldId);
+			var sortOrder = EntityColumnMetadata.Convert (this.sortOrder);
 
 			return new SortClause (fieldNode, sortOrder);
 		}
@@ -101,6 +108,34 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			attributes.Add (new XAttribute (Strings.DisplayMode, this.displayMode.ToString ()));
 		}
 
+
+		public static ColumnSortOrder Convert(SortOrder value)
+		{
+			switch (value)
+			{
+				case Epsitec.Cresus.DataLayer.Expressions.SortOrder.Ascending:
+					return ColumnSortOrder.Ascending;
+				case Epsitec.Cresus.DataLayer.Expressions.SortOrder.Descending:
+					return ColumnSortOrder.Descending;
+			}
+
+			throw new System.NotImplementedException (string.Format ("{0} not implemented", value.GetQualifiedName ()));
+		}
+
+		public static SortOrder Convert(ColumnSortOrder value)
+		{
+			switch (value)
+			{
+				case ColumnSortOrder.Ascending:
+					return Epsitec.Cresus.DataLayer.Expressions.SortOrder.Ascending;
+				case ColumnSortOrder.Descending:
+					return Epsitec.Cresus.DataLayer.Expressions.SortOrder.Descending;
+			}
+
+			throw new System.NotImplementedException (string.Format ("{0} not implemented", value.GetQualifiedName ()));
+		}
+
+
 		#region Strings Class
 
 		private static class Strings
@@ -112,7 +147,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 		#endregion
 
-		private SortOrder						sortOrder;
+		private ColumnSortOrder					sortOrder;
 		private int								sortIndex;
 		private ColumnDisplayMode				displayMode;
 	}

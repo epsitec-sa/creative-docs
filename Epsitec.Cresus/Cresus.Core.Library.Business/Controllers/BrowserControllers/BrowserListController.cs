@@ -243,9 +243,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if (this.collectionEntityId == customerEntityId)
 			{
 				var recorder = new EntityMetadataRecorder<CustomerEntity> ()
-							.Column (x => x.MainRelation.Person.DisplayName2, SortOrder.Ascending)
-							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode, SortOrder.Ascending)
-							.Column (x => x.MainRelation.DefaultMailContact.Location.Name, SortOrder.Ascending)
+							.Column (x => x.MainRelation.Person.DisplayName2, ColumnSortOrder.Ascending)
+							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode, ColumnSortOrder.Ascending)
+							.Column (x => x.MainRelation.DefaultMailContact.Location.Name, ColumnSortOrder.Ascending)
 					//	.Column (x => x.MainRelation.DefaultMailContact.StreetName, SortOrder.Ascending)
 					//	.Column (x => x.MainRelation.DefaultMailContact.HouseNumber, SortOrder.Ascending)
 							;
