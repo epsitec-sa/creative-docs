@@ -9,6 +9,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	/// </summary>
 	public enum SortOrder
 	{
+		None,
+
 		Ascending,
 		Descending,
 	}
