@@ -84,5 +84,23 @@ namespace Epsitec.Common.Support
 				xmlCDataNode = next;
 			}
 		}
+
+
+		/// <summary>
+		/// Gets a bag with every attribute found for the specified XML element.
+		/// </summary>
+		/// <param name="xml">The XML element.</param>
+		/// <returns>The bag of attributes.</returns>
+		public static Epsitec.Common.Types.Collections.Bag<string, string> GetAttributeBag(XElement xml)
+		{
+			var bag = new Epsitec.Common.Types.Collections.Bag<string, string> ();
+
+			foreach (var attribute in xml.Attributes ())
+			{
+				bag.Add (attribute.Name.LocalName, attribute.Value);
+			}
+			
+			return bag;
+		}
 	}
 }

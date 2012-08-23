@@ -26,6 +26,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="title">The (optional) title associated with the column.</param>
 		/// <param name="captionId">The (optional) caption id associated with the column.</param>
+		/// <param name="tag">The (optional) tag associated with the column.</param>
 		public EntityColumn(LambdaExpression expression, FormattedText title = default (FormattedText), Druid captionId = default (Druid), string tag = null)
 			: this (title, captionId, tag)
 		{
@@ -38,7 +39,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// is used when deserializing a column definition.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		public EntityColumn(IDictionary<string, string> data)
+		protected EntityColumn(IDictionary<string, string> data)
 			: this (new FormattedText (data[Strings.Title]), Druid.Parse (data[Strings.CaptionId]), data[Strings.Tag])
 		{
 			this.path       = EntityFieldPath.Parse (data[Strings.Path]);
@@ -158,7 +159,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			var typeName = TypeEnumerator.Instance.UnshrinkTypeName (xml.Attribute (Strings.Type).Value);
 			var sysType  = TypeEnumerator.Instance.FindType (typeName);
-			var data     = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
+			var data     = Xml.GetAttributeBag (xml);
 			var instance = System.Activator.CreateInstance (sysType, data) as EntityColumn;
 			
 			return instance;

@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 		public static DataSetMetadata Restore(XElement xml)
 		{
-			var data     = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
+			var data     = Xml.GetAttributeBag (xml);
 			var metadata = new DataSetMetadata (data);
 
 			return metadata;

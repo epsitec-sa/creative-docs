@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		/// <returns>The metadata.</returns>
 		public static EntityMetadata Restore(XElement xml)
 		{
-			var data    = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
+			var data    = Xml.GetAttributeBag (xml);
 			var columns = xml.Elements (Strings.Column).Select (x => EntityColumn.Restore (x)).Cast<EntityColumnMetadata> ();
 
 			return new EntityMetadata (data, columns);
