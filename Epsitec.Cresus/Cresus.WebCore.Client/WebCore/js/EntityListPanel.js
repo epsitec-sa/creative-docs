@@ -23,7 +23,7 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
   setupEntityList: function(listOptions) {
     this.setLoading(true);
     Ext.Ajax.request({
-      url: 'proxy/database/columns/' + listOptions.databaseName,
+      url: 'proxy/database/definition/' + listOptions.databaseName,
       callback: function(requestOptions, success, response) {
         this.setupEntityListCallback(listOptions, success, response);
       },
@@ -32,7 +32,7 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
   },
 
   setupEntityListCallback: function(options, success, response) {
-    var json, columnDefinitions;
+    var json, columnDefinitions, sorterDefinitions, type;
 
     this.setLoading(false);
 
@@ -42,20 +42,20 @@ Ext.define('Epsitec.cresus.webcore.EntityListPanel', {
     }
 
     columnDefinitions = json.content.columns;
-    this.entityList = this.createEntityList(options, columnDefinitions);
-    this.add(this.entityList);
-  },
+    sorterDefinitions = json.content.sorters;
 
-  createEntityList: function(options, columnDefinitions) {
-    var type = options.editable ?
+    type = options.editable ?
         'Epsitec.EditableEntityList' : 'Epsitec.EntityList';
 
-    return Ext.create(type, {
+    this.entityList = Ext.create(type, {
       databaseName: options.databaseName,
       columnDefinitions: columnDefinitions,
+      sorterDefinitions: sorterDefinitions,
       multiSelect: options.multiSelect,
       onSelectionChange: options.onSelectionChange
     });
+
+    this.add(this.entityList);
   },
 
   getEntityList: function() {

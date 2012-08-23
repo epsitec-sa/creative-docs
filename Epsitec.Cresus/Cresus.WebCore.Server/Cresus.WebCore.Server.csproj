@@ -60,6 +60,7 @@
     <Compile Include="Core\Databases\ColumnType.cs" />
     <Compile Include="Core\Databases\DatabaseManager.cs" />
     <Compile Include="Core\Databases\Database`1.cs" />
+    <Compile Include="Core\Databases\Sorter.cs" />
     <Compile Include="Core\Databases\ColumnTypeConverter.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />

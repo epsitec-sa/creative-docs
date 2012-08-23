@@ -14,6 +14,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   databaseName: null,
   onSelectionChangeCallback: null,
   columnDefinitions: null,
+  sorterDefinitions: null,
 
   /* Constructor */
 
@@ -126,7 +127,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   createStore: function(options) {
     return Ext.create('Ext.data.Store', {
       fields: this.createFields(options.columnDefinitions),
-      sorters: this.createSorters(options.columnDefinitions),
+      sorters: this.createSorters(options.sorterDefinitions),
       autoLoad: true,
       pageSize: 100,
       remoteSort: true,
@@ -179,16 +180,13 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     });
   },
 
-  createSorters: function(columnDefinitions) {
-    return columnDefinitions
-        .filter(function(c) {
-          return c.sortDirection !== null;
-        }).map(function(c) {
-          return {
-            property: c.name,
-            direction: c.sortDirection
-          };
-        });
+  createSorters: function(sorterDefinitions) {
+    return sorterDefinitions.map(function(s) {
+      return {
+        property: s.name,
+        direction: s.sortDirection
+      };
+    });
   },
 
   encodeSorters: function(sorters) {
@@ -269,42 +267,51 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   getCurrentSorters: function() {
     var usedSorters, unusedSorters;
 
-    usedSorters = this.store.getSorters().map(
-        function(s1) {
-          return {
-            title: this.columnDefinitions.filter(function(s2) {
-              return s1.property === s2.name;
-            })[0].title,
-            name: s1.property,
-            sortDirection: s1.direction
-          };
-        },
-        this
-        );
-
-    unusedSorters = this.getInitialSorters().filter(function(s1) {
-      return !usedSorters.some(function(s2) {
-        return s1.name === s2.name;
-      });
-    });
-
-    unusedSorters.forEach(function(s) {
-      s.sortDirection = null;
-    });
+    usedSorters = this.getUsedSorters(this.store.getSorters());
+    unusedSorters = this.getUnusedSorters(usedSorters);
 
     return usedSorters.concat(unusedSorters);
   },
 
   getInitialSorters: function() {
+    var usedSorters, unusedSorters;
+
+    usedSorters = this.getUsedSorters(
+        this.createSorters(this.sorterDefinitions)
+        );
+
+    unusedSorters = this.getUnusedSorters(usedSorters);
+
+    return usedSorters.concat(unusedSorters);
+  },
+
+  getUsedSorters: function(sorters) {
+    return sorters.map(
+        function(s) {
+          return {
+            title: this.columnDefinitions.filter(function(c) {
+              return s.property === c.name;
+            })[0].title,
+            name: s.property,
+            sortDirection: s.direction
+          };
+        },
+        this
+    );
+  },
+
+  getUnusedSorters: function(usedSorters) {
     return this.columnDefinitions
         .filter(function(c) {
-          return c.sortable === true;
+          return c.sortable === true && !usedSorters.some(function(s) {
+            return c.name === s.name;
+          });
         })
         .map(function(c) {
           return {
             title: c.title,
             name: c.name,
-            sortDirection: c.sortDirection
+            sortDirection: null
           };
         });
   },

@@ -54,157 +54,194 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private IEnumerable<Database> CreateAiderDatabases()
 		{
-			yield return Database.Create<AiderCountryEntity, CountryEntity>
-			(
-				title: "Countries",
-				iconUri: "Base.Country",
-				columns: new List<Column> ()
-				{
-					Column.Create<AiderCountryEntity, string>
-					(
-						title: "Name",
-						name: "Name",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: true,
-						sortOrder: SortOrder.Descending,
-						lambdaExpression: x => x.Name
-					),
-					Column.Create<AiderCountryEntity, string>
-					(
-						title: "Code",
-						name: "Code",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: false,
-						sortOrder: null,
-						lambdaExpression: x => x.IsoCode
-					),
-				}
-			);
-
-			yield return Database.Create<AiderTownEntity, LocationEntity>
-			(
-				title: "Towns",
-				iconUri: "Base.Location",
-				columns: new List<Column> ()
-				{
-					Column.Create<AiderTownEntity, string>
-					(
-						title: "Name",
-						name: "Name",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: true,
-						sortOrder: null,
-						lambdaExpression: x => x.Name
-					),
-					Column.Create<AiderTownEntity, string>
-					(
-						title: "ZipCode",
-						name: "ZipCode",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: true,
-						sortOrder: null,
-						lambdaExpression: x => x.ZipCode
-					),
-					Column.Create<AiderTownEntity, string>
-					(
-						title: "CountryName",
-						name: "CountryName",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: true,
-						sortOrder: null,
-						lambdaExpression: x => x.Country.Name
-					),
-					Column.Create<AiderTownEntity, string>
-					(
-						title: "CountryCode",
-						name: "CountryCode",
-						type: ColumnType.String,
-						hidden: true,
-						sortable: true,
-						sortOrder: null,
-						lambdaExpression: x => x.Country.IsoCode
-					),
-				}
-			);
+			yield return this.CreateDatabaseForAiderCountryEntity ();
+			yield return this.CreateDatabaseForAiderTownEntity ();
 
 			yield return Database.Create<AiderAddressEntity, AiderAddressEntity>
 			(
 				title: "Addresses",
 				iconUri: "Data.AiderAddress",
-				columns: new List<Column> ()
+				columns: new List<Column> (),
+				sorters: new List<Sorter> ()
 			);
 
 			yield return Database.Create<AiderHouseholdEntity, AiderHouseholdEntity>
 			(
 				title: "Households",
 				iconUri: "Data.AiderHousehold",
-				columns: new List<Column> ()
+				columns: new List<Column> (),
+				sorters: new List<Sorter> ()
 			);
 
-			yield return Database.Create<AiderPersonEntity, AiderPersonEntity>
-			(
-				title: "Persons",
-				iconUri: "Base.AiderPerson",
-				columns: new List<Column> ()
-				{
-					Column.Create<AiderPersonEntity, string>
-					(
-						title: "FirstName",
-						name: "FirstName",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: true,
-						sortOrder: null,
-						lambdaExpression: x => x.eCH_Person.PersonFirstNames
-					),
-					Column.Create<AiderPersonEntity, string>
-					(
-						title: "LastName",
-						name: "LastName",
-						type: ColumnType.String,
-						hidden: false,
-						sortable: true,
-						sortOrder: null,
-						lambdaExpression: x => x.eCH_Person.PersonOfficialName
-					),
-				}
-			);
+			yield return this.CreateDatabaseForAiderPersonEntity ();
 
 			yield return Database.Create<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity>
 			(
 				title: "Relationships",
 				iconUri: "Base.AiderPersonRelationship",
+				columns: new List<Column> (),
+				sorters: new List<Sorter> ()
+			);
+		}
+
+
+		private Database CreateDatabaseForAiderCountryEntity()
+		{
+			var columnName = Column.Create<AiderCountryEntity, string>
+			(
+				title: "Name",
+				name: "Name",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: true,
+				lambdaExpression: x => x.Name
+			);
+
+			var columnCode = Column.Create<AiderCountryEntity, string>
+			(
+				title: "Code",
+				name: "Code",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: false,
+				lambdaExpression: x => x.IsoCode
+			);
+
+			return Database.Create<AiderCountryEntity, CountryEntity>
+			(
+				title: "Countries",
+				iconUri: "Base.Country",
 				columns: new List<Column> ()
+				{
+					columnName,
+					columnCode,
+				},
+				sorters: new List<Sorter> ()
+				{
+					new Sorter (columnName, SortOrder.Ascending)
+				}
+			);
+		}
+
+
+		private Database CreateDatabaseForAiderTownEntity()
+		{
+			var columnName = Column.Create<AiderTownEntity, string>
+			(
+				title: "Name",
+				name: "Name",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: true,
+				lambdaExpression: x => x.Name
+			);
+
+			var columnZipCode = Column.Create<AiderTownEntity, string>
+			(
+				title: "ZipCode",
+				name: "ZipCode",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: true,
+				lambdaExpression: x => x.ZipCode
+			);
+
+			var columnCountryName = Column.Create<AiderTownEntity, string>
+			(
+				title: "CountryName",
+				name: "CountryName",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: true,
+				lambdaExpression: x => x.Country.Name
+			);
+
+			var columnCountryCode = Column.Create<AiderTownEntity, string>
+			(
+				title: "CountryCode",
+				name: "CountryCode",
+				type: ColumnType.String,
+				hidden: true,
+				sortable: true,
+				lambdaExpression: x => x.Country.IsoCode
+			);
+
+			return Database.Create<AiderTownEntity, LocationEntity>
+			(
+				title: "Towns",
+				iconUri: "Base.Location",
+				columns: new List<Column> ()
+				{
+					columnName,
+					columnZipCode,
+					columnCountryName,
+					columnCountryCode,
+				},
+				sorters: new List<Sorter> ()
+			);
+		}
+
+
+		private Database CreateDatabaseForAiderPersonEntity()
+		{
+			var columnFirstName = Column.Create<AiderPersonEntity, string>
+			(
+				title: "FirstName",
+				name: "FirstName",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: true,
+				lambdaExpression: x => x.eCH_Person.PersonFirstNames
+			);
+
+			var columLastName = Column.Create<AiderPersonEntity, string>
+			(
+				title: "LastName",
+				name: "LastName",
+				type: ColumnType.String,
+				hidden: false,
+				sortable: true,
+				lambdaExpression: x => x.eCH_Person.PersonOfficialName
+			);
+
+			return Database.Create<AiderPersonEntity, AiderPersonEntity>
+			(
+				title: "Persons",
+				iconUri: "Base.AiderPerson",
+				columns: new List<Column> ()
+				{
+					columnFirstName,
+					columLastName,
+				},
+				sorters: new List<Sorter> ()
 			);
 		}
 
 
 		private IEnumerable<Database> CreateCoreDatabases()
 		{
-			yield return Database.Create<CustomerEntity, CustomerEntity> 
+			yield return Database.Create<CustomerEntity, CustomerEntity>
 			(
 				title: "Clients",
 				iconUri: "Base.Customer",
-				columns: new List<Column> ()
+				columns: new List<Column> (),
+				sorters: new List<Sorter> ()
 			);
 
-			yield return Database.Create<ArticleDefinitionEntity, ArticleDefinitionEntity> 
+			yield return Database.Create<ArticleDefinitionEntity, ArticleDefinitionEntity>
 			(
 				title: "Articles",
 				iconUri: "Base.ArticleDefinition",
-				columns: new List<Column> ()
+				columns: new List<Column> (),
+				sorters: new List<Sorter> ()
 			);
 
-			yield return Database.Create<PersonGenderEntity, PersonGenderEntity> 
+			yield return Database.Create<PersonGenderEntity, PersonGenderEntity>
 			(
 				title: "Genres",
 				iconUri: "Base.PersonGender",
-				columns: new List<Column> ()
+				columns: new List<Column> (),
+				sorters: new List<Sorter> ()
 			);
 		}
 

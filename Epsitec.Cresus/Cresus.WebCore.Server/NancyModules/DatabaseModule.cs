@@ -35,8 +35,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (coreServer, "/database")
 		{
 			Get["/list"] = p => this.GetDatabaseList ();
-			Get["/columns/{name}"] = p => this.GetColumnList(p);
-			Get["/get/{name}"] = p => this.Execute (b => this.GetDatabase (b, p));
+			Get["/definition/{name}"] = p => this.GetDatabase (p);
+			Get["/get/{name}"] = p => this.Execute (b => this.GetEntities (b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetColumnList(dynamic parameters)
+		private Response GetDatabase(dynamic parameters)
 		{
 			string databaseName = parameters.name;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
@@ -77,9 +77,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				.Select (c => this.GetColumnData (c))
 				.ToList ();
 
+			var sorters = database.Sorters
+				.Select (s => this.GetSorterData (s))
+				.ToList ();
+
 			var content = new Dictionary<string, object> ()
 			{
 				{ "columns", columns },
+				{ "sorters", sorters },
 			};
 
 			return CoreResponse.Success (content);
@@ -95,7 +100,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				{ "type", this.GetColumnTypeData(column.Type) },
 				{ "hidden", column.Hidden },
 				{ "sortable", column.Sortable },
-				{ "sortDirection", this.GetSortOrder (column.SortOrder) } 
+			};
+		}
+
+
+		private Dictionary<string, object> GetSorterData(Sorter sorter)
+		{
+			return new Dictionary<string, object> ()
+			{
+				{ "name", sorter.Column.Name },
+				{ "sortDirection", this.GetSortOrderData (sorter.SortOrder) },
 			};
 		}
 
@@ -125,7 +139,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private string GetSortOrder(SortOrder? sortOrder)
+		private string GetSortOrderData(SortOrder? sortOrder)
 		{
 			switch (sortOrder)
 			{
@@ -144,7 +158,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetDatabase(BusinessContext businessContext, dynamic parameters)
+		private Response GetEntities(BusinessContext businessContext, dynamic parameters)
 		{
 			string databaseName = parameters.name;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
@@ -153,12 +167,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int limit = Request.Query.limit;
 
 			string sort = DatabasesModule.GetOptionalParameter (Request.Query.sort);
-			var sortCriteria = this.ParseSortCriteria (sort);
+			var sorters = this.ParseSorters (database, sort);
 
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
 			var total = database.GetCount (businessContext);
-			var entities = database.GetEntities (businessContext, sortCriteria, start, limit)
+			var entities = database.GetEntities (businessContext, sorters, start, limit)
 				.Select (e => database.GetEntityData (businessContext, e, propertyAccessorCache))
 				.ToList ();
 
@@ -172,20 +186,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private IEnumerable<Tuple<string, SortOrder>> ParseSortCriteria(string sortParameter)
+		private IEnumerable<Sorter> ParseSorters(Core.Databases.Database database, string sortParameter)
 		{
 			if (sortParameter != null)
 			{
-				foreach (var sortCriterium in sortParameter.Split (";"))
+				foreach (var sorter in sortParameter.Split (";"))
 				{
-					var data = sortCriterium.Split (":");
+					var data = sorter.Split (":");
 
 					if (data.Length == 2)
 					{
 						var name = data[0];
+						var column = database.Columns.First (c => c.Name == name);
 						var direction = this.ParseSortOrder (data[1]);
 
-						yield return Tuple.Create (name, direction);
+						yield return new Sorter (column, direction);
 					}
 				}
 			}

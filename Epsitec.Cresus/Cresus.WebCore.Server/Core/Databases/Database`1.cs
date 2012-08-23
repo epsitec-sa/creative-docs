@@ -2,8 +2,6 @@
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.Core.Data.Metadata;
-
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
@@ -24,8 +22,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(string title, string name, string iconClass, IEnumerable<Column> columns)
-			: base (title, name, iconClass, columns)
+		public Database(string title, string name, string iconClass, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
+			: base (title, name, iconClass, columns, sorters)
 		{
 		}
 
@@ -56,7 +54,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Tuple<string, SortOrder>> sortCriteria, int skip, int take)
+		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Sorter> sorters, int skip, int take)
 		{
 			var example = new T ();
 
@@ -67,25 +65,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				Take = take,
 			};
 
-			request.SortClauses.AddRange (this.CreateSortClauses (example, sortCriteria));
+			request.SortClauses.AddRange (this.CreateSortClauses (example, sorters));
 
 			return businessContext.DataContext.GetByRequest<T> (request);
 		}
 
 
-		private IEnumerable<SortClause> CreateSortClauses(T example, IEnumerable<Tuple<string, SortOrder>> sortCriteria)
+		private IEnumerable<SortClause> CreateSortClauses(T example, IEnumerable<Sorter> sorters)
 		{
-			foreach (var sortCriterium in sortCriteria)
+			foreach (var sorter in sorters)
 			{
-				var name = sortCriterium.Item1;
-				var sortOrder = sortCriterium.Item2;
-
-				var column = this.Columns.First (c => c.Name == name);
-
-				var lambda = column.LambdaExpression;
-				var entityDataColumn = new EntityColumnMetadata (lambda, name, sortOrder);
-
-				yield return entityDataColumn.ToSortClause (example);
+				yield return sorter.ToSortClause (example);
 			}
 
 			yield return new SortClause (InternalField.CreateId (example), SortOrder.Ascending);

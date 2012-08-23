@@ -2,8 +2,6 @@
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.DataLayer.Expressions;
-
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
@@ -21,12 +19,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(string title, string name, string iconClass, IEnumerable<Column> columns)
+		public Database(string title, string name, string iconClass, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
 		{
 			this.title = title;
 			this.name = name;
 			this.iconClass = iconClass;
 			this.columns = columns.ToList ();
+			this.sorters = sorters.ToList ();
 		}
 
 
@@ -66,10 +65,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
+		public IEnumerable<Sorter> Sorters
+		{
+			get
+			{
+				return this.sorters;
+			}
+		}
+
+
 		public abstract Dictionary<string, object> GetEntityData(BusinessContext businessContext, AbstractEntity entity, PropertyAccessorCache propertyAccessorCache);
 
 
-		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Tuple<string, SortOrder>> sortCriteria, int skip, int take);
+		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Sorter> sorters, int skip, int take);
 
 
 		public abstract int GetCount(BusinessContext businessContext);
@@ -81,14 +89,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		public abstract bool DeleteEntity(BusinessContext businessContext, AbstractEntity entity);
 
 
-		public static Database Create<T1, T2>(string title, string iconUri, IEnumerable<Column> columns)
+		public static Database Create<T1, T2>(string title, string iconUri, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
 			where T1 : AbstractEntity, new ()
 			where T2 : AbstractEntity, new ()
 		{
 			var name = Tools.TypeToString (typeof (T1));
 			var iconClass = IconManager.GetCssClassName (typeof (T2), iconUri, IconSize.ThirtyTwo);
 
-			return new Database<T1> (title, name, iconClass, columns);
+			return new Database<T1> (title, name, iconClass, columns, sorters);
 		}
 
 
@@ -98,7 +106,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			var name = Tools.TypeToString (type);
 			var iconClass = "";
 			var columns = new Column[0];
-			var arguments = new object[] { title, name, iconClass, columns };
+			var sorters = new Sorter[0];
+			var arguments = new object[] { title, name, iconClass, columns, sorters};
 			
 			var genericType = typeof (Database<>);
 			var concreteType = genericType.MakeGenericType (type);
@@ -117,6 +126,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		
 		
 		private readonly List<Column> columns;
+
+
+		private readonly List<Sorter> sorters;
 
 
 	}

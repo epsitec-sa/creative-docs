@@ -1,5 +1,3 @@
-using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System;
@@ -17,14 +15,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Column(string title, string name, ColumnType type, bool hidden, bool sortable, SortOrder? sortOrder, LambdaExpression lambdaExpression)
+		public Column(string title, string name, ColumnType type, bool hidden, bool sortable, LambdaExpression lambdaExpression)
 		{
 			this.title = title;
 			this.name = name;
 			this.type = type;
 			this.hidden = hidden;
 			this.sortable = sortable;
-			this.sortOrder = sortOrder;
 			this.lambdaExpression = lambdaExpression;
 		}
 
@@ -74,15 +71,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public SortOrder? SortOrder
-		{
-			get
-			{
-				return this.sortOrder;
-			}
-		}
-
-
 		public LambdaExpression LambdaExpression
 		{
 			get
@@ -92,9 +80,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public static Column Create<T1, T2>(string title, string name, ColumnType type, bool hidden, bool sortable, SortOrder? sortOrder, Expression<Func<T1, T2>> lambdaExpression)
+		public static Column Create<T1, T2>(string title, string name, ColumnType type, bool hidden, bool sortable, Expression<Func<T1, T2>> lambdaExpression)
 		{
-			return new Column(title, name, type, hidden, sortable, sortOrder, lambdaExpression);
+			return new Column(title, name, type, hidden, sortable, lambdaExpression);
 		}
 
 
@@ -111,9 +99,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly bool sortable;
-
-
-		private readonly SortOrder? sortOrder;
 
 
 		private readonly LambdaExpression lambdaExpression;
