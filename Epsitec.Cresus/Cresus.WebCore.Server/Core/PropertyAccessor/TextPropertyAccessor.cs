@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		{
 			this.isTextProperty = this.IsTextProperty ();
 			this.marshalerFactory = this.GetMarshalerFactory (lambda);
-			this.valueChecker = this.GetValueChecker ();
+			this.valueConverter = this.GetValueConverter ();
 		}
 
 
@@ -64,24 +64,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		private Func<string, bool> GetValueChecker()
+		private Func<string, Tuple<bool, object>> GetValueConverter()
 		{
-			var highLevelType = (AbstractType) this.Property.Type;
-			var lowLevelValueConverter = TextPropertyAccessor.GetValueConverter (this.Type);
-
-			return value =>
-			{
-				var conversionResult = lowLevelValueConverter (value);
-
-				return conversionResult.Item1
-					&& highLevelType.IsValidValue (conversionResult.Item2);
-			};
-		}
-
-
-		private static Func<string, Tuple<bool, object>> GetValueConverter(Type type)
-		{
-			Type systemType = type;
+			Type systemType = this.Type;
 
 			if (systemType.IsNullable ())
 			{
@@ -129,7 +114,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public bool CheckString(AbstractEntity entity, string value)
+		public bool CheckString(string value)
 		{
 			var processedValue = this.ProcessStringValue (value);
 
@@ -139,8 +124,25 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			}
 			else
 			{
-				return this.valueChecker (processedValue);
+				var highLevelType = (AbstractType) this.Property.Type;
+				var conversionResult = this.valueConverter (value);
+
+				return conversionResult.Item1
+					&& highLevelType.IsValidValue (conversionResult.Item2);
 			}
+		}
+
+
+		public object ConvertString(string value)
+		{
+			var conversionResult = this.valueConverter (value);
+
+			if (!conversionResult.Item1)
+			{
+				throw new ArgumentException ();
+			}
+
+			return conversionResult.Item2;
 		}
 
 
@@ -149,7 +151,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			// NOTE Because of how the marshaler for text values works, we must replace null strings
 			// with empty strings if the property is a text property. NonNullableMarshalers consider
 			// null values as invalid and resets the entity property if it is given a null value.
-			
+
 			return this.isTextProperty
 				? value ?? ""
 				: value;
@@ -165,7 +167,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		public override bool CheckValue(AbstractEntity entity, object value)
 		{
 			return (value == null || value is string)
-				&& this.CheckString (entity, (string) value);
+				&& this.CheckString ((string) value);
 		}
 
 
@@ -175,11 +177,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		private readonly AbstractMarshalerFactory marshalerFactory;
 
 
-		private readonly Func<string, bool> valueChecker;
+		private readonly Func<string, Tuple<bool, object>> valueConverter;
 
 
 	}
 
 
 }
-
