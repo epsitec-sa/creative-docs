@@ -23,11 +23,11 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public EntityMetadataRecorder()
 			: base (EntityInfo<TEntity>.GetTypeId ())
 		{
-			this.columns = new List<EntitySortedColumn> ();
+			this.columns = new List<EntityColumnMetadata> ();
 		}
 
 
-		public override IEnumerable<EntitySortedColumn> Columns
+		public override IEnumerable<EntityColumnMetadata> Columns
 		{
 			get
 			{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public EntityMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 			where TField : struct
 		{
-			this.Add (new EntitySortedColumn (expression, sortOrder, name));
+			this.Add (new EntityColumnMetadata (expression, name, sortOrder));
 			return this;
 		}
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public EntityMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 			where TField : struct
 		{
-			this.Add (new EntitySortedColumn (expression, sortOrder, name));
+			this.Add (new EntityColumnMetadata (expression, name, sortOrder));
 			return this;
 		}
 
@@ -107,17 +107,17 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		/// </returns>
 		public EntityMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending, FormattedText name = default (FormattedText))
 		{
-			this.Add (new EntitySortedColumn (expression, sortOrder, name));
+			this.Add (new EntityColumnMetadata (expression, name, sortOrder));
 			return this;
 		}
 
 
-		private void Add(EntitySortedColumn column)
+		private void Add(EntityColumnMetadata column)
 		{
 			this.columns.Add (column);
 		}
 
 
-		private readonly List<EntitySortedColumn> columns;
+		private readonly List<EntityColumnMetadata> columns;
 	}
 }

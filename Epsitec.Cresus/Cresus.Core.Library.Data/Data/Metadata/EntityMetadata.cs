@@ -18,13 +18,13 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// </summary>
 	public sealed class EntityMetadata : CoreMetadata
 	{
-		internal EntityMetadata(Druid entityId, IEnumerable<EntitySortedColumn> columns)
+		internal EntityMetadata(Druid entityId, IEnumerable<EntityColumnMetadata> columns)
 		{
 			this.entityId = entityId;
 			this.columns = columns.ToArray ();
 		}
 
-		private EntityMetadata(IDictionary<string, string> data, IEnumerable<EntitySortedColumn> columns)
+		private EntityMetadata(IDictionary<string, string> data, IEnumerable<EntityColumnMetadata> columns)
 		{
 			this.entityId = Druid.Parse (data[Strings.EntityId]);
 			this.columns = columns.ToArray ();
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
-		public IEnumerable<EntitySortedColumn>	Columns
+		public IEnumerable<EntityColumnMetadata>	Columns
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public static EntityMetadata Restore(XElement xml)
 		{
 			var data    = xml.Attributes ().ToDictionary (x => x.Name.LocalName, x => x.Value);
-			var columns = xml.Elements (Strings.Column).Select (x => EntityColumn.Restore (x)).Cast<EntitySortedColumn> ();
+			var columns = xml.Elements (Strings.Column).Select (x => EntityColumn.Restore (x)).Cast<EntityColumnMetadata> ();
 
 			return new EntityMetadata (data, columns);
 		}
@@ -111,6 +111,6 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		#endregion
 
 		private readonly Druid					entityId;
-		private readonly EntitySortedColumn[]	columns;
+		private readonly EntityColumnMetadata[]	columns;
 	}
 }

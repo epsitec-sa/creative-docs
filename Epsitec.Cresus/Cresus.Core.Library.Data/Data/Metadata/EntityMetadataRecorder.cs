@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		/// <summary>
 		/// Gets the columns.
 		/// </summary>
-		public abstract IEnumerable<EntitySortedColumn> Columns
+		public abstract IEnumerable<EntityColumnMetadata> Columns
 		{
 			get;
 		}
