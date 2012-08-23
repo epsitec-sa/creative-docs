@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Core.Library
 		public virtual void SetupApplication()
 		{
 			Factories.CoreAppComponentFactory.SetupComponents (this.components.GetComponents ());
+			CoreContext.ExecutePendingSetupFunctions ();
 		}
 
 		public virtual IEnumerable<ICoreComponent> FindAllComponents()

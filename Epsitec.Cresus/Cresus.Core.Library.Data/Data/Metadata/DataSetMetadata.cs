@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public DataSetMetadata(string dataSetName)
 		{
 			this.dataSetName = dataSetName;
+			
 			this.dataSetEntityType = DataSetGetter.GetRootEntityType (this.dataSetName);
-			this.baseShowCommand = DataSetMetadata.ResolveShowCommand (this.dataSetName);
-
+			this.baseShowCommand   = DataSetMetadata.ResolveShowCommand (this.dataSetName);
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
@@ -130,10 +130,10 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		#endregion
 
 
-		private readonly string dataSetName;
-		private readonly Command baseShowCommand;
-		private readonly System.Type dataSetEntityType;
+		private readonly string					dataSetName;
+		private readonly System.Type			dataSetEntityType;
+		private readonly Command				baseShowCommand;
 
-		private Druid displayGroupCaptionId;
+		private Druid							displayGroupCaptionId;
 	}
 }

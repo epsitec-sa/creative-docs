@@ -105,12 +105,12 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		private static class Strings
 		{
 			public static readonly string		EntityId = "eid";
-			public static readonly string		Column = "col";
+			public static readonly string		Column   = "col";
 		}
 
 		#endregion
 
 		private readonly Druid					entityId;
-		private readonly EntitySortedColumn[]		columns;
+		private readonly EntitySortedColumn[]	columns;
 	}
 }

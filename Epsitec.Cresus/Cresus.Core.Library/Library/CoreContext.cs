@@ -8,6 +8,7 @@ using Epsitec.Common.Types.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -105,6 +106,7 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.isServer      = true;
 		}
 
+
 		public static void DefineDatabase(string name, string host)
 		{
 			CoreContext.databaseName = name;
@@ -117,10 +119,31 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.applicationType = assembly.GetType (typeName);
 		}
 
-		public static void DefineMetadata(string className, string xml)
+		public static void DefineMetadata(string className, string xmlSource)
 		{
+			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
+						where type.IsClass && type.Name == className && type.IsSubclassOf (typeof (CoreMetadata))
+						select type;
 
+			var match = types.FirstOrDefault ();
+
+			if (match == null)
+			{
+				throw new System.ArgumentException ("The class name cannot be resolved", className);
+			}
+
+			var xml   = XElement.Parse (xmlSource, LoadOptions.None);
+			var args  = new object[1] { xml };
+			var flags = System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public;
+			
+			//	At this very early stage in the boot process, we cannot instanciate the meta
+			//	class, so we will have to defer the restore until the application object calls
+			//	CoreContext back through method ExecutePendingSetupFunctions.
+			
+			CoreContext.EnqueueSetupCode (() => CoreContext.metadata.Add (match, match.InvokeMember ("Restore", flags, null, null, args) as CoreMetadata));
 		}
+
+
 
 		/// <summary>
 		/// Parses the optional settings file. Every line in the file can specify a
@@ -190,6 +213,20 @@ namespace Epsitec.Cresus.Core.Library
 
 					methodInfo.Invoke (null, parameters);
 				}
+			}
+		}
+
+		public static void EnqueueSetupCode(System.Action action)
+		{
+			CoreContext.pendingSetupCode.Enqueue (action);
+		}
+
+		public static void ExecutePendingSetupFunctions()
+		{
+			while (CoreContext.pendingSetupCode.Count > 0)
+			{
+				var action = CoreContext.pendingSetupCode.Dequeue ();
+				action ();
 			}
 		}
 
@@ -285,6 +322,7 @@ namespace Epsitec.Cresus.Core.Library
 		static CoreContext()
 		{
 			CoreContext.metadata = new Dictionary<System.Type, CoreMetadata> ();
+			CoreContext.pendingSetupCode = new Queue<System.Action> ();
 		}
 
 		
@@ -299,5 +337,6 @@ namespace Epsitec.Cresus.Core.Library
 		private static System.Type				applicationType;
 		
 		private static readonly Dictionary<System.Type, CoreMetadata> metadata;
+		private static readonly Queue<System.Action> pendingSetupCode;
 	}
 }
