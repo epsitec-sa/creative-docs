@@ -20,6 +20,11 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// </summary>
 	public sealed class EntityColumnMetadata : EntityColumn
 	{
+		public EntityColumnMetadata(LambdaExpression expression, FormattedText name, SortOrder sortOrder)
+			: this (expression, name, EntityColumnMetadata.Convert (sortOrder))
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityColumnMetadata"/> class. This should
 		/// not be called directly. Use <see cref="EntityMetadataRecorder.Column"/> instead.
