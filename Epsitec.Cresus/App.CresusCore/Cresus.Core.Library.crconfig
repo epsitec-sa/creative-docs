@@ -1,2 +1,21 @@
 DefineDatabase ("core", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
+
+<meta>
+  <tables>
+    <table eid="[GVAV5]">
+      <col type="@CoreDataMeta.EntitySortedColumn" path="[GVAV5]:[GVA06].[GVA3].[FVA33]" cid="" sort="Ascending" />
+      <col type="@CoreDataMeta.EntitySortedColumn" path="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA71]" cid="" sort="Ascending" />
+      <col type="@CoreDataMeta.EntitySortedColumn" path="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA81]" cid="" sort="Ascending" />
+    </table>
+  </tables>
+  <dataSets>
+    <dataSet name="Customer" disp.grp="" />
+    <dataSet name="ArticleDefinition" disp.grp="" />
+    <dataSet name="DocumentMetadata" disp.grp="" />
+  </dataSets>
+  <displayGroups/>
+</meta>
+
+DefineMetadata ("DataStoreMetadata", $0)
+
