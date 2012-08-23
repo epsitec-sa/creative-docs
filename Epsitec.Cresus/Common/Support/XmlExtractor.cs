@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.excessText;
+				return this.excessText ?? "";
 			}
 		}
 
@@ -44,7 +44,22 @@ namespace Epsitec.Common.Support
 		public void AppendLine(string line)
 		{
 			this.Append (line);
-			this.Append ("\n");
+
+			if (this.Finished)
+			{
+				if (this.excessText != null)
+				{
+					this.excessText = this.excessText + "\n";
+				}
+				else
+				{
+					this.buffer.Append ('\n');
+				}
+			}
+			else
+			{
+				this.buffer.Append ('\n');
+			}
 		}
 		
 		public void Append(string line)

@@ -12,6 +12,35 @@ namespace Epsitec.Common.Tests.Support
 	public class XmlExtractorTest
 	{
 		[Test]
+		public void Check()
+		{
+			var extractor = new XmlExtractor ();
+			var sourceXml = @"<?xml version=""1.0"" encoding=""UTF-8""?>" + "\n"
+				/**/	  + @"<!-- edited with ... -->" + "\n"
+				/**/	  + @"<xs:schema xmlns:xs=""http://www.w3.org/2001/XMLSchema"" elementFormDefault=""qualified"" attributeFormDefault=""unqualified"" version=""2.0"">" + "\n"
+				/**/	  + @"<xs:annotation>bla</xs:annotation>" + "\n"
+				/**/	  + @"</xs:schema>" + "\n";
+
+			var afterXml  = "\n"
+				/**/	  + "bla\n";
+
+			var lines = (sourceXml + afterXml).Split ('\n');
+
+			foreach (var line in lines)
+			{
+				extractor.AppendLine (line);
+
+				if (extractor.Finished)
+				{
+					break;
+				}
+			}
+
+			Assert.AreEqual ("", extractor.ExcessText);
+			Assert.AreEqual (sourceXml, extractor.ToString ());
+		}
+
+		[Test]
 		public void CheckEmpty()
 		{
 			var extractor = new XmlExtractor ();
