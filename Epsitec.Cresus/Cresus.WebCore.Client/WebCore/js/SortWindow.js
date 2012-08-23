@@ -202,6 +202,7 @@ Ext.define('Epsitec.cresus.webcore.SortWindow', {
 
     this.leftGrid.reconfigure(leftStore);
     this.rightGrid.reconfigure(rightStore);
+    this.sortRightGrid();
   },
 
   onCancelClick: function() {
