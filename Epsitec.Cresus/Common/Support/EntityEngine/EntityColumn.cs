@@ -24,12 +24,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// not be called directly. Use <see cref="EntityMetadataRecorder.Column"/> instead.
 		/// </summary>
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
-		/// <param name="name">The name associated with the column.</param>
-		public EntityColumn(LambdaExpression expression, FormattedText name)
+		/// <param name="title">The (optional) title associated with the column.</param>
+		/// <param name="captionId">The (optional) caption id associated with the column.</param>
+		public EntityColumn(LambdaExpression expression, FormattedText title = default (FormattedText), Druid captionId = default (Druid), string tag = null)
+			: this (title, captionId, tag)
 		{
 			this.expression = expression;
 			this.path       = EntityFieldPath.CreateAbsolutePath (expression);
-			this.name       = name;
 		}
 
 		/// <summary>
@@ -38,10 +39,18 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="data">The data.</param>
 		public EntityColumn(IDictionary<string, string> data)
+			: this (new FormattedText (data[Strings.Title]), Druid.Parse (data[Strings.CaptionId]), data[Strings.Tag])
 		{
 			this.path       = EntityFieldPath.Parse (data[Strings.Path]);
-			this.captionId  = Druid.Parse (data[Strings.CaptionId]);
 			this.expression = this.path.CreateLambda () as LambdaExpression;
+		}
+
+		
+		private EntityColumn(FormattedText title, Druid captionId, string tag)
+		{
+			this.captionId  = captionId;
+			this.title      = title;
+			this.tag        = tag;
 		}
 
 
@@ -61,16 +70,40 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public Druid							CaptionId
+		{
+			get
+			{
+				return this.captionId;
+			}
+		}
+
+		public FormattedText					Name
+		{
+			get
+			{
+				return this.title;
+			}
+		}
+
+		public string							Tag
+		{
+			get
+			{
+				return this.tag;
+			}
+		}
+
 
 		/// <summary>
-		/// Gets the name of the column.
+		/// Gets the title of the column.
 		/// </summary>
 		/// <returns>The name of the column.</returns>
-		public FormattedText GetName()
+		public FormattedText GetColumnTitle()
 		{
-			if (this.name.IsNotNull ())
+			if (this.title.IsNotNull ())
 			{
-				return this.name;
+				return this.title;
 			}
 
 			var captionId = this.captionId.IsEmpty
@@ -142,6 +175,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			attributes.Add (new XAttribute (Strings.Type, TypeEnumerator.Instance.ShrinkTypeName (this.GetType ().FullName)));
 			attributes.Add (new XAttribute (Strings.Path, this.path.ToString ()));
 			attributes.Add (new XAttribute (Strings.CaptionId, this.captionId.ToCompactString ()));
+			attributes.Add (new XAttribute (Strings.Title, this.title.ToString ()));
+			attributes.Add (new XAttribute (Strings.Tag, this.tag ?? ""));
 		}
 
 
@@ -152,6 +187,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			public static readonly string		Type = "type";
 			public static readonly string		Path = "path";
 			public static readonly string		CaptionId = "cid";
+			public static readonly string		Title = "title";
+			public static readonly string		Tag = "tag";
 		}
 
 		#endregion
@@ -159,6 +196,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly LambdaExpression		expression;
 		private readonly EntityFieldPath		path;
 		private readonly Druid					captionId;
-		private readonly FormattedText			name;
+		private readonly FormattedText			title;
+		private readonly string					tag;
 	}
 }
