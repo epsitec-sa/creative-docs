@@ -7,6 +7,7 @@ using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -116,7 +117,7 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.applicationType = assembly.GetType (typeName);
 		}
 
-		public static void DefineMetadata(CoreMetadata metadata)
+		public static void DefineMetadata(string className, string xml)
 		{
 
 		}
@@ -130,24 +131,56 @@ namespace Epsitec.Cresus.Core.Library
 		/// <param name="lines">The source lines from the settings file.</param>
 		public static void ParseOptionalSettingsFile(IEnumerable<string> lines)
 		{
-			bool parsingXml = false;
+			XmlExtractor xmlExtractor = null;
+			string       xmlSource;
+			
+			var stack = new List<string> ();
 
-			foreach (var line in lines)
+			foreach (var current in lines)
 			{
-				int pos1 = line.IndexOf ('(');
-				int pos2 = line.IndexOf (')', pos1+1);
-				int len  = pos2-pos1-1;
+				string line = current;
+
+			extractXml:
+
+				if (xmlExtractor != null)
+				{
+					xmlExtractor.AppendLine (line);
+
+					if (xmlExtractor.Finished)
+					{
+						line = xmlExtractor.ExcessText;
+						
+						xmlSource    = xmlExtractor.ToString ();
+						xmlExtractor = null;
+						
+						stack.Insert (0, xmlSource);
+					}
+					else
+					{
+						continue;
+					}
+				}
+
+				line = line.TrimStart (' ', '\t');
 
 				if (line.StartsWith ("<"))
 				{
 					//	Found some inline XML: parse it and store it for future reference
+
+					xmlExtractor = new XmlExtractor ();
+					
+					goto extractXml;
 				}
+
+				int pos1 = line.IndexOf ('(');
+				int pos2 = line.IndexOf (')', pos1+1);
+				int len  = pos2-pos1-1;
 
 				if ((pos1 > 0) &&
 					(len >= 0))
 				{
 					var methodName = line.Substring (0, pos1).Trim ();
-					var parameters = line.Substring (pos1+1, len).Split (',').Select (x => CoreContext.ParseArg (x.Trim ())).ToArray ();
+					var parameters = line.Substring (pos1+1, len).Split (',').Select (x => CoreContext.ParseArg (x.Trim (), stack)).ToArray ();
 					var methodInfo = typeof (CoreContext).GetMethod (methodName, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
 
 					if (methodInfo == null)
@@ -202,8 +235,22 @@ namespace Epsitec.Cresus.Core.Library
 			throw new System.ArgumentException ("Cannot find metadata of type " + typeof (T).FullName);
 		}
 
-		private static object ParseArg(string arg)
+		/// <summary>
+		/// Parses the argument and derives the proper type. This recognizes <c>true</c>, <c>false</c>
+		/// and <c>null</c>, integers and decimals, <c>"strings"</c> and <c>$0</c> indexes into the
+		/// XML stack.
+		/// </summary>
+		/// <param name="arg">The argument.</param>
+		/// <param name="stack">The XML stack.</param>
+		/// <returns>The value of the argument.</returns>
+		private static object ParseArg(string arg, IList<string> stack)
 		{
+			if (arg[0] == '$')
+			{
+				int index = InvariantConverter.ToInt (arg.Substring (1));
+				return stack[index];
+			}
+
 			if ((arg.Length > 1) &&
 				(arg[0] == '\"') &&
 				(arg[arg.Length-1] == '\"'))
