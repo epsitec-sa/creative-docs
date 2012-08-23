@@ -46,9 +46,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				var propertyAccessor = propertyAccessorCache.Get (column.LambdaExpression);
 				var textPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 				var name = column.Name;
-				var value = textPropertyAccessor.GetString (entity);
+				var serverValue = textPropertyAccessor.GetString (entity);
+				var clientValue = ColumnTypeConverter.ServerToClient (column.Type, serverValue);
 
-				data[name] = value;
+				data[name] = clientValue;
 			}
 
 			return data;
@@ -80,7 +81,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				var sortOrder = sortCriterium.Item2;
 
 				var column = this.Columns.First (c => c.Name == name);
-				var entityDataColumn = new EntityColumnMetadata (column.LambdaExpression, column.Title, sortOrder);
+
+				var lambda = column.LambdaExpression;
+				var entityDataColumn = new EntityColumnMetadata (lambda, name, sortOrder);
 
 				yield return entityDataColumn.ToSortClause (example);
 			}

@@ -73,12 +73,37 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
           return c.hidden === false;
         })
         .map(function(c) {
-          return {
+          var column = {
             text: c.title,
             flex: 1,
             dataIndex: c.name,
             sortable: c.sortable
           };
+
+          switch (c.type) {
+            case 'boolean':
+              column.xtype = 'booleancolumn';
+              break;
+
+            case 'date':
+              column.xtype = 'datecolumn';
+              column.format = 'd/m/Y';
+              break;
+
+            case 'int':
+              column.xtype = 'numbercolumn';
+              column.format = '0,000';
+              break;
+
+            case 'float':
+              column.xtype = 'numbercolumn';
+              break;
+
+            case 'string':
+              break;
+          }
+
+          return column;
         });
   },
 
@@ -141,10 +166,16 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   createDynamicFields: function(columnDefinitions) {
     return columnDefinitions.map(function(c) {
-      return {
+      var field = {
         name: c.name,
         type: c.type
       };
+
+      if (c.type === 'date') {
+        field.dateFormat = 'd/m/Y';
+      }
+
+      return field;
     });
   },
 

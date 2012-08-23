@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
-			string sort = Request.Query.sort;
+			string sort = DatabasesModule.GetOptionalParameter (Request.Query.sort);
 			var sortCriteria = this.ParseSortCriteria (sort);
 
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
@@ -252,6 +252,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityData = database.GetEntityData (businessContext, entity, propertyAccessorCache);
 
 			return CoreResponse.Success (entityData);
+		}
+
+
+		private static string GetOptionalParameter(dynamic parameter)
+		{
+			return parameter.HasValue
+				? parameter.Value
+				: null;
 		}
 
 
