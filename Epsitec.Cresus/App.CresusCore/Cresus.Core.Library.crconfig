@@ -4,14 +4,17 @@ DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication"
 <meta>
   <tables>
     <table eid="[GVAV5]">
-      <col type="@CoreDataMeta.EntityColumnMetadata" path="[GVAV5]:[GVA06].[GVA3].[FVA33]" canSort="True" canFilter="True" disp="Visible">
+      <col type="@CoreDataMeta.EntityColumnMetadata" path="[GVAV5]:[GVA06].[GVA3].[FVA33]" canSort="True" canFilter="True">
 	<sort order="Ascending" index="0" />
+	<display mode="Visible" />
       </col>
-      <col type="@CoreDataMeta.EntityColumnMetadata" path="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA71]" canSort="True" canFilter="True" disp="Visible">
+      <col type="@CoreDataMeta.EntityColumnMetadata" path="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA71]" canSort="True" canFilter="True">
 	<sort order="Ascending" index="0" />
+	<display mode="Hidden" />
       </col>
-      <col type="@CoreDataMeta.EntityColumnMetadata" path="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA81]" canSort="True" canFilter="True" disp="Visible">
+      <col type="@CoreDataMeta.EntityColumnMetadata" path="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA81]" canSort="True" canFilter="True">
 	<sort order="Ascending" index="0" />
+	<display mode="Hidden" />
       </col>
     </table>
   </tables>
