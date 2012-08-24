@@ -90,7 +90,17 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			}
 		}
 
-		
+
+
+		public static IEnumerable<EntityColumnMetadata> GetSortColumns(IEnumerable<EntityColumnMetadata> columns)
+		{
+			return from column in columns
+				   where column.DefaultSort.SortOrder != ColumnSortOrder.None
+				   orderby column.DefaultSort.SortIndex ascending
+				   select column;
+		}
+
+
 		protected override void Serialize(List<XAttribute> attributes)
 		{
 			base.Serialize (attributes);
