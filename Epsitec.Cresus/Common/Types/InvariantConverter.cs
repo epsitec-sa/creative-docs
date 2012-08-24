@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -441,6 +442,8 @@ namespace Epsitec.Common.Types
 		
 		public static bool Convert(object obj, out string value)
 		{
+			obj = InvariantConverter.UnwrapXmlAttribute (obj);
+
 			if ((obj == null) || (obj == System.DBNull.Value))
 			{
 				value = null;
@@ -516,6 +519,8 @@ namespace Epsitec.Common.Types
 		}
 		public static bool Convert(object obj, out decimal value)
 		{
+			obj = InvariantConverter.UnwrapXmlAttribute (obj);
+	
 			//	Retourne true si la valeur de 'obj' n'est pas 'null' ou une
 			//	de ses variantes, false sinon. Si le type n'est pas reconnu ou
 			//	que la syntaxe n'est pas correcte, une exception est levée.
@@ -588,6 +593,8 @@ namespace Epsitec.Common.Types
 		}
 		public static bool Convert(object obj, System.Type type, out System.Enum value)
 		{
+			obj = InvariantConverter.UnwrapXmlAttribute (obj);
+
 			if ((obj == null) ||
 				(obj == System.DBNull.Value))
 			{
@@ -623,6 +630,8 @@ namespace Epsitec.Common.Types
 		}
 		public static bool Convert(object obj, out System.DateTime value)
 		{
+			obj = InvariantConverter.UnwrapXmlAttribute (obj);
+
 			if ((obj == null) || (obj == System.DBNull.Value))
 			{
 				value = new System.DateTime ();
@@ -661,10 +670,11 @@ namespace Epsitec.Common.Types
 			
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
-
 		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{
+			obj = InvariantConverter.UnwrapXmlAttribute (obj);
+
 			if (obj == null)
 			{
 				value = null;
@@ -860,6 +870,17 @@ namespace Epsitec.Common.Types
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, format, args);
 		}
 
+		public static object UnwrapXmlAttribute(object obj)
+		{
+			XAttribute attribute = obj as XAttribute;
+
+			if (attribute == null)
+			{
+				return obj;
+			}
+
+			return attribute.Value;
+		}
 
 		/// <summary>
 		/// Converts the text to an enum value. If the conversion is not possible, this will
@@ -903,6 +924,18 @@ namespace Epsitec.Common.Types
 				return defaultValue;
 			}
 		}
+
+		public static TEnum ToEnum<TEnum>(this XAttribute xml, TEnum defaultValue)
+			where TEnum : struct
+		{
+			if (xml == null)
+			{
+				return defaultValue;
+			}
+
+			return xml.Value.ToEnum<TEnum> (defaultValue);
+		}
+
 
 		public static bool CheckEnumValue(System.Type type, System.Enum value)
 		{
