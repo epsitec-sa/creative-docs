@@ -65,7 +65,9 @@
     <Compile Include="Data\Metadata\ColumnSortOrder.cs" />
     <Compile Include="Data\Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Data\Metadata\DataSetMetadata.cs" />
+    <Compile Include="Data\Metadata\EntityColumnFilter.cs" />
     <Compile Include="Data\Metadata\EntityColumnMetadata.cs" />
+    <Compile Include="Data\Metadata\EntityColumnSort.cs" />
     <Compile Include="Data\Metadata\EntityMetadata.cs" />
     <Compile Include="Data\Metadata\EntityMetadataRecorder.cs" />
     <Compile Include="Data\Metadata\EntityMetadataRecorder`1.cs" />

@@ -60,6 +60,18 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Gets the id of the column. This is guaranteed to be unique for a given entity.
+		/// It is basically the encoding of the relative field path.
+		/// </summary>
+		public string							Id
+		{
+			get
+			{
+				return this.path.FieldPath;
+			}
+		}
+
 		public LambdaExpression					Expression
 		{
 			get
@@ -157,10 +169,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		public XElement Save(string xmlNodeName)
 		{
 			var attributes = new List<XAttribute> ();
+			var elements   = new List<XElement> ();
 
 			this.Serialize (attributes);
+			this.Serialize (elements);
 
-			return new XElement (xmlNodeName, attributes.Where (x => !string.IsNullOrEmpty (x.Value)));
+			return new XElement (xmlNodeName, attributes.Where (x => !string.IsNullOrEmpty (x.Value)), elements);
 		}
 
 		/// <summary>
@@ -174,6 +188,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			var sysType  = TypeEnumerator.Instance.FindType (typeName);
 			var data     = Xml.GetAttributeBag (xml);
 			var instance = System.Activator.CreateInstance (sysType, data) as EntityColumn;
+
+			instance.Deserialize (xml);
 			
 			return instance;
 		}
@@ -192,6 +208,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			attributes.Add (new XAttribute (Strings.Title, this.title.ToString ()));
 			attributes.Add (new XAttribute (Strings.CanSort, this.canSort.ToString ()));
 			attributes.Add (new XAttribute (Strings.CanFilter, this.canFilter.ToString ()));
+		}
+
+		protected virtual void Serialize(List<XElement> elements)
+		{
+		}
+
+		protected virtual void Deserialize(XElement xml)
+		{
 		}
 
 

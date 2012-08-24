@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		private IEnumerable<SortClause> CreateSortClauses(AbstractEntity example)
 		{
-			return this.sortColumns.Select (c => c.ToSortClause (example));
+			return this.sortColumns.Select (c => c.DefaultSort.ToSortClause (c, example));
 		}
 
 		private int RetrieveItemCount()

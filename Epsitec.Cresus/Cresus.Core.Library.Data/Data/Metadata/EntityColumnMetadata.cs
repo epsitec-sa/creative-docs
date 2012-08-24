@@ -20,11 +20,6 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 	/// </summary>
 	public sealed class EntityColumnMetadata : EntityColumn
 	{
-		public EntityColumnMetadata(LambdaExpression expression, FormattedText name, SortOrder sortOrder)
-			: this (expression, name, EntityColumnMetadata.Convert (sortOrder))
-		{
-		}
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityColumnMetadata"/> class. This should
 		/// not be called directly. Use <see cref="EntityMetadataRecorder.Column"/> instead.
@@ -37,41 +32,46 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public EntityColumnMetadata(LambdaExpression expression, FormattedText name, ColumnSortOrder sortOrder = ColumnSortOrder.None, ColumnDisplayMode displayMode = ColumnDisplayMode.Visible, int sortIndex = 0)
 			: base (expression, name)
 		{
-			this.sortOrder   = sortOrder;
-			this.sortIndex   = sortIndex;
-			this.displayMode = displayMode;
+			this.defaultSort   = new EntityColumnSort
+			{
+				SortOrder = sortOrder,
+				SortIndex = sortIndex
+			};
+
+			this.defaultFilter = new EntityColumnFilter ();
+			this.displayMode   = displayMode;
 		}
 
 		public EntityColumnMetadata(IDictionary<string, string> data)
 			: base (data)
 		{
-			this.sortOrder   = data[Strings.SortOrder].ToEnum<ColumnSortOrder> ();
-			this.sortIndex   = InvariantConverter.ToInt (data[Strings.SortIndex]);
-			this.displayMode = data[Strings.DisplayMode].ToEnum<ColumnDisplayMode> ();
+			this.defaultSort   = new EntityColumnSort ();
+			this.defaultFilter = new EntityColumnFilter ();
+			this.displayMode   = data[Strings.DisplayMode].ToEnum<ColumnDisplayMode> ();
 		}
 
 
-		public ColumnSortOrder					SortOrder
+		public EntityColumnSort					DefaultSort
 		{
 			get
 			{
-				return this.sortOrder;
+				return this.defaultSort;
 			}
 			set
 			{
-				this.sortOrder = value;
+				this.defaultSort = value;
 			}
 		}
 
-		public int								SortIndex
+		public EntityColumnFilter				DefaultFilter
 		{
 			get
 			{
-				return this.sortIndex;
+				return this.defaultFilter;
 			}
 			set
 			{
-				this.sortIndex = value;
+				this.defaultFilter = value;
 			}
 		}
 
@@ -88,56 +88,26 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		}
 
 		
-		public SortClause ToSortClause(AbstractEntity example)
-		{
-			if (this.SortOrder == ColumnSortOrder.None)
-			{
-				return null;
-			}
-
-			var fieldEntity = this.GetLeafEntity (example, NullNodeAction.CreateMissing);
-			var fieldId     = this.GetLeafFieldId ();
-
-			var fieldNode = new ValueField (fieldEntity, fieldId);
-			var sortOrder = EntityColumnMetadata.Convert (this.sortOrder);
-
-			return new SortClause (fieldNode, sortOrder);
-		}
-
 		protected override void Serialize(List<XAttribute> attributes)
 		{
 			base.Serialize (attributes);
 
-			attributes.Add (new XAttribute (Strings.SortOrder, this.sortOrder.ToString ()));
-			attributes.Add (new XAttribute (Strings.SortIndex, this.sortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
 			attributes.Add (new XAttribute (Strings.DisplayMode, this.displayMode.ToString ()));
 		}
 
-
-		public static ColumnSortOrder Convert(SortOrder value)
+		protected override void Serialize(List<XElement> elements)
 		{
-			switch (value)
-			{
-				case Epsitec.Cresus.DataLayer.Expressions.SortOrder.Ascending:
-					return ColumnSortOrder.Ascending;
-				case Epsitec.Cresus.DataLayer.Expressions.SortOrder.Descending:
-					return ColumnSortOrder.Descending;
-			}
+			base.Serialize (elements);
 
-			throw new System.NotImplementedException (string.Format ("{0} not implemented", value.GetQualifiedName ()));
+			elements.Add (this.defaultSort.Save (Strings.DefaultSort));
 		}
 
-		public static SortOrder Convert(ColumnSortOrder value)
+		protected override void Deserialize(XElement xml)
 		{
-			switch (value)
-			{
-				case ColumnSortOrder.Ascending:
-					return Epsitec.Cresus.DataLayer.Expressions.SortOrder.Ascending;
-				case ColumnSortOrder.Descending:
-					return Epsitec.Cresus.DataLayer.Expressions.SortOrder.Descending;
-			}
+			base.Deserialize (xml);
 
-			throw new System.NotImplementedException (string.Format ("{0} not implemented", value.GetQualifiedName ()));
+			this.defaultSort   = EntityColumnSort.Restore (xml.Element (Strings.DefaultSort)) ?? this.defaultSort;
+			this.defaultFilter = EntityColumnFilter.Restore (xml.Element (Strings.DefaultFilter)) ?? this.defaultFilter;
 		}
 
 
@@ -145,15 +115,16 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 		private static class Strings
 		{
-			public static readonly string		SortOrder = "sort.o";
-			public static readonly string		SortIndex = "sort.i";
+			public static readonly string		DefaultSort = "sort";
+			public static readonly string		DefaultFilter = "filter";
 			public static readonly string		DisplayMode = "disp";
 		}
 
 		#endregion
 
-		private ColumnSortOrder					sortOrder;
-		private int								sortIndex;
+
+		private EntityColumnSort				defaultSort;
+		private EntityColumnFilter				defaultFilter;
 		private ColumnDisplayMode				displayMode;
 	}
 }

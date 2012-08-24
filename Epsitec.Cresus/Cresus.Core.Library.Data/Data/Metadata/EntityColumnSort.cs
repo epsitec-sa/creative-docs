@@ -1,0 +1,116 @@
+//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+using Epsitec.Cresus.DataLayer.Expressions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Xml.Linq;
+
+namespace Epsitec.Cresus.Core.Data.Metadata
+{
+	/// <summary>
+	/// The <c>EntityColumnSort</c> class defines the sorting for an <see cref="EntityColumn"/>.
+	/// </summary>
+	public class EntityColumnSort
+	{
+		public EntityColumnSort()
+		{
+			this.SortOrder = ColumnSortOrder.None;
+			this.SortIndex = 0;
+		}
+		
+		
+		public ColumnSortOrder					SortOrder
+		{
+			get;
+			set;
+		}
+
+		public int								SortIndex
+		{
+			get;
+			set;
+		}
+		
+		
+		public SortClause ToSortClause(EntityColumn column, AbstractEntity example)
+		{
+			if (this.SortOrder == ColumnSortOrder.None)
+			{
+				return null;
+			}
+
+			var fieldEntity = column.GetLeafEntity (example, NullNodeAction.CreateMissing);
+			var fieldId     = column.GetLeafFieldId ();
+
+			var fieldNode = new ValueField (fieldEntity, fieldId);
+			var sortOrder = EntityColumnSort.Convert (this.SortOrder);
+
+			return new SortClause (fieldNode, sortOrder);
+		}
+
+		
+		public XElement Save(string xmlNodeName)
+		{
+			return new XElement (xmlNodeName,
+				new XAttribute (Strings.SortOrder, this.SortOrder.ToString ()),
+				new XAttribute (Strings.SortIndex, this.SortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
+		}
+
+		public static EntityColumnSort Restore(XElement xml)
+		{
+			if (xml == null)
+			{
+				return null;
+			}
+
+			return new EntityColumnSort
+			{
+				SortOrder = InvariantConverter.ToEnum (xml.Attribute (Strings.SortOrder), ColumnSortOrder.None),
+				SortIndex = InvariantConverter.ToInt (xml.Attribute (Strings.SortIndex)),
+			};
+		}
+
+
+		#region Strings Class
+
+		private static class Strings
+		{
+			public static readonly string		SortOrder = "order";
+			public static readonly string		SortIndex = "index";
+		}
+
+		#endregion
+		
+		
+		public static ColumnSortOrder Convert(SortOrder value)
+		{
+			switch (value)
+			{
+				case Epsitec.Cresus.DataLayer.Expressions.SortOrder.Ascending:
+					return ColumnSortOrder.Ascending;
+				case Epsitec.Cresus.DataLayer.Expressions.SortOrder.Descending:
+					return ColumnSortOrder.Descending;
+			}
+
+			throw new System.NotImplementedException (string.Format ("{0} not implemented", value.GetQualifiedName ()));
+		}
+
+		public static SortOrder Convert(ColumnSortOrder value)
+		{
+			switch (value)
+			{
+				case ColumnSortOrder.Ascending:
+					return Epsitec.Cresus.DataLayer.Expressions.SortOrder.Ascending;
+				case ColumnSortOrder.Descending:
+					return Epsitec.Cresus.DataLayer.Expressions.SortOrder.Descending;
+			}
+
+			throw new System.NotImplementedException (string.Format ("{0} not implemented", value.GetQualifiedName ()));
+		}
+	}
+}
