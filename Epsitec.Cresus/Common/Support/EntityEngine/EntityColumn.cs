@@ -26,9 +26,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="expression">The lambda expression (as an expression, not as compiled code).</param>
 		/// <param name="title">The (optional) title associated with the column.</param>
 		/// <param name="captionId">The (optional) caption id associated with the column.</param>
-		/// <param name="tag">The (optional) tag associated with the column.</param>
-		public EntityColumn(LambdaExpression expression, FormattedText title = default (FormattedText), Druid captionId = default (Druid), string tag = null)
-			: this (title, captionId, tag)
+		/// <param name="canSort">If set to <c>true</c>, the column supports sorting.</param>
+		/// <param name="canFilter">if set to <c>true</c>, the column supports filtering.</param>
+		public EntityColumn(LambdaExpression expression, FormattedText title = default (FormattedText), Druid captionId = default (Druid), bool canSort = true, bool canFilter = true)
+			: this (title, captionId, canSort, canFilter)
 		{
 			this.expression = expression;
 			this.path       = EntityFieldPath.CreateAbsolutePath (expression);
@@ -40,18 +41,22 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="data">The data.</param>
 		protected EntityColumn(IDictionary<string, string> data)
-			: this (new FormattedText (data[Strings.Title]), Druid.Parse (data[Strings.CaptionId]), data[Strings.Tag])
+			: this (new FormattedText (data[Strings.Title]),
+					Druid.Parse (data[Strings.CaptionId]),
+					bool.Parse (data[Strings.CanSort] ?? "false"),
+					bool.Parse (data[Strings.CanFilter] ?? "false"))
 		{
 			this.path       = EntityFieldPath.Parse (data[Strings.Path]);
 			this.expression = this.path.CreateLambda () as LambdaExpression;
 		}
 
 		
-		private EntityColumn(FormattedText title, Druid captionId, string tag)
+		private EntityColumn(FormattedText title, Druid captionId, bool canSort, bool canFilter)
 		{
 			this.captionId  = captionId;
 			this.title      = title;
-			this.tag        = tag;
+			this.canSort    = canSort;
+			this.canFilter  = canFilter;
 		}
 
 
@@ -79,7 +84,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public FormattedText					Name
+		public FormattedText					Title
 		{
 			get
 			{
@@ -87,11 +92,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		public string							Tag
+		public bool								CanSort
 		{
 			get
 			{
-				return this.tag;
+				return this.canSort;
+			}
+		}
+
+		public bool								CanFilter
+		{
+			get
+			{
+				return this.canFilter;
 			}
 		}
 
@@ -177,7 +190,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			attributes.Add (new XAttribute (Strings.Path, this.path.ToString ()));
 			attributes.Add (new XAttribute (Strings.CaptionId, this.captionId.ToCompactString ()));
 			attributes.Add (new XAttribute (Strings.Title, this.title.ToString ()));
-			attributes.Add (new XAttribute (Strings.Tag, this.tag ?? ""));
+			attributes.Add (new XAttribute (Strings.CanSort, this.canSort.ToString ()));
+			attributes.Add (new XAttribute (Strings.CanFilter, this.canFilter.ToString ()));
 		}
 
 
@@ -189,7 +203,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			public static readonly string		Path = "path";
 			public static readonly string		CaptionId = "cid";
 			public static readonly string		Title = "title";
-			public static readonly string		Tag = "tag";
+			public static readonly string		CanSort = "canSort";
+			public static readonly string		CanFilter = "canFilter";
 		}
 
 		#endregion
@@ -198,6 +213,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly EntityFieldPath		path;
 		private readonly Druid					captionId;
 		private readonly FormattedText			title;
-		private readonly string					tag;
+		private readonly bool					canSort;
+		private readonly bool					canFilter;
 	}
 }
