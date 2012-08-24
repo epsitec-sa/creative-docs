@@ -143,11 +143,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The XML element.</returns>
 		public XElement Save(string xmlNodeName)
 		{
-			List<XAttribute> attributes = new List<XAttribute> ();
+			var attributes = new List<XAttribute> ();
 
 			this.Serialize (attributes);
 
-			return new XElement (xmlNodeName, attributes);
+			return new XElement (xmlNodeName, attributes.Where (x => !string.IsNullOrEmpty (x.Value)));
 		}
 
 		/// <summary>
