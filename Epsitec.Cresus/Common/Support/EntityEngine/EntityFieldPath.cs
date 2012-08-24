@@ -163,7 +163,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the field path as a single <c>string</c>.
+		/// </summary>
+		public string							FieldPath
+		{
+			get
+			{
+				return this.path;
+			}
+		}
 
+		
 		public IEnumerable<EntityField> ExplodeFields()
 		{
 			var entityId = this.EntityId;
