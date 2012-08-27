@@ -44,13 +44,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			var lambda = column.LambdaExpression;
 			var name = column.Name;
-			var entityDataColumn = new EntityColumnMetadata (lambda, name);
-			var columnSort = new EntityColumnSort ()
+			var entityColumnMetaData = new EntityColumnMetadata (lambda, name);
+			var entityColumnSort = new EntityColumnSort ()
 			{
 				SortOrder = EntityColumnSort.Convert (this.sortOrder)
 			};
 
-			return columnSort.ToSortClause (entityDataColumn, example);
+			return entityColumnSort.ToSortClause (entityColumnMetaData, example);
 		}
 
 
