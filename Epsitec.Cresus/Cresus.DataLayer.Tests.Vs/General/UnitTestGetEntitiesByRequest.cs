@@ -201,6 +201,73 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void SetComparisonTest1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new SetComparison (
+						new ValueField (example, new Druid ("[J1AD2]")),
+						SetComparator.In,
+						new List<Constant> ()
+		                {
+		                    new Constant (0),
+		                    new Constant (42)
+		                }
+					)
+				);
+
+				ValueDataEntity[] data = dataContext.GetByRequest<ValueDataEntity> (request).ToArray ();
+
+				Assert.IsTrue (data.Count () == 2);
+				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData1 (d)));
+				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData3 (d)));
+			}
+		}
+
+
+		[TestMethod]
+		public void SetComparisonTest2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new SetComparison (
+						new ValueField (example, new Druid ("[J1AD2]")),
+						SetComparator.NotIn,
+						new List<Constant> ()
+		                {
+		                    new Constant (0),
+		                    new Constant (42)
+		                }
+					)
+				);
+
+				ValueDataEntity[] data = dataContext.GetByRequest<ValueDataEntity> (request).ToArray ();
+
+				Assert.IsTrue (data.Count () == 1);
+				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData2 (d)));
+			}
+		}
+
+
+		[TestMethod]
 		public void UnaryOperationTest()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())

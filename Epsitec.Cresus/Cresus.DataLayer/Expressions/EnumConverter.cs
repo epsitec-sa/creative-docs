@@ -71,6 +71,26 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		/// <summary>
 		/// Gets the <see cref="SqlFunctionCode"/> that is equivalent to the given
+		/// <see cref="SetComparator"/>.
+		/// </summary>
+		/// <param name="setComparator">The <see cref="SetComparator"/> to convert.</param>
+		/// <returns>The converted <see cref="SetComparator"/>.</returns>
+		public static SqlFunctionCode ToSqlFunctionCode(SetComparator setComparator)
+		{
+			switch (setComparator)
+			{
+				case SetComparator.In:
+					return SqlFunctionCode.SetIn;
+				case SetComparator.NotIn:
+					return SqlFunctionCode.SetNotIn;
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + setComparator + "' is not supported");
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the <see cref="SqlFunctionCode"/> that is equivalent to the given
 		/// <see cref="UnaryOperator"/>.
 		/// </summary>
 		/// <param name="unaryOperator">The <see cref="UnaryOperator"/> to convert.</param>

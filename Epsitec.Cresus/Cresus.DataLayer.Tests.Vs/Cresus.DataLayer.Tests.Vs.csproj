@@ -76,6 +76,7 @@
     <Compile Include="Entities\SimpleEnum.cs" />
     <Compile Include="Expressions\UnitTestCollectionField.cs" />
     <Compile Include="Expressions\UnitTestReferenceField.cs" />
+    <Compile Include="Expressions\UnitTestSetComparison.cs" />
     <Compile Include="Expressions\UnitTestSortClause.cs" />
     <Compile Include="Expressions\UnitTestInternalField.cs" />
     <Compile Include="General\UnitTestConcurrencyDelete.cs" />

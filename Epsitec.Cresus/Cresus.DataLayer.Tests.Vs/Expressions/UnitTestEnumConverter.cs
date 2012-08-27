@@ -76,6 +76,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
+		public void ToSqlFunctionCodeTest5()
+		{
+			var matches = new Dictionary<SetComparator, SqlFunctionCode> ()
+		    {
+		        { SetComparator.In, SqlFunctionCode.SetIn },
+		        { SetComparator.NotIn, SqlFunctionCode.SetNotIn },
+		    };
+
+			this.Check (matches, EnumConverter.ToSqlFunctionCode);
+		}
+
+
+		[TestMethod]
 		public void ToSqlSortOrderTest()
 		{
 			var matches = new Dictionary<SortOrder, SqlSortOrder> ()

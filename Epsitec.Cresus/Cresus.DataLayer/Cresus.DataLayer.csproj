@@ -154,6 +154,8 @@
     <Compile Include="Expressions\EntityDruidField.cs" />
     <Compile Include="Expressions\EntityField.cs" />
     <Compile Include="Expressions\InternalField.cs" />
+    <Compile Include="Expressions\SetComparator.cs" />
+    <Compile Include="Expressions\SetComparison.cs" />
     <Compile Include="Expressions\SortClause.cs" />
     <Compile Include="Expressions\SortOrder.cs" />
     <Compile Include="Loader\AliasManager.cs" />
