@@ -26,7 +26,7 @@ Ext.application({
     'Epsitec.cresus.webcore.EntityListPanel',
     'Epsitec.cresus.webcore.EntityPicker',
     'Epsitec.cresus.webcore.EntityReferenceField',
-    'Epsitec.cresus.webcore.EnumerationComboBox',
+    'Epsitec.cresus.webcore.Enumeration',
     'Epsitec.cresus.webcore.EnumerationField',
     'Epsitec.cresus.webcore.ErrorHandler',
     'Epsitec.cresus.webcore.LoginPanel',

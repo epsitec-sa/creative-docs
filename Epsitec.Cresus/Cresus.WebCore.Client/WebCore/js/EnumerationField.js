@@ -1,23 +1,31 @@
 Ext.define('Epsitec.cresus.webcore.EnumerationField', {
-  extend: 'Ext.container.Container',
+  extend: 'Ext.form.field.ComboBox',
   alternateClassName: ['Epsitec.EnumerationField'],
   alias: 'widget.epsitec.enumerationfield',
 
   /* Config */
 
-  layout: 'column',
+  valueField: 'id',
+  displayField: 'name',
+  queryMode: 'local',
+  forceSelection: true,
+  typeAhead: true,
 
   /* Constructor */
 
   constructor: function(options) {
-    options.columnWidth = 1;
+    var store, newOptions;
 
-    var combo = Ext.create('Epsitec.EnumerationComboBox', options);
+    store = Epsitec.Enumeration.getStore(options.enumerationName);
 
-    this.items = this.items || [];
-    this.items.push(combo);
+    store.on('load', function() { this.select(options.value); }, this);
 
-    this.callParent(arguments);
+    newOptions = {
+      store: store
+    };
+    Ext.applyIf(newOptions, options);
+
+    this.callParent([newOptions]);
     return this;
   }
 });
