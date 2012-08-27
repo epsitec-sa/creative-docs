@@ -10,21 +10,13 @@ namespace Epsitec.Cresus.Database
 	{
 
 
-		public SqlSet(DbRawType type, IEnumerable<object> values)
+		public SqlSet(IEnumerable<SqlField> values)
 		{
-			this.Type = type;
 			this.Values = values.ToList ();
 		}
 
 
-		public DbRawType Type
-		{
-			get;
-			private set;
-		}
-
-
-		public IEnumerable<object> Values
+		public IEnumerable<SqlField> Values
 		{
 			get;
 			private set;

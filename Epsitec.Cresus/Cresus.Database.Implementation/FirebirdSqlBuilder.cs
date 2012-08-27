@@ -1092,9 +1092,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				case SqlFieldType.Set:
 					SqlSet set = field.AsSet;
 
-					var values = set.Values
-						.Select (v => SqlField.CreateConstant (v, set.Type))
-						.Select (c => this.MakeCommandParam (c));
+					var values = set.Values.Select (c => this.MakeCommandParam (c));
 										
 					this.Append ('(');
 					this.Append (string.Join(", ", values));

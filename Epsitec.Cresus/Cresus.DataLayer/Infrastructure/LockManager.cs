@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 						(
 							SqlFunctionCode.SetIn,
 							SqlField.CreateAliasedName ("l", lNameColumnName, lNameColumnName),
-							SqlField.CreateSet (new SqlSet (DbRawType.String, lockNames))
+							SqlField.CreateSet (new SqlSet (lockNames.Select (n => SqlField.CreateConstant (n, DbRawType.String))))
 						)
 					)
 				);
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			(
 				SqlFunctionCode.SetIn,
 				SqlField.CreateName (this.tableLock.Columns[LockManager.TableFactory.ColumnNameName].GetSqlName ()),
-				SqlField.CreateSet (new SqlSet (DbRawType.String, locks.Select (l => l.Name)))
+				SqlField.CreateSet (new SqlSet (locks.Select (l => SqlField.CreateConstant (l.Name, DbRawType.String))))
 			);
 		}
 

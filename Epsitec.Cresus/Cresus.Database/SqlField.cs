@@ -657,7 +657,7 @@ namespace Epsitec.Cresus.Database
 
 		public static SqlField CreateSet(SqlSet sqlSet)
 		{
-			return new SqlField (SqlFieldType.Set, sqlSet, sqlSet.Type);
+			return new SqlField (SqlFieldType.Set, sqlSet, DbRawType.Unknown);
 		}
 
 		private SqlFieldType					fieldType;

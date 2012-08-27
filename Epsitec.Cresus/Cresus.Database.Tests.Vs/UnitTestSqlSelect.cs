@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				(
 					SqlFunctionCode.SetIn,
 					SqlField.CreateAliasedName ("A", "EMP_NO", "EMP_NO"),
-					SqlField.CreateSet (new SqlSet (DbRawType.Int16, ids.Cast<object> ()))
+					SqlField.CreateSet (new SqlSet (ids.Select (i => SqlField.CreateConstant (i, DbRawType.Int16))))
 				);
 				sqlSelect.Conditions.Add (sqlFunction);
 
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				(
 					SqlFunctionCode.SetIn,
 					SqlField.CreateAliasedName ("A", "EMP_NO", "EMP_NO"),
-					SqlField.CreateSet (new SqlSet (DbRawType.Int16, Enumerable.Range (0, 1500).Cast<object> ()))
+					SqlField.CreateSet (new SqlSet (Enumerable.Range (0, 1500).Select (c => SqlField.CreateConstant (c, DbRawType.Int16))))
 				);
 				sqlSelect.Conditions.Add (sqlFunction);
 
