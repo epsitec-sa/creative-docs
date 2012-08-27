@@ -566,6 +566,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				case FieldType.Date:
 					return new DateFieldData ();
 
+				case FieldType.Decimal:
+					return new DecimalFieldData ();
+
 				case FieldType.EntityCollection:
 					return new EntityCollectionFieldData ();
 
@@ -574,6 +577,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				case FieldType.Enumeration:
 					return new EnumerationFieldData ();
+
+				case FieldType.Integer:
+					return new IntegerFieldData ();
 
 				case FieldType.Text:
 					return new TextFieldData ();

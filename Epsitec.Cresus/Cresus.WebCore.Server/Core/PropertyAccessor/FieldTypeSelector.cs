@@ -35,6 +35,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				return FieldType.CheckBox;
 			}
+			else if (FieldTypeSelector.IsTypeSuitableForIntegerField (type))
+			{
+				return FieldType.Integer;
+			}
+			else if (FieldTypeSelector.IsTypeSuitableForDecimalField (type))
+			{
+				return FieldType.Decimal;
+			}
 			else if (FieldTypeSelector.IsTypeSuitableForTextField (type))
 			{
 				return FieldType.Text;
@@ -80,17 +88,29 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
+		private static bool IsTypeSuitableForIntegerField(Type type)
+		{
+			return type == typeof (short)
+		        || type == typeof (short?)
+				|| type == typeof (int)
+		        || type == typeof (int?)
+		        || type == typeof (long)
+		        || type == typeof (long?);
+		}
+
+
+		private static bool IsTypeSuitableForDecimalField(Type type)
+		{
+			return type == typeof (decimal)
+		        || type == typeof (decimal?);
+		}
+
+
 		private static bool IsTypeSuitableForTextField(Type type)
 		{
 			return type == typeof (string)
 		        || type == typeof (FormattedText)
-		        || type == typeof (FormattedText?)
-		        || type == typeof (long)
-		        || type == typeof (long?)
-		        || type == typeof (decimal)
-		        || type == typeof (decimal?)
-		        || type == typeof (int)
-		        || type == typeof (int?);
+		        || type == typeof (FormattedText?);
 		}
 
 

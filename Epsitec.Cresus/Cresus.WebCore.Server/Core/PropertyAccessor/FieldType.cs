@@ -12,6 +12,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		Date,
 
 
+		Decimal,
+
+
 		EntityCollection,
 
 
@@ -19,6 +22,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 
 		Enumeration,
+
+
+		Integer,
 
 
 		Text,

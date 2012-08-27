@@ -64,7 +64,11 @@
     <Compile Include="Core\Databases\ColumnTypeConverter.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
+    <Compile Include="Layout\TileData\DecimalFieldData.cs" />
+    <Compile Include="Layout\TileData\IntegerFieldData.cs" />
+    <Compile Include="Layout\Tile\DecimalField.cs" />
     <Compile Include="Layout\Tile\EntityValue.cs" />
+    <Compile Include="Layout\Tile\IntegerField.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="Core\AuthenticationManager.cs" />
     <Compile Include="Core\Databases\Column.cs" />

@@ -127,6 +127,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				case FieldType.CheckBox:
 				case FieldType.Date:
+				case FieldType.Decimal:
+				case FieldType.Integer:
 				case FieldType.Text:
 					return EntityModule.ConvertForBooleanDateAndText (value);
 
