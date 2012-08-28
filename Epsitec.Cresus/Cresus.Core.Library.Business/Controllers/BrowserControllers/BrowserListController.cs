@@ -251,6 +251,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 							;
 
 				var metadata = recorder.GetMetadata ();
+				var xml      = metadata.Save ("table");
 
 				this.context.Accessor.SetSortOrder (metadata.Columns);
 			}

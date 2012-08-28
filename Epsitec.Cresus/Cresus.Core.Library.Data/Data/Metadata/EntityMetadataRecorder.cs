@@ -53,9 +53,9 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		/// been added to the recorder.
 		/// </summary>
 		/// <returns>The metadata information.</returns>
-		public EntityMetadata GetMetadata()
+		public EntityTableMetadata GetMetadata()
 		{
-			return new EntityMetadata (this.EntityId, this.Columns);
+			return new EntityTableMetadata (this.EntityId, this.Columns);
 		}
 
 

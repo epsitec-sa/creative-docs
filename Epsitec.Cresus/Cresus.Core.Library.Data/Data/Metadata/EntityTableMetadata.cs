@@ -13,18 +13,18 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.Core.Data.Metadata
 {
 	/// <summary>
-	/// The <c>EntityMetadata</c> class is a collection of <see cref="EntityDataColum"/>
+	/// The <c>EntityTableMetadata</c> class is a collection of <see cref="EntityDataColum"/>
 	/// instances.
 	/// </summary>
-	public sealed class EntityMetadata : CoreMetadata
+	public sealed class EntityTableMetadata : CoreMetadata
 	{
-		internal EntityMetadata(Druid entityId, IEnumerable<EntityColumnMetadata> columns)
+		internal EntityTableMetadata(Druid entityId, IEnumerable<EntityColumnMetadata> columns)
 		{
 			this.entityId = entityId;
 			this.columns  = new List<EntityColumnMetadata> (columns);
 		}
 
-		private EntityMetadata(IDictionary<string, string> data, IEnumerable<EntityColumnMetadata> columns)
+		private EntityTableMetadata(IDictionary<string, string> data, IEnumerable<EntityColumnMetadata> columns)
 			: this (Druid.Parse (data[Strings.EntityId]), columns)
 		{
 		}
@@ -88,12 +88,12 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		/// </summary>
 		/// <param name="xml">The XML tree.</param>
 		/// <returns>The metadata.</returns>
-		public static EntityMetadata Restore(XElement xml)
+		public static EntityTableMetadata Restore(XElement xml)
 		{
 			var data    = Xml.GetAttributeBag (xml);
 			var columns = xml.Elements (Strings.Column).Select (x => EntityColumn.Restore (x)).Cast<EntityColumnMetadata> ();
 
-			return new EntityMetadata (data, columns);
+			return new EntityTableMetadata (data, columns);
 		}
 
 		
