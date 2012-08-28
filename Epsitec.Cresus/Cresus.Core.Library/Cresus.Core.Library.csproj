@@ -50,19 +50,74 @@
     </Compile>
     <Compile Include="Business\BusinessRuleAttribute.cs" />
     <Compile Include="Business\CompositeBusinessRule.cs" />
+    <Compile Include="Business\Extensions.cs" />
+    <Compile Include="Business\FormattedIdGenerator.cs" />
     <Compile Include="Business\GenericBusinessRule.cs" />
     <Compile Include="Business\GenericBusinessRule`1.cs" />
+    <Compile Include="Business\IBusinessContext.cs" />
+    <Compile Include="Business\ICopyable.cs" />
     <Compile Include="Business\Logic.cs" />
+    <Compile Include="Business\ReferenceIdFormatterHelper.cs" />
+    <Compile Include="Business\RefIdGenerator.cs" />
+    <Compile Include="Business\RefIdGeneratorPool.cs" />
+    <Compile Include="Business\Rules\IDateMetadataBusinessRules.cs" />
+    <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
     <Compile Include="Business\RuleType.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
+    <Compile Include="CoreData.cs" />
+    <Compile Include="DataExtractionMode.cs" />
+    <Compile Include="Data\AttributeState.cs" />
+    <Compile Include="Data\AttributeType.cs" />
+    <Compile Include="Data\ConnectionManager.cs" />
+    <Compile Include="Data\ConnectionUserIdentity.cs" />
+    <Compile Include="Data\CoreDataBrowser.cs" />
+    <Compile Include="Data\CoreDataComponent.cs" />
+    <Compile Include="Data\DatabaseTime.cs" />
+    <Compile Include="Data\DataSetAccessor.cs" />
+    <Compile Include="Data\DataSetAccessor`1.cs" />
+    <Compile Include="Data\DataSetCollectionGetter.cs" />
+    <Compile Include="Data\DataSetGetter.cs" />
+    <Compile Include="Data\GlobalLock.cs" />
+    <Compile Include="Data\GlobalLocks.cs" />
+    <Compile Include="Data\Infrastructure.cs" />
+    <Compile Include="Data\ItemCode.cs" />
+    <Compile Include="Data\ItemCodeGenerator.cs" />
+    <Compile Include="Data\ItemCodes.cs" />
+    <Compile Include="Data\Locker.cs" />
+    <Compile Include="Data\LockMonitor.cs" />
+    <Compile Include="Data\LockOwner.cs" />
+    <Compile Include="Data\LockTransaction.cs" />
+    <Compile Include="Data\Metadata\ColumnDisplayMode.cs" />
+    <Compile Include="Data\Metadata\ColumnSortOrder.cs" />
+    <Compile Include="Data\Metadata\DataSetDisplayGroup.cs" />
+    <Compile Include="Data\Metadata\DataSetMetadata.cs" />
+    <Compile Include="Data\Metadata\DataStoreMetadata.cs" />
+    <Compile Include="Data\Metadata\EntityColumnDisplay.cs" />
+    <Compile Include="Data\Metadata\EntityColumnFilter.cs" />
+    <Compile Include="Data\Metadata\EntityColumnMetadata.cs" />
+    <Compile Include="Data\Metadata\EntityColumnSort.cs" />
+    <Compile Include="Data\Metadata\EntityMetadataRecorder.cs" />
+    <Compile Include="Data\Metadata\EntityMetadataRecorder`1.cs" />
+    <Compile Include="Data\Metadata\EntityTableMetadata.cs" />
     <Compile Include="Dialogs\CoreDialog.cs" />
+    <Compile Include="Entities\AbstractEntityExtension.cs" />
+    <Compile Include="Entities\CommentEntity.cs" />
+    <Compile Include="Entities\EntityClonerExtensions.cs" />
+    <Compile Include="Entities\Extensions.cs" />
+    <Compile Include="Entities\GeneratorDefinitionEntity.cs" />
+    <Compile Include="Entities\IDataHashExtension.cs" />
+    <Compile Include="Entities\LanguageEntity.cs" />
+    <Compile Include="Entities\XmlBlobEntity.cs" />
+    <Compile Include="Extensions\DateRangeExtensions.cs" />
     <Compile Include="Factories\CoreComponentFactory`1.cs" />
     <Compile Include="Factories\CoreAppComponentFactory.cs" />
     <Compile Include="Factories\CoreComponentFactory.cs" />
+    <Compile Include="Factories\CoreDataComponentFactory.cs" />
     <Compile Include="Factories\DefaultCoreAppComponentFactory.cs" />
     <Compile Include="Factories\ICoreAppComponentFactory.cs" />
+    <Compile Include="Factories\ICoreDataComponentFactory.cs" />
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
     <Compile Include="Library\CoreAppPolicy.cs" />
@@ -78,8 +133,13 @@
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
     <Compile Include="Library\SettingsTuple.cs" />
+    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Repositories\Repository`1.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
+    <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Res.cs" />
     <Compile Include="Widgets\ActionButton.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Workflows\WorkflowActionAttribute.cs" />
@@ -182,10 +242,18 @@
     <Content Include="Resources\Cresus.Core.Library\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Cresus.Core.Library.Data\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Data\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Data\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Binders\" />
-    <Folder Include="Data\" />
     <Folder Include="Library\Formatters\" />
     <Folder Include="Library\Internal\" />
   </ItemGroup>
