@@ -76,14 +76,6 @@
       <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
       <Name>Cresus.Core.Library.Address</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
-      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
-      <Name>Cresus.Core.Library.BusinessLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
-      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
-      <Name>Cresus.Core.Library.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
       <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
       <Name>Cresus.Core.Library.Images</Name>

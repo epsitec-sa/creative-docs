@@ -57,10 +57,6 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
-      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
-      <Name>Cresus.Core.Library.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
       <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
       <Name>Cresus.Core.Library.UserManagement</Name>

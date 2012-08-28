@@ -100,10 +100,6 @@
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
       <Name>Cresus.Core.Library.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
-      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
-      <Name>Cresus.Core.Library.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj">
       <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
       <Name>Cresus.Core.Library.Print</Name>

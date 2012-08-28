@@ -10,4 +10,8 @@ using System.Reflection;
 [assembly: AssemblyProduct ("Crésus")]
 [assembly: AssemblyCopyright ("Copyright © 2009-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
 
-[assembly: Namespace ("Epsitec.Cresus.Core.Library")]
+[assembly: Namespace ("Epsitec.Cresus.Core")]
+
+[assembly: NamespaceShortcut ("Epsitec.Cresus.Core.Library", "CoreLib")]
+[assembly: NamespaceShortcut ("Epsitec.Cresus.Core.Data", "CoreData")]
+[assembly: NamespaceShortcut ("Epsitec.Cresus.Core.Data.Metadata", "CoreDataMeta")]

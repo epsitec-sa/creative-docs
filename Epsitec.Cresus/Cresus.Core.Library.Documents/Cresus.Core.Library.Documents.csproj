@@ -104,14 +104,6 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
-      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
-      <Name>Cresus.Core.Library.BusinessLogic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
-      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
-      <Name>Cresus.Core.Library.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Workflows\Cresus.Core.Library.Workflows.csproj">
       <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
       <Name>Cresus.Core.Library.Workflows</Name>
