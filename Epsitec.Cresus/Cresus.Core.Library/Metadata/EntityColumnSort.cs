@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Metadata
+namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
 	/// The <c>EntityColumnSort</c> class defines the sorting for an <see cref="EntityColumn"/>.
@@ -57,8 +57,8 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				new XAttribute (Strings.SortOrder, this.SortOrder.ToString ()),
-				new XAttribute (Strings.SortIndex, this.SortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
+				new XAttribute (Xml.SortOrder, this.SortOrder.ToString ()),
+				new XAttribute (Xml.SortIndex, this.SortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
 		}
 
 		public static EntityColumnSort Restore(XElement xml)
@@ -70,18 +70,18 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 			return new EntityColumnSort
 			{
-				SortOrder = InvariantConverter.ToEnum (xml.Attribute (Strings.SortOrder), ColumnSortOrder.None),
-				SortIndex = InvariantConverter.ToInt (xml.Attribute (Strings.SortIndex)),
+				SortOrder = InvariantConverter.ToEnum (xml.Attribute (Xml.SortOrder), ColumnSortOrder.None),
+				SortIndex = InvariantConverter.ToInt (xml.Attribute (Xml.SortIndex)),
 			};
 		}
 
 
-		#region Strings Class
+		#region Xml Class
 
-		private static class Strings
+		private static class Xml
 		{
-			public static readonly string		SortOrder = "order";
-			public static readonly string		SortIndex = "index";
+			public static readonly string		SortOrder = "o";
+			public static readonly string		SortIndex = "i";
 		}
 
 		#endregion

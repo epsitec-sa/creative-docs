@@ -1,6 +1,6 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Data.Metadata;
+using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 

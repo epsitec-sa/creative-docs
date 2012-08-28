@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Metadata
+namespace Epsitec.Cresus.Core.Metadata
 {
 	public class EntityColumnDisplay
 	{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				new XAttribute (Strings.DisplayMode, this.Mode.ToString ()));
+				new XAttribute (Xml.DisplayMode, this.Mode.ToString ()));
 		}
 
 		public static EntityColumnDisplay Restore(XElement xml)
@@ -41,16 +41,16 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 			return new EntityColumnDisplay ()
 			{
-				Mode = InvariantConverter.ToEnum (xml.Attribute (Strings.DisplayMode), ColumnDisplayMode.Visible)
+				Mode = InvariantConverter.ToEnum (xml.Attribute (Xml.DisplayMode), ColumnDisplayMode.Visible)
 			};
 		}
 
 
-		#region Strings Class
+		#region Xml Class
 
-		private static class Strings
+		private static class Xml
 		{
-			public static readonly string		DisplayMode = "mode";
+			public static readonly string		DisplayMode = "m";
 		}
 
 		#endregion

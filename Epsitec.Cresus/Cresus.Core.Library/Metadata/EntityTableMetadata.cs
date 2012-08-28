@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Metadata
+namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
 	/// The <c>EntityTableMetadata</c> class is a collection of <see cref="EntityDataColum"/>

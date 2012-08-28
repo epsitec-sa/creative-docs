@@ -12,7 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Metadata
+namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
 	/// The <c>EntityColumnMetadata</c> class defines a column (i.e. a direct or indirect field
@@ -110,28 +110,28 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		{
 			base.Serialize (elements);
 
-			elements.Add (this.defaultSort.Save (Strings.DefaultSort));
-			elements.Add (this.defaultFilter.Save (Strings.DefaultFilter));
-			elements.Add (this.defaultDisplay.Save (Strings.DefaultDisplay));
+			elements.Add (this.defaultSort.Save (Xml.DefaultSort));
+			elements.Add (this.defaultFilter.Save (Xml.DefaultFilter));
+			elements.Add (this.defaultDisplay.Save (Xml.DefaultDisplay));
 		}
 
 		protected override void Deserialize(XElement xml)
 		{
 			base.Deserialize (xml);
 
-			this.defaultSort    = EntityColumnSort.Restore (xml.Element (Strings.DefaultSort)) ?? this.defaultSort;
-			this.defaultFilter  = EntityColumnFilter.Restore (xml.Element (Strings.DefaultFilter)) ?? this.defaultFilter;
-			this.defaultDisplay = EntityColumnDisplay.Restore (xml.Element (Strings.DefaultDisplay)) ?? this.defaultDisplay;
+			this.defaultSort    = EntityColumnSort.Restore (xml.Element (Xml.DefaultSort)) ?? this.defaultSort;
+			this.defaultFilter  = EntityColumnFilter.Restore (xml.Element (Xml.DefaultFilter)) ?? this.defaultFilter;
+			this.defaultDisplay = EntityColumnDisplay.Restore (xml.Element (Xml.DefaultDisplay)) ?? this.defaultDisplay;
 		}
 
 
-		#region Strings Class
+		#region Xml Class
 
-		private static class Strings
+		private static class Xml
 		{
 			public static readonly string		DefaultSort    = "sort";
-			public static readonly string		DefaultFilter  = "filter";
-			public static readonly string		DefaultDisplay = "display";
+			public static readonly string		DefaultFilter  = "filt";
+			public static readonly string		DefaultDisplay = "disp";
 		}
 
 		#endregion

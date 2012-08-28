@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Metadata
+namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
 	/// The <c>EntityColumnFilter</c> class defines the filtering conditions for an
@@ -39,9 +39,9 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		}
 
 		
-		#region Strings Class
+		#region Xml Class
 
-		private static class Strings
+		private static class Xml
 		{
 		}
 

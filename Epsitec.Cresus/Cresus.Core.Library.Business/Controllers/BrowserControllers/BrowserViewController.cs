@@ -12,7 +12,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Data.Metadata;
+using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators;

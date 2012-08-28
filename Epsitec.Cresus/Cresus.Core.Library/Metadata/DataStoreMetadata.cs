@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Core.Data.Metadata
+namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
 	/// The <c>DataStoreMetadata</c> class defines metadata at the global level: tables,
