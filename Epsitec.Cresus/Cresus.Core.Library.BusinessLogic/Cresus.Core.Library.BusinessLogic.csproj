@@ -44,14 +44,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Business\BusinessRuleAttribute.cs" />
-    <Compile Include="Business\CompositeBusinessRule.cs" />
-    <Compile Include="Business\GenericBusinessRule.cs" />
-    <Compile Include="Business\GenericBusinessRule`1.cs" />
-    <Compile Include="Business\Logic.cs" />
-    <Compile Include="Business\RuleType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resolvers\BusinessRuleResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
@@ -71,6 +64,10 @@
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Business\" />
+    <Folder Include="Resolvers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

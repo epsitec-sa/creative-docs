@@ -48,6 +48,12 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Business\BusinessRuleAttribute.cs" />
+    <Compile Include="Business\CompositeBusinessRule.cs" />
+    <Compile Include="Business\GenericBusinessRule.cs" />
+    <Compile Include="Business\GenericBusinessRule`1.cs" />
+    <Compile Include="Business\Logic.cs" />
+    <Compile Include="Business\RuleType.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
@@ -72,6 +78,7 @@
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
     <Compile Include="Library\SettingsTuple.cs" />
+    <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
     <Compile Include="Widgets\ActionButton.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
@@ -152,6 +159,14 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
+      <Name>Cresus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
@@ -170,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Binders\" />
+    <Folder Include="Data\" />
     <Folder Include="Library\Formatters\" />
     <Folder Include="Library\Internal\" />
   </ItemGroup>
