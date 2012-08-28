@@ -8,6 +8,7 @@ Ext.define('Epsitec.cresus.webcore.Enumeration', {
 
       if (Epsitec.Tools.isUndefined(store) || store === null) {
         store = Ext.create('Ext.data.Store', {
+          storeId: name,
           fields: ['id', 'name'],
           autoLoad: true,
           proxy: Ext.create('Ext.data.proxy.Ajax', {
