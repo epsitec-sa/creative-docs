@@ -50,6 +50,19 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 				return this.displayGroupIds;
 			}
 		}
+		
+		/// <summary>
+		/// Retrieves the current data store metdata. This relies on <see cref="CoreContext"/>
+		/// to find the required information.
+		/// </summary>
+		public static DataStoreMetadata			Current
+		{
+			get
+			{
+				return CoreContext.GetMetadata<DataStoreMetadata> ();
+			}
+		}
+
 
 
 		public IEnumerable<DataSetDisplayGroup> GetSortedDisplayGroups()
@@ -143,6 +156,7 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 
 			return metadata;
 		}
+
 
 
 		private XElement SerializeTables()

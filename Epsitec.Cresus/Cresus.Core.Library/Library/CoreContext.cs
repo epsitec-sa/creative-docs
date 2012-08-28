@@ -143,6 +143,7 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.EnqueueSetupCode (() => CoreContext.AddMetadata (match.InvokeMember ("Restore", flags, null, null, args) as CoreMetadata));
 		}
 
+		
 		private static void AddMetadata(CoreMetadata metadata)
 		{
 			if (metadata == null)
