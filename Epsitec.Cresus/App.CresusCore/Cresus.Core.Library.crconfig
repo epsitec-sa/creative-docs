@@ -21,6 +21,16 @@ DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication"
   <D>
     <d name="Customer" disp.grp="" />
     <d name="ArticleDefinition" disp.grp="" />
+<!--    <d name="DocumentMetadata" disp.grp="" /> -->
+  </D>
+  <G/>
+</meta>
+
+DefineMetadata ("DataStoreMetadata", $0)
+
+<meta>
+  <T />
+  <D>
     <d name="DocumentMetadata" disp.grp="" />
   </D>
   <G/>

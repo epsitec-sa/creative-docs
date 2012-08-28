@@ -83,6 +83,10 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 			this.displayGroupCaptionId = captionId;
 		}
 
+		public override void Add(CoreMetadata metadata)
+		{
+			throw new System.NotImplementedException ();
+		}
 		
 		public XElement Save(string xmlNodeName)
 		{

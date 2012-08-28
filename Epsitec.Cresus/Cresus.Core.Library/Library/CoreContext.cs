@@ -140,9 +140,28 @@ namespace Epsitec.Cresus.Core.Library
 			//	class, so we will have to defer the restore until the application object calls
 			//	CoreContext back through method ExecutePendingSetupFunctions.
 			
-			CoreContext.EnqueueSetupCode (() => CoreContext.metadata.Add (match, match.InvokeMember ("Restore", flags, null, null, args) as CoreMetadata));
+			CoreContext.EnqueueSetupCode (() => CoreContext.AddMetadata (match.InvokeMember ("Restore", flags, null, null, args) as CoreMetadata));
 		}
 
+		private static void AddMetadata(CoreMetadata metadata)
+		{
+			if (metadata == null)
+			{
+				return;
+			}
+
+			var type = metadata.GetType ();
+			var meta = metadata;
+
+			if (CoreContext.metadata.TryGetValue (type, out meta))
+			{
+				meta.Add (metadata);
+			}
+			else
+			{
+				CoreContext.metadata.Add (type, metadata);
+			}
+		}
 
 
 		/// <summary>

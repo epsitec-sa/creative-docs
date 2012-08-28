@@ -70,6 +70,57 @@ namespace Epsitec.Cresus.Core.Data.Metadata
 		}
 
 
+		/// <summary>
+		/// Adds the definitions from the specified metadata into the current data store
+		/// metadata. NOTE: for now, duplicates are not handled.
+		/// </summary>
+		/// <param name="metadata">The metadata.</param>
+		public void Add(DataStoreMetadata metadata)
+		{
+			this.tables.AddRange (metadata.tables);
+			this.dataSets.AddRange (metadata.dataSets);
+			this.displayGroupIds.AddRange (metadata.displayGroupIds);
+		}
+
+		public override void Add(CoreMetadata metadata)
+		{
+			var dataStoreMetadata = metadata as DataStoreMetadata;
+
+			if (dataStoreMetadata != null)
+			{
+				this.Add (dataStoreMetadata);
+				return;
+			}
+
+			var entityTableMetadata = metadata as EntityTableMetadata;
+
+			if (entityTableMetadata != null)
+			{
+				this.tables.Add (entityTableMetadata);
+				return;
+			}
+
+			var dataSetMetadata = metadata as DataSetMetadata;
+
+			if (dataSetMetadata != null)
+			{
+				this.dataSets.Add (dataSetMetadata);
+				return;
+			}
+		}
+
+
+		public EntityTableMetadata FindTable(Druid entityId)
+		{
+			return this.tables.FirstOrDefault (x => x.EntityId == entityId);
+		}
+
+		public DataSetMetadata FindDataSet(string name)
+		{
+			return this.dataSets.FirstOrDefault (x => x.DataSetName == name);
+		}
+
+
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,

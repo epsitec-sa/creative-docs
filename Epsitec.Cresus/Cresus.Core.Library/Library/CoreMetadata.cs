@@ -12,5 +12,11 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	public abstract class CoreMetadata
 	{
+		/// <summary>
+		/// Adds the specified metadata to this instance of metadata. This is used to
+		/// merge two sets of metadata.
+		/// </summary>
+		/// <param name="metadata">The metadata.</param>
+		public abstract void Add(CoreMetadata metadata);
 	}
 }
