@@ -399,6 +399,26 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+
+		/// <summary>
+		/// Parses the specified value; this recognizes DRUIDs in the resource
+		/// id "[1023]" format, resource field name "$23" format, bundle id
+		/// "_1023" format and XML field id "23" format. This method throws a
+		/// <see cref="T:System.FormatException"/> exception if the format is
+		/// not recognized. An empty attribute maps to the <c>Empty</c> DRUID.
+		/// </summary>
+		/// <param name="attribute">The attribute containing the value to parse.</param>
+		/// <returns>The DRUID.</returns>
+		public static Druid Parse(System.Xml.Linq.XAttribute attribute)
+		{
+			if (attribute == null)
+			{
+				return Druid.Empty;
+			}
+
+			return Druid.Parse (attribute.Value);
+		}
+
 		/// <summary>
 		/// Parses the specified value; this recognizes DRUIDs in the resource
 		/// id "[1023]" format, resource field name "$23" format, bundle id

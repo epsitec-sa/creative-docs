@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void RefreshCollection()
 		{
 			this.UpdateAccessor ();
-			this.DefineContentSortOrder ();
+			this.UpdateContentSortOrder ();
 			this.UpdateCollection (reset: false);
 		}
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.collectionEntityId = EntityInfo.GetTypeId (this.dataSetType);
 			this.UpdateAccessor ();
-			this.DefineContentSortOrder ();
+			this.UpdateContentSortOrder ();
 			
 			this.itemScrollList.SetUpItemList<BrowserListItem> (this.context.ItemProvider, this.context.ItemMapper, this.context.ItemRenderer);
 			
@@ -236,24 +236,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			return accessor;
 		}
 
-		private void DefineContentSortOrder()
+		private void UpdateContentSortOrder()
 		{
-			var customerEntityId = EntityInfo<CustomerEntity>.GetTypeId ();
-
-			if (this.collectionEntityId == customerEntityId)
+			var metadata = DataStoreMetadata.Current.FindTable (this.collectionEntityId);
+			
+			if (metadata != null)
 			{
-				var recorder = new EntityMetadataRecorder<CustomerEntity> ()
-							.Column (x => x.MainRelation.Person.DisplayName2, ColumnSortOrder.Ascending)
-							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode, ColumnSortOrder.Ascending)
-							.Column (x => x.MainRelation.DefaultMailContact.Location.Name, ColumnSortOrder.Ascending)
-					//	.Column (x => x.MainRelation.DefaultMailContact.StreetName, SortOrder.Ascending)
-					//	.Column (x => x.MainRelation.DefaultMailContact.HouseNumber, SortOrder.Ascending)
-							;
-
-				var metadata = recorder.GetMetadata ();
-				var xml      = metadata.Save ("table");
-
-				this.context.Accessor.SetSortOrder (metadata.Columns);
+				this.context.Accessor.SetSortOrder (metadata.GetSortColumns ());
 			}
 		}
 
@@ -273,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void HandleOrchestratorSavingChanges(object sender, CancelEventArgs e)
 		{
 			this.UpdateAccessor ();
-			this.DefineContentSortOrder ();
+			this.UpdateContentSortOrder ();
 		}
 
 		private void HandleItemListActiveIndexChanged(object sender, ItemListIndexEventArgs e)

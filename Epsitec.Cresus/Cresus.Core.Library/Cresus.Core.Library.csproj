@@ -89,6 +89,7 @@
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Data\LockTransaction.cs" />
+    <Compile Include="Library\Settings\UserEntityTableSettings.cs" />
     <Compile Include="Metadata\ColumnDisplayMode.cs" />
     <Compile Include="Metadata\ColumnSortOrder.cs" />
     <Compile Include="Metadata\DataSetDisplayGroup.cs" />

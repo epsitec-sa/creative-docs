@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -6,17 +6,28 @@ using Epsitec.Common.Support;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
 	public sealed class UserEntityEditionSettings
 	{
-		public UserEntityEditionSettings()
+		public UserEntityEditionSettings(Druid entityId)
 		{
-			this.fields = new Dictionary<Druid, List<UserFieldEditionSettings>> ();
+			this.entityId = entityId;
+			this.fields   = new Dictionary<Druid, List<UserFieldEditionSettings>> ();
 		}
 
 
+		public Druid							EntityId
+		{
+			get
+			{
+				return this.entityId;
+			}
+		}
+
+		
 		public void Add(UserFieldEditionSettings settings)
 		{
 			Druid field = settings.FieldId;
@@ -95,7 +106,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		public XElement Save(string xmlNodeName)
 		{
 			/*
-			 * <xx>
+			 * <xx id="[123]">
 			 *  <F>
 			 *   <f id="[ABC]">
 			 *    <S>
@@ -113,6 +124,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			 */
 			
 			return new XElement (xmlNodeName,
+				new XAttribute (Xml.EntityId, this.entityId.ToCompactString ()),
 				new XElement (Xml.FieldList,
 					this.fields.Keys.OrderBy (x => x).Select (x => 
 						new XElement (Xml.FieldItem,
@@ -123,7 +135,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		public static UserEntityEditionSettings Restore(XElement xml)
 		{
-			var entitySettings = new UserEntityEditionSettings ();
+			var entitySettings = new UserEntityEditionSettings (Druid.Parse (xml.Attribute (Xml.EntityId)));
 
 			var xmlFieldList  = xml.Element (Xml.FieldList);
 			var xmlFieldItems = xmlFieldList.Elements (Xml.FieldItem);
@@ -142,6 +154,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		private static class Xml
 		{
+			public const string EntityId		= "id";
 			public const string FieldList		= "F";
 			public const string FieldItem		= "f";
 			public const string FieldId			= "id";
@@ -149,7 +162,8 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			public const string SettingsItem	= "s";
 		}
 
-		
+
+		private readonly Druid entityId;
 		private readonly Dictionary<Druid, List<UserFieldEditionSettings>> fields;
 	}
 }

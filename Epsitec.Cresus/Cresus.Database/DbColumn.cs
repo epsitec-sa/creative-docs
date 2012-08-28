@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -831,8 +831,8 @@ namespace Epsitec.Cresus.Database
 				var columnTypeCaption = columnType.Caption;
 			}
 		}
-        
-        /// <summary>
+		
+		/// <summary>
 		/// Deserializes a column from the specified XML reader.
 		/// </summary>
 		/// <param name="xmlReader">The XML reader.</param>
