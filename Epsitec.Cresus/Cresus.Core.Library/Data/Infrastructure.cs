@@ -185,8 +185,10 @@ namespace Epsitec.Cresus.Core.Data
 
 				return true;
 			}
-			catch (System.Exception)
+			catch (System.Exception e)
 			{
+				System.Diagnostics.Debug.WriteLine ("Error while updating database schema: " + e.Message);
+
 				return false;
 			}
 		}
