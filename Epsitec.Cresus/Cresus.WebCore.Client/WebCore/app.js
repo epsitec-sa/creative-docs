@@ -10,6 +10,7 @@ Ext.application({
   appFolder: 'js',
 
   requires: [
+    'Epsitec.cresus.webcore.BooleanNullableColumn',
     'Epsitec.cresus.webcore.Callback',
     'Epsitec.cresus.webcore.CallbackQueue',
     'Epsitec.cresus.webcore.CollectionSummaryTile',

@@ -83,7 +83,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
           switch (c.type) {
             case 'boolean':
-              column.xtype = 'booleancolumn';
+              column.xtype = 'booleannullablecolumn';
               break;
 
             case 'date':
@@ -172,8 +172,16 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         type: c.type
       };
 
-      if (c.type === 'date') {
-        field.dateFormat = 'd.m.Y';
+      switch (c.type) {
+        case 'int':
+        case 'float':
+        case 'boolean':
+          field.useNull = true;
+          break;
+
+        case 'date':
+          field.dateFormat = 'd.m.Y';
+          break;
       }
 
       return field;
