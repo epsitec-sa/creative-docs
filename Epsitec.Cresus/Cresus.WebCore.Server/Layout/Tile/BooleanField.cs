@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 {
 
 
-	internal sealed class CheckBoxField : AbstractField
+	internal sealed class BooleanField : AbstractField
 	{
 
 

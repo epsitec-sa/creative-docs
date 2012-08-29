@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			switch (propertyAccessor.FieldType)
 			{
-				case FieldType.CheckBox:
+				case FieldType.Boolean:
 				case FieldType.Date:
 				case FieldType.Decimal:
 				case FieldType.Integer:

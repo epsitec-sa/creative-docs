@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				return FieldType.Date;
 			}
-			else if (FieldTypeSelector.IsTypeSuitableForCheckBoxField (type))
+			else if (FieldTypeSelector.IsTypeSuitableForBooleanField (type))
 			{
-				return FieldType.CheckBox;
+				return FieldType.Boolean;
 			}
 			else if (FieldTypeSelector.IsTypeSuitableForIntegerField (type))
 			{
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		private static bool IsTypeSuitableForCheckBoxField(Type type)
+		private static bool IsTypeSuitableForBooleanField(Type type)
 		{
 			return type == typeof (bool)
 		        || type == typeof (bool?);

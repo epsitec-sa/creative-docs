@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
 
 
-	internal sealed class CheckboxFieldData : AbstractFieldData
+	internal sealed class BooleanFieldData : AbstractFieldData
 	{
 
 
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		{
 			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
 
-			return new CheckBoxField ()
+			return new BooleanField ()
 			{
 				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
 				Title = this.Title.ToString (),

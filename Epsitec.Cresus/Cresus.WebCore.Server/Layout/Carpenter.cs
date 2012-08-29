@@ -560,8 +560,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			switch (fieldType)
 			{
-				case FieldType.CheckBox:
-					return new CheckboxFieldData ();
+				case FieldType.Boolean:
+					return new BooleanFieldData ();
 
 				case FieldType.Date:
 					return new DateFieldData ();
