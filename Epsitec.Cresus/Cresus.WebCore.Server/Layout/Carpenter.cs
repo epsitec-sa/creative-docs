@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static AbstractFieldData BuildFieldData(AbstractPropertyAccessor propertyAccessor, FormattedText title, bool isReadOnly)
 		{
-			var fieldData = Carpenter.GetFieldData (propertyAccessor.FieldType);
+			var fieldData = Carpenter.GetFieldData (propertyAccessor.PropertyAccessorType);
 
 			fieldData.Title = title;
 			fieldData.IsReadOnly = isReadOnly;
@@ -556,32 +556,32 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static AbstractFieldData GetFieldData(FieldType fieldType)
+		private static AbstractFieldData GetFieldData(PropertyAccessorType type)
 		{
-			switch (fieldType)
+			switch (type)
 			{
-				case FieldType.Boolean:
+				case PropertyAccessorType.Boolean:
 					return new BooleanFieldData ();
 
-				case FieldType.Date:
+				case PropertyAccessorType.Date:
 					return new DateFieldData ();
 
-				case FieldType.Decimal:
+				case PropertyAccessorType.Decimal:
 					return new DecimalFieldData ();
 
-				case FieldType.EntityCollection:
+				case PropertyAccessorType.EntityCollection:
 					return new EntityCollectionFieldData ();
 
-				case FieldType.EntityReference:
+				case PropertyAccessorType.EntityReference:
 					return new EntityReferenceFieldData ();
 
-				case FieldType.Enumeration:
+				case PropertyAccessorType.Enumeration:
 					return new EnumerationFieldData ();
 
-				case FieldType.Integer:
+				case PropertyAccessorType.Integer:
 					return new IntegerFieldData ();
 
-				case FieldType.Text:
+				case PropertyAccessorType.Text:
 					return new TextFieldData ();
 
 				default:

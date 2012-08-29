@@ -21,14 +21,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
+			var booleanPropertyAccessor = (BooleanPropertyAccessor) this.PropertyAccessor;
 
 			return new BooleanField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
+				PropertyAccessorId = InvariantConverter.ToString (booleanPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = bool.Parse (textPropertyAccessor.GetString (entity))
+				Value = (bool?) booleanPropertyAccessor.GetValue (entity)
 			};
 		}
 

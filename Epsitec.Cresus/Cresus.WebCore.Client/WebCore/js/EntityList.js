@@ -88,7 +88,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
             case 'date':
               column.xtype = 'datecolumn';
-              column.format = 'd/m/Y';
+              column.format = 'd.m.Y';
               break;
 
             case 'int':
@@ -173,7 +173,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       };
 
       if (c.type === 'date') {
-        field.dateFormat = 'd/m/Y';
+        field.dateFormat = 'd.m.Y';
       }
 
       return field;

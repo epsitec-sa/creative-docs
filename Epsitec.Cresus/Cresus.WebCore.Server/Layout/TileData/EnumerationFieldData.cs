@@ -23,15 +23,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
+			var enumerationPropertyAccessor = (EnumerationPropertyAccessor) this.PropertyAccessor;
 
 			return new EnumerationField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
+				PropertyAccessorId = InvariantConverter.ToString (enumerationPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = textPropertyAccessor.GetString (entity) ?? Constants.KeyForNullValue,
-				TypeName = layoutBuilder.GetTypeName (textPropertyAccessor.Type),
+				Value = (string) enumerationPropertyAccessor.GetValue (entity),
+				TypeName = layoutBuilder.GetTypeName (enumerationPropertyAccessor.Type),
 			};
 		}
 

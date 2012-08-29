@@ -1,7 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using System.Linq.Expressions;
+using Epsitec.Cresus.WebCore.Server.Layout.TileData;
 
+using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
@@ -15,6 +16,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		public EntityReferencePropertyAccessor(LambdaExpression lambda, int id)
 			: base (lambda, id)
 		{
+		}
+
+
+		public override PropertyAccessorType PropertyAccessorType
+		{
+			get
+			{
+				return PropertyAccessorType.EntityReference;
+			}
 		}
 
 

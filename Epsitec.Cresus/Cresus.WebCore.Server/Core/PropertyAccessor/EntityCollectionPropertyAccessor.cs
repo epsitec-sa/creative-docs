@@ -1,6 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.WebCore.Server.Layout.TileData;
+
 using System;
 
 using System.Collections;
@@ -22,6 +24,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			: base (lambda, id)
 		{
 			this.collectionType = lambda.ReturnType.GetGenericArguments ().Single ();
+		}
+
+
+		public override PropertyAccessorType PropertyAccessorType
+		{
+			get
+			{
+				return PropertyAccessorType.EntityCollection;
+			}
 		}
 
 

@@ -21,14 +21,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
+			var datePropertyAccessor = (DatePropertyAccessor) this.PropertyAccessor;
 
 			return new DateField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
+				PropertyAccessorId = InvariantConverter.ToString (datePropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = textPropertyAccessor.GetString (entity),
+				Value = (string) datePropertyAccessor.GetValue (entity),
 			};
 		}
 

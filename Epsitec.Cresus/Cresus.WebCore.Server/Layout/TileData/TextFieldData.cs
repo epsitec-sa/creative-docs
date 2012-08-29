@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = textPropertyAccessor.GetString (entity),
+				Value = (string) textPropertyAccessor.GetValue (entity),
 			};
 		}
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				PropertyAccessorId = InvariantConverter.ToString (textPropertyAccessor.Id),
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = textPropertyAccessor.GetString (entity),
+				Value = (string) textPropertyAccessor.GetValue (entity),
 			};
 		}
 

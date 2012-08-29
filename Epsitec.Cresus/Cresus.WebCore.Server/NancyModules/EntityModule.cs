@@ -123,40 +123,42 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static object ConvertValue(BusinessContext businessContext, AbstractPropertyAccessor propertyAccessor, DynamicDictionaryValue value)
 		{
-			switch (propertyAccessor.FieldType)
+			switch (propertyAccessor.PropertyAccessorType)
 			{
-				case FieldType.Boolean:
-				case FieldType.Date:
-				case FieldType.Decimal:
-				case FieldType.Integer:
-				case FieldType.Text:
-					return EntityModule.ConvertForBooleanDateAndText (value);
+				case PropertyAccessorType.Boolean:
+					return EntityModule.ConvertForString (value, v => (bool) v);
 
-				case FieldType.EntityCollection:
+				case PropertyAccessorType.Date:
+				case PropertyAccessorType.Enumeration:
+				case PropertyAccessorType.Text:
+					return EntityModule.ConvertForString (value, v => (string) v);
+
+				case PropertyAccessorType.Decimal:
+					return EntityModule.ConvertForString (value, v => (decimal) v);
+
+				case PropertyAccessorType.EntityCollection:
 					return EntityModule.ConvertForEntityCollection (businessContext, value);
 
-				case FieldType.EntityReference:
+				case PropertyAccessorType.EntityReference:
 					return EntityModule.ConvertForEntityReference (businessContext, value);
 
-				case FieldType.Enumeration:
-					return EntityModule.ConvertForEnumeration (value);
-
+				case PropertyAccessorType.Integer:
+					return EntityModule.ConvertForString (value, v => (long) v);
+				
 				default:
 					throw new NotImplementedException ();
 			}
 		}
 
 
-		private static object ConvertForBooleanDateAndText(DynamicDictionaryValue value)
+		private static object ConvertForString(DynamicDictionaryValue value, Func<DynamicDictionaryValue, object> converter)
 		{
-			var castedValue = (string) value;
-
-			if (string.IsNullOrEmpty (castedValue))
+			if (!value.HasValue || string.IsNullOrEmpty ((string) value))
 			{
-				castedValue = null;
+				return null;
 			}
 
-			return castedValue;
+			return converter (value);
 		}
 
 
@@ -171,38 +173,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				.ToList ();
 		}
 
+
 		private static object ConvertForEntityReference(BusinessContext businessContext, DynamicDictionaryValue value)
 		{
 			var entityId = (string) value;
 
 			AbstractEntity entity = null;
 
-			if (!EntityModule.IsStringNullOrEmpty (entityId))
+			if (!string.IsNullOrEmpty (entityId))
 			{
 				entity = Tools.ResolveEntity (businessContext, entityId);
 			}
 
 			return entity;
-		}
-
-
-		private static object ConvertForEnumeration(DynamicDictionaryValue value)
-		{
-			var enumerationValue = (string) value;
-
-			if (EntityModule.IsStringNullOrEmpty (enumerationValue))
-			{
-				enumerationValue = null;
-			}
-
-			return enumerationValue;
-		}
-
-
-		private static bool IsStringNullOrEmpty(string text)
-		{
-			return string.IsNullOrEmpty (text)
-				|| text == Constants.KeyForNullValue;
 		}
 
 

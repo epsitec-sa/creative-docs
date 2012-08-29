@@ -42,12 +42,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			foreach (var column in this.Columns.Where (c => !c.Hidden))
 			{
 				var propertyAccessor = propertyAccessorCache.Get (column.LambdaExpression);
-				var textPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
+				var stringPropertyAccessor = (AbstractStringPropertyAccessor) propertyAccessor;
 				var name = column.Name;
-				var serverValue = textPropertyAccessor.GetString (entity);
-				var clientValue = ColumnTypeConverter.ServerToClient (column.Type, serverValue);
+				var value = stringPropertyAccessor.GetValue (entity);
 
-				data[name] = clientValue;
+				data[name] = value;
 			}
 
 			return data;

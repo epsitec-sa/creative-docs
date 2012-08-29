@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public bool Value
+		public bool? Value
 		{
 			get;
 			set;
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			var fieldDictionary = base.ToDictionary ();
 
 			fieldDictionary["xtype"] = "checkboxfield";
-			fieldDictionary["checked"] = this.Value;
+			fieldDictionary["checked"] = this.Value ?? false;
 			fieldDictionary["inputValue"] = true;
 			fieldDictionary["uncheckedValue"] = false;
 
