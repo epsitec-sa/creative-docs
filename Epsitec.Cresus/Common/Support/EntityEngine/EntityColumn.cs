@@ -80,6 +80,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public Druid							EntityId
+		{
+			get
+			{
+				return this.Path.EntityId;
+			}
+		}
+
 		public EntityFieldPath					Path
 		{
 			get
@@ -223,8 +231,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private static class Strings
 		{
-			public static readonly string		Type = "type";
-			public static readonly string		Path = "path";
+			public static readonly string		Type = "t";
+			public static readonly string		Path = "p";
 			public static readonly string		CaptionId = "cid";
 			public static readonly string		Title = "title";
 			public static readonly string		CanSort = "canSort";
