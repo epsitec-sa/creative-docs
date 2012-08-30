@@ -81,7 +81,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
             sortable: c.sortable
           };
 
-          switch (c.type) {
+          switch (c.type.type) {
             case 'boolean':
               column.xtype = 'booleannullablecolumn';
               break;
@@ -98,6 +98,11 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
             case 'float':
               column.xtype = 'numbercolumn';
+              break;
+
+            case 'list':
+              column.xtype = 'listcolumn';
+              column.enumerationName = c.type.enumerationName;
               break;
 
             case 'string':
@@ -169,10 +174,10 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     return columnDefinitions.map(function(c) {
       var field = {
         name: c.name,
-        type: c.type
+        type: c.type.type
       };
 
-      switch (c.type) {
+      switch (c.type.type) {
         case 'int':
         case 'float':
         case 'boolean':
@@ -181,6 +186,10 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
         case 'date':
           field.dateFormat = 'd.m.Y';
+          break;
+
+        case 'list':
+          field.type = 'string';
           break;
       }
 

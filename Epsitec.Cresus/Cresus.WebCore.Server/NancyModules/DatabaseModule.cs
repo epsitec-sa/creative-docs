@@ -115,11 +115,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private string GetColumnTypeData(Column column)
+		private Dictionary<string, object> GetColumnTypeData(Column column)
 		{
 			var propertyAccessorType = this.GetPropertyAccessorType (column);
 
-			return this.GetPropertyAccessorTypeData (propertyAccessorType);
+			var data = new Dictionary<string, object> ()
+			{
+				{ "type", this.GetPropertyAccessorTypeData (propertyAccessorType) },
+			};
+
+			if (propertyAccessorType == PropertyAccessorType.Enumeration)
+			{
+				data["enumerationName"] = Tools.TypeToString (column.LambdaExpression.ReturnType);
+			}
+
+			return data;
 		}
 
 
@@ -145,13 +155,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				case PropertyAccessorType.Integer:
 					return "int";
 
+				case PropertyAccessorType.Enumeration:
+					return "list";
+
 				case PropertyAccessorType.Decimal:
 					return "float";
 
 				case PropertyAccessorType.Text:
 					return "string";
 
-				case PropertyAccessorType.Enumeration:
 				case PropertyAccessorType.EntityReference:
 				case PropertyAccessorType.EntityCollection:
 					throw new NotSupportedException ();
