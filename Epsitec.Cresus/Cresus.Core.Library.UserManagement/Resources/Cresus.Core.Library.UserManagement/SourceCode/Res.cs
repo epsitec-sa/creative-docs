@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			//	designer:cap/AVAE
 			public static readonly Epsitec.Common.Types.EnumType UserPowerLevel = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
 			//	designer:cap/AVAR
-			public static readonly Epsitec.Common.Types.StructuredType EntityEditionSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
+			public static readonly Epsitec.Common.Types.StructuredType EntityUISettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 			//	designer:cap/AVAU
-			public static readonly Epsitec.Common.Types.StructuredType SoftwareEditionSettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
+			public static readonly Epsitec.Common.Types.StructuredType SoftwareUISettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30));
 			//	designer:cap/AVA
 			public static readonly Epsitec.Common.Types.StructuredType SoftwareUser = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/AVA1
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		
 		public static class Fields
 		{
-			public static class EntityEditionSettings
+			public static class EntityUISettings
 			{
 				internal static void _Initialize()
 				{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 				public static readonly global::Epsitec.Common.Support.Druid SerializedSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 			}
 			
-			public static class SoftwareEditionSettings
+			public static class SoftwareUISettings
 			{
 				internal static void _Initialize()
 				{
@@ -266,8 +266,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			Values._Initialize ();
 			Values.UserAuthenticationMethod._Initialize ();
 			Values.UserPowerLevel._Initialize ();
-			Fields.EntityEditionSettings._Initialize ();
-			Fields.SoftwareEditionSettings._Initialize ();
+			Fields.EntityUISettings._Initialize ();
+			Fields.SoftwareUISettings._Initialize ();
 			Fields.SoftwareUser._Initialize ();
 			Fields.SoftwareUserGroup._Initialize ();
 		}

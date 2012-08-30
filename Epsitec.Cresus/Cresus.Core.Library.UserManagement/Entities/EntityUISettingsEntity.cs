@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	partial class EntityEditionSettingsEntity
+	partial class EntityUISettingsEntity
 	{
 		/// <summary>
 		/// Gets the display settings. This will deserialize the settings when accessed

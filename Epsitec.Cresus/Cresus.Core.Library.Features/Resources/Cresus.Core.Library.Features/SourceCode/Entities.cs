@@ -129,19 +129,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/JVA/JVA1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[JVA1]")]
-		public global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity EnabledSettings
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity EnabledSettings
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity> ("[JVA1]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[JVA1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue = this.EnabledSettings;
+				global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue = this.EnabledSettings;
 				if (oldValue != value || !this.IsFieldDefined("[JVA1]"))
 				{
 					this.OnEnabledSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity> ("[JVA1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[JVA1]", oldValue, value);
 					this.OnEnabledSettingsChanged (oldValue, value);
 				}
 			}
@@ -151,28 +151,28 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/JVA/JVA2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[JVA2]")]
-		public global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity DisabledSettings
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity DisabledSettings
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity> ("[JVA2]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[JVA2]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue = this.DisabledSettings;
+				global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue = this.DisabledSettings;
 				if (oldValue != value || !this.IsFieldDefined("[JVA2]"))
 				{
 					this.OnDisabledSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity> ("[JVA2]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[JVA2]", oldValue, value);
 					this.OnDisabledSettingsChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnEnabledSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity newValue);
-		partial void OnEnabledSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity newValue);
-		partial void OnDisabledSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity newValue);
-		partial void OnDisabledSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity newValue);
+		partial void OnEnabledSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
+		partial void OnEnabledSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
+		partial void OnDisabledSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
+		partial void OnDisabledSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -301,26 +301,26 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/JVA3/JVA4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[JVA4]")]
-		public global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity Settings
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity Settings
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity> ("[JVA4]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[JVA4]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue = this.Settings;
+				global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue = this.Settings;
 				if (oldValue != value || !this.IsFieldDefined("[JVA4]"))
 				{
 					this.OnSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity> ("[JVA4]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[JVA4]", oldValue, value);
 					this.OnSettingsChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity newValue);
-		partial void OnSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareEditionSettingsEntity newValue);
+		partial void OnSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
+		partial void OnSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

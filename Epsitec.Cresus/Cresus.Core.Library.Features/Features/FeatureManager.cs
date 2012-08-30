@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Features
 		{
 			string entityId = entity.ToString ();
 
-			var customEditionSettings     = this.GetAllSoftwareEditionSettings ().SelectMany (x => x.EntityEditionSettings).Where (x => x.EntityId == entityId);
+			var customEditionSettings     = this.GetAllSoftwareUISettings ().SelectMany (x => x.EntityEditionSettings).Where (x => x.EntityId == entityId);
 			var tileEntityEditionSettings = customEditionSettings.Select (x => x.DisplaySettings);
 			var fieldEditionSettings      = tileEntityEditionSettings.SelectMany (x => x.GetAllFieldSettings (s => user.Matches (s)));
 
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.Features
 			return EntityInfo<T>.GetTypeId ();
 		}
 		
-		private IEnumerable<SoftwareEditionSettingsEntity> GetAllSoftwareEditionSettings()
+		private IEnumerable<SoftwareUISettingsEntity> GetAllSoftwareUISettings()
 		{
 			yield return this.Customizations.Settings;
 

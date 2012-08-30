@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	partial class SoftwareEditionSettingsEntity
+	partial class SoftwareUISettingsEntity
 	{
 		/// <summary>
 		/// Gets the command set settings. This will deserialize the settings when accessed
