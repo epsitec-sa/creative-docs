@@ -6,6 +6,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -97,7 +98,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				{ "title", column.Title },
 				{ "name", column.Name },
-				{ "type", this.GetColumnTypeData(column.Type) },
+				{ "type", this.GetColumnTypeData(column) },
 				{ "hidden", column.Hidden },
 				{ "sortable", column.Sortable },
 			};
@@ -114,24 +115,46 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private string GetColumnTypeData(ColumnType type)
+		private string GetColumnTypeData(Column column)
+		{
+			var propertyAccessorType = this.GetPropertyAccessorType (column);
+
+			return this.GetPropertyAccessorTypeData (propertyAccessorType);
+		}
+
+
+		private PropertyAccessorType GetPropertyAccessorType(Column column)
+		{
+			var lambdaExpression = column.LambdaExpression;
+			var propertyAccessor = this.CoreServer.PropertyAccessorCache.Get (lambdaExpression);
+
+			return propertyAccessor.PropertyAccessorType;
+		}
+
+
+		private string GetPropertyAccessorTypeData(PropertyAccessorType type)
 		{
 			switch (type)
 			{
-				case ColumnType.Boolean:
+				case PropertyAccessorType.Boolean:
 					return "boolean";
 
-				case ColumnType.Date:
+				case PropertyAccessorType.Date:
 					return "date";
 
-				case ColumnType.Integer:
+				case PropertyAccessorType.Integer:
 					return "int";
 
-				case ColumnType.Number:
+				case PropertyAccessorType.Decimal:
 					return "float";
 
-				case ColumnType.String:
+				case PropertyAccessorType.Text:
 					return "string";
+
+				case PropertyAccessorType.Enumeration:
+				case PropertyAccessorType.EntityReference:
+				case PropertyAccessorType.EntityCollection:
+					throw new NotSupportedException ();
 
 				default:
 					throw new NotImplementedException ();

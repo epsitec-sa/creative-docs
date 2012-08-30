@@ -15,11 +15,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Column(string title, string name, ColumnType type, bool hidden, bool sortable, LambdaExpression lambdaExpression)
+		public Column(string title, string name, bool hidden, bool sortable, LambdaExpression lambdaExpression)
 		{
 			this.title = title;
 			this.name = name;
-			this.type = type;
 			this.hidden = hidden;
 			this.sortable = sortable;
 			this.lambdaExpression = lambdaExpression;
@@ -40,15 +39,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			get
 			{
 				return this.name;
-			}
-		}
-
-
-		public ColumnType Type
-		{
-			get
-			{
-				return this.type;
 			}
 		}
 
@@ -80,9 +70,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public static Column Create<T1, T2>(string title, string name, ColumnType type, bool hidden, bool sortable, Expression<Func<T1, T2>> lambdaExpression)
+		public static Column Create<T1, T2>(string title, string name, bool hidden, bool sortable, Expression<Func<T1, T2>> lambdaExpression)
 		{
-			return new Column(title, name, type, hidden, sortable, lambdaExpression);
+			return new Column(title, name, hidden, sortable, lambdaExpression);
 		}
 
 
@@ -90,9 +80,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly string name;
-
-
-		private readonly ColumnType type;
 
 
 		private readonly bool hidden;

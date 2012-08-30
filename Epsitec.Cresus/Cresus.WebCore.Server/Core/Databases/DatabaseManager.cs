@@ -91,7 +91,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "Name",
 				name: "Name",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: true,
 				lambdaExpression: x => x.Name
@@ -101,7 +100,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "Code",
 				name: "Code",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: false,
 				lambdaExpression: x => x.IsoCode
@@ -130,7 +128,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "Name",
 				name: "Name",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: true,
 				lambdaExpression: x => x.Name
@@ -140,7 +137,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "ZipCode",
 				name: "ZipCode",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: true,
 				lambdaExpression: x => x.ZipCode
@@ -150,7 +146,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "CountryName",
 				name: "CountryName",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: true,
 				lambdaExpression: x => x.Country.Name
@@ -160,7 +155,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "CountryCode",
 				name: "CountryCode",
-				type: ColumnType.String,
 				hidden: true,
 				sortable: true,
 				lambdaExpression: x => x.Country.IsoCode
@@ -188,7 +182,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "FirstName",
 				name: "FirstName",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: true,
 				lambdaExpression: x => x.eCH_Person.PersonFirstNames
@@ -198,7 +191,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			(
 				title: "LastName",
 				name: "LastName",
-				type: ColumnType.String,
 				hidden: false,
 				sortable: true,
 				lambdaExpression: x => x.eCH_Person.PersonOfficialName

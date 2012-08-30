@@ -57,7 +57,6 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Core\CoreWorkerPool.cs" />
-    <Compile Include="Core\Databases\ColumnType.cs" />
     <Compile Include="Core\Databases\DatabaseManager.cs" />
     <Compile Include="Core\Databases\Database`1.cs" />
     <Compile Include="Core\Databases\Sorter.cs" />
