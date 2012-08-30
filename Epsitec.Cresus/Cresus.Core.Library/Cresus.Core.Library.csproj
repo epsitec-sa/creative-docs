@@ -91,6 +91,8 @@
     <Compile Include="Data\LockTransaction.cs" />
     <Compile Include="Library\Settings\UserEntityTableSettings.cs" />
     <Compile Include="Metadata\ColumnDisplayMode.cs" />
+    <Compile Include="Metadata\ColumnRef.cs" />
+    <Compile Include="Metadata\ColumnRef`1.cs" />
     <Compile Include="Metadata\ColumnSortOrder.cs" />
     <Compile Include="Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Metadata\DataSetMetadata.cs" />

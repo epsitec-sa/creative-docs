@@ -73,6 +73,11 @@ namespace Epsitec.Cresus.Core.Metadata
 			return EntityColumnMetadata.GetSortColumns (this.columns);
 		}
 
+		public EntityColumnMetadata FindColumn(string columnId)
+		{
+			return this.columns.FirstOrDefault (x => x.Id == columnId);
+		}
+
 
 		/// <summary>
 		/// Saves the metadata as an XML tree.
