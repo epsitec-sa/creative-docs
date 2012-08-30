@@ -29,6 +29,12 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		public EntityColumnMetadata Resolve(Druid entityId)
+		{
+			return EntityColumnMetadata.Resolve (entityId, this.Id);
+		}
+
+
 		public XElement Save(string xmlNodeName)
 		{
 			var attributes = new List<XAttribute> ();

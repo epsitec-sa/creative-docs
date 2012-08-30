@@ -36,8 +36,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.defaultSort    = new EntityColumnSort
 			{
 				SortOrder = sortOrder,
-				SortIndex = sortIndex
 			};
+
+			this.DefaultSortIndex = sortIndex;
 
 			this.defaultFilter  = new EntityColumnFilter ();
 			this.defaultDisplay = new EntityColumnDisplay
@@ -91,10 +92,17 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public int								DefaultSortIndex
+		{
+			get;
+			set;
+		}
 
 
 		public static EntityColumnMetadata Resolve(Druid entityId, string columnId)
 		{
+			//	TODO: should we add a cache to speed up the resolution?
+
 			var table = DataStoreMetadata.Current.FindTable (entityId);
 
 			if (table == null)
@@ -109,7 +117,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			return from column in columns
 				   where column.DefaultSort.SortOrder != ColumnSortOrder.None
-				   orderby column.DefaultSort.SortIndex ascending
+				   orderby column.DefaultSortIndex ascending
 				   select column;
 		}
 
@@ -117,6 +125,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		protected override void Serialize(List<XAttribute> attributes)
 		{
 			base.Serialize (attributes);
+
+			attributes.Add (new XAttribute (Xml.DefaultSortIndex, this.DefaultSortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
 		}
 
 		protected override void Serialize(List<XElement> elements)
@@ -132,6 +142,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			base.Deserialize (xml);
 
+			this.DefaultSortIndex = InvariantConverter.ToInt (xml.Attribute (Xml.DefaultSortIndex));
+
 			this.defaultSort    = EntityColumnSort.Restore (xml.Element (Xml.DefaultSort)) ?? this.defaultSort;
 			this.defaultFilter  = EntityColumnFilter.Restore (xml.Element (Xml.DefaultFilter)) ?? this.defaultFilter;
 			this.defaultDisplay = EntityColumnDisplay.Restore (xml.Element (Xml.DefaultDisplay)) ?? this.defaultDisplay;
@@ -142,9 +154,10 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private static class Xml
 		{
-			public static readonly string		DefaultSort    = "sort";
-			public static readonly string		DefaultFilter  = "filt";
-			public static readonly string		DefaultDisplay = "disp";
+			public const string					DefaultSortIndex = "si";
+			public const string					DefaultSort    = "sort";
+			public const string					DefaultFilter  = "filt";
+			public const string					DefaultDisplay = "disp";
 		}
 
 		#endregion

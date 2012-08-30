@@ -135,31 +135,32 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		public static UserEntityEditionSettings Restore(XElement xml)
 		{
-			var entitySettings = new UserEntityEditionSettings (Druid.Parse (xml.Attribute (Xml.EntityId)));
+			var entityId = Druid.Parse (xml.Attribute (Xml.EntityId));
+			var settings = new UserEntityEditionSettings (entityId);
 
 			var xmlFieldList  = xml.Element (Xml.FieldList);
 			var xmlFieldItems = xmlFieldList.Elements (Xml.FieldItem);
 
 			foreach (var xmlFieldItem in xmlFieldItems)
 			{
-				var field    = Druid.Parse ((string) xmlFieldItem.Attribute (Xml.FieldId));
-				var settings = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => UserFieldEditionSettings.Restore (field, x));
+				var field = Druid.Parse ((string) xmlFieldItem.Attribute (Xml.FieldId));
+				var items = xmlFieldItem.Element (Xml.SettingsList).Elements (Xml.SettingsItem).Select (x => UserFieldEditionSettings.Restore (field, x));
 
-				entitySettings.AddRange (settings);
+				settings.AddRange (items);
 			}
 
-			return entitySettings;
+			return settings;
 		}
 
 
 		private static class Xml
 		{
-			public const string EntityId		= "id";
-			public const string FieldList		= "F";
-			public const string FieldItem		= "f";
-			public const string FieldId			= "id";
-			public const string SettingsList	= "S";
-			public const string SettingsItem	= "s";
+			public const string					EntityId		= "id";
+			public const string					FieldList		= "F";
+			public const string					FieldItem		= "f";
+			public const string					FieldId			= "id";
+			public const string					SettingsList	= "S";
+			public const string					SettingsItem	= "s";
 		}
 
 

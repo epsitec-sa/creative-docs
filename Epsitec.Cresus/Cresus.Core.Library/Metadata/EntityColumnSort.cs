@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Core.Metadata
 		public EntityColumnSort()
 		{
 			this.SortOrder = ColumnSortOrder.None;
-			this.SortIndex = 0;
 		}
 		
 		
@@ -30,12 +29,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			set;
 		}
 
-		public int								SortIndex
-		{
-			get;
-			set;
-		}
-		
 		
 		public SortClause ToSortClause(EntityColumn column, AbstractEntity example)
 		{
@@ -57,8 +50,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-				new XAttribute (Xml.SortOrder, this.SortOrder.ToString ()),
-				new XAttribute (Xml.SortIndex, this.SortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
+				new XAttribute (Xml.SortOrder, this.SortOrder.ToString ()));
 		}
 
 		public static EntityColumnSort Restore(XElement xml)
@@ -70,8 +62,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			return new EntityColumnSort
 			{
-				SortOrder = InvariantConverter.ToEnum (xml.Attribute (Xml.SortOrder), ColumnSortOrder.None),
-				SortIndex = InvariantConverter.ToInt (xml.Attribute (Xml.SortIndex)),
+				SortOrder = InvariantConverter.ToEnum (xml.Attribute (Xml.SortOrder), ColumnSortOrder.None)
 			};
 		}
 
@@ -81,7 +72,6 @@ namespace Epsitec.Cresus.Core.Metadata
 		private static class Xml
 		{
 			public static readonly string		SortOrder = "o";
-			public static readonly string		SortIndex = "i";
 		}
 
 		#endregion
