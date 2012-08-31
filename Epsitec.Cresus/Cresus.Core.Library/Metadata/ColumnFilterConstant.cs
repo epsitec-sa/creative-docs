@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.Extensions;
 
+using System.Linq.Expressions;
+
 namespace Epsitec.Cresus.Core.Metadata
 {
 	public struct ColumnFilterConstant : System.IEquatable<ColumnFilterConstant>
@@ -23,6 +25,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public System.Type SystemType
+		{
+			get
+			{
+				return ColumnFilterConstant.ToSystemType (this.type);
+			}
+		}
+
 		public object							Value
 		{
 			get
@@ -31,6 +41,16 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		
+		public bool IsValid()
+		{
+			return this.type != ColumnFilterConstantType.Undefined && this.value != null;
+		}
+
+		public Expression GetExpression()
+		{
+			return Expression.Constant (this.value, this.SystemType);
+		}
 		
 		public override string ToString()
 		{
@@ -136,6 +156,29 @@ namespace Epsitec.Cresus.Core.Metadata
 					return Strings.StringType;
 				case ColumnFilterConstantType.Undefined:
 					return Strings.UndefinedType;
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", type.GetQualifiedName ()));
+			}
+		}
+
+		private static System.Type ToSystemType(ColumnFilterConstantType type)
+		{
+			switch (type)
+			{
+				case ColumnFilterConstantType.Integer:
+					return typeof (int);
+				case ColumnFilterConstantType.Decimal:
+					return typeof (decimal);
+				case ColumnFilterConstantType.DateTime:
+					return typeof (System.DateTime);
+				case ColumnFilterConstantType.Date:
+					return typeof (Date);
+				case ColumnFilterConstantType.Time:
+					return typeof (Time);
+				case ColumnFilterConstantType.String:
+					return typeof (string);
+				case ColumnFilterConstantType.Undefined:
+					return typeof (void);
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", type.GetQualifiedName ()));
 			}

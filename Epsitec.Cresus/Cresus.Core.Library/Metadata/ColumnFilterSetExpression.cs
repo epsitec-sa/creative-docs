@@ -4,9 +4,20 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.Extensions;
 
+using System.Linq.Expressions;
+
 namespace Epsitec.Cresus.Core.Metadata
 {
 	public class ColumnFilterSetExpression : ColumnFilterExpression
 	{
+		public override bool IsValid()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public override Expression GetExpression(ParameterExpression parameter)
+		{
+			throw new System.NotImplementedException ();
+		}
 	}
 }
