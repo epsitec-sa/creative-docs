@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -11,6 +12,8 @@ using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
+
+using Nancy.Json;
 
 using System;
 
@@ -101,6 +104,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				{ "type", this.GetColumnTypeData(column) },
 				{ "hidden", column.Hidden },
 				{ "sortable", column.Sortable },
+				{ "filter", this.GetFilterData (column) },
 			};
 		}
 
@@ -193,6 +197,24 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		private Dictionary<string, object> GetFilterData(Column column)
+		{
+			var data = new Dictionary<string, object> ()
+			{		
+				{ "filterable", column.Filterable },
+			};
+
+			var propertyAccessorType = this.GetPropertyAccessorType (column);
+
+			if (column.Filterable && propertyAccessorType == PropertyAccessorType.Enumeration)
+			{
+				data["enumerationName"] = Tools.TypeToString (column.LambdaExpression.ReturnType);
+			}
+
+			return data;
+		}
+
+
 		private Response GetEntities(BusinessContext businessContext, dynamic parameters)
 		{
 			string databaseName = parameters.name;
@@ -204,10 +226,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string sort = DatabasesModule.GetOptionalParameter (Request.Query.sort);
 			var sorters = this.ParseSorters (database, sort);
 
+			string filter = DatabasesModule.GetOptionalParameter (Request.Query.filter);
+			var filters = this.ParseFilters (database, filter).ToList ();
+
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
-			var total = database.GetCount (businessContext);
-			var entities = database.GetEntities (businessContext, sorters, start, limit)
+			var total = database.GetCount (businessContext, filters);
+			var entities = database.GetEntities (businessContext, sorters, filters, start, limit)
 				.Select (e => database.GetEntityData (businessContext, e, propertyAccessorCache))
 				.ToList ();
 
@@ -252,6 +277,121 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				case "DESC":
 					return SortOrder.Descending;
 
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private IEnumerable<Core.Databases.Filter> ParseFilters(Core.Databases.Database database, string filterParameter)
+		{
+			if (filterParameter != null)
+			{
+				var deserializer = new JavaScriptSerializer ();
+				var filters = (object[]) deserializer.DeserializeObject (filterParameter);
+
+				foreach (var filter in filters.Cast<Dictionary<string, object>> ())
+				{
+					yield return this.ParseFilter (database, filter);
+				}
+			}
+		}
+
+
+		private Core.Databases.Filter ParseFilter(Core.Databases.Database database, Dictionary<string, object> filter)
+		{
+			var column = this.ParseFilterColumn (database, filter);
+			var filterCondition = this.ParseFilterCondition (column, filter);
+
+			return new Core.Databases.Filter (column, filterCondition);
+		}
+
+		private Column ParseFilterColumn(Core.Databases.Database database, Dictionary<string, object> filter)
+		{
+			var field = (string) filter["field"];
+
+			return database.Columns.First (c => c.Name == field);
+		}
+
+
+		private EntityColumnFilter ParseFilterCondition(Column column, Dictionary<string, object> filter)
+		{
+			var lambda = column.LambdaExpression;
+			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+			var propertyAccessor = (AbstractStringPropertyAccessor) propertyAccessorCache.Get (lambda);
+
+			var type = (string) filter["type"];
+			var value = filter["value"];
+
+			if (type == "list")
+			{
+				return this.ParseSetFilter (propertyAccessor, value);
+			}
+			else
+			{
+				object comparison;
+				if (!filter.TryGetValue ("comparison", out comparison))
+				{
+					comparison = "eq";
+				}
+
+				return this.ParseComparisonFilter (propertyAccessor, type, comparison, value);
+			}
+		}
+
+
+		private EntityColumnFilter ParseSetFilter(AbstractStringPropertyAccessor propertyAccessor, object value)
+		{
+			var valueArray = (object[]) value;
+			var convertedValues = valueArray.Select (v => propertyAccessor.ConvertValue (v));
+
+			return new EntityColumnSetFilter (SetComparator.In, convertedValues);
+		}
+
+
+		private EntityColumnFilter ParseComparisonFilter(AbstractStringPropertyAccessor propertyAccessor, string type, object comparison, object value)
+		{
+			var comparator = this.ParseComparator (comparison);
+
+			switch (type)
+			{
+				case "numeric":
+					switch (propertyAccessor.PropertyAccessorType)
+					{
+						case PropertyAccessorType.Integer:
+							value = Convert.ToInt64 (value);
+							break;
+
+						case PropertyAccessorType.Decimal:
+							value = Convert.ToDecimal (value);
+							break;
+					}
+					break;
+
+				case "string":
+					comparator = BinaryComparator.IsLikeEscape;
+					value =  "%" + Constant.Escape ((string) value) + "%";
+					break;
+			}
+
+			var convertedValue = propertyAccessor.ConvertValue (value);
+
+			return new EntityColumnComparisonFilter (comparator, convertedValue);
+		}
+
+
+		private BinaryComparator ParseComparator(object comparator)
+		{
+			switch ((string) comparator)
+			{
+				case "eq":
+					return BinaryComparator.IsEqual;
+				case "nq":
+					return BinaryComparator.IsNotEqual;
+				case "gt":
+					return BinaryComparator.IsGreater;
+				case "lt":
+					return BinaryComparator.IsLower;
 				default:
 					throw new NotImplementedException ();
 			}

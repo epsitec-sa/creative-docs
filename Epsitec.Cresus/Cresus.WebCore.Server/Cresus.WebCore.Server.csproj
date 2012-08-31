@@ -59,6 +59,7 @@
     <Compile Include="Core\CoreWorkerPool.cs" />
     <Compile Include="Core\Databases\DatabaseManager.cs" />
     <Compile Include="Core\Databases\Database`1.cs" />
+    <Compile Include="Core\Databases\Filter.cs" />
     <Compile Include="Core\Databases\Sorter.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />

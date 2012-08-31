@@ -3,6 +3,7 @@
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
@@ -53,18 +54,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Sorter> sorters, int skip, int take)
+		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Sorter> sorters, IEnumerable<Filter> filters, int skip, int take)
 		{
-			var example = new T ();
+			var result = this.CreateBasicRequest (filters);
+			var example = result.Item1;
+			var request = result.Item2;
 
-			var request = new DataLayer.Loader.Request ()
-			{
-				RootEntity = example,
-				Skip = skip,
-				Take = take,
-			};
+			request.Skip = skip;
+			request.Take = take;
 
-			request.SortClauses.AddRange (this.CreateSortClauses (example, sorters));
+			var sortClauses = this.CreateSortClauses (example, sorters);
+			request.SortClauses.AddRange (sortClauses);
 
 			return businessContext.DataContext.GetByRequest<T> (request);
 		}
@@ -81,9 +81,33 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public override int GetCount(BusinessContext businessContext)
+		private IEnumerable<Expression> CreateConditions(T example, IEnumerable<Filter> filters)
 		{
-			return businessContext.DataContext.GetCount (new T ());
+			return filters.Select (f => f.ToCondition (example));
+		}
+
+
+		public override int GetCount(BusinessContext businessContext, IEnumerable<Filter> filters)
+		{
+			var request = this.CreateBasicRequest (filters).Item2;
+
+			return businessContext.DataContext.GetCount (request);
+		}
+
+
+		private Tuple<T,Request> CreateBasicRequest(IEnumerable<Filter> filters)
+		{
+			var example = new T ();
+
+			var request = new Request ()
+			{
+				RootEntity = example,
+			};
+
+			var conditions = this.CreateConditions (example, filters);
+			request.Conditions.AddRange (conditions);
+
+			return Tuple.Create (example, request);
 		}
 
 

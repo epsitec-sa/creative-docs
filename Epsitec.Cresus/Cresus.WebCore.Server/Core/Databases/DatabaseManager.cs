@@ -93,6 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "Name",
 				hidden: false,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.Name
 			);
 
@@ -102,6 +103,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "Code",
 				hidden: false,
 				sortable: false,
+				filterable: false,
 				lambdaExpression: x => x.IsoCode
 			);
 
@@ -130,6 +132,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "Name",
 				hidden: false,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.Name
 			);
 
@@ -139,6 +142,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "ZipCode",
 				hidden: false,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.ZipCode
 			);
 
@@ -148,6 +152,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "CountryName",
 				hidden: false,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.Country.Name
 			);
 
@@ -157,6 +162,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "CountryCode",
 				hidden: true,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.Country.IsoCode
 			);
 
@@ -184,6 +190,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "FirstName",
 				hidden: false,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.eCH_Person.PersonFirstNames
 			);
 
@@ -193,6 +200,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				name: "LastName",
 				hidden: false,
 				sortable: true,
+				filterable: true,
 				lambdaExpression: x => x.eCH_Person.PersonOfficialName
 			);
 

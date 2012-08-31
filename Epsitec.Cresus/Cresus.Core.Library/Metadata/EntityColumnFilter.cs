@@ -2,12 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 using Epsitec.Cresus.DataLayer.Expressions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+
 using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
@@ -21,8 +17,12 @@ namespace Epsitec.Cresus.Core.Metadata
 		public EntityColumnFilter()
 		{
 		}
-		
-		
+
+		public virtual Expression ToCondition(EntityColumn entityColumn, AbstractEntity example)
+		{
+			throw new System.NotImplementedException ();
+		}
+
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName);

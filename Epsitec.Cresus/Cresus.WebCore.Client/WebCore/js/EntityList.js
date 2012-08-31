@@ -30,7 +30,11 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
       listeners: {
         selectionchange: this.onSelectionChangeHandler,
         scope: this
-      }
+      },
+      features: [{
+        ftype: 'filters',
+        encode: true
+      }]
     };
     Ext.applyIf(newOptions, options);
 
@@ -73,44 +77,89 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         .filter(function(c) {
           return c.hidden === false;
         })
-        .map(function(c) {
-          var column = {
-            text: c.title,
-            flex: 1,
-            dataIndex: c.name,
-            sortable: c.sortable
-          };
+        .map(this.createDynamicColumn, this);
+  },
 
-          switch (c.type.type) {
-            case 'boolean':
-              column.xtype = 'booleannullablecolumn';
-              break;
+  createDynamicColumn: function(columnDefinition) {
+    var column = {
+      text: columnDefinition.title,
+      flex: 1,
+      dataIndex: columnDefinition.name,
+      sortable: columnDefinition.sortable,
+      filter: this.createFilter(columnDefinition)
+    };
 
-            case 'date':
-              column.xtype = 'datecolumn';
-              column.format = 'd.m.Y';
-              break;
+    switch (columnDefinition.type.type) {
+      case 'boolean':
+        column.xtype = 'booleannullablecolumn';
+        break;
 
-            case 'int':
-              column.xtype = 'numbercolumn';
-              column.format = '0,000';
-              break;
+      case 'date':
+        column.xtype = 'datecolumn';
+        column.format = 'd.m.Y';
+        break;
 
-            case 'float':
-              column.xtype = 'numbercolumn';
-              break;
+      case 'int':
+        column.xtype = 'numbercolumn';
+        column.format = '0,000';
+        break;
 
-            case 'list':
-              column.xtype = 'listcolumn';
-              column.enumerationName = c.type.enumerationName;
-              break;
+      case 'float':
+        column.xtype = 'numbercolumn';
+        break;
 
-            case 'string':
-              break;
-          }
+      case 'list':
+        column.xtype = 'listcolumn';
+        column.enumerationName = columnDefinition.type.enumerationName;
+        break;
 
-          return column;
-        });
+      case 'string':
+        break;
+    }
+
+    return column;
+  },
+
+  createFilter: function(columnDefinition) {
+    var typeDefinition = columnDefinition.type;
+
+    if (!columnDefinition.filter.filterable) {
+      return false;
+    }
+
+    switch (typeDefinition.type) {
+      case 'boolean':
+        return {
+          type: 'boolean'
+        };
+
+      case 'date':
+        return {
+          type: 'date',
+          dateFormat: 'd.m.Y'
+        };
+
+      case 'int':
+      case 'float':
+        return {
+          type: 'numeric'
+        };
+
+      case 'list':
+        return {
+          type: 'list',
+          store: Epsitec.Enumeration.getStore(typeDefinition.enumerationName),
+          labelField: 'name'
+        };
+
+      case 'string':
+        return {
+          type: 'string'
+        };
+
+      default:
+        return false;
+    }
   },
 
   createSelModel: function(options) {
