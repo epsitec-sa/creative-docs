@@ -83,8 +83,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				var conversionResult = converter.ConvertFromString (value);
 
-				var success = conversionResult.HasValue;
-				object result = success ? conversionResult.Value : default (T);
+				var success = conversionResult.IsValid;
+
+				object result;
+
+				if (conversionResult.HasValue)
+				{
+					result = conversionResult.Value;
+				}
+				else if (conversionResult.IsNull)
+				{
+					result = null;
+				}
+				else
+				{
+					result = default (T);
+				}
 
 				return Tuple.Create (success, result);
 			};
