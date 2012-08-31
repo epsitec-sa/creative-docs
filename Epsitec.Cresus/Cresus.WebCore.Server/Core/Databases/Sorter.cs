@@ -44,6 +44,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			var lambda = column.LambdaExpression;
 			var name = column.Name;
+			
+			//	TODO: resolve EntityColumnMetadata through DataStoreMetdata
+			
 			var entityColumnMetaData = new EntityColumnMetadata (lambda, name);
 			var entityColumnSort = new EntityColumnSort ()
 			{

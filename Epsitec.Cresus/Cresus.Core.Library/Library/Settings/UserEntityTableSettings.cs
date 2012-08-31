@@ -20,7 +20,8 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			this.display  = new List<ColumnRef<EntityColumnDisplay>> ();
 		}
 
-		public Druid EntityId
+		
+		public Druid									EntityId
 		{
 			get
 			{
@@ -28,6 +29,21 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
+		public IList<ColumnRef<EntityColumnSort>>		Sort
+		{
+			get
+			{
+				return this.sort;
+			}
+		}
+
+		public IList<ColumnRef<EntityColumnDisplay>>	Display
+		{
+			get
+			{
+				return this.display;
+			}
+		}
 
 
 		
@@ -38,24 +54,6 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				new XElement (Xml.SortColumnList, this.sort.Select (x => x.Save (Xml.SortColumnItem))),
 				new XElement (Xml.DisplayColumnList, this.display.Select (x => x.Save (Xml.DisplayColumnItem))));
 		}
-
-
-		public IList<ColumnRef<EntityColumnSort>> Sort
-		{
-			get
-			{
-				return this.sort;
-			}
-		}
-
-		public IList<ColumnRef<EntityColumnDisplay>> Display
-		{
-			get
-			{
-				return this.display;
-			}
-		}
-
 
 		public static UserEntityTableSettings Restore(XElement xml)
 		{

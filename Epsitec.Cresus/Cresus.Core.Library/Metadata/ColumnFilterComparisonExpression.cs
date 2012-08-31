@@ -6,10 +6,7 @@ using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public enum ColumnSortOrder
+	public class ColumnFilterComparisonExpression : ColumnFilterExpression
 	{
-		None,
-		Ascending,
-		Descending,
 	}
 }

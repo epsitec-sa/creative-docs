@@ -6,10 +6,15 @@ using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public enum ColumnSortOrder
+	public enum ColumnFilterConstantType
 	{
-		None,
-		Ascending,
-		Descending,
+		Undefined,
+
+		Integer,
+		Decimal,
+		Date,
+		Time,
+		DateTime,
+		String,
 	}
 }

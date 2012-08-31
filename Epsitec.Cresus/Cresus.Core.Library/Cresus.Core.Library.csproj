@@ -90,9 +90,17 @@
     <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Data\LockTransaction.cs" />
     <Compile Include="Library\Settings\UserEntityTableSettings.cs" />
+    <Compile Include="Library\Settings\UserFilterSettings.cs" />
     <Compile Include="Metadata\ColumnDisplayMode.cs" />
+    <Compile Include="Metadata\ColumnFilterComparisonCode.cs" />
+    <Compile Include="Metadata\ColumnFilterConstant.cs" />
+    <Compile Include="Metadata\ColumnFilterConstantType.cs" />
+    <Compile Include="Metadata\ColumnFilterExpression.cs" />
+    <Compile Include="Metadata\ColumnFilterRangeExpression.cs" />
+    <Compile Include="Metadata\ColumnFilterSetExpression.cs" />
     <Compile Include="Metadata\ColumnRef.cs" />
     <Compile Include="Metadata\ColumnRef`1.cs" />
+    <Compile Include="Metadata\ColumnFilterComparisonExpression.cs" />
     <Compile Include="Metadata\ColumnSortOrder.cs" />
     <Compile Include="Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Metadata\DataSetMetadata.cs" />

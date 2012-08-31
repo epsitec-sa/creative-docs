@@ -1,5 +1,6 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+using Epsitec.Cresus.Database.Collections;
 
 namespace Epsitec.Cresus.Database
 {
@@ -13,8 +14,14 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public SqlSelect()
 		{
+			this.fields	 = new SqlFieldList ();
+			this.tables	 = new SqlFieldList ();
+			this.wheres	 = new SqlFieldList ();
+			this.joins	 = new SqlFieldList ();
+			this.orderBy = new SqlFieldList ();
 		}
 
+		
 		/// <summary>
 		/// Gets or sets the SELECT predicate.
 		/// </summary>
@@ -34,7 +41,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// The number of rows to remove from the result of the query.
 		/// </summary>
-		public int? Skip
+		public int?								Skip
 		{
 			get
 			{
@@ -54,7 +61,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// The number of rows retrieve from the result of the query.
 		/// </summary>
-		public int? Take
+		public int?								Take
 		{
 			get
 			{
@@ -75,7 +82,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the fields for the columns that will be returned by the query.
 		/// </summary>
 		/// <value>The fields.</value>
-		public Collections.SqlFieldList			Fields
+		public SqlFieldList						Fields
 		{
 			get
 			{
@@ -87,7 +94,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the tables.
 		/// </summary>
 		/// <value>The tables.</value>
-		public Collections.SqlFieldList			Tables
+		public SqlFieldList						Tables
 		{
 			get
 			{
@@ -99,7 +106,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the conditions for the WHERE clause.
 		/// </summary>
 		/// <value>The conditions.</value>
-		public Collections.SqlFieldList			Conditions
+		public SqlFieldList						Conditions
 		{
 			get
 			{
@@ -111,7 +118,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the joins.
 		/// </summary>
 		/// <value>The joins.</value>
-		public Collections.SqlFieldList			Joins
+		public SqlFieldList						Joins
 		{
 			get
 			{
@@ -122,7 +129,7 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Gets the field that are part of the ORDER BY clause of the query.
 		/// </summary>
-		public Collections.SqlFieldList OrderBy
+		public SqlFieldList						OrderBy
 		{
 			get
 			{
@@ -154,6 +161,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		/// <summary>
 		/// Adds the specified set query.
 		/// </summary>
@@ -177,17 +185,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private readonly Collections.SqlFieldList	fields	= new Collections.SqlFieldList ();
-		private readonly Collections.SqlFieldList	tables	= new Collections.SqlFieldList ();
-		private readonly Collections.SqlFieldList	wheres	= new Collections.SqlFieldList ();
-		private readonly Collections.SqlFieldList	joins	= new Collections.SqlFieldList ();
-		private readonly Collections.SqlFieldList	orderBy = new Collections.SqlFieldList ();
+		
+		private readonly SqlFieldList			fields;
+		private readonly SqlFieldList			tables;
+		private readonly SqlFieldList			wheres;
+		private readonly SqlFieldList			joins;
+		private readonly SqlFieldList			orderBy;
 
-		private SqlSelectPredicate					predicate;
-		private SqlSelectSetOp						setOp;
-		private SqlSelect							setQuery;
+		private SqlSelectPredicate				predicate;
+		private SqlSelectSetOp					setOp;
+		private SqlSelect						setQuery;
 
-		private int?								skip;
-		private int?								take;
+		private int?							skip;
+		private int?							take;
 	}
 }
