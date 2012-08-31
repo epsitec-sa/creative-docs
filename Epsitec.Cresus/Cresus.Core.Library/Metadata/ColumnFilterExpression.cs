@@ -12,9 +12,14 @@ namespace Epsitec.Cresus.Core.Metadata
 {
 	public abstract class ColumnFilterExpression
 	{
-		public abstract bool IsValid();
+		public abstract bool IsValid
+		{
+			get;
+		}
+
 		public abstract Expression GetExpression(ParameterExpression parameter);
 
+		
 		public static Expression Comparison(ParameterExpression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
 			switch (code)
@@ -38,12 +43,24 @@ namespace Epsitec.Cresus.Core.Metadata
 					return Expression.LessThanOrEqual (parameter, expression);
 
 				case ColumnFilterComparisonCode.Like:
+					return Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression);
+
 				case ColumnFilterComparisonCode.NotLike:
-					
+					return Expression.Not (Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression));
 
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));
 			}
+		}
+
+		public static Expression IsNull(ParameterExpression parameter)
+		{
+			return Expression.Call (Epsitec.Cresus.Database.SqlMethods.IsNullMethodInfo, parameter);
+		}
+
+		public static Expression IsNotNull(ParameterExpression parameter)
+		{
+			return Expression.Call (Epsitec.Cresus.Database.SqlMethods.IsNotNullMethodInfo, parameter);
 		}
 	}
 }

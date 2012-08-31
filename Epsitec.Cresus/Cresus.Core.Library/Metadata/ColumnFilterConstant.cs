@@ -41,10 +41,28 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		
-		public bool IsValid()
+		public bool								IsNull
 		{
-			return this.type != ColumnFilterConstantType.Undefined && this.value != null;
+			get
+			{
+				return (this.type != ColumnFilterConstantType.Undefined) && this.value == null;
+			}
+		}
+		
+		public bool								IsDefined
+		{
+			get
+			{
+				return this.type != ColumnFilterConstantType.Undefined;
+			}
+		}
+
+		public bool								IsValid
+		{
+			get
+			{
+				return this.IsNull == false && this.IsDefined;
+			}
 		}
 
 		public Expression GetExpression()
@@ -83,12 +101,12 @@ namespace Epsitec.Cresus.Core.Metadata
 		#endregion
 
 
-		public static ColumnFilterConstant From(int value)
+		public static ColumnFilterConstant From(int? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.Integer, value);
 		}
 
-		public static ColumnFilterConstant From(decimal value)
+		public static ColumnFilterConstant From(decimal? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.Decimal, value);
 		}

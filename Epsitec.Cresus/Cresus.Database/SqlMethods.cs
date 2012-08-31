@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Reflection;
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -9,6 +11,39 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public static class SqlMethods
 	{
+		public static MethodInfo				LikeMethodInfo
+		{
+			get
+			{
+				return SqlMethods.likeMethodInfo;
+			}
+		}
+
+		public static MethodInfo				EscapedLikeMethodInfo
+		{
+			get
+			{
+				return SqlMethods.escapedLikeMethodInfo;
+			}
+		}
+
+		public static MethodInfo				IsNullMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isNullMethodInfo;
+			}
+		}
+
+		public static MethodInfo				IsNotNullMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isNotNullMethodInfo;
+			}
+		}
+
+
 		/// <summary>
 		/// Determines whether a specific value matches a specified pattern. This method
 		/// is currently only supported when generating SQL queries based on expression
@@ -39,5 +74,30 @@ namespace Epsitec.Cresus.Database
 		{
 			throw new System.NotSupportedException ();
 		}
+
+		public static bool IsNull(object value)
+		{
+			return value == null;
+		}
+
+		public static bool IsNotNull(object value)
+		{
+			return value != null;
+		}
+
+		
+		static SqlMethods()
+		{
+			SqlMethods.likeMethodInfo        = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string) });
+			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string), typeof (char) });
+			SqlMethods.isNullMethodInfo      = typeof (SqlMethods).GetMethod ("IsNull");
+			SqlMethods.isNotNullMethodInfo   = typeof (SqlMethods).GetMethod ("IsNotNull");
+		}
+
+
+		private static readonly MethodInfo		likeMethodInfo;
+		private static readonly MethodInfo		escapedLikeMethodInfo;
+		private static readonly MethodInfo		isNullMethodInfo;
+		private static readonly MethodInfo		isNotNullMethodInfo;
 	}
 }

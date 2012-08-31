@@ -10,9 +10,12 @@ namespace Epsitec.Cresus.Core.Metadata
 {
 	public class ColumnFilterSetExpression : ColumnFilterExpression
 	{
-		public override bool IsValid()
+		public override bool IsValid
 		{
-			throw new System.NotImplementedException ();
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
 		}
 
 		public override Expression GetExpression(ParameterExpression parameter)

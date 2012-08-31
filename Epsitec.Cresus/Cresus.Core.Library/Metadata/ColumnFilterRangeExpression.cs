@@ -86,7 +86,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-
 		/// <summary>
 		/// Determines whether the range is valid: both bounds must be valid and be
 		/// of the same type, and a valid comparison must be defined for both bounds.
@@ -94,19 +93,22 @@ namespace Epsitec.Cresus.Core.Metadata
 		/// <returns>
 		///   <c>true</c> if this range is valid; otherwise, <c>false</c>.
 		/// </returns>
-		public override bool IsValid()
+		public override bool					IsValid
 		{
-			if ((this.lowerBound.IsValid ()) &&
-				(this.upperBound.IsValid ()) &&
-				(this.upperBound.Type == this.lowerBound.Type) &&
-				(this.lowerBoundComparison != ColumnFilterComparisonCode.Undefined) &&
-				(this.upperBoundComparison != ColumnFilterComparisonCode.Undefined))
+			get
 			{
-				return true;
-			}
-			else
-			{
-				return false;
+				if ((this.lowerBound.IsValid) &&
+					(this.upperBound.IsValid) &&
+					(this.upperBound.Type == this.lowerBound.Type) &&
+					(this.lowerBoundComparison != ColumnFilterComparisonCode.Undefined) &&
+					(this.upperBoundComparison != ColumnFilterComparisonCode.Undefined))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
