@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override Expression GetExpression(ParameterExpression parameter)
+		public override Expression GetExpression(Expression parameter)
 		{
 			if (this.constant.IsNull)
 			{

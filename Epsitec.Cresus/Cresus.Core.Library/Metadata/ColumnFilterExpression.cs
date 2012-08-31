@@ -10,6 +10,10 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
+	/// <summary>
+	/// The <c>ColumnFilterExpression</c> class is the base class used to represent filters
+	/// applied to a column of a table.
+	/// </summary>
 	public abstract class ColumnFilterExpression
 	{
 		public abstract bool IsValid
@@ -17,10 +21,17 @@ namespace Epsitec.Cresus.Core.Metadata
 			get;
 		}
 
-		public abstract Expression GetExpression(ParameterExpression parameter);
+
+		/// <summary>
+		/// Gets the expression for this filter, applied to the specified parameter.
+		/// The expression is always represented by a predicate returning a boolean.
+		/// </summary>
+		/// <param name="parameter">The parameter (which may be the body of a lambda).</param>
+		/// <returns>The expression for this filter.</returns>
+		public abstract Expression GetExpression(Expression parameter);
 
 		
-		public static Expression Comparison(ParameterExpression parameter, ColumnFilterComparisonCode code, Expression expression)
+		public static Expression Comparison(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
 			switch (code)
 			{
@@ -53,12 +64,12 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public static Expression IsNull(ParameterExpression parameter)
+		public static Expression IsNull(Expression parameter)
 		{
 			return Expression.Call (Epsitec.Cresus.Database.SqlMethods.IsNullMethodInfo, parameter);
 		}
 
-		public static Expression IsNotNull(ParameterExpression parameter)
+		public static Expression IsNotNull(Expression parameter)
 		{
 			return Expression.Call (Epsitec.Cresus.Database.SqlMethods.IsNotNullMethodInfo, parameter);
 		}

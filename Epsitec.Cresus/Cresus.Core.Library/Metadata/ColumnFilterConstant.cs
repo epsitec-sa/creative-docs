@@ -65,6 +65,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		
 		public Expression GetExpression()
 		{
 			return Expression.Constant (this.value, this.SystemType);

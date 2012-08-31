@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override Expression GetExpression(ParameterExpression parameter)
+		public override Expression GetExpression(Expression parameter)
 		{
 			throw new System.NotImplementedException ();
 		}
