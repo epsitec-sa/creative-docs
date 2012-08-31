@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 		private Func<string, Tuple<bool, object>> GetValueConverter()
 		{
-			Type systemType = this.Type;
+			var systemType = this.Type;
 
 			if (systemType.IsNullable ())
 			{
@@ -70,8 +70,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 			var method = classType.GetMethod (methodName, bindingFlags);
 			var genericMethod = method.MakeGenericMethod (systemType);
+			var arguments = new object[0];
 
-			return (Func<string, Tuple<bool, object>>) genericMethod.Invoke (null, new object[0]);
+			return (Func<string, Tuple<bool, object>>) genericMethod.Invoke (null, arguments);
 		}
 
 
@@ -126,10 +127,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			else
 			{
 				var highLevelType = (AbstractType) this.Property.Type;
-				var conversionResult = this.valueConverter (value);
+				
+				var result = this.valueConverter (value);
+				var conversionSucess = result.Item1;
+				var convertedValue = result.Item2;
 
-				return conversionResult.Item1
-					&& highLevelType.IsValidValue (conversionResult.Item2);
+				return conversionSucess && highLevelType.IsValidValue (convertedValue);
 			}
 		}
 
