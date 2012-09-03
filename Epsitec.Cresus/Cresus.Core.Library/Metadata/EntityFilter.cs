@@ -32,15 +32,35 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public XElement Save(string xmlNodeName)
 		{
-			throw new System.NotImplementedException ();
+			var xml = new XElement (xmlNodeName,
+				new XElement (Strings.ColumnList,
+					this.columns.Select (x => x.Save (Strings.ColumnItem))));
+
+			return xml;
 		}
 
 		public static EntityFilter Restore(XElement xml)
 		{
-			throw new System.NotImplementedException ();
+			var list = xml.Element (Strings.ColumnList).Elements ();
+			var filter = new EntityFilter ();
+
+			filter.columns.AddRange (list.Select (x => ColumnRef.Restore<EntityColumnFilter> (x)));
+
+			return filter;
 		}
-		
-		
+
+
+		#region Strings Class
+
+		private static class Strings
+		{
+			public const string ColumnList = "C";
+			public const string ColumnItem = "c";
+		}
+
+		#endregion
+
+
 		private readonly List<ColumnRef<EntityColumnFilter>> columns;
 	}
 }

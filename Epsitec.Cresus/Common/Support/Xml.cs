@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support
 {
@@ -101,6 +102,17 @@ namespace Epsitec.Common.Support
 			}
 			
 			return bag;
+		}
+
+		public static FormattedText GetFormattedText(XAttribute attribute)
+		{
+			if ((attribute == null) &&
+				(attribute.Value == null))
+			{
+				return FormattedText.Empty;
+			}
+
+			return new FormattedText (attribute.Value);
 		}
 	}
 }

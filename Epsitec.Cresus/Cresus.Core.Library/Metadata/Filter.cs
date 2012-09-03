@@ -50,13 +50,43 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public XElement Save(string xmlNodeName)
 		{
-			throw new System.NotImplementedException ();
+			var xml = new XElement (xmlNodeName,
+				new XAttribute (Strings.CombineMode, InvariantConverter.ToString (EnumType.ConvertToInt (this.CombineMode))),
+				new XAttribute (Strings.Name, this.Name.ToString ()),
+				new XAttribute (Strings.Description, this.Description.ToString ()),
+				new XElement (Strings.FilterNodeList,
+					this.nodes.Select (x => x.Save (Strings.FilterNodeItem))));
+
+			return xml;
 		}
 
 		public static Filter Restore(XElement xml)
 		{
-			throw new System.NotImplementedException ();
+			var list   = xml.Element (Strings.FilterNodeList).Elements ();
+			var filter = new Filter ();
+
+			filter.CombineMode = xml.Attribute (Strings.CombineMode).ToEnum (FilterCombineMode.And);
+			filter.Name        = Xml.GetFormattedText (xml.Attribute (Strings.Name));
+			filter.Description = Xml.GetFormattedText (xml.Attribute (Strings.Description));
+
+			filter.Nodes.AddRange (list.Select (x => FilterNode.Restore (x)));
+
+			return filer;
 		}
+
+
+#region Strings Class
+
+		private static class Strings
+		{
+			public const string CombineMode = "c";
+			public const string Name = "n";
+			public const string Description = "d";
+			public const string FilterNodeList = "F";
+			public const string FilterNodeItem = "f";
+		}
+
+		#endregion
 
 		
 		private readonly List<FilterNode>		nodes;
