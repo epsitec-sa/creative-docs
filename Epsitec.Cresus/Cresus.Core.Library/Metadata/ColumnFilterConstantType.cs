@@ -16,5 +16,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		Time,
 		DateTime,
 		String,
+		Enumeration,
+		EntityKey,
 	}
 }

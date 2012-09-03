@@ -4,6 +4,8 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Metadata
@@ -25,11 +27,19 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public System.Type SystemType
+		public System.Type						SystemType
 		{
 			get
 			{
-				return ColumnFilterConstant.ToSystemType (this.type);
+				if ((this.value != null) &&
+					(this.type == ColumnFilterConstantType.Enumeration))
+				{
+					return this.value.GetType ();
+				}
+				else
+				{
+					return ColumnFilterConstant.ToSystemType (this.type);
+				}
 			}
 		}
 
@@ -70,12 +80,21 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			return Expression.Constant (this.value, this.SystemType);
 		}
-		
+
 		public override string ToString()
 		{
 			string text;
 			string code = ColumnFilterConstant.ToTypeCode (this.type);
-			InvariantConverter.Convert (this.value, out text);
+
+			if ((this.value != null) &&
+				(this.type == ColumnFilterConstantType.Enumeration))
+			{
+				text = EnumType.ToCompactString ((System.Enum)this.value);
+			}
+			else
+			{
+				text = InvariantConverter.ToString (this.value);
+			}
 
 			return string.Concat (code, text);
 		}
@@ -89,6 +108,10 @@ namespace Epsitec.Cresus.Core.Metadata
 				if (this.type == ColumnFilterConstantType.String)
 				{
 					return (string) other.value == (string) this.value;
+				}
+				else if (this.type == ColumnFilterConstantType.EntityKey)
+				{
+					return (EntityKey) other.value == (EntityKey) this.value;
 				}
 				else
 				{
@@ -117,7 +140,38 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new ColumnFilterConstant (ColumnFilterConstantType.String, value);
 		}
 
-		//	TODO: add other From methods, as needed
+		public static ColumnFilterConstant From(System.Enum value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.Enumeration, value);
+		}
+
+		public static ColumnFilterConstant From(EntityKey value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.EntityKey, value);
+		}
+
+		public static ColumnFilterConstant From(System.DateTime value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.DateTime, value);
+		}
+
+		public static ColumnFilterConstant From(Date value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.Date, value);
+		}
+
+		public static ColumnFilterConstant From(Time value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.Time, value);
+		}
+
+
+		
+		public static ColumnFilterConstant FromEnum<T>(T value)
+			where T : struct
+		{
+			return ColumnFilterConstant.From ((System.Enum) (object) value);
+		}
 
 		
 		public static ColumnFilterConstant Parse(string value)
@@ -150,6 +204,10 @@ namespace Epsitec.Cresus.Core.Metadata
 					return InvariantConverter.ConvertFromString<Time> (value);
 				case ColumnFilterConstantType.String:
 					return value;
+				case ColumnFilterConstantType.EntityKey:
+					return EntityKey.Parse (value);
+				case ColumnFilterConstantType.Enumeration:
+					return EnumType.FromCompactString (value);
 				case ColumnFilterConstantType.Undefined:
 					return null;
 				default:
@@ -173,6 +231,10 @@ namespace Epsitec.Cresus.Core.Metadata
 					return Strings.TimeType;
 				case ColumnFilterConstantType.String:
 					return Strings.StringType;
+				case ColumnFilterConstantType.Enumeration:
+					return Strings.EnumerationType;
+				case ColumnFilterConstantType.EntityKey:
+					return Strings.EntityKeyType;
 				case ColumnFilterConstantType.Undefined:
 					return Strings.UndefinedType;
 				default:
@@ -198,6 +260,10 @@ namespace Epsitec.Cresus.Core.Metadata
 					return typeof (string);
 				case ColumnFilterConstantType.Undefined:
 					return typeof (void);
+				case ColumnFilterConstantType.Enumeration:
+					return typeof (System.Enum);
+				case ColumnFilterConstantType.EntityKey:
+					return typeof (EntityKey);
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", type.GetQualifiedName ()));
 			}
@@ -219,6 +285,10 @@ namespace Epsitec.Cresus.Core.Metadata
 					return ColumnFilterConstantType.Time;
 				case Strings.StringType:
 					return ColumnFilterConstantType.String;
+				case Strings.EnumerationType:
+					return ColumnFilterConstantType.Enumeration;
+				case Strings.EntityKeyType:
+					return ColumnFilterConstantType.EntityKey;
 				case Strings.UndefinedType:
 					return ColumnFilterConstantType.Undefined;
 				default:
@@ -229,17 +299,19 @@ namespace Epsitec.Cresus.Core.Metadata
 		
 		private static class Strings
 		{
-			public const string IntegerType = "I";
-			public const string DecimalType = "N";
-			public const string DateTimeType = "D";
-			public const string DateType = "d";
-			public const string TimeType = "t";
-			public const string StringType = "S";
-			public const string UndefinedType = "U";
+			public const string UndefinedType   = "U";
+			public const string IntegerType     = "I";
+			public const string DecimalType     = "N";
+			public const string DateTimeType    = "D";
+			public const string DateType        = "d";
+			public const string TimeType        = "t";
+			public const string StringType      = "S";
+			public const string EnumerationType = "e";
+			public const string EntityKeyType   = "k";
 		}
 
 
 		private readonly ColumnFilterConstantType type;
-		private readonly object value;
+		private readonly object					  value;
 	}
 }
