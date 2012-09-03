@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			filter.Nodes.AddRange (list.Select (x => FilterNode.Restore (x)));
 
-			return filer;
+			return filter;
 		}
 
 
