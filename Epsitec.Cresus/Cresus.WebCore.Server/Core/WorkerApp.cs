@@ -54,11 +54,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public T Execute<T>(Func<BusinessContext, T> action)
+		public T Execute<T>(string username, Func<BusinessContext, T> action)
 		{
-			using (var businessContext = new BusinessContext (this.coreData))
+			try
 			{
-				return action (businessContext);
+				var user = this.userManager.FindUser (username);
+				this.userManager.SetAuthenticatedUser (user.Code);
+
+				using (var businessContext = new BusinessContext (this.coreData))
+				{
+					return action (businessContext);
+				}
+			}
+			finally
+			{
+				this.userManager.SetAuthenticatedUser (null);
 			}
 		}
 

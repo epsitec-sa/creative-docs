@@ -63,11 +63,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// See remarks in the other Execute overload.
 		/// </remarks>
 		/// <typeparam name="T">The return type of the function.</typeparam>
+		/// <param name="username">The username for which to execute the function.</param>
 		/// <param name="function">The function to execute.</param>
 		/// <returns>The result of the execution of the function.</returns>
-		public T Execute<T>(Func<BusinessContext, T> function)
+		public T Execute<T>(string username, Func<BusinessContext, T> function)
 		{
-			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (function));
+			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, function));
 		}
 
 

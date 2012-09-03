@@ -30,12 +30,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		public Response Login()
 		{
-			bool loggedIn = this.CheckCredentials (this.Request.Form);
+			string username = this.Request.Form.username;
+			string password = this.Request.Form.password;
+
+			bool loggedIn = this.CheckCredentials (username, password);
 
 			this.Session[LoginModule.LoggedInName] = loggedIn;
 
 			if (loggedIn)
 			{
+				this.Session[LoginModule.UserName] = username;
+
 				return CoreResponse.FormSuccess ();
 			}
 			else
@@ -53,6 +58,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		public Response Logout()
 		{
+			this.Session.Delete (LoginModule.UserName);
 			this.Session[LoginModule.LoggedInName] = false;
 
 			var content = new Dictionary<string, object> ()
@@ -64,11 +70,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private bool CheckCredentials(dynamic form)
+		private bool CheckCredentials(string username, string password)
 		{
-			string username = form.username;
-			string password = form.password;
-
 			return this.CoreServer.AuthenticationManager.CheckCredentials (username, password);
 		}
 
@@ -99,7 +102,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		public static string GetUserName(NancyModule module)
+		{
+			return (string) module.Session[LoginModule.UserName];
+		}
+
+
 		public static readonly string LoggedInName = "LoggedIn";
+
+
+		public static readonly string UserName = "UserName";
 
 
 	}
