@@ -32,13 +32,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var fieldDictionary = base.ToDictionary ();
+			var brick = base.ToDictionary ();
 			
-			fieldDictionary["fieldLabel"] = this.Title;
-			fieldDictionary["name"] = this.PropertyAccessorId;
-			fieldDictionary["readOnly"] = this.IsReadOnly;
+			brick["title"] = this.Title;
+			brick["name"] = this.PropertyAccessorId;
+			brick["readOnly"] = this.IsReadOnly;
 
-			return fieldDictionary;
+			return brick;
 		}
 
 

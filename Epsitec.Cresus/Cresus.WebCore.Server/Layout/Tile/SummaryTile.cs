@@ -67,26 +67,22 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var panel = new Dictionary<string, object> ();
+			var tile = new Dictionary<string, object> ();
 
-			panel["xtype"] = "epsitec.summarytile";
+			tile["type"] = "summary";
 
-			if (this.IconClass != null)
-			{
-				panel["iconCls"] = this.IconClass;
-			}
+			tile["title"] = this.Title;
+			tile["icon"] = this.IconClass;
+			tile["text"] = this.Text;
 
-			panel["title"] = this.Title;
-			panel["html"] = this.Text;
+			tile["isRoot"] = this.IsRoot;
+			tile["entityId"] = this.EntityId;
+			tile["subViewMode"] = this.SubViewMode;
+			tile["subViewId"] = this.SubViewId;
 
-			panel["isRoot"] = this.IsRoot;
-			panel["entityId"] = this.EntityId;
-			panel["subViewMode"] = this.SubViewMode;
-			panel["subViewId"] = this.SubViewId;
+			tile["autoCreatorId"] = this.AutoCreatorId;
 
-			panel["autoCreatorId"] = this.AutoCreatorId;
-
-			return panel;
+			return tile;
 		}
 
 

@@ -44,11 +44,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		}
 
 
-		public IList<AbstractEditionTilePartData> Items
+		public IList<AbstractEditionTilePartData> Bricks
 		{
 			get
 			{
-				return this.items;
+				return this.bricks;
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 		public IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			if (this.Items.Count > 0)
+			if (this.Bricks.Count > 0)
 			{
 				yield return this.ToTile (layoutBuilder, entity);
 			}
@@ -94,18 +94,18 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				EntityId = layoutBuilder.GetEntityId (entity),
 				IconClass = layoutBuilder.GetIconClass (this.EntityType, this.Icon),
 				Title = this.TitleGetter (entity).ToString (),
-				Items = this.GetEditionTileParts (layoutBuilder, entity).ToList ()
+				Bricks = this.GetEditionTileParts (layoutBuilder, entity).ToList ()
 			};
 		}
 
 
 		private IEnumerable<AbstractEditionTilePart> GetEditionTileParts(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			return this.Items.Select (i => i.ToAbstractEditionTilePart (layoutBuilder, entity));
+			return this.Bricks.Select (i => i.ToAbstractEditionTilePart (layoutBuilder, entity));
 		}
 
 
-		private readonly IList<AbstractEditionTilePartData> items = new List<AbstractEditionTilePartData> ();
+		private readonly IList<AbstractEditionTilePartData> bricks = new List<AbstractEditionTilePartData> ();
 
 
 		private readonly IList<IncludeData> includes = new List<IncludeData> ();

@@ -11,13 +11,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var item = new Dictionary<string, object> ();
+			var brick = new Dictionary<string, object> ();
 
-			item["xtype"] = "box";
-			item["margin"] = "10 0";
-			item["autoEl"] = new Dictionary<string, object> () { { "tag", "hr" } };
+			brick["type"] = "separator";
 
-			return item;
+			return brick;
 		}
 
 

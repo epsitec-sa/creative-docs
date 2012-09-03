@@ -25,27 +25,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
-		public override IEnumerable<Dictionary<string, object>> ToDictionaries()
+		public override Dictionary<string, object> ToDictionary()
 		{
-			var item = new Dictionary<string, object> ();
+			var brick = new Dictionary<string, object> ();
 
-			item["xtype"] = "fieldset";
-			item["layout"] = "column";
-			item["title"] = this.Title;
+			brick["type"] = "horizontalGroup";
+			brick["title"] = this.Title;
+			brick["bricks"] = this.Fields.Select (f => f.ToDictionary ()).ToList ();
 
-			var fieldItems = this.Fields.Select (f => f.ToDictionary ()).ToList ();
-			var fieldWidth = 1.0 / fieldItems.Count;
-				
-			foreach (var fieldItem in fieldItems)
-			{
-				fieldItem["columnWidth"] = fieldWidth;
-				fieldItem["margin"] = "0 5 0 0";
-				fieldItem.Remove ("fieldLabel");
-			}
-
-			item["items"] = fieldItems;
-
-			yield return item;
+			return brick;
 		}
 
 

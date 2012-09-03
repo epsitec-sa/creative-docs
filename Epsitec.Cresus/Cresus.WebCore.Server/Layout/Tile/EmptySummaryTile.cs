@@ -25,13 +25,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var panel = new Dictionary<string, object> ();
+			var tile = new Dictionary<string, object> ();
 
-			panel["xtype"] = "epsitec.emptysummarytile";
-			panel["propertyAccessorId"] = this.PropertyAccessorId;
-			panel["entityType"] = this.EntityType;
+			tile["type"] = "emptySummary";
 
-			return panel;
+			tile["propertyAccessorId"] = this.PropertyAccessorId;
+			tile["entityType"] = this.EntityType;
+
+			return tile;
 		}
 
 	}

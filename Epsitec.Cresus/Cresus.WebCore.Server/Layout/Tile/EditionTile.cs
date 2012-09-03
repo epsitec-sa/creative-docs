@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
-		public IList<AbstractEditionTilePart> Items
+		public IList<AbstractEditionTilePart> Bricks
 		{
 			get;
 			set;
@@ -41,20 +41,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var panel = new Dictionary<string, object> ();
+			var tile = new Dictionary<string, object> ();
 
-			panel["xtype"] = "epsitec.editiontile";
-			panel["entityId"] = this.EntityId;
+			tile["type"] = "edition";
 
-			if (this.IconClass != null)
-			{
-				panel["iconCls"] = this.IconClass;
-			}
+			tile["title"] = this.Title;
+			tile["icon"] = this.IconClass;
+			tile["bricks"] = this.Bricks.SelectMany (i => i.ToDictionaries ()).ToList ();
 
-			panel["title"] = this.Title;
-			panel["items"] = this.Items.SelectMany (i => i.ToDictionaries ()).ToList ();
+			tile["entityId"] = this.EntityId;
 
-			return panel;
+			return tile;
 		}
 
 

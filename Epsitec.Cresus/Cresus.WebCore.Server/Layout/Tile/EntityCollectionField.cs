@@ -27,13 +27,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var fieldDictionary = base.ToDictionary ();
+			var brick = base.ToDictionary ();
 
-			fieldDictionary["xtype"] = "epsitec.entitycollectionfield";
-			fieldDictionary["values"] = this.Values.Select (v => v.ToDictionary ()).ToList ();
-			fieldDictionary["entityName"] = this.TypeName;
+			brick["type"] = "entityCollectionField";
+			brick["values"] = this.Values.Select (v => v.ToDictionary ()).ToList ();
+			brick["entityName"] = this.TypeName;
 
-			return fieldDictionary;
+			return brick;
 		}
 
 

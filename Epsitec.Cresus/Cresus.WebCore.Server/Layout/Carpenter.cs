@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			editionTileData.EntityType = brick.GetFieldType ();
 			editionTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 
-			editionTileData.Items.AddRange (Carpenter.BuildEditionData (brick, propertyAccessorCache));
+			editionTileData.Bricks.AddRange (Carpenter.BuildEditionData (brick, propertyAccessorCache));
 			editionTileData.Includes.AddRange (Carpenter.BuildIncludeData (brick));
 
 			return editionTileData;

@@ -18,13 +18,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var fieldDictionary = base.ToDictionary ();
+			var brick = base.ToDictionary ();
 
-			fieldDictionary["xtype"] = "numberfield";
-			fieldDictionary["allowDecimals"] = false;
-			fieldDictionary["value"] = this.Value;
+			brick["type"] = "integerField";
+			brick["value"] = this.Value;
 
-			return fieldDictionary;
+			return brick;
 		}
 
 

@@ -41,14 +41,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public Dictionary<string, object> ToDictionary()
 		{
-			var panel = new Dictionary<string, object> ();
+			var entityColumn = new Dictionary<string, object> ();
 
-			panel["entityId"] = this.EntityId;
-			panel["viewMode"] = this.ViewMode;
-			panel["viewId"] = this.ViewId;
-			panel["items"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();
+			entityColumn["entityId"] = this.EntityId;
+			entityColumn["viewMode"] = this.ViewMode;
+			entityColumn["viewId"] = this.ViewId;
+			entityColumn["tiles"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();
 
-			return panel;
+			return entityColumn;
 		}
 
 

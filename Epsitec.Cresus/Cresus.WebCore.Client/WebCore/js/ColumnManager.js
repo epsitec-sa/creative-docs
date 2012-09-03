@@ -184,13 +184,12 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
   },
 
   createColumn: function(config, columnId) {
-    var newConfig = {
-      columnId: columnId,
-      columnManager: this
-    };
-    Ext.applyIf(newConfig, config);
+    var parsedConfig = Epsitec.BrickWallParser.parseEntityColumn(config);
 
-    return Ext.create('Epsitec.EntityColumn', newConfig);
+    parsedConfig.columnId = columnId;
+    parsedConfig.columnManager = this;
+
+    return Ext.create('Epsitec.EntityColumn', parsedConfig);
   },
 
   addExistingColumn: function(column) {

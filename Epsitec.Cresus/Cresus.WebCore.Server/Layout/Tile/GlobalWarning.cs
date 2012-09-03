@@ -11,13 +11,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var item = base.ToDictionary ();
+			var brick = base.ToDictionary ();
 
-			item["xtype"] = "displayfield";
-			item["value"] = "<i><b>ATTENTION:</b> Les modifications effectuées ici seront répercutées dans tous les enregistrements.</i>";
-			item["cls"] = "global-warning";
+			brick["type"] = "globalWarning";
 
-			return item;
+			return brick;
 		}
 
 

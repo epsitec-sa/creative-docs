@@ -12,6 +12,7 @@ Ext.application({
 
   requires: [
     'Epsitec.cresus.webcore.BooleanNullableColumn',
+    'Epsitec.cresus.webcore.BrickWallParser',
     'Epsitec.cresus.webcore.Callback',
     'Epsitec.cresus.webcore.CallbackQueue',
     'Epsitec.cresus.webcore.CollectionSummaryTile',

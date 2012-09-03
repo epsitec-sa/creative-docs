@@ -18,14 +18,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var fieldDictionary = base.ToDictionary ();
+			var brick = base.ToDictionary ();
 
-			fieldDictionary["xtype"] = "checkboxfield";
-			fieldDictionary["checked"] = this.Value ?? false;
-			fieldDictionary["inputValue"] = true;
-			fieldDictionary["uncheckedValue"] = false;
+			brick["type"] = "booleanField";
+			brick["value"] = this.Value;
 
-			return fieldDictionary;
+			return brick;
 		}
 
 		

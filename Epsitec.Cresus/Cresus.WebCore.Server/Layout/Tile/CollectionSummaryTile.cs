@@ -39,16 +39,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var panel = base.ToDictionary ();
+			var tile = base.ToDictionary ();
 
-			panel["xtype"] = "epsitec.collectionsummarytile";
+			tile["type"] = "collectionSummary";
 
-			panel["hideRemoveButton"] = this.HideRemoveButton;
-			panel["hideAddButton"] = this.HideAddButton;
-			panel["propertyAccessorId"] = this.PropertyAccessorId;
-			panel["entityType"] = this.EntityType;
+			tile["hideRemoveButton"] = this.HideRemoveButton;
+			tile["hideAddButton"] = this.HideAddButton;
+			tile["propertyAccessorId"] = this.PropertyAccessorId;
+			tile["entityType"] = this.EntityType;
 
-			return panel;
+			return tile;
 		}
 
 
