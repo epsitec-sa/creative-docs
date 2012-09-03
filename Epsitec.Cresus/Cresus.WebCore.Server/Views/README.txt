@@ -1,2 +1,0 @@
-﻿When creating a page in the Views folder, don't forget to set the file property that allows to copy the file to the bin folder when compiling.
-Otherwise the file won't be available when reunning the server
