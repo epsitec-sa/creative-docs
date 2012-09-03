@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -26,10 +26,8 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="dataRow">The data row.</param>
 		public DbKey(System.Data.DataRow dataRow)
+			: this (DbKey.GetValueId (dataRow[Tags.ColumnId]))
 		{
-			this.id = 0;
-			
-			this.DefineId (dataRow[Tags.ColumnId]);
 		}
 
 		/// <summary>
@@ -37,10 +35,8 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="dataRow">The data row.</param>
 		public DbKey(object[] dataRow)
+			: this (DbKey.GetValueId (dataRow[0]))
 		{
-			this.id = 0;
-
-			this.DefineId (dataRow[0]);
 		}
 
 
@@ -67,6 +63,7 @@ namespace Epsitec.Cresus.Database
 				return this.id.IsEmpty;
 			}
 		}
+
 
 		/// <summary>
 		/// Sets the row key id and status.
@@ -240,38 +237,31 @@ namespace Epsitec.Cresus.Database
 			row[Tags.ColumnId] = id.Value;
 		}
 
+		
 		/// <summary>
-		/// Defines the id of the key based on object values.
+		/// Returns the id of the key based on object values.
 		/// </summary>
 		/// <param name="valueId">The id value (<c>long</c>).</param>
-		private void DefineId(object valueId)
+		/// <returns>The id of the key.</returns>
+		private static long GetValueId(object valueId)
 		{
 			long id;
 
 			if ((InvariantConverter.Convert (valueId, out id)) &&
 				(id >= 0))
 			{
-				this.id     = id;
+				return id;
 			}
 			else
 			{
 				throw new System.ArgumentException ("Invalid key specification");
 			}
 		}
+
 		
-		public const DbRawType					RawTypeForId		= DbRawType.Int64;
+		public const DbRawType					RawTypeForId = DbRawType.Int64;
+		public static readonly DbKey			Empty        = new DbKey (DbId.Empty);
 
-		private DbId							id;
-
-		public static DbKey Empty
-		{
-			get
-			{
-				return DbKey.empty;
-			}
-		}
-
-		private static readonly DbKey empty = new DbKey (0);
-
+		private readonly DbId					id;
 	}
 }

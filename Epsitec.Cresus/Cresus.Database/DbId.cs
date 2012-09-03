@@ -1,19 +1,16 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
-
 	/// <summary>
 	/// The <c>DbId</c> structure encapsulates an identifier used by the database
 	/// to access its data (this is the lowest-level encoding of an access key).
 	/// Compare with <see cref="DbKey"/> which includes more information.
 	/// </summary>
-
 	[System.Serializable]
 	public struct DbId : System.IComparable, System.IComparable<DbId>, System.IEquatable<DbId>
 	{
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbId"/> class.
 		/// </summary>
@@ -28,11 +25,12 @@ namespace Epsitec.Cresus.Database
 			this.value = id;
 		}
 
+		
 		/// <summary>
 		/// Gets the <c>DbId</c> as a 64-bit numeric value.
 		/// </summary>
 		/// <value>The numeric value.</value>
-		public long Value
+		public long								Value
 		{
 			get
 			{
@@ -40,7 +38,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public bool IsEmpty
+		/// <summary>
+		/// Gets a value indicating whether this ID is empty. An empty ID is equivalent
+		/// to a NULL reference and uses zero as value, since the database layer ensures
+		/// that primary keys are never zero.
+		/// </summary>
+		/// <value>
+		///   <c>true</c> if this ID is empty; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -48,6 +54,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		/// <summary>
 		/// Implicitly convert from <c>DbId</c> to <c>long</c>.
 		/// </summary>
@@ -92,12 +99,26 @@ namespace Epsitec.Cresus.Database
 
 		public override string ToString()
 		{
-			return this.value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			if (this.IsEmpty)
+			{
+				return "";
+			}
+			else
+			{
+				return this.value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
 		}
 
 		public static DbId Parse(string value)
 		{
-			return new DbId (long.Parse (value, System.Globalization.CultureInfo.InvariantCulture));
+			if (string.IsNullOrEmpty (value))
+			{
+				return DbId.Empty;
+			}
+			else
+			{
+				return new DbId (long.Parse (value, System.Globalization.CultureInfo.InvariantCulture));
+			}
 		}
 
 		#region IComparable Members
@@ -144,18 +165,8 @@ namespace Epsitec.Cresus.Database
 
 		#endregion
 
-		private readonly long value;
+		public static readonly DbId				Empty = new DbId (0);
 
-		public static DbId Empty
-		{
-			get
-			{
-				return DbId.empty;
-			}
-		}
-
-		private static readonly DbId empty = new DbId (0);
-
+		private readonly long					value;
 	}
-
 }

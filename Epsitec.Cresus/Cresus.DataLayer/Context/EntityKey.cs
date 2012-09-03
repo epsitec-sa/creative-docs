@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.rowKey = rowKey;
 		}
 		
+
 		/// <summary>
 		/// Gets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
 		/// </summary>
@@ -147,7 +148,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </returns>
 		public override string ToString()
 		{
-			return string.Concat (this.entityId.ToString (), "/", this.rowKey.Id.ToString ());
+			return string.Concat (this.entityId.ToCompactString (), "/", this.rowKey.Id.ToString ());
 		}
 
 
@@ -161,6 +162,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (string.IsNullOrEmpty (value))
 			{
 				return null;
+			}
+			if (value == "/")
+			{
+				return EntityKey.Empty;
 			}
 
 			int separator = value.IndexOf ("]/");

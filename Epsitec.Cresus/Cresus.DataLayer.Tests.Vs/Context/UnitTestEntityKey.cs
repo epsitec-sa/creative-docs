@@ -18,8 +18,8 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 {
-    
-    
+	
+	
 	[TestClass]
 	public sealed class UnitTestEntityKey
 	{
@@ -277,8 +277,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			Assert.IsNull (EntityKey.Parse (null));
 			Assert.IsNull (EntityKey.Parse (""));
+			Assert.IsTrue (EntityKey.Parse ("/").Value.IsEmpty);
 			Assert.AreEqual (new EntityKey (Druid.Parse ("[J1AB1]"), new DbKey (new DbId (2))), EntityKey.Parse ("[J1AB1]/2"));
 			Assert.AreEqual (new EntityKey (Druid.Parse ("[J1AN1]"), new DbKey (new DbId (43))), EntityKey.Parse ("[J1AN1]/43"));
+			Assert.AreEqual (new EntityKey (Druid.Parse ("[J1AN1]"), new DbKey (DbId.Empty)), EntityKey.Parse ("[J1AN1]/"));
+			Assert.AreEqual (new EntityKey (Druid.Parse ("[J1AN1]"), DbKey.Empty), EntityKey.Parse ("[J1AN1]/"));
+			Assert.AreEqual (new EntityKey (Druid.Empty, DbKey.Empty), EntityKey.Parse ("/"));
+			Assert.AreEqual (EntityKey.Empty.ToString (), "/");
 		}
 
 
@@ -303,14 +308,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				int number2 = 0;
 				
 				while (number1 == 0)
-                {
-                	number1 = this.dice.Next ();
-                }
+				{
+					number1 = this.dice.Next ();
+				}
 
 				while (number2 == 0)
-                {
-                	number2 = this.dice.Next ();
-                }
+				{
+					number2 = this.dice.Next ();
+				}
 				
 				DbKey dbKey = new DbKey (new DbId (number1));
 				Druid druid = Druid.FromLong (number2);
