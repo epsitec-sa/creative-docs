@@ -18,9 +18,13 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
 
   /* Constructor */
 
-  constructor: function(options)  {
-    this.addRefreshButton(options);
-    this.callParent(arguments);
+  constructor: function(options) {
+    var newOptions = {
+      tools: this.createSummaryTools(options)
+    };
+    Ext.applyIf(newOptions, options);
+
+    this.callParent([newOptions]);
     return this;
   },
 
@@ -43,16 +47,19 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
 
   /* Additional methods */
 
-  addRefreshButton: function(options)  {
+  createSummaryTools: function(options)  {
+    var tools = Ext.Array.clone(options.tools || []);
+
     if (options.isRoot) {
-      options.tools = options.tools || [];
-      options.tools.push({
+      tools.push({
         type: 'refresh',
         tooltip: 'Refresh entity',
         handler: function() { this.column.refresh(); },
         scope: this
       });
     }
+
+    return tools;
   },
 
   addEntityColumn: function(entityId, refresh) {

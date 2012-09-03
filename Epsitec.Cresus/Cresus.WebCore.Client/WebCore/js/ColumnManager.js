@@ -173,11 +173,7 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
   addNewColumn: function(config) {
     var column, dom;
 
-    config.columnId = this.columns.length;
-    config.columnManager = this;
-
-    column = Ext.create('Epsitec.EntityColumn', config);
-
+    column = this.createColumn(config, this.columns.length);
     this.addExistingColumn(column);
 
     // Scroll all the way to the right, in case there are more columns than the
@@ -185,6 +181,16 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
     dom = this.rightPanel.getEl().child('.x-panel-body').dom;
     dom.scrollLeft = 1000000;
     dom.scrollTop = 0;
+  },
+
+  createColumn: function(config, columnId) {
+    var newConfig = {
+      columnId: columnId,
+      columnManager: this
+    };
+    Ext.applyIf(newConfig, config);
+
+    return Ext.create('Epsitec.EntityColumn', newConfig);
   },
 
   addExistingColumn: function(column) {
@@ -211,7 +217,8 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
     // rebuilt.
 
     // Used in the for loops to iterate.
-    var i, dom, scrollLeft, scrollTop, savedColumns, columnStates, config;
+    var i, dom, scrollLeft, scrollTop, savedColumns, columnStates, config,
+        column;
 
     // Remember the scroll position.
     dom = this.rightPanel.getEl().child('.x-panel-body').dom;
@@ -237,9 +244,8 @@ Ext.define('Epsitec.cresus.webcore.ColumnManager', {
     // Replace the columns with their new version.
     for (i = firstColumnId; i <= lastColumnId; i += 1) {
       config = configs[i - firstColumnId];
-      config.columnId = i;
-      config.columnManager = this;
-      this.addExistingColumn(Ext.create('Epsitec.EntityColumn', config));
+      column = this.createColumn(config, i);
+      this.addExistingColumn(column);
     }
 
     // Add the column that we removed before so that they are displayed again.

@@ -9,12 +9,13 @@ Ext.define('Epsitec.cresus.webcore.EmptySummaryTile', {
 
   /* Constructor */
 
-  constructor: function(o) {
-    var options = o || {};
+  constructor: function(options) {
+    var newOptions = {
+      hideRemoveButton: true
+    };
+    Ext.applyIf(newOptions, options);
 
-    options.hideRemoveButton = true;
-
-    this.callParent([options]);
+    this.callParent([newOptions]);
     return this;
   },
 

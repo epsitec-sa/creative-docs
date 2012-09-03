@@ -12,21 +12,23 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
 
   /* Constructor */
 
-  constructor: function(o) {
-    var options = o || {};
-    this.addPlusMinusButtons(options);
+  constructor: function(options) {
+    var newOptions = {
+      tools: this.createCollectionTools(options)
+    };
+    Ext.applyIf(newOptions, options);
 
-    this.callParent([options]);
+    this.callParent([newOptions]);
     return this;
   },
 
   /* Additional methods */
 
-  addPlusMinusButtons: function(options) {
-    options.tools = options.tools || [];
+  createCollectionTools: function(options) {
+    var tools = Ext.Array.clone(options.tools || []);
 
     if (!options.hideAddButton) {
-      options.tools.push({
+      tools.push({
         type: 'plus',
         tooltip: 'Add a new item',
         handler: this.addEntityHandler,
@@ -35,13 +37,15 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     }
 
     if (!options.hideRemoveButton) {
-      options.tools.push({
+      tools.push({
         type: 'minus',
         tooltip: 'Remove this item',
         handler: this.deleteEntityHandler,
         scope: this
       });
     }
+
+    return tools;
   },
 
   addEntityHandler: function() {

@@ -28,11 +28,14 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
   /* Constructor */
 
   constructor: function(options) {
-    options.url = 'proxy/log/in';
-    options.items = this.getItems();
-    options.buttons = this.getButtons();
+    var newOptions = {
+      url: 'proxy/log/in',
+      items: this.getItems(),
+      buttons: this.getButtons()
+    };
+    Ext.applyIf(newOptions, options);
 
-    this.callParent(arguments);
+    this.callParent([newOptions]);
     return this;
   },
 

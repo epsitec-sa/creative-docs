@@ -20,14 +20,17 @@ Ext.define('Epsitec.cresus.webcore.EntityColumn', {
   /* Constructor */
 
   constructor: function(options) {
-    Ext.Array.forEach(options.items,
+    var newOptions = Ext.clone(options);
+
+    Ext.Array.forEach(newOptions.items,
         function(tile) {
           tile.column = this;
         },
         this
     );
 
-    this.callParent(arguments);
+    this.callParent([newOptions]);
+    return this;
   },
 
   /* Additional methods */

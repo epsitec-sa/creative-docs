@@ -271,7 +271,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
   },
 
   createButtons: function(options) {
-    var buttons = options.toolbarButtons || [];
+    var buttons = Ext.Array.clone(options.toolbarButtons || []);
 
     buttons.push(Ext.create('Ext.Button', {
       text: 'Sort',

@@ -20,9 +20,13 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
   /* Constructor */
 
   constructor: function(options) {
-    options.url = 'proxy/entity/edit/' + options.entityId;
-    this.buttons = this.getButtons();
-    this.callParent(arguments);
+    var newOptions = {
+      url: 'proxy/entity/edit/' + options.entityId,
+      buttons: this.getButtons()
+    };
+    Ext.applyIf(newOptions, options);
+
+    this.callParent([newOptions]);
     return this;
   },
 
