@@ -10,6 +10,7 @@ namespace Epsitec.Common.Types
 	using IComparer    = System.Collections.IComparer;
 	using FieldInfo    = System.Reflection.FieldInfo;
 	using BindingFlags = System.Reflection.BindingFlags;
+	using Epsitec.Common.Support;
 	
 	/// <summary>
 	/// La classe EnumType décrit des valeurs de type System.Enum.
@@ -505,6 +506,67 @@ namespace Epsitec.Common.Types
 			}
 			
 			throw new System.InvalidOperationException (string.Format ("Value {0:X} cannot be mapped to int", number));
+		}
+
+
+		public static string ToCompactString(System.Enum value)
+		{
+			var typeEnum = TypeEnumerator.Instance;
+			var sysType  = value.GetType ();
+			var objType  = TypeRosetta.GetTypeObject (sysType);
+
+			string prefix;
+
+			if (objType == null)
+			{
+				prefix = typeEnum.ShrinkTypeName (sysType.FullName);
+			}
+			else
+			{
+				prefix = objType.CaptionId.ToCompactString ();
+			}
+			
+			return string.Concat (prefix, "/", InvariantConverter.ToString (EnumType.ConvertToInt (value)));
+		}
+
+		public static System.Enum FromCompactString(string value)
+		{
+			int pos = value.IndexOf ('/');
+
+			if (pos < 1)
+			{
+				throw new System.FormatException ("Invalid compact enum format");
+			}
+
+			string prefix   = value.Substring (0, pos);
+			string suffix   = value.Substring (pos+1);
+
+			if (prefix[0] == '[')
+			{
+				int intValue = InvariantConverter.ToInt (suffix);
+				var typeId   = Druid.Parse (prefix);
+				var enumType = TypeRosetta.GetTypeObject (typeId) as EnumType;
+
+				if (enumType != null)
+				{
+					return enumType.ConvertToEnum (intValue);
+				}
+			}
+			else
+			{
+				var typeEnum = TypeEnumerator.Instance;
+				var typeName = typeEnum.UnshrinkTypeName (prefix);
+				var sysType = typeEnum.FindType (typeName);
+				
+				System.Enum enumValue;
+
+				if (InvariantConverter.TryParseEnum (sysType, suffix, out enumValue))
+				{
+					return enumValue;
+				}
+			}
+
+			throw new System.FormatException ("Invalid compact enum format");
 		}
 
 

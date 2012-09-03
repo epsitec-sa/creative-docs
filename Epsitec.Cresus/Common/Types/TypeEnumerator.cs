@@ -163,6 +163,10 @@ namespace Epsitec.Common.Types
 			{
 				return "@" + shortName;
 			}
+			else if (shortName.Length == 0)
+			{
+				return name;
+			}
 			else
 			{
 				return string.Concat ("@", shortName, name.Substring (length));

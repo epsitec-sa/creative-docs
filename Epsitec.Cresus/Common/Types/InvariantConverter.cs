@@ -615,11 +615,8 @@ namespace Epsitec.Common.Types
 				name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
 			}
 
-			object item;
-			
-			if (InvariantConverter.TryParseEnum (type, name, out item))
+			if (InvariantConverter.TryParseEnum (type, name, out value))
 			{
-				value = (System.Enum) item;
 				return true;
 			}
 			
@@ -914,11 +911,11 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				object value;
+				System.Enum value;
 				
 				if (InvariantConverter.TryParseEnum (typeof (TEnum), text, out value))
 				{
-					return (TEnum) value;
+					return (TEnum) (object) value;
 				}
 
 				return defaultValue;
@@ -944,7 +941,7 @@ namespace Epsitec.Common.Types
 			for (int i = 0; i < values.Length; i++)
 			{
 				string name = values[i];
-				object item;
+				System.Enum item;
 
 				if ((InvariantConverter.TryParseEnum (type, name, out item) == false) ||
 					(System.Enum.IsDefined (type, item) == false))
@@ -969,7 +966,7 @@ namespace Epsitec.Common.Types
 		/// <returns>
 		/// <c>true</c> if the value was converted successfully; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool TryParseEnum(System.Type type, string input, out object value)
+		public static bool TryParseEnum(System.Type type, string input, out System.Enum value)
 		{
 			if (type == null)
 			{
@@ -1033,7 +1030,7 @@ namespace Epsitec.Common.Types
 					continue;
 				}
 
-				object tokenValue;
+				System.Enum tokenValue;
 				
 				if (!InvariantConverter.EnumTokenToObject (type, underlyingType, names, values, token, out tokenValue))
 				{
@@ -1070,7 +1067,7 @@ namespace Epsitec.Common.Types
 		}
 
 
-		private static bool EnumTokenToObject(System.Type type, System.Type underlyingType, string[] names, System.Array values, string input, out object value)
+		private static bool EnumTokenToObject(System.Type type, System.Type underlyingType, string[] names, System.Array values, string input, out System.Enum value)
 		{
 			for (int i = 0; i < names.Length; i++)
 			{
@@ -1089,7 +1086,7 @@ namespace Epsitec.Common.Types
 					value = InvariantConverter.CreateDefaultEnumValue (type);
 					return false;
 				}
-				value = obj;
+				value = (System.Enum) obj;
 				return true;
 			}
 
@@ -1174,7 +1171,7 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 		
-		private static char[] EnumFlagSeperators = new char[] { ',', ';', '+', '|', ' ' };
+		private static readonly char[] EnumFlagSeperators = new char[] { ',', ';', '+', '|', ' ' };
 
 
 		private static Dictionary<System.Type, ISerializationConverter> typeConverters = new Dictionary<System.Type, ISerializationConverter> ();
