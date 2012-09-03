@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public class Filter
+	public sealed class Filter
 	{
 		public Filter()
 		{

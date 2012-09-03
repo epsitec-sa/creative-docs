@@ -166,14 +166,25 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
-		
+		/// <summary>
+		/// Creates a constant from an <c>enum</c> value.
+		/// </summary>
+		/// <typeparam name="T">The type of the <c>enum</c>.</typeparam>
+		/// <param name="value">The value.</param>
+		/// <returns>The filter constant.</returns>
 		public static ColumnFilterConstant FromEnum<T>(T value)
 			where T : struct
 		{
 			return ColumnFilterConstant.From ((System.Enum) (object) value);
 		}
 
-		
+
+		/// <summary>
+		/// Parses the specified value back into a filter constant. This is the
+		/// opposite of <see cref="ToString"/>.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The filter constant.</returns>
 		public static ColumnFilterConstant Parse(string value)
 		{
 			if (string.IsNullOrEmpty (value))
