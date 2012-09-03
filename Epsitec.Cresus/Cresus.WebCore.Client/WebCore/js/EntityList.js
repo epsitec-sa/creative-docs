@@ -149,7 +149,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
         return {
           type: 'list',
           store: Epsitec.Enumeration.getStore(typeDefinition.enumerationName),
-          labelField: 'name'
+          labelField: 'text'
         };
 
       case 'string':

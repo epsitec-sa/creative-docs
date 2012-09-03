@@ -61,14 +61,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static IEnumerable<object> GetValuesImplementation<T>(bool isNullable) where T : struct
+		private static IEnumerable<object> GetValuesImplementation<T>(bool isNullable)
+			where T : struct
 		{
 			if (isNullable)
 			{
 				yield return new
 				{
 					id = Constants.KeyForNullValue,
-					name = Constants.TextForNullValue
+					text = Constants.TextForNullValue
 				};
 			}
 
@@ -79,9 +80,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				if (values.Any ())
 				{
-					var name = values[0].ToString ();
+					var text = values[0].ToString ();
 
-					yield return new { id = id, name = name };
+					yield return new { id = id, text = text };
 				}
 			}
 		}

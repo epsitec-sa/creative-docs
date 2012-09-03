@@ -6,7 +6,7 @@ Ext.define('Epsitec.cresus.webcore.EnumerationField', {
   /* Config */
 
   valueField: 'id',
-  displayField: 'name',
+  displayField: 'text',
   queryMode: 'local',
   forceSelection: true,
   typeAhead: true,

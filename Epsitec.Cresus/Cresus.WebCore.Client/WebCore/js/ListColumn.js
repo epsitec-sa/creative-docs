@@ -37,7 +37,7 @@ Ext.define('Epsitec.cresus.webcore.ListColumn', {
       return this.loadingText;
     }
 
-    return this.store.findRecord('id', value).get('name');
+    return this.store.findRecord('id', value).get('text');
   },
 
   requestRefresh: function(view) {
