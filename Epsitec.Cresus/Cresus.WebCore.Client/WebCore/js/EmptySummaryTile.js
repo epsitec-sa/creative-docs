@@ -5,7 +5,7 @@ Ext.define('Epsitec.cresus.webcore.EmptySummaryTile', {
 
   /* Config */
 
-  html: 'Empty',
+  html: Epsitec.Texts.getEmptySummaryText(),
 
   /* Constructor */
 

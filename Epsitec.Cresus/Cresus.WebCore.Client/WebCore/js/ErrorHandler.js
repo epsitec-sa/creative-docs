@@ -3,9 +3,8 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
 
   statics: {
     handleError: function() {
-      var title = 'Error',
-          message = 'An unexpected error occured while communicating with ' +
-                    'the remote server';
+      var title = Epsitec.Texts.getErrorTitle(),
+          message = Epsitec.Texts.getErrorMessage();
       this.showError(title, message);
     },
 
@@ -24,9 +23,8 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
     },
 
     handleJsonError: function() {
-      var title = 'Error',
-          message = 'An error occured while decoding the answer from the ' +
-                    'remote server';
+      var title = Epsitec.Texts.getErrorTitle(),
+          message = Epsitec.Texts.getJsonErrorMessage();
       this.showError(title, message);
     },
 
@@ -51,8 +49,8 @@ Ext.define('Epsitec.cresus.webcore.ErrorHandler', {
     },
 
     handleDefaultFailure: function() {
-      var title = 'Error',
-          message = 'An unexpected error occured on the remote server';
+      var title = Epsitec.Texts.getErrorTitle(),
+          message = Epsitec.Texts.getServerErrorMessage();
       this.showError(title, message);
     },
 

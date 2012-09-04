@@ -20,7 +20,7 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
     var buttonCreate, buttonDelete;
 
     buttonCreate = Ext.create('Ext.Button', {
-      text: 'Create',
+      text: Epsitec.Texts.getCreateLabel(),
       iconCls: 'icon-add',
       listeners: {
         click: this.onCreateHandler,
@@ -29,7 +29,7 @@ Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
     });
 
     buttonDelete = Ext.create('Ext.Button', {
-      text: 'Delete',
+      text: Epsitec.Texts.getDeleteLabel(),
       iconCls: 'icon-remove',
       listeners: {
         click: this.onDeleteHandler,

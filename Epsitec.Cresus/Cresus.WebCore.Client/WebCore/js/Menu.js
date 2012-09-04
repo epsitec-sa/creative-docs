@@ -18,7 +18,7 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
 
   createDatabasesGroup: function() {
     var group = Ext.create('Ext.container.ButtonGroup', {
-      title: 'Databases',
+      title: Epsitec.Texts.getDatabasesTitle(),
       headerPosition: 'bottom'
     });
 
@@ -65,19 +65,19 @@ Ext.define('Epsitec.cresus.webcore.Menu', {
     var aboutButton, logoutButton;
 
     aboutButton = this.createButton({
-      text: 'About',
+      text: Epsitec.Texts.getAboutLabel(),
       handler: this.aboutButtonHandler,
       iconCls: 'epsitec-cresus-core-images-base-softwareuserrole-icon32'
     });
 
     logoutButton = this.createButton({
-      text: 'Logout',
+      text: Epsitec.Texts.getLogoutLabel(),
       handler: this.logoutButtonHandler,
       iconCls: 'epsitec-cresus-core-images-usermanager-icon32'
     });
 
     return Ext.create('Ext.container.ButtonGroup', {
-      title: 'Options',
+      title: Epsitec.Texts.getToolsTitle(),
       headerPosition: 'bottom',
       items: [aboutButton, logoutButton]
     });

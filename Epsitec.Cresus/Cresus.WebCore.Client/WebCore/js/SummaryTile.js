@@ -53,7 +53,7 @@ Ext.define('Epsitec.cresus.webcore.SummaryTile', {
     if (options.isRoot) {
       tools.push({
         type: 'refresh',
-        tooltip: 'Refresh entity',
+        tooltip: Epsitec.Texts.getRefreshTip(),
         handler: function() { this.column.refresh(); },
         scope: this
       });

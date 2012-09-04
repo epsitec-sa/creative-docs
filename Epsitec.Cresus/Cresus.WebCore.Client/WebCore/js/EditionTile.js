@@ -34,7 +34,7 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
     var resetButton, saveButton;
 
     resetButton = Ext.create('Ext.button.Button', {
-      text: 'Reset',
+      text: Epsitec.Texts.getResetLabel(),
       listeners: {
         click: this.onResetClick,
         scope: this
@@ -42,7 +42,7 @@ Ext.define('Epsitec.cresus.webcore.EditionTile', {
     });
 
     saveButton = Ext.create('Ext.button.Button', {
-      text: 'Save',
+      text: Epsitec.Texts.getSaveLabel(),
       listeners: {
         click: this.onSaveClick,
         scope: this

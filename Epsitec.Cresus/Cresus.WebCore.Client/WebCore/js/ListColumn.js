@@ -4,7 +4,7 @@ Ext.define('Epsitec.cresus.webcore.ListColumn', {
   alternateClassName: ['Epsitec.ListColumn'],
 
   /* Config */
-  loadingText: '...',
+  loadingText: Epsitec.Texts.getLoadingText(),
 
   /* Properties */
 

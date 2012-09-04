@@ -8,7 +8,7 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
   layout: 'fit',
   modal: true,
   border: false,
-  title: 'Entity selection',
+  title: Epsitec.Texts.getEntityPickerTitle(),
 
   /* Properties */
   callback: null,
@@ -49,7 +49,7 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
 
   createCancelButton: function() {
     return Ext.create('Ext.Button', {
-      text: 'Cancel',
+      text: Epsitec.Texts.getCancelLabel(),
       handler: this.onCancelClick,
       scope: this
     });
@@ -57,7 +57,7 @@ Ext.define('Epsitec.cresus.webcore.EntityPicker', {
 
   createOkButton: function() {
     return Ext.create('Ext.Button', {
-      text: 'Ok',
+      text: Epsitec.Texts.getOkLabel(),
       handler: this.onSaveClick,
       scope: this
     });

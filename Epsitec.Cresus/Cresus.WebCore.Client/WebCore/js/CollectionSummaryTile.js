@@ -30,7 +30,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     if (!options.hideAddButton) {
       tools.push({
         type: 'plus',
-        tooltip: 'Add a new item',
+        tooltip: Epsitec.Texts.getAddTip(),
         handler: this.addEntityHandler,
         scope: this
       });
@@ -39,7 +39,7 @@ Ext.define('Epsitec.cresus.webcore.CollectionSummaryTile', {
     if (!options.hideRemoveButton) {
       tools.push({
         type: 'minus',
-        tooltip: 'Remove this item',
+        tooltip: Epsitec.Texts.getRemoveTip(),
         handler: this.deleteEntityHandler,
         scope: this
       });

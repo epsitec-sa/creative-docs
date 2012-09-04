@@ -6,7 +6,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
   border: false,
   viewConfig: {
-    emptyText: 'Nothing to display'
+    emptyText: Epsitec.Texts.getEmptyListText()
   },
 
   /* Properties */
@@ -62,7 +62,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
 
     if (Epsitec.Tools.isArrayEmpty(columnDefinitions)) {
       basicColumns.push({
-        text: 'Summary',
+        text: Epsitec.Texts.getSummaryHeader(),
         flex: 1,
         dataIndex: 'summary',
         sortable: false
@@ -274,7 +274,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     var buttons = Ext.Array.clone(options.toolbarButtons || []);
 
     buttons.push(Ext.create('Ext.Button', {
-      text: 'Sort',
+      text: Epsitec.Texts.getSortLabel(),
       iconCls: 'icon-sort',
       listeners: {
         click: this.onSortHandler,
@@ -283,7 +283,7 @@ Ext.define('Epsitec.cresus.webcore.EntityList', {
     }));
 
     buttons.push(Ext.create('Ext.Button', {
-      text: 'Refresh',
+      text: Epsitec.Texts.getRefreshLabel(),
       iconCls: 'icon-refresh',
       listeners: {
         click: this.onRefreshHandler,

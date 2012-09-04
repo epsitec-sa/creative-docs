@@ -196,8 +196,7 @@ Ext.define('Epsitec.cresus.webcore.BrickWallParser', {
     parseGlobalWarning: function(brick) {
       return {
         xtype: 'displayfield',
-        value: '<i><b>ATTENTION:</b> Les modifications effectu\u00E9es ici ' +
-            'seront r\u00E9percut\u00E9es dans tous les enregistrements.</i>',
+        value: Epsitec.Texts.getGlobalWarning(),
         cls: 'global-warning'
       };
     },

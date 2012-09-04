@@ -11,7 +11,6 @@ Ext.define('Epsitec.cresus.webcore.EntityFieldList', {
   },
   hideHeaders: true,
   columns: [{
-    text: 'Summary',
     flex: 1,
     dataIndex: 'displayed'
   }],
@@ -26,7 +25,7 @@ Ext.define('Epsitec.cresus.webcore.EntityFieldList', {
     var newOptions = {
       store: this.createStore(values),
       viewConfig: {
-        emptyText: '&nbsp;\u2014', // This is the long dash character
+        emptyText: '&nbsp' + Epsitec.Texts.getEmptyItemText(),
         deferEmptyText: false
       }
     };
@@ -50,7 +49,7 @@ Ext.define('Epsitec.cresus.webcore.EntityFieldList', {
     var buttonAdd, buttonRemove;
 
     buttonAdd = Ext.create('Ext.Button', {
-      text: 'Add',
+      text: Epsitec.Texts.getAddLabel(),
       iconCls: 'icon-add',
       listeners: {
         click: this.onAddClick,
@@ -59,7 +58,7 @@ Ext.define('Epsitec.cresus.webcore.EntityFieldList', {
     });
 
     buttonRemove = Ext.create('Ext.Button', {
-      text: 'Remove',
+      text: Epsitec.Texts.getRemoveLabel(),
       iconCls: 'icon-remove',
       listeners: {
         click: this.onRemoveClick,

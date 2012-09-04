@@ -7,7 +7,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
   /* Config */
 
   id: 'loginwindow',
-  title: 'Crésus.Core Login',
+  title: Epsitec.Texts.getLoginTitle(),
   bodyPadding: 5,
   width: 400,
   height: 300,
@@ -53,7 +53,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
     });
 
     usernameField = Ext.create('Ext.form.field.Text', {
-      fieldLabel: 'Username',
+      fieldLabel: Epsitec.Texts.getUsernameLabel(),
       name: 'username',
       value: '',
       allowBlank: false,
@@ -65,7 +65,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
 
     passwordField = Ext.create('Ext.form.field.Text', {
       inputType: 'password',
-      fieldLabel: 'Password',
+      fieldLabel: Epsitec.Texts.getPasswordLabel(),
       name: 'password',
       value: '',
       allowBlank: false,
@@ -82,7 +82,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
     var resetButton, loginButton;
 
     resetButton = Ext.create('Ext.button.Button', {
-      text: 'Reset',
+      text: Epsitec.Texts.getResetLabel(),
       listeners: {
         click: this.onResetClick,
         scope: this
@@ -90,7 +90,7 @@ Ext.define('Epsitec.cresus.webcore.LoginPanel', {
     });
 
     loginButton = Ext.create('Ext.button.Button', {
-      text: 'Log in',
+      text: Epsitec.Texts.getLoginLabel(),
       listeners: {
         click: this.onLoginClick,
         scope: this

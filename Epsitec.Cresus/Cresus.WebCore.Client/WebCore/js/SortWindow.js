@@ -13,7 +13,7 @@ Ext.define('Epsitec.cresus.webcore.SortWindow', {
   },
   modal: true,
   plain: true,
-  title: 'Sort selection',
+  title: Epsitec.Texts.getSortTitle(),
 
   /* Properties */
 
@@ -103,7 +103,6 @@ Ext.define('Epsitec.cresus.webcore.SortWindow', {
 
   createTitleColumn: function() {
     return {
-      text: 'Name',
       dataIndex: 'title',
       flex: 1
     };
@@ -174,7 +173,7 @@ Ext.define('Epsitec.cresus.webcore.SortWindow', {
 
   createResetButton: function() {
     return Ext.create('Ext.Button', {
-      text: 'Reset',
+      text: Epsitec.Texts.getResetLabel(),
       handler: this.onResetClick,
       scope: this
     });
@@ -182,7 +181,7 @@ Ext.define('Epsitec.cresus.webcore.SortWindow', {
 
   createCancelButton: function() {
     return Ext.create('Ext.Button', {
-      text: 'Cancel',
+      text: Epsitec.Texts.getCancelLabel(),
       handler: this.onCancelClick,
       scope: this
     });
@@ -190,7 +189,7 @@ Ext.define('Epsitec.cresus.webcore.SortWindow', {
 
   createOkButton: function() {
     return Ext.create('Ext.Button', {
-      text: 'Ok',
+      text: Epsitec.Texts.getOkLabel(),
       handler: this.onOkClick,
       scope: this
     });

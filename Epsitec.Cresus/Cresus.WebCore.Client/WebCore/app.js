@@ -11,6 +11,7 @@ Ext.application({
   appFolder: 'js',
 
   requires: [
+    'Epsitec.cresus.webcore.Texts',
     'Epsitec.cresus.webcore.BooleanNullableColumn',
     'Epsitec.cresus.webcore.BrickWallParser',
     'Epsitec.cresus.webcore.Callback',

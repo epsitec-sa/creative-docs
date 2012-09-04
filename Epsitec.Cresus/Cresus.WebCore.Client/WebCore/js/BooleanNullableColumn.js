@@ -5,7 +5,7 @@ Ext.define('Epsitec.cresus.webcore.BooleanNullableColumn', {
 
   /* Config */
 
-  nullText: '&#160;',
+  nullText: Epsitec.Texts.getNullItemText(),
 
   /* Additional methods */
 
