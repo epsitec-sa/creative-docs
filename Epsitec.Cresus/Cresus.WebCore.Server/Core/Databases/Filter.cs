@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Expression ToCondition(AbstractEntity example)
+		public DataExpression ToCondition(AbstractEntity example)
 		{
 			var lambda = this.Column.LambdaExpression;
 			var name = this.Column.Name;

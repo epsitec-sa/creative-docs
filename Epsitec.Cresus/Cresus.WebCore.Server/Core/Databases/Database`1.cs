@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private IEnumerable<Expression> CreateConditions(T example, IEnumerable<Filter> filters)
+		private IEnumerable<DataExpression> CreateConditions(T example, IEnumerable<Filter> filters)
 		{
 			return filters.Select (f => f.ToCondition (example));
 		}

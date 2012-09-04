@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	
 	/// <summary>
 	/// The <c>EntityDruidField</c> class represents a field of an <see cref="AbstractEntity"/> in an
-	/// <see cref="Expression"/> that is referenced by a Druid.
+	/// <see cref="DataExpression"/> that is referenced by a Druid.
 	/// </summary>
 	public abstract class EntityDruidField : EntityField
 	{

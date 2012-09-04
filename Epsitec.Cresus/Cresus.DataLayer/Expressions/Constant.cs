@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 	/// <summary>
 	///  The <c>Constant</c> class represents a constant value that can be used in an
-	///  <see cref="Expression"/>.
+	///  <see cref="DataExpression"/>.
 	/// </summary>
 	public sealed class Constant : Value
 	{

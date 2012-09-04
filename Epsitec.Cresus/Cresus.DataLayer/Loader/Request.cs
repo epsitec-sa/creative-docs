@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		public Request()
 		{
-			this.conditions = new List<Expression> ();
+			this.conditions = new List<DataExpression> ();
 			this.sortClauses = new List<SortClause> ();
 			this.significantFields = new List<EntityField> ();
 		}
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public List<Expression> Conditions
+		public List<DataExpression> Conditions
 		{
 			get
 			{
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private readonly List<Expression> conditions;
+		private readonly List<DataExpression> conditions;
 		
 		
 		private readonly List<SortClause> sortClauses;

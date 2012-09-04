@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public sealed class Filter
+	public sealed class Filter : IFilter
 	{
 		public Filter()
 		{
@@ -48,6 +48,24 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		#region IFilter Members
+
+		public bool IsValid
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		public Expression GetExpression(Expression parameter)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		#endregion
+
+		
 		public XElement Save(string xmlNodeName)
 		{
 			var xml = new XElement (xmlNodeName,
@@ -63,11 +81,12 @@ namespace Epsitec.Cresus.Core.Metadata
 		public static Filter Restore(XElement xml)
 		{
 			var list   = xml.Element (Strings.FilterNodeList).Elements ();
-			var filter = new Filter ();
-
-			filter.CombineMode = xml.Attribute (Strings.CombineMode).ToEnum (FilterCombineMode.And);
-			filter.Name        = Xml.GetFormattedText (xml.Attribute (Strings.Name));
-			filter.Description = Xml.GetFormattedText (xml.Attribute (Strings.Description));
+			var filter = new Filter ()
+			{
+				CombineMode = xml.Attribute (Strings.CombineMode).ToEnum (FilterCombineMode.And),
+				Name        = Xml.GetFormattedText (xml.Attribute (Strings.Name)),
+				Description = Xml.GetFormattedText (xml.Attribute (Strings.Description)),
+			};
 
 			filter.Nodes.AddRange (list.Select (x => FilterNode.Restore (x)));
 
@@ -75,13 +94,13 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
-#region Strings Class
+		#region Strings Class
 
 		private static class Strings
 		{
-			public const string CombineMode = "c";
-			public const string Name = "n";
-			public const string Description = "d";
+			public const string CombineMode    = "c";
+			public const string Name           = "n";
+			public const string Description    = "d";
 			public const string FilterNodeList = "F";
 			public const string FilterNodeItem = "f";
 		}

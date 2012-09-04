@@ -3,9 +3,9 @@
 
 
 	/// <summary>
-	/// The <c>Operation</c> class represents an operation over <see cref="Expression"/>s.
+	/// The <c>Operation</c> class represents an operation over <see cref="DataExpression"/>s.
 	/// </summary>
-	public abstract class Operation : Expression
+	public abstract class Operation : DataExpression
 	{
 
 		

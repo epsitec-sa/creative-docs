@@ -5,6 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Xml.Linq;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
@@ -12,13 +13,42 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// The <c>EntityColumnFilter</c> class defines the filtering conditions for an
 	/// <see cref="EntityColumn"/>.
 	/// </summary>
-	public class EntityColumnFilter
+	public class EntityColumnFilter : IFilter
 	{
-		public EntityColumnFilter()
+		public EntityColumnFilter(ColumnFilterExpression filterExpression = null)
 		{
+			this.filterExpression = filterExpression;
 		}
 
-		public virtual Expression ToCondition(EntityColumn entityColumn, AbstractEntity example)
+
+		public ColumnFilterExpression			FilterExpression
+		{
+			get
+			{
+				return this.filterExpression;
+			}
+		}
+
+
+		#region IFilter Members
+
+		public bool IsValid
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		public Expression GetExpression(Expression parameter)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		#endregion
+		
+
+		public virtual DataExpression ToCondition(EntityColumn entityColumn, AbstractEntity example)
 		{
 			throw new System.NotImplementedException ();
 		}
@@ -46,5 +76,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 		#endregion
+
+
+		private readonly ColumnFilterExpression	filterExpression;
 	}
 }

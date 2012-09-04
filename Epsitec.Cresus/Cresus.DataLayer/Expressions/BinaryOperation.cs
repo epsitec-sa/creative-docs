@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 	/// <summary>
-	/// The <c>BinaryOperation</c> class represent a logical operation on two <see cref="Expression"/>,
+	/// The <c>BinaryOperation</c> class represent a logical operation on two <see cref="DataExpression"/>,
 	/// such as ((a = b) and (c = d)).
 	/// </summary>
 	public class BinaryOperation : Operation
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <param name="right">The right side of the <see cref="BinaryOperator"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="left"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="right"/> is null.</exception>
-		public BinaryOperation(Expression left, BinaryOperator op, Expression right)
+		public BinaryOperation(DataExpression left, BinaryOperator op, DataExpression right)
 		{
 			left.ThrowIfNull ("left");
 			right.ThrowIfNull ("right");
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// The left side of the <c>Expression</c>.
 		/// </summary>
-		public Expression Left
+		public DataExpression Left
 		{
 			get;
 			private set;
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// The right side of the <c>Expression</c>.
 		/// </summary>
-		public Expression Right
+		public DataExpression Right
 		{
 			get;
 			private set;

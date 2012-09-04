@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override Expression ToCondition(EntityColumn column, AbstractEntity example)
+		public override DataExpression ToCondition(EntityColumn column, AbstractEntity example)
 		{
 			var fieldEntity = column.GetLeafEntity (example, NullNodeAction.CreateMissing);
 			var fieldId = column.GetLeafFieldId ();

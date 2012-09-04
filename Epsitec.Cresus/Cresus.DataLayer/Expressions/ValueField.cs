@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 	/// <summary>
 	/// The <c>ValueField</c> class represents a field of an <see cref="AbstractEntity"/> in an
-	/// <see cref="Expression"/> that targets a value field of the entity.
+	/// <see cref="DataExpression"/> that targets a value field of the entity.
 	/// </summary>
 	public sealed class ValueField : EntityDruidField
 	{

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 	/// <summary>
 	/// The <c>CollectionField</c> class represents a field of an <see cref="AbstractEntity"/> in an
-	/// <see cref="Expression"/> that targets an column in the collection table of field of the
+	/// <see cref="DataExpression"/> that targets an column in the collection table of field of the
 	/// entity.
 	/// </summary>
 	public sealed class CollectionField : EntityDruidField

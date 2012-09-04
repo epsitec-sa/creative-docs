@@ -62,27 +62,27 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 			Request request = new Request ();
 
-			Expression expression1 = new BinaryComparison
+			DataExpression expression1 = new BinaryComparison
 			(
 				new ValueField (person, new Druid ("[J1AM1]")),
 				BinaryComparator.IsEqual,
 				new ValueField (person, new Druid ("[J1AL1]"))
 			);
 
-			Expression expression2 = new BinaryComparison
+			DataExpression expression2 = new BinaryComparison
 			(
 				new ValueField (person, new Druid ("[J1AO1]")),
 				BinaryComparator.IsEqual,
 				new Constant (true)
 			);
 
-			Expression expression3 = new UnaryComparison
+			DataExpression expression3 = new UnaryComparison
 			(
 				new ValueField (uriContact, new Druid ("[J1A62]")),
 				UnaryComparator.IsNull
 			);
 
-			Expression expression4 = new BinaryOperation
+			DataExpression expression4 = new BinaryOperation
 			(
 				new UnaryComparison
 				(
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				)
 			);
 
-			var expected = new List<Expression> ();
+			var expected = new List<DataExpression> ();
 
 			expected.Add (expression1);
 			request.Conditions.Add (expression1);

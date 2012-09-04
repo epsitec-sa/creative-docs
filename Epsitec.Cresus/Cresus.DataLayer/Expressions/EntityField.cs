@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	
 	/// <summary>
 	/// The <c>EntityField</c> class represents a field of an <see cref="AbstractEntity"/> in an
-	/// <see cref="Expression"/>.
+	/// <see cref="DataExpression"/>.
 	/// </summary>
 	public abstract class EntityField : Value
 	{

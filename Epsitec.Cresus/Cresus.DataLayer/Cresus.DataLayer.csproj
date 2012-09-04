@@ -205,7 +205,7 @@
     <Compile Include="Expressions\Comparison.cs" />
     <Compile Include="Expressions\Constant.cs" />
     <Compile Include="Expressions\EnumConverter.cs" />
-    <Compile Include="Expressions\Expression.cs" />
+    <Compile Include="Expressions\DataExpression.cs" />
     <Compile Include="Expressions\UnaryComparator.cs" />
     <Compile Include="Expressions\UnaryComparison.cs" />
     <Compile Include="Expressions\UnaryOperation.cs" />

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 	/// <summary>
 	/// The <c>ReferenceField</c> class represents a field of an <see cref="AbstractEntity"/> in an
-	/// <see cref="Expression"/> that targets a reference field of the entity.
+	/// <see cref="DataExpression"/> that targets a reference field of the entity.
 	/// </summary>
 	public sealed class ReferenceField : EntityDruidField
 	{

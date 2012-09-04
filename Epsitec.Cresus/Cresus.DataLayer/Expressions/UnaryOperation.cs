@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <param name="op">The operation to apply to the <see cref="Expression"/>.</param>
 		/// <param name="expression">The <see cref="Expression"/> on which to apply the <see cref="UnaryOperator"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="expression"/> is null.</exception>
-		public UnaryOperation(UnaryOperator op, Expression expression) : base()
+		public UnaryOperation(UnaryOperator op, DataExpression expression) : base()
 		{
 			expression.ThrowIfNull ("expression");
 			
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <summary>
 		/// Gets the <see cref="Expression"/> of the current instance.
 		/// </summary>
-		public Expression Expression
+		public DataExpression Expression
 		{
 			get;
 			private set;

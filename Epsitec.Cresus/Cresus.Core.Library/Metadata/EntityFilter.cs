@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public class EntityFilter
+	public class EntityFilter : IFilter
 	{
 		public EntityFilter()
 		{
@@ -27,6 +27,34 @@ namespace Epsitec.Cresus.Core.Metadata
 			{
 				return this.columns;
 			}
+		}
+
+		#region IFilter Members
+
+		public bool IsValid
+		{
+			get
+			{
+				return this.columns.All (x => this.GetExpression (x) != null);
+			}
+		}
+
+		public Expression GetExpression(Expression parameter)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		#endregion
+
+
+		public Expression GetExpression(ColumnRef<EntityColumnFilter> column)
+		{
+			var columnRef = column.Id;
+			var columnFilter = column.Value;
+			
+			
+			
+			return null;
 		}
 
 

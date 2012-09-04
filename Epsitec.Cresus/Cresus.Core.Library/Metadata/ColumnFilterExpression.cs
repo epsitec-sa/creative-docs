@@ -7,6 +7,7 @@ using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
@@ -14,23 +15,35 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// The <c>ColumnFilterExpression</c> class is the base class used to represent filters
 	/// applied to a column of a table.
 	/// </summary>
-	public abstract class ColumnFilterExpression
+	public abstract class ColumnFilterExpression : IFilter
 	{
+		#region IFilter Members
+
 		public abstract bool IsValid
 		{
 			get;
 		}
 
-
-		/// <summary>
-		/// Gets the expression for this filter, applied to the specified parameter.
-		/// The expression is always represented by a predicate returning a boolean.
-		/// </summary>
-		/// <param name="parameter">The parameter (which may be the body of a lambda).</param>
-		/// <returns>The expression for this filter.</returns>
 		public abstract Expression GetExpression(Expression parameter);
 
-		
+		#endregion
+
+		public XElement Save(string xmlNodeName)
+		{
+			return new XElement (xmlNodeName);
+		}
+
+		public static ColumnFilterExpression Restore(XElement xml)
+		{
+			if (xml == null)
+			{
+				return null;
+			}
+
+			throw new System.NotImplementedException ();
+		}
+
+
 		public static Expression Comparison(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
 			switch (code)

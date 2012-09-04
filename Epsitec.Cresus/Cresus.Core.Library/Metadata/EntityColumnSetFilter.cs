@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override Expression ToCondition(EntityColumn column, AbstractEntity example)
+		public override DataExpression ToCondition(EntityColumn column, AbstractEntity example)
 		{
 			var fieldEntity = column.GetLeafEntity (example, NullNodeAction.CreateMissing);
 			var fieldId = column.GetLeafFieldId ();
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			// - if the value is not null, we generate "column = value"
 			// - if the value is null, we generate "column IS NULL"
 			var expressions = this.Values.Select (v => v == null
-				? (Expression) new UnaryComparison (fieldNode, UnaryComparator.IsNull)
+				? (DataExpression) new UnaryComparison (fieldNode, UnaryComparator.IsNull)
 				: new BinaryComparison (fieldNode, BinaryComparator.IsEqual, new Constant (v))
 			);
 

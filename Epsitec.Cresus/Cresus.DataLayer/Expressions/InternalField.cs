@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 	/// <summary>
 	/// The <c>InternalField</c> class represents a field of an <see cref="AbstractEntity"/>
-	/// in an <see cref="Expression"/> that targets an field of the entity, such as its id.
+	/// in an <see cref="DataExpression"/> that targets an field of the entity, such as its id.
 	/// </summary>
 	public sealed class InternalField : EntityField
 	{

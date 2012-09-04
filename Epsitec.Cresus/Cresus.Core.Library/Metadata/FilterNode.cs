@@ -159,6 +159,6 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private readonly FilterIncludeMode		includeMode;
 		private readonly FilterActiveMode		activeMode;
-		private readonly object					filter;
+		private readonly IFilter				filter;
 	}
 }
