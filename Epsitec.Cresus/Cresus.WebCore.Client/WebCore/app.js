@@ -39,6 +39,7 @@ Ext.application({
     'Epsitec.cresus.webcore.SortWindow',
     'Epsitec.cresus.webcore.SummaryTile',
     'Epsitec.cresus.webcore.TabManager',
+    'Epsitec.cresus.webcore.Tile',
     'Epsitec.cresus.webcore.Tools',
 
     'Ext.ux.grid.FiltersFeature'
