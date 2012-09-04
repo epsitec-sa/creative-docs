@@ -12,6 +12,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support.PlugIns
 {
 	using Assembly=System.Reflection.Assembly;
+using System.Xml.Linq;
 
 	/// <summary>
 	/// The <c>PlugInFactory</c> class provides a generic implementation of
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Support.PlugIns
 
 			if (PlugInFactory<TClass, TAttribute, TId>.types.TryGetValue (id, out record))
 			{
-				Support.Allocator<TClass> allocator = record.GetAllocator<Support.Allocator<TClass>> (type => Support.DynamicCodeFactory.CreateAllocator<TClass> (type));
+				var allocator = record.GetAllocator<Allocator<TClass>> (type => DynamicCodeFactory.CreateAllocator<TClass> (type));
 				return allocator ();
 			}
 			else
@@ -59,7 +60,7 @@ namespace Epsitec.Common.Support.PlugIns
 				{
 					lock (record)
 					{
-						var allocator = record.GetAllocator<Support.Allocator<TClass>> (type => Support.DynamicCodeFactory.CreateAllocator<TClass> (type));
+						var allocator = record.GetAllocator<Support.Allocator<TClass>> (type => DynamicCodeFactory.CreateAllocator<TClass> (type));
 						record.Template = allocator ();
 					}
 				}
@@ -70,6 +71,32 @@ namespace Epsitec.Common.Support.PlugIns
 			{
 				throw new System.InvalidOperationException (string.Format ("Cannot find class for id '{0}'", id));
 			}
+		}
+
+		/// <summary>
+		/// Creates an instance of the specified class, using the specified XML element
+		/// to rehydrate the instance.
+		/// </summary>
+		/// <param name="id">The id of the class to instantiate.</param>
+		/// <param name="xml">The XML element.</param>
+		/// <returns>
+		/// The instance of the specified class.
+		/// </returns>
+		protected static TClass CreateInstance(TId id, XElement xml)
+		{
+			Record record;
+
+			if (PlugInFactory<TClass, TAttribute, TId>.types.TryGetValue (id, out record))
+			{
+				var restorer = record.GetRestorer ();
+
+				if (restorer != null)
+				{
+					return restorer (xml);
+				}
+			}
+
+			throw new System.InvalidOperationException (string.Format ("Cannot find restorable class for id '{0}'", id));
 		}
 
 		/// <summary>
@@ -258,10 +285,22 @@ namespace Epsitec.Common.Support.PlugIns
 				return (TAlloc) this.allocator;
 			}
 
+			public System.Func<XElement, TClass> GetRestorer()
+			{
+				if (this.restoreFunc == null)
+				{
+					var restoreMethod = typeof (TClass).GetMethod ("Restore", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.InvokeMethod);
+					this.restoreFunc = x => (TClass) restoreMethod.Invoke (null, new object[] { x });
+				}
+
+				return this.restoreFunc;
+			}
+
 			private readonly object				exclusion;
 			private readonly System.Type		type;
 			private object						allocator;
 			private object						template;
+			private System.Func<XElement, TClass> restoreFunc;
 		}
 
 		#endregion

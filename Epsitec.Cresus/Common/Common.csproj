@@ -423,6 +423,7 @@
     <Compile Include="Printing\XmlPort.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\IconProvider.cs" />
+    <Compile Include="Support\IXmlNodeClass.cs" />
     <Compile Include="Support\ReaderWriterLockWrapper.cs" />
     <Compile Include="Resources\Common.Dialogs\SourceCode\Entities.cs" />
     <Compile Include="Resources\Common.Dialogs\SourceCode\Forms.cs" />
@@ -678,6 +679,8 @@
     <Compile Include="Support\WorkerThread.cs" />
     <Compile Include="Support\Xml.cs" />
     <Compile Include="Support\XmlExtractor.cs" />
+    <Compile Include="Support\XmlNodeClassAttribute.cs" />
+    <Compile Include="Support\XmlNodeClassFactory.cs" />
     <Compile Include="Support\XmlValidator.cs" />
     <Compile Include="Text\Exchange\ClipboardData.cs" />
     <Compile Include="Text\Exchange\CopyPasteContext.cs" />
