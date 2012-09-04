@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public struct FilterNode
+	public struct FilterNode : IFilter
 	{
 		public FilterNode(Filter filter, FilterIncludeMode includeMode, FilterActiveMode activeMode)
 			: this (includeMode, activeMode)
@@ -91,6 +91,43 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		#region IFilter Members
+
+		public bool IsValid
+		{
+			get
+			{
+				if (this.filter == null)
+				{
+					return false;
+				}
+				
+				return this.filter.IsValid;
+			}
+		}
+
+		public Expression GetExpression(Expression parameter)
+		{
+			if ((this.filter == null) ||
+				(this.activeMode == FilterActiveMode.Disabled))
+			{
+				return null;
+			}
+
+			switch (this.includeMode)
+			{
+				case FilterIncludeMode.Inclusive:
+					return this.filter.GetExpression (parameter);
+				case FilterIncludeMode.Exclusive:
+					return Expression.Not (this.filter.GetExpression (parameter));
+			}
+
+			throw new System.NotSupportedException (string.Format ("{0} not supported", this.includeMode.GetQualifiedName ()));
+		}
+
+		#endregion
+
+		
 		public XElement Save(string xmlNodeName)
 		{
 			XElement filter;
