@@ -30,7 +30,7 @@ Ext.define('Epsitec.cresus.webcore.BrickWallParser', {
           return this.parseEditionTile(tile);
 
         default:
-          throw 'invalid tile type';
+          throw 'invalid tile type: ' + tile.type;
       }
     },
 
@@ -121,7 +121,7 @@ Ext.define('Epsitec.cresus.webcore.BrickWallParser', {
           return this.parseTextField(brick);
 
         default:
-          throw 'invalid brick type';
+          throw 'invalid brick type: ' + brick.type;
       }
     },
 
