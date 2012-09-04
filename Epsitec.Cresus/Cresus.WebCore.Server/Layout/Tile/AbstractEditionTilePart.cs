@@ -9,15 +9,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public virtual IEnumerable<Dictionary<string, object>> ToDictionaries()
-		{
-			return new Dictionary<string, object>[] { this.ToDictionary () };
-		}
+		protected abstract string GetEditionTilePartType();
 
 
 		public virtual Dictionary<string, object> ToDictionary()
 		{
-			return new Dictionary<string, object> ();
+			var brick = new Dictionary<string, object> ();
+
+			brick["type"] = this.GetEditionTilePartType ();
+
+			return brick;
 		}
 
 	}

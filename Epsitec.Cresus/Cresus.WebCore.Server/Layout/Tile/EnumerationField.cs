@@ -23,12 +23,22 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetEditionTilePartType()
+		{
+			return "enumerationField";
+		}
+
+
+		protected override object GetValue()
+		{
+			return this.Value;
+		}
+		
+		
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
 
-			brick["type"] = "enumerationField";
-			brick["value"] = this.Value;
 			brick["enumerationName"] = this.TypeName;
 
 			return brick;

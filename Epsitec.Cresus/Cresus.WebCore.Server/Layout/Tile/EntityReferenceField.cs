@@ -27,12 +27,22 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetEditionTilePartType()
+		{
+			return "entityReferenceField";
+		}
+
+
+		protected override object GetValue()
+		{
+			return this.Value.ToDictionary ();
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
 
-			brick["type"] = "entityReferenceField";
-			brick["value"] = this.Value.ToDictionary ();
 			brick["entityName"] = this.TypeName;
 
 			return brick;

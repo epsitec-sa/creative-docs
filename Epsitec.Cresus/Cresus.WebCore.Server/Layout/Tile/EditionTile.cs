@@ -11,27 +11,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public string EntityId
-		{
-			get;
-			set;
-		}
-
-
-		public string Title
-		{
-			get;
-			set;
-		}
-
-
-		public string IconClass
-		{
-			get;
-			set;
-		}
-
-
 		public IList<AbstractEditionTilePart> Bricks
 		{
 			get;
@@ -39,17 +18,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetTileType()
+		{
+			return "edition";
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var tile = new Dictionary<string, object> ();
-
-			tile["type"] = "edition";
-
-			tile["title"] = this.Title;
-			tile["icon"] = this.IconClass;
-			tile["bricks"] = this.Bricks.SelectMany (i => i.ToDictionaries ()).ToList ();
-
-			tile["entityId"] = this.EntityId;
+			var tile = base.ToDictionary ();
+		
+			tile["bricks"] = this.Bricks.Select (i => i.ToDictionary ()).ToList ();	
 
 			return tile;
 		}

@@ -16,14 +16,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
-		public override Dictionary<string, object> ToDictionary()
+		protected override string GetEditionTilePartType()
 		{
-			var brick = base.ToDictionary ();
+			return "decimalField";
+		}
 
-			brick["type"] = "decimalField";
-			brick["value"] = this.Value;
 
-			return brick;
+		protected override object GetValue()
+		{
+			return this.Value;
 		}
 
 

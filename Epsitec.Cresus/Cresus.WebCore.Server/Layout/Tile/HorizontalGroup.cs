@@ -25,11 +25,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetEditionTilePartType()
+		{
+			return "horizontalGroup";
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var brick = new Dictionary<string, object> ();
+			var brick = base.ToDictionary ();
 
-			brick["type"] = "horizontalGroup";
 			brick["title"] = this.Title;
 			brick["bricks"] = this.Fields.Select (f => f.ToDictionary ()).ToList ();
 

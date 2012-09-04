@@ -5,34 +5,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 {
 
 
-	internal sealed class EmptySummaryTile : AbstractTile
+	internal sealed class EmptySummaryTile : CollectionSummaryTile
 	{
 
 
-		public string PropertyAccessorId
+		protected override string GetTileType()
 		{
-			get;
-			set;
-		}
-
-
-		public string EntityType
-		{
-			get;
-			set;
-		}
-
-
-		public override Dictionary<string, object> ToDictionary()
-		{
-			var tile = new Dictionary<string, object> ();
-
-			tile["type"] = "emptySummary";
-
-			tile["propertyAccessorId"] = this.PropertyAccessorId;
-			tile["entityType"] = this.EntityType;
-
-			return tile;
+			return "emptySummary";
 		}
 
 	}

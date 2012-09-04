@@ -9,13 +9,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public override Dictionary<string, object> ToDictionary()
+		protected override string GetEditionTilePartType()
 		{
-			var brick = base.ToDictionary ();
-
-			brick["type"] = "globalWarning";
-
-			return brick;
+			return "globalWarning";
 		}
 
 

@@ -167,7 +167,7 @@ Ext.define('Epsitec.cresus.webcore.BrickWallParser', {
       var field = this.parseField(brick);
 
       field.xtype = 'epsitec.entitycollectionfield';
-      field.values = brick.values;
+      field.values = brick.value;
       field.entityName = brick.entityName;
 
       return field;

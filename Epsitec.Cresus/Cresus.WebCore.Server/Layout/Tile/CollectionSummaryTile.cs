@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 {
 
 
-	internal sealed class CollectionSummaryTile : SummaryTile
+	internal class CollectionSummaryTile : SummaryTile
 	{
 
 
@@ -37,11 +37,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetTileType()
+		{
+			return "collectionSummary";
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var tile = base.ToDictionary ();
-
-			tile["type"] = "collectionSummary";
 
 			tile["hideRemoveButton"] = this.HideRemoveButton;
 			tile["hideAddButton"] = this.HideAddButton;

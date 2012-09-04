@@ -130,26 +130,32 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		{
 			return new EmptySummaryTile ()
 			{
+				EntityId = null,
+				IconClass = layoutBuilder.GetIconClass (this.Template.EntityType, this.Template.Icon),
+				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
+				SubViewId = Tools.ViewIdToString (this.SubViewId),
+				Text = null,
+				Title = null,
 				EntityType = layoutBuilder.GetTypeName (this.Template.EntityType),
 				PropertyAccessorId = InvariantConverter.ToString (this.Template.PropertyAccessor.Id),
+				HideAddButton = this.HideAddButton,
+				HideRemoveButton = this.HideRemoveButton,	
 			};
 		}
 
 
 		public AbstractTile ToCollectionSummaryTile(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			CollectionTileData template = this.Template;
-
 			return new CollectionSummaryTile ()
 			{
 				EntityId = layoutBuilder.GetEntityId (entity),
-				IconClass = layoutBuilder.GetIconClass (template.EntityType, template.Icon),
+				IconClass = layoutBuilder.GetIconClass (this.Template.EntityType, this.Template.Icon),
 				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
 				SubViewId = Tools.ViewIdToString (this.SubViewId),
-				Text = template.TextGetter (entity).ToString (),
-				Title = template.TitleGetter (entity).ToString (),
-				EntityType = layoutBuilder.GetTypeName (template.EntityType),
-				PropertyAccessorId = InvariantConverter.ToString (template.PropertyAccessor.Id),
+				Text = this.Template.TextGetter (entity).ToString (),
+				Title = this.Template.TitleGetter (entity).ToString (),
+				EntityType = layoutBuilder.GetTypeName (this.Template.EntityType),
+				PropertyAccessorId = InvariantConverter.ToString (this.Template.PropertyAccessor.Id),
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,
 			};

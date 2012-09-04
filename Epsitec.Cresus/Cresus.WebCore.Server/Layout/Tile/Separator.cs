@@ -9,13 +9,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public override Dictionary<string, object> ToDictionary()
+		protected override string GetEditionTilePartType()
 		{
-			var brick = new Dictionary<string, object> ();
-
-			brick["type"] = "separator";
-
-			return brick;
+			return "separator";
 		}
 
 

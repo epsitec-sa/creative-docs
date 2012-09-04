@@ -25,12 +25,22 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetEditionTilePartType()
+		{
+			return "entityCollectionField";
+		}
+
+
+		protected override object GetValue()
+		{
+			return this.Values.Select (v => v.ToDictionary ()).ToList ();
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
 
-			brick["type"] = "entityCollectionField";
-			brick["values"] = this.Values.Select (v => v.ToDictionary ()).ToList ();
 			brick["entityName"] = this.TypeName;
 
 			return brick;

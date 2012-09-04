@@ -9,27 +9,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 	{
 
 
-		public string EntityId
-		{
-			get;
-			set;
-		}
-
-
-		public string IconClass
-		{
-			get;
-			set;
-		}
-
-
-		public string Title
-		{
-			get;
-			set;
-		}
-
-
 		public string Text
 		{
 			get;
@@ -65,21 +44,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		protected override string GetTileType()
+		{
+			return "summary";
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
-			var tile = new Dictionary<string, object> ();
+			var tile = base.ToDictionary ();
 
-			tile["type"] = "summary";
-
-			tile["title"] = this.Title;
-			tile["icon"] = this.IconClass;
 			tile["text"] = this.Text;
-
 			tile["isRoot"] = this.IsRoot;
-			tile["entityId"] = this.EntityId;
 			tile["subViewMode"] = this.SubViewMode;
 			tile["subViewId"] = this.SubViewId;
-
 			tile["autoCreatorId"] = this.AutoCreatorId;
 
 			return tile;
