@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support
 		{
 			if (xml == null)
 			{
-				return null;
+				return default (TClass);
 			}
 
 			string xmlNodeName = xml.Name.LocalName;
