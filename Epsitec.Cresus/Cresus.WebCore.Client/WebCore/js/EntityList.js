@@ -205,7 +205,12 @@ function() {
             root: 'content.entities',
             totalProperty: 'content.total'
           },
-          encodeSorters: this.encodeSorters
+          encodeSorters: this.encodeSorters,
+          listeners: {
+            exception: function(proxy, response, operation, eOpts) {
+              Epsitec.Tools.processProxyError(response);
+            }
+          }
         }
       });
     },

@@ -21,12 +21,23 @@ function() {
               reader: {
                 type: 'json',
                 root: 'content.values'
+              },
+              listeners: {
+                exception: function(proxy, response, operation, eOpts) {
+                  this.onExceptionCallback(store, response);
+                },
+                scope: this
               }
             })
           });
         }
 
         return store;
+      },
+
+      onExceptionCallback: function(store, response) {
+        Ext.data.StoreManager.remove(store);
+        Epsitec.Tools.processProxyError(response);
       }
     }
   });

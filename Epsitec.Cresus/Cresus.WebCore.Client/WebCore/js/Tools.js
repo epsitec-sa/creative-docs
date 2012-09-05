@@ -31,6 +31,18 @@ function() {
         callback.apply(context, callbackArguments);
       },
 
+      processProxyError: function(response) {
+        var status, success;
+
+        status = response.status;
+
+        // The http status codes from 200 to 299 are the http status codes for
+        // valid http responses.
+        success = status >= 200 && status <= 299;
+
+        return this.processResponse(success, response);
+      },
+
       processResponse: function(success, response) {
         var json;
 
