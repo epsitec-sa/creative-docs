@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
-				StatusCode = HttpStatusCode.BadRequest,
+				StatusCode = HttpStatusCode.InternalServerError,
 			};
 		}
 		
