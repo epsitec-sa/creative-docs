@@ -1,68 +1,73 @@
-Ext.define('Epsitec.cresus.webcore.TabManager', {
-  extend: 'Ext.tab.Panel',
-  alternateClassName: ['Epsitec.TabManager'],
+Ext.require([
+  'Epsitec.cresus.webcore.ColumnManager'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.TabManager', {
+    extend: 'Ext.tab.Panel',
+    alternateClassName: ['Epsitec.TabManager'],
 
-  /* Config */
+    /* Config */
 
-  plain: true,
+    plain: true,
 
-  /* Properties */
+    /* Properties */
 
-  application: null,
-  entityTabs: null,
-  pageTabs: null,
+    application: null,
+    entityTabs: null,
+    pageTabs: null,
 
-  /* Constructor */
+    /* Constructor */
 
-  constructor: function() {
-    this.entityTabs = [];
-    this.pageTabs = [];
+    constructor: function() {
+      this.entityTabs = [];
+      this.pageTabs = [];
 
-    this.callParent(arguments);
-    return this;
-  },
+      this.callParent(arguments);
+      return this;
+    },
 
-  /* Additional methods */
+    /* Additional methods */
 
-  showEntityTab: function(database) {
-    var key, entityTab;
+    showEntityTab: function(database) {
+      var key, entityTab;
 
-    key = database.name;
-    entityTab = this.entityTabs[key] || null;
+      key = database.name;
+      entityTab = this.entityTabs[key] || null;
 
-    if (entityTab === null || entityTab.isDestroyed) {
-      entityTab = Ext.create('Epsitec.ColumnManager', {
-        database: database,
-        closable: true,
-        border: false
-      });
+      if (entityTab === null || entityTab.isDestroyed) {
+        entityTab = Ext.create('Epsitec.ColumnManager', {
+          database: database,
+          closable: true,
+          border: false
+        });
 
-      this.add(entityTab);
-      this.entityTabs[key] = entityTab;
+        this.add(entityTab);
+        this.entityTabs[key] = entityTab;
+      }
+
+      this.setActiveTab(entityTab);
+    },
+
+    showPageTab: function(title, url) {
+      var pageTab = this.pageTabs[url] || null;
+
+      if (pageTab === null || pageTab.isDestroyed) {
+        pageTab = Ext.create('Ext.panel.Panel', {
+          title: title,
+          closable: true,
+          border: false,
+          id: url,
+          loader: {
+            url: url,
+            autoLoad: true
+          }
+        });
+
+        this.add(pageTab);
+        this.pageTabs[url] = pageTab;
+      }
+
+      this.setActiveTab(pageTab);
     }
-
-    this.setActiveTab(entityTab);
-  },
-
-  showPageTab: function(title, url) {
-    var pageTab = this.pageTabs[url] || null;
-
-    if (pageTab === null || pageTab.isDestroyed) {
-      pageTab = Ext.create('Ext.panel.Panel', {
-        title: title,
-        closable: true,
-        border: false,
-        id: url,
-        loader: {
-          url: url,
-          autoLoad: true
-        }
-      });
-
-      this.add(pageTab);
-      this.pageTabs[url] = pageTab;
-    }
-
-    this.setActiveTab(pageTab);
-  }
+  });
 });

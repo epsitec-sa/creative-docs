@@ -6,87 +6,58 @@ Ext.Loader.setConfig({
   }
 });
 
-Ext.application({
-  name: 'Epsitec.Cresus.Core',
-  appFolder: 'js',
+Ext.require([
+  'Epsitec.cresus.webcore.LoginPanel',
+  'Epsitec.cresus.webcore.Menu',
+  'Epsitec.cresus.webcore.TabManager'
+],
+function() {
+  Ext.application({
+    name: 'Epsitec.Cresus.Core',
+    appFolder: 'js',
 
-  requires: [
-    'Epsitec.cresus.webcore.Texts',
-    'Epsitec.cresus.webcore.BooleanNullableColumn',
-    'Epsitec.cresus.webcore.BrickWallParser',
-    'Epsitec.cresus.webcore.Callback',
-    'Epsitec.cresus.webcore.CallbackQueue',
-    'Epsitec.cresus.webcore.CollectionSummaryTile',
-    'Epsitec.cresus.webcore.ColumnManager',
-    'Epsitec.cresus.webcore.EditableEntityList',
-    'Epsitec.cresus.webcore.EditionTile',
-    'Epsitec.cresus.webcore.EmptySummaryTile',
-    'Epsitec.cresus.webcore.EntityCollectionField',
-    'Epsitec.cresus.webcore.EntityCollectionHiddenField',
-    'Epsitec.cresus.webcore.EntityColumn',
-    'Epsitec.cresus.webcore.EntityFieldList',
-    'Epsitec.cresus.webcore.EntityFieldListItem',
-    'Epsitec.cresus.webcore.EntityList',
-    'Epsitec.cresus.webcore.EntityListPanel',
-    'Epsitec.cresus.webcore.EntityPicker',
-    'Epsitec.cresus.webcore.EntityReferenceField',
-    'Epsitec.cresus.webcore.Enumeration',
-    'Epsitec.cresus.webcore.EnumerationField',
-    'Epsitec.cresus.webcore.ErrorHandler',
-    'Epsitec.cresus.webcore.ListColumn',
-    'Epsitec.cresus.webcore.LoginPanel',
-    'Epsitec.cresus.webcore.Menu',
-    'Epsitec.cresus.webcore.SortItem',
-    'Epsitec.cresus.webcore.SortWindow',
-    'Epsitec.cresus.webcore.SummaryTile',
-    'Epsitec.cresus.webcore.TabManager',
-    'Epsitec.cresus.webcore.Tile',
-    'Epsitec.cresus.webcore.Tools',
+    /* Properties */
 
-    'Ext.ux.grid.FiltersFeature'
-  ],
+    menu: null,
+    loginPanel: null,
+    tabManager: null,
 
-  /* Properties */
+    launch: function() {
+      this.showLoginPanel();
+    },
 
-  menu: null,
-  loginPanel: null,
-  tabManager: null,
+    /* Additional methods */
 
-  launch: function() {
-    this.showLoginPanel();
-  },
+    showLoginPanel: function() {
+      this.loginPanel = Ext.create('Epsitec.LoginPanel', {
+        application: this
+      });
+    },
 
-  /* Additional methods */
+    showMainPanel: function() {
+      this.loginPanel.close();
+      this.loginPanel = null;
 
-  showLoginPanel: function() {
-    this.loginPanel = Ext.create('Epsitec.LoginPanel', {
-      application: this
-    });
-  },
+      this.menu = Ext.create('Epsitec.Menu', {
+        application: this,
+        region: 'north',
+        cls: 'border-bottom',
+        margin: '0 0 5 0'
+      });
 
-  showMainPanel: function() {
-    this.loginPanel.close();
-    this.loginPanel = null;
+      this.tabManager = Ext.create('Epsitec.TabManager', {
+        application: this,
+        region: 'center',
+        border: false
+      });
 
-    this.menu = Ext.create('Epsitec.Menu', {
-      application: this,
-      region: 'north',
-      cls: 'border-bottom',
-      margin: '0 0 5 0'
-    });
-
-    this.tabManager = Ext.create('Epsitec.TabManager', {
-      application: this,
-      region: 'center',
-      border: false
-    });
-
-    Ext.create('Ext.container.Viewport', {
-      layout: 'border',
-      items: [
-        this.menu,
-        this.tabManager
-      ]
-    });
-  }
+      Ext.create('Ext.container.Viewport', {
+        layout: 'border',
+        items: [
+          this.menu,
+          this.tabManager
+        ]
+      });
+    }
+  });
 });

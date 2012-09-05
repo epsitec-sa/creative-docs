@@ -8,60 +8,65 @@
 // executed before the asynchronous operation terminates. Keep that in mind when
 // dealing with this class.
 
-Ext.define('Epsitec.cresus.webcore.CallbackQueue', {
-  alternateClassName: ['Epsitec.CallbackQueue'],
+Ext.require([
+  'Epsitec.cresus.webcore.Callback'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.CallbackQueue', {
+    alternateClassName: ['Epsitec.CallbackQueue'],
 
-  /* Properties */
+    /* Properties */
 
-  head: null,
-  tail: null,
+    head: null,
+    tail: null,
 
-  /* Constructor */
+    /* Constructor */
 
-  constructor: function(head, tail) {
-    this.head = head;
-    this.tail = tail;
-  },
-
-  /* Methods */
-
-  isEmpty: function() {
-    return this.tail === null;
-  },
-
-  enqueue: function(callback) {
-    return Ext.create(
-        'Epsitec.CallbackQueue', callback, this
-    );
-  },
-
-  enqueueCallback: function(func, context) {
-    return this.enqueue(Epsitec.Callback.create(func, context));
-  },
-
-  merge: function(queue) {
-    if (queue.isEmpty()) {
-      return this;
-    }
-
-    return this.merge(queue.tail).enqueue(queue.head);
-  },
-
-  execute: function(callbackArguments) {
-    if (!this.isEmpty())
-    {
-      this.tail.execute(callbackArguments);
-      this.head.execute(callbackArguments);
-    }
-  },
-
-  statics: {
-    empty: function() {
-      return Ext.create('Epsitec.CallbackQueue', null, null);
+    constructor: function(head, tail) {
+      this.head = head;
+      this.tail = tail;
     },
 
-    create: function(func, context) {
-      return this.empty().enqueueCallback(func, context);
+    /* Methods */
+
+    isEmpty: function() {
+      return this.tail === null;
+    },
+
+    enqueue: function(callback) {
+      return Ext.create(
+          'Epsitec.CallbackQueue', callback, this
+      );
+    },
+
+    enqueueCallback: function(func, context) {
+      return this.enqueue(Epsitec.Callback.create(func, context));
+    },
+
+    merge: function(queue) {
+      if (queue.isEmpty()) {
+        return this;
+      }
+
+      return this.merge(queue.tail).enqueue(queue.head);
+    },
+
+    execute: function(callbackArguments) {
+      if (!this.isEmpty())
+      {
+        this.tail.execute(callbackArguments);
+        this.head.execute(callbackArguments);
+      }
+    },
+
+    statics: {
+      empty: function() {
+        return Ext.create('Epsitec.CallbackQueue', null, null);
+      },
+
+      create: function(func, context) {
+        return this.empty().enqueueCallback(func, context);
+      }
     }
-  }
+  });
 });

@@ -1,27 +1,33 @@
-Ext.define('Epsitec.cresus.webcore.EmptySummaryTile', {
-  extend: 'Epsitec.cresus.webcore.CollectionSummaryTile',
-  alternateClassName: ['Epsitec.EmptySummaryTile'],
-  alias: 'widget.epsitec.emptysummarytile',
+Ext.require([
+  'Epsitec.cresus.webcore.CollectionSummaryTile',
+  'Epsitec.cresus.webcore.Texts'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.EmptySummaryTile', {
+    extend: 'Epsitec.cresus.webcore.CollectionSummaryTile',
+    alternateClassName: ['Epsitec.EmptySummaryTile'],
+    alias: 'widget.epsitec.emptysummarytile',
 
-  /* Config */
+    /* Config */
 
-  html: Epsitec.Texts.getEmptySummaryText(),
+    html: Epsitec.Texts.getEmptySummaryText(),
 
-  /* Constructor */
+    /* Constructor */
 
-  constructor: function(options) {
-    var newOptions = {
-      hideRemoveButton: true
-    };
-    Ext.applyIf(newOptions, options);
+    constructor: function(options) {
+      var newOptions = {
+        hideRemoveButton: true
+      };
+      Ext.applyIf(newOptions, options);
 
-    this.callParent([newOptions]);
-    return this;
-  },
+      this.callParent([newOptions]);
+      return this;
+    },
 
-  /* Additional methods */
+    /* Additional methods */
 
-  bodyClickHandler: function() {
-    this.addEntityHandler();
-  }
+    bodyClickHandler: function() {
+      this.addEntityHandler();
+    }
+  });
 });

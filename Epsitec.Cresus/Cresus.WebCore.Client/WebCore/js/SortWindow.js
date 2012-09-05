@@ -1,225 +1,231 @@
-Ext.define('Epsitec.cresus.webcore.SortWindow', {
-  extend: 'Ext.window.Window',
-  alternateClassName: ['Epsitec.SortWindow'],
+Ext.require([
+  'Epsitec.cresus.webcore.SortItem',
+  'Epsitec.cresus.webcore.Texts'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.SortWindow', {
+    extend: 'Ext.window.Window',
+    alternateClassName: ['Epsitec.SortWindow'],
 
-  /* Config */
+    /* Config */
 
-  width: 400,
-  height: 300,
-  border: false,
-  layout: {
-    type: 'hbox',
-    align: 'stretch'
-  },
-  modal: true,
-  plain: true,
-  title: Epsitec.Texts.getSortTitle(),
+    width: 400,
+    height: 300,
+    border: false,
+    layout: {
+      type: 'hbox',
+      align: 'stretch'
+    },
+    modal: true,
+    plain: true,
+    title: Epsitec.Texts.getSortTitle(),
 
-  /* Properties */
+    /* Properties */
 
-  leftGrid: null,
-  rightGrid: null,
-  callback: null,
-  initialSorters: null,
-  sorters: null,
+    leftGrid: null,
+    rightGrid: null,
+    callback: null,
+    initialSorters: null,
+    sorters: null,
 
-  /* Constructor */
+    /* Constructor */
 
-  constructor: function(options) {
-    var newOptions;
+    constructor: function(options) {
+      var newOptions;
 
-    this.leftGrid = this.createLeftGrid(options);
-    this.rightGrid = this.createRightGrid(options);
+      this.leftGrid = this.createLeftGrid(options);
+      this.rightGrid = this.createRightGrid(options);
 
-    newOptions = {
-      items: [this.leftGrid, this.rightGrid],
-      buttons: [
-        this.createResetButton(),
-        this.createCancelButton(),
-        this.createOkButton()
-      ]
-    };
-    Ext.applyIf(newOptions, options);
-
-    this.callParent([newOptions]);
-    return this;
-  },
-
-  /* Additional methods */
-
-  createLeftGrid: function(options) {
-    return this.createGrid(false, {
-      margin: '0 5 0 0',
-      columns: [
-        this.createTitleColumn(),
-        this.createSortDirectionColumn()
-      ],
-      store: this.createLeftStore(options.sorters)
-    });
-  },
-
-  createRightGrid: function(options) {
-    return this.createGrid(true, {
-      store: this.createRightStore(options.sorters),
-      columns: [
-        this.createTitleColumn()
-      ],
-      listeners: {
-        viewready: this.sortRightGrid,
-        scope: this
-      }
-    });
-  },
-
-  createGrid: function(sortOnDrop, options) {
-    var newOptions = {
-      hideHeaders: true,
-      flex: 1,
-      sortableColumns: false,
-      viewConfig: {
-        plugins: {
-          ptype: 'gridviewdragdrop',
-          ddGroup: 'sortPanelDDGroup'
-        }
-      },
-      selModel: {
-        selType: 'rowmodel',
-        allowDeselect: true,
-        mode: 'SINGLE'
-      }
-    };
-
-    if (sortOnDrop) {
-      newOptions.viewConfig.listeners = {
-        drop: this.sortRightGrid,
-        scope: this
+      newOptions = {
+        items: [this.leftGrid, this.rightGrid],
+        buttons: [
+          this.createResetButton(),
+          this.createCancelButton(),
+          this.createOkButton()
+        ]
       };
-    }
+      Ext.applyIf(newOptions, options);
 
-    Ext.applyIf(newOptions, options);
+      this.callParent([newOptions]);
+      return this;
+    },
 
-    return Ext.create('Ext.grid.Panel', newOptions);
-  },
+    /* Additional methods */
 
-  createTitleColumn: function() {
-    return {
-      dataIndex: 'title',
-      flex: 1
-    };
-  },
+    createLeftGrid: function(options) {
+      return this.createGrid(false, {
+        margin: '0 5 0 0',
+        columns: [
+          this.createTitleColumn(),
+          this.createSortDirectionColumn()
+        ],
+        store: this.createLeftStore(options.sorters)
+      });
+    },
 
-  createSortDirectionColumn: function() {
-    return {
-      xtype: 'actioncolumn',
-      width: 20,
-      items: [{
-        getClass: function(v, meta, record) {
-          return record.get('sortDirection') === 'ASC' ?
-              'icon-sort-ascending' : 'icon-sort-descending';
+    createRightGrid: function(options) {
+      return this.createGrid(true, {
+        store: this.createRightStore(options.sorters),
+        columns: [
+          this.createTitleColumn()
+        ],
+        listeners: {
+          viewready: this.sortRightGrid,
+          scope: this
+        }
+      });
+    },
+
+    createGrid: function(sortOnDrop, options) {
+      var newOptions = {
+        hideHeaders: true,
+        flex: 1,
+        sortableColumns: false,
+        viewConfig: {
+          plugins: {
+            ptype: 'gridviewdragdrop',
+            ddGroup: 'sortPanelDDGroup'
+          }
         },
-        handler: function(grid, rowIndex, colIndex, item, e, record) {
-          var newDirection = record.get('sortDirection') === 'ASC' ?
-              'DESC' : 'ASC';
-          record.set('sortDirection', newDirection);
+        selModel: {
+          selType: 'rowmodel',
+          allowDeselect: true,
+          mode: 'SINGLE'
         }
-      }]
-    };
-  },
+      };
 
-  createLeftStore: function(sorters) {
-    var data = sorters
-        .filter(function(s) {
-          return s.sortDirection !== null;
-        });
+      if (sortOnDrop) {
+        newOptions.viewConfig.listeners = {
+          drop: this.sortRightGrid,
+          scope: this
+        };
+      }
 
-    return this.createStore(data);
-  },
+      Ext.applyIf(newOptions, options);
 
-  createRightStore: function(sorters) {
-    var data = sorters
-        .filter(function(s) {
-          return s.sortDirection === null;
-        })
-        .map(function(s) {
-          return {
-            title: s.title,
-            name: s.name,
-            sortDirection: 'ASC'
-          };
-        });
+      return Ext.create('Ext.grid.Panel', newOptions);
+    },
 
-    return this.createStore(data);
-  },
+    createTitleColumn: function() {
+      return {
+        dataIndex: 'title',
+        flex: 1
+      };
+    },
 
-  createStore: function(data) {
-    return Ext.create('Ext.data.JsonStore', {
-      model: 'Epsitec.cresus.webcore.SortItem',
-      proxy: {
-        type: 'memory',
-        reader: {
-          type: 'json'
-        }
-      },
-      data: data
-    });
-  },
+    createSortDirectionColumn: function() {
+      return {
+        xtype: 'actioncolumn',
+        width: 20,
+        items: [{
+          getClass: function(v, meta, record) {
+            return record.get('sortDirection') === 'ASC' ?
+                'icon-sort-ascending' : 'icon-sort-descending';
+          },
+          handler: function(grid, rowIndex, colIndex, item, e, record) {
+            var newDirection = record.get('sortDirection') === 'ASC' ?
+                'DESC' : 'ASC';
+            record.set('sortDirection', newDirection);
+          }
+        }]
+      };
+    },
 
-  sortRightGrid: function() {
-    this.rightGrid.store.sort({
-      property: 'title',
-      direction: 'ASC'
-    });
-  },
+    createLeftStore: function(sorters) {
+      var data = sorters
+          .filter(function(s) {
+            return s.sortDirection !== null;
+          });
 
-  createResetButton: function() {
-    return Ext.create('Ext.Button', {
-      text: Epsitec.Texts.getResetLabel(),
-      handler: this.onResetClick,
-      scope: this
-    });
-  },
+      return this.createStore(data);
+    },
 
-  createCancelButton: function() {
-    return Ext.create('Ext.Button', {
-      text: Epsitec.Texts.getCancelLabel(),
-      handler: this.onCancelClick,
-      scope: this
-    });
-  },
+    createRightStore: function(sorters) {
+      var data = sorters
+          .filter(function(s) {
+            return s.sortDirection === null;
+          })
+          .map(function(s) {
+            return {
+              title: s.title,
+              name: s.name,
+              sortDirection: 'ASC'
+            };
+          });
 
-  createOkButton: function() {
-    return Ext.create('Ext.Button', {
-      text: Epsitec.Texts.getOkLabel(),
-      handler: this.onOkClick,
-      scope: this
-    });
-  },
+      return this.createStore(data);
+    },
 
-  onResetClick: function() {
-    var leftStore = this.createLeftStore(this.initialSorters),
-        rightStore = this.createRightStore(this.initialSorters);
+    createStore: function(data) {
+      return Ext.create('Ext.data.JsonStore', {
+        model: 'Epsitec.cresus.webcore.SortItem',
+        proxy: {
+          type: 'memory',
+          reader: {
+            type: 'json'
+          }
+        },
+        data: data
+      });
+    },
 
-    this.leftGrid.reconfigure(leftStore);
-    this.rightGrid.reconfigure(rightStore);
-    this.sortRightGrid();
-  },
+    sortRightGrid: function() {
+      this.rightGrid.store.sort({
+        property: 'title',
+        direction: 'ASC'
+      });
+    },
 
-  onCancelClick: function() {
-    this.close();
-  },
+    createResetButton: function() {
+      return Ext.create('Ext.Button', {
+        text: Epsitec.Texts.getResetLabel(),
+        handler: this.onResetClick,
+        scope: this
+      });
+    },
 
-  onOkClick: function() {
-    var sorters = this.leftGrid.store
-        .getRange()
-        .map(function(i) {
-          return {
-            title: i.get('title'),
-            name: i.get('name'),
-            sortDirection: i.get('sortDirection')
-          };
-        });
+    createCancelButton: function() {
+      return Ext.create('Ext.Button', {
+        text: Epsitec.Texts.getCancelLabel(),
+        handler: this.onCancelClick,
+        scope: this
+      });
+    },
 
-    this.callback.execute([sorters]);
-    this.close();
-  }
+    createOkButton: function() {
+      return Ext.create('Ext.Button', {
+        text: Epsitec.Texts.getOkLabel(),
+        handler: this.onOkClick,
+        scope: this
+      });
+    },
+
+    onResetClick: function() {
+      var leftStore = this.createLeftStore(this.initialSorters),
+          rightStore = this.createRightStore(this.initialSorters);
+
+      this.leftGrid.reconfigure(leftStore);
+      this.rightGrid.reconfigure(rightStore);
+      this.sortRightGrid();
+    },
+
+    onCancelClick: function() {
+      this.close();
+    },
+
+    onOkClick: function() {
+      var sorters = this.leftGrid.store
+          .getRange()
+          .map(function(i) {
+            return {
+              title: i.get('title'),
+              name: i.get('name'),
+              sortDirection: i.get('sortDirection')
+            };
+          });
+
+      this.callback.execute([sorters]);
+      this.close();
+    }
+  });
 });

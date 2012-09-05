@@ -1,18 +1,23 @@
-Ext.define('Epsitec.cresus.webcore.BooleanNullableColumn', {
-  extend: 'Ext.grid.column.Boolean',
-  alias: ['widget.booleannullablecolumn'],
-  alternateClassName: ['Epsitec.BooleanNullableColumn'],
+Ext.require([
+  'Epsitec.cresus.webcore.Texts'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.BooleanNullableColumn', {
+    extend: 'Ext.grid.column.Boolean',
+    alias: ['widget.booleannullablecolumn'],
+    alternateClassName: ['Epsitec.BooleanNullableColumn'],
 
-  /* Config */
+    /* Config */
 
-  nullText: Epsitec.Texts.getNullItemText(),
+    nullText: Epsitec.Texts.getNullItemText(),
 
-  /* Additional methods */
+    /* Additional methods */
 
-  defaultRenderer: function(value) {
-    if (value === null) {
-      return this.nullText;
+    defaultRenderer: function(value) {
+      if (value === null) {
+        return this.nullText;
+      }
+      return this.callParent(arguments);
     }
-    return this.callParent(arguments);
-  }
+  });
 });

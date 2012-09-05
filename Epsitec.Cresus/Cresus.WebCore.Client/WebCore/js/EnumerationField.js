@@ -1,31 +1,36 @@
-Ext.define('Epsitec.cresus.webcore.EnumerationField', {
-  extend: 'Ext.form.field.ComboBox',
-  alternateClassName: ['Epsitec.EnumerationField'],
-  alias: 'widget.epsitec.enumerationfield',
+Ext.require([
+  'Epsitec.cresus.webcore.Enumeration'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.EnumerationField', {
+    extend: 'Ext.form.field.ComboBox',
+    alternateClassName: ['Epsitec.EnumerationField'],
+    alias: 'widget.epsitec.enumerationfield',
 
-  /* Config */
+    /* Config */
 
-  valueField: 'id',
-  displayField: 'text',
-  queryMode: 'local',
-  forceSelection: true,
-  typeAhead: true,
+    valueField: 'id',
+    displayField: 'text',
+    queryMode: 'local',
+    forceSelection: true,
+    typeAhead: true,
 
-  /* Constructor */
+    /* Constructor */
 
-  constructor: function(options) {
-    var store, newOptions;
+    constructor: function(options) {
+      var store, newOptions;
 
-    store = Epsitec.Enumeration.getStore(options.enumerationName);
+      store = Epsitec.Enumeration.getStore(options.enumerationName);
 
-    store.on('load', function() { this.select(options.value); }, this);
+      store.on('load', function() { this.select(options.value); }, this);
 
-    newOptions = {
-      store: store
-    };
-    Ext.applyIf(newOptions, options);
+      newOptions = {
+        store: store
+      };
+      Ext.applyIf(newOptions, options);
 
-    this.callParent([newOptions]);
-    return this;
-  }
+      this.callParent([newOptions]);
+      return this;
+    }
+  });
 });
