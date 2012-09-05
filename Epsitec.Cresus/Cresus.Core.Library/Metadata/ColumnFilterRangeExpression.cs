@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public override Expression GetExpression(Expression parameter)
 		{
-			return Expression.And (
+			return Expression.AndAlso (
 				ColumnFilterExpression.Compare (parameter, this.lowerBoundComparison, this.lowerBound.GetExpression (parameter)),
 				ColumnFilterExpression.Compare (parameter, this.upperBoundComparison, this.upperBound.GetExpression (parameter)));
 		}

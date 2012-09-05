@@ -15,9 +15,10 @@ namespace Epsitec.Cresus.Core.Metadata
 {
 	public class EntityFilter : IFilter
 	{
-		public EntityFilter()
+		public EntityFilter(Druid entityId)
 		{
 			this.columns = new List<ColumnRef<EntityColumnFilter>> ();
+			this.entityId = entityId;
 		}
 
 
@@ -29,9 +30,17 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public Druid							EntityId
+		{
+			get
+			{
+				return this.entityId;
+			}
+		}
+
 		#region IFilter Members
 
-		public bool IsValid
+		public bool								IsValid
 		{
 			get
 			{
@@ -41,7 +50,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public Expression GetExpression(Expression parameter)
 		{
-			return Filter.GetExpression (this.columns.Select (x => x.Value), parameter, FilterCombineMode.And);
+			return Filter.GetExpression (this.GetColumnFilters (parameter), FilterCombineMode.And);
 		}
 
 		#endregion
@@ -50,6 +59,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		public XElement Save(string xmlNodeName)
 		{
 			var xml = new XElement (xmlNodeName,
+				new XAttribute (Strings.EntityId, this.entityId.ToCompactString ()),
 				new XElement (Strings.ColumnList,
 					this.columns.Select (x => x.Save (Strings.ColumnItem))));
 
@@ -58,8 +68,9 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public static EntityFilter Restore(XElement xml)
 		{
-			var list = xml.Element (Strings.ColumnList).Elements ();
-			var filter = new EntityFilter ();
+			var list     = xml.Element (Strings.ColumnList).Elements ();
+			var entityId = Druid.Parse (xml.Attribute (Strings.EntityId));
+			var filter   = new EntityFilter (entityId);
 
 			filter.columns.AddRange (list.Select (x => ColumnRef.Restore<EntityColumnFilter> (x)));
 
@@ -67,10 +78,23 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		private IEnumerable<Expression> GetColumnFilters(Expression parameter)
+		{
+			foreach (var column in this.columns)
+			{
+				var entityColumn = column.Resolve (this.entityId);
+				var columnLambda = ExpressionAnalyzer.ReplaceParameter (entityColumn.Expression, parameter as ParameterExpression);
+
+				yield return column.Value.GetExpression (columnLambda);
+			}
+		}
+
+
 		#region Strings Class
 
 		private static class Strings
 		{
+			public const string EntityId = "id";
 			public const string ColumnList = "C";
 			public const string ColumnItem = "c";
 		}
@@ -79,5 +103,6 @@ namespace Epsitec.Cresus.Core.Metadata
 
 
 		private readonly List<ColumnRef<EntityColumnFilter>> columns;
+		private readonly Druid entityId;
 	}
 }

@@ -43,10 +43,20 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			return XmlNodeClassFactory.Restore<ColumnFilterExpression> (xml);
 		}
-
+		
 
 		public static Expression Compare(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
+			if (parameter.Type != expression.Type)
+			{
+				throw new System.ArgumentException (string.Format ("Parameter type mismatch: trying to compare {0} with {1}", parameter.Type.FullName, expression.Type.FullName));
+			}
+
+			if (parameter.Type == typeof (string))
+			{
+				return ColumnFilterExpression.CompareStrings (parameter, code, expression);
+			}
+
 			switch (code)
 			{
 				case ColumnFilterComparisonCode.Equal:
@@ -66,6 +76,33 @@ namespace Epsitec.Cresus.Core.Metadata
 
 				case ColumnFilterComparisonCode.LessThanOrEqual:
 					return Expression.LessThanOrEqual (parameter, expression);
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));
+			}
+		}
+
+		private static Expression CompareStrings(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
+		{
+			switch (code)
+			{
+				case ColumnFilterComparisonCode.Equal:
+					return Expression.Equal (parameter, expression);
+
+				case ColumnFilterComparisonCode.NotEqual:
+					return Expression.NotEqual (parameter, expression);
+
+				case ColumnFilterComparisonCode.GreaterThan:
+					return Expression.GreaterThan (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+
+				case ColumnFilterComparisonCode.GreaterThanOrEqual:
+					return Expression.GreaterThanOrEqual (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+
+				case ColumnFilterComparisonCode.LessThan:
+					return Expression.LessThan (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+
+				case ColumnFilterComparisonCode.LessThanOrEqual:
+					return Expression.LessThanOrEqual (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
 
 				case ColumnFilterComparisonCode.Like:
 					return Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression);
@@ -77,6 +114,8 @@ namespace Epsitec.Cresus.Core.Metadata
 					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));
 			}
 		}
+
+		private static readonly Expression zero = Expression.Constant (0);
 
 		public static Expression IsNull(Expression parameter)
 		{

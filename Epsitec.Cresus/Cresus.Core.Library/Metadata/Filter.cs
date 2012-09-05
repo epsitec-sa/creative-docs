@@ -104,39 +104,46 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public static Expression GetExpression(IEnumerable<IFilter> filters, Expression parameter, FilterCombineMode mode)
 		{
-			var list = filters.ToList ();
+			return Filter.GetExpression (filters.Select (x => x.GetExpression (parameter)), mode);
+		}
+
+		public static Expression GetExpression(IEnumerable<Expression> expressions, FilterCombineMode mode)
+		{
+			var list = expressions.ToList ();
 
 			switch (list.Count)
 			{
 				case 0:
 					return null;
 				case 1:
-					return list[0].GetExpression (parameter);
+					return list[0];
 				default:
-					return Filter.GetRecursiveExpression (list, parameter, mode);
+					return Filter.GetRecursiveExpression (list, mode);
 			}
 		}
 
 		/// <summary>
-		/// Recursively gets the expression tree, build by combining all individual filter nodes
+		/// Recursively gets the expression tree, build by combining all individual expressions
 		/// using either logical <c>AND</c> or logical <c>OR</c>.
 		/// </summary>
-		/// <param name="list">The list of nodes.</param>
-		/// <param name="parameter">The parameter.</param>
-		/// <param name="index">The index into the list of nodes.</param>
-		/// <returns>The combined filter expression.</returns>
-		public static Expression GetRecursiveExpression(IList<IFilter> list, Expression parameter, FilterCombineMode mode, int index = 0)
+		/// <param name="list">The list of expressions.</param>
+		/// <param name="mode">The mode.</param>
+		/// <param name="index">The index into the list of expressions.</param>
+		/// <returns>
+		/// The combined filter expression.
+		/// </returns>
+		public static Expression GetRecursiveExpression(IList<Expression> list, FilterCombineMode mode, int index = 0)
 		{
-			Expression left = list[index+0].GetExpression (parameter);
+			Expression left = list[index+0];
 			Expression right;
 
 			if (index+2 == list.Count)
 			{
-				right = list[index+1].GetExpression (parameter);
+				right = list[index+1];
 			}
 			else
 			{
-				right = Filter.GetRecursiveExpression (list, parameter, mode, index+1);
+				right = Filter.GetRecursiveExpression (list, mode, index+1);
 			}
 
 			//	See http://stackoverflow.com/questions/457316/combining-two-expressions-expressionfunct-bool
