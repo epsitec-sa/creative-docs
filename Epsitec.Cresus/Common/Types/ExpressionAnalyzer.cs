@@ -93,6 +93,32 @@ namespace Epsitec.Common.Types
 		}
 
 
+		/// <summary>
+		/// Replaces the parameter of the lambda expression with another one.
+		/// </summary>
+		/// <param name="expression">The lambda expression.</param>
+		/// <param name="paramNew">The replacement parameter.</param>
+		/// <returns>The updated lambda expression.</returns>
+		public static Expression ReplaceParameter(LambdaExpression expression, ParameterExpression paramNew)
+		{
+			return ExpressionAnalyzer.ReplaceParameter (expression, expression.Parameters.First (), paramNew);
+		}
+
+		/// <summary>
+		/// Replaces the parameter of the lambda expression with another one.
+		/// </summary>
+		/// <param name="expression">The lambda expression.</param>
+		/// <param name="paramOld">The original parameter.</param>
+		/// <param name="paramNew">The replacement parameter.</param>
+		/// <returns>
+		/// The updated lambda expression.
+		/// </returns>
+		public static Expression ReplaceParameter(LambdaExpression expression, ParameterExpression paramOld, ParameterExpression paramNew)
+		{
+			var replacer = new ExpressionParameterReplacer (paramOld, paramNew);
+			return replacer.Visit (expression.Body);
+		}
+
 
 		/// <summary>
 		/// Creates a setter expression based on a getter expression.

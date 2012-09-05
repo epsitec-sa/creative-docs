@@ -984,6 +984,7 @@
     <Compile Include="Types\Exceptions\ReadOnlyException.cs" />
     <Compile Include="Types\Exceptions\WrongBaseTypeException.cs" />
     <Compile Include="Types\ExpressionAnalyzer.cs" />
+    <Compile Include="Types\ExpressionParameterReplacer.cs" />
     <Compile Include="Types\FieldMembership.cs" />
     <Compile Include="Types\FieldOptions.cs" />
     <Compile Include="Types\FieldRelation.cs" />
