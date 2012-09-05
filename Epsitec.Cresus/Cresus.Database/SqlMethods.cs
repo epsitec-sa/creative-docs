@@ -11,6 +11,14 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public static class SqlMethods
 	{
+		public static MethodInfo				CompareToMethodInfo
+		{
+			get
+			{
+				return SqlMethods.compareToMethodInfo;
+			}
+		}
+
 		public static MethodInfo				LikeMethodInfo
 		{
 			get
@@ -43,6 +51,21 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+		/// <summary>
+		/// Compares two strings. This method is used when generating SQL queries based
+		/// on expressions, since we cannot encode <c>a &lt; "x"</c> in an expression
+		/// tree if we want to generate SQL from it.
+		/// </summary>
+		/// <param name="arg1">The first string argument.</param>
+		/// <param name="arg2">The second string argument.</param>
+		/// <returns>zero if both arguments are equal, <c>-1</c> if <paramref name="arg1"/> comes
+		/// before <paramref name="arg2"/> or <c>1</c> if <paramref name="arg1"/> comes after
+		/// <paramref name="arg2"/>.</returns>
+		public static int CompareTo(string arg1, string arg2)
+		{
+			return arg1.CompareTo (arg2);
+		}
 
 		/// <summary>
 		/// Determines whether a specific value matches a specified pattern. This method
@@ -88,13 +111,14 @@ namespace Epsitec.Cresus.Database
 		
 		static SqlMethods()
 		{
+			SqlMethods.compareToMethodInfo   = typeof (SqlMethods).GetMethod ("CompareTo", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.likeMethodInfo        = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string), typeof (char) });
 			SqlMethods.isNullMethodInfo      = typeof (SqlMethods).GetMethod ("IsNull");
 			SqlMethods.isNotNullMethodInfo   = typeof (SqlMethods).GetMethod ("IsNotNull");
 		}
 
-
+		private static readonly MethodInfo		compareToMethodInfo;
 		private static readonly MethodInfo		likeMethodInfo;
 		private static readonly MethodInfo		escapedLikeMethodInfo;
 		private static readonly MethodInfo		isNullMethodInfo;
