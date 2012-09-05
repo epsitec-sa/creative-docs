@@ -24,6 +24,12 @@ namespace Epsitec.Common.Support
 			this.id = id;
 			this.type = type;
 		}
+		
+		public XmlNodeClassAttribute(System.Type type)
+			: this ("-", type)
+		{
+		}
+
 
 		#region IPlugInAttribute<string> Members
 

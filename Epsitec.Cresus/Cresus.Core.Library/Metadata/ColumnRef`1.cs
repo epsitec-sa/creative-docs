@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		protected override XElement SaveValue(string xmlNodeName)
 		{
-			return ColumnRef<T>.saveFunc (this, xmlNodeName);
+			return ColumnRef<T>.saveFunc (this.value, xmlNodeName);
 		}
 
 		public static T RestoreValue(XElement xml)
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			ColumnRef<T>.restoreFunc = xml => (T) restoreMethod.Invoke (null, new object[] { xml });
 		}
 
-		private static readonly System.Func<ColumnRef, string, XElement> saveFunc;
+		private static readonly System.Func<T, string, XElement> saveFunc;
 		private static readonly System.Func<XElement, T> restoreFunc;
 
 		private readonly T value;

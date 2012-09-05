@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
@@ -217,7 +218,7 @@ using System.Xml.Linq;
 		{
 			System.Type TClass = typeof (TClass);
 
-			foreach (TAttribute attribute in assembly.GetCustomAttributes (typeof (TAttribute), false))
+			foreach (TAttribute attribute in assembly.GetCustomAttributes<TAttribute> ())
 			{
 				if (typeof (TClass).IsClass)
 				{
@@ -289,7 +290,7 @@ using System.Xml.Linq;
 			{
 				if (this.restoreFunc == null)
 				{
-					var restoreMethod = typeof (TClass).GetMethod ("Restore", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.InvokeMethod);
+					var restoreMethod = this.type.GetMethod ("Restore", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.InvokeMethod);
 					this.restoreFunc = x => (TClass) restoreMethod.Invoke (null, new object[] { x });
 				}
 

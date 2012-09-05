@@ -681,6 +681,7 @@
     <Compile Include="Support\XmlExtractor.cs" />
     <Compile Include="Support\XmlNodeClassAttribute.cs" />
     <Compile Include="Support\XmlNodeClassFactory.cs" />
+    <Compile Include="Support\XmlNodeClassFactory`1.cs" />
     <Compile Include="Support\XmlValidator.cs" />
     <Compile Include="Text\Exchange\ClipboardData.cs" />
     <Compile Include="Text\Exchange\CopyPasteContext.cs" />

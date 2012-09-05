@@ -11,6 +11,6 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public interface IXmlNodeClass
 	{
-		XElement Serialize();
+		XElement Save(string xmlNodeName);
 	}
 }

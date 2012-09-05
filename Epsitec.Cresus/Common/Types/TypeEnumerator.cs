@@ -23,6 +23,7 @@ namespace Epsitec.Common.Types
 			this.assemblies    = new List<Assembly> ();
 			this.typeNames     = new HashSet<string> ();
 			this.typeMap       = new Dictionary<string, List<System.Type>> ();
+			this.attributes    = new Dictionary<System.Type, List<System.Attribute>> ();
 			this.assemblyNames = new HashSet<string> ();
 			
 			this.namespaceShortcutsShortToFull = new ConcurrentDictionary<string, string> ();
@@ -130,6 +131,29 @@ namespace Epsitec.Common.Types
 
 				yield return type;
 			}
+		}
+
+		/// <summary>
+		/// Gets all assembly level attributes of the specified type.
+		/// </summary>
+		/// <typeparam name="TAttribute">The type of the attribute.</typeparam>
+		/// <returns>The collection of assembly level attributes.</returns>
+		public IEnumerable<TAttribute> GetAllAssemblyLevelAttributes<TAttribute>()
+			where TAttribute : System.Attribute
+		{
+			var result = new List<TAttribute> ();
+
+			lock (this.attributes)
+			{
+				List<System.Attribute> list;
+				
+				if (this.attributes.TryGetValue (typeof (TAttribute), out list))
+				{
+					result.AddRange (list.Cast<TAttribute> ());
+				}
+			}
+
+			return result;
 		}
 
 
@@ -294,6 +318,29 @@ namespace Epsitec.Common.Types
 						this.namespaceShortcutsFullToShort[shortcut.FullName]  = shortcut.ShortName;
 					}
 				}
+				
+				var attributes = assembly.GetCustomAttributes (false);
+
+				lock (this.attributes)
+				{
+					foreach (System.Attribute attribute in attributes)
+					{
+						var attributeType = attribute.GetType ();
+						List<System.Attribute> attributeList;
+
+						if (this.attributes.TryGetValue (attributeType, out attributeList))
+						{
+							//	List already exists.
+						}
+						else
+						{
+							attributeList = new List<System.Attribute> ();
+							this.attributes[attributeType] = attributeList;
+						}
+						
+						attributeList.Add (attribute);
+					}
+				}
 			}
 		}
 
@@ -303,6 +350,7 @@ namespace Epsitec.Common.Types
 		private readonly List<Assembly>			assemblies;
 		private readonly HashSet<string>		assemblyNames;
 		private readonly HashSet<string>		typeNames;
+		private readonly Dictionary<System.Type, List<System.Attribute>> attributes;
 		private readonly Dictionary<string, List<System.Type>> typeMap;
 		private readonly ConcurrentDictionary<string, string> namespaceShortcutsShortToFull;
 		private readonly ConcurrentDictionary<string, string> namespaceShortcutsFullToShort;
