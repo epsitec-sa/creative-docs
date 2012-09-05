@@ -1,10 +1,16 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Core.Metadata;
+
 using System.Linq.Expressions;
+using System.Xml.Linq;
+using Epsitec.Common.Types;
+
+[assembly: XmlNodeClass ("comp", typeof (ColumnFilterComparisonExpression))]
 
 namespace Epsitec.Cresus.Core.Metadata
 {
@@ -83,10 +89,33 @@ namespace Epsitec.Cresus.Core.Metadata
 				throw new System.NotSupportedException ("Cannot compare with NULL");
 			}
 
-			return ColumnFilterExpression.Comparison (parameter, this.comparison, this.constant.GetExpression ());
+			return ColumnFilterExpression.Compare (parameter, this.comparison, this.constant.GetExpression (parameter));
+		}
+
+		public override XElement Save(string xmlNodeName)
+		{
+			return new XElement (xmlNodeName,
+				new XAttribute (Strings.ComparisonCode, InvariantConverter.ToString (EnumType.ConvertToInt (this.comparison))),
+				new XAttribute (Strings.Value, this.constant.ToString ()));
+		}
+
+		public static new ColumnFilterComparisonExpression Restore(XElement xml)
+		{
+			return new ColumnFilterComparisonExpression ()
+			{
+				Comparison = InvariantConverter.ToEnum (xml.Attribute (Strings.ComparisonCode), ColumnFilterComparisonCode.Undefined),
+				Constant   = ColumnFilterConstant.Parse (xml.Attribute (Strings.Value))
+			};
 		}
 
 
+		private static class Strings
+		{
+			public const string ComparisonCode = "c";
+			public const string Value = "v";
+		}
+		
+			
 		private ColumnFilterComparisonCode		comparison;
 		private ColumnFilterConstant			constant;
 	}

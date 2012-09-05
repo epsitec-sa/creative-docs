@@ -7,10 +7,11 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public struct ColumnFilterConstant : System.IEquatable<ColumnFilterConstant>
+	public struct ColumnFilterConstant : IFilter, System.IEquatable<ColumnFilterConstant>
 	{
 		private ColumnFilterConstant(ColumnFilterConstantType type, object value)
 		{
@@ -67,6 +68,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		#region IFilter Members
+
 		public bool								IsValid
 		{
 			get
@@ -74,12 +77,13 @@ namespace Epsitec.Cresus.Core.Metadata
 				return this.IsNull == false && this.IsDefined;
 			}
 		}
-
 		
-		public Expression GetExpression()
+		public Expression GetExpression(Expression parameter)
 		{
 			return Expression.Constant (this.value, this.SystemType);
 		}
+
+		#endregion
 
 		public override string ToString()
 		{
@@ -198,6 +202,15 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new ColumnFilterConstant (type, obj);
 		}
 
+		public static ColumnFilterConstant Parse(XAttribute attribute)
+		{
+			if (attribute == null)
+			{
+				throw new System.ArgumentException ("Null or empty value");
+			}
+
+			return ColumnFilterConstant.Parse (attribute.Value);
+		}
 		
 		private static object FromValue(ColumnFilterConstantType type, string value)
 		{

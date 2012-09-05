@@ -2,12 +2,17 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
+
+[assembly:XmlNodeClass (typeof (ColumnFilterExpression))]
 
 namespace Epsitec.Cresus.Core.Metadata
 {
@@ -15,7 +20,7 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// The <c>ColumnFilterExpression</c> class is the base class used to represent filters
 	/// applied to a column of a table.
 	/// </summary>
-	public abstract class ColumnFilterExpression : IFilter
+	public abstract class ColumnFilterExpression : IFilter, IXmlNodeClass
 	{
 		#region IFilter Members
 
@@ -28,23 +33,19 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		#endregion
 
-		public XElement Save(string xmlNodeName)
-		{
-			return new XElement (xmlNodeName);
-		}
+		#region IXmlNodeClass Members
+
+		public abstract XElement Save(string xmlNodeName);
+
+		#endregion
 
 		public static ColumnFilterExpression Restore(XElement xml)
 		{
-			if (xml == null)
-			{
-				return null;
-			}
-
-			throw new System.NotImplementedException ();
+			return XmlNodeClassFactory.Restore<ColumnFilterExpression> (xml);
 		}
 
 
-		public static Expression Comparison(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
+		public static Expression Compare(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
 			switch (code)
 			{

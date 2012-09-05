@@ -1,12 +1,18 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Xml.Linq;
+
+[assembly:XmlNodeClass ("range", typeof (ColumnFilterRangeExpression))]
 
 namespace Epsitec.Cresus.Core.Metadata
 {
@@ -116,10 +122,40 @@ namespace Epsitec.Cresus.Core.Metadata
 		public override Expression GetExpression(Expression parameter)
 		{
 			return Expression.And (
-				ColumnFilterExpression.Comparison (parameter, this.lowerBoundComparison, this.lowerBound.GetExpression ()),
-				ColumnFilterExpression.Comparison (parameter, this.upperBoundComparison, this.upperBound.GetExpression ()));
+				ColumnFilterExpression.Compare (parameter, this.lowerBoundComparison, this.lowerBound.GetExpression (parameter)),
+				ColumnFilterExpression.Compare (parameter, this.upperBoundComparison, this.upperBound.GetExpression (parameter)));
 		}
-		
+
+		public override XElement Save(string xmlNodeName)
+		{
+			return new XElement (xmlNodeName,
+				new XAttribute (Strings.LowerBoundComparisonCode, InvariantConverter.ToString (EnumType.ConvertToInt (this.lowerBoundComparison))),
+				new XAttribute (Strings.UpperBoundComparisonCode, InvariantConverter.ToString (EnumType.ConvertToInt (this.upperBoundComparison))),
+				new XAttribute (Strings.LowerBoundValue, this.lowerBound.ToString ()),
+				new XAttribute (Strings.UpperBoundValue, this.upperBound.ToString ()));
+		}
+
+
+		public static new ColumnFilterRangeExpression Restore(XElement xml)
+		{
+			return new ColumnFilterRangeExpression ()
+			{
+				LowerBoundComparison = InvariantConverter.ToEnum (xml.Attribute (Strings.LowerBoundComparisonCode), ColumnFilterComparisonCode.Undefined),
+				UpperBoundComparison = InvariantConverter.ToEnum (xml.Attribute (Strings.UpperBoundComparisonCode), ColumnFilterComparisonCode.Undefined),
+				LowerBound = ColumnFilterConstant.Parse (xml.Attribute (Strings.LowerBoundValue)),
+				UpperBound = ColumnFilterConstant.Parse (xml.Attribute (Strings.UpperBoundValue))
+			};
+		}
+
+
+		private static class Strings
+		{
+			public const string LowerBoundComparisonCode = "lc";
+			public const string UpperBoundComparisonCode = "uc";
+			public const string LowerBoundValue = "lv";
+			public const string UpperBoundValue = "uv";
+		}
+
 		private ColumnFilterComparisonCode		lowerBoundComparison;
 		private ColumnFilterComparisonCode		upperBoundComparison;
 		private ColumnFilterConstant			lowerBound;

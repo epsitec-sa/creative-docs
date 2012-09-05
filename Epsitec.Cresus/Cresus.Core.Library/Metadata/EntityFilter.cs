@@ -35,27 +35,16 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			get
 			{
-				return this.columns.All (x => this.GetExpression (x) != null);
+				return this.columns.All (x => x.Value.IsValid);
 			}
 		}
 
 		public Expression GetExpression(Expression parameter)
 		{
-			throw new System.NotImplementedException ();
+			return Filter.GetExpression (this.columns.Select (x => x.Value), parameter, FilterCombineMode.And);
 		}
 
 		#endregion
-
-
-		public Expression GetExpression(ColumnRef<EntityColumnFilter> column)
-		{
-			var columnRef = column.Id;
-			var columnFilter = column.Value;
-			
-			
-			
-			return null;
-		}
 
 
 		public XElement Save(string xmlNodeName)

@@ -5,7 +5,9 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Xml.Linq;
+using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
@@ -36,13 +38,19 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			get
 			{
-				throw new System.NotImplementedException ();
+				return this.filterExpression != null
+					&& this.filterExpression.IsValid;
 			}
 		}
 
 		public Expression GetExpression(Expression parameter)
 		{
-			throw new System.NotImplementedException ();
+			if (this.filterExpression == null)
+			{
+				return null;
+			}
+
+			return this.filterExpression.GetExpression (parameter);
 		}
 
 		#endregion
@@ -55,7 +63,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public XElement Save(string xmlNodeName)
 		{
-			return new XElement (xmlNodeName);
+			return new XElement (xmlNodeName, XmlNodeClassFactory.Save (this.filterExpression));
 		}
 
 		public static EntityColumnFilter Restore(XElement xml)
@@ -65,13 +73,15 @@ namespace Epsitec.Cresus.Core.Metadata
 				return null;
 			}
 
-			return new EntityColumnFilter ();
+			var element = xml.Elements ().First ();
+			
+			return new EntityColumnFilter (ColumnFilterExpression.Restore (element));
 		}
 
-		
-		#region Xml Class
 
-		private static class Xml
+		#region Strings Class
+
+		private static class Strings
 		{
 		}
 

@@ -35,11 +35,11 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public IEnumerable<FilterNode>			ActiveNodes
+		public IEnumerable<IFilter>				ActiveFilters
 		{
 			get
 			{
-				return this.nodes.Where (x => x.ActiveMode != FilterActiveMode.Disabled);
+				return this.nodes.Where (x => x.ActiveMode != FilterActiveMode.Disabled).Cast<IFilter> ();
 			}
 		}
 
@@ -62,23 +62,13 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			get
 			{
-				return this.ActiveNodes.All (x => x.IsValid);
+				return this.ActiveFilters.All (x => x.IsValid);
 			}
 		}
 
 		public Expression GetExpression(Expression parameter)
 		{
-			var list = this.ActiveNodes.ToList ();
-
-			switch (list.Count)
-			{
-				case 0:
-					return null;
-				case 1:
-					return list[0].GetExpression (parameter);
-				default:
-					return this.GetRecursiveExpression (parameter, list);
-			}
+			return Filter.GetExpression (this.ActiveFilters, parameter, this.CombineMode);
 		}
 
 		#endregion
@@ -112,15 +102,30 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		public static Expression GetExpression(IEnumerable<IFilter> filters, Expression parameter, FilterCombineMode mode)
+		{
+			var list = filters.ToList ();
+
+			switch (list.Count)
+			{
+				case 0:
+					return null;
+				case 1:
+					return list[0].GetExpression (parameter);
+				default:
+					return Filter.GetRecursiveExpression (list, parameter, mode);
+			}
+		}
+
 		/// <summary>
 		/// Recursively gets the expression tree, build by combining all individual filter nodes
 		/// using either logical <c>AND</c> or logical <c>OR</c>.
 		/// </summary>
-		/// <param name="parameter">The parameter.</param>
 		/// <param name="list">The list of nodes.</param>
+		/// <param name="parameter">The parameter.</param>
 		/// <param name="index">The index into the list of nodes.</param>
 		/// <returns>The combined filter expression.</returns>
-		private Expression GetRecursiveExpression(Expression parameter, IList<FilterNode> list, int index = 0)
+		public static Expression GetRecursiveExpression(IList<IFilter> list, Expression parameter, FilterCombineMode mode, int index = 0)
 		{
 			Expression left = list[index+0].GetExpression (parameter);
 			Expression right;
@@ -131,12 +136,12 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 			else
 			{
-				right = this.GetRecursiveExpression (parameter, list, index+1);
+				right = Filter.GetRecursiveExpression (list, parameter, mode, index+1);
 			}
 
 			//	See http://stackoverflow.com/questions/457316/combining-two-expressions-expressionfunct-bool
 
-			switch (this.CombineMode)
+			switch (mode)
 			{
 				case FilterCombineMode.And:
 					return Expression.AndAlso (left, right);
@@ -144,7 +149,7 @@ namespace Epsitec.Cresus.Core.Metadata
 					return Expression.OrElse (left, right);
 			}
 
-			throw new System.NotSupportedException (string.Format ("{0} not supported", this.CombineMode.GetQualifiedName ()));
+			throw new System.NotSupportedException (string.Format ("{0} not supported", mode.GetQualifiedName ()));
 		}
 
 
