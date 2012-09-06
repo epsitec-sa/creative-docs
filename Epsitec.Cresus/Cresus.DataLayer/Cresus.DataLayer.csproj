@@ -150,6 +150,7 @@
     <Compile Include="Context\IsolatedTransaction.cs" />
     <Compile Include="Context\RequestView.cs" />
     <Compile Include="Expressions\CollectionField.cs" />
+    <Compile Include="Expressions\LambdaConverter.cs" />
     <Compile Include="Expressions\ReferenceField.cs" />
     <Compile Include="Expressions\EntityDruidField.cs" />
     <Compile Include="Expressions\EntityField.cs" />
