@@ -119,6 +119,32 @@ namespace Epsitec.Common.Types
 			return replacer.Visit (expression.Body);
 		}
 
+		/// <summary>
+		/// Recursively generates the expression tree, build by combining all individual expressions.
+		/// </summary>
+		/// <param name="list">The list of expressions.</param>
+		/// <param name="combiner">The combiner.</param>
+		/// <returns>
+		/// The combined expression.
+		/// </returns>
+		public static Expression CombineExpressions(IEnumerable<Expression> list, System.Func<Expression, Expression, Expression> combiner)
+		{
+			Expression left = null;
+
+			foreach (var right in list)
+			{
+				if (left == null)
+				{
+					left = right;
+				}
+				else
+				{
+					left = combiner (left, right);
+				}
+			}
+
+			return left;
+		}
 
 		/// <summary>
 		/// Creates a setter expression based on a getter expression.

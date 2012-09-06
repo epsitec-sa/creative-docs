@@ -107,53 +107,25 @@ namespace Epsitec.Cresus.Core.Metadata
 			return Filter.GetExpression (filters.Select (x => x.GetExpression (parameter)), mode);
 		}
 
-		public static Expression GetExpression(IEnumerable<Expression> expressions, FilterCombineMode mode)
-		{
-			var list = expressions.ToList ();
-
-			switch (list.Count)
-			{
-				case 0:
-					return null;
-				case 1:
-					return list[0];
-				default:
-					return Filter.GetRecursiveExpression (list, mode);
-			}
-		}
-
 		/// <summary>
-		/// Recursively gets the expression tree, build by combining all individual expressions
+		/// Produces the expression tree, built by combining all individual filter expressions
 		/// using either logical <c>AND</c> or logical <c>OR</c>.
 		/// </summary>
-		/// <param name="list">The list of expressions.</param>
+		/// <param name="expressions">The expressions.</param>
 		/// <param name="mode">The mode.</param>
-		/// <param name="index">The index into the list of expressions.</param>
 		/// <returns>
 		/// The combined filter expression.
 		/// </returns>
-		public static Expression GetRecursiveExpression(IList<Expression> list, FilterCombineMode mode, int index = 0)
+		public static Expression GetExpression(IEnumerable<Expression> expressions, FilterCombineMode mode)
 		{
-			Expression left = list[index+0];
-			Expression right;
-
-			if (index+2 == list.Count)
-			{
-				right = list[index+1];
-			}
-			else
-			{
-				right = Filter.GetRecursiveExpression (list, mode, index+1);
-			}
-
 			//	See http://stackoverflow.com/questions/457316/combining-two-expressions-expressionfunct-bool
 
 			switch (mode)
 			{
 				case FilterCombineMode.And:
-					return Expression.AndAlso (left, right);
+					return ExpressionAnalyzer.CombineExpressions (expressions, (left, right) => Expression.AndAlso (left, right));
 				case FilterCombineMode.Or:
-					return Expression.OrElse (left, right);
+					return ExpressionAnalyzer.CombineExpressions (expressions, (left, right) => Expression.OrElse (left, right));
 			}
 
 			throw new System.NotSupportedException (string.Format ("{0} not supported", mode.GetQualifiedName ()));
