@@ -84,16 +84,17 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Determines whether a specific value matches a specified pattern. This method
 		/// is currently only supported when generating SQL queries based on expression
-		/// trees. The pattern matching characters can be escaped in the value.
+		/// trees. The pattern matching characters can be escaped in the value by using
+		/// the escape character in Database.DbSqlStandard.CompareLikeEscape. The method
+		/// DataLayer.Expressions.Constant.Escape provides a way to escape the pattern.
 		/// <remarks>Calling this method will throw a <see cref="System.NotSupportedException"/> exception.</remarks>
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <param name="pattern">The pattern.</param>
-		/// <param name="escapeCharacter">The escape character.</param>
 		/// <returns>
 		///   <c>true</c> if the value matches the pattern; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool Like(string value, string pattern, char escapeCharacter)
+		public static bool EscapedLike(string value, string pattern)
 		{
 			throw new System.NotSupportedException ();
 		}
@@ -113,7 +114,7 @@ namespace Epsitec.Cresus.Database
 		{
 			SqlMethods.compareToMethodInfo   = typeof (SqlMethods).GetMethod ("CompareTo", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.likeMethodInfo        = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string) });
-			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string), typeof (char) });
+			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.isNullMethodInfo      = typeof (SqlMethods).GetMethod ("IsNull");
 			SqlMethods.isNotNullMethodInfo   = typeof (SqlMethods).GetMethod ("IsNotNull");
 		}
