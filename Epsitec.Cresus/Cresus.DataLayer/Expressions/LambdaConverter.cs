@@ -34,11 +34,34 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			LambdaConverter.Check (entity, lambda);
 
-			var converter = new LambdaConverter (entity);
+			var computedExpression = LambdaComputer.Compute (lambda.Body, LambdaConverter.IsExpressionComputable);
+			var dataExpression = new LambdaConverter (entity).Convert (computedExpression);
 
-			converter.Visit (lambda.Body);
+			return dataExpression;
+		}
 
-			return converter.GetResult ();
+
+		private static bool IsExpressionComputable(Expression expression)
+		{
+			// Expressions that are the parameter of the lambda expression cannot be computed.
+			if (expression.NodeType == ExpressionType.Parameter)
+			{
+				return false;
+			}
+
+			// We don't want to compute the calls to methods declared in SqlMethods because these
+			// are "fake" method calls that are to be translated into DataExpressions.
+			if (expression is MethodCallExpression)
+			{
+				var method = ((MethodCallExpression) expression).Method;
+
+				if (method.DeclaringType == typeof (SqlMethods))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 
@@ -80,6 +103,14 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			this.entity = entity;
 			this.results = new Stack<object> ();
+		}
+
+
+		public DataExpression Convert(Expression expression)
+		{
+			this.Visit (expression);
+
+			return this.GetResult ();
 		}
 
 

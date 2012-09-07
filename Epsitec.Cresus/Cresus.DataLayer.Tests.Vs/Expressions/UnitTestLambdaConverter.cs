@@ -13,6 +13,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 
+using System.Collections.Generic;
+
+using System.Linq;
 using System.Linq.Expressions;
 
 
@@ -689,6 +692,87 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				)
 			);
 		}
+
+
+		[TestMethod]
+		public void CapturedVariable()
+		{
+			var entity = new ValueDataEntity ();
+			var constant = 1;
+
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == constant,
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					BinaryComparator.IsEqual,
+					new Constant (constant)
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void CapturedPropertyAccess()
+		{
+			var entity = new ValueDataEntity ();
+			var constant = DateTime.Now;
+
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == constant.Year,
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					BinaryComparator.IsEqual,
+					new Constant (constant.Year)
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void CapturedMethodCall()
+		{
+			var entity = new ValueDataEntity ();
+			var constant = new List<int> ();
+
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == constant.Count (),
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					BinaryComparator.IsEqual,
+					new Constant (constant.Count ())
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void CapturedMember()
+		{
+			var entity = new ValueDataEntity ();
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == this.member,
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					BinaryComparator.IsEqual,
+					new Constant (this.member)
+				)
+			);
+		}
+
+
+		private int member = 1;
 
 		
 		public void Check<T>(T entity, Expression<Func<T, bool>> lambda, DataExpression result)
