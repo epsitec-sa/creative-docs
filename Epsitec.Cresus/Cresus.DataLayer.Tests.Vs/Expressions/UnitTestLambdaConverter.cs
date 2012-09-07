@@ -916,6 +916,41 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		}
 
 
+		[TestMethod]
+		public void Conversion1()
+		{
+			var entity = new ValueDataEntity ();
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == null,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					UnaryComparator.IsNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void Conversion2()
+		{
+			var entity = new ValueDataEntity ();
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == 1m,
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					BinaryComparator.IsEqual,
+					new Constant (1)
+				)
+			);
+		}
+
+
 		private int member = 1;
 
 		

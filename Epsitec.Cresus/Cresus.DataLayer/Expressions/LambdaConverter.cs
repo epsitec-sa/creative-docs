@@ -162,22 +162,30 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			var nodeType = node.NodeType;
 			var operand = this.VisitAndPop (node.Operand);
 
-			DataExpression dataExpression;
+			object result;
 
 			if (this.IsUnaryOperator (nodeType))
 			{
-				dataExpression = new UnaryOperation
+				result = new UnaryOperation
 				(
 					this.GetUnaryOperator (nodeType),
 					(DataExpression) operand
 				);
+			}
+			else if (nodeType == ExpressionType.Convert || nodeType == ExpressionType.ConvertChecked)
+			{
+				// In this case, we have a type conversion. So we skip the conversion and return the
+				// value to be converted. This behavior works for simple case. However, it might not
+				// work for more complex cases. If they happen, this behavior should be changed.
+
+				result = operand;
 			}
 			else
 			{
 				throw new NotSupportedException ();
 			}
 			
-			return this.PushAndReturn (node, dataExpression);
+			return this.PushAndReturn (node, result);
 		}
 
 
