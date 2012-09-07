@@ -11,7 +11,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class UserEntityTableSettings
+	public sealed class UserEntityTableSettings : IXmlNodeClass
 	{
 		public UserEntityTableSettings(Druid entityId)
 		{
@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		}
 
 
+		#region IXmlNodeClass Members
 		
 		public XElement Save(string xmlNodeName)
 		{
@@ -54,6 +55,8 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				new XElement (Xml.SortColumnList, this.sort.Select (x => x.Save (Xml.SortColumnItem))),
 				new XElement (Xml.DisplayColumnList, this.display.Select (x => x.Save (Xml.DisplayColumnItem))));
 		}
+
+		#endregion
 
 		public static UserEntityTableSettings Restore(XElement xml)
 		{

@@ -9,10 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public class EntityColumnDisplay
+	public class EntityColumnDisplay : IXmlNodeClass
 	{
 		public EntityColumnDisplay()
 		{
@@ -25,12 +26,15 @@ namespace Epsitec.Cresus.Core.Metadata
 			set;
 		}
 
+		#region IXmlNodeClass Members
 
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
 				new XAttribute (Xml.DisplayMode, this.Mode.ToString ()));
 		}
+
+		#endregion
 
 		public static EntityColumnDisplay Restore(XElement xml)
 		{

@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -12,7 +13,13 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
+	/// <summary>
+	/// The <c>ColumnRef</c> class is used to attach a value of type <typeparamref name="T"/> to
+	/// a column, by using the ID of the column to reference it.
+	/// </summary>
+	/// <typeparam name="T">The type of the value.</typeparam>
 	public class ColumnRef<T> : ColumnRef
+		where T : IXmlNodeClass
 	{
 		public ColumnRef(string columnId, T value)
 			: base (columnId)
@@ -20,13 +27,15 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.value    = value;
 		}
 
-		public T Value
+		
+		public T								Value
 		{
 			get
 			{
 				return this.value;
 			}
 		}
+
 
 		protected override XElement SaveValue(string xmlNodeName)
 		{

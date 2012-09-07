@@ -11,6 +11,11 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
+	/// <summary>
+	/// The <c>ColumnFilterConstant</c> structure reprsents a constant used in a column
+	/// filter. The value is persisted through <see cref="ToString"/> and <see cref="Parse"/>
+	/// methods.
+	/// </summary>
 	public struct ColumnFilterConstant : IFilter, System.IEquatable<ColumnFilterConstant>
 	{
 		private ColumnFilterConstant(ColumnFilterConstantType type, object value)

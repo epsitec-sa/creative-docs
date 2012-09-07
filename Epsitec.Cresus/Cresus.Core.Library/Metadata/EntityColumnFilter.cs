@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// The <c>EntityColumnFilter</c> class defines the filtering conditions for an
 	/// <see cref="EntityColumn"/>.
 	/// </summary>
-	public class EntityColumnFilter : IFilter
+	public class EntityColumnFilter : IFilter, IXmlNodeClass
 	{
 		public EntityColumnFilter(ColumnFilterExpression filterExpression = null)
 		{
@@ -61,10 +61,15 @@ namespace Epsitec.Cresus.Core.Metadata
 			throw new System.NotImplementedException ();
 		}
 
+		#region IXmlNodeClass Members
+		
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName, XmlNodeClassFactory.Save (this.filterExpression));
 		}
+
+		#endregion
+
 
 		public static EntityColumnFilter Restore(XElement xml)
 		{

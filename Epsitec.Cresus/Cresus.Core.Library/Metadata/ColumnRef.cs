@@ -13,7 +13,11 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public abstract class ColumnRef
+	/// <summary>
+	/// The <c>ColumnRef</c> class is used to attach a value to a column, by using the ID
+	/// of the column to reference it.
+	/// </summary>
+	public abstract class ColumnRef : IXmlNodeClass
 	{
 		public ColumnRef(string columnId)
 		{
@@ -34,6 +38,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			return EntityColumnMetadata.Resolve (entityId, this.Id);
 		}
 
+		#region IXmlNodeClass Members
 
 		public XElement Save(string xmlNodeName)
 		{
@@ -48,7 +53,10 @@ namespace Epsitec.Cresus.Core.Metadata
 			return xml;
 		}
 
+		#endregion
+
 		public static ColumnRef<T> Restore<T>(XElement xml)
+			where T : IXmlNodeClass
 		{
 			var value    = ColumnRef<T>.RestoreValue (xml.Element (Strings.Value));
 			var instance = new ColumnRef<T> (xml.Attribute (Strings.Id).Value, value);

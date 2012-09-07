@@ -13,7 +13,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
-	public sealed class Filter : IFilter
+	public sealed class Filter : IFilter, IXmlNodeClass
 	{
 		public Filter()
 		{
@@ -73,7 +73,8 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		#endregion
 
-		
+		#region IXmlNodeClass Members
+
 		public XElement Save(string xmlNodeName)
 		{
 			var xml = new XElement (xmlNodeName,
@@ -85,6 +86,8 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			return xml;
 		}
+
+		#endregion
 
 		public static Filter Restore(XElement xml)
 		{

@@ -9,13 +9,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Xml.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
 	/// The <c>EntityColumnSort</c> class defines the sorting for an <see cref="EntityColumn"/>.
 	/// </summary>
-	public class EntityColumnSort
+	public class EntityColumnSort : IXmlNodeClass
 	{
 		public EntityColumnSort()
 		{
@@ -46,12 +47,15 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new SortClause (fieldNode, sortOrder);
 		}
 
-		
+		#region IXmlNodeClass Members
+
 		public XElement Save(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
 				new XAttribute (Xml.SortOrder, this.SortOrder.ToString ()));
 		}
+
+		#endregion
 
 		public static EntityColumnSort Restore(XElement xml)
 		{
