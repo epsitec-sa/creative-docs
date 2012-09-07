@@ -488,14 +488,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
-		public void IsNull()
+		public void RegularIsNull()
 		{
 			var entity = new ValueDataEntity ();
 
 			this.Check
 			(
 				entity,
-				x => SqlMethods.IsNull (x.StringValue),
+				x => x.StringValue == null,
 				new UnaryComparison
 				(
 					ValueField.Create (entity, x => x.StringValue),
@@ -506,14 +506,122 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
-		public void IsNotNull()
+		public void RegularIsNullReversed()
 		{
 			var entity = new ValueDataEntity ();
 
 			this.Check
 			(
 				entity,
-				x => SqlMethods.IsNotNull (x.StringValue),
+				x => null == x.StringValue,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.StringValue),
+					UnaryComparator.IsNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void RegularIsNotNull()
+		{
+			var entity = new ValueDataEntity ();
+
+			this.Check
+			(
+				entity,
+				x => x.StringValue != null,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.StringValue),
+					UnaryComparator.IsNotNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void RegularIsNotNullReversed()
+		{
+			var entity = new ValueDataEntity ();
+
+			this.Check
+			(
+				entity,
+				x => null != x.StringValue,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.StringValue),
+					UnaryComparator.IsNotNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void StringIsNull()
+		{
+			var entity = new ValueDataEntity ();
+
+			this.Check
+			(
+				entity,
+				x => SqlMethods.CompareTo (x.StringValue, null) == 0,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.StringValue),
+					UnaryComparator.IsNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void StringIsNullReversed()
+		{
+			var entity = new ValueDataEntity ();
+
+			this.Check
+			(
+				entity,
+				x => SqlMethods.CompareTo (null, x.StringValue) == 0,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.StringValue),
+					UnaryComparator.IsNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void StringIsNotNull()
+		{
+			var entity = new ValueDataEntity ();
+
+			this.Check
+			(
+				entity,
+				x => SqlMethods.CompareTo (x.StringValue, null) != 0,
+				new UnaryComparison
+				(
+					ValueField.Create (entity, x => x.StringValue),
+					UnaryComparator.IsNotNull
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void StringIsNotNullReversed()
+		{
+			var entity = new ValueDataEntity ();
+
+			this.Check
+			(
+				entity,
+				x => SqlMethods.CompareTo (null, x.StringValue) != 0,
 				new UnaryComparison
 				(
 					ValueField.Create (entity, x => x.StringValue),

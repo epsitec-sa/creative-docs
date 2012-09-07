@@ -35,22 +35,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static MethodInfo				IsNullMethodInfo
-		{
-			get
-			{
-				return SqlMethods.isNullMethodInfo;
-			}
-		}
-
-		public static MethodInfo				IsNotNullMethodInfo
-		{
-			get
-			{
-				return SqlMethods.isNotNullMethodInfo;
-			}
-		}
-
 
 		/// <summary>
 		/// Compares two strings. This method is used when generating SQL queries based
@@ -99,30 +83,16 @@ namespace Epsitec.Cresus.Database
 			throw new System.NotSupportedException ();
 		}
 
-		public static bool IsNull(object value)
-		{
-			return value == null;
-		}
-
-		public static bool IsNotNull(object value)
-		{
-			return value != null;
-		}
-
 		
 		static SqlMethods()
 		{
 			SqlMethods.compareToMethodInfo   = typeof (SqlMethods).GetMethod ("CompareTo", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.likeMethodInfo        = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new System.Type[] { typeof (string), typeof (string) });
-			SqlMethods.isNullMethodInfo      = typeof (SqlMethods).GetMethod ("IsNull");
-			SqlMethods.isNotNullMethodInfo   = typeof (SqlMethods).GetMethod ("IsNotNull");
 		}
 
 		private static readonly MethodInfo		compareToMethodInfo;
 		private static readonly MethodInfo		likeMethodInfo;
 		private static readonly MethodInfo		escapedLikeMethodInfo;
-		private static readonly MethodInfo		isNullMethodInfo;
-		private static readonly MethodInfo		isNotNullMethodInfo;
 	}
 }

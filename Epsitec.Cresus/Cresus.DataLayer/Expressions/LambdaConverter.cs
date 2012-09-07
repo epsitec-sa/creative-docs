@@ -280,12 +280,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			var leftOperand = this.VisitAndPop (callToCompareTo.Arguments[0]);
 			var rightOperand = this.VisitAndPop (callToCompareTo.Arguments[1]);
 
-			return new BinaryComparison
-			(
-				(Value) leftOperand,
-				this.GetBinaryComparator (nodeType),
-				(Value) rightOperand
-			);
+			return this.ConvertBinaryComparison (leftOperand, nodeType, rightOperand);
 		}
 
 
@@ -298,6 +293,53 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 			if (this.IsBinaryComparator (nodeType))
 			{
+				return this.ConvertBinaryComparison (left, nodeType, right);
+			}
+			else if (this.IsBinaryOperator (nodeType))
+			{
+				return this.ConvertBinaryOperation (left, nodeType, right);
+			}
+			
+			throw new NotSupportedException ();
+		}
+
+
+		private DataExpression ConvertBinaryComparison(object left, ExpressionType nodeType, object right)
+		{
+			// Here we swap both sides if the left one is null, so it makes the null special case
+			// below a lot easier.
+			var swap = this.IsNullConstant (left);
+
+			if (swap)
+			{
+				var tmp = left;
+				left = right;
+				right = tmp;
+			}
+
+			// Because of how the NULL stuff totally sucks in SQL, we must have two special cases
+			// here to convert stuff like x == null, null == x, x != null and null != x to IS
+			// NULL OR IS NOT NULL SQL clauses.
+			var isNullConstant = this.IsNullConstant (right);
+
+			if (isNullConstant && nodeType == ExpressionType.Equal)
+			{
+				return new UnaryComparison
+				(
+					(EntityField) left,
+					UnaryComparator.IsNull
+				);
+			}
+			else if (isNullConstant && nodeType == ExpressionType.NotEqual)
+			{
+				return new UnaryComparison
+				(
+					(EntityField) left,
+					UnaryComparator.IsNotNull
+				);
+			}
+			else
+			{
 				return new BinaryComparison
 				(
 					(Value) left,
@@ -305,17 +347,25 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					(Value) right
 				);
 			}
-			else if (this.IsBinaryOperator (nodeType))
-			{
-				return new BinaryOperation
-				(
-					(DataExpression) left,
-					this.GetBinaryOperator (nodeType),
-					(DataExpression) right
-				);
-			}
-			
-			throw new NotSupportedException ();
+		}
+
+
+		private DataExpression ConvertBinaryOperation(object left, ExpressionType nodeType, object right)
+		{
+			return new BinaryOperation
+			(
+				(DataExpression) left,
+				this.GetBinaryOperator (nodeType),
+				(DataExpression) right
+			);
+		}
+
+
+		private bool IsNullConstant(object o)
+		{
+			var constant = o as Constant;
+
+			return constant != null && constant.Value == null;
 		}
 
 
@@ -434,22 +484,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					(Value) arguments[0],
  					BinaryComparator.IsLikeEscape,
 					(Value) arguments[1]
-				);
-			}
-			else if (method == SqlMethods.IsNullMethodInfo)
-			{
-				expression = new UnaryComparison
-				(
-					(EntityField) arguments[0],
-					UnaryComparator.IsNull
-				);
-			}
-			else if (method == SqlMethods.IsNotNullMethodInfo)
-			{
-				expression = new UnaryComparison
-				(
-					(EntityField) arguments[0],
-					UnaryComparator.IsNotNull
 				);
 			}
 			else if (method == SqlMethods.CompareToMethodInfo)

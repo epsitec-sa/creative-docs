@@ -116,15 +116,5 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 		private static readonly Expression zero = Expression.Constant (0);
-
-		public static Expression IsNull(Expression parameter)
-		{
-			return Expression.Call (Epsitec.Cresus.Database.SqlMethods.IsNullMethodInfo, parameter);
-		}
-
-		public static Expression IsNotNull(Expression parameter)
-		{
-			return Expression.Call (Epsitec.Cresus.Database.SqlMethods.IsNotNullMethodInfo, parameter);
-		}
 	}
 }

@@ -76,17 +76,13 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			if (this.constant.IsNull)
 			{
-				if (this.comparison == ColumnFilterComparisonCode.Equal)
-				{
-					return ColumnFilterExpression.IsNull (parameter);
-				}
-				
-				if (this.comparison == ColumnFilterComparisonCode.NotEqual)
-				{
-					return ColumnFilterExpression.IsNotNull (parameter);
-				}
+				var invalidNullComparison = this.comparison != ColumnFilterComparisonCode.Equal
+					&& this.comparison != ColumnFilterComparisonCode.NotEqual;
 
-				throw new System.NotSupportedException ("Cannot compare with NULL");
+				if (invalidNullComparison)
+				{
+					throw new System.NotSupportedException ("Cannot compare with NULL");
+				}
 			}
 
 			return ColumnFilterExpression.Compare (parameter, this.comparison, this.constant.GetExpression (parameter));
