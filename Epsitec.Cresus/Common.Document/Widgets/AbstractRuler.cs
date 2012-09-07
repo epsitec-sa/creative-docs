@@ -217,7 +217,14 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if ( !this.IsEnabled )  return;
+			if ((this.document == null) ||
+				(this.document.Modifier == null) ||
+				(this.document.Modifier.ActiveViewer == null) ||
+				(this.document.Modifier.ActiveViewer.DrawingContext == null) ||
+				(this.IsEnabled == false))
+			{
+				return;
+			}
 			
 			if ( this.document != null )
 			{
