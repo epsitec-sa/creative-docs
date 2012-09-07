@@ -1,6 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Database;
 
 using System;
@@ -438,18 +440,60 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		protected override Expression VisitMember(MemberExpression node)
 		{
-			// TODO Manage more complex cases, like where we have a chain of member invocations
-			// or indexers, or method calls. Also manage EntityReferenceFields and
-			// EntityCollectionFields.
+			// TODO Manage EntityCollectionFields.
 
-			var entity = (AbstractEntity) this.VisitAndPop (node.Expression);
-			
+			// Here we interpret the result of the expression on which the member access is done. We
+			// can have the simple case where it is an entity or another member access on an entity
+			// which returns an entity.
+			// Of course there are lots of other cases that might be possible, but for now that's
+			// the only ones that we allow.
+
+			var expression = this.VisitAndPop (node.Expression);
+
+			AbstractEntity entity;
+
+			if (expression is AbstractEntity)
+			{
+				entity = (AbstractEntity) expression;
+			}
+			else if (expression is ReferenceField)
+			{
+				var referenceField = (ReferenceField) expression;
+				var referenceFieldId = referenceField.FieldId.ToResourceId ();
+
+				entity = referenceField.Entity.GetField<AbstractEntity> (referenceFieldId);
+			}
+			else
+			{
+				throw new NotImplementedException ();
+			}
+
+			// Here we build the result of the current expression transformation based on the kind
+			// of member that we have.
+			// For now we don't support the case of collection fields.
+
 			var propertyInfo = (PropertyInfo) node.Member;
-			var fieldId = EntityInfo.GetStructuredTypeField (propertyInfo).CaptionId;
+			var field = EntityInfo.GetStructuredTypeField (propertyInfo);
+			var fieldId = field.CaptionId;
 
-			var field = new ValueField (entity, fieldId);
+			EntityField entityField;
 
-			return this.PushAndReturn (node, field);
+			switch (field.Relation)
+			{
+				case FieldRelation.None:
+					entityField = new ValueField (entity, fieldId);
+					break;
+
+				case FieldRelation.Reference:
+					entityField = new ReferenceField (entity, fieldId);
+					break;
+
+				case FieldRelation.Collection:
+				default:
+					throw new NotSupportedException ();
+			}
+
+			return this.PushAndReturn (node, entityField);
 		}
 
 

@@ -615,6 +615,81 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 			);
 		}
 
+
+		[TestMethod]
+		public void MemberChain1()
+		{
+			var entity = new AddressEntity ()
+			{
+				Location = new LocationEntity (),
+			};
+
+			this.Check
+			(
+				entity,
+				x => x.Location.Name == "foo",
+				new BinaryComparison
+				(
+					ValueField.Create (entity.Location, x => x.Name),
+					BinaryComparator.IsEqual,
+					new Constant ("foo")
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void MemberChain2()
+		{
+			var entity = new AddressEntity ()
+			{
+				Location = new LocationEntity ()
+				{
+					Region = new RegionEntity ()
+				}
+			};
+
+			this.Check
+			(
+				entity,
+				x => x.Location.Region.Name == "foo",
+				new BinaryComparison
+				(
+					ValueField.Create (entity.Location.Region, x => x.Name),
+					BinaryComparator.IsEqual,
+					new Constant ("foo")
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void MemberChain3()
+		{
+			var entity = new AddressEntity ()
+			{
+				Location = new LocationEntity ()
+				{
+					Region = new RegionEntity ()
+					{
+						Country = new CountryEntity ()
+					}
+				}
+			};
+
+			this.Check
+			(
+				entity,
+				x => x.Location.Region.Country.Name == "foo",
+				new BinaryComparison
+				(
+					ValueField.Create (entity.Location.Region.Country, x => x.Name),
+					BinaryComparator.IsEqual,
+					new Constant ("foo")
+				)
+			);
+		}
+
 		
 		public void Check<T>(T entity, Expression<Func<T, bool>> lambda, DataExpression result)
 			where T : AbstractEntity
