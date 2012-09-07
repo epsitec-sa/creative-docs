@@ -695,7 +695,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
-		public void CapturedVariable()
+		public void ConstantCapturedVariable()
 		{
 			var entity = new ValueDataEntity ();
 			var constant = 1;
@@ -715,7 +715,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
-		public void CapturedPropertyAccess()
+		public void ConstantCapturedPropertyAccess()
 		{
 			var entity = new ValueDataEntity ();
 			var constant = DateTime.Now;
@@ -735,7 +735,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
-		public void CapturedMethodCall()
+		public void ConstantCapturedMethodCall()
 		{
 			var entity = new ValueDataEntity ();
 			var constant = new List<int> ();
@@ -755,7 +755,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
-		public void CapturedMember()
+		public void ConstantCapturedMember()
 		{
 			var entity = new ValueDataEntity ();
 			this.Check
@@ -767,6 +767,42 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 					ValueField.Create (entity, x => x.IntegerValue),
 					BinaryComparator.IsEqual,
 					new Constant (this.member)
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void ConstantMathOperation()
+		{
+			var entity = new ValueDataEntity ();
+			this.Check
+			(
+				entity,
+				x => x.IntegerValue == (this.member + 2) / 5 % 3,
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.IntegerValue),
+					BinaryComparator.IsEqual,
+					new Constant ((this.member + 2) / 5 % 3)
+				)
+			);
+		}
+
+
+		[TestMethod]
+		public void NullableMember()
+		{
+			var entity = new PersonTitleEntity ();
+			this.Check
+			(
+				entity,
+				x => x.Rank == 0,
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.Rank),
+					BinaryComparator.IsEqual,
+					new Constant (0)
 				)
 			);
 		}
