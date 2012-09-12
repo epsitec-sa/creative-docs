@@ -159,13 +159,19 @@ namespace Epsitec.Common.Types
 			{
 				int length = text.Length;
 
+				if ((length == 0) &&
+					(this.IsNullable))
+				{
+					return true;
+				}
+
 				if ((length >= this.MinimumLength) &&
 					(length <= this.MaximumLength))
 				{
 					return true;
 				}
 
-				System.Diagnostics.Debug.Fail (string.Format ("String length {0} not between {1} and {2}", length, this.MinimumLength, this.MaximumLength));
+//-				System.Diagnostics.Debug.Fail (string.Format ("String length {0} not between {1} and {2}", length, this.MinimumLength, this.MaximumLength));
 			}
 			
 			return false;
