@@ -238,6 +238,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void UpdateContentSortOrder()
 		{
+			if (Epsitec.Cresus.Core.Library.CoreContext.ContainsMetadata<DataStoreMetadata> () == false)
+			{
+				//	HACK
+				return;
+			}
+
 			var metadata = DataStoreMetadata.Current.FindTable (this.collectionEntityId);
 			
 			if (metadata != null)
