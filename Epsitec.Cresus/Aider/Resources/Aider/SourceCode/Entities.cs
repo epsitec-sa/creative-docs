@@ -25,18 +25,18 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAB7]", typeof (Epsitec.Aider.Entities.AiderContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAS7]", typeof (Epsitec.Aider.Entities.AiderDataManagerEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAV7]", typeof (Epsitec.Aider.Entities.SoftwareSessionEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA08]", typeof (Epsitec.Aider.Entities.SoftwareUserEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA18]", typeof (Epsitec.Aider.Entities.SoftwareMutationLogEntryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA28]", typeof (Epsitec.Aider.Entities.AiderDataEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA38]", typeof (Epsitec.Aider.Entities.AiderLegalPersonContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA48]", typeof (Epsitec.Aider.Entities.AiderGroupEventEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA78]", typeof (Epsitec.Aider.Entities.AiderCommentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAL8]", typeof (Epsitec.Aider.Entities.AiderPersonDataEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA69]", typeof (Epsitec.Aider.Entities.SoftwareUserGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA2A]", typeof (Epsitec.Aider.Entities.AiderGroupDefEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7A]", typeof (Epsitec.Aider.Entities.AiderFunctionDefEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAFB]", typeof (Epsitec.Aider.Entities.AiderWarningActionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVALB]", typeof (Epsitec.Aider.Entities.AiderPersonWarningEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVACC]", typeof (Epsitec.Aider.Entities.AiderUserCircleEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVAHC]", typeof (Epsitec.Aider.Entities.AiderUserEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -4580,26 +4580,26 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVAS7/LVAA9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAA9]")]
-		public global::Epsitec.Aider.Entities.SoftwareUserGroupEntity UserGroup
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity UserGroup
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.SoftwareUserGroupEntity> ("[LVAA9]");
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity> ("[LVAA9]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.SoftwareUserGroupEntity oldValue = this.UserGroup;
+				global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity oldValue = this.UserGroup;
 				if (oldValue != value || !this.IsFieldDefined("[LVAA9]"))
 				{
 					this.OnUserGroupChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.SoftwareUserGroupEntity> ("[LVAA9]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity> ("[LVAA9]", oldValue, value);
 					this.OnUserGroupChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnUserGroupChanging(global::Epsitec.Aider.Entities.SoftwareUserGroupEntity oldValue, global::Epsitec.Aider.Entities.SoftwareUserGroupEntity newValue);
-		partial void OnUserGroupChanged(global::Epsitec.Aider.Entities.SoftwareUserGroupEntity oldValue, global::Epsitec.Aider.Entities.SoftwareUserGroupEntity newValue);
+		partial void OnUserGroupChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity newValue);
+		partial void OnUserGroupChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUserGroupEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -4708,129 +4708,6 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SoftwareSessionEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Aider.SoftwareUser Entity
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>SoftwareUser</c> entity.
-	///	designer:cap/LVA08
-	///	</summary>
-	public partial class SoftwareUserEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IDateRange, global::Epsitec.Aider.Entities.IComment
-	{
-		#region IComment Members
-		///	<summary>
-		///	The <c>Comment</c> field.
-		///	designer:fld/LVA08/LVAA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAA8]")]
-		public global::Epsitec.Aider.Entities.AiderCommentEntity Comment
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.GetComment (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IDateRange Members
-		///	<summary>
-		///	The <c>StartDate</c> field.
-		///	designer:fld/LVA08/LVAN3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAN3]")]
-		public global::Epsitec.Common.Types.Date? StartDate
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.GetStartDate (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetStartDate (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>EndDate</c> field.
-		///	designer:fld/LVA08/LVAO3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAO3]")]
-		public global::Epsitec.Common.Types.Date? EndDate
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>UserName</c> field.
-		///	designer:fld/LVA08/LVA89
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA89]")]
-		public string UserName
-		{
-			get
-			{
-				return this.GetField<string> ("[LVA89]");
-			}
-			set
-			{
-				string oldValue = this.UserName;
-				if (oldValue != value || !this.IsFieldDefined("[LVA89]"))
-				{
-					this.OnUserNameChanging (oldValue, value);
-					this.SetField<string> ("[LVA89]", oldValue, value);
-					this.OnUserNameChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Groups</c> field.
-		///	designer:fld/LVA08/LVA79
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA79]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.SoftwareUserGroupEntity> Groups
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Aider.Entities.SoftwareUserGroupEntity> ("[LVA79]");
-			}
-		}
-		
-		partial void OnUserNameChanging(string oldValue, string newValue);
-		partial void OnUserNameChanged(string oldValue, string newValue);
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Aider.Entities.SoftwareUserEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Aider.Entities.SoftwareUserEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 256);	// [LVA08]
-		public static readonly string EntityStructuredTypeKey = "[LVA08]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SoftwareUserEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
@@ -5679,132 +5556,6 @@ namespace Epsitec.Aider.Entities
 }
 #endregion
 
-#region Epsitec.Aider.SoftwareUserGroup Entity
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>SoftwareUserGroup</c> entity.
-	///	designer:cap/LVA69
-	///	</summary>
-	public partial class SoftwareUserGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IDateRange, global::Epsitec.Aider.Entities.IComment
-	{
-		#region IComment Members
-		///	<summary>
-		///	The <c>Comment</c> field.
-		///	designer:fld/LVA69/LVAA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAA8]")]
-		public global::Epsitec.Aider.Entities.AiderCommentEntity Comment
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.GetComment (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IDateRange Members
-		///	<summary>
-		///	The <c>StartDate</c> field.
-		///	designer:fld/LVA69/LVAN3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAN3]")]
-		public global::Epsitec.Common.Types.Date? StartDate
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.GetStartDate (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetStartDate (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>EndDate</c> field.
-		///	designer:fld/LVA69/LVAO3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAO3]")]
-		public global::Epsitec.Common.Types.Date? EndDate
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>GroupName</c> field.
-		///	designer:fld/LVA69/LVA99
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA99]")]
-		public string GroupName
-		{
-			get
-			{
-				return this.GetField<string> ("[LVA99]");
-			}
-			set
-			{
-				string oldValue = this.GroupName;
-				if (oldValue != value || !this.IsFieldDefined("[LVA99]"))
-				{
-					this.OnGroupNameChanging (oldValue, value);
-					this.SetField<string> ("[LVA99]", oldValue, value);
-					this.OnGroupNameChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Users</c> field.
-		///	designer:fld/LVA69/LVAB9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAB9]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.SoftwareUserEntity> Users
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.SoftwareUserEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.SoftwareUserEntity>);
-				this.GetUsers (ref value);
-				return value;
-			}
-		}
-		
-		partial void OnGroupNameChanging(string oldValue, string newValue);
-		partial void OnGroupNameChanged(string oldValue, string newValue);
-		
-		partial void GetUsers(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.SoftwareUserEntity> value);
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Aider.Entities.SoftwareUserGroupEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Aider.Entities.SoftwareUserGroupEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 294);	// [LVA69]
-		public static readonly string EntityStructuredTypeKey = "[LVA69]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SoftwareUserGroupEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
 #region Epsitec.Aider.AiderGroupDef Entity
 namespace Epsitec.Aider.Entities
 {
@@ -6631,6 +6382,166 @@ namespace Epsitec.Aider.Entities
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPersonWarningEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderUserCircle Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderUserCircle</c> entity.
+	///	designer:cap/LVACC
+	///	</summary>
+	public partial class AiderUserCircleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
+	{
+		#region IComment Members
+		///	<summary>
+		///	The <c>Comment</c> field.
+		///	designer:fld/LVACC/LVAA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAA8]")]
+		public global::Epsitec.Aider.Entities.AiderCommentEntity Comment
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.GetComment (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>CircleName</c> field.
+		///	designer:fld/LVACC/LVAFC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAFC]")]
+		public string CircleName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAFC]");
+			}
+			set
+			{
+				string oldValue = this.CircleName;
+				if (oldValue != value || !this.IsFieldDefined("[LVAFC]"))
+				{
+					this.OnCircleNameChanging (oldValue, value);
+					this.SetField<string> ("[LVAFC]", oldValue, value);
+					this.OnCircleNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Children</c> field.
+		///	designer:fld/LVACC/LVAGC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAGC]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderUserCircleEntity> Children
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderUserCircleEntity> ("[LVAGC]");
+			}
+		}
+		
+		partial void OnCircleNameChanging(string oldValue, string newValue);
+		partial void OnCircleNameChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderUserCircleEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderUserCircleEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 396);	// [LVACC]
+		public static readonly string EntityStructuredTypeKey = "[LVACC]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderUserCircleEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderUser Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderUser</c> entity.
+	///	designer:cap/LVAHC
+	///	</summary>
+	public partial class AiderUserEntity : global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity
+	{
+		///	<summary>
+		///	The <c>Person</c> field.
+		///	designer:fld/LVAHC/LVAIC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAIC]")]
+		public global::Epsitec.Aider.Entities.AiderPersonEntity Person
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAIC]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Person;
+				if (oldValue != value || !this.IsFieldDefined("[LVAIC]"))
+				{
+					this.OnPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAIC]", oldValue, value);
+					this.OnPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Circles</c> field.
+		///	designer:fld/LVAHC/LVAJC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJC]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderUserCircleEntity> Circles
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderUserCircleEntity> ("[LVAJC]");
+			}
+		}
+		
+		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderUserEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderUserEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 401);	// [LVAHC]
+		public static readonly new string EntityStructuredTypeKey = "[LVAHC]";
+		
+		#region Repository Class
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderUserEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
 			}
 		}
