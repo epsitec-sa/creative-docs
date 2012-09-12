@@ -17,6 +17,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.allIndexesInModules = new List<int> ();
 		}
 
+		/// <summary>
+		/// Shows this instance.
+		/// </summary>
 		public override void Show()
 		{
 			//	Crée et montre la fenêtre du dialogue.

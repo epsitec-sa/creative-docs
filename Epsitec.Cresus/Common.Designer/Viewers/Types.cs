@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryNullable = new CheckButton(this.groupNullable.GroupBox);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
 			this.primaryNullable.Dock = DockStyle.StackBegin;
-			this.primaryNullable.Clicked += this.HandleNullableClicked;
+			this.primaryNullable.ActiveStateChanged += this.HandleNullableActiveStateChanged;
 			this.primaryNullable.TabIndex = this.tabIndex++;
 			this.primaryNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.fieldController.TextChanged -= this.HandleControllerTextChanged;
 				this.fieldControllerParameter.TextChanged -= this.HandleControllerTextChanged;
-				this.primaryNullable.Clicked -= this.HandleNullableClicked;
+				this.primaryNullable.ActiveStateChanged += this.HandleNullableActiveStateChanged;
 			}
 
 			base.Dispose(disposing);
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.AccessTypes.SetLocalDirty();
 		}
 
-		private void HandleNullableClicked(object sender, MessageEventArgs e)
+		private void HandleNullableActiveStateChanged(object sender)
 		{
 			//	Bouton à cocher 'Nullable' pressé.
 			if (this.ignoreChange)
@@ -369,16 +369,16 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+			StructuredData data = item.GetCultureData (this.GetTwoLetters (0));
 
-			data.SetValue(Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.Yes);
+			data.SetValue (Support.Res.Fields.ResourceBaseType.Nullable, this.primaryNullable.ActiveState == ActiveState.Yes);
 
-			CultureMapSource source = this.access.GetCultureMapSource(item);
+			CultureMapSource source = this.access.GetCultureMapSource (item);
 			bool usesOriginalData;
-			data.GetValue(Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
-			this.ColorizeResetBox(this.groupNullable, source, usesOriginalData);
+			data.GetValue (Support.Res.Fields.ResourceBaseType.Nullable, out usesOriginalData);
+			this.ColorizeResetBox (this.groupNullable, source, usesOriginalData);
 
-			this.module.AccessTypes.SetLocalDirty();
+			this.module.AccessTypes.SetLocalDirty ();
 		}
 
 		private void HandleEditorContentChanged(object sender)
@@ -409,8 +409,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private static double[]					columnWidthHorizontal = { 140, 60, 100, 100, 20, 80, 50, 100, 50 };
-		private static double[]					columnWidthVertical = { 250, 60, 270, 270, 20, 80, 50, 100, 50 };
+		private static readonly double[]		columnWidthHorizontal = { 140, 60, 100, 100, 20, 80, 50, 100, 50 };
+		private static readonly double[]		columnWidthVertical   = { 250, 60, 270, 270, 20, 80, 50, 100, 50 };
 
 		protected MyWidgets.StackedPanel		container;
 		protected TypeCode						typeCode = TypeCode.Invalid;

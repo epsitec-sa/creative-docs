@@ -101,7 +101,7 @@
   <data name="Viewers.Types.DateTime.TimeMax" id="019">Heure maximale</data>
   <data name="Viewers.Types.DateTime.TimeStep" id="029">Pas pour l&amp;apos;heure</data>
   <data name="Viewers.Types.DateTime.Sample" id="049">Exemple de valeur</data>
-  <data name="Viewers.Types.Nullable.Title" id="0F7">Etats</data>
+  <data name="Viewers.Types.Nullable.Title" id="0F7">États</data>
   <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d&amp;apos;être nul</data>
   <data name="Viewers.Types.Enum.RowName" id="0Q7">Nom</data>
   <data name="Viewers.Types.Enum.RowDescription" id="0R7">Textes et description</data>
