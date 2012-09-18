@@ -133,8 +133,9 @@ namespace Epsitec.Aider.Data.Eerv
 			var name = AiderGroupEntity.GetParishGroupName (parish.ParishName);
 
 			var parishGroup = parishGroupDefinition.Instantiate (businessContext, name);
-			
-			parishGroup.Root = regionGroups[parish.RegionCode];
+
+			//	TODO: init. group path
+//-			parishGroup.Root = regionGroups[parish.RegionCode];
 
 			return parishGroup;
 		}

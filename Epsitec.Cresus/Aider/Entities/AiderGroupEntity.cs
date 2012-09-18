@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "\n", this.Description);
+			return TextFormatter.FormatText (this.Name);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -33,7 +33,6 @@ namespace Epsitec.Aider.Entities
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return this.Name;
-			yield return this.Description;
 		}
 
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name)
