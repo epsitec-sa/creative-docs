@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -30,16 +30,24 @@ namespace Epsitec.Common.Types
 		{
 			get;
 		}
-		
-		
-		public static EnumKeyValues<T> Create<T>(T key, params string[] values)
+
+		/// <summary>
+		/// Gets the enum value description (if any) for this value.
+		/// </summary>
+		public abstract EnumValue				EnumValue
 		{
-			return new EnumKeyValues<T> (key, values);
+			get;
 		}
+
 		
-		public static EnumKeyValues<T> Create<T>(T key, params FormattedText[] values)
+		public static EnumKeyValues<T> Create<T>(T key, EnumValue item, params string[] values)
 		{
-			return new EnumKeyValues<T> (key, values);
+			return new EnumKeyValues<T> (key, item, values);
+		}
+
+		public static EnumKeyValues<T> Create<T>(T key, EnumValue item, params FormattedText[] values)
+		{
+			return new EnumKeyValues<T> (key, item, values);
 		}
 
 		public static IEnumerable<EnumKeyValues<T>> FromEnum<T>()
@@ -65,7 +73,7 @@ namespace Epsitec.Common.Types
 					labels = new string[] { FormattedText.FromSimpleText (enumKey.ToString ()).ApplyFontColor (red).ToString () };
 				}
 
-				yield return EnumKeyValues.Create<T> (enumKey, labels);
+				yield return EnumKeyValues.Create<T> (enumKey, item, labels);
 			}
 		}
 
@@ -83,7 +91,7 @@ namespace Epsitec.Common.Types
 				var label   = new FormattedText (caption.DefaultLabel ?? caption.Description ?? "");
 				var name    = FormattedText.FromSimpleText (caption.Name);
 
-				yield return EnumKeyValues.Create (caption.Id, name, label);
+				yield return EnumKeyValues.Create (caption.Id, null, name, label);
 			}
 		}
 

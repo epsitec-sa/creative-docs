@@ -824,6 +824,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands1()
 		{
 			//	Retourne null lorsque le menu doit contenir un séparateur.
+
+			var user  = this.userManager.AuthenticatedUser;
+
+			if (user.IsNull ())
+			{
+				yield break;
+			}
+
+			var roles = this.userManager.GetUserRoles (user).ToArray ();
+			var meta  = CoreContext.GetMetadata<DataStoreMetadata> ();
+
+			foreach (var dataSet in meta.DataSets.Where (x => x.DisplayGroupId.IsValid && x.MatchesAnyUserRole (roles)))
+			{
+//-				yield return new SubMenuItem (dataSet.BaseShowCommand, dataSet.DisplayGroupId);
+			}
+			
+
+
 			
 			bool admin = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
 			bool devel = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
@@ -946,25 +964,37 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static string GetSubMenuName(SubMenuType type)
 		{
+			var caption = RibbonViewController.GetSubMenuCaption (type);
+
+			if (caption == null)
+			{
+				return null;
+			}
+
+			return caption.DefaultLabel;
+		}
+
+		private static Caption GetSubMenuCaption(SubMenuType type)
+		{
 			switch (type)
 			{
-				case SubMenuType.Printing:
-					return "Impression";
-
-				case SubMenuType.Finance:
-					return "Finances";
-
-				case SubMenuType.Images:
-					return "Images";
+				case SubMenuType.Articles:
+					return Res.Captions.DatabaseSubmenu.Articles;
 
 				case SubMenuType.Customers:
-					return "Personnes";
+					return Res.Captions.DatabaseSubmenu.Customers;
 
-				case SubMenuType.Articles:
-					return "Articles";
+				case SubMenuType.Finance:
+					return Res.Captions.DatabaseSubmenu.Finance;
+
+				case SubMenuType.Images:
+					return Res.Captions.DatabaseSubmenu.Images;
 
 				case SubMenuType.Misc:
-					return "Divers";
+					return Res.Captions.DatabaseSubmenu.Misc;
+
+				case SubMenuType.Printing:
+					return Res.Captions.DatabaseSubmenu.Printing;
 
 				default:
 					return null;
@@ -973,29 +1003,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static string GetSubMenuIcon(SubMenuType type)
 		{
-			switch (type)
+			var caption = RibbonViewController.GetSubMenuCaption (type);
+
+			if (caption == null)
 			{
-				case SubMenuType.Printing:
-					return "Base.DocumentPrintingUnits";
-
-				case SubMenuType.Finance:
-					return "Base.PaymentCategory";
-
-				case SubMenuType.Images:
-					return "Base.Image";
-
-				case SubMenuType.Customers:
-					return "Base.Customer";
-
-				case SubMenuType.Articles:
-					return "Base.ArticleDefinition";
-
-				case SubMenuType.Misc:
-					return "Base.BusinessSettings";
-
-				default:
-					return null;
+				return null;
 			}
+
+			return caption.Icon;
 		}
 
 		private enum SubMenuType

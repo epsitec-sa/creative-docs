@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 				if (entity != null)
 				{
-					var e = EnumKeyValues.Create (entity.QuantityType, entity.Name);
+					var e = EnumKeyValues.Create (entity.QuantityType, null, entity.Name);
 					widget.Items.Add (e.Key.ToString (), e);
 				}
 			}

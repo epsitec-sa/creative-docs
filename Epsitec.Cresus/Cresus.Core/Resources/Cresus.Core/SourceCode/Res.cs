@@ -373,6 +373,98 @@ namespace Epsitec.Cresus.Core
 			
 		}
 		
+		public static class Captions
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class DatabaseSubmenu
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0ADL
+				public static global::Epsitec.Common.Types.Caption Articles
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 685));
+					}
+				}
+				//	designer:cap/L0ACL
+				public static global::Epsitec.Common.Types.Caption Customers
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 684));
+					}
+				}
+				//	designer:cap/L0AFL
+				public static global::Epsitec.Common.Types.Caption Finance
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 687));
+					}
+				}
+				//	designer:cap/L0AGL
+				public static global::Epsitec.Common.Types.Caption Images
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 688));
+					}
+				}
+				//	designer:cap/L0AHL
+				public static global::Epsitec.Common.Types.Caption Misc
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 689));
+					}
+				}
+				//	designer:cap/L0AEL
+				public static global::Epsitec.Common.Types.Caption Printing
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 686));
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class DatabaseSubmenu
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0ADL
+				public const long Articles = 0x150000A0002ADL;
+				//	designer:cap/L0ACL
+				public const long Customers = 0x150000A0002ACL;
+				//	designer:cap/L0AFL
+				public const long Finance = 0x150000A0002AFL;
+				//	designer:cap/L0AGL
+				public const long Images = 0x150000A0002B0L;
+				//	designer:cap/L0AHL
+				public const long Misc = 0x150000A0002B1L;
+				//	designer:cap/L0AEL
+				public const long Printing = 0x150000A0002AEL;
+			}
+			
+		}
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
@@ -558,6 +650,10 @@ namespace Epsitec.Cresus.Core
 			CommandIds.File._Initialize ();
 			CommandIds.Global._Initialize ();
 			CommandIds.Test._Initialize ();
+			Captions._Initialize ();
+			Captions.DatabaseSubmenu._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.DatabaseSubmenu._Initialize ();
 		}
 		
 		public static void Initialize()

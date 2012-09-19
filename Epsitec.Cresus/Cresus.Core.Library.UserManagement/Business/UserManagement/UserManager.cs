@@ -190,6 +190,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+		public IEnumerable<string> GetUserRoles(SoftwareUserEntity user)
+		{
+			var powerLevelDruids = user.UserGroups.Select (x => EnumKeyValues.GetEnumKeyValue (x.UserPowerLevel).EnumValue.CaptionId).ToArray ();
+
+			return powerLevelDruids.Select (x => x.ToCompactString ());
+		}
+
 		/// <summary>
 		/// Gets all users.
 		/// </summary>

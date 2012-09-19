@@ -88,6 +88,25 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		public bool MatchesUserRole(string role)
+		{
+			return this.userRoles.Contains (role);
+		}
+
+		public bool MatchesAnyUserRole(IEnumerable<string> roles)
+		{
+			foreach (var role in roles)
+			{
+				if (this.MatchesUserRole (role))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
 		public void DefineDisplayGroup(Druid captionId)
 		{
 			this.displayGroupCaptionId = captionId;

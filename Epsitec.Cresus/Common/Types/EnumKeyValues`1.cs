@@ -1,7 +1,5 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
-using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +13,17 @@ namespace Epsitec.Common.Types
 	/// <typeparam name="T">The enumeration type.</typeparam>
 	public sealed class EnumKeyValues<T> : EnumKeyValues
 	{
-		public EnumKeyValues(T key, params string[] values)
+		public EnumKeyValues(T key, EnumValue item, params string[] values)
 		{
 			this.key    = key;
+			this.enumValue = item;
 			this.values = values.Where (x => !string.IsNullOrEmpty (x)).Select (x => new FormattedText (x)).ToArray ();
 		}
 
-		public EnumKeyValues(T key, params FormattedText[] values)
+		public EnumKeyValues(T key, EnumValue item, params FormattedText[] values)
 		{
 			this.key    = key;
+			this.enumValue = item;
 			this.values = values.Where (x => !x.IsNullOrEmpty ()).ToArray ();
 		}
 
@@ -52,8 +52,20 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the enum value description (if any) for this value.
+		/// </summary>
+		public override EnumValue				EnumValue
+		{
+			get
+			{
+				return this.enumValue;
+			}
+		}
+
 
 		private readonly T						key;
 		private readonly FormattedText[]		values;
+		private readonly EnumValue				enumValue;
 	}
 }
