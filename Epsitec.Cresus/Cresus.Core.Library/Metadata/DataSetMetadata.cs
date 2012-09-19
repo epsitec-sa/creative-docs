@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			
 			this.dataSetEntityType = DataSetGetter.GetRootEntityType (this.dataSetName);
 			this.baseShowCommand   = DataSetMetadata.ResolveShowCommand (this.dataSetName);
+
+			this.userRoles = new List<string> ();
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
@@ -77,6 +79,13 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public IList<string>					UserRoles
+		{
+			get
+			{
+				return this.userRoles;
+			}
+		}
 
 
 		public void DefineDisplayGroup(Druid captionId)
@@ -95,13 +104,20 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			this.Serialize (attributes);
 
-			return new XElement (xmlNodeName, attributes);
+			var roles = new XElement (Strings.UserRoles,
+				from role in this.userRoles
+				select new XElement (Strings.UserRole, new XText (role)));
+
+			return new XElement (xmlNodeName, attributes, roles);
 		}
 
 		public static DataSetMetadata Restore(XElement xml)
 		{
 			var data     = Xml.GetAttributeBag (xml);
+			var roles    = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
 			var metadata = new DataSetMetadata (data);
+
+			metadata.userRoles.AddRange (roles);
 
 			return metadata;
 		}
@@ -130,6 +146,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			public static readonly string		Name = "n";
 			public static readonly string		DisplayGroup = "dg";
+			public static readonly string		UserRoles = "R";
+			public static readonly string		UserRole = "r";
 		}
 
 		#endregion
@@ -138,6 +156,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly string					dataSetName;
 		private readonly System.Type			dataSetEntityType;
 		private readonly Command				baseShowCommand;
+		private readonly List<string>			userRoles;
 
 		private Druid							displayGroupCaptionId;
 	}

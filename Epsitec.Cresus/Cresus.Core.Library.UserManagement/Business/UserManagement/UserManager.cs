@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 			else
 			{
-				return user.UserGroups.Where (group => group.UserPowerLevel == level).Count () > 0;
+				return user.UserGroups.Any (group => group.UserPowerLevel == level);
 			}
 		}
 
