@@ -19,6 +19,7 @@ using Epsitec.Cresus.Core.Workflows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Cresus.Core.Metadata;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -105,87 +106,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.sectionTitles.Clear ();
 
 			//	|-->
-			{
-				var section = this.CreateSection (frame, DockStyle.Left, "Navigation");
-
-				section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateBackward));
-				section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateForward));
-			}
-
-			{
-				var section = this.CreateSection (frame, DockStyle.Left, "Validation");
-
-				section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.SaveRecord));
-				section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
-			}
-
-			{
-				var section = this.CreateSection (frame, DockStyle.Left, "Edition");
-
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
-
-				topSection.Children.Add (this.CreateButton (ApplicationCommands.Bold, large: false, isActivable: true));
-				topSection.Children.Add (this.CreateButton (ApplicationCommands.Italic, large: false, isActivable: true));
-				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
-				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition, large: false));
-
-				section.Children.Add (this.CreateGap ());
-				this.CreateLanguage (section);
-			}
-
-			{
-				var section = this.CreateSection (frame, DockStyle.Left, "Presse-papier");
-
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
-
-				topSection.Children.Add (this.CreateButton (ApplicationCommands.Cut, large: false));
-				bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Copy, large: false));
-
-				section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
-			}
-
-			{
-				var section = this.CreateSection (frame, DockStyle.Left, "Actions");
-
-				this.CreateRibbonWorkflowTransition (section);
-				section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
-				section.Children.Add (this.CreateGap ());
-
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
-
-				topSection.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.File.ExportAccountingEntries, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Feedback, large: false));
-			}
-
-			{
-				var section = this.CreateSection (frame, DockStyle.Left, "Bases de données");
-
-				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
-				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
-				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
-
-				this.CreateRibbonDatabaseSectionMenuButton (section);
-			}
-
+			this.CreateNavigationSection (frame);
+			this.CreateValidationSection (frame);
+			this.CreateEditionSection (frame);
+			this.CreateClipboardSection (frame);
+			this.CreateActionsSection (frame);
+			this.CreateDatabaseSection (frame);
 			//	<--|
-			{
-				var section = this.CreateSection (frame, DockStyle.Right, "Réglages");
-
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
-
-				topSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug, large: false));
-
-				this.CreateRibbonUserSection (section);
-
-				section.Children.Add (this.CreateGap ());  // espace pour le bouton 'v', avec chevauchement partiel volontaire
-			}
-
+			this.CreateSettingsSection (frame);
 			//	Bouton 'v'
 			var showRibbonButton = new GlyphButton
 			{
@@ -205,6 +133,102 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
+
+		private void CreateNavigationSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Left, "Navigation");
+
+			section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateBackward));
+			section.Children.Add (this.CreateButton (Library.Res.Commands.History.NavigateForward));
+		}
+
+		private void CreateValidationSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Left, "Validation");
+
+			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.SaveRecord));
+			section.Children.Add (this.CreateButton (Library.Res.Commands.Edition.DiscardRecord));
+		}
+
+		private void CreateEditionSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Left, "Edition");
+
+			Widget topSection, bottomSection;
+			this.CreateSubsections (section, out topSection, out bottomSection);
+
+			topSection.Children.Add (this.CreateButton (ApplicationCommands.Bold, large: false, isActivable: true));
+			topSection.Children.Add (this.CreateButton (ApplicationCommands.Italic, large: false, isActivable: true));
+			bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Underlined, large: false, isActivable: true));
+			bottomSection.Children.Add (this.CreateButton (ApplicationCommands.MultilingualEdition, large: false));
+
+			section.Children.Add (this.CreateGap ());
+			
+			this.CreateLanguageSelectionUI (section);
+		}
+
+		private void CreateClipboardSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Left, "Presse-papier");
+
+			Widget topSection, bottomSection;
+			this.CreateSubsections (section, out topSection, out bottomSection);
+
+			topSection.Children.Add (this.CreateButton (ApplicationCommands.Cut, large: false));
+			bottomSection.Children.Add (this.CreateButton (ApplicationCommands.Copy, large: false));
+
+			section.Children.Add (this.CreateButton (ApplicationCommands.Paste));
+		}
+
+		private void CreateActionsSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Left, "Actions");
+
+			this.CreateRibbonWorkflowTransitionUI (section);
+			
+			section.Children.Add (this.CreateButton (Res.Commands.Edition.Print));
+			section.Children.Add (this.CreateGap ());
+
+			Widget topSection, bottomSection;
+			this.CreateSubsections (section, out topSection, out bottomSection);
+
+			topSection.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
+			topSection.Children.Add (this.CreateButton (Res.Commands.File.ExportAccountingEntries, large: false));
+			bottomSection.Children.Add (this.CreateButton (Res.Commands.Feedback, large: false));
+		}
+
+		private void CreateDatabaseSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Left, "Bases de données");
+
+			var metadata = CoreContext.GetMetadata<DataStoreMetadata> ();
+			
+			foreach (var dataset in metadata.DataSets.Where (x => x.DisplayGroupId.IsEmpty))
+			{
+				section.Children.Add (this.CreateButton (dataset.BaseShowCommand));
+			}
+
+//-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
+//-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
+//-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
+
+			this.CreateRibbonDatabaseSectionMenuButton (section);
+		}
+
+		private void CreateSettingsSection(GradientFrameBox frame)
+		{
+			var section = this.CreateSection (frame, DockStyle.Right, "Réglages");
+
+			Widget topSection, bottomSection;
+			this.CreateSubsections (section, out topSection, out bottomSection);
+
+			topSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowSettings, large: false));
+			bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.ShowDebug, large: false));
+
+			this.CreateRibbonUserSection (section);
+
+			section.Children.Add (this.CreateGap ());  // espace pour le bouton 'v', avec chevauchement partiel volontaire
+		}
 
 		private void UpdateRibbon()
 		{
@@ -405,7 +429,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private void CreateLanguage(Widget section)
+		private void CreateLanguageSelectionUI(Widget section)
 		{
 			//	Crée les boutons pour choisir la langue.
 			Widget topSection, bottomSection;
@@ -500,7 +524,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		#region Workflow transitions
-		private void CreateRibbonWorkflowTransition(Widget section)
+		private void CreateRibbonWorkflowTransitionUI(Widget section)
 		{
 			//	Crée le bouton permettant de choisir une action pour créer un nouveau document dans l'affaire en cours,
 			//	par le biais d'un menu.
@@ -660,21 +684,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			ToolTip.Default.SetToolTip (this.databaseMenuButton, "Montre une autre base de données...");
 
-			this.databaseMenuButton.Clicked += delegate
-			{
-				this.ShowDatabaseSelectionMenu (this.databaseButton);
-			};
-
-			this.databaseMenuButton.Entered += delegate
-			{
-				this.databaseButton.ButtonStyle = ButtonStyle.Combo;
-			};
-
-			this.databaseMenuButton.Exited += delegate
-			{
-				this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
-			};
-
+			this.databaseMenuButton.Clicked += (s,e) => this.ShowDatabaseSelectionMenu ();
+			this.databaseMenuButton.Entered += (s,e) => this.databaseButton.ButtonStyle = ButtonStyle.Combo;
+			this.databaseMenuButton.Exited  += (s,e) => this.databaseButton.ButtonStyle = ButtonStyle.ToolItem;
+			
 			var databaseCommandHandler = this.GetDatabaseCommandHandler ();
 
 			databaseCommandHandler.Changed += delegate
@@ -701,7 +714,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void ShowDatabaseSelectionMenu(Widget parentButton)
+		private void ShowDatabaseSelectionMenu()
 		{
 			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
 			var menu = new VMenu ();
@@ -733,10 +746,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
-			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+			TextFieldCombo.AdjustComboSize (this.databaseButton, menu, false);
 
 			menu.Host = this.container;
-			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+			menu.ShowAsComboList (this.databaseButton, Point.Zero, this.databaseButton);
 		}
 
 		private static void AddDatabaseToMenu(VMenu menu, Command command)
@@ -818,12 +831,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (System.AppDomain.CurrentDomain.FriendlyName == "App.Aider.vshost.exe" || System.AppDomain.CurrentDomain.FriendlyName == "App.Aider.exe")
 			{
-				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 0)), SubMenuType.Customers);
-				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 1)), SubMenuType.Customers);
-				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 2)), SubMenuType.Customers);
-				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 3)), SubMenuType.Customers);
-				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 4)), SubMenuType.Customers);
-				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 5)), SubMenuType.Customers);
+				yield return new SubMenuItem (Command.Get (new Druid (1013, 80, 0)), SubMenuType.Customers);
+				yield return new SubMenuItem (Command.Get (new Druid (1013, 80, 1)), SubMenuType.Customers);
+				yield return new SubMenuItem (Command.Get (new Druid (1013, 80, 2)), SubMenuType.Customers);
+				yield return new SubMenuItem (Command.Get (new Druid (1013, 80, 3)), SubMenuType.Customers);
+				yield return new SubMenuItem (Command.Get (new Druid (1013, 80, 4)), SubMenuType.Customers);
+				yield return new SubMenuItem (Command.Get (new Druid (1013, 80, 5)), SubMenuType.Customers);
 			}
 
 			if (admin || devel || power)

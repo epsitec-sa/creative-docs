@@ -128,8 +128,8 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private static class Strings
 		{
-			public static readonly string		Name = "name";
-			public static readonly string		DisplayGroup = "disp.grp";
+			public static readonly string		Name = "n";
+			public static readonly string		DisplayGroup = "dg";
 		}
 
 		#endregion
