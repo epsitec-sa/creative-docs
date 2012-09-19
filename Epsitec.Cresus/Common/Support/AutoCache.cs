@@ -1,14 +1,12 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using System;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
-
 namespace Epsitec.Common.Support
 {
-
-
 	/// <summary>
 	/// The <c>AutoCache</c> class caches results of function calls. That is, when requested for a
 	/// result, it computes it, caches it and never computes it back.	
@@ -26,10 +24,8 @@ namespace Epsitec.Common.Support
 	/// </remarks>
 	/// <typeparam name="TKey">The type of the function argument.</typeparam>
 	/// <typeparam name="TValue">The type of the function result.</typeparam>
-	public sealed class AutoCache<TKey, TValue> : IDisposable
+	public sealed class AutoCache<TKey, TValue> : System.IDisposable
 	{
-
-
 		/*
 		 * As the Dictionary<TKey,TValue> class cannot contain a value for the null key, we have to
 		 * work around this with the fields resultOfCallWithNull and resultOfCallWithNullComputed
@@ -44,7 +40,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <param name="computer">The function whose results must be cached.</param>
 		/// <exception cref=""
-		public AutoCache(Func<TKey, TValue> computer)
+		public AutoCache(System.Func<TKey, TValue> computer)
 		{
 			computer.ThrowIfNull ("computer");
 
@@ -64,7 +60,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		/// <param name="key">The value that must be passed as an argument to the computer function.</param>
 		/// <returns>The (possibly cached) result of the computer function.</returns>
-		public TValue this[TKey key]
+		public TValue							this[TKey key]
 		{
 			get
 			{
@@ -79,6 +75,32 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		/// <summary>
+		/// Clears the cache used by this instance.
+		/// </summary>
+		public void Clear()
+		{
+			using (this.rwLock.LockWrite ())
+			{
+				this.cache.Clear ();
+
+				this.resultOfCallWithNull = default (TValue);
+				this.resultOfCallWithNullComputed = false;
+			}
+		}
+		
+		
+		#region IDisposable Members
+
+
+		public void Dispose()
+		{
+			this.rwLock.Dispose ();
+		}
+
+
+		#endregion
+	
 
 		private TValue GetResultForNullArgument(TKey key)
 		{
@@ -112,7 +134,6 @@ namespace Epsitec.Common.Support
 			return result;
 		}
 
-
 		private TValue GetResultForRegularArgument(TKey key)
 		{
 			TValue result = default (TValue);
@@ -142,50 +163,11 @@ namespace Epsitec.Common.Support
 		}
 
 
-		/// <summary>
-		/// Clears the cache used by this instance.
-		/// </summary>
-		public void Clear()
-		{
-			using (this.rwLock.LockWrite ())
-			{
-				this.cache.Clear ();
-
-				this.resultOfCallWithNull = default (TValue);
-				this.resultOfCallWithNullComputed = false;
-			}
-		}
-		
-		
-		#region IDisposable Members
-
-
-		public void Dispose()
-		{
-			this.rwLock.Dispose ();
-		}
-
-
-		#endregion
-	
-
-
 		private readonly ReaderWriterLockWrapper rwLock;
-
-
-		private readonly Func<TKey, TValue> computer;
-
-
+		private readonly System.Func<TKey, TValue> computer;
 		private readonly IDictionary<TKey,TValue> cache;
 
-
-		private TValue resultOfCallWithNull;
-
-
-		private bool resultOfCallWithNullComputed;
-
-
+		private TValue							resultOfCallWithNull;
+		private bool							resultOfCallWithNullComputed;
 	}
-
-
 }
