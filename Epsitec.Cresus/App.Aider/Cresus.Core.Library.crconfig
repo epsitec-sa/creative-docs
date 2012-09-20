@@ -1,2 +1,19 @@
 DefineDatabase ("aider", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
+
+user = [AVAK]
+
+<meta>
+  <T />
+  <D>
+    <d n="AiderPerson" dg=""><R><r>@user</r></R></d>
+    <d n="AiderHousehold" dg=""><R><r>@user</r></R></d>
+    <d n="AiderAddress" dg=""><R><r>@user</r></R></d>
+    <d n="AiderTown" dg=""><R><r>@user</r></R></d>
+    <d n="AiderCountry" dg=""><R><r>@user</r></R></d>
+    <d n="AiderPersonRelationship" dg=""><R><r>@user</r></R></d>
+  </D>
+  <G/>
+</meta>
+
+DefineMetadata ("DataStoreMetadata", $0)
