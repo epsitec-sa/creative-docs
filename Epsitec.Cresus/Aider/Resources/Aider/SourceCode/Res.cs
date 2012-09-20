@@ -26,6 +26,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderAddress = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 2));
 				//	designer:cap/LVG402
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
+				//	designer:cap/LVA3D
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderFunctionDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 419));
+				//	designer:cap/LVA1D
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
+				//	designer:cap/LVA2D
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 418));
 				//	designer:cap/LVG102
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderHousehold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
 				//	designer:cap/LVG002
@@ -53,6 +59,12 @@ namespace Epsitec.Aider
 				public const long ShowAiderAddress = 0x3F500050000002L;
 				//	designer:cap/LVG402
 				public const long ShowAiderCountry = 0x3F500050000004L;
+				//	designer:cap/LVA3D
+				public const long ShowAiderFunctionDef = 0x3F50000A0001A3L;
+				//	designer:cap/LVA1D
+				public const long ShowAiderGroup = 0x3F50000A0001A1L;
+				//	designer:cap/LVA2D
+				public const long ShowAiderGroupDef = 0x3F50000A0001A2L;
 				//	designer:cap/LVG102
 				public const long ShowAiderHousehold = 0x3F500050000001L;
 				//	designer:cap/LVG002
@@ -61,6 +73,58 @@ namespace Epsitec.Aider
 				public const long ShowAiderPersonRelationship = 0x3F500050000005L;
 				//	designer:cap/LVG302
 				public const long ShowAiderTown = 0x3F500050000003L;
+			}
+			
+		}
+		
+		public static class Captions
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class DatabaseSubmenu
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVA4D
+				public static global::Epsitec.Common.Types.Caption Definitions
+				{
+					get
+					{
+						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 420));
+					}
+				}
+				//	designer:cap/LVA5D
+				public static global::Epsitec.Common.Types.Caption Misc
+				{
+					get
+					{
+						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 421));
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class DatabaseSubmenu
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVA4D
+				public const long Definitions = 0x3F50000A0001A4L;
+				//	designer:cap/LVA5D
+				public const long Misc = 0x3F50000A0001A5L;
 			}
 			
 		}
@@ -2040,6 +2104,10 @@ namespace Epsitec.Aider
 			Commands.Base._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Base._Initialize ();
+			Captions._Initialize ();
+			Captions.DatabaseSubmenu._Initialize ();
+			CaptionIds._Initialize ();
+			CaptionIds.DatabaseSubmenu._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Types.String._Initialize ();

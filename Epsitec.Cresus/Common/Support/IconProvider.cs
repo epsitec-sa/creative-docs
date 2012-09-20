@@ -49,7 +49,8 @@ namespace Epsitec.Common.Support
 		{
 			string name = FormattedText.Escape (icon);
 			
-			if (icon.Contains (':'))
+			if ((string.IsNullOrEmpty (icon)) ||
+				(icon.Contains (':')))
 			{
 				return name;
 			}
