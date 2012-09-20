@@ -1,26 +1,46 @@
 DefineDatabase ("core", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
 
+user = [AVAK]
+
 <meta>
   <T>
     <t eid="[GVAV5]">
-      <col t="@CoreMeta.EntityColumnMetadata" si="2" p="[GVAV5]:[GVA06].[GVA3].[FVA33]" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="2" p="[GVAV5]:[GVA06].[GVA3].[FVA33]" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
-      <col t="@CoreMeta.EntityColumnMetadata" si="1" p="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA71]" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="1" p="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA71]" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Hidden" />
       </col>
-      <col t="@CoreMeta.EntityColumnMetadata" si="0" p="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA81]" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="[GVAV5]:[GVA06].[GVAK7].[FVAE2].[FVA81]" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Hidden" />
       </col>
     </t>
   </T>
   <D>
-    <d n="Customer" dg=""><R><r>user</r></R></d>
-    <d n="ArticleDefinition" dg=""><R><r>user</r></R></d>
+    <d n="Customer" dg=""><R><r>@user</r></R></d>
+    <d n="ArticleDefinition" dg=""><R><r>@user</r></R></d>
+    
+    <d n="DocumentCategoryMapping" dg="[L0AEL]"><R><r>@user</r></R></d>
+    <d n="DocumentCategory" dg="[L0AEL]"><R><r>@user</r></R></d>
+    <d n="DocumentFooterText" dg="[L0AEL]"><R><r>@user</r></R></d>
+    <d n="DocumentOptions" dg="[L0AEL]"><R><r>@user</r></R></d>
+    <d n="DocumentPrintingUnits" dg="[L0AEL]"><R><r>@user</r></R></d>
+    
+    <d n="Currency" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="ExchangeRateSource" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="VatDefinition" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="AccountingOperation" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="PriceGroup" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="PriceRoundingMode" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="IsrDefinition" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="PaymentCategory" dg="[L0AFL]"><R><r>@user</r></R></d>
+    <d n="PaymentReminderDefinition" dg="[L0AFL]"><R><r>@user</r></R></d>
+    
+    <d n="Image" dg="[L0AGL]"><R><r>@user</r></R></d>
   </D>
   <G/>
 </meta>

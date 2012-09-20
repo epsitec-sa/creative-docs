@@ -208,10 +208,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				section.Children.Add (this.CreateButton (dataset.BaseShowCommand));
 			}
 
-//-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
-//-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
-//-			section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
-
 			this.CreateRibbonDatabaseSectionMenuButton (section);
 		}
 
@@ -701,7 +697,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateDatabaseMenu()
 		{
 			//	Met à jour les boutons pour les bases de données d'usage peu fréquent, après un changement d'utilisateur par exemple.
-			var list  = this.GetDatabaseMenuCommands ().Where (x => x.Command != null).ToList ();
+			var list  = this.GetEnabledDatabaseMenuCommands ().Where (x => x.Command != null).ToList ();
 			int count = list.Count;
 
 			this.databaseButton.Visibility     = (count > 0);
@@ -718,10 +714,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Construit puis affiche le menu des bases de données d'usage peu fréquent.
 			var menu = new VMenu ();
+			var cmds = this.GetEnabledDatabaseMenuCommands ().ToList ();
+			var types = cmds.Where (x => x.Command != null).Select (x => x.Type).Distinct ().OrderBy (x => x.DefaultLabelOrName).ToList ();
 
-			foreach (var type in this.GetSubMenuTypes ())
+			foreach (var type in types)
 			{
-				var commands = this.GetDatabaseMenuCommands ().Where (x => x.Type == type).ToArray ();
+				var commands = cmds.Where (x => x.Type == type).ToArray ();
 
 				if (commands.Length > 0)
 				{
@@ -729,16 +727,25 @@ namespace Epsitec.Cresus.Core.Controllers
 					menu.Items.Add (new MenuItem (type.ToString (), icon, RibbonViewController.GetSubMenuName (type), ""));
 
 					var subMenu = new VMenu ();
+					int rowCount = commands.Length;
+					bool separator = true;
 
-					for (int i=0; i<commands.Length; i++)
+					for (int i = 0; i < rowCount; i++)
 					{
 						var command = commands[i];
 
-						if (i == commands.Length-1 && command.Command == null)  // séparateur à la fin ?
+						if (command.Command == null)
 						{
-							break;
+							separator = true;
+							continue;
 						}
 
+						if (separator)
+						{
+							RibbonViewController.AddSeparatorToMenu (subMenu);
+							separator = false;
+						}
+						
 						RibbonViewController.AddDatabaseToMenu (subMenu, command.Command);
 					}
 
@@ -752,22 +759,25 @@ namespace Epsitec.Cresus.Core.Controllers
 			menu.ShowAsComboList (this.databaseButton, Point.Zero, this.databaseButton);
 		}
 
-		private static void AddDatabaseToMenu(VMenu menu, Command command)
+		private static void AddSeparatorToMenu(VMenu menu)
 		{
-			if (command == null)
+			if (menu.Items.Count > 0)
 			{
 				menu.Items.Add (new MenuSeparator ());
 			}
-			else
-			{
-				var item = new MenuItem ()
-				{
-					CommandObject = command,
-					Name          = command.Name,
-				};
+		}
 
-				menu.Items.Add (item);
-			}
+		private static void AddDatabaseToMenu(VMenu menu, Command command)
+		{
+			System.Diagnostics.Debug.Assert (command != null);
+
+			var item = new MenuItem ()
+			{
+				CommandObject = command,
+				Name          = command.Name,
+			};
+
+			menu.Items.Add (item);
 		}
 
 		private void UpdateDatabaseButton()
@@ -795,16 +805,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private Command GetDatabaseCommand(string name)
 		{
-			var item = this.GetDatabaseMenuCommands ().Where (x => x.Command != null && x.Command.Name == name).FirstOrDefault ();
-
-			if (item == null)
-			{
-				return null;
-			}
-			else
-			{
-				return item.Command;
-			}
+			return this.GetEnabledDatabaseMenuCommands ().FirstOrDefault (x => x.Command != null && x.Command.Name == name).Command;
 		}
 
 		private CommandHandlers.DatabaseCommandHandler GetDatabaseCommandHandler()
@@ -816,12 +817,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			return handlers.First ();
 		}
 
-		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands()
+		private IEnumerable<SubMenuItem> GetEnabledDatabaseMenuCommands()
 		{
-			return this.GetDatabaseMenuCommands1 ().Where (x => x.Command == null || this.featureManager.IsCommandEnabled (x.Command.Caption.Id));
+			return this.GetDatabaseMenuCommands ().Where (x => x.Command == null || this.featureManager.IsCommandEnabled (x.Command));
 		}
 
-		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands1()
+		private IEnumerable<SubMenuItem> GetDatabaseMenuCommands()
 		{
 			//	Retourne null lorsque le menu doit contenir un séparateur.
 
@@ -837,10 +838,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var dataSet in meta.DataSets.Where (x => x.DisplayGroupId.IsValid && x.MatchesAnyUserRole (roles)))
 			{
-//-				yield return new SubMenuItem (dataSet.BaseShowCommand, dataSet.DisplayGroupId);
+				var caption = Epsitec.Common.Support.EntityEngine.SafeResourceResolver.Instance.GetCaption (dataSet.DisplayGroupId);
+				yield return new SubMenuItem (dataSet.BaseShowCommand, caption);
 			}
-			
 
+
+			yield break;
 
 			
 			bool admin = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Administrator);
@@ -931,7 +934,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private IEnumerable<SubMenuType> GetSubMenuTypes()
+		private IEnumerable<Caption> GetSubMenuTypes()
 		{
 			yield return SubMenuType.Printing;
 			yield return SubMenuType.Customers;
@@ -941,31 +944,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield return SubMenuType.Misc;
 		}
 
-		private class SubMenuItem
+		private struct SubMenuItem
 		{
-			public SubMenuItem(Command command, SubMenuType type)
+			public SubMenuItem(Command command, Caption type)
 			{
 				this.Command = command;
 				this.Type = type;
 			}
 
-			public Command Command
-			{
-				get;
-				private set;
-			}
+			public readonly Command Command;
 
-			public SubMenuType Type
-			{
-				get;
-				private set;
-			}
+			public readonly Caption Type;
 		}
 
-		private static string GetSubMenuName(SubMenuType type)
+		private static string GetSubMenuName(Caption caption)
 		{
-			var caption = RibbonViewController.GetSubMenuCaption (type);
-
 			if (caption == null)
 			{
 				return null;
@@ -974,37 +967,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			return caption.DefaultLabel;
 		}
 
-		private static Caption GetSubMenuCaption(SubMenuType type)
+
+		private static string GetSubMenuIcon(Caption caption)
 		{
-			switch (type)
-			{
-				case SubMenuType.Articles:
-					return Res.Captions.DatabaseSubmenu.Articles;
-
-				case SubMenuType.Customers:
-					return Res.Captions.DatabaseSubmenu.Customers;
-
-				case SubMenuType.Finance:
-					return Res.Captions.DatabaseSubmenu.Finance;
-
-				case SubMenuType.Images:
-					return Res.Captions.DatabaseSubmenu.Images;
-
-				case SubMenuType.Misc:
-					return Res.Captions.DatabaseSubmenu.Misc;
-
-				case SubMenuType.Printing:
-					return Res.Captions.DatabaseSubmenu.Printing;
-
-				default:
-					return null;
-			}
-		}
-
-		private static string GetSubMenuIcon(SubMenuType type)
-		{
-			var caption = RibbonViewController.GetSubMenuCaption (type);
-
 			if (caption == null)
 			{
 				return null;
@@ -1013,15 +978,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			return caption.Icon;
 		}
 
-		private enum SubMenuType
+		private static class SubMenuType
 		{
-			Printing,
-			Finance,
-			Images,
-			Customers,
-			Articles,
-			Misc,
+			public static readonly Caption Articles = Res.Captions.DatabaseSubmenu.Articles;
+			public static readonly Caption Customers = Res.Captions.DatabaseSubmenu.Customers;
+			public static readonly Caption Finance = Res.Captions.DatabaseSubmenu.Finance;
+			public static readonly Caption Images = Res.Captions.DatabaseSubmenu.Images;
+			public static readonly Caption Misc = Res.Captions.DatabaseSubmenu.Misc;
+			public static readonly Caption Printing = Res.Captions.DatabaseSubmenu.Printing;
 		}
+
 		#endregion
 
 

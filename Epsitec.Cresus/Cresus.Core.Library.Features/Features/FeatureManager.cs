@@ -19,6 +19,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Features
 {
@@ -115,6 +116,11 @@ namespace Epsitec.Cresus.Core.Features
 				var fieldSettings = entitySettings[fieldId];
 				return new TileFieldEditionSettings (fieldSettings.FieldVisibilityMode.Simplify (), fieldSettings.FieldEditionMode.Simplify ());
 			}
+		}
+
+		public bool IsCommandEnabled(Command command)
+		{
+			return this.IsCommandEnabled (command.Caption.Id);
 		}
 
 		public bool IsCommandEnabled(Druid commandId, UserSummary user = null)

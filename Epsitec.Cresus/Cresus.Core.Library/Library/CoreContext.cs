@@ -162,6 +162,43 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				CoreContext.metadata.Add (type, metadata);
 			}
+			
+#if false
+			var ef1 = new Metadata.EntityFilter (Druid.Parse ("[GVAV5]"));
+			var ef2 = new Metadata.EntityFilter (Druid.Parse ("[GVAV5]"));
+
+			var filter = new Metadata.Filter ()
+			{
+				CombineMode = Metadata.FilterCombineMode.Or,
+				Description = "Essai",
+				Name = "Test",
+			};
+
+			var ex1 = new Metadata.ColumnFilterComparisonExpression ()
+			{
+				Comparison = Metadata.ColumnFilterComparisonCode.Equal,
+				Constant = Metadata.ColumnFilterConstant.From ("X")
+			};
+
+			var ex2 = new Metadata.ColumnFilterRangeExpression ()
+			{
+				LowerBoundComparison = Metadata.ColumnFilterComparisonCode.GreaterThanOrEqual,
+				LowerBound = Metadata.ColumnFilterConstant.From ("A"),
+				UpperBoundComparison = Metadata.ColumnFilterComparisonCode.LessThanOrEqual,
+				UpperBound = Metadata.ColumnFilterConstant.From ("Z")
+			};
+
+			ef1.Columns.Add (new Metadata.ColumnRef<Metadata.EntityColumnFilter> ("[GVA06].[GVA3].[FVA33]", new Metadata.EntityColumnFilter (ex1)));
+			ef2.Columns.Add (new Metadata.ColumnRef<Metadata.EntityColumnFilter> ("[GVA06].[GVAK7].[FVAE2].[FVA71]", new Metadata.EntityColumnFilter (ex2)));
+
+			filter.Nodes.Add (new Metadata.FilterNode (ef1, Metadata.FilterIncludeMode.Inclusive, Metadata.FilterActiveMode.Enabled));
+			filter.Nodes.Add (new Metadata.FilterNode (ef2, Metadata.FilterIncludeMode.Exclusive, Metadata.FilterActiveMode.Enforced));
+
+			var xml = filter.Save ("filter");
+			var copy = Metadata.Filter.Restore (xml);
+
+			var lambda = filter.GetExpression (System.Linq.Expressions.Expression.Parameter (Epsitec.Common.Support.EntityEngine.EntityInfo.GetType (ef1.EntityId), "customer"));
+#endif
 		}
 
 
@@ -178,10 +215,30 @@ namespace Epsitec.Cresus.Core.Library
 			string       xmlSource;
 			
 			var stack = new List<string> ();
+			var dict  = new Dictionary<string, string> ();
 
 			foreach (var current in lines)
 			{
 				string line = current;
+
+				if (line.Contains ('@'))
+				{
+					line = CoreContext.SubstituteArguments (line, dict);
+				}
+
+				int pos = line.IndexOf ('=');
+
+				if (pos > 0)
+				{
+					var key   = line.Substring (0, pos).Trim ();
+					var value = line.Substring (pos+1).Trim ();
+
+					if (key.All (c => char.IsLetterOrDigit (c)))
+					{
+						dict[key] = value;
+						continue;
+					}
+				}
 
 			extractXml:
 
@@ -234,6 +291,54 @@ namespace Epsitec.Cresus.Core.Library
 					methodInfo.Invoke (null, parameters);
 				}
 			}
+		}
+
+		private static string SubstituteArguments(string line, IDictionary<string, string> dict)
+		{
+			var buffer = new System.Text.StringBuilder ();
+			var key    = new System.Text.StringBuilder ();
+
+			bool isKey = false;
+
+			foreach (char c in line)
+			{
+				if (isKey)
+				{
+					if ((c == '@') &&
+						(key.Length == 0))
+					{
+						buffer.Append ('@');
+						isKey = false;
+						continue;
+					}
+
+					if (char.IsLetterOrDigit (c))
+					{
+						key.Append (c);
+						continue;
+					}
+					
+					buffer.Append (dict[key.ToString ()]);
+					key.Clear ();
+					isKey = false;
+				}
+
+				if (c == '@')
+				{
+					isKey = true;
+				}
+				else
+				{
+					buffer.Append (c);
+				}
+			}
+
+			if (key.Length > 0)
+			{
+				buffer.Append (dict[key.ToString ()]);
+			}
+
+			return buffer.ToString ();
 		}
 
 		public static void EnqueueSetupCode(System.Action action)
@@ -290,6 +395,21 @@ namespace Epsitec.Cresus.Core.Library
 			}
 
 			throw new System.ArgumentException ("Cannot find metadata of type " + typeof (T).FullName);
+		}
+
+		public static bool ContainsMetadata<T>()
+			where T : CoreMetadata
+		{
+			CoreMetadata metadata;
+
+			if (CoreContext.metadata.TryGetValue (typeof (T), out metadata))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		/// <summary>

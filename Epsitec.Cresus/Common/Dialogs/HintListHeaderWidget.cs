@@ -133,13 +133,13 @@ namespace Epsitec.Common.Dialogs
 				case HintListContentType.Catalog:
 					this.image.Visibility =	enable;
 					this.title.Visibility = enable;
-					this.image.ImageName = @"manifest:Epsitec.Common.Dialogs.Images.box-64x48.png";
+					this.image.ImageName = "manifest:Epsitec.Common.Dialogs.Images.box-64x48.png";
 					break;
 
 				case HintListContentType.Suggestions:
 					this.image.Visibility = enable;
 					this.title.Visibility = enable;
-					this.image.ImageName = @"manifest:Epsitec.Common.Dialogs.Images.binocular-64x48.png";
+					this.image.ImageName = "manifest:Epsitec.Common.Dialogs.Images.binocular-64x48.png";
 					break;
 			}
 

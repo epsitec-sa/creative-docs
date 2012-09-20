@@ -185,7 +185,7 @@ namespace Epsitec.Common.Types
 
 			if (name.Length == length)
 			{
-				return "@" + shortName;
+				return "$" + shortName;
 			}
 			else if (shortName.Length == 0)
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return string.Concat ("@", shortName, name.Substring (length));
+				return string.Concat ("$", shortName, name.Substring (length));
 			}
 		}
 
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Types
 				return name;
 			}
 
-			if (name[0] != '@')
+			if (name[0] != '$')
 			{
 				return name;
 			}
