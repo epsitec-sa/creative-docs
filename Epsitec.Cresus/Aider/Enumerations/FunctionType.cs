@@ -13,8 +13,8 @@ namespace Epsitec.Aider.Enumerations
 	{
 		None = 0,
 
-		GroupParticipant,
-		PlacePerson,
-		LegalPersonContact,
+		GroupParticipant	= 1,
+		PlacePerson			= 2,
+		LegalPersonContact	= 3,
 	}
 }

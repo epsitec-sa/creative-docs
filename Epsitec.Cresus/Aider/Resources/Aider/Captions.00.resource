@@ -286,9 +286,9 @@
   <data name="Fld.AiderPlacePerson.Function" id="AEA">&lt;s:data id="_0" f:Name="Function" /&gt;</data>
   <data name="Fld.AiderFunctionDef.Type" id="AFA">&lt;s:data id="_0" f:Name="Type" /&gt;</data>
   <data name="Fld.AiderLegalPersonContact.Function" id="AGA">&lt;s:data id="_0" f:Name="Function" /&gt;</data>
-  <data name="Val.Enum.FunctionType.GroupParticipant" id="AIA">&lt;s:data id="_0" f:Name="GroupParticipant" f:Labels="{Collection {Text 'participant'}}" /&gt;</data>
-  <data name="Val.Enum.FunctionType.PlacePerson" id="AJA">&lt;s:data id="_0" f:Name="PlacePerson" f:Labels="{Collection {Text 'personne liée à un lieu'}}" /&gt;</data>
-  <data name="Val.Enum.FunctionType.LegalPersonContact" id="AKA">&lt;s:data id="_0" f:Name="LegalPersonContact" f:Labels="{Collection {Text 'personne de contact'}}" /&gt;</data>
+  <data name="Val.Enum.FunctionType.GroupParticipant" id="AIA">&lt;s:data id="_0" f:Name="GroupParticipant" f:Labels="{Collection {Text 'Fonc. groupe'}}" /&gt;</data>
+  <data name="Val.Enum.FunctionType.PlacePerson" id="AJA">&lt;s:data id="_0" f:Name="PlacePerson" f:Labels="{Collection {Text 'Fonc. lieu'}}" /&gt;</data>
+  <data name="Val.Enum.FunctionType.LegalPersonContact" id="AKA">&lt;s:data id="_0" f:Name="LegalPersonContact" f:Labels="{Collection {Text 'Fonc. contact'}}" /&gt;</data>
   <data name="Val.Enum.GroupRelationshipType.Inclusion" id="ALA">&lt;s:data id="_0" f:Name="Inclusion" f:Labels="{Collection {Text 'inclusion'}}" /&gt;</data>
   <data name="Val.Enum.GroupRelationshipType.Exclusion" id="AMA">&lt;s:data id="_0" f:Name="Exclusion" f:Labels="{Collection {Text 'exclusion'}}" /&gt;</data>
   <data name="Val.Enum.GroupType.None" id="AOA">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>

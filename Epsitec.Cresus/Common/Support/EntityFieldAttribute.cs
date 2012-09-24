@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 		/// Gets the field id.
 		/// </summary>
 		/// <value>The field id.</value>
-		public string FieldId
+		public string							FieldId
 		{
 			get
 			{
@@ -37,7 +37,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool IsVirtual
+		/// <summary>
+		/// Gets or sets a value indicating whether this field is virtual.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this field is virtual; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsVirtual
 		{
 			get
 			{
@@ -49,7 +55,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		private string fieldId;
-		private bool isVirtual;
+		private string							fieldId;
+		private bool							isVirtual;
 	}
 }
