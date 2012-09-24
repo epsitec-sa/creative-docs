@@ -21,14 +21,14 @@ namespace Epsitec.Common.Types.Converters
 		/// </summary>
 		/// <param name="value">The raw value, as returned by the marshaler.</param>
 		/// <returns>The value which should be used for edition.</returns>
-		string ConvertToUI(string value);
+		FormattedText ConvertToUI(FormattedText value);
 
 		/// <summary>
 		/// Converts the string from its UI representation to the raw representation.
 		/// </summary>
 		/// <param name="value">The UI value.</param>
 		/// <returns>The value which should be handed back to the marshaler.</returns>
-		string ConvertFromUI(string value);
+		FormattedText ConvertFromUI(FormattedText value);
 
 		/// <summary>
 		/// Validates the data from the UI. The data format is expected to be OK; this
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Types.Converters
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>The validation result.</returns>
-		IValidationResult ValidateFromUI(string value);
+		IValidationResult ValidateFromUI(FormattedText value);
 
 		/// <summary>
 		/// Attaches the field binder to the specified marshaler. This can be used to

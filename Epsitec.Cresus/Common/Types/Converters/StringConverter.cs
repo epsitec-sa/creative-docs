@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -26,12 +26,12 @@ namespace Epsitec.Common.Types.Converters
 		public override ConversionResult<string> ConvertFromString(string text)
 		{
 			if (text == null)
-            {
+			{
 				return new ConversionResult<string>
 				{
 					IsNull = true,
 				};
-            }
+			}
 			else
 			{
 				return new ConversionResult<string>

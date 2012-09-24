@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleEditionAccepted(object sender)
 		{
-			string text = this.GetWidgetText ();
+			FormattedText text = this.GetWidgetText ();
 
 			this.SetMarshalerText (text);
 			
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return result;
 		}
 
-		private string GetWidgetText()
+		private FormattedText GetWidgetText()
 		{
 			if (this.widget is AutoCompleteTextFieldEx)
 			{
@@ -185,33 +185,33 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				string[] item = autoCompleteTextField.Items.GetValue (autoCompleteTextField.SelectedItemIndex) as string[];
 
-				return item[TextValueController.KeyIndex];
+				return new FormattedText (item[TextValueController.KeyIndex]);
 			}
 			else
 			{
-				return this.widget.Text;
+				return this.widget.FormattedText;
 			}
 		}
 
-		private void SetWidgetText(string text)
+		private void SetWidgetText(FormattedText text)
 		{
 			if (this.widget is AutoCompleteTextFieldEx)
 			{
 				var auto = this.widget as AutoCompleteTextFieldEx;
 
-				auto.SelectedItemIndex = auto.Items.FindIndexByKey (text);
+				auto.SelectedItemIndex = auto.Items.FindIndexByKey (text.ToString ());
 			}
 			else
 			{
 				// Il ne faut absolument pas utiliser TextConverter.ConvertToTaggedText, car le texte peut
 				// contenir des tags <br/>, <b>, etc. qui doivent être édités par le widget !
 
-				if (this.widget.Text == text)
+				if (this.widget.FormattedText == text)
 				{
 				}
 				else
 				{
-					this.widget.Text = text;
+					this.widget.FormattedText = text;
 
 					var field = this.widget as AbstractTextField;
 
@@ -225,8 +225,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private bool CheckIfMarshalerIsUsingFormattedText()
 		{
-			string value = this.marshaler.GetStringValue ();
-			return marshaler.MarshaledType == typeof (FormattedText);
+			return this.marshaler.IsMarshaledTypeFormattedText;
 		}
 
 
@@ -235,14 +234,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.namedType ?? EntityInfo.GetFieldType (this.marshaler.ValueGetterExpression);
 		}
 
-		private string GetMarshalerText()
+		private FormattedText GetMarshalerText()
 		{
-			string value = this.marshaler.GetStringValue ();
+			var value = this.marshaler.GetFormattedTextValue ();
+
 			MultilingualText multilingual = null;
 
 			if (marshaler.MarshaledType == typeof (FormattedText))
 			{
-				FormattedText formattedText = new FormattedText (value);
+				FormattedText formattedText = value;
 
 				//	Handle formatted text, which could be stored as a multilingual text : the UI
 				//	can only display and handle one language at any given time.
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return this.ConvertToUI (value);
 		}
 
-		private void SetMarshalerText(string text)
+		private void SetMarshalerText(FormattedText text)
 		{
 			try
 			{
@@ -272,8 +272,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (this.marshaler.MarshaledType == typeof (FormattedText))
 				{
-					var originalValue            = this.marshaler.GetStringValue ();
-					var originalFormattedText    = new FormattedText (originalValue);
+					var originalFormattedText    = this.marshaler.GetFormattedTextValue ();
 					var twoLetterISOLanguageName = this.TwoLetterISOLanguageName;
 
 					//	Handle formatted text, which could be stored as a multilingual text : the UI
@@ -283,12 +282,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 					if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguage (twoLetterISOLanguageName))
 					{
-						multilingual.SetDefaultText (new FormattedText (text));
+						multilingual.SetDefaultText (text);
 						multilingual.ClearText (twoLetterISOLanguageName);
 					}
 					else
 					{
-						multilingual.SetText (twoLetterISOLanguageName, new FormattedText (text));
+						multilingual.SetText (twoLetterISOLanguageName, text);
 					}
 
 					if (multilingual.ContainsLocalizations)
@@ -301,7 +300,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				}
 
-				this.marshaler.SetStringValue (text);
+				this.marshaler.SetFormattedTextValue (text);
 				this.UpdateWidgetAfterTextChanged (multilingual);
 			}
 			catch
@@ -311,7 +310,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private string ConvertToUI(string value)
+		private FormattedText ConvertToUI(FormattedText value)
 		{
 			if (this.fieldBinder != null)
 			{
@@ -323,7 +322,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private string ConvertFromUI(string value)
+		private FormattedText ConvertFromUI(FormattedText value)
 		{
 			if (this.fieldBinder != null)
 			{
@@ -342,11 +341,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	depuis le menu contextuel de AbstractTextField.
 			var textField = sender as AbstractTextField;
 
-			string value = this.marshaler.GetStringValue ();
+			var value = this.marshaler.GetFormattedTextValue ();
 
 			if (marshaler.MarshaledType == typeof (FormattedText))
 			{
-				FormattedText formattedText = new FormattedText (value);
+				FormattedText formattedText = value;
 				MultilingualText multilingual = new MultilingualText (formattedText);
 
 				var dialog = new MultilingualEditionDialog (textField, multilingual);
@@ -355,8 +354,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (dialog.Result == Common.Dialogs.DialogResult.Accept)
 				{
-					var text = multilingual.ToString ();
-					this.marshaler.SetStringValue (text);
+					var text = multilingual.ToFormattedText ();
+					this.marshaler.SetFormattedTextValue (text);
 
 					this.UpdateWidgetAfterTextChanged (multilingual);
 				}
@@ -385,11 +384,11 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				}
 
-				string text = this.GetMarshalerText ();
+				FormattedText text = this.GetMarshalerText ();
 				
 				if (button != null)
 				{
-					switch (text.ToLowerInvariant ())
+					switch (text.ToSimpleText ().ToLowerInvariant ())
 					{
 						case "true":
 							button.ActiveState = ActiveState.Yes;

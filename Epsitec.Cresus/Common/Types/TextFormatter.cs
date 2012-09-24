@@ -119,10 +119,10 @@ namespace Epsitec.Common.Types
 			var marshaler = Marshaler.Create (expression);
 			var fieldType = EntityInfo.GetFieldType (expression);
 			
-			return TextFormatter.FormatField (fieldType, marshaler.GetStringValue ());
+			return TextFormatter.FormatField (fieldType, marshaler.GetFormattedTextValue ());
 		}
 
-		public static FormattedText FormatField(INamedType type, string value)
+		public static FormattedText FormatField(INamedType type, FormattedText value)
 		{
 			var binder = FieldBinderFactory.Create (type);
 

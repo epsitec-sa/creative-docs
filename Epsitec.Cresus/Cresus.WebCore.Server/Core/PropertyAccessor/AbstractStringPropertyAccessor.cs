@@ -108,13 +108,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 		private string GetString(AbstractEntity entity)
 		{
-			return this.marshalerFactory.CreateMarshaler (entity).GetStringValue ();
+			return this.marshalerFactory.CreateMarshaler (entity).GetFormattedTextValue ().ToString ();
 		}
 
 
 		private void SetString(AbstractEntity entity, string value)
 		{
-			this.marshalerFactory.CreateMarshaler (entity).SetStringValue (value);
+			this.marshalerFactory.CreateMarshaler (entity).SetFormattedTextValue (new FormattedText (value));
 		}
 
 

@@ -752,7 +752,7 @@ namespace Epsitec.Cresus.Core
 		private static void InitializeAccount(Widgets.AutoCompleteTextFieldEx editor, Marshaler marshaler)
 		{
 			//	Initialise le texte complet du widget, en fonction du numéro de compte stocké dans le champ de l'entité.
-			FormattedText value = marshaler.GetStringValue();
+			FormattedText value = marshaler.GetFormattedTextValue ();
 
 			foreach (var item in editor.Items)
 			{
@@ -791,7 +791,7 @@ namespace Epsitec.Cresus.Core
 
 		public SlimField CreateSlimField(FrameBox parent, DockStyle dockStyle, double width, bool forceReadOnly, Caption caption, Marshaler marshaler, INamedType fieldType = null)
 		{
-			string value = marshaler.GetStringValue ();
+			string value = marshaler.GetFormattedTextValue ().ToSimpleText ();
 
 			var slimField = SlimFieldBuilder.CreateSlimField (caption, string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text);
 
@@ -826,7 +826,7 @@ namespace Epsitec.Cresus.Core
 			behavior.TextEditionEnded +=
 				delegate
 				{
-					marshaler.SetStringValue (slimField.FieldText);
+					marshaler.SetFormattedTextValue (FormattedText.FromSimpleText (slimField.FieldText));
 					SlimFieldBuilder.SetFieldTexts (slimField, caption);
 //-					behavior.GetTextField ().FormattedText = FormattedText.FromSimpleText (marshaler.GetStringValue ());
 				};

@@ -21,31 +21,33 @@ namespace Epsitec.Cresus.Core.Binders
 	{
 		#region IFieldBinder Members
 
-		public string ConvertToUI(string value)
+		public FormattedText ConvertToUI(FormattedText formattedValue)
 		{
+			var value = formattedValue.ToSimpleText ();
+
 			if (Isr.IsCompactSubscriberNumber (value))
 			{
 				value = Isr.FormatSubscriberNumber (value);
 			}
 
-			return value;
+			return FormattedText.FromSimpleText (value);
 		}
 
-		public string ConvertFromUI(string value)
+		public FormattedText ConvertFromUI(FormattedText value)
 		{
 			string text;
 
-			if (Isr.TryCompactSubscriberNumber (value, out text))
+			if (Isr.TryCompactSubscriberNumber (value.ToSimpleText (), out text))
 			{
-				return text;
+				return FormattedText.FromSimpleText (text);
 			}
 
 			throw new System.FormatException ("Invalid format");
 		}
 
-		public IValidationResult ValidateFromUI(string value)
+		public IValidationResult ValidateFromUI(FormattedText value)
 		{
-			if (Isr.IsFormattedSubscriberNumber (value))
+			if (Isr.IsFormattedSubscriberNumber (value.ToSimpleText ()))
 			{
 				return ValidationResult.Ok;
 			}

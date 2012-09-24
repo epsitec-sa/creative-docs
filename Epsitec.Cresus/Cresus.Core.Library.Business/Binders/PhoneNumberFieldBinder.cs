@@ -17,24 +17,24 @@ namespace Epsitec.Cresus.Core.Binders
 
 		#region IFieldBinder Members
 
-		public string ConvertToUI(string value)
+		public FormattedText ConvertToUI(FormattedText value)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (value.IsNullOrEmpty ())
 			{
 				return value;
 			}
 
-			return Epsitec.TwixClip.TwixTel.FormatPhoneNumber (value);
+			return FormattedText.FromSimpleText (Epsitec.TwixClip.TwixTel.FormatPhoneNumber (value.ToSimpleText ()));
 		}
 
-		public string ConvertFromUI(string value)
+		public FormattedText ConvertFromUI(FormattedText value)
 		{
-			return Epsitec.TwixClip.TwixTel.ParsePhoneNumber (value);
+			return FormattedText.FromSimpleText (Epsitec.TwixClip.TwixTel.ParsePhoneNumber (value.ToSimpleText ()));
 		}
 
-		public IValidationResult ValidateFromUI(string value)
+		public IValidationResult ValidateFromUI(FormattedText value)
 		{
-			if (Epsitec.TwixClip.TwixTel.IsValidPhoneNumber (value, acceptEmptyNumbers: true))
+			if (Epsitec.TwixClip.TwixTel.IsValidPhoneNumber (value.ToSimpleText (), acceptEmptyNumbers: true))
 			{
 				return ValidationResult.Ok;
 			}

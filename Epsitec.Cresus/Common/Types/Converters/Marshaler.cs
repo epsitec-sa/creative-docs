@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -42,6 +42,19 @@ namespace Epsitec.Common.Types.Converters
 			protected set;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the marshaled type is of type <see cref="FormattedText"/>.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the marshaled type is of type <see cref="FormattedText"/>; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsMarshaledTypeFormattedText
+		{
+			get
+			{
+				return this.MarshaledType == typeof (FormattedText);
+			}
+		}
 
 		/// <summary>
 		/// Gets the associated converter. This is implemented in <see cref="GenericMarshaler&lt;T1, T2&gt;"/>.
@@ -131,6 +144,46 @@ namespace Epsitec.Common.Types.Converters
 			
 			return Marshaler.CreateInternal (getter, setter, getterExpression);
 		}
+
+
+		/// <summary>
+		/// Gets the formatted text value. If the underlying type is a <see cref="FormattedText"/>,
+		/// this returns the source text; otherwise, it produces an escaped version of the string
+		/// value returned by method <see cref="GetStringValue"/>.
+		/// </summary>
+		/// <returns>The formatted text value.</returns>
+		public FormattedText GetFormattedTextValue()
+		{
+			var str = this.GetStringValue ();
+
+			if (this.IsMarshaledTypeFormattedText)
+			{
+				return new FormattedText (str);
+			}
+			else
+			{
+				return FormattedText.FromSimpleText (str);
+			}
+		}
+
+		/// <summary>
+		/// Sets the formatted text value. If the underlying type is a <see cref="FormattedText"/>,
+		/// this assigns the source text; otherwise, it produces an simplified version of the string
+		/// value and calls method <see cref="SetStringValue"/>.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		public void SetFormattedTextValue(FormattedText text)
+		{
+			if (this.IsMarshaledTypeFormattedText)
+			{
+				this.SetStringValue (text.ToString ());
+			}
+			else
+			{
+				this.SetStringValue (text.ToSimpleText ());
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the string value. Invokes the getter and converts the result to <c>string</c>.

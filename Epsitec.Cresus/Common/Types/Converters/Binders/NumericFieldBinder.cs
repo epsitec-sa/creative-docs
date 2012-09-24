@@ -23,12 +23,14 @@ namespace Epsitec.Common.Types.Converters.Binders
 
 		#region IFieldBinder Members
 
-		public string ConvertToUI(string value)
+		public FormattedText ConvertToUI(FormattedText formattedValue)
 		{
-			if (string.IsNullOrEmpty (value))
+			if (formattedValue.IsNullOrEmpty ())
 			{
-				return value;
+				return formattedValue;
 			}
+
+			var value = formattedValue.ToString ();
 			
 			int posDot   = value.IndexOf ('.');
 			int posComma = value.IndexOf (',');
@@ -81,14 +83,14 @@ namespace Epsitec.Common.Types.Converters.Binders
 				zeroes = zeroes + "%";
 			}
 
-			return string.Concat (before, separator, after, zeroes);
+			return new FormattedText (string.Concat (before, separator, after, zeroes));
 		}
 
-		public string ConvertFromUI(string value)
+		public FormattedText ConvertFromUI(FormattedText value)
 		{
 			if (this.percent)
 			{
-				return NumericFieldBinder.RemovePercent (value);
+				return new FormattedText (NumericFieldBinder.RemovePercent (value.ToString ()));
 			}
 			else
 			{
@@ -96,7 +98,7 @@ namespace Epsitec.Common.Types.Converters.Binders
 			}
 		}
 
-		public IValidationResult ValidateFromUI(string value)
+		public IValidationResult ValidateFromUI(FormattedText value)
 		{
 			return new ValidationResult (ValidationState.Ok);
 		}

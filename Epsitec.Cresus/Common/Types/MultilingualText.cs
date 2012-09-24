@@ -222,6 +222,11 @@ namespace Epsitec.Common.Types
 			return new FormattedText (buffer.ToString ());
 		}
 
+		public FormattedText ToFormattedText()
+		{
+			return this.GetGlobalText ();
+		}
+
 		public override string ToString()
 		{
 			return this.GetGlobalText ().ToString ();
