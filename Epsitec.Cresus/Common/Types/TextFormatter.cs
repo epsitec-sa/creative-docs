@@ -222,7 +222,9 @@ namespace Epsitec.Common.Types
 
 			if (converter != null)
 			{
-				return converter (value);
+				var stringValue = converter (value);
+				var escapedValue = FormattedText.Escape (stringValue);
+				return escapedValue;
 			}
 
 			if (value.GetType ().IsEnum)
