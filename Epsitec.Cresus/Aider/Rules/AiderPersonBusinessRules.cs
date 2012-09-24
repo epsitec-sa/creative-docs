@@ -64,6 +64,11 @@ namespace Epsitec.Aider.Rules
 
 		private void VerifyParish(AiderPersonEntity person)
 		{
+			if (person.Parish.IsNull ())
+			{
+				return;
+			}
+			
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
 			var parish1 = ParishLocator.FindParish (businessContext, person.Household1.Address);

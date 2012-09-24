@@ -344,9 +344,11 @@ namespace Epsitec.Aider.Entities
 		}
 
 		
-		internal static FormattedText GetDisplayName(AiderPersonEntity person)
+		internal static string GetDisplayName(AiderPersonEntity person)
 		{
-			return TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);
+			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);
+
+			return display.ToSimpleText ();
 		}
 		
 		internal string GetIconName(string prefix)

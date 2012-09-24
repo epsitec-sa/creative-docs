@@ -29,7 +29,8 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (
-				"<b>Adresse</b>\n~", this.GetPostalAddress (), "~\n",
+				new FormattedText ("<b>Adresse</b>\n~"),
+				this.GetPostalAddress (), "~\n",
 				TextFormatter.FormatField (() => this.Phone1), "~(fixe 1)\n",
 				TextFormatter.FormatField (() => this.Phone2), "~(fixe 2)\n",
 				TextFormatter.FormatField (() => this.Mobile), "~(mobile)\n",

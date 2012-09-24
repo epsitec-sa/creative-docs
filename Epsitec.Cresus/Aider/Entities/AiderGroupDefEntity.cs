@@ -70,5 +70,17 @@ namespace Epsitec.Aider.Entities
 		{
 			return "Paroisses";
 		}
+
+		partial void GetSubgroups(ref IList<AiderGroupDefEntity> value)
+		{
+			if (this.subgroupsList == null)
+			{
+				this.subgroupsList = new List<AiderGroupDefEntity> ();
+			}
+
+			value = this.subgroupsList;
+		}
+
+		List<AiderGroupDefEntity> subgroupsList;
 	}
 }
