@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -36,7 +36,20 @@ namespace Epsitec.Common.Support
 				return this.fieldId;
 			}
 		}
+
+		public bool IsVirtual
+		{
+			get
+			{
+				return this.isVirtual;
+			}
+			set
+			{
+				this.isVirtual = value;
+			}
+		}
 		
 		private string fieldId;
+		private bool isVirtual;
 	}
 }

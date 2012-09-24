@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -97,6 +97,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 
 			public const string EntityFieldAttribute = "global::Epsitec.Common.Support.EntityField";
 			public const string EntityClassAttribute = "global::Epsitec.Common.Support.EntityClass";
+			public const string EntityFieldAttributeIsVirtual = "IsVirtual=true";
 
 			public const string SimpleComment = "//";
 			public const string XmlComment = "///";
