@@ -31,6 +31,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var records = EervDataReader.ReadGroupDefinitions (inputFile);
 
 			var parents = new Stack<EervGroupDefinition> ();
+			var functions = new Dictionary<string, EervGroupDefinition> ();
 
 			parents.Push (null);
 
@@ -56,6 +57,33 @@ namespace Epsitec.Aider.Data.Eerv
 					}
 
 					parents.Push (groupDefinition);
+
+					string id = groupDefinition.Id;
+
+					if ((id.StartsWith ("0101")) &&
+						(id.EndsWith ("0000")))
+					{
+						var functionCode = id.Substring (4, 2);
+						functions[functionCode] = groupDefinition;
+					}
+					else if ((id.StartsWith ("02")) ||
+						/**/ (id.StartsWith ("03")) ||
+						/**/ (id.StartsWith ("04")) ||
+						/**/ (id.StartsWith ("05")) ||
+						/**/ (id.StartsWith ("06")))
+					{
+						var functionCode = record[GroupDefinitionHeader.Function] ?? "";
+
+						if (functionCode.Length == 1)
+						{
+							functionCode = "0" + functionCode;
+						}
+						if (functionCode.Length == 2)
+						{
+							groupDefinition.Function = functions[functionCode];
+						}
+					}
+
 
 					yield return groupDefinition;
 				}
@@ -83,6 +111,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var id = record[GroupDefinitionHeader.Id];
 			var name = record[EervMainDataLoader.names[groupLevel]];
+			var type = string.IsNullOrEmpty (record[GroupDefinitionHeader.IsLeaf]) ? Enumerations.GroupType.Node : Enumerations.GroupType.Leaf;
 
 			return new EervGroupDefinition (id, name);
 		}

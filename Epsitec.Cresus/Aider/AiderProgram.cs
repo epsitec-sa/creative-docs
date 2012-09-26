@@ -38,6 +38,11 @@ namespace Epsitec.Aider
 			return;
 #endif
 
+
+			var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
+			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (eervGroupDefinitionFile).ToList ();
+
+
 			CoreProgram.Main (args);
 		}
 

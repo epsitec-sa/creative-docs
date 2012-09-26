@@ -229,6 +229,8 @@ namespace Epsitec.Aider.Data.Eerv
 			{ GroupDefinitionHeader.NameLevel3, "Superstructures groupes C" },
 			{ GroupDefinitionHeader.NameLevel4, "Groupes" },
 			{ GroupDefinitionHeader.NameLevel5, "Sous-Groupes A" },
+			{ GroupDefinitionHeader.Function, "Fonctions" },
+			{ GroupDefinitionHeader.IsLeaf, "Feuille" },
 		};
 
 
@@ -318,6 +320,8 @@ namespace Epsitec.Aider.Data.Eerv
 		NameLevel3,
 		NameLevel4,
 		NameLevel5,
+		Function,
+		IsLeaf,
 	}
 
 

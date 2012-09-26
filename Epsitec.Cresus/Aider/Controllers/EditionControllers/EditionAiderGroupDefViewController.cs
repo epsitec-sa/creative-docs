@@ -15,16 +15,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Name)
+					.Field (x => x.PathTemplate)
 					.Field (x => x.Level)
 					.Field (x => x.Type)
 					.Field (x => x.DefType)
 					.Field (x => x.Category)
-				.End ()
-				.Input ()
-					.HorizontalGroup ("Occurrences")
-						.Field (x => x.MinOccurs)
-						.Field (x => x.MaxOccurs)
-					.End ()
 				.End ();
 		}
 	}

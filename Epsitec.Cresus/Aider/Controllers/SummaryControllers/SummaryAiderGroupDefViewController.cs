@@ -18,10 +18,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Template ()
 				.End ();
 
-			wall.AddBrick (x => x.Functions)
-				.Template ()
-				.End ();
-			
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
 		}

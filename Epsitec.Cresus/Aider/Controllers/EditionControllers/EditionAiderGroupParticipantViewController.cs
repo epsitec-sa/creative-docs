@@ -19,7 +19,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Field (x => x.EndDate)
 					.End ()
 					.Field (x => x.Group)
-					.Field (x => x.Function)
 					.Field (x => x.Person)
 				.End ();
 		}

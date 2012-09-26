@@ -13,15 +13,17 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervGroupDefinition(string id, string name)
+		public EervGroupDefinition(string id, string name, Enumerations.GroupType groupType = Enumerations.GroupType.NodeAndLeaf)
 		{
 			this.Id = id;
 			this.Name = name;
+			this.GroupType = groupType;
 
 			this.children = new List<EervGroupDefinition> ();
 		}
 
-		public EervGroupDefinition Parent
+		
+		public EervGroupDefinition				Parent
 		{
 			get
 			{
@@ -32,9 +34,44 @@ namespace Epsitec.Aider.Data.Eerv
 				this.ThrowIfReadOnly ();
 				
 				this.parent = value;
+				
+				if (this.parent != null)
+				{
+					if (this.parent.GroupType == Enumerations.GroupType.Leaf)
+					{
+						this.parent.GroupType = Enumerations.GroupType.NodeAndLeaf;
+					}
+				}
 			}
 		}
 
+		public EervGroupDefinition Function
+		{
+			get
+			{
+				return this.function;
+			}
+			set
+			{
+				this.ThrowIfReadOnly ();
+
+				this.function = value;
+			}
+		}
+
+		public Enumerations.GroupType GroupType
+		{
+			get
+			{
+				return this.groupType;
+			}
+			set
+			{
+				this.ThrowIfReadOnly ();
+
+				this.groupType = value;
+			}
+		}
 
 		public IList<EervGroupDefinition> Children
 		{
@@ -74,12 +111,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public readonly string Id;
-		public readonly string Name;
+		public readonly string					Id;
+		public readonly string					Name;
 
-
-		private EervGroupDefinition parent;
-		private IList<EervGroupDefinition> children;
+		private EervGroupDefinition				parent;
+		private EervGroupDefinition				function;
+		private Enumerations.GroupType			groupType;
+		private IList<EervGroupDefinition>		children;
 
 
 	}
