@@ -40,7 +40,10 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGroupDefinitions(BusinessContext businessContext, EervMainData eervData)
 		{
-			var topLevelGroups = eervData.GroupDefinitions.Where (g => g.Parent == null);
+			var functionRoot = eervData.GroupDefinitions.First (g => g.GroupClassification == Enumerations.GroupClassification.Function && g.GroupLevel == 1);
+			EervMainDataImporter.ImportGroupDefinition (businessContext, functionRoot);
+
+			var topLevelGroups = eervData.GroupDefinitions.Where (g => g.GroupLevel == 0);
 
 			foreach (var groupDefinition in topLevelGroups)
 			{
@@ -56,13 +59,23 @@ namespace Epsitec.Aider.Data.Eerv
 			var aiderGroupDef = businessContext.CreateEntity<AiderGroupDefEntity> ();
 
 			aiderGroupDef.Name = groupDefinition.Name;
+			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
 
-			var children = groupDefinition
+			var children = new List<AiderGroupDefEntity> ();
+
+			if (groupDefinition.FunctionGroup != null)
+			{
+				var funcGroup = groupDefinition.FunctionGroup;
+				var funcGroupEntity = funcGroup.EntityCache;
+				children.Add (funcGroupEntity);
+			}
+
+			children.AddRange (groupDefinition
 				.Children
-				.Select (c => EervMainDataImporter.ImportGroupDefinition (businessContext, c))
-				.ToList ();
+				.Select (c => EervMainDataImporter.ImportGroupDefinition (businessContext, c)));
 
 			aiderGroupDef.Subgroups.AddRange (children);
+			groupDefinition.EntityCache = aiderGroupDef;
 
 			// TODO Add a lot more stuff here to set up properly the group definition level, type,
 			// category, etc.

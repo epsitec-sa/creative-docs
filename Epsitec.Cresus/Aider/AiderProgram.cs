@@ -42,6 +42,9 @@ namespace Epsitec.Aider
 			var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (eervGroupDefinitionFile).ToList ();
 
+			var functionArray = groupDefinitions.Where (x => x.GroupClassification == Enumerations.GroupClassification.Function && x.GroupLevel == 1).ToArray ();
+			var topLevel = groupDefinitions.Where (x => x.GroupLevel == 0).ToArray ();
+
 
 			CoreProgram.Main (args);
 		}
@@ -123,7 +126,7 @@ namespace Epsitec.Aider
 				var coreDataManager = new CoreDataManager (app.Data);
 
 				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2012-04-18.xml");
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile, 1000);
 				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 				
 				var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
@@ -132,6 +135,7 @@ namespace Epsitec.Aider
 
 				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
 
+#if false
 				var eervFileGroups = new List<Tuple<FileInfo, FileInfo, FileInfo, FileInfo, FileInfo>> ()
 				{
 					Tuple.Create
@@ -167,6 +171,7 @@ namespace Epsitec.Aider
 						EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
 					}
 				}
+#endif
 				Services.ShutDown ();
 			}
 		}

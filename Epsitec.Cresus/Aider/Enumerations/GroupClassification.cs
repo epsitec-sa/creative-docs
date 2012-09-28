@@ -9,11 +9,19 @@ using System.Linq;
 namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum GroupDefType
+	public enum GroupClassification
 	{
 		None = 0,
 
-		Region = 1,
-		Parish = 2,
+		Canton				= 10,
+		Region				= 20,
+		Parish				= 30,
+		Common				= 40,
+		External			= 50,
+
+		Function			= 100,
+		Staff				= 110,
+		StaffAssociation	= 120,
+
 	}
 }

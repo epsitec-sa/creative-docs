@@ -148,6 +148,17 @@ namespace Epsitec.Aider.Entities
 			return "Paroisse de " + parishName;
 		}
 
+		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
+		{
+			if (this.subgroupsList == null)
+			{
+				this.subgroupsList = new List<AiderGroupEntity> ();
+			}
+
+			value = this.subgroupsList;
+		}
+
+		private List<AiderGroupEntity> subgroupsList;
 
 	}
 }

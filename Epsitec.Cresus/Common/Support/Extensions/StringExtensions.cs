@@ -42,6 +42,33 @@ namespace Epsitec.Common.Support.Extensions
 			return buffer.ToString ();
 		}
 
+		public static string SubstringStart(this string text, int length)
+		{
+			if (text == null)
+			{
+				return null;
+			}
+			else
+			{
+				return text.Substring (0, length);
+			}
+		}
+
+		public static string SubstringEnd(this string text, int length)
+		{
+			if (text == null)
+			{
+				return null;
+			}
+			else
+			{
+				int count = text.Length;
+				int take  = System.Math.Min (count, length);
+				int skip  = count - take;
+
+				return text.Substring (skip, take);
+			}
+		}
 
 		public static bool IsNullOrWhiteSpace(this string text)
 		{

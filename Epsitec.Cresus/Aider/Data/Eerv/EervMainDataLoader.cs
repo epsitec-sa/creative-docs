@@ -1,4 +1,7 @@
-﻿using System;
+﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +21,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static EervMainData LoadEervData(FileInfo groupDefinitionFile)
 		{
-			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile).ToList ();
+			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile)
+				.Where (g => g.GroupClassification != Enumerations.GroupClassification.None)
+				.ToList ();
 
 			EervMainDataLoader.FreezeData (groupDefinitions);
 
@@ -58,38 +63,48 @@ namespace Epsitec.Aider.Data.Eerv
 
 					parents.Push (groupDefinition);
 
-					string id = groupDefinition.Id;
-
-					if ((id.StartsWith ("0101")) &&
-						(id.EndsWith ("0000")))
-					{
-						var functionCode = id.Substring (4, 2);
-						functions[functionCode] = groupDefinition;
-					}
-					else if ((id.StartsWith ("02")) ||
-						/**/ (id.StartsWith ("03")) ||
-						/**/ (id.StartsWith ("04")) ||
-						/**/ (id.StartsWith ("05")) ||
-						/**/ (id.StartsWith ("06")))
-					{
-						var functionCode = record[GroupDefinitionHeader.Function] ?? "";
-
-						if (functionCode.Length == 1)
-						{
-							functionCode = "0" + functionCode;
-						}
-						if (functionCode.Length == 2)
-						{
-							groupDefinition.Function = functions[functionCode];
-						}
-					}
-
+					EervMainDataLoader.HandleGroupDefinitionFunctions (functions, record, groupDefinition);
 
 					yield return groupDefinition;
 				}
 			}
 		}
 
+
+		private static void HandleGroupDefinitionFunctions(Dictionary<string, EervGroupDefinition> functions, Dictionary<GroupDefinitionHeader, string> record, EervGroupDefinition groupDefinition)
+		{
+			string id = groupDefinition.Id;
+
+			if (id.StartsWith ("0101"))
+			{
+				//	1.1.x describe not real groups, but transversal functions, which can be applied
+				//	to any standard non-leaf group:
+
+				if (id.EndsWith ("0000"))
+				{
+					var functionCode = id.Substring (4, 2);
+					functions[functionCode] = groupDefinition;
+				}
+				else
+				{
+					groupDefinition.GroupType = Enumerations.GroupType.Leaf;
+				}
+			}
+			else if ((id.StartsWith ("02")) ||	//	"Synodal"
+				/**/ (id.StartsWith ("03")) ||	//	"Régional"
+				/**/ (id.StartsWith ("04")) ||	//	"Paroissial"
+				/**/ (id.StartsWith ("05")) ||	//	"Missions communes"
+				/**/ (id.StartsWith ("06")))	//	"Relations extérieures"
+			{
+				var functionCode = record[GroupDefinitionHeader.Function];
+
+				if (functionCode != null)
+				{
+					functionCode = ("00" + functionCode).SubstringEnd (2);
+					groupDefinition.FunctionGroup = functions[functionCode];
+				}
+			}
+		}
 
 		private static int GetEervGroupDefinitionLevel(Dictionary<GroupDefinitionHeader, string> record)
 		{
@@ -103,7 +118,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			throw new FormatException ("Invalid group definition level");
+			throw new System.FormatException ("Invalid group definition level");
 		}
 
 
@@ -113,7 +128,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var name = record[EervMainDataLoader.names[groupLevel]];
 			var type = string.IsNullOrEmpty (record[GroupDefinitionHeader.IsLeaf]) ? Enumerations.GroupType.Node : Enumerations.GroupType.Leaf;
 
-			return new EervGroupDefinition (id, name);
+			return new EervGroupDefinition (id, name, type, groupLevel);
 		}
 
 

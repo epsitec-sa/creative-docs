@@ -5631,19 +5631,19 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVA2A/LVA1C
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA1C]")]
-		public global::Epsitec.Aider.Enumerations.GroupDefType DefType
+		public global::Epsitec.Aider.Enumerations.GroupClassification DefType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.GroupDefType> ("[LVA1C]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.GroupClassification> ("[LVA1C]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Enumerations.GroupDefType oldValue = this.DefType;
+				global::Epsitec.Aider.Enumerations.GroupClassification oldValue = this.DefType;
 				if (oldValue != value || !this.IsFieldDefined("[LVA1C]"))
 				{
 					this.OnDefTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.GroupDefType> ("[LVA1C]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.GroupClassification> ("[LVA1C]", oldValue, value);
 					this.OnDefTypeChanged (oldValue, value);
 				}
 			}
@@ -5674,14 +5674,12 @@ namespace Epsitec.Aider.Entities
 		///	The <c>Subgroups</c> field.
 		///	designer:fld/LVA2A/LVA4A
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA4A]", IsVirtual=true)]
+		[global::Epsitec.Common.Support.EntityField ("[LVA4A]")]
 		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupDefEntity> Subgroups
 		{
 			get
 			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupDefEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupDefEntity>);
-				this.GetSubgroups (ref value);
-				return value;
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVA4A]");
 			}
 		}
 		
@@ -5693,12 +5691,11 @@ namespace Epsitec.Aider.Entities
 		partial void OnLevelChanged(global::Epsitec.Aider.Enumerations.GroupLevel oldValue, global::Epsitec.Aider.Enumerations.GroupLevel newValue);
 		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
-		partial void OnDefTypeChanging(global::Epsitec.Aider.Enumerations.GroupDefType oldValue, global::Epsitec.Aider.Enumerations.GroupDefType newValue);
-		partial void OnDefTypeChanged(global::Epsitec.Aider.Enumerations.GroupDefType oldValue, global::Epsitec.Aider.Enumerations.GroupDefType newValue);
+		partial void OnDefTypeChanging(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
+		partial void OnDefTypeChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnCategoryChanging(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		partial void OnCategoryChanged(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		
-		partial void GetSubgroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupDefEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
