@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Entities
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			yield return this.Name;
+			yield return TextFormatter.FormatText (this.Name);
 		}
 
 		public AiderGroupEntity Instantiate(BusinessContext businessContext, GroupPathInfo info)
