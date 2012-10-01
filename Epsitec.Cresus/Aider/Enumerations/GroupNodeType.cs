@@ -9,7 +9,7 @@ using System.Linq;
 namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum GroupType
+	public enum GroupNodeType
 	{
 		None = 0,
 

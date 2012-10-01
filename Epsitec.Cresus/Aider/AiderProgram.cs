@@ -33,18 +33,18 @@ namespace Epsitec.Aider
 			return;
 #endif
 
-#if false
+#if true
 			AiderProgram.TestDatabaseCreation ();
 			return;
 #endif
 
-
+#if false
 			var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (eervGroupDefinitionFile).ToList ();
 
 			var functionArray = groupDefinitions.Where (x => x.GroupClassification == Enumerations.GroupClassification.Function && x.GroupLevel == 1).ToArray ();
 			var topLevel = groupDefinitions.Where (x => x.GroupLevel == 0).ToArray ();
-
+#endif
 
 			CoreProgram.Main (args);
 		}

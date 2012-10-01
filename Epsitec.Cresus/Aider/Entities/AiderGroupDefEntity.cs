@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name, "\n", this.DefType);
+			return TextFormatter.FormatText (this.Classification, "~, ", this.Name);
 		}
 
 		public override FormattedText GetCompactSummary()

@@ -162,7 +162,7 @@
     <Compile Include="Enumerations\GroupLevel.cs" />
     <Compile Include="Enumerations\GroupParticipantRole.cs" />
     <Compile Include="Enumerations\GroupRelationshipType.cs" />
-    <Compile Include="Enumerations\GroupType.cs" />
+    <Compile Include="Enumerations\GroupNodeType.cs" />
     <Compile Include="Enumerations\Language.cs" />
     <Compile Include="Enumerations\LegalPersonType.cs" />
     <Compile Include="Enumerations\PersonRelationshipType.cs" />

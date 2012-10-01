@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Tools
 
 			example.GroupDef = new AiderGroupDefEntity ()
 			{
-				DefType = Enumerations.GroupClassification.Parish
+				Classification = Enumerations.GroupClassification.Parish
 			};
 
 			example.Name = parishName;

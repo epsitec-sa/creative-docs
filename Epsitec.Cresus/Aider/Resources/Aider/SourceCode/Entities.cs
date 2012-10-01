@@ -5583,55 +5583,33 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Level</c> field.
-		///	designer:fld/LVA2A/LVAAA
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAAA]")]
-		public global::Epsitec.Aider.Enumerations.GroupLevel Level
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.GroupLevel> ("[LVAAA]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.GroupLevel oldValue = this.Level;
-				if (oldValue != value || !this.IsFieldDefined("[LVAAA]"))
-				{
-					this.OnLevelChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.GroupLevel> ("[LVAAA]", oldValue, value);
-					this.OnLevelChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Type</c> field.
+		///	The <c>NodeType</c> field.
 		///	designer:fld/LVA2A/LVA1B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA1B]")]
-		public global::Epsitec.Aider.Enumerations.GroupType Type
+		public global::Epsitec.Aider.Enumerations.GroupNodeType NodeType
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.GroupType> ("[LVA1B]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.GroupNodeType> ("[LVA1B]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Enumerations.GroupType oldValue = this.Type;
+				global::Epsitec.Aider.Enumerations.GroupNodeType oldValue = this.NodeType;
 				if (oldValue != value || !this.IsFieldDefined("[LVA1B]"))
 				{
-					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.GroupType> ("[LVA1B]", oldValue, value);
-					this.OnTypeChanged (oldValue, value);
+					this.OnNodeTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.GroupNodeType> ("[LVA1B]", oldValue, value);
+					this.OnNodeTypeChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>DefType</c> field.
+		///	The <c>Classification</c> field.
 		///	designer:fld/LVA2A/LVA1C
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA1C]")]
-		public global::Epsitec.Aider.Enumerations.GroupClassification DefType
+		public global::Epsitec.Aider.Enumerations.GroupClassification Classification
 		{
 			get
 			{
@@ -5639,12 +5617,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				global::Epsitec.Aider.Enumerations.GroupClassification oldValue = this.DefType;
+				global::Epsitec.Aider.Enumerations.GroupClassification oldValue = this.Classification;
 				if (oldValue != value || !this.IsFieldDefined("[LVA1C]"))
 				{
-					this.OnDefTypeChanging (oldValue, value);
+					this.OnClassificationChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Enumerations.GroupClassification> ("[LVA1C]", oldValue, value);
-					this.OnDefTypeChanged (oldValue, value);
+					this.OnClassificationChanged (oldValue, value);
 				}
 			}
 		}
@@ -5687,12 +5665,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnPathTemplateChanging(string oldValue, string newValue);
 		partial void OnPathTemplateChanged(string oldValue, string newValue);
-		partial void OnLevelChanging(global::Epsitec.Aider.Enumerations.GroupLevel oldValue, global::Epsitec.Aider.Enumerations.GroupLevel newValue);
-		partial void OnLevelChanged(global::Epsitec.Aider.Enumerations.GroupLevel oldValue, global::Epsitec.Aider.Enumerations.GroupLevel newValue);
-		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
-		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
-		partial void OnDefTypeChanging(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
-		partial void OnDefTypeChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
+		partial void OnNodeTypeChanging(global::Epsitec.Aider.Enumerations.GroupNodeType oldValue, global::Epsitec.Aider.Enumerations.GroupNodeType newValue);
+		partial void OnNodeTypeChanged(global::Epsitec.Aider.Enumerations.GroupNodeType oldValue, global::Epsitec.Aider.Enumerations.GroupNodeType newValue);
+		partial void OnClassificationChanging(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
+		partial void OnClassificationChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnCategoryChanging(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		partial void OnCategoryChanged(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		

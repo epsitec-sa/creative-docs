@@ -15,6 +15,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ();
 
 			wall.AddBrick (x => x.Subgroups)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 				.End ();
 

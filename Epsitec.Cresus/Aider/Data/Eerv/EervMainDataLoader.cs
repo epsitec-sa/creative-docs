@@ -55,7 +55,11 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var parent = parents.Peek ();
 
-					if (parent != null)
+					if (parent == null)
+					{
+						groupDefinition.Parent = null;
+					}
+					else
 					{
 						parent.Children.Add (groupDefinition);
 						groupDefinition.Parent = parent;
@@ -87,7 +91,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					groupDefinition.GroupType = Enumerations.GroupType.Leaf;
+					groupDefinition.GroupNodeType = Enumerations.GroupNodeType.Leaf;
 				}
 			}
 			else if ((id.StartsWith ("02")) ||	//	"Synodal"
@@ -126,7 +130,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var id = record[GroupDefinitionHeader.Id];
 			var name = record[EervMainDataLoader.names[groupLevel]];
-			var type = string.IsNullOrEmpty (record[GroupDefinitionHeader.IsLeaf]) ? Enumerations.GroupType.Node : Enumerations.GroupType.Leaf;
+			var type = string.IsNullOrEmpty (record[GroupDefinitionHeader.IsLeaf]) ? Enumerations.GroupNodeType.Node : Enumerations.GroupNodeType.Leaf;
 
 			return new EervGroupDefinition (id, name, type, groupLevel);
 		}
