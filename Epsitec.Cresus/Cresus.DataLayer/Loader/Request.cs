@@ -8,7 +8,10 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 
+using System;
 using System.Collections.Generic;
+
+using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.DataLayer.Loader
@@ -138,6 +141,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public void AddSortClause(EntityField field, SortOrder sortOrder = SortOrder.Ascending)
 		{
 			this.sortClauses.Add (new SortClause (field, sortOrder));
+		}
+
+
+		public void AddCondition<T>(T entity, Expression<Func<T, bool>> lambda)
+			where T : AbstractEntity
+		{
+			var condition = LambdaConverter.Convert (entity, lambda);
+
+			this.conditions.Add (condition);
 		}
 
 
