@@ -54,20 +54,27 @@ namespace Epsitec.Aider.Entities
 			return group;
 		}
 
-		public IEnumerable<AiderGroupEntity> FindSubGroups(BusinessContext businessContext)
+		public IEnumerable<AiderGroupEntity> FindSubgroups(BusinessContext businessContext)
 		{
 			var example = new AiderGroupEntity ();
-			var request = new Request ()
-			{
-				RootEntity = example
-			};
+			var request = Request.Create (example);
 
-			var path  = this.Path + "___.";
+			var path  = this.Path + EervGroupIds.SubgroupSqlWildcard;
 			var level = this.GroupLevel + 1;
 
 			request.AddCondition (example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
 
-			return businessContext.DataContext.GetByRequest<AiderGroupEntity> (request);
+			return businessContext.DataContext.GetByRequest (request);
+		}
+
+		public IEnumerable<AiderGroupParticipantEntity> FindParticipants(BusinessContext businessContext)
+		{
+			var example = new AiderGroupParticipantEntity ();
+			var request = Request.Create (example);
+
+			example.Group = this;
+
+			return businessContext.DataContext.GetByRequest (request);
 		}
 
 		public AiderGroupParticipantEntity AddParticipant(BusinessContext businessContext, AiderPersonEntity aiderPerson, Date? startDate, Date? endDate, string comment)
@@ -152,26 +159,40 @@ namespace Epsitec.Aider.Entities
 			return "Région " + InvariantConverter.ToString (regionNumber);
 		}
 
-
 		public static string GetParishGroupName(string parishName)
 		{
 			return "Paroisse de " + parishName;
 		}
+
 
 		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
 		{
 			if (this.subgroupsList == null)
 			{
 				var context = BusinessContextPool.GetCurrentContext (this);
-				
+
 				this.subgroupsList = new List<AiderGroupEntity> ();
-				this.subgroupsList.AddRange (this.FindSubGroups (context));
+				this.subgroupsList.AddRange (this.FindSubgroups (context));
 			}
 
 			value = this.subgroupsList;
 		}
 
+		partial void GetParticipants(ref IList<AiderGroupParticipantEntity> value)
+		{
+			if (this.participantsList == null)
+			{
+				var context = BusinessContextPool.GetCurrentContext (this);
+
+				this.participantsList = new List<AiderGroupParticipantEntity> ();
+				this.participantsList.AddRange (this.FindParticipants (context));
+			}
+
+			value = this.participantsList;
+		}
+
 		private List<AiderGroupEntity> subgroupsList;
+		private List<AiderGroupParticipantEntity> participantsList;
 
 	}
 }

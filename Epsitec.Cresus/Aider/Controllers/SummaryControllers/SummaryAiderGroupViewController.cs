@@ -21,6 +21,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Template ()
 				.End ();
 
+			wall.AddBrick (x => x.Participants)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ();
+
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
 		}

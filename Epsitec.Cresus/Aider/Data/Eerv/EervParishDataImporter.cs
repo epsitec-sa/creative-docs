@@ -1132,7 +1132,7 @@ namespace Epsitec.Aider.Data.Eerv
 			while (todo.Count > 0)
 			{
 				var currentGroup = todo.Pop ();
-				var subGroups = currentGroup.FindSubGroups (businessContext).ToList ();
+				var subGroups = currentGroup.FindSubgroups (businessContext).ToList ();
 
 				mapping[currentGroup] = subGroups;
 
