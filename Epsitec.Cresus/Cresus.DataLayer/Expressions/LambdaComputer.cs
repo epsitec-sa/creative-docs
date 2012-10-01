@@ -112,18 +112,9 @@ public static class LambdaComputer
 			// a stack of bools to store the values that should have been returned if we could have
 			// done so.
 
-			// If we can't compute the current expression then the parent expression cannot be
-			// computed.
-			if (!this.isExpressionComputable (expression))
-			{
-				this.isComputableStack.Pop ();
-				this.isComputableStack.Push (false);
-
-				return expression;
-			}
-
-			// We start by assuming that the current expression can be computed.
-			this.isComputableStack.Push (true);
+			// We start by assuming that the current expression can be computed if we are said so by
+			// the callback that we are given.
+			this.isComputableStack.Push (this.isExpressionComputable (expression));
 
 			// We walk the tree with the children of the current expression to see if they can
 			// be computed.
@@ -131,16 +122,16 @@ public static class LambdaComputer
 
 			if (!this.isComputableStack.Pop ())
 			{
-				// If one child of the current expression cannot be computed, which implies that the
-				// parent expression cannot be computed.
+				// Either the current expression or at least one of its children cannot be computed,
+				// which implies that the parent expression cannot be computed.
 
 				this.isComputableStack.Pop ();
 				this.isComputableStack.Push (false);
 			}
 			else
 			{
-				// All children of the current expression can be computed and so can the current
-				// expression, so we add it to the list of expressions that can be computed.
+				// The current expression as well as all its children can be computed, so we add it
+				// to the list of expressions that can be computed.
 
 				this.computableExpressions.Add (expression);
 			}

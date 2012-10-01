@@ -899,6 +899,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
+		public void EvaluableOperationWithinNonEvaluableOperation()
+		{
+			var entity = new LocationEntity ();
+
+			this.Check
+			(
+				entity,
+				x => SqlMethods.Like (x.Name, this.member.ToString () + "___"),
+				new BinaryComparison
+				(
+					ValueField.Create (entity, x => x.Name),
+					BinaryComparator.IsLike,
+					new Constant (this.member.ToString () + "___")
+				)
+			);
+		}
+
+
+		[TestMethod]
 		public void NullableMember()
 		{
 			var entity = new PersonTitleEntity ();
