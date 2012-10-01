@@ -33,7 +33,7 @@ namespace Epsitec.Aider
 			return;
 #endif
 
-#if true
+#if false
 			AiderProgram.TestDatabaseCreation ();
 			return;
 #endif

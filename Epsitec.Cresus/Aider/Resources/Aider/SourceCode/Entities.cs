@@ -3149,6 +3149,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>GroupLevel</c> field.
+		///	designer:fld/LVA54/LVAED
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAED]")]
+		public int GroupLevel
+		{
+			get
+			{
+				return this.GetField<int> ("[LVAED]");
+			}
+			set
+			{
+				int oldValue = this.GroupLevel;
+				if (oldValue != value || !this.IsFieldDefined("[LVAED]"))
+				{
+					this.OnGroupLevelChanging (oldValue, value);
+					this.SetField<int> ("[LVAED]", oldValue, value);
+					this.OnGroupLevelChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>GroupDef</c> field.
 		///	designer:fld/LVA54/LVADA
 		///	</summary>
@@ -3223,6 +3245,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnGroupLevelChanging(int oldValue, int newValue);
+		partial void OnGroupLevelChanged(int oldValue, int newValue);
 		partial void OnGroupDefChanging(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
 		partial void OnGroupDefChanged(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
 		partial void OnPathChanging(string oldValue, string newValue);

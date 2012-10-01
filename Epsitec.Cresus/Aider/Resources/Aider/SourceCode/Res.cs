@@ -1480,6 +1480,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVADA
 				public static readonly global::Epsitec.Common.Support.Druid GroupDef = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 333);
+				//	designer:cap/LVAED
+				public static readonly global::Epsitec.Common.Support.Druid GroupLevel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 430);
 				//	designer:cap/LVAA4
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 138);
 				//	designer:cap/LVAJ8

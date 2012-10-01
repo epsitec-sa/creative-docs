@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
@@ -35,11 +36,14 @@ namespace Epsitec.Aider.Entities
 			yield return this.Name;
 		}
 
-		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name)
+		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition,
+			/**/							  PathPrefixReplacement info)
 		{
 			var group = businessContext.CreateEntity<AiderGroupEntity> ();
 
-			group.Name = name;
+			group.Name = info.Name;
+			group.GroupLevel = info.Level;
+			group.Path = info.Map (groupDefinition);
 
 			if (groupDefinition != null)
 			{

@@ -128,30 +128,40 @@ namespace Epsitec.Aider.Data.Eerv
 		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
 			var parishGroupDefinition = AiderGroupDefEntity.Find (businessContext, "Paroisses");
+			var parishAddressInfos = regions.Values.SelectMany (p => p.Values.Select (p2 => p2.First ())).ToArray ();
+			var parishIds = regions.Keys.ToDictionary (x => x, x => 0);
+			var parishes = new Dictionary<string, AiderGroupEntity> ();
 
-			return regions
-				.Values
-				.SelectMany (p => p.Values.Select (p2 => p2.First ()))
-				.ToDictionary (p => p.ParishName, p => EervMainDataImporter.CreateParishGroup (businessContext, regionGroups, parishGroupDefinition, p));
+			foreach (var parishAddressInfo in parishAddressInfos)
+			{
+				var regionId = parishAddressInfo.RegionCode;
+				var parishId = parishIds[regionId] + 1;
+
+				parishes.Add (parishAddressInfo.ParishName,
+					/**/      EervMainDataImporter.CreateParishGroup (businessContext, parishGroupDefinition, parishAddressInfo, parishId));
+
+				parishIds[regionId] = parishId;
+			}
+
+			return parishes;
 		}
 
 
 		private static AiderGroupEntity CreateRegionGroup(BusinessContext businessContext, AiderGroupDefEntity regionGroupDefinition, int regionCode)
 		{
 			var name = AiderGroupEntity.GetRegionGroupName (regionCode);
+			var info = new PathPrefixReplacement (name, regionGroupDefinition.PathTemplate.SubstringStart (4), string.Format ("R{0:00}.", regionCode));
 
-			return regionGroupDefinition.Instantiate (businessContext, name);
+			return regionGroupDefinition.Instantiate (businessContext, info);
 		}
 
-
-		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish)
+		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish, int parishId)
 		{
 			var name = AiderGroupEntity.GetParishGroupName (parish.ParishName);
+			var path = string.Format ("R{0:00}.P{1:00}.", parish.RegionCode, parishId);
+			var info = new PathPrefixReplacement (name, parishGroupDefinition.PathTemplate.SubstringStart (4), path, 1);
 
-			var parishGroup = parishGroupDefinition.Instantiate (businessContext, name);
-
-			//	TODO: init. group path
-//-			parishGroup.Root = regionGroups[parish.RegionCode];
+			var parishGroup = parishGroupDefinition.Instantiate (businessContext, info);
 
 			return parishGroup;
 		}

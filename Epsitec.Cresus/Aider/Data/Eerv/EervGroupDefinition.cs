@@ -157,7 +157,7 @@ namespace Epsitec.Aider.Data.Eerv
 			return buffer.ToString ();
 
 		}
-		
+
 		protected void BuildPathTemplate(System.Text.StringBuilder buffer)
 		{
 			if (this.parent != null)
@@ -165,15 +165,27 @@ namespace Epsitec.Aider.Data.Eerv
 				this.parent.BuildPathTemplate (buffer);
 			}
 
+			var groupClassification = this.GroupClassification;
+			
 			if (((this.GroupLevel > 0) && (!this.Id.StartsWith ("01"))) ||
 				((this.GroupLevel > 1)))
 			{
+				if (groupClassification == Enumerations.GroupClassification.Function)
+				{
+					buffer.Append ("F");
+				}
+				else
+				{
+					buffer.Append ("G");
+				}
+
 				buffer.Append (this.Id.Substring (this.GroupLevel*2, 2));
 				buffer.Append (".");
+				
 				return;
 			}
 
-			switch (this.GroupClassification)
+			switch (groupClassification)
 			{
 				case Enumerations.GroupClassification.Canton:
 					buffer.Append ("SCC.");

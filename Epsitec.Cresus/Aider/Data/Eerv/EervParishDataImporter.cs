@@ -992,6 +992,9 @@ namespace Epsitec.Aider.Data.Eerv
 					// exception later. This need to be corrected.
 					var name = eervGroup.Name.Substring (0, Math.Min (200, eervGroup.Name.Length));
 
+					throw new System.NotImplementedException ("Pas compris ce code - les paroisses sont importées par le EervMainDataImporter");
+
+#if false
 					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, name);
 					AiderGroupRelationshipEntity.Create (businessContext, aiderGroup, newAiderGroup, GroupRelationshipType.Inclusion);
 
@@ -1001,6 +1004,7 @@ namespace Epsitec.Aider.Data.Eerv
 					aiderIdMapping[eervGroup.Id] = newAiderGroup;
 
 					groupMapping[eervGroup] = newAiderGroup;
+#endif
 				}
 				else
 				{
