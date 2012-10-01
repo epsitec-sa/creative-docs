@@ -161,6 +161,7 @@
     <Compile Include="Expressions\SortOrder.cs" />
     <Compile Include="Expressions\LambdaComputer.cs" />
     <Compile Include="Loader\AliasManager.cs" />
+    <Compile Include="Loader\Request`1.cs" />
     <Compile Include="Loader\EntityHelper.cs" />
     <Compile Include="Loader\FieldChecker.cs" />
     <Compile Include="Loader\SqlFieldBuilder.cs" />

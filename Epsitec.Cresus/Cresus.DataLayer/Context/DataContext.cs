@@ -1135,6 +1135,14 @@ namespace Epsitec.Cresus.DataLayer.Context
 				.ToList ();
 		}
 
+		public IList<TEntity> GetByRequest<TEntity>(Request<TEntity> request)
+			where TEntity : AbstractEntity
+		{
+			return this.GetByRequest (request as Request)
+				.Cast<TEntity> ()
+				.ToList ();
+		}
+
 
 		/// <summary>
 		/// Queries the database for the number of entities which match the given example.

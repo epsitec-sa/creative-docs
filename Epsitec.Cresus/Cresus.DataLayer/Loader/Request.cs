@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// of the result by specifying the number of entities to skip and the number of entities to
 	/// take.
 	/// </remarks>
-	public sealed class Request
+	public class Request
 	{
 		
 		
@@ -153,9 +153,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public static Request Create(AbstractEntity rootEntity)
+		public static Request<TEntity> Create<TEntity>(TEntity rootEntity)
+			where TEntity : AbstractEntity
 		{
-			return new Request ()
+			return new Request<TEntity> ()
 			{
 				RootEntity = rootEntity,
 			};
@@ -192,18 +193,23 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public Request Clone()
 		{
-			var copy = new Request ()
-			{
-				RootEntity = this.RootEntity,
-				RequestedEntity = this.RequestedEntity,
-				Skip = this.Skip,
-				Take = this.Take,
-			};
-
+			var copy = this.CloneEmpty ();
+			
+			copy.RootEntity      = this.RootEntity;
+			copy.RequestedEntity = this.RequestedEntity;
+			copy.Skip            = this.Skip;
+			copy.Take            = this.Take;
+			
 			copy.Conditions.AddRange (this.Conditions);
 			copy.SortClauses.AddRange (this.SortClauses);
 
 			return copy;
+		}
+
+
+		protected virtual Request CloneEmpty()
+		{
+			return new Request ();
 		}
 
 
@@ -409,6 +415,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
  
 		
 		private AbstractEntity requestedEntity;
+
 
 	}
 
