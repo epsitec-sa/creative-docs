@@ -18,6 +18,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Field (x => x.StartDate)
 						.Field (x => x.EndDate)
 					.End ()
+					.Field (x => x.Path).ReadOnly ()
+					.Field (x => x.GroupLevel).ReadOnly ()
 					.Field (x => x.GroupDef)
 					.Field (x => x.Name)
 //-					.Field (x => x.Description)

@@ -16,6 +16,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Cresus.Database;
 
 namespace Epsitec.Aider.Entities
 {
@@ -55,13 +56,18 @@ namespace Epsitec.Aider.Entities
 
 		public IEnumerable<AiderGroupEntity> FindSubGroups(BusinessContext businessContext)
 		{
-			var example = new AiderGroupRelationshipEntity ()
+			var example = new AiderGroupEntity ();
+			var request = new Request ()
 			{
-				Group1 = this,
-				Type = GroupRelationshipType.Inclusion,
+				RootEntity = example
 			};
 
-			return businessContext.DataContext.GetByExample(example).Select(r => r.Group2);
+			var path = this.Path + "___.";
+
+			request.Conditions.Add (
+				LambdaConverter.Convert (example, x => SqlMethods.Like (x.Path, path)));
+
+			return businessContext.DataContext.GetByRequest<AiderGroupEntity> (request);
 		}
 
 		public AiderGroupParticipantEntity AddParticipant(BusinessContext businessContext, AiderPersonEntity aiderPerson, Date? startDate, Date? endDate, string comment)
@@ -156,7 +162,10 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.subgroupsList == null)
 			{
+				var context = BusinessContextPool.GetCurrentContext (this);
+				
 				this.subgroupsList = new List<AiderGroupEntity> ();
+				this.subgroupsList.AddRange (this.FindSubGroups (context));
 			}
 
 			value = this.subgroupsList;

@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
-	internal sealed class LambdaConverter : ExpressionVisitor
+	public class LambdaConverter : ExpressionVisitor
 	{
 
 
