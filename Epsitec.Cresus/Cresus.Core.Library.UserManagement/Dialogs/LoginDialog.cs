@@ -460,7 +460,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			new StaticText
 			{
 				Parent = parent,
-				FormattedText = TextFormatter.FormatText ("<font size=\"40\"><b>", number, ".</b></font>"),
+				FormattedText = TextFormatter.FormatText (new FormattedText ("<font size=\"40\"><b>"), number, new FormattedText (".</b></font>")),
 				ContentAlignment = Common.Drawing.ContentAlignment.TopLeft,
 				PreferredWidth = 50,
 				Dock = DockStyle.Left,
