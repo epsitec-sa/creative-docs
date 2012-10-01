@@ -292,7 +292,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-
 		private DataExpression ConvertRegularComparison(BinaryExpression node)
 		{
 			var left = this.VisitAndPop (node.Left);
