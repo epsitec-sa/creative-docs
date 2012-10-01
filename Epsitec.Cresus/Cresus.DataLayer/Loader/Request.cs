@@ -98,6 +98,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			set;
 		}
 
+		public SqlSelectPredicate? SelectPredicate
+		{
+			get;
+			set;
+		}
+
 
 		public List<DataExpression> Conditions
 		{

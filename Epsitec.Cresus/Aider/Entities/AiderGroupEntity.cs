@@ -73,6 +73,7 @@ namespace Epsitec.Aider.Entities
 			var request = Request.Create (example);
 
 			example.Group = this;
+			request.SelectPredicate = SqlSelectPredicate.All;
 
 			return businessContext.DataContext.GetByRequest (request);
 		}
