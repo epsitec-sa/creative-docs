@@ -62,10 +62,11 @@ namespace Epsitec.Aider.Entities
 				RootEntity = example
 			};
 
-			var path = this.Path + "___.";
+			var path  = this.Path + "___.";
+			var level = this.GroupLevel + 1;
 
 			request.Conditions.Add (
-				LambdaConverter.Convert (example, x => SqlMethods.Like (x.Path, path)));
+				LambdaConverter.Convert (example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path)));
 
 			return businessContext.DataContext.GetByRequest<AiderGroupEntity> (request);
 		}
