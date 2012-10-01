@@ -74,7 +74,7 @@
     <Compile Include="Data\Eerv\EervId.cs" />
     <Compile Include="Data\Eerv\AiderEnumerator.cs" />
     <Compile Include="Data\Eerv\ParishAssigner.cs" />
-    <Compile Include="Data\Eerv\PathPrefixReplacement.cs" />
+    <Compile Include="Data\Eerv\GroupPathInfo.cs" />
     <Compile Include="Entities\AiderGroupRelationshipEntity.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />

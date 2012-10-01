@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Entities
 			yield return this.Name;
 		}
 
-		public AiderGroupEntity Instantiate(BusinessContext businessContext, PathPrefixReplacement info)
+		public AiderGroupEntity Instantiate(BusinessContext businessContext, GroupPathInfo info)
 		{
 			var group = AiderGroupEntity.Create (businessContext, this, info);
 
@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Entities
 
 			foreach (var subGroupDef in this.Subgroups)
 			{
-				var subInfo  = new PathPrefixReplacement (subGroupDef.Name, subGroupDef.PathTemplate, group.Path + subGroupDef.PathTemplate.SubstringEnd (4), info.Level + 1);
+				var subInfo  = new GroupPathInfo (subGroupDef.Name, subGroupDef.PathTemplate, group.Path + subGroupDef.PathTemplate.SubstringEnd (4), info.Level + 1);
 				var subGroup = subGroupDef.Instantiate (businessContext, subInfo);
 
 //-				AiderGroupRelationshipEntity.Create (businessContext, group, subGroup, GroupRelationshipType.Inclusion);

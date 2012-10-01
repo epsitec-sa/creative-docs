@@ -38,13 +38,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition,
-			/**/							  PathPrefixReplacement info)
+			/**/							  GroupPathInfo info)
 		{
 			var group = businessContext.CreateEntity<AiderGroupEntity> ();
 
 			group.Name = info.Name;
 			group.GroupLevel = info.Level;
-			group.Path = info.Map (groupDefinition);
+			group.Path = info.MapPath (groupDefinition);
 
 			if (groupDefinition != null)
 			{
