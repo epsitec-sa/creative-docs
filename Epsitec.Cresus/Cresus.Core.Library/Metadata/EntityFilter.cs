@@ -82,8 +82,22 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			foreach (var column in this.columns)
 			{
+				LambdaExpression expression;
 				var entityColumn = column.Resolve (this.entityId);
-				var columnLambda = ExpressionAnalyzer.ReplaceParameter (entityColumn.Expression, parameter as ParameterExpression);
+
+				if (entityColumn == null)
+				{
+					var fieldPath = EntityFieldPath.CreateAbsolutePath (this.entityId, column.Id);
+					var fieldExpr = fieldPath.CreateLambda ();
+					
+					expression = fieldExpr;
+				}
+				else
+				{
+					expression = entityColumn.Expression;
+				}
+				
+				var columnLambda = ExpressionAnalyzer.ReplaceParameter (expression, parameter as ParameterExpression);
 
 				yield return column.Value.GetExpression (columnLambda);
 			}

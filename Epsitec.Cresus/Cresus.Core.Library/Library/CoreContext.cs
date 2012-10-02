@@ -197,7 +197,9 @@ namespace Epsitec.Cresus.Core.Library
 			var xml = filter.Save ("filter");
 			var copy = Metadata.Filter.Restore (xml);
 
-			var lambda = filter.GetExpression (System.Linq.Expressions.Expression.Parameter (Epsitec.Common.Support.EntityEngine.EntityInfo.GetType (ef1.EntityId), "customer"));
+			var @param = System.Linq.Expressions.Expression.Parameter (Epsitec.Common.Support.EntityEngine.EntityInfo.GetType (ef1.EntityId), "customer");
+			var compoundExpression = filter.GetExpression (@param);
+			var compoundLambda = System.Linq.Expressions.Expression.Lambda (compoundExpression, @param);
 #endif
 		}
 

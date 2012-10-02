@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Cresus.Core.Data
@@ -23,13 +24,13 @@ namespace Epsitec.Cresus.Core.Data
 	/// </summary>
 	public abstract class DataSetAccessor : System.IDisposable
 	{
-		protected DataSetAccessor(CoreData data, System.Type entityType, DataSetMetadata metadata, IsolatedTransaction isolatedTransaction = null)
+		protected DataSetAccessor(CoreData data, DataSetMetadata dataSetMetadata, IsolatedTransaction isolatedTransaction = null)
 		{
-			this.data        = data;
-			this.entityType  = entityType;
-			this.metadata    = metadata;
-			this.dataContext = this.data.CreateIsolatedDataContext ("DataSetAccessor");
-			this.sortColumns = new List<EntityColumnMetadata> ();
+			this.data            = data;
+			this.entityType      = dataSetMetadata.DataSetEntityType;
+			this.dataSetMetadata = dataSetMetadata;
+			this.dataContext     = this.data.CreateIsolatedDataContext ("DataSetAccessor");
+			this.sortColumns     = new List<EntityColumnMetadata> ();
 
 			this.isolatedTransaction = isolatedTransaction;
 		}
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
-				return this.metadata;
+				return this.dataSetMetadata;
 			}
 		}
 
@@ -152,6 +153,38 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
+			if (this.dataSetMetadata.DataSetName == "AiderGroup")
+			{
+#if true
+				var ex = new ColumnFilterComparisonExpression ()
+				{
+					Comparison = ColumnFilterComparisonCode.Equal,
+					Constant = ColumnFilterConstant.From (0),
+				};
+
+				var ef = new EntityFilter (Druid.Parse ("[LVA54]"));
+
+				ef.Columns.Add (new ColumnRef<EntityColumnFilter> ("[LVAED]", new EntityColumnFilter (ex)));
+
+				request.AddCondition (this.dataContext, example, ef);
+#else
+				var fieldPath  = EntityFieldPath.CreateAbsolutePath (Druid.Parse ("[LVA54]"), "[LVAED]");
+				var fieldExpr  = fieldPath.CreateLambda ();
+				var groupParam = System.Linq.Expressions.Expression.Parameter (this.dataSetMetadata.DataSetEntityType, "group");
+				var parameter  = ExpressionAnalyzer.ReplaceParameter (fieldExpr, groupParam);
+				
+				var compExpr  = new ColumnFilterComparisonExpression ()
+				{
+					Comparison = ColumnFilterComparisonCode.Equal,
+					Constant = ColumnFilterConstant.From (0),
+				};
+
+				var lambda = System.Linq.Expressions.Expression.Lambda (compExpr.GetExpression (parameter), groupParam);
+
+				request.AddCondition (example, lambda);
+#endif
+			}
+
 			request.SortClauses.AddRange (this.CreateSortClauses (example));
 			request.AddIdSortClause (example);
 
@@ -177,7 +210,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly System.Type			entityType;
 		private readonly IsolatedTransaction	isolatedTransaction;
 		private readonly List<EntityColumnMetadata>	sortColumns;
-		private readonly DataSetMetadata		metadata;
+		private readonly DataSetMetadata		dataSetMetadata;
 		
 		private RequestView						requestView;
 		private int?							itemCount;

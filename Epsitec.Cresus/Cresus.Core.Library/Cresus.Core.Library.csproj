@@ -155,6 +155,7 @@
     <Compile Include="Metadata\FilterNode.cs" />
     <Compile Include="Metadata\FilterNodeType.cs" />
     <Compile Include="Metadata\IFilter.cs" />
+    <Compile Include="Metadata\RequestExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />

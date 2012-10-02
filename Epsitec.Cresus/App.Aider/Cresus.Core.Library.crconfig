@@ -4,9 +4,17 @@ DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication"
 user = [AVAK]
 submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
+AiderGroup = [LVA54]
 
 <meta>
-  <T />
+  <T>
+    <t eid="@AiderGroup">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+    </t>
+  </T>
   <D>
     <d n="AiderPerson" dg=""><R><r>@user</r></R></d>
     <d n="AiderGroup" dg=""><R><r>@user</r></R></d>

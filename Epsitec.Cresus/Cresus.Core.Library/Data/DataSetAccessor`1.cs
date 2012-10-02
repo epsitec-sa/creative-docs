@@ -19,8 +19,9 @@ namespace Epsitec.Cresus.Core.Data
 		where T : AbstractEntity, new ()
 	{
 		public DataSetAccessor(CoreData data, DataSetMetadata metadata)
-			: base (data, typeof (T), metadata)
+			: base (data, metadata)
 		{
+			System.Diagnostics.Debug.Assert (typeof (T) == metadata.DataSetEntityType);
 		}
 		
 		protected override AbstractEntity GetExample()
