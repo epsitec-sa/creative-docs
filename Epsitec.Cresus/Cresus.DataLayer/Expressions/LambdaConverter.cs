@@ -33,17 +33,38 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 			return LambdaConverter.Convert (dataContext, e, l);
 		}
+		
+		public static DataExpression Convert(DataContext dataContext, AbstractEntity entity, Expression expression)
+		{
+			var lambda = expression as LambdaExpression;
+
+			if (lambda == null)
+			{
+				return LambdaConverter.ConvertExpression (dataContext, entity, expression);
+			}
+			else
+			{
+				return LambdaConverter.ConvertLambda (dataContext, entity, lambda);
+			}
+		}
 
 
-		public static DataExpression Convert(DataContext dataContext, AbstractEntity entity, LambdaExpression lambda)
+		private static DataExpression ConvertLambda(DataContext dataContext, AbstractEntity entity, LambdaExpression lambda)
 		{
 			LambdaConverter.Check (dataContext, entity, lambda);
 
-			var computedExpression = LambdaComputer.Compute (lambda.Body, LambdaConverter.IsExpressionComputable);
+			return LambdaConverter.ConvertExpression (dataContext, entity, lambda.Body);
+		}
+
+
+		private static DataExpression ConvertExpression(DataContext dataContext, AbstractEntity entity, Expression expression)
+		{
+			var computedExpression = LambdaComputer.Compute (expression, LambdaConverter.IsExpressionComputable);
 			var dataExpression = new LambdaConverter (dataContext, entity).Convert (computedExpression);
 
 			return dataExpression;
 		}
+
 
 
 		private static bool IsExpressionComputable(Expression expression)
