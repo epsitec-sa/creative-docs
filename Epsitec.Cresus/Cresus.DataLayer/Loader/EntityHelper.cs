@@ -30,22 +30,32 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		internal static IEnumerable<Tuple<Druid, AbstractEntity>> GetFieldsWithChildren(EntityTypeEngine typeEngine, AbstractEntity entity)
 		{
-			var result = new HashSet<Tuple<Druid, AbstractEntity>> ();
-			
+			var referenceChildren = EntityHelper.GetReferenceFieldsWithChildren (typeEngine, entity);
+			var collectionChildren = EntityHelper.GetCollectionFieldsWithChildren (typeEngine, entity);
+
+			return referenceChildren
+				.Concat (collectionChildren)
+				.Where (t => !EntityNullReferenceVirtualizer.IsNullEntity (t.Item2))
+				.Distinct ();
+		}
+
+
+		private static IEnumerable<Tuple<Druid, AbstractEntity>> GetReferenceFieldsWithChildren(EntityTypeEngine typeEngine, AbstractEntity entity)
+		{
 			var entityTypeId = entity.GetEntityStructuredTypeId ();
 
-			foreach(var field in typeEngine.GetReferenceFields (entityTypeId))
-			{
-				var fieldId = field.CaptionId;
-				var fieldName = fieldId.ToResourceId ();
+			return from field in typeEngine.GetReferenceFields (entityTypeId)
+				   let fieldId = field.CaptionId
+				   let fieldName = fieldId.ToResourceId ()
+				   where entity.IsFieldNotEmpty (fieldName)
+				   let target = entity.GetField<AbstractEntity> (fieldName)
+				   select Tuple.Create (fieldId, target);
+		}
 
-				if (entity.IsFieldDefined (fieldName))
-				{
-					var target = entity.GetField<AbstractEntity> (fieldName);
 
-					result.Add (Tuple.Create (fieldId, target));
-				}
-			}
+		private static IEnumerable<Tuple<Druid, AbstractEntity>> GetCollectionFieldsWithChildren(EntityTypeEngine typeEngine, AbstractEntity entity)
+		{
+			var entityTypeId = entity.GetEntityStructuredTypeId ();
 
 			foreach (var field in typeEngine.GetCollectionFields (entityTypeId))
 			{
@@ -56,14 +66,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				{
 					var targets = entity.GetFieldCollection<AbstractEntity> (fieldName);
 
-					foreach(var target in targets)
+					foreach (var target in targets)
 					{
-						result.Add (Tuple.Create (fieldId, target));
+						yield return Tuple.Create (fieldId, target);
 					}
 				}
 			}
-
-			return result;
 		}
 
 
