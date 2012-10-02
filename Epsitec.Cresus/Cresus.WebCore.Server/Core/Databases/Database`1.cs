@@ -56,15 +56,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Sorter> sorters, IEnumerable<Filter> filters, int skip, int take)
 		{
-			var result = this.CreateBasicRequest (filters);
-			var example = result.Item1;
-			var request = result.Item2;
+			var tuple = this.CreateBasicRequest (filters);
+			var example = tuple.Item1;
+			var request = tuple.Item2;
 
 			request.Skip = skip;
 			request.Take = take;
 
 			var sortClauses = this.CreateSortClauses (example, sorters);
+			
 			request.SortClauses.AddRange (sortClauses);
+			request.AddIdSortClause (example);
 
 			return businessContext.DataContext.GetByRequest<T> (request);
 		}
@@ -72,12 +74,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private IEnumerable<SortClause> CreateSortClauses(T example, IEnumerable<Sorter> sorters)
 		{
-			foreach (var sorter in sorters)
-			{
-				yield return sorter.ToSortClause (example);
-			}
-
-			yield return new SortClause (InternalField.CreateId (example), SortOrder.Ascending);
+			return sorters.Select (s => s.ToSortClause (example));
 		}
 
 

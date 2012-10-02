@@ -149,6 +149,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.sortClauses.Add (new SortClause (field, sortOrder));
 		}
 
+		public void AddIdSortClause(AbstractEntity example)
+		{
+			this.sortClauses.Add (new SortClause (InternalField.CreateId (example), SortOrder.Ascending));
+		}
+
 
 		public void AddCondition<T>(T entity, Expression<Func<T, bool>> lambda)
 			where T : AbstractEntity
