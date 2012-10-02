@@ -1247,11 +1247,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelectPredicate GetSqlSelectPredicate(Request request)
 		{
-			if (request.SelectPredicate.HasValue)
-			{
-				return request.SelectPredicate.Value;
-			}
-
 			return this.UseDistinct (request)
 				? SqlSelectPredicate.Distinct
 				: SqlSelectPredicate.All;
