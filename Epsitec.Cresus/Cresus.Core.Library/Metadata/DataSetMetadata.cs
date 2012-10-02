@@ -54,7 +54,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-
 		public Command							BaseShowCommand
 		{
 			get

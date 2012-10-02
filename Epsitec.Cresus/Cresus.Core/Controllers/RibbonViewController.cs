@@ -199,9 +199,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateDatabaseSection(GradientFrameBox frame)
 		{
-			var section = this.CreateSection (frame, DockStyle.Left, "Bases de données");
-
-			var metadata = CoreContext.GetMetadata<DataStoreMetadata> ();
+			var section  = this.CreateSection (frame, DockStyle.Left, "Bases de données");
+			var metadata = DataStoreMetadata.Current;
 			
 			foreach (var dataset in metadata.DataSets.Where (x => x.DisplayGroupId.IsEmpty))
 			{
@@ -834,7 +833,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			var roles = this.userManager.GetUserRoles (user).ToArray ();
-			var meta  = CoreContext.GetMetadata<DataStoreMetadata> ();
+			var meta  = DataStoreMetadata.Current;
 
 			foreach (var dataSet in meta.DataSets.Where (x => x.DisplayGroupId.IsValid && x.MatchesAnyUserRole (roles)))
 			{

@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
 
@@ -131,6 +132,11 @@ namespace Epsitec.Cresus.Core.Metadata
 		public DataSetMetadata FindDataSet(string name)
 		{
 			return this.dataSets.FirstOrDefault (x => x.DataSetName == name);
+		}
+
+		public DataSetMetadata FindDataSet(Command command)
+		{
+			return this.dataSets.FirstOrDefault (x => x.BaseShowCommand == command);
 		}
 
 

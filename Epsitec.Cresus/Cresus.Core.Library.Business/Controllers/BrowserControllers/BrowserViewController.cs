@@ -57,6 +57,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public DataSetMetadata					DataSetMetadata
+		{
+			get
+			{
+				return this.dataSetMetadata;
+			}
+		}
+
 		public System.Type						DataSetEntityType
 		{
 			get
@@ -70,14 +78,20 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// Selects the specified data set.
 		/// </summary>
 		/// <param name="dataSetName">Name of the data set.</param>
-		public void SelectDataSet(string dataSetName)
+		public void SelectDataSet(DataSetMetadata dataSetMetadata)
 		{
-			if (this.dataSetName != dataSetName)
+			var dataSetName = dataSetMetadata.DataSetName;
+
+			if ((this.dataSetName != dataSetName) ||
+				(this.dataSetMetadata != dataSetMetadata))
 			{
 				this.Orchestrator.ClearActiveEntity ();
 
 				this.DisposeBrowserListController ();
-				this.dataSetName = dataSetName;
+
+				this.dataSetName     = dataSetName;
+				this.dataSetMetadata = dataSetMetadata;
+				
 				this.CreateBrowserListController ();
 				this.OnDataSetSelected ();
 			}
@@ -197,7 +211,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.browserListController = new BrowserListController (this.Orchestrator, this.itemScrollList, this.DataSetEntityType);
+			this.browserListController = new BrowserListController (this.Orchestrator, this.itemScrollList, this.DataSetEntityType, this.DataSetMetadata);
 			
 			this.browserListController.CurrentChanged  += this.HandleBrowserListControllerCurrentChanged;
 			this.browserListController.CurrentChanging += this.HandleBrowserListControllerCurrentChanging;
@@ -295,6 +309,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private readonly CoreData				data;
 		private string							dataSetName;
+		private DataSetMetadata					dataSetMetadata;
 
 		private FrameBox						topPanel;
 		private ItemScrollList					itemScrollList;

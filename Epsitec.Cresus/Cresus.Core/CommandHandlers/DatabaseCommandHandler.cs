@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -61,10 +62,10 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		private void SelectDatabase(Command command)
 		{
-			var dataSetName = DatabaseCommandHandler.GetDataSetName (command.Name);
-			var controller  = this.commandDispatcher.GetApplicationComponent<BrowserViewController> ();
+			var browserController = this.commandDispatcher.GetApplicationComponent<BrowserViewController> ();
+			var dataSetMetadata   = DataStoreMetadata.Current.FindDataSet (command);
 
-			controller.SelectDataSet (dataSetName);
+			browserController.SelectDataSet (dataSetMetadata);
 			
 			this.OnChanged ();
 		}

@@ -102,6 +102,7 @@
     <Compile Include="Metadata\ColumnRef`1.cs" />
     <Compile Include="Metadata\ColumnFilterComparisonExpression.cs" />
     <Compile Include="Metadata\ColumnSortOrder.cs" />
+    <Compile Include="Metadata\Command.cs" />
     <Compile Include="Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Metadata\DataSetMetadata.cs" />
     <Compile Include="Metadata\DataStoreMetadata.cs" />

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Factories;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Metadata;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -28,20 +29,10 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
-		
-		public DataSetCollectionGetter ResolveDataSet(string dataSetName)
-		{
-			return this.ResolveDataSet (DataSetGetter.GetRootEntityType (dataSetName));
-		}
 
-		public DataSetCollectionGetter ResolveDataSet(System.Type entityType)
+		public DataSetAccessor ResolveAccessor(System.Type entityType, DataSetMetadata metadata)
 		{
-			return Resolver.ResolveGetter (entityType, this.Host);
-		}
-
-		public DataSetAccessor ResolveAccessor(System.Type entityType)
-		{
-			return Resolver.ResolveAccessor (entityType, this.Host);
+			return Resolver.ResolveAccessor (this.Host, entityType, metadata);
 		}
 		
 		public static Druid GetRootEntityId(string dataSetName)
@@ -94,22 +85,14 @@ namespace Epsitec.Cresus.Core.Data
 
 		private abstract class Resolver
 		{
-			public static DataSetCollectionGetter ResolveGetter(System.Type entityType, CoreData data)
+			public static DataSetAccessor ResolveAccessor(CoreData data, System.Type entityType, DataSetMetadata metadata)
 			{
 				var resolver = Resolver.GetResolver (entityType);
-				return resolver.ResolveGetter (data);
+				return resolver.ResolveAccessor (data, metadata);
 			}
 
-			public static DataSetAccessor ResolveAccessor(System.Type entityType, CoreData data)
-			{
-				var resolver = Resolver.GetResolver (entityType);
-				return resolver.ResolveAccessor (data);
-			}
 
-			
-			protected abstract DataSetCollectionGetter ResolveGetter(CoreData data);
-
-			protected abstract DataSetAccessor ResolveAccessor(CoreData data);
+			protected abstract DataSetAccessor ResolveAccessor(CoreData data, DataSetMetadata metadata);
 
 			
 			private static Resolver GetResolver(System.Type entityType)
@@ -125,14 +108,9 @@ namespace Epsitec.Cresus.Core.Data
 			private sealed class Implementation<T> : Resolver
 				where T : AbstractEntity, new ()
 			{
-				protected override DataSetCollectionGetter ResolveGetter(CoreData data)
+				protected override DataSetAccessor ResolveAccessor(CoreData data, DataSetMetadata metadata)
 				{
-					return context => data.GetAllEntities<T> (dataContext: context);
-				}
-
-				protected override DataSetAccessor ResolveAccessor(CoreData data)
-				{
-					return new DataSetAccessor<T> (data);
+					return new DataSetAccessor<T> (data, metadata);
 				}
 			}
 

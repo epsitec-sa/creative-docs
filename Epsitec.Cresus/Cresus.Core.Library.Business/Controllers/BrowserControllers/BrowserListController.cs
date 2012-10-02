@@ -23,17 +23,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListController : System.IDisposable
 	{
-		public BrowserListController(DataViewOrchestrator orchestrator, ItemScrollList scrollList, System.Type dataSetType)
+		public BrowserListController(DataViewOrchestrator orchestrator, ItemScrollList scrollList, System.Type dataSetType, DataSetMetadata metadata)
 		{
-			this.orchestrator   = orchestrator;
-			this.data           = orchestrator.Data;
-			this.itemScrollList = scrollList;
-			this.dataSetType    = dataSetType;
+			this.orchestrator    = orchestrator;
+			this.data            = orchestrator.Data;
+			this.itemScrollList  = scrollList;
+			this.dataSetType     = dataSetType;
+			this.dataSetMetadata = metadata;
 			
-			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+			this.dataContext     = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 
-			this.suspendUpdates = new SafeCounter ();
-			this.context        = new BrowserListContext ();
+			this.suspendUpdates  = new SafeCounter ();
+			this.context         = new BrowserListContext ();
 
 			this.SetUpItemList ();
 			this.AttachEventHandlers ();
@@ -231,7 +232,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private DataSetAccessor GetContentAccessor()
 		{
 			var component = this.data.GetComponent<DataSetGetter> ();
-			var accessor  = component.ResolveAccessor (this.dataSetType);
+			var accessor  = component.ResolveAccessor (this.dataSetType, this.dataSetMetadata);
 
 			return accessor;
 		}
@@ -324,6 +325,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly CoreData				data;
 		private readonly ItemScrollList			itemScrollList;
 		private readonly System.Type			dataSetType;
+		private readonly DataSetMetadata		dataSetMetadata;
 		private readonly DataContext			dataContext;
 		private readonly SafeCounter			suspendUpdates;
 

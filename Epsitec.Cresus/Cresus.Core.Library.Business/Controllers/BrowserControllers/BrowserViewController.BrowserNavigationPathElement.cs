@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
-
+using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 
@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
 			{
-				this.dataSetName = controller.DataSetName;
-				this.entityKey   = entityKey;
+				this.dataSetName     = controller.DataSetName;
+				this.entityKey       = entityKey;
 			}
 
 			private BrowserNavigationPathElement (string dataSetName, string entityKey)
@@ -40,8 +40,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			public override bool Navigate(NavigationOrchestrator navigator)
 			{
 				var browserViewController = navigator.BrowserViewController;
+				var dataSetMetadata = DataStoreMetadata.Current.FindDataSet (this.dataSetName);
 
-				browserViewController.SelectDataSet (this.dataSetName);
+				browserViewController.SelectDataSet (dataSetMetadata);
 				browserViewController.SelectEntity (this.entityKey);
 				browserViewController.SelectActiveEntity ();
 
@@ -66,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					}
 				}
 				
-				throw new System.FormatException (string.Format ("Invalid format; expected '{0}DataSet.EntityKey', got '{1}'", BrowserNavigationPathElement.ClassIdPrefix, data));
+				throw new System.FormatException (string.Format ("Invalid format; expected '{0}<DataSet>.<EntityKey>', got '{1}'", BrowserNavigationPathElement.ClassIdPrefix, data));
 			}
 
 			private const string				ClassIdPrefix = "Browser:";

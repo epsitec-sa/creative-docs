@@ -23,15 +23,15 @@ namespace Epsitec.Cresus.Core.Data
 	/// </summary>
 	public abstract class DataSetAccessor : System.IDisposable
 	{
-		protected DataSetAccessor(CoreData data, System.Type entityType, IsolatedTransaction isolatedTransaction = null)
+		protected DataSetAccessor(CoreData data, System.Type entityType, DataSetMetadata metadata, IsolatedTransaction isolatedTransaction = null)
 		{
-			this.data = data;
-			this.entityType = entityType;
-			
+			this.data        = data;
+			this.entityType  = entityType;
+			this.metadata    = metadata;
 			this.dataContext = this.data.CreateIsolatedDataContext ("DataSetAccessor");
+			this.sortColumns = new List<EntityColumnMetadata> ();
 
 			this.isolatedTransaction = isolatedTransaction;
-			this.sortColumns = new List<EntityColumnMetadata> ();
 		}
 
 
@@ -43,6 +43,13 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		public DataSetMetadata					Metadata
+		{
+			get
+			{
+				return this.metadata;
+			}
+		}
 
 		public int GetItemCount()
 		{
@@ -146,6 +153,7 @@ namespace Epsitec.Cresus.Core.Data
 			};
 
 			request.SortClauses.AddRange (this.CreateSortClauses (example));
+			request.AddIdSortClause (example);
 
 			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);
 		}
@@ -169,6 +177,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly System.Type			entityType;
 		private readonly IsolatedTransaction	isolatedTransaction;
 		private readonly List<EntityColumnMetadata>	sortColumns;
+		private readonly DataSetMetadata		metadata;
 		
 		private RequestView						requestView;
 		private int?							itemCount;
