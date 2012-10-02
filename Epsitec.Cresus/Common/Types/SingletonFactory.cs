@@ -13,6 +13,13 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public static class SingletonFactory
 	{
+		/// <summary>
+		/// Gets the singleton instance for the specified type. The instance is shared
+		/// between all threads of the calling app domain.
+		/// </summary>
+		/// <typeparam name="T">The base type of the singleton.</typeparam>
+		/// <param name="type">The concrete type which must be compatible with <typeparamref name="T"/>.</param>
+		/// <returns>The singleton instance.</returns>
 		public static T GetSingleton<T>(System.Type type)
 			where T : class
 		{
@@ -36,6 +43,16 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Gets the singleton instance for the specified type. The instance is shared
+		/// between all threads of the calling app domain.
+		/// </summary>
+		/// <typeparam name="T">The base type of the singleton.</typeparam>
+		/// <param name="genericType">The generic type.</param>
+		/// <param name="typeArguments">The type arguments.</param>
+		/// <returns>
+		/// The singleton instance.
+		/// </returns>
 		public static T GetSingleton<T>(System.Type genericType, params System.Type[] typeArguments)
 			where T : class
 		{
