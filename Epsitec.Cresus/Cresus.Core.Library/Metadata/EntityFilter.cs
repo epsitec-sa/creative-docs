@@ -68,6 +68,11 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public static EntityFilter Restore(XElement xml)
 		{
+			if (xml == null)
+			{
+				return null;
+			}
+
 			var list     = xml.Element (Strings.ColumnList).Elements ();
 			var entityId = Druid.Parse (xml.Attribute (Strings.EntityId));
 			var filter   = new EntityFilter (entityId);

@@ -17,7 +17,7 @@ AiderGroup = [LVA54]
   </T>
   <D>
     <d n="AiderPerson" dg=""><R><r>@user</r></R></d>
-    <d n="AiderGroup" dg=""><R><r>@user</r></R></d>
+    <d n="AiderGroup" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
     <d n="AiderHousehold" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderPersonRelationship" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderAddress" dg="@submenuMisc"><R><r>@user</r></R></d>

@@ -153,38 +153,7 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
-			if (this.dataSetMetadata.DataSetName == "AiderGroup")
-			{
-#if true
-				var ex = new ColumnFilterComparisonExpression ()
-				{
-					Comparison = ColumnFilterComparisonCode.Equal,
-					Constant = ColumnFilterConstant.From (0),
-				};
-
-				var ef = new EntityFilter (Druid.Parse ("[LVA54]"));
-
-				ef.Columns.Add (new ColumnRef<EntityColumnFilter> ("[LVAED]", new EntityColumnFilter (ex)));
-
-				request.AddCondition (this.dataContext, example, ef);
-#else
-				var fieldPath  = EntityFieldPath.CreateAbsolutePath (Druid.Parse ("[LVA54]"), "[LVAED]");
-				var fieldExpr  = fieldPath.CreateLambda ();
-				var groupParam = System.Linq.Expressions.Expression.Parameter (this.dataSetMetadata.DataSetEntityType, "group");
-				var parameter  = ExpressionAnalyzer.ReplaceParameter (fieldExpr, groupParam);
-				
-				var compExpr  = new ColumnFilterComparisonExpression ()
-				{
-					Comparison = ColumnFilterComparisonCode.Equal,
-					Constant = ColumnFilterConstant.From (0),
-				};
-
-				var lambda = System.Linq.Expressions.Expression.Lambda (compExpr.GetExpression (parameter), groupParam);
-
-				request.AddCondition (example, lambda);
-#endif
-			}
-
+			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
 			request.SortClauses.AddRange (this.CreateSortClauses (example));
 			request.AddIdSortClause (example);
 

@@ -86,6 +86,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public EntityFilter						Filter
+		{
+			get
+			{
+				return this.filter;
+			}
+		}
+
 
 		public bool MatchesUserRole(string role)
 		{
@@ -111,6 +119,11 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.displayGroupCaptionId = captionId;
 		}
 
+		public void DefineFilter(EntityFilter filter)
+		{
+			this.filter = filter;
+		}
+
 		public override void Add(CoreMetadata metadata)
 		{
 			throw new System.NotImplementedException ();
@@ -126,16 +139,20 @@ namespace Epsitec.Cresus.Core.Metadata
 				from role in this.userRoles
 				select new XElement (Strings.UserRole, new XText (role)));
 
-			return new XElement (xmlNodeName, attributes, roles);
+			var filter = this.filter.Save (Strings.Filter);
+
+			return new XElement (xmlNodeName, attributes, roles, filter);
 		}
 
 		public static DataSetMetadata Restore(XElement xml)
 		{
 			var data     = Xml.GetAttributeBag (xml);
 			var roles    = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
+			var filter   = xml.Element (Strings.Filter);
 			var metadata = new DataSetMetadata (data);
 
 			metadata.userRoles.AddRange (roles);
+			metadata.DefineFilter (EntityFilter.Restore (filter));
 
 			return metadata;
 		}
@@ -166,6 +183,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public static readonly string		DisplayGroup = "dg";
 			public static readonly string		UserRoles = "R";
 			public static readonly string		UserRole = "r";
+			public static readonly string		Filter = "f";
 		}
 
 		#endregion
@@ -177,5 +195,6 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly List<string>			userRoles;
 
 		private Druid							displayGroupCaptionId;
+		private EntityFilter					filter;
 	}
 }
