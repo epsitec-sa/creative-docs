@@ -149,10 +149,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public void AddCondition<T>(T entity, Expression<Func<T, bool>> lambda)
+		public void AddCondition<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda)
 			where T : AbstractEntity
 		{
-			var condition = LambdaConverter.Convert (entity, lambda);
+			var condition = LambdaConverter.Convert (dataContext, entity, lambda);
 
 			this.conditions.Add (condition);
 		}

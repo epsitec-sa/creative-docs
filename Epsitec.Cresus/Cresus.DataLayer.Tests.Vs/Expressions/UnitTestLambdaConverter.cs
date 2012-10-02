@@ -5,6 +5,8 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Infrastructure;
 
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
@@ -32,951 +34,1245 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
 		[TestMethod]
 		public void ArgumentCheck()
 		{
-			ExceptionAssert.Throw<ArgumentNullException>
-			(
-				() => LambdaConverter.Convert
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ExceptionAssert.Throw<ArgumentNullException>
 				(
-					null,
-					(ValueDataEntity e) => e.IntegerValue == 0
-				)
-			);
-
-			ExceptionAssert.Throw<ArgumentNullException>
-			(
-				() => LambdaConverter.Convert
+				   () => LambdaConverter.Convert
+				   (
+						null,
+						new ValueDataEntity (),
+						(ValueDataEntity e) => e.IntegerValue == 0
+				   )
+				);
+				
+				ExceptionAssert.Throw<ArgumentNullException>
 				(
-					new ValueDataEntity (),
-					null
-				)
-			);
+				   () => LambdaConverter.Convert
+				   (
+						dataContext,
+						null,
+						(ValueDataEntity e) => e.IntegerValue == 0
+				   )
+				);
 
-			ExceptionAssert.Throw<ArgumentException>
-			(
-				() => LambdaConverter.Convert
+				ExceptionAssert.Throw<ArgumentNullException>
 				(
-					new ValueDataEntity (),
-					(LambdaExpression) (Expression<Func<object, bool>>) (i => i == null)
-				)
-			);
+					() => LambdaConverter.Convert
+					(
+						dataContext,
+						new ValueDataEntity (),
+						null
+					)
+				);
 
-			ExceptionAssert.Throw<ArgumentException>
-			(
-				() => LambdaConverter.Convert
+				ExceptionAssert.Throw<ArgumentException>
 				(
-					new NaturalPersonEntity (),
-					(Expression<Func<ValueDataEntity, bool>>) (e => e.IntegerValue == 0)
-				)
-			);
+					() => LambdaConverter.Convert
+					(
+						dataContext,
+						new ValueDataEntity (),
+						(LambdaExpression) (Expression<Func<object, bool>>) (i => i == null)
+					)
+				);
 
-			ExceptionAssert.Throw<ArgumentException>
-			(
-				() => LambdaConverter.Convert
+				ExceptionAssert.Throw<ArgumentException>
 				(
-					new ValueDataEntity (),
-					(Expression<Func<ValueDataEntity, ValueDataEntity, bool>>) ((e1, e2) => e2.IntegerValue == 0)
-				)
-			);
+					() => LambdaConverter.Convert
+					(
+						dataContext,
+						new NaturalPersonEntity (),
+						(Expression<Func<ValueDataEntity, bool>>) (e => e.IntegerValue == 0)
+					)
+				);
 
-			ExceptionAssert.Throw<ArgumentException>
-			(
-				() => LambdaConverter.Convert
+				ExceptionAssert.Throw<ArgumentException>
 				(
-					new ValueDataEntity (),
-					(Expression<Func<bool>>) (() => true)
-				)
-			);
+					() => LambdaConverter.Convert
+					(
+						dataContext,
+						new ValueDataEntity (),
+						(Expression<Func<ValueDataEntity, ValueDataEntity, bool>>) ((e1, e2) => e2.IntegerValue == 0)
+					)
+				);
 
-			ExceptionAssert.Throw<ArgumentException>
-			(
-			  () => LambdaConverter.Convert
-				  (
-					  new ValueDataEntity (),
-					 (Expression<Func<ValueDataEntity, int>>) (e => e.IntegerValue)
-				  )
-			);
+				ExceptionAssert.Throw<ArgumentException>
+				(
+					() => LambdaConverter.Convert
+					(
+						dataContext,
+						new ValueDataEntity (),
+						(Expression<Func<bool>>) (() => true)
+					)
+				);
+
+				ExceptionAssert.Throw<ArgumentException>
+				(
+					() => LambdaConverter.Convert
+					(
+						dataContext,
+						new ValueDataEntity (),
+						(Expression<Func<ValueDataEntity, int>>) (e => e.IntegerValue)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void RegularEqual()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == 1,
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant (1)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void RegularEqualInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 1 == x.IntegerValue,
-				new BinaryComparison
-				(
-					new Constant (1),
-					BinaryComparator.IsEqual,
-					ValueField.Create (entity, x => x.IntegerValue)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void RegularNotEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue != 1,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsNotEqual,
-					new Constant (1)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void RegularGreater()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue > 1,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsGreater,
-					new Constant (1)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void RegularGreaterOrEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue >= 1,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsGreaterOrEqual,
-					new Constant (1)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void RegularLower()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue < 1,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsLower,
-					new Constant (1)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void RegularLowerOrEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue <= 1,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsLowerOrEqual,
-					new Constant (1)
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, "foo") == 0,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringEqualInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 0 == SqlMethods.CompareTo (x.StringValue, "foo"),
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringNotEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, "foo") != 0,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsNotEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringNotEqualInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 0 != SqlMethods.CompareTo (x.StringValue, "foo"),
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsNotEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringGreater()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, "foo") > 0,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsGreater,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringGreaterInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 0 > SqlMethods.CompareTo (x.StringValue, "foo"),
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsLower,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringGreaterOrEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, "foo") >= 0,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsGreaterOrEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringGreaterOrEqualInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 0 >= SqlMethods.CompareTo (x.StringValue, "foo"),
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsLowerOrEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringLower()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, "foo") < 0,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsLower,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringLowerInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 0 < SqlMethods.CompareTo (x.StringValue, "foo"),
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsGreater,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringLowerOrEqual()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, "foo") <= 0,
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsLowerOrEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void StringLowerOrEqualInverted()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => 0 <= SqlMethods.CompareTo (x.StringValue, "foo"),
-				new BinaryComparison
-				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsGreaterOrEqual,
-					new Constant ("foo")
-				)
-			);
-		}
-
-
-		[TestMethod]
-		public void Not()
-		{
-			var entity = new ValueDataEntity ();
-
-			this.Check
-			(
-				entity,
-				x => !(x.IntegerValue == 1),
-				new UnaryOperation
-				(
-					UnaryOperator.Not,
+					dataContext,
+					entity,
+					x => x.IntegerValue == 1,
 					new BinaryComparison
 					(
 						ValueField.Create (entity, x => x.IntegerValue),
 						BinaryComparator.IsEqual,
 						new Constant (1)
 					)
-				)
-			);
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 1 == x.IntegerValue,
+					new BinaryComparison
+					(
+						new Constant (1),
+						BinaryComparator.IsEqual,
+						ValueField.Create (entity, x => x.IntegerValue)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularNotEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => x.IntegerValue != 1,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsNotEqual,
+						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularGreater()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => x.IntegerValue > 1,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsGreater,
+						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularGreaterOrEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => x.IntegerValue >= 1,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsGreaterOrEqual,
+						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularLower()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => x.IntegerValue < 1,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsLower,
+						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularLowerOrEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => x.IntegerValue <= 1,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsLowerOrEqual,
+						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, "foo") == 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 0 == SqlMethods.CompareTo (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringNotEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, "foo") != 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsNotEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringNotEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 0 != SqlMethods.CompareTo (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsNotEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringGreater()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, "foo") > 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsGreater,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringGreaterInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 0 > SqlMethods.CompareTo (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsLower,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringGreaterOrEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, "foo") >= 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsGreaterOrEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringGreaterOrEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 0 >= SqlMethods.CompareTo (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsLowerOrEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringLower()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, "foo") < 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsLower,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringLowerInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 0 < SqlMethods.CompareTo (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsGreater,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringLowerOrEqual()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, "foo") <= 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsLowerOrEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void StringLowerOrEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 0 <= SqlMethods.CompareTo (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsGreaterOrEqual,
+						new Constant ("foo")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void Not()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => !(x.IntegerValue == 1),
+					new UnaryOperation
+					(
+						UnaryOperator.Not,
+						new BinaryComparison
+						(
+							ValueField.Create (entity, x => x.IntegerValue),
+							BinaryComparator.IsEqual,
+							new Constant (1)
+						)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void RegularIsNull()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => x.StringValue == null,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNull
-				)
-			);
+					dataContext,
+					entity,
+					x => x.StringValue == null,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void RegularIsNullReversed()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => null == x.StringValue,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNull
-				)
-			);
+					dataContext,
+					entity,
+					x => null == x.StringValue,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void RegularIsNotNull()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => x.StringValue != null,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNotNull
-				)
-			);
+					dataContext,
+					entity,
+					x => x.StringValue != null,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNotNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void RegularIsNotNullReversed()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => null != x.StringValue,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNotNull
-				)
-			);
+					dataContext,
+					entity,
+					x => null != x.StringValue,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNotNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void StringIsNull()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, null) == 0,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNull
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, null) == 0,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void StringIsNullReversed()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (null, x.StringValue) == 0,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNull
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (null, x.StringValue) == 0,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void StringIsNotNull()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (x.StringValue, null) != 0,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNotNull
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (x.StringValue, null) != 0,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNotNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void StringIsNotNullReversed()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.CompareTo (null, x.StringValue) != 0,
-				new UnaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					UnaryComparator.IsNotNull
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.CompareTo (null, x.StringValue) != 0,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						UnaryComparator.IsNotNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void IsLike()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.Like (x.StringValue, "foo"),
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsLike,
-					new Constant ("foo")
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.Like (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsLike,
+						new Constant ("foo")
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void IsLikeEscape()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.EscapedLike (x.StringValue, "foo"),
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.StringValue),
-					BinaryComparator.IsLikeEscape,
-					new Constant ("foo")
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.EscapedLike (x.StringValue, "foo"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.StringValue),
+						BinaryComparator.IsLikeEscape,
+						new Constant ("foo")
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void And()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue > 0 && x.IntegerValue < 10,
-				new BinaryOperation
+				this.Check
 				(
-					new BinaryComparison
+					dataContext,
+					entity,
+					x => x.IntegerValue > 0 && x.IntegerValue < 10,
+					new BinaryOperation
 					(
-						ValueField.Create (entity, x => x.IntegerValue),
-						BinaryComparator.IsGreater,
-						new Constant (0)
-					),
-					BinaryOperator.And,
-					new BinaryComparison
-					(
-						ValueField.Create (entity, x => x.IntegerValue),
-						BinaryComparator.IsLower,
-						new Constant (10)
+						new BinaryComparison
+						(
+							ValueField.Create (entity, x => x.IntegerValue),
+							BinaryComparator.IsGreater,
+							new Constant (0)
+						),
+						BinaryOperator.And,
+						new BinaryComparison
+						(
+							ValueField.Create (entity, x => x.IntegerValue),
+							BinaryComparator.IsLower,
+							new Constant (10)
+						)
 					)
-				)
-			);
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void Or()
 		{
-			var entity = new ValueDataEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
 
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue < 0 || x.IntegerValue > 10,
-				new BinaryOperation
+				this.Check
 				(
-					new BinaryComparison
+					dataContext,
+					entity,
+					x => x.IntegerValue < 0 || x.IntegerValue > 10,
+					new BinaryOperation
 					(
-						ValueField.Create (entity, x => x.IntegerValue),
-						BinaryComparator.IsLower,
-						new Constant (0)
-					),
-					BinaryOperator.Or,
-					new BinaryComparison
-					(
-						ValueField.Create (entity, x => x.IntegerValue),
-						BinaryComparator.IsGreater,
-						new Constant (10)
+						new BinaryComparison
+						(
+							ValueField.Create (entity, x => x.IntegerValue),
+							BinaryComparator.IsLower,
+							new Constant (0)
+						),
+						BinaryOperator.Or,
+						new BinaryComparison
+						(
+							ValueField.Create (entity, x => x.IntegerValue),
+							BinaryComparator.IsGreater,
+							new Constant (10)
+						)
 					)
-				)
-			);
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void MemberChain1()
 		{
-			var entity = new AddressEntity ()
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				Location = new LocationEntity (),
-			};
+				var entity = new AddressEntity ()
+				{
+					Location = new LocationEntity (),
+				};
 
-			this.Check
-			(
-				entity,
-				x => x.Location.Name == "foo",
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity.Location, x => x.Name),
-					BinaryComparator.IsEqual,
-					new Constant ("foo")
-				)
-			);
+					dataContext,
+					entity,
+					x => x.Location.Name == "foo",
+					new BinaryComparison
+					(
+						ValueField.Create (entity.Location, x => x.Name),
+						BinaryComparator.IsEqual,
+						new Constant ("foo")
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void MemberChain2()
 		{
-			var entity = new AddressEntity ()
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				Location = new LocationEntity ()
+				var entity = new AddressEntity ()
 				{
-					Region = new RegionEntity ()
-				}
-			};
+					Location = new LocationEntity ()
+					{
+						Region = new RegionEntity ()
+					}
+				};
 
-			this.Check
-			(
-				entity,
-				x => x.Location.Region.Name == "foo",
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity.Location.Region, x => x.Name),
-					BinaryComparator.IsEqual,
-					new Constant ("foo")
-				)
-			);
+					dataContext,
+					entity,
+					x => x.Location.Region.Name == "foo",
+					new BinaryComparison
+					(
+						ValueField.Create (entity.Location.Region, x => x.Name),
+						BinaryComparator.IsEqual,
+						new Constant ("foo")
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void MemberChain3()
 		{
-			var entity = new AddressEntity ()
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
-				Location = new LocationEntity ()
+				var entity = new AddressEntity ()
 				{
-					Region = new RegionEntity ()
+					Location = new LocationEntity ()
 					{
-						Country = new CountryEntity ()
+						Region = new RegionEntity ()
+						{
+							Country = new CountryEntity ()
+						}
 					}
-				}
-			};
+				};
 
-			this.Check
-			(
-				entity,
-				x => x.Location.Region.Country.Name == "foo",
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity.Location.Region.Country, x => x.Name),
-					BinaryComparator.IsEqual,
-					new Constant ("foo")
-				)
-			);
+					dataContext,
+					entity,
+					x => x.Location.Region.Country.Name == "foo",
+					new BinaryComparison
+					(
+						ValueField.Create (entity.Location.Region.Country, x => x.Name),
+						BinaryComparator.IsEqual,
+						new Constant ("foo")
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void ConstantCapturedVariable()
 		{
-			var entity = new ValueDataEntity ();
-			var constant = 1;
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				var constant = 1;
 
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == constant,
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant (constant)
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == constant,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant (constant)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void ConstantCapturedPropertyAccess()
 		{
-			var entity = new ValueDataEntity ();
-			var constant = DateTime.Now;
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				var constant = DateTime.Now;
 
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == constant.Year,
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant (constant.Year)
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == constant.Year,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant (constant.Year)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void ConstantCapturedMethodCall()
 		{
-			var entity = new ValueDataEntity ();
-			var constant = new List<int> ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				var constant = new List<int> ();
 
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == constant.Count (),
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant (constant.Count ())
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == constant.Count (),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant (constant.Count ())
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void ConstantCapturedMember()
 		{
-			var entity = new ValueDataEntity ();
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == this.member,
-				new BinaryComparison
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant (this.member)
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == this.member,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant (this.member)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void ConstantMathOperation()
 		{
-			var entity = new ValueDataEntity ();
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == (this.member + 2) / 5 % 3,
-				new BinaryComparison
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant ((this.member + 2) / 5 % 3)
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == (this.member + 2) / 5 % 3,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant ((this.member + 2) / 5 % 3)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void EvaluableOperationWithinNonEvaluableOperation()
 		{
-			var entity = new LocationEntity ();
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new LocationEntity ();
 
-			this.Check
-			(
-				entity,
-				x => SqlMethods.Like (x.Name, this.member.ToString () + "___"),
-				new BinaryComparison
+				this.Check
 				(
-					ValueField.Create (entity, x => x.Name),
-					BinaryComparator.IsLike,
-					new Constant (this.member.ToString () + "___")
-				)
-			);
+					dataContext,
+					entity,
+					x => SqlMethods.Like (x.Name, this.member.ToString () + "___"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.Name),
+						BinaryComparator.IsLike,
+						new Constant (this.member.ToString () + "___")
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void NullableMember()
 		{
-			var entity = new PersonTitleEntity ();
-			this.Check
-			(
-				entity,
-				x => x.Rank == 0,
-				new BinaryComparison
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new PersonTitleEntity ();
+				this.Check
 				(
-					ValueField.Create (entity, x => x.Rank),
-					BinaryComparator.IsEqual,
-					new Constant (0)
-				)
-			);
+					dataContext,
+					entity,
+					x => x.Rank == 0,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.Rank),
+						BinaryComparator.IsEqual,
+						new Constant (0)
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void Conversion1()
 		{
-			var entity = new ValueDataEntity ();
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == null,
-				new UnaryComparison
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					UnaryComparator.IsNull
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == null,
+					new UnaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						UnaryComparator.IsNull
+					)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void Conversion2()
 		{
-			var entity = new ValueDataEntity ();
-			this.Check
-			(
-				entity,
-				x => x.IntegerValue == 1m,
-				new BinaryComparison
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				this.Check
 				(
-					ValueField.Create (entity, x => x.IntegerValue),
-					BinaryComparator.IsEqual,
-					new Constant (1)
-				)
-			);
+					dataContext,
+					entity,
+					x => x.IntegerValue == 1m,
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void EntityComparison1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person1 = new NaturalPersonEntity ();
+				var person2 = dataContext.GetByExample (new NaturalPersonEntity ()).First ();
+				var person2Key = dataContext.GetNormalizedEntityKey (person2).Value;
+
+				this.Check
+				(
+					dataContext,
+					person1,
+					x => x != person2,
+					new BinaryComparison
+					(
+						InternalField.CreateId (person1),
+						BinaryComparator.IsNotEqual,
+						new Constant (person2Key.RowKey)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void EntityComparison2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var gender = dataContext.GetByExample (new PersonGenderEntity ()).First ();
+				var genderKey = dataContext.GetNormalizedEntityKey (gender).Value;
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => x.Gender == gender,
+					new BinaryComparison
+					(
+						ReferenceField.Create (person, x => x.Gender),
+						BinaryComparator.IsEqual,
+						new Constant (genderKey.RowKey)
+					)
+				);
+			}
 		}
 
 
 		private int member = 1;
 
 		
-		public void Check<T>(T entity, Expression<Func<T, bool>> lambda, DataExpression result)
+		public void Check<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda, DataExpression result)
 			where T : AbstractEntity
 		{
-			var actual = LambdaConverter.Convert (entity, lambda);
+			var actual = LambdaConverter.Convert (dataContext, entity, lambda);
 
 			DeepAssert.AreEqual (result, actual);
 		}

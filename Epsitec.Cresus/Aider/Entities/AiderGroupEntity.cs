@@ -56,15 +56,17 @@ namespace Epsitec.Aider.Entities
 
 		public IEnumerable<AiderGroupEntity> FindSubgroups(BusinessContext businessContext)
 		{
+			var dataContext = businessContext.DataContext;
+
 			var example = new AiderGroupEntity ();
 			var request = Request.Create (example);
 
 			var path  = this.Path + EervGroupIds.SubgroupSqlWildcard;
 			var level = this.GroupLevel + 1;
 
-			request.AddCondition (example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
+			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
 
-			return businessContext.DataContext.GetByRequest (request);
+			return dataContext.GetByRequest (request);
 		}
 
 		public IEnumerable<AiderGroupParticipantEntity> FindParticipants(BusinessContext businessContext)

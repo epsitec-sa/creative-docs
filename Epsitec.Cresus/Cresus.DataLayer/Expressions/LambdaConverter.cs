@@ -5,6 +5,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System;
 
 using System.Collections.Generic;
@@ -23,19 +25,22 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	{
 
 
-		public static DataExpression Convert<T>(T entity, Expression<Func<T, bool>> lambda)
+		public static DataExpression Convert<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda)
 			where T : AbstractEntity
 		{
-			return LambdaConverter.Convert ((AbstractEntity) entity, (LambdaExpression) lambda);
+			var e = (AbstractEntity) entity;
+			var l = (LambdaExpression) lambda;
+
+			return LambdaConverter.Convert (dataContext, e, l);
 		}
 
 
-		public static DataExpression Convert(AbstractEntity entity, LambdaExpression lambda)
+		public static DataExpression Convert(DataContext dataContext, AbstractEntity entity, LambdaExpression lambda)
 		{
-			LambdaConverter.Check (entity, lambda);
+			LambdaConverter.Check (dataContext, entity, lambda);
 
 			var computedExpression = LambdaComputer.Compute (lambda.Body, LambdaConverter.IsExpressionComputable);
-			var dataExpression = new LambdaConverter (entity).Convert (computedExpression);
+			var dataExpression = new LambdaConverter (dataContext, entity).Convert (computedExpression);
 
 			return dataExpression;
 		}
@@ -65,8 +70,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		private static void Check(AbstractEntity entity, LambdaExpression lambda)
+		private static void Check(DataContext dataContext, AbstractEntity entity, LambdaExpression lambda)
 		{
+			dataContext.ThrowIfNull ("dataContext");
 			entity.ThrowIfNull ("entity");
 			lambda.ThrowIfNull ("lambda");
 
@@ -99,8 +105,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		public LambdaConverter(AbstractEntity entity)
+		public LambdaConverter(DataContext dataContext, AbstractEntity entity)
 		{
+			this.dataContext = dataContext;
 			this.entity = entity;
 			this.results = new Stack<object> ();
 		}
@@ -524,9 +531,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 			AbstractEntity entity;
 
-			if (expression is AbstractEntity)
+			if (expression is InternalField)
 			{
-				entity = (AbstractEntity) expression;
+				var internalField = (InternalField) expression;
+
+				entity = internalField.Entity;
 			}
 			else if (expression is ReferenceField)
 			{
@@ -571,17 +580,31 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		protected override Expression VisitParameter(ParameterExpression node)
 		{
-			// TODO Manage the cases where we want to return an InternalEntityField with an id.
-
-			return this.PushAndReturn (node, this.entity);
+			return this.PushAndReturn (node, InternalField.CreateId (this.entity));
 		}
 
 
 		protected override Expression VisitConstant(ConstantExpression node)
 		{
-			var constant = new Constant (node.Value);
+			object value = node.Value;
 
-			return this.PushAndReturn (node, constant);
+			// If we have an entity at this point, we must get its row key and use that as a
+			// constant, since we have a lambda like x => x == myEntity and we want to check for
+			// equality based on the value of the entity key of myEntity.
+
+			if (value is AbstractEntity)
+			{
+				var entityKey = this.dataContext.GetNormalizedEntityKey ((AbstractEntity) value);
+
+				if (!entityKey.HasValue)
+				{
+					throw new NotSupportedException ("Entity used as constant has no entity key.");
+				}
+
+				value = entityKey.Value.RowKey;
+			}
+
+			return this.PushAndReturn (node, new Constant (value));
 		}
 
 
@@ -751,6 +774,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			throw new NotSupportedException ();
 		}
+
+
+		private readonly DataContext dataContext;
 
 
 		private readonly AbstractEntity entity;
