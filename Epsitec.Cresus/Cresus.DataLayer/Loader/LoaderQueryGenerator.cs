@@ -194,13 +194,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private IEnumerable<SqlField> BuildInnerRequestForIndexFields(SqlFieldBuilder builder, Request request)
 		{
+			// The same field of the same entity can appear more that once in the sort clause. If
+			// that's the case, we must include it only once in the SQL request. That's why we keep
+			// a set with all the fields that we have already included, so we don't include them
+			// twice.
+
+			var done = new HashSet<string> ();
+
 			foreach (var sortClause in request.SortClauses)
 			{
 				var field = sortClause.Field.CreateSqlField (builder);
-				
-				field.Alias = this.GetAliasForInnerQueryForIndexField (field);
+				var alias = this.GetAliasForInnerQueryForIndexField (field);
 
-				yield return field;
+				if (!done.Contains (alias))
+				{
+					done.Add (alias);
+					field.Alias = alias;
+
+					yield return field;
+				}
 			}
 		}
 
