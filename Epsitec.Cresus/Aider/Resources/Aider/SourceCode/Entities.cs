@@ -5651,24 +5651,24 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Category</c> field.
+		///	The <c>Mutability</c> field.
 		///	designer:fld/LVA2A/LVA2B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA2B]")]
-		public global::Epsitec.Aider.Enumerations.GroupCategory Category
+		public global::Epsitec.Aider.Enumerations.Mutability Mutability
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.GroupCategory> ("[LVA2B]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVA2B]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Enumerations.GroupCategory oldValue = this.Category;
+				global::Epsitec.Aider.Enumerations.Mutability oldValue = this.Mutability;
 				if (oldValue != value || !this.IsFieldDefined("[LVA2B]"))
 				{
-					this.OnCategoryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.GroupCategory> ("[LVA2B]", oldValue, value);
-					this.OnCategoryChanged (oldValue, value);
+					this.OnMutabilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVA2B]", oldValue, value);
+					this.OnMutabilityChanged (oldValue, value);
 				}
 			}
 		}
@@ -5693,8 +5693,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnNodeTypeChanged(global::Epsitec.Aider.Enumerations.GroupNodeType oldValue, global::Epsitec.Aider.Enumerations.GroupNodeType newValue);
 		partial void OnClassificationChanging(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnClassificationChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
-		partial void OnCategoryChanging(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
-		partial void OnCategoryChanged(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
+		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -6327,6 +6327,28 @@ namespace Epsitec.Aider.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>Mutability</c> field.
+		///	designer:fld/LVACC/LVAFD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAFD]")]
+		public global::Epsitec.Aider.Enumerations.Mutability Mutability
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVAFD]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.Mutability oldValue = this.Mutability;
+				if (oldValue != value || !this.IsFieldDefined("[LVAFD]"))
+				{
+					this.OnMutabilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVAFD]", oldValue, value);
+					this.OnMutabilityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Name</c> field.
 		///	designer:fld/LVACC/LVAFC
 		///	</summary>
@@ -6371,6 +6393,8 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		
+		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnGroupPathChanging(string oldValue, string newValue);
@@ -6454,11 +6478,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Scopes</c> field.
+		///	The <c>CustomScopes</c> field.
 		///	designer:fld/LVAHC/LVAJC
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAJC]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderUserScopeEntity> Scopes
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderUserScopeEntity> CustomScopes
 		{
 			get
 			{

@@ -76,6 +76,10 @@
     <Compile Include="Data\Eerv\ParishAssigner.cs" />
     <Compile Include="Data\Eerv\GroupPathInfo.cs" />
     <Compile Include="Entities\AiderGroupRelationshipEntity.cs" />
+    <Compile Include="Entities\AiderUserEntity.cs" />
+    <Compile Include="Entities\AiderUserRoleEntity.cs" />
+    <Compile Include="Entities\AiderUserScopeEntity.cs" />
+    <Compile Include="Entities\AiderWarningActionEntity.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
@@ -141,7 +145,7 @@
     <Compile Include="Data\ECh\EChXmlTags.cs" />
     <Compile Include="Enumerations\DataSource.cs" />
     <Compile Include="Enumerations\FunctionType.cs" />
-    <Compile Include="Enumerations\GroupCategory.cs" />
+    <Compile Include="Enumerations\Mutability.cs" />
     <Compile Include="Enumerations\GroupClassification.cs" />
     <Compile Include="Enumerations\HouseholdMrMrs.cs" />
     <Compile Include="Enumerations\PersonDeclarationStatus.cs" />

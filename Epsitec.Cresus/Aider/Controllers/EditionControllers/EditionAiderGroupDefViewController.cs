@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.PathTemplate)
 					.Field (x => x.NodeType)
 					.Field (x => x.Classification)
-					.Field (x => x.Category)
+					.Field (x => x.Mutability)
 				.End ();
 		}
 	}

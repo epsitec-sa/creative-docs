@@ -62,7 +62,7 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
 			aiderGroupDef.NodeType = groupDefinition.GroupNodeType;
 			aiderGroupDef.Classification = groupDefinition.GroupClassification;
-			aiderGroupDef.Category = Enumerations.GroupCategory.SystemDefined;
+			aiderGroupDef.Mutability = Enumerations.Mutability.SystemDefined;
 
 			var children = new List<AiderGroupDefEntity> ();
 
