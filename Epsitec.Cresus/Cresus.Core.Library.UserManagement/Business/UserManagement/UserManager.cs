@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		protected UserManager(CoreData data)
 			: base (data)
 		{
+			this.sessions = new Dictionary<string, UserSession> ();
 		}
 
 	
@@ -155,6 +156,22 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		public virtual void SetActiveSessionId(string sessionId)
 		{
 			this.activeSessionId = sessionId;
+			
+			if (sessionId != null)
+			{
+				this.EnsureSessionExists (sessionId);
+			}
+		}
+
+		private void EnsureSessionExists(string sessionId)
+		{
+			UserSession session;
+
+			if (this.sessions.TryGetValue (sessionId, out session) == false)
+			{
+				session = CoreContext.New<UserSession> (sessionId);
+				this.sessions[sessionId] = session;
+			}
 		}
 
 		private void SetAuthenticatedUser(string userCode, NotificationMode notificationMode)
@@ -446,16 +463,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			public CoreDataComponent Create(CoreData data)
 			{
-				var type = CoreContext.ResolveType (typeof (UserManager));
-
-				if (type == typeof (UserManager))
-				{
-					return new UserManager (data);
-				}
-				else
-				{
-					return System.Activator.CreateInstance (type, data) as UserManager;
-				}
+				return CoreContext.New<UserManager> (data);
 			}
 
 			public System.Type GetComponentType()
@@ -475,5 +483,6 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		private SoftwareUserEntity				authenticatedUser;
 		private string							activeSessionId;
 		private IBusinessContext				businessContext;
+		private readonly Dictionary<string, UserSession>	sessions;
 	}
 }

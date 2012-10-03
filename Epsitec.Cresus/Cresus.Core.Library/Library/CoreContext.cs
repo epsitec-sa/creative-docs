@@ -1,14 +1,15 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using System.Xml.Linq;
+using System.Reflection;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -134,7 +135,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			var xml   = XElement.Parse (xmlSource, LoadOptions.None);
 			var args  = new object[1] { xml };
-			var flags = System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.InvokeMethod | System.Reflection.BindingFlags.Public;
+			var flags = BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public;
 			
 			//	At this very early stage in the boot process, we cannot instanciate the meta
 			//	class, so we will have to defer the restore until the application object calls
@@ -287,7 +288,7 @@ namespace Epsitec.Cresus.Core.Library
 				{
 					var methodName = line.Substring (0, pos1).Trim ();
 					var parameters = line.Substring (pos1+1, len).Split (',').Select (x => CoreContext.ParseArg (x.Trim (), stack)).ToArray ();
-					var methodInfo = typeof (CoreContext).GetMethod (methodName, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+					var methodInfo = typeof (CoreContext).GetMethod (methodName, BindingFlags.Static | BindingFlags.Public);
 
 					if (methodInfo == null)
 					{
@@ -368,7 +369,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// <returns>The lines of text found in the settings file.</returns>
 		public static IEnumerable<string> ReadCoreContextSettingsFile()
 		{
-			var file = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+			var file = Assembly.GetExecutingAssembly ().Location;
 			var dir  = System.IO.Path.GetDirectoryName (file);
 			var name = System.IO.Path.GetFileNameWithoutExtension (file);
 			var path = System.IO.Path.Combine (dir, name + ".crconfig");
@@ -415,6 +416,22 @@ namespace Epsitec.Cresus.Core.Library
 			else
 			{
 				return false;
+			}
+		}
+
+		public static T New<T>(params object[] args)
+			where T : class
+		{
+			var type = CoreContext.ResolveType (typeof (T));
+
+			if (type == typeof (T))
+			{
+				return null;
+			}
+			else
+			{
+				var binding = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+				return System.Activator.CreateInstance (type, binding, null, args, null) as T;
 			}
 		}
 

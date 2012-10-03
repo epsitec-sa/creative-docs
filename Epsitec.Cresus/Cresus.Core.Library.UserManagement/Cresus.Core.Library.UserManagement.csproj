@@ -49,6 +49,7 @@
     <Compile Include="Business\Rules\SoftwareUserBusinessRules.cs" />
     <Compile Include="Business\Rules\SoftwareUserGroupBusinessRules.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
+    <Compile Include="Business\UserManagement\UserSession.cs" />
     <Compile Include="Business\UserManagement\UserSummary.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\UserManagerDialog.cs" />
