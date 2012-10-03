@@ -15,7 +15,6 @@ namespace Epsitec.Aider
 		public AiderUserSession(string sessionId)
 			: base (sessionId)
 		{
-			System.Console.WriteLine ("Session {0} created", sessionId);
 		}
 	}
 }
