@@ -3,6 +3,7 @@
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,16 @@ namespace Epsitec.Aider
 		public AiderUserManager(CoreData data)
 			: base (data)
 		{
+		}
+
+		protected override void SetAuthenticatedUser(SoftwareUserEntity user)
+		{
+			base.SetAuthenticatedUser (user);
+		}
+
+		public override void SetActiveSessionId(string sessionId)
+		{
+			base.SetActiveSessionId (sessionId);
 		}
 	}
 }

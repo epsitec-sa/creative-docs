@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			if (loggedIn)
 			{
 				this.Session[LoginModule.UserName] = username;
+				this.Session[LoginModule.SessionId] = System.Guid.NewGuid ().ToString ("D");
 
 				return CoreResponse.FormSuccess ();
 			}
@@ -59,6 +60,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public Response Logout()
 		{
 			this.Session.Delete (LoginModule.UserName);
+			this.Session.Delete (LoginModule.SessionId);
 			this.Session[LoginModule.LoggedInName] = false;
 
 			var content = new Dictionary<string, object> ()
@@ -107,11 +109,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return (string) module.Session[LoginModule.UserName];
 		}
 
+		
+		public static string GetSessionId(NancyModule module)
+		{
+			return (string) module.Session[LoginModule.SessionId];
+		}
+
 
 		public static readonly string LoggedInName = "LoggedIn";
 
 
 		public static readonly string UserName = "UserName";
+
+
+		public static readonly string SessionId = "UserSessionId";
 
 
 	}

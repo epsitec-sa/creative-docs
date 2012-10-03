@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// <param name="username">The username for which to execute the function.</param>
 		/// <param name="function">The function to execute.</param>
 		/// <returns>The result of the execution of the function.</returns>
-		public T Execute<T>(string username, Func<BusinessContext, T> function)
+		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> function)
 		{
-			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, function));
+			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, function));
 		}
 
 

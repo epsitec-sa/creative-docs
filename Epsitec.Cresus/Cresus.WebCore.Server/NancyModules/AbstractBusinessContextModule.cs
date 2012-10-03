@@ -31,9 +31,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected Response Execute(Func<BusinessContext, Response> function)
 		{
-			var username = LoginModule.GetUserName (this);
+			var userName  = LoginModule.GetUserName (this);
+			var sessionId = LoginModule.GetSessionId (this);
 
-			return this.CoreServer.CoreWorkerPool.Execute (username, function);
+			return this.CoreServer.CoreWorkerPool.Execute (userName, sessionId, function);
 		}
 
 

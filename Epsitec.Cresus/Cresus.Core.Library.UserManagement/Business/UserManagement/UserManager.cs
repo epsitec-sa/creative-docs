@@ -58,6 +58,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+		/// <summary>
+		/// Gets the active session id.
+		/// </summary>
+		public string							ActiveSessionId
+		{
+			get
+			{
+				return this.activeSessionId;
+			}
+		}
 		
 		/// <summary>
 		/// Gets the user manager instance for the executing thread.
@@ -138,6 +148,15 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.SetAuthenticatedUser (userCode, NotificationMode.OnChange);
 		}
 
+		/// <summary>
+		/// Sets the active session id.
+		/// </summary>
+		/// <param name="sessionId">The session id.</param>
+		public virtual void SetActiveSessionId(string sessionId)
+		{
+			this.activeSessionId = sessionId;
+		}
+
 		private void SetAuthenticatedUser(string userCode, NotificationMode notificationMode)
 		{
 			var user = this.FindActiveUser (userCode);
@@ -157,6 +176,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return;
 			}
 
+			this.SetAuthenticatedUser (user);
+		}
+
+		protected virtual void SetAuthenticatedUser(SoftwareUserEntity user)
+		{
 			this.OnAuthenticatedUserChanging ();
 			this.authenticatedUser = user;
 			this.OnAuthenticatedUserChanged ();
@@ -449,6 +473,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 
 		private SoftwareUserEntity				authenticatedUser;
+		private string							activeSessionId;
 		private IBusinessContext				businessContext;
 	}
 }
