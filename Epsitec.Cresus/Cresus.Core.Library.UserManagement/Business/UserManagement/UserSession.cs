@@ -17,11 +17,20 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 {
 	public class UserSession : System.IDisposable
 	{
-		public UserSession(string sessionId)
+		public UserSession(UserManager manager, string sessionId)
 		{
+			this.userManager = manager;
 			this.sessionId = sessionId;
 		}
 
+
+		public UserManager UserManager
+		{
+			get
+			{
+				return this.userManager;
+			}
+		}
 		
 		public string SessionId
 		{
@@ -44,8 +53,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		protected virtual void Dispose(bool disposing)
 		{
 		}
-		
 
+
+		private readonly UserManager userManager;
 		private readonly string sessionId;
 	}
 }

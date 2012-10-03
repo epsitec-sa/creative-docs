@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			if (this.sessions.TryGetValue (sessionId, out session) == false)
 			{
-				session = CoreContext.New<UserSession> (sessionId);
+				session = CoreContext.New<UserSession> (this, sessionId);
 				this.sessions[sessionId] = session;
 			}
 		}

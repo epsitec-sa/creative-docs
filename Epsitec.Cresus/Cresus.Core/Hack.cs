@@ -11,6 +11,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core
 {
@@ -72,7 +73,10 @@ namespace Epsitec.Cresus.Core
 
 		private static SoftwareUserEntity CreateUser(DataContext context, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword, Business.UserManagement.UserAuthenticationMethod am)
 		{
-			var user = context.CreateEntity<SoftwareUserEntity> ();
+			var userType  = CoreContext.ResolveType (typeof (SoftwareUserEntity));
+			var userDruid = Epsitec.Common.Support.EntityEngine.EntityInfo.GetTypeId (userType);
+
+			var user = context.CreateEntity (userDruid) as SoftwareUserEntity;
 			var logic = new Logic (user);
 
 			logic.ApplyRule (RuleType.Setup, user);
