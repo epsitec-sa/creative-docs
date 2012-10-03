@@ -1266,6 +1266,142 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		}
 
 
+		[TestMethod]
+		public void AnyCall1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var contact = new UriContactEntity ();
+				person.Contacts.Add (contact);
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => x.Contacts.Any (c => ((UriContactEntity) c).Uri == "blupi@hotmail.com"),
+					new BinaryComparison
+					(
+						ValueField.Create (contact, x => x.Uri),
+						BinaryComparator.IsEqual,
+						new Constant ("blupi@hotmail.com")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AnyCall2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var contact = new UriContactEntity ();
+				person.Contacts.Add (contact);
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => x.Firstname == "blupi" && x.Contacts.Any (c => ((UriContactEntity) c).Uri == "blupi@hotmail.com"),
+					new BinaryOperation
+					(
+						new BinaryComparison
+						(
+							ValueField.Create (person, x => x.Firstname),
+							BinaryComparator.IsEqual,
+							new Constant ("blupi")
+						),
+						BinaryOperator.And,			
+						new BinaryComparison
+						(
+							ValueField.Create (contact, x => x.Uri),
+							BinaryComparator.IsEqual,
+							new Constant ("blupi@hotmail.com")
+						)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AnyCall3()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var contact = new UriContactEntity ();
+				var role = new ContactRoleEntity ();
+
+				person.Contacts.Add (contact);
+				contact.Roles.Add (role);
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => x.Contacts.Any (c => c.Roles.Any (r => r.Name == "mySuperRole")),
+					new BinaryComparison
+					(
+						ValueField.Create (role, x => x.Name),
+						BinaryComparator.IsEqual,
+						new Constant ("mySuperRole")
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void AnyCall4()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var contact = new UriContactEntity ();
+				var role = new ContactRoleEntity ();
+
+				person.Contacts.Add (contact);
+				contact.Roles.Add (role);
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => x.Contacts.Any
+					(
+						c => ((UriContactEntity) c).Uri == "blupi@hotmail.com" || c.Roles.Any
+						(
+							r => r.Name == "mySuperRole"
+						)
+					),
+					new BinaryOperation
+					(
+						new BinaryComparison
+						(
+							ValueField.Create (contact, x => x.Uri),
+							BinaryComparator.IsEqual,
+							new Constant ("blupi@hotmail.com")
+						),
+						BinaryOperator.Or,
+						new BinaryComparison
+						(
+							ValueField.Create (role, x => x.Name),
+							BinaryComparator.IsEqual,
+							new Constant ("mySuperRole")
+						)
+					)
+				);
+			}
+		}
+
+
 		private int member = 1;
 
 		

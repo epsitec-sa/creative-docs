@@ -28,48 +28,42 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		public static DataExpression Convert<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda)
 			where T : AbstractEntity
 		{
-			var e = (AbstractEntity) entity;
-			var l = (LambdaExpression) lambda;
-
-			return LambdaConverter.Convert (dataContext, e, l);
-		}
-		
-		public static DataExpression Convert(DataContext dataContext, AbstractEntity entity, Expression expression)
-		{
-			var lambda = expression as LambdaExpression;
-
-			if (lambda == null)
-			{
-				return LambdaConverter.ConvertExpression (dataContext, entity, expression);
-			}
-			else
-			{
-				return LambdaConverter.ConvertLambda (dataContext, entity, lambda);
-			}
+			return LambdaConverter.Convert (dataContext, entity, (LambdaExpression) lambda);
 		}
 
 
-		private static DataExpression ConvertLambda(DataContext dataContext, AbstractEntity entity, LambdaExpression lambda)
+		public static DataExpression Convert(DataContext dataContext, AbstractEntity entity, LambdaExpression lambda)
 		{
 			LambdaConverter.Check (dataContext, entity, lambda);
 
-			return LambdaConverter.ConvertExpression (dataContext, entity, lambda.Body);
+			var entityName = lambda.Parameters[0].Name;
+			var expression = lambda.Body;
+
+			return LambdaConverter.Convert (dataContext, entityName, entity, expression);
 		}
 
 
-		private static DataExpression ConvertExpression(DataContext dataContext, AbstractEntity entity, Expression expression)
+		public static DataExpression Convert(DataContext dataContext, string entityName, AbstractEntity entity, Expression expression)
 		{
 			var computedExpression = LambdaComputer.Compute (expression, LambdaConverter.IsExpressionComputable);
-			var dataExpression = new LambdaConverter (dataContext, entity).Convert (computedExpression);
+
+			var entities = new Dictionary<string, AbstractEntity> ()
+			{
+				{ entityName, entity }
+			};
+			var converter = new LambdaConverter (dataContext, entities);
+			var dataExpression = converter.Convert (computedExpression);
 
 			return dataExpression;
 		}
 
 
-
 		private static bool IsExpressionComputable(Expression expression)
 		{
-			// Expressions that are the parameter of the lambda expression cannot be computed.
+			// Expressions that are the parameter of the lambda expression cannot be computed. This
+			// also has the side effect that all expressions involving a lambda expression won't be
+			// computed and will be evaluated in the SQL query if they can be translated. If they
+			// can't be translated, an exception will be thrown later on.
 			if (expression.NodeType == ExpressionType.Parameter)
 			{
 				return false;
@@ -126,10 +120,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		public LambdaConverter(DataContext dataContext, AbstractEntity entity)
+		public LambdaConverter(DataContext dataContext, IDictionary<string, AbstractEntity> entities)
 		{
 			this.dataContext = dataContext;
-			this.entity = entity;
+			this.entities = new Dictionary<string, AbstractEntity> (entities);
 			this.results = new Stack<object> ();
 		}
 
@@ -496,38 +490,25 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		protected override Expression VisitMethodCall(MethodCallExpression node)
 		{
-			var method = node.Method;
-			var arguments = node.Arguments
-				.Select (a => this.VisitAndPop (a))
-				.ToList ();
-
 			object expression;
+
+			var method = node.Method;
 
 			if (method == SqlMethods.LikeMethodInfo)
 			{
-				expression = new BinaryComparison
-				(
-					(Value) arguments[0],
-					BinaryComparator.IsLike,
-					(Value) arguments[1]
-				);
+				expression = this.VisitMethodCallLike (node);
 			}
 			else if (method == SqlMethods.EscapedLikeMethodInfo)
 			{
-				expression = new BinaryComparison
-				(
-					(Value) arguments[0],
- 					BinaryComparator.IsLikeEscape,
-					(Value) arguments[1]
-				);
+				expression = this.VisitMethodCallEscapedLike (node);
 			}
 			else if (method == SqlMethods.CompareToMethodInfo)
 			{
-				// This method is a special case used to compare strings. It is processed beforehand
-				// in the VisitBinary method. So in theory this case should never happen and we
-				// throw an exception just to make sure that if it does happen, we'll know it.
-
-				throw new NotSupportedException ();
+				expression = this.VisitMethodCallCompareTo (node);
+			}
+			else if (method.Name == "Any" && method.DeclaringType == typeof (Enumerable))
+			{
+				expression = this.VisitMethodCallAny (node);
 			}
 			else
 			{
@@ -538,10 +519,59 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		private object VisitMethodCallLike(MethodCallExpression methodCall)
+		{
+			return new BinaryComparison
+			(
+				(Value) this.VisitAndPop (methodCall.Arguments[0]),
+				BinaryComparator.IsLike,
+				(Value) this.VisitAndPop (methodCall.Arguments[1])
+			);
+		}
+
+
+		private object VisitMethodCallEscapedLike(MethodCallExpression methodCall)
+		{
+			return new BinaryComparison
+			(
+				(Value) this.VisitAndPop (methodCall.Arguments[0]),
+				BinaryComparator.IsLikeEscape,
+				(Value) this.VisitAndPop (methodCall.Arguments[1])
+			);
+		}
+
+
+		private object VisitMethodCallCompareTo(MethodCallExpression methodCall)
+		{
+			// This method is a special case used to compare strings. It is processed beforehand
+			// in the VisitBinary method. So in theory this case should never happen and we
+			// throw an exception just to make sure that if it does happen, we'll know it.
+
+			throw new NotSupportedException ();
+		}
+
+
+		private object VisitMethodCallAny(MethodCallExpression methodCall)
+		{
+			var entityField = (InternalField) this.VisitAndPop (methodCall.Arguments[0]);
+			var entity = entityField.Entity;
+
+			var innerLambda = (LambdaExpression) methodCall.Arguments[1];
+
+			var entityName = innerLambda.Parameters[0].Name;
+
+			this.entities[entityName] = entity;
+
+			object expression = this.VisitAndPop (innerLambda.Body);
+
+			this.entities.Remove (entityName);
+
+			return expression;
+		}
+
+
 		protected override Expression VisitMember(MemberExpression node)
 		{
-			// TODO Manage EntityCollectionFields.
-
 			// Here we interpret the result of the expression on which the member access is done. We
 			// can have the simple case where it is an entity or another member access on an entity
 			// which returns an entity.
@@ -572,7 +602,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 			// Here we build the result of the current expression transformation based on the kind
 			// of member that we have.
-			// For now we don't support the case of collection fields.
+			// For now we support only basic stuff with collection fields, i.e. we return the first
+			// element of the collection. This works for simple case but might cause problems if we
+			// have more that one element in the collection and would like to attach conditions to
+			// elements other that the first one.
 
 			var propertyInfo = (PropertyInfo) node.Member;
 			var field = EntityInfo.GetStructuredTypeField (propertyInfo);
@@ -591,6 +624,17 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					break;
 
 				case FieldRelation.Collection:
+					var targets = entity.GetFieldCollection<AbstractEntity> (field.Id);
+
+					if (targets.Count != 1)
+					{
+						var message = "There must be exactly one element in a collection field";
+						throw new NotSupportedException (message);
+					}
+
+					entityField = InternalField.CreateId (targets[0]);
+					break;
+
 				default:
 					throw new NotSupportedException ();
 			}
@@ -601,7 +645,14 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		protected override Expression VisitParameter(ParameterExpression node)
 		{
-			return this.PushAndReturn (node, InternalField.CreateId (this.entity));
+			AbstractEntity entity;
+
+			if (!this.entities.TryGetValue (node.Name, out entity))
+			{
+				throw new NotSupportedException ("No entity match parameter name.");
+			}
+
+			return this.PushAndReturn (node, InternalField.CreateId (entity));
 		}
 
 
@@ -800,7 +851,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		private readonly DataContext dataContext;
 
 
-		private readonly AbstractEntity entity;
+		private readonly Dictionary<string, AbstractEntity> entities;
 
 
 		private readonly Stack<object> results;

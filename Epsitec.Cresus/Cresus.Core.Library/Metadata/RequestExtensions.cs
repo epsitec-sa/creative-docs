@@ -21,20 +21,21 @@ namespace Epsitec.Cresus.Core.Metadata
 				return;
 			}
 
-			var @param = Expression.Parameter (entity.GetType (), "x");
+			var name = "x";
+			var @param = Expression.Parameter (entity.GetType (), name);
 			var body   = filter.GetExpression (@param);
 
-			request.Conditions.Add (LambdaConverter.Convert (dataContext, entity, body));
+			request.AddCondition (dataContext, name, entity, body);
 		}
 
-		public static void AddCondition(this Epsitec.Cresus.DataLayer.Loader.Request request, DataContext dataContext, AbstractEntity entity, Expression expression)
+		public static void AddCondition(this Epsitec.Cresus.DataLayer.Loader.Request request, DataContext dataContext, string entityName, AbstractEntity entity, Expression expression)
 		{
 			if (expression == null)
 			{
 				return;
 			}
 
-			request.Conditions.Add (LambdaConverter.Convert (dataContext, entity, expression));
+			request.Conditions.Add (LambdaConverter.Convert (dataContext, entityName, entity, expression));
 		}
 	}
 }
