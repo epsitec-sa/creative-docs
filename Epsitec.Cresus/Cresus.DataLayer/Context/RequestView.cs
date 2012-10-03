@@ -83,14 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			var entityKeyRequest = request.Clone ();
 
-			entityKeyRequest.SortClauses.Add
-			(
-				new SortClause
-				(
-					InternalField.CreateId (request.RequestedEntity),
-					SortOrder.Ascending
-				)
-			);
+			entityKeyRequest.AddIdSortClause (request.RequestedEntity);
 
 			return entityKeyRequest;
 		}
