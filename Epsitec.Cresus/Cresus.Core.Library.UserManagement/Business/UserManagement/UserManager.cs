@@ -422,7 +422,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			public CoreDataComponent Create(CoreData data)
 			{
-				return new UserManager (data);
+				var type = CoreContext.ResolveType (typeof (UserManager));
+				return System.Activator.CreateInstance (type, data) as UserManager;
 			}
 
 			public System.Type GetComponentType()

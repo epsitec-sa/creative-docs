@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (match == null)
 			{
-				throw new System.ArgumentException ("The class name cannot be resolved", className);
+				throw new System.ArgumentException (string.Format ("The class name {0} cannot be resolved", className));
 			}
 
 			var xml   = XElement.Parse (xmlSource, LoadOptions.None);
@@ -143,6 +143,10 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.EnqueueSetupCode (() => CoreContext.AddMetadata (match.InvokeMember ("Restore", flags, null, null, args) as CoreMetadata));
 		}
 
+		public static void DefineTypeSubstitution(string baseClassName, string implClassName)
+		{
+			CoreContext.typeSubstitutions[baseClassName] = implClassName;
+		}
 		
 		private static void AddMetadata(CoreMetadata metadata)
 		{
@@ -414,6 +418,32 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static System.Type ResolveType(System.Type baseType)
+		{
+			string baseName = baseType.Name;
+			string implName;
+
+			if (CoreContext.typeSubstitutions.TryGetValue (baseName, out implName))
+			{
+				var implTypes = from type in TypeEnumerator.Instance.GetAllTypes ()
+								where type.IsClass && (type.Name == implName || type.FullName == implName) && type.IsSubclassOf (baseType)
+								select type;
+
+				var implType = implTypes.FirstOrDefault ();
+
+				if (implType == null)
+				{
+					throw new System.ArgumentException (string.Format ("The implementation class name {0} cannot be resolved", implName));
+				}
+
+				return implType;
+			}
+			else
+			{
+				return baseType;
+			}
+		}
+
 		/// <summary>
 		/// Parses the argument and derives the proper type. This recognizes <c>true</c>, <c>false</c>
 		/// and <c>null</c>, integers and decimals, <c>"strings"</c> and <c>$0</c> indexes into the
@@ -465,6 +495,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			CoreContext.metadata = new Dictionary<System.Type, CoreMetadata> ();
 			CoreContext.pendingSetupCode = new Queue<System.Action> ();
+			CoreContext.typeSubstitutions = new Dictionary<string, string> ();
 		}
 
 		
@@ -480,5 +511,6 @@ namespace Epsitec.Cresus.Core.Library
 		
 		private static readonly Dictionary<System.Type, CoreMetadata> metadata;
 		private static readonly Queue<System.Action> pendingSetupCode;
+		private static readonly Dictionary<string, string> typeSubstitutions;
 	}
 }
