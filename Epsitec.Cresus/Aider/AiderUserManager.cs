@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Entities;
 
 namespace Epsitec.Aider
 {
@@ -16,6 +17,16 @@ namespace Epsitec.Aider
 			: base (data)
 		{
 		}
+
+
+		public new AiderUserEntity				AuthenticatedUser
+		{
+			get
+			{
+				return base.AuthenticatedUser as AiderUserEntity;
+			}
+		}
+
 
 		protected override void SetAuthenticatedUser(SoftwareUserEntity user)
 		{

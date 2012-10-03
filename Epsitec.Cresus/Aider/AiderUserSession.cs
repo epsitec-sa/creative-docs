@@ -45,9 +45,29 @@ namespace Epsitec.Aider
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			//	TODO: resolve active scope
+			if (user == null)
+			{
+				return null;
+			}
 
-			return null;
+			var scope = user.PreferredScope;
+
+			if (scope.IsNull ())
+			{
+				var role = user.Role;
+
+				if (role.IsNotNull ())
+				{
+					scope = role.DefaultScopes.FirstOrDefault ();
+
+					if (scope.IsNull ())
+					{
+						scope = user.CustomScopes.FirstOrDefault ();
+					}
+				}
+			}
+
+			return scope;
 		}
 
 

@@ -6489,11 +6489,35 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderUserScopeEntity> ("[LVAJC]");
 			}
 		}
+		///	<summary>
+		///	The <c>PreferredScope</c> field.
+		///	designer:fld/LVAHC/LVAGD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAGD]")]
+		public global::Epsitec.Aider.Entities.AiderUserScopeEntity PreferredScope
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderUserScopeEntity> ("[LVAGD]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue = this.PreferredScope;
+				if (oldValue != value || !this.IsFieldDefined("[LVAGD]"))
+				{
+					this.OnPreferredScopeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderUserScopeEntity> ("[LVAGD]", oldValue, value);
+					this.OnPreferredScopeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
+		partial void OnPreferredScopeChanging(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
+		partial void OnPreferredScopeChanged(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

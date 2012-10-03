@@ -3,8 +3,8 @@
 
 using Epsitec.Aider.Entities;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {

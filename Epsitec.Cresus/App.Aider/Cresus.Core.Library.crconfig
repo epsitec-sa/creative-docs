@@ -26,6 +26,8 @@ AiderGroup = [LVA54]
     <d n="AiderAddress" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderTown" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderCountry" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d n="AiderUser" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d n="AiderUserRole" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderGroupDef" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderFunctionDef" dg="@submenuDefs"><R><r>@user</r></R></d>
   </D>

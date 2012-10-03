@@ -40,6 +40,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonRelationship = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 5));
 				//	designer:cap/LVG302
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderTown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3));
+				//	designer:cap/LVAHD
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderUser = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 433));
+				//	designer:cap/LVAID
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderUserRole = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 434));
 			}
 		}
 		
@@ -73,6 +77,10 @@ namespace Epsitec.Aider
 				public const long ShowAiderPersonRelationship = 0x3F500050000005L;
 				//	designer:cap/LVG302
 				public const long ShowAiderTown = 0x3F500050000003L;
+				//	designer:cap/LVAHD
+				public const long ShowAiderUser = 0x3F50000A0001B1L;
+				//	designer:cap/LVAID
+				public const long ShowAiderUserRole = 0x3F50000A0001B2L;
 			}
 			
 		}
@@ -1812,6 +1820,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid CustomScopes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 403);
 				//	designer:cap/LVAIC
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 402);
+				//	designer:cap/LVAGD
+				public static readonly global::Epsitec.Common.Support.Druid PreferredScope = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 432);
 				//	designer:cap/LVALC
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 405);
 			}
