@@ -16,6 +16,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.Name)
 				.End ();
+
+			wall.AddBrick ()
+				.Input ()
+					.Field (x => x.DefaultScopes)
+				.End ();
 		}
 	}
 }

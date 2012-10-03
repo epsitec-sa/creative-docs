@@ -25,6 +25,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Role)
 					.Field (x => x.PreferredScope).ReadOnly ()
 				.End ();
+
+			wall.AddBrick ()
+				.Input ()
+					.Field (x => x.CustomScopes)
+				.End ();
 		}
 	}
 }
