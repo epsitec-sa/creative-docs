@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	/// The <c>UserManager</c> class is used to authenticate users, based on their name
 	/// and on their credentials (which might be a password).
 	/// </summary>
-	public sealed class UserManager : CoreDataComponent
+	public class UserManager : CoreDataComponent
 	{
-		private UserManager(CoreData data)
+		protected UserManager(CoreData data)
 			: base (data)
 		{
 		}
@@ -423,7 +423,15 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			public CoreDataComponent Create(CoreData data)
 			{
 				var type = CoreContext.ResolveType (typeof (UserManager));
-				return System.Activator.CreateInstance (type, data) as UserManager;
+
+				if (type == typeof (UserManager))
+				{
+					return new UserManager (data);
+				}
+				else
+				{
+					return System.Activator.CreateInstance (type, data) as UserManager;
+				}
 			}
 
 			public System.Type GetComponentType()

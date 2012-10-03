@@ -1,5 +1,6 @@
 DefineDatabase ("aider", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
+DefineTypeSubstitution ("UserManager", "AiderUserManager")
 
 user = [AVAK]
 submenuDefs = [LVA4D]
