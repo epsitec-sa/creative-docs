@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Text;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,13 @@ namespace Epsitec.Common.Types
 			if (prettyPrinter != null)
 			{
 				return prettyPrinter.ToFormattedText (value, culture, detailLevel);
+			}
+
+			var entity = value as AbstractEntity;
+
+			if (entity != null)
+			{
+				return entity.GetCompactSummary ();
 			}
 			
 			return TextFormatterConverter.PrettyPrintUsingStringFormat (value, type, culture);
