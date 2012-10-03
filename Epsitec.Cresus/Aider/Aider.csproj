@@ -58,6 +58,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AiderUserManager.cs" />
+    <Compile Include="AiderUserSession.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
