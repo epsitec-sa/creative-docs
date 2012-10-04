@@ -1,19 +1,29 @@
 using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Metadata;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 
-using System;
 using System.Collections.Generic;
+
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Metadata
+
+namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-	public class EntityColumnSetFilter : EntityColumnFilter
+
+
+	internal class SetFilter : Filter
 	{
-		public EntityColumnSetFilter(SetComparator comparator, IEnumerable<object> values)
+
+
+		public SetFilter(Column column, SetComparator comparator, IEnumerable<object> values)
+			: base (column)
 		{
 			this.comparator = comparator;
 			this.values = values.ToList ();
 		}
+
 
 		public SetComparator Comparator
 		{
@@ -23,6 +33,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+
 		public IEnumerable<object> Values
 		{
 			get
@@ -31,13 +42,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override DataExpression ToCondition(EntityColumn column, AbstractEntity example)
+
+		protected override DataExpression ToCondition(EntityColumnMetadata column, AbstractEntity example)
 		{
 			var fieldEntity = column.GetLeafEntity (example, NullNodeAction.CreateMissing);
 			var fieldId = column.GetLeafFieldId ();
 
 			var fieldNode = new ValueField (fieldEntity, fieldId);
-			
+
 			// We must do all this weird stuff because of the behavior of NULL values in SQL, which
 			// implies that if we simply translate this to SQL will give incorrect results in the
 			// case where we have NULL in the set. If we have NULL in the set, the rows where the
@@ -48,8 +60,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			// - if the value is not null, we generate "column = value"
 			// - if the value is null, we generate "column IS NULL"
 			var expressions = this.Values.Select (v => v == null
-				? (DataExpression) new UnaryComparison (fieldNode, UnaryComparator.IsNull)
-				: new BinaryComparison (fieldNode, BinaryComparator.IsEqual, new Constant (v))
+					? (DataExpression) new UnaryComparison (fieldNode, UnaryComparator.IsNull)
+					: new BinaryComparison (fieldNode, BinaryComparator.IsEqual, new Constant (v))
 			);
 
 			// Now we join all these expressions together with OR statements in order to get a
@@ -89,7 +101,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			return expression;
 		}
 
+
 		private readonly SetComparator comparator;
+
+
 		private readonly IEnumerable<object> values;
+
+
 	}
+
+
 }

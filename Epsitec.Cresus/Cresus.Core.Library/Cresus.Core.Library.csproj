@@ -146,8 +146,6 @@
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
     <Compile Include="Library\SettingsTuple.cs" />
-    <Compile Include="Metadata\EntityColumnComparisonFilter.cs" />
-    <Compile Include="Metadata\EntityColumnSetFilter.cs" />
     <Compile Include="Metadata\Filter.cs" />
     <Compile Include="Metadata\FilterActiveMode.cs" />
     <Compile Include="Metadata\FilterCombineMode.cs" />

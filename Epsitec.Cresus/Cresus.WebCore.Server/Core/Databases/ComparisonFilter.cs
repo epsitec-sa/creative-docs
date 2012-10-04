@@ -1,17 +1,31 @@
 using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Metadata;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System;
 
-namespace Epsitec.Cresus.Core.Metadata
+using System.Collections.Generic;
+
+using System.Linq;
+
+
+namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
-	public class EntityColumnComparisonFilter : EntityColumnFilter
+
+
+	internal class ComparisonFilter : Filter
 	{
-		public EntityColumnComparisonFilter(BinaryComparator comparator, object value)
+
+
+		public ComparisonFilter(Column column, BinaryComparator comparator, object value)
+			: base (column)
 		{
 			this.comparator = comparator;
 			this.value = value;
 		}
+
 
 		public BinaryComparator Comparator
 		{
@@ -21,6 +35,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+
 		public object Value
 		{
 			get
@@ -29,7 +44,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override DataExpression ToCondition(EntityColumn column, AbstractEntity example)
+
+		protected override DataExpression ToCondition(EntityColumnMetadata column, AbstractEntity example)
 		{
 			var fieldEntity = column.GetLeafEntity (example, NullNodeAction.CreateMissing);
 			var fieldId = column.GetLeafFieldId ();
@@ -65,10 +81,18 @@ namespace Epsitec.Cresus.Core.Metadata
 				var constantNode = new Constant (this.Value);
 
 				return new BinaryComparison (fieldNode, this.Comparator, constantNode);
-			}	
+			}
 		}
 
+
 		private readonly BinaryComparator comparator;
+
+
 		private readonly object value;
+
+
 	}
+
+
 }
+

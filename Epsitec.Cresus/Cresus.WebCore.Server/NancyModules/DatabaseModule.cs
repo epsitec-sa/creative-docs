@@ -301,9 +301,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Core.Databases.Filter ParseFilter(Core.Databases.Database database, Dictionary<string, object> filter)
 		{
 			var column = this.ParseFilterColumn (database, filter);
-			var filterCondition = this.ParseFilterCondition (column, filter);
-
-			return new Core.Databases.Filter (column, filterCondition);
+			
+			return this.ParseFilterCondition (column, filter);
 		}
 
 		private Column ParseFilterColumn(Core.Databases.Database database, Dictionary<string, object> filter)
@@ -314,7 +313,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private EntityColumnFilter ParseFilterCondition(Column column, Dictionary<string, object> filter)
+		private Core.Databases.Filter ParseFilterCondition(Column column, Dictionary<string, object> filter)
 		{
 			var lambda = column.LambdaExpression;
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
@@ -325,7 +324,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (type == "list")
 			{
-				return this.ParseSetFilter (propertyAccessor, value);
+				return this.ParseSetFilter (column, propertyAccessor, value);
 			}
 			else
 			{
@@ -335,21 +334,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					comparison = "eq";
 				}
 
-				return this.ParseComparisonFilter (propertyAccessor, type, comparison, value);
+				return this.ParseComparisonFilter (column, propertyAccessor, type, comparison, value);
 			}
 		}
 
 
-		private EntityColumnFilter ParseSetFilter(AbstractStringPropertyAccessor propertyAccessor, object value)
+		private SetFilter ParseSetFilter(Column column, AbstractStringPropertyAccessor propertyAccessor, object value)
 		{
 			var valueArray = (object[]) value;
 			var convertedValues = valueArray.Select (v => propertyAccessor.ConvertValue (v));
 
-			return new EntityColumnSetFilter (SetComparator.In, convertedValues);
+			return new SetFilter (column, SetComparator.In, convertedValues);
 		}
 
 
-		private EntityColumnFilter ParseComparisonFilter(AbstractStringPropertyAccessor propertyAccessor, string type, object comparison, object value)
+		private ComparisonFilter ParseComparisonFilter(Column column, AbstractStringPropertyAccessor propertyAccessor, string type, object comparison, object value)
 		{
 			var comparator = this.ParseComparator (comparison);
 
@@ -376,7 +375,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var convertedValue = propertyAccessor.ConvertValue (value);
 
-			return new EntityColumnComparisonFilter (comparator, convertedValue);
+			return new ComparisonFilter (column, comparator, convertedValue);
 		}
 
 
