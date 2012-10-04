@@ -673,7 +673,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					throw new NotSupportedException ("Entity used as constant has no entity key.");
 				}
 
-				value = entityKey.Value.RowKey;
+				value = entityKey.Value.RowKey.Id.Value;
 			}
 
 			return this.PushAndReturn (node, new Constant (value));

@@ -1233,7 +1233,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 					(
 						InternalField.CreateId (person1),
 						BinaryComparator.IsNotEqual,
-						new Constant (person2Key.RowKey)
+						new Constant (person2Key.RowKey.Id.Value)
 					)
 				);
 			}
@@ -1259,7 +1259,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 					(
 						ReferenceField.Create (person, x => x.Gender),
 						BinaryComparator.IsEqual,
-						new Constant (genderKey.RowKey)
+						new Constant (genderKey.RowKey.Id.Value)
 					)
 				);
 			}
