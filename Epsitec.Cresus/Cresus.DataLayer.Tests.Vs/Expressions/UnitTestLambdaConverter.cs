@@ -200,6 +200,30 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
+		public void RegularNotEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 1 != x.IntegerValue,
+					new BinaryComparison
+					(
+						new Constant (1),
+						BinaryComparator.IsNotEqual,
+						ValueField.Create (entity, x => x.IntegerValue)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void RegularGreater()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -217,6 +241,31 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 						ValueField.Create (entity, x => x.IntegerValue),
 						BinaryComparator.IsGreater,
 						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularGreaterInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 1 > x.IntegerValue,
+					new BinaryComparison
+					(
+						new Constant (1),
+						BinaryComparator.IsGreater,
+						ValueField.Create (entity, x => x.IntegerValue)
+						
 					)
 				);
 			}
@@ -248,6 +297,30 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
+		public void RegularGreaterOrEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 1 >= x.IntegerValue,
+					new BinaryComparison
+					(
+						new Constant (1),
+						BinaryComparator.IsGreaterOrEqual, 
+						ValueField.Create (entity, x => x.IntegerValue)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void RegularLower()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -272,6 +345,30 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
+		public void RegularLowerInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 1 < x.IntegerValue,
+					new BinaryComparison
+					(
+						new Constant (1),
+						BinaryComparator.IsLower,
+						ValueField.Create (entity, x => x.IntegerValue)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void RegularLowerOrEqual()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -289,6 +386,30 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 						ValueField.Create (entity, x => x.IntegerValue),
 						BinaryComparator.IsLowerOrEqual,
 						new Constant (1)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void RegularLowerOrEqualInverted()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => 1 <= x.IntegerValue,
+					new BinaryComparison
+					(
+						new Constant (1),
+						BinaryComparator.IsLowerOrEqual,
+						ValueField.Create (entity, x => x.IntegerValue)
 					)
 				);
 			}
