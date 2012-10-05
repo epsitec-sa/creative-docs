@@ -3,6 +3,10 @@
 
 using Epsitec.Common.IO;
 
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Library;
+
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -37,11 +41,14 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private void Initialize()
 		{
-			Logger.LogToConsole ("Generating icons...");
-
+			Logger.LogToConsole ("Setting up server...");
+			
 			IconManager.BuildIcons (CoreServerProgram.iconDirectory.FullName);
 
-			Logger.LogToConsole ("Icons generated");
+			TypeRosetta.InitializeResources ();
+			CoreContext.ExecutePendingSetupFunctions ();
+
+			Logger.LogToConsole ("Server set up");
 		}
 
 
