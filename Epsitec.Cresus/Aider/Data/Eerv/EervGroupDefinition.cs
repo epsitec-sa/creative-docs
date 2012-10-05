@@ -172,11 +172,11 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				if (groupClassification == Enumerations.GroupClassification.Function)
 				{
-					buffer.Append (EervGroupIds.FunctionPrefix);
+					buffer.Append (AiderGroupIds.FunctionPrefix);
 				}
 				else
 				{
-					buffer.Append (EervGroupIds.GroupPrefix);
+					buffer.Append (AiderGroupIds.GroupPrefix);
 				}
 
 				buffer.Append (this.Id.Substring (this.GroupLevel*2, 2));
@@ -188,28 +188,28 @@ namespace Epsitec.Aider.Data.Eerv
 			switch (groupClassification)
 			{
 				case Enumerations.GroupClassification.Canton:
-					buffer.Append (EervGroupIds.Canton);
+					buffer.Append (AiderGroupIds.Canton);
 					break;
 				case Enumerations.GroupClassification.Common:
-					buffer.Append (EervGroupIds.Common);
+					buffer.Append (AiderGroupIds.Common);
 					break;
 				case Enumerations.GroupClassification.External:
-					buffer.Append (EervGroupIds.External);
+					buffer.Append (AiderGroupIds.External);
 					break;
 				case Enumerations.GroupClassification.Function:
-					buffer.Append (EervGroupIds.Function);
+					buffer.Append (AiderGroupIds.Function);
 					break;
 				case Enumerations.GroupClassification.Parish:
-					buffer.Append (EervGroupIds.Parish);
+					buffer.Append (AiderGroupIds.Parish);
 					break;
 				case Enumerations.GroupClassification.Region:
-					buffer.Append (EervGroupIds.Region);
+					buffer.Append (AiderGroupIds.Region);
 					break;
 				case Enumerations.GroupClassification.Staff:
-					buffer.Append (EervGroupIds.Staff);
+					buffer.Append (AiderGroupIds.Staff);
 					break;
 				case Enumerations.GroupClassification.StaffAssociation:
-					buffer.Append (EervGroupIds.StaffAssociation);
+					buffer.Append (AiderGroupIds.StaffAssociation);
 					break;
 
 				default:
@@ -254,34 +254,5 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 	}
-
-	public static class EervGroupIds
-	{
-		public const string Canton   = "SCC.";
-		public const string Common   = "MIC.";
-		public const string External = "REX.";
-		public const string Function = "FNC.";
-		public const string Parish = "P__.";
-		public const string Region = "R__.";
-		public const string Staff = "PRS.";
-		public const string StaffAssociation = "ASP.";
-		
-		public const string GroupPrefix = "G";
-		public const string FunctionPrefix = "F";
-
-		public const string SubgroupSqlWildcard = "___.";
-		public const int SubgroupLength = 4;
-
-		public static string GetRegionId(int regionCode)
-		{
-			return string.Format ("R{0:00}.", regionCode);
-		}
-
-		public static string GetParishId(int parishCode)
-		{
-			return string.Format ("P{0:00}.", parishCode);
-		}
-	}
-
 
 }

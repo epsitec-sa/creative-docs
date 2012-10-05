@@ -36,32 +36,44 @@ namespace Epsitec.Aider
 		{
 			if (entityType == typeof (AiderPersonEntity))
 			{
-				var pattern = this.GetActiveScopePathPattern ();
-
-				if (pattern != null)
-				{
-					var filter = new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.Parish.Group.Path, pattern));
-					return filter;
-				}
+				return this.GetAiderPersonEntityFilter ();
 			}
 			
 			return null;
 		}
 
-		private string GetActiveScopePathPattern()
+		private IFilter GetAiderPersonEntityFilter()
 		{
+			var pattern = this.GetActiveScopePathPattern ();
 
-			var scope = this.GetActiveScope ();
-
-			if ((scope == null) ||
-				(string.IsNullOrEmpty (scope.GroupPath)))
+			if (pattern == null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Scope path : %");
-
 				return null;
 			}
 
-			var path = scope.GroupPath + "%";
+			pattern = Data.AiderGroupIds.ReplacePlaceholders (pattern);
+
+			return new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.Parish.Group.Path, pattern));
+		}
+
+		private string GetActiveScopePathPattern()
+		{
+			var scope = this.GetActiveScope ();
+
+			if (scope == null)
+			{
+				return null;
+			}
+
+			var scopeGroupPath = scope.GroupPath;
+			
+			if (string.IsNullOrEmpty (scopeGroupPath))
+			{
+				System.Diagnostics.Debug.WriteLine ("Scope path : %");
+				return null;
+			}
+
+			var path = scopeGroupPath + "%";
 
 			System.Diagnostics.Debug.WriteLine ("Scope path : " + path);
 

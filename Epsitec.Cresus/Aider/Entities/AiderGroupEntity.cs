@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Enumerations;
 
@@ -61,7 +62,7 @@ namespace Epsitec.Aider.Entities
 			var example = new AiderGroupEntity ();
 			var request = Request.Create (example);
 
-			var path  = this.Path + EervGroupIds.SubgroupSqlWildcard;
+			var path  = this.Path + AiderGroupIds.SubgroupSqlWildcard;
 			var level = this.GroupLevel + 1;
 
 			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));

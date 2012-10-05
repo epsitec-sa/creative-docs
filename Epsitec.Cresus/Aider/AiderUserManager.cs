@@ -35,6 +35,14 @@ namespace Epsitec.Aider
 			}
 		}
 
+		public static new AiderUserManager		Current
+		{
+			get
+			{
+				return UserManager.Current as AiderUserManager;
+			}
+		}
+
 
 		protected override void SetAuthenticatedUser(SoftwareUserEntity user)
 		{

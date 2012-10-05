@@ -150,8 +150,8 @@ namespace Epsitec.Aider.Data.Eerv
 		private static AiderGroupEntity CreateRegionGroup(BusinessContext businessContext, AiderGroupDefEntity regionGroupDefinition, int regionCode)
 		{
 			var name     = AiderGroupEntity.GetRegionGroupName (regionCode);
-			var template = regionGroupDefinition.PathTemplate.SubstringStart (EervGroupIds.SubgroupLength);
-			var path     = EervGroupIds.GetRegionId (regionCode);
+			var template = regionGroupDefinition.PathTemplate.SubstringStart (AiderGroupIds.SubgroupLength);
+			var path     = AiderGroupIds.GetRegionId (regionCode);
 			var info     = new GroupPathInfo (name, template, path);
 
 			return regionGroupDefinition.Instantiate (businessContext, info);
@@ -160,8 +160,8 @@ namespace Epsitec.Aider.Data.Eerv
 		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish, int parishId)
 		{
 			var name     = AiderGroupEntity.GetParishGroupName (parish.ParishName);
-			var path     = EervGroupIds.GetRegionId (parish.RegionCode) + EervGroupIds.GetParishId (parishId);
-			var template = parishGroupDefinition.PathTemplate.SubstringStart (EervGroupIds.SubgroupLength);
+			var path     = AiderGroupIds.GetRegionId (parish.RegionCode) + AiderGroupIds.GetParishId (parishId);
+			var template = parishGroupDefinition.PathTemplate.SubstringStart (AiderGroupIds.SubgroupLength);
 			var info     = new GroupPathInfo (name, template, path, 1);
 
 			var parishGroup = parishGroupDefinition.Instantiate (businessContext, info);

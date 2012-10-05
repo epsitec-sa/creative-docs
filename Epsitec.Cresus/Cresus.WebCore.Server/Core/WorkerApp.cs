@@ -27,10 +27,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.userManager = this.coreData.GetComponent<UserManager> ();
 
 			Services.SetApplication (this);
+
+			CoreApp.current = null;
 		}
 
 
-		public override string ApplicationIdentifier
+		public override string					ApplicationIdentifier
 		{
 			get
 			{
@@ -39,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public override string ShortWindowTitle
+		public override string					ShortWindowTitle
 		{
 			get
 			{
@@ -48,6 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		
 		public T Execute<T>(Func<UserManager, T> action)
 		{
 			return action (this.userManager);
@@ -58,6 +61,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			try
 			{
+				System.Diagnostics.Debug.Assert (CoreApp.current == null);
+
 				var user = this.userManager.FindUser (username);
 
 				this.userManager.SetAuthenticatedUser (user.Code);
@@ -65,6 +70,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 				using (var businessContext = new BusinessContext (this.coreData))
 				{
+					CoreApp.current = this;
 					return action (businessContext);
 				}
 			}
@@ -72,14 +78,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			{
 				this.userManager.SetAuthenticatedUser (null);
 				this.userManager.SetActiveSessionId (null);
+
+				CoreApp.current = null;
 			}
 		}
 
 
-		private readonly CoreData coreData;
-
-
-		private readonly UserManager userManager;
+		private readonly CoreData				coreData;
+		private readonly UserManager			userManager;
 
 
 	}
