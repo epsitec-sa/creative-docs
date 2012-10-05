@@ -29,10 +29,17 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="canSort">If set to <c>true</c>, the column supports sorting.</param>
 		/// <param name="canFilter">if set to <c>true</c>, the column supports filtering.</param>
 		public EntityColumn(LambdaExpression expression, FormattedText title = default (FormattedText), Druid captionId = default (Druid), bool canSort = true, bool canFilter = true)
-			: this (title, captionId, canSort, canFilter)
 		{
 			this.expression = expression;
-			this.path       = EntityFieldPath.CreateAbsolutePath (expression);
+			this.path = EntityFieldPath.CreateAbsolutePath (expression);
+
+			this.captionId = captionId.IsEmpty
+				? this.GetLeafFieldId ()
+				: captionId;
+
+			this.title      = title;
+			this.canSort    = canSort;
+			this.canFilter  = canFilter;
 		}
 
 		/// <summary>
@@ -41,22 +48,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="data">The data.</param>
 		protected EntityColumn(IDictionary<string, string> data)
-			: this (new FormattedText (data[Strings.Title]),
+			: this (EntityFieldPath.Parse (data[Strings.Path]).CreateLambda() as LambdaExpression,
+					new FormattedText (data[Strings.Title]),
 					Druid.Parse (data[Strings.CaptionId]),
 					bool.Parse (data[Strings.CanSort] ?? "false"),
 					bool.Parse (data[Strings.CanFilter] ?? "false"))
 		{
-			this.path       = EntityFieldPath.Parse (data[Strings.Path]);
-			this.expression = this.path.CreateLambda () as LambdaExpression;
-		}
-
-		
-		private EntityColumn(FormattedText title, Druid captionId, bool canSort, bool canFilter)
-		{
-			this.captionId  = captionId;
-			this.title      = title;
-			this.canSort    = canSort;
-			this.canFilter  = canFilter;
 		}
 
 
