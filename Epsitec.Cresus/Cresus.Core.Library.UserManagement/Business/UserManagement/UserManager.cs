@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -69,7 +70,20 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return this.activeSessionId;
 			}
 		}
-		
+
+		public UserSession						ActiveSession
+		{
+			get
+			{
+				if (string.IsNullOrEmpty (this.activeSessionId))
+				{
+					return null;
+				}
+
+				return this.sessions[this.activeSessionId];
+			}
+		}
+
 		/// <summary>
 		/// Gets the user manager instance for the executing thread.
 		/// </summary>
@@ -114,7 +128,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 
 			var dialog = new Dialogs.LoginDialog (application, user, softwareStartup);
-			
+
 			dialog.IsModal = true;
 			dialog.OpenDialog ();
 
@@ -123,7 +137,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return false;
 			}
 
-			this.SetAuthenticatedUser (dialog.SelectedUser, NotificationMode.OnChange);
+			var userCode = dialog.SelectedUserCode;
+
+			this.SetAuthenticatedUser (userCode, NotificationMode.OnChange);
+			this.SetActiveSessionId ("Interactive:" + userCode);
+			
 			return true;
 		}
 
@@ -137,6 +155,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			if (user != null)
 			{
 				this.SetAuthenticatedUser (user.Code, NotificationMode.Always);
+				this.SetActiveSessionId ("Interactive:" + user.Code);
 			}
 		}
 
@@ -267,7 +286,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The new user.</returns>
 		public SoftwareUserEntity CreateNewUser()
 		{
-			return this.BusinessContext.CreateEntity<SoftwareUserEntity> ();
+			var type  = CoreContext.ResolveType (typeof (SoftwareUserEntity));
+			var druid = EntityInfo.GetTypeId (type);
+			
+			return this.BusinessContext.CreateEntity (druid) as SoftwareUserEntity;
 		}
 
 		/// <summary>
@@ -276,7 +298,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns>The new user group.</returns>
 		public SoftwareUserGroupEntity CreateNewUserGroup()
 		{
-			return this.BusinessContext.CreateEntity<SoftwareUserGroupEntity> ();
+			var type  = CoreContext.ResolveType (typeof (SoftwareUserGroupEntity));
+			var druid = EntityInfo.GetTypeId (type);
+
+			return this.BusinessContext.CreateEntity (druid) as SoftwareUserGroupEntity;
 		}
 
 		/// <summary>

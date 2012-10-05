@@ -44,6 +44,20 @@ namespace Epsitec.Cresus.Core.Dialogs
 			}
 		}
 
+		public string							SelectedUserCode
+		{
+			get
+			{
+				if (this.SelectedUser.IsNull ())
+				{
+					return null;
+				}
+				else
+				{
+					return this.SelectedUser.Code;
+				}
+			}
+		}
 		
 		
 		protected override Window CreateWindow()

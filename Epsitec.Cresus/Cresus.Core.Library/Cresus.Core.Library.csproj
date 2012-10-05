@@ -103,6 +103,7 @@
     <Compile Include="Metadata\ColumnFilterComparisonExpression.cs" />
     <Compile Include="Metadata\ColumnSortOrder.cs" />
     <Compile Include="Metadata\Command.cs" />
+    <Compile Include="Metadata\LambdaFilter`1.cs" />
     <Compile Include="Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Metadata\DataSetMetadata.cs" />
     <Compile Include="Metadata\DataStoreMetadata.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Metadata\FilterNode.cs" />
     <Compile Include="Metadata\FilterNodeType.cs" />
     <Compile Include="Metadata\IFilter.cs" />
+    <Compile Include="Metadata\LambdaFilter.cs" />
     <Compile Include="Metadata\RequestExtensions.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
