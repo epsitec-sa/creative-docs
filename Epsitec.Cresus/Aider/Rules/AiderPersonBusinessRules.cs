@@ -96,8 +96,7 @@ namespace Epsitec.Aider.Rules
 
 				warnings.Add (warning);
 
-				businessContext.SaveChanges ();
-				businessContext.ReleaseLock ();
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}
 		}
 	}

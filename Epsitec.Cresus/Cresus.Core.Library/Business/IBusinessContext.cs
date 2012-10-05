@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		bool AcquireLock(out IList<Data.LockOwner> foreignLockOwners);
 
-		bool ReleaseLock();
+//-		bool ReleaseLock();
 
 		AbstractEntity CreateEntity(Druid entityId);
 
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		void Register(AbstractEntity entity);
 		
-		void SaveChanges();
+		void SaveChanges(LockingPolicy lockingPolicy);
 
 		void Discard();
 

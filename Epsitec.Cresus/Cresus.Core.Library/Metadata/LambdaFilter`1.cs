@@ -11,6 +11,12 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
+	/// <summary>
+	/// The <c>LambdaFilter&lt;TEntity&gt;</c> class is used to turn a lambda expression into
+	/// an <see cref="IFilter"/> compatible filter, operating on entities of type
+	/// <typeparamref name="TEntity"/>.
+	/// </summary>
+	/// <typeparam name="TEntity">The type of the entity.</typeparam>
 	public class LambdaFilter<TEntity> : LambdaFilter
 		where TEntity : AbstractEntity
 	{

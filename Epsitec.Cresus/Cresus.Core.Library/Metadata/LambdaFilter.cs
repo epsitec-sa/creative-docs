@@ -11,6 +11,10 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Metadata
 {
+	/// <summary>
+	/// The <c>LambdaFilter</c> class is used to turn a lambda expression into an <see cref="IFilter"/>
+	/// compatible filter.
+	/// </summary>
 	public class LambdaFilter : IFilter
 	{
 		public LambdaFilter(LambdaExpression lambda)

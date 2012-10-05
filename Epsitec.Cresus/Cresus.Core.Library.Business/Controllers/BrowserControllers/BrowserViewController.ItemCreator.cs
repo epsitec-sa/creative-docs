@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					initializer (context, entity);
 				}
 
-				context.SaveChanges (EntitySaveMode.IncludeEmpty);
+				context.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
 				//	Load the new entity in the browser context (in order to pick it up in the
 				//	list) and in the current business context (so that the user can work on it).

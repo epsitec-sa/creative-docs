@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// Releases the lock acquired by <see cref="BusinessContext.AcquireLock"/>.
 		/// </summary>
 		/// <returns></returns>
-		public bool ReleaseLock()
+		internal bool ReleaseLock()
 		{
 			if (this.IsLocked == false)
 			{
@@ -481,12 +481,12 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		void IBusinessContext.SaveChanges()
+		void IBusinessContext.SaveChanges(LockingPolicy lockingPolicy)
 		{
-			this.SaveChanges (EntitySaveMode.None);
+			this.SaveChanges (lockingPolicy, EntitySaveMode.None);
 		}
 
-		public void SaveChanges(EntitySaveMode entitySaveMode = EntitySaveMode.None)
+		public void SaveChanges(LockingPolicy lockingPolicy, EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
 			this.ClearDummyEntities ();
 			this.ApplyRulesBeforeSaveChanges ();
@@ -517,6 +517,17 @@ namespace Epsitec.Cresus.Core.Business
 				}
 
 				this.OnContainsChangesChanged ();
+			}
+
+			switch (lockingPolicy)
+			{
+				case LockingPolicy.KeepLock:
+					break;
+				case LockingPolicy.ReleaseLock:
+					this.ReleaseLock ();
+					break;
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", lockingPolicy.GetQualifiedName ()));
 			}
 		}
 

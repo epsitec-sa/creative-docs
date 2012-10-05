@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Data.ECh
 
 			var towns = EChDataImporter.ImportTowns (businessContext, echReportedPersons, switzerland);
 
-			businessContext.SaveChanges ();
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
 
 			return towns.ToDictionary
 			(
@@ -134,7 +134,7 @@ namespace Epsitec.Aider.Data.ECh
 				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, townDataToEntityKey);
 			}
 
-			businessContext.SaveChanges ();
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
 
 			// NOTE Now that the changes are saved, the newly created entities have an
 			// entity key which we can store in the dictionary.

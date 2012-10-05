@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Print
 			}
 
 			//	TODO: vérifier que l'on veut vraiment persister cela ici ainsi...
-			businessContext.SaveChanges ();
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 
 		public static List<DeserializedJob> SearchXmlSource(IBusinessContext businessContext, SerializedDocumentBlobEntity blob)

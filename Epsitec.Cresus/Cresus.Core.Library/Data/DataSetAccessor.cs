@@ -155,7 +155,6 @@ namespace Epsitec.Cresus.Core.Data
 
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
 			request.SortClauses.AddRange (this.CreateSortClauses (example));
-//-			request.AddIdSortClause (example);
 
 			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);
 		}

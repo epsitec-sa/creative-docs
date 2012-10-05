@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Workflows
 				using (this.businessContext.AutoLock (workflow))
 				{
 					run = this.FollowThreadWorkflowEdge (thread, arcs, executor);
-					this.businessContext.SaveChanges ();
+					this.businessContext.SaveChanges (LockingPolicy.KeepLock);
 				}
 
 				if (iterationCount++ > 100)
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Core.Workflows
 					using (this.businessContext.AutoLock (workflow))
 					{
 						WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Cancelled);
-						this.businessContext.SaveChanges ();
+						this.businessContext.SaveChanges (LockingPolicy.KeepLock);
 					}
 					
 					throw new System.Exception ("Fatal error: malformed workflow produces too many transitions at once -- cancelled");

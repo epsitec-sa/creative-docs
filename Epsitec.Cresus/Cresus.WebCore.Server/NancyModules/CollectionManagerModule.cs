@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				collection.Remove (d);
 				businessContext.DeleteEntity (d);
 
-				businessContext.SaveChanges ();
+				businessContext.SaveChanges (LockingPolicy.KeepLock);
 			}
 
 			return CoreResponse.Success ();
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var collection = propertyAccessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
 
-				businessContext.SaveChanges (EntitySaveMode.IncludeEmpty);
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 			}
 
 			var key = Tools.GetEntityId (businessContext, newEntity);

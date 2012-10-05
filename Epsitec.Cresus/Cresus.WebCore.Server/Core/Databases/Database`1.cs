@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			// will lead the user to click like a maniac on the "create" button without noticeable
 			// result other than him becoming mad :-P
 
-			businessContext.SaveChanges (EntitySaveMode.IncludeEmpty);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
 			return entity;
 		}

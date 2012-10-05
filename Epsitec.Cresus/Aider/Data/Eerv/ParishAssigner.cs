@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Data.Eerv
 				ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person);
 			}
 
-			businessContext.SaveChanges ();
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 
 

@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Features
 		{
 			if (this.businessContext != null)
 			{
-				this.businessContext.SaveChanges ();
+				this.businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 				this.DisposeBusinessContext ();
 			}
 		}
@@ -232,9 +232,8 @@ namespace Epsitec.Cresus.Core.Features
 			if (entity == null)
 			{
 				entity = context.CreateEntity<ProductCustomizationEntity> ();
-				
-				context.SaveChanges ();
-				context.ReleaseLock ();
+
+				context.SaveChanges (LockingPolicy.ReleaseLock);
 			}
 
 			this.activeCustomizations = entity;
@@ -259,9 +258,8 @@ namespace Epsitec.Cresus.Core.Features
 				//	TODO: protest if there is no valid product settings ! for now, we create an empty product settings entity
 
 				entity = context.CreateEntity<ProductSettingsEntity> ();
-				
-				context.SaveChanges ();
-				context.ReleaseLock ();
+
+				context.SaveChanges (LockingPolicy.ReleaseLock);
 			}
 
 			this.activeProductSettings = entity;

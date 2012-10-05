@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 						propertyAccessor.SetValue (entity, value);
 					}
 
-					businessContext.SaveChanges ();
+					businessContext.SaveChanges (LockingPolicy.KeepLock);
 					return CoreResponse.FormSuccess ();
 				}
 			}
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var child = autoCreator.Execute (businessContext, entity);
 
-			businessContext.SaveChanges ();
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
 
 			var entityId = Tools.GetEntityId (businessContext, child);
 

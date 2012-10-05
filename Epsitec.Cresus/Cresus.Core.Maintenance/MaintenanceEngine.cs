@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} locations -> {1} ms", count, watch.ElapsedMilliseconds));
 			watch.Restart ();
-			context.SaveChanges ();
+			context.SaveChanges (LockingPolicy.KeepLock);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} locations -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 			}
 			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} cantons -> {1} ms", count, watch.ElapsedMilliseconds));
 			watch.Restart ();
-			context.SaveChanges ();
+			context.SaveChanges (LockingPolicy.KeepLock);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} cantons -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} countries -> {1} ms", count, watch.ElapsedMilliseconds));
 			watch.Restart ();
-			context.SaveChanges ();
+			context.SaveChanges (LockingPolicy.KeepLock);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} countries -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 

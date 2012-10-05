@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (context.ContainsChanges ())
 			{
-				context.SaveChanges ();
+				context.SaveChanges (LockingPolicy.ReleaseLock);
 			}
 
 			this.Host.DisposeDataContext (dataContext);
