@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Proxy to retrieve a page stored in the Views folder
 	/// </summary>
-	public class PageModule : AbstractBusinessContextModule
+	public class PageModule : AbstractAuthenticatedModule
 	{
 
 

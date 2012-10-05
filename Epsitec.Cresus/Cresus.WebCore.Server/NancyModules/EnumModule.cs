@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Used to provide Enum values to the ExtJS store
 	/// </summary>
-	public class EnumModule : AbstractBusinessContextModule
+	public class EnumModule : AbstractAuthenticatedModule
 	{
 
 

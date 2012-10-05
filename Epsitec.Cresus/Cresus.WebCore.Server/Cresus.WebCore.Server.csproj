@@ -133,7 +133,7 @@
     <Compile Include="Layout\Tile\EditionTile.cs" />
     <Compile Include="Layout\Tile\TextAreaField.cs" />
     <Compile Include="Layout\Tile\TextField.cs" />
-    <Compile Include="NancyModules\AbstractBusinessContextModule.cs" />
+    <Compile Include="NancyModules\AbstractAuthenticatedModule.cs" />
     <Compile Include="Core\IconManager.cs" />
     <Compile Include="NancyModules\EnumModule.cs" />
     <Compile Include="NancyModules\PageModule.cs" />

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Used to update value of an existing entity
 	/// </summary>
-	public class EntityModule : AbstractBusinessContextModule
+	public class EntityModule : AbstractAuthenticatedModule
 	{
 
 

@@ -59,26 +59,40 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> action)
 		{
+			return this.Execute (username, sessionId, () =>
+			{
+				using (var businessContext = new BusinessContext (this.coreData))
+				{
+					return action (businessContext);
+				}
+			});
+		}
+
+
+		public T Execute<T>(string username, string sessionId, Func<UserManager, T> action)
+		{
+			return this.Execute (username, sessionId, () => action (this.userManager));
+		}
+
+
+		public T Execute<T>(string username, string sessionId, Func<T> action)
+		{
+			System.Diagnostics.Debug.Assert (CoreApp.current == null);
+
 			try
 			{
-				System.Diagnostics.Debug.Assert (CoreApp.current == null);
-
 				var user = this.userManager.FindUser (username);
 
 				this.userManager.SetAuthenticatedUser (user.Code);
 				this.userManager.SetActiveSessionId (sessionId);
+				CoreApp.current = this;
 
-				using (var businessContext = new BusinessContext (this.coreData))
-				{
-					CoreApp.current = this;
-					return action (businessContext);
-				}
+				return action ();
 			}
 			finally
 			{
 				this.userManager.SetAuthenticatedUser (null);
 				this.userManager.SetActiveSessionId (null);
-
 				CoreApp.current = null;
 			}
 		}

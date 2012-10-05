@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
-	public class LayoutModule : AbstractBusinessContextModule
+	public class LayoutModule : AbstractAuthenticatedModule
 	{
 
 

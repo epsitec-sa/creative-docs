@@ -64,9 +64,28 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// </remarks>
 		/// <typeparam name="T">The return type of the function.</typeparam>
 		/// <param name="username">The username for which to execute the function.</param>
+		/// <param name="sessionId">The session id for which to execute the function.</param>
 		/// <param name="function">The function to execute.</param>
 		/// <returns>The result of the execution of the function.</returns>
 		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> function)
+		{
+			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, function));
+		}
+
+
+		/// <summary>
+		/// Synchronously executes the given function, using the <c>UserManager</c> of the
+		/// <c>WorkerApp</c> owned by this instance.
+		/// </summary>
+		/// <remarks>
+		/// See remarks in the other Execute overload.
+		/// </remarks>
+		/// <typeparam name="T">The return type of the function.</typeparam>
+		/// <param name="username">The username for which to execute the function.</param>
+		/// <param name="sessionId">The session id for which to execute the function.</param>
+		/// <param name="function">The function to execute.</param>
+		/// <returns>The result of the execution of the function.</returns>
+		public T Execute<T>(string username, string sessionId, Func<UserManager, T> function)
 		{
 			return this.Execute (coreWorkerApp => coreWorkerApp.Execute (username, sessionId, function));
 		}

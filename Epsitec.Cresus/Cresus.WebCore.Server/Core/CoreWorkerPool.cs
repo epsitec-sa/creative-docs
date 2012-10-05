@@ -43,6 +43,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		public T Execute<T>(string username, string sessionId, Func<UserManager, T> function)
+		{
+			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
+		}
+
+
 		public T Execute<T>(Func<UserManager, T> function)
 		{
 			return this.Execute (coreWorker => coreWorker.Execute (function));

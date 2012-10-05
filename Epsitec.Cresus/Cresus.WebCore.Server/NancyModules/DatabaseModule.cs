@@ -1,7 +1,6 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -31,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// of entities within a database, a subset of a database or to create or delete an entity
 	/// within a database.
 	/// </summary>
-	public class DatabasesModule : AbstractBusinessContextModule
+	public class DatabasesModule : AbstractAuthenticatedModule
 	{
 
 

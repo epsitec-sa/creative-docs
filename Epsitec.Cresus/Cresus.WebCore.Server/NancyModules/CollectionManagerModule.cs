@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Allows to add or delete an entity within a collection
 	/// </summary>
-	public class CollectionManagerModule : AbstractBusinessContextModule
+	public class CollectionManagerModule : AbstractAuthenticatedModule
 	{
 
 
