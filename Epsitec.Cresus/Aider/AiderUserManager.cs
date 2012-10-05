@@ -49,7 +49,8 @@ namespace Epsitec.Aider
 
 			if (session != null)
 			{
-				var scope = session.GetActiveScope ();
+				var scope  = session.GetActiveScope ();
+				var filter = session.GetScopeFilter (typeof (Epsitec.Aider.Entities.AiderPersonEntity));
 			}
 		}
 	}

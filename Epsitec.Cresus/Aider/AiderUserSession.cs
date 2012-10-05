@@ -50,15 +50,22 @@ namespace Epsitec.Aider
 
 		private string GetActiveScopePathPattern()
 		{
-			if ((this.activeScope == null) ||
-				(string.IsNullOrEmpty (this.activeScope.GroupPath)))
+
+			var scope = this.GetActiveScope ();
+
+			if ((scope == null) ||
+				(string.IsNullOrEmpty (scope.GroupPath)))
 			{
+				System.Diagnostics.Debug.WriteLine ("Scope path : %");
+
 				return null;
 			}
 
-			var path = this.activeScope.GroupPath;
+			var path = scope.GroupPath + "%";
 
-			return path + "%";
+			System.Diagnostics.Debug.WriteLine ("Scope path : " + path);
+
+			return path;
 		}
 
 
@@ -100,6 +107,7 @@ namespace Epsitec.Aider
 
 			this.OnActiveScopeChanged ();
 		}
+		
 		
 		public AiderUserScopeEntity GetActiveScope()
 		{

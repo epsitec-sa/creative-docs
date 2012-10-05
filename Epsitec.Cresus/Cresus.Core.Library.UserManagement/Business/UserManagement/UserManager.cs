@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				(user == this.FindActiveSystemUser ()))
 			{
 				this.SetAuthenticatedUser (user, NotificationMode.OnChange);
+				this.SetActiveSessionId ("Interactive:" + user.Code);
 				return true;
 			}
 
