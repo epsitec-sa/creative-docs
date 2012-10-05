@@ -89,14 +89,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		public abstract bool DeleteEntity(BusinessContext businessContext, AbstractEntity entity);
 
 
-		public static Database Create<T1, T2>(string title, string iconUri, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
-			where T1 : AbstractEntity, new ()
-			where T2 : AbstractEntity, new ()
+		public static Database Create(Type type, string title, string iconUri, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
 		{
-			var name = Tools.TypeToString (typeof (T1));
-			var iconClass = IconManager.GetCssClassName (typeof (T2), iconUri, IconSize.ThirtyTwo);
+			var name = Tools.TypeToString (type);
+			var iconClass = IconManager.GetCssClassName (type, iconUri, IconSize.ThirtyTwo);
 
-			return new Database<T1> (title, name, iconClass, columns, sorters);
+			return Database.Create (type, title, name, iconClass, columns, sorters);
 		}
 
 
@@ -107,8 +105,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			var iconClass = "";
 			var columns = new Column[0];
 			var sorters = new Sorter[0];
-			var arguments = new object[] { title, name, iconClass, columns, sorters};
-			
+
+			return Database.Create (type, title, name, iconClass, columns, sorters);
+		}
+
+
+		private static Database Create(Type type, string title, string name, string iconClass, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
+		{
+			var arguments = new object[] { title, name, iconClass, columns, sorters };
 			var genericType = typeof (Database<>);
 			var concreteType = genericType.MakeGenericType (type);
 

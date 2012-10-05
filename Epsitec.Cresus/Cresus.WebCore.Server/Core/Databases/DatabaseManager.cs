@@ -1,9 +1,10 @@
-﻿using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
+﻿using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Metadata;
+
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -24,252 +25,145 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		public DatabaseManager()
 		{
-			this.databases = this.CreateDatabases ();
+			this.dataStore = DataStoreMetadata.Current;
 		}
 
 
-		private Dictionary<string, Database> CreateDatabases()
+		public IEnumerable<Database> GetDatabases(UserManager userManager)
 		{
-			// HACK This is an ugly hack and we should not initialize this from here like that, with
-			// static texts and entities and whatever. We should read the menu description from a
-			// configuration file or something to do it properly, so we could have different
-			// configurations for different applications.
+			return this.GetDataSets (userManager).Select (d => this.GetDatabase (d));
+		}
 
-			IEnumerable<Database> databases;
 
-			var appDomainName = AppDomain.CurrentDomain.FriendlyName;
+		private IEnumerable<DataSetMetadata> GetDataSets(UserManager userManager)
+		{
+			var user = userManager.AuthenticatedUser;
+			var roles = userManager.GetUserRoles (user).ToList ();
 
-			if (appDomainName == "App.Aider.vshost.exe" || appDomainName == "App.Aider.exe")
+			var dataSets = this.dataStore.DataSets;
+
+			var globalDataSets = dataSets.Where (x => this.IsGlobalDataSet(x));
+			var userDataSets = dataSets.Where (x => this.IsUserDataSet (x, roles));
+
+			return globalDataSets.Concat (userDataSets);
+		}
+
+
+		private bool IsGlobalDataSet(DataSetMetadata dataSet)
+		{
+			return dataSet.DisplayGroupId.IsEmpty;
+		}
+
+
+		private bool IsUserDataSet(DataSetMetadata dataSet, IEnumerable<string> roles)
+		{
+			return dataSet.DisplayGroupId.IsValid && dataSet.MatchesAnyUserRole (roles);
+		}
+
+
+		private Database GetDatabase(DataSetMetadata dataSet)
+		{
+			var entityType = dataSet.DataSetEntityType;
+			
+			var entityTypeId = EntityInfo.GetTypeId (entityType);
+			var commandCaption = dataSet.BaseShowCommand.Caption;
+			var title = commandCaption.DefaultLabel;
+			var iconUri = commandCaption.Icon;
+
+			IEnumerable<Column> columns;
+			IEnumerable<Sorter> sorters;
+						
+			var entityTable = this.dataStore.FindTable (entityTypeId);
+
+			if (entityTable == null)
 			{
-				databases = this.CreateAiderDatabases ();
+				columns = Enumerable.Empty<Column> ();
+				sorters = Enumerable.Empty<Sorter> ();
 			}
 			else
 			{
-				databases = this.CreateCoreDatabases ();
+				var mapping = this.GetColumnMapping (entityTable);
+				columns = this.GetColumns (entityTable, mapping);
+				sorters = this.GetSorters (entityTable, mapping);
 			}
 
-			return databases.ToDictionary (d => d.Name);
+			return Database.Create (entityType, title, iconUri, columns, sorters);
 		}
 
 
-		private IEnumerable<Database> CreateAiderDatabases()
+		private Dictionary<EntityColumnMetadata, Column> GetColumnMapping(EntityTableMetadata entityTable)
 		{
-			yield return this.CreateDatabaseForAiderCountryEntity ();
-			yield return this.CreateDatabaseForAiderTownEntity ();
+			var mapping = from entityColumn in entityTable.Columns
+						  let title = entityColumn.GetColumnTitle ().ToString ()
+						  let name = InvariantConverter.ToString (entityColumn.CaptionId.ToLong ())
+						  let hidden = entityColumn.DefaultDisplay.Mode != ColumnDisplayMode.Visible
+						  let sortable = entityColumn.CanSort
+						  let filterable = entityColumn.CanFilter
+						  let lambda = entityColumn.Expression
+						  let column = new Column (title, name, hidden, sortable, filterable, lambda)
+						  select Tuple.Create (entityColumn, column);
 
-			yield return Database.Create<AiderAddressEntity, AiderAddressEntity>
-			(
-				title: "Addresses",
-				iconUri: "Data.AiderAddress",
-				columns: new List<Column> (),
-				sorters: new List<Sorter> ()
-			);
-
-			yield return Database.Create<AiderHouseholdEntity, AiderHouseholdEntity>
-			(
-				title: "Households",
-				iconUri: "Data.AiderHousehold",
-				columns: new List<Column> (),
-				sorters: new List<Sorter> ()
-			);
-
-			yield return this.CreateDatabaseForAiderPersonEntity ();
-
-			yield return Database.Create<AiderPersonRelationshipEntity, AiderPersonRelationshipEntity>
-			(
-				title: "Relationships",
-				iconUri: "Base.AiderPersonRelationship",
-				columns: new List<Column> (),
-				sorters: new List<Sorter> ()
-			);
+			return mapping.ToDictionary (t => t.Item1, t => t.Item2);
 		}
 
 
-		private Database CreateDatabaseForAiderCountryEntity()
+		private IEnumerable<Column> GetColumns(EntityTableMetadata entityTable, Dictionary<EntityColumnMetadata, Column> mapping)
 		{
-			var columnName = Column.Create<AiderCountryEntity, string>
-			(
-				title: "Name",
-				name: "Name",
-				hidden: false,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.Name
-			);
+			// Here we can't simply enumerate the values in the mapping, since we want to keep the
+			// columns in the order they are in the entityTable, and the dictionary doesn't provide
+			// any guarantee on the order of its elements when they are enumerated.
 
-			var columnCode = Column.Create<AiderCountryEntity, string>
-			(
-				title: "Code",
-				name: "Code",
-				hidden: false,
-				sortable: false,
-				filterable: false,
-				lambdaExpression: x => x.IsoCode
-			);
-
-			return Database.Create<AiderCountryEntity, CountryEntity>
-			(
-				title: "Countries",
-				iconUri: "Base.Country",
-				columns: new List<Column> ()
-				{
-					columnName,
-					columnCode,
-				},
-				sorters: new List<Sorter> ()
-				{
-					new Sorter (columnName, SortOrder.Ascending)
-				}
-			);
+			return entityTable.Columns.Select (c => mapping[c]);
 		}
 
 
-		private Database CreateDatabaseForAiderTownEntity()
+		private IEnumerable<Sorter> GetSorters(EntityTableMetadata entityTable, Dictionary<EntityColumnMetadata, Column> mapping)
 		{
-			var columnName = Column.Create<AiderTownEntity, string>
-			(
-				title: "Name",
-				name: "Name",
-				hidden: false,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.Name
-			);
-
-			var columnZipCode = Column.Create<AiderTownEntity, string>
-			(
-				title: "ZipCode",
-				name: "ZipCode",
-				hidden: false,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.ZipCode
-			);
-
-			var columnCountryName = Column.Create<AiderTownEntity, string>
-			(
-				title: "CountryName",
-				name: "CountryName",
-				hidden: false,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.Country.Name
-			);
-
-			var columnCountryCode = Column.Create<AiderTownEntity, string>
-			(
-				title: "CountryCode",
-				name: "CountryCode",
-				hidden: true,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.Country.IsoCode
-			);
-
-			return Database.Create<AiderTownEntity, LocationEntity>
-			(
-				title: "Towns",
-				iconUri: "Base.Location",
-				columns: new List<Column> ()
-				{
-					columnName,
-					columnZipCode,
-					columnCountryName,
-					columnCountryCode,
-				},
-				sorters: new List<Sorter> ()
-			);
+			return from entityColumn in entityTable.GetSortColumns ()
+				   let column = mapping[entityColumn]
+				   let sortOrder = this.GetSortOrder (entityColumn.DefaultSort.SortOrder)
+				   select new Sorter (column, sortOrder);
 		}
 
 
-		private Database CreateDatabaseForAiderPersonEntity()
+		private SortOrder GetSortOrder(ColumnSortOrder sortOrder)
 		{
-			var columnFirstName = Column.Create<AiderPersonEntity, string>
-			(
-				title: "FirstName",
-				name: "FirstName",
-				hidden: false,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.eCH_Person.PersonFirstNames
-			);
+			switch (sortOrder)
+			{
+				case ColumnSortOrder.Ascending:
+					return SortOrder.Ascending;
 
-			var columLastName = Column.Create<AiderPersonEntity, string>
-			(
-				title: "LastName",
-				name: "LastName",
-				hidden: false,
-				sortable: true,
-				filterable: true,
-				lambdaExpression: x => x.eCH_Person.PersonOfficialName
-			);
+				case ColumnSortOrder.Descending:
+					return SortOrder.Descending;
 
-			return Database.Create<AiderPersonEntity, AiderPersonEntity>
-			(
-				title: "Persons",
-				iconUri: "Base.AiderPerson",
-				columns: new List<Column> ()
-				{
-					columnFirstName,
-					columLastName,
-				},
-				sorters: new List<Sorter> ()
-			);
-		}
-
-
-		private IEnumerable<Database> CreateCoreDatabases()
-		{
-			yield return Database.Create<CustomerEntity, CustomerEntity>
-			(
-				title: "Clients",
-				iconUri: "Base.Customer",
-				columns: new List<Column> (),
-				sorters: new List<Sorter> ()
-			);
-
-			yield return Database.Create<ArticleDefinitionEntity, ArticleDefinitionEntity>
-			(
-				title: "Articles",
-				iconUri: "Base.ArticleDefinition",
-				columns: new List<Column> (),
-				sorters: new List<Sorter> ()
-			);
-
-			yield return Database.Create<PersonGenderEntity, PersonGenderEntity>
-			(
-				title: "Genres",
-				iconUri: "Base.PersonGender",
-				columns: new List<Column> (),
-				sorters: new List<Sorter> ()
-			);
-		}
-
-
-		public IEnumerable<Database> GetDatabases()
-		{
-			return this.databases.Values;
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 
 		public Database GetDatabase(string name)
 		{
-			Database database;
+			var entityType = Tools.ParseType (name);
 
-			var exists = this.databases.TryGetValue (name, out database);
+			// We check if we have a definition for the database and if we don't, we create a
+			// a default database for it.
 
-			if (!exists)
+			var dataSets = this.dataStore.DataSets;
+			var dataSet = dataSets.FirstOrDefault (d => d.DataSetEntityType == entityType);
+
+			if (dataSet == null)
 			{
-				var type = Tools.ParseType (name);
-
-				database = Database.Create (type);
+				return Database.Create (entityType);
 			}
-
-			return database;
+			else
+			{
+				return this.GetDatabase (dataSet);
+			}
 		}
 
 
-		private readonly Dictionary<string, Database> databases;
+		private readonly DataStoreMetadata dataStore;
 
 
 	}

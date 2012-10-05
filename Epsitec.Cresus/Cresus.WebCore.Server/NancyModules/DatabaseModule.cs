@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public DatabasesModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
-			Get["/list"] = p => this.GetDatabaseList ();
+			Get["/list"] = p => this.Execute (um => this.GetDatabaseList (um));
 			Get["/definition/{name}"] = p => this.GetDatabase (p);
 			Get["/get/{name}"] = p => this.Execute (b => this.GetEntities (b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
@@ -45,9 +46,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetDatabaseList()
+		private Response GetDatabaseList(UserManager userManager)
 		{
-			var databases = this.CoreServer.DatabaseManager.GetDatabases ()
+			var databases = this.CoreServer.DatabaseManager.GetDatabases (userManager)
 				.Select (d => this.GetDatabaseData (d))
 				.ToList ();
 
