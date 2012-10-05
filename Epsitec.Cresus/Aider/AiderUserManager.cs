@@ -27,6 +27,14 @@ namespace Epsitec.Aider
 			}
 		}
 
+		public new AiderUserSession				ActiveSession
+		{
+			get
+			{
+				return base.ActiveSession as AiderUserSession;
+			}
+		}
+
 
 		protected override void SetAuthenticatedUser(SoftwareUserEntity user)
 		{
@@ -36,6 +44,13 @@ namespace Epsitec.Aider
 		public override void SetActiveSessionId(string sessionId)
 		{
 			base.SetActiveSessionId (sessionId);
+
+			var session = this.ActiveSession;
+
+			if (session != null)
+			{
+				var scope = session.GetActiveScope ();
+			}
 		}
 	}
 }

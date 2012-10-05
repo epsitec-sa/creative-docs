@@ -3,9 +3,12 @@
 
 using Epsitec.Aider.Entities;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +23,7 @@ namespace Epsitec.Aider
 		}
 
 
-		public new AiderUserManager UserManager
+		public new AiderUserManager				UserManager
 		{
 			get
 			{
@@ -28,6 +31,75 @@ namespace Epsitec.Aider
 			}
 		}
 
+		
+		public IFilter GetScopeFilter(System.Type entityType)
+		{
+			if (entityType == typeof (AiderPersonEntity))
+			{
+				var pattern = this.GetActiveScopePathPattern ();
+
+				if (pattern != null)
+				{
+					var filter = new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.Parish.Group.Path, pattern));
+					return filter;
+				}
+			}
+			
+			return null;
+		}
+
+		private string GetActiveScopePathPattern()
+		{
+			if ((this.activeScope == null) ||
+				(string.IsNullOrEmpty (this.activeScope.GroupPath)))
+			{
+				return null;
+			}
+
+			var path = this.activeScope.GroupPath;
+
+			return path + "%";
+		}
+
+
+		public void SetActiveScope(AiderUserScopeEntity scope)
+		{
+			if (this.activeScope == scope)
+			{
+				return;
+			}
+
+			this.activeScope = scope;
+
+			var user    = this.UserManager.AuthenticatedUser;
+			var context = this.UserManager.BusinessContext;
+
+			if (user == null)
+			{
+				return;
+			}
+
+			if (scope.IsNull ())
+			{
+				scope = null;
+			}
+			else
+			{
+				scope = context.GetLocalEntity (scope);
+			}
+
+
+			if ((user.PreferredScope.IsNull () && (scope == null)) ||
+				(user.PreferredScope == scope))
+			{
+				return;
+			}
+
+			user.PreferredScope = scope;
+			context.SaveChanges (LockingPolicy.ReleaseLock);
+
+			this.OnActiveScopeChanged ();
+		}
 		
 		public AiderUserScopeEntity GetActiveScope()
 		{
@@ -40,6 +112,10 @@ namespace Epsitec.Aider
 			return this.activeScope;
 		}
 
+
+		private void OnActiveScopeChanged()
+		{
+		}
 		
 		private AiderUserScopeEntity ResolveActiveScope()
 		{
@@ -67,10 +143,12 @@ namespace Epsitec.Aider
 				}
 			}
 
+			this.SetActiveScope (scope);
+
 			return scope;
 		}
 
 
-		private AiderUserScopeEntity activeScope;
+		private AiderUserScopeEntity			activeScope;
 	}
 }

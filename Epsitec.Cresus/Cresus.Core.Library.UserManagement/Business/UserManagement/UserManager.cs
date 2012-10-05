@@ -38,6 +38,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			get
 			{
+				if (this.authenticatedUser == null)
+				{
+					if (this.authenticatedUserCode == null)
+					{
+						return null;
+					}
+
+					this.authenticatedUser = this.FindActiveUser (this.authenticatedUserCode);
+				}
+
 				return this.authenticatedUser;
 			}
 		}
@@ -150,12 +160,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// </summary>
 		public void UpdateAuthenticatedUser()
 		{
-			var user = this.authenticatedUser;
+			var userCode = this.authenticatedUserCode;
 
-			if (user != null)
+			if (userCode != null)
 			{
-				this.SetAuthenticatedUser (user.Code, NotificationMode.Always);
-				this.SetActiveSessionId ("Interactive:" + user.Code);
+				this.SetAuthenticatedUser (userCode, NotificationMode.Always);
+				this.SetActiveSessionId ("Interactive:" + userCode);
 			}
 		}
 
@@ -219,6 +229,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			this.OnAuthenticatedUserChanging ();
 			this.authenticatedUser = user;
+			this.authenticatedUserCode = user.IsNull () ? null : user.Code;
 			this.OnAuthenticatedUserChanged ();
 		}
 
@@ -312,9 +323,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			if (this.businessContext != null)
 			{
-				this.businessContext.SaveChanges ();
-				this.businessContext.Dispose ();
-				this.businessContext = null;
+				this.businessContext.SaveChanges (LockingPolicy.ReleaseLock);
+				this.DisposeBusinessContext ();
 			}
 		}
 
@@ -327,8 +337,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			if (this.businessContext != null)
 			{
 				this.businessContext.Discard ();
-				this.businessContext.Dispose ();
-				this.businessContext = null;
+				this.DisposeBusinessContext ();
 			}
 		}
 
@@ -391,7 +400,15 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		#endregion
 
-		
+
+		private void DisposeBusinessContext()
+		{
+			this.businessContext.Dispose ();
+
+			this.businessContext   = null;
+			this.authenticatedUser = null;
+		}
+
 		private SoftwareUserEntity FindActiveUser(string userCode)
 		{
 			return this.GetActiveUsers ().FirstOrDefault (user => user.Code == userCode);
@@ -506,6 +523,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 
 		private SoftwareUserEntity				authenticatedUser;
+		private string							authenticatedUserCode;
 		private string							activeSessionId;
 		private IBusinessContext				businessContext;
 		private readonly Dictionary<string, UserSession>	sessions;
