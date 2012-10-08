@@ -37,6 +37,9 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Epsitec.CresusToolkit">
+      <HintPath>..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\bin\Debug\Epsitec.CresusToolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,22 +51,80 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Address\PostBoxConverter.cs" />
+    <Compile Include="Address\StreetAddressConverter.cs" />
+    <Compile Include="Address\StreetAddressFormat.cs" />
+    <Compile Include="Business\Accounting\AccountingEntryDefinition.cs" />
+    <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
+    <Compile Include="Business\Accounting\CresusAccountingEntriesConnector.cs" />
+    <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
+    <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
+    <Compile Include="Business\Accounting\MultiAccountingEntryDefinition.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
     <Compile Include="Business\CompositeBusinessRule.cs" />
+    <Compile Include="Business\ContactGroupType.cs" />
+    <Compile Include="Business\DocumentFlowDirection.cs" />
+    <Compile Include="Business\DocumentSource.cs" />
+    <Compile Include="Business\DocumentState.cs" />
+    <Compile Include="Business\DocumentType.cs" />
+    <Compile Include="Business\EntityPrinters\MailContactPrinter.cs" />
     <Compile Include="Business\Extensions.cs" />
+    <Compile Include="Business\Finance\BillingMode.cs" />
+    <Compile Include="Business\Finance\BillingStatus.cs" />
+    <Compile Include="Business\Finance\CurrencyCode.cs" />
+    <Compile Include="Business\Finance\DiscountPolicy.cs" />
+    <Compile Include="Business\Finance\DiscountPolicyExtensions.cs" />
+    <Compile Include="Business\Finance\ExchangeRateSourceType.cs" />
+    <Compile Include="Business\Finance\IPriceCalculator.cs" />
+    <Compile Include="Business\Finance\PaymentDetailType.cs" />
+    <Compile Include="Business\Finance\PriceCalculator.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\AbstractDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\CodeDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
+    <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
+    <Compile Include="Business\Finance\PriceDisplayModes.cs" />
+    <Compile Include="Business\Finance\RoundingPolicy.cs" />
+    <Compile Include="Business\Finance\RoundingPolicyExtensions.cs" />
+    <Compile Include="Business\Finance\Tax.cs" />
+    <Compile Include="Business\Finance\TaxCalculator.cs" />
+    <Compile Include="Business\Finance\TaxContext.cs" />
+    <Compile Include="Business\Finance\TaxMode.cs" />
+    <Compile Include="Business\Finance\TaxRateAmount.cs" />
+    <Compile Include="Business\Finance\VatCode.cs" />
+    <Compile Include="Business\Finance\VatCodeRate.cs" />
+    <Compile Include="Business\Finance\VatRateType.cs" />
     <Compile Include="Business\FormattedIdGenerator.cs" />
     <Compile Include="Business\GenericBusinessRule.cs" />
     <Compile Include="Business\GenericBusinessRule`1.cs" />
     <Compile Include="Business\IBusinessContext.cs" />
     <Compile Include="Business\ICopyable.cs" />
+    <Compile Include="Business\Isr.cs" />
+    <Compile Include="Business\IsrHelper.cs" />
+    <Compile Include="Business\IsrSlip.cs" />
+    <Compile Include="Business\IsrType.cs" />
     <Compile Include="Business\LockingPolicy.cs" />
     <Compile Include="Business\Logic.cs" />
     <Compile Include="Business\ReferenceIdFormatterHelper.cs" />
     <Compile Include="Business\RefIdGenerator.cs" />
     <Compile Include="Business\RefIdGeneratorPool.cs" />
+    <Compile Include="Business\Rules\DocumentMetadataBusinessRules.cs" />
     <Compile Include="Business\Rules\IDateMetadataBusinessRules.cs" />
     <Compile Include="Business\Rules\IItemCodeBusinessRules.cs" />
+    <Compile Include="Business\Rules\LegalPersonBusinessRules.cs" />
+    <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
+    <Compile Include="Business\Rules\SerializedDocumentBlobBusinessRules.cs" />
+    <Compile Include="Business\Rules\SoftwareUserBusinessRules.cs" />
+    <Compile Include="Business\Rules\SoftwareUserGroupBusinessRules.cs" />
+    <Compile Include="Business\Rules\WorkflowBusinessRules.cs" />
+    <Compile Include="Business\Rules\WorkflowThreadBusinessRules.cs" />
     <Compile Include="Business\RuleType.cs" />
+    <Compile Include="Business\UnitOfMeasureCategory.cs" />
+    <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
+    <Compile Include="Business\UserManagement\UserManager.cs" />
+    <Compile Include="Business\UserManagement\UserPowerLevel.cs" />
+    <Compile Include="Business\UserManagement\UserSession.cs" />
+    <Compile Include="Business\UserManagement\UserSummary.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
@@ -82,6 +143,8 @@
     <Compile Include="Data\DataSetGetter.cs" />
     <Compile Include="Data\GlobalLock.cs" />
     <Compile Include="Data\GlobalLocks.cs" />
+    <Compile Include="Data\ImageData.cs" />
+    <Compile Include="Data\ImageDataStore.cs" />
     <Compile Include="Data\Infrastructure.cs" />
     <Compile Include="Data\ItemCode.cs" />
     <Compile Include="Data\ItemCodeGenerator.cs" />
@@ -90,6 +153,87 @@
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Data\LockTransaction.cs" />
+    <Compile Include="Dialogs\LoginDialog.cs" />
+    <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
+    <Compile Include="Dialogs\PrintOptionsDialog.cs" />
+    <Compile Include="Dialogs\PrintPreviewDialog.cs" />
+    <Compile Include="Dialogs\UserManagerDialog.cs" />
+    <Compile Include="Dialogs\V11ImportDialog.cs" />
+    <Compile Include="Documents\Controllers\DocumentCategoryController.cs" />
+    <Compile Include="Documents\Controllers\DocumentCategoryOptionsController.cs" />
+    <Compile Include="Documents\Controllers\DocumentOptionsController.cs" />
+    <Compile Include="Documents\Controllers\MainController.cs" />
+    <Compile Include="Documents\Controllers\OptionsController.cs" />
+    <Compile Include="Documents\Controllers\PageTypesController.cs" />
+    <Compile Include="Documents\Controllers\SelectController.cs" />
+    <Compile Include="Documents\Controllers\SummaryController.cs" />
+    <Compile Include="Documents\Controllers\ValuesController.cs" />
+    <Compile Include="Documents\DocumentOption.cs" />
+    <Compile Include="Documents\DocumentOptionConverter.cs" />
+    <Compile Include="Documents\DocumentOptionValueType.cs" />
+    <Compile Include="Documents\IEntityPrinter.cs" />
+    <Compile Include="Documents\PageType.cs" />
+    <Compile Include="Documents\PageTypeConverter.cs" />
+    <Compile Include="Documents\PageTypeHelper.cs" />
+    <Compile Include="Documents\PrintingOptionDictionary.cs" />
+    <Compile Include="Documents\PrintingUnit.cs" />
+    <Compile Include="Documents\PrintingUnitDictionary.cs" />
+    <Compile Include="Documents\VerboseDocumentOption.cs" />
+    <Compile Include="Documents\VerbosePageType.cs" />
+    <Compile Include="Entities\AbstractPersonEntity.cs" />
+    <Compile Include="Entities\AccountingOperationEntity.cs" />
+    <Compile Include="Entities\ContactGroupEntity.cs" />
+    <Compile Include="Entities\ContactPersonEntity.cs" />
+    <Compile Include="Entities\ContactPersonGroupEntity.cs" />
+    <Compile Include="Entities\CountryEntity.cs" />
+    <Compile Include="Entities\CurrencyEntity.cs" />
+    <Compile Include="Entities\DocumentCategoryEntity.cs" />
+    <Compile Include="Entities\DocumentCategoryMappingEntity.cs" />
+    <Compile Include="Entities\DocumentFooterTextEntity.cs" />
+    <Compile Include="Entities\DocumentMetadataEntity.cs" />
+    <Compile Include="Entities\DocumentOptionsEntity.cs" />
+    <Compile Include="Entities\DocumentPrintingUnitsEntity.cs" />
+    <Compile Include="Entities\EntityUISettingsEntity.cs" />
+    <Compile Include="Entities\ExchangeRateSourceEntity.cs" />
+    <Compile Include="Entities\ImageBlobEntity.cs" />
+    <Compile Include="Entities\ImageCategoryEntity.cs" />
+    <Compile Include="Entities\ImageEntity.cs" />
+    <Compile Include="Entities\ImageGroupEntity.cs" />
+    <Compile Include="Entities\IsrDefinitionEntity.cs" />
+    <Compile Include="Entities\LegalPersonEntity.cs" />
+    <Compile Include="Entities\LegalPersonTypeEntity.cs" />
+    <Compile Include="Entities\LocationEntity.cs" />
+    <Compile Include="Entities\MailContactEntity.cs" />
+    <Compile Include="Entities\NaturalPersonEntity.cs" />
+    <Compile Include="Entities\PaymentCategoryEntity.cs" />
+    <Compile Include="Entities\PaymentTransactionEntity.cs" />
+    <Compile Include="Entities\PeopleEntity.cs" />
+    <Compile Include="Entities\PeopleGroupEntity.cs" />
+    <Compile Include="Entities\PersonGenderEntity.cs" />
+    <Compile Include="Entities\PersonTitleEntity.cs" />
+    <Compile Include="Entities\PriceCalculatorEntity.cs" />
+    <Compile Include="Entities\PriceDiscountEntity.cs" />
+    <Compile Include="Entities\PriceGroupEntity.cs" />
+    <Compile Include="Entities\PriceRoundingModeEntity.cs" />
+    <Compile Include="Entities\SerializedDocumentBlobEntity.cs" />
+    <Compile Include="Entities\SoftwareUISettingsEntity.cs" />
+    <Compile Include="Entities\SoftwareUserEntity.cs" />
+    <Compile Include="Entities\SoftwareUserGroupEntity.cs" />
+    <Compile Include="Entities\SoftwareUserRoleEntity.cs" />
+    <Compile Include="Entities\StateProvinceCountyEntity.cs" />
+    <Compile Include="Entities\TaxSettingsEntity.cs" />
+    <Compile Include="Entities\TelecomContactEntity.cs" />
+    <Compile Include="Entities\TelecomTypeEntity.cs" />
+    <Compile Include="Entities\UnitOfMeasureEntity.cs" />
+    <Compile Include="Entities\UnitOfMeasureGroupEntity.cs" />
+    <Compile Include="Entities\UriContactEntity.cs" />
+    <Compile Include="Entities\UriTypeEntity.cs" />
+    <Compile Include="Entities\VatDefinitionEntity.cs" />
+    <Compile Include="Entities\WorkflowDefinitionEntity.cs" />
+    <Compile Include="Entities\WorkflowEdgeEntity.cs" />
+    <Compile Include="Entities\WorkflowNodeEntity.cs" />
+    <Compile Include="Entities\WorkflowStepEntity.cs" />
+    <Compile Include="Entities\WorkflowThreadEntity.cs" />
     <Compile Include="Library\Settings\UserEntityTableSettings.cs" />
     <Compile Include="Library\Settings\UserFilterSettings.cs" />
     <Compile Include="Metadata\ColumnDisplayMode.cs" />
@@ -157,15 +301,84 @@
     <Compile Include="Metadata\IFilter.cs" />
     <Compile Include="Metadata\LambdaFilter.cs" />
     <Compile Include="Metadata\RequestExtensions.cs" />
+    <Compile Include="Print\AbstractPrinter.cs" />
+    <Compile Include="Print\Bands\AbstractBand.cs" />
+    <Compile Include="Print\Bands\AbstractIsrBand.cs" />
+    <Compile Include="Print\Bands\CellBorder.cs" />
+    <Compile Include="Print\Bands\ImageBand.cs" />
+    <Compile Include="Print\Bands\IsBand.cs" />
+    <Compile Include="Print\Bands\IsrBand.cs" />
+    <Compile Include="Print\Bands\SurfaceBand.cs" />
+    <Compile Include="Print\Bands\TableBand.cs" />
+    <Compile Include="Print\Bands\TableColumn.cs" />
+    <Compile Include="Print\Bands\TableColumnKeys.cs" />
+    <Compile Include="Print\Bands\TextBand.cs" />
+    <Compile Include="Print\Common.cs" />
+    <Compile Include="Print\Containers\BandContainer.cs" />
+    <Compile Include="Print\Containers\DocumentContainer.cs" />
+    <Compile Include="Print\Containers\PageContainer.cs" />
+    <Compile Include="Print\Controllers\ContinuousController.cs" />
+    <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
+    <Compile Include="Print\EntityToPrint.cs" />
+    <Compile Include="Print\JobToPrint.cs" />
+    <Compile Include="Print\PreviewMode.cs" />
+    <Compile Include="Print\PrintEngine.cs" />
+    <Compile Include="Print\PrinterApplicationSettings.cs" />
+    <Compile Include="Print\SectionToPrint.cs" />
+    <Compile Include="Print\Serialization\DeserializedJob.cs" />
+    <Compile Include="Print\Serialization\DeserializedPage.cs" />
+    <Compile Include="Print\Serialization\DeserializedSection.cs" />
+    <Compile Include="Print\Serialization\SerializationEngine.cs" />
+    <Compile Include="Print\XmlJobPrintEngine.cs" />
+    <Compile Include="Repositories\ImageBlobRepository.cs" />
+    <Compile Include="Repositories\ImageCategoryRepository.cs" />
+    <Compile Include="Repositories\ImageGroupRepository.cs" />
+    <Compile Include="Repositories\ImageRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\Repository`1.cs" />
+    <Compile Include="Repositories\WorkflowDefinitionRepository.cs" />
+    <Compile Include="Repositories\WorkflowNodeRepository.cs" />
+    <Compile Include="Repositories\WorkflowRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
+    <Compile Include="Resolvers\EntityPrinterFactoryResolver.cs" />
+    <Compile Include="Resolvers\IEntityPrinterFactory.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Res.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Data\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Documents\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Images\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Images\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Measures\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Measures\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Res.cs" />
+    <Compile Include="V11\ImportFile.cs" />
+    <Compile Include="V11\V11AbstractLine.cs" />
+    <Compile Include="V11\V11Error.cs" />
+    <Compile Include="V11\V11LineBVRTransaction.cs" />
+    <Compile Include="V11\V11LineCodeRejet.cs" />
+    <Compile Include="V11\V11LineCodeTransaction.cs" />
+    <Compile Include="V11\V11LineGenreRemise.cs" />
+    <Compile Include="V11\V11LineGenreTransaction.cs" />
+    <Compile Include="V11\V11LineOrigine.cs" />
+    <Compile Include="V11\V11LineType.cs" />
+    <Compile Include="V11\V11Message.cs" />
+    <Compile Include="V11\V11RecordLine.cs" />
+    <Compile Include="V11\V11TotalLine.cs" />
     <Compile Include="Widgets\ActionButton.cs" />
+    <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
+    <Compile Include="Widgets\IconOrImageButton.cs" />
+    <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
+    <Compile Include="Workflows\WorkflowAction.cs" />
     <Compile Include="Workflows\WorkflowActionAttribute.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
     <Compile Include="Library\CoreComponentHostImplementation.cs" />
@@ -233,11 +446,26 @@
     <Compile Include="Widgets\TileTabBook.cs" />
     <Compile Include="Widgets\TileTabBook`1.cs" />
     <Compile Include="Widgets\ValueToFormattedTextConverter.cs" />
+    <Compile Include="Workflows\WorkflowActionCompiler.cs" />
+    <Compile Include="Workflows\WorkflowActionValidationResult.cs" />
+    <Compile Include="Workflows\WorkflowArgs.cs" />
+    <Compile Include="Workflows\WorkflowCancellation.cs" />
+    <Compile Include="Workflows\WorkflowException.cs" />
+    <Compile Include="Workflows\WorkflowExecutionEngine.cs" />
+    <Compile Include="Workflows\WorkflowFactory.cs" />
+    <Compile Include="Workflows\WorkflowNodeAttributes.cs" />
+    <Compile Include="Workflows\WorkflowState.cs" />
+    <Compile Include="Workflows\WorkflowTransition.cs" />
+    <Compile Include="Workflows\WorkflowTransitionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Identity\Common.Identity.csproj">
+      <Project>{3B21F4C6-9461-4751-9B23-9A9006743D68}</Project>
+      <Name>Common.Identity</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
@@ -273,6 +501,83 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Cresus.Core.Library.Data\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Address\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Address\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Address\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Documents\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Documents\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\Cresus.Core.Library.Documents\Captions.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Resources\Cresus.Core.Library.Documents\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Documents\module.info">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Documents\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\Cresus.Core.Library.Documents\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Resources\Cresus.Core.Library.Finance\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Finance\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Finance\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Images\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Images\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Images\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Measures\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Measures\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Measures\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Workflows\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Workflows\module.info">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.Workflows\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.UserManagement\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.UserManagement\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Core.Library.UserManagement\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Database;
@@ -32,7 +33,7 @@ namespace Epsitec.Aider
 		}
 
 		
-		public IFilter GetScopeFilter(System.Type entityType)
+		public override IFilter GetScopeFilter(System.Type entityType)
 		{
 			if (entityType == typeof (AiderPersonEntity))
 			{
@@ -51,7 +52,7 @@ namespace Epsitec.Aider
 				return null;
 			}
 
-			pattern = Data.AiderGroupIds.ReplacePlaceholders (pattern);
+			pattern = AiderGroupIds.ReplacePlaceholders (pattern);
 
 			return new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.Parish.Group.Path, pattern));
 		}

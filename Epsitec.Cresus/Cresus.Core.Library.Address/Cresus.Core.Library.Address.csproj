@@ -44,49 +44,12 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Business\ContactGroupType.cs" />
-    <Compile Include="Business\EntityPrinters\MailContactPrinter.cs" />
-    <Compile Include="Business\Rules\LegalPersonBusinessRules.cs" />
-    <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
-    <Compile Include="Entities\AbstractPersonEntity.cs" />
-    <Compile Include="Entities\ContactGroupEntity.cs" />
-    <Compile Include="Entities\ContactPersonEntity.cs" />
-    <Compile Include="Entities\ContactPersonGroupEntity.cs" />
-    <Compile Include="Entities\PeopleGroupEntity.cs" />
-    <Compile Include="Entities\PeopleEntity.cs" />
-    <Compile Include="Entities\StateProvinceCountyEntity.cs" />
-    <Compile Include="Entities\UriTypeEntity.cs" />
-    <Compile Include="Entities\TelecomTypeEntity.cs" />
-    <Compile Include="Entities\LegalPersonTypeEntity.cs" />
-    <Compile Include="Entities\CountryEntity.cs" />
-    <Compile Include="Entities\LegalPersonEntity.cs" />
-    <Compile Include="Entities\LocationEntity.cs" />
-    <Compile Include="Entities\MailContactEntity.cs" />
-    <Compile Include="Entities\NaturalPersonEntity.cs" />
-    <Compile Include="Entities\PersonGenderEntity.cs" />
-    <Compile Include="Entities\PersonTitleEntity.cs" />
-    <Compile Include="Entities\TelecomContactEntity.cs" />
-    <Compile Include="Entities\UriContactEntity.cs" />
-    <Compile Include="PostBoxConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Res.cs" />
-    <Compile Include="StreetAddressConverter.cs" />
-    <Compile Include="StreetAddressFormat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <Content Include="Resources\Cresus.Core.Library.Address\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Core.Library.Address\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Core.Library.Address\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -113,6 +76,12 @@
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Business\EntityPrinters\" />
+    <Folder Include="Business\Rules\" />
+    <Folder Include="Entities\" />
+    <Folder Include="Resources\Cresus.Core.Library.Address\SourceCode\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

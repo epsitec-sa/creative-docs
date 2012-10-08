@@ -47,87 +47,21 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
-    <Compile Include="Business\Accounting\AccountingEntryDefinition.cs" />
-    <Compile Include="Business\Accounting\CresusAccountingEntriesConnector.cs" />
-    <Compile Include="Business\Accounting\MultiAccountingEntryDefinition.cs" />
-    <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
-    <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
-    <Compile Include="Business\Finance\BillingMode.cs" />
-    <Compile Include="Business\Finance\BillingStatus.cs" />
-    <Compile Include="Business\Finance\CurrencyCode.cs" />
-    <Compile Include="Business\Finance\DiscountPolicy.cs" />
-    <Compile Include="Business\Finance\DiscountPolicyExtensions.cs" />
-    <Compile Include="Business\Finance\ExchangeRateSourceType.cs" />
-    <Compile Include="Business\Finance\IPriceCalculator.cs" />
-    <Compile Include="Business\Finance\PaymentDetailType.cs" />
-    <Compile Include="Business\Finance\PriceCalculator.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\AbstractDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\CodeDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\DimensionTable.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\NumericDimension.cs" />
-    <Compile Include="Business\Finance\PriceCalculators\RoundingMode.cs" />
-    <Compile Include="Business\Finance\PriceDisplayModes.cs" />
-    <Compile Include="Business\Finance\RoundingPolicy.cs" />
-    <Compile Include="Business\Finance\RoundingPolicyExtensions.cs" />
-    <Compile Include="Business\Finance\Tax.cs" />
-    <Compile Include="Business\Finance\TaxCalculator.cs" />
-    <Compile Include="Business\Finance\TaxContext.cs" />
-    <Compile Include="Business\Finance\TaxMode.cs" />
-    <Compile Include="Business\Finance\TaxRateAmount.cs" />
-    <Compile Include="Business\Finance\VatCode.cs" />
-    <Compile Include="Business\Finance\VatCodeRate.cs" />
-    <Compile Include="Business\Finance\VatRateType.cs" />
-    <Compile Include="Business\IsrHelper.cs" />
-    <Compile Include="Dialogs\V11ImportDialog.cs" />
-    <Compile Include="Entities\AccountingOperationEntity.cs" />
-    <Compile Include="Entities\PaymentTransactionEntity.cs" />
-    <Compile Include="Entities\CurrencyEntity.cs" />
-    <Compile Include="Entities\ExchangeRateSourceEntity.cs" />
-    <Compile Include="Entities\IsrDefinitionEntity.cs" />
-    <Compile Include="Entities\PaymentCategoryEntity.cs" />
-    <Compile Include="Entities\PriceCalculatorEntity.cs" />
-    <Compile Include="Entities\PriceDiscountEntity.cs" />
-    <Compile Include="Entities\PriceGroupEntity.cs" />
-    <Compile Include="Entities\PriceRoundingModeEntity.cs" />
-    <Compile Include="Entities\TaxSettingsEntity.cs" />
-    <Compile Include="Entities\VatDefinitionEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Business\Isr.cs" />
-    <Compile Include="Business\IsrSlip.cs" />
-    <Compile Include="Business\IsrType.cs" />
-    <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Entities.cs" />
-    <Compile Include="Resources\Cresus.Core.Library.Finance\SourceCode\Res.cs" />
-    <Compile Include="V11\ImportFile.cs" />
-    <Compile Include="V11\V11AbstractLine.cs" />
-    <Compile Include="V11\V11Error.cs" />
-    <Compile Include="V11\V11LineBVRTransaction.cs" />
-    <Compile Include="V11\V11LineCodeRejet.cs" />
-    <Compile Include="V11\V11LineCodeTransaction.cs" />
-    <Compile Include="V11\V11LineGenreRemise.cs" />
-    <Compile Include="V11\V11LineGenreTransaction.cs" />
-    <Compile Include="V11\V11LineOrigine.cs" />
-    <Compile Include="V11\V11LineType.cs" />
-    <Compile Include="V11\V11Message.cs" />
-    <Compile Include="V11\V11RecordLine.cs" />
-    <Compile Include="V11\V11TotalLine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Business\Accounting\" />
+    <Folder Include="Business\Finance\PriceCalculators\" />
+    <Folder Include="Dialogs\" />
+    <Folder Include="Entities\" />
     <Folder Include="Factories\" />
+    <Folder Include="Resources\Cresus.Core.Library.Finance\SourceCode\" />
+    <Folder Include="V11\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <Content Include="Resources\Cresus.Core.Library.Finance\Captions.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Core.Library.Finance\module.info">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Cresus.Core.Library.Finance\Strings.00.resource">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">

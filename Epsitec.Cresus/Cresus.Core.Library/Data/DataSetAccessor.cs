@@ -153,7 +153,10 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
+			IFilter scopeFilter = null; // TODO: get scope filter
+
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
+			request.AddCondition (this.dataContext, example, scopeFilter);
 			request.SortClauses.AddRange (this.CreateSortClauses (example));
 
 			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);

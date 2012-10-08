@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Metadata;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -24,7 +25,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
-		public UserManager UserManager
+		public UserManager						UserManager
 		{
 			get
 			{
@@ -32,12 +33,18 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 		
-		public string SessionId
+		public string							SessionId
 		{
 			get
 			{
 				return this.sessionId;
 			}
+		}
+
+
+		public virtual IFilter GetScopeFilter(System.Type entityType)
+		{
+			return null;
 		}
 
 

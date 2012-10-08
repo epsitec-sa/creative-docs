@@ -46,41 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Dialogs\PrintOptionsDialog.cs" />
-    <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
-    <Compile Include="Dialogs\PrintPreviewDialog.cs" />
-    <Compile Include="AbstractPrinter.cs" />
-    <Compile Include="Print\Bands\AbstractBand.cs" />
-    <Compile Include="Print\Bands\AbstractIsrBand.cs" />
-    <Compile Include="Print\Bands\CellBorder.cs" />
-    <Compile Include="Print\Bands\IsBand.cs" />
-    <Compile Include="Print\Bands\IsrBand.cs" />
-    <Compile Include="Print\Bands\ImageBand.cs" />
-    <Compile Include="Print\Bands\SurfaceBand.cs" />
-    <Compile Include="Print\Bands\TableBand.cs" />
-    <Compile Include="Print\Bands\TableColumn.cs" />
-    <Compile Include="Print\Bands\TableColumnKeys.cs" />
-    <Compile Include="Print\Bands\TextBand.cs" />
-    <Compile Include="Print\Common.cs" />
-    <Compile Include="Print\Containers\BandContainer.cs" />
-    <Compile Include="Print\Containers\DocumentContainer.cs" />
-    <Compile Include="Print\Containers\PageContainer.cs" />
-    <Compile Include="Print\Controllers\ContinuousController.cs" />
-    <Compile Include="Print\Controllers\XmlPreviewerController.cs" />
-    <Compile Include="Print\EntityToPrint.cs" />
-    <Compile Include="Print\JobToPrint.cs" />
-    <Compile Include="Print\PreviewMode.cs" />
-    <Compile Include="Print\PrintEngine.cs" />
-    <Compile Include="Print\PrinterApplicationSettings.cs" />
-    <Compile Include="Print\SectionToPrint.cs" />
-    <Compile Include="Print\Serialization\DeserializedJob.cs" />
-    <Compile Include="Print\Serialization\DeserializedPage.cs" />
-    <Compile Include="Print\Serialization\DeserializedSection.cs" />
-    <Compile Include="Print\Serialization\SerializationEngine.cs" />
-    <Compile Include="Print\XmlJobPrintEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
-    <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
@@ -117,7 +83,14 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Dialogs\" />
+    <Folder Include="Print\Bands\" />
+    <Folder Include="Print\Containers\" />
+    <Folder Include="Print\Controllers\" />
+    <Folder Include="Print\Serialization\" />
+    <Folder Include="Widgets\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
