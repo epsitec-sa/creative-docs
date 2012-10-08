@@ -282,14 +282,6 @@
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
       <Name>Cresus.Core.Library.Business</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
-      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
-      <Name>Cresus.Core.Library.Images</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
-      <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
-      <Name>Cresus.Core.Library.UserManagement</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>

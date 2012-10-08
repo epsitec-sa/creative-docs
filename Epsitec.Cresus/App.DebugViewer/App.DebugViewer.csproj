@@ -84,49 +84,9 @@
       <Project>{AE911461-2EFC-435D-B7AD-1F0DE07EE251}</Project>
       <Name>Cresus.Bricks</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
-      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
-      <Name>Cresus.Core.Library.Address</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
       <Name>Cresus.Core.Library.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Documents\Cresus.Core.Library.Documents.csproj">
-      <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
-      <Name>Cresus.Core.Library.Documents</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Features\Cresus.Core.Library.Features.csproj">
-      <Project>{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}</Project>
-      <Name>Cresus.Core.Library.Features</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
-      <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
-      <Name>Cresus.Core.Library.Finance</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
-      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
-      <Name>Cresus.Core.Library.Images</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Measures\Cresus.Core.Library.Measures.csproj">
-      <Project>{01B39E29-EDB1-4330-8E03-689DA987B6A5}</Project>
-      <Name>Cresus.Core.Library.Measures</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj">
-      <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
-      <Name>Cresus.Core.Library.Print</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.UI\Cresus.Core.Library.UI.csproj">
-      <Project>{F33C234B-2DD9-420D-9793-FD22B601D061}</Project>
-      <Name>Cresus.Core.Library.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
-      <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
-      <Name>Cresus.Core.Library.UserManagement</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Workflows\Cresus.Core.Library.Workflows.csproj">
-      <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
-      <Name>Cresus.Core.Library.Workflows</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>

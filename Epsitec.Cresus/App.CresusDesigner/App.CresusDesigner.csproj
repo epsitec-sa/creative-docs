@@ -108,10 +108,6 @@
       <Project>{12FC693E-674E-4DE2-891D-B856239CD977}</Project>
       <Name>Cresus.Compta</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
-      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
-      <Name>Cresus.Core.Library.Address</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
       <Name>Cresus.Core</Name>
