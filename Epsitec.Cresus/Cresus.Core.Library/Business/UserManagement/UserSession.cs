@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
-		public virtual IFilter GetScopeFilter(System.Type entityType)
+		public virtual IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
 			return null;
 		}

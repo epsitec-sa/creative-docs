@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Entities;
 
@@ -32,24 +34,33 @@ namespace Epsitec.Aider
 			}
 		}
 
-		
-		public override IFilter GetScopeFilter(System.Type entityType)
+
+		public override IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
 			if (entityType == typeof (AiderPersonEntity))
 			{
-				return this.GetAiderPersonEntityFilter ();
+				return this.GetAiderPersonEntityFilter (example as AiderPersonEntity);
 			}
 			
 			return null;
 		}
 
-		private IFilter GetAiderPersonEntityFilter()
+		private IFilter GetAiderPersonEntityFilter(AiderPersonEntity example)
 		{
 			var pattern = this.GetActiveScopePathPattern ();
 
 			if (pattern == null)
 			{
 				return null;
+			}
+
+			if (example.Parish == null)
+			{
+				example.Parish = new AiderGroupParticipantEntity ();
+			}
+			if (example.Parish.Group == null)
+			{
+				example.Parish.Group = new AiderGroupEntity ();
 			}
 
 			pattern = AiderGroupIds.ReplacePlaceholders (pattern);

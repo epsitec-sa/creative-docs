@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer.Loader;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 
 namespace Epsitec.Cresus.Core.Data
@@ -153,7 +154,7 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
-			IFilter scopeFilter = null; // TODO: get scope filter
+			IFilter scopeFilter = UserManager.Current.ActiveSession.GetScopeFilter (this.entityType, example);
 
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
 			request.AddCondition (this.dataContext, example, scopeFilter);
