@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// of entities within a database, a subset of a database or to create or delete an entity
 	/// within a database.
 	/// </summary>
-	public class DatabasesModule : AbstractAuthenticatedModule
+	public class DatabaseModule : AbstractAuthenticatedModule
 	{
 
 
-		public DatabasesModule(CoreServer coreServer)
+		public DatabaseModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
 			Get["/list"] = p => this.Execute (um => this.GetDatabaseList (um));
@@ -223,10 +223,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
-			string sort = DatabasesModule.GetOptionalParameter (Request.Query.sort);
+			string sort = DatabaseModule.GetOptionalParameter (Request.Query.sort);
 			var sorters = this.ParseSorters (database, sort);
 
-			string filter = DatabasesModule.GetOptionalParameter (Request.Query.filter);
+			string filter = DatabaseModule.GetOptionalParameter (Request.Query.filter);
 			var filters = this.ParseFilters (database, filter).ToList ();
 
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
