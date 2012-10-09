@@ -52,7 +52,7 @@ IF %setupversion%=="%version%" (
 
 set EXE=CrDoc-%version%-installer.exe
 set EXEPATH="%CD%\Setup.CreativeDocs\%EXE%"
-set BUILD=Debug .NET 2.0
+set BUILD=Debug
 set IEXPRESS="%CD%\External\iexpress.exe"
 set SIGNTOOL="%CD%\External\CodeSigning\signtool.exe"
 
@@ -70,9 +70,9 @@ copy "%CD%\External\Sleep.exe" "%CD%\Setup.CreativeDocs\Sleep.exe"
 copy "%CD%\Setup.CreativeDocs\%BUILD%\Setup.exe" "%CD%\Setup.CreativeDocs\Setup.exe"
 copy "%CD%\Setup.CreativeDocs\%BUILD%\CreativeDocs.msi" "%CD%\Setup.CreativeDocs\CreativeDocs.msi"
 
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\Sleep.exe"
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\Setup.exe"
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\CreativeDocs.msi"
+%SIGNTOOL% sign /a /n OPaC /i Verisign /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\Sleep.exe"
+%SIGNTOOL% sign /a /n OPaC /i Verisign /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\Setup.exe"
+%SIGNTOOL% sign /a /n OPaC /i Verisign /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\Setup.CreativeDocs\CreativeDocs.msi"
 
 echo Packaging installer into %EXE%
 
@@ -83,7 +83,7 @@ rename CrDoc-2.x.x-installer.exe %EXE%
 
 cd ..
 
-%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
+%SIGNTOOL% sign /a /n OPaC /i Verisign /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
 
 del "%CD%\Setup.CreativeDocs\Sleep.exe" 2>NUL
 del "%CD%\Setup.CreativeDocs\Setup.exe" 2>NUL
