@@ -1170,24 +1170,41 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Create a new <see cref="RequestView"/>. See the constructor of that class for more info.
+		/// Create a new <see cref="AbstractRequestView"/>. See the constructor of that class for
+		/// more info.
 		/// </summary>
 		/// <param name="request">The <c>Request</c> that will be used in the <c>RequestView</c>.</param>
-		/// <param name="isolatedTransaction">The isolated transaction to share, or <c>null</c> if a new isolated transaction should be used.</param>
-		/// <returns>
-		/// The <see cref="RequestView"/>.
-		/// </returns>
+		/// <param name="indepedent">
+		/// A bool indicating whether the AbstractRequestView should be isolated from the
+		/// DataContext. If so, the provided IsolatedTransation will be used or a new one will be
+		/// created if it is null. All queries made with the AbstractRequestView will be totally
+		/// independent from any other query that might be made concurrently on the database, with
+		/// this DataContext or another. If the RequestView is dependent, then other queries might
+		/// have effects on the result of the queries of the AbstractRequestView, but it will allow
+		/// it to return full entities instead of simply the EntityKeys.
+		/// </param>
+		/// <param name="isolatedTransaction">
+		/// The isolated transaction to share, or <c>null</c> if a new isolated transaction should
+		/// be used.
+		/// </param>
+		/// <returns>The <see cref="AbstractRequestView"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		///   
 		/// <exception cref="System.ArgumentException">If <paramref name="request"/> is null or invalid.</exception>
-		public RequestView GetRequestView(Request request, IsolatedTransaction isolatedTransaction = null)
+		public AbstractRequestView GetRequestView(Request request, bool indepedent = true, IsolatedTransaction isolatedTransaction = null)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			request.ThrowIfNull ("request");
 			request.Check (this);
 
-			return new RequestView (this, request, isolatedTransaction);
+			if (indepedent)
+			{
+				return new IndependentRequestView (this, request, isolatedTransaction);
+			}
+			else
+			{
+				return new DependentRequestView (this, request);
+			}
 		}
 
 

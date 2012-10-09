@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Core.Data
 			request.AddCondition (this.dataContext, example, scopeFilter);
 			request.SortClauses.AddRange (this.CreateSortClauses (example));
 
-			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);
+			this.requestView = this.dataContext.GetRequestView (request, true, this.isolatedTransaction);
 		}
 
 		private IEnumerable<SortClause> CreateSortClauses(AbstractEntity example)
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly List<EntityColumnMetadata>	sortColumns;
 		private readonly DataSetMetadata		dataSetMetadata;
 		
-		private RequestView						requestView;
+		private AbstractRequestView				requestView;
 		private int?							itemCount;
 	}
 }

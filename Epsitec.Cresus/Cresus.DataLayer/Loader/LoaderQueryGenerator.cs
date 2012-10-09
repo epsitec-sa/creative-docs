@@ -147,6 +147,21 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				.PlusSqlFields (entityId)
 				.BuildSqlSelect (predicate, request.Skip, request.Take);
 		}
+
+
+		public int? GetIndex(Request request, EntityKey entityKey)
+		{
+			var sqlSelect = this.BuildSelectForIndex (request, entityKey);
+
+			using (var dbTransaction = this.StartTransaction())
+			{
+				var index = this.GetNullableInteger (sqlSelect, dbTransaction);
+
+				dbTransaction.Commit ();
+
+				return index;
+			}
+		}
 		
 		
 		public int? GetIndex(Request request, EntityKey entityKey, DbTransaction dbTransaction)

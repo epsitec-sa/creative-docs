@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 {
 	/// <summary>
 	/// The <c>IsolatedTransaction</c> class encapsulates an isolated read-only transaction. It
-	/// is mainly used by <see cref="RequestView"/>.
+	/// is mainly used by <see cref="IndependentRequestView"/>.
 	/// </summary>
 	public sealed class IsolatedTransaction : System.IDisposable
 	{

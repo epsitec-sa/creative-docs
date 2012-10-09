@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		}
 
 
-		public void GetIndexTest(RequestView requestView, EntityKey[] entityKeys, int nbSkip)
+		public void GetIndexTest(AbstractRequestView requestView, EntityKey[] entityKeys, int nbSkip)
 		{
 			for (int i = 0; i < entityKeys.Length; i++)
 			{
