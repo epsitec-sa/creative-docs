@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public override string					ApplicationIdentifier
+		public override string ApplicationIdentifier
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public override string					ShortWindowTitle
+		public override string ShortWindowTitle
 		{
 			get
 			{
@@ -49,6 +49,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
+
+		public CoreData CoreData
+		{
+			get
+			{
+				return this.coreData;
+			}
+		}
+
+
+		public UserManager UserManager
+		{
+			get
+			{
+				return this.userManager;
+			}
+		}
 
 		
 		public T Execute<T>(Func<UserManager, T> action)
@@ -59,9 +76,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> action)
 		{
-			return this.Execute (username, sessionId, () =>
+			return this.Execute (username, sessionId, w =>
 			{
-				using (var businessContext = new BusinessContext (this.coreData))
+				using (var businessContext = new BusinessContext (w.CoreData))
 				{
 					return action (businessContext);
 				}
@@ -69,13 +86,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public T Execute<T>(string username, string sessionId, Func<UserManager, T> action)
-		{
-			return this.Execute (username, sessionId, () => action (this.userManager));
-		}
-
-
-		public T Execute<T>(string username, string sessionId, Func<T> action)
+		public T Execute<T>(string username, string sessionId, Func<WorkerApp, T> action)
 		{
 			System.Diagnostics.Debug.Assert (CoreApp.current == null);
 
@@ -87,7 +98,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				this.userManager.SetActiveSessionId (sessionId);
 				CoreApp.current = this;
 
-				return action ();
+				return action (this);
 			}
 			finally
 			{
@@ -98,8 +109,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		private readonly CoreData				coreData;
-		private readonly UserManager			userManager;
+		private readonly CoreData coreData;
+		private readonly UserManager userManager;
 
 
 	}

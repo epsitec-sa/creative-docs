@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		protected Response Execute(Func<UserManager, Response> function)
+		protected Response Execute(Func<WorkerApp, Response> function)
 		{
 			var userName  = this.GetUserName ();
 			var sessionId = this.GetSessionId ();
