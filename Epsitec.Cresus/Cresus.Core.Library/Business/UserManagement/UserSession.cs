@@ -10,10 +10,11 @@ using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.Settings;
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Metadata;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -42,12 +43,52 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+		public SoftwareUISettingsEntity			SoftwareUISettings
+		{
+			get
+			{
+				if ((this.userManager == null) ||
+					(this.userManager.AuthenticatedUser.IsNull ()) ||
+					(this.userManager.AuthenticatedUser.CustomUISettings.IsNull ()))
+				{
+					return null;
+				}
+				
+				return this.userManager.AuthenticatedUser.CustomUISettings;
+			}
+		}
+
+
+		public UserEntityTableSettings GetTableSettings(System.Type entityType)
+		{
+			var entitySettings = this.GetEntityUISettingsEntity (entityType);
+
+			if (entitySettings == null)
+			{
+				return null;
+			}
+
+			return entitySettings.TableSettings;
+		}
+
+		public void SetTableSettings(System.Type entityType, UserEntityTableSettings settings)
+		{
+			var context = this.userManager.BusinessContext;
+
+			var entitySettings = this.GetEntityUISettingsEntity (entityType, context);
+
+			entitySettings.TableSettings = settings;
+			entitySettings.PersistSettings (context);
+
+			context.SaveChanges (LockingPolicy.ReleaseLock);
+		}
 
 		public virtual IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
 			return null;
 		}
 
+		
 
 		#region IDisposable Members
 
@@ -60,6 +101,37 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		protected virtual void Dispose(bool disposing)
 		{
+		}
+
+		private EntityUISettingsEntity GetEntityUISettingsEntity(System.Type entityType, IBusinessContext context = null)
+		{
+			var entityId = EntityInfo.GetTypeId (entityType);
+
+			if (entityId.IsEmpty)
+			{
+				return null;
+			}
+
+			var softwareSettings = this.SoftwareUISettings;
+
+			if (softwareSettings == null)
+			{
+				return null;
+			}
+
+			var entityIdString = entityId.ToCompactString ();
+			var entitySettings = softwareSettings.EntityUISettings.FirstOrDefault (x => x.EntityId == entityIdString);
+
+			if ((entitySettings == null) &&
+				(context != null))
+			{
+				entitySettings = context.CreateEntity<EntityUISettingsEntity> ();
+				entitySettings.EntityId = entityIdString;
+
+				softwareSettings.EntityUISettings.Add (entitySettings);
+			}
+
+			return entitySettings;
 		}
 
 

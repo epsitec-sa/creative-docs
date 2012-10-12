@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.Core
 			var userDruid = Epsitec.Common.Support.EntityEngine.EntityInfo.GetTypeId (userType);
 
 			var user = context.CreateEntity (userDruid) as SoftwareUserEntity;
+			var settings = context.CreateEntity<SoftwareUISettingsEntity> ();
 			var logic = new Logic (user);
 
 			logic.ApplyRule (RuleType.Setup, user);
@@ -86,6 +87,7 @@ namespace Epsitec.Cresus.Core
 			user.LoginName = userLogin;
 			user.UserGroups.Add (group);
 			user.SetPassword (userPassword);
+			user.CustomUISettings = settings;
 
 #if false
 			FormattedText[] p = displayName.Split (" ");

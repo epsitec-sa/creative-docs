@@ -60,6 +60,11 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		public static UserEntityTableSettings Restore(XElement xml)
 		{
+			if (xml == null)
+			{
+				return null;
+			}
+
 			/*
 			 * <xx id="[123]">
 			 *  <S>

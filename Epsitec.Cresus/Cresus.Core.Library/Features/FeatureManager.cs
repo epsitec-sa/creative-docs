@@ -165,8 +165,8 @@ namespace Epsitec.Cresus.Core.Features
 		{
 			string entityId = entity.ToString ();
 
-			var customEditionSettings     = this.GetAllSoftwareUISettings ().SelectMany (x => x.EntityEditionSettings).Where (x => x.EntityId == entityId);
-			var tileEntityEditionSettings = customEditionSettings.Select (x => x.DisplaySettings);
+			var customEditionSettings     = this.GetAllSoftwareUISettings ().SelectMany (x => x.EntityUISettings).Where (x => x.EntityId == entityId);
+			var tileEntityEditionSettings = customEditionSettings.Select (x => x.EditionSettings);
 			var fieldEditionSettings      = tileEntityEditionSettings.SelectMany (x => x.GetAllFieldSettings (s => user.Matches (s)));
 
 			var result = new TileEntityMergedSettings (entity);
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core.Features
 			this.activeCustomizations = null;
 		}
 
-		private void SetupProductFreatureList()
+		private void SetupProductFeatureList()
 		{
 			//	TODO: ...
 		}

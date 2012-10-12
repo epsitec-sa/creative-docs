@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 				}
 				
 				//	designer:cap/AVAV
-				public static readonly global::Epsitec.Common.Support.Druid EntityEditionSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31);
+				public static readonly global::Epsitec.Common.Support.Druid EntityUISettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31);
 				//	designer:cap/AVA01
 				public static readonly global::Epsitec.Common.Support.Druid SerializedCommandSetSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32);
 			}
@@ -178,6 +178,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 				
 				//	designer:cap/AVAB
 				public static readonly global::Epsitec.Common.Support.Druid AuthenticationMethod = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
+				//	designer:cap/AVA21
+				public static readonly global::Epsitec.Common.Support.Druid CustomUISettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34);
 				//	designer:cap/AVAD
 				public static readonly global::Epsitec.Common.Support.Druid Disabled = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 				//	designer:cap/AVA7

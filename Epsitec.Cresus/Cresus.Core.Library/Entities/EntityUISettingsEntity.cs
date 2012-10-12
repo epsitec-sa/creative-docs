@@ -19,33 +19,46 @@ namespace Epsitec.Cresus.Core.Entities
 		/// for the first time.
 		/// </summary>
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
-		public UserEntityEditionSettings DisplaySettings
+		public UserEntityEditionSettings		EditionSettings
 		{
 			get
 			{
 				this.DeserializeSettingsIfNeeded ();
-				
 				return this.editionSettings;
 			}
+			set
+			{
+				this.DeserializeSettingsIfNeeded ();
+				this.editionSettings = value ?? new UserEntityEditionSettings (Druid.Parse (this.EntityId));
+			}
 		}
 
+		/// <summary>
+		/// Gets the table settings. This will deserialize the settings when accessed
+		/// for the first time.
+		/// </summary>
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
-		public UserEntityTableSettings TableSettings
+		public UserEntityTableSettings			TableSettings
 		{
 			get
 			{
 				this.DeserializeSettingsIfNeeded ();
-
-				return null;
+				return this.tableSettings;
+			}
+			set
+			{
+				this.DeserializeSettingsIfNeeded ();
+				this.tableSettings = value ?? new UserEntityTableSettings (Druid.Parse (this.EntityId));
 			}
 		}
 
 
-		public bool HasSettings
+		public bool								HasSettings
 		{
 			get
 			{
-				return this.editionSettings != null;
+				return this.editionSettings != null
+					|| this.tableSettings != null;
 			}
 		}
 
@@ -67,8 +80,8 @@ namespace Epsitec.Cresus.Core.Entities
 		private void SerializeSettings()
 		{
 			this.SerializedSettings.XmlData = new XElement (Xml.Settings,
-				this.editionSettings.Save (Xml.EditionSettings),
-				this.tableSettings.Save (Xml.TableSettings));
+				this.editionSettings == null ? null : this.editionSettings.Save (Xml.EditionSettings),
+				this.tableSettings == null ? null : this.tableSettings.Save (Xml.TableSettings));
 		}
 
 		private void DeserializeSettingsIfNeeded()

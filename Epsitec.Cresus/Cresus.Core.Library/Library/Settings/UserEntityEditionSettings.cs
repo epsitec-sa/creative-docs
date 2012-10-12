@@ -135,6 +135,11 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		public static UserEntityEditionSettings Restore(XElement xml)
 		{
+			if (xml == null)
+			{
+				return null;
+			}
+
 			var entityId = Druid.Parse (xml.Attribute (Xml.EntityId));
 			var settings = new UserEntityEditionSettings (entityId);
 

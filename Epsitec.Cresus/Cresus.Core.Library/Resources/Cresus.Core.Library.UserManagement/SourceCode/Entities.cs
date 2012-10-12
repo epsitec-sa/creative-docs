@@ -254,6 +254,28 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>CustomUISettings</c> field.
+		///	designer:fld/AVA/AVA21
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVA21]")]
+		public global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity CustomUISettings
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[AVA21]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue = this.CustomUISettings;
+				if (oldValue != value || !this.IsFieldDefined("[AVA21]"))
+				{
+					this.OnCustomUISettingsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity> ("[AVA21]", oldValue, value);
+					this.OnCustomUISettingsChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPeopleChanging(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnPeopleChanged(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
@@ -269,6 +291,8 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnAuthenticationMethodChanged(global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod oldValue, global::Epsitec.Cresus.Core.Business.UserManagement.UserAuthenticationMethod newValue);
 		partial void OnDisabledChanging(bool oldValue, bool newValue);
 		partial void OnDisabledChanged(bool oldValue, bool newValue);
+		partial void OnCustomUISettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
+		partial void OnCustomUISettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -657,11 +681,11 @@ namespace Epsitec.Cresus.Core.Entities
 	public partial class SoftwareUISettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>EntityEditionSettings</c> field.
+		///	The <c>EntityUISettings</c> field.
 		///	designer:fld/AVAU/AVAV
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[AVAV]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.EntityUISettingsEntity> EntityEditionSettings
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.EntityUISettingsEntity> EntityUISettings
 		{
 			get
 			{
