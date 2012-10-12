@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Library.Settings;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -24,14 +25,34 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				this.DeserializeSettingsIfNeeded ();
 				
-				return this.settings;
+				return this.editionSettings;
+			}
+		}
+
+		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
+		public UserEntityTableSettings TableSettings
+		{
+			get
+			{
+				this.DeserializeSettingsIfNeeded ();
+
+				return null;
+			}
+		}
+
+
+		public bool HasSettings
+		{
+			get
+			{
+				return this.editionSettings != null;
 			}
 		}
 
 		
 		public void PersistSettings(IBusinessContext context)
 		{
-			if (this.settings != null)
+			if (this.HasSettings)
 			{
 				if (this.SerializedSettings.IsNull ())
 				{
@@ -42,31 +63,44 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		
+
 		private void SerializeSettings()
 		{
-			this.SerializedSettings.XmlData = this.settings.Save ("settings");
+			this.SerializedSettings.XmlData = new XElement (Xml.Settings,
+				this.editionSettings.Save (Xml.EditionSettings),
+				this.tableSettings.Save (Xml.TableSettings));
 		}
 
 		private void DeserializeSettingsIfNeeded()
 		{
-			if (this.settings == null)
+			if (this.HasSettings == false)
 			{
 				var xml = this.SerializedSettings.IsNull () ? null : this.SerializedSettings.XmlData;
 				var entityId = Druid.Parse (this.EntityId);
 
 				if (xml == null)
 				{
-					this.settings = new UserEntityEditionSettings (entityId);
+					this.editionSettings = new UserEntityEditionSettings (entityId);
+					this.tableSettings   = new UserEntityTableSettings (entityId);
 				}
 				else
 				{
-					this.settings = UserEntityEditionSettings.Restore (xml);
+					this.editionSettings = UserEntityEditionSettings.Restore (xml.Element (Xml.EditionSettings));
+					this.tableSettings   = UserEntityTableSettings.Restore (xml.Element (Xml.TableSettings));
 				}
 			}
 		}
 
 
-		private UserEntityEditionSettings settings;
+		private static class Xml
+		{
+			public const string					Settings		= "settings";
+			public const string					EditionSettings	= "edition";
+			public const string					TableSettings	= "table";
+		}
+
+
+		private UserEntityEditionSettings		editionSettings;
+		private UserEntityTableSettings			tableSettings;
 	}
 }
