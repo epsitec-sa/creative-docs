@@ -8,4 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription ("Creative Docs .NET Application")]
 [assembly: AssemblyCompany ("OPaC bright ideas")]
 [assembly: AssemblyProduct ("Creative Docs .NET")]
-[assembly: AssemblyCopyright ("Copyright © 2002-2011, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2002-2012, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland")]

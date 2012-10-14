@@ -72,7 +72,7 @@ namespace Epsitec.Common.Support
 
 			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
 			this.providers = new Dictionary<string, ProviderRecord> ();
-			this.culture = CultureInfo.CurrentCulture;
+			this.culture = CultureInfo.CurrentUICulture;
 			this.defaultPath = string.IsNullOrEmpty (executablePath) ? null : executablePath;
 
 			foreach (Allocator<IResourceProvider, ResourceManager> allocator in Resources.Factory.Allocators)

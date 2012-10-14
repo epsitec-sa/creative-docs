@@ -141,9 +141,9 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <None Include="app.config">
+    <Content Include="Creative Docs.exe.config">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <None Include="App.ico" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>

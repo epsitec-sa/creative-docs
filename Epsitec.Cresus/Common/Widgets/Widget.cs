@@ -65,10 +65,9 @@ namespace Epsitec.Common.Widgets
 					Support.ImageProvider.Initialize ();
 				});
 			
-			System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
-			System.Globalization.CultureInfo culture = thread.CurrentCulture;
-
-			thread.CurrentUICulture = culture;
+			//System.Threading.Thread thread = System.Threading.Thread.CurrentThread;
+			//System.Globalization.CultureInfo culture = thread.CurrentCulture;
+			//thread.CurrentUICulture = culture;
 		}
 		
 		

@@ -65,7 +65,7 @@
   <data id="0V1">Version</data>
   <data id="002">Language: English</data>
   <data id="012">Serial number</data>
-  <data id="022">© 2002-2011 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
+  <data id="022">© 2002-2012 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
   <data id="032">Demo</data>
   <data id="042">Expired</data>
   <data id="062">Check for Updates</data>

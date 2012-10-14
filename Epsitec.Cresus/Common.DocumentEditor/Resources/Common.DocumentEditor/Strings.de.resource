@@ -6,7 +6,7 @@
   <data id="02" mod="1">Creative Pict .NET</data>
   <data id="04" mod="1">CreativeDocs</data>
   <data id="03" mod="1">Creative Text .NET</data>
-  <data id="022">© 2002-2011 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
+  <data id="022">© 2002-2012 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
   <data id="032">Demo</data>
   <data id="042">Abgelaufen</data>
   <data id="012">Seriennummer</data>
@@ -126,7 +126,7 @@
   <data id="086">Web:</data>
   <data id="026">Version &lt;b&gt;{0}&lt;/b&gt;    Sprache: Deutsch</data>
   <data id="016">Update...</data>
-  <data id="0I6">+41 84 827 37 87</data>
+  <data id="0I6">+41 84 827 37 88</data>
   <data id="0H6">Telefon:</data>
   <data id="0D6">mailto:info@creativedocs.net</data>
   <data id="0E6">info@creativedocs.net</data>
