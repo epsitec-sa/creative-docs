@@ -243,6 +243,7 @@
     <Compile Include="Metadata\ColumnFilterConstantType.cs" />
     <Compile Include="Metadata\ColumnFilterExpression.cs" />
     <Compile Include="Metadata\ColumnFilterRangeExpression.cs" />
+    <Compile Include="Metadata\ColumnFilterSetCode.cs" />
     <Compile Include="Metadata\ColumnFilterSetExpression.cs" />
     <Compile Include="Metadata\ColumnRef.cs" />
     <Compile Include="Metadata\ColumnRef`1.cs" />
