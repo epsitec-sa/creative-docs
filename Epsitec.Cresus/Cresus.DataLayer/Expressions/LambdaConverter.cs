@@ -506,6 +506,14 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				expression = this.VisitMethodCallCompareTo (node);
 			}
+			else if (method == SqlMethods.IsInSetMethodInfo)
+			{
+				expression = this.VisitMethodCallIsInSet (node);
+			}
+			else if (method == SqlMethods.IsNotInSetMethodInfo)
+			{
+				expression = this.VisitMethodCallIsNotInSet (node);
+			}
 			else if (method.Name == "Any" && method.DeclaringType == typeof (Enumerable))
 			{
 				expression = this.VisitMethodCallAny (node);
@@ -567,6 +575,94 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			this.entities.Remove (entityName);
 
 			return expression;
+		}
+
+
+		private object VisitMethodCallIsInSet(MethodCallExpression methodCall)
+		{
+			// We must do all this weird stuff because of the behavior of NULL values in SQL, which
+			// implies that if we simply translate this to SQL will give incorrect results in the
+			// case where we have NULL in the set. If we have NULL in the set, the rows where the
+			// column is NULL will never be returned. The same applies for the
+			// VisitMethodVallIsNotInSet method.
+
+			var entityField = (ValueField) this.VisitAndPop (methodCall.Arguments[0]);
+
+			var constant = (ConstantExpression) methodCall.Arguments[1];
+			var values = (IEnumerable<object>) constant.Value;
+
+			return this.GetIsInSetValuesTest (entityField, values);
+		}
+
+
+		private object VisitMethodCallIsNotInSet(MethodCallExpression methodCall)
+		{
+			var entityField = (ValueField) this.VisitAndPop (methodCall.Arguments[0]);
+
+			var constant = (ConstantExpression) methodCall.Arguments[1];
+			var values = (IEnumerable<object>) constant.Value;
+
+			var expression = this.GetIsInSetValuesTest (entityField, values);
+
+			// Now we have a condition that check that the element is in the set, so we must negate
+			// it.
+			expression = new UnaryOperation (UnaryOperator.Not, expression);
+
+			// If all the values in the set are not null, our expression must return true for the
+			// rows where the value of the column is NULL. For such rows, the expression that we
+			// have is equivalent to NOT ((NULL = 'A') OR (NULL = 'B') OR ...) which evaluates to
+			// NULL, which not TRUE, which implies the row will not be in the result set. Because of
+			// that, we must add a check that checks if the column is NULL and return TRUE in this
+			// case. So we generate an expression like that :
+			// ((NOT ((column = 'A') OR (column = 'B') OR ...)) OR column IS NULL)
+			if (values.All (v => v != null))
+			{
+				expression = new BinaryOperation
+				(
+					expression,
+					BinaryOperator.Or,
+					new UnaryComparison (entityField, UnaryComparator.IsNull)
+				);
+			}
+			
+			return expression;
+		}
+
+
+		private DataExpression GetIsInSetValuesTest(ValueField valueField, IEnumerable<object> values)
+		{
+			// Firstly, we convert the sequence of values into a sequence of expression using the
+			// following rule.
+			// - if the value is not null, we generate "column = value"
+			// - if the value is null, we generate "column IS NULL"
+			// Then we join all these expressions together with OR statements in order to get a
+			// single expression that returns TRUE if the column is in the set. For instance we
+			// could get ((column = 'A') OR (column IS NULL) OR (column = 'B') OR ...)
+
+			return values
+				.Select (v => this.GetSetValueTest (valueField, v))
+				.Aggregate ((e1, e2) => this.CombineSetValueTests (e1, e2));
+		}
+
+
+		private DataExpression GetSetValueTest(ValueField valueField, object value)
+		{
+			if (value == null)
+			{
+				return new UnaryComparison (valueField, UnaryComparator.IsNull);
+			}
+			else
+			{
+				var constant = new Constant (value);
+				
+				return new BinaryComparison (valueField, BinaryComparator.IsEqual, constant);
+			}
+		}
+
+
+		private DataExpression CombineSetValueTests(DataExpression e1, DataExpression e2)
+		{
+			return new BinaryOperation (e1, BinaryOperator.Or, e2);
 		}
 
 

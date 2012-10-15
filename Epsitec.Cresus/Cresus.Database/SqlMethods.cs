@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 using System.Reflection;
 
 namespace Epsitec.Cresus.Database
@@ -32,6 +34,22 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return SqlMethods.escapedLikeMethodInfo;
+			}
+		}
+
+		public static MethodInfo				IsInSetMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isInSetMethodInfo;
+			}
+		}
+
+		public static MethodInfo				IsNotInSetMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isNotInSetMethodInfo;
 			}
 		}
 
@@ -83,16 +101,30 @@ namespace Epsitec.Cresus.Database
 			throw new System.NotSupportedException ();
 		}
 
+		public static bool IsInSet(object value, IEnumerable<object> set)
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public static bool IsNotInSet(object value, IEnumerable<object> set)
+		{
+			throw new System.NotImplementedException ();
+		}
+
 		
 		static SqlMethods()
 		{
 			SqlMethods.compareToMethodInfo   = typeof (SqlMethods).GetMethod ("CompareTo", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.likeMethodInfo        = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new System.Type[] { typeof (string), typeof (string) });
+			SqlMethods.isInSetMethodInfo	 = typeof (SqlMethods).GetMethod ("IsInSet", new System.Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.isNotInSetMethodInfo	 = typeof (SqlMethods).GetMethod ("IsNotInSet", new System.Type[] { typeof (object), typeof (IEnumerable<object>) });
 		}
 
 		private static readonly MethodInfo		compareToMethodInfo;
 		private static readonly MethodInfo		likeMethodInfo;
 		private static readonly MethodInfo		escapedLikeMethodInfo;
+		private static readonly MethodInfo		isInSetMethodInfo;
+		private static readonly MethodInfo		isNotInSetMethodInfo;
 	}
 }

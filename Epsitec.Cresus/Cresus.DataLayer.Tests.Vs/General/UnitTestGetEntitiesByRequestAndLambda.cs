@@ -29,7 +29,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+		}
 
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
 			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
@@ -1009,6 +1014,100 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				var result = dataContext.GetByRequest (request).ToList ();
 				Assert.AreEqual (0, result.Count);
+			}
+		}
+
+
+		[TestMethod]
+		public void IsInSetCall1()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var firstnames = new List<string> () { "Alfred", "Gertrude" };
+				
+				var request = Request.Create (person);
+				request.AddCondition (dataContext, person, p => SqlMethods.IsInSet (p.Firstname, firstnames));
+
+				var result = dataContext.GetByRequest (request).ToList ();
+				Assert.AreEqual (2, result.Count);
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckGertrude (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void IsInSetCall2()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var nullFirstNamePerson = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				nullFirstNamePerson.Firstname = null;
+				nullFirstNamePerson.Lastname = "I have no first name";
+
+				dataContext.SaveChanges();
+				
+				var person = new NaturalPersonEntity ();
+				var firstnames = new List<string> () { "Alfred", null };
+
+				var request = Request.Create (person);
+				request.AddCondition (dataContext, person, p => SqlMethods.IsInSet (p.Firstname, firstnames));
+
+				var result = dataContext.GetByRequest (request).ToList ();
+				Assert.AreEqual (2, result.Count);
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckAlfred (p)));
+				Assert.IsTrue (result.Any (p => p == nullFirstNamePerson));
+			}
+		}
+
+
+		[TestMethod]
+		public void IsNotInSetCall1()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var firstnames = new List<string> () { "Alfred", "Gertrude" };
+
+				var request = Request.Create (person);
+				request.AddCondition (dataContext, person, p => SqlMethods.IsNotInSet (p.Firstname, firstnames));
+
+				var result = dataContext.GetByRequest (request).ToList ();
+				Assert.AreEqual (1, result.Count);
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckHans (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void IsNotInSetCall2()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var nullFirstNamePerson = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				nullFirstNamePerson.Firstname = null;
+				nullFirstNamePerson.Lastname = "I have no first name";
+
+				dataContext.SaveChanges ();
+
+				var person = new NaturalPersonEntity ();
+				var firstnames = new List<string> () { "Alfred", null };
+
+				var request = Request.Create (person);
+				request.AddCondition (dataContext, person, p => SqlMethods.IsNotInSet (p.Firstname, firstnames));
+
+				var result = dataContext.GetByRequest (request).ToList ();
+				Assert.AreEqual (2, result.Count);
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckHans (p)));
+
 			}
 		}
 

@@ -1523,6 +1523,221 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		}
 
 
+		[TestMethod]
+		public void IsInSetCall1()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var set = new List<string> ()
+				{
+					"a",
+					"b",
+					"c",
+				};
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => SqlMethods.IsInSet (x.Firstname, set),
+					new BinaryOperation
+					(
+						new BinaryOperation
+						(
+							new BinaryComparison
+							(
+								ValueField.Create (person, p => p.Firstname),
+								BinaryComparator.IsEqual,
+								new Constant ("a")
+							),
+							BinaryOperator.Or,
+							new BinaryComparison
+							(
+								ValueField.Create (person, p => p.Firstname),
+								BinaryComparator.IsEqual,
+								new Constant ("b")
+							)
+						),
+						BinaryOperator.Or,
+						new BinaryComparison
+						(
+							ValueField.Create (person, p => p.Firstname),
+							BinaryComparator.IsEqual,
+							new Constant ("c")
+						)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void IsInSetCall2()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var set = new List<string> ()
+				{
+					"a",
+					null,
+					"c",
+				};
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => SqlMethods.IsInSet (x.Firstname, set),
+					new BinaryOperation
+					(
+						new BinaryOperation
+						(
+							new BinaryComparison
+							(
+								ValueField.Create (person, p => p.Firstname),
+								BinaryComparator.IsEqual,
+								new Constant ("a")
+							),
+							BinaryOperator.Or,
+							new UnaryComparison
+							(
+								ValueField.Create (person, p => p.Firstname),
+								UnaryComparator.IsNull
+							)
+						),
+						BinaryOperator.Or,
+						new BinaryComparison
+						(
+							ValueField.Create (person, p => p.Firstname),
+							BinaryComparator.IsEqual,
+							new Constant ("c")
+						)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void IsNotInSetCall1()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var set = new List<string> ()
+				{
+					"a",
+					"b",
+					"c",
+				};
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => SqlMethods.IsNotInSet (x.Firstname, set),
+					new BinaryOperation
+					(
+						new UnaryOperation
+						(
+							UnaryOperator.Not,
+							new BinaryOperation
+							(
+								new BinaryOperation
+								(
+									new BinaryComparison
+									(
+										ValueField.Create (person, p => p.Firstname),
+										BinaryComparator.IsEqual,
+										new Constant ("a")
+									),
+									BinaryOperator.Or,
+									new BinaryComparison
+									(
+										ValueField.Create (person, p => p.Firstname),
+										BinaryComparator.IsEqual,
+										new Constant ("b")
+									)
+								),
+								BinaryOperator.Or,
+								new BinaryComparison
+								(
+									ValueField.Create (person, p => p.Firstname),
+									BinaryComparator.IsEqual,
+									new Constant ("c")
+								)
+							)
+						),
+						BinaryOperator.Or,
+						new UnaryComparison
+						(
+							ValueField.Create (person, p => p.Firstname),
+							UnaryComparator.IsNull
+						)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void IsNotInSetCall2()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var set = new List<string> ()
+				{
+					"a",
+					null,
+					"c",
+				};
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => SqlMethods.IsNotInSet (x.Firstname, set),
+					new UnaryOperation
+					(
+						UnaryOperator.Not,
+						new BinaryOperation
+						(
+							new BinaryOperation
+							(
+								new BinaryComparison
+								(
+									ValueField.Create (person, p => p.Firstname),
+									BinaryComparator.IsEqual,
+									new Constant ("a")
+								),
+								BinaryOperator.Or,
+								new UnaryComparison
+								(
+									ValueField.Create (person, p => p.Firstname),
+									UnaryComparator.IsNull
+								)
+							),
+							BinaryOperator.Or,
+							new BinaryComparison
+							(
+								ValueField.Create (person, p => p.Firstname),
+								BinaryComparator.IsEqual,
+								new Constant ("c")
+							)
+						)
+					)
+				);
+			}
+		}
+
+
 		private int member = 1;
 
 		
