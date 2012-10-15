@@ -100,6 +100,16 @@ namespace Epsitec.Cresus.Core.Metadata
 			{
 				text = EnumType.ToCompactString ((System.Enum)this.value);
 			}
+			else if ((this.value != null) &&
+					 (this.type == ColumnFilterConstantType.DateTime))
+			{
+				// Here we don't use the InvariantConverter because it serializes only the UTC value
+				// of the DateTime and does not store the data about its time zone. So if we had a
+				// constant that is a local DateTime, we would loose part of its information. That's
+				// why we use a custom serialization here.
+
+				text = ((System.DateTime) this.value).ToString ("o");
+			}
 			else
 			{
 				text = InvariantConverter.ToString (this.value);
@@ -240,7 +250,7 @@ namespace Epsitec.Cresus.Core.Metadata
 				case ColumnFilterConstantType.Decimal:
 					return InvariantConverter.ConvertFromString<decimal> (value);
 				case ColumnFilterConstantType.DateTime:
-					return InvariantConverter.ConvertFromString<System.DateTime> (value);
+					return System.DateTime.Parse (value, null, System.Globalization.DateTimeStyles.RoundtripKind);
 				case ColumnFilterConstantType.Date:
 					return InvariantConverter.ConvertFromString<Date> (value);
 				case ColumnFilterConstantType.Time:

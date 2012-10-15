@@ -475,6 +475,14 @@ namespace Epsitec.Common.Types
 					case System.TypeCode.Int64:		value = ((long)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					
 					case System.TypeCode.DateTime:
+						
+						// There might be a bug here, because the DateTime is converted to UTC time
+						// before being converted. Therefore we loose the time zone information for
+						// local DateTimes. I'm not sure whether this behavior is desired or if this
+						// is a bug, so I don't modify this code for know. Just keep in mind that it
+						// might cause problems with local DateTimes.
+						// Marc
+
 						value = ((System.DateTime)obj).ToUniversalTime ().ToString ("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
 						return true;
 				}
