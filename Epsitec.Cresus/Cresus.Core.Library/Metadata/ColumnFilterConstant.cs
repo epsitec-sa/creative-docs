@@ -12,7 +12,7 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.Core.Metadata
 {
 	/// <summary>
-	/// The <c>ColumnFilterConstant</c> structure reprsents a constant used in a column
+	/// The <c>ColumnFilterConstant</c> structure represents a constant used in a column
 	/// filter. The value is persisted through <see cref="ToString"/> and <see cref="Parse"/>
 	/// methods.
 	/// </summary>
@@ -139,6 +139,16 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new ColumnFilterConstant (ColumnFilterConstantType.Integer, value);
 		}
 
+		public static ColumnFilterConstant From(long? value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.Long, value);
+		}
+
+		public static ColumnFilterConstant From(bool? value)
+		{
+			return new ColumnFilterConstant (ColumnFilterConstantType.Boolean, value);
+		}
+
 		public static ColumnFilterConstant From(decimal? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.Decimal, value);
@@ -154,22 +164,22 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new ColumnFilterConstant (ColumnFilterConstantType.Enumeration, value);
 		}
 
-		public static ColumnFilterConstant From(EntityKey value)
+		public static ColumnFilterConstant From(EntityKey? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.EntityKey, value);
 		}
 
-		public static ColumnFilterConstant From(System.DateTime value)
+		public static ColumnFilterConstant From(System.DateTime? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.DateTime, value);
 		}
 
-		public static ColumnFilterConstant From(Date value)
+		public static ColumnFilterConstant From(Date? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.Date, value);
 		}
 
-		public static ColumnFilterConstant From(Time value)
+		public static ColumnFilterConstant From(Time? value)
 		{
 			return new ColumnFilterConstant (ColumnFilterConstantType.Time, value);
 		}
@@ -223,6 +233,10 @@ namespace Epsitec.Cresus.Core.Metadata
 			{
 				case ColumnFilterConstantType.Integer:
 					return InvariantConverter.ConvertFromString<int> (value);
+				case ColumnFilterConstantType.Long:
+					return InvariantConverter.ConvertFromString<long> (value);
+				case ColumnFilterConstantType.Boolean:
+					return InvariantConverter.ConvertFromString<bool> (value);
 				case ColumnFilterConstantType.Decimal:
 					return InvariantConverter.ConvertFromString<decimal> (value);
 				case ColumnFilterConstantType.DateTime:
@@ -250,6 +264,10 @@ namespace Epsitec.Cresus.Core.Metadata
 			{
 				case ColumnFilterConstantType.Integer:
 					return Strings.IntegerType;
+				case ColumnFilterConstantType.Long:
+					return Strings.LongType;
+				case ColumnFilterConstantType.Boolean:
+					return Strings.BooleanType;
 				case ColumnFilterConstantType.Decimal:
 					return Strings.DecimalType;
 				case ColumnFilterConstantType.DateTime:
@@ -277,6 +295,10 @@ namespace Epsitec.Cresus.Core.Metadata
 			{
 				case ColumnFilterConstantType.Integer:
 					return typeof (int);
+				case ColumnFilterConstantType.Long:
+					return typeof (long);
+				case ColumnFilterConstantType.Boolean:
+					return typeof (bool);
 				case ColumnFilterConstantType.Decimal:
 					return typeof (decimal);
 				case ColumnFilterConstantType.DateTime:
@@ -304,6 +326,10 @@ namespace Epsitec.Cresus.Core.Metadata
 			{
 				case Strings.IntegerType:
 					return ColumnFilterConstantType.Integer;
+				case Strings.LongType:
+					return ColumnFilterConstantType.Long;
+				case Strings.BooleanType:
+					return ColumnFilterConstantType.Boolean;
 				case Strings.DecimalType:
 					return ColumnFilterConstantType.Decimal;
 				case Strings.DateTimeType:
@@ -330,6 +356,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			public const string UndefinedType   = "U";
 			public const string IntegerType     = "I";
+			public const string LongType		= "L";
+			public const string BooleanType		= "B";
 			public const string DecimalType     = "N";
 			public const string DateTimeType    = "D";
 			public const string DateType        = "d";

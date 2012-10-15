@@ -2,11 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
@@ -34,6 +30,8 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			var col6 = ColumnFilterConstant.From (new System.DateTime (2012, 9, 3));
 			var col7 = ColumnFilterConstant.From (new Date (2012, 9, 3));
 			var col8 = ColumnFilterConstant.From (new Time (11, 00, 59));
+			var col9 = ColumnFilterConstant.From (false);
+			var col10 = ColumnFilterConstant.From (42L);
 
 			Assert.AreEqual (ColumnFilterConstantType.EntityKey, col1.Type);
 			Assert.AreEqual (ColumnFilterConstantType.Enumeration, col2.Type);
@@ -43,6 +41,8 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			Assert.AreEqual (ColumnFilterConstantType.DateTime, col6.Type);
 			Assert.AreEqual (ColumnFilterConstantType.Date, col7.Type);
 			Assert.AreEqual (ColumnFilterConstantType.Time, col8.Type);
+			Assert.AreEqual (ColumnFilterConstantType.Boolean, col9.Type);
+			Assert.AreEqual (ColumnFilterConstantType.Long, col10.Type);
 
 			var ser1 = col1.ToString ();
 			var ser2 = col2.ToString ();
@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			var ser6 = col6.ToString ();
 			var ser7 = col7.ToString ();
 			var ser8 = col8.ToString ();
+			var ser9 = col9.ToString ();
+			var ser10 = col10.ToString ();
 
 			Assert.AreEqual (col1, ColumnFilterConstant.Parse (ser1));
 			Assert.AreEqual (col2, ColumnFilterConstant.Parse (ser2));
@@ -61,6 +63,8 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			Assert.AreEqual (col6, ColumnFilterConstant.Parse (ser6));
 			Assert.AreEqual (col7, ColumnFilterConstant.Parse (ser7));
 			Assert.AreEqual (col8, ColumnFilterConstant.Parse (ser8));
+			Assert.AreEqual (col9, ColumnFilterConstant.Parse (ser9));
+			Assert.AreEqual (col10, ColumnFilterConstant.Parse (ser10));
 		}
 	}
 }

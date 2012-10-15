@@ -18,5 +18,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		String,
 		Enumeration,
 		EntityKey,
+		Boolean,
+		Long,
 	}
 }
