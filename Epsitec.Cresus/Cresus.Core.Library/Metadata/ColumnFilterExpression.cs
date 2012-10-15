@@ -107,8 +107,14 @@ namespace Epsitec.Cresus.Core.Metadata
 				case ColumnFilterComparisonCode.Like:
 					return Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression);
 
+				case ColumnFilterComparisonCode.LikeEscaped:
+					return Expression.Call (Epsitec.Cresus.Database.SqlMethods.EscapedLikeMethodInfo, parameter, expression);
+
 				case ColumnFilterComparisonCode.NotLike:
 					return Expression.Not (Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression));
+
+				case ColumnFilterComparisonCode.NotLikeEscaped:
+					return Expression.Not (Expression.Call (Epsitec.Cresus.Database.SqlMethods.EscapedLikeMethodInfo, parameter, expression));
 
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));

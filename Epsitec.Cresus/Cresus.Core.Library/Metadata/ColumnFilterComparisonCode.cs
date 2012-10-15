@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		LessThanOrEqual,
 		GreaterThanOrEqual,
 		Like,
+		LikeEscaped,
 		NotLike,
+		NotLikeEscaped
 	}
 }
