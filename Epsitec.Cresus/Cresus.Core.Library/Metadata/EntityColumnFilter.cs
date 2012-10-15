@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Xml.Linq;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// The <c>EntityColumnFilter</c> class defines the filtering conditions for an
 	/// <see cref="EntityColumn"/>.
 	/// </summary>
-	public class EntityColumnFilter : IFilter, IXmlNodeClass
+	public sealed class EntityColumnFilter : IFilter, IXmlNodeClass
 	{
 		public EntityColumnFilter(ColumnFilterExpression filterExpression = null)
 		{
@@ -55,11 +54,6 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		#endregion
 		
-
-		public virtual DataExpression ToCondition(EntityColumn entityColumn, AbstractEntity example)
-		{
-			throw new System.NotImplementedException ();
-		}
 
 		#region IXmlNodeClass Members
 		
