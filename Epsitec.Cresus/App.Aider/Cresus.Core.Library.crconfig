@@ -61,7 +61,7 @@ AiderFunctionDef = [LVA7A]
     <d n="AiderUserRole" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderGroupDef" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderFunctionDef" dg="@submenuDefs"><R><r>@user</r></R></d>
-    </D>
+  </D>
   <G/>
 </meta>
 
