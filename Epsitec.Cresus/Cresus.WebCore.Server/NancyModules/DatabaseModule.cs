@@ -1,6 +1,8 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 
@@ -19,6 +21,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Common.Types;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -39,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Get["/list"] = p => this.Execute (wa => this.GetDatabaseList (wa));
 			Get["/definition/{name}"] = p => this.GetDatabase (p);
-			Get["/get/{name}"] = p => this.Execute (b => this.GetEntities (b, p));
+			Get["/get/{name}"] = p => this.Execute (wa => this.GetEntities (wa, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
@@ -49,7 +52,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var databases = this.CoreServer.DatabaseManager
 				.GetDatabases (workerApp.UserManager)
-				.Select (d => this.GetDatabaseData (d))
+				.Select (d => d.GetSummaryDataDictionary ())
 				.ToList ();
 
 			var content = new Dictionary<string, object> ()
@@ -61,161 +64,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Dictionary<string, object> GetDatabaseData(Core.Databases.Database database)
-		{
-			return new Dictionary<string, object> ()
-			{
-			    { "title", database.Title },
-			    { "name", database.Name },
-			    { "cssClass", database.IconClass },
-			};
-		}
-
-
 		private Response GetDatabase(dynamic parameters)
 		{
 			string databaseName = parameters.name;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
-			var columns = database.Columns
-				.Select (c => this.GetColumnData (c))
-				.ToList ();
-
-			var sorters = database.Sorters
-				.Select (s => this.GetSorterData (s))
-				.ToList ();
-
-			var content = new Dictionary<string, object> ()
-			{
-				{ "columns", columns },
-				{ "sorters", sorters },
-			};
+			var content = database.GetDataDictionary (this.CoreServer.PropertyAccessorCache);
 
 			return CoreResponse.Success (content);
 		}
 
 
-		private Dictionary<string, object> GetColumnData(Column column)
-		{
-			return new Dictionary<string, object> ()
-			{
-				{ "title", column.Title },
-				{ "name", column.Name },
-				{ "type", this.GetColumnTypeData(column) },
-				{ "hidden", column.Hidden },
-				{ "sortable", column.Sortable },
-				{ "filter", this.GetFilterData (column) },
-			};
-		}
-
-
-		private Dictionary<string, object> GetSorterData(Sorter sorter)
-		{
-			return new Dictionary<string, object> ()
-			{
-				{ "name", sorter.Column.Name },
-				{ "sortDirection", this.GetSortOrderData (sorter.SortOrder) },
-			};
-		}
-
-
-		private Dictionary<string, object> GetColumnTypeData(Column column)
-		{
-			var propertyAccessorType = this.GetPropertyAccessorType (column);
-
-			var data = new Dictionary<string, object> ()
-			{
-				{ "type", this.GetPropertyAccessorTypeData (propertyAccessorType) },
-			};
-
-			if (propertyAccessorType == PropertyAccessorType.Enumeration)
-			{
-				data["enumerationName"] = Tools.TypeToString (column.LambdaExpression.ReturnType);
-			}
-
-			return data;
-		}
-
-
-		private PropertyAccessorType GetPropertyAccessorType(Column column)
-		{
-			var lambdaExpression = column.LambdaExpression;
-			var propertyAccessor = this.CoreServer.PropertyAccessorCache.Get (lambdaExpression);
-
-			return propertyAccessor.PropertyAccessorType;
-		}
-
-
-		private string GetPropertyAccessorTypeData(PropertyAccessorType type)
-		{
-			switch (type)
-			{
-				case PropertyAccessorType.Boolean:
-					return "boolean";
-
-				case PropertyAccessorType.Date:
-					return "date";
-
-				case PropertyAccessorType.Integer:
-					return "int";
-
-				case PropertyAccessorType.Enumeration:
-					return "list";
-
-				case PropertyAccessorType.Decimal:
-					return "float";
-
-				case PropertyAccessorType.Text:
-					return "string";
-
-				case PropertyAccessorType.EntityReference:
-				case PropertyAccessorType.EntityCollection:
-					throw new NotSupportedException ();
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private string GetSortOrderData(SortOrder? sortOrder)
-		{
-			switch (sortOrder)
-			{
-				case null:
-					return null;
-
-				case SortOrder.Ascending:
-					return "ASC";
-
-				case SortOrder.Descending:
-					return "DESC";
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private Dictionary<string, object> GetFilterData(Column column)
-		{
-			var data = new Dictionary<string, object> ()
-			{		
-				{ "filterable", column.Filterable },
-			};
-
-			var propertyAccessorType = this.GetPropertyAccessorType (column);
-
-			if (column.Filterable && propertyAccessorType == PropertyAccessorType.Enumeration)
-			{
-				data["enumerationName"] = Tools.TypeToString (column.LambdaExpression.ReturnType);
-			}
-
-			return data;
-		}
-
-
-		private Response GetEntities(BusinessContext businessContext, dynamic parameters)
+		private Response GetEntities(WorkerApp workerApp, dynamic parameters)
 		{
 			string databaseName = parameters.name;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
@@ -223,30 +83,48 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
+			var entityType = database.DataSetMetadata.DataSetEntityType;
+
+			var session = workerApp.UserManager.ActiveSession;
+			var settings = session.GetTableSettings (entityType);
+
 			string sort = DatabaseModule.GetOptionalParameter (Request.Query.sort);
 			var sorters = this.ParseSorters (database, sort);
 
+			settings.Sort.Clear();
+			settings.Sort.AddRange (sorters);
+
 			string filter = DatabaseModule.GetOptionalParameter (Request.Query.filter);
-			var filters = this.ParseFilters (database, filter).ToList ();
+			var entityFilter = this.ParseEntityFilter (database, filter);
 
-			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+			settings.Filter = entityFilter;
 
-			var total = database.GetCount (businessContext, filters);
-			var entities = database.GetEntities (businessContext, sorters, filters, start, limit)
-				.Select (e => database.GetEntityData (businessContext, e, propertyAccessorCache))
-				.ToList ();
+			session.SetTableSettings (entityType, settings);
 
-			var content = new Dictionary<string, object> ()
+			var dataSetGetter = workerApp.DataSetGetter;
+
+			using (var dataSet = database.GetDataSetAccessor (dataSetGetter))
 			{
-				{ "total", total },
-				{ "entities", entities },
-			};
+				var dataContext = dataSet.IsolatedDataContext;
+				var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
-			return CoreResponse.Success (content);
+				var total = dataSet.GetItemCount ();
+				var entities = dataSet.GetItems (start, limit)
+					.Select (e => database.GetEntityData (dataContext, propertyAccessorCache, e))
+					.ToList ();
+
+				var content = new Dictionary<string, object> ()
+				{
+					{ "total", total },
+					{ "entities", entities },
+				};
+
+				return CoreResponse.Success (content);
+			}
 		}
 
 
-		private IEnumerable<Sorter> ParseSorters(Core.Databases.Database database, string sortParameter)
+		private IEnumerable<ColumnRef<EntityColumnSort>> ParseSorters(Core.Databases.Database database, string sortParameter)
 		{
 			if (sortParameter != null)
 			{
@@ -257,25 +135,28 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					if (data.Length == 2)
 					{
 						var name = data[0];
-						var column = database.Columns.First (c => c.Name == name);
-						var direction = this.ParseSortOrder (data[1]);
+						var columnId = database.Columns.First (c => c.Name == name).MetaData.Id;
+						var entityColumnSort = new EntityColumnSort ()
+						{
+							SortOrder = this.ParseColumnSortOrder (data[1]),
+						};
 
-						yield return new Sorter (column, direction);
+						yield return new ColumnRef<EntityColumnSort> (columnId, entityColumnSort);
 					}
 				}
 			}
 		}
 
 
-		private SortOrder ParseSortOrder(string sortOrder)
+		private ColumnSortOrder ParseColumnSortOrder(string sortOrder)
 		{
 			switch (sortOrder)
 			{
 				case "ASC":
-					return SortOrder.Ascending;
+					return ColumnSortOrder.Ascending;
 
 				case "DESC":
-					return SortOrder.Descending;
+					return ColumnSortOrder.Descending;
 
 				default:
 					throw new NotImplementedException ();
@@ -283,8 +164,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private IEnumerable<Core.Databases.Filter> ParseFilters(Core.Databases.Database database, string filterParameter)
+		private EntityFilter ParseEntityFilter(Core.Databases.Database database, string filterParameter)
 		{
+			var entityType = database.DataSetMetadata.DataSetEntityType;
+			var entityId = EntityInfo.GetTypeId (entityType);
+			var entityFilter = new EntityFilter (entityId);
+
 			if (filterParameter != null)
 			{
 				var deserializer = new JavaScriptSerializer ();
@@ -292,28 +177,29 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				foreach (var filter in filters.Cast<Dictionary<string, object>> ())
 				{
-					yield return this.ParseFilter (database, filter);
+					var column = this.ParseColumn (database, filter);
+
+					var columnId = column.MetaData.Id;
+					var columnFilter = this.ParseColumnFilter (column, filter);
+					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+
+					entityFilter.Columns.Add (columnRef);
 				}
 			}
+
+			return entityFilter;
 		}
 
 
-		private Core.Databases.Filter ParseFilter(Core.Databases.Database database, Dictionary<string, object> filter)
-		{
-			var column = this.ParseFilterColumn (database, filter);
-			
-			return this.ParseFilterCondition (column, filter);
-		}
-
-		private Column ParseFilterColumn(Core.Databases.Database database, Dictionary<string, object> filter)
+		private Column ParseColumn(Core.Databases.Database database, Dictionary<string, object> filter)
 		{
 			var field = (string) filter["field"];
 
-			return database.Columns.First (c => c.Name == field);
+		    return database.Columns.First (c => c.Name == field);
 		}
 
 
-		private Core.Databases.Filter ParseFilterCondition(Column column, Dictionary<string, object> filter)
+		private EntityColumnFilter ParseColumnFilter(Column column, Dictionary<string, object> filter)
 		{
 			var lambda = column.LambdaExpression;
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
@@ -324,7 +210,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (type == "list")
 			{
-				return this.ParseSetFilter (column, propertyAccessor, value);
+				return this.ParseColumnSetFilter (propertyAccessor, type, value);
 			}
 			else
 			{
@@ -334,23 +220,71 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					comparison = "eq";
 				}
 
-				return this.ParseComparisonFilter (column, propertyAccessor, type, comparison, value);
+				return this.ParseColumnComparisonFilter (propertyAccessor, type, comparison, value);
 			}
 		}
 
 
-		private SetFilter ParseSetFilter(Column column, AbstractStringPropertyAccessor propertyAccessor, object value)
+		private EntityColumnFilter ParseColumnSetFilter(AbstractStringPropertyAccessor propertyAccessor, string type, object value)
 		{
 			var valueArray = (object[]) value;
-			var convertedValues = valueArray.Select (v => propertyAccessor.ConvertValue (v));
+			var constants = valueArray.Select (v => this.ParseConstant (propertyAccessor, type, v));
 
-			return new SetFilter (column, SetComparator.In, convertedValues);
+			var filterExpression = new ColumnFilterSetExpression ()
+			{
+				Predicate = ColumnFilterSetCode.In,
+			};
+
+			foreach (var constant in constants)
+			{
+				filterExpression.Values.Add (constant);
+			}
+
+			return new EntityColumnFilter (filterExpression);
 		}
 
 
-		private ComparisonFilter ParseComparisonFilter(Column column, AbstractStringPropertyAccessor propertyAccessor, string type, object comparison, object value)
+		private EntityColumnFilter ParseColumnComparisonFilter(AbstractStringPropertyAccessor propertyAccessor, string type, object comparator, object value)
 		{
-			var comparator = this.ParseComparator (comparison);
+			var comparison = this.ParseComparison (type, comparator);
+			var constant = this.ParseConstant (propertyAccessor, type, value);
+
+			var filterExpression = new ColumnFilterComparisonExpression ()
+			{
+				Comparison = comparison,
+				Constant = constant,
+			};
+
+			return new EntityColumnFilter (filterExpression);
+		}
+
+
+		private ColumnFilterComparisonCode ParseComparison(string type, object comparator)
+		{
+			if (type == "string")
+			{
+				return ColumnFilterComparisonCode.LikeEscaped;
+			}
+
+			switch ((string) comparator)
+			{
+				case "eq":
+					return ColumnFilterComparisonCode.Equal;
+				case "nq":
+					return ColumnFilterComparisonCode.NotEqual;
+				case "gt":
+					return ColumnFilterComparisonCode.GreaterThan;
+				case "lt":
+					return ColumnFilterComparisonCode.LessThan;
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private ColumnFilterConstant ParseConstant(AbstractStringPropertyAccessor propertyAccessor, string type, object value)
+		{
+			var convertedValue = value;
 
 			switch (type)
 			{
@@ -358,39 +292,57 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					switch (propertyAccessor.PropertyAccessorType)
 					{
 						case PropertyAccessorType.Integer:
-							value = Convert.ToInt64 (value);
+							convertedValue = Convert.ToInt64 (convertedValue);
 							break;
 
 						case PropertyAccessorType.Decimal:
-							value = Convert.ToDecimal (value);
+							convertedValue = Convert.ToDecimal (convertedValue);
 							break;
 					}
 					break;
 
 				case "string":
-					comparator = BinaryComparator.IsLikeEscape;
-					value =  "%" + Constant.Escape ((string) value) + "%";
+					convertedValue = "%" + Constant.Escape ((string) convertedValue) + "%";
 					break;
 			}
 
-			var convertedValue = propertyAccessor.ConvertValue (value);
+			convertedValue = propertyAccessor.ConvertValue (convertedValue);
 
-			return new ComparisonFilter (column, comparator, convertedValue);
-		}
-
-
-		private BinaryComparator ParseComparator(object comparator)
-		{
-			switch ((string) comparator)
+			switch (propertyAccessor.PropertyAccessorType)
 			{
-				case "eq":
-					return BinaryComparator.IsEqual;
-				case "nq":
-					return BinaryComparator.IsNotEqual;
-				case "gt":
-					return BinaryComparator.IsGreater;
-				case "lt":
-					return BinaryComparator.IsLower;
+				case PropertyAccessorType.Boolean:
+					return ColumnFilterConstant.From ((bool?) convertedValue);
+
+				case PropertyAccessorType.Date:
+					return ColumnFilterConstant.From ((Date?) convertedValue);
+
+				case PropertyAccessorType.Decimal:
+					return ColumnFilterConstant.From ((decimal?) convertedValue);
+
+				case PropertyAccessorType.Enumeration:
+					return ColumnFilterConstant.From ((Enum) convertedValue);
+
+				case PropertyAccessorType.Integer:
+					if (convertedValue is short? || convertedValue is short)
+					{
+						return ColumnFilterConstant.From ((short?) convertedValue);
+					}
+					else if (convertedValue is int? || convertedValue is int)
+					{
+						return ColumnFilterConstant.From ((int?) convertedValue);
+					}
+					else if (convertedValue is long? || convertedValue is long)
+					{
+						return ColumnFilterConstant.From ((long?) convertedValue);
+					}
+					else
+					{
+						throw new NotImplementedException ();
+					}
+
+				case PropertyAccessorType.Text:
+					return ColumnFilterConstant.From (FormattedText.CastToString (convertedValue));
+
 				default:
 					throw new NotImplementedException ();
 			}
@@ -399,9 +351,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response DeleteEntities(BusinessContext businessContext)
 		{
-			string databaseName = Request.Form.databaseName;
-			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
-
 			string rawEntityIds = Request.Form.entityIds;
 			var entityIds = rawEntityIds.Split (";");
 
@@ -411,7 +360,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var entity = Tools.ResolveEntity (businessContext, entityId);
 
-				success = database.DeleteEntity (businessContext, entity);
+				using (businessContext.Bind (entity))
+				{
+					success = businessContext.DeleteEntity (entity);
+				}
 
 				if (!success)
 				{
@@ -436,9 +388,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+			var dataContext = businessContext.DataContext;
 
 			var entity = database.CreateEntity (businessContext);
-			var entityData = database.GetEntityData (businessContext, entity, propertyAccessorCache);
+			var entityData = database.GetEntityData (dataContext, propertyAccessorCache, entity);
 
 			return CoreResponse.Success (entityData);
 		}

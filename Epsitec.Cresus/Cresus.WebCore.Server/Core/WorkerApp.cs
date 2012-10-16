@@ -7,8 +7,12 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
+using Epsitec.Cresus.Core.Data;
+
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
+
+using Epsitec.Cresus.Core.Metadata;
 
 using System;
 
@@ -25,6 +29,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			this.coreData = this.GetComponent<CoreData> ();
 			this.userManager = this.coreData.GetComponent<UserManager> ();
+			this.dataStoreMetadata = CoreContext.GetMetadata<DataStoreMetadata> ();
+			this.dataSetGetter = this.coreData.GetComponent<DataSetGetter> ();
 
 			Services.SetApplication (this);
 
@@ -64,6 +70,24 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			get
 			{
 				return this.userManager;
+			}
+		}
+
+
+		public DataStoreMetadata DataStoreMetaData
+		{
+			get
+			{
+				return this.dataStoreMetadata;
+			}
+		}
+
+
+		public DataSetGetter DataSetGetter
+		{
+			get
+			{
+				return this.dataSetGetter;
 			}
 		}
 
@@ -111,6 +135,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private readonly CoreData coreData;
 		private readonly UserManager userManager;
+		private readonly DataStoreMetadata dataStoreMetadata;
+		private readonly DataSetGetter dataSetGetter;
 
 
 	}

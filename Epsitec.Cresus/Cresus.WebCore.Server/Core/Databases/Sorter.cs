@@ -1,8 +1,8 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Cresus.DataLayer.Expressions;
 
-using Epsitec.Cresus.Core.Metadata;
+using System;
 
-using Epsitec.Cresus.DataLayer.Expressions;
+using System.Collections.Generic;
 
 using System.Linq;
 
@@ -40,20 +40,29 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public SortClause ToSortClause(AbstractEntity example)
+		public Dictionary<string, object> GetDataDictionary()
 		{
-			var lambda = column.LambdaExpression;
-			var name = column.Name;
-			
-			//	TODO: resolve EntityColumnMetadata through DataStoreMetdata
-			
-			var entityColumnMetaData = new EntityColumnMetadata (lambda, name);
-			var entityColumnSort = new EntityColumnSort ()
+			return new Dictionary<string, object> ()
 			{
-				SortOrder = EntityColumnSort.Convert (this.sortOrder)
+				{ "name", this.Column.Name },
+				{ "sortDirection", this.GetSortOrderData () },
 			};
+		}
 
-			return entityColumnSort.ToSortClause (entityColumnMetaData, example);
+
+		private string GetSortOrderData()
+		{
+			switch (this.sortOrder)
+			{
+				case SortOrder.Ascending:
+					return "ASC";
+
+				case SortOrder.Descending:
+					return "DESC";
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 

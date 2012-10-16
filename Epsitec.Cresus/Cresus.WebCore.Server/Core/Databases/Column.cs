@@ -1,4 +1,10 @@
-using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Metadata;
+
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
 
@@ -15,14 +21,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Column(string title, string name, bool hidden, bool sortable, bool filterable, LambdaExpression lambdaExpression)
+		public Column(EntityColumnMetadata metadata)
 		{
-			this.title = title;
-			this.name = name;
-			this.hidden = hidden;
-			this.sortable = sortable;
-			this.filterable = filterable;
-			this.lambdaExpression = lambdaExpression;
+			this.metadata = metadata;
+		}
+
+
+		public EntityColumnMetadata MetaData
+		{
+			get
+			{
+				return this.metadata;
+			}
 		}
 
 
@@ -30,7 +40,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.title;
+				return this.metadata.GetColumnTitle ().ToString ();
 			}
 		}
 
@@ -39,7 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.name;
+				return InvariantConverter.ToString (this.metadata.CaptionId.ToLong ());
 			}
 		}
 
@@ -48,7 +58,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.hidden;
+				return this.metadata.DefaultDisplay.Mode != ColumnDisplayMode.Visible;
 			}
 		}
 
@@ -57,7 +67,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.sortable;
+				return this.metadata.CanSort;
 			}
 		}
 
@@ -66,7 +76,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.filterable;
+				return this.metadata.CanFilter;
 			}
 		}
 
@@ -75,33 +85,112 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.lambdaExpression;
+				return this.metadata.Expression;
 			}
 		}
 
 
-		public static Column Create<T1, T2>(string title, string name, bool hidden, bool sortable, bool filterable, Expression<Func<T1, T2>> lambdaExpression)
+		public object GetColumnData(PropertyAccessorCache propertyAccessorCache, AbstractEntity entity)
 		{
-			return new Column(title, name, hidden, sortable, filterable, lambdaExpression);
+			var propertyAccessor = propertyAccessorCache.Get (this.LambdaExpression);		
+			var stringPropertyAccessor = (AbstractStringPropertyAccessor) propertyAccessor;
+
+			return stringPropertyAccessor.GetValue (entity);
 		}
 
 
-		private readonly string title;
+		public Dictionary<string, object> GetDataDictionary(PropertyAccessorCache propertyAccessorCache)
+		{
+			return new Dictionary<string, object> ()
+			{
+				{ "title", this.Title },
+				{ "name", this.Name },
+				{ "type", this.GetColumnTypeData (propertyAccessorCache) },
+				{ "hidden", this.Hidden },
+				{ "sortable", this.Sortable },
+				{ "filter", this.GetFilterData (propertyAccessorCache) },
+			};
+		}
 
 
-		private readonly string name;
+		private Dictionary<string, object> GetColumnTypeData(PropertyAccessorCache propertyAccessorCache)
+		{
+			var propertyAccessorType = this.GetPropertyAccessorType (propertyAccessorCache);
+
+			var data = new Dictionary<string, object> ()
+			{
+				{ "type", this.GetPropertyAccessorTypeData (propertyAccessorType) },
+			};
+
+			if (propertyAccessorType == PropertyAccessorType.Enumeration)
+			{
+				data["enumerationName"] = Tools.TypeToString (this.LambdaExpression.ReturnType);
+			}
+
+			return data;
+		}
 
 
-		private readonly bool hidden;
+		private PropertyAccessorType GetPropertyAccessorType(PropertyAccessorCache propertyAccessorCache)
+		{
+			var lambdaExpression = this.LambdaExpression;
+			var propertyAccessor = propertyAccessorCache.Get (lambdaExpression);
+
+			return propertyAccessor.PropertyAccessorType;
+		}
 
 
-		private readonly bool sortable;
+		private string GetPropertyAccessorTypeData(PropertyAccessorType type)
+		{
+			switch (type)
+			{
+				case PropertyAccessorType.Boolean:
+					return "boolean";
+
+				case PropertyAccessorType.Date:
+					return "date";
+
+				case PropertyAccessorType.Integer:
+					return "int";
+
+				case PropertyAccessorType.Enumeration:
+					return "list";
+
+				case PropertyAccessorType.Decimal:
+					return "float";
+
+				case PropertyAccessorType.Text:
+					return "string";
+
+				case PropertyAccessorType.EntityReference:
+				case PropertyAccessorType.EntityCollection:
+					throw new NotSupportedException ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
 
 
-		private readonly bool filterable;
+		private Dictionary<string, object> GetFilterData(PropertyAccessorCache propertyAccessorCache)
+		{
+			var data = new Dictionary<string, object> ()
+			{		
+				{ "filterable", this.Filterable },
+			};
+
+			var propertyAccessorType = this.GetPropertyAccessorType (propertyAccessorCache);
+
+			if (this.Filterable && propertyAccessorType == PropertyAccessorType.Enumeration)
+			{
+				data["enumerationName"] = Tools.TypeToString (this.LambdaExpression.ReturnType);
+			}
+
+			return data;
+		}
 
 
-		private readonly LambdaExpression lambdaExpression;
+		private readonly EntityColumnMetadata metadata;
 
 
 	}

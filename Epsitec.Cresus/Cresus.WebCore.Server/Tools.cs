@@ -126,11 +126,17 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public static string GetEntityId(BusinessContext businessContext, AbstractEntity entity)
 		{
+			return Tools.GetEntityId (businessContext.DataContext, entity);
+		}
+
+
+		public static string GetEntityId(DataContext dataContext, AbstractEntity entity)
+		{
 			string entityId = null;
 
 			if (entity != null)
 			{
-				var entityKey = businessContext.DataContext.GetNormalizedEntityKey (entity);
+				var entityKey = dataContext.GetNormalizedEntityKey (entity);
 
 				if (entityKey.HasValue)
 				{

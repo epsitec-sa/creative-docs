@@ -1,6 +1,10 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Metadata;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
@@ -10,22 +14,31 @@ using System.Collections.Generic;
 
 using System.Linq;
 
+using System.Reflection;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
-	internal abstract class Database
+	internal sealed class Database
 	{
 
 
-		public Database(string title, string name, string iconClass, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
+		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
 		{
-			this.title = title;
-			this.name = name;
-			this.iconClass = iconClass;
+			this.dataSetMetadata = dataSetMetadata;
 			this.columns = columns.ToList ();
 			this.sorters = sorters.ToList ();
+		}
+
+
+		public DataSetMetadata DataSetMetadata
+		{
+			get
+			{
+				return this.dataSetMetadata;
+			}
 		}
 
 
@@ -33,7 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.title;
+				return this.DataSetMetadata.BaseShowCommand.Caption.DefaultLabel;
 			}
 		}
 
@@ -42,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.name;
+				return Tools.TypeToString (this.DataSetMetadata.DataSetEntityType);
 			}
 		}
 
@@ -51,7 +64,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return this.iconClass;
+				var iconUri = this.DataSetMetadata.BaseShowCommand.Caption.Icon;
+				var type = this.DataSetMetadata.DataSetEntityType;
+				
+				return IconManager.GetCssClassName (type, iconUri, IconSize.ThirtyTwo);
 			}
 		}
 
@@ -74,59 +90,94 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public abstract Dictionary<string, object> GetEntityData(BusinessContext businessContext, AbstractEntity entity, PropertyAccessorCache propertyAccessorCache);
-
-
-		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, IEnumerable<Sorter> sorters, IEnumerable<Filter> filters, int skip, int take);
-
-
-		public abstract int GetCount(BusinessContext businessContext, IEnumerable<Filter> filters);
-
-
-		public abstract AbstractEntity CreateEntity(BusinessContext businessContext);
-
-
-		public abstract bool DeleteEntity(BusinessContext businessContext, AbstractEntity entity);
-
-
-		public static Database Create(Type type, string title, string iconUri, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
+		public DataSetAccessor GetDataSetAccessor(DataSetGetter dataSetGetter)
 		{
-			var name = Tools.TypeToString (type);
-			var iconClass = IconManager.GetCssClassName (type, iconUri, IconSize.ThirtyTwo);
+			var dataSet = this.DataSetMetadata;
 
-			return Database.Create (type, title, name, iconClass, columns, sorters);
+			var dataSetAccessor = dataSetGetter.ResolveAccessor (dataSet);
+			dataSetAccessor.MakeDependent ();
+
+			return dataSetAccessor;
 		}
 
 
-		public static Database Create(Type type)
+		public AbstractEntity CreateEntity(BusinessContext businessContext)
 		{
-			var title = "";
-			var name = Tools.TypeToString (type);
-			var iconClass = "";
-			var columns = new Column[0];
-			var sorters = new Sorter[0];
+			var flags = BindingFlags.NonPublic | BindingFlags.Static;
+			var method = typeof (Database).GetMethod ("CreateEntityImplementation", flags);
+			var genericMethod = method.MakeGenericMethod (this.DataSetMetadata.DataSetEntityType);
+			var arguments = new object[] { businessContext };
 
-			return Database.Create (type, title, name, iconClass, columns, sorters);
+			return (AbstractEntity) genericMethod.Invoke (null, arguments);
 		}
 
 
-		private static Database Create(Type type, string title, string name, string iconClass, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
+		private static T CreateEntityImplementation<T>(BusinessContext businessContext)
+			where T : AbstractEntity, new ()
 		{
-			var arguments = new object[] { title, name, iconClass, columns, sorters };
-			var genericType = typeof (Database<>);
-			var concreteType = genericType.MakeGenericType (type);
+			var entity = businessContext.CreateEntity<T> ();
 
-			return (Database) Activator.CreateInstance (concreteType, arguments);
+			// NOTE Here we need to include the empty entities, otherwise we might be in the case
+			// where the entity that we just have created will be empty and thus not saved and this
+			// will lead the user to click like a maniac on the "create" button without noticeable
+			// result other than him becoming mad :-P
+
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+
+			return entity;
 		}
 
 
-		private readonly string title;
+		public Dictionary<string, object> GetEntityData(DataContext dataContext, PropertyAccessorCache propertyAccessorCache, AbstractEntity entity)
+		{
+			var id = Tools.GetEntityId (dataContext, entity);
+			var summary = entity.GetCompactSummary ().ToSimpleText ();
+
+			var data = new Dictionary<string, object> ()
+			{
+			    { "id", id },
+			    { "summary", summary },
+			};
+
+			foreach (var column in this.Columns.Where (c => !c.Hidden))
+			{
+				data[column.Name] = column.GetColumnData (propertyAccessorCache, entity);
+			}
+
+			return data;
+		}
 
 
-		private readonly string name;
-		
-		
-		private readonly string iconClass;
+		public Dictionary<string, object> GetSummaryDataDictionary()
+		{
+			return new Dictionary<string, object> ()
+			{
+			    { "title", this.Title },
+			    { "name", this.Name },
+			    { "cssClass", this.IconClass },
+			};
+		}
+
+
+		public Dictionary<string, object> GetDataDictionary(PropertyAccessorCache propertyAccessorCache)
+		{
+			var columns = this.columns
+				.Select (c => c.GetDataDictionary (propertyAccessorCache))
+				.ToList ();
+
+			var sorters = this.Sorters
+				.Select (s => s.GetDataDictionary ())
+				.ToList ();
+
+			return new Dictionary<string, object> ()
+			{
+				{ "columns", columns },
+				{ "sorters", sorters },
+			};
+		}
+
+
+		private readonly DataSetMetadata dataSetMetadata;
 		
 		
 		private readonly List<Column> columns;

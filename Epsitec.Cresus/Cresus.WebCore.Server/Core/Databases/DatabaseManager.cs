@@ -1,7 +1,5 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -63,17 +61,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private Database GetDatabase(DataSetMetadata dataSet)
 		{
-			var entityType = dataSet.DataSetEntityType;
-			
-			var entityTypeId = EntityInfo.GetTypeId (entityType);
-			var commandCaption = dataSet.BaseShowCommand.Caption;
-			var title = commandCaption.DefaultLabel;
-			var iconUri = commandCaption.Icon;
+			var entityTable = dataSet.EntityTableMetadata;
 
 			IEnumerable<Column> columns;
 			IEnumerable<Sorter> sorters;
-						
-			var entityTable = this.dataStore.FindTable (entityTypeId);
 
 			if (entityTable == null)
 			{
@@ -82,45 +73,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 			else
 			{
-				var mapping = this.GetColumnMapping (entityTable);
-				columns = this.GetColumns (entityTable, mapping);
-				sorters = this.GetSorters (entityTable, mapping);
+				columns = this.GetColumns (entityTable);
+				sorters = this.GetSorters (entityTable, columns);
 			}
 
-			return Database.Create (entityType, title, iconUri, columns, sorters);
+			return new Database(dataSet, columns, sorters);
 		}
 
 
-		private Dictionary<EntityColumnMetadata, Column> GetColumnMapping(EntityTableMetadata entityTable)
+		private IEnumerable<Column> GetColumns(EntityTableMetadata entityTable)
 		{
-			var mapping = from entityColumn in entityTable.Columns
-						  let title = entityColumn.GetColumnTitle ().ToString ()
-						  let name = InvariantConverter.ToString (entityColumn.CaptionId.ToLong ())
-						  let hidden = entityColumn.DefaultDisplay.Mode != ColumnDisplayMode.Visible
-						  let sortable = entityColumn.CanSort
-						  let filterable = entityColumn.CanFilter
-						  let lambda = entityColumn.Expression
-						  let column = new Column (title, name, hidden, sortable, filterable, lambda)
-						  select Tuple.Create (entityColumn, column);
-
-			return mapping.ToDictionary (t => t.Item1, t => t.Item2);
+			return entityTable.Columns
+				.Select (c => new Column (c))
+				.ToList ();
 		}
 
 
-		private IEnumerable<Column> GetColumns(EntityTableMetadata entityTable, Dictionary<EntityColumnMetadata, Column> mapping)
-		{
-			// Here we can't simply enumerate the values in the mapping, since we want to keep the
-			// columns in the order they are in the entityTable, and the dictionary doesn't provide
-			// any guarantee on the order of its elements when they are enumerated.
-
-			return entityTable.Columns.Select (c => mapping[c]);
-		}
-
-
-		private IEnumerable<Sorter> GetSorters(EntityTableMetadata entityTable, Dictionary<EntityColumnMetadata, Column> mapping)
+		private IEnumerable<Sorter> GetSorters(EntityTableMetadata entityTable, IEnumerable<Column> columns)
 		{
 			return from entityColumn in entityTable.GetSortColumns ()
-				   let column = mapping[entityColumn]
+				   let column = columns.First (c => c.MetaData == entityColumn)
 				   let sortOrder = this.GetSortOrder (entityColumn.DefaultSort.SortOrder)
 				   select new Sorter (column, sortOrder);
 		}
@@ -146,20 +118,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			var entityType = Tools.ParseType (name);
 
-			// We check if we have a definition for the database and if we don't, we create a
-			// a default database for it.
-
 			var dataSets = this.dataStore.DataSets;
 			var dataSet = dataSets.FirstOrDefault (d => d.DataSetEntityType == entityType);
 
 			if (dataSet == null)
 			{
-				return Database.Create (entityType);
+				throw new Exception ("The database '" + name + "' does not exist.");
 			}
-			else
-			{
-				return this.GetDatabase (dataSet);
-			}
+			
+			return this.GetDatabase (dataSet);
 		}
 
 
