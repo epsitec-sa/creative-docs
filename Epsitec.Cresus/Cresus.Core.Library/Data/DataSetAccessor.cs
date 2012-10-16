@@ -2,8 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -12,8 +12,6 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
-using Epsitec.Cresus.Core.Business.UserManagement;
 
 
 namespace Epsitec.Cresus.Core.Data
@@ -71,8 +69,18 @@ namespace Epsitec.Cresus.Core.Data
 
 			return this.requestView.GetIndex (entityKey.Value) ?? -1;
 		}
+
+		public AbstractEntity[] GetItems(int index, int count)
+		{
+			return this.ExecuteRequest (index, count, (r, i, c) => r.GetEntities (i, c));
+		}
 		
 		public EntityKey[] GetItemKeys(int index, int count)
+		{
+			return this.ExecuteRequest (index, count, (r, i, c) => r.GetKeys (i, c));
+		}
+
+		private T[] ExecuteRequest<T>(int index, int count, System.Func<AbstractRequestView, int, int, IEnumerable<T>> getter)
 		{
 			int total = this.GetItemCount ();
 			int end   = index + count;
@@ -80,7 +88,7 @@ namespace Epsitec.Cresus.Core.Data
 			if ((index >= total) ||
 				(count < 1))
 			{
-				return new EntityKey[0];
+				return new T[0];
 			}
 
 			if (end >= total)
@@ -88,11 +96,8 @@ namespace Epsitec.Cresus.Core.Data
 				count = total - index;
 			}
 
-			return this.requestView
-				.GetKeys (index, count)
-				.ToArray ();
+			return getter (this.requestView, index, count).ToArray ();
 		}
-
 
 		#region IDisposable Members
 
