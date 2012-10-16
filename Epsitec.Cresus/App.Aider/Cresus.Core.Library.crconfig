@@ -7,15 +7,46 @@ DefineTypeSubstitution ("SoftwareUserEntity", "AiderUserEntity")
 user = [AVAK]
 submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
+AiderPerson = [LVAF]
 AiderGroup = [LVA54]
+AiderHousehold = [LVAI2]
+AiderPersonRelationship = [LVAV2]
+AiderAddress = [LVAJ2]
+AiderTown = [LVA65]
+AiderCountry = [LVAB5]
+AiderUser = [LVAHC]
+AiderUserRole = [LVAKC]
+AiderGroupDef = [LVA2A]
+AiderFunctionDef = [LVA7A]
+
 
 <meta>
   <T>
+    <t eid="@AiderPerson">
+    </t>
     <t eid="@AiderGroup">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
+    </t>
+    <t eid="@AiderHousehold">
+    </t>
+    <t eid="@AiderPersonRelationship">
+    </t>
+    <t eid="@AiderAddress">
+    </t>
+    <t eid="@AiderTown">
+    </t>
+    <t eid="@AiderCountry">
+    </t>
+    <t eid="@AiderUser">
+    </t>
+    <t eid="@AiderUserRole">
+    </t>
+    <t eid="@AiderGroupDef">
+    </t>
+    <t eid="@AiderFunctionDef">
     </t>
   </T>
   <D>
@@ -30,7 +61,7 @@ AiderGroup = [LVA54]
     <d n="AiderUserRole" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderGroupDef" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderFunctionDef" dg="@submenuDefs"><R><r>@user</r></R></d>
-  </D>
+    </D>
   <G/>
 </meta>
 

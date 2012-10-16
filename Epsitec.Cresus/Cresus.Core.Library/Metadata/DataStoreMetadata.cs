@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			var metadata  = new DataStoreMetadata ();
 
 			metadata.tables.AddRange (xmlTables.Select (x => EntityTableMetadata.Restore (x)));
-			metadata.dataSets.AddRange (xmlDataSets.Select (x => DataSetMetadata.Restore (x)));
+			metadata.dataSets.AddRange (xmlDataSets.Select (x => DataSetMetadata.Restore (x, metadata.tables)));
 			metadata.displayGroupIds.AddRange (xmlGroupIds.Select (x => Druid.Parse (x.Attribute (Xml.Id).Value)));
 
 			return metadata;

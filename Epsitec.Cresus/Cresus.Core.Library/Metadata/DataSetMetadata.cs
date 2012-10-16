@@ -94,6 +94,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public EntityTableMetadata				EntityTableMetadata
+		{
+			get
+			{
+				return this.entityTableMetadata;
+			}
+		}
+
 
 		public bool MatchesUserRole(string role)
 		{
@@ -124,6 +132,11 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.filter = filter;
 		}
 
+		public void DefineEntityTableMetadata(EntityTableMetadata entityTableMetadata)
+		{
+			this.entityTableMetadata = entityTableMetadata;
+		}
+
 		public override void Add(CoreMetadata metadata)
 		{
 			throw new System.NotImplementedException ();
@@ -144,15 +157,18 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new XElement (xmlNodeName, attributes, roles, filter);
 		}
 
-		public static DataSetMetadata Restore(XElement xml)
+		public static DataSetMetadata Restore(XElement xml, IEnumerable<EntityTableMetadata> tables)
 		{
 			var data     = Xml.GetAttributeBag (xml);
 			var roles    = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
 			var filter   = xml.Element (Strings.Filter);
 			var metadata = new DataSetMetadata (data);
 
+			var entityId = EntityInfo.GetTypeId (metadata.dataSetEntityType);
+
 			metadata.userRoles.AddRange (roles);
 			metadata.DefineFilter (EntityFilter.Restore (filter));
+			metadata.DefineEntityTableMetadata (tables.Single (t => t.EntityId == entityId));
 
 			return metadata;
 		}
@@ -196,5 +212,6 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private Druid							displayGroupCaptionId;
 		private EntityFilter					filter;
+		private EntityTableMetadata				entityTableMetadata;
 	}
 }
