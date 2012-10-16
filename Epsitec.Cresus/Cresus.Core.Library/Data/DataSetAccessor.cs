@@ -31,7 +31,6 @@ namespace Epsitec.Cresus.Core.Data
 			this.entityType      = dataSetMetadata.DataSetEntityType;
 			this.dataSetMetadata = dataSetMetadata;
 			this.dataContext     = this.data.CreateIsolatedDataContext ("DataSetAccessor");
-			this.sortColumns     = new List<EntityColumnMetadata> ();
 
 			this.isolatedTransaction = isolatedTransaction;
 		}
@@ -45,7 +44,7 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		public DataSetMetadata					Metadata
+		public DataSetMetadata					DataSetMetadata
 		{
 			get
 			{
@@ -94,16 +93,6 @@ namespace Epsitec.Cresus.Core.Data
 				.ToArray ();
 		}
 
-		public void SetSortOrder(IEnumerable<EntityColumnMetadata> columns)
-		{
-			this.sortColumns.Clear ();
-
-			if (columns != null)
-			{
-				this.sortColumns.AddRange (columns);
-			}
-		}
-
 
 		#region IDisposable Members
 
@@ -147,26 +136,54 @@ namespace Epsitec.Cresus.Core.Data
 			//	TODO: ...
 
 			var example = this.GetExample ();
-			
+
 			var request = new Request ()
 			{
 				RequestedEntity = example,
 				RootEntity = example,
 			};
 
-			IFilter scopeFilter = UserManager.Current.ActiveSession.GetScopeFilter (this.entityType, example);
+			var session = UserManager.Current.ActiveSession;
+
+			var scopeFilter = session.GetScopeFilter (this.entityType, example);
+			var tableSettings = session.GetTableSettings (this.entityType);
 
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
 			request.AddCondition (this.dataContext, example, scopeFilter);
-			request.SortClauses.AddRange (this.CreateSortClauses (example));
+			request.AddCondition (this.dataContext, example, tableSettings.Filter);
+
+			IEnumerable<SortClause> sortClauses;
+
+			if (tableSettings.Sort.Any ())
+			{
+				var settingsSort = tableSettings.Sort;
+
+				sortClauses = settingsSort.Select (sc => this.CreateSortClause (sc, example));
+			}
+			else
+			{
+				var defaultSort = this.dataSetMetadata.EntityTableMetadata.GetSortColumns ();
+
+				sortClauses = defaultSort.Select (c => this.CreateSortClause (c, example));
+			}
+
+			request.SortClauses.AddRange (sortClauses);
 
 			this.requestView = this.dataContext.GetRequestView (request, true, this.isolatedTransaction);
 		}
 
-		private IEnumerable<SortClause> CreateSortClauses(AbstractEntity example)
+		private SortClause CreateSortClause(ColumnRef<EntityColumnSort> sortColumn, AbstractEntity example)
 		{
-			return this.sortColumns.Select (c => c.DefaultSort.ToSortClause (c, example));
+			var column = this.DataSetMetadata.EntityTableMetadata.FindColumn (sortColumn.Id);
+
+			return sortColumn.Value.ToSortClause (column, example);
 		}
+
+		private SortClause CreateSortClause(EntityColumnMetadata column, AbstractEntity example)
+		{
+			return column.DefaultSort.ToSortClause (column, example);
+		}
+
 
 		private int RetrieveItemCount()
 		{
@@ -181,7 +198,6 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly DataContext			dataContext;
 		private readonly System.Type			entityType;
 		private readonly IsolatedTransaction	isolatedTransaction;
-		private readonly List<EntityColumnMetadata>	sortColumns;
 		private readonly DataSetMetadata		dataSetMetadata;
 		
 		private AbstractRequestView				requestView;
