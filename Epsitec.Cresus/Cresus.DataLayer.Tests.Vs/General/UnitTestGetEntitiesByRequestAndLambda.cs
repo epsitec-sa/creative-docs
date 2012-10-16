@@ -1112,6 +1112,23 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		}
 
 
+		[TestMethod]
+		public void Convert()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+
+				var request = Request.Create (person);
+				request.AddCondition (dataContext, person, p => p.Lastname == SqlMethods.Convert<int, string> (42));
+
+				var result = dataContext.GetByRequest (request).ToList ();
+				Assert.AreEqual (0, result.Count);
+			}
+		}
+
+
 		private int member = 42;
 
 

@@ -1738,6 +1738,29 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		}
 
 
+		[TestMethod]
+		public void Convert()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var entity = new ValueDataEntity ();
+				this.Check
+				(
+					dataContext,
+					entity,
+					x => x.IntegerValue == SqlMethods.Convert<string, int> ("foobar"),
+					new BinaryComparison
+					(
+						ValueField.Create (entity, x => x.IntegerValue),
+						BinaryComparator.IsEqual,
+						new Constant ("foobar")
+					)
+				);
+			}
+		}
+
+
 		private int member = 1;
 
 		

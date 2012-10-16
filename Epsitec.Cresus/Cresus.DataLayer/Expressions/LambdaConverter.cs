@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					(DataExpression) operand
 				);
 			}
-			else if (nodeType == ExpressionType.Convert || nodeType == ExpressionType.ConvertChecked)
+			else if (this.IsTypeConversionOperator (nodeType))
 			{
 				// In this case, we have a type conversion. So we skip the conversion and return the
 				// value to be converted. This behavior works for simple case. However, it might not
@@ -208,6 +208,13 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			}
 			
 			return this.PushAndReturn (node, result);
+		}
+
+
+		private bool IsTypeConversionOperator(ExpressionType type)
+		{
+			return type == ExpressionType.Convert
+				|| type == ExpressionType.ConvertChecked;
 		}
 
 
@@ -518,6 +525,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				expression = this.VisitMethodCallAny (node);
 			}
+			else if (method.IsGenericMethod && method.GetGenericMethodDefinition () == SqlMethods.ConvertMethodInfo)
+			{
+				expression = this.VisitMethodCallConvert (node);
+			}
 			else
 			{
 				throw new NotSupportedException ();
@@ -663,6 +674,15 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		private DataExpression CombineSetValueTests(DataExpression e1, DataExpression e2)
 		{
 			return new BinaryOperation (e1, BinaryOperator.Or, e2);
+		}
+
+
+		private object VisitMethodCallConvert(MethodCallExpression methodCall)
+		{
+			// This is a dummy conversion method used to bypass the type safety checks of the
+			// expression tree, so we simple return the argument of the method call.
+
+			return this.VisitAndPop (methodCall.Arguments[0]);
 		}
 
 

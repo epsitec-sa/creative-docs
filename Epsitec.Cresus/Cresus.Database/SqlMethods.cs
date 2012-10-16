@@ -53,6 +53,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public static MethodInfo ConvertMethodInfo
+		{
+			get
+			{
+				return SqlMethods.convertMethodInfo;
+			}
+		}
+
 
 		/// <summary>
 		/// Compares two strings. This method is used when generating SQL queries based
@@ -111,6 +119,26 @@ namespace Epsitec.Cresus.Database
 			throw new System.NotImplementedException ();
 		}
 
+		/// <summary>
+		/// This method is used to convert between values of two different type. SQL is not type
+		/// safe so we can write a something like 'My string' = 42. However, The C# Expression Trees
+		/// are type safe and we can't write that kind of stuff. We can't even make Expression Trees
+		/// to compare between a FormattedText and a string, which is kind of weird. So this method
+		/// lets you "convert" between the types. What happens is that this method call is simply
+		/// discarded by the LambdaConverter so for it, it is as if it did not exist, but it allows
+		/// to bypass the type safety checks in the Expression Trees.
+		/// </summary>
+		/// <typeparam name="TIn">The type that you want to convert from.</typeparam>
+		/// <typeparam name="TOut">The type that you want to convert to.</typeparam>
+		/// <param name="value">The value that you want to convert.</param>
+		/// <exception cref="System.NotImplementedException">
+		/// Do not call this method, it is a stub which will always throw an exception
+		/// </exception>
+		public static TOut Convert<TIn, TOut>(TIn value)
+		{
+			throw new System.NotImplementedException ();
+		}
+
 		
 		static SqlMethods()
 		{
@@ -119,6 +147,7 @@ namespace Epsitec.Cresus.Database
 			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new System.Type[] { typeof (string), typeof (string) });
 			SqlMethods.isInSetMethodInfo	 = typeof (SqlMethods).GetMethod ("IsInSet", new System.Type[] { typeof (object), typeof (IEnumerable<object>) });
 			SqlMethods.isNotInSetMethodInfo	 = typeof (SqlMethods).GetMethod ("IsNotInSet", new System.Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.convertMethodInfo	 = typeof (SqlMethods).GetMethod ("Convert");
 		}
 
 		private static readonly MethodInfo		compareToMethodInfo;
@@ -126,5 +155,6 @@ namespace Epsitec.Cresus.Database
 		private static readonly MethodInfo		escapedLikeMethodInfo;
 		private static readonly MethodInfo		isInSetMethodInfo;
 		private static readonly MethodInfo		isNotInSetMethodInfo;
+		private static readonly MethodInfo		convertMethodInfo;
 	}
 }
