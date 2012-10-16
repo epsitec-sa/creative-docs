@@ -7,6 +7,8 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Metadata;
 
+using Epsitec.Cresus.Database;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -49,10 +51,10 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			if (parameter.Type != expression.Type)
 			{
-				throw new System.ArgumentException (string.Format ("Parameter type mismatch: trying to compare {0} with {1}", parameter.Type.FullName, expression.Type.FullName));
+				expression = ColumnFilterExpression.Convert (expression, parameter.Type);
 			}
 
-			if (parameter.Type == typeof (string))
+			if (ColumnFilterExpression.IsStringType (parameter.Type))
 			{
 				return ColumnFilterExpression.CompareStrings (parameter, code, expression);
 			}
@@ -84,6 +86,12 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private static Expression CompareStrings(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
+			if (parameter.Type != typeof (string))
+			{
+				parameter = ColumnFilterExpression.Convert (parameter, typeof (string));
+				expression = ColumnFilterExpression.Convert (expression, typeof (string));
+			}
+
 			switch (code)
 			{
 				case ColumnFilterComparisonCode.Equal:
@@ -120,6 +128,23 @@ namespace Epsitec.Cresus.Core.Metadata
 					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));
 			}
 		}
+
+		private static bool IsStringType(System.Type type)
+		{
+			return type == typeof (string)
+				|| type == typeof (FormattedText)
+				|| type == typeof (FormattedText?);
+		}
+
+		private static Expression Convert(Expression expression, System.Type type)
+		{
+			var declaringType = typeof (SqlMethods);
+			var methodName = SqlMethods.ConvertMethodInfo.Name;
+			var genericArguments = new System.Type[] { expression.Type, type };
+
+			return Expression.Call (declaringType, methodName, genericArguments, expression);
+		}
+
 
 		private static readonly Expression zero = Expression.Constant (0);
 	}
