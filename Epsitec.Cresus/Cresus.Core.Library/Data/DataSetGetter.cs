@@ -30,6 +30,11 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public DataSetAccessor ResolveAccessor(DataSetMetadata metadata)
+		{
+			return this.ResolveAccessor (metadata.DataSetEntityType, metadata);
+		}
+
 		public DataSetAccessor ResolveAccessor(System.Type entityType, DataSetMetadata metadata)
 		{
 			return Resolver.ResolveAccessor (this.Host, entityType, metadata);
