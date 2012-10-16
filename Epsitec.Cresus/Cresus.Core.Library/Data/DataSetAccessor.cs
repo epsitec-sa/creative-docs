@@ -50,6 +50,12 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+
+		public void MakeDependent()
+		{
+			this.isDependent = true;
+		}
+
 		public int GetItemCount()
 		{
 			if (this.itemCount == null)
@@ -174,7 +180,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			request.SortClauses.AddRange (sortClauses);
 
-			this.requestView = this.dataContext.GetRequestView (request, true, this.isolatedTransaction);
+			this.requestView = this.dataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
 		}
 
 		private SortClause CreateSortClause(ColumnRef<EntityColumnSort> sortColumn, AbstractEntity example)
@@ -207,5 +213,6 @@ namespace Epsitec.Cresus.Core.Data
 		
 		private AbstractRequestView				requestView;
 		private int?							itemCount;
+		private bool							isDependent;
 	}
 }
