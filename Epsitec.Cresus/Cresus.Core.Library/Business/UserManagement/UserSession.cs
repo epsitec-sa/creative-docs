@@ -58,17 +58,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
-
 		public UserEntityTableSettings GetTableSettings(System.Type entityType)
 		{
-			var entitySettings = this.GetEntityUISettingsEntity (entityType);
+			var context = this.userManager.BusinessContext;
 
-			if (entitySettings == null)
-			{
-				return null;
-			}
-
-			return entitySettings.TableSettings;
+			return this.GetEntityUISettingsEntity (entityType, context).TableSettings;
 		}
 
 		public void SetTableSettings(System.Type entityType, UserEntityTableSettings settings)
