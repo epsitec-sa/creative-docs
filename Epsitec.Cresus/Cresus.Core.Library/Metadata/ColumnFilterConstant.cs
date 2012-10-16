@@ -95,13 +95,18 @@ namespace Epsitec.Cresus.Core.Metadata
 			string text;
 			string code = ColumnFilterConstant.ToTypeCode (this.type);
 
-			if ((this.value != null) &&
-				(this.type == ColumnFilterConstantType.Enumeration))
+			if (this.value == null)
+			{
+				// The Invariant Converter does not handle properly null values. It doesn't know how
+				// to convert them. So we do it by ourselves.
+
+				text = "";
+			}
+			else if (this.type == ColumnFilterConstantType.Enumeration)
 			{
 				text = EnumType.ToCompactString ((System.Enum)this.value);
 			}
-			else if ((this.value != null) &&
-					 (this.type == ColumnFilterConstantType.DateTime))
+			else if (this.type == ColumnFilterConstantType.DateTime)
 			{
 				// Here we don't use the InvariantConverter because it serializes only the UTC value
 				// of the DateTime and does not store the data about its time zone. So if we had a
@@ -239,6 +244,11 @@ namespace Epsitec.Cresus.Core.Metadata
 		
 		private static object FromValue(ColumnFilterConstantType type, string value)
 		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+
 			switch (type)
 			{
 				case ColumnFilterConstantType.Integer:

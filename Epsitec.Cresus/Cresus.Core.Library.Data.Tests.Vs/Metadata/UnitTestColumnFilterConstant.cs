@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			var col8 = ColumnFilterConstant.From (new Time (11, 00, 59));
 			var col9 = ColumnFilterConstant.From (false);
 			var col10 = ColumnFilterConstant.From (42L);
+			var col11 = ColumnFilterConstant.From ((bool?) null);
 
 			Assert.AreEqual (ColumnFilterConstantType.EntityKey, col1.Type);
 			Assert.AreEqual (ColumnFilterConstantType.Enumeration, col2.Type);
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			Assert.AreEqual (ColumnFilterConstantType.Time, col8.Type);
 			Assert.AreEqual (ColumnFilterConstantType.Boolean, col9.Type);
 			Assert.AreEqual (ColumnFilterConstantType.Long, col10.Type);
+			Assert.AreEqual (ColumnFilterConstantType.Boolean, col11.Type);
 
 			var ser1 = col1.ToString ();
 			var ser2 = col2.ToString ();
@@ -54,6 +56,7 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			var ser8 = col8.ToString ();
 			var ser9 = col9.ToString ();
 			var ser10 = col10.ToString ();
+			var ser11 = col11.ToString ();
 
 			Assert.AreEqual (col1, ColumnFilterConstant.Parse (ser1));
 			Assert.AreEqual (col2, ColumnFilterConstant.Parse (ser2));
@@ -65,6 +68,7 @@ namespace Epsitec.Cresus.Core.Metadata.Tests.Vs
 			Assert.AreEqual (col8, ColumnFilterConstant.Parse (ser8));
 			Assert.AreEqual (col9, ColumnFilterConstant.Parse (ser9));
 			Assert.AreEqual (col10, ColumnFilterConstant.Parse (ser10));
+			Assert.AreEqual (col11, ColumnFilterConstant.Parse (ser11));
 		}
 	}
 }
