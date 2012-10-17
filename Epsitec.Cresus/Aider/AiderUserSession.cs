@@ -37,16 +37,6 @@ namespace Epsitec.Aider
 
 		public override IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
-			if (entityType == typeof (AiderPersonEntity))
-			{
-				return this.GetAiderPersonEntityFilter (example as AiderPersonEntity);
-			}
-			
-			return null;
-		}
-
-		private IFilter GetAiderPersonEntityFilter(AiderPersonEntity example)
-		{
 			var pattern = this.GetActiveScopePathPattern ();
 
 			if (pattern == null)
@@ -54,6 +44,22 @@ namespace Epsitec.Aider
 				return null;
 			}
 
+			pattern = AiderGroupIds.ReplacePlaceholders (pattern);
+			
+			if (entityType == typeof (AiderPersonEntity))
+			{
+				return this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern);
+			}
+			else if (entityType == typeof (AiderGroupEntity))
+			{
+				return this.GetAiderGroupEntityFilter ((AiderGroupEntity) example, pattern);
+			}
+			
+			return null;
+		}
+
+		private IFilter GetAiderPersonEntityFilter(AiderPersonEntity example, string pattern)
+		{
 			if (example.Parish == null)
 			{
 				example.Parish = new AiderGroupParticipantEntity ();
@@ -63,10 +69,14 @@ namespace Epsitec.Aider
 				example.Parish.Group = new AiderGroupEntity ();
 			}
 
-			pattern = AiderGroupIds.ReplacePlaceholders (pattern);
-
 			return new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.Parish.Group.Path, pattern));
 		}
+
+		private IFilter GetAiderGroupEntityFilter(AiderGroupEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderGroupEntity> (x => SqlMethods.Like (x.Path, pattern));
+		}
+
 
 		private string GetActiveScopePathPattern()
 		{
