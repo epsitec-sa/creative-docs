@@ -16,6 +16,7 @@ AiderTown = [LVA65]
 AiderCountry = [LVAB5]
 AiderUser = [LVAHC]
 AiderUserRole = [LVAKC]
+AiderUserScope = [LVACC]
 AiderGroupDef = [LVA2A]
 AiderFunctionDef = [LVA7A]
 
@@ -44,6 +45,8 @@ AiderFunctionDef = [LVA7A]
     </t>
     <t eid="@AiderUserRole">
     </t>
+    <t eid="@AiderUserScope">
+    </t>
     <t eid="@AiderGroupDef">
     </t>
     <t eid="@AiderFunctionDef">
@@ -59,6 +62,7 @@ AiderFunctionDef = [LVA7A]
     <d n="AiderCountry" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderUser" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderUserRole" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d n="AiderUserScope" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderGroupDef" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d n="AiderFunctionDef" dg="@submenuDefs"><R><r>@user</r></R></d>
   </D>
