@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignToParish(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity parishGroup)
 		{
-			parishGroup.AddParticipant (businessContext, person, Date.Today, null, null);
+			person.Parish = parishGroup.AddParticipant (businessContext, person, Date.Today, null, null);
 		}
 
 
