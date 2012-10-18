@@ -4,9 +4,9 @@
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
-using System.Collections.Concurrent;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
+using System.Threading;
 
 namespace Epsitec.Common.Types
 {
@@ -19,15 +19,17 @@ namespace Epsitec.Common.Types
 	{
 		public TypeEnumerator()
 		{
+			this.exclusion = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
+
 			this.types         = new List<System.Type> ();
 			this.assemblies    = new List<Assembly> ();
 			this.typeNames     = new HashSet<string> ();
 			this.typeMap       = new Dictionary<string, List<System.Type>> ();
 			this.attributes    = new Dictionary<System.Type, List<System.Attribute>> ();
 			this.assemblyNames = new HashSet<string> ();
-			
-			this.namespaceShortcutsShortToFull = new ConcurrentDictionary<string, string> ();
-			this.namespaceShortcutsFullToShort = new ConcurrentDictionary<string, string> ();
+
+			this.namespaceShortcutsShortToFull = new Dictionary<string, string> ();
+			this.namespaceShortcutsFullToShort = new Dictionary<string, string> ();
 
 			Epsitec.Common.Support.AssemblyLoader.AssemblyLoaded += this.HandleCurrentDomainAssemblyLoaded;
 
@@ -53,8 +55,10 @@ namespace Epsitec.Common.Types
 		/// <returns>The collection of types, which will be empty if none was found.</returns>
 		public IEnumerable<System.Type> GetTypesFromName(string typeName)
 		{
-			lock (this.types)
+			try
 			{
+				this.exclusion.EnterReadLock ();
+				
 				List<System.Type> list;
 
 				if (this.typeMap.TryGetValue (typeName, out list))
@@ -65,6 +69,10 @@ namespace Epsitec.Common.Types
 				{
 					return Epsitec.Common.Types.Collections.EmptyEnumerable<System.Type>.Instance;
 				}
+			}
+			finally
+			{
+				this.exclusion.ExitReadLock ();
 			}
 		}
 
@@ -101,9 +109,15 @@ namespace Epsitec.Common.Types
 		/// <returns>The collection of loaded assemblies.</returns>
 		public IEnumerable<Assembly> GetLoadedAssemblies()
 		{
-			lock (this.assemblies)
+			try
 			{
+				this.exclusion.EnterReadLock ();
+
 				return this.assemblies.ToArray ();
+			}
+			finally
+			{
+				this.exclusion.ExitReadLock ();
 			}
 		}
 
@@ -119,14 +133,20 @@ namespace Epsitec.Common.Types
 			{
 				System.Type type;
 
-				lock (this.types)
+				try
 				{
+					this.exclusion.EnterReadLock ();
+
 					if (index >= this.types.Count)
 					{
 						yield break;
 					}
 
 					type = this.types[index++];
+				}
+				finally
+				{
+					this.exclusion.ExitReadLock ();
 				}
 
 				yield return type;
@@ -141,19 +161,25 @@ namespace Epsitec.Common.Types
 		public IEnumerable<TAttribute> GetAllAssemblyLevelAttributes<TAttribute>()
 			where TAttribute : System.Attribute
 		{
-			var result = new List<TAttribute> ();
-
-			lock (this.attributes)
+			try
 			{
+				this.exclusion.EnterReadLock ();
+
+				var result = new List<TAttribute> ();
+
 				List<System.Attribute> list;
-				
+
 				if (this.attributes.TryGetValue (typeof (TAttribute), out list))
 				{
 					result.AddRange (list.Cast<TAttribute> ());
 				}
-			}
 
-			return result;
+				return result;
+			}
+			finally
+			{
+				this.exclusion.ExitReadLock ();
+			}
 		}
 
 
@@ -165,22 +191,32 @@ namespace Epsitec.Common.Types
 		/// <returns>The shortened name.</returns>
 		public string ShrinkTypeName(string name)
 		{
-			var keys = this.namespaceShortcutsFullToShort.Keys.ToArray ();
-			
 			int    length = 0;
 			string shortName = "";
 
-			foreach (var key in keys)
+			try
 			{
-				if (name.StartsWith (key))
+				this.exclusion.EnterReadLock ();
+
+				foreach (var item in this.namespaceShortcutsFullToShort)
 				{
-					if ((key.Length > length) &&
-						(name.Length == key.Length || name[key.Length] == '.'))
+					var key = item.Key;
+					var value = item.Value;
+
+					if (name.StartsWith (key))
 					{
-						length = key.Length;
-						shortName = this.namespaceShortcutsFullToShort[key];
+						if ((key.Length > length) &&
+						(name.Length == key.Length || name[key.Length] == '.'))
+						{
+							length = key.Length;
+							shortName = value;
+						}
 					}
 				}
+			}
+			finally
+			{
+				this.exclusion.ExitReadLock ();
 			}
 
 			if (name.Length == length)
@@ -223,7 +259,19 @@ namespace Epsitec.Common.Types
 
 			var shortName = name.Substring (1, pos-1);
 			var otherName = name.Substring (pos);
-			var fullName  = this.namespaceShortcutsShortToFull[shortName];
+
+			string fullName;
+
+			try
+			{
+				this.exclusion.EnterReadLock ();
+
+				fullName  = this.namespaceShortcutsShortToFull[shortName];
+			}
+			finally
+			{
+				this.exclusion.ExitReadLock ();
+			}
 
 			return fullName + otherName;
 		}
@@ -243,106 +291,106 @@ namespace Epsitec.Common.Types
 		/// <param name="assembly">The assembly.</param>
 		private void AnalyseAssembly(Assembly assembly)
 		{
+
 #if DOTNET35
-			if (!assembly.ReflectionOnly)
+			if (assembly.ReflectionOnly)
 #else
-			if ((!assembly.IsDynamic) &&
-				(!assembly.ReflectionOnly))
+			if (assembly.ReflectionOnly || assembly.IsDynamic)
 #endif
 			{
-				lock (this.assemblies)
+				return;
+			}
+
+			try
+			{
+				this.exclusion.EnterWriteLock ();
+
+				if (this.assemblyNames.Add (assembly.FullName))
 				{
-					if (this.assemblyNames.Add (assembly.FullName))
-					{
-						System.Diagnostics.Debug.WriteLine ("TypeEnumerator: analyzing assembly " + assembly.FullName);
-						this.assemblies.Add (assembly);
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine ("TypeEnumerator: skipping assembly " + assembly.FullName);
-						return;
-					}
+					System.Diagnostics.Debug.WriteLine ("TypeEnumerator: analyzing assembly " + assembly.FullName);
+					this.assemblies.Add (assembly);
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine ("TypeEnumerator: skipping assembly " + assembly.FullName);
+					return;
 				}
 
 				var types = assembly.GetTypes ();
 
-				lock (this.types)
+				foreach (var type in types)
 				{
-					foreach (var type in types)
+					var name = type.FullName;
+
+					if (this.typeNames.Add (type.AssemblyQualifiedName))
 					{
-						var name = type.FullName;
+						this.types.Add (type);
 
-						if (this.typeNames.Add (type.AssemblyQualifiedName))
+						List<System.Type> list;
+
+						if (this.typeMap.TryGetValue (name, out list))
 						{
-							this.types.Add (type);
-
-							List<System.Type> list;
-							
-							if (this.typeMap.TryGetValue (name, out list))
-							{
-							}
-							else
-							{
-								list = new List<System.Type> ();
-								this.typeMap[name] = list;
-							}
-
-							list.Add (type);
 						}
 						else
 						{
-							System.Diagnostics.Debug.Fail (string.Format ("TypeEnumerator: found duplicate type '{0}'", name));
+							list = new List<System.Type> ();
+							this.typeMap[name] = list;
 						}
+
+						list.Add (type);
+					}
+					else
+					{
+						System.Diagnostics.Debug.Fail (string.Format ("TypeEnumerator: found duplicate type '{0}'", name));
 					}
 				}
 
 				var shortcuts = assembly.GetCustomAttributes<NamespaceShortcutAttribute> ();
 
-				lock (this.namespaceShortcutsShortToFull)
+				foreach (var shortcut in shortcuts)
 				{
-					foreach (var shortcut in shortcuts)
+					string shortName;
+					string fullName;
+
+					if (this.namespaceShortcutsFullToShort.TryGetValue (shortcut.FullName, out shortName))
 					{
-						string shortName;
-						string fullName;
-
-						if (this.namespaceShortcutsFullToShort.TryGetValue (shortcut.FullName, out shortName))
-						{
-							System.Diagnostics.Debug.Assert (shortName == shortcut.ShortName);
-						}
-						if (this.namespaceShortcutsShortToFull.TryGetValue (shortcut.ShortName, out fullName))
-						{
-							System.Diagnostics.Debug.Assert (fullName == shortcut.FullName);
-						}
-
-						this.namespaceShortcutsShortToFull[shortcut.ShortName] = shortcut.FullName;
-						this.namespaceShortcutsFullToShort[shortcut.FullName]  = shortcut.ShortName;
+						System.Diagnostics.Debug.Assert (shortName == shortcut.ShortName);
 					}
+					if (this.namespaceShortcutsShortToFull.TryGetValue (shortcut.ShortName, out fullName))
+					{
+						System.Diagnostics.Debug.Assert (fullName == shortcut.FullName);
+					}
+
+					this.namespaceShortcutsShortToFull[shortcut.ShortName] = shortcut.FullName;
+					this.namespaceShortcutsFullToShort[shortcut.FullName]  = shortcut.ShortName;
 				}
-				
+
 				var attributes = assembly.GetCustomAttributes (false);
 
-				lock (this.attributes)
+				foreach (System.Attribute attribute in attributes)
 				{
-					foreach (System.Attribute attribute in attributes)
-					{
-						var attributeType = attribute.GetType ();
-						List<System.Attribute> attributeList;
+					var attributeType = attribute.GetType ();
+					List<System.Attribute> attributeList;
 
-						if (this.attributes.TryGetValue (attributeType, out attributeList))
-						{
-							//	List already exists.
-						}
-						else
-						{
-							attributeList = new List<System.Attribute> ();
-							this.attributes[attributeType] = attributeList;
-						}
-						
-						attributeList.Add (attribute);
+					if (this.attributes.TryGetValue (attributeType, out attributeList))
+					{
+						//	List already exists.
 					}
+					else
+					{
+						attributeList = new List<System.Attribute> ();
+						this.attributes[attributeType] = attributeList;
+					}
+
+					attributeList.Add (attribute);
 				}
 			}
+			finally
+			{
+				this.exclusion.ExitWriteLock ();
+			}
 		}
+
 
 		private static readonly TypeEnumerator	instance = new TypeEnumerator ();
 
@@ -352,7 +400,8 @@ namespace Epsitec.Common.Types
 		private readonly HashSet<string>		typeNames;
 		private readonly Dictionary<System.Type, List<System.Attribute>> attributes;
 		private readonly Dictionary<string, List<System.Type>> typeMap;
-		private readonly ConcurrentDictionary<string, string> namespaceShortcutsShortToFull;
-		private readonly ConcurrentDictionary<string, string> namespaceShortcutsFullToShort;
+		private readonly Dictionary<string, string> namespaceShortcutsShortToFull;
+		private readonly Dictionary<string, string> namespaceShortcutsFullToShort;
+		private readonly ReaderWriterLockSlim	exclusion;
 	}
 }
