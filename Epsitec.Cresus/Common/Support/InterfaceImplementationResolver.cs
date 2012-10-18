@@ -51,7 +51,7 @@ namespace Epsitec.Common.Support
 			var types = InterfaceImplementationResolver<TInterface>.FindSystemTypes (constructorArgumentTypes);
 
 			return from type in types
-				   select System.Activator.CreateInstance (type, constructorArguments) as TInterface;
+			       select System.Activator.CreateInstance (type, constructorArguments) as TInterface;
 		}
 
 		private static IEnumerable<System.Type> FindSystemTypes(System.Type[] constructorArgumentTypes)
@@ -59,8 +59,8 @@ namespace Epsitec.Common.Support
 			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
 						where type.IsClass
 						   && !type.IsAbstract
-						   && type.GetConstructor (constructorArgumentTypes) != null
 						   && type.ContainsInterface<TInterface> ()
+						   && type.GetConstructor (constructorArgumentTypes) != null
 						select type;
 
 			return types;
