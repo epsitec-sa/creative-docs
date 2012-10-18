@@ -161,10 +161,6 @@
       <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
       <Name>Epsitec.CresusToolkit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Aider\Aider.csproj">
-      <Project>{0F0E9452-EFE5-4007-B634-B0198E13E3DA}</Project>
-      <Name>Aider</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
