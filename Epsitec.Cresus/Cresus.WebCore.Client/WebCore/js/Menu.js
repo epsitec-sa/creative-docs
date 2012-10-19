@@ -1,4 +1,5 @@
 Ext.require([
+  'Epsitec.cresus.webcore.ScopeSelector',
   'Epsitec.cresus.webcore.Texts',
   'Epsitec.cresus.webcore.Tools'
 ],
@@ -6,6 +7,13 @@ function() {
   Ext.define('Epsitec.cresus.webcore.Menu', {
     extend: 'Ext.Toolbar',
     alternateClassName: ['Epsitec.Menu'],
+
+    /* Config */
+
+    layout: {
+      xtype: 'hbox',
+      align: 'stretch'
+    },
 
     /* Properties */
 
@@ -15,7 +23,12 @@ function() {
 
     constructor: function() {
       this.callParent(arguments);
-      this.add(this.createDatabasesGroup(), '->', this.createToolsGroup());
+      this.add(
+          this.createDatabasesGroup(),
+          '->',
+          this.createScopeSelector(),
+          this.createToolsGroup()
+      );
       return this;
     },
 
@@ -64,6 +77,18 @@ function() {
 
     databaseClickCallback: function(database) {
       this.application.tabManager.showEntityTab(database);
+    },
+
+    createScopeSelector: function() {
+      var scopeSelector = Ext.create('Epsitec.cresus.webcore.ScopeSelector', {
+        margin: '5 5 5 5'
+      });
+
+      return Ext.create('Ext.container.ButtonGroup', {
+        title: 'Scopes',
+        headerPosition: 'bottom',
+        items: [scopeSelector]
+      });
     },
 
     createToolsGroup: function() {
