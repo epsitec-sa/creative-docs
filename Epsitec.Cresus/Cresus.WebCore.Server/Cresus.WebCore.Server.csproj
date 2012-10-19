@@ -79,6 +79,7 @@
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="NancyHosting\Dumper.cs" />
     <Compile Include="Core\Databases\Database.cs" />
+    <Compile Include="NancyModules\ScopeModule.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache.cs" />
