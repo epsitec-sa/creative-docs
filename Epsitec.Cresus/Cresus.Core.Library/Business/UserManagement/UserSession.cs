@@ -1,15 +1,9 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Factories;
-using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.Settings;
 using Epsitec.Cresus.Core.Metadata;
 
@@ -77,11 +71,25 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 
+
 		public virtual IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
 			return null;
 		}
 
+		public virtual IEnumerable<UserScope> GetAvailableUserScopes()
+		{
+			return Enumerable.Empty<UserScope> ();
+		}
+
+		public virtual UserScope GetActiveUserScope()
+		{
+			return null;
+		}
+
+		public virtual void SetActiveUserScope(string scopeId)
+		{
+		}
 		
 
 		#region IDisposable Members

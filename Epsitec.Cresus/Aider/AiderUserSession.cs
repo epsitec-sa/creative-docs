@@ -7,6 +7,7 @@ using Epsitec.Aider.Data;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -77,7 +78,6 @@ namespace Epsitec.Aider
 			return new LambdaFilter<AiderGroupEntity> (x => SqlMethods.Like (x.Path, pattern));
 		}
 
-
 		private string GetActiveScopePathPattern()
 		{
 			var scope = this.GetActiveScope ();
@@ -103,6 +103,48 @@ namespace Epsitec.Aider
 		}
 
 
+		public override IEnumerable<UserScope> GetAvailableUserScopes()
+		{
+			var user = this.UserManager.AuthenticatedUser;
+
+			var defaultScopes = user.Role.DefaultScopes;
+			var customScopes = user.CustomScopes;
+
+			return defaultScopes
+				.Concat (customScopes)
+				.Distinct ()
+				.Select (s => this.GetUserScope (s))
+				.ToList ();
+		}
+
+		public override UserScope GetActiveUserScope()
+		{
+			var activeScope = this.GetActiveScope ();
+
+			return this.GetUserScope (activeScope);
+		}
+
+		private UserScope GetUserScope(AiderUserScopeEntity scope)
+		{
+			var dataContext = this.UserManager.BusinessContext.DataContext;
+
+			var id = dataContext.GetNormalizedEntityKey (scope).Value.ToString ();
+			var name = scope.Name;
+
+			return new UserScope (id, name);
+		}
+		
+		public override void SetActiveUserScope(string scopeId)
+		{
+			var entityKey = EntityKey.Parse (scopeId);
+			var dataContext = this.UserManager.BusinessContext.DataContext;
+
+			var scope = (AiderUserScopeEntity) dataContext.ResolveEntity (entityKey);
+
+			this.SetActiveScope (scope);
+		}
+
+		
 		public void SetActiveScope(AiderUserScopeEntity scope)
 		{
 			if (this.activeScope == scope)

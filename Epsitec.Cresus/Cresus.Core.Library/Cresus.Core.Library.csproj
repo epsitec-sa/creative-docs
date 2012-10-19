@@ -123,6 +123,7 @@
     <Compile Include="Business\UserManagement\UserAuthenticationMethod.cs" />
     <Compile Include="Business\UserManagement\UserManager.cs" />
     <Compile Include="Business\UserManagement\UserPowerLevel.cs" />
+    <Compile Include="Business\UserManagement\UserScope.cs" />
     <Compile Include="Business\UserManagement\UserSession.cs" />
     <Compile Include="Business\UserManagement\UserSummary.cs" />
     <Compile Include="CommandHandlerStack.cs" />
