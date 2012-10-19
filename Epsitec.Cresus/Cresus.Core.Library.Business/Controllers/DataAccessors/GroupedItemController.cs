@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				if (this.collectionAccessor == null)
 				{
-					return EmptyEnumerable<AbstractEntity>.Instance;
+					return Enumerable.Empty<AbstractEntity> ();
 				}
 				else
 				{

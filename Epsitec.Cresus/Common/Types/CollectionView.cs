@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -1461,7 +1462,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.leaves == null)
 					{
-						return Collections.EmptyEnumerable<object>.Instance;
+						return Enumerable.Empty<object> ();
 					}
 					else
 					{
@@ -1476,7 +1477,7 @@ namespace Epsitec.Common.Types
 				{
 					if (this.subnodes == null)
 					{
-						return Collections.EmptyEnumerable<GroupNode>.Instance;
+						return Enumerable.Empty<GroupNode> ();
 					}
 					else
 					{

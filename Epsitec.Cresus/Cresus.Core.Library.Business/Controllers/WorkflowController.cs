@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (workflow.IsNull ())
 			{
-				return EmptyEnumerable<WorkflowTransition>.Instance;
+				return Enumerable.Empty<WorkflowTransition> ();
 			}
 
 			var data = context.Data;
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (context == null)
 			{
-				return EmptyEnumerable<WorkflowEntity>.Instance;
+				return Enumerable.Empty<WorkflowEntity> ();
 			}
 
 			return (from workflowHost in context.GetMasterEntities ().OfType<IWorkflowHost> ()
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				return EmptyEnumerable<WorkflowEdgeEntity>.Instance;
+				return Enumerable.Empty<WorkflowEdgeEntity> ();
 			}
 		}
 
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else if (node.Edges.Count == 0)
 			{
-				return EmptyEnumerable<WorkflowEdgeEntity>.Instance;
+				return Enumerable.Empty<WorkflowEdgeEntity> ();
 			}
 			else
 			{

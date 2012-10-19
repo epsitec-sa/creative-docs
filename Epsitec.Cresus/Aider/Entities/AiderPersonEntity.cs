@@ -260,7 +260,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetHousemates(ref IList<AiderPersonEntity> value)
 		{
-			IEnumerable<AiderPersonEntity> housemates = EmptyEnumerable<AiderPersonEntity>.Instance;
+			IEnumerable<AiderPersonEntity> housemates = Enumerable.Empty<AiderPersonEntity> ();
 
 			if (this.Household1.IsNotNull ())
 			{

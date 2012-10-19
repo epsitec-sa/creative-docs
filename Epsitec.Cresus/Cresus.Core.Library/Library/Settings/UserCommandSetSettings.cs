@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 			else
 			{
-				return EmptyEnumerable<UserCommandSettings>.Instance;
+				return Enumerable.Empty<UserCommandSettings> ();
 			}
 		}
 
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 			else
 			{
-				return EmptyEnumerable<UserCommandSettings>.Instance;
+				return Enumerable.Empty<UserCommandSettings> ();
 			}
 		}
 

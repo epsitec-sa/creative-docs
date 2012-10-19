@@ -105,7 +105,7 @@ namespace Epsitec.Common.Support
 			{
 				if (this.first == null)
 				{
-					return EmptyEnumerable<string>.Instance;
+					return Enumerable.Empty<string> ();
 				}
 				if (this.next == null)
 				{

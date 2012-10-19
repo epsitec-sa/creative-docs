@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types.Internal
 {
@@ -248,7 +249,7 @@ namespace Epsitec.Common.Types.Internal
 		{
 			if (this.host.ItemCount == 0)
 			{
-				return Collections.EmptyEnumerable<object>.Instance;
+				return Enumerable.Empty<object> ();
 			}
 			else if (this.host.HasSubgroups)
 			{

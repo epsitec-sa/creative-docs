@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
-				return this.lockOwners as IEnumerable<LockOwner> ?? EmptyEnumerable<LockOwner>.Instance;
+				return this.lockOwners as IEnumerable<LockOwner> ?? Enumerable.Empty<LockOwner> ();
 			}
 		}
 

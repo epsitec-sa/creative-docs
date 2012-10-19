@@ -896,8 +896,6 @@
     <Compile Include="Types\Collections\Concurrent\BlockingBag.cs" />
     <Compile Include="Types\Collections\CountedStringDictionary.cs" />
     <Compile Include="Types\Collections\EmptyArray.cs" />
-    <Compile Include="Types\Collections\EmptyEnumerable.cs" />
-    <Compile Include="Types\Collections\EmptyEnumerator.cs" />
     <Compile Include="Types\Collections\EmptyList.cs" />
     <Compile Include="Types\Collections\EnumValueCollection.cs" />
     <Compile Include="Types\Collections\HostedDepdendencyObjectList.cs" />

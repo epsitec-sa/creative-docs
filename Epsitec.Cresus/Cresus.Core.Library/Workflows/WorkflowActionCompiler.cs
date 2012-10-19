@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		{
 			if (string.IsNullOrEmpty (source))
 			{
-				return EmptyEnumerable<string>.Instance;
+				return Enumerable.Empty<string> ();
 			}
 
 			return source.Split ('\n');

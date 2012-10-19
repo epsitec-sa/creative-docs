@@ -72,7 +72,7 @@ namespace Epsitec.Common.Support
 
 			if (prefix == escapeChar)
 			{
-				return EmptyEnumerable<string>.Instance;
+				return Enumerable.Empty<string> ();
 			}
 			
 			if (prefix == separatorChar)

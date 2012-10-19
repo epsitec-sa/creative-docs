@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
@@ -257,7 +258,7 @@ namespace Epsitec.Common.Types
 			{
 				if (this.values == null)
 				{
-					return Collections.EmptyEnumerable<string>.Instance;
+					return Enumerable.Empty<string> ();
 				}
 				else
 				{

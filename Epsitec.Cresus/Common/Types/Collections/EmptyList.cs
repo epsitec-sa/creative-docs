@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types.Collections
 {
@@ -95,7 +96,7 @@ namespace Epsitec.Common.Types.Collections
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return EmptyEnumerable<T>.Instance.GetEnumerator ();
+			return Enumerable.Empty<T> ().GetEnumerator ();
 		}
 
 		#endregion
@@ -104,7 +105,7 @@ namespace Epsitec.Common.Types.Collections
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return EmptyEnumerable<T>.Instance.GetEnumerator ();
+			return Enumerable.Empty<T> ().GetEnumerator ();
 		}
 
 		#endregion

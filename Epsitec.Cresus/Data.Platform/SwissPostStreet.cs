@@ -1,12 +1,11 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
-using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Data.Platform
 {
@@ -29,7 +28,7 @@ namespace Epsitec.Data.Platform
 		{
 			if (string.IsNullOrEmpty (name))
 			{
-				return EmptyEnumerable<string>.Instance;
+				return Enumerable.Empty<string> ();
 			}
 
 			name = TextConverter.ConvertToUpperAndStripAccents (name);

@@ -270,7 +270,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				return EmptyEnumerable<string>.Instance;
+				return Enumerable.Empty<string> ();
 			}
 		}
 

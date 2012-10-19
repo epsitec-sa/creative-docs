@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 			else
 			{
-				return EmptyEnumerable<string>.Instance;
+				return Enumerable.Empty<string> ();
 			}
 		}
 

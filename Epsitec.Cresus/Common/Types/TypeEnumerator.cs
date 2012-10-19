@@ -67,7 +67,7 @@ namespace Epsitec.Common.Types
 				}
 				else
 				{
-					return Epsitec.Common.Types.Collections.EmptyEnumerable<System.Type>.Instance;
+					return Enumerable.Empty<System.Type> ();
 				}
 			}
 			finally

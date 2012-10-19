@@ -571,7 +571,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		{
 			if (this.articleDef.ArticleCategory.IsNull ())
 			{
-				return EmptyEnumerable<ArticleAccountingDefinitionEntity>.Instance;
+				return Enumerable.Empty<ArticleAccountingDefinitionEntity> ();
 			}
 			
 			var accounting = (from def in this.articleDef.ArticleCategory.Accounting

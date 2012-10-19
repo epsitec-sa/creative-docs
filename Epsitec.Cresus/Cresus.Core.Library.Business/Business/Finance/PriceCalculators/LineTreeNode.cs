@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 					}
 					else
 					{
-						return Epsitec.Common.Types.Collections.EmptyEnumerable<AbstractDocumentItemEntity>.Instance;
+						return Enumerable.Empty<AbstractDocumentItemEntity> ();
 					}
 				}
 			}

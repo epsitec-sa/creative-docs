@@ -105,7 +105,6 @@
     <Compile Include="Support\DocumentTest.cs" />
     <Compile Include="Support\DruidTest.cs" />
     <Compile Include="Support\DynamicCodeTest.cs" />
-    <Compile Include="Support\EmptyEnumeratorTest.cs" />
     <Compile Include="Support\EntityFieldPathTest.cs" />
     <Compile Include="Support\EntityTest.cs" />
     <Compile Include="Support\EventsTest.cs" />
