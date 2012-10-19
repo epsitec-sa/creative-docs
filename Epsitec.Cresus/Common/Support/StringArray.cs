@@ -109,14 +109,14 @@ namespace Epsitec.Common.Support
 				}
 				if (this.next == null)
 				{
-					return new SingleValueEnumerable<string> (this.first);
+					return this.first.ToEnumerable ();
 				}
 				if (this.next is string)
 				{
 					return new string[] { this.first, (string) this.next };
 				}
 
-				return new SingleValueEnumerable<string> (this.first).Concat ((string[])this.next);
+				return this.first.ToEnumerable ().Concat ((string[]) this.next);
 			}
 		}
 

@@ -907,7 +907,6 @@
     <Compile Include="Types\Collections\ReadOnlyDictionary.cs" />
     <Compile Include="Types\Collections\ReadOnlyList.cs" />
     <Compile Include="Types\Collections\ReadOnlyObservableList.cs" />
-    <Compile Include="Types\Collections\SingleValueEnumerable.cs" />
     <Compile Include="Types\Collections\StructuredTypeFieldCollection.cs" />
     <Compile Include="Types\Collections\WeakList.cs" />
     <Compile Include="Types\CollectionType.cs" />

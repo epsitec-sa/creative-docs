@@ -275,6 +275,12 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 
+		public static IEnumerable<T> ToEnumerable<T>(this T item)
+		{
+			yield return item;
+		}
+
+
 		[System.ThreadStatic]
 		private static System.Random dice;
 	}
