@@ -899,7 +899,6 @@
     <Compile Include="Types\Collections\EmptyEnumerable.cs" />
     <Compile Include="Types\Collections\EmptyEnumerator.cs" />
     <Compile Include="Types\Collections\EmptyList.cs" />
-    <Compile Include="Types\Collections\Enumerable.cs" />
     <Compile Include="Types\Collections\EnumValueCollection.cs" />
     <Compile Include="Types\Collections\HostedDepdendencyObjectList.cs" />
     <Compile Include="Types\Collections\HostedDictionary.cs" />
