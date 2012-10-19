@@ -16,6 +16,8 @@ using Epsitec.Cresus.Core.Metadata;
 
 using System;
 
+using System.Diagnostics;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -94,7 +96,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		
 		public T Execute<T>(Func<UserManager, T> action)
 		{
-			return action (this.userManager);
+			return this.Execute (() => action (this.userManager));
 		}
 
 
@@ -112,23 +114,41 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public T Execute<T>(string username, string sessionId, Func<WorkerApp, T> action)
 		{
-			System.Diagnostics.Debug.Assert (CoreApp.current == null);
+			return this.Execute (() =>
+			{
+				try
+				{
+					var user = this.userManager.FindUser (username);
+
+					this.userManager.SetAuthenticatedUser (user.Code);
+					this.userManager.SetActiveSessionId (sessionId);
+
+					return action (this);
+				}
+				finally
+				{
+					this.userManager.SetAuthenticatedUser (null);
+					this.userManager.SetActiveSessionId (null);
+				}
+			});
+		}
+
+
+		private T Execute<T>(Func<T> action)
+		{
+			Debug.Assert (CoreApp.current == null);
 
 			try
 			{
-				var user = this.userManager.FindUser (username);
-
-				this.userManager.SetAuthenticatedUser (user.Code);
-				this.userManager.SetActiveSessionId (sessionId);
 				CoreApp.current = this;
 
-				return action (this);
+				return action ();
 			}
 			finally
 			{
-				this.userManager.SetAuthenticatedUser (null);
-				this.userManager.SetActiveSessionId (null);
 				CoreApp.current = null;
+
+				this.userManager.Flush ();
 			}
 		}
 

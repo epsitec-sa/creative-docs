@@ -2,18 +2,16 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Factories;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.Business.UserManagement
 {
@@ -340,6 +338,32 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				this.businessContext.Discard ();
 				this.DisposeBusinessContext ();
 			}
+		}
+
+		public virtual void Flush()
+		{
+			// This method is required for WebCore, because we need to get rid of any data that is
+			// fetched from the database and that is not immutable between any two http requests, so
+			// that we are sure that the data that we have is up to date.
+
+			this.DiscardChangesAndDisposeBusinessContext ();
+
+			// Moreover, the session design is flawed. Each UserManager has its own sessions, so for
+			// WebCore, the session data might not be the same if the requests for a user are made
+			// through different WorkApps. There is a need for a unique SessionManager somewhere
+			// that can be accessed by multiple UserManager or objects at the same time.
+			//
+			// The sessions contains some cached entities fetched from the database. Because of
+			// that, we must get rid of them as well, for the same reason that we need to flush the
+			// BusinessContext above. For now, they don't contain any session data (that is, data
+			// that is associated to the session of the user and that is not stored somewhere in the
+			// database), so we don't loose any data.
+			//
+			// However, clearing the sessions is clearly a big fat ugly hack. It must be corrected
+			// before any real session data is added to the sessions, but this requires a redesign
+			// in the session management. I have to see that with Pierre.
+
+			this.sessions.Clear ();
 		}
 
 		
