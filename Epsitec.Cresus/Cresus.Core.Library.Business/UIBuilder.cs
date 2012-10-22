@@ -638,11 +638,24 @@ namespace Epsitec.Cresus.Core
 			//	une ligne éditable toute simple.
 
 			//	Cherche le plan comptable en cours.
-			var businessSettings = this.businessContext.GetCachedBusinessSettings ();
-			var financeSettings  = businessSettings.Finance;
 
-			System.Diagnostics.Debug.Assert (financeSettings != null);
-			var chart = financeSettings.GetChartOfAccountsOrDefaultToNearest (this.businessContext.GetReferenceDate ());
+			// OK here there is some really nasty stuff going on. When The
+			// Epsitec.Cresus.Core.Library and the Epsitec.Cresus.Core.Library.Business projects
+			// where all messed up, this class was in the same project at the BusinessSettingsEntity
+			// and the FinanceSettingsEntity classes. So we could access the CresusChartOfAccounts
+			// easily. But now that we moved up the UIBuilder where it belongs in
+			// Epsitec.Cresus.Core.Library, these classes are not in the same project anymore, so we
+			// can't simply use the commented code below. Therefore, I used an ugly trick to get it.
+			// The trick is to have an interface that can get a CresusChartOfAccounts defined in
+			// Epsitec.Cresus.Core.Library and an implementation in Cresus.Core.Library.Business. We
+			// look for this implementation by reflection and so everything works. I know, this is
+			// really ugly code that will kill baby kittens. The problem is, that to have a nice
+			// solution, I would have to implement some yet to be designed plugin system that Pierre 
+			// talks about around like 50 and I have no idea of the details of how he wants to do
+			// that, so I can't do it right now.
+
+			var chartProvider = InterfaceImplementationResolver<IChartProvider>.CreateInstance (this.businessContext);
+			var chart = chartProvider.GetChart ();
 
 			if (chart == null)  // aucun plan comptable trouvé ?
 			{

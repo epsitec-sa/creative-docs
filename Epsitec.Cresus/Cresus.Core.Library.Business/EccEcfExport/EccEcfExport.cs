@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Library.Business.EccEcfExport
 	{
 		public static void Export(BusinessContext businessContext)
 		{
-			var businessSettings = businessContext.GetCachedBusinessSettings ();
+			var businessSettings = businessContext.GetCached<BusinessSettingsEntity> ();
 			var businessFinance = businessSettings.Finance;
 
 			//	De l'année la plus récente à la plus ancienne.

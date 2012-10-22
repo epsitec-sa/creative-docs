@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
+			var settings		= businessContext.GetCached<BusinessSettingsEntity> ();
 
 			var currentCustomer = businessContext.GetMasterEntity<CustomerEntity> ();
 
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				affair.Customer = currentCustomer;
 			}
 
-			businessContext.AssignIds (affair, generatorPool);
+			businessContext.AssignIds (affair, generatorPool, settings.Generators);
 
 			affair.Workflow = WorkflowFactory.CreateDefaultWorkflow<AffairEntity> (businessContext);
 			affair.ActiveAffairOwner = this.SearchActiveAffairOwner (businessContext);
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		
 		public static void InitializeDefaults(BusinessContext businessContext, AffairEntity affair)
 		{
-			var businessSettings = businessContext.GetCachedBusinessSettings ();
+			var businessSettings = businessContext.GetCached<BusinessSettingsEntity> ();
 			var customer         = affair.Customer;
 
 			if (customer.MainRelation.IsNotNull ())

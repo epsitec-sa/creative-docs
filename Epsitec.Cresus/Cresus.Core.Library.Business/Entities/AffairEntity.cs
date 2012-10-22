@@ -113,8 +113,9 @@ namespace Epsitec.Cresus.Core.Entities
 
 				var businessContext = logic.GetComponent<BusinessContext> ();
 				var generatorPool   = logic.GetComponent<RefIdGeneratorPool> ();
+				var settings		= businessContext.GetCached<BusinessSettingsEntity> ();
 
-				businessContext.AssignIds (document, generatorPool);
+				businessContext.AssignIds (document, generatorPool, settings.Generators);
 			}
 		}
 

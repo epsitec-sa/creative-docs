@@ -110,6 +110,7 @@
     <Compile Include="Business\ContentAccessors\DocumentItemAccessorColumn.cs" />
     <Compile Include="Business\ContentAccessors\DocumentItemAccessor.cs" />
     <Compile Include="Business\ContentAccessors\DocumentItemAccessorMode.cs" />
+    <Compile Include="ChartProvider.cs" />
     <Compile Include="Controllers\ActionControllers\ActionClass.cs" />
     <Compile Include="Controllers\ActionControllers\ActionItem.cs" />
     <Compile Include="Controllers\ActionControllers\ActionItemGenerator.cs" />
@@ -253,6 +254,7 @@
     <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
     <Compile Include="Business\EntityPrinters\InvoiceDocumentPrinter.cs" />
     <Compile Include="Helpers\EntityPreviewHelper.cs" />
+    <Compile Include="IChartProvider.cs" />
     <Compile Include="Library\CoreInteractiveApp.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />

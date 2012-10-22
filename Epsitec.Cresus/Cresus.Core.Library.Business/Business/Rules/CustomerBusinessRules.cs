@@ -24,8 +24,9 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
-
-			businessContext.AssignIds (customer, generatorPool);
+			var settings		= businessContext.GetCached<BusinessSettingsEntity> ();
+			
+			businessContext.AssignIds (customer, generatorPool, settings.Generators);
 
 			//	TODO: @DR@ ... assigner un CustomerCategory par défaut
 

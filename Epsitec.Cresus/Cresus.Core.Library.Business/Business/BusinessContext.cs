@@ -198,21 +198,10 @@ namespace Epsitec.Cresus.Core.Business
 		
 		}
 
-		/// <summary>
-		/// Gets the cached business settings (<see cref="BusinessSettingsEntity"/>).
-		/// Warning: the entity might not belong to this context and will be read-only.
-		/// </summary>
-		/// <returns>The cached business settings.</returns>
-		public BusinessSettingsEntity GetCachedBusinessSettings()
-		{
-			return this.GetCached<BusinessSettingsEntity> ();
-		}
-
-		public void AssignIds<T>(T entity, RefIdGeneratorPool generatorPool)
+		public void AssignIds<T>(T entity, RefIdGeneratorPool generatorPool, IEnumerable<GeneratorDefinitionEntity> generators)
 			where T : AbstractEntity, IReferenceNumber, new ()
 		{
-			var settings  = this.GetCachedBusinessSettings ();
-			var generator = new FormattedIdGenerator (generatorPool, settings.Generators);
+			var generator = new FormattedIdGenerator (generatorPool, generators);
 
 			if (generator.AssignIds (this, entity) == false)
 			{

@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			//	Ajoute l'en-tête dans le document.
 			var context = this.businessContext as BusinessContext;
-			var settings = context.GetCachedBusinessSettings ();
+			var settings = context.GetCached<BusinessSettingsEntity> ();
 
 			//	Génère l'image du logo de l'entreprise.
 			if (this.HasOption (DocumentOption.HeaderSender) && settings.CompanyLogo.IsNotNull ())
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			get
 			{
 				var context = this.businessContext as BusinessContext;
-				var settings = context.GetCachedBusinessSettings ();
+				var settings = context.GetCached<BusinessSettingsEntity> ();
 
 				if (settings.IsNull () ||
 					settings.Company.IsNull () ||
