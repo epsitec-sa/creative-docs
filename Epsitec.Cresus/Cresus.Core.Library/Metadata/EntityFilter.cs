@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -48,9 +47,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public Expression GetExpression(Expression parameter)
+		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
-			return Filter.GetExpression (this.GetColumnFilters (parameter), FilterCombineMode.And);
+			return Filter.GetExpression (this.GetColumnFilters (example, parameter), FilterCombineMode.And);
 		}
 
 		#endregion
@@ -83,28 +82,26 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
-		private IEnumerable<Expression> GetColumnFilters(Expression parameter)
+		private IEnumerable<Expression> GetColumnFilters(AbstractEntity example, Expression parameter)
 		{
 			foreach (var column in this.columns)
 			{
-				LambdaExpression expression;
 				var entityColumn = column.Resolve (this.entityId);
 
 				if (entityColumn == null)
 				{
 					var fieldPath = EntityFieldPath.CreateAbsolutePath (this.entityId, column.Id);
 					var fieldExpr = fieldPath.CreateLambda ();
-					
-					expression = fieldExpr;
-				}
-				else
-				{
-					expression = entityColumn.Expression;
-				}
-				
-				var columnLambda = ExpressionAnalyzer.ReplaceParameter (expression, parameter as ParameterExpression);
 
-				yield return column.Value.GetExpression (columnLambda);
+					entityColumn = new EntityColumnMetadata (fieldExpr, "");
+				}
+
+				entityColumn.GetLeafEntity (example, NullNodeAction.CreateMissing);
+
+				var expression = entityColumn.Expression;
+				var columnLambda = ExpressionAnalyzer.ReplaceParameter (expression, (ParameterExpression) parameter);
+
+				yield return column.Value.GetExpression (example, columnLambda);
 			}
 		}
 

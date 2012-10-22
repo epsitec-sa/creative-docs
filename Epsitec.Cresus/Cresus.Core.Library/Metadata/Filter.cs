@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public Expression GetExpression(Expression parameter)
+		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
-			return Filter.GetExpression (this.ActiveFilters, parameter, this.CombineMode);
+			return Filter.GetExpression (this.ActiveFilters, example, parameter, this.CombineMode);
 		}
 
 		#endregion
@@ -105,9 +105,9 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
-		public static Expression GetExpression(IEnumerable<IFilter> filters, Expression parameter, FilterCombineMode mode)
+		public static Expression GetExpression(IEnumerable<IFilter> filters, AbstractEntity example, Expression parameter, FilterCombineMode mode)
 		{
-			return Filter.GetExpression (filters.Select (x => x.GetExpression (parameter)), mode);
+			return Filter.GetExpression (filters.Select (x => x.GetExpression (example, parameter)), mode);
 		}
 
 		/// <summary>

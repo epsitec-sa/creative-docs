@@ -42,14 +42,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public Expression GetExpression(Expression parameter)
+		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			if (this.filterExpression == null)
 			{
 				return null;
 			}
 
-			return this.filterExpression.GetExpression (parameter);
+			return this.filterExpression.GetExpression (example, parameter);
 		}
 
 		#endregion

@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Metadata;
@@ -55,14 +56,14 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
-		public override Expression GetExpression(Expression parameter)
+		public override Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			var method = this.Predicate == ColumnFilterSetCode.In
 				? SqlMethods.IsInSetMethodInfo
 				: SqlMethods.IsNotInSetMethodInfo;
 
 			var values = this.Values
-				.Select (v => ((ConstantExpression) v.GetExpression (parameter)).Value)
+				.Select (v => ((ConstantExpression) v.GetExpression (example, parameter)).Value)
 				.ToList ();
 
 			var arguments = new List<Expression> ()

@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
@@ -119,11 +120,11 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
-		public override Expression GetExpression(Expression parameter)
+		public override Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			return Expression.AndAlso (
-				ColumnFilterExpression.Compare (parameter, this.lowerBoundComparison, this.lowerBound.GetExpression (parameter)),
-				ColumnFilterExpression.Compare (parameter, this.upperBoundComparison, this.upperBound.GetExpression (parameter)));
+				ColumnFilterExpression.Compare (parameter, this.lowerBoundComparison, this.lowerBound.GetExpression (example, parameter)),
+				ColumnFilterExpression.Compare (parameter, this.upperBoundComparison, this.upperBound.GetExpression (example, parameter)));
 		}
 
 		public override XElement Save(string xmlNodeName)

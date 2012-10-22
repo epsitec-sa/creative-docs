@@ -1,9 +1,10 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Metadata;
 
@@ -31,7 +32,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			get;
 		}
 
-		public abstract Expression GetExpression(Expression parameter);
+		public abstract Expression GetExpression(AbstractEntity example, Expression parameter);
 
 		#endregion
 

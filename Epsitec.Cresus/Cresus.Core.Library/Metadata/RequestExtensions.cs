@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			var name = "x";
 			var @param = Expression.Parameter (entity.GetType (), name);
-			var body   = filter.GetExpression (@param);
+			var body   = filter.GetExpression (entity, @param);
 
 			request.AddCondition (dataContext, name, entity, body);
 		}

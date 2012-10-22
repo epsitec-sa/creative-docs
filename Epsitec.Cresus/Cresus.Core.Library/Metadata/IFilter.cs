@@ -1,8 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +24,9 @@ namespace Epsitec.Cresus.Core.Metadata
 		/// Gets the expression for this filter, applied to the specified parameter.
 		/// The expression is always represented by a predicate returning a boolean.
 		/// </summary>
+		/// <param name="example">The example that will be used for the request.</param>
 		/// <param name="parameter">The parameter (which may be the body of a lambda).</param>
 		/// <returns>The expression for this filter.</returns>
-		Expression GetExpression(Expression parameter);
+		Expression GetExpression(AbstractEntity example, Expression parameter);
 	}
 }

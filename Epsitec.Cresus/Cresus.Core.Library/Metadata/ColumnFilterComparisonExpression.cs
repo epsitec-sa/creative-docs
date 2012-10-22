@@ -2,13 +2,13 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Metadata;
 
 using System.Linq.Expressions;
 using System.Xml.Linq;
-using Epsitec.Common.Types;
 
 [assembly: XmlNodeClass ("comp", typeof (ColumnFilterComparisonExpression))]
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public override Expression GetExpression(Expression parameter)
+		public override Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			if (this.constant.IsNull)
 			{
@@ -85,7 +85,9 @@ namespace Epsitec.Cresus.Core.Metadata
 				}
 			}
 
-			return ColumnFilterExpression.Compare (parameter, this.comparison, this.constant.GetExpression (parameter));
+			var constantExpression = this.constant.GetExpression (example, parameter);
+
+			return ColumnFilterExpression.Compare (parameter, this.comparison, constantExpression);
 		}
 
 		public override XElement Save(string xmlNodeName)

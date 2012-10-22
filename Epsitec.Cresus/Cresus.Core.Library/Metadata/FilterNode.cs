@@ -1,7 +1,6 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -106,7 +105,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public Expression GetExpression(Expression parameter)
+		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			if ((this.filter == null) ||
 				(this.activeMode == FilterActiveMode.Disabled))
@@ -117,9 +116,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			switch (this.includeMode)
 			{
 				case FilterIncludeMode.Inclusive:
-					return this.filter.GetExpression (parameter);
+					return this.filter.GetExpression (example, parameter);
 				case FilterIncludeMode.Exclusive:
-					return Expression.Not (this.filter.GetExpression (parameter));
+					return Expression.Not (this.filter.GetExpression (example, parameter));
 			}
 
 			throw new System.NotSupportedException (string.Format ("{0} not supported", this.includeMode.GetQualifiedName ()));

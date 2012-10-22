@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public Expression GetExpression(Expression parameter)
+		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			return ExpressionAnalyzer.ReplaceParameter (lambda, parameter as ParameterExpression);
 		}

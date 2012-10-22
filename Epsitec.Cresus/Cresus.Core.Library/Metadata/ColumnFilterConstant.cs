@@ -1,8 +1,9 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -82,8 +83,8 @@ namespace Epsitec.Cresus.Core.Metadata
 				return this.IsNull == false && this.IsDefined;
 			}
 		}
-		
-		public Expression GetExpression(Expression parameter)
+
+		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			return Expression.Constant (this.value, this.SystemType);
 		}
