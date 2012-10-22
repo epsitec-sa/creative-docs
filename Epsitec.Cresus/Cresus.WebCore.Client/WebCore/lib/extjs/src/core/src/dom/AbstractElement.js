@@ -1,21 +1,28 @@
+//@tag dom,core
+//@require Ext.Supports
+
 /**
- * @class Ext.dom.AbstractElement
- * @extend Ext.Base
  * @private
+ * @requires Ext.EventManager
  */
-(function() {
-
-var document = window.document,
-    trimRe = /^\s+|\s+$/g,
-    whitespaceRe = /\s/;
-
-if (!Ext.cache){
-    Ext.cache = {};
-}
-
 Ext.define('Ext.dom.AbstractElement', {
+    /** @ignore */
+    requires: [
+        'Ext.EventManager',
+        'Ext.dom.AbstractElement-static',
+        'Ext.dom.AbstractElement-alignment',
+        'Ext.dom.AbstractElement-insertion',
+        'Ext.dom.AbstractElement-position',
+        'Ext.dom.AbstractElement-style',
+        'Ext.dom.AbstractElement-traversal'
+    ],
 
+    trimRe: /^\s+|\s+$/g,
+    whitespaceRe: /\s/,
+    
     inheritableStatics: {
+        trimRe: /^\s+|\s+$/g,
+        whitespaceRe: /\s/,
 
         /**
          * Retrieves Ext.dom.Element objects. {@link Ext#get} is alias for {@link Ext.dom.Element#get}.
@@ -33,6 +40,7 @@ Ext.define('Ext.dom.AbstractElement', {
          */
         get: function(el) {
             var me = this,
+                document = window.document,
                 El = Ext.dom.Element,
                 cacheItem,
                 extEl,
@@ -146,7 +154,9 @@ myElement.dom.className = Ext.core.Element.mergeClsList(this.initialClasses, 'x-
         mergeClsList: function() {
             var clsList, clsHash = {},
                 i, length, j, listLength, clsName, result = [],
-                changed = false;
+                changed = false,
+                trimRe = this.trimRe,
+                whitespaceRe = this.whitespaceRe;
 
             for (i = 0, length = arguments.length; i < length; i++) {
                 clsList = arguments[i];
@@ -189,11 +199,12 @@ myElement.dom.className = Ext.core.Element.removeCls(this.initialClasses, 'x-inv
         removeCls: function(existingClsList, removeClsList) {
             var clsHash = {},
                 i, length, clsName, result = [],
-                changed = false;
+                changed = false,
+                whitespaceRe = this.whitespaceRe;
 
             if (existingClsList) {
                 if (Ext.isString(existingClsList)) {
-                    existingClsList = existingClsList.replace(trimRe, '').split(whitespaceRe);
+                    existingClsList = existingClsList.replace(this.trimRe, '').split(whitespaceRe);
                 }
                 for (i = 0, length = existingClsList.length; i < length; i++) {
                     clsHash[existingClsList[i]] = true;
@@ -512,8 +523,8 @@ myElement.dom.className = Ext.core.Element.removeCls(this.initialClasses, 'x-inv
             
         return me.$cache;
     }
-    
-}, function() {
+},
+function() {
     var AbstractElement = this;
 
     /**
@@ -687,5 +698,3 @@ myElement.dom.className = Ext.core.Element.removeCls(this.initialClasses, 'x-inv
         }
     }(this.prototype));
 });
-
-}());

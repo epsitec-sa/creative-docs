@@ -78,7 +78,7 @@ Ext.define('Ext.grid.property.Store', {
 
                 // private
                 isEditableValue: function(val){
-                    return Ext.isPrimitive(val) || Ext.isDate(val);
+                    return Ext.isPrimitive(val) || Ext.isDate(val) || val === null;
                 }
             });
         }

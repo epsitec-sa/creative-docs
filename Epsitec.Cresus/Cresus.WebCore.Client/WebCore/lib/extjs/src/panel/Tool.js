@@ -202,7 +202,7 @@ Ext.define('Ext.panel.Tool', {
 
         me.callParent(arguments);
         if (me.tooltip) {
-            if (Ext.isObject(me.tooltip)) {
+            if (Ext.quickTipsActive && Ext.isObject(me.tooltip)) {
                 Ext.tip.QuickTipManager.register(Ext.apply({
                     target: me.id
                 }, me.tooltip));
@@ -272,7 +272,7 @@ Ext.define('Ext.panel.Tool', {
 
     // inherit docs
     onDestroy: function(){
-        if (Ext.isObject(this.tooltip)) {
+        if (Ext.quickTipsActive && Ext.isObject(this.tooltip)) {
             Ext.tip.QuickTipManager.unregister(this.id);
         }
         this.callParent();

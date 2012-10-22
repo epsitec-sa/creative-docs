@@ -266,10 +266,8 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    getStoreListeners: function(){
-        return {
-            beforeload: this.onBeforeLoad,
-            load: this.onLoad,
+    getStoreListeners: function(store) {
+        var result = {
             exception: this.onLoad,
 
             // Fired when a range is requested for rendering that is not in the cache
@@ -278,6 +276,13 @@ Ext.define('Ext.LoadMask', {
             // Fired when a range for rendering which was previously missing from the cache is loaded
             cachefilled: this.onLoad
         };
+
+        // Only need to mask on load if the proxy is asynchronous - ie: Ajax/JsonP
+        if (!store.proxy.isSynchronous) {
+            result.beforeLoad = this.onBeforeLoad;
+            result.load = this.onLoad;
+        }
+        return result;
     },
 
     onDisable : function() {
@@ -287,11 +292,11 @@ Ext.define('Ext.LoadMask', {
         }
     },
 
-    getOwner: function(){
+    getOwner: function() {
         return this.ownerCt || this.floatParent;
     },
 
-    getMaskTarget: function(){
+    getMaskTarget: function() {
         var owner = this.getOwner();
         return this.useTargetEl ? owner.getTargetEl() : owner.getEl();
     },

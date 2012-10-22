@@ -437,7 +437,7 @@ Ext.define('Ext.grid.plugin.Editing', {
         if (selModel.getCurrentPosition) {
             pos = selModel.getCurrentPosition();
             if (pos) {
-                record = grid.store.getAt(pos.row);
+                record = grid.getView().getStore().getAt(pos.row);
                 columnHeader = grid.headerCt.getHeaderAtIndex(pos.column);
             }
         }
@@ -454,7 +454,7 @@ Ext.define('Ext.grid.plugin.Editing', {
 
     // private
     onEscKey: function(e) {
-        this.cancelEdit();
+        return this.cancelEdit();
     },
 
     /**
@@ -524,6 +524,12 @@ Ext.define('Ext.grid.plugin.Editing', {
             record = view.getRecord(node);
         } else {
             rowIdx = view.indexOf(node);
+        }
+        
+        // The record may be removed from the store but the view
+        // not yet updated, so check it exists
+        if (!record) {
+            return;
         }
 
         return {

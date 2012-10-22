@@ -8,7 +8,7 @@ Ext.define('Ext.picker.Month', {
     requires: [
         'Ext.XTemplate', 
         'Ext.util.ClickRepeater', 
-        'Ext.Date', 
+        'Ext.Date',
         'Ext.button.Button'
     ],
     alias: 'widget.monthpicker',

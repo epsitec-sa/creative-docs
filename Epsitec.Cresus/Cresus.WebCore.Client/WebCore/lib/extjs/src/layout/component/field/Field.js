@@ -74,8 +74,12 @@ Ext.define('Ext.layout.component.field.Field', {
 
         owner.el.setStyle('table-layout', 'fixed');
         owner.bodyEl.setStyle('width', width + suffix);
-        if (inputEl && inputWidth) {
-            inputEl.setStyle('width', inputWidth + 'px');
+        if (inputEl) {
+            if (inputWidth) {
+                inputEl.setStyle('width', inputWidth + 'px');
+            } else {
+                inputEl.setStyle('width', owner.stretchInputElFixed ? '100%' : '');
+            }
         }
         ownerContext.isFixed = true;
     },
@@ -89,6 +93,8 @@ Ext.define('Ext.layout.component.field.Field', {
             inputEl.dom.removeAttribute('size');
             if (inputWidth) {
                 inputEl.setStyle('width', inputWidth + 'px');
+            } else {
+                inputEl.setStyle('width', '');
             }
         }
         owner.el.setStyle('table-layout', 'auto');

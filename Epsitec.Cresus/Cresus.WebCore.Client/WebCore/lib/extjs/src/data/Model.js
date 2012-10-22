@@ -594,19 +594,19 @@ Ext.define('Ext.data.Model', {
         /**
          * @property
          * @static
-         * The update operation of type 'edit'. Used by {@link Ext.data.Store#update Store.update} event.
+         * The update operation of type 'edit'. Used by {@link Ext.data.Store#event-update Store.update} event.
          */
         EDIT   : 'edit',
         /**
          * @property
          * @static
-         * The update operation of type 'reject'. Used by {@link Ext.data.Store#update Store.update} event.
+         * The update operation of type 'reject'. Used by {@link Ext.data.Store#event-update Store.update} event.
          */
         REJECT : 'reject',
         /**
          * @property
          * @static
-         * The update operation of type 'commit'. Used by {@link Ext.data.Store#update Store.update} event.
+         * The update operation of type 'commit'. Used by {@link Ext.data.Store#event-update Store.update} event.
          */
         COMMIT : 'commit',
 
@@ -1062,25 +1062,36 @@ Ext.define('Ext.data.Model', {
                 field, i = 0,
                 myData = me[me.persistenceProperty],
                 sourceData = sourceRecord[sourceRecord.persistenceProperty],
+                idProperty = me.idProperty,
+                name,
                 value;
 
             for (; i < fieldCount; i++) {
                 field = fields[i];
-
+                name = field.name;
+                
                 // Do not use setters.
                 // Copy returned values in directly from the data object.
                 // Converters have already been called because new Records
                 // have been created to copy from.
                 // This is a direct record-to-record value copy operation.
-                value = sourceData[field.name];
-                if (value !== undefined) {
-                    myData[field.name] = value;
+                if (name != idProperty) {
+                    // don't copy the id, we'll do it at the end
+                    value = sourceData[name];
+                    if (value !== undefined) {
+                        myData[name] = value;
+                    }
                 }
             }
 
             // If this is a phantom record being updated from a concrete record, copy the ID in.
             if (me.phantom && !sourceRecord.phantom) {
+                // beginEdit to prevent events firing
+                // commit at the end to prevent dirty being set
+                me.beginEdit();
                 me.setId(sourceRecord.getId());
+                me.endEdit(true);
+                me.commit(true);
             }
         }
     },
@@ -1105,12 +1116,30 @@ Ext.define('Ext.data.Model', {
      * When an edit has begun, it must be followed by either {@link #endEdit} or {@link #cancelEdit}.
      */
     beginEdit : function(){
-        var me = this;
+        var me = this,
+            key,
+            data,
+            o;
+            
         if (!me.editing) {
             me.editing = true;
             me.dirtySave = me.dirty;
-            me.dataSave = Ext.apply({}, me[me.persistenceProperty]);
-            me.modifiedSave = Ext.apply({}, me.modified);
+            
+            o = me[me.persistenceProperty];
+            data = me.dataSave = {};
+            for (key in o) {
+                if (o.hasOwnProperty(key)) {
+                    data[key] = o[key];
+                }
+            }
+            
+            o = me.modified;
+            data = me.modifiedSave = {}; 
+            for (key in o) {
+                if (o.hasOwnProperty(key)) {
+                    data[key] = o[key];
+                }
+            }
         }
     },
 
@@ -1139,34 +1168,42 @@ Ext.define('Ext.data.Model', {
      */
     endEdit : function(silent, modifiedFieldNames){
         var me = this,
+            dataSave,
             changed;
+            
+        silent = silent === true;
         if (me.editing) {
             me.editing = false;
-            if(!modifiedFieldNames) {
-                modifiedFieldNames = me.getModifiedFieldNames();
-            }
-            changed = me.dirty || modifiedFieldNames.length > 0;
+            dataSave = me.dataSave;
             delete me.modifiedSave;
             delete me.dataSave;
             delete me.dirtySave;
-            if (changed && silent !== true) {
-                me.afterEdit(modifiedFieldNames);
+            if (!silent) {
+                if (!modifiedFieldNames) {
+                    modifiedFieldNames = me.getModifiedFieldNames(dataSave);
+                }
+                changed = me.dirty || modifiedFieldNames.length > 0;
+                if (changed) {
+                    me.afterEdit(modifiedFieldNames);
+                }
             }
         }
     },
 
     /**
      * Gets the names of all the fields that were modified during an edit
+     * @param {Object} [saved] The currently saved data. Defaults to
+     * the dataSave property on the object.
      * @private
      * @return {String[]} An array of modified field names
      */
-    getModifiedFieldNames: function(){
+    getModifiedFieldNames: function(saved){
         var me = this,
-            saved = me.dataSave,
             data = me[me.persistenceProperty],
             modified = [],
             key;
 
+        saved = saved || me.dataSave;
         for (key in data) {
             if (data.hasOwnProperty(key)) {
                 if (!me.isEqual(data[key], saved[key])) {

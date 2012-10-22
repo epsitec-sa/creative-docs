@@ -1,3 +1,7 @@
+//@tag dom,core
+//@require EventManager.js
+//@define Ext.EventObject
+
 /**
  * @class Ext.EventObject
 
@@ -853,9 +857,7 @@ Ext.getBody().on('click', function(e,t){
             dispatchers = {}; // never mind all those we just built :P
 
             API = {
-                fixTarget: function (t) {
-                    return t;
-                }
+                fixTarget: Ext.identityFn
             };
         }
 

@@ -13,7 +13,7 @@ terms contained in a written agreement between you and Sencha.
 If you are unsure which license is appropriate for your use, please contact the sales department
 at http://www.sencha.com/contact.
 
-Build date: 2012-07-04 21:23:42 (65ff594cd80b9bad45df640c22cc0adb52c95a7b)
+Build date: 2012-09-07 16:54:29 (4861809b76e43ce65f9f8bfed1f258813adb26de)
 */
 /**
  * @class Global_CSS
@@ -336,19 +336,20 @@ input, textarea, select {
 .x4-hide-visibility {
   visibility: hidden !important; }
 
-/* line 56, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 57, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-item-disabled .x4-form-item-label,
 .x4-item-disabled .x4-form-field,
+.x4-item-disabled .x4-form-display-field,
 .x4-item-disabled .x4-form-cb-label,
 .x4-item-disabled .x4-form-trigger {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
   opacity: 0.3; }
 
-/* line 60, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 61, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-ie6 .x4-item-disabled {
   filter: none; }
 
-/* line 65, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 66, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-hidden,
 .x4-hide-offsets {
   display: block !important;
@@ -357,21 +358,16 @@ input, textarea, select {
   left: -10000px !important;
   top: -10000px !important; }
 
-/* line 75, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 76, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-hide-nosize {
   height: 0!important;
   width: 0!important; }
 
-/* line 80, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 81, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-masked-relative {
   position: relative; }
 
 /* line 86, ../themes/stylesheets/ext4/default/core/_core.scss */
-.x4-ie6 .x4-masked select,
-.x4-ie6.x4-body-masked select {
-  visibility: hidden !important; }
-
-/* line 92, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-css-shadow {
   position: absolute;
   -webkit-border-radius: 5px 5px;
@@ -380,7 +376,7 @@ input, textarea, select {
   -o-border-radius: 5px 5px;
   border-radius: 5px 5px; }
 
-/* line 98, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 92, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-ie-shadow {
   background-color: #777;
   display: none;
@@ -388,86 +384,86 @@ input, textarea, select {
   overflow: hidden;
   zoom: 1; }
 
-/* line 107, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 101, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tl {
   background: transparent no-repeat 0 0;
   zoom: 1; }
 
-/* line 112, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 106, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tc {
   height: 8px;
   background: transparent repeat-x 0 0;
   overflow: hidden; }
 
-/* line 118, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 112, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tr {
   background: transparent no-repeat right -8px; }
 
-/* line 122, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 116, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-ml {
   background: transparent repeat-y 0;
   padding-left: 4px;
   overflow: hidden;
   zoom: 1; }
 
-/* line 129, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 123, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-mc {
   background: repeat-x 0 -16px;
   padding: 4px 10px; }
 
-/* line 134, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 128, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-mc h3 {
   margin: 0 0 4px 0;
   zoom: 1; }
 
-/* line 139, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 133, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-mr {
   background: transparent repeat-y right;
   padding-right: 4px;
   overflow: hidden; }
 
-/* line 145, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 139, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-bl {
   background: transparent no-repeat 0 -16px;
   zoom: 1; }
 
-/* line 150, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 144, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-bc {
   background: transparent repeat-x 0 -8px;
   height: 8px;
   overflow: hidden; }
 
-/* line 156, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 150, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-br {
   background: transparent no-repeat right -24px; }
 
-/* line 160, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 154, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tl, .x4-box-bl {
   padding-left: 8px;
   overflow: hidden; }
 
-/* line 165, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 159, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tr, .x4-box-br {
   padding-right: 8px;
   overflow: hidden; }
 
-/* line 170, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 164, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tl {
   background-image: url('../../resources/themes/images/default/box/corners.gif'); }
 
-/* line 174, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 168, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tc {
   background-image: url('../../resources/themes/images/default/box/tb.gif'); }
 
-/* line 178, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 172, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-tr {
   background-image: url('../../resources/themes/images/default/box/corners.gif'); }
 
-/* line 182, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 176, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-ml {
   background-image: url('../../resources/themes/images/default/box/l.gif'); }
 
-/* line 186, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 180, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-mc {
   background-color: #eee;
   background-image: url('../../resources/themes/images/default/box/tb.gif');
@@ -475,61 +471,61 @@ input, textarea, select {
   color: #393939;
   font-size: 15px; }
 
-/* line 194, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 188, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-mc h3 {
   font-size: 18px;
   font-weight: bold; }
 
-/* line 199, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 193, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-mr {
   background-image: url('../../resources/themes/images/default/box/r.gif'); }
 
-/* line 203, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 197, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-bl {
   background-image: url('../../resources/themes/images/default/box/corners.gif'); }
 
-/* line 207, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 201, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-bc {
   background-image: url('../../resources/themes/images/default/box/tb.gif'); }
 
-/* line 211, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 205, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-br {
   background-image: url('../../resources/themes/images/default/box/corners.gif'); }
 
-/* line 215, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 209, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-blue .x4-box-bl, .x4-box-blue .x4-box-br, .x4-box-blue .x4-box-tl, .x4-box-blue .x4-box-tr {
   background-image: url('../../resources/themes/images/default/box/corners-blue.gif'); }
 
-/* line 219, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 213, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-blue .x4-box-bc, .x4-box-blue .x4-box-mc, .x4-box-blue .x4-box-tc {
   background-image: url('../../resources/themes/images/default/box/tb-blue.gif'); }
 
-/* line 223, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 217, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-blue .x4-box-mc {
   background-color: #c3daf9; }
 
-/* line 227, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 221, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-blue .x4-box-mc h3 {
   color: #17385b; }
 
-/* line 231, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 225, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-blue .x4-box-ml {
   background-image: url('../../resources/themes/images/default/box/l-blue.gif'); }
 
-/* line 235, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 229, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-box-blue .x4-box-mr {
   background-image: url('../../resources/themes/images/default/box/r-blue.gif'); }
 
-/* line 239, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 233, ../themes/stylesheets/ext4/default/core/_core.scss */
 .x4-container {
   zoom: 1; }
-  /* line 244, ../themes/stylesheets/ext4/default/core/_core.scss */
+  /* line 238, ../themes/stylesheets/ext4/default/core/_core.scss */
   .x4-container:before {
     content: "";
     clear: both;
     display: table; }
 
-/* line 254, ../themes/stylesheets/ext4/default/core/_core.scss */
+/* line 248, ../themes/stylesheets/ext4/default/core/_core.scss */
 table.x4-container:before,
 tbody.x4-container:before,
 tr.x4-container:before {
@@ -703,7 +699,16 @@ tr.x4-container:before {
   zoom: 1;
   background: #cccccc; }
 
-/* line 19, ../themes/stylesheets/ext4/default/widgets/_loadmask.scss */
+/* line 20, ../themes/stylesheets/ext4/default/widgets/_loadmask.scss */
+.x4-mask-shim {
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
+/* line 30, ../themes/stylesheets/ext4/default/widgets/_loadmask.scss */
 .x4-mask-msg {
   z-index: 20001;
   position: absolute;
@@ -714,7 +719,7 @@ tr.x4-container:before {
   border-color: #99bce8;
   background-image: none;
   background-color: #dfe9f6; }
-  /* line 38, ../themes/stylesheets/ext4/default/widgets/_loadmask.scss */
+  /* line 49, ../themes/stylesheets/ext4/default/widgets/_loadmask.scss */
   .x4-mask-msg div {
     padding: 5px 10px 5px 25px;
     background-image: url('../../resources/themes/images/default/grid/loading.gif');
@@ -3476,7 +3481,7 @@ table.x4-datepicker-inner {
   height: 16px;
   position: absolute;
   top: 6px;
-  right: 4px;
+  right: 2px;
   background: no-repeat center center; }
 
 /* line 96, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
@@ -3484,21 +3489,25 @@ table.x4-datepicker-inner {
   font-size: 11px;
   color: #222222; }
 
-/* line 102, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
-.x4-menu-item-checked .x4-menu-item-icon {
+/* line 101, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+.x4-right-check-item-text {
+  padding-right: 22px; }
+
+/* line 106, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+.x4-menu-item-checked .x4-menu-item-icon, .x4-menu-item-checked .x4-menu-item-icon-right {
   background-image: url('../../resources/themes/images/default/menu/checked.gif'); }
-/* line 105, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 109, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-checked .x4-menu-group-icon {
   background-image: url('../../resources/themes/images/default/menu/group-checked.gif'); }
 
-/* line 111, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
-.x4-menu-item-unchecked .x4-menu-item-icon {
+/* line 115, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+.x4-menu-item-unchecked .x4-menu-item-icon, .x4-menu-item-unchecked .x4-menu-item-icon-right {
   background-image: url('../../resources/themes/images/default/menu/unchecked.gif'); }
-/* line 114, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 118, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-unchecked .x4-menu-group-icon {
   background-image: none; }
 
-/* line 119, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 123, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-separator {
   height: 2px;
   border-top: solid 1px #e0e0e0;
@@ -3506,7 +3515,7 @@ table.x4-datepicker-inner {
   margin: 2px 0px;
   overflow: hidden; }
 
-/* line 127, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 131, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-arrow {
   position: absolute;
   width: 12px;
@@ -3516,15 +3525,15 @@ table.x4-datepicker-inner {
   background: no-repeat center center;
   background-image: url('../../resources/themes/images/default/menu/menu-parent.gif'); }
 
-/* line 137, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 141, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-indent {
   margin-left: 31px;
   /* The 2px is the width of the seperator */ }
 
-/* line 141, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 145, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-active {
   cursor: pointer; }
-  /* line 144, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+  /* line 148, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
   .x4-menu-item-active .x4-menu-item-link {
     background-image: none;
     background-color: #d9e8fb;
@@ -3543,39 +3552,49 @@ table.x4-datepicker-inner {
     -o-border-radius: 3px;
     border-radius: 3px; }
 
-/* line 153, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 157, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-item-disabled {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5; }
 
-/* line 160, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 164, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-ie .x4-menu-item-disabled .x4-menu-item-icon {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5; }
-/* line 164, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 168, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-ie .x4-menu-item-disabled .x4-menu-item-text {
   background-color: transparent; }
-/* line 171, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 175, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-strict .x4-ie7m .x4-ie .x4-menu-icon-separator {
   width: 1px; }
-/* line 175, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 179, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-strict .x4-ie7m .x4-ie .x4-menu-item-separator {
   height: 1px; }
 
-/* line 184, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 188, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-ie6 .x4-menu-item-link,
 .x4-ie7 .x4-menu-item-link,
 .x4-quirks .x4-ie8 .x4-menu-item-link {
   padding-bottom: 2px; }
 
-/* line 192, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 196, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-nlg .x4-menu-item-active .x4-menu-item-link {
   background: #d9e8fb repeat-x left top;
   background-image: url('../../resources/themes/images/default/menu/menu-item-active-bg.gif'); }
 
-/* line 199, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+/* line 203, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
 .x4-menu-date-item {
   border-color: #99BBE8; }
+
+/* line 208, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+.x4-menu-item .x4-field-label-cell {
+  vertical-align: middle; }
+
+/* line 211, ../themes/stylesheets/ext4/default/widgets/_menu.scss */
+.x4-menu-item .x4-form-item-label {
+  font-size: 11px;
+  color: #222222;
+  padding-left: 34px; }
 
 /* line 8, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-panel .x4-grid-body {
@@ -3584,45 +3603,42 @@ table.x4-datepicker-inner {
   border-style: solid;
   border-width: 1px;
   border-top-color: #c5c5c5; }
-/* line 17, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
-.x4-panel .x4-grid-header-ct-hidden {
-  visibility: hidden; }
 
-/* line 22, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 17, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-empty {
   padding: 10px;
   color: gray;
   font: normal 11px tahoma, arial, helvetica, sans-serif; }
 
-/* line 28, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 23, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-header-hidden .x4-grid-body {
   border-top-color: #99bce8 !important; }
 
-/* line 32, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 27, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-view {
   overflow: hidden;
   position: relative; }
 
-/* line 38, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 33, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-table {
   table-layout: fixed;
   border-collapse: separate; }
 
-/* line 45, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 40, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-autowidth-table table.x4-grid-table {
   table-layout: auto;
   width: auto!important; }
 
-/* line 50, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 45, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-row .x4-grid-table {
   border-collapse: collapse; }
 
-/* line 54, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 49, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-locked .x4-grid-inner-locked {
   border-width: 0 1px 0 0 !important;
   border-style: solid; }
 
-/* line 59, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 54, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-header-ct {
   cursor: default;
   zoom: 1;
@@ -3638,9 +3654,13 @@ table.x4-datepicker-inner {
   background-image: -ms-linear-gradient(top, #f9f9f9, #e3e4e6);
   background-image: linear-gradient(top, #f9f9f9, #e3e4e6); }
 
-/* line 73, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+/* line 68, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-accordion-item .x4-grid-header-ct {
-  border-width: 0 0 1px 0!important; }
+  border-width: 0 0 1px !important; }
+
+/* line 73, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+.x4-accordion-item .x4-grid-header-ct-hidden {
+  border: 0 !important; }
 
 /* line 77, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-column-header {
@@ -3811,7 +3831,7 @@ table.x4-datepicker-inner {
 .x4-grid-rowwrap-div .x4-grid-cell,
 .x4-grid-rowwrap-div .x4-grid-cell-inner {
   border-width: 0;
-  background: transparent; }
+  background-color: transparent; }
 
 /* line 261, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
 .x4-grid-row-body-hidden {
@@ -4378,6 +4398,13 @@ browsers will do whacky things with it.
   list-style: disc;
   margin-left: 15px; }
 
+/* line 904, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+.x4-grid-inner-locked .x4-column-header-last {
+  border-right: 0 none; }
+/* line 907, ../themes/stylesheets/ext4/default/widgets/_grid.scss */
+.x4-grid-inner-locked .x4-grid-cell-last {
+  border-right: 0 none; }
+
 /*misc*/
 /* line 9, ../themes/stylesheets/ext4/default/widgets/form/_all.scss */
 .x4-webkit *:focus {
@@ -4596,7 +4623,7 @@ textarea.x4-form-invalid-field {
 /* line 6, ../themes/stylesheets/ext4/default/widgets/form/_fieldset.scss */
 .x4-fieldset {
   border: 1px solid #b5b8c8;
-  padding: 10px;
+  padding: 0 10px;
   margin-bottom: 10px;
   display: block;
   /* preserve margins in IE */
@@ -4607,7 +4634,7 @@ textarea.x4-form-invalid-field {
   padding-top: 0; }
   /* line 20, ../themes/stylesheets/ext4/default/widgets/form/_fieldset.scss */
   .x4-ie .x4-fieldset .x4-fieldset-body {
-    padding-top: 10px; }
+    padding-top: 5px; }
 
 /* line 25, ../themes/stylesheets/ext4/default/widgets/form/_fieldset.scss */
 .x4-fieldset-header-checkbox {
@@ -5104,6 +5131,11 @@ textarea.x4-form-invalid-field {
 .x4-html-editor-wrap textarea {
   border: 0;
   padding: 3px 2px;
+  overflow: auto; }
+
+/* line 129, ../themes/stylesheets/ext4/default/widgets/form/_htmleditor.scss */
+.x4-htmleditor-iframe {
+  display: block;
   overflow: auto; }
 
 /* line 7, ../themes/stylesheets/ext4/default/widgets/_panel.scss */
@@ -9046,39 +9078,43 @@ svg, vml {
   position: absolute !important;
   z-index: 1; }
 
-/* line 11, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 12, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+.x4-docked-vertical {
+  position: static; }
+
+/* line 16, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-top {
   border-bottom-width: 0 !important; }
 
-/* line 15, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 20, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-bottom {
   border-top-width: 0 !important; }
 
-/* line 19, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 24, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-left {
   border-right-width: 0 !important; }
 
-/* line 23, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 28, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-right {
   border-left-width: 0 !important; }
 
-/* line 27, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 32, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-noborder-top {
   border-top-width: 0 !important; }
 
-/* line 31, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 36, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-noborder-right {
   border-right-width: 0 !important; }
 
-/* line 35, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 40, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-noborder-bottom {
   border-bottom-width: 0 !important; }
 
-/* line 39, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 44, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-docked-noborder-left {
   border-left-width: 0 !important; }
 
-/* line 43, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 48, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-inner {
   overflow: hidden;
   zoom: 1;
@@ -9086,114 +9122,114 @@ svg, vml {
   left: 0;
   top: 0; }
 
-/* line 53, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 58, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-item {
   position: absolute !important;
   left: 0;
   top: 0; }
 
-/* line 59, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 64, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-rtl .x4-box-item {
   right: 0;
   left: auto; }
 
-/* line 65, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 70, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-layout-ct,
 .x4-border-layout-ct {
   overflow: hidden;
   zoom: 1; }
 
-/* line 70, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 75, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-border-layout-ct {
   background-color: #dfe8f6;
   position: relative; }
 
-/* line 75, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 80, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-overflow-hidden {
   overflow: hidden !important; }
 
-/* line 79, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 84, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-inline-children > * {
   display: inline-block !important; }
 
-/* line 83, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 88, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-abs-layout-ct {
   position: relative; }
 
-/* line 87, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 92, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-abs-layout-item {
   position: absolute !important; }
 
-/* line 91, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 96, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-fit-item {
   position: relative; }
 
-/* line 95, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 100, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-border-region-slide-in {
   z-index: 5; }
 
-/* line 99, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 104, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-region-collapsed-placeholder {
   z-index: 4; }
 
-/* line 103, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 108, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-accordion-hd .x4-panel-header-text {
   color: black;
   font-weight: normal; }
 
-/* line 108, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 113, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-accordion-hd {
   background: #d9e7f8 !important;
   -webkit-box-shadow: inset 0 0 0 0 #d9e7f8;
   -moz-box-shadow: inset 0 0 0 0 #d9e7f8;
   box-shadow: inset 0 0 0 0 #d9e7f8; }
-  /* line 112, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 117, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-accordion-hd .x4-tool-collapse-top,
   .x4-accordion-hd .x4-tool-collapse-right,
   .x4-accordion-hd .x4-tool-collapse-bottom,
   .x4-accordion-hd .x4-tool-collapse-left {
     background-position: 0 -255px; }
-  /* line 119, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 124, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-accordion-hd .x4-tool-expand-top,
   .x4-accordion-hd .x4-tool-expand-right,
   .x4-accordion-hd .x4-tool-expand-bottom,
   .x4-accordion-hd .x4-tool-expand-left {
     background-position: 0 -240px; }
-  /* line 127, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 132, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-accordion-hd .x4-tool-over .x4-tool-collapse-top,
   .x4-accordion-hd .x4-tool-over .x4-tool-collapse-right,
   .x4-accordion-hd .x4-tool-over .x4-tool-collapse-bottom,
   .x4-accordion-hd .x4-tool-over .x4-tool-collapse-left {
     background-position: -15px -255px; }
-  /* line 136, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 141, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-accordion-hd .x4-tool-over .x4-tool-expand-top,
   .x4-accordion-hd .x4-tool-over .x4-tool-expand-right,
   .x4-accordion-hd .x4-tool-over .x4-tool-expand-bottom,
   .x4-accordion-hd .x4-tool-over .x4-tool-expand-left {
     background-position: -15px -240px; }
 
-/* line 145, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 150, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-accordion-hd {
   border-width: 1px 0 1px 0 !important;
   padding: 4px 5px 5px 5px;
   border-top-color: #f3f7fb !important; }
 
-/* line 151, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 156, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-accordion-body {
   border-width: 0 !important; }
 
-/* line 155, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 160, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-accordion-hd-sibling-expanded {
   border-top-color: #99bce8 !important;
   -webkit-box-shadow: inset 0 1px 0 0 #f3f7fb;
   -moz-box-shadow: inset 0 1px 0 0 #f3f7fb;
   box-shadow: inset 0 1px 0 0 #f3f7fb; }
 
-/* line 160, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 165, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-accordion-hd-last-collapsed {
   border-bottom-color: #d9e7f8 !important; }
 
-/* line 169, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 174, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-frame-tl,
 .x4-frame-tr,
 .x4-frame-tc,
@@ -9203,23 +9239,23 @@ svg, vml {
   overflow: hidden;
   background-repeat: no-repeat; }
 
-/* line 175, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 180, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-frame-tc,
 .x4-frame-bc {
   background-repeat: repeat-x; }
 
-/* line 179, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 184, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-frame-mc {
   position: relative;
   background-repeat: repeat-x;
   overflow: hidden; }
 
-/* line 188, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 193, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-scroller-left {
   float: left;
   height: 100%;
   z-index: 5; }
-  /* line 195, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 200, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left,
   .x4-box-scroller-left .x4-tabbar-scroll-left {
     width: 18px;
@@ -9228,42 +9264,42 @@ svg, vml {
     height: 20px;
     background: transparent no-repeat -18px 0;
     background-image: url('../../resources/themes/images/default/tab-bar/scroll-left.gif'); }
-  /* line 203, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 208, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left-hover {
     background-position: 0 0; }
-  /* line 207, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 212, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left-disabled,
   .x4-box-scroller-left .x4-tabbar-scroll-left-disabled {
     background-position: -18px 0;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
     opacity: 0.5;
     cursor: default; }
-  /* line 214, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 219, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left {
     background-image: url('../../resources/themes/images/default/toolbar/scroll-left.gif');
     background-position: -14px 0; }
-  /* line 218, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 223, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left-hover {
     background-position: 0 0; }
-  /* line 221, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 226, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left-disabled {
     background-position: -14px 0; }
-  /* line 225, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 230, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-left .x4-toolbar-scroll-left {
     width: 14px;
     height: 22px;
     border-bottom: 1px solid #8db2e3; }
 
-/* line 233, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 238, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-horizontal-box-overflow-body {
   float: left; }
 
-/* line 236, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 241, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-scroller-right {
   float: right;
   height: 100%;
   z-index: 5; }
-  /* line 243, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 248, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right,
   .x4-box-scroller-right .x4-tabbar-scroll-right {
     width: 18px;
@@ -9272,68 +9308,68 @@ svg, vml {
     height: 20px;
     background: transparent no-repeat 0 0;
     background-image: url('../../resources/themes/images/default/tab-bar/scroll-right.gif'); }
-  /* line 251, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 256, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right-hover {
     background-position: -18px 0; }
-  /* line 255, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 260, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right-disabled,
   .x4-box-scroller-right .x4-tabbar-scroll-right-disabled {
     background-position: 0 0;
     filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
     opacity: 0.5;
     cursor: default; }
-  /* line 262, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 267, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right {
     background-image: url('../../resources/themes/images/default/toolbar/scroll-right.gif'); }
-  /* line 265, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 270, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right-hover {
     background-position: -14px 0; }
-  /* line 268, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 273, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right-disabled {
     background-position: 0 0; }
-  /* line 272, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+  /* line 277, ../themes/stylesheets/ext4/default/layout/_layout.scss */
   .x4-box-scroller-right .x4-toolbar-scroll-right {
     width: 14px;
     height: 22px;
     border-bottom: 1px solid #8db2e3; }
 
-/* line 282, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 287, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-scroller-top .x4-box-scroller {
   line-height: 0;
   font-size: 0; }
-/* line 286, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 291, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-scroller-top .x4-menu-scroll-top {
   background: transparent no-repeat center center;
   background-image: url('../../resources/themes/images/default/layout/mini-top.gif');
   height: 8px;
   cursor: pointer; }
 
-/* line 294, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 299, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-scroller-bottom .x4-box-scroller {
   line-height: 0;
   font-size: 0; }
-/* line 298, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 303, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-scroller-bottom .x4-menu-scroll-bottom {
   background: transparent no-repeat center center;
   background-image: url('../../resources/themes/images/default/layout/mini-bottom.gif');
   height: 8px;
   cursor: pointer; }
 
-/* line 306, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 311, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-box-menu-right {
   float: right;
   padding-right: 2px; }
 
-/* line 311, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 316, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-column {
   float: left; }
 
-/* line 315, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 320, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-ie6 .x4-column {
   display: inline;
   /*prevent IE6 double-margin bug*/ }
 
-/* line 319, ../themes/stylesheets/ext4/default/layout/_layout.scss */
+/* line 324, ../themes/stylesheets/ext4/default/layout/_layout.scss */
 .x4-quirks .x4-ie .x4-form-layout-table, .x4-quirks .x4-ie .x4-form-layout-table tbody tr.x4-form-item {
   position: relative; }
 

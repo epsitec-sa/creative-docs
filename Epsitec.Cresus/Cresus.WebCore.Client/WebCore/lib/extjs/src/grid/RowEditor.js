@@ -104,7 +104,10 @@ Ext.define('Ext.grid.RowEditor', {
         var buttons = this.floatingButtons; 
         if (buttons) {
             buttons.child('#update').setDisabled(!valid);
-        }    
+        } else {
+            // set flag so we can disabled when created if needed
+            this.updateButtonDisabled = !valid;
+        }
     },
 
     afterRender: function() {
@@ -218,9 +221,11 @@ Ext.define('Ext.grid.RowEditor', {
     },
 
     onColumnShow: function(column) {
-        var field = column.getEditor();
-        field.setWidth(column.getWidth() - 2).show();
-        this.repositionIfVisible();
+        if (!column.isGroupHeader) {
+            var field = column.getEditor();
+            field.setWidth(column.getWidth() - 2).show();
+            this.repositionIfVisible();
+        }
     },
 
     onColumnMove: function(column, fromIdx, toIdx) {
@@ -309,7 +314,8 @@ Ext.define('Ext.grid.RowEditor', {
                     handler: plugin.completeEdit,
                     scope: plugin,
                     text: me.saveBtnText,
-                    minWidth: minWidth
+                    minWidth: minWidth,
+                    disabled: me.updateButtonDisabled
                 }, {
                     xtype: 'button',
                     handler: plugin.cancelEdit,

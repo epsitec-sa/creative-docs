@@ -1,3 +1,7 @@
+//@tag extras,core
+//@require perf/Monitor.js
+//@define Ext.Supports
+
 /**
  * @class Ext.is
  * 
@@ -202,6 +206,11 @@ Ext.supports = {
      * @type {Boolean}
      */
     PointerEvents: 'pointerEvents' in document.documentElement.style,
+    
+    /**
+     * @property LocalStorage True if localStorage is supported
+     */
+    LocalStorage: 'localStorage' in window && window['localStorage'] !== null,
 
     /**
      * @property CSS3BoxShadow True if document environment supports the CSS3 box-shadow style.

@@ -298,7 +298,7 @@ Ext.define('Ext.chart.series.Line', {
             yValueMap = {},
             onbreak = false,
             storeIndices = [],
-            markerStyle = me.markerStyle,
+            markerStyle = Ext.apply({}, me.markerStyle),
             seriesStyle = me.seriesStyle,
             colorArrayStyle = me.colorArrayStyle,
             colorArrayLength = colorArrayStyle && colorArrayStyle.length || 0,
@@ -307,6 +307,8 @@ Ext.define('Ext.chart.series.Line', {
             boundAxes = me.getAxesForXAndYFields(),
             boundXAxis = boundAxes.xAxis,
             boundYAxis = boundAxes.yAxis,
+            xAxisType = boundXAxis ? chartAxes.get(boundXAxis).type : '',
+            yAxisType = boundYAxis ? chartAxes.get(boundYAxis).type : '',
             shadows, shadow, shindex, fromPath, fill, fillPath, rendererAttributes,
             x, y, prevX, prevY, firstX, firstY, markerCount, i, j, ln, axis, ends, marker, markerAux, item, xValue,
             yValue, coords, xScale, yScale, minX, maxX, minY, maxY, line, animation, endMarkerStyle,
@@ -427,7 +429,9 @@ Ext.define('Ext.chart.series.Line', {
         for (i = 0, ln = data.length; i < ln; i++) {
             record = data[i];
             xValue = record.get(me.xField);
-
+            if (xAxisType == 'Time' && typeof xValue == "string") {
+                xValue = Date.parse(xValue);
+            }
             // Ensure a value
             if (typeof xValue == 'string' || typeof xValue == 'object' && !Ext.isDate(xValue)
                 //set as uniform distribution if the axis is a category axis.
@@ -441,6 +445,9 @@ Ext.define('Ext.chart.series.Line', {
 
             // Filter out values that don't fit within the pan/zoom buffer area
             yValue = record.get(me.yField);
+            if (yAxisType == 'Time' && typeof yValue == "string") {
+                yValue = Date.parse(yValue);
+            }
             //skip undefined values
             if (typeof yValue == 'undefined' || (typeof yValue == 'string' && !yValue)) {
                 //<debug warn>
@@ -595,6 +602,7 @@ Ext.define('Ext.chart.series.Line', {
                 path: dummyPath,
                 stroke: endLineStyle.stroke || endLineStyle.fill
             }, endLineStyle || {}));
+            me
 
             //set configuration opacity
             me.line.setAttributes({
@@ -878,19 +886,22 @@ Ext.define('Ext.chart.series.Line', {
 
     // @private Overriding highlights.js highlightItem method.
     highlightItem: function() {
-        var me = this;
+        var me = this,
+            line = me.line;
+                
         me.callParent(arguments);
-        if (me.line && !me.highlighted) {
-            if (!('__strokeWidth' in me.line)) {
-                me.line.__strokeWidth = parseFloat(me.line.attr['stroke-width']) || 0;
+        if (line && !me.highlighted) {
+            if (!('__strokeWidth' in line)) {
+                line.__strokeWidth = parseFloat(line.attr['stroke-width']) || 0;
             }
-            if (me.line.__anim) {
-                me.line.__anim.paused = true;
+            if (line.__anim) {
+                line.__anim.paused = true;
             }
-            me.line.__anim = Ext.create('Ext.fx.Anim', {
-                target: me.line,
+            
+            line.__anim = new Ext.fx.Anim({
+                target: line,
                 to: {
-                    'stroke-width': me.line.__strokeWidth + 3
+                    'stroke-width': line.__strokeWidth + 3
                 }
             });
             me.highlighted = true;
@@ -899,13 +910,17 @@ Ext.define('Ext.chart.series.Line', {
 
     // @private Overriding highlights.js unHighlightItem method.
     unHighlightItem: function() {
-        var me = this;
+        var me = this,
+            line = me.line,
+            width;
+            
         me.callParent(arguments);
-        if (me.line && me.highlighted) {
-            me.line.__anim = Ext.create('Ext.fx.Anim', {
-                target: me.line,
+        if (line && me.highlighted) {
+            width = line.__strokeWidth || parseFloat(line.attr['stroke-width']) || 0;
+            line.__anim = new Ext.fx.Anim({
+                target: line,
                 to: {
-                    'stroke-width': me.line.__strokeWidth
+                    'stroke-width': width
                 }
             });
             me.highlighted = false;

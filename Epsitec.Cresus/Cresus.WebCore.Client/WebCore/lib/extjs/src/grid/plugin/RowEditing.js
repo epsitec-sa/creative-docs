@@ -58,6 +58,8 @@ Ext.define('Ext.grid.plugin.RowEditing', {
         'Ext.grid.RowEditor'
     ],
 
+    lockableScope: 'both',
+
     editStyle: 'row',
 
     /**
@@ -92,10 +94,6 @@ Ext.define('Ext.grid.plugin.RowEditing', {
         me.autoCancel = !!me.autoCancel;
     },
 
-    init: function(grid) {
-        this.callParent([grid]);
-    },
-
     /**
      * @private
      * AbstractComponent calls destroy on all its plugins at destroy time.
@@ -117,6 +115,11 @@ Ext.define('Ext.grid.plugin.RowEditing', {
             editor = me.getEditor();
 
         if ((editor.beforeEdit() !== false) && (me.callParent(arguments) !== false)) {
+
+            // If editing one side of a lockable grid, cancel any edit on the other side.
+            if (me.lockingPartner) {
+                me.lockingPartner.cancelEdit();
+            }
             editor.startEdit(me.context.record, me.context.column);
             return true;
         }
@@ -130,7 +133,10 @@ Ext.define('Ext.grid.plugin.RowEditing', {
         if (me.editing) {
             me.getEditor().cancelEdit();
             me.callParent(arguments);
+            return;
         }
+        // If we aren't editing, return true to allow the event to bubble
+        return true;
     },
 
     // private

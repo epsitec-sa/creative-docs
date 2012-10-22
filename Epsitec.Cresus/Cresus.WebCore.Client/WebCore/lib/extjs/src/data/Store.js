@@ -145,43 +145,43 @@
  * existing filters). Note that by default {@link #sortOnFilter} is set to true, which means that your sorters are
  * automatically reapplied if using local sorting.
  *
- *      store.filter('eyeColor', 'Brown');
+ *     store.filter('eyeColor', 'Brown');
  *
  * Change the sorting at any time by calling {@link #sort}:
  *
- *      store.sort('height', 'ASC');
+ *     store.sort('height', 'ASC');
  *
  * Note that all existing sorters will be removed in favor of the new sorter data (if {@link #sort} is called with no
  * arguments, the existing sorters are just reapplied instead of being removed). To keep existing sorters and add new
  * ones, just add them to the MixedCollection:
  *
- *      store.sorters.add(new Ext.util.Sorter({
- *          property : 'shoeSize',
- *          direction: 'ASC'
- *      }));
+ *     store.sorters.add(new Ext.util.Sorter({
+ *         property : 'shoeSize',
+ *         direction: 'ASC'
+ *     }));
  *
- *      store.sort();
+ *     store.sort();
  *
  * ## Registering with StoreManager
  *
- * Any Store that is instantiated with a {@link #storeId} will automatically be registed with the {@link
+ * Any Store that is instantiated with a {@link #storeId} will automatically be registered with the {@link
  * Ext.data.StoreManager StoreManager}. This makes it easy to reuse the same store in multiple views:
  *
- *      //this store can be used several times
- *      Ext.create('Ext.data.Store', {
- *          model: 'User',
- *          storeId: 'usersStore'
- *      });
+ *     //this store can be used several times
+ *     Ext.create('Ext.data.Store', {
+ *         model: 'User',
+ *         storeId: 'usersStore'
+ *     });
  *
- *      new Ext.List({
- *          store: 'usersStore',
- *          //other config goes here
- *      });
+ *     new Ext.List({
+ *         store: 'usersStore',
+ *         //other config goes here
+ *     });
  *
- *      new Ext.view.View({
- *          store: 'usersStore',
- *          //other config goes here
- *      });
+ *     new Ext.view.View({
+ *         store: 'usersStore',
+ *         //other config goes here
+ *     });
  *
  * ## Further Reading
  *
@@ -222,7 +222,7 @@ Ext.define('Ext.data.Store', {
 
     /**
      * @cfg {Boolean} remoteGroup
-     * True if the grouping should apply on the server side, false if it is local only.  If the
+     * `true` if the grouping should apply on the server side, false if it is local only.  If the
      * grouping is local, it can be applied immediately to the data.  If it is remote, then it will simply act as a
      * helper, automatically sending the grouping information to the server.
      */
@@ -305,7 +305,7 @@ Ext.define('Ext.data.Store', {
 
     /**
      * @property {Boolean} loading
-     * True if the Store is currently loading via its Proxy
+     * `true` if the Store is currently loading via its Proxy.
      * @private
      */
     loading: false,
@@ -313,7 +313,7 @@ Ext.define('Ext.data.Store', {
     /**
      * @cfg {Boolean} sortOnFilter
      * For local filtering only, causes {@link #sort} to be called whenever {@link #filter} is called,
-     * causing the sorters to be reapplied after filtering. Defaults to true
+     * causing the sorters to be reapplied after filtering.
      */
     sortOnFilter: true,
 
@@ -327,8 +327,7 @@ Ext.define('Ext.data.Store', {
      * requested and cached.
      * Example:
      *
-     *    // Load page 1
-     *    myStore.loadPage(1);
+     *     myStore.loadPage(1); // Load page 1
      *
      * A {@link Ext.grid.PagingScroller PagingScroller} is instantiated which will monitor the scrolling in the grid, and
      * refresh the view's rows from the page cache as needed. It will also pull new data into the page
@@ -340,7 +339,7 @@ Ext.define('Ext.data.Store', {
      * The margins which trigger loading more data into the page cache are, {@link #leadingBufferZone} and
      * {@link #trailingBufferZone}.
      *
-     * By defult, only 5 pages of data are cached in the page cache, with pages "scrolling" out of the buffer
+     * By default, only 5 pages of data are cached in the page cache, with pages "scrolling" out of the buffer
      * as the view moves down through the dataset.
      * Setting this value to zero means that no pages are *ever* scrolled out of the page cache, and
      * that eventually the whole dataset may become present in the page cache. This is sometimes desirable
@@ -350,9 +349,9 @@ Ext.define('Ext.data.Store', {
      * records from its collection when those Records cycle out of the Store's primary collection. This is done
      * by configuring the SelectionModel like this:
      *
-     *    selModel: {
-     *        pruneRemoved: false
-     *    }
+     *     selModel: {
+     *         pruneRemoved: false
+     *     }
      *
      */
     buffered: false,
@@ -372,7 +371,7 @@ Ext.define('Ext.data.Store', {
 
     /**
      * @cfg {Boolean} [clearRemovedOnLoad=true]
-     * True to clear anything in the {@link #removed} record collection when the store loads.
+     * `true` to clear anything in the {@link #removed} record collection when the store loads.
      */
     clearRemovedOnLoad: true,
 
@@ -392,27 +391,9 @@ Ext.define('Ext.data.Store', {
         }
     },
 
-    onClassExtended: function(cls, data, hooks) {
-        var model = data.model,
-            onBeforeClassCreated;
-
-        if (typeof model == 'string') {
-            onBeforeClassCreated = hooks.onBeforeCreated;
-
-            hooks.onBeforeCreated = function() {
-                var me = this,
-                    args = arguments;
-
-                Ext.require(model, function() {
-                    onBeforeClassCreated.apply(me, args);
-                });
-            };
-        }
-    },
-
     /**
      * Creates the store.
-     * @param {Object} [config] Config object
+     * @param {Object} [config] Config object.
      */
     constructor: function(config) {
         // Clone the config so we don't modify the original config object
@@ -426,23 +407,23 @@ Ext.define('Ext.data.Store', {
 
         /**
          * @event beforeprefetch
-         * Fires before a prefetch occurs. Return false to cancel.
+         * Fires before a prefetch occurs. Return `false` to cancel.
          * @param {Ext.data.Store} this
-         * @param {Ext.data.Operation} operation The associated operation
+         * @param {Ext.data.Operation} operation The associated operation.
          */
         /**
          * @event groupchange
-         * Fired whenever the grouping in the grid changes
-         * @param {Ext.data.Store} store The store
-         * @param {Ext.util.Grouper[]} groupers The array of grouper objects
+         * Fired whenever the grouping in the grid changes.
+         * @param {Ext.data.Store} store The store.
+         * @param {Ext.util.Grouper[]} groupers The array of grouper objects.
          */
         /**
          * @event prefetch
-         * Fires whenever records have been prefetched
+         * Fires whenever records have been prefetched.
          * @param {Ext.data.Store} this
          * @param {Ext.data.Model[]} records An array of records.
-         * @param {Boolean} successful True if the operation was successful.
-         * @param {Ext.data.Operation} operation The associated operation
+         * @param {Boolean} successful `true` if the operation was successful.
+         * @param {Ext.data.Operation} operation The associated operation.
          */
         data = config.data || me.data;
 
@@ -479,8 +460,13 @@ Ext.define('Ext.data.Store', {
 
             /**
              * @property {Ext.data.Store.PageMap} pageMap
-             * Internal PageMap instance.
-             * @private
+             * Only present when this Store is {@link #buffered}.
+             *
+             * A cache of *pages* of records used to satisfy load requests from the Store when the associated view
+             * scrolls downwards.
+             *
+             * Pages in the direction of scroll are prefetched from the remote server and loaded into this cache *before*
+             * they are needed so that scrolling can proceed without visible pauses for data loading.
              */
             me.pageMap = new me.PageMap({
                 pageSize: me.pageSize,
@@ -696,7 +682,7 @@ Ext.define('Ext.data.Store', {
 
     /**
      * Checks if the store is currently grouped
-     * @return {Boolean} True if the store is grouped.
+     * @return {Boolean} `true` if the store is grouped.
      */
     isGrouped: function() {
         return this.groupers.getCount() > 0;
@@ -871,7 +857,7 @@ Ext.define('Ext.data.Store', {
      *         }
      *     ]
      *
-     * @param {Boolean} [sort=true] True to call {@link #sort} before finding groups. Sorting is required to make grouping
+     * @param {Boolean} [sort=true] `true` to call {@link #sort} before finding groups. Sorting is required to make grouping
      * function correctly so this should only be set to false if the Store is known to already be sorted correctly.
      * @return {Object[]} The group data
      */
@@ -1078,40 +1064,70 @@ Ext.define('Ext.data.Store', {
         isMove = isMove === true;
         var me = this,
             sync = false,
+            snapshot = me.snapshot,
+            data = me.data,
             i = 0,
             length = records.length,
+            info = [],
+            allRecords = [],
+            indexes = [],
+            item,
             isNotPhantom,
             index,
             record;
-
-        for (; i < length; i++) {
+            
+        for (; i < length; ++i) {
             record = records[i];
-            index = me.data.indexOf(record);
-
-            if (me.snapshot) {
-                me.snapshot.remove(record);
+            
+            if (snapshot) {
+                snapshot.remove(record);
             }
-
+            
+            index = data.indexOf(record);
             if (index > -1) {
-                isNotPhantom = record.phantom !== true;
-
-                // don't push phantom records onto removed
-                if (!isMove && isNotPhantom) {
-
-                    // Store the index the record was removed from so that rejectChanges can re-insert at the correct place.
-                    // The record's index property won't do, as that is the index in the overall dataset when Store is buffered.
-                    record.removedFrom = index;
-                    me.removed.push(record);
-                }
-
-                record.unjoin(me);
-                me.data.remove(record);
-                sync = sync || isNotPhantom;
-
-                me.fireEvent('remove', me, record, index);
+                info.push({
+                    record: record,
+                    index: index
+                });
             }
         }
+        
+        info = Ext.Array.sort(info, function(o1, o2){
+            var index1 = o1.index,
+                index2 = o2.index;
+                
+            return index1 === o2.index2 ? 0 : (index1 < index2 ? -1 : 1);
+        });
 
+        // we need to maintain a set of indexes since we're not guaranteed to
+        // be removing the records in order
+        for (i = 0, length = info.length; i < length; i++) {
+            item = info[i];
+            record = item.record;
+            index = item.index;
+            
+            allRecords.push(record);
+            indexes.push(index);
+            
+            isNotPhantom = record.phantom !== true;
+            // don't push phantom records onto removed
+            if (!isMove && isNotPhantom) {
+
+                // Store the index the record was removed from so that rejectChanges can re-insert at the correct place.
+                // The record's index property won't do, as that is the index in the overall dataset when Store is buffered.
+                record.removedFrom = index;
+                me.removed.push(record);
+            }
+
+            record.unjoin(me);
+            // grab the current index since we're firing an event each remove
+            index = data.indexOf(record);
+            data.remove(record);
+            sync = sync || isNotPhantom;
+            me.fireEvent('remove', me, record, index);
+        }
+
+        me.fireEvent('bulkremove', me, allRecords, indexes);
         me.fireEvent('datachanged', me);
         if (!isMove && me.autoSync && sync && !me.autoSyncSuspended) {
             me.sync();
@@ -1119,14 +1135,21 @@ Ext.define('Ext.data.Store', {
     },
 
     /**
-     * Removes the model instance at the given index
+     * Removes the model instance(s) at the given index
      * @param {Number} index The record index
+     * @param {Number} [count=1] The number of records to delete
      */
-    removeAt: function(index) {
-        var record = this.getAt(index);
+    removeAt: function(index, count) {
+        var me = this,
+            records;
 
-        if (record) {
-            this.remove(record);
+        if (arguments.length == 1) {
+            records = me.getAt(index);
+            if (records) {
+                me.remove([ records ]);
+            }
+        } else {
+            me.remove(me.data.getRange(index, index + count - 1));
         }
     },
 
@@ -1186,7 +1209,8 @@ Ext.define('Ext.data.Store', {
             i,
             waitForReload,
             bufferZone,
-            records;
+            records,
+            count = me.getCount();
 
         if (!options) {
             options = {};
@@ -1213,8 +1237,8 @@ Ext.define('Ext.data.Store', {
             bufferZone = Math.ceil((me.leadingBufferZone + me.trailingBufferZone) / 2);
 
             // Get our record index range in the dataset
-            startIdx = options.start || me.getAt(0).index;
-            endIdx = startIdx + (options.count || me.getCount()) - 1;
+            startIdx = options.start || (count ? me.getAt(0).index : 0);
+            endIdx = startIdx + (options.count || (count ? count : me.pageSize)) - 1;
 
             // Calculate a page range which encompasses the Store's loaded range plus both buffer zones
             startPage = me.getPageFromRecordIndex(Math.max(startIdx - bufferZone, 0));
@@ -1226,14 +1250,14 @@ Ext.define('Ext.data.Store', {
             if (me.fireEvent('beforeload', me, options) !== false) {
                 me.loading = true;
 
+                // Wait for the requested range to become available in the page map
+                // Load the range as soon as the whole range is available
+                me.pageMap.on('pageAdded', waitForReload);
+
                 // Recache the page range which encapsulates our visible records
                 for (i = startPage; i <= endPage; i++) {
                     me.prefetchPage(i, options);
                 }
-
-                // Wait for the requested range to become available in the page map
-                // Load the range as soon as the whole range is available
-                me.pageMap.on('pageAdded', waitForReload);
             }
         } else {
             return me.callParent(arguments);
@@ -1385,7 +1409,7 @@ Ext.define('Ext.data.Store', {
 
     /**
      * Reverts to a view of the Record cache with no filtering applied.
-     * @param {Boolean} suppressEvent If `true` the filter is cleared silently.
+     * @param {Boolean} [suppressEvent] If `true` the filter is cleared silently.
      *
      * For a locally filtered Store, this means that the filter collection is cleared without firing the
      * {@link #datachanged} event.
@@ -1431,7 +1455,7 @@ Ext.define('Ext.data.Store', {
     },
 
     /**
-     * Returns true if this store is currently filtered
+     * Returns `true` if this store is currently filtered
      * @return {Boolean}
      */
     isFiltered: function() {
@@ -1495,10 +1519,10 @@ Ext.define('Ext.data.Store', {
      *
      * @param {String} property The property to create the filter function for
      * @param {String/RegExp} value The string/regex to compare the property value to
-     * @param {Boolean} [anyMatch=false] True if we don't care if the filter value is not the full value.
-     * @param {Boolean} [caseSensitive=false] True to create a case-sensitive regex.
-     * @param {Boolean} [exactMatch=false] True to force exact match (^ and $ characters added to the regex).
-     * Ignored if anyMatch is true.
+     * @param {Boolean} [anyMatch=false] `true` if we don't care if the filter value is not the full value.
+     * @param {Boolean} [caseSensitive=false] `true` to create a case-sensitive regex.
+     * @param {Boolean} [exactMatch=false] `true` to force exact match (^ and $ characters added to the regex).
+     * Ignored if `anyMatch` is `true`.
      * @return {Ext.util.MixedCollection} Returns an Ext.util.MixedCollection of the matched records
      */
     query: function(property, value, anyMatch, caseSensitive, exactMatch) {
@@ -1523,7 +1547,7 @@ Ext.define('Ext.data.Store', {
      *
      * @param {Ext.data.Model[]/Object[]} data Array of data to load. Any non-model instances will be cast
      * into model instances first.
-     * @param {Boolean} [append=false] True to add the records to the existing records in the store, false
+     * @param {Boolean} [append=false] `true` to add the records to the existing records in the store, `false`
      * to remove the old ones first.
      */
     loadData: function(data, append) {
@@ -1553,7 +1577,7 @@ Ext.define('Ext.data.Store', {
      * Use this method if you are attempting to load data and want to utilize the configured data reader.
      *
      * @param {Object[]} data The full JSON object you'd like to load into the Data store.
-     * @param {Boolean} [append=false] True to add the records to the existing records in the store, false
+     * @param {Boolean} [append=false] `true` to add the records to the existing records in the store, `false`
      * to remove the old ones first.
      */
     loadRawData : function(data, append) {
@@ -1632,9 +1656,9 @@ Ext.define('Ext.data.Store', {
     // PAGING METHODS
     /**
      * Loads a given 'page' of data by setting the start and limit values appropriately. Internally this just causes a normal
-     * load operation, passing in calculated 'start' and 'limit' params
-     * @param {Number} page The number of the page to load
-     * @param {Object} options See options for {@link #method-load}
+     * load operation, passing in calculated 'start' and 'limit' params.
+     * @param {Number} page The number of the page to load.
+     * @param {Object} [options] See options for {@link #method-load}.
      */
     loadPage: function(page, options) {
         var me = this;
@@ -1690,13 +1714,14 @@ Ext.define('Ext.data.Store', {
         var me = this,
             i,
             records,
+            prefetchOptions = options,
 
             // Get the requested record index range in the dataset
             startIdx = options.start,
             endIdx = options.start + options.limit - 1,
 
             // The end index to load into the store's live record collection
-            loadEndIdx = options.start + (me.viewSize || options.limit) - 1,
+            loadEndIdx = Math.min(endIdx, options.start + (me.viewSize || options.limit) - 1),
 
             // Calculate a page range which encompasses the requested range plus both buffer zones
             startPage = me.getPageFromRecordIndex(Math.max(startIdx - me.trailingBufferZone, 0)),
@@ -1740,13 +1765,24 @@ Ext.define('Ext.data.Store', {
             // Once it is loaded, go ahead and prefetch any subsequent pages, if necessary.
             // The prefetchPage has a check to prevent us loading more than the totalCount,
             // so we don't want to blindly load up <n> pages where it isn't required. 
-            me.on('prefetch', function(){
+            me.on('prefetch', function() {
+
+                // When some data comes back, make sure that the prefetch range doesn't exceed what's available
+                endPage = Math.min(endPage, me.getPageFromRecordIndex(me.getTotalCount() + 1));
+
                 for (i = startPage + 1; i <= endPage; ++i) {
                     me.prefetchPage(i, options);
                 }
             }, null, {single: true});
-            
-            me.prefetchPage(startPage, options);
+
+            // Any configured callback is handled in waitForRequestedRange above.
+            // It should not be processed by onProxyPrefetch.
+            if (options.callback) {
+                prefetchOptions = Ext.apply({}, options);
+                delete options.callback;
+            }
+
+            me.prefetchPage(startPage, prefetchOptions);
         }
     },
 
@@ -1765,7 +1801,7 @@ Ext.define('Ext.data.Store', {
         // Check pageSize has not been tampered with. That would break page caching
         if (pageSize) {
             if (me.lastPageSize && pageSize != me.lastPageSize) {
-                Ext.error.raise("pageSize cannot be dynamically altered");
+                Ext.Error.raise("pageSize cannot be dynamically altered");
             }
             if (!me.pageMap.pageSize) {
                 me.pageMap.pageSize = pageSize;
@@ -1805,7 +1841,6 @@ Ext.define('Ext.data.Store', {
             operation = new Ext.data.Operation(options);
 
             if (me.fireEvent('beforeprefetch', me, operation) !== false) {
-                me.loading = true;
                 proxy = me.proxy;
                 me.pageRequests[options.page] = proxy.read(operation, me.onProxyPrefetch, me);
                 if (proxy.isSynchronous) {
@@ -1956,6 +1991,7 @@ Ext.define('Ext.data.Store', {
      * @deprecated 4.1.0 use {@link #rangeCached} instead
      * @param {Number} start The start index
      * @param {Number} end The end index in the range
+     * @return {Boolean}
      */
     rangeSatisfied: function(start, end) {
         return this.rangeCached(start, end);
@@ -2030,7 +2066,7 @@ Ext.define('Ext.data.Store', {
 
     /**
      * Guarantee a specific range, this will load the store with a range (that
-     * must be the pageSize or smaller) and take care of any loading that may
+     * must be the `pageSize` or smaller) and take care of any loading that may
      * be necessary.
      */
     guaranteeRange: function(start, end, cb, scope) {

@@ -134,14 +134,16 @@ Ext.define('Ext.selection.CellModel', {
     move: function(dir, e) {
         var me = this,
             pos = me.getCurrentPosition(),
-            
+            newPos;
+
+        if (pos) {
             // Calculate the new row and column position
             newPos = pos.view.walkCells(pos, dir, e, me.preventWrap);
-
-        // If walk was successful, select new Position
-        if (newPos) {
-            newPos.view = pos.view;
-            return me.setCurrentPosition(newPos);
+            // If walk was successful, select new Position
+            if (newPos) {
+                newPos.view = pos.view;
+                return me.setCurrentPosition(newPos);
+            }
         }
         // <debug>
         // Enforce code correctness in unbuilt source.
@@ -172,10 +174,13 @@ Ext.define('Ext.selection.CellModel', {
         if (pos) {
             me.nextSelection = new me.Selection(me);
             me.nextSelection.setPosition(pos);
+            // set this flag here so we know to use nextSelection
+            // if the node is updated during a select
+            me.selecting = true;
             me.onCellSelect(me.nextSelection);
-
+            me.selecting = false;
             // Deselect triggered by new selection will kill the selection property, so restore it here.
-            return me.selection = me.nextSelection;
+            return (me.selection = me.nextSelection);
         }
         // <debug>
         // Enforce code correctness in unbuilt source.
@@ -276,13 +281,17 @@ Ext.define('Ext.selection.CellModel', {
     // Tab key from the View's KeyNav, *not* from an editor.
     onKeyTab: function(e, t) {
         var me = this,
-            editingPlugin = me.getCurrentPosition().view.editingPlugin;
+            pos = me.getCurrentPosition(),
+            editingPlugin;
 
-        // If we were in editing mode, but just focused on a non-editable cell, behave as if we tabbed off an editable field
-        if (editingPlugin && me.wasEditing) {
-            me.onEditorTab(editingPlugin, e)
-        } else {
-            me.move(e.shiftKey ? 'left' : 'right', e);
+        if (pos) {
+            editingPlugin = pos.view.editingPlugin;
+            // If we were in editing mode, but just focused on a non-editable cell, behave as if we tabbed off an editable field
+            if (editingPlugin && me.wasEditing) {
+                me.onEditorTab(editingPlugin, e)
+            } else {
+                me.move(e.shiftKey ? 'left' : 'right', e);
+            }
         }
     },
 
@@ -294,7 +303,7 @@ Ext.define('Ext.selection.CellModel', {
         // Navigation had somewhere to go.... not hit the buffers.
         if (position) {
             // If we were able to begin editing clear the wasEditing flag. It gets set during navigation off an active edit.
-            if (editingPlugin.startEditByPosition(position)) {
+            if (editingPlugin.startEdit(position.row, position.column)) {
                 me.wasEditing = false;
             }
             // If we could not continue editing...
@@ -331,6 +340,16 @@ Ext.define('Ext.selection.CellModel', {
         var grid = headerCt.up('tablepanel');
         if (grid) {
             this.onViewRefresh(grid.view);
+        }
+    },
+    
+    onUpdate: function(record) {
+        var me = this,
+            pos;
+            
+        if (me.isSelected(record)) {
+            pos = me.selecting ? me.nextSelection : me.selection; 
+            me.view.onCellSelect(pos);
         }
     },
 

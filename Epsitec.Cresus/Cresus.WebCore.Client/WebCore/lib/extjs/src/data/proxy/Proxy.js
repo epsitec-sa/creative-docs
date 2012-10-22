@@ -164,7 +164,8 @@ Ext.define('Ext.data.proxy.Proxy', {
      */
     setReader: function(reader) {
         var me = this,
-            needsCopy = true;
+            needsCopy = true,
+            current = me.reader;
 
         if (reader === undefined || typeof reader == 'string') {
             reader = {
@@ -188,7 +189,7 @@ Ext.define('Ext.data.proxy.Proxy', {
             reader = Ext.createByAlias('reader.' + reader.type, reader);
         }
 
-        if (reader.onMetaChange) {
+        if (reader !== current && reader.onMetaChange) {
             reader.onMetaChange = Ext.Function.createSequence(reader.onMetaChange, this.onMetaChange, this);
         }
 

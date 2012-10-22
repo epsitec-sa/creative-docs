@@ -98,13 +98,11 @@ Ext.define('Ext.data.writer.Writer', {
     getRecordData: function(record, operation) {
         var isPhantom = record.phantom === true,
             writeAll = this.writeAllFields || isPhantom,
-            nameProperty = this.nameProperty,
             fields = record.fields,
             fieldItems = fields.items,
             data = {},
             clientIdProperty = record.clientIdProperty,
             changes,
-            name,
             field,
             key,
             value,
@@ -116,15 +114,7 @@ Ext.define('Ext.data.writer.Writer', {
             for (f = 0; f < fLen; f++) {
                 field = fieldItems[f];
                 if (field.persist) {
-                    name = field[nameProperty] || field.name;
-                    value = record.get(field.name);
-                    if (field.serialize) {
-                        data[name] = field.serialize(value, record);
-                    } else if (field.type === Ext.data.Types.DATE && field.dateFormat) {
-                        data[name] = Ext.Date.format(value, field.dateFormat);
-                    } else {
-                        data[name] = value;
-                    }
+                    this.writeValue(data, field, record);
                 }
             }
         } else {
@@ -134,15 +124,7 @@ Ext.define('Ext.data.writer.Writer', {
                 if (changes.hasOwnProperty(key)) {
                     field = fields.get(key);
                     if (field.persist) {
-                        name = field[nameProperty] || field.name;
-                        value = record.get(field.name);
-                        if (field.serialize) {
-                            data[name] = field.serialize(value, record);
-                        } else if (field.type === Ext.data.Types.DATE && field.dateFormat) {
-                            data[name] = Ext.Date.format(value, field.dateFormat);
-                        } else {
-                            data[name] = value;
-                        }
+                        this.writeValue(data, field, record);
                     }
                 }
             }
@@ -159,5 +141,26 @@ Ext.define('Ext.data.writer.Writer', {
         }
 
         return data;
+    },
+    
+    writeValue: function(data, field, record){
+        var name = field[this.nameProperty] || field.name,
+            dateFormat = field.dateFormat,
+            value = record.get(field.name);
+            
+        if (field.serialize) {
+            data[name] = field.serialize(value, record);
+        } else if (field.type === Ext.data.Types.DATE && dateFormat && Ext.isDate(value)) {
+            if (dateFormat === 'time') {
+                data[name] = value.getTime().toString();
+            } else {
+                if (dateFormat === 'timestamp') {
+                    dateFormat = 'U';
+                }
+                data[name] = Ext.Date.format(value, dateFormat);
+            }
+        } else {
+            data[name] = value;
+        }
     }
 });

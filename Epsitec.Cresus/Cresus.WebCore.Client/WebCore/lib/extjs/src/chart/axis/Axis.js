@@ -256,6 +256,9 @@ Ext.define('Ext.chart.axis.Axis', {
             }
             for (field in allFields) {
                 value = record.get(field);
+                if (me.type == 'Time' && typeof value == "string") {
+                    value = Date.parse(value);
+                }
                 if (isNaN(value)) {
                     continue;
                 }
@@ -293,7 +296,8 @@ Ext.define('Ext.chart.axis.Axis', {
         }
 
         //normalize min max for snapEnds.
-        if (min != max && (max != Math.floor(max))) {
+        if (min != max && (max != Math.floor(max) || min != Math.floor(min))) {
+            min = Math.floor(min);
             max = Math.floor(max) + 1;
         }
 
@@ -307,7 +311,8 @@ Ext.define('Ext.chart.axis.Axis', {
 
         if (min >= max) {
             // snapEnds will return NaN if max >= min;
-            max = min + 1;
+            min = Math.floor(min);
+            max = min + 1;                
         }
 
         return {min: min, max: max};

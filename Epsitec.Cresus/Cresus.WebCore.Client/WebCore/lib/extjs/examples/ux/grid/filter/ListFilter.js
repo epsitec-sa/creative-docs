@@ -137,7 +137,6 @@ filter : [{"type":"list","value":"small,medium","field":"size"}]
     },
 
     /**
-     * @private
      * Template method that is to return <tt>true</tt> if the filter
      * has enough configuration information to be activated.
      * @return {Boolean}

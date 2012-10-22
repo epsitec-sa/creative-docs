@@ -51,6 +51,13 @@ Ext.define('Ext.grid.PagingScroller', {
     percentageFromEdge: 0.35,
 
     /**
+     * @cfg {Boolean} [variableRowHeight=false]
+     * Configure as `true` if the row heights are not all the same height as the first row. Only configure this is needed - this will be if the
+     * rows contain unpredictably sized data, or you have changed the cell's text overflow stype to `'wrap'`.
+     */
+    variableRowHeight: false,
+
+    /**
      * @cfg
      * The zone which causes a refresh of the rendered viewport. As soon as the edge
      * of the rendered grid is this number of rows from the edge of the viewport, the view is moved.
@@ -148,8 +155,12 @@ Ext.define('Ext.grid.PagingScroller', {
         me.view = view;
         me.grid = me.view.up('tablepanel');
         me.store = view.store;
+
+        // Binding to a rendered view, we do not have to listen for render - process it now.
         if (view.rendered) {
+            delete viewListeners.render;
             me.viewSize = me.store.viewSize = Math.ceil(view.getHeight() / me.rowHeight) + me.trailingBufferZone + (me.numFromEdge * 2) + me.leadingBufferZone;
+            me.onViewRender();
         }
         
         partner = view.lockingPartner;
@@ -214,7 +225,6 @@ Ext.define('Ext.grid.PagingScroller', {
     onViewRender: function() {
         var me = this,
             view = me.view,
-            el = me.view.el,
             stretcher;
 
         me.stretcher = me.createStretcher(view);
@@ -358,7 +368,7 @@ Ext.define('Ext.grid.PagingScroller', {
         // then we must calculate the table's vertical position from the scrollProportion
         if (me.scrollProportion !== undefined) {
             me.setTablePosition('absolute');
-            me.setTableTop((me.scrollProportion ? (newScrollHeight * me.scrollProportion) - (table.offsetHeight * me.scrollProportion) : 0) + 'px');
+            me.setTableTop((me.scrollProportion && me.tableStart > 0 ? (newScrollHeight * me.scrollProportion) - (table.offsetHeight * me.scrollProportion) : 0) + 'px');
         } else {
             me.setTablePosition('absolute');
             me.setTableTop((tableTop = (me.tableStart||0) * me.rowHeight) + 'px');
@@ -411,6 +421,44 @@ Ext.define('Ext.grid.PagingScroller', {
             this.view.table.attach(this.view.el.child('table', true));
             return (this.isScrollRefresh = false);
         }
+    },
+
+    /**
+     * Scrolls to and optionlly selects the specified row index **in the total dataset**.
+     * 
+     * @param {Number} recordIdx The zero-based position in the dataset to scroll to.
+     * @param {Boolean} doSelect Pass as `true` to select the specified row.
+     * 
+     */
+    scrollTo: function(recordIdx, doSelect) {
+        var me = this,
+            store = me.store,
+            total = store.getTotalCount(),
+            startIdx, endIdx,
+            targetRec,
+            tableTop;
+
+        // Sanitize the requested record
+        recordIdx = Math.min(Math.max(recordIdx, 0), total - 1);
+
+        // Calculate view start index
+        startIdx = Math.max(Math.min(recordIdx - ((me.leadingBufferZone + me.trailingBufferZone) / 2), total - me.viewSize + 1), 0);
+        tableTop = startIdx * me.rowHeight;
+        endIdx = startIdx + me.viewSize - 1;
+
+        // So that we will not attempt to find any common row between refreshes which may not exist
+        me.lastScrollDirection = undefined;
+
+        me.disabled = true;
+        store.guaranteeRange(startIdx, endIdx, function() {
+            targetRec = store.pageMap.getRange(recordIdx, recordIdx)[0];
+            me.view.table.dom.style.top = tableTop + 'px';
+            me.view.el.dom.scrollTop = Math.max(0, tableTop - me.view.table.getOffsetsTo(me.view.getNode(targetRec))[1]);
+            me.disabled = false;
+            if (doSelect) {
+                me.grid.selModel.select(targetRec);
+            }
+        });
     },
 
     onGuaranteedRange: function(range, start, end) {
@@ -553,7 +601,8 @@ Ext.define('Ext.grid.PagingScroller', {
             rows,
             count,
             i,
-            rowBottom;
+            rowBottom,
+            grouped = me.store.isGrouped();
 
         if (me.variableRowHeight) {
             rows = view.getNodes();
@@ -563,8 +612,13 @@ Ext.define('Ext.grid.PagingScroller', {
             }
             rowBottom = Ext.fly(rows[0]).getOffsetsTo(view.el)[1];
             for (i = 0; i < count; i++) {
+                // If we are grouped then we cannot be sure that the rows are contiguous, so cannot step down from the top row pos by row
+                // heights, but must find the offset to each one.
+                if (grouped) {
+                    rowBottom = Ext.fly(rows[i]).getOffsetsTo(view.el)[1];
+                }
                 rowBottom += rows[i].offsetHeight;
-
+ 
                 // Searching for the first visible row, and off the bottom of the clientArea, then there's no visible first row!
                 if (rowBottom > view.el.dom.clientHeight) {
                     return;
@@ -589,7 +643,8 @@ Ext.define('Ext.grid.PagingScroller', {
             rows,
             count,
             i,
-            rowTop;
+            rowTop,
+            grouped = me.store.isGrouped();
 
         if (me.variableRowHeight) {
             rows = view.getNodes();
@@ -599,7 +654,13 @@ Ext.define('Ext.grid.PagingScroller', {
             count = store.getCount() - 1;
             rowTop = Ext.fly(rows[count]).getOffsetsTo(view.el)[1] + rows[count].offsetHeight;
             for (i = count; i >= 0; i--) {
-                rowTop -= rows[i].offsetHeight;
+                // If we are grouped then we cannot be sure that the rows are contiguous, so cannot step upwards from the last row pos by row
+                // heights, but must find the offset to each one.
+                if (grouped) {
+                    rowTop = Ext.fly(rows[i]).getOffsetsTo(view.el)[1];
+                } else {
+                    rowTop -= rows[i].offsetHeight;
+                }
 
                 // Searching for the last visible row, and off the top of the clientArea, then there's no visible last row!
                 if (rowTop < 0) {

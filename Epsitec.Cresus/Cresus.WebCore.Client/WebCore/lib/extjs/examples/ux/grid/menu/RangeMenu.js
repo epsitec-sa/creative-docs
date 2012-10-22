@@ -48,17 +48,17 @@ fields : {
      */
 
     /**
-     * @cfg {Object} iconCls
-     * The iconCls to be applied to each comparator field item.
+     * @cfg {Object} itemIconCls
+     * The itemIconCls to be applied to each comparator field item.
      * Defaults to:<pre>
-iconCls : {
+itemIconCls : {
     gt : 'ux-rangemenu-gt',
     lt : 'ux-rangemenu-lt',
     eq : 'ux-rangemenu-eq'
 }
      * </pre>
      */
-    iconCls : {
+    itemIconCls : {
         gt : 'ux-rangemenu-gt',
         lt : 'ux-rangemenu-lt',
         eq : 'ux-rangemenu-eq'
@@ -134,15 +134,10 @@ menuItemCfgs : {
                 cfg = {
                     itemId: 'range-' + item,
                     enableKeyEvents: true,
-                    hideLabel: false,
-                    fieldLabel: me.iconTpl.apply({
-                        cls: me.iconCls[item] || 'no-icon',
-                        text: me.fieldLabels[item] || '',
-                        src: Ext.BLANK_IMAGE_URL
-                    }),
+                    hideEmptyLabel: false,
+                    labelCls: 'ux-rangemenu-icon ' + me.itemIconCls[item],
                     labelSeparator: '',
                     labelWidth: 29,
-                    labelStyle: 'position: relative;',
                     listeners: {
                         scope: me,
                         change: me.onInputChange,
@@ -254,14 +249,4 @@ menuItemCfgs : {
         // restart the timer
         this.updateTask.delay(this.updateBuffer);
     }
-}, function() {
-
-    /**
-     * @cfg {Ext.XTemplate} iconTpl
-     * A template for generating the label for each field in the menu
-     */
-    this.prototype.iconTpl = Ext.create('Ext.XTemplate',
-        '<img src="{src}" alt="{text}" class="' + Ext.baseCSSPrefix + 'menu-item-icon ux-rangemenu-icon {cls}" />'
-    );
-
 });

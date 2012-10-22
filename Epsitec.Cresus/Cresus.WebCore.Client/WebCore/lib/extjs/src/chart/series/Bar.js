@@ -190,6 +190,7 @@ Ext.define('Ext.chart.series.Bar', {
             data = store.data.items,
             i, ln, record,
             bars = [].concat(me.yField),
+            barsLoc,
             barsLen = bars.length,
             groupBarsLen = barsLen,
             groupGutter = me.groupGutter / 100,
@@ -205,6 +206,7 @@ Ext.define('Ext.chart.series.Bar', {
             mabs = math.abs,
             boundAxes = me.getAxesForXAndYFields(),
             boundYAxis = boundAxes.yAxis,
+            minX, maxX, colsScale, colsZero, gutter,
             ends, shrunkBarWidth, groupBarWidth, bbox, minY, maxY, axis, out,
             scale, zero, total, rec, j, plus, minus;
 
@@ -272,8 +274,41 @@ Ext.define('Ext.chart.series.Bar', {
         else if (minY / maxY < 0) {
             zero = zero - minY * scale * (column ? -1 : 1);
         }
+
+        // If the columns are bound to the x-axis, calculate their positions
+        if (me.boundColumn) {
+            axis = chart.axes.get(boundAxes.xAxis);
+            if (axis) {
+                ends = axis.applyData();
+                minX = ends.from;
+                maxX = ends.to;
+            }
+            if (me.xField && !Ext.isNumber(minX)) {
+                out = me.getMinMaxYValues();
+                minX = out[0];
+                maxX = out[1];
+            }
+            if (!Ext.isNumber(minX)) {
+                minX = 0;
+            }
+            if (!Ext.isNumber(maxX)) {
+                maxX = 0;
+            }
+            gutter = me.getGutters()[0];
+            colsScale = (bbox.width - gutter * 2) / ((maxX - minX) || 1);
+            colsZero = bbox.x + gutter;
+        
+            barsLoc = [];
+            for (i = 0, ln = data.length; i < ln; i++) {
+                record = data[i];
+                rec = record.get(me.xField);
+                barsLoc[i] = colsZero + (rec - minX) * colsScale - (groupBarWidth / 2);
+            }
+        }
+
         return {
             bars: bars,
+            barsLoc: barsLoc,
             bbox: bbox,
             shrunkBarWidth: shrunkBarWidth,
             barsLen: barsLen,
@@ -346,7 +381,8 @@ Ext.define('Ext.chart.series.Bar', {
                     Ext.apply(barAttr, {
                         height: height,
                         width: mmax(bounds.groupBarWidth, 0),
-                        x: (bbox.x + xPadding + (barWidth - shrunkBarWidth) * 0.5 + i * barWidth * (1 + gutter) + counter * bounds.groupBarWidth * (1 + groupGutter) * !stacked),
+                        x: (me.boundColumn ? bounds.barsLoc[i] 
+                                           : (bbox.x + xPadding + (barWidth - shrunkBarWidth) * 0.5 + i * barWidth * (1 + gutter) + counter * bounds.groupBarWidth * (1 + groupGutter) * !stacked)),
                         y: bottom - height
                     });
                 }
@@ -514,6 +550,9 @@ Ext.define('Ext.chart.series.Bar', {
             animate = chart.animate,
             stacked = me.stacked,
             column = me.column,
+            chartAxes = chart.axes,
+            boundAxes = me.getAxesForXAndYFields(),
+            boundXAxis = boundAxes.xAxis,
             enableShadows = chart.shadow,
             shadowGroups = me.shadowGroups,
             shadowGroupsLn = shadowGroups.length,
@@ -539,6 +578,9 @@ Ext.define('Ext.chart.series.Bar', {
         me.unHighlightItem();
         me.cleanHighlights();
         
+        me.boundColumn = (boundXAxis && Ext.Array.contains(me.axis,boundXAxis) 
+                            && chartAxes.get(boundXAxis) && chartAxes.get(boundXAxis).type == 'Numeric');
+
         me.getPaths();
         bounds = me.bounds;
         items = me.items;

@@ -25,6 +25,30 @@
  * - `component[autoScroll]`
  * - `panel[title="Test"]`
  *
+ * Attributes can use the '=' or '~=' operators to do the pattern matching.
+ *
+ * The '=' operator will return the results that <strong>exactly</strong> match:
+ *
+ *     Ext.Component.query('panel[cls=my-cls]')
+ *
+ * Will match the following Component:
+ *
+ *     Ext.create('Ext.Panel', {
+ *         cls : 'my-cls'
+ *     });
+ *
+ * The '~=' operator will return results that <strong>exactly</strong> matches one of the whitespace-separated values:
+ *
+ *     Ext.Component.query('panel[cls~=my-cls]')
+ *
+ * Will match the follow Component:
+ *
+ *     Ext.create('My.Panel', {
+ *         cls : 'foo-cls my-cls bar-cls'
+ *     });
+ *
+ * This is because it <strong>exactly</strong> matched the 'my-cls' within the cls config.
+ *
  * Member expressions from candidate Components may be tested. If the expression returns a *truthy* value,
  * the candidate Component will be included in the query:
  *
@@ -78,7 +102,7 @@
  */
 Ext.define('Ext.ComponentQuery', {
     singleton: true,
-    uses: ['Ext.ComponentManager']
+    requires: ['Ext.ComponentManager']
 }, function() {
 
     var cq = this,
@@ -178,10 +202,29 @@ Ext.define('Ext.ComponentQuery', {
             var result = [],
                 i = 0,
                 length = items.length,
-                candidate;
+                candidate, getValue;
+
             for (; i < length; i++) {
                 candidate = items[i];
-                if (!value ? !!candidate[property] : (String(candidate[property]) === value)) {
+
+                if (operator === '~=') {
+                    getValue = null;
+
+                    if (candidate[property]) {
+                        getValue = String(candidate[property]);
+                    }
+
+                    if (getValue) {
+                        //We need an array
+                        if (!Ext.isArray(getValue)) {
+                            getValue = getValue.split(' ');
+                        }
+
+                        if (Ext.Array.indexOf(getValue, value) !== -1) {
+                            result.push(candidate);
+                        }
+                    }
+                } else if (!value ? !!candidate[property] : (String(candidate[property]) === value)) {
                     result.push(candidate);
                 }
             }

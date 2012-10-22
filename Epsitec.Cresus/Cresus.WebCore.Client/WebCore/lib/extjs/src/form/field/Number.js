@@ -205,29 +205,11 @@ Ext.define('Ext.form.field.Number', {
     autoStripChars: false,
 
     initComponent: function() {
-        var me = this,
-            allowed;
-
+        var me = this;
         me.callParent();
 
         me.setMinValue(me.minValue);
         me.setMaxValue(me.maxValue);
-
-        // Build regexes for masking and stripping based on the configured options
-        if (me.disableKeyFilter !== true) {
-            allowed = me.baseChars + '';
-            if (me.allowDecimals) {
-                allowed += me.decimalSeparator;
-            }
-            if (me.minValue < 0) {
-                allowed += '-';
-            }
-            allowed = Ext.String.escapeRegex(allowed);
-            me.maskRe = new RegExp('[' + allowed + ']');
-            if (me.autoStripChars) {
-                me.stripCharsRe = new RegExp('[^' + allowed + ']', 'gi');
-            }
-        }
     },
 
     /**
@@ -319,8 +301,27 @@ Ext.define('Ext.form.field.Number', {
      * @param {Number} value The minimum value
      */
     setMinValue : function(value) {
-        this.minValue = Ext.Number.from(value, Number.NEGATIVE_INFINITY);
-        this.toggleSpinners();
+        var me = this,
+            allowed;
+        
+        me.minValue = Ext.Number.from(value, Number.NEGATIVE_INFINITY);
+        me.toggleSpinners();
+        
+        // Build regexes for masking and stripping based on the configured options
+        if (me.disableKeyFilter !== true) {
+            allowed = me.baseChars + '';
+            if (me.allowDecimals) {
+                allowed += me.decimalSeparator;
+            }
+            if (me.minValue < 0) {
+                allowed += '-';
+            }
+            allowed = Ext.String.escapeRegex(allowed);
+            me.maskRe = new RegExp('[' + allowed + ']');
+            if (me.autoStripChars) {
+                me.stripCharsRe = new RegExp('[^' + allowed + ']', 'gi');
+            }
+        }
     },
 
     /**
@@ -366,15 +367,31 @@ Ext.define('Ext.form.field.Number', {
 
     onSpinUp: function() {
         var me = this;
+            
         if (!me.readOnly) {
-            me.setValue(Ext.Number.constrain(me.getValue() + me.step, me.minValue, me.maxValue));
+            me.setSpinValue(Ext.Number.constrain(me.getValue() + me.step, me.minValue, me.maxValue));
         }
     },
 
     onSpinDown: function() {
         var me = this;
+        
         if (!me.readOnly) {
-            me.setValue(Ext.Number.constrain(me.getValue() - me.step, me.minValue, me.maxValue));
+            me.setSpinValue(Ext.Number.constrain(me.getValue() - me.step, me.minValue, me.maxValue));
         }
+    },
+    
+    setSpinValue: function(value) {
+        var me = this,
+            len;
+            
+        if (me.enforceMaxLength) {
+            // We need to round the value here, otherwise we could end up with a
+            // very long number (think 0.1 + 0.2)
+            if (me.fixPrecision(value).toString().length > me.maxLength) {
+                return;
+            }
+        }
+        me.setValue(value);
     }
 });

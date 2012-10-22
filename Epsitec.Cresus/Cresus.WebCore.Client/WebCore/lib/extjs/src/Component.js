@@ -177,6 +177,12 @@ Ext.define('Ext.Component', {
      * floating component.
      */
     toFrontOnShow: true,
+    
+    /**
+     * @cfg {Ext.util.Region/Ext.Element} constrainTo
+     * A {@link Ext.util.Region Region} (or an element from which a Region measurement will be read) which is used
+     * to constrain the component. Only applies when the component is floating.
+     */
 
     /**
      * @property {Ext.ZIndexManager} zIndexManager
@@ -290,10 +296,14 @@ Ext.define('Ext.Component', {
      */
 
     hideMode: 'display',
+    
+    offsetsCls: Ext.baseCSSPrefix + 'hide-offsets',
 
     bubbleEvents: [],
 
     monPropRe: /^(?:scope|delay|buffer|single|stopEvent|preventDefault|stopPropagation|normalized|args|delegate)$/,
+
+    defaultComponentLayoutType: 'autocomponent',
 
     //renderTpl: new Ext.XTemplate(
     //    '<div id="{id}" class="{baseCls} {cls} {cmpCls}<tpl if="typeof ui !== \'undefined\'"> {uiBase}-{ui}</tpl>"<tpl if="typeof style !== \'undefined\'"> style="{style}"</tpl>></div>', {
@@ -372,6 +382,7 @@ Ext.define('Ext.Component', {
      *
      * @template
      * @protected
+     * @since Ext 1
      */
     initComponent: function() {
         var me = this;
@@ -883,6 +894,14 @@ Ext.define('Ext.Component', {
             }
         }
     },
+    
+    getAnimateTarget: function(target){
+        target = target || this.animateTarget;
+        if (target) {
+            target = target.isComponent ? target.getEl() : Ext.get(target);
+        }
+        return target || null;
+    },
 
     /**
      * Invoked after the Component is shown (after #onShow is called).
@@ -903,7 +922,7 @@ Ext.define('Ext.Component', {
             ghostPanel;
 
         // Default to configured animate target if none passed
-        animateTarget = animateTarget || me.animateTarget;
+        animateTarget = me.getAnimateTarget(animateTarget);
 
         // Need to be able to ghost the Component
         if (!me.ghost) {
@@ -911,10 +930,9 @@ Ext.define('Ext.Component', {
         }
         // If we're animating, kick of an animation of the ghost from the target to the *Element* current box
         if (animateTarget) {
-            animateTarget = animateTarget.el ? animateTarget.el : Ext.get(animateTarget);
             toBox = me.el.getBox();
             fromBox = animateTarget.getBox();
-            me.el.addCls(Ext.baseCSSPrefix + 'hide-offsets');
+            me.el.addCls(me.offsetsCls);
             ghostPanel = me.ghost();
             ghostPanel.el.stopAnimation();
 
@@ -928,7 +946,7 @@ Ext.define('Ext.Component', {
                     afteranimate: function() {
                         delete ghostPanel.componentLayout.lastComponentSize;
                         me.unghost();
-                        me.el.removeCls(Ext.baseCSSPrefix + 'hide-offsets');
+                        me.el.removeCls(me.offsetsCls);
                         me.onShowComplete(cb, scope);
                     }
                 }
@@ -1008,7 +1026,7 @@ Ext.define('Ext.Component', {
             toBox;
 
         // Default to configured animate target if none passed
-        animateTarget = animateTarget || me.animateTarget;
+        animateTarget = me.getAnimateTarget(animateTarget);
 
         // Need to be able to ghost the Component
         if (!me.ghost) {
@@ -1016,7 +1034,6 @@ Ext.define('Ext.Component', {
         }
         // If we're animating, kick off an animation of the ghost down to the target
         if (animateTarget) {
-            animateTarget = animateTarget.el ? animateTarget.el : Ext.get(animateTarget);
             ghostPanel = me.ghost();
             ghostPanel.el.stopAnimation();
             toBox = animateTarget.getBox();

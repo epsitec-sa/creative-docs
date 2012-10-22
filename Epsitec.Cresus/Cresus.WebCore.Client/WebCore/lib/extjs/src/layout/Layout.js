@@ -405,12 +405,17 @@ Ext.define('Ext.layout.Layout', {
         // Test DOM nodes for equality using "===" : http://jsperf.com/dom-equality-test
         if (itemDom && targetDom) {
             if (typeof position == 'number') {
+                position = this.getPositionOffset(position);
                 return itemDom === targetDom.childNodes[position];
             }
             return itemDom.parentNode === targetDom;
         }
 
         return false;
+    },
+    
+    getPositionOffset: function(position){
+        return position;
     },
 
     /**

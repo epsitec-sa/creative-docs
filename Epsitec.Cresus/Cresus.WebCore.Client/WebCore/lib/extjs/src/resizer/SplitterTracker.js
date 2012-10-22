@@ -144,27 +144,23 @@ Ext.define('Ext.resizer.SplitterTracker', {
             owner     = splitter.ownerCt,
             flexedSiblings = owner.query('>[flex]'),
             len       = flexedSiblings.length,
+            vertical  = orient === 'vertical',
             i         = 0,
-            dimension,
-            size,
-            totalFlex = 0;
+            dimension = vertical ? 'width' : 'height',
+            totalFlex = 0,
+            item, size;
 
         // Convert flexes to pixel values proportional to the total pixel width of all flexes.
         for (; i < len; i++) {
-            size = flexedSiblings[i].getWidth();
+            item = flexedSiblings[i];
+            size = vertical ? item.getWidth() : item.getHeight();
             totalFlex += size;
-            flexedSiblings[i].flex = size;
+            item.flex = size;
         }
 
         offset = offset || me.getOffset('dragTarget');
+        offset = vertical ? offset[0] : offset[1];
 
-        if (orient === 'vertical') {
-            offset = offset[0];
-            dimension = 'width';
-        } else {
-            dimension = 'height';
-            offset = offset[1];
-        }
         if (prevCmp) {
             size = me.prevBox[dimension] + offset;
             if (prevCmp.flex) {

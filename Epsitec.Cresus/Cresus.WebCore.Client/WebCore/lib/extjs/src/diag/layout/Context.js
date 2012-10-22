@@ -1,5 +1,7 @@
+// This override adds diagnostics to the Ext.layout.Context class.
+
 /**
- * This override adds diagnostics to the {@link Ext.layout.Context} class.
+ * @class Ext.layout.Context
  */
 Ext.define('Ext.diag.layout.Context', {
 

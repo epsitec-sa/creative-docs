@@ -55,6 +55,13 @@ Ext.define('Ext.data.proxy.Memory', {
     alternateClassName: 'Ext.data.MemoryProxy',
 
     /**
+     * @cfg {Boolean} [enablePaging=false]
+     * Configure as `true` to enable this MemoryProxy to honour a read operation's `start` and `limit` options.
+     *
+     * When `true`, read operations will be ablew to read *pages* of records from the data object.
+     */
+
+    /**
      * @cfg {Object} data
      * Optional data to pass to configured Reader.
      */
@@ -139,12 +146,33 @@ Ext.define('Ext.data.proxy.Memory', {
      * @param {Object} scope The scope to call the callback function in
      */
     read: function(operation, callback, scope) {
-        var me = this;
-
-        operation.resultSet = me.getReader().read(me.data);
+        var me = this,
+            resultSet = operation.resultSet = me.getReader().read(me.data);
 
         operation.setCompleted();
-        operation.setSuccessful();
+
+        // Reader reads the whole passed data object.
+        // If successful and we were given a start and limit, slice the result.
+        if (me.enablePaging && resultSet.success && operation.start !== undefined && operation.limit !== undefined) {
+
+            // Attempt to read past end of memory dataset - convert to failure
+            if (operation.start >= resultSet.total) {
+                resultSet.success = false;
+                resultSet.count = 0;
+                resultSet.records = [];
+            }
+            // Range is valid, slice it up.
+            else {
+                resultSet.records = Ext.Array.slice(resultSet.records, operation.start, operation.start + operation.limit);
+                resultSet.count = resultSet.records.length;
+            }
+        }
+
+        if (resultSet.success) {
+            operation.setSuccessful();
+        } else {
+            me.fireEvent('exception', me, null, operation);
+        }
         Ext.callback(callback, scope || me, [operation]);
     },
 

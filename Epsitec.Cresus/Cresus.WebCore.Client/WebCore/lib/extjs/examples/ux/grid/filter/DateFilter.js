@@ -125,7 +125,11 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
                     menu: Ext.create('Ext.menu.Menu', {
                         items: [
                             Ext.apply(pickerCfg, {
-                                itemId: item
+                                itemId: item,
+                                listeners: {
+                                    select: me.onPickerSelect,
+                                    scope: me
+                                }
                             })
                         ]
                     }),
@@ -139,11 +143,22 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
             //me.add(item);
             me.menu.add(item);
         }
+        me.values = {};
     },
 
-    onCheckChange : function () {
-        this.setActive(this.isActivatable());
-        this.fireEvent('update', this);
+    onCheckChange : function (item, checked) {
+        var me = this,
+            picker = item.menu.items.first(),
+            itemId = picker.itemId,
+            values = me.values;
+
+        if (checked) {
+            values[itemId] = picker.getValue();
+        } else {
+            delete values[itemId]
+        }
+        me.setActive(me.isActivatable());
+        me.fireEvent('update', me);
     },
 
     /**
@@ -223,7 +238,6 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
     },
 
     /**
-     * @private
      * Template method that is to return <tt>true</tt> if the filter
      * has enough configuration information to be activated.
      * @return {Boolean}
@@ -265,7 +279,7 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
      * @return {Date} Gets the current selected value of the date field
      */
     getFieldValue : function(item){
-        return this.getPicker(item).getValue();
+        return this.values[item];
     },
 
     /**
@@ -310,5 +324,13 @@ Ext.define('Ext.ux.grid.filter.DateFilter', {
             }
         }
         return true;
+    },
+
+    onPickerSelect: function(picker, date) {
+        // keep track of the picker value separately because the menu gets destroyed
+        // when columns order changes.  We return this value from getValue() instead
+        // of picker.getValue()
+        this.values[picker.itemId] = date;
+        this.fireEvent('update', this);
     }
 });

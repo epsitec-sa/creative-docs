@@ -1,3 +1,6 @@
+//@tag extras,core
+//@require misc/JSON.js
+
 /**
  * @class Ext
  *
@@ -170,18 +173,6 @@ Ext.apply(Ext, {
             return doc || (doc = Ext.get(document));
         };
     }()),
-
-    /**
-     * This is shorthand reference to {@link Ext.ComponentManager#get}.
-     * Looks up an existing {@link Ext.Component Component} by {@link Ext.Component#id id}
-     *
-     * @param {String} id The component {@link Ext.Component#id id}
-     * @return Ext.Component The Component, `undefined` if not found, or `null` if a
-     * Class was found.
-    */
-    getCmp: function(id) {
-        return Ext.ComponentManager.get(id);
-    },
 
     /**
      * Returns the current orientation of the mobile device
@@ -516,7 +507,8 @@ Opera 11.11 - Opera/9.80 (Windows NT 6.1; U; en) Presto/2.8.131 Version/11.11
     nullLog = function () {};
     nullLog.info = nullLog.warn = nullLog.error = Ext.emptyFn;
 
-    Ext.setVersion('extjs', '4.1.1');
+    // also update Version.js
+    Ext.setVersion('extjs', '4.1.2.1');
     Ext.apply(Ext, {
         /**
          * @property {String} SSL_SECURE_URL

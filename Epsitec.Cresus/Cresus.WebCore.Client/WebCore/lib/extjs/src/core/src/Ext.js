@@ -1,3 +1,4 @@
+//@tag foundation,core
 /**
  * @class Ext
  * @singleton
@@ -90,6 +91,13 @@ Ext._startTime = new Date().getTime();
          * A reusable empty function
          */
         emptyFn: emptyFn,
+        
+        /**
+         * A reusable identity function. The function will always return the first argument, unchanged.
+         */
+        identityFn: function(o) {
+            return o;
+        },
 
         /**
          * A zero length string which will pass a truth test. Useful for passing to methods

@@ -141,6 +141,11 @@ Ext.define('Ext.grid.LockingView', {
         }
         return result;
     },
+    
+    scrollBy: function(){
+        var normal = this.normalView;
+        normal.scrollBy.apply(normal, arguments);
+    },
 
     addElListener: function(eventName, fn, scope){
         this.relayFn('addElListener', arguments);

@@ -93,9 +93,7 @@ Ext.define('Ext.chart.Label', {
             minMargin: 50,
             font: "11px Helvetica, sans-serif",
             orientation: "horizontal",
-            renderer: function(v) {
-                return v;
-            }
+            renderer: Ext.identityFn
         });
 
         if (me.label.display !== 'none') {

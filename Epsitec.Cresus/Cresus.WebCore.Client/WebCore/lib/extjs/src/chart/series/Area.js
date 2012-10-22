@@ -523,13 +523,17 @@ Ext.define('Ext.chart.series.Area', {
             next = (i == items.length -1) ? false : items[i +1].point,
             cur = item.point,
             dir, norm, normal, a, aprev, anext,
-            bbox = callout.label.getBBox(),
+            bbox = (callout && callout.label ? callout.label.getBBox() : {width:0,height:0}),
             offsetFromViz = 30,
             offsetToSide = 10,
             offsetBox = 3,
             boxx, boxy, boxw, boxh,
             p, clipRect = me.clipRect,
             x, y;
+
+        if (!bbox.width || !bbox.height) {
+            return;
+        }
 
         //get the right two points
         if (!prev) {
@@ -633,7 +637,7 @@ Ext.define('Ext.chart.series.Area', {
                 if (y >= point[1] && (!pointsDown.length || y <= (pointsDown[p -1][1]))) {
                     item.storeIndex = p -1;
                     item.storeField = me.yField[i];
-                    item.storeItem = me.chart.store.getAt(p -1);
+                    item.storeItem = me.chart.getChartStore().getAt(p -1);
                     item._points = pointsDown.length? [point, pointsDown[p -1]] : [point];
                     return true;
                 } else {

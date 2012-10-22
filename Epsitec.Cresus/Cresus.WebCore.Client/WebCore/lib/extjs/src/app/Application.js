@@ -15,7 +15,10 @@
  *
  * This does several things. First it creates a global variable called 'MyApp' - all of your Application's classes (such
  * as its Models, Views and Controllers) will reside under this single namespace, which drastically lowers the chances
- * of colliding global variables.
+ * of colliding global variables. The MyApp global will also have a getApplication method to get a reference to
+ * the current application:
+ * 
+ *     var app = MyApp.getApplication();
  *
  * When the page is ready and all of your JavaScript has loaded, your Application's {@link #launch} function is called,
  * at which time you can run the code that starts your app. Usually this consists of creating a Viewport, as we do in
@@ -126,12 +129,17 @@ Ext.define('Ext.app.Application', {
         config = config || {};
         Ext.apply(this, config);
 
-        var me = this,
+        var me       = this,
+            name     = me.name,
             requires = config.requires || [],
+            views    = config.views    || [],
+            vLen     = views.length,
+            name     = me.name,
+            v,
             controllers, ln, i, controller,
             paths, path, ns;
 
-        Ext.Loader.setPath(me.name, me.appFolder);
+        Ext.Loader.setPath(name, me.appFolder);
 
         if (me.paths) {
             paths = me.paths;
@@ -162,10 +170,27 @@ Ext.define('Ext.app.Application', {
             requires.push(me.getModuleClassName(controllers[i], 'controller'));
         }
 
+        for (v = 0; v < vLen; v++) {
+            requires.push(me.getModuleClassName(views[v], 'view'));
+        }
+
         Ext.require(requires);
+        
+        ns = null;
+        if (name) {
+            ns = Ext.namespace(name);
+        }
 
         Ext.onReady(function() {
+            if (ns) {
+                ns.getApplication = function() {
+                    return me;
+                };
+                ns.app = me;
+            }
+
             me.init(me);
+
             for (i = 0; i < ln; i++) {
                 controller = me.getController(controllers[i]);
                 controller.init(me);
@@ -270,5 +295,9 @@ Ext.define('Ext.app.Application', {
         view = this.getModuleClassName(view, 'view');
 
         return Ext.ClassManager.get(view);
+    },
+    
+    getApplication: function(){
+        return this;
     }
 });

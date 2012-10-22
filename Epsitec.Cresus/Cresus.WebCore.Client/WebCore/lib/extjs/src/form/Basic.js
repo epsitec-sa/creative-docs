@@ -78,6 +78,7 @@ Ext.define('Ext.form.Basic', {
     constructor: function(owner, config) {
         var me = this,
             onItemAddOrRemove = me.onItemAddOrRemove,
+            reader,
             api,
             fn;
 
@@ -111,6 +112,26 @@ Ext.define('Ext.form.Basic', {
         }
 
         me.checkValidityTask = new Ext.util.DelayedTask(me.checkValidity, me);
+        
+        reader = me.reader;
+        if (reader && !reader.isReader) {
+            if (typeof reader === 'string') {
+                reader = {
+                    type: reader
+                };
+            }
+            me.reader = Ext.createByAlias('reader.' + reader.type, reader);
+        }
+        
+        reader = me.errorReader;
+        if (reader && !reader.isReader) {
+            if (typeof reader === 'string') {
+                reader = {
+                    type: reader
+                };
+            }
+            me.errorReader = Ext.createByAlias('reader.' + reader.type, reader);
+        }
 
         me.addEvents(
             /**
@@ -169,17 +190,17 @@ Ext.define('Ext.form.Basic', {
      */
 
     /**
-     * @cfg {Ext.data.reader.Reader} reader
-     * An Ext.data.DataReader (e.g. {@link Ext.data.reader.Xml}) to be used to read
-     * data when executing 'load' actions. This is optional as there is built-in
-     * support for processing JSON responses.
+     * @cfg {Object/Ext.data.reader.Reader} reader
+     * An Ext.data.reader.Reader (e.g. {@link Ext.data.reader.Xml}) instance or
+     * configuration to be used to read data when executing 'load' actions. This 
+     * is optional as there is built-in support for processing JSON responses.
      */
 
     /**
-     * @cfg {Ext.data.reader.Reader} errorReader
-     * An Ext.data.DataReader (e.g. {@link Ext.data.reader.Xml}) to be used to
-     * read field error messages returned from 'submit' actions. This is optional
-     * as there is built-in support for processing JSON responses.
+     * @cfg {Object/Ext.data.reader.Reader} errorReader
+     * An Ext.data.reader.Reader (e.g. {@link Ext.data.reader.Xml}) instance or
+     * configuration to be used to read field error messages returned from 'submit' actions. 
+     * This is optional as there is built-in support for processing JSON responses.
      *
      * The Records which provide messages for the invalid Fields must use the
      * Field name (or id) as the Record ID, and must contain a field called 'msg'
@@ -276,6 +297,13 @@ Ext.define('Ext.form.Basic', {
      * If set to true, a standard HTML form submit is used instead of a XHR (Ajax) style form submission.
      * All of the field values, plus any additional params configured via {@link #baseParams}
      * and/or the `options` to {@link #submit}, will be included in the values submitted in the form.
+     */
+
+    /**
+     * @cfg {Boolean} jsonSubmit
+     * If set to true, the field values are sent as JSON in the request body.
+     * All of the field values, plus any additional params configured via {@link #baseParams}
+     * and/or the `options` to {@link #submit}, will be included in the values POSTed in the body of the request.
      */
 
     /**
@@ -654,11 +682,13 @@ Ext.define('Ext.form.Basic', {
      */
     updateRecord: function(record) {
         record = record || this._record;
-        //<debug>
         if (!record) {
+            //<debug>
             Ext.Error.raise("A record is required.");
+            //</debug>
+            return this;
         }
-        //</debug>
+        
         var fields = record.fields.items,
             values = this.getFieldValues(),
             obj = {},
@@ -707,9 +737,10 @@ Ext.define('Ext.form.Basic', {
      * @param {Ext.form.action.Action} action The Action instance that was invoked
      */
     beforeAction: function(action) {
-        var waitMsg = action.waitMsg,
+        var me = this,
+            waitMsg = action.waitMsg,
             maskCls = Ext.baseCSSPrefix + 'mask-loading',
-            fields  = this.getFields().items,
+            fields  = me.getFields().items,
             f,
             fLen    = fields.length,
             field, waitMsgTarget;
@@ -724,14 +755,27 @@ Ext.define('Ext.form.Basic', {
         }
 
         if (waitMsg) {
-            waitMsgTarget = this.waitMsgTarget;
+            waitMsgTarget = me.waitMsgTarget;
             if (waitMsgTarget === true) {
-                this.owner.el.mask(waitMsg, maskCls);
+                me.owner.el.mask(waitMsg, maskCls);
             } else if (waitMsgTarget) {
-                waitMsgTarget = this.waitMsgTarget = Ext.get(waitMsgTarget);
+                waitMsgTarget = me.waitMsgTarget = Ext.get(waitMsgTarget);
                 waitMsgTarget.mask(waitMsg, maskCls);
             } else {
-                Ext.MessageBox.wait(waitMsg, action.waitTitle || this.waitTitle);
+                me.floatingAncestor = me.owner.up('[floating]');
+
+                // https://sencha.jira.com/browse/EXTJSIV-6397
+                // When the "wait" MessageBox is hidden, the ZIndexManager activates the previous
+                // topmost floating item which would be any Window housing this form.
+                // That kicks off a delayed focus call on that Window.
+                // So if any form post submit processing displayed a MessageBox, that gets
+                // stomped on.
+                // The solution is to not move focus at all during this process.
+                if (me.floatingAncestor) {
+                    me.savePreventFocusOnActivate = me.floatingAncestor.preventFocusOnActivate;
+                    me.floatingAncestor.preventFocusOnActivate = true;
+                }
+                Ext.MessageBox.wait(waitMsg, action.waitTitle || me.waitTitle);
             }
         }
     },
@@ -743,30 +787,31 @@ Ext.define('Ext.form.Basic', {
      * @param {Boolean} success True if the action completed successfully, false, otherwise.
      */
     afterAction: function(action, success) {
+        var me = this;
         if (action.waitMsg) {
             var messageBox = Ext.MessageBox,
-                waitMsgTarget = this.waitMsgTarget;
+                waitMsgTarget = me.waitMsgTarget;
             if (waitMsgTarget === true) {
-                this.owner.el.unmask();
+                me.owner.el.unmask();
             } else if (waitMsgTarget) {
                 waitMsgTarget.unmask();
             } else {
-                // Do not fire the hide event because that triggers complex processing
-                // which is not necessary just for the wait window, and which may interfere with the app.
-                messageBox.suspendEvents();
                 messageBox.hide();
-                messageBox.resumeEvents();
             }
+        }
+        // Restore setting of any floating ancestor which was manipulated in beforeAction
+        if (me.floatingAncestor) {
+            me.floatingAncestor.preventFocusOnActivate = me.savePreventFocusOnActivate;
         }
         if (success) {
             if (action.reset) {
-                this.reset();
+                me.reset();
             }
-            Ext.callback(action.success, action.scope || action, [this, action]);
-            this.fireEvent('actioncomplete', this, action);
+            Ext.callback(action.success, action.scope || action, [me, action]);
+            me.fireEvent('actioncomplete', me, action);
         } else {
-            Ext.callback(action.failure, action.scope || action, [this, action]);
-            this.fireEvent('actionfailed', this, action);
+            Ext.callback(action.failure, action.scope || action, [me, action]);
+            me.fireEvent('actionfailed', me, action);
         }
     },
 
@@ -979,10 +1024,13 @@ Ext.define('Ext.form.Basic', {
     },
 
     /**
-     * Resets all fields in this form.
+     * Resets all fields in this form. By default, any record bound by {@link #loadRecord}
+     * will be retained.
+     * @param {Boolean} [resetRecord=false] True to unbind any record set
+     * by {@link #loadRecord}
      * @return {Ext.form.Basic} this
      */
-    reset: function() {
+    reset: function(resetRecord) {
         Ext.suspendLayouts();
 
         var me     = this,
@@ -995,6 +1043,10 @@ Ext.define('Ext.form.Basic', {
         }
 
         Ext.resumeLayouts(true);
+        
+        if (resetRecord === true) {
+            delete me._record;
+        }
         return me;
     },
 

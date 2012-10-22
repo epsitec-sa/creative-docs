@@ -156,6 +156,13 @@ Ext.define('Ext.grid.column.Column', {
     sortable: true,
 
     /**
+     * @cfg {Boolean} lockable
+     * If the grid is configured with {@link Ext.panel.Table#enableLocking enableLocking}, or has columns which are
+     * configured with a {@link #locked} value, this option may be used to disable user-driven locking or unlocking
+     * of this column. This column will remain in the side into which its own {@link #locked} configuration placed it.
+     */
+
+    /**
      * @cfg {Boolean} groupable
      * If the grid uses a {@link Ext.grid.feature.Grouping}, this option may be used to disable the header menu
      * item to group by the column selected. By default, the header menu group option is enabled. Set to false to
@@ -305,8 +312,19 @@ Ext.define('Ext.grid.column.Column', {
      * HeaderContainer base class, but are in fact, the subclass: Header.
      */
     isHeader: true,
+    
+    ascSortCls: Ext.baseCSSPrefix + 'column-header-sort-ASC',
+    descSortCls: Ext.baseCSSPrefix + 'column-header-sort-DESC',
+    nullSortCls: Ext.baseCSSPrefix + 'column-header-sort-null',
 
     componentLayout: 'columncomponent',
+    
+    groupSubHeaderCls: Ext.baseCSSPrefix + 'group-sub-header',
+    
+    groupHeaderCls: Ext.baseCSSPrefix + 'group-header',
+    
+    // So that when removing from group headers which are then empty and then get destroyed, there's no child DOM left
+    detachOnRemove : true,
     
     // We need to override the default component resizable behaviour here
     initResizable: Ext.emptyFn,
@@ -342,7 +360,7 @@ Ext.define('Ext.grid.column.Column', {
             delete me.columns;
             delete me.flex;
             delete me.width;
-            me.cls = (me.cls||'') + ' ' + Ext.baseCSSPrefix + 'group-header';
+            me.cls = (me.cls||'') + ' ' + me.groupHeaderCls;
             me.sortable = false;
             me.resizable = false;
             me.align = 'center';
@@ -392,13 +410,16 @@ Ext.define('Ext.grid.column.Column', {
 
     onAdd: function(childHeader) {
         childHeader.isSubHeader = true;
-        childHeader.addCls(Ext.baseCSSPrefix + 'group-sub-header');
+        if (this.hidden) {
+            childHeader.hide();
+        }
+        childHeader.addCls(this.groupSubHeaderCls);
         this.callParent(arguments);
     },
 
     onRemove: function(childHeader) {
         childHeader.isSubHeader = false;
-        childHeader.removeCls(Ext.baseCSSPrefix + 'group-sub-header');
+        childHeader.removeCls(this.groupSubHeaderCls);
         this.callParent(arguments);
     },
 
@@ -714,22 +735,25 @@ Ext.define('Ext.grid.column.Column', {
         return this.dataIndex;
     },
 
-    //setSortState: function(state, updateUI) {
-    //setSortState: function(state, doSort) {
     setSortState: function(state, skipClear, initial) {
         var me = this,
-            colSortClsPrefix = Ext.baseCSSPrefix + 'column-header-sort-',
-            ascCls = colSortClsPrefix + 'ASC',
-            descCls = colSortClsPrefix + 'DESC',
-            nullCls = colSortClsPrefix + 'null',
+            ascCls = me.ascSortCls,
+            descCls = me.descSortCls,
+            nullCls = me.nullSortCls,
             ownerHeaderCt = me.getOwnerHeaderCt(),
             oldSortState = me.sortState;
+            
+         state = state || null;
 
-        if (oldSortState !== state && me.getSortParam()) {
-            me.addCls(colSortClsPrefix + state);
+        if (!me.sorting && oldSortState !== state && me.getSortParam()) {
+            me.addCls(Ext.baseCSSPrefix + 'column-header-sort-' + state);
             // don't trigger a sort on the first time, we just want to update the UI
             if (state && !initial) {
+                // when sorting, it will call setSortState on the header again once
+                // refresh is called
+                me.sorting = true;
                 me.doSort(state);
+                me.sorting = false;
             }
             switch (state) {
                 case 'DESC':
@@ -757,8 +781,16 @@ Ext.define('Ext.grid.column.Column', {
         var me = this,
             ownerHeaderCt = me.getOwnerHeaderCt(),
             owner = me.ownerCt,
-            ownerIsGroup = owner.isGroupHeader,
+            ownerIsGroup,
             item, items, len, i;
+            
+        // If we have no ownerHeaderCt, it's during object construction, so
+        // just set the hidden flag and jump out
+        if (!ownerHeaderCt) {
+            me.callParent();
+            return me;
+        }
+        ownerIsGroup = owner.isGroupHeader;
 
         // owner is a group, hide call didn't come from the owner
         if (ownerIsGroup && !fromOwner) {
@@ -787,6 +819,7 @@ Ext.define('Ext.grid.column.Column', {
         ownerHeaderCt.onHeaderHide(me);
 
         Ext.resumeLayouts(true);
+        return me;
     },
 
     show: function(fromOwner, fromChild) {
@@ -871,7 +904,7 @@ Ext.define('Ext.grid.column.Column', {
      * @method getEditor
      * Retrieves the editing field for editing associated with this header. Returns false if there is no field
      * associated with the Header the method will return false. If the field has not been instantiated it will be
-     * created. Note: These methods only has an implementation if a Editing plugin has been enabled on the grid.
+     * created. Note: These methods only have an implementation if an Editing plugin has been enabled on the grid.
      * @param {Object} record The {@link Ext.data.Model Model} instance being edited.
      * @param {Object} defaultField An object representing a default field to be created
      * @return {Ext.form.field.Field} field

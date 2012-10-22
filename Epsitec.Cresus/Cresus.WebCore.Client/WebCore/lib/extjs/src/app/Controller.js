@@ -241,15 +241,13 @@ Ext.define('Ext.app.Controller', {
 
     onClassExtended: function(cls, data, hooks) {
         var className = Ext.getClassName(cls),
-            match = className.match(/^(.*)\.controller\./),
-            namespace,
+            namespace = Ext.Loader.getPrefix(className) || className.match(/^(.*)\.controller\./)[1],
             onBeforeClassCreated,
             requires,
             modules,
             namespaceAndModule;
         
-        if (match !== null) {
-            namespace = Ext.Loader.getPrefix(className) || match[1];
+        if (namespace) {
             onBeforeClassCreated = hooks.onBeforeCreated;
             requires = [];
             modules = ['model', 'view', 'store'];
@@ -414,7 +412,8 @@ Ext.define('Ext.app.Controller', {
      * @return {Boolean}
      */
     hasRef: function(ref) {
-        return this.references && this.references.indexOf(ref.toLowerCase()) !== -1;
+        var references = this.references;
+        return references && Ext.Array.indexOf(references, ref.toLowerCase()) !== -1;
     },
 
     /**
@@ -489,5 +488,13 @@ Ext.define('Ext.app.Controller', {
      */
     getView: function(view) {
         return this.application.getView(view);
+    },
+    
+    /**
+     * Returns the base {@link Ext.app.Application} for this controller.
+     * @return {Ext.app.Application} the application
+     */
+    getApplication: function(){
+        return this.application;
     }
 });

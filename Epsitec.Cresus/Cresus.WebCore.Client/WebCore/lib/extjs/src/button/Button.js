@@ -565,7 +565,25 @@ Ext.define('Ext.button.Button', {
              * @param {Ext.menu.Menu} menu
              * @param {Event} e
              */
-            'menutriggerout'
+            'menutriggerout',
+
+            /**
+             * @event textchange
+             * Fired when the button's text is changed by the {@link #setText} method.
+             * @param {Ext.button.Button} this
+             * @param {String} oldText
+             * @param {String} newText
+             */
+            'textchange',
+
+            /**
+             * @event iconchange
+             * Fired when the button's icon is changed by the {@link #setIcon} or {@link #setIconCls} methods.
+             * @param {Ext.button.Button} this
+             * @param {String} oldIcon
+             * @param {String} newIcon
+             */
+            'iconchange'
         );
 
         if (me.menu) {
@@ -845,6 +863,29 @@ Ext.define('Ext.button.Button', {
     },
 
     /**
+     * Sets the background image (inline style) of the button. This method also changes the value of the {@link #icon}
+     * config internally.
+     * @param {String} icon The path to an image to display in the button
+     * @return {Ext.button.Button} this
+     */
+    setIcon: function(icon) {
+        var me = this,
+            btnIconEl = me.btnIconEl,
+            oldIcon = me.icon;
+            
+        me.icon = icon;
+        if (btnIconEl) {
+            btnIconEl.setStyle('background-image', icon ? 'url(' + icon + ')': '');
+            me.setComponentCls();
+            if (me.didIconStateChange(oldIcon, icon)) {
+                me.updateLayout();
+            }
+        }
+        me.fireEvent('iconchange', me, oldIcon, icon);
+        return me;
+    },
+    
+    /**
      * Sets the CSS class that provides a background image to use as the button's icon. This method also changes the
      * value of the {@link #iconCls} config internally.
      * @param {String} cls The CSS class providing the icon image
@@ -865,6 +906,7 @@ Ext.define('Ext.button.Button', {
                 me.updateLayout();
             }
         }
+        me.fireEvent('iconchange', me, oldCls, cls);
         return me;
     },
 
@@ -885,7 +927,7 @@ Ext.define('Ext.button.Button', {
             if (!initial) {
                 me.clearTip();
             }
-            if (Ext.isObject(tooltip)) {
+            if (Ext.quickTipsActive && Ext.isObject(tooltip)) {
                 Ext.tip.QuickTipManager.register(Ext.apply({
                     target: me.btnEl.id
                 },
@@ -934,7 +976,7 @@ Ext.define('Ext.button.Button', {
 
     // private
     clearTip: function() {
-        if (Ext.isObject(this.tooltip)) {
+        if (Ext.quickTipsActive && Ext.isObject(this.tooltip)) {
             Ext.tip.QuickTipManager.unregister(this.btnEl);
         }
     },
@@ -986,7 +1028,9 @@ Ext.define('Ext.button.Button', {
      * @return {Ext.button.Button} this
      */
     setText: function(text) {
-        var me = this;
+        var me = this,
+            oldText = me.text;
+
         me.text = text;
         if (me.rendered) {
             me.btnInnerEl.update(text || '&#160;');
@@ -997,31 +1041,10 @@ Ext.define('Ext.button.Button', {
             }
             me.updateLayout();
         }
+        me.fireEvent('textchange', me, oldText, text);
         return me;
     },
 
-    /**
-     * Sets the background image (inline style) of the button. This method also changes the value of the {@link #icon}
-     * config internally.
-     * @param {String} icon The path to an image to display in the button
-     * @return {Ext.button.Button} this
-     */
-    setIcon: function(icon) {
-        var me = this,
-            btnIconEl = me.btnIconEl,
-            oldIcon = me.icon;
-            
-        me.icon = icon;
-        if (btnIconEl) {
-            btnIconEl.setStyle('background-image', icon ? 'url(' + icon + ')': '');
-            me.setComponentCls();
-            if (me.didIconStateChange(oldIcon, icon)) {
-                me.updateLayout();
-            }
-        }
-        return me;
-    },
-    
     /**
      * Checks if the icon/iconCls changed from being empty to having a value, or having a value to being empty.
      * @private
@@ -1077,7 +1100,7 @@ Ext.define('Ext.button.Button', {
     showMenu: function() {
         var me = this;
         if (me.rendered && me.menu) {
-            if (me.tooltip && me.getTipAttr() != 'title') {
+            if (me.tooltip && Ext.quickTipsActive && me.getTipAttr() != 'title') {
                 Ext.tip.QuickTipManager.getQuickTip().cancelShow(me.btnEl);
             }
             if (me.menu.isVisible()) {

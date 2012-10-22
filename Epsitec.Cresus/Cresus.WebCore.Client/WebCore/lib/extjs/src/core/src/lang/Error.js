@@ -1,3 +1,6 @@
+//@tag foundation,core
+//@require ../class/Loader.js
+
 /**
  * @author Brian Moeskau <brian@sencha.com>
  * @docauthor Brian Moeskau <brian@sencha.com>
@@ -5,7 +8,7 @@
  * A wrapper class for the native JavaScript Error object that adds a few useful capabilities for handling
  * errors in an Ext application. When you use Ext.Error to {@link #raise} an error from within any class that
  * uses the Ext 4 class system, the Error class can automatically add the source class and method from which
- * the error was raised. It also includes logic to automatically log the eroor to the console, if available,
+ * the error was raised. It also includes logic to automatically log the error to the console, if available,
  * with additional metadata about the error. In all cases, the error will always be thrown at the end so that
  * execution will halt.
  *

@@ -69,11 +69,14 @@ Ext.define('Ext.view.TableChunker', {
     ],
 
     firstOrLastCls: function(xindex, xcount) {
+        var result = '';
         if (xindex === 1) {
-            return Ext.view.Table.prototype.firstCls;
-        } else if (xindex === xcount) {
-            return Ext.view.Table.prototype.lastCls;
+            result = Ext.view.Table.prototype.firstCls;
         }
+        if (xindex === xcount) {
+            result += ' ' + Ext.view.Table.prototype.lastCls;
+        }
+        return result;
     },
     
     embedRowCls: function() {

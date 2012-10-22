@@ -80,6 +80,7 @@ Ext.define('Ext.tab.Bar', {
 
         // Element onClick listener added by Header base class
         me.callParent(arguments);
+        Ext.merge(me.layout, me.initialConfig.layout);
 
         // TabBar must override the Header's align setting.
         me.layout.align = (me.orientation == 'vertical') ? 'left' : 'top';

@@ -233,7 +233,9 @@ Ext.define('Ext.grid.feature.Grouping', {
         }
         me.callParent();
         groupToggleMenuItem = me.view.headerCt.getMenu().down('#groupToggleMenuItem');
-        groupToggleMenuItem.setChecked(true, true);
+        if (groupToggleMenuItem) {
+            groupToggleMenuItem.setChecked(true, true);
+        }
         me.refreshIf();
     },
 
@@ -255,8 +257,9 @@ Ext.define('Ext.grid.feature.Grouping', {
 
         me.callParent();
         groupToggleMenuItem = me.view.headerCt.getMenu().down('#groupToggleMenuItem');
-        groupToggleMenuItem.setChecked(true, true);
-        groupToggleMenuItem.setChecked(false, true);
+        if (groupToggleMenuItem) {
+            groupToggleMenuItem.setChecked(false, true);
+        }
         me.refreshIf();
     },
 
@@ -414,9 +417,13 @@ Ext.define('Ext.grid.feature.Grouping', {
     showMenuBy: function(t, header) {
         var menu = this.getMenu(),
             groupMenuItem  = menu.down('#groupMenuItem'),
-            groupableMth = header.groupable === false ?  'disable' : 'enable';
-            
-        groupMenuItem[groupableMth]();
+            groupMenuMeth = header.groupable === false ?  'disable' : 'enable',
+            groupToggleMenuItem  = menu.down('#groupToggleMenuItem');
+
+        groupMenuItem[groupMenuMeth]();
+        if (groupToggleMenuItem) {
+            groupToggleMenuItem[this.view.store.isGrouped() ?  'enable' : 'disable']();
+        }
         Ext.grid.header.Container.prototype.showMenuBy.apply(this, arguments);
     },
 
@@ -809,7 +816,7 @@ Ext.define('Ext.grid.feature.Grouping', {
             }
         }
 
-        group.groupField = groupField,
+        group.groupField = groupField;
         group.groupHeaderId = me.getGroupHeaderId(group.name);
         group.groupBodyId = me.getGroupBodyId(group.name);
         group.fullWidth = fullWidth;

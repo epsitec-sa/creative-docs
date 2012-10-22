@@ -74,9 +74,11 @@ Ext.define('Ext.layout.container.Accordion', {
     /**
      * @cfg {Boolean} collapseFirst
      * True to make sure the collapse/expand toggle button always renders first (to the left of) any other tools
-     * in the contained Panels' title bars, false to render it last.
+     * in the contained Panels' title bars, false to render it last. By default, this will use the 
+     * {@link Ext.panel.Panel#collapseFirst} setting on the panel. If the config option is specified on the layout,
+     * it will override the panel value.
      */
-    collapseFirst : false,
+    collapseFirst : undefined,
 
     /**
      * @cfg {Boolean} animate
@@ -120,14 +122,16 @@ Ext.define('Ext.layout.container.Accordion', {
         var me = this,
             ln = items.length,
             i = 0,
+            collapseFirst = me.collapseFirst,
+            hasCollapseFirst = Ext.isDefined(collapseFirst),
             comp;
 
         for (; i < ln; i++) {
             comp = items[i];
             if (!comp.rendered) {
                 // Set up initial properties for Panels in an accordion.
-                if (me.collapseFirst) {
-                    comp.collapseFirst = me.collapseFirst;
+                if (hasCollapseFirst) {
+                    comp.collapseFirst = collapseFirst;
                 }
                 if (me.hideCollapseTool) {
                     comp.hideCollapseTool = me.hideCollapseTool;

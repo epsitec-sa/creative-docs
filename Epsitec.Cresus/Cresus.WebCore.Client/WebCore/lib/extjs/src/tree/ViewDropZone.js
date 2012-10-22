@@ -126,10 +126,7 @@ Ext.define('Ext.tree.ViewDropZone', {
         if (Ext.Array.contains(draggedRecords, targetNode)) {
              return false;
         }
-
-        // @TODO: fire some event to notify that there is a valid drop possible for the node you're dragging
-        // Yes: this.fireViewEvent(blah....) fires an event through the owning View.
-        return true;
+        return view.fireEvent('nodedragover', targetNode, position, data, e) !== false;
     },
 
     onNodeOver : function(node, dragZone, e, data) {

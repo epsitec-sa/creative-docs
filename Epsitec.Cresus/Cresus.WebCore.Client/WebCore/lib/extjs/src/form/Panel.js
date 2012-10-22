@@ -274,6 +274,36 @@ Ext.define('Ext.form.Panel', {
     getValues: function(asString, dirtyOnly, includeEmptyText, useDataValues) {
         return this.getForm().getValues(asString, dirtyOnly, includeEmptyText, useDataValues);
     },
+    
+    /**
+     * Convenience function to check if the form has any dirty fields. This is the same as calling
+     * {@link Ext.form.Basic#isDirty this.getForm().isDirty()}.
+     *
+     * @inheritdoc Ext.form.Basic#isDirty
+     */
+    isDirty: function () {
+        return this.form.isDirty();
+    },
+    
+    /**
+     * Convenience function to check if the form has all valid fields. This is the same as calling
+     * {@link Ext.form.Basic#isValid this.getForm().isValid()}.
+     *
+     * @inheritdoc Ext.form.Basic#isValid
+     */
+    isValid: function () {
+       return this.form.isValid();
+    },
+    
+    /**
+     * Convenience function to check if the form has any invalid fields. This is the same as calling
+     * {@link Ext.form.Basic#hasInvalidField this.getForm().hasInvalidField()}.
+     *
+     * @inheritdoc Ext.form.Basic#hasInvalidField
+     */
+    hasInvalidField: function () {
+        return this.form.hasInvalidField();
+    },
 
     beforeDestroy: function() {
         this.stopPolling();

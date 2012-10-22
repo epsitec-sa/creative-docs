@@ -282,6 +282,15 @@ Ext.define('Ext.form.field.Picker', {
             me.inputEl.focus();
         }
     },
+    
+    triggerBlur: function() {
+        var picker = this.picker;
+            
+        this.callParent(arguments);
+        if (picker && picker.isVisible()) {
+            picker.hide();
+        }
+    },
 
     mimicBlur: function(e) {
         var me = this,

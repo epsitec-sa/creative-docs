@@ -53,7 +53,6 @@ Ext.define('Ext.ux.grid.filter.NumericFilter', {
     },
 
     /**
-     * @private
      * Template method that is to return <tt>true</tt> if the filter
      * has enough configuration information to be activated.
      * @return {Boolean}

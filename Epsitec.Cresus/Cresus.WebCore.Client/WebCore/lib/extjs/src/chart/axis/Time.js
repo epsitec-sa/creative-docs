@@ -35,6 +35,8 @@ Ext.define('Ext.chart.axis.Time', {
 
     alternateClassName: 'Ext.chart.TimeAxis',
 
+    type: 'Time',
+
     alias: 'axis.time',
 
     uses: ['Ext.data.Store'],

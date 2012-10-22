@@ -148,7 +148,7 @@ Ext.define('Ext.form.field.ComboBox', {
      */
     fieldSubTpl: [
         '<div class="{hiddenDataCls}" role="presentation"></div>',
-        '<input id="{id}" type="{type}" {inputAttrTpl} class="{fieldCls} {typeCls}" autocomplete="off"',
+        '<input id="{id}" type="{type}" {inputAttrTpl} class="{fieldCls} {typeCls} {editableCls}" autocomplete="off"',
             '<tpl if="value"> value="{[Ext.util.Format.htmlEncode(values.value)]}"</tpl>',
             '<tpl if="name"> name="{name}"</tpl>',
             '<tpl if="placeholder"> placeholder="{placeholder}"</tpl>',
@@ -984,6 +984,13 @@ Ext.define('Ext.form.field.ComboBox', {
         }
     },
 
+    onPaste: function(){
+        var me = this;
+        
+        if (!me.readOnly && !me.disabled && me.editable) {
+            me.doQueryTask.delay(me.queryDelay);
+        }
+    },
 
     // store the last key and doQuery if relevant
     onKeyUp: function(e, t) {
@@ -1017,6 +1024,7 @@ Ext.define('Ext.form.field.ComboBox', {
         if (!me.enableKeyEvents) {
             me.mon(me.inputEl, 'keyup', me.onKeyUp, me);
         }
+        me.mon(me.inputEl, 'paste', me.onPaste, me);
     },
 
     onDestroy: function() {
@@ -1453,7 +1461,7 @@ Ext.define('Ext.form.field.ComboBox', {
             selModel = picker.getSelectionModel();
             selModel.deselectAll();
             if (selection.length) {
-                selModel.select(selection);
+                selModel.select(selection, undefined, true);
             }
             me.ignoreSelection--;
         }

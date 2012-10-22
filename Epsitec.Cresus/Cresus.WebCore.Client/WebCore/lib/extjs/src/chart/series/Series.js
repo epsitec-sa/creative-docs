@@ -165,7 +165,7 @@ Ext.define('Ext.chart.series.Series', {
      */
     eachRecord: function(fn, scope) {
         var chart = this.chart;
-        (chart.substore || chart.store).each(fn, scope);
+        chart.getChartStore().each(fn, scope);
     },
 
     /**
@@ -174,7 +174,7 @@ Ext.define('Ext.chart.series.Series', {
      */
     getRecordCount: function() {
         var chart = this.chart,
-            store = chart.substore || chart.store;
+            store = chart.getChartStore();
         return store ? store.getCount() : 0;
     },
 
@@ -222,11 +222,10 @@ Ext.define('Ext.chart.series.Series', {
         } else {
             me.animating = true;
             return sprite.animate(Ext.apply(Ext.applyIf(attr, me.chart.animate), {
-                listeners: {
-                    'afteranimate': function() {
-                        me.animating = false;
-                        me.fireEvent('afterrender');
-                    }
+                // use callback, don't overwrite listeners
+                callback: function() {
+                    me.animating = false;
+                    me.fireEvent('afterrender');
                 }
             }));
         }

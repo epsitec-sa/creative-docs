@@ -56,24 +56,23 @@
  *         width: 400,
  *         renderTo: Ext.getBody()
  *     });
- *
- *     grid.getView().on('render', function(view) {
- *         view.tip = Ext.create('Ext.tip.ToolTip', {
- *             // The overall target element.
- *             target: view.el,
- *             // Each grid row causes its own separate show and hide.
- *             delegate: view.itemSelector,
- *             // Moving within the row should not hide the tip.
- *             trackMouse: true,
- *             // Render immediately so that tip.body can be referenced prior to the first show.
- *             renderTo: Ext.getBody(),
- *             listeners: {
- *                 // Change content dynamically depending on which element triggered the show.
- *                 beforeshow: function updateTipBody(tip) {
- *                     tip.update('Over company "' + view.getRecord(tip.triggerElement).get('company') + '"');
- *                 }
+ *     
+ *     var view = grid.getView();
+ *     var tip = Ext.create('Ext.tip.ToolTip', {
+ *         // The overall target element.
+ *         target: view.el,
+ *         // Each grid row causes its own separate show and hide.
+ *         delegate: view.itemSelector,
+ *         // Moving within the row should not hide the tip.
+ *         trackMouse: true,
+ *         // Render immediately so that tip.body can be referenced prior to the first show.
+ *         renderTo: Ext.getBody(),
+ *         listeners: {
+ *             // Change content dynamically depending on which element triggered the show.
+ *             beforeshow: function updateTipBody(tip) {
+ *                 tip.update('Over company "' + view.getRecord(tip.triggerElement).get('company') + '"');
  *             }
- *         });
+ *         }
  *     });
  *
  * {@img Ext.tip.ToolTip/Ext.tip.ToolTip2.png Ext.tip.ToolTip with delegation}
@@ -480,6 +479,7 @@ Ext.define('Ext.tip.ToolTip', {
     
     onShowVeto: function(){
         this.callParent();
+        delete this.triggerElement;
         this.clearTimer('show');
     },
 

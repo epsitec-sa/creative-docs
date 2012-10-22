@@ -43,10 +43,21 @@ Ext.define('Ext.selection.Model', {
     selected: null,
 
     /**
-     * @cfg {Boolean} pruneRemoved
-     * Prune records when they are removed from the store from the selection.
-     * This is a private flag. For an example of its usage, take a look at
-     * Ext.selection.TreeModel.
+     * @cfg {Boolean} [pruneRemoved=true]
+     * Remove records from the selection when they are removed from the store.
+     *
+     * **Important:** When using a {@link Ext.data.Store#buffered buffered Store}, records
+     * which are cached in the Store's {@link Ext.data.Store#pageMap page map}
+     * may be removed from the Store when scrolled out of view. For this reason `pruneRemoved` should
+     * be set to `false` when using a buffered Store.
+     *
+     * Also, when using a {@link Ext.data.Store#buffered buffered Store}, cached *pages of records* may be pruned
+     * from the Store's {@link Ext.data.Store#pageMap page map} as new pages are prefetched to
+     * handle scroll events. This means that when a previously selected record is scrolled back into view, the
+     * **instance** referenced by the selection model is a different instance to that in the Store. For this reason,
+     * you MUST ensure that the Model definition's {@link Ext.data.Model#idProperty idProperty} references a unique
+     * key because in this situation, records in the Store have their **IDs** compared to records in the SelectionModel
+     * in order to re-select a record which is scrolled back into view.
      */
     pruneRemoved: true,
 
@@ -360,8 +371,11 @@ Ext.define('Ext.selection.Model', {
         for (; i < len; i++) {
             record = records[i];
             if (me.isSelected(record)) {
-                if (me.lastSelected == record) {
+                if (me.lastSelected === record) {
                     me.lastSelected = selected.last();
+                    if (me.lastFocused === record) {
+                        me.setLastFocused(null);
+                    }
                 }
                 ++attempted;
                 me.onSelectChange(record, false, suppressEvent, commit);
@@ -520,7 +534,9 @@ Ext.define('Ext.selection.Model', {
     refresh: function() {
         var me = this,
             store = me.store,
+            rec,
             toBeSelected = [],
+            toBeReAdded = [],
             oldSelections = me.getSelection(),
             len = oldSelections.length,
             selection,
@@ -533,19 +549,31 @@ Ext.define('Ext.selection.Model', {
             return;
         }
 
-        // check to make sure that there are no records
-        // missing after the refresh was triggered, prune
-        // them from what is to be selected if so
+        // Add currently records to the toBeSelected list if present in the Store
+        // If they are not present, and pruneRemoved is false, we must still retain the record
         for (; i < len; i++) {
             selection = oldSelections[i];
-            if (!me.pruneRemoved || store.indexOf(selection) !== -1) {
+            if (store.indexOf(selection) !== -1) {
                 toBeSelected.push(selection);
+            }
+
+            // Selected records no longer represented in Store must be retained
+            else if (!me.pruneRemoved) {
+                // See if a record by the same ID exists. If so, select it
+                rec = store.getById(selection.getId());
+                if (rec) {
+                    toBeSelected.push(rec);
+                }
+                // If it does not exist, we have to re-add it to the selection
+                else {
+                    toBeReAdded.push(selection)
+                }
             }
         }
 
         // there was a change from the old selected and
         // the new selection
-        if (me.selected.getCount() != toBeSelected.length) {
+        if (me.selected.getCount() != (toBeSelected.length + toBeReAdded.length)) {
             change = true;
         }
 
@@ -559,6 +587,16 @@ Ext.define('Ext.selection.Model', {
         if (toBeSelected.length) {
             // perform the selection again
             me.doSelect(toBeSelected, false, true);
+        }
+
+        // If some of the selections were not present in the Store, but pruneRemoved is false, we must add them back
+        if (toBeReAdded.length) {
+            me.selected.addAll(toBeReAdded);
+
+            // No records reselected.
+            if (!me.lastSelected) {
+                me.lastSelected = toBeReAdded[toBeReAdded.length - 1];
+            }
         }
 
         me.maybeFireSelectionChange(change);
@@ -617,6 +655,9 @@ Ext.define('Ext.selection.Model', {
     getCount: function() {
         return this.selected.getCount();
     },
+    
+    // Called when the contents of the node are updated, perform any processing here.
+    onUpdate: Ext.emptyFn,
 
     // cleanup.
     destroy: Ext.emptyFn,

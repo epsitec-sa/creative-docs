@@ -191,6 +191,8 @@ Ext.define('Ext.panel.Header', {
 
         // Add Tools
         me.items = me.items.concat(me.tools);
+        // clear the tools so we can have only the instances
+        me.tools = [];
         me.callParent();
         
         me.on({
@@ -359,40 +361,38 @@ Ext.define('Ext.panel.Header', {
      */
     setTitle: function(title) {
         var me = this,
+            titleCmp = me.titleCmp,
             sprite,
             surface;
-        if (me.rendered) {
-            if (me.titleCmp.rendered) {
-                if (me.titleCmp.surface) {
-                    me.title = title || '';
-                    sprite = me.titleCmp.surface.items.items[0];
-                    surface = me.titleCmp.surface;
+            
+        me.title = title;
+        if (titleCmp.rendered) {
+            if (titleCmp.surface) {
+                title = title || '';
+                sprite = titleCmp.surface.items.items[0];
+                surface = titleCmp.surface;
 
-                    surface.remove(sprite);
-                    me.textConfig.type = 'text';
-                    me.textConfig.text = title;
-                    sprite = surface.add(me.textConfig);
-                    sprite.setAttributes({
-                        rotate: {
-                            degrees: 90
-                        }
-                    }, true);
-                    me.titleCmp.autoSizeSurface();
-                } else {
-                    me.title = title;
-                    me.titleCmp.textEl.update(me.title || '&#160;');
-                }
-                me.titleCmp.updateLayout();
+                surface.remove(sprite);
+                me.textConfig.type = 'text';
+                me.textConfig.text = title;
+                sprite = surface.add(me.textConfig);
+                sprite.setAttributes({
+                    rotate: {
+                        degrees: 90
+                    }
+                }, true);
+                titleCmp.autoSizeSurface();
             } else {
-                me.titleCmp.on({
-                    render: function() {
-                        me.setTitle(title);
-                    },
-                    single: true
-                });
+                titleCmp.textEl.update(me.title || '&#160;');
             }
+            titleCmp.updateLayout();
         } else {
-            me.title = title;
+            me.titleCmp.on({
+                render: function() {
+                    me.setTitle(title);
+                },
+                single: true
+            });
         }
     },
 
@@ -481,13 +481,23 @@ Ext.define('Ext.panel.Header', {
             }
         }
     },
+    
+    /**
+     * Gets the tools for this header.
+     * @return {Ext.panel.Tool[]} The tools
+     */
+    getTools: function(){
+        return this.tools.slice();    
+    },
 
     /**
      * Add a tool to the header
      * @param {Object} tool
      */
     addTool: function(tool) {
-        this.tools.push(this.add(tool));
+        // Even though the defaultType is tool, it may be changed,
+        // so let's be safe and forcibly specify tool
+        this.add(Ext.ComponentManager.create(tool, 'tool'));
     },
 
     /**
@@ -498,10 +508,12 @@ Ext.define('Ext.panel.Header', {
      * @param index
      */
     onAdd: function(component, index) {
+        var tools = this.tools;
         this.callParent(arguments);
         if (component instanceof Ext.panel.Tool) {
             component.bindTo(this.ownerCt);
-            this.tools[component.type] = component;
+            tools.push(component);
+            tools[component.type] = component;
         }
     },
 

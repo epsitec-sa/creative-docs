@@ -72,8 +72,16 @@ Ext.define('Ext.grid.header.Container', {
     //<locale>
     columnsText: 'Columns',
     //</locale>
+    
+    dirtyCls: Ext.baseCSSPrefix + 'grid-dirty-cell',
 
     headerOpenCls: Ext.baseCSSPrefix + 'column-header-open',
+    
+    menuSortAscCls: Ext.baseCSSPrefix + 'hmenu-sort-asc',
+    
+    menuSortDescCls: Ext.baseCSSPrefix + 'hmenu-sort-desc',
+    
+    menuColsIcon: Ext.baseCSSPrefix + 'cols-icon',
 
     // private; will probably be removed by 4.0
     triStateSort: false,
@@ -199,6 +207,18 @@ Ext.define('Ext.grid.header.Container', {
              */
             'menucreate'
         );
+    },
+    
+    isLayoutRoot: function(){
+        // Since we're docked, the width is always calculated
+        // If we're hidden, the height is explicitly 0, which
+        // means we'll be considered a layout root. However, we
+        // still need the view to layout to update the underlying
+        // table to match the size.
+        if (this.hiddenHeaders) {
+            return false;
+        }
+        return this.callParent();    
     },
 
     onDestroy: function() {
@@ -345,7 +365,7 @@ Ext.define('Ext.grid.header.Container', {
 
     afterRender: function() {
         this.callParent();
-        this.setSortState();
+        this.setSortState(undefined, true);
         
     },
     
@@ -453,7 +473,8 @@ Ext.define('Ext.grid.header.Container', {
     
     disableMenuItems: function(rootItem, item){
         while (item && item != rootItem) {
-            item.disableCheckChange();
+            // If it's a grouped header (with sub items), then just disable check change, otherwise, fully disable
+            item[item.menu ? 'disableCheckChange' : 'disable']();
             item = item.parentMenu.ownerItem;
         }
     },
@@ -465,7 +486,9 @@ Ext.define('Ext.grid.header.Container', {
         while (item && item != rootItem) {
             parentMenu = item.parentMenu;
             checkedChildren = item.parentMenu.query('[checked=true]:not([menu])').length;
-            item.enableCheckChange();
+
+            // If it's a grouped header (with sub items), then just enable check change, otherwise, fully enable
+            item[item.menu ? 'enableCheckChange' : 'enable']();
             item = parentMenu.ownerItem;
             if (checkedChildren === total) {
                 // contains all the checked children, jump out the item and all parents
@@ -653,13 +676,13 @@ Ext.define('Ext.grid.header.Container', {
             menuItems = [{
                 itemId: 'ascItem',
                 text: me.sortAscText,
-                cls: Ext.baseCSSPrefix + 'hmenu-sort-asc',
+                cls: me.menuSortAscCls,
                 handler: me.onSortAscClick,
                 scope: me
             },{
                 itemId: 'descItem',
                 text: me.sortDescText,
-                cls: Ext.baseCSSPrefix + 'hmenu-sort-desc',
+                cls: me.menuSortDescCls,
                 handler: me.onSortDescClick,
                 scope: me
             }];
@@ -668,8 +691,9 @@ Ext.define('Ext.grid.header.Container', {
             menuItems.push('-', {
                 itemId: 'columnItem',
                 text: me.columnsText,
-                cls: Ext.baseCSSPrefix + 'cols-icon',
-                menu: hideableColumns
+                cls: me.menuColsIcon,
+                menu: hideableColumns,
+                hideOnClick: false
             });
         }
         return menuItems;
@@ -877,7 +901,7 @@ Ext.define('Ext.grid.header.Container', {
     getHeaderIndex: function(header) {
         // If we are being asked the index of a group header, find the first leaf header node, and return the index of that
         if (header.isGroupHeader) {
-            header = header.down(':not([isgroupHeader])');
+            header = header.down(':not([isGroupHeader])');
         }
         return Ext.Array.indexOf(this.getGridColumns(), header);
     },
@@ -915,6 +939,7 @@ Ext.define('Ext.grid.header.Container', {
             obj       = {},
             headers   = me.gridDataColumns || me.getGridColumns(),
             headersLn = headers.length,
+            dirtyCls = me.dirtyCls,
             colIdx    = 0,
             header,
             headerId,
@@ -957,7 +982,7 @@ Ext.define('Ext.grid.header.Container', {
             }
             // </debug>
             if (me.markDirty) {
-                obj[headerId + '-modified'] = record.isModified(header.dataIndex) ? Ext.baseCSSPrefix + 'grid-dirty-cell' : '';
+                obj[headerId + '-modified'] = record.isModified(header.dataIndex) ? dirtyCls : '';
             }
             obj[headerId+'-tdCls'] = metaData.tdCls;
             obj[headerId+'-tdAttr'] = metaData.tdAttr;

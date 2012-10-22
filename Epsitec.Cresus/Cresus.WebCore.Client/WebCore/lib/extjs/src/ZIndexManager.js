@@ -161,17 +161,30 @@ Ext.define('Ext.ZIndexManager', {
 
         if (maskTarget.dom === document.body) {
             viewSize.height = Math.max(document.body.scrollHeight, Ext.dom.Element.getDocumentHeight());
-            viewSize.width = Math.max(document.body.scrollWidth, viewSize.width);
+            viewSize.width = Math.max(document.body.scrollWidth, Ext.dom.Element.getDocumentWidth());
         }
         if (!me.mask) {
+            if (Ext.isIE6) {
+                me.maskShim = Ext.getBody().createChild({
+                    tag: 'iframe',
+                    cls : Ext.baseCSSPrefix + 'shim ' + Ext.baseCSSPrefix + 'mask-shim'
+                });
+                me.maskShim.setVisibilityMode(Ext.Element.DISPLAY);
+            }
+
             me.mask = Ext.getBody().createChild({
                 cls: Ext.baseCSSPrefix + 'mask'
             });
             me.mask.setVisibilityMode(Ext.Element.DISPLAY);
             me.mask.on('click', me._onMaskClick, me);
         }
+
+        if (me.maskShim) {
+            me.maskShim.setStyle('zIndex', zIndex);
+            me.maskShim.show();
+            me.maskShim.setBox(viewSize);
+        }
         me.mask.maskTarget = maskTarget;
-        maskTarget.addCls(Ext.baseCSSPrefix + 'body-masked');
         me.mask.setStyle('zIndex', zIndex);
 
         // setting mask box before showing it in an IE7 strict iframe within a quirks page
@@ -181,11 +194,15 @@ Ext.define('Ext.ZIndexManager', {
     },
 
     _hideModalMask: function() {
-        var mask = this.mask;
+        var mask = this.mask,
+            maskShim = this.maskShim;
+
         if (mask && mask.isVisible()) {
-            mask.maskTarget.removeCls(Ext.baseCSSPrefix + 'body-masked');
             mask.maskTarget = undefined;
             mask.hide();
+            if (maskShim) {
+                maskShim.hide();
+            }
         }
     },
 
@@ -197,6 +214,7 @@ Ext.define('Ext.ZIndexManager', {
 
     _onContainerResize: function() {
         var mask = this.mask,
+            maskShim = this.maskShim,
             maskTarget,
             viewSize;
 
@@ -205,6 +223,9 @@ Ext.define('Ext.ZIndexManager', {
             // At the new container size, the mask might be *causing* the scrollbar, so to find the valid
             // client size to mask, we must temporarily unmask the parent node.
             mask.hide();
+            if (maskShim) {
+                maskShim.hide();
+            }
             maskTarget = mask.maskTarget;
 
             if (maskTarget.dom === document.body) {
@@ -214,6 +235,10 @@ Ext.define('Ext.ZIndexManager', {
                 };
             } else {
                 viewSize = maskTarget.getViewSize(true);
+            }
+            if (maskShim) {
+                maskShim.setSize(viewSize);
+                maskShim.show();
             }
             mask.setSize(viewSize);
             mask.show();
@@ -235,7 +260,8 @@ Ext.define('Ext.ZIndexManager', {
      * @param {Ext.Component} comp The Component to register.
      */
     register : function(comp) {
-        var me = this;
+        var me = this,
+            compAfterHide = comp.afterHide;
         
         if (comp.zIndexManager) {
             comp.zIndexManager.unregister(comp);
@@ -244,7 +270,12 @@ Ext.define('Ext.ZIndexManager', {
 
         me.list[comp.id] = comp;
         me.zIndexStack.push(comp);
-        comp.on('hide', me.onComponentHide, me);
+        
+        // Hook into Component's afterHide processing
+        comp.afterHide = function() {
+            compAfterHide.apply(comp, arguments);
+            me.onComponentHide(comp);
+        };
     },
 
     /**
@@ -260,7 +291,9 @@ Ext.define('Ext.ZIndexManager', {
         delete comp.zIndexManager;
         if (list && list[comp.id]) {
             delete list[comp.id];
-            comp.un('hide', me.onComponentHide);
+            
+            // Relinquish control of Component's afterHide processing
+            delete comp.afterHide;
             Ext.Array.remove(me.zIndexStack, comp);
 
             // Destruction requires that the topmost visible floater be activated. Same as hiding.
@@ -350,25 +383,18 @@ Ext.define('Ext.ZIndexManager', {
      * they should all be hidden just for the duration of the drag.
      */
     hide: function() {
-        var me = this,
-            mask = me.mask,
-            i = 0,
-            stack = me.zIndexStack,
+        var i = 0,
+            stack = this.zIndexStack,
             len = stack.length,
             comp;
 
-        me.tempHidden = me.tempHidden||[];
+        this.tempHidden = [];
         for (; i < len; i++) {
             comp = stack[i];
             if (comp.isVisible()) {
-                me.tempHidden.push(comp);
+                this.tempHidden.push(comp);
                 comp.el.hide();
             }
-        }
-        
-        // Also hide modal mask during hidden state
-        if (mask) {
-            mask.hide();
         }
     },
 
@@ -377,10 +403,8 @@ Ext.define('Ext.ZIndexManager', {
      * Restores temporarily hidden managed Components to visibility.
      */
     show: function() {
-        var me = this,
-            mask = me.mask,
-            i = 0,
-            tempHidden = me.tempHidden,
+        var i = 0,
+            tempHidden = this.tempHidden,
             len = tempHidden ? tempHidden.length : 0,
             comp;
 
@@ -389,13 +413,7 @@ Ext.define('Ext.ZIndexManager', {
             comp.el.show();
             comp.setPosition(comp.x, comp.y);
         }
-        me.tempHidden.length = 0;
-
-        // Also restore mask to visibility and ensure it is aligned with its target element
-        if (mask) {
-            mask.show();
-            mask.alignTo(mask.maskTarget, 'tl-tl');
-        }
+        delete this.tempHidden;
     },
 
     /**

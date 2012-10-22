@@ -176,7 +176,7 @@ Ext.define('Ext.util.Floating', {
         var me = this;
 
         if (me.constrain || me.constrainHeader) {
-            constrainTo = constrainTo || (me.floatParent && me.floatParent.getTargetEl()) || me.container || me.el.getScopeParent();
+            constrainTo = constrainTo || me.constrainTo || (me.floatParent && me.floatParent.getTargetEl()) || me.container || me.el.getScopeParent();
             return (me.constrainHeader ? me.header.el : me.el).getConstrainVector(constrainTo);
         }
     },
@@ -317,6 +317,10 @@ Ext.define('Ext.util.Floating', {
             container = parent ? parent.getTargetEl() : me.container;
 
         me.setSize(container.getViewSize(false));
-        me.setPosition.apply(me, parent ? [0, 0] : container.getXY());
+        me.setPosition.apply(me, parent || (container.dom !== document.body) ?
+            // If we are a contained floater, or rendered to a div, maximized position is (0,0)
+            [0, 0] :
+            // If no parent and rendered to body, align with origin of container el.
+            container.getXY());
     }
 });

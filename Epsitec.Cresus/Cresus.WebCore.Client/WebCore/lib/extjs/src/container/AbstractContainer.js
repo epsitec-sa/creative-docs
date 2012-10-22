@@ -31,7 +31,7 @@ Ext.define('Ext.container.AbstractContainer', {
      * the Container's layout manager which creates and manages the type of layout
      * you have in mind.  For example:
      *
-     * If the {@link #layout} configuration is not explicitly specified for
+     * If the layout configuration is not explicitly specified for
      * a general purpose container (e.g. Container or Panel) the
      * {@link Ext.layout.container.Auto default layout manager} will be used
      * which does nothing but render child components sequentially into the
@@ -96,6 +96,8 @@ Ext.define('Ext.container.AbstractContainer', {
      *     layout: {
      *         pack: 'center'
      *     }
+     *
+     * @since Ext 2
      */
 
     /**
@@ -106,6 +108,8 @@ Ext.define('Ext.container.AbstractContainer', {
      * container's collection).  activeItem only applies to layout styles that can
      * display items one at a time (like {@link Ext.layout.container.Card} and
      * {@link Ext.layout.container.Fit}).
+     *
+     * @since Ext 2
      */
 
     /**
@@ -147,6 +151,8 @@ Ext.define('Ext.container.AbstractContainer', {
      *
      * Do not specify {@link Ext.panel.Panel#contentEl contentEl} or
      * {@link Ext.panel.Panel#html html} with `items`.
+     *
+     * @since Ext 2
      */
 
     /**
@@ -183,6 +189,8 @@ Ext.define('Ext.container.AbstractContainer', {
      *             id: 'panel2'
      *         })
      *     ]
+     *
+     * @since Ext 2
      */
 
     /**
@@ -196,6 +204,7 @@ Ext.define('Ext.container.AbstractContainer', {
      * @cfg {Boolean} [autoDestroy=true]
      * If true the container will automatically destroy any contained component that is removed
      * from it, else destruction must be handled manually.
+     * @since Ext 2
      */
     autoDestroy : true,
 
@@ -203,6 +212,7 @@ Ext.define('Ext.container.AbstractContainer', {
       * @cfg {String} [defaultType="panel"]
       * The default {@link Ext.Component xtype} of child Components to create in this Container when
       * a child item is specified as a raw configuration object, rather than as an instantiated Component.
+      * @since Ext 2
       */
     defaultType: 'panel',
     
@@ -234,8 +244,11 @@ Ext.define('Ext.container.AbstractContainer', {
      * @cfg {String[]} bubbleEvents
      * An array of events that, when fired, should be bubbled to any parent container.
      * See {@link Ext.util.Observable#enableBubble}.
+     * @since Ext 3
      */
     bubbleEvents: ['add', 'remove'],
+
+    defaultLayoutType: 'auto',
 
     // @private
     initComponent : function(){
@@ -246,6 +259,7 @@ Ext.define('Ext.container.AbstractContainer', {
              * Fires when the components in this container are arranged by the associated layout manager.
              * @param {Ext.container.Container} this
              * @param {Ext.layout.container.Container} layout The ContainerLayout implementation for this container
+             * @since Ext 2
              */
             'afterlayout',
             /**
@@ -255,6 +269,7 @@ Ext.define('Ext.container.AbstractContainer', {
              * @param {Ext.container.Container} this
              * @param {Ext.Component} component The component being added
              * @param {Number} index The index at which the component will be added to the container's items collection
+             * @since Ext 2
              */
             'beforeadd',
             /**
@@ -263,6 +278,7 @@ Ext.define('Ext.container.AbstractContainer', {
              * false to cancel the remove.
              * @param {Ext.container.Container} this
              * @param {Ext.Component} component The component being removed
+             * @since Ext 2
              */
             'beforeremove',
             /**
@@ -274,6 +290,7 @@ Ext.define('Ext.container.AbstractContainer', {
              * @param {Ext.container.Container} this
              * @param {Ext.Component} component The component that was added
              * @param {Number} index The index at which the component was added to the container's items collection
+             * @since Ext 2
              */
             'add',
             /**
@@ -284,6 +301,7 @@ Ext.define('Ext.container.AbstractContainer', {
              * the child containers or their children or ...
              * @param {Ext.container.Container} this
              * @param {Ext.Component} component The component that was removed
+             * @since Ext 2
              */
             'remove'
         );
@@ -303,8 +321,10 @@ Ext.define('Ext.container.AbstractContainer', {
          * The MixedCollection containing all the child items of this container.
          * @property items
          * @type Ext.util.AbstractMixedCollection
+         * @since Ext 2
          */
         me.items = new Ext.util.AbstractMixedCollection(false, me.getComponentId);
+        me.floatingItems = new Ext.util.MixedCollection(false, me.getComponentId);
 
         if (items) {
             if (!Ext.isArray(items)) {
@@ -376,7 +396,7 @@ Ext.define('Ext.container.AbstractContainer', {
         var me = this;
         if (!me.layout || !me.layout.isLayout) {
             // Pass any configured in layout property, defaulting to the prototype's layout property, falling back to Auto.
-            me.setLayout(Ext.layout.Layout.create(me.layout, me.self.prototype.layout || 'autocontainer'));
+            me.setLayout(Ext.layout.Layout.create(me.layout, me.self.prototype.layout || me.defaultLayoutType));
         }
 
         return me.layout;
@@ -386,6 +406,7 @@ Ext.define('Ext.container.AbstractContainer', {
      * Manually force this container's layout to be recalculated. The framework uses this internally to refresh layouts
      * form most cases.
      * @return {Ext.container.Container} this
+     * @since Ext 2
      */
     doLayout : function() {
         this.updateLayout();
@@ -439,7 +460,9 @@ Ext.define('Ext.container.AbstractContainer', {
                 // Tell the item we're in a container during construction
                 item.isContained = me;
                 items[i] = me.lookupComponent(item);
+                // need to delete both in case item was a config
                 delete item.isContained;
+                delete items[i].isContained;
             }
         }
 
@@ -518,6 +541,8 @@ Ext.define('Ext.container.AbstractContainer', {
      * See `{@link #cfg-items}` for additional information.
      *
      * @return {Ext.Component[]/Ext.Component} The Components that were added.
+     *
+     * @since Ext 2
      */
     add : function() {
         var me = this,
@@ -557,9 +582,12 @@ Ext.define('Ext.container.AbstractContainer', {
 
             // Floating Components are not added into the items collection, but to a separate floatingItems collection
             if (item.floating) {
-                me.floatingItems = me.floatingItems || new Ext.util.MixedCollection();
                 me.floatingItems.add(item);
                 item.onAdded(me, pos);
+
+                if (me.hasListeners.add) {
+                    me.fireEvent('add', me, item, pos);
+                }
             } else if ((!me.hasListeners.beforeadd || me.fireEvent('beforeadd', me, item, pos) !== false) && me.onBeforeAdd(item) !== false) {
                 me.items.insert(pos, item);
                 item.onAdded(me, pos);
@@ -632,6 +660,8 @@ Ext.define('Ext.container.AbstractContainer', {
      *
      * @return {Ext.Component} component The Component (or config object) that was
      * inserted with the Container's default config values applied.
+     *
+     * @since Ext 2
      */
     insert : function(index, comp) {
         return this.add(index, comp);
@@ -651,7 +681,7 @@ Ext.define('Ext.container.AbstractContainer', {
             return false;
         }
         items.insert(toIdx, item);
-        this.doLayout();
+        this.updateLayout();
         return item;
     },
 
@@ -694,6 +724,7 @@ Ext.define('Ext.container.AbstractContainer', {
      * Defaults to the value of this Container's {@link #autoDestroy} config.
      *
      * @return {Ext.Component} component The Component that was removed.
+     * @since Ext 2
      */
     remove : function(comp, autoDestroy) {
         var me = this,
@@ -710,8 +741,8 @@ Ext.define('Ext.container.AbstractContainer', {
                 me.fireEvent('remove', me, c);
             }
 
-            if (!me.destroying) {
-                me.doLayout();
+            if (!me.destroying && !c.floating) {
+                me.updateLayout();
             }
         }
 
@@ -723,13 +754,18 @@ Ext.define('Ext.container.AbstractContainer', {
         var me = this,
             layout = me.layout,
             hasLayout = layout && me.rendered,
-            destroying = autoDestroy === true || (autoDestroy !== false && me.autoDestroy);
+            destroying = autoDestroy === true || (autoDestroy !== false && me.autoDestroy),
+            floating = component.floating;
 
         autoDestroy = autoDestroy === true || (autoDestroy !== false && me.autoDestroy);
-        me.items.remove(component);
+        if (floating) {
+            me.floatingItems.remove(component);
+        } else {
+            me.items.remove(component);
+        }
 
         // Inform ownerLayout of removal before deleting the ownerLayout & ownerCt references in the onRemoved call
-        if (hasLayout) {
+        if (hasLayout && !floating) {
             // Removing a component from a running layout has to cancel the layout
             if (layout.running) {
                 Ext.AbstractComponent.cancelLayout(component, destroying);
@@ -747,7 +783,7 @@ Ext.define('Ext.container.AbstractContainer', {
         }
         // Only have the layout perform remove postprocessing if the Component is not being destroyed
         else {
-            if (hasLayout) {
+            if (hasLayout && !floating) {
                 layout.afterRemove(component);       
             }
             if (me.detachOnRemove && component.rendered) {
@@ -762,10 +798,11 @@ Ext.define('Ext.container.AbstractContainer', {
      * Component's {@link Ext.Component#method-destroy} function.
      * Defaults to the value of this Container's {@link #autoDestroy} config.
      * @return {Ext.Component[]} Array of the removed components
+     * @since Ext 2
      */
     removeAll : function(autoDestroy) {
         var me = this,
-            removeItems = me.items.items.slice(),
+            removeItems = me.items.items.slice().concat(me.floatingItems.items),
             items = [],
             i = 0,
             len = removeItems.length,
@@ -812,9 +849,7 @@ Ext.define('Ext.container.AbstractContainer', {
         }
 
         // Append floating items to the list.
-        if (me.floatingItems) {
-            result.push.apply(result, me.floatingItems.items);
-        }
+        result.push.apply(result, me.floatingItems.items);
 
         return result;
     },
@@ -831,6 +866,7 @@ Ext.define('Ext.container.AbstractContainer', {
      * @param {Array} [args] The args to call the function with. The current component
      * always passed as the last argument.
      * @return {Ext.Container} this
+     * @since Ext 2
      */
     cascade : function(fn, scope, origArgs){
         var me = this,
@@ -885,13 +921,22 @@ Ext.define('Ext.container.AbstractContainer', {
      * For additional information see {@link Ext.util.MixedCollection#get}.
      *
      * @return {Ext.Component} The component (if found).
+     *
+     * @since Ext 2
      */
     getComponent : function(comp) {
         if (Ext.isObject(comp)) {
             comp = comp.getItemId();
         }
+        
+        var c = this.items.get(comp);
+             
+        // Only allow finding by index on the main items container
+        if (!c && typeof comp != 'number') {
+            c = this.floatingItems.get(comp);
+        }
 
-        return this.items.get(comp);
+        return c;
     },
 
     /**
@@ -1058,13 +1103,21 @@ Ext.define('Ext.container.AbstractContainer', {
     },
 
     // @private
+    // @since Ext 2
     beforeDestroy : function() {
         var me = this,
             items = me.items,
+            floatingItems = me.floatingItems,
             c;
 
         if (items) {
             while ((c = items.first())) {
+                me.doRemove(c, true);
+            }
+        }
+        
+        if (floatingItems) {
+            while ((c = floatingItems.first())) {
                 me.doRemove(c, true);
             }
         }

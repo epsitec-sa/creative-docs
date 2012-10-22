@@ -140,6 +140,7 @@ Ext.define("Ext.util.Sortable", {
         }
 
         if (doSort !== false) {
+            me.fireEvent('beforesort', me, newSorters);
             me.onBeforeSort(newSorters);
             
             sorters = me.sorters.items;

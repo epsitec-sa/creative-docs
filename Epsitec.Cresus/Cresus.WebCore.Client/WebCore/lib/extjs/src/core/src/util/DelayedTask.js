@@ -1,3 +1,7 @@
+//@tag dom,core
+//@require ../Support.js
+//@define Ext.util.DelayedTask
+
 /**
  * @class Ext.util.DelayedTask
  * 
@@ -41,6 +45,7 @@ Ext.util.DelayedTask = function(fn, scope, args) {
             clearInterval(id);
             id = null;
             fn.apply(scope, args || []);
+            Ext.EventManager.idleEvent.fire();
         };
 
     /**

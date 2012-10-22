@@ -207,6 +207,13 @@ Ext.define('Ext.grid.plugin.DragDrop', {
      * False to disallow dragging items from the View.
      */
     enableDrag: true,
+    
+    /**
+     * True to register this container with the Scrollmanager for auto scrolling during drag operations.
+     * A {@link Ext.dd.ScrollManager} configuration may also be passed.
+     * @cfg {ObjectBoolean} containerScroll
+     */
+    containerScroll: false,
 
     init : function(view) {
         view.on('render', this.onViewRender, this, {single: true});
@@ -243,13 +250,20 @@ Ext.define('Ext.grid.plugin.DragDrop', {
     },
 
     onViewRender : function(view) {
-        var me = this;
+        var me = this,
+            scrollEl;
 
         if (me.enableDrag) {
+            if (me.containerScroll) {
+                scrollEl = view.getEl();
+            }
+            
             me.dragZone = new Ext.view.DragZone({
                 view: view,
                 ddGroup: me.dragGroup || me.ddGroup,
-                dragText: me.dragText
+                dragText: me.dragText,
+                containerScroll: me.containerScroll,
+                scrollEl: scrollEl
             });
         }
 

@@ -168,7 +168,7 @@ Ext.define('Ext.data.reader.Reader', {
     /**
      * @cfg {String} idProperty
      * Name of the property within a row object that contains a record identifier value. Defaults to the id of the
-     * model. If an idProperty is explicitly specified it will override the idProperty defined on the model.
+     * model. If an idProperty is explicitly specified it will take precedence over idProperty defined on the model.
      */
 
     /**
@@ -507,9 +507,7 @@ Ext.define('Ext.data.reader.Reader', {
      * @param {Object} data The data object
      * @return {Object} The normalized data object
      */
-    getData: function(data) {
-        return data;
-    },
+    getData: Ext.identityFn,
 
     /**
      * @private
@@ -519,9 +517,7 @@ Ext.define('Ext.data.reader.Reader', {
      * @param {Object} data The data object
      * @return {Object} The same data object
      */
-    getRoot: function(data) {
-        return data;
-    },
+    getRoot: Ext.identityFn,
 
     /**
      * Takes a raw response object (as passed to the {@link #read} method) and returns the useful data

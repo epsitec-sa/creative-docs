@@ -1,3 +1,6 @@
+//@tag foundation,core
+//@require Base.js
+
 /**
  * @author Jacky Nguyen <jacky@sencha.com>
  * @docauthor Jacky Nguyen <jacky@sencha.com>
@@ -661,5 +664,4 @@
         return cls;
     };
     //</feature>
-
 }());

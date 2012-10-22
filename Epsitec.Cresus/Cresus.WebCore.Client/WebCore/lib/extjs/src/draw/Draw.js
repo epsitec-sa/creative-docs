@@ -648,7 +648,7 @@ Ext.define('Ext.draw.Draw', {
             Y = [],
             i = 0,
             ln = path.length,
-            p, xmin, ymin, dim;
+            p, xmin, ymin, xmax, ymax, dim;
         for (; i < ln; i++) {
             p = path[i];
             if (p[0] == "M") {
@@ -667,12 +667,14 @@ Ext.define('Ext.draw.Draw', {
         }
         xmin = Math.min.apply(0, X);
         ymin = Math.min.apply(0, Y);
+        xmax = Math.max.apply(0, X);
+        ymax = Math.max.apply(0, Y);
         return {
-            x: xmin,
-            y: ymin,
+            x: Math.round(xmin),
+            y: Math.round(ymin),
             path: path,
-            width: Math.max.apply(0, X) - xmin,
-            height: Math.max.apply(0, Y) - ymin
+            width: Math.round(xmax - xmin),
+            height: Math.round(ymax - ymin)
         };
     },
 
@@ -1110,7 +1112,7 @@ Ext.define('Ext.draw.Draw', {
                     break;
                 case Ext.Date.DAY:
                     testFrom = new Date(fromStat[0], fromStat[1],
-                            Math.floor(fromStat[2] - 1 / step[1]) * step[1] + 1, 0, 0, 0, 0);
+                            Math.floor((fromStat[2] - 1) / step[1]) * step[1] + 1, 0, 0, 0, 0);
                     break;
                 case Ext.Date.MONTH:
                     testFrom = new Date(fromStat[0], Math.floor(fromStat[1] / step[1]) * step[1], 1, 0, 0, 0, 0);

@@ -60,6 +60,12 @@ Ext.define('Ext.window.Window', {
      */
 
     /**
+     * @cfg {Boolean/Function} ghost
+     * Set to false to disable the ghost panel during dragging the window.
+     * Do note that you should not set this to true, by default it is a function.
+     */
+
+    /**
      * @cfg {String/Number/Ext.Component} defaultFocus
      * Specifies a Component to receive focus when this Window is focused.
      *
@@ -127,12 +133,6 @@ Ext.define('Ext.window.Window', {
      * Optionally the entire window can be constrained using {@link #constrain}.
      */
     constrainHeader: false,
-
-    /**
-     * @cfg {Ext.util.Region/Ext.Element} constrainTo
-     * A {@link Ext.util.Region Region} (or an element from which a Region measurement will be read) which is used
-     * to constrain the window.
-     */
 
     /**
      * @cfg {Boolean} plain
@@ -630,9 +630,9 @@ Ext.define('Ext.window.Window', {
             if (sizeModel.width.natural || sizeModel.height.natural) {
                 me.updateLayout();
             }
+            me.doConstrain();
         }
 
-        me.doConstrain();
     },
 
     /**
@@ -783,8 +783,9 @@ Ext.define('Ext.window.Window', {
         if (yes && !veto) {
             // we should be listening...
             if (!currentlyMonitoring) {
-                // but we aren't, so set it up
-                Ext.EventManager.onWindowResize(me.onWindowResize, me);
+                // but we aren't, so set it up.
+                // Delay so that we jump over any Viewport resize activity
+                Ext.EventManager.onWindowResize(me.onWindowResize, me, {delay: 1});
                 me._monitoringResize = true;
             }
         } else if (currentlyMonitoring) {

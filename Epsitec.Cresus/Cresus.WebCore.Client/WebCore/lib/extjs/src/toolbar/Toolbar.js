@@ -261,8 +261,7 @@ Ext.define('Ext.toolbar.Toolbar', {
     },
 
     initComponent: function() {
-        var me = this,
-            keys;
+        var me = this;
 
         // check for simplified (old-style) overflow config:
         if (!me.layout && me.enableOverflow) {
@@ -294,8 +293,9 @@ Ext.define('Ext.toolbar.Toolbar', {
         /**
          * @event overflowchange
          * Fires after the overflow state has changed.
-         * @param {Object} c The Container
-         * @param {Boolean} lastOverflow overflow state
+         * @param {Number} lastHiddenCount The number of overflowing items that used to be hidden.
+         * @param {Number} hiddenCount The number of overflowing items that are hidden now.
+         * @param {Array} The hidden items
          */
         me.addEvents('overflowchange');
     },
