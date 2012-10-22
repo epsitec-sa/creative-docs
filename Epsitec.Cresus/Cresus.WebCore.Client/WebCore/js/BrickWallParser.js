@@ -218,15 +218,18 @@ function() {
         group = {
           xtype: 'fieldset',
           layout: 'column',
+          padding: '0 5 5 5',
           title: brick.title,
           items: this.parseBricks(brick.bricks)
         };
 
         columnWidth = 1 / group.items.length;
 
-        Ext.Array.forEach(group.items, function(b) {
+        Ext.Array.forEach(group.items, function(b, i) {
           b.columnWidth = columnWidth;
-          b.margin = '0 5 0 0';
+          if (i < group.items.length - 1) {
+            b.margin = '0 5 0 0';
+          }
           delete b.fieldLabel;
         });
 
