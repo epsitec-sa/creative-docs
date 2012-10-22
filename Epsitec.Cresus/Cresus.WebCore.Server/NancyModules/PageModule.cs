@@ -1,6 +1,6 @@
 ﻿using Epsitec.Cresus.WebCore.Server.Core;
 
-using Nancy;
+using Nancy.Responses.Negotiation;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetPageView(dynamic parameters)
+		private Negotiator GetPageView(dynamic parameters)
 		{
 			string pageName = parameters.name;
 
