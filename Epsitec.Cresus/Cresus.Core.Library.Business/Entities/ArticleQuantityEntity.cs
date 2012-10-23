@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		#region ICloneable<ArticleQuantityEntity> Members
 
-		void ICopyableEntity<ArticleQuantityEntity>.CopyTo(IBusinessContext businessContext, ArticleQuantityEntity copy)
+		void ICopyableEntity<ArticleQuantityEntity>.CopyTo(BusinessContext businessContext, ArticleQuantityEntity copy)
 		{
 			copy.BeginDate          = this.BeginDate;
 			copy.EndDate            = this.EndDate;

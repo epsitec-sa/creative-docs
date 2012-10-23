@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Business.ReferenceNumberFormatters
 
 		private string CreateReferenceNumber(FormatterHelper helper, string argument)
 		{
-			var businessContext = helper.GetComponent<IBusinessContext> ();
+			var businessContext = helper.GetComponent<BusinessContext> ();
 			var affair = businessContext.GetMasterEntity<AffairEntity> ();
 
 			return string.Format ("{0}-{1:00}", affair.IdA, affair.Documents.Count);
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Business.ReferenceNumberFormatters
 
 		private string CreateReferenceNumber(FormatterHelper helper, string argument)
 		{
-			var businessContext = helper.GetComponent<IBusinessContext> ();
+			var businessContext = helper.GetComponent<BusinessContext> ();
 			var affair = businessContext.GetMasterEntity<AffairEntity> ();
 			var customer = affair.Customer;
 

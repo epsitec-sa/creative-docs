@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 		}
 
-		private EntityUISettingsEntity GetEntityUISettingsEntity(System.Type entityType, IBusinessContext context = null)
+		private EntityUISettingsEntity GetEntityUISettingsEntity(System.Type entityType, BusinessContext context = null)
 		{
 			var entityId = EntityInfo.GetTypeId (entityType);
 

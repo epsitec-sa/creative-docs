@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
 	public sealed class MailContactPrinter : AbstractPrinter
 	{
-		private MailContactPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		private MailContactPrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				return DocumentType.Unknown;
 			}
 
-			IEntityPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+			IEntityPrinter IEntityPrinterFactory.CreatePrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				return new MailContactPrinter (businessContext, entity, options, printingUnits);
 			}

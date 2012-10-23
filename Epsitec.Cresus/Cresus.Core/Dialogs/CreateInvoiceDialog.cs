@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public class CreateInvoiceDialog : CoreDialog
 	{
-		public CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity sourceDocument, bool invoiceValidation)
+		public CreateInvoiceDialog(BusinessContext businessContext, DocumentMetadataEntity sourceDocument, bool invoiceValidation)
 			: base (businessContext.Data.Host)
 		{
 			//	'sourceDocument' correspond en principe au bulletin de livraison, car la facture
@@ -451,7 +451,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static readonly double labelWidth = 90;
 		private static readonly double fieldWidth = 75;
 
-		private readonly IBusinessContext						businessContext;
+		private readonly BusinessContext						businessContext;
 		private readonly DocumentMetadataEntity					sourceDocument;
 		private readonly bool									invoiceValidation;
 		private readonly IEnumerable<PaymentCategoryEntity>		paymentCategoryEntities;

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		
-		public bool AssignIds<T>(IBusinessContext businessContext, T entity)
+		public bool AssignIds<T>(BusinessContext businessContext, T entity)
 			where T : AbstractEntity, IReferenceNumber, new ()
 		{
 			bool assigned = false;

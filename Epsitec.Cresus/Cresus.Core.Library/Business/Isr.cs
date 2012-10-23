@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// <returns>
 		/// A unique reference number for an ISR slip.
 		/// </returns>
-		public static string GetNewReferenceNumber(IBusinessContext context, string subscriberNumber, string bankPrefix = null)
+		public static string GetNewReferenceNumber(BusinessContext context, string subscriberNumber, string bankPrefix = null)
 		{
 			if (!Isr.IsCompactSubscriberNumber (subscriberNumber))
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Business
 			return refLine + checksum;
 		}
 
-		public static string GetNewReferenceNumber(IBusinessContext context, IsrDefinitionEntity isrDefinition)
+		public static string GetNewReferenceNumber(BusinessContext context, IsrDefinitionEntity isrDefinition)
 		{
 			if (isrDefinition.IsNull ())
 			{

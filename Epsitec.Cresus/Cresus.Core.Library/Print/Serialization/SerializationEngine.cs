@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 {
 	public static class SerializationEngine
 	{
-		public static string SerializeJobs(IBusinessContext businessContext, List<JobToPrint> jobs)
+		public static string SerializeJobs(BusinessContext businessContext, List<JobToPrint> jobs)
 		{
 			//	Retourne la chaîne xmlSource qui sérialise une liste de jobs d'impression.
 			if (jobs == null)
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 			return xDocument.ToString (SaveOptions.None);
 		}
 
-		public static List<DeserializedJob> DeserializeJobs(IBusinessContext businessContext, string xmlSource, double zoom=0)
+		public static List<DeserializedJob> DeserializeJobs(BusinessContext businessContext, string xmlSource, double zoom=0)
 		{
 			//	Désérialise une liste de jobs d'impression.
 			//	Si le zoom est différent de zéro, on génère des bitmaps miniatures des pages.

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 {
 	public sealed class DocumentLogic
 	{
-		public DocumentLogic(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata)
+		public DocumentLogic(BusinessContext businessContext, DocumentMetadataEntity documentMetadata)
 		{
 			this.businessContext  = businessContext as BusinessContext;
 			this.documentMetadata = documentMetadata;

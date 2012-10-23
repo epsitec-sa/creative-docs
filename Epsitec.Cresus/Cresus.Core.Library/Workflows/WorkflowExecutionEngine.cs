@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		}
 
 
-		public IBusinessContext					BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 		private readonly WorkflowTransition		transition;
 		private readonly CoreData				data;
-		private readonly IBusinessContext		businessContext;
+		private readonly BusinessContext		businessContext;
 		private readonly List<object>			associatedItems;
 		private Logic							businessLogic;
 		private bool							isDisposed;

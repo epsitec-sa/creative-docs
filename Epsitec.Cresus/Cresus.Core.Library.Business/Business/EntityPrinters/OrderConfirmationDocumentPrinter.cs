@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
 	public sealed class OrderConfirmationDocumentPrinter : BusinessDocumentPrinter
 	{
-		internal OrderConfirmationDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		internal OrderConfirmationDocumentPrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 		}

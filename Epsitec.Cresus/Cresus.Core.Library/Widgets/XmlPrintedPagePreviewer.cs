@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public class XmlPrintedPagePreviewer : Widget
 	{
-		public XmlPrintedPagePreviewer(IBusinessContext businessContext, bool showCheckButtons)
+		public XmlPrintedPagePreviewer(BusinessContext businessContext, bool showCheckButtons)
 		{
 			this.businessContext = businessContext;
 			this.coreData = this.businessContext.Data;
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		public static readonly double		titleHeight = 18;
 
-		private readonly IBusinessContext	businessContext;
+		private readonly BusinessContext	businessContext;
 		private readonly CoreData			coreData;
 		private readonly CheckButton		checkButton;
 

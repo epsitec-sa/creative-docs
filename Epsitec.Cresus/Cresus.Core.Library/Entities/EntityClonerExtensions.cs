@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Entities
 		/// <returns>The cloned entity.</returns>
 		/// <exception cref="System.InvalidOperationException">Throws an invalid operation exception if
 		/// the entity does not implement <see cref="ICopyableEntity&lt;T&gt;"/>.</exception>
-		public static T CloneEntity<T>(this T entity, IBusinessContext businessContext)
+		public static T CloneEntity<T>(this T entity, BusinessContext businessContext)
 			where T : AbstractEntity, new ()
 		{
 			if (entity.IsNull ())
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private abstract class EntityCopier
 		{
-			public abstract AbstractEntity GenericClone(IBusinessContext businessContext, AbstractEntity entity);
+			public abstract AbstractEntity GenericClone(BusinessContext businessContext, AbstractEntity entity);
 		}
 
 		#endregion
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 			}
 
-			public static T Clone(IBusinessContext businessContext, AbstractEntity entity)
+			public static T Clone(BusinessContext businessContext, AbstractEntity entity)
 			{
 				var cloneable = entity as ICopyableEntity<T>;
 
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return copy;
 			}
 
-			public override AbstractEntity GenericClone(IBusinessContext businessContext, AbstractEntity entity)
+			public override AbstractEntity GenericClone(BusinessContext businessContext, AbstractEntity entity)
 			{
 				return EntityCopier<T>.Clone (businessContext, entity);
 			}

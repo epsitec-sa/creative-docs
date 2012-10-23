@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		#region ICopyableEntity<BusinessDocumentEntity> Members
 
-		void ICopyableEntity<BusinessDocumentEntity>.CopyTo(IBusinessContext businessContext, BusinessDocumentEntity copy)
+		void ICopyableEntity<BusinessDocumentEntity>.CopyTo(BusinessContext businessContext, BusinessDocumentEntity copy)
 		{
 			copy.VariantId             = this.VariantId;
 

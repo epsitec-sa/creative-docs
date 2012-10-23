@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Print
 {
 	public abstract class AbstractPrinter : IEntityPrinter
 	{
-		protected AbstractPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		protected AbstractPrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			this.businessContext   = businessContext;
 			this.coreData          = this.businessContext.Data;
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
-		public static AbstractPrinter CreateDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		public static AbstractPrinter CreateDocumentPrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Crée le XxxPrinter adapté à un type d'entité.
 			//	Il ne faut pas perdre de vue qu'il n'y a pas de lien direct entre un type d'entité et
@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Core.Print
 		private static readonly IEnumerable<VerboseDocumentOption> verboseDocumentOptions = VerboseDocumentOption.GetAll ();
 		public static readonly double						ContinuousHeight = 100*1000;  // 100 mètres devraient suffire
 
-		protected readonly IBusinessContext					businessContext;
+		protected readonly BusinessContext					businessContext;
 		protected readonly CoreData							coreData;
 		protected readonly AbstractEntity					entity;
 		private readonly PrintingUnitDictionary				printingUnits;

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsController
 {
 	public sealed class DocumentOptionsController : System.IDisposable
 	{
-		public DocumentOptionsController(IBusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
+		public DocumentOptionsController(BusinessContext businessContext, DocumentOptionsEntity documentOptionsEntity)
 		{
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentOptionsEntity.IsNotNull ());
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.DocumentOptionsController
 		#endregion
 
 
-		private readonly IBusinessContext					businessContext;
+		private readonly BusinessContext					businessContext;
 		private readonly DocumentOptionsEntity				documentOptionsEntity;
 
 		private MainController								mainController;

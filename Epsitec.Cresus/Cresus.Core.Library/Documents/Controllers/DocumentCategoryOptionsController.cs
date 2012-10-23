@@ -1369,7 +1369,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		private static readonly int ratioWidth = 40;
 
 		private readonly DocumentCategoryController			documentCategoryController;
-		private readonly IBusinessContext					businessContext;
+		private readonly BusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategory;
 		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;
 		private readonly List<OptionInformation>			optionInformations;

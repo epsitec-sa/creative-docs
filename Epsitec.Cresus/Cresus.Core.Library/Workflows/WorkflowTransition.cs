@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		/// <param name="workflowThread">The workflow thread.</param>
 		/// <param name="workflowNode">The workflow node.</param>
 		/// <param name="workflowEdge">The workflow edge.</param>
-		public WorkflowTransition(IBusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowNodeEntity workflowNode, WorkflowEdgeEntity workflowEdge)
+		public WorkflowTransition(BusinessContext businessContext, WorkflowEntity workflow, WorkflowThreadEntity workflowThread, WorkflowNodeEntity workflowNode, WorkflowEdgeEntity workflowEdge)
 		{
 			this.businessContext = businessContext;
 			this.workflow = workflow;
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		}
 
 		
-		public IBusinessContext					BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		}
 
 
-		private readonly IBusinessContext		businessContext;
+		private readonly BusinessContext		businessContext;
 		private readonly WorkflowEntity			workflow;
 		private readonly WorkflowThreadEntity	thread;
 		private readonly WorkflowNodeEntity		node;

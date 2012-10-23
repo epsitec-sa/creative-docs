@@ -16,6 +16,6 @@ namespace Epsitec.Cresus.Core.Business
 	public interface ICopyableEntity<T>
 		where T : AbstractEntity
 	{
-		void CopyTo(IBusinessContext businessContext, T copy);
+		void CopyTo(BusinessContext businessContext, T copy);
 	}
 }

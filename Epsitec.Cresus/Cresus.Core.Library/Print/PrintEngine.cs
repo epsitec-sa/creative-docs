@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
-		public static bool CheckPrintCommandEnable(IBusinessContext businessContext, AbstractEntity entity)
+		public static bool CheckPrintCommandEnable(BusinessContext businessContext, AbstractEntity entity)
 		{
 			if (entity.IsNull ())
 			{
@@ -51,20 +51,20 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 		#region Command handlers
-		public static void PrintCommand(IBusinessContext businessContext, AbstractEntity entity)
+		public static void PrintCommand(BusinessContext businessContext, AbstractEntity entity)
 		{
 			//	La commande 'Print' du ruban a été activée.
 			PrintEngine.PrintOrPreviewCommand (businessContext, entity, isPreview: true);
 		}
 
-		public static void PreviewCommand(IBusinessContext businessContext, AbstractEntity entity)
+		public static void PreviewCommand(BusinessContext businessContext, AbstractEntity entity)
 		{
 			//	La commande 'Preview' du ruban a été activée.
 			PrintEngine.PrintOrPreviewCommand (businessContext, entity, isPreview: true);
 		}
 
 
-		private static void PrintOrPreviewCommand(IBusinessContext businessContext, AbstractEntity entity, bool isPreview)
+		private static void PrintOrPreviewCommand(BusinessContext businessContext, AbstractEntity entity, bool isPreview)
 		{
 			if (entity == null)
 			{
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		private static IEnumerable<EntityToPrint> GetEntitiesToPrint(IBusinessContext businessContext, AbstractEntity entity)
+		private static IEnumerable<EntityToPrint> GetEntitiesToPrint(BusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Prépare les entités à imprimer. Une entité peut déboucher sur plusieurs entités
 			//	filles à imprimer (par exemple sous forme d'étiquettes).
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Print
 			return entitiesToPrint;
 		}
 
-		private static void AddEntityToPrint(IBusinessContext businessContext, List<EntityToPrint> entitiesToPrint, AbstractEntity entity, string title)
+		private static void AddEntityToPrint(BusinessContext businessContext, List<EntityToPrint> entitiesToPrint, AbstractEntity entity, string title)
 		{
 			var options       = PrintEngine.GetOptions       (businessContext, entity);
 			var printingUnits = PrintEngine.GetPrintingUnits (businessContext, entity);
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core.Print
 
 
 		#region xml source recording
-		private static void RecordXmlSources(IBusinessContext businessContext, AbstractEntity entity, IList<string> xmlSources)
+		private static void RecordXmlSources(BusinessContext businessContext, AbstractEntity entity, IList<string> xmlSources)
 		{
 			//	Stocke xml source d'une impression dans l'entité DocumentMetadataEntity.
 			var documentMetadata = entity as DocumentMetadataEntity;
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Print
 			}
 		}
 
-		private static void RecordXmlSource(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, string xmlSource)
+		private static void RecordXmlSource(BusinessContext businessContext, DocumentMetadataEntity documentMetadata, string xmlSource)
 		{
 			byte[] data = Epsitec.Common.IO.Serialization.SerializeAndCompressToMemory(xmlSource, Epsitec.Common.IO.Compressor.Zip);
 
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Core.Print
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 
-		public static List<DeserializedJob> SearchXmlSource(IBusinessContext businessContext, SerializedDocumentBlobEntity blob)
+		public static List<DeserializedJob> SearchXmlSource(BusinessContext businessContext, SerializedDocumentBlobEntity blob)
 		{
 			//	Régénère les jobs d'impression stockés dans une entité SerializedDocumentBlobEntity.
 			if (blob.Data != null)
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		public static void PrintJobs(IBusinessContext businessContext, IEnumerable<DeserializedJob> jobs)
+		public static void PrintJobs(BusinessContext businessContext, IEnumerable<DeserializedJob> jobs)
 		{
 			//	Imprime effectivement une liste de jobs d'impression.
 			PrintEngine.RemoveUnprintablePages (jobs);
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Print
 		}
 
 
-		private static string MakePrintingData(IBusinessContext businessContext, IEnumerable<EntityToPrint> entitiesToPrint)
+		private static string MakePrintingData(BusinessContext businessContext, IEnumerable<EntityToPrint> entitiesToPrint)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Core.Print
 			return SerializationEngine.SerializeJobs (businessContext, jobs);
 		}
 
-		public static string MakePrintingData(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		public static string MakePrintingData(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne le source xml correspondant.
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Core.Print
 			return SerializationEngine.SerializeJobs (businessContext, jobs);
 		}
 
-		private static List<JobToPrint> MakePrintingJobs(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		private static List<JobToPrint> MakePrintingJobs(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 		{
 			//	Fabrique les données permettant d'imprimer un document, sans aucune interaction.
 			//	Retourne les jobs correspondant.
@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.Core.Print
 		
 		
 		#region Dictionary getters
-		private static PrintingOptionDictionary GetOptions(IBusinessContext businessContext, AbstractEntity entity)
+		private static PrintingOptionDictionary GetOptions(BusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les options à utiliser pour l'entité.
 			var result = new PrintingOptionDictionary ();
@@ -452,7 +452,7 @@ namespace Epsitec.Cresus.Core.Print
 			return result;
 		}
 
-		private static PrintingUnitDictionary GetPrintingUnits(IBusinessContext businessContext, AbstractEntity entity)
+		private static PrintingUnitDictionary GetPrintingUnits(BusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne les unités d'impression à utiliser pour l'entité.
 			var result = new PrintingUnitDictionary ();
@@ -488,7 +488,7 @@ namespace Epsitec.Cresus.Core.Print
 			return result;
 		}
 
-		public static DocumentCategoryEntity GetDocumentCategoryEntity(IBusinessContext businessContext, AbstractEntity entity)
+		public static DocumentCategoryEntity GetDocumentCategoryEntity(BusinessContext businessContext, AbstractEntity entity)
 		{
 			//	Retourne l'entité de catégorie de document à utiliser, pour une entité représentant un document quelconque.
 			if (entity is DocumentMetadataEntity)
@@ -511,7 +511,7 @@ namespace Epsitec.Cresus.Core.Print
 			return null;
 		}
 
-		private static DocumentCategoryMappingEntity GetMappingEntity(IBusinessContext businessContext, AbstractEntity entity)
+		private static DocumentCategoryMappingEntity GetMappingEntity(BusinessContext businessContext, AbstractEntity entity)
 		{
 			var example = new DocumentCategoryMappingEntity ();
 
@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		public static Image GetImage(IBusinessContext businessContext, string id)
+		public static Image GetImage(BusinessContext businessContext, string id)
 		{
 			//	Retrouve l'image dans la base de données, à partir de son identificateur (ImageBlobEntity.Code).
 			var store = businessContext.Data.GetComponent<ImageDataStore> ();

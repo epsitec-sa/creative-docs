@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.GetAllChartsOfAccounts ().Where (chart => (date >= chart.BeginDate) && (date <= chart.EndDate)).FirstOrDefault ();
 		}
 
-		public void AddChartOfAccounts(IBusinessContext businessContext, CresusChartOfAccounts chart)
+		public void AddChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
 		{
 			this.DeserializeChartsOfAccountsIfNeeded ();
 
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Entities
 			this.chartsOfAccounts.Add (chart);
 		}
 
-		public void RemoveChartOfAccounts(IBusinessContext businessContext, CresusChartOfAccounts chart)
+		public void RemoveChartOfAccounts(BusinessContext businessContext, CresusChartOfAccounts chart)
 		{
 			var repository = businessContext.GetRepository<XmlBlobEntity> ();
 			var example    = repository.CreateExample ();

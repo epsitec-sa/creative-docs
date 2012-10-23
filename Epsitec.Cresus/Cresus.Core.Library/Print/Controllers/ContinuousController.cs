@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Print.Controllers
 {
 	public sealed class ContinuousController
 	{
-		public ContinuousController(IBusinessContext businessContext, AbstractEntity metadoc, Business.DocumentType documentType)
+		public ContinuousController(BusinessContext businessContext, AbstractEntity metadoc, Business.DocumentType documentType)
 		{
 			var entities = new List<AbstractEntity> ();
 			entities.Add (metadoc);

@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		
-		public void PersistSettings(IBusinessContext context)
+		public void PersistSettings(BusinessContext context)
 		{
 			if (this.HasSettings)
 			{

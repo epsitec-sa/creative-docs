@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Print
 		/// <param name="businessContext">The business context.</param>
 		/// <param name="printDocument">The print document.</param>
 		/// <param name="sections">The sections.</param>
-		public XmlJobPrintEngine(IBusinessContext businessContext, PrintDocument printDocument, List<DeserializedSection> sections)
+		public XmlJobPrintEngine(BusinessContext businessContext, PrintDocument printDocument, List<DeserializedSection> sections)
 		{
 			this.businessContext = businessContext;
 			this.coreData        = this.businessContext.Data;
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Print
 		#endregion
 
 
-		private readonly IBusinessContext			businessContext;
+		private readonly BusinessContext			businessContext;
 		private readonly CoreData					coreData;
 		private readonly PrintDocument				printDocument;
 		private readonly List<DeserializedSection>	sections;

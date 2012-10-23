@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		{
 		}
 
-		private ArticleItemPriceCalculator(CoreData data, IBusinessContext businessContext, BusinessDocumentEntity document, DocumentMetadataEntity metadata, ArticleDocumentItemEntity articleItem)
+		private ArticleItemPriceCalculator(CoreData data, BusinessContext businessContext, BusinessDocumentEntity document, DocumentMetadataEntity metadata, ArticleDocumentItemEntity articleItem)
 		{
 			if (articleItem.ArticleAttributes.HasFlag (ArticleDocumentItemAttributes.Dirty))
 			{
@@ -583,7 +583,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators.ItemPriceCalcula
 		}
 
 		private readonly CoreData					data;
-		private readonly IBusinessContext			businessContext;
+		private readonly BusinessContext			businessContext;
 		private readonly DocumentMetadataEntity		metadata;
 		private readonly BusinessDocumentEntity		document;
 		private readonly ArticleDocumentItemEntity	articleItem;

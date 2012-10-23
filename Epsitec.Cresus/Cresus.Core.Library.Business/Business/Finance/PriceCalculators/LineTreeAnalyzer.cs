@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 	/// </summary>
 	internal sealed class LineTreeAnalyzer
 	{
-		private LineTreeAnalyzer(IBusinessContext context, IList<AbstractDocumentItemEntity> lines)
+		private LineTreeAnalyzer(BusinessContext context, IList<AbstractDocumentItemEntity> lines)
 		{
 			this.context = context;
 			this.lines = lines;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// </summary>
 		/// <param name="context">The business context.</param>
 		/// <param name="lines">The collection of lines which has to be fixed.</param>
-		public static void FixSubTotals(IBusinessContext context, IList<AbstractDocumentItemEntity> lines)
+		public static void FixSubTotals(BusinessContext context, IList<AbstractDocumentItemEntity> lines)
 		{
 			var analyzer = new LineTreeAnalyzer (context, lines);
 			
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 
 		
-		private readonly IBusinessContext		context;
+		private readonly BusinessContext		context;
 		private readonly IList<AbstractDocumentItemEntity> lines;
 		private readonly Stack<State>			stack;
 

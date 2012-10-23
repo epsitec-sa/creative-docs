@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		/// <param name="businessContext">The business context.</param>
 		/// <param name="document">The business document to work on.</param>
 		/// <param name="metadata">The associated document metadata.</param>
-		private DocumentPriceCalculator(IBusinessContext businessContext, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
+		private DocumentPriceCalculator(BusinessContext businessContext, BusinessDocumentEntity document, DocumentMetadataEntity metadata)
 		{
 			ExceptionThrower.ThrowIfNull (businessContext, "businessContext");
 			ExceptionThrower.ThrowIfNull (document, "document");
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			}
 		}
 
-		public IBusinessContext					BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
@@ -531,7 +531,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 		}
 		
 
-		private readonly IBusinessContext										context;
+		private readonly BusinessContext										context;
 		private readonly BusinessDocumentEntity									document;
 		private readonly DocumentMetadataEntity									metadata;
 		private readonly List<AbstractItemPriceCalculator>						calculators;

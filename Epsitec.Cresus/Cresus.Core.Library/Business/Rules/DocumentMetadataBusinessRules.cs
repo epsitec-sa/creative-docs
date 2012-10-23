@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		public override void ApplyBindRule(DocumentMetadataEntity entity)
 		{
-			var businessContext = Logic.Current.GetComponent<IBusinessContext> ();
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
 			businessContext.Register (entity.BusinessDocument);
 		}

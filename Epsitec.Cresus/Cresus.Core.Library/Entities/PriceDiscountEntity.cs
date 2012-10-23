@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		#region ICloneable<PriceDiscountEntity> Members
 
-		void ICopyableEntity<PriceDiscountEntity>.CopyTo(IBusinessContext businessContext, PriceDiscountEntity copy)
+		void ICopyableEntity<PriceDiscountEntity>.CopyTo(BusinessContext businessContext, PriceDiscountEntity copy)
 		{
 			copy.Text           = this.Text;
 			copy.DiscountRate   = this.DiscountRate;

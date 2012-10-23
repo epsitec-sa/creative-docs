@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 		}
 
 
-		public static PaymentTransactionEntity CreateInvoiceDialog(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, bool invoiceValidation)
+		public static PaymentTransactionEntity CreateInvoiceDialog(BusinessContext businessContext, DocumentMetadataEntity documentMetadata, bool invoiceValidation)
 		{
 			//	Choix interactif du moyen de paiement.
 			using (var dialog = new Dialogs.CreateInvoiceDialog (businessContext, documentMetadata, invoiceValidation))

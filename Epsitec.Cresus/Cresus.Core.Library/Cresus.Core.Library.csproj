@@ -125,7 +125,6 @@
     <Compile Include="Business\FormattedIdGenerator.cs" />
     <Compile Include="Business\GenericBusinessRule.cs" />
     <Compile Include="Business\GenericBusinessRule`1.cs" />
-    <Compile Include="Business\IBusinessContext.cs" />
     <Compile Include="Business\ICopyable.cs" />
     <Compile Include="Business\Isr.cs" />
     <Compile Include="Business\IsrHelper.cs" />

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 {
 	public sealed class DocumentCategoryController : System.IDisposable
 	{
-		public DocumentCategoryController(IBusinessContext businessContext, DocumentCategoryEntity documentCategoryEntity)
+		public DocumentCategoryController(BusinessContext businessContext, DocumentCategoryEntity documentCategoryEntity)
 		{
 			System.Diagnostics.Debug.Assert (businessContext != null);
 			System.Diagnostics.Debug.Assert (documentCategoryEntity.IsNotNull ());
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 #endif
 
 
-		public IBusinessContext BusinessContext
+		public BusinessContext BusinessContext
 		{
 			get
 			{
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 		public static readonly FormattedText	uselessBullet = Misc.IconProvider.GetRichTextImg ("DocumentOptions.Useless", -2, new Size (13, 13));
 		public static readonly FormattedText	missingBullet = Misc.IconProvider.GetRichTextImg ("DocumentOptions.Missing", -2, new Size (13, 13));
 
-		private readonly IBusinessContext					businessContext;
+		private readonly BusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 
 		private DocumentOptionsController					documentOptionsController;

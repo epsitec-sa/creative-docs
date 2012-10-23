@@ -54,13 +54,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// Gets the associated business context.
 		/// </summary>
 		/// <value>The business context.</value>
-		public IBusinessContext					BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
 				if (this.businessContext == null)
 				{
-					this.businessContext = InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.Host);
+					this.businessContext = new BusinessContext (this.Host);
 					this.businessContext.GlobalLock = GlobalLocks.UserManagement;
 				}
 
@@ -555,7 +555,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		private SoftwareUserEntity				authenticatedUser;
 		private string							authenticatedUserCode;
 		private string							activeSessionId;
-		private IBusinessContext				businessContext;
+		private BusinessContext					businessContext;
 		private readonly Dictionary<string, UserSession>	sessions;
 	}
 }

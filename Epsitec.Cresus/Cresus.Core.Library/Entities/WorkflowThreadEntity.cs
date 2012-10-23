@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Entities
 		/// </summary>
 		/// <param name="businessContext">The business context.</param>
 		/// <param name="args">The arguments.</param>
-		public void SetArgs(IBusinessContext businessContext, SettingsCollection args)
+		public void SetArgs(BusinessContext businessContext, SettingsCollection args)
 		{
 			if (this.SerializedArgs.IsNull ())
 			{

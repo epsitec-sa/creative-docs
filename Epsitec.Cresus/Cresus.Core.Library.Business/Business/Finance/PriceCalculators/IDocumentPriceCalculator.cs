@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Core.Business.Finance.PriceCalculators
 			get;
 		}
 
-		IBusinessContext BusinessContext
+		BusinessContext BusinessContext
 		{
 			get;
 		}

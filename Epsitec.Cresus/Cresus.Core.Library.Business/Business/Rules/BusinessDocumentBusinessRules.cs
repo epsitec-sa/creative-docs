@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		}
 
 
-		public static DocumentMetadataEntity GetDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
+		public static DocumentMetadataEntity GetDocument(BusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType documentType)
 		{
 			//	Cherche le document d'un type donné.
 			var sourceDocuments = from document in activeAffair.Documents.Reverse ()
@@ -52,14 +52,14 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return sourceDocuments.FirstOrDefault ();
 		}
 
-		public static DocumentMetadataEntity GetSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
+		public static DocumentMetadataEntity GetSourceDocument(BusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
 			var document = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, sourceDocumentType);
 			System.Diagnostics.Debug.Assert (document != null);
 			return document;
 		}
 
-		public static DocumentMetadataEntity CreateDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
+		public static DocumentMetadataEntity CreateDocument(BusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
 			var documentCategory = BusinessDocumentBusinessRules.FindDocumentCategory (businessContext, sourceDocumentType);
 
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		}
 
 		
-		private static DocumentMetadataEntity CreateDocumentMetadata(IBusinessContext businessContext, DocumentCategoryEntity documentCategory)
+		private static DocumentMetadataEntity CreateDocumentMetadata(BusinessContext businessContext, DocumentCategoryEntity documentCategory)
 		{
 			var documentMetadata = businessContext.CreateEntity<DocumentMetadataEntity> ();
 			
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return documentMetadata;
 		}
 
-		private static DocumentMetadataEntity FindSourceDocument(IBusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
+		private static DocumentMetadataEntity FindSourceDocument(BusinessContext businessContext, AffairEntity activeAffair, int activeVariantId, DocumentType sourceDocumentType)
 		{
 			var documentTypes = new HashSet<DocumentType> (DocumentLogic.GetProcessParentDocumentTypes (sourceDocumentType));
 
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return sourceDocuments.FirstOrDefault ();
 		}
 		
-		private static DocumentCategoryEntity FindDocumentCategory(IBusinessContext businessContext, DocumentType documentType)
+		private static DocumentCategoryEntity FindDocumentCategory(BusinessContext businessContext, DocumentType documentType)
 		{
 			var categoryRepository = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var documentCategories = categoryRepository.Find (documentType);
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return documentCategory;
 		}
 
-		private static BusinessDocumentEntity CloneBusinessDocument(IBusinessContext businessContext, AffairEntity affair, DocumentMetadataEntity metadata, DocumentType docTypeNew)
+		private static BusinessDocumentEntity CloneBusinessDocument(BusinessContext businessContext, AffairEntity affair, DocumentMetadataEntity metadata, DocumentType docTypeNew)
 		{
 			var template = metadata.BusinessDocument as BusinessDocumentEntity;
 			var document = template.CloneEntity (businessContext);
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		}
 
 
-		private static void SetupDeliveryNote(IBusinessContext businessContext, AffairEntity affair, BusinessDocumentEntity document)
+		private static void SetupDeliveryNote(BusinessContext businessContext, AffairEntity affair, BusinessDocumentEntity document)
 		{
 			var deliveryNotes = affair.Documents.Where (x => x.BusinessDocument != document && x.DocumentCategory.DocumentType == DocumentType.DeliveryNote);
 
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			return shipped;
 		}
 
-		private static void SetupDeliveryNoteArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line, decimal shippedPreviously)
+		private static void SetupDeliveryNoteArticleDocumentItem(BusinessContext businessContext, ArticleDocumentItemEntity line, decimal shippedPreviously)
 		{
 			//	Cherche la quantité à livrer la plus probable.
 			decimal shippedQuantity = 0;
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			}
 		}
 
-		private static void SetupInvoice(IBusinessContext businessContext, BusinessDocumentEntity document)
+		private static void SetupInvoice(BusinessContext businessContext, BusinessDocumentEntity document)
 		{
 			document.BillingStatus = Finance.BillingStatus.DebtorBillOpen;
 			document.BillingDate   = Date.Today;
@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 			}
 		}
 
-		private static void SetupInvoiceArticleDocumentItem(IBusinessContext businessContext, ArticleDocumentItemEntity line)
+		private static void SetupInvoiceArticleDocumentItem(BusinessContext businessContext, ArticleDocumentItemEntity line)
 		{
 			decimal orderedQuantity = line.GetQuantity (ArticleQuantityType.Ordered);
 			decimal shippedQuantity = line.GetQuantity (ArticleQuantityType.Shipped);
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 		}
 
 
-		private static ArticleQuantityColumnEntity FindArticleQuantityColumnEntity(IBusinessContext businessContext, ArticleQuantityType type)
+		private static ArticleQuantityColumnEntity FindArticleQuantityColumnEntity(BusinessContext businessContext, ArticleQuantityType type)
 		{
 			var example = new ArticleQuantityColumnEntity ();
 			example.QuantityType = type;

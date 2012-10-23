@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			workflowEngine.GetAssociated<NavigationOrchestrator> ().NavigateToTiles (affair, documentMetadata);
 		}
 
-		private static bool SetupDocumentMetadata(IBusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument, DocumentType documentType)
+		private static bool SetupDocumentMetadata(BusinessContext businessContext, DocumentMetadataEntity documentMetadata, BusinessDocumentEntity businessDocument, DocumentType documentType)
 		{
 			var categoryRepository = businessContext.GetSpecificRepository<DocumentCategoryEntity.Repository> ();
 			var documentCategories = categoryRepository.Find (documentType);
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Business.Actions
 			}
 		}
 
-		private static void SetupBusinessDocument(IBusinessContext businessContext, BusinessDocumentEntity businessDocument, CustomerEntity currentCustomer)
+		private static void SetupBusinessDocument(BusinessContext businessContext, BusinessDocumentEntity businessDocument, CustomerEntity currentCustomer)
 		{
 			//	Define default billing & shipping addresses :
 

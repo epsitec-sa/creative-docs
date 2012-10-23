@@ -3,8 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -14,12 +13,8 @@ using Epsitec.Cresus.Core.Extensions;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.Settings;
 
-using Epsitec.Cresus.DataLayer.Context;
-
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Features
 {
@@ -37,13 +32,13 @@ namespace Epsitec.Cresus.Core.Features
 		/// Gets the associated business context.
 		/// </summary>
 		/// <value>The business context.</value>
-		public IBusinessContext					BusinessContext
+		public BusinessContext					BusinessContext
 		{
 			get
 			{
 				if (this.businessContext == null)
 				{
-					this.businessContext = InterfaceImplementationResolver<IBusinessContext>.CreateInstance (this.data);
+					this.businessContext = new BusinessContext (this.data);
 					this.businessContext.GlobalLock = GlobalLocks.FeatureManagement;
 				}
 
@@ -296,7 +291,7 @@ namespace Epsitec.Cresus.Core.Features
 
 		private bool							overrideCommandEnable;
 
-		private IBusinessContext				businessContext;
+		private BusinessContext					businessContext;
 		private ProductCustomizationEntity		activeCustomizations;
 		private ProductSettingsEntity			activeProductSettings;
 

@@ -1,15 +1,16 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Documents
 {
@@ -91,7 +92,7 @@ namespace Epsitec.Cresus.Core.Documents
 		}
 
 
-		public FormattedText GetNiceDescription(Business.IBusinessContext businessContext)
+		public FormattedText GetNiceDescription(BusinessContext businessContext)
 		{
 			var example = new DocumentPrintingUnitsEntity ();
 			example.Code = this.DocumentPrintingUnitCode;

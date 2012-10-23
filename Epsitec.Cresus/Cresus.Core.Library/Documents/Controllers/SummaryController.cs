@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 
 		private readonly DocumentCategoryController			documentCategoryController;
-		private readonly IBusinessContext					businessContext;
+		private readonly BusinessContext					businessContext;
 		private readonly DocumentCategoryEntity				documentCategoryEntity;
 		private readonly DocumentOptionsController			documentOptionsController;
 		private readonly IEnumerable<VerboseDocumentOption>	verboseDocumentOptions;

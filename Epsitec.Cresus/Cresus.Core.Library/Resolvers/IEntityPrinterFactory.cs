@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// <param name="options">The printing options.</param>
 		/// <param name="printingUnits">The <see cref="PageType"/> to printing unit mapping.</param>
 		/// <returns>The <see cref="AbstractPrinter"/> instance.</returns>
-		IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits);
+		IEntityPrinter CreatePrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits);
 
 		/// <summary>
 		/// Gets the type of the document, as a <see cref="DocumentType"/> enumeration value,

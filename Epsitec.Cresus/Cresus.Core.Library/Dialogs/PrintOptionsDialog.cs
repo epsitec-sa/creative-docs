@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 	/// </summary>
 	public sealed class PrintOptionsDialog : CoreDialog
 	{
-		public PrintOptionsDialog(IBusinessContext businessContext, IEnumerable<EntityToPrint> entitiesToPrint, bool isPreview)
+		public PrintOptionsDialog(BusinessContext businessContext, IEnumerable<EntityToPrint> entitiesToPrint, bool isPreview)
 			: base (businessContext.Data.Host)
 		{
 			this.businessContext = businessContext;
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private sealed class PageController
 		{
-			public PageController(IBusinessContext businessContext, EntityToPrint entityToPrint, Widget container, bool isPreview)
+			public PageController(BusinessContext businessContext, EntityToPrint entityToPrint, Widget container, bool isPreview)
 			{
 				this.businessContext = businessContext;
 				this.settingsManager = businessContext.Data.Host.SettingsManager;
@@ -540,7 +540,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			#endregion
 
 
-			private readonly IBusinessContext						businessContext;
+			private readonly BusinessContext						businessContext;
 			private readonly SettingsManager						settingsManager;
 			private readonly EntityToPrint							entityToPrint;
 			private readonly PrintingOptionDictionary				categoryOptions;
@@ -563,7 +563,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		#endregion
 
 
-		private readonly IBusinessContext						businessContext;
+		private readonly BusinessContext						businessContext;
 		private readonly List<EntityToPrint>					entitiesToPrint;
 		private readonly List<PageController>					entitiesPageControllers;
 		private readonly bool									isPreview;

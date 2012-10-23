@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 {
 	public abstract class BusinessDocumentPrinter : AbstractPrinter
 	{
-		protected BusinessDocumentPrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+		protected BusinessDocumentPrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			: base (businessContext, entity, options, printingUnits)
 		{
 			var documentMetadata = this.businessContext.GetMasterEntity<DocumentMetadataEntity> ();
@@ -1644,7 +1644,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				return DocumentType.Unknown;
 			}
 
-			public IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+			public IEntityPrinter CreatePrinter(BusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				var documentMetadata = entity as DocumentMetadataEntity;
 

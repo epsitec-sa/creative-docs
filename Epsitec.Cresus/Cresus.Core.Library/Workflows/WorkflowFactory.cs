@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Workflows
 {
 	public static class WorkflowFactory
 	{
-		public static WorkflowEntity CreateDefaultWorkflow<T>(IBusinessContext businessContext, string workflowName = null, SettingsCollection settings = null)
+		public static WorkflowEntity CreateDefaultWorkflow<T>(BusinessContext businessContext, string workflowName = null, SettingsCollection settings = null)
 			where T : AbstractEntity, new ()
 		{
 			var definition = businessContext.GetLocalEntity (WorkflowFactory.FindDefaultWorkflowDefinition<T> (businessContext, workflowName));
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			return workflow;
 		}
 
-		public static WorkflowThreadEntity CreateWorkflowThread(IBusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection args)
+		public static WorkflowThreadEntity CreateWorkflowThread(BusinessContext businessContext, WorkflowDefinitionEntity definition, SettingsCollection args)
 		{
 			System.Diagnostics.Debug.Assert (definition.IsNotNull ());
 
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		/// <returns>
 		/// The default workflow definition associated with the specified entity type.
 		/// </returns>
-		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(IBusinessContext businessContext, string workflowName = null)
+		public static WorkflowDefinitionEntity FindDefaultWorkflowDefinition<T>(BusinessContext businessContext, string workflowName = null)
 			where T : AbstractEntity, new ()
 		{
 			var data = businessContext.Data;

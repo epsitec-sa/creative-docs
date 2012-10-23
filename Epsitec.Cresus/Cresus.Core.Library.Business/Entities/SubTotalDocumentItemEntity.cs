@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		#region ICloneable<SubTotalDocumentItemEntity> Members
 
-		void ICopyableEntity<SubTotalDocumentItemEntity>.CopyTo(IBusinessContext businessContext, SubTotalDocumentItemEntity copy)
+		void ICopyableEntity<SubTotalDocumentItemEntity>.CopyTo(BusinessContext businessContext, SubTotalDocumentItemEntity copy)
 		{
 			copy.Attributes            = this.Attributes;
 			copy.GroupIndex            = this.GroupIndex;

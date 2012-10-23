@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Business
 		/// <param name="generator">The ID generator.</param>
 		/// <param name="businessContext">The business context.</param>
 		/// <param name="entity">The entity (which has <c>IdA</c>, <c>IdB</c> and <c>IdC</c> properties.</param>
-		public ReferenceIdFormatterHelper(FormattedIdGenerator generator, IBusinessContext businessContext, IReferenceNumber entity)
+		public ReferenceIdFormatterHelper(FormattedIdGenerator generator, BusinessContext businessContext, IReferenceNumber entity)
 		{
 			this.generator = generator;
 			this.businessContext = businessContext;
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			var type = typeof (T);
 
-			if (type == typeof (IBusinessContext))
+			if (type == typeof (BusinessContext))
 			{
 				return this.businessContext as T;
 			}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Business
 		}
 		
 		private readonly FormattedIdGenerator	generator;
-		private readonly IBusinessContext		businessContext;
+		private readonly BusinessContext		businessContext;
 		private readonly IReferenceNumber		entity;
 	}
 }
