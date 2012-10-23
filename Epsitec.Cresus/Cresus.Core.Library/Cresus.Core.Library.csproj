@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -54,20 +55,47 @@
     <Compile Include="Address\PostBoxConverter.cs" />
     <Compile Include="Address\StreetAddressConverter.cs" />
     <Compile Include="Address\StreetAddressFormat.cs" />
+    <Compile Include="Bricks\BrickMode.cs" />
+    <Compile Include="Bricks\BrickModeExtensions.cs" />
+    <Compile Include="Bricks\Bridge.cs" />
+    <Compile Include="Bricks\Bridge.InputProcessor.cs" />
+    <Compile Include="Bricks\BridgeContext.cs" />
+    <Compile Include="Bricks\BridgeSpy.cs" />
+    <Compile Include="Bricks\BridgeSpyEventArgs.cs" />
+    <Compile Include="Bricks\Bridge`1.cs" />
+    <Compile Include="Bricks\Factories\ButtonFactory.cs" />
+    <Compile Include="Bricks\Factories\DynamicFactory.cs" />
+    <Compile Include="Bricks\Factories\EntityAutoCompleteTextFieldDynamicFactory.cs" />
+    <Compile Include="Bricks\Factories\EnumAutoCompleteTextFieldDynamicFactory.cs" />
+    <Compile Include="Bricks\Factories\ItemPickerDynamicFactory.cs" />
+    <Compile Include="Bricks\Factories\SearchPanelFactory.cs" />
+    <Compile Include="Bricks\Factories\StaticFactory.cs" />
+    <Compile Include="Bricks\Factories\TextFieldDynamicFactory.cs" />
+    <Compile Include="Bricks\FieldInfo.cs" />
+    <Compile Include="Bricks\Helpers\DummyListEntity.cs" />
+    <Compile Include="Bricks\UIAction.cs" />
+    <Compile Include="Bricks\UIGroupAction.cs" />
+    <Compile Include="Bricks\UIMultiAction.cs" />
     <Compile Include="Business\Accounting\AccountingEntryDefinition.cs" />
     <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
     <Compile Include="Business\Accounting\CresusAccountingEntriesConnector.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
     <Compile Include="Business\Accounting\MultiAccountingEntryDefinition.cs" />
+    <Compile Include="Business\BusinessContext.cs" />
+    <Compile Include="Business\BusinessContextEventArgs.cs" />
+    <Compile Include="Business\BusinessContextOperation.cs" />
+    <Compile Include="Business\BusinessContextPool.cs" />
     <Compile Include="Business\BusinessRuleAttribute.cs" />
     <Compile Include="Business\CompositeBusinessRule.cs" />
     <Compile Include="Business\ContactGroupType.cs" />
+    <Compile Include="Business\CoreSnapshotService.cs" />
     <Compile Include="Business\DocumentFlowDirection.cs" />
     <Compile Include="Business\DocumentSource.cs" />
     <Compile Include="Business\DocumentState.cs" />
     <Compile Include="Business\DocumentType.cs" />
     <Compile Include="Business\EntityPrinters\MailContactPrinter.cs" />
+    <Compile Include="Business\EntitySaveMode.cs" />
     <Compile Include="Business\Extensions.cs" />
     <Compile Include="Business\Finance\BillingMode.cs" />
     <Compile Include="Business\Finance\BillingStatus.cs" />
@@ -127,8 +155,72 @@
     <Compile Include="Business\UserManagement\UserSession.cs" />
     <Compile Include="Business\UserManagement\UserSummary.cs" />
     <Compile Include="CommandHandlerStack.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionClass.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionItem.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionItemGenerator.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionItemLayout.cs" />
+    <Compile Include="Controllers\ActionViewController.cs" />
+    <Compile Include="Controllers\ActionViewControllerMode.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListContext.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListItemMapper.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListItemProvider.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListItemRenderer.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserSettingsMode.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.BrowserNavigationPathElement.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserViewController.ItemCreator.cs" />
+    <Compile Include="Controllers\ControllerSubTypeAttribute.cs" />
+    <Compile Include="Controllers\CoreController.cs" />
+    <Compile Include="Controllers\CoreViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\ICreationViewController.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionTemplateProperty.cs" />
+    <Compile Include="Controllers\DataAccessors\CollectionTemplate`1.cs" />
+    <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory.cs" />
+    <Compile Include="Controllers\DataAccessors\DynamicAccessorFactory`3.cs" />
+    <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />
+    <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\ICollectionModificationCapabilities.cs" />
+    <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
+    <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataItem.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
+    <Compile Include="Controllers\DataAccessors\TileDataType.cs" />
+    <Compile Include="Controllers\DataViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\IEditionViewController.cs" />
+    <Compile Include="Controllers\EntityViewController.cs" />
+    <Compile Include="Controllers\EntityViewController`1.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
+    <Compile Include="Controllers\IClickSimulator.cs" />
+    <Compile Include="Controllers\IEntitySpecialController.cs" />
+    <Compile Include="Controllers\IGroupedItem.cs" />
+    <Compile Include="Controllers\IGroupedItemPosition.cs" />
+    <Compile Include="Controllers\ITileController.cs" />
+    <Compile Include="Controllers\ListController.cs" />
+    <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\MainWindowController.cs" />
+    <Compile Include="Controllers\NewEntityReference.cs" />
+    <Compile Include="Controllers\PickerControllers\ItemPickerController.cs" />
+    <Compile Include="Controllers\PreviewViewController.cs" />
+    <Compile Include="Controllers\ReferenceController.cs" />
+    <Compile Include="Controllers\SelectionController.cs" />
+    <Compile Include="Controllers\SummaryControllers\ISummaryViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryDummyListEntityViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />
+    <Compile Include="Controllers\TextValueController.cs" />
+    <Compile Include="Controllers\TileContainerController.cs" />
+    <Compile Include="Controllers\TileContainerController.Initializer.cs" />
+    <Compile Include="Controllers\ViewControllerMode.cs" />
+    <Compile Include="Controllers\ViewLayoutController.cs" />
+    <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="CoreData.cs" />
     <Compile Include="DataExtractionMode.cs" />
     <Compile Include="Data\AttributeState.cs" />
@@ -154,6 +246,7 @@
     <Compile Include="Data\LockMonitor.cs" />
     <Compile Include="Data\LockOwner.cs" />
     <Compile Include="Data\LockTransaction.cs" />
+    <Compile Include="Dialogs\ItemPickerDialog.cs" />
     <Compile Include="Dialogs\LoginDialog.cs" />
     <Compile Include="Dialogs\OptimalPreviewPlacer.cs" />
     <Compile Include="Dialogs\PrintOptionsDialog.cs" />
@@ -235,9 +328,20 @@
     <Compile Include="Entities\WorkflowNodeEntity.cs" />
     <Compile Include="Entities\WorkflowStepEntity.cs" />
     <Compile Include="Entities\WorkflowThreadEntity.cs" />
+    <Compile Include="Factories\DefaultEntitySpecialControllerFactory.cs" />
+    <Compile Include="Factories\DefaultViewControllerComponentFactory.cs" />
+    <Compile Include="Factories\EntityViewControllerFactory.cs" />
+    <Compile Include="Factories\IEntitySpecialControllerFactory.cs" />
+    <Compile Include="Factories\IViewControllerComponentFactory.cs" />
+    <Compile Include="Factories\ViewControllerComponentFactory.cs" />
     <Compile Include="Features\FeatureManager.cs" />
+    <Compile Include="Helpers\EntityPreviewHelper.cs" />
+    <Compile Include="IChartProvider.cs" />
+    <Compile Include="Library\CoreInteractiveApp.cs" />
     <Compile Include="Library\Settings\UserEntityTableSettings.cs" />
     <Compile Include="Library\Settings\UserFilterSettings.cs" />
+    <Compile Include="Library\ViewControllerComponent.cs" />
+    <Compile Include="Library\ViewControllerComponent`1.cs" />
     <Compile Include="Metadata\ColumnDisplayMode.cs" />
     <Compile Include="Metadata\ColumnFilterComparisonCode.cs" />
     <Compile Include="Metadata\ColumnFilterConstant.cs" />
@@ -304,6 +408,16 @@
     <Compile Include="Metadata\IFilter.cs" />
     <Compile Include="Metadata\LambdaFilter.cs" />
     <Compile Include="Metadata\RequestExtensions.cs" />
+    <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
+    <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
+    <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
+    <Compile Include="Orchestrators\NavigationOrchestrator.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationHistory.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationPath.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationPathElement.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationPathElementClassAttribute.cs" />
+    <Compile Include="Orchestrators\Navigation\NavigationPathElementClassFactory.cs" />
+    <Compile Include="Orchestrators\Navigation\TileNavigationPathElement.cs" />
     <Compile Include="Print\AbstractPrinter.cs" />
     <Compile Include="Print\Bands\AbstractBand.cs" />
     <Compile Include="Print\Bands\AbstractIsrBand.cs" />
@@ -344,6 +458,8 @@
     <Compile Include="Repositories\WorkflowRepository.cs" />
     <Compile Include="Resolvers\BusinessRuleResolver.cs" />
     <Compile Include="Resolvers\EntityPrinterFactoryResolver.cs" />
+    <Compile Include="Resolvers\EntitySpecialControllerResolver.cs" />
+    <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Resolvers\IEntityPrinterFactory.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
@@ -366,6 +482,7 @@
     <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Res.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Res.cs" />
+    <Compile Include="UIBuilder.cs" />
     <Compile Include="V11\ImportFile.cs" />
     <Compile Include="V11\V11AbstractLine.cs" />
     <Compile Include="V11\V11Error.cs" />
@@ -382,6 +499,18 @@
     <Compile Include="Widgets\ActionButton.cs" />
     <Compile Include="Widgets\ContinuousPagePreviewer.cs" />
     <Compile Include="Widgets\IconOrImageButton.cs" />
+    <Compile Include="Widgets\LayeredIconButton.cs" />
+    <Compile Include="Widgets\Miniature.cs" />
+    <Compile Include="Widgets\TabNavigateEventArgs.cs" />
+    <Compile Include="Widgets\TileContainer.cs" />
+    <Compile Include="Widgets\Tiles\CollectionItemTile.cs" />
+    <Compile Include="Widgets\Tiles\ControllerTile.cs" />
+    <Compile Include="Widgets\Tiles\EditionTile.cs" />
+    <Compile Include="Widgets\Tiles\GenericTile.cs" />
+    <Compile Include="Widgets\Tiles\StaticTitleTile.cs" />
+    <Compile Include="Widgets\Tiles\SummaryTile.cs" />
+    <Compile Include="Widgets\Tiles\TitleTile.cs" />
+    <Compile Include="Widgets\Tiles\TitleTileWithVerticalLayout.cs" />
     <Compile Include="Widgets\XmlPrintedPagePreviewer.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Workflows\WorkflowAction.cs" />
@@ -476,6 +605,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Bricks\Cresus.Bricks.csproj">
+      <Project>{AE911461-2EFC-435D-B7AD-1F0DE07EE251}</Project>
+      <Name>Cresus.Bricks</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
@@ -606,7 +739,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Binders\" />
     <Folder Include="Library\Formatters\" />
     <Folder Include="Library\Internal\" />
   </ItemGroup>
