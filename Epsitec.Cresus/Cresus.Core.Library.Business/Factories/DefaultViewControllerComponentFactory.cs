@@ -19,6 +19,11 @@ namespace Epsitec.Cresus.Core.Factories
 			return true;
 		}
 
+		public virtual bool ShouldCreate(DataViewOrchestrator host)
+		{
+			return true;
+		}
+
 		public virtual ViewControllerComponent Create(DataViewOrchestrator host)
 		{
 			var args = new object[] { host };

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Factories
 		/// <summary>
 		/// Determines whether the host is in a sufficiently advanced state, so that the
 		/// factory can create the component. This is useful if a component relies on another
-		/// combonent to be already present (it will not, however, be fully initialized yet).
+		/// component to be already present (it will not, however, be fully initialized yet).
 		/// </summary>
 		/// <param name="host">The host.</param>
 		/// <returns>
@@ -25,6 +25,16 @@ namespace Epsitec.Cresus.Core.Factories
 		///   otherwise, <c>false</c>.
 		/// </returns>
 		bool CanCreate(THost host);
+
+		/// <summary>
+		/// Determines whether this component must be created. This is useful to define optional
+		/// components that are created only if some condition is met.
+		/// </summary>
+		/// <param name="host">The host.</param>
+		/// <returns>
+		/// <c>true</c> if the component must be created, <c>false</c> if it must not.
+		/// </returns>
+		bool ShouldCreate(THost host);
 
 		/// <summary>
 		/// Creates a component. This may only be called if <see cref="CanCreate"/> returned

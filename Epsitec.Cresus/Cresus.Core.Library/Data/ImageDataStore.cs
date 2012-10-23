@@ -345,6 +345,11 @@ namespace Epsitec.Cresus.Core.Data
 				return data.IsReady;
 			}
 
+			public bool ShouldCreate(CoreData host)
+			{
+				return true;
+			}
+
 			public CoreDataComponent Create(CoreData data)
 			{
 				return new ImageDataStore (data);

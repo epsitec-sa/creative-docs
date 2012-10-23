@@ -42,7 +42,9 @@ namespace Epsitec.Cresus.Core.Factories
 				CoreComponentFactory.registerRecursionCount = new SafeCounter ();
 			}
 
-			var factories = CoreComponentFactoryResolver<TFactory>.Resolve ();
+			var factories = CoreComponentFactoryResolver<TFactory>.Resolve ()
+				.Where (f => f.ShouldCreate (host))
+				.ToList ();
 
 			using (CoreComponentFactory.registerRecursionCount.Enter ())
 			{

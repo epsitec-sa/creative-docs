@@ -79,6 +79,11 @@ namespace Epsitec.Cresus.Core.Business
 				return true;
 			}
 
+			public bool ShouldCreate(CoreData host)
+			{
+				return true;
+			}
+
 			public CoreDataComponent Create(CoreData data)
 			{
 				return new RefIdGeneratorPool (data);

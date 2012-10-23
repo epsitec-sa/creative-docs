@@ -228,6 +228,11 @@ namespace Epsitec.Cresus.Core.Data
 				return true;
 			}
 
+			public bool ShouldCreate(CoreData host)
+			{
+				return true;
+			}
+
 			public CoreDataComponent Create(CoreData data)
 			{
 				return new Infrastructure (data);

@@ -59,6 +59,11 @@ namespace Epsitec.Aider.Controllers
 				return data.ContainsComponent<BusinessContextPool> ();
 			}
 
+			public bool ShouldCreate(CoreData host)
+			{
+				return true;
+			}
+
 			public CoreDataComponent Create(CoreData data)
 			{
 				return new AiderWarningController (data);

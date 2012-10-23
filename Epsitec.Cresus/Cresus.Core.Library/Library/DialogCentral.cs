@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<DialogCentral>
 		{
-			public override bool CanCreate(CoreApp host)
+			public override bool ShouldCreate(CoreApp host)
 			{
 				return CoreContext.IsInteractive;
 			}

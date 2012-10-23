@@ -80,6 +80,11 @@ namespace Epsitec.Cresus.Core.Business.Finance
 				return true;
 			}
 
+			public bool ShouldCreate(CoreData host)
+			{
+				return true;
+			}
+
 			public CoreDataComponent Create(CoreData data)
 			{
 				return new TaxContext (data);

@@ -528,6 +528,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return data.IsReady;
 			}
 
+			public bool ShouldCreate(CoreData host)
+			{
+				return true;
+			}
+
 			public CoreDataComponent Create(CoreData data)
 			{
 				return CoreContext.New<UserManager> (data);

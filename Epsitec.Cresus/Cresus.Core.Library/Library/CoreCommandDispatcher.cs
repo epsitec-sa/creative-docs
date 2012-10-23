@@ -190,6 +190,11 @@ namespace Epsitec.Cresus.Core.Library
 
 			public bool CanCreate(CoreApp data)
 			{
+				return true;
+			}
+
+			public bool ShouldCreate(CoreApp host)
+			{
 				return Library.CoreContext.IsInteractive;
 			}
 
