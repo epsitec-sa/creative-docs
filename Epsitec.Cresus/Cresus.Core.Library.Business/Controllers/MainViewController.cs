@@ -339,10 +339,27 @@ namespace Epsitec.Cresus.Core.Controllers
 						{
 							//	HACK
 							//	TODO: remove this
-							if (entity is BusinessDocumentEntity)
+
+							// HACK II
+							// There was already a hack here but I needed to add one more. When the
+							// Epsitec.Cresus.Core.Library and the Epsitec.Cresus.Core.Library.Business
+							// projects where not clearly separated, the type BusinessDocumentEntity
+							// was in the same project at this one. Now it is in another project and
+							// is not accessible anymore. Therefore, we rely on the name of the type
+							// for the check, instead of relying on the type itself. This works
+							// because BusinessDocumentEntity has no descendant classes, so we can
+							// get away by only checking the name of the type.That's ugly but since
+							// this code is already a hack that shouldn't be here in the first place
+							// (and that it will hopefully be removed once) there's no point in
+							// making something clean right here. A real fix would be to remove all
+							// this code and replacing it with something dynamic, like plugins or a
+							// subclass or whathever. But I don't know what Pierre intends to do
+							// with that...
+
+							if (entity.GetType ().Name == "BusinessDocumentEntity")
 							{
 								DocumentMetadataEntity example = new DocumentMetadataEntity ();
-								example.BusinessDocument = entity as BusinessDocumentEntity;
+								example.BusinessDocument = entity as AbstractDocumentEntity;
 								example.IsArchive = false;
 								yield return context.GetByExample<DocumentMetadataEntity> (example).FirstOrDefault ();
 							}
