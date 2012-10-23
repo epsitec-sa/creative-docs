@@ -121,6 +121,11 @@ namespace Epsitec.Aider
 		{
 			var activeScope = this.GetActiveScope ();
 
+			if (activeScope == null)
+			{
+				return null;
+			}
+
 			return this.GetUserScope (activeScope);
 		}
 

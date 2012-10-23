@@ -55,7 +55,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				.Select (s => this.GetScopeData (s))
 				.ToList ();
 
-			var activeScopeId = session.GetActiveUserScope().Id;
+			var activeScope = session.GetActiveUserScope ();
+
+			var activeScopeId = activeScope != null
+				? activeScope.Id
+				: null;
 
 			var content = new Dictionary<string, object> ()
 			{

@@ -46,12 +46,14 @@ function() {
     },
 
     getScopeDataCallback: function(options, success, response) {
-      var json;
+      var json, scopes, activeScopeId;
 
       json = Epsitec.Tools.processResponse(success, response);
       if (json === null) {
         return;
       }
+
+      scopes = json.content.scopes;
 
       this.comboBox.bindStore(
           Ext.create('Ext.data.Store', {
@@ -63,11 +65,19 @@ function() {
                 type: 'json'
               }
             }),
-            data: json.content.scopes
+            data: scopes
           })
       );
 
-      this.comboBox.select(json.content.activeId);
+      if (scopes.length === 0) {
+        this.comboBox.disable();
+      }
+
+      activeScopeId = json.content.activeId;
+
+      if (activeScopeId !== null) {
+        this.comboBox.select(activeScopeId);
+      }
 
       this.comboBox.on('change', this.onSelectionChangeCallback, this);
     },
