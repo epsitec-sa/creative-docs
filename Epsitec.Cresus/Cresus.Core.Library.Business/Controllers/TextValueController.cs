@@ -7,9 +7,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
-using Epsitec.Cresus.Core.Binders;
 using Epsitec.Cresus.Core.Dialogs;
-using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
