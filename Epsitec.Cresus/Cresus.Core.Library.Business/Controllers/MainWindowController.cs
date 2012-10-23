@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			public override bool CanCreate(DataViewOrchestrator host)
 			{
-				return host.MainViewController != null;
+				return host.ContainsComponent<MainViewController> ();
 			}
 		}
 
