@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Core.Factories
 				while (again)
 				{
 					again = false;
+					bool progress = false;
 
 					foreach (var factory in factories)
 					{
@@ -60,6 +61,8 @@ namespace Epsitec.Cresus.Core.Factories
 						{
 							continue;
 						}
+
+						again = true;
 
 						if (factory.CanCreate (host))
 						{
@@ -71,8 +74,13 @@ namespace Epsitec.Cresus.Core.Factories
 								System.Diagnostics.Debug.WriteLine (string.Format ("WARNING {2} slow component; {0} took {1}ms to register", type.FullName, ms, new string ('>', recursion)));
 							}
 
-							again = true;
+							progress = true;
 						}
+					}
+
+					if (again && !progress)
+					{
+						throw new System.Exception ("Cyclic dependence in components.");
 					}
 				}
 			}
