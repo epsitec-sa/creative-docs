@@ -41,7 +41,8 @@ Ext.define('Epsitec.cresus.webcore.Locale', {
         aboutLabel: 'A propos',
         logoutLabel: 'D\u00E9connexion',
         sortTitle: 'Configuration du tri',
-        scopeTitle: 'Cercles'
+        scopeTitle: 'Cercles',
+        windowTitle: 'Cr\u00E9sus.Core'
       };
     }
   }

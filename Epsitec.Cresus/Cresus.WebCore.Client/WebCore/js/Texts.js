@@ -148,6 +148,10 @@ function() {
 
       getScopeTitle: function() {
         return this.texts.scopeTitle;
+      },
+
+      getWindowTitle: function() {
+        return this.texts.windowTitle;
       }
     }
   });

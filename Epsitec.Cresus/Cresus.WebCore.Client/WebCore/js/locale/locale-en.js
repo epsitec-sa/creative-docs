@@ -40,7 +40,8 @@ Ext.define('Epsitec.cresus.webcore.Locale', {
         aboutLabel: 'About',
         logoutLabel: 'Logout',
         sortTitle: 'Sort selection',
-        scopeTitle: 'Scopes'
+        scopeTitle: 'Scopes',
+        windowTitle: 'Cr\u00E9sus.Core'
       };
     }
   }

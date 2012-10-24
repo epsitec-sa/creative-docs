@@ -9,7 +9,8 @@ Ext.Loader.setConfig({
 Ext.require([
   'Epsitec.cresus.webcore.LoginPanel',
   'Epsitec.cresus.webcore.Menu',
-  'Epsitec.cresus.webcore.TabManager'
+  'Epsitec.cresus.webcore.TabManager',
+  'Epsitec.cresus.webcore.Texts'
 ],
 function() {
   Ext.application({
@@ -23,11 +24,16 @@ function() {
     tabManager: null,
 
     launch: function() {
+      this.setupWindowTitle();
       this.fixLocalizationBug();
       this.showLoginPanel();
     },
 
     /* Additional methods */
+
+    setupWindowTitle: function() {
+      window.document.title = Epsitec.Texts.getWindowTitle();
+    },
 
     fixLocalizationBug: function() {
 
