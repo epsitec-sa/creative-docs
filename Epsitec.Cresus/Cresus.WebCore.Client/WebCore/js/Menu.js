@@ -85,7 +85,7 @@ function() {
       });
 
       return Ext.create('Ext.container.ButtonGroup', {
-        title: 'Scopes',
+        title: Epsitec.Texts.getScopeTitle(),
         headerPosition: 'bottom',
         items: [scopeSelector]
       });

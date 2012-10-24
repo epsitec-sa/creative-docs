@@ -141,6 +141,10 @@ Ext.define('Epsitec.cresus.webcore.Texts', {
 
     getSortTitle: function() {
       return 'Sort selection';
+    },
+
+    getScopeTitle: function() {
+      return 'Scopes';
     }
   }
 });
