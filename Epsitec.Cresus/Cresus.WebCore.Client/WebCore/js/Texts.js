@@ -1,150 +1,154 @@
-Ext.define('Epsitec.cresus.webcore.Texts', {
-  alternateClassName: ['Epsitec.Texts'],
+Ext.require([
+  'Epsitec.cresus.webcore.Locale'
+],
+function() {
+  Ext.define('Epsitec.cresus.webcore.Texts', {
+    alternateClassName: ['Epsitec.Texts'],
 
-  statics: {
-    getGlobalWarning: function() {
-      return '<i><b>ATTENTION:</b> Les modifications effectu\u00E9es ici ' +
-             'seront r\u00E9percut\u00E9es dans tous les enregistrements.</i>';
-    },
+    statics: {
 
-    getSortLabel: function() {
-      return 'Sort';
-    },
+      texts: Epsitec.Locale.getTexts(),
 
-    getRefreshLabel: function() {
-      return 'Refresh';
-    },
+      getGlobalWarning: function() {
+        return this.texts.globalwarning;
+      },
 
-    getRefreshTip: function() {
-      return 'Refresh';
-    },
+      getSortLabel: function() {
+        return this.texts.sortLabel;
+      },
 
-    getAddLabel: function() {
-      return 'Add';
-    },
+      getRefreshLabel: function() {
+        return this.texts.refreshLabel;
+      },
 
-    getAddTip: function() {
-      return 'Add a new item';
-    },
+      getRefreshTip: function() {
+        return this.texts.refreshTip;
+      },
 
-    getRemoveLabel: function() {
-      return 'Remove';
-    },
+      getAddLabel: function() {
+        return this.texts.addLabel;
+      },
 
-    getRemoveTip: function() {
-      return 'Remove this item';
-    },
+      getAddTip: function() {
+        return this.texts.addTip;
+      },
 
-    getCreateLabel: function() {
-      return 'Create';
-    },
+      getRemoveLabel: function() {
+        return this.texts.removeLabel;
+      },
 
-    getDeleteLabel: function() {
-      return 'Delete';
-    },
+      getRemoveTip: function() {
+        return this.texts.removeTip;
+      },
 
-    getResetLabel: function() {
-      return'Reset';
-    },
+      getCreateLabel: function() {
+        return this.texts.createLabel;
+      },
 
-    getSaveLabel: function() {
-      return 'Save';
-    },
+      getDeleteLabel: function() {
+        return this.texts.deleteLabel;
+      },
 
-    getOkLabel: function() {
-      return 'Ok';
-    },
+      getResetLabel: function() {
+        return this.texts.resetLabel;
+      },
 
-    getCancelLabel: function() {
-      return 'Cancel';
-    },
+      getSaveLabel: function() {
+        return this.texts.saveLabel;
+      },
 
-    getEmptySummaryText: function() {
-      return 'Empty';
-    },
+      getOkLabel: function() {
+        return this.texts.okLabel;
+      },
 
-    getEmptyItemText: function() {
-      // This is the long dash character.
-      return '\u2014';
-    },
+      getCancelLabel: function() {
+        return this.texts.cancelLabel;
+      },
 
-    getNullItemText: function() {
-      // This is the non breakable space (&nbsp;).
-      return '&#160;';
-    },
+      getEmptySummaryText: function() {
+        return this.texts.emptySummaryText;
+      },
 
-    getEmptyListText: function() {
-      return 'Nothing to display';
-    },
+      getEmptyItemText: function() {
 
-    getLoadingText: function() {
-      return '...';
-    },
+        return this.texts.emptyItemText;
+      },
 
-    getSummaryHeader: function() {
-      return 'Summary';
-    },
+      getNullItemText: function() {
+        return this.texts.nullItemText;
+      },
 
-    getEntityPickerTitle: function() {
-      return 'Entity selection';
-    },
+      getEmptyListText: function() {
+        return this.texts.emptyListText;
+      },
 
-    getErrorTitle: function() {
-      return 'Error';
-    },
+      getLoadingText: function() {
+        return this.texts.loadingText;
+      },
 
-    getErrorMessage: function() {
-      return 'An unexpected error occured while communicating with the ' +
-             'remote server';
-    },
+      getSummaryHeader: function() {
+        return this.texts.summaryHeader;
+      },
 
-    getServerErrorMessage: function() {
-      return 'An unexpected error occured on the remote server';
-    },
+      getEntityPickerTitle: function() {
+        return this.texts.entityPickerTitle;
+      },
 
-    getJsonErrorMessage: function() {
-      return 'An error occured while decoding the answer from the remote ' +
-             'server';
-    },
+      getErrorTitle: function() {
+        return this.texts.errorTitle;
+      },
 
-    getLoginTitle: function() {
-      return 'Cr\u00E9sus.Core Login';
-    },
+      getErrorMessage: function() {
+        return this.texts.errorMessage;
+      },
 
-    getLoginLabel: function() {
-      return 'Log in';
-    },
+      getServerErrorMessage: function() {
+        return this.texts.serverErrorMessage;
+      },
 
-    getUsernameLabel: function() {
-      return 'Username';
-    },
+      getJsonErrorMessage: function() {
+        return this.texts.jsonErrorMessage;
+      },
 
-    getPasswordLabel: function() {
-      return 'Password';
-    },
+      getLoginTitle: function() {
+        return this.texts.loginTitle;
+      },
 
-    getDatabasesTitle: function() {
-      return 'Databases';
-    },
+      getLoginLabel: function() {
+        return this.texts.loginLabel;
+      },
 
-    getToolsTitle: function() {
-      return 'Options';
-    },
+      getUsernameLabel: function() {
+        return this.texts.usernameLabel;
+      },
 
-    getAboutLabel: function() {
-      return 'About';
-    },
+      getPasswordLabel: function() {
+        return this.texts.passwordLabel;
+      },
 
-    getLogoutLabel: function() {
-      return 'Logout';
-    },
+      getDatabasesTitle: function() {
+        return this.texts.databasesTitle;
+      },
 
-    getSortTitle: function() {
-      return 'Sort selection';
-    },
+      getToolsTitle: function() {
+        return this.texts.toolsTitle;
+      },
 
-    getScopeTitle: function() {
-      return 'Scopes';
+      getAboutLabel: function() {
+        return this.texts.aboutLabel;
+      },
+
+      getLogoutLabel: function() {
+        return this.texts.logoutLabel;
+      },
+
+      getSortTitle: function() {
+        return this.texts.sortTitle;
+      },
+
+      getScopeTitle: function() {
+        return this.texts.scopeTitle;
+      }
     }
-  }
+  });
 });
