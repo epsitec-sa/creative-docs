@@ -12,7 +12,11 @@ using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using System;
 
+using System.Globalization;
+
 using System.IO;
+
+using System.Threading;
 
 
 namespace Epsitec.Cresus.WebCore.Server
@@ -27,11 +31,15 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			ConsoleCreator.RunWithConsole (() =>
 			{
-				this.Initialize ();
+				this.Initialize
+				(
+					uiCulture: CoreServerProgram.uiCulture
+				);
 				this.Run
 				(
 					nGinxAutorun: CoreServerProgram.nGinxAutorun,
 					nGinxPath: CoreServerProgram.nGinxPath,
+					uiCulture: CoreServerProgram.uiCulture,
 					uri: CoreServerProgram.baseUri,
 					nbCoreWorkers: CoreServerProgram.nbCoreWorkers
 				);
@@ -39,25 +47,27 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		private void Initialize()
+		private void Initialize(CultureInfo uiCulture)
 		{
 			Logger.LogToConsole ("Setting up server...");
-			
-			IconManager.BuildIcons (CoreServerProgram.iconDirectory.FullName);
 
+			Thread.CurrentThread.CurrentUICulture = uiCulture;
+			
 			TypeRosetta.InitializeResources ();
 			CoreContext.ExecutePendingSetupFunctions ();
+
+			IconManager.BuildIcons (CoreServerProgram.iconDirectory.FullName);
 
 			Logger.LogToConsole ("Server set up");
 		}
 
 
-		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers)
+		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers, CultureInfo uiCulture)
 		{		
 			Logger.LogToConsole ("Launching server...");
 
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
-			using (var coreServer = new CoreServer (nbCoreWorkers))
+			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
 			using (var nancyServer = new NancyServer (coreServer, uri))
 			{
 				Dumper.Instance.IsEnabled = CoreServerProgram.enableDumper;
@@ -73,6 +83,9 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Press [ENTER] to exit");
 			Console.ReadLine ();
 		}
+
+
+		private static readonly CultureInfo uiCulture = new CultureInfo ("fr-CH");
 
 
 		private static readonly FileInfo nGinxPath = new FileInfo ("C:\\nginx\\nginx.exe");

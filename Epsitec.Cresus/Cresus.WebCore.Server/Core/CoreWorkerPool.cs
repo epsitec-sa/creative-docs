@@ -9,6 +9,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Globalization;
+
 using System.Linq;
 
 
@@ -20,14 +22,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	{
 
 
-		public CoreWorkerPool(int nbCoreWorkers)
+		public CoreWorkerPool(int nbCoreWorkers, CultureInfo uiCulture)
 		{
 			this.workers = new List<CoreWorker>();
 			this.idleWorkers = new BlockingBag<CoreWorker> ();
 
 			for (int i = 0; i < nbCoreWorkers; i++)
 			{
-				var coreWorker = new CoreWorker ();
+				var coreWorker = new CoreWorker (uiCulture);
 
 				this.workers.Add (coreWorker);
 				this.idleWorkers.Add (coreWorker);				

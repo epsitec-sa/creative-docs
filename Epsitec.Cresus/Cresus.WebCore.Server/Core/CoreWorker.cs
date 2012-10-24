@@ -8,6 +8,10 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System;
 
+using System.Globalization;
+
+using System.Threading;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -26,7 +30,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// <summary>
 		/// Creates a new instance of <c>CoreWorker</c>.
 		/// </summary>
-		public CoreWorker()
+		/// <param name="uiCulture">The culture that should be used for doing UI stuff</param>
+		public CoreWorker(CultureInfo uiCulture)
 		{
 			this.workerThread = new WorkerThread ();
 
@@ -34,6 +39,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			try
 			{
+				this.workerThread.ExecuteSynchronously
+				(
+					() => Thread.CurrentThread.CurrentUICulture = uiCulture
+				);
+
 				this.workerThread.ExecuteSynchronously (() => workerApp = new WorkerApp ());
 
 				this.workerApp = workerApp;

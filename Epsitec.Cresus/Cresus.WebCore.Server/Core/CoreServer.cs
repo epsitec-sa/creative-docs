@@ -4,6 +4,8 @@ using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
 
 using System;
 
+using System.Globalization;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -13,9 +15,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 	{
 
 
-		public CoreServer(int nbCoreWorkers)
+		public CoreServer(int nbCoreWorkers, CultureInfo uiCulture)
 		{
-			var coreWorkerPool = new CoreWorkerPool (nbCoreWorkers);
+			var coreWorkerPool = new CoreWorkerPool (nbCoreWorkers, uiCulture);
 
 			this.coreWorkerPool = coreWorkerPool;
 			this.authenticationManager = new AuthenticationManager (coreWorkerPool);
