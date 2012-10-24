@@ -1,12 +1,10 @@
 Ext.require([
-
+  'Epsitec.cresus.webcore.Tools'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.ScopeSelector', {
     extend: 'Ext.container.Container',
     alternateClassName: ['Epsitec.ScopeSelector'],
-
-    /* Config */
 
     /* Properties */
 
