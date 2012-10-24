@@ -81,6 +81,7 @@
     <Compile Include="Core\Databases\Database.cs" />
     <Compile Include="NancyModules\ScopeModule.cs" />
     <Compile Include="NGinxServer.cs" />
+    <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache.cs" />
     <Compile Include="Core\AbstractLambdaCache`1.cs" />
@@ -155,6 +156,18 @@
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
+    <None Include="Resources\Cresus.WebCore.Server\Captions.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Cresus.WebCore.Server\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Cresus.WebCore.Server\Strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Cresus.WebCore.Server\Strings.en.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

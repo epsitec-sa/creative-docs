@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var errors = invalidItems.ToDictionary (
 					i => InvariantConverter.ToString (i.Item1.Id),
-					i => (object) "Invalid value"
+					i => (object) Res.Strings.IncorrectValue.ToSimpleText ()
 				);
 
 				return CoreResponse.FormFailure (errors);

@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				yield return new
 				{
 					id = Constants.KeyForNullValue,
-					text = Constants.TextForNullValue
+					text = Res.Strings.EmptyValue.ToSimpleText (),
 				};
 			}
 

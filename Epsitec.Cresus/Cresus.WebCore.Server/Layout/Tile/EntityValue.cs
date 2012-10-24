@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			{
 				return new EntityValue ()
 				{
-					Displayed = Constants.TextForNullValue,
+					Displayed = Res.Strings.EmptyValue.ToSimpleText (),
 					Submitted = Constants.KeyForNullValue,
 				};
 			}

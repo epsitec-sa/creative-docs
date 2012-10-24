@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var errors = new Dictionary<string, object> ()
 				{
-					{ "username" , "Incorrect username" },
-					{ "password" , "Incorrect password" },
+					{ "username" , Res.Strings.IncorrectUsername.ToSimpleText () },
+					{ "password" , Res.Strings.IncorrectPassword.ToSimpleText () },
 				};
 				
 				return CoreResponse.FormFailure (errors);
