@@ -1830,32 +1830,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 405);
 			}
 			
-			public static class AiderUser2
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/LVADC
-				public static readonly global::Epsitec.Common.Support.Druid Circles = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 397);
-				//	designer:cap/LVABC
-				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 395);
-				//	designer:cap/LVA89
-				public static readonly global::Epsitec.Common.Support.Druid UserName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 296);
-			}
-			
-			public static class AiderUserGroup2
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/LVAEC
-				public static readonly global::Epsitec.Common.Support.Druid Circles = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 398);
-				//	designer:cap/LVA99
-				public static readonly global::Epsitec.Common.Support.Druid GroupName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 297);
-			}
-			
 			public static class AiderUserRole
 			{
 				internal static void _Initialize()
@@ -2223,8 +2197,6 @@ namespace Epsitec.Aider
 			Fields.AiderRelationshipType._Initialize ();
 			Fields.AiderTown._Initialize ();
 			Fields.AiderUser._Initialize ();
-			Fields.AiderUser2._Initialize ();
-			Fields.AiderUserGroup2._Initialize ();
 			Fields.AiderUserRole._Initialize ();
 			Fields.AiderUserScope._Initialize ();
 			Fields.AiderWarningAction._Initialize ();
