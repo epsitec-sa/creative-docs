@@ -22,7 +22,7 @@ AiderFunctionDef = [LVA7A]
   <T>
     <t eid="@AiderPerson">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
+	<sort o="None" />
 	<disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA3]" title="Prénom" canSort="True" canFilter="True">
@@ -40,13 +40,13 @@ AiderFunctionDef = [LVA7A]
     </t>
     <t eid="@AiderGroup">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
+	<sort o="None" />
 	<disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderHousehold">$
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="foobar" canSort="True" canFilter="True">
-	<sort o="Ascending" />
+	<sort o="None" />
 	<disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAH9]" title="Nom" canSort="True" canFilter="True">
