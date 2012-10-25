@@ -10,8 +10,6 @@ submenuMisc = [LVA5D]
 AiderPerson = [LVAF]
 AiderGroup = [LVA54]
 AiderHousehold = [LVAI2]
-AiderPersonRelationship = [LVAV2]
-AiderAddress = [LVAJ2]
 AiderTown = [LVA65]
 AiderCountry = [LVAB5]
 AiderUser = [LVAHC]
@@ -20,44 +18,113 @@ AiderUserScope = [LVACC]
 AiderGroupDef = [LVA2A]
 AiderFunctionDef = [LVA7A]
 
-
 <meta>
   <T>
     <t eid="@AiderPerson">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA3]" title="Prénom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAL4].[LVAT2].[LVA55].[LVA95]" title="Localité" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVADB].[LVA84].[LVAA4]" title="Paroisse" canSort="False" canFilter="False">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderGroup">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderHousehold">
-    </t>
-    <t eid="@AiderPersonRelationship">
-    </t>
-    <t eid="@AiderAddress">
+    <t eid="@AiderHousehold">$
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="foobar" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAH9]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVA55].[LVA95]" title="Ville" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderTown">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVA95]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVAH8]" title="Code postal" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderCountry">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderCountry:[LVAD5]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderCountry:[LVAC5]" title="Code ISO" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderUser">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA9]" title="Nom d'utilisateur" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderUserRole">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUserRole:[LVAMC]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderUserScope">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUserScope:[LVAFC]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderGroupDef">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupDef:[LVA3A]" title="Nom" canSort="True" canFilter="True">
+	<sort o="Ascending" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderFunctionDef">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderFunctionDef:[LVA8A]" title="Nom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderFunctionDef:[LVAFA]" title="Type" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
     </t>
   </T>
   <D>
     <d n="AiderPerson" dg=""><R><r>@user</r></R></d>
     <d n="AiderGroup" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
     <d n="AiderHousehold" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d n="AiderPersonRelationship" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d n="AiderAddress" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderTown" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderCountry" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderUser" dg="@submenuDefs"><R><r>@user</r></R></d>
