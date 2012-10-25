@@ -224,14 +224,19 @@ namespace Epsitec.Aider
 				if (role.IsNotNull ())
 				{
 					scope = role.DefaultScopes.FirstOrDefault ();
+				}
 
-					if (scope.IsNull ())
-					{
-						scope = user.CustomScopes.FirstOrDefault ();
-					}
+				if (scope.IsNull ())
+				{
+					scope = user.CustomScopes.FirstOrDefault ();
+				}
+
+				if (scope.IsNull ())
+				{
+					scope = null;
 				}
 			}
-
+			
 			this.SetActiveScope (scope);
 
 			return scope;
