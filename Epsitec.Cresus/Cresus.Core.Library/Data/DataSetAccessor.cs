@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			IEnumerable<SortClause> sortClauses;
 
-			if (tableSettings.Sort.Any ())
+			if (tableSettings != null)
 			{
 				var settingsSort = tableSettings.Sort;
 
