@@ -158,7 +158,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		}
 
-		protected void BuildPathTemplate(System.Text.StringBuilder buffer)
+		private void BuildPathTemplate(System.Text.StringBuilder buffer)
 		{
 			if (this.parent != null)
 			{
