@@ -30,6 +30,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController1);
 
+			wall.AddBrick ()
+				.Icon ("Data.AiderGroup.People")
+				.Title (p => p.GetGroupTitle ())
+				.Text (p => p.GetGroupText ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.Attribute (BrickMode.SpecialController3);
+
 			//if (this.Entity.Warnings.Any () || true)
 			//{
 			//    wall.AddBrick (x => x.Warnings)

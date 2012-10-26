@@ -1,25 +1,22 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Controllers;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Entities.Helpers;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Extensions;
 
 using System;
 
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Aider.Controllers;
 
 
 namespace Epsitec.Aider.Entities
@@ -289,6 +286,11 @@ namespace Epsitec.Aider.Entities
 			// TODO
 		}
 
+		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
+		{
+			value = new AiderPersonGroupList (this);
+		}
+
 		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
 		{
 			if (this.householdList == null)
@@ -403,6 +405,23 @@ namespace Epsitec.Aider.Entities
 			var groups = repository.GetAllEntities ().OrderByDescending (x => x.EndDate ?? x.StartDate ?? distantPast).ToArray ();
 			*/
 
+		}
+
+
+		public FormattedText GetGroupTitle()
+		{
+			int nbGroups = this.Groups.Count;
+
+			return TextFormatter.FormatText ("Groupes (", nbGroups, ")");
+		}
+
+		public FormattedText GetGroupText()
+		{
+			var groups = this.Groups.Select (g => g.GetSummaryWithGroupName ());
+
+			var text = string.Join ("\n", groups);
+
+			return TextFormatter.FormatText (text);
 		}
 
 

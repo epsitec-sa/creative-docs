@@ -68,6 +68,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderUserRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderUserScopeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderUserViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController3.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupParticipantViewController.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Entities\AiderWarningActionEntity.cs" />
+    <Compile Include="Entities\Helpers\AiderPersonGroupList.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
@@ -195,6 +197,7 @@
     <Compile Include="Enumerations\UserRole.cs" />
     <Compile Include="Enumerations\ValidationState.cs" />
     <Compile Include="Tools\CoreDataManager.cs" />
+    <Compile Include="Entities\Helpers\IDateRangeExtensions.cs" />
     <Compile Include="Tools\IsoCountryNames.cs" />
     <Compile Include="Tools\ParishLocator.cs" />
   </ItemGroup>
