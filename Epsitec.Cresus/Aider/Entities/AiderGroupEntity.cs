@@ -3,13 +3,13 @@
 
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.Eerv;
-using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+
+using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -17,7 +17,6 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Cresus.Database;
 
 namespace Epsitec.Aider.Entities
 {
@@ -57,6 +56,16 @@ namespace Epsitec.Aider.Entities
 
 		public IEnumerable<AiderGroupEntity> FindSubgroups(BusinessContext businessContext)
 		{
+			// If we are at the maximum group level, there's no point in looking for sub groups in
+			// the database. We won't find any. So we return directly an empty sequence. Note that
+			// this optimization avoids to make a request with a group path longer than the maximum
+			// group path which Firebird don't like at all. It considers such requests invalid.
+
+			if (this.GroupLevel >= AiderGroupEntity.maxGroupLevel)
+			{
+				return Enumerable.Empty<AiderGroupEntity> ();
+			}
+			
 			var dataContext = businessContext.DataContext;
 
 			var example = new AiderGroupEntity ();
@@ -196,6 +205,8 @@ namespace Epsitec.Aider.Entities
 
 		private List<AiderGroupEntity> subgroupsList;
 		private List<AiderGroupParticipantEntity> participantsList;
+
+		private static readonly int maxGroupLevel = 6;
 
 	}
 }
