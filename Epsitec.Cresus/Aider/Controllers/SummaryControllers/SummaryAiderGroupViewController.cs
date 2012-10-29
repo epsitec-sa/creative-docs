@@ -3,7 +3,7 @@
 
 using Epsitec.Aider.Entities;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
@@ -11,7 +11,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	public sealed class SummaryAiderGroupViewController : SummaryViewController<AiderGroupEntity>
 	{
-		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderGroupEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
 			wall.AddBrick ();
 
@@ -21,11 +21,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Template ()
 				.End ();
 
-			wall.AddBrick (x => x.Participants)
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ();
+			wall.AddBrick ()
+				.Icon ("Data.AiderGroup.People")
+				.Title (p => p.GetParticipantsTitle ())
+				.Text (p => p.GetParticipantsSummary ())
+				.Attribute (BrickMode.SpecialController1);
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);

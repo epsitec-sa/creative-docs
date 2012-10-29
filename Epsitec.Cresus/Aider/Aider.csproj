@@ -60,6 +60,7 @@
     <Compile Include="AiderUserManager.cs" />
     <Compile Include="AiderUserSession.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Entities\AiderWarningActionEntity.cs" />
+    <Compile Include="Entities\Helpers\AiderGroupPersonList.cs" />
     <Compile Include="Entities\Helpers\AiderPersonGroupList.cs" />
     <Compile Include="Entities\Helpers\VirtualEventList.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />

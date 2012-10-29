@@ -3,8 +3,11 @@
 
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Entities.Helpers;
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -196,21 +199,39 @@ namespace Epsitec.Aider.Entities
 			value = this.subgroupsList;
 		}
 
-		partial void GetParticipants(ref IList<AiderGroupParticipantEntity> value)
+		partial void GetParticipants(ref IList<AiderPersonEntity> value)
 		{
 			if (this.participantsList == null)
 			{
-				var context = BusinessContextPool.GetCurrentContext (this);
-
-				this.participantsList = new List<AiderGroupParticipantEntity> ();
-				this.participantsList.AddRange (this.FindParticipants (context));
+				this.participantsList = new AiderGroupPersonList (this);
 			}
 
 			value = this.participantsList;
 		}
 
+
+		public FormattedText GetParticipantsTitle()
+		{
+			var nbParticipants = this.Participants.Count;
+
+			return TextFormatter.FormatText ("Particpants (", nbParticipants, ")");
+		}
+
+
+		public FormattedText GetParticipantsSummary()
+		{
+			var groups = this.Participants
+				.Select (g => g.GetCompactSummary ())
+				.CreateSummarySequence (10, "...");
+
+			var text = string.Join ("\n", groups);
+
+			return TextFormatter.FormatText (text);
+		}
+
+
 		private List<AiderGroupEntity> subgroupsList;
-		private List<AiderGroupParticipantEntity> participantsList;
+		private AiderGroupPersonList participantsList;
 
 		private static readonly int maxGroupLevel = 6;
 
