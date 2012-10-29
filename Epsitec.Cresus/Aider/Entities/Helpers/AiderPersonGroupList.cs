@@ -15,23 +15,13 @@ using System.Linq;
 namespace Epsitec.Aider.Entities.Helpers
 {
 	
-	public sealed class AiderPersonGroupList : VirtualList<AiderPersonEntity, AiderGroupParticipantEntity>
+	public sealed class AiderPersonGroupList : VirtualEventList<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
 
 
 		public AiderPersonGroupList(AiderPersonEntity entity)
 			: base (entity)
 		{
-			this.CollectionChanged += this.HandleCollectionChanged;
-		}
-
-
-		public override int MaxCount
-		{
-			get
-			{
-				return int.MaxValue;
-			}
 		}
 
 
@@ -60,63 +50,23 @@ namespace Epsitec.Aider.Entities.Helpers
 		}
 
 
-		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs eventArgs)
+		protected override void HandleCollectionAddition(AiderGroupParticipantEntity item)
 		{
-			switch (eventArgs.Action)
-			{
-				case CollectionChangedAction.Add:
-					this.HandleCollectionAddition (eventArgs);
-					break;
-				
-				case CollectionChangedAction.Remove:
-					this.HandleCollectionRemoval (eventArgs);
-					break;
-
-				case CollectionChangedAction.Replace:
-				case CollectionChangedAction.Reset:
-				case CollectionChangedAction.Move:
-					throw new NotSupportedException ();
-
-				default:
-					throw new NotImplementedException ();
-			}
+			item.Person = this.entity;
+			item.StartDate = Date.Today;
 		}
 
 
-		private void HandleCollectionAddition(CollectionChangedEventArgs eventArgs)
+		protected override void HandleCollectionRemoval(AiderGroupParticipantEntity item)
 		{
-			// Here we simply setup the newly created object so that it will appear in this list,
-			// otherwise we'll have an empty group participation with no group and person that we
-			// won't know that it was created with the intent of being attached to this person.
-
-			var newItem = (AiderGroupParticipantEntity) eventArgs.NewItems[0];
-
-			newItem.Person = this.entity;
-			newItem.StartDate = Date.Today;
-		}
-
-
-		private void HandleCollectionRemoval(CollectionChangedEventArgs eventArgs)
-		{
-			// Here we create a new group participation because the one removed is also deleted from
-			// the database, but we want to keep that information around.
-
-			var oldItem = (AiderGroupParticipantEntity) eventArgs.OldItems[0];
-
 			var businessContext = BusinessContextPool.GetCurrentContext (this.entity);
 
 			var newParticipation = businessContext.CreateEntity<AiderGroupParticipantEntity> ();
 
-			newParticipation.Person = oldItem.Person;
-			newParticipation.Group = oldItem.Group;
-			newParticipation.StartDate = oldItem.StartDate;
+			newParticipation.Person = item.Person;
+			newParticipation.Group = item.Group;
+			newParticipation.StartDate = item.StartDate;
 			newParticipation.EndDate = Date.Today;
-		}
-
-
-		protected override void ReplaceItems(IList<AiderGroupParticipantEntity> list)
-		{
-			// Nothing to do here, as we handle this case with the event handlers.
 		}
 
 

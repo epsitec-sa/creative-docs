@@ -91,6 +91,7 @@
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Entities\AiderWarningActionEntity.cs" />
     <Compile Include="Entities\Helpers\AiderPersonGroupList.cs" />
+    <Compile Include="Entities\Helpers\VirtualEventList.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
