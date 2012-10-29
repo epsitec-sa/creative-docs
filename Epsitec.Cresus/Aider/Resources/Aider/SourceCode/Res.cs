@@ -32,6 +32,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVA2D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 418));
+				//	designer:cap/LVG322
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupParticipant = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 67));
 				//	designer:cap/LVG102
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderHousehold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
 				//	designer:cap/LVG002
