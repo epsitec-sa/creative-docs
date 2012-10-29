@@ -475,15 +475,7 @@ namespace Epsitec.Common.Types
 					case System.TypeCode.Int64:		value = ((long)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					
 					case System.TypeCode.DateTime:
-						
-						// There might be a bug here, because the DateTime is converted to UTC time
-						// before being converted. Therefore we loose the time zone information for
-						// local DateTimes. I'm not sure whether this behavior is desired or if this
-						// is a bug, so I don't modify this code for know. Just keep in mind that it
-						// might cause problems with local DateTimes.
-						// Marc
-
-						value = ((System.DateTime)obj).ToUniversalTime ().ToString ("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
+						value = ((System.DateTime)obj).ToString ("o", System.Globalization.CultureInfo.InvariantCulture);
 						return true;
 				}
 			}
@@ -659,8 +651,13 @@ namespace Epsitec.Common.Types
 					value = new System.DateTime ();
 					return false;
 				}
+
+				//	We are expecting a string formatted as "2012-10-29T06:24:41.8134030+01:00"
+				//	(local time zone) or as "2012-10-29T05:24:41.8134030Z" (UTC). In versions
+				//	before October 2012, only UTC times were serialized.
+				//	See also http://msdn.microsoft.com/en-us/library/bb882584.aspx
 				
-				value = System.DateTime.Parse (text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal);
+				value = System.DateTime.Parse (text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind);
 				return true;
 			}
 			
