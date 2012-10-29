@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Entities.Helpers
 			{
 				return false;
 			}
-			else if (this.GetItems ().Count () == this.MaxCount)
+			else if (this.list.Count == this.MaxCount)
 			{
 				return false;
 			}
@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Entities.Helpers
 
 		public bool CanRemove(int index)
 		{
-			if ((index < 0) || (index >= this.GetItems ().Count ()))
+			if ((index < 0) || (index >= this.list.Count))
 			{
 				return false;
 			}
@@ -129,7 +129,7 @@ namespace Epsitec.Aider.Entities.Helpers
 
 		protected void Apply(System.Action<IList<T>> action)
 		{
-			var list = this.GetItems ().ToList ();
+			var list = new List<T>(this.list);
 			action (list);
 			this.ReplaceItems (list);
 		}
