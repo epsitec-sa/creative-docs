@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
 		{
-			int size = 100;
+			int size = 1000;
 
 			for (int i = 0; ;i += size)
 			{
