@@ -9,6 +9,7 @@ submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
 AiderPerson = [LVAF]
 AiderGroup = [LVA54]
+AiderGroupParticipant = [LVA73]
 AiderHousehold = [LVAI2]
 AiderTown = [LVA65]
 AiderCountry = [LVAB5]
@@ -40,6 +41,20 @@ AiderFunctionDef = [LVA7A]
     </t>
     <t eid="@AiderGroup">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+    </t>
+    <t eid="@AiderGroupParticipant">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVAA4]" title="Groupe" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA3]" title="Prenom" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
@@ -124,6 +139,7 @@ AiderFunctionDef = [LVA7A]
   <D>
     <d n="AiderPerson" dg=""><R><r>@user</r></R></d>
     <d n="AiderGroup" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
+    <d n="AiderGroupParticipant" dg=""><R><r>@user</r></R></d>
     <d n="AiderHousehold" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderTown" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d n="AiderCountry" dg="@submenuMisc"><R><r>@user</r></R></d>
