@@ -146,8 +146,6 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 		}
 
-		public AiderGroupDefEntity				EntityCache;
-
 		public string GetPathTemplate()
 		{
 			var buffer = new System.Text.StringBuilder ();
@@ -247,9 +245,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public AiderGroupDefEntity				EntityCache;
 		private EervGroupDefinition				parent;
 		private EervGroupDefinition				function;
-		private Enumerations.GroupNodeType			groupType;
+		private Enumerations.GroupNodeType		groupType;
 		private IList<EervGroupDefinition>		children;
 
 
