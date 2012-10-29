@@ -421,7 +421,9 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetGroupText()
 		{
-			var groups = this.Groups.Select (g => g.GetSummaryWithGroupName ());
+			var groups = this.Groups
+				.Select (g => g.GetSummaryWithGroupName ())
+				.CreateSummarySequence (10, "...");
 
 			var text = string.Join ("\n", groups);
 

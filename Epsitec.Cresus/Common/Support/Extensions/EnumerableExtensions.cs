@@ -281,6 +281,38 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 
+		/// <summary>
+		/// Creates a sequence of items that is truncated to a maximum number of elements, and adds
+		/// an item at the end of the sequence if it is longer than the maximum number of items.
+		/// This is useful for creating sequence such as ["A", "B", "C", "D", "E", "..."] where the
+		/// original sequence is longer.
+		/// </summary>
+		/// <param name="sequence">The original sequence</param>
+		/// <param name="maxLength">The maximum number of items in the new sequence (not including the last one).</param>
+		/// <param name="last">The item to be added at the end of the sequence.</param>
+		/// <returns></returns>
+		public static IEnumerable<T> CreateSummarySequence<T>(this IEnumerable<T> sequence, int maxLength, T last)
+		{
+			sequence.ThrowIfNull ("sequence");
+			maxLength.ThrowIf (x => x < 0, "maxLength");
+
+			int i = 0;
+
+			foreach (var item in sequence)
+			{
+				if (i == maxLength)
+				{
+					yield return last;
+					break;
+				}
+
+				i++;
+
+				yield return item;
+			}
+		}
+
+
 		[System.ThreadStatic]
 		private static System.Random dice;
 	}
