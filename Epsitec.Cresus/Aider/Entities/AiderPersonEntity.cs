@@ -288,7 +288,11 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
 		{
-			value = new AiderPersonGroupList (this);
+			if (this.groupList == null)
+			{
+				this.groupList = new AiderPersonGroupList (this);
+			}
+			value = this.groupList;
 		}
 
 		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
@@ -437,7 +441,8 @@ namespace Epsitec.Aider.Entities
 
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
-		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;
-		private Helpers.AiderPersonHouseholdList householdList;
+		private AiderPersonAdditionalContactAddressList additionalAddresses;
+		private AiderPersonHouseholdList householdList;
+		private AiderPersonGroupList groupList;
 	}
 }
