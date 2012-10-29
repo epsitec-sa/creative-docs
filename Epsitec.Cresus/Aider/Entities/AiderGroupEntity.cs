@@ -40,19 +40,25 @@ namespace Epsitec.Aider.Entities
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition,
 			/**/							  GroupPathInfo info)
 		{
+			var name = info.Name;
+			var level = info.Level;
+			var path = info.MapPath (groupDefinition);
+			
+			return AiderGroupEntity.Create (businessContext, groupDefinition, name, level, path);
+		}
+
+		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name, int level, string path)
+		{
 			var group = businessContext.CreateEntity<AiderGroupEntity> ();
 
-			group.Name = info.Name;
-			group.GroupLevel = info.Level;
-			group.Path = info.MapPath (groupDefinition);
-
-			if (groupDefinition != null)
-			{
-				group.GroupDef = groupDefinition;
-			}
+			group.Name = name;
+			group.GroupLevel = level;
+			group.Path = path;
+			group.GroupDef = groupDefinition;
 
 			return group;
 		}
+
 
 		public IEnumerable<AiderGroupEntity> FindSubgroups(BusinessContext businessContext)
 		{
