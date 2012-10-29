@@ -59,6 +59,6 @@ namespace Epsitec.Cresus.Core.Metadata
 		private static readonly System.Func<T, string, XElement> saveFunc;
 		private static readonly System.Func<XElement, T> restoreFunc;
 
-		private readonly T value;
+		private readonly T						value;
 	}
 }

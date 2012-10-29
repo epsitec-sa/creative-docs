@@ -97,6 +97,7 @@ namespace Epsitec.Cresus.Core.Metadata
 				new XAttribute (Strings.Value, this.constant.ToString ()));
 		}
 
+		
 		public static new ColumnFilterComparisonExpression Restore(XElement xml)
 		{
 			return new ColumnFilterComparisonExpression ()
@@ -107,13 +108,17 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 
+		#region Strings Class
+
 		private static class Strings
 		{
-			public const string ComparisonCode = "c";
-			public const string Value = "v";
+			public const string					ComparisonCode = "c";
+			public const string					Value = "v";
 		}
-		
-			
+
+		#endregion
+
+
 		private ColumnFilterComparisonCode		comparison;
 		private ColumnFilterConstant			constant;
 	}

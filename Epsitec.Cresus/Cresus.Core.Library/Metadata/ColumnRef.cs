@@ -24,7 +24,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.columnId = columnId;
 		}
 
-		public string Id
+		
+		public string							Id
 		{
 			get
 			{

@@ -234,6 +234,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			return ColumnFilterConstant.Parse (attribute.Value);
 		}
 		
+		
 		private static object FromValue(ColumnFilterConstantType type, string value)
 		{
 			if (string.IsNullOrEmpty (value))
@@ -363,7 +364,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		
+
+		#region Strings Class
+
 		private static class Strings
 		{
 			public const string UndefinedType   = "U";
@@ -379,6 +382,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public const string EntityKeyType   = "k";
 		}
 
+		#endregion
 
 		private readonly ColumnFilterConstantType type;
 		private readonly object					  value;

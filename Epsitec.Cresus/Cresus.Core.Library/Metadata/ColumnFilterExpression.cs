@@ -47,7 +47,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			return XmlNodeClassFactory.Restore<ColumnFilterExpression> (xml);
 		}
 		
-
 		public static Expression Compare(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
 			if (parameter.Type != expression.Type)
@@ -85,6 +84,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		
 		private static Expression CompareStrings(Expression parameter, ColumnFilterComparisonCode code, Expression expression)
 		{
 			if (parameter.Type != typeof (string))

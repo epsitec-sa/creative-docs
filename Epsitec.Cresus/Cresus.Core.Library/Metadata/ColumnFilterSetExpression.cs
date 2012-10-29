@@ -24,7 +24,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.values = new List<ColumnFilterConstant> ();
 		}
 
-		public ColumnFilterSetCode Predicate
+		
+		public ColumnFilterSetCode				Predicate
 		{
 			get
 			{
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 		
-		public IList<ColumnFilterConstant> Values
+		public IList<ColumnFilterConstant>		Values
 		{
 			get
 			{
@@ -44,8 +45,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-
-		public override bool IsValid
+		public override bool					IsValid
 		{
 			get
 			{
@@ -75,7 +75,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			return Expression.Call (null, method, arguments);
 		}
 
-
 		public override XElement Save(string xmlNodeName)
 		{
 			var predicate = new XAttribute (Strings.Predicate, InvariantConverter.ToString (EnumType.ConvertToInt (this.Predicate)));
@@ -87,6 +86,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			return new XElement (xmlNodeName, predicate, values);
 		}
 
+		
 		public static new ColumnFilterSetExpression Restore(XElement xml)
 		{
 			var predicate = InvariantConverter.ToEnum (xml.Attribute (Strings.Predicate), ColumnFilterSetCode.Undefined);
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		#endregion
 
 
-		private ColumnFilterSetCode							predicate;
-		private readonly IList<ColumnFilterConstant>		values;
+		private ColumnFilterSetCode					 predicate;
+		private readonly IList<ColumnFilterConstant> values;
 	}
 }

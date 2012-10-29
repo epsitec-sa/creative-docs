@@ -148,6 +148,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			};
 		}
 
+		#region Strings Class
 
 		private static class Strings
 		{
@@ -156,6 +157,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			public const string LowerBoundValue = "lv";
 			public const string UpperBoundValue = "uv";
 		}
+
+		#endregion
+
 
 		private ColumnFilterComparisonCode		lowerBoundComparison;
 		private ColumnFilterComparisonCode		upperBoundComparison;
