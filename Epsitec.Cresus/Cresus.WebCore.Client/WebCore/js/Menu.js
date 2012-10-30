@@ -97,13 +97,13 @@ function() {
       aboutButton = this.createButton({
         text: Epsitec.Texts.getAboutLabel(),
         handler: this.aboutButtonHandler,
-        iconCls: 'epsitec-cresus-core-images-base-softwareuserrole-icon32'
+        iconCls: 'epsitec-cresus-core-images-data-feedback-icon32'
       });
 
       logoutButton = this.createButton({
         text: Epsitec.Texts.getLogoutLabel(),
         handler: this.logoutButtonHandler,
-        iconCls: 'epsitec-cresus-core-images-usermanager-icon32'
+        iconCls: 'epsitec-cresus-core-images-action-logout-icon32'
       });
 
       return Ext.create('Ext.container.ButtonGroup', {

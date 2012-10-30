@@ -260,6 +260,8 @@
     <EmbeddedResource Include="Images\Data.AiderWarning.icon" />
     <EmbeddedResource Include="DataFiles\ParishAddresses.zip" />
     <EmbeddedResource Include="DataFiles\eCH-StreetFixes.zip" />
+    <EmbeddedResource Include="Images\Base.AiderGroupDefinition.icon" />
+    <EmbeddedResource Include="Images\Data.Scopes.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

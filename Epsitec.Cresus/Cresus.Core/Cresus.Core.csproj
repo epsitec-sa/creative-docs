@@ -566,6 +566,7 @@
     <EmbeddedResource Include="Images\Action.Mail.icon" />
     <EmbeddedResource Include="Images\ExportAccountingEntries.icon" />
     <EmbeddedResource Include="Images\Base.Comptabilité.icon" />
+    <EmbeddedResource Include="Images\Action.Logout.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
