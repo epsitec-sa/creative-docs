@@ -60,7 +60,7 @@ AiderFunctionDef = [LVA7A]
       </col>
     </t>
     <t eid="@AiderHousehold">$
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="foobar" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="Intitulé" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
