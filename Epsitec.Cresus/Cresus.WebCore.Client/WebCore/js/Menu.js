@@ -114,7 +114,12 @@ function() {
     },
 
     aboutButtonHandler: function() {
-      this.application.tabManager.showPageTab('About box', 'proxy/page/about');
+      var title, url;
+
+      title = Epsitec.Texts.getAboutLabel();
+      url = 'proxy/page/about';
+
+      this.application.tabManager.showPageTab(title, url);
     },
 
     logoutButtonHandler: function() {
