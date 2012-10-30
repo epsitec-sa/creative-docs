@@ -2,6 +2,10 @@ Ext.define('Epsitec.cresus.webcore.Tile', {
   extend: 'Ext.form.Panel',
   alternateClassName: ['Epsitec.Tile'],
 
+  /* Config */
+
+  minHeight: 50,
+
   /* Properties */
 
   column: null,
