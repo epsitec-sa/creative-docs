@@ -1293,7 +1293,7 @@ namespace Epsitec.Common.Support.EntityEngine
 					System.Diagnostics.Debug.Assert (constraint != null);
 
 					if ((this.context.SkipConstraintChecking) ||
-					(constraint.IsValidValue (newValue)))
+						(constraint.IsValidValue (newValue)))
 					{
 						object value;
 
