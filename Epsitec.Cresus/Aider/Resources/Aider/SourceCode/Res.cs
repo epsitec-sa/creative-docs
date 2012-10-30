@@ -73,6 +73,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVA2D
 				public const long ShowAiderGroupDef = 0x3F50000A0001A2L;
+				//	designer:cap/LVG322
+				public const long ShowAiderGroupParticipant = 0x3F500050000043L;
 				//	designer:cap/LVG102
 				public const long ShowAiderHousehold = 0x3F500050000001L;
 				//	designer:cap/LVG002
