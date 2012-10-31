@@ -260,8 +260,15 @@
     <EmbeddedResource Include="Images\Data.AiderWarning.icon" />
     <EmbeddedResource Include="DataFiles\ParishAddresses.zip" />
     <EmbeddedResource Include="DataFiles\eCH-StreetFixes.zip" />
-    <EmbeddedResource Include="Images\Base.AiderGroupDefinition.icon" />
-    <EmbeddedResource Include="Images\Data.Scopes.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroupDef.icon" />
+    <EmbeddedResource Include="Images\Data.AiderUserScope.icon" />
+    <EmbeddedResource Include="Images\Data.AiderUserRole.icon" />
+    <EmbeddedResource Include="Images\Data.AiderUser.icon" />
+    <EmbeddedResource Include="Images\Data.AiderCountry.icon" />
+    <EmbeddedResource Include="Images\Data.AiderTown.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroup.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroupParticipant.icon" />
+    <EmbeddedResource Include="Images\Data.ech_address.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
