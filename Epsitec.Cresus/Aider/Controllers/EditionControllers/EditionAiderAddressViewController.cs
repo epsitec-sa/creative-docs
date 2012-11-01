@@ -1,6 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 
@@ -25,6 +24,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Town)
 					.Field (x => x.Phone1)
 					.Field (x => x.Phone2)
+					.Field (x => x.Mobile)
 					.Field (x => x.Email)
 					.Field (x => x.Web)
 				.End ();
