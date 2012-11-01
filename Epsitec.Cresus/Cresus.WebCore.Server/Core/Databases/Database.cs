@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Dictionary<string, object> GetEntityData(DataContext dataContext, IdCache<string> columnIdCache, PropertyAccessorCache propertyAccessorCache, AbstractEntity entity)
+		public Dictionary<string, object> GetEntityData(DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
 			var id = Tools.GetEntityId (dataContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
@@ -141,9 +141,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			foreach (var column in this.Columns.Where (c => !c.Hidden))
 			{
-				var columnId = column.GetId (columnIdCache);
+				var columnId = column.GetId (caches);
 
-				data[columnId] = column.GetColumnData (propertyAccessorCache, entity);
+				data[columnId] = column.GetColumnData (caches, entity);
 			}
 
 			return data;
@@ -161,14 +161,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Dictionary<string, object> GetDataDictionary(IdCache<string> columnIdCache, PropertyAccessorCache propertyAccessorCache)
+		public Dictionary<string, object> GetDataDictionary(Caches caches)
 		{
 			var columns = this.columns
-				.Select (c => c.GetDataDictionary (columnIdCache, propertyAccessorCache))
+				.Select (c => c.GetDataDictionary (caches))
 				.ToList ();
 
 			var sorters = this.Sorters
-				.Select (s => s.GetDataDictionary (columnIdCache))
+				.Select (s => s.GetDataDictionary (caches))
 				.ToList ();
 
 			return new Dictionary<string, object> ()

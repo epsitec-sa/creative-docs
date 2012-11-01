@@ -28,14 +28,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetLayout(BusinessContext businessContext, dynamic parameters)
 		{
-			var propertyAccessors = this.CoreServer.PropertyAccessorCache;
-			var autoCreators = this.CoreServer.AutoCreatorCache;
-
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
 			var viewMode = Tools.ParseViewMode ((string) parameters.viewMode);
 			var viewId = Tools.ParseViewId ((string) parameters.viewId);
 
-			var layoutBuilder = new LayoutBuilder (businessContext, propertyAccessors, autoCreators);
+			var layoutBuilder = new LayoutBuilder (businessContext, this.CoreServer.Caches);
 			var layout = layoutBuilder.Build (entity, viewMode, viewId);
 
 			return CoreResponse.Success (layout);

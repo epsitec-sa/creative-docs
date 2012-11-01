@@ -40,10 +40,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response Edit(BusinessContext businessContext, dynamic parameters)
 		{
-			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
-
 			DynamicDictionary form = Request.Form;
-			var propertyAccessorsWithValues = EntityModule.GetPropertyAccessorsWithValues (businessContext, propertyAccessorCache, form)
+			var propertyAccessorsWithValues = EntityModule.GetPropertyAccessorsWithValues (businessContext, this.CoreServer.Caches, form)
 				.ToList ();
 
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
@@ -85,7 +83,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// NOTE Should we add some locking here in order to ensure that we don't have two
 			// clients that auto create an entity at the same time ?
 
-			var autoCreatorCache = this.CoreServer.AutoCreatorCache;
+			var autoCreatorCache = this.CoreServer.Caches.AutoCreatorCache;
 
 			var entity = Tools.ResolveEntity (businessContext, (string) Request.Form.entityId);
 			string autoCreatorId = Request.Form.autoCreatorId;
@@ -106,10 +104,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, DynamicDictionary form)
+		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, Caches caches, DynamicDictionary form)
 		{
 			foreach (var propertyAccessorId in form.GetDynamicMemberNames ())
 			{
+				var propertyAccessorCache = caches.PropertyAccessorCache;
 				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
 				var value = (DynamicDictionaryValue) form[propertyAccessorId];
 

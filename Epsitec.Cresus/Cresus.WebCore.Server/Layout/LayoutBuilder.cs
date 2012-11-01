@@ -32,11 +32,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public LayoutBuilder(BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
+		public LayoutBuilder(BusinessContext businessContext, Caches caches)
 		{
 			this.businessContext = businessContext;
-			this.propertyAccessorCache = propertyAccessorCache;
-			this.autoCreatorCache = autoCreatorCache;
+			this.caches = caches;
 		}
 
 
@@ -57,8 +56,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private IEnumerable<ITileData> GetTileData(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
 			var brickWall = Mason.BuildBrickWall (entity, viewMode, viewId);
-			
-			return Carpenter.BuildTileData (brickWall, this.propertyAccessorCache, this.autoCreatorCache);
+
+			return Carpenter.BuildTileData (brickWall, this.caches);
 		}
 
 
@@ -106,10 +105,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private readonly BusinessContext businessContext;
 
 
-		private readonly PropertyAccessorCache propertyAccessorCache;
-
-
-		private readonly AutoCreatorCache autoCreatorCache;
+		private readonly Caches caches;
 
 
 	}

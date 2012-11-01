@@ -69,10 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string databaseName = parameters.name;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
-			var columnIdCache = this.CoreServer.ColumnIdCache;
-			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
-
-			var content = database.GetDataDictionary (columnIdCache, propertyAccessorCache);
+			var content = database.GetDataDictionary (this.CoreServer.Caches);
 
 			return CoreResponse.Success (content);
 		}
@@ -109,12 +106,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (var dataSet = database.GetDataSetAccessor (dataSetGetter))
 			{
 				var dataContext = dataSet.IsolatedDataContext;
-				var columnIdCache = this.CoreServer.ColumnIdCache;
-				var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
 				var total = dataSet.GetItemCount ();
 				var entities = dataSet.GetItems (start, limit)
-					.Select (e => database.GetEntityData (dataContext, columnIdCache, propertyAccessorCache, e))
+					.Select (e => database.GetEntityData (dataContext, this.CoreServer.Caches, e))
 					.ToList ();
 
 				var content = new Dictionary<string, object> ()
@@ -154,7 +149,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private string ParseColumnName(string id)
 		{
-			return this.CoreServer.ColumnIdCache.GetItem (id);
+			return this.CoreServer.Caches.ColumnIdCache.GetItem (id);
 		}
 
 
@@ -213,7 +208,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private EntityColumnFilter ParseColumnFilter(Column column, Dictionary<string, object> filter)
 		{
 			var lambda = column.LambdaExpression;
-			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
 			var propertyAccessor = (AbstractStringPropertyAccessor) propertyAccessorCache.Get (lambda);
 
 			var type = (string) filter["type"];
@@ -398,13 +393,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string databaseName = Request.Form.databaseName;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
-			var columnIdCache = this.CoreServer.ColumnIdCache;
-			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
-			
 			var dataContext = businessContext.DataContext;
 
 			var entity = database.CreateEntity (businessContext);
-			var entityData = database.GetEntityData (dataContext, columnIdCache, propertyAccessorCache, entity);
+			var entityData = database.GetEntityData (dataContext, this.CoreServer.Caches, entity);
 
 			return CoreResponse.Success (entityData);
 		}

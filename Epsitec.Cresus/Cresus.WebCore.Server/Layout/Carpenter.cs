@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
 
+using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Layout.TileData;
 
 using System;
@@ -35,20 +36,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
+		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, Caches caches)
 		{
 			bool isFirst = true;
 
 			foreach (var brick in brickWall.Bricks)
 			{
-				yield return Carpenter.BuildTileData (brick, propertyAccessorCache, autoCreatorCache, isFirst);
+				yield return Carpenter.BuildTileData (brick, caches, isFirst);
 
 				isFirst = false;
 			}
 		}
 
 
-		private static ITileData BuildTileData(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache, bool isFirst)
+		private static ITileData BuildTileData(Brick brick, Caches caches, bool isFirst)
 		{
 			var viewMode = Carpenter.GetTileViewMode (brick);
 
@@ -58,13 +59,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Edition:
-					return Carpenter.BuildEditionTileDataItem (brick, propertyAccessorCache);
+					return Carpenter.BuildEditionTileDataItem (brick, caches);
 
 				case ViewControllerMode.None:
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Summary:
-					return Carpenter.BuildSummaryTileDataItem (brick, propertyAccessorCache, autoCreatorCache, isFirst);
+					return Carpenter.BuildSummaryTileDataItem (brick, caches, isFirst);
 
 				default:
 					throw new NotImplementedException ();
@@ -88,13 +89,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache, bool isFirst)
+		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, Caches caches, bool isFirst)
 		{
 			var summaryTileData = Carpenter.CreateSummaryTileData ();
 
 			var summaryBrick = Carpenter.GetSummaryBrick (brick);
 
-			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData, propertyAccessorCache, autoCreatorCache);
+			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData, caches);
 
 			summaryTileData.IsRoot = isFirst;
 
@@ -128,7 +129,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
+		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData, Caches caches)
 		{
 			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
 
@@ -138,9 +139,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			summaryTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 			summaryTileData.TextGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Text);
 
-			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData, autoCreatorCache);
+			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData, caches);
 
-			summaryTileData.Template = Carpenter.GetOptionalTemplate (brick, propertyAccessorCache);
+			summaryTileData.Template = Carpenter.GetOptionalTemplate (brick, caches);
 		}
 
 
@@ -248,11 +249,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static void PopulateSummaryTileDataWithAttributes(Brick brick, SummaryTileData summaryTileData, AutoCreatorCache autoCreatorCache)
+		private static void PopulateSummaryTileDataWithAttributes(Brick brick, SummaryTileData summaryTileData, Caches caches)
 		{
 			foreach (var brickMode in Carpenter.GetBrickModes (brick))
 			{
-				Carpenter.PupulateSummaryTileDataWithAttribute (brick, brickMode, summaryTileData, autoCreatorCache);
+				Carpenter.PupulateSummaryTileDataWithAttribute (brick, brickMode, summaryTileData, caches);
 			}
 		}
 
@@ -267,7 +268,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static void PupulateSummaryTileDataWithAttribute(Brick brick, BrickMode brickMode, SummaryTileData summaryTileData, AutoCreatorCache autoCreatorCache)
+		private static void PupulateSummaryTileDataWithAttribute(Brick brick, BrickMode brickMode, SummaryTileData summaryTileData, Caches caches)
 		{
 			// TODO Implement other brick modes ?
 
@@ -286,7 +287,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					break;
 
 				case BrickMode.AutoCreateNullEntity:
-					summaryTileData.AutoCreator = autoCreatorCache.Get (brick.GetLambda ());
+					summaryTileData.AutoCreator = caches.AutoCreatorCache.Get (brick.GetLambda ());
 					break;
 
 				default:
@@ -299,7 +300,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static CollectionTileData GetOptionalTemplate(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static CollectionTileData GetOptionalTemplate(Brick brick, Caches caches)
 		{
 			var templateBrickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
 
@@ -307,7 +308,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				var templateBrick = templateBrickProperty.Value.Brick;
 
-				return Carpenter.GetTemplate (brick, templateBrick, propertyAccessorCache);
+				return Carpenter.GetTemplate (brick, templateBrick, caches);
 			}
 			else
 			{
@@ -316,9 +317,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static CollectionTileData GetTemplate(Brick brick, Brick templateBrick, PropertyAccessorCache propertyAccessorCache)
+		private static CollectionTileData GetTemplate(Brick brick, Brick templateBrick, Caches caches)
 		{
 			var lambda = brick.GetLambda ();
+			var propertyAccessorCache = caches.PropertyAccessorCache;
 			var propertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessorCache.Get (lambda);
 
 			return new CollectionTileData ()
@@ -354,7 +356,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static EditionTileData BuildEditionTileDataItem(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static EditionTileData BuildEditionTileDataItem(Brick brick, Caches caches)
 		{
 			var editionTileData = new EditionTileData ();
 
@@ -362,14 +364,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			editionTileData.EntityType = brick.GetFieldType ();
 			editionTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 
-			editionTileData.Bricks.AddRange (Carpenter.BuildEditionData (brick, propertyAccessorCache));
+			editionTileData.Bricks.AddRange (Carpenter.BuildEditionData (brick, caches));
 			editionTileData.Includes.AddRange (Carpenter.BuildIncludeData (brick));
 
 			return editionTileData;
 		}
 
 
-		private static IEnumerable<AbstractEditionTilePartData> BuildEditionData(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static IEnumerable<AbstractEditionTilePartData> BuildEditionData(Brick brick, Caches caches)
 		{
 			var editionData = new List<AbstractEditionTilePartData> ();
 
@@ -378,7 +380,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				switch (property.Key)
 				{
 					case BrickPropertyKey.Input:
-						editionData.AddRange (Carpenter.BuildInputData (property.Brick, propertyAccessorCache));
+						editionData.AddRange (Carpenter.BuildInputData (property.Brick, caches));
 						break;
 
 					case BrickPropertyKey.Separator:
@@ -411,7 +413,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractEditionTilePartData> BuildInputData(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static IEnumerable<AbstractEditionTilePartData> BuildInputData(Brick brick, Caches caches)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
 
@@ -420,36 +422,37 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				switch (brickProperty.Key)
 				{
 					case BrickPropertyKey.HorizontalGroup:
-						yield return Carpenter.BuildHorizontalGroupData (brickProperty.Brick, propertyAccessorCache);
+						yield return Carpenter.BuildHorizontalGroupData (brickProperty.Brick, caches);
 						break;
 
 					case BrickPropertyKey.Field:
-						yield return Carpenter.BuildFieldData (propertyAccessorCache, brickProperties, brickProperty);
+						yield return Carpenter.BuildFieldData (caches, brickProperties, brickProperty);
 						break;
 				}
 			}
 		}
 
 
-		private static AbstractEditionTilePartData BuildHorizontalGroupData(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static AbstractEditionTilePartData BuildHorizontalGroupData(Brick brick, Caches caches)
 		{
 			var horizontalGroupData = new HorizontalGroupData ()
 			{
 				Title = Carpenter.GetHorizontalGroupTitle (brick),
 			};
 
-			horizontalGroupData.Fields.AddRange (Carpenter.BuildHorizontalFieldData (brick, propertyAccessorCache));
+			horizontalGroupData.Fields.AddRange (Carpenter.BuildHorizontalFieldData (brick, caches));
 
 			return horizontalGroupData;
 		}
 
 
-		private static AbstractEditionTilePartData BuildFieldData(PropertyAccessorCache propertyAccessorCache, BrickPropertyCollection brickProperties, BrickProperty fieldProperty)
+		private static AbstractEditionTilePartData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty)
 		{
 			var expression = fieldProperty.ExpressionValue;
 			var lambda = (LambdaExpression) expression;
 			
 			var title = Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression);
+			var propertyAccessorCache = caches.PropertyAccessorCache;
 			var	propertyAccessor = propertyAccessorCache.Get (lambda);
 			var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
 
@@ -515,7 +518,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Brick brick, Caches caches)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
 
@@ -524,6 +527,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				var lambda = (LambdaExpression) brickProperty.ExpressionValue;
 
 				var title = FormattedText.Empty;
+				var propertyAccessorCache = caches.PropertyAccessorCache;
 				var propertyAccessor = propertyAccessorCache.Get (lambda);
 				var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
 

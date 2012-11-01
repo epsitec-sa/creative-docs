@@ -49,7 +49,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var deletedKey = EntityKey.Parse (deletedEntityId);
 
 			string propertyAccessorId = Request.Form.propertyAccessorId;
-			var propartyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
+			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
+			var propartyAccessor = propertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propartyAccessor == null)
 			{
@@ -92,7 +93,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var newEntity = o as AbstractEntity;
 
 			string propertyAccessorId = Request.Form.propertyAccessorId;
-			var propertyAccessor = this.CoreServer.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
+			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
+			var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propertyAccessor == null)
 			{

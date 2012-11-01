@@ -1,7 +1,5 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
@@ -92,38 +90,38 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public object GetColumnData(PropertyAccessorCache propertyAccessorCache, AbstractEntity entity)
+		public object GetColumnData(Caches caches, AbstractEntity entity)
 		{
-			var propertyAccessor = propertyAccessorCache.Get (this.LambdaExpression);		
+			var propertyAccessor = caches.PropertyAccessorCache.Get (this.LambdaExpression);		
 			var stringPropertyAccessor = (AbstractStringPropertyAccessor) propertyAccessor;
 
 			return stringPropertyAccessor.GetValue (entity);
 		}
 
 
-		public Dictionary<string, object> GetDataDictionary(IdCache<string> columnIdCache, PropertyAccessorCache propertyAccessorCache)
+		public Dictionary<string, object> GetDataDictionary(Caches caches)
 		{
 			return new Dictionary<string, object> ()
 			{
 				{ "title", this.Title },
-				{ "name", this.GetId (columnIdCache) },
-				{ "type", this.GetColumnTypeData (propertyAccessorCache) },
+				{ "name", this.GetId (caches) },
+				{ "type", this.GetColumnTypeData (caches) },
 				{ "hidden", this.Hidden },
 				{ "sortable", this.Sortable },
-				{ "filter", this.GetFilterData (propertyAccessorCache) },
+				{ "filter", this.GetFilterData (caches) },
 			};
 		}
 
 
-		public string GetId(IdCache<string> columnIdCache)
+		public string GetId(Caches caches)
 		{
-			return columnIdCache.GetId (this.Name);
+			return caches.ColumnIdCache.GetId (this.Name);
 		}
 
 
-		private Dictionary<string, object> GetColumnTypeData(PropertyAccessorCache propertyAccessorCache)
+		private Dictionary<string, object> GetColumnTypeData(Caches caches)
 		{
-			var propertyAccessorType = this.GetPropertyAccessorType (propertyAccessorCache);
+			var propertyAccessorType = this.GetPropertyAccessorType (caches);
 
 			var data = new Dictionary<string, object> ()
 			{
@@ -139,10 +137,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private PropertyAccessorType GetPropertyAccessorType(PropertyAccessorCache propertyAccessorCache)
+		private PropertyAccessorType GetPropertyAccessorType(Caches caches)
 		{
 			var lambdaExpression = this.LambdaExpression;
-			var propertyAccessor = propertyAccessorCache.Get (lambdaExpression);
+			var propertyAccessor = caches.PropertyAccessorCache.Get (lambdaExpression);
 
 			return propertyAccessor.PropertyAccessorType;
 		}
@@ -180,14 +178,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private Dictionary<string, object> GetFilterData(PropertyAccessorCache propertyAccessorCache)
+		private Dictionary<string, object> GetFilterData(Caches caches)
 		{
 			var data = new Dictionary<string, object> ()
 			{		
 				{ "filterable", this.Filterable },
 			};
 
-			var propertyAccessorType = this.GetPropertyAccessorType (propertyAccessorCache);
+			var propertyAccessorType = this.GetPropertyAccessorType (caches);
 
 			if (this.Filterable && propertyAccessorType == PropertyAccessorType.Enumeration)
 			{
