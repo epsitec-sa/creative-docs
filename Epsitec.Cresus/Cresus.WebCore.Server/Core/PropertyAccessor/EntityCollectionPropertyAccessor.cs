@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 	{
 
 
-		public EntityCollectionPropertyAccessor(LambdaExpression lambda, int id)
+		public EntityCollectionPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
 			this.collectionType = lambda.ReturnType.GetGenericArguments ().Single ();

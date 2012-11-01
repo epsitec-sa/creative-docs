@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new DecimalField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (decimalPropertyAccessor.Id),
+				PropertyAccessorId = decimalPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (decimal?) decimalPropertyAccessor.GetValue (entity)

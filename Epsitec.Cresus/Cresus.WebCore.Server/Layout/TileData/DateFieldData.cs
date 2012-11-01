@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new DateField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (datePropertyAccessor.Id),
+				PropertyAccessorId = datePropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) datePropertyAccessor.GetValue (entity),

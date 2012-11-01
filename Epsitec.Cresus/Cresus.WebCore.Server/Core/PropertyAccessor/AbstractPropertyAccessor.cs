@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 	{
 
 
-		public AbstractPropertyAccessor(LambdaExpression lambda, int id)
+		public AbstractPropertyAccessor(LambdaExpression lambda, string id)
 		{
 			this.id = id;
 			this.type = lambda.ReturnType;
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public int Id
+		public string Id
 		{
 			get
 			{
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		public abstract bool CheckValue(AbstractEntity entity, object value);
 
 
-		public static AbstractPropertyAccessor Create(LambdaExpression lambda, int id)
+		public static AbstractPropertyAccessor Create(LambdaExpression lambda, string id)
 		{
 			var type = lambda.ReturnType;
 
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 
 
-		private readonly int id;
+		private readonly string id;
 
 
 		private readonly Type type;

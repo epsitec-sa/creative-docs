@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			if (invalidItems.Any ())
 			{
 				var errors = invalidItems.ToDictionary (
-					i => InvariantConverter.ToString (i.Item1.Id),
+					i => i.Item1.Id,
 					i => (object) Res.Strings.IncorrectValue.ToSimpleText ()
 				);
 
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var autoCreatorCache = this.CoreServer.AutoCreatorCache;
 
 			var entity = Tools.ResolveEntity (businessContext, (string) Request.Form.entityId);
-			var autoCreatorId = InvariantConverter.ParseInt ((string) Request.Form.autoCreatorId);
+			string autoCreatorId = Request.Form.autoCreatorId;
 			var autoCreator = autoCreatorCache.Get (autoCreatorId);
 
 			var child = autoCreator.Execute (businessContext, entity);
@@ -108,11 +108,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, DynamicDictionary form)
 		{
-			foreach (var rawPropertyAccessorId in form.GetDynamicMemberNames ())
+			foreach (var propertyAccessorId in form.GetDynamicMemberNames ())
 			{
-				var propertyAccessorId = InvariantConverter.ParseInt (rawPropertyAccessorId);
 				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
-				var value = (DynamicDictionaryValue) form[rawPropertyAccessorId];
+				var value = (DynamicDictionaryValue) form[propertyAccessorId];
 
 				var convertedValue = EntityModule.ConvertValue (businessContext, propertyAccessor, value);
 

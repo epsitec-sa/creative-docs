@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 	{
 		
 		
-		public DecimalPropertyAccessor(LambdaExpression lambda, int id)
+		public DecimalPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{		
 		}

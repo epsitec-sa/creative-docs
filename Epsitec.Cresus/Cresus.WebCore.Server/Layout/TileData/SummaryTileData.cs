@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Text = null,
 				Title = null,
 				EntityType = layoutBuilder.GetTypeName (this.Template.EntityType),
-				PropertyAccessorId = InvariantConverter.ToString (this.Template.PropertyAccessor.Id),
+				PropertyAccessorId = this.Template.PropertyAccessor.Id,
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,	
 			};
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Text = this.Template.TextGetter (entity).ToString (),
 				Title = this.Template.TitleGetter (entity).ToString (),
 				EntityType = layoutBuilder.GetTypeName (this.Template.EntityType),
-				PropertyAccessorId = InvariantConverter.ToString (this.Template.PropertyAccessor.Id),
+				PropertyAccessorId = this.Template.PropertyAccessor.Id,
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,
 			};
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		{
 			return this.AutoCreator == null
 				? null
-				: InvariantConverter.ToString (this.AutoCreator.Id);
+				: this.AutoCreator.Id;
 		}
 
 

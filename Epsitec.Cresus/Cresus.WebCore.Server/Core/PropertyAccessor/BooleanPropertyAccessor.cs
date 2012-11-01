@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 	{
 
 
-		public BooleanPropertyAccessor(LambdaExpression lambda, int id)
+		public BooleanPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{		
 		}

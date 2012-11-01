@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new IntegerField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (integerPropertyAccessor.Id),
+				PropertyAccessorId = integerPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (long?) integerPropertyAccessor.GetValue (entity),

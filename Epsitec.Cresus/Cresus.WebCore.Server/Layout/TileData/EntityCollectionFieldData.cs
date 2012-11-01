@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new EntityCollectionField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (entityCollectionPropertyAccessor.Id),
+				PropertyAccessorId = entityCollectionPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				TypeName = this.GetTypeName (layoutBuilder, entityCollectionPropertyAccessor.Type),

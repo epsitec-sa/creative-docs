@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new EnumerationField ()
 			{
-				PropertyAccessorId = InvariantConverter.ToString (enumerationPropertyAccessor.Id),
+				PropertyAccessorId = enumerationPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) enumerationPropertyAccessor.GetValue (entity),

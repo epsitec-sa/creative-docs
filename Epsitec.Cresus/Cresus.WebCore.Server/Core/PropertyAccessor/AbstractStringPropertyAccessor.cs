@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		// validator. This implies that the value is being converted twice, which is stupid.
 
 
-		public AbstractStringPropertyAccessor(LambdaExpression lambda, int id)
+		public AbstractStringPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
 			this.marshalerFactory = this.GetMarshalerFactory (lambda);

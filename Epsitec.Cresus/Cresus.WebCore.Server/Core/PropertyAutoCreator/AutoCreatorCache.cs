@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 	{
 
 
-		protected override AutoCreator Create(LambdaExpression lambda, int id)
+		protected override AutoCreator Create(LambdaExpression lambda, string id)
 		{
 			return new AutoCreator (lambda, id);
 		}
