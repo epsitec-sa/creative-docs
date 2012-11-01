@@ -61,6 +61,7 @@
     <Compile Include="Core\Databases\Sorter.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
+    <Compile Include="Core\IdCache.cs" />
     <Compile Include="Core\ItemCache.cs" />
     <Compile Include="Core\PropertyAccessor\BooleanPropertyAccessor.cs" />
     <Compile Include="Core\PropertyAccessor\DatePropertyAccessor.cs" />

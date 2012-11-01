@@ -69,7 +69,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string databaseName = parameters.name;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
-			var content = database.GetDataDictionary (this.CoreServer.PropertyAccessorCache);
+			var columnIdCache = this.CoreServer.ColumnIdCache;
+			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+
+			var content = database.GetDataDictionary (columnIdCache, propertyAccessorCache);
 
 			return CoreResponse.Success (content);
 		}
@@ -106,11 +109,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (var dataSet = database.GetDataSetAccessor (dataSetGetter))
 			{
 				var dataContext = dataSet.IsolatedDataContext;
+				var columnIdCache = this.CoreServer.ColumnIdCache;
 				var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
 
 				var total = dataSet.GetItemCount ();
 				var entities = dataSet.GetItems (start, limit)
-					.Select (e => database.GetEntityData (dataContext, propertyAccessorCache, e))
+					.Select (e => database.GetEntityData (dataContext, columnIdCache, propertyAccessorCache, e))
 					.ToList ();
 
 				var content = new Dictionary<string, object> ()
@@ -134,7 +138,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 					if (data.Length == 2)
 					{
-						var name = data[0];
+						var name = this.ParseColumnName (data[0]);
 						var columnId = database.Columns.First (c => c.Name == name).MetaData.Id;
 						var entityColumnSort = new EntityColumnSort ()
 						{
@@ -145,6 +149,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					}
 				}
 			}
+		}
+
+
+		private string ParseColumnName(string id)
+		{
+			return this.CoreServer.ColumnIdCache.GetItem (id);
 		}
 
 
@@ -193,9 +203,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Column ParseColumn(Core.Databases.Database database, Dictionary<string, object> filter)
 		{
-			var field = (string) filter["field"];
+			var fieldId = (string) filter["field"];
+			var fieldName = this.ParseColumnName (fieldId);
 
-		    return database.Columns.First (c => c.Name == field);
+		    return database.Columns.First (c => c.Name == fieldName);
 		}
 
 
@@ -387,11 +398,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string databaseName = Request.Form.databaseName;
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
+			var columnIdCache = this.CoreServer.ColumnIdCache;
 			var propertyAccessorCache = this.CoreServer.PropertyAccessorCache;
+			
 			var dataContext = businessContext.DataContext;
 
 			var entity = database.CreateEntity (businessContext);
-			var entityData = database.GetEntityData (dataContext, propertyAccessorCache, entity);
+			var entityData = database.GetEntityData (dataContext, columnIdCache, propertyAccessorCache, entity);
 
 			return CoreResponse.Success (entityData);
 		}

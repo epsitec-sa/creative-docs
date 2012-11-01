@@ -10,6 +10,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 using System.Linq.Expressions;
 
 
@@ -49,7 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			get
 			{
-				return InvariantConverter.ToString (this.metadata.CaptionId.ToLong ());
+				return this.metadata.Path.FieldPath;
 			}
 		}
 
@@ -99,17 +101,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Dictionary<string, object> GetDataDictionary(PropertyAccessorCache propertyAccessorCache)
+		public Dictionary<string, object> GetDataDictionary(IdCache<string> columnIdCache, PropertyAccessorCache propertyAccessorCache)
 		{
 			return new Dictionary<string, object> ()
 			{
 				{ "title", this.Title },
-				{ "name", this.Name },
+				{ "name", this.GetId (columnIdCache) },
 				{ "type", this.GetColumnTypeData (propertyAccessorCache) },
 				{ "hidden", this.Hidden },
 				{ "sortable", this.Sortable },
 				{ "filter", this.GetFilterData (propertyAccessorCache) },
 			};
+		}
+
+
+		public string GetId(IdCache<string> columnIdCache)
+		{
+			return columnIdCache.GetId (this.Name);
 		}
 
 

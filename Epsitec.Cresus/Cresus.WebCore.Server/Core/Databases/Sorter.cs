@@ -40,11 +40,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Dictionary<string, object> GetDataDictionary()
+		public Dictionary<string, object> GetDataDictionary(IdCache<string> columnIdCache)
 		{
 			return new Dictionary<string, object> ()
 			{
-				{ "name", this.Column.Name },
+				{ "name", this.Column.GetId (columnIdCache) },
 				{ "sortDirection", this.GetSortOrderData () },
 			};
 		}

@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.authenticationManager = new AuthenticationManager (coreWorkerPool);
 			this.propertyAccessorCache = new PropertyAccessorCache ();
 			this.autoCreatorCache = new AutoCreatorCache ();
+			this.columnIdCache = new IdCache<string> ();
 			this.databaseManager = new DatabaseManager ();
 		}
 
@@ -63,6 +64,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		internal IdCache<string> ColumnIdCache
+		{
+			get
+			{
+				return this.columnIdCache;
+			}
+		}
+
+
 		internal DatabaseManager DatabaseManager
 		{
 			get
@@ -77,6 +87,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.coreWorkerPool.Dispose ();
 			this.propertyAccessorCache.Dispose ();
 			this.autoCreatorCache.Dispose ();
+			this.columnIdCache.Dispose ();
 		}
 
 
@@ -90,6 +101,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 
 		private readonly AutoCreatorCache autoCreatorCache;
+
+
+		private readonly IdCache<string> columnIdCache;
 
 
 		private readonly DatabaseManager databaseManager;
