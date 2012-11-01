@@ -988,23 +988,32 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else if (aiderIdMapping.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
 				{
+					var subgroups = aiderSubGroupMapping[aiderGroup];
+					
 					// HACK This is a hack for group names greater than 200 chars that will throw an
 					// exception later. This need to be corrected.
 					var name = eervGroup.Name.Substring (0, Math.Min (200, eervGroup.Name.Length));
 
-					throw new System.NotImplementedException ("Pas compris ce code - les paroisses sont importées par le EervMainDataImporter");
+					var level = aiderGroup.GroupLevel + 1;
 
-#if false
-					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, name);
-					AiderGroupRelationshipEntity.Create (businessContext, aiderGroup, newAiderGroup, GroupRelationshipType.Inclusion);
+					var groupNumber = subgroups.Count + 1;
 
-					aiderSubGroupMapping[aiderGroup].Add (newAiderGroup);
+					if (groupNumber > 99)
+					{
+						throw new NotSupportedException ("Groups cannot have more that 99 children.");
+					}
+					
+					var path = aiderGroup.Path + "G" + groupNumber + ".";
+
+					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, name, level, path);
+					//AiderGroupRelationshipEntity.Create (businessContext, aiderGroup, newAiderGroup, GroupRelationshipType.Inclusion);
+
+					subgroups.Add (newAiderGroup);
 					aiderSubGroupMapping[newAiderGroup] = new List<AiderGroupEntity> ();
 
 					aiderIdMapping[eervGroup.Id] = newAiderGroup;
 
 					groupMapping[eervGroup] = newAiderGroup;
-#endif
 				}
 				else
 				{
