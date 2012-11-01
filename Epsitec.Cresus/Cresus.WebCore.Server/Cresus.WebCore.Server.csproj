@@ -61,6 +61,7 @@
     <Compile Include="Core\Databases\Sorter.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
+    <Compile Include="Core\ItemCache.cs" />
     <Compile Include="Core\PropertyAccessor\BooleanPropertyAccessor.cs" />
     <Compile Include="Core\PropertyAccessor\DatePropertyAccessor.cs" />
     <Compile Include="Core\PropertyAccessor\DecimalPropertyAccessor.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
     <Compile Include="Tools.cs" />
-    <Compile Include="Core\AbstractLambdaCache.cs" />
     <Compile Include="Core\AbstractLambdaCache`1.cs" />
     <Compile Include="Core\PropertyAutoCreator\AutoCreator.cs" />
     <Compile Include="Core\PropertyAutoCreator\AutoCreatorCache.cs" />

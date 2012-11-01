@@ -1,5 +1,4 @@
 ﻿using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 
 using System;
 
@@ -12,90 +11,49 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 {
 	
 	
-	internal abstract class AbstractLambdaCache<T> : AbstractLambdaCache, IDisposable
+	internal abstract class AbstractLambdaCache<T> : ItemCache<LambdaExpression, string, T, string, T>
 	{
-
-
-		protected AbstractLambdaCache()
-		{
-			this.lambdaToElement = new Dictionary<string, T> ();
-			this.idToElement = new Dictionary<string, T> ();
-
-			this.rwLock = new ReaderWriterLockWrapper ();
-		}
 
 
 		public T Get(LambdaExpression lambda)
 		{
-			T element;
-			bool done;
-			
-			var lambdaKey = AbstractLambdaCache.GetLambdaKey (lambda);
-
-			using (this.rwLock.LockRead ())
-			{
-				done = this.lambdaToElement.TryGetValue (lambdaKey, out element);
-			}
-
-			if (!done)
-			{
-				using (this.rwLock.LockWrite ())
-				{
-					done = this.lambdaToElement.TryGetValue (lambdaKey, out element);
-
-					if (!done)
-					{
-						var id = "id" + InvariantConverter.ToString(this.lambdaToElement.Count);
-
-						element = this.Create (lambda, id);
-
-						this.lambdaToElement[lambdaKey] = element;
-						this.idToElement[id] = element;
-					}
-				}
-			}
-
-			return element;
+			return this.Get1 (lambda);
 		}
 
 
 		public T Get(string id)
 		{
-			using (this.rwLock.LockRead ())
-			{
-				T element;
-
-				this.idToElement.TryGetValue (id, out element);
-
-				return element;
-			}
+			return this.Get2 (id);
 		}
-
-
-		#region IDisposable Members
-
-
-		public void Dispose()
-		{
-			this.rwLock.Dispose ();
-		}
-
-
-		#endregion
-	
 
 
 		protected abstract T Create(LambdaExpression lambda, string id);
 
 
-		private readonly Dictionary<string, T> lambdaToElement;
+		protected override string GetKey1(LambdaExpression itemIn1)
+		{
+			var part1 = itemIn1.ToString ();
+			var part2 = itemIn1.ReturnType.FullName;
+			var part3 = itemIn1.Parameters[0].Type.FullName;
+
+			return part1 + part2 + part3;
+		}
+
+		protected override T GetItemOut1(LambdaExpression itemIn1)
+		{
+			return this.Create (itemIn1, this.GetCurrentId ());
+		}
+
+		protected override string GetItemIn2(LambdaExpression itemIn1, T itemOut1)
+		{
+			return this.GetCurrentId ();
+		}
 
 
-		private readonly Dictionary<string, T> idToElement;
-
-
-		private readonly ReaderWriterLockWrapper rwLock;
-
+		protected override T GetItemOut2(LambdaExpression itemIn1, T itemOut1, string itemIn2)
+		{
+			return itemOut1;
+		}
 
 	}
 
