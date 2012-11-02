@@ -106,7 +106,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			{
 				using (var businessContext = new BusinessContext (w.CoreData))
 				{
-					return action (businessContext);
+					try
+					{
+						return action (businessContext);
+					}
+					finally
+					{
+						if (businessContext != null)
+						{
+							// We discard the BusinessContext so any unsaved changes won't be
+							// persisted to the database. Such changes could happen if an exception
+							// is thrown after some entities have been modified. In such a case, we
+							// want to make sure that the changed are not persisted to the databse.
+
+							businessContext.Discard ();
+						}
+					}
 				}
 			});
 		}
