@@ -19,6 +19,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 	{
 
 
+		public bool IsPassword
+		{
+			get;
+			set;
+		}
+		
+		
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
 			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
@@ -42,6 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) textPropertyAccessor.GetValue (entity),
+				IsPassword = this.IsPassword
 			};
 		}
 

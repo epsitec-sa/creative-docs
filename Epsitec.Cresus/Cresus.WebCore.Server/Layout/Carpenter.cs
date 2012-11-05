@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				switch (brickProperty.Key)
 				{
 					case BrickPropertyKey.HorizontalGroup:
-						yield return Carpenter.BuildHorizontalGroupData (brickProperty.Brick, caches);
+						yield return Carpenter.BuildHorizontalGroupData (caches, brickProperty.Brick);
 						break;
 
 					case BrickPropertyKey.Field:
@@ -433,14 +433,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static AbstractEditionTilePartData BuildHorizontalGroupData(Brick brick, Caches caches)
+		private static AbstractEditionTilePartData BuildHorizontalGroupData(Caches caches, Brick brick)
 		{
 			var horizontalGroupData = new HorizontalGroupData ()
 			{
 				Title = Carpenter.GetHorizontalGroupTitle (brick),
 			};
 
-			horizontalGroupData.Fields.AddRange (Carpenter.BuildHorizontalFieldData (brick, caches));
+			var horizontalBricks = Carpenter.BuildHorizontalFieldData (caches, brick);
+
+			horizontalGroupData.Fields.AddRange (horizontalBricks);
 
 			return horizontalGroupData;
 		}
@@ -448,21 +450,46 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static AbstractEditionTilePartData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty)
 		{
+			return Carpenter.BuildFieldData (caches, brickProperties, fieldProperty, true);
+		}
+
+
+		private static AbstractFieldData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool inculdeTitle)
+		{
 			var expression = fieldProperty.ExpressionValue;
 			var lambda = (LambdaExpression) expression;
-			
-			var title = Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression);
+
+			var title = inculdeTitle
+				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression)
+				: FormattedText.Empty;
+
 			var propertyAccessorCache = caches.PropertyAccessorCache;
 			var	propertyAccessor = propertyAccessorCache.Get (lambda);
 			var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
 
-			return Carpenter.BuildFieldData (propertyAccessor, title, isReadOnly);
+			var fieldData = Carpenter.BuildFieldData (propertyAccessor, title, isReadOnly);
+
+			if (propertyAccessor.PropertyAccessorType == PropertyAccessorType.Text)
+			{
+				var isPassword = Carpenter.IsFieldDataPassword (brickProperties);
+				var textFieldData = (TextFieldData) fieldData;
+
+				textFieldData.IsPassword = isPassword;
+			}
+
+			return fieldData;
 		}
 
 
 		private static bool IsFieldDataReadOnly(BrickPropertyCollection brickProperties)
 		{
 			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
+		}
+
+
+		private static bool IsFieldDataPassword(BrickPropertyCollection brickProperties)
+		{
+			return brickProperties.PeekAfter (BrickPropertyKey.Password, -1).HasValue;
 		}
 
 
@@ -518,21 +545,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Brick brick, Caches caches)
+		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Caches caches, Brick brick)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
-
-			foreach (var brickProperty in brickProperties)
-			{
-				var lambda = (LambdaExpression) brickProperty.ExpressionValue;
-
-				var title = FormattedText.Empty;
-				var propertyAccessorCache = caches.PropertyAccessorCache;
-				var propertyAccessor = propertyAccessorCache.Get (lambda);
-				var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
-
-				yield return Carpenter.BuildFieldData (propertyAccessor, title, isReadOnly);
-			}
+			
+			return brickProperties.Select
+			(
+				b => Carpenter.BuildFieldData (caches, brickProperties, b, false)
+			);
 		}
 
 

@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Bricks
 		FromCollection,
 		SpecialController,
 		GlobalWarning,
+		Password,
 
 		Button,
 		SearchPanel,

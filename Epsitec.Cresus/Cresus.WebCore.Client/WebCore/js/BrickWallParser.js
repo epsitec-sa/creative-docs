@@ -275,6 +275,10 @@ function() {
         field.xtype = 'textfield';
         field.value = brick.value;
 
+        if (brick.isPassword === true) {
+          field.inputType = 'password';
+        }
+
         return field;
       }
     }

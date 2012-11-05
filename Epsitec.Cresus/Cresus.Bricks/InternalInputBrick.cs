@@ -64,6 +64,12 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
+		public TSelf Password()
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Password));
+			return this as TSelf;
+		}
+
 		public TSelf WithSpecialController(int mode = 0)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.SpecialController, mode));
