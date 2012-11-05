@@ -1,10 +1,7 @@
 ﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -83,6 +80,14 @@ namespace Epsitec.Cresus.Core.Entities
 		public static bool RefDiffers(this AbstractEntity that, AbstractEntity other)
 		{
 			return that.UnwrapNullEntity () != other.UnwrapNullEntity ();
+		}
+
+		public static TOut GetValueOrDefault<TIn, TOut>(this TIn entity, System.Func<TIn, TOut> function)
+			where TIn : AbstractEntity
+		{
+			return entity.IsNull ()
+				? default (TOut)
+				: function (entity);
 		}
 	}
 }
