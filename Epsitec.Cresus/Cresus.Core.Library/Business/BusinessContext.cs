@@ -1252,7 +1252,6 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly Stack<DelayedUpdate>	delayedUpdates;
 		private readonly SafeCounter			dataChangedCounter;
 		private readonly List<LockMonitor>		lockMonitors;
-		private readonly bool					saveOnDispose;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
