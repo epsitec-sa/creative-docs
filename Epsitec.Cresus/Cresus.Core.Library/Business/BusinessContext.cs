@@ -23,13 +23,8 @@ namespace Epsitec.Cresus.Core.Business
 	public sealed class BusinessContext : IIsDisposed, ICoreManualComponent
 	{
 		public BusinessContext(CoreData data)
-			: this (data.GetComponent<BusinessContextPool> ())
 		{
-		}
-		
-		private BusinessContext(BusinessContextPool pool)
-		{
-			this.pool     = pool;
+			this.pool     = data.GetComponent<BusinessContextPool> ();
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
 			
 			this.pool.Add (this);
@@ -1257,6 +1252,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly Stack<DelayedUpdate>	delayedUpdates;
 		private readonly SafeCounter			dataChangedCounter;
 		private readonly List<LockMonitor>		lockMonitors;
+		private readonly bool					saveOnDispose;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
