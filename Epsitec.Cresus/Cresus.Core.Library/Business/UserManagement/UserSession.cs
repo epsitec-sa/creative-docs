@@ -129,6 +129,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				entitySettings = context.CreateEntity<EntityUISettingsEntity> ();
 				entitySettings.EntityId = entityIdString;
+				entitySettings.TableSettings = new UserEntityTableSettings (entityId);
+				entitySettings.EditionSettings = new UserEntityEditionSettings (entityId);
 
 				softwareSettings.EntityUISettings.Add (entitySettings);
 			}
