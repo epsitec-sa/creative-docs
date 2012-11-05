@@ -366,7 +366,7 @@
     <Compile Include="Metadata\EntityMetadataRecorder`1.cs" />
     <Compile Include="Metadata\EntityTableMetadata.cs" />
     <Compile Include="Dialogs\CoreDialog.cs" />
-    <Compile Include="Entities\AbstractEntityExtension.cs" />
+    <Compile Include="Entities\AbstractEntityExtensions.cs" />
     <Compile Include="Entities\CommentEntity.cs" />
     <Compile Include="Entities\EntityClonerExtensions.cs" />
     <Compile Include="Entities\Extensions.cs" />
