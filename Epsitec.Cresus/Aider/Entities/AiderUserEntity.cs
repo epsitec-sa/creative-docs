@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business.UserManagement;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -41,7 +43,23 @@ namespace Epsitec.Aider.Entities
 			this.clearPasswordConfirmation = value;
 		}
 
+		partial void GetIsAdministrator(ref bool value)
+		{
+			if (!this.isAdministrator.HasValue)
+			{
+				this.isAdministrator = this.HasPowerLevel (UserPowerLevel.Administrator);
+			}
+
+			value = this.isAdministrator.Value;
+		}
+
+		partial void SetIsAdministrator(bool value)
+		{
+			this.isAdministrator = value;
+		}
+
 		private string clearPassword;
 		private string clearPasswordConfirmation;
+		private bool? isAdministrator;
 	}
 }

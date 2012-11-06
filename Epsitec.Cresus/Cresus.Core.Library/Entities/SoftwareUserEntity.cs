@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Extensions;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -30,16 +31,16 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				switch (this.AuthenticationMethod)
 				{
-					case Business.UserManagement.UserAuthenticationMethod.Password:
+					case UserAuthenticationMethod.Password:
 						return true;
 
-					case Business.UserManagement.UserAuthenticationMethod.None:
+					case UserAuthenticationMethod.None:
 						return false;
 
-					case Business.UserManagement.UserAuthenticationMethod.System:
+					case UserAuthenticationMethod.System:
 						return string.Compare (this.LoginName, System.Environment.UserName, System.StringComparison.CurrentCultureIgnoreCase) != 0;
 
-					case Business.UserManagement.UserAuthenticationMethod.Disabled:
+					case UserAuthenticationMethod.Disabled:
 						return false;
 
 					default:
@@ -95,7 +96,7 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.Code.GetEntityStatus ());
 				a.Accumulate (this.LoginName.GetEntityStatus ());
 				a.Accumulate (this.DisplayName.GetEntityStatus ());
-				a.Accumulate ((this.AuthenticationMethod == Business.UserManagement.UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid);
+				a.Accumulate ((this.AuthenticationMethod == UserAuthenticationMethod.Password && string.IsNullOrWhiteSpace (this.LoginPasswordHash)) ? EntityStatus.None : EntityStatus.Valid);
 				a.Accumulate (this.UserGroups.Select (x => x.GetEntityStatus ()));
 
 				return a.EntityStatus;
@@ -118,6 +119,18 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				this.LoginPasswordHash = Epsitec.Common.Identity.BCrypt.HashPassword (plaintextPassword);
 			}
+		}
+
+		/// <summary>
+		/// Checks whether the user has at least the given power level. So this function will return
+		/// true when asked for the power level "regular" if the user is an administrator.
+		/// </summary>
+		public bool HasPowerLevel(UserPowerLevel powerLevel)
+		{
+			return this.UserGroups.Any
+			(
+				g => g.UserPowerLevel != UserPowerLevel.None && g.UserPowerLevel <= powerLevel
+			);
 		}
 	}
 }

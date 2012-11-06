@@ -1830,6 +1830,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ClearPasswordConfirmation = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 69);
 				//	designer:cap/LVAJC
 				public static readonly global::Epsitec.Common.Support.Druid CustomScopes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 403);
+				//	designer:cap/LVG622
+				public static readonly global::Epsitec.Common.Support.Druid IsAdministrator = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 70);
 				//	designer:cap/LVAIC
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 402);
 				//	designer:cap/LVAGD

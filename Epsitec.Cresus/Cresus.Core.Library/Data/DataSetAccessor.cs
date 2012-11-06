@@ -158,10 +158,12 @@ namespace Epsitec.Cresus.Core.Data
 
 			var scopeFilter = session.GetScopeFilter (this.entityType, example);
 			var tableSettings = session.GetTableSettings (this.entityType);
+			var additionalFilter = session.GetAdditionalFilter (this.entityType, example);
 
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
 			request.AddCondition (this.dataContext, example, scopeFilter);
 			request.AddCondition (this.dataContext, example, tableSettings.Filter);
+			request.AddCondition (this.dataContext, example, additionalFilter);
 
 			IEnumerable<SortClause> sortClauses;
 

@@ -3,6 +3,8 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
@@ -33,7 +35,7 @@ namespace Epsitec.Aider.Rules
 
 		private static void SetupUserGroups(AiderUserEntity user)
 		{
-			var standardGroup = AiderUserBusinessRules.GetStandardUserGroup (user);
+			var standardGroup = AiderUserBusinessRules.GetGroup (user, UserPowerLevel.Standard);
 
 			user.UserGroups.Add (standardGroup);
 		}
@@ -46,19 +48,16 @@ namespace Epsitec.Aider.Rules
 			user.CustomUISettings = businessContext.CreateEntity<SoftwareUISettingsEntity> ();
 		}
 
-
-		private static SoftwareUserGroupEntity GetStandardUserGroup(AiderUserEntity user)
+		private static SoftwareUserGroupEntity GetGroup(AiderUserEntity user, UserPowerLevel powerLevel)
 		{
 			var example = new SoftwareUserGroupEntity ()
 			{
-				UserPowerLevel = UserPowerLevel.Standard
+				UserPowerLevel = powerLevel
 			};
 
 			var dataContext = BusinessContextPool.GetCurrentContext (user).DataContext;
 
-			var standardGroups = dataContext.GetByExample (example);
-
-			return standardGroups[0];
+			return dataContext.GetByExample (example)[0];
 		}
 
 
@@ -67,6 +66,7 @@ namespace Epsitec.Aider.Rules
 			AiderUserBusinessRules.CheckLoginNameIsNotEmpty (user);
 			AiderUserBusinessRules.CheckLoginNameIsUnique (user);
 			AiderUserBusinessRules.UpdateDisplayName (user);
+			AiderUserBusinessRules.UpdateUserGroups (user);
 			AiderUserBusinessRules.UpdatePassword (user);
 		}
 
@@ -111,6 +111,29 @@ namespace Epsitec.Aider.Rules
 			user.DisplayName = user.Person.IsNotNull ()
 				? user.Person.DisplayName
 				: user.LoginName;
+		}
+
+
+		private static void UpdateUserGroups(AiderUserEntity user)
+		{
+			var shouldBeAdmin = user.IsAdministrator;
+			var isAdmin = user.HasPowerLevel (UserPowerLevel.Administrator);
+
+			var powerLevel = UserPowerLevel.Administrator;
+			
+			if (!isAdmin && shouldBeAdmin)
+			{
+				var adminGroup = AiderUserBusinessRules.GetGroup (user, powerLevel);
+
+				user.UserGroups.Add (adminGroup);
+			}
+			else if (isAdmin && !shouldBeAdmin)
+			{
+				user.UserGroups.RemoveAll
+				(
+					g => g.UserPowerLevel != UserPowerLevel.None && g.UserPowerLevel <= powerLevel
+				);
+			}
 		}
 
 

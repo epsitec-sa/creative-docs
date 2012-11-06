@@ -72,6 +72,11 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+		public virtual IFilter GetAdditionalFilter(System.Type entityType, AbstractEntity example)
+		{
+			return null;
+		}
+
 		public virtual IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
 			return null;

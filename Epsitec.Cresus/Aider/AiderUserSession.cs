@@ -36,6 +36,28 @@ namespace Epsitec.Aider
 		}
 
 
+		public override IFilter GetAdditionalFilter(System.Type entityType, AbstractEntity example)
+		{
+			if (entityType == typeof (AiderUserEntity))
+			{
+				return this.GetAiderUserEntityFilter ((AiderUserEntity) example);
+			}
+
+			return null;
+		}
+
+		private IFilter GetAiderUserEntityFilter(AiderUserEntity example)
+		{
+			var user = this.UserManager.AuthenticatedUser;
+
+			if (!user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return new LambdaFilter<AiderUserEntity> (x => x.LoginName == user.LoginName);
+			}
+
+			return null;
+		}
+
 		public override IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
 		{
 			var pattern = this.GetActiveScopePathPattern ();

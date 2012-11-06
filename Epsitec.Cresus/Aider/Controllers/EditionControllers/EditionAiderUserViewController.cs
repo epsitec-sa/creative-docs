@@ -7,11 +7,29 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
+using Epsitec.Cresus.Core.Business.UserManagement;
+
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderUserViewController : EditionViewController<AiderUserEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderUserEntity> wall)
+		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
+			if (user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				EditionAiderUserViewController.AddUserDataBrick (wall);
+			}
+			else
+			{
+				EditionAiderUserViewController.AddUserDataBrickReadonly (wall);
+			}
+
+			EditionAiderUserViewController.AddPasswordBrick (wall);
+		}
+
+		private static void AddUserDataBrick(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
 				.Title (Res.Strings.AiderUserDataTitle)
@@ -19,9 +37,31 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Person)
 					.Field (x => x.LoginName)
 					.Field (x => x.Role)
+					.Field (x => x.IsAdministrator)
 					.Field (x => x.Disabled)
 				.End ();
+		}
 
+		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall)
+		{
+			wall.AddBrick ()
+				.Title (Res.Strings.AiderUserDataTitle)
+				.Input ()
+					.Field (x => x.Person)
+						.ReadOnly ()
+					.Field (x => x.LoginName)
+						.ReadOnly ()
+					.Field (x => x.Role)
+						.ReadOnly ()
+					.Field (x => x.IsAdministrator)
+						.ReadOnly ()
+					.Field (x => x.Disabled)
+						.ReadOnly ()
+				.End ();
+		}
+
+		private static void AddPasswordBrick(BrickWall<AiderUserEntity> wall)
+		{
 			wall.AddBrick ()
 				.Title (Res.Strings.AiderUserPasswordTitle)
 				.Input ()

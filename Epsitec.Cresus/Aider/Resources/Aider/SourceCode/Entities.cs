@@ -6559,6 +6559,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>IsAdministrator</c> field.
+		///	designer:fld/LVAHC/LVG622
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG622]", IsVirtual=true)]
+		public bool IsAdministrator
+		{
+			get
+			{
+				bool value = default (bool);
+				this.GetIsAdministrator (ref value);
+				return value;
+			}
+			set
+			{
+				bool oldValue = this.IsAdministrator;
+				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
+				{
+					this.OnIsAdministratorChanging (oldValue, value);
+					this.SetIsAdministrator (value);
+					this.OnIsAdministratorChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
@@ -6570,11 +6594,15 @@ namespace Epsitec.Aider.Entities
 		partial void OnClearPasswordChanged(string oldValue, string newValue);
 		partial void OnClearPasswordConfirmationChanging(string oldValue, string newValue);
 		partial void OnClearPasswordConfirmationChanged(string oldValue, string newValue);
+		partial void OnIsAdministratorChanging(bool oldValue, bool newValue);
+		partial void OnIsAdministratorChanged(bool oldValue, bool newValue);
 		
 		partial void GetClearPassword(ref string value);
 		partial void SetClearPassword(string value);
 		partial void GetClearPasswordConfirmation(ref string value);
 		partial void SetClearPasswordConfirmation(string value);
+		partial void GetIsAdministrator(ref bool value);
+		partial void SetIsAdministrator(bool value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
