@@ -1,10 +1,10 @@
 //	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
-		public static void AddRange(this System.Collections.IList list, System.Collections.IEnumerable collection)
+		public static void AddRange(this IList list, IEnumerable collection)
 		{
 			foreach (object item in collection)
 			{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
-		public static System.IDisposable SuspendNotifications(this System.Collections.IList list)
+		public static System.IDisposable SuspendNotifications(this IList list)
 		{
 			ISuspendCollectionChanged collection = list as ISuspendCollectionChanged;
 
@@ -132,6 +132,27 @@ namespace Epsitec.Common.Support.Extensions
 				
 				index++;
 				take--;
+			}
+		}
+
+
+		public static void RemoveAll<T>(this IList<T> list, System.Func<T, bool> predicate)
+		{
+			list.ThrowIfNull ("list");
+			predicate.ThrowIfNull ("predicate");
+
+			for (int i = 0; i < list.Count; )
+			{
+				var item = list[i];
+
+				if (predicate (item))
+				{
+					list.RemoveAt (i);
+				}
+				else
+				{
+					i++;
+				}
 			}
 		}
 

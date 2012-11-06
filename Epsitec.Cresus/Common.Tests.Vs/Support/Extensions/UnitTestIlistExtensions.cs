@@ -4,6 +4,8 @@ using Epsitec.Common.UnitTesting;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -21,12 +23,12 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void InsertAtIndexArgumentCheck()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IList<int>) null).InsertAtIndex (0, 0)
 			);
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			ExceptionAssert.Throw<ArgumentException>
 			(
 				() => new List<int> ().InsertAtIndex (-1, 0)
 			);
@@ -71,12 +73,12 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void GetRandomElementArgumentCheck()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IList<int>) null).GetRandomElement ()
 			);
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			ExceptionAssert.Throw<ArgumentException>
 			(
 				() => new List<int> ().GetRandomElement ()
 			);
@@ -120,6 +122,69 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			{
 				Assert.IsTrue (System.Math.Abs (counts[count] - expectedCount) / expectedCount < 0.05);
 			}
+		}
+
+
+		[TestMethod]
+		public void RemoveAllArgumentCheck()
+		{
+			ExceptionAssert.Throw<ArgumentNullException>
+			(
+				() => ((IList<int>) null).RemoveAll (x => x == 0)
+			);
+
+			ExceptionAssert.Throw<ArgumentException>
+			(
+				() => ((IList<int>) new List<int> ()).RemoveAll (null)
+			);
+		}
+
+
+		[TestMethod]
+		public void RemoveAllTest()
+		{
+			this.RemoveAllTest
+			(
+				new List<int> ()  { },
+				x => x == 0, 
+				new List<int> () { }
+			);
+			
+			this.RemoveAllTest
+			(
+				new List<int> () { 0, 1, 2 },
+				x => x == 0,
+				new List<int> () { 1, 2 }
+			);
+
+			this.RemoveAllTest
+			(
+				new List<int> () { 0, 1, 2, 3, 4 },
+				x => x > 5,
+				new List<int> () { 0, 1, 2, 3, 4 }
+			);
+
+			this.RemoveAllTest
+			(
+				new List<int> () { 2, 0, 2, 2, 2, 1, 2, 3, 4, 2 },
+				x => x == 2,
+				new List<int> () { 0, 1, 3, 4 }
+			);
+
+			this.RemoveAllTest
+			(
+				new List<int> () { 0, 0, 0, 0, 0 },
+				x => x == 0,
+				new List<int> () { }
+			);
+		}
+
+
+		private void RemoveAllTest<T>(List<T> original, Func<T, bool> predicate, List<T> expected)
+		{
+			((IList<T>) original).RemoveAll (predicate);
+
+			CollectionAssert.AreEqual (expected, original);
 		}
 
 
