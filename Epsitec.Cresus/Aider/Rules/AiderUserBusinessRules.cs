@@ -35,18 +35,20 @@ namespace Epsitec.Aider.Rules
 
 		private static void SetupUserGroups(AiderUserEntity user)
 		{
-			var standardGroup = AiderUserBusinessRules.GetGroup (user, UserPowerLevel.Standard);
-
-			user.UserGroups.Add (standardGroup);
+			AiderUserBusinessRules.AssignGroup (user, UserPowerLevel.Standard);
 		}
 
 
-		private static void SetupCustomUISettings(AiderUserEntity user)
+		private static void AssignGroup(AiderUserEntity user, UserPowerLevel powerLevel)
 		{
-			var businessContext = BusinessContextPool.GetCurrentContext (user);
+			var group = AiderUserBusinessRules.GetGroup (user, powerLevel);
 
-			user.CustomUISettings = businessContext.CreateEntity<SoftwareUISettingsEntity> ();
+			if (group != null)
+			{
+				user.UserGroups.Add (group);
+			}
 		}
+
 
 		private static SoftwareUserGroupEntity GetGroup(AiderUserEntity user, UserPowerLevel powerLevel)
 		{
@@ -57,7 +59,15 @@ namespace Epsitec.Aider.Rules
 
 			var dataContext = BusinessContextPool.GetCurrentContext (user).DataContext;
 
-			return dataContext.GetByExample (example)[0];
+			return dataContext.GetByExample (example).FirstOrDefault ();
+		}
+
+
+		private static void SetupCustomUISettings(AiderUserEntity user)
+		{
+			var businessContext = BusinessContextPool.GetCurrentContext (user);
+
+			user.CustomUISettings = businessContext.CreateEntity<SoftwareUISettingsEntity> ();
 		}
 
 
@@ -123,9 +133,7 @@ namespace Epsitec.Aider.Rules
 			
 			if (!isAdmin && shouldBeAdmin)
 			{
-				var adminGroup = AiderUserBusinessRules.GetGroup (user, powerLevel);
-
-				user.UserGroups.Add (adminGroup);
+				AiderUserBusinessRules.AssignGroup (user, powerLevel);
 			}
 			else if (isAdmin && !shouldBeAdmin)
 			{
