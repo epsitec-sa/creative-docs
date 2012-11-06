@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-
-
 namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 {
 

@@ -1,7 +1,5 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;

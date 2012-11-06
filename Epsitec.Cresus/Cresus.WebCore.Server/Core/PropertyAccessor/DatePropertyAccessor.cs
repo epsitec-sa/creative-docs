@@ -1,6 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.Layout.TileData;
-
-using System;
+﻿using System;
 
 using System.Globalization;
 

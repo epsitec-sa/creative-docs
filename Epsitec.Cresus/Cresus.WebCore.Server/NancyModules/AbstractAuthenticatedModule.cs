@@ -1,5 +1,4 @@
 ﻿using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 

@@ -1,8 +1,6 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.WebCore.Server.Layout.TileData;
-
 using System;
 
 using System.Collections;

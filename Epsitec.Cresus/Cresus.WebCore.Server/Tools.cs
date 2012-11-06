@@ -12,8 +12,6 @@ using System;
 
 using System.Collections.Generic;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server
 {
@@ -154,6 +152,8 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			return businessContext.DataContext.ResolveEntity (entityKey);
 		}
+
+
 	}
 
 

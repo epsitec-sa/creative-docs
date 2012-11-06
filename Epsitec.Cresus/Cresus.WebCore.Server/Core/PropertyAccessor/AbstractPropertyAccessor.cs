@@ -3,8 +3,6 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.WebCore.Server.Layout.TileData;
-
 using System;
 
 using System.Linq.Expressions;

@@ -1,7 +1,6 @@
-﻿using Epsitec.Cresus.WebCore.Server.Layout.TileData;
+﻿using Epsitec.Common.Types;
 
 using System.Linq.Expressions;
-using Epsitec.Common.Types;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor

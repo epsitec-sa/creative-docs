@@ -1,14 +1,10 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator;
 
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 using Epsitec.Cresus.WebCore.Server.Layout.TileData;

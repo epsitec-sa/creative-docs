@@ -1,5 +1,6 @@
-﻿using Epsitec.Common.Types;
-using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
@@ -7,8 +8,11 @@ using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Nancy;
 
 using System;
+
 using System.Collections.Generic;
+
 using System.Linq;
+
 using System.Reflection;
 
 

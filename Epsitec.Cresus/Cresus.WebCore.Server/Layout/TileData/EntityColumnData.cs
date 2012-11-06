@@ -2,8 +2,6 @@
 
 using Epsitec.Cresus.Core.Controllers;
 
-using Epsitec.Cresus.WebCore.Server.Layout.Tile;
-
 using System.Collections.Generic;
 
 using System.Linq;

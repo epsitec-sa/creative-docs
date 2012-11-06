@@ -6,10 +6,6 @@ using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 
-using System;
-
-using System.Collections.Generic;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {

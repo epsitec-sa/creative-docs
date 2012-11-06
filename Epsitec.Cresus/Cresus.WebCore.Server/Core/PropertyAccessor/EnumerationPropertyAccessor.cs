@@ -1,5 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.Layout.TileData;
-using Epsitec.Cresus.WebCore.Server.NancyModules;
+﻿using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using System.Linq.Expressions;
 
