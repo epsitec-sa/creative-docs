@@ -51,11 +51,8 @@ function() {
           return null;
         }
 
-        try {
-          json = Ext.decode(response.responseText);
-        }
-        catch (e) {
-          Epsitec.ErrorHandler.handleJsonError();
+        json = this.decodeResponse(response);
+        if (json === null) {
           return null;
         }
 
@@ -65,6 +62,16 @@ function() {
         }
 
         return json;
+      },
+
+      decodeResponse: function(response) {
+        try {
+          return Ext.decode(response.responseText);
+        }
+        catch (e) {
+          Epsitec.ErrorHandler.handleJsonError();
+          return null;
+        }
       }
     }
   });

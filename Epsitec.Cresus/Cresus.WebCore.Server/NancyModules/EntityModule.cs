@@ -59,22 +59,33 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				return CoreResponse.FormFailure (errors);
 			}
-			else
+
+			using (businessContext.Bind (entity))
 			{
-				using (businessContext.Bind (entity))
+				foreach (var propertyAccessorWithValue in propertyAccessorsWithValues)
 				{
-					foreach (var propertyAccessorWithValue in propertyAccessorsWithValues)
-					{
-						var propertyAccessor = propertyAccessorWithValue.Item1;
-						var value = propertyAccessorWithValue.Item2;
+					var propertyAccessor = propertyAccessorWithValue.Item1;
+					var value = propertyAccessorWithValue.Item2;
 
-						propertyAccessor.SetValue (entity, value);
-					}
+					propertyAccessor.SetValue (entity, value);
+				}
 
+				try
+				{
 					businessContext.SaveChanges (LockingPolicy.KeepLock);
-					return CoreResponse.FormSuccess ();
+				}
+				catch (BusinessRuleException e)
+				{
+					var errors = new Dictionary<string, object> ()
+					{
+						{ "business", e.Message } 
+					};
+
+					return CoreResponse.FormFailure (errors);
 				}
 			}
+
+			return CoreResponse.FormSuccess ();
 		}
 
 

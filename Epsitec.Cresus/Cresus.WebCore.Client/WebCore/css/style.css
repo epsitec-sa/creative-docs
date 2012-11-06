@@ -70,3 +70,12 @@ html, body {
   border-bottom-width: 1px;
   border-left-width: 0px;
 }
+
+.business-error {
+  color: #CC3300;
+  background-color: #FFDDDD;
+  border-width: 1px;
+  border-color: #CC3300;
+  border-style: solid;
+  padding: 5px;
+}

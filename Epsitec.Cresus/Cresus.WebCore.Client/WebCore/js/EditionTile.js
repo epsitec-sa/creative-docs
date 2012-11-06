@@ -4,6 +4,7 @@ Ext.require([
   'Epsitec.cresus.webcore.EnumerationField',
   'Epsitec.cresus.webcore.ErrorHandler',
   'Epsitec.cresus.webcore.Texts',
+  'Epsitec.cresus.webcore.Tools',
   'Epsitec.cresus.webcore.Tile'
 ],
 function() {
@@ -25,6 +26,10 @@ function() {
       labelAlign: 'top',
       msgTarget: 'side'
     },
+
+    /* Properties */
+
+    errorField: null,
 
     /* Constructor */
 
@@ -62,10 +67,12 @@ function() {
     },
 
     onResetClick: function() {
+      this.hideError();
       this.getForm().reset();
     },
 
     onSaveClick: function() {
+      this.hideError();
       var form = this.getForm();
       if (this.form.isValid()) {
         this.setLoading();
@@ -82,14 +89,49 @@ function() {
     },
 
     onSaveClickCallback: function(success, form, action) {
+      var json, businessError;
+
       this.setLoading(false);
 
       if (!success) {
         Epsitec.ErrorHandler.handleFormError(action);
+
+        json = Epsitec.Tools.decodeResponse(action.response);
+        if (json === null) {
+          return;
+        }
+
+        businessError = json.errors.business;
+        if (!Epsitec.Tools.isUndefined(businessError))
+        {
+          this.showError(businessError);
+        }
+
         return;
       }
 
       this.column.refreshToLeft(false);
+    },
+
+    showError: function(error) {
+      if (this.errorField === null)
+      {
+        this.errorField = Ext.create('Ext.form.field.Display', {
+          baseBodyCls: 'business-error',
+          fieldCls: null,
+          fieldLabel: Epsitec.Texts.getErrorTitle()
+        }),
+        this.insert(0, this.errorField);
+      }
+      this.errorField.setValue(error);
+    },
+
+    hideError: function() {
+      if (this.errorField !== null)
+      {
+        this.remove(this.errorField);
+        this.errorField = null;
+      }
     }
   });
 });
