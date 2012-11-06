@@ -1,19 +1,8 @@
 ﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Dialogs;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Business.UserManagement;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
 
 using System.Collections.Generic;
@@ -51,7 +40,7 @@ namespace Epsitec.Cresus.Core
 
 		protected override void InitializeEmptyDatabase()
 		{
-			Hack.PopulateUsers (this.Data.CreateDataContext ("hack"));
+			Hack.PopulateUsers (new BusinessContext (this.Data));
 		}
 
 		protected override void CreateManualComponents(IList<System.Action> initializers)

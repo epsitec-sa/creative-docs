@@ -73,9 +73,10 @@ namespace Epsitec.Cresus.Compta
 
 		protected override void InitializeEmptyDatabase()
 		{
-			var dataContext = this.Data.CreateDataContext ("hack");
+			var businessContext = new BusinessContext (this.Data);
+			var dataContext = businessContext.DataContext;
 			
-			Hack.PopulateUsers (dataContext);
+			Hack.PopulateUsers (businessContext);
 
 			var compta = dataContext.CreateEntity<ComptaEntity> ();
 			var logic = new Logic (compta);

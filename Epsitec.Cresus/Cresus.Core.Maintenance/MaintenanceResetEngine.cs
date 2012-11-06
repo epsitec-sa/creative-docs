@@ -1,6 +1,8 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Business;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,7 +22,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			using (var app = new MaintenanceApp ())
 			{
-				Hack.PopulateUsers (app.CoreData.CreateDataContext ("hack"));
+				Hack.PopulateUsers (new BusinessContext (app.CoreData));
 			}
 
 			Epsitec.Cresus.Core.CoreData.ForceDatabaseCreationRequest = false;

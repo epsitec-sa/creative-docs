@@ -18,8 +18,10 @@ namespace Epsitec.Cresus.Core
 #if true
 	public static class Hack
 	{
-		public static void PopulateUsers(DataContext context)
+		public static void PopulateUsers(BusinessContext businessContext)
 		{
+			var context = businessContext.DataContext;
+
 			var role = context.CreateEntity<SoftwareUserRoleEntity> ();
 
 			role.Code = "?";
