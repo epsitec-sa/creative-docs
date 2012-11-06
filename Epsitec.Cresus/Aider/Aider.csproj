@@ -94,6 +94,7 @@
     <Compile Include="Entities\Helpers\AiderGroupPersonList.cs" />
     <Compile Include="Entities\Helpers\AiderPersonGroupList.cs" />
     <Compile Include="Entities\Helpers\VirtualEventList.cs" />
+    <Compile Include="Rules\AiderUserBusinessRules.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />

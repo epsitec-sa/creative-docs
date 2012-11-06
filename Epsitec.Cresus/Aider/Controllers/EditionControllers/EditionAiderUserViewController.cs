@@ -3,32 +3,32 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
-using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderUserViewController : EditionViewController<AiderUserEntity>
 	{
-		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderUserEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
+				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.DisplayName)
-					.Field (x => x.LoginName).ReadOnly ()
+					.Field (x => x.Person)
+					.Field (x => x.LoginName)
+					.Field (x => x.Role)
 					.Field (x => x.Disabled)
 				.End ();
 
 			wall.AddBrick ()
+				.Title (Res.Strings.AiderUserPasswordTitle)
 				.Input ()
-					.Field (x => x.Person)
-					.Field (x => x.Role)
-					.Field (x => x.PreferredScope).ReadOnly ()
-				.End ();
-
-			wall.AddBrick ()
-				.Input ()
-					.Field (x => x.CustomScopes)
+					.Field (x => x.ClearPassword)
+						.Password ()
+					.Field (x => x.ClearPasswordConfirmation)
+						.Password ()
 				.End ();
 		}
 	}

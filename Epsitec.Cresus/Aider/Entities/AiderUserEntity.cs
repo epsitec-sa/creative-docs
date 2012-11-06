@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+
 using System.Linq;
 
 namespace Epsitec.Aider.Entities
@@ -19,5 +20,28 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (this.DisplayName);
 		}
+
+		partial void GetClearPassword(ref string value)
+		{
+			value = this.clearPassword;
+		}
+
+		partial void SetClearPassword(string value)
+		{
+			this.clearPassword = value;
+		}
+
+		partial void GetClearPasswordConfirmation(ref string value)
+		{
+			value = this.clearPasswordConfirmation;
+		}
+
+		partial void SetClearPasswordConfirmation(string value)
+		{
+			this.clearPasswordConfirmation = value;
+		}
+
+		private string clearPassword;
+		private string clearPasswordConfirmation;
 	}
 }

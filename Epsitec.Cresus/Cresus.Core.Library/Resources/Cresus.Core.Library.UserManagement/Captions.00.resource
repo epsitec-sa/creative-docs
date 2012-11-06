@@ -8,11 +8,11 @@
   <data name="Fld.SoftwareUserGroup.UserPowerLevel" id="A5">&lt;s:data id="_0" f:Name="UserPowerLevel" f:Labels="{Collection {Text 'Niveau de l&amp;amp;apos;utilisateur'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.DisplayName" id="A7">&lt;s:data id="_0" f:Name="DisplayName" f:Labels="{Collection {Text 'Nom pour l&amp;amp;apos;affichage'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.LoginPicture" id="A8">&lt;s:data id="_0" f:Name="LoginPicture" f:Labels="{Collection {Text 'Image'}}" /&gt;</data>
-  <data name="Fld.SoftwareUser.LoginName" id="A9">&lt;s:data id="_0" f:Name="LoginName" f:Labels="{Collection {Text 'Nom'}}" /&gt;</data>
+  <data name="Fld.SoftwareUser.LoginName" id="A9">&lt;s:data id="_0" f:Name="LoginName" f:Labels="{Collection {Text 'Nom d&amp;amp;apos;utilisateur'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.LoginPasswordHash" id="AA">&lt;s:data id="_0" f:Name="LoginPasswordHash" /&gt;</data>
   <data name="Fld.SoftwareUser.AuthenticationMethod" id="AB">&lt;s:data id="_0" f:Name="AuthenticationMethod" /&gt;</data>
   <data name="Fld.SoftwareUser.UserGroups" id="AC">&lt;s:data id="_0" f:Name="UserGroups" f:Labels="{Collection {Text 'Groupe d&amp;amp;apos;utilisateurs'}}" /&gt;</data>
-  <data name="Fld.SoftwareUser.Disabled" id="AD">&lt;s:data id="_0" f:Name="Disabled" f:Labels="{Collection {Text 'Désactivé'}}" /&gt;</data>
+  <data name="Fld.SoftwareUser.Disabled" id="AD">&lt;s:data id="_0" f:Name="Disabled" f:Labels="{Collection {Text 'Utilisateur désactivé'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.None" id="AF">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Aucun'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.System" id="AG">&lt;s:data id="_0" f:Name="System" f:Labels="{Collection {Text 'Système'}}" /&gt;</data>
   <data name="Val.UserPowerLevel.Developer" id="AH">&lt;s:data id="_0" f:Name="Developer" f:Labels="{Collection {Text 'Développeur'}}" /&gt;</data>
