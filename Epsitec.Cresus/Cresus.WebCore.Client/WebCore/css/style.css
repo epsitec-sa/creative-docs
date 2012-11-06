@@ -1,9 +1,9 @@
 html, body {
-  margin:0;
-  padding:0;
-  border:0 none;
-  overflow:hidden;
-  height:100%;
+  margin: 0;
+  padding: 0;
+  border: 0 none;
+  overflow: hidden;
+  height: 100%;
 }
 
 .summary {
@@ -11,12 +11,12 @@ html, body {
 }
 
 .over-summary .summary {
-  background: #f4f4f4;
+  background: #F4F4F4;
   cursor: pointer;
 }
 
 .selected-entity .summary {
-  background: #ebf4ff url('../images/Static/star.png') bottom right no-repeat;
+  background: #EBF4FF url('../images/Static/star.png') bottom right no-repeat;
 }
 
 .global-warning {
