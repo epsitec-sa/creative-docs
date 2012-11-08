@@ -80,9 +80,7 @@
     <Compile Include="Business\Rules\BusinessSettingsBusinessRules.cs" />
     <Compile Include="Business\Rules\CustomerBusinessRules.cs" />
     <Compile Include="Business\Rules\EnumValueArticleParameterDefinitionBusinessRules.cs" />
-    <Compile Include="Business\Rules\FinanceSettingsBusinessRules.cs" />
     <Compile Include="Business\Rules\FreeTextValueArticleParameterDefinitionBusinessRules.cs" />
-    <Compile Include="Business\Rules\MailContactBusinessRules.cs" />
     <Compile Include="Business\Rules\NumericValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueArticleParameterDefinitionBusinessRules.cs" />
     <Compile Include="Business\Rules\OptionValueBusinessRules.cs" />
