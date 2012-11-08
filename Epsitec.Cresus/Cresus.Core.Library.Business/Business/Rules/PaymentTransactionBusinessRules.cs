@@ -18,8 +18,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(PaymentTransactionEntity payment)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
+			var businessContext = this.GetBusinessContext ();
 
 			payment.Code = (string) ItemCodeGenerator.NewCode ();
 			

@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(AffairEntity affair)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
+			var businessContext = this.GetBusinessContext ();
+			var generatorPool   = this.GetRefIdGeneratorPool ();
 			var settings		= businessContext.GetCached<BusinessSettingsEntity> ();
 
 			var currentCustomer = businessContext.GetMasterEntity<CustomerEntity> ();
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 		public override void ApplyUpdateRule(AffairEntity affair)
 		{
-			var businessContext  = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext  = this.GetBusinessContext ();
 			
 			AffairBusinessRules.InitializeDefaults (businessContext, affair);
 		}

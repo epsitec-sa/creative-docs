@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplyBindRule(RelationEntity relation)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = this.GetBusinessContext ();
 			businessContext.Register (relation.Person);
 		}
 		

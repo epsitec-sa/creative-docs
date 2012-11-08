@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(ArticleGroupEntity articleGroup)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = this.GetBusinessContext ();
 			int? maxRank = businessContext.Data.GetAllEntities<ArticleGroupEntity> ().Max (x => x.Rank);
 
 			if (maxRank.HasValue)

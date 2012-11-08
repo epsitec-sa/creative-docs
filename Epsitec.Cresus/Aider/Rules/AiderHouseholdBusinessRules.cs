@@ -15,7 +15,7 @@ namespace Epsitec.Aider.Rules
 	{
 		public override void ApplySetupRule(AiderHouseholdEntity household)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = this.GetBusinessContext ();
 
 			household.Address = businessContext.CreateEntity<AiderAddressEntity> ();
 		}

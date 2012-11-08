@@ -13,7 +13,6 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(TaxSettingsEntity entity)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 			entity.TaxMode = Finance.TaxMode.None;
 		}
 	}

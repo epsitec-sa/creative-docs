@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Rules
 	{
 		public override void ApplySetupRule(AiderPersonEntity person)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = this.GetBusinessContext ();
 
 			var eChPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
 			
@@ -68,8 +68,8 @@ namespace Epsitec.Aider.Rules
 			{
 				return;
 			}
-			
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+
+			var businessContext = this.GetBusinessContext ();
 
 			var parish1 = ParishLocator.FindParish (businessContext, person.Household1.Address);
 			var parish2 = ParishLocator.FindParish (businessContext, person.Household2.Address);

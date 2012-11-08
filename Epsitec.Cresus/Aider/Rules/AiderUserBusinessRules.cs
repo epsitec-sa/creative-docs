@@ -28,20 +28,20 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplySetupRule(AiderUserEntity user)
 		{
-			AiderUserBusinessRules.SetupUserGroups (user);
-			AiderUserBusinessRules.SetupCustomUISettings (user);
+			this.SetupUserGroups (user);
+			this.SetupCustomUISettings (user);
 		}
 
 
-		private static void SetupUserGroups(AiderUserEntity user)
+		private void SetupUserGroups(AiderUserEntity user)
 		{
-			AiderUserBusinessRules.AssignGroup (user, UserPowerLevel.Standard);
+			this.AssignGroup (user, UserPowerLevel.Standard);
 		}
 
 
-		private static void AssignGroup(AiderUserEntity user, UserPowerLevel powerLevel)
+		private void AssignGroup(AiderUserEntity user, UserPowerLevel powerLevel)
 		{
-			var group = AiderUserBusinessRules.GetGroup (user, powerLevel);
+			var group = this.GetGroup (powerLevel);
 
 			if (group != null)
 			{
@@ -50,22 +50,22 @@ namespace Epsitec.Aider.Rules
 		}
 
 
-		private static SoftwareUserGroupEntity GetGroup(AiderUserEntity user, UserPowerLevel powerLevel)
+		private SoftwareUserGroupEntity GetGroup(UserPowerLevel powerLevel)
 		{
 			var example = new SoftwareUserGroupEntity ()
 			{
 				UserPowerLevel = powerLevel
 			};
 
-			var dataContext = BusinessContextPool.GetCurrentContext (user).DataContext;
+			var dataContext = this.GetBusinessContext ().DataContext;
 
 			return dataContext.GetByExample (example).FirstOrDefault ();
 		}
 
 
-		private static void SetupCustomUISettings(AiderUserEntity user)
+		private void SetupCustomUISettings(AiderUserEntity user)
 		{
-			var businessContext = BusinessContextPool.GetCurrentContext (user);
+			var businessContext = this.GetBusinessContext ();
 
 			user.CustomUISettings = businessContext.CreateEntity<SoftwareUISettingsEntity> ();
 		}
@@ -74,9 +74,9 @@ namespace Epsitec.Aider.Rules
 		public override void ApplyValidateRule(AiderUserEntity user)
 		{
 			AiderUserBusinessRules.CheckLoginNameIsNotEmpty (user);
-			AiderUserBusinessRules.CheckLoginNameIsUnique (user);
+			this.CheckLoginNameIsUnique (user);
 			AiderUserBusinessRules.UpdateDisplayName (user);
-			AiderUserBusinessRules.UpdateUserGroups (user);
+			this.UpdateUserGroups (user);
 			AiderUserBusinessRules.UpdatePassword (user);
 		}
 
@@ -92,14 +92,14 @@ namespace Epsitec.Aider.Rules
 		}
 
 
-		private static void CheckLoginNameIsUnique(AiderUserEntity user)
+		private void CheckLoginNameIsUnique(AiderUserEntity user)
 		{
 			var example = new AiderUserEntity ()
 			{
 				LoginName = user.LoginName
 			};
 
-			var dataContext = BusinessContextPool.GetCurrentContext (user).DataContext;
+			var dataContext = this.GetBusinessContext ().DataContext;
 
 			var usersWithSameLoginName = dataContext.GetByExample (example);
 
@@ -124,7 +124,7 @@ namespace Epsitec.Aider.Rules
 		}
 
 
-		private static void UpdateUserGroups(AiderUserEntity user)
+		private void UpdateUserGroups(AiderUserEntity user)
 		{
 			var shouldBeAdmin = user.IsAdministrator;
 			var isAdmin = user.HasPowerLevel (UserPowerLevel.Administrator);
@@ -133,7 +133,7 @@ namespace Epsitec.Aider.Rules
 			
 			if (!isAdmin && shouldBeAdmin)
 			{
-				AiderUserBusinessRules.AssignGroup (user, powerLevel);
+				this.AssignGroup (user, powerLevel);
 			}
 			else if (isAdmin && !shouldBeAdmin)
 			{

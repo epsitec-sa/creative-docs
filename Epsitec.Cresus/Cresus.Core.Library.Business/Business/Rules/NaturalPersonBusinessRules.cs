@@ -15,8 +15,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(NaturalPersonEntity person)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
-			var generatorPool   = Logic.Current.GetComponent<RefIdGeneratorPool> ();
+			var businessContext = this.GetBusinessContext ();
 
 			var example = new LanguageEntity();
 			example.IsoLanguageCode = "fr";

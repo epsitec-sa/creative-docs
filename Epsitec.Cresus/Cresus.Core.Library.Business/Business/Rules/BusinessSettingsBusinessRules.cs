@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 	{
 		public override void ApplySetupRule(BusinessSettingsEntity entity)
 		{
-			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+			var businessContext = this.GetBusinessContext ();
 			entity.Code = (string) ItemCodeGenerator.NewCode ();
 			entity.Finance = businessContext.CreateEntity<FinanceSettingsEntity> ();
 			entity.Tax = businessContext.CreateEntity<TaxSettingsEntity> ();

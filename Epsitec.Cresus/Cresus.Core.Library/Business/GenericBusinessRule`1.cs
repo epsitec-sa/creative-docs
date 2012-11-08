@@ -28,6 +28,17 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		public BusinessContext GetBusinessContext()
+		{
+			return Logic.Current.GetComponent<BusinessContext> ();
+		}
+
+		public RefIdGeneratorPool GetRefIdGeneratorPool()
+		{
+			return Logic.Current.GetComponent<RefIdGeneratorPool> ();
+		}
+
+
 		public sealed override void Apply(RuleType ruleType, AbstractEntity entity)
 		{
 			System.Diagnostics.Debug.Assert (entity is T);
