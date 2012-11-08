@@ -32,6 +32,11 @@ namespace Epsitec.Aider.Data
 			this.ParishName       = cols[7];
 			this.RegionCode       = ParishAddressInformation.ParseRegionCode (cols[8]);
 
+			if (this.RegionCode == 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Region is not defined for row " + this.Row);
+			}
+
 			this.NormalizedStreetName = SwissPostStreet.NormalizeStreetName (this.StreetName + ", " + this.StreetPrefix);
 
 			if (string.IsNullOrEmpty (cols[6]))
