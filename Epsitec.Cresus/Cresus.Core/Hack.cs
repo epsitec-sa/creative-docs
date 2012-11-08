@@ -10,8 +10,6 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
 
-using Epsitec.Cresus.DataLayer.Context;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,39 +20,34 @@ namespace Epsitec.Cresus.Core
 	{
 		public static void PopulateUsers(BusinessContext businessContext)
 		{
-			var context = businessContext.DataContext;
-
-			var role = context.CreateEntity<SoftwareUserRoleEntity> ();
+			var role = businessContext.CreateEntity<SoftwareUserRoleEntity> ();
 
 			role.Code = "?";
 			role.Name = "Principal";
 
-			var groupSystem     = Hack.CreateUserGroup (context, role, "Système", UserPowerLevel.System);
-			var groupDev        = Hack.CreateUserGroup (context, role, "Développeurs", UserPowerLevel.Developer);
-			var groupAdmin      = Hack.CreateUserGroup (context, role, "Administrateurs", UserPowerLevel.Administrator);
-			var groupPowerUser  = Hack.CreateUserGroup (context, role, "Utilisateurs avec pouvoir", UserPowerLevel.PowerUser);
-			var groupStandard   = Hack.CreateUserGroup (context, role, "Utilisateurs standards", UserPowerLevel.Standard);
-			var groupRestricted = Hack.CreateUserGroup (context, role, "Utilisateurs restreints", UserPowerLevel.Restricted);
+			var groupSystem     = Hack.CreateUserGroup (businessContext, role, "Système", UserPowerLevel.System);
+			var groupDev        = Hack.CreateUserGroup (businessContext, role, "Développeurs", UserPowerLevel.Developer);
+			var groupAdmin      = Hack.CreateUserGroup (businessContext, role, "Administrateurs", UserPowerLevel.Administrator);
+			var groupPowerUser  = Hack.CreateUserGroup (businessContext, role, "Utilisateurs avec pouvoir", UserPowerLevel.PowerUser);
+			var groupStandard   = Hack.CreateUserGroup (businessContext, role, "Utilisateurs standards", UserPowerLevel.Standard);
+			var groupRestricted = Hack.CreateUserGroup (businessContext, role, "Utilisateurs restreints", UserPowerLevel.Restricted);
 
-			var userStandard1 = Hack.CreateUser (context, groupDev, "Pierre Arnaud", "arnaud", "smaky", UserAuthenticationMethod.System);
-			var userStandard2 = Hack.CreateUser (context, groupDev, "Marc Bettex", "Marc", "tiger", UserAuthenticationMethod.System);
-			var userStandard3 = Hack.CreateUser (context, groupDev, "Daniel Roux", "Daniel", "blupi", UserAuthenticationMethod.System);
-			var userEpsitec   = Hack.CreateUser (context, groupDev, "Epsitec", "Epsitec", "admin", UserAuthenticationMethod.Password);
+			var userStandard1 = Hack.CreateUser (businessContext, groupDev, "Pierre Arnaud", "arnaud", "smaky", UserAuthenticationMethod.System);
+			var userStandard2 = Hack.CreateUser (businessContext, groupDev, "Marc Bettex", "Marc", "tiger", UserAuthenticationMethod.System);
+			var userStandard3 = Hack.CreateUser (businessContext, groupDev, "Daniel Roux", "Daniel", "blupi", UserAuthenticationMethod.System);
+			var userEpsitec   = Hack.CreateUser (businessContext, groupDev, "Epsitec", "Epsitec", "admin", UserAuthenticationMethod.Password);
 
 			userStandard1.UserGroups.Add (groupStandard);
 			userStandard2.UserGroups.Add (groupStandard);
 			userStandard3.UserGroups.Add (groupStandard);
 			userEpsitec.UserGroups.Add (groupAdmin);
 
-			context.SaveChanges ();
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 
-		private static SoftwareUserGroupEntity CreateUserGroup(DataContext context, SoftwareUserRoleEntity role, string name, UserPowerLevel level)
+		private static SoftwareUserGroupEntity CreateUserGroup(BusinessContext businessContext, SoftwareUserRoleEntity role, string name, UserPowerLevel level)
 		{
-			var group = context.CreateEntity<SoftwareUserGroupEntity> ();
-			var logic = new Logic (group);
-
-			logic.ApplyRule (RuleType.Setup, group);
+			var group = businessContext.CreateAndRegisterEntity<SoftwareUserGroupEntity> ();
 
 			group.Code           = "?";
 			group.Name           = name;
@@ -64,16 +57,14 @@ namespace Epsitec.Cresus.Core
 			return group;
 		}
 
-		private static SoftwareUserEntity CreateUser(DataContext context, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword, UserAuthenticationMethod am)
+		private static SoftwareUserEntity CreateUser(BusinessContext businessContext, SoftwareUserGroupEntity group, FormattedText displayName, string userLogin, string userPassword, UserAuthenticationMethod am)
 		{
 			var userType  = CoreContext.ResolveType (typeof (SoftwareUserEntity));
 			var userDruid = EntityInfo.GetTypeId (userType);
 
-			var user = context.CreateEntity (userDruid) as SoftwareUserEntity;
-			var settings = context.CreateEntity<SoftwareUISettingsEntity> ();
-			var logic = new Logic (user);
-
-			logic.ApplyRule (RuleType.Setup, user);
+			var user = businessContext.CreateEntity (userDruid) as SoftwareUserEntity;
+			businessContext.Register (user);
+			var settings = businessContext.CreateAndRegisterEntity<SoftwareUISettingsEntity> ();
 
 			user.AuthenticationMethod = am;
 			user.DisplayName = displayName;
