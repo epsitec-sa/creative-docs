@@ -6,7 +6,6 @@ using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
@@ -22,7 +21,7 @@ namespace Epsitec.Aider.Rules
 		{
 			var businessContext = this.GetBusinessContext ();
 
-			var eChPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
+			var eChPerson = businessContext.CreateAndRegisterEntity<eCH_PersonEntity> ();
 			
 			eChPerson.CreationDate = Date.Today;
 			eChPerson.DataSource   = Enumerations.DataSource.Undefined;
@@ -85,7 +84,7 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			var warning = businessContext.CreateEntity<AiderPersonWarningEntity> ();
+			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
 
 			warning.Title       = new FormattedText ("La paroisse ne correspond pas à l'adresse principale");
 			warning.WarningType = Enumerations.WarningType.ParishMismatch;

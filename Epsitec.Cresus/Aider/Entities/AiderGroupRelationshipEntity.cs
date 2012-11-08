@@ -8,7 +8,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public static AiderGroupRelationshipEntity Create(BusinessContext businessContext, AiderGroupEntity group, AiderGroupEntity subGroup, GroupRelationshipType type)
 		{
-			var relationship = businessContext.CreateEntity<AiderGroupRelationshipEntity> ();
+			var relationship = businessContext.CreateAndRegisterEntity<AiderGroupRelationshipEntity> ();
 
 			relationship.Group1 = group;
 			relationship.Group2 = subGroup;

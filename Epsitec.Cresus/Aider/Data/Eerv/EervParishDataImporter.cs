@@ -280,7 +280,7 @@ namespace Epsitec.Aider.Data.Eerv
 					throw new InvalidOperationException ();
 				}
 
-				var address = businessContext.CreateEntity<AiderAddressEntity> ();
+				var address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 
 				EervParishDataImporter.SetEmail (address, email);
 				EervParishDataImporter.SetPhoneNumber (address, mobile, (a, s) => a.Mobile = s);
@@ -344,7 +344,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderPersonEntity CreateAiderPersonWithEervPerson(BusinessContext businessContext, EervPerson eervPerson)
 		{
-			var aiderPerson = businessContext.CreateEntity<AiderPersonEntity> ();
+			var aiderPerson = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 			var eChPerson = aiderPerson.eCH_Person;
 
 			eChPerson.PersonFirstNames = eervPerson.Firstname;
@@ -546,7 +546,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CreateHousehold(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons, AiderTownRepository aiderTowns)
 		{
-			var aiderHousehold = businessContext.CreateEntity<AiderHouseholdEntity> ();
+			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
 			aiderHouseholdToAiderPersons[aiderHousehold] = new List<AiderPersonEntity> ();
 
 			EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, aiderHousehold, aiderHouseholdToAiderPersons);
@@ -843,7 +843,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportEervLegalPerson(BusinessContext businessContext, AiderTownRepository aiderTowns, string parishName, EervLegalPerson legalPerson)
 		{
-			var aiderLegalPerson = businessContext.CreateEntity<AiderLegalPersonEntity> ();
+			var aiderLegalPerson = businessContext.CreateAndRegisterEntity<AiderLegalPersonEntity> ();
 
 			// NOTE It happens often that the corporate name is empty but that the firstname or the
 			// lastname is filled with the value that should have been in the corporate name field.
@@ -874,7 +874,7 @@ namespace Epsitec.Aider.Data.Eerv
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.ContactPerson.Coordinates);
 
 			var contactPerson = legalPerson.ContactPerson;
-			var aiderLegalPersonContact = businessContext.CreateEntity<AiderLegalPersonContactEntity> ();
+			var aiderLegalPersonContact = businessContext.CreateAndRegisterEntity<AiderLegalPersonContactEntity> ();
 
 			if (!emptyCorporateName)
 			{

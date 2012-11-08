@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition)
 		{
-			var aiderGroupDef = businessContext.CreateEntity<AiderGroupDefEntity> ();
+			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
 			aiderGroupDef.Name = groupDefinition.Name;
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();

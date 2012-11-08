@@ -17,7 +17,7 @@ namespace Epsitec.Aider.Rules
 		{
 			var businessContext = this.GetBusinessContext ();
 
-			household.Address = businessContext.CreateEntity<AiderAddressEntity> ();
+			household.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 		}
 	}
 }

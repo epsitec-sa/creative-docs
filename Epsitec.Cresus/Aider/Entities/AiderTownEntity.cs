@@ -46,7 +46,7 @@ namespace Epsitec.Aider.Entities
 
 			if (aiderTown == null)
 			{
-				aiderTown = businessContext.CreateEntity<AiderTownEntity> ();
+				aiderTown = businessContext.CreateAndRegisterEntity<AiderTownEntity> ();
 
 				aiderTown.ZipCode = InvariantConverter.ToString (zipCode);
 				aiderTown.SwissZipCode = zipCode;
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Entities
 
 			if (aiderTown == null)
 			{
-				aiderTown = businessContext.CreateEntity<AiderTownEntity> ();
+				aiderTown = businessContext.CreateAndRegisterEntity<AiderTownEntity> ();
 
 				aiderTown.ZipCode = zipCode;
 				aiderTown.Name = name;

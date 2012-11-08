@@ -60,7 +60,7 @@ namespace Epsitec.Aider.Entities.Helpers
 		{
 			var businessContext = BusinessContextPool.GetCurrentContext (this.entity);
 
-			var participation = businessContext.CreateEntity<AiderGroupParticipantEntity> ();
+			var participation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
 			participation.StartDate = Date.Today;
 			participation.Group = this.entity;

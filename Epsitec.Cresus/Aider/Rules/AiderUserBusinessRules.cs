@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Rules
 		{
 			var businessContext = this.GetBusinessContext ();
 
-			user.CustomUISettings = businessContext.CreateEntity<SoftwareUISettingsEntity> ();
+			user.CustomUISettings = businessContext.CreateAndRegisterEntity<SoftwareUISettingsEntity> ();
 		}
 
 

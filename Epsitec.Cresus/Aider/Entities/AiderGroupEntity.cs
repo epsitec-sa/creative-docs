@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name, int level, string path)
 		{
-			var group = businessContext.CreateEntity<AiderGroupEntity> ();
+			var group = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
 
 			group.Name = name;
 			group.GroupLevel = level;
@@ -100,7 +100,7 @@ namespace Epsitec.Aider.Entities
 
 		public AiderGroupParticipantEntity AddParticipant(BusinessContext businessContext, AiderPersonEntity aiderPerson, Date? startDate, Date? endDate, string comment)
 		{
-			var aiderGroupParticipant = businessContext.CreateEntity<AiderGroupParticipantEntity> ();
+			var aiderGroupParticipant = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
 			aiderGroupParticipant.Group = this;
 			aiderGroupParticipant.Person = aiderPerson;
@@ -110,7 +110,7 @@ namespace Epsitec.Aider.Entities
 
 			if (!string.IsNullOrWhiteSpace (comment))
 			{
-				var aiderComment = businessContext.CreateEntity<AiderCommentEntity> ();
+				var aiderComment = businessContext.CreateAndRegisterEntity<AiderCommentEntity> ();
 
 				aiderComment.Text = TextFormatter.FormatText (comment);
 

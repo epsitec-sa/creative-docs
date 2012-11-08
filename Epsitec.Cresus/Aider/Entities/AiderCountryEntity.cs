@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Entities
 
 			if (country == null)
 			{
-				country = businessContext.CreateEntity<AiderCountryEntity> ();
+				country = businessContext.CreateAndRegisterEntity<AiderCountryEntity> ();
 
 				country.IsoCode = isoCode;
 				country.Name = name;
