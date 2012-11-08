@@ -81,6 +81,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderUserViewController.cs" />
     <Compile Include="Data\Eerv\AiderAddressEntityComparer.cs" />
     <Compile Include="Data\AiderGroupIds.cs" />
+    <Compile Include="Data\Eerv\AiderTownRepository.cs" />
     <Compile Include="Data\Eerv\EervDataReader.cs" />
     <Compile Include="Data\Eerv\EervId.cs" />
     <Compile Include="Data\Eerv\AiderEnumerator.cs" />

@@ -467,9 +467,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var aiderHouseholdToAiderPersons = EervParishDataImporter.GetAiderHouseholdToAiderPersons (businessContext, aiderPersonKeys);
 
+			var aiderTowns = new AiderTownRepository (businessContext);
+
 			foreach (var eervHousehold in eervHouseholds)
 			{
-				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderHouseholdToAiderPersons);
+				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderHouseholdToAiderPersons, aiderTowns);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
@@ -495,14 +497,14 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToPersons)
+		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToPersons, AiderTownRepository aiderTowns)
 		{
 			var eervToAiderPersons = EervParishDataImporter.GetEervToAiderPersons (businessContext, matches, newEntities, eervHousehold);
 			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (eervToAiderPersons.Values);
 
 			if (aiderHouseholds.Count == 0)
 			{
-				EervParishDataImporter.CreateHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholdToPersons);
+				EervParishDataImporter.CreateHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholdToPersons, aiderTowns);
 			}
 			else if (aiderHouseholds.Count == 1)
 			{
@@ -542,14 +544,14 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void CreateHousehold(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons)
+		private static void CreateHousehold(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons, AiderTownRepository aiderTowns)
 		{
 			var aiderHousehold = businessContext.CreateEntity<AiderHouseholdEntity> ();
 			aiderHouseholdToAiderPersons[aiderHousehold] = new List<AiderPersonEntity> ();
 
 			EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, aiderHousehold, aiderHouseholdToAiderPersons);
 
-			EervParishDataImporter.CombineAddress (businessContext, aiderHousehold.Address, eervHousehold.Address);
+			EervParishDataImporter.CombineAddress (aiderTowns, aiderHousehold.Address, eervHousehold.Address);
 		}
 
 
@@ -660,7 +662,7 @@ namespace Epsitec.Aider.Data.Eerv
 			// TODO Copy info of deleted households to the proper main household ?
 		}
 
-		private static void CombineAddress(BusinessContext businessContext, AiderAddressEntity aiderAddress, EervAddress eervAddress)
+		private static void CombineAddress(AiderTownRepository aiderTowns, AiderAddressEntity aiderAddress, EervAddress eervAddress)
 		{
 			if (string.IsNullOrEmpty (eervAddress.ZipCode) || string.IsNullOrEmpty (eervAddress.Town))
 			{
@@ -669,18 +671,18 @@ namespace Epsitec.Aider.Data.Eerv
 				return;
 			}
 
-			if (eervAddress.ZipCode.Length == 4 && eervAddress.ZipCode.IsInteger ())
+			if (eervAddress.IsInSwitzerland())
 			{
-				EervParishDataImporter.CombineSwissAddress (businessContext, eervAddress, aiderAddress);
+				EervParishDataImporter.CombineSwissAddress (aiderTowns, eervAddress, aiderAddress);
 			}
 			else
 			{
-				EervParishDataImporter.CombineForeignAddress (businessContext, eervAddress, aiderAddress);
+				EervParishDataImporter.CombineForeignAddress (aiderTowns, eervAddress, aiderAddress);
 			}
 		}
 
 
-		private static void CombineSwissAddress(BusinessContext businessContext, EervAddress eervAddress, AiderAddressEntity aiderAddress)
+		private static void CombineSwissAddress(AiderTownRepository aiderTowns, EervAddress eervAddress, AiderAddressEntity aiderAddress)
 		{
 			var firstAddressLine = eervAddress.FirstAddressLine;
 			var street = eervAddress.StreetName;
@@ -698,20 +700,17 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderAddress.HouseNumber = houseNumber;
 			aiderAddress.HouseNumberComplement = houseNumberComplement;
 
-			var switzerland = AiderCountryEntity.Find (businessContext, "CH", "Suisse");
-			var town = AiderTownEntity.FindOrCreate (businessContext, switzerland, zipCode, townName);
-
-			aiderAddress.Town = town;
+			aiderAddress.Town = aiderTowns.GetTown (eervAddress);
 		}
 
 
-		private static void CombineForeignAddress(BusinessContext businessContext, EervAddress eervAddress, AiderAddressEntity aiderAddress)
+		private static void CombineForeignAddress(AiderTownRepository aiderTowns, EervAddress eervAddress, AiderAddressEntity aiderAddress)
 		{
 			aiderAddress.AddressLine1 = eervAddress.FirstAddressLine;
 			aiderAddress.Street = eervAddress.StreetName;
 			aiderAddress.HouseNumber = eervAddress.HouseNumber;
 			aiderAddress.HouseNumberComplement = eervAddress.HouseNumberComplement;
-			aiderAddress.Town = AiderTownEntity.FindOrCreate (businessContext, eervAddress.ZipCode, eervAddress.Town);
+			aiderAddress.Town = aiderTowns.GetTown (eervAddress);
 		}
 
 
@@ -831,17 +830,18 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
 		{
 			var parishName = eervParishData.Id.Name;
+			var aiderTowns = new AiderTownRepository (businessContext);
 
 			foreach (var legalPerson in eervParishData.LegalPersons)
 			{
-				EervParishDataImporter.ImportEervLegalPerson (businessContext, parishName, legalPerson);
+				EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, parishName, legalPerson);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 
 
-		private static void ImportEervLegalPerson(BusinessContext businessContext, string parishName, EervLegalPerson legalPerson)
+		private static void ImportEervLegalPerson(BusinessContext businessContext, AiderTownRepository aiderTowns, string parishName, EervLegalPerson legalPerson)
 		{
 			var aiderLegalPerson = businessContext.CreateEntity<AiderLegalPersonEntity> ();
 
@@ -869,7 +869,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			var aiderAddress = aiderLegalPerson.Address;
-			EervParishDataImporter.CombineAddress (businessContext, aiderAddress, legalPerson.Address);
+			EervParishDataImporter.CombineAddress (aiderTowns, aiderAddress, legalPerson.Address);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.Coordinates);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.ContactPerson.Coordinates);
 

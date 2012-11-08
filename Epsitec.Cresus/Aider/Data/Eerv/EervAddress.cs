@@ -1,3 +1,6 @@
+using Epsitec.Common.Support.Extensions;
+
+
 namespace Epsitec.Aider.Data.Eerv
 {
 
@@ -14,6 +17,12 @@ namespace Epsitec.Aider.Data.Eerv
 			this.HouseNumberComplement = houseNumberComplement;
 			this.ZipCode = zipCode;
 			this.Town = town;
+		}
+
+
+		public bool IsInSwitzerland()
+		{
+			return this.ZipCode.Length == 4 && this.ZipCode.IsInteger ();
 		}
 
 
