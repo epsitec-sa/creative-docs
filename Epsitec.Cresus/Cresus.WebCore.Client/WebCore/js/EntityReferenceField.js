@@ -82,14 +82,11 @@ function() {
     },
 
     rawToValue: function(object) {
-      var returnNull = object === '' ||
-          this.currentValue === null ||
-          this.currentValue.displayed !== object;
-
-      if (returnNull) {
+      var value = this.currentValue;
+      if (value === null || value.displayed !== object) {
         return null;
       }
-      return this.currentValue;
+      return value;
     },
 
     getSubmitValue: function() {
