@@ -541,6 +541,22 @@ namespace Epsitec.Common.Support.Extensions
 					return false;
 			}
 		}
+
+
+		public static bool IsAllUpperCase(this string text)
+		{
+			text.ThrowIfNull ("text");
+
+			for (int i = 0; i < text.Length; i++)
+			{
+				if (char.IsLower (text, i))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
 		
 		
 		static StringExtensions()

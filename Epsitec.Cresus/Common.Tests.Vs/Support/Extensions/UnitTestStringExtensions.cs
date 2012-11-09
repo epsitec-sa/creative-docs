@@ -146,5 +146,20 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			ExceptionAssert.Throw<System.ArgumentException> (() => "".CountOccurences (null));
 			ExceptionAssert.Throw<System.ArgumentException> (() => "".CountOccurences (""));
 		}
+
+		[TestMethod]
+		public void IsAllUpperCaseTest()
+		{
+			Assert.IsTrue ("".IsAllUpperCase ());
+			Assert.IsTrue ("A".IsAllUpperCase ());
+			Assert.IsTrue ("A B C".IsAllUpperCase ());
+			Assert.IsTrue ("A-B".IsAllUpperCase ());
+			Assert.IsTrue ("A'B".IsAllUpperCase ());
+			Assert.IsTrue ("A!B".IsAllUpperCase ());
+
+			Assert.IsFalse ("a".IsAllUpperCase ());
+			Assert.IsFalse ("A-b".IsAllUpperCase ());
+			Assert.IsFalse ("b!A".IsAllUpperCase ());
+		}
 	}
 }
