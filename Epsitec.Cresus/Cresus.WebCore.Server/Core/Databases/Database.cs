@@ -66,8 +66,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			{
 				var iconUri = this.DataSetMetadata.BaseShowCommand.Caption.Icon;
 				var type = this.DataSetMetadata.DataSetEntityType;
-				
-				return IconManager.GetCssClassName (type, iconUri, IconSize.ThirtyTwo);
+
+				return IconManager.GetCssClassName (iconUri, IconSize.ThirtyTwo, type);
 			}
 		}
 

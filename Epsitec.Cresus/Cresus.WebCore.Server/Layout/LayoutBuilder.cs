@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public string GetIconClass(Type entityType, string uri)
 		{
-			return IconManager.GetCssClassName (entityType, uri, IconSize.Sixteen);
+			return IconManager.GetCssClassName (uri, IconSize.Sixteen, entityType);
 		}
 
 

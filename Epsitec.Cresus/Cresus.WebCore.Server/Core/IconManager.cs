@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public static string GetCssClassName(Type entityType, string iconUri, IconSize size)
+		public static string GetCssClassName(string iconUri, IconSize size, Type entityType = null)
 		{
 			if (iconUri == null)
 			{
