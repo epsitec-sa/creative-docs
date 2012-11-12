@@ -51,12 +51,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var databases = this.CoreServer.DatabaseManager
 				.GetDatabases (workerApp.UserManager)
-				.Select (d => d.GetSummaryDataDictionary ())
+				.Select (d => d.GetDataDictionary ())
 				.ToList ();
 
 			var content = new Dictionary<string, object> ()
 			{
-				{ "databases", databases },
+				{ "menu", databases },
 			};
 
 			return CoreResponse.Success (content);

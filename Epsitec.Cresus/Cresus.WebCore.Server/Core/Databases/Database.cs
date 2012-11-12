@@ -6,8 +6,6 @@ using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using System;
 
 using System.Collections.Generic;
@@ -38,36 +36,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			get
 			{
 				return this.dataSetMetadata;
-			}
-		}
-
-
-		public string Title
-		{
-			get
-			{
-				return this.DataSetMetadata.BaseShowCommand.Caption.DefaultLabel;
-			}
-		}
-
-
-		public string Name
-		{
-			get
-			{
-				return Tools.TypeToString (this.DataSetMetadata.DataSetEntityType);
-			}
-		}
-
-
-		public string IconClass
-		{
-			get
-			{
-				var iconUri = this.DataSetMetadata.BaseShowCommand.Caption.Icon;
-				var type = this.DataSetMetadata.DataSetEntityType;
-
-				return IconManager.GetCssClassName (iconUri, IconSize.ThirtyTwo, type);
 			}
 		}
 
@@ -147,17 +115,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			}
 
 			return data;
-		}
-
-
-		public Dictionary<string, object> GetSummaryDataDictionary()
-		{
-			return new Dictionary<string, object> ()
-			{
-			    { "title", this.Title },
-			    { "name", this.Name },
-			    { "cssClass", this.IconClass },
-			};
 		}
 
 

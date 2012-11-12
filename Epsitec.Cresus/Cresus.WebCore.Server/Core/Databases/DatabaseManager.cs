@@ -27,9 +27,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public IEnumerable<Database> GetDatabases(UserManager userManager)
+		public IEnumerable<AbstractMenuItem> GetDatabases(UserManager userManager)
 		{
-			return this.GetDataSets (userManager).Select (d => this.GetDatabase (d));
+			var dataSets = this.GetDataSets (userManager).ToList ();
+
+			var mainDatabases = this.GetMainDatabases (dataSets);
+			var secondaryDatabases = this.GetSecondaryDatabases (dataSets);
+
+			return mainDatabases.Concat (secondaryDatabases);
 		}
 
 
@@ -45,7 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			return globalDataSets.Concat (userDataSets);
 		}
-
+		
 
 		private bool IsGlobalDataSet(DataSetMetadata dataSet)
 		{
@@ -56,6 +61,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		private bool IsUserDataSet(DataSetMetadata dataSet, IEnumerable<string> roles)
 		{
 			return dataSet.DisplayGroupId.IsValid && dataSet.MatchesAnyUserRole (roles);
+		}
+
+
+		private IEnumerable<AbstractMenuItem> GetMainDatabases(IEnumerable<DataSetMetadata> dataSets)
+		{
+			return dataSets
+				.Where (d => d.DisplayGroupId.IsEmpty)
+				.Select (d => new DatabaseMenuItem (d));
+		}
+
+
+		private IEnumerable<AbstractMenuItem > GetSecondaryDatabases(IEnumerable<DataSetMetadata> dataSets)
+		{
+			return dataSets
+				.Where (d => !d.DisplayGroupId.IsEmpty)
+				.GroupBy (d => d.DisplayGroupId)
+				.Select (g => new SubMenuItem (
+					SafeResourceResolver.Instance.GetCaption (g.Key),
+					g.Select (d => new DatabaseMenuItem (d))
+				));
 		}
 
 

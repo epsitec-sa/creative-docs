@@ -24,7 +24,7 @@ function() {
     constructor: function() {
       this.callParent(arguments);
       this.add(
-          this.createDatabasesGroup(),
+          this.createMenuGroup(),
           '->',
           this.createScopeSelector(),
           this.createToolsGroup()
@@ -34,7 +34,7 @@ function() {
 
     /* Additional methods */
 
-    createDatabasesGroup: function() {
+    createMenuGroup: function() {
       var group = Ext.create('Ext.container.ButtonGroup', {
         title: Epsitec.Texts.getDatabasesTitle(),
         headerPosition: 'bottom'
@@ -43,7 +43,7 @@ function() {
       Ext.Ajax.request({
         url: 'proxy/database/list',
         callback: function(options, success, response) {
-          this.createDatabasesGroupCallback(success, response, group);
+          this.createMenuGroupCallback(success, response, group);
         },
         scope: this
       });
@@ -51,32 +51,68 @@ function() {
       return group;
     },
 
-    createDatabasesGroupCallback: function(success, response, group) {
-      var json, databases, i;
+    createMenuGroupCallback: function(success, response, group) {
+      var json, menuItems, i, menuItem;
 
       json = Epsitec.Tools.processResponse(success, response);
       if (json === null) {
         return;
       }
 
-      databases = json.content.databases;
+      menuItems = json.content.menu;
 
-      for (i = 0; i < databases.length; i += 1) {
-        this.createDatabaseButton(group, databases[i]);
+      for (i = 0; i < menuItems.length; i += 1) {
+        menuItem = this.createMenuItem(menuItems[i]);
+        group.add(menuItem);
       }
     },
 
-    createDatabaseButton: function(group, database) {
-      var databaseButton = this.createButton({
-        text: database.title,
-        handler: function() { this.databaseClickCallback(database); },
-        iconCls: database.cssClass
+    createMenuItem: function(menuItem) {
+      switch (menuItem.type) {
+        case 'database':
+          return this.createDatabaseButton(menuItem);
+
+        case 'subMenu':
+          return this.createSubMenu(menuItem);
+
+        default:
+          throw 'invalid menu item type: ' + menuItem.type;
+      }
+    },
+
+    createDatabaseButton: function(menuItem) {
+      return this.createButton({
+        text: menuItem.title,
+        handler: function() { this.databaseClickCallback(menuItem); },
+        iconCls: menuItem.cssClass
       });
-      group.add(databaseButton);
     },
 
     databaseClickCallback: function(database) {
       this.application.tabManager.showEntityTab(database);
+    },
+
+    createSubMenu: function(menuItem) {
+      var items, item, i;
+
+      items = [];
+
+      for (i = 0; i < menuItem.items.length; i += 1) {
+        item = this.createMenuItem(menuItem.items[i]);
+        items.push(item);
+      }
+
+      return {
+        text: menuItem.title,
+        iconCls: menuItem.cssClass,
+        scale: 'large',
+        iconAlign: 'top',
+        menu: {
+          xtype: 'menu',
+          plain: true,
+          items: items
+        }
+      };
     },
 
     createScopeSelector: function() {
@@ -143,14 +179,14 @@ function() {
     },
 
     createButton: function(options) {
-      return Ext.create('Ext.Action', {
-        text: options.text,
-        handler: options.handler,
+      var newOptions = {
         scale: 'large',
         scope: this,
-        iconAlign: 'top',
-        iconCls: options.iconCls
-      });
+        iconAlign: 'top'
+      };
+      Ext.applyIf(newOptions, options);
+
+      return Ext.create('Ext.Action', newOptions);
     }
   });
 });
