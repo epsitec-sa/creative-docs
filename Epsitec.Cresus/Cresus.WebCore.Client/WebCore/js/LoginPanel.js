@@ -23,6 +23,7 @@ function() {
       anchor: '100%'
     },
     fieldDefaults: {
+      labelSeparator: null,
       msgTarget: 'side'
     },
 

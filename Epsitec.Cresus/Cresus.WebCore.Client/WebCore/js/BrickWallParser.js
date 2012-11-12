@@ -140,7 +140,8 @@ function() {
         return {
           fieldLabel: brick.title,
           name: brick.name,
-          readOnly: brick.readOnly
+          readOnly: brick.readOnly,
+          labelSeparator: null
         };
       },
 
