@@ -67,7 +67,8 @@ function() {
         {
           xtype: 'rownumberer',
           width: 35,
-          sortable: false
+          sortable: false,
+          resizable: true
         }
       ];
 
