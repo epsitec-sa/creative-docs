@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InputHorizontalGroupBrick<TSource, TField, TSelf, TParent> : Brick
-		where TSelf : InputHorizontalGroupBrick<TSource, TField, TSelf, TParent>
+	public class InputHorizontalGroupBrick<TSource, TSelf, TParent> : Brick
+		where TSelf : InputHorizontalGroupBrick<TSource, TSelf, TParent>
 		where TParent : Brick
 	{
 		public InputHorizontalGroupBrick(TParent parent)
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Bricks
 			this.parent = parent;
 		}
 
-		public TSelf Field<TResult>(Expression<System.Func<TField, TResult>> expression)
+		public TSelf Field<TResult>(Expression<System.Func<TSource, TResult>> expression)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Field, expression));
 			return this as TSelf;
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public override System.Type GetFieldType()
 		{
-			return typeof (TField);
+			return typeof (TSource);
 		}
 
 		readonly TParent parent;
