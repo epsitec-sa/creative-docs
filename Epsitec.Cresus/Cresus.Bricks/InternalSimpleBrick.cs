@@ -33,9 +33,9 @@ namespace Epsitec.Cresus.Bricks
 			return new TemplateBrick<T, TSelf> (this as TSelf);
 		}
 		
-		public InputBrick<T, T, TSelf> Input()
+		public InputBrick<T, TSelf> Input()
 		{
-			return new InputBrick<T, T, TSelf> (this as TSelf);
+			return new InputBrick<T, TSelf> (this as TSelf);
 		}
 	}
 }

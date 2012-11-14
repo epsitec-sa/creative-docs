@@ -10,8 +10,8 @@ using System.Dynamic;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InternalInputBrick<TSource, TField, TSelf, TParent> : Brick
-		where TSelf : InternalInputBrick<TSource, TField, TSelf, TParent>
+	public class InternalInputBrick<T, TSelf, TParent> : Brick
+		where TSelf : InternalInputBrick<T, TSelf, TParent>
 		where TParent : Brick
 	{
 		public InternalInputBrick(TParent parent)
@@ -28,19 +28,19 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public HorizontalGroupBrick<TField, TSelf> HorizontalGroup(string value)
+		public HorizontalGroupBrick<T, TSelf> HorizontalGroup(string value)
 		{
-			var group = new HorizontalGroupBrick<TField, TSelf> (this as TSelf);
+			var group = new HorizontalGroupBrick<T, TSelf> (this as TSelf);
 			group.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
 			return group;
 		}
 
-		public HorizontalGroupBrick<TField, TSelf> HorizontalGroup()
+		public HorizontalGroupBrick<T, TSelf> HorizontalGroup()
 		{
-			return new HorizontalGroupBrick<TField, TSelf> (this as TSelf);
+			return new HorizontalGroupBrick<T, TSelf> (this as TSelf);
 		}
 
-		public TSelf Field<TResult>(Expression<System.Func<TField, TResult>> expression)
+		public TSelf Field<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Field, expression));
 			return this as TSelf;
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public override System.Type GetFieldType()
 		{
-			return typeof (TField);
+			return typeof (T);
 		}
 
 		readonly TParent parent;

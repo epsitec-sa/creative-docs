@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InputBrick<TSource, TField, TParent> : InternalInputBrick<TSource, TField, InputBrick<TSource, TField, TParent>, TParent>
+	public class InputBrick<T, TParent> : InternalInputBrick<T, InputBrick<T, TParent>, TParent>
 			where TParent : Brick
 	{
 		public InputBrick(TParent parent)
