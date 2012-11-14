@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Title ("Document lié")
-				.TitleCompact ("Documents liés")
 				.Template ()
+					.Title ("Document lié")
+					.TitleCompact ("Documents liés")
 				.End ()
 				;
 			wall.AddBrick (x => x.Comments)

@@ -72,13 +72,12 @@ namespace Epsitec.Cresus.Bricks
 
 				wall.AddBrick (x => x.Bars)
 					.Name ("name")
-					.Icon ("icon")
-					.Title ("title")
 					.Template ()
-					.Title ("template title")
-					.Title (x => string.Format ("{0}", x.Value))
-					.Title (x => x.Value)
-					.Text ("template text")
+						.Icon ("icon")
+						.Title ("template title")
+						.Title (x => string.Format ("{0}", x.Value))
+						.Title (x => x.Value)
+						.Text ("template text")
 					.End ()
 					;
 
