@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InternalSimpleBrick<TSource, TField, TSelf> : InternalBaseBrick<TSource, TField, InternalSimpleBrick<TSource, TField, TSelf>>
-			where TSelf : InternalSimpleBrick<TSource, TField, TSelf>
+	public class InternalSimpleBrick<T, TSelf> : InternalBaseBrick<T, InternalSimpleBrick<T, TSelf>>
+			where TSelf : InternalSimpleBrick<T, TSelf>
 	{
 		public TSelf Name(string value)
 		{
@@ -16,26 +16,26 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public TSelf Include<TResult>(Expression<System.Func<TSource, TResult>> expression)
+		public TSelf Include<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Include, expression));
 			return this as TSelf;
 		}
 
-		public TSelf Attribute<T>(T attributeValue)
+		public TSelf Attribute<TAttribute>(TAttribute attributeValue)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<T> (attributeValue)));
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
 			return this as TSelf;
 		}
 
-		public TemplateBrick<TField, TField, TSelf> Template()
+		public TemplateBrick<T, TSelf> Template()
 		{
-			return new TemplateBrick<TField, TField, TSelf> (this as TSelf);
+			return new TemplateBrick<T, TSelf> (this as TSelf);
 		}
 		
-		public InputBrick<TField, TField, TSelf> Input()
+		public InputBrick<T, T, TSelf> Input()
 		{
-			return new InputBrick<TField, TField, TSelf> (this as TSelf);
+			return new InputBrick<T, T, TSelf> (this as TSelf);
 		}
 	}
 }

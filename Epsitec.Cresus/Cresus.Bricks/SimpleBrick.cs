@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class SimpleBrick<TSource, TField> : InternalSimpleBrick<TSource, TField, SimpleBrick<TSource, TField>>
+	public class SimpleBrick<T> : InternalSimpleBrick<T, SimpleBrick<T>>
 	{
 		public SimpleBrick()
 		{
@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Bricks
 			parent.AddProperty (new BrickProperty (BrickPropertyKey.OfType, this));
 		}
 
-		public SimpleBrick<TOutput, TOutput> OfType<TOutput>()
+		public SimpleBrick<TOutput> OfType<TOutput>()
 		{
-			var brick = new SimpleBrick<TOutput, TOutput> (this);
+			var brick = new SimpleBrick<TOutput> (this);
 
 			brick.InheritResolver (this);
 			brick.DefineBrickWall (this.BrickWall);

@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Bricks
 		{
 		}
 
-		public SimpleBrick<T, T> AddBrick()
+		public SimpleBrick<T> AddBrick()
 		{
-			var brick = new SimpleBrick<T, T> ();
+			var brick = new SimpleBrick<T> ();
 
 			this.Add (brick);
 			this.NotifyBrickAdded (typeof (T), brick);
@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Bricks
 			return brick;
 		}
 
-		public SimpleBrick<TField, TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
+		public SimpleBrick<TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
 		{
-			var brick = new SimpleBrick<TField, TField> ();
+			var brick = new SimpleBrick<TField> ();
 
 			brick.DefineResolver (expression);
 
@@ -35,9 +35,9 @@ namespace Epsitec.Cresus.Bricks
 			return brick;
 		}
 
-		public SimpleBrick<TField, TField> AddBrick<TField>(Expression<System.Func<T, IList<TField>>> expression)
+		public SimpleBrick<TField> AddBrick<TField>(Expression<System.Func<T, IList<TField>>> expression)
 		{
-			var brick = new SimpleBrick<TField, TField> ();
+			var brick = new SimpleBrick<TField> ();
 
 			brick.DefineResolver (expression);
 

@@ -1,37 +1,35 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InternalBaseBrick<TSource, TField, TSelf> : Brick
-				where TSelf : InternalBaseBrick<TSource, TField, TSelf>
+	public class InternalBaseBrick<T, TSelf> : Brick
+				where TSelf : InternalBaseBrick<T, TSelf>
 	{
-		public TSelf Text(Mortar<TSource> value)
+		public TSelf Text(Mortar<T> value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Text, value));
 			return this as TSelf;
 		}
 
-		public TSelf TextCompact(Mortar<TSource> value)
+		public TSelf TextCompact(Mortar<T> value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.TextCompact, value));
 			return this as TSelf;
 		}
 
-		public TSelf Text<TResult>(Expression<System.Func<TSource, TResult>> expression)
+		public TSelf Text<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
-			return this.Text (new Mortar<TSource, TResult> (expression));
+			return this.Text (new Mortar<T, TResult> (expression));
 		}
 
-		public TSelf TextCompact<TResult>(Expression<System.Func<TSource, TResult>> expression)
+		public TSelf TextCompact<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
-			return this.TextCompact (new Mortar<TSource, TResult> (expression));
+			return this.TextCompact (new Mortar<T, TResult> (expression));
 		}
 
 		public TSelf Icon(string value)
@@ -40,18 +38,18 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public TSelf Title<TResult>(Expression<System.Func<TSource, TResult>> expression)
+		public TSelf Title<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
-			return this.Title (new Mortar<TSource, TResult> (expression));
+			return this.Title (new Mortar<T, TResult> (expression));
 		}
 
-		public TSelf Title(Mortar<TSource> value)
+		public TSelf Title(Mortar<T> value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
 			return this as TSelf;
 		}
 
-		public TSelf TitleCompact(Mortar<TSource> value)
+		public TSelf TitleCompact(Mortar<T> value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.TitleCompact, value));
 			return this as TSelf;
@@ -72,7 +70,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public override System.Type GetFieldType()
 		{
-			return typeof (TField);
+			return typeof (T);
 		}
 	}
 }

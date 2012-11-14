@@ -3,12 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InternalTemplateBrick<TSource, TField, TSelf, TParent> : InternalBaseBrick<TSource, TField, InternalTemplateBrick<TSource, TField, TSelf, TParent>>
-			where TSelf : InternalTemplateBrick<TSource, TField, TSelf, TParent>
+	public class InternalTemplateBrick<T, TSelf, TParent> : InternalBaseBrick<T, InternalTemplateBrick<T, TSelf, TParent>>
+			where TSelf : InternalTemplateBrick<T, TSelf, TParent>
 			where TParent : Brick
 
 	{
