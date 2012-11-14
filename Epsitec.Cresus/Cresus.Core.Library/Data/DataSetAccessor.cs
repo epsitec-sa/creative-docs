@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			if (this.itemCount == null)
 			{
-				this.itemCount = this.RetrieveItemCount ();
+				this.itemCount = this.GetRequestView ().GetCount ();
 			}
 
 			return this.itemCount.Value;
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Data
 				return -1;
 			}
 
-			return this.requestView.GetIndex (entityKey.Value) ?? -1;
+			return this.GetRequestView ().GetIndex (entityKey.Value) ?? -1;
 		}
 
 		public AbstractEntity[] GetItems(int index, int count)
@@ -102,7 +102,9 @@ namespace Epsitec.Cresus.Core.Data
 				count = total - index;
 			}
 
-			return getter (this.requestView, index, count).ToArray ();
+			var requestView = this.GetRequestView ();
+
+			return getter (requestView, index, count).ToArray ();
 		}
 
 		#region IDisposable Members
@@ -123,29 +125,34 @@ namespace Epsitec.Cresus.Core.Data
 					this.data.DisposeDataContext (this.dataContext);
 				}
 
-				if (this.requestView != null)
-				{
-					this.requestView.Dispose ();
-					this.requestView = null;
-				}
+				this.DisposeRequestView ();
 			}
 		}
 
 		protected abstract AbstractEntity GetExample();
 
-		private void SetUpRequestView()
+
+		private AbstractRequestView GetRequestView()
+		{
+			if (this.requestView == null)
+			{
+				this.requestView = this.CreateRequestView ();
+			}
+
+			return this.requestView;
+		}
+
+		private void DisposeRequestView()
 		{
 			if (this.requestView != null)
 			{
-				return;
+				this.requestView.Dispose ();
+				this.requestView = null;
 			}
-			if (this.dataContext.IsDisposed)
-			{
-				throw new System.ObjectDisposedException ("dataContext", "The data set accessor was disposed");
-			}
+		}
 
-			//	TODO: ...
-
+		private AbstractRequestView CreateRequestView()
+		{
 			var example = this.GetExample ();
 
 			var request = new Request ()
@@ -182,7 +189,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			request.SortClauses.AddRange (sortClauses);
 
-			this.requestView = this.dataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
+			return this.dataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
 		}
 
 		private SortClause CreateSortClause(ColumnRef<EntityColumnSort> sortColumn, AbstractEntity example)
@@ -196,15 +203,6 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			return column.DefaultSort.ToSortClause (column, example);
 		}
-
-
-		private int RetrieveItemCount()
-		{
-			this.SetUpRequestView ();
-
-			return this.requestView.GetCount ();
-		}
-
 
 
 		private readonly CoreData				data;
