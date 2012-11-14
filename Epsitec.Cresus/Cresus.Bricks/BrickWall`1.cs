@@ -9,40 +9,29 @@ namespace Epsitec.Cresus.Bricks
 {
 	public class BrickWall<T> : BrickWall
 	{
-		public BrickWall()
-		{
-		}
-
 		public SimpleBrick<T> AddBrick()
 		{
-			var brick = new SimpleBrick<T> ();
-
-			this.Add (brick);
-			this.NotifyBrickAdded (typeof (T), brick);
-
-			return brick;
+			return this.AddSimpleBrick<T> (null);
 		}
 
 		public SimpleBrick<TField> AddBrick<TField>(Expression<System.Func<T, TField>> expression)
 		{
-			var brick = new SimpleBrick<TField> ();
-
-			brick.DefineResolver (expression);
-
-			this.Add (brick);
-			this.NotifyBrickAdded (typeof (TField), brick);
-
-			return brick;
+			return this.AddSimpleBrick<TField> (expression);
 		}
 
 		public SimpleBrick<TField> AddBrick<TField>(Expression<System.Func<T, IList<TField>>> expression)
 		{
-			var brick = new SimpleBrick<TField> ();
+			return this.AddSimpleBrick<TField> (expression);
+		}
+
+		private SimpleBrick<TBrick> AddSimpleBrick<TBrick>(Expression expression)
+		{
+			var brick = new SimpleBrick<TBrick> ();
 
 			brick.DefineResolver (expression);
 
 			this.Add (brick);
-			this.NotifyBrickAdded (typeof (TField), brick);
+			this.NotifyBrickAdded (typeof (TBrick), brick);
 
 			return brick;
 		}
