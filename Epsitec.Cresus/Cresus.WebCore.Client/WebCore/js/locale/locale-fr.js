@@ -42,7 +42,15 @@ Ext.define('Epsitec.cresus.webcore.Locale', {
         logoutLabel: 'D\u00E9connexion',
         sortTitle: 'Configuration du tri',
         scopeTitle: 'Cercles',
-        windowTitle: 'Cr\u00E9sus.Core'
+        windowTitle: 'Cr\u00E9sus.Core',
+        warningTitle: 'Attention',
+        entityCreationWarningMessage: 'Un filtre est actif. L\'entit\u00E9 ' +
+            'que vous allez cr\u00E9er ne sera pas affich\u00E9e dans la ' +
+            'liste si elle ne correspond pas \u00E0 ces crit\u00E8res.' +
+            'Voulez-vous quand m\u00EAme la cr\u00E9er?',
+        entitySelectionErrorMessage: 'L\'entit\u00E9 que vous avez cr\u00E9e ' +
+            'ne peut pas \u00EAtre affich\u00E9e dans la liste, probablement ' +
+            '\u00E0 cause d\'un filtre.'
       };
     }
   }

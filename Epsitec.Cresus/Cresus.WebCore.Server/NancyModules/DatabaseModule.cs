@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -42,6 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/list"] = p => this.Execute (wa => this.GetDatabaseList (wa));
 			Get["/definition/{name}"] = p => this.GetDatabase (p);
 			Get["/get/{name}"] = p => this.Execute (wa => this.GetEntities (wa, p));
+			Get["/getindex/{name}/{id}"] = p => this.Execute (wa => this.GetEntityIndex (wa, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
@@ -76,11 +78,67 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetEntities(WorkerApp workerApp, dynamic parameters)
 		{
-			string databaseName = parameters.name;
-			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
+			Func<dynamic, DataSetAccessor, Core.Databases.Database, Response> getter = this.GetEntities;
 
+			return this.GetData (workerApp, parameters, getter);
+		}
+
+
+		private Response GetEntities(dynamic parameters, DataSetAccessor dataSet, Core.Databases.Database database)
+		{
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
+
+			var dataContext = dataSet.IsolatedDataContext;
+
+			var total = dataSet.GetItemCount ();
+			var entities = dataSet.GetItems (start, limit)
+				.Select (e => database.GetEntityData (dataContext, this.CoreServer.Caches, e))
+				.ToList ();
+
+			var content = new Dictionary<string, object> ()
+			{
+				{ "total", total },
+				{ "entities", entities },
+			};
+
+			return CoreResponse.Success (content);
+		}
+
+
+		private Response GetEntityIndex(WorkerApp workerApp, dynamic parameters)
+		{
+			Func<dynamic, DataSetAccessor, Core.Databases.Database, Response> getter = this.GetEntityIndex;
+
+			return this.GetData (workerApp, parameters, getter);
+		}
+		
+		
+		private Response GetEntityIndex(dynamic parameters, DataSetAccessor dataSet, Core.Databases.Database database)
+		{
+			string entityId = parameters.id;
+			var entityKey = Tools. ParseEntityId (entityId);
+
+			int? index = dataSet.IndexOf (entityKey);
+
+			if (index == -1)
+			{
+				index = null;
+			}
+
+			var content = new Dictionary<string, object> ()
+			{
+				{ "index", index },
+			};
+
+			return CoreResponse.Success (content);
+		}
+
+
+		private Response GetData(WorkerApp workerApp, dynamic parameters, Func<dynamic, DataSetAccessor, Core.Databases.Database, Response> responseGetter)
+		{
+			string databaseName = parameters.name;
+			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
 
 			var entityType = database.DataSetMetadata.DataSetEntityType;
 
@@ -90,7 +148,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string sort = DatabaseModule.GetOptionalParameter (Request.Query.sort);
 			var sorters = this.ParseSorters (database, sort);
 
-			settings.Sort.Clear();
+			settings.Sort.Clear ();
 			settings.Sort.AddRange (sorters);
 
 			string filter = DatabaseModule.GetOptionalParameter (Request.Query.filter);
@@ -104,20 +162,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (var dataSet = database.GetDataSetAccessor (dataSetGetter))
 			{
-				var dataContext = dataSet.IsolatedDataContext;
-
-				var total = dataSet.GetItemCount ();
-				var entities = dataSet.GetItems (start, limit)
-					.Select (e => database.GetEntityData (dataContext, this.CoreServer.Caches, e))
-					.ToList ();
-
-				var content = new Dictionary<string, object> ()
-				{
-					{ "total", total },
-					{ "entities", entities },
-				};
-
-				return CoreResponse.Success (content);
+				return responseGetter (parameters, dataSet, database);
 			}
 		}
 

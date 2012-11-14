@@ -146,6 +146,12 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
+		public static EntityKey? ParseEntityId(string entityId)
+		{
+			return EntityKey.Parse (entityId);
+		}
+
+
 		public static AbstractEntity ResolveEntity(BusinessContext businessContext, string entityId)
 		{
 			var entityKey = EntityKey.Parse (entityId);

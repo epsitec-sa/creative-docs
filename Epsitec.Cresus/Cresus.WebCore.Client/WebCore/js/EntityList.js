@@ -2,6 +2,7 @@ Ext.require([
   'Epsitec.cresus.webcore.Callback',
   'Epsitec.cresus.webcore.BooleanNullableColumn',
   'Epsitec.cresus.webcore.Enumeration',
+  'Epsitec.cresus.webcore.ErrorHandler',
   'Epsitec.cresus.webcore.ListColumn',
   'Epsitec.cresus.webcore.SortWindow',
   'Epsitec.cresus.webcore.Texts',
@@ -333,8 +334,21 @@ function() {
       // this.store.load() resets the position of the scroll bar to the top,
       // whereas a call to this.store.reload() would keep it. I did not find any
       // workaround for this yet.
-      this.store.removeAll();
+      this.clearStore();
       this.store.load();
+    },
+
+    clearStore: function() {
+      this.store.removeAll();
+
+      // The removeAll() method does not delete the totalCount, but we need to
+      // do it if the total count has changed on the server, otherwise this
+      // value would not be updated this leads to bugs where new rows are not
+      // shown or selected because they are above the total count.
+      // This stuff is done automatically in this.store.load() for instance, but
+      // it is not done in this.store.guaranteeRange() or other methods. We do
+      // it manually here so that we are sure that it is done at some point.
+      delete this.store.totalCount;
     },
 
     onSortHandler: function() {
@@ -443,6 +457,100 @@ function() {
         id: row.get('id'),
         summary: row.get('summary')
       };
+    },
+
+    selectEntity: function(entityId) {
+      this.clearStore();
+      this.setLoading();
+
+      Ext.Ajax.request({
+        url: this.buildGetIndexUrl(entityId),
+        method: 'GET',
+        callback: function(options, success, response) {
+          this.selectEntityCallback(success, response, entityId);
+        },
+        scope: this
+      });
+    },
+
+    buildGetIndexUrl: function(entityId) {
+      var base, sorters, filters, parameters, key, value;
+
+      base = 'proxy/database/getindex' +
+          '/' + this.databaseName +
+          '/' + entityId;
+
+      parameters = [];
+
+      sorters = this.store.getSorters();
+      if (sorters.length > 0) {
+        key = 'sort';
+        value = this.store.proxy.encodeSorters(sorters);
+        parameters.push([key, value]);
+      }
+
+      filters = this.filters.getFilterData();
+      if (filters.length > 0) {
+        key = 'filter';
+        value = this.filters.buildQuery(filters).filter;
+        parameters.push([key, value]);
+      }
+
+      return Epsitec.Tools.createUrl(base, parameters);
+    },
+
+    selectEntityCallback: function(success, response, entityId) {
+      var json, index, halfRange;
+
+      this.setLoading(false);
+
+      json = Epsitec.Tools.processResponse(success, response);
+      if (json === null) {
+        return;
+      }
+
+      index = json.content.index;
+
+      if (index === null) {
+        // The requested entity is not in the data set. This is probably because
+        // it does not match the filters.
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getErrorTitle(),
+            Epsitec.Texts.getEntitySelectionErrorMessage()
+        );
+        this.reloadStore();
+        return;
+      }
+
+      halfRange = this.store.pageSize / 2;
+
+      this.store.guaranteeRange(
+          Math.max(0, index - halfRange),
+          index + halfRange,
+          function() {
+            this.selectEntityCallback2(entityId);
+          },
+          this
+      );
+    },
+
+    selectEntityCallback2: function(entityId) {
+      // We don't look for the record by its index but by its id. This is
+      // the index might have changed if another user has added or removed
+      // entities. We hope that our record has not been shifted too far away
+      // from the index that we got. If that's the case, we'll still be able to
+      // find it in the data that has been loaded by the call to guaranteeRage.
+      var record = this.store.getById(entityId);
+
+      if (record === null) {
+        // the record was not found, it is outside the range that was loaded by
+        // the call to guaranteeRange. Therefore, we start again, hoping that
+        // this time the index won't change.
+        this.selectEntity(entityId);
+        return;
+      }
+
+      this.getSelectionModel().select(record, false, false);
     }
   });
 });

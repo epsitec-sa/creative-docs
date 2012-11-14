@@ -72,6 +72,20 @@ function() {
           Epsitec.ErrorHandler.handleJsonError();
           return null;
         }
+      },
+
+      createUrl: function(base, parameters) {
+        var url, i, parameter, separator;
+
+        url = base;
+
+        for (i = 0; i < parameters.length; i += 1) {
+          parameter = parameters[i];
+          separator = i === 0 ? '?' : '&';
+          url += separator + parameter[0] + '=' + parameter[1];
+        }
+
+        return url;
       }
     }
   });

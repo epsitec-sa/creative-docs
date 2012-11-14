@@ -152,6 +152,18 @@ function() {
 
       getWindowTitle: function() {
         return this.texts.windowTitle;
+      },
+
+      getWarningTitle: function() {
+        return this.texts.warningTitle;
+      },
+
+      getEntityCreationWarningMessage: function() {
+        return this.texts.entityCreationWarningMessage;
+      },
+
+      getEntitySelectionErrorMessage: function() {
+        return this.texts.entitySelectionErrorMessage;
       }
     }
   });

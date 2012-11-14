@@ -47,7 +47,23 @@ function() {
     },
 
     onCreateHandler: function() {
-      this.createEntity();
+      if (this.filters.getFilterData().length > 0) {
+        Ext.MessageBox.confirm(
+            Epsitec.Texts.getWarningTitle(),
+            Epsitec.Texts.getEntityCreationWarningMessage(),
+            this.onCreateHandlerCallback,
+            this
+        );
+      }
+      else {
+        this.createEntity();
+      }
+    },
+
+    onCreateHandlerCallback: function(buttonId) {
+      if (buttonId === 'yes') {
+        this.createEntity();
+      }
     },
 
     onDeleteHandler: function() {
@@ -75,7 +91,7 @@ function() {
     },
 
     createEntityCallback: function(options, success, response) {
-      var json;
+      var json, entityId;
 
       this.setLoading(false);
 
@@ -84,7 +100,8 @@ function() {
         return;
       }
 
-      this.reloadStore();
+      entityId = json.content.id;
+      this.selectEntity(entityId);
     },
 
     deleteEntities: function(entityItems) {

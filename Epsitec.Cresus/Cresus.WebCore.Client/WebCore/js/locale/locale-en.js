@@ -41,7 +41,13 @@ Ext.define('Epsitec.cresus.webcore.Locale', {
         logoutLabel: 'Logout',
         sortTitle: 'Sort selection',
         scopeTitle: 'Scopes',
-        windowTitle: 'Cr\u00E9sus.Core'
+        windowTitle: 'Cr\u00E9sus.Core',
+        warningTitle: 'Warning',
+        entityCreationWarningMessage: 'A filter is active. The entity you ' +
+            'are about to create will not appear in the entity list, if it ' +
+            'does not satisfy the filter condition. Do you want to create it?',
+        entitySelectionErrorMessage: 'The entity that you have created ' +
+            'cannot be displayed in the list, probably because of a filter.'
       };
     }
   }
