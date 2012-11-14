@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class SimpleBrick<T> : InternalBaseBrick<T, SimpleBrick<T>>
+	public class SimpleBrick<T> : Brick<T, SimpleBrick<T>>
 	{
 		public SimpleBrick<T> Name(string value)
 		{

@@ -7,8 +7,8 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InternalBaseBrick<T, TSelf> : Brick
-				where TSelf : InternalBaseBrick<T, TSelf>
+	public class Brick<T, TSelf> : Brick
+				where TSelf : Brick<T, TSelf>
 	{
 		public TSelf Text(Mortar<T> value)
 		{
@@ -66,7 +66,6 @@ namespace Epsitec.Cresus.Bricks
 			this.AddProperty (new BrickProperty (BrickPropertyKey.GlobalWarning));
 			return this as TSelf;
 		}
-
 
 		public override System.Type GetFieldType()
 		{

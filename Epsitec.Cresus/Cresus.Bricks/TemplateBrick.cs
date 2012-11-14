@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class TemplateBrick<T, TParent> : InternalBaseBrick<T, TemplateBrick<T, TParent>>
+	public class TemplateBrick<T, TParent> : Brick<T, TemplateBrick<T, TParent>>
 			where TParent : Brick
 	{
 		public TemplateBrick(TParent parent)
