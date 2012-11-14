@@ -174,9 +174,9 @@ namespace Epsitec.Cresus.Core.Bricks
 				{
 					item.EntityMarshaler = this.ViewController.CreateEntityMarshaler ();
 
-					System.Type fieldType = brick.GetFieldType ();
+					System.Type brickType = brick.GetBrickType ();
 
-					if (fieldType == typeof (T))
+					if (brickType == typeof (T))
 					{
 						//	Type already ok.
 
@@ -194,11 +194,11 @@ namespace Epsitec.Cresus.Core.Bricks
 					}
 					else
 					{
-						item.SetEntityConverter<T> (brick.GetResolver (fieldType));
+						item.SetEntityConverter<T> (brick.GetResolver (brickType));
 
 						if (this.autoCreateNullEntity)
 						{
-							item.SetEntityAutoCreator (this.controller.BusinessContext, fieldType, brick.CreateResolverSetter (fieldType));
+							item.SetEntityAutoCreator (this.controller.BusinessContext, brickType, brick.CreateResolverSetter (brickType));
 						}
 					}
 					
@@ -294,24 +294,24 @@ namespace Epsitec.Cresus.Core.Bricks
 		private void ProcessTemplate(TileDataItems data, TileDataItem item, Brick root, Brick templateBrick)
 		{
 			var templateName      = Brick.GetProperty (templateBrick, BrickPropertyKey.Name).StringValue ?? item.Name;
-			var templateFieldType = templateBrick.GetFieldType ();
+			var templateBrickType = templateBrick.GetBrickType ();
 
-			CollectionTemplate collectionTemplate = this.DynamicCreateCollectionTemplate (templateName, templateFieldType);
+			CollectionTemplate collectionTemplate = this.DynamicCreateCollectionTemplate (templateName, templateBrickType);
 
 			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Title,        x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Title, x));
 			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TitleCompact, x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactTitle, x));
 			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.Text,         x => collectionTemplate.GenericDefine (CollectionTemplateProperty.Text, x));
 			this.ProcessTemplateProperty (templateBrick, BrickPropertyKey.TextCompact,  x => collectionTemplate.GenericDefine (CollectionTemplateProperty.CompactText, x));
 
-			CollectionAccessor accessor = this.DynamicCreateCollectionAccessor (root, templateFieldType, collectionTemplate);
+			CollectionAccessor accessor = this.DynamicCreateCollectionAccessor (root, templateBrickType, collectionTemplate);
 			
 			data.Add (accessor);
 		}
 
-		private CollectionTemplate DynamicCreateCollectionTemplate(string name, System.Type templateFieldType)
+		private CollectionTemplate DynamicCreateCollectionTemplate(string name, System.Type templateBrickType)
 		{
 			var genericCollectionTemplateType     = typeof (CollectionTemplate<>);
-			var genericCollectionTemplateTypeArg  = templateFieldType;
+			var genericCollectionTemplateTypeArg  = templateBrickType;
 			var constructedCollectionTemplateType = genericCollectionTemplateType.MakeGenericType (genericCollectionTemplateTypeArg);
 
 			object arg1 = name;
@@ -320,17 +320,17 @@ namespace Epsitec.Cresus.Core.Bricks
 			return System.Activator.CreateInstance (constructedCollectionTemplateType, arg1, arg2) as CollectionTemplate;
 		}
 
-		private CollectionAccessor DynamicCreateCollectionAccessor(Brick root, System.Type templateFieldType, CollectionTemplate collectionTemplate)
+		private CollectionAccessor DynamicCreateCollectionAccessor(Brick root, System.Type templateBrickType, CollectionTemplate collectionTemplate)
 		{
 			var accessorFactoryType = typeof (DynamicAccessorFactory<,,>);
 			var accessorFactoryTypeArg1 = typeof (T);
-			var accessorFactoryTypeArg2 = root.GetFieldType ();
-			var accessorFactoryTypeArg3 = templateFieldType;
+			var accessorFactoryTypeArg2 = root.GetBrickType ();
+			var accessorFactoryTypeArg3 = templateBrickType;
 
 			var genericAccessorFactoryType = accessorFactoryType.MakeGenericType (accessorFactoryTypeArg1, accessorFactoryTypeArg2, accessorFactoryTypeArg3);
 
 			var entityGetter   = this.ViewController.EntityGetter;
-			var entityResolver = root.GetResolver (templateFieldType);
+			var entityResolver = root.GetResolver (templateBrickType);
 
 #if false
 			var constructor = genericAccessorFactoryType.GetConstructors ()[0];

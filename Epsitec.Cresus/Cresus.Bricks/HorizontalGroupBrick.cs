@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class HorizontalGroupBrick<T, TParent> : Brick
+	public class HorizontalGroupBrick<T, TParent> : Brick<T>
 		where TParent : Brick
 	{
 		public HorizontalGroupBrick(TParent parent)
@@ -45,11 +45,6 @@ namespace Epsitec.Cresus.Bricks
 		public TParent End()
 		{
 			return this.parent;
-		}
-
-		public override System.Type GetFieldType()
-		{
-			return typeof (T);
 		}
 
 		readonly TParent parent;

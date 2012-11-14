@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
 
 			summaryTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
-			summaryTileData.EntityType = brick.GetFieldType ();
+			summaryTileData.EntityType = brick.GetBrickType ();
 
 			summaryTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 			summaryTileData.TextGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Text);
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			return new CollectionTileData ()
 			{
-				EntityType = templateBrick.GetFieldType (),
+				EntityType = templateBrick.GetBrickType (),
 				EntitiesGetter = Carpenter.GetEntitiesGetter (brick, propertyAccessor),
 				Icon = Carpenter.GetMandatoryValue (templateBrick, BrickPropertyKey.Icon),
 				PropertyAccessor = propertyAccessor,
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			};
 
 			var collectionType = propertyAccessor.CollectionType;
-			var templateType = brick.GetFieldType ();
+			var templateType = brick.GetBrickType ();
 			
 			if (collectionType != templateType)
 			{
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var editionTileData = new EditionTileData ();
 
 			editionTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
-			editionTileData.EntityType = brick.GetFieldType ();
+			editionTileData.EntityType = brick.GetBrickType ();
 			editionTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 
 			editionTileData.Bricks.AddRange (Carpenter.BuildEditionData (brick, caches));

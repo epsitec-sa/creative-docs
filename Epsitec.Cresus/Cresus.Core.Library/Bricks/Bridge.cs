@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Bricks
 
 		private static void PostProcessPropertyOfType(Brick brick, BrickProperty property)
 		{
-			var type = property.Brick.GetFieldType ();
+			var type = property.Brick.GetBrickType ();
 			Bridge.CreateDefaultProperties (brick, type);
 		}
 

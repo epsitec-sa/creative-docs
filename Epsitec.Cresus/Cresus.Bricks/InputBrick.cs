@@ -10,7 +10,7 @@ using System.Dynamic;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InputBrick<T, TParent> : Brick
+	public class InputBrick<T, TParent> : Brick<T>
 		where TParent : Brick
 	{
 		public InputBrick(TParent parent)
@@ -108,11 +108,6 @@ namespace Epsitec.Cresus.Bricks
 		public TParent End()
 		{
 			return this.parent;
-		}
-
-		public override System.Type GetFieldType()
-		{
-			return typeof (T);
 		}
 
 		readonly TParent parent;

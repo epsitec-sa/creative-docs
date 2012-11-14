@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			if (e.Property.Key == BrickPropertyKey.OfType)
 			{
 				var brick = e.Property.Brick;
-				var type = e.Property.Brick.GetFieldType ();
+				var type = e.Property.Brick.GetBrickType ();
 				
 				Mason.CreateDefaultProperties (brick, type);
 			}

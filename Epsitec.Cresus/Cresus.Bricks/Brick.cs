@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		
-		public abstract System.Type GetFieldType();
+
+		public abstract System.Type GetBrickType();
 
 		public System.Delegate GetResolver(System.Type expectedReturnType)
 		{

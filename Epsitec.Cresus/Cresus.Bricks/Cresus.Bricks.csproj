@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="AttributeValue.cs" />
     <Compile Include="AttributeValue`1.cs" />
+    <Compile Include="Brick`1.cs" />
     <Compile Include="BrickAddedEventArgs.cs" />
     <Compile Include="BrickPropertyAddedEventArgs.cs" />
     <Compile Include="BrickPropertyCollection.cs" />
