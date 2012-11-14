@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// Gets the entity keys which corresponds to the given request in the database. The query
 		/// is made to the database with the given transaction and will therefore not interfere with
-		/// other queries and will be totaly independent of them.
+		/// other queries and will be totally independent of them.
 		/// </summary>
 		/// <param name="request">The request defining which entity keys to get.</param>
 		/// <param name="dbTransaction">The transaction to use for the query.</param>
@@ -155,6 +155,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// Gets the index of the entity key as it will be in the given request to the database.
 		/// </summary>
+		/// <remarks>
+		/// The order defined by the request must be strict and total, otherwise you will get dummy
+		/// results. And anyway, you shouldn't rely on indexes where the order is not strict and
+		/// total, because there are no guarantees whatsoever that the rows will always be in the
+		/// same order.
+		/// </remarks>
 		/// <param name="request">The request defining the order of the entity keys.</param>
 		/// <param name="entityKey">The entity key whose index to get.</param>
 		/// <returns>The index of the given entity key within the result of the request.</returns>
@@ -169,6 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// query is made to the database with the given transaction and will therefore not
 		/// interfere with other queries and will be totally independent of them.
 		/// </summary>
+		/// <remarks>See remarks in the other overload of this method.</remarks>
 		/// <param name="request">The request defining the order of the entity keys.</param>
 		/// <param name="entityKey">The entity key whose index to get.</param>
 		/// <param name="dbTransaction">The transaction to use for the query.</param>

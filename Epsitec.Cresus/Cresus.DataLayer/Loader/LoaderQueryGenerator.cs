@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				dbTransaction.Commit ();
 
-				return index;
+				return this.PostProcessIndex (index);
 			}
 		}
 		
@@ -171,12 +171,36 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			
 			var sqlSelect = this.BuildSelectForIndex (request, entityKey);
 
-			return this.GetNullableInteger (sqlSelect, dbTransaction);
+			var index = this.GetNullableInteger (sqlSelect, dbTransaction);
+
+			return this.PostProcessIndex (index);
+		}
+
+
+		private int? PostProcessIndex(int? index)
+		{
+			if (!index.HasValue)
+			{
+				return null;
+			}
+
+			if (index == 0)
+			{
+				return null;
+			}
+
+			return index - 1;
 		}
 
 
 		public SqlSelect BuildSelectForIndex(Request request, EntityKey entityKey)
 		{
+			// Basically what we do here is that we count the number of rows that come before or at
+			// the same position in the order. Say that if we order by firstnames ascending, we
+			// count the number of rows where the firstname is smaller or equal to the one of the
+			// entity that we are interested in. When we have that number, assuming that the order
+			// is strict and total, we substract 1 from it and we have the index.
+
 			var innerBuilder = this.GetBuilder ();
 			var innerSelect = this.BuildInnerRequestForIndex (innerBuilder, request, entityKey);
 
@@ -334,10 +358,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			switch (sortClause.SortOrder)
 			{
 				case SortOrder.Ascending:
-					return SqlFunctionCode.CompareLessThan;
+					return SqlFunctionCode.CompareLessThanOrEqual;
 
 				case SortOrder.Descending:
-					return SqlFunctionCode.CompareGreaterThan;
+					return SqlFunctionCode.CompareGreaterThanOrEqual;
 
 				default:
 					throw new NotImplementedException ();

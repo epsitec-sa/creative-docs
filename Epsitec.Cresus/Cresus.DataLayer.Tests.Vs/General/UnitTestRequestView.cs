@@ -246,6 +246,31 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void GetIndexNullTest()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var example = new NaturalPersonEntity ()
+				{
+					Firstname = "I don't exist",
+				};
+
+				var request = Request.Create (example);
+
+				var person = dataContext.GetByExample (new NaturalPersonEntity ()).First ();
+				var personKey = dataContext.GetNormalizedEntityKey (person).Value;
+
+				using (var requestView = dataContext.GetRequestView (request))
+				{
+					Assert.AreEqual (0, requestView.GetCount ());
+					Assert.IsNull (requestView.GetIndex (personKey));
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void ConcurrencyTest()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
