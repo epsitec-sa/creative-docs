@@ -242,13 +242,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var innerQueryAlias = outerBuilder.AliasManager.GetAlias ();
 			var innerQueryJoin = this.BuildOuterRequestForIndexInnerQueryJoin (innerSelect, innerQueryAlias);
 
-			var converterOrderBy = this.BuildOuterRequestForIndexOrderByCondition (outerBuilder, innerBuilder, innerQueryAlias, request);
+			var convertedOrderBy = this.BuildOuterRequestForIndexOrderByCondition (outerBuilder, innerBuilder, innerQueryAlias, request);
 
 			var fieldForCount = this.BuildFieldForCount (outerBuilder, request);
 
 			return fromAndWhere
 				.PlusSqlJoins (innerQueryJoin)
-				.PlusSqlConditions (converterOrderBy)
+				.PlusSqlConditions (convertedOrderBy)
 				.PlusSqlFields (fieldForCount)
 				.BuildSqlSelect ();
 		}
