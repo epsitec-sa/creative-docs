@@ -18,83 +18,59 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 		public BrickProperty(BrickPropertyKey key, string value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = value;
-			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, FormattedText value)
+			: this (key, value.IsNull () ? null : value.ToString (), false)
 		{
-			this.key = key;
-			this.value = value.IsNull () ? null : value.ToString ();
-			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, int value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = value;
-			this.isDefaultProperty = false;
 		}
 
-		public BrickProperty(BrickPropertyKey key, System.Collections.IEnumerable collection)
+		public BrickProperty(BrickPropertyKey key, System.Collections.IEnumerable value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = collection;
-			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, Brick value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = value;
-			this.isDefaultProperty = false;
 		}
 
-		public BrickProperty(BrickPropertyKey key, Expression expression)
+		public BrickProperty(BrickPropertyKey key, Expression value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = expression;
-			this.isDefaultProperty = false;
 		}
 
-		public BrickProperty(BrickPropertyKey key, Mortar mortar)
+		public BrickProperty(BrickPropertyKey key, Mortar value)
+			: this (key, (object) value.GetExpression () ?? value.GetString (), false)
 		{
-			this.key = key;
-			this.isDefaultProperty = false;
-			
-			var text = mortar.GetString ();
-			var expr = mortar.GetExpression ();
-
-			if (expr != null)
-			{
-				this.value = expr;
-			}
-			else
-			{
-				this.value = text;
-			}
 		}
 
 		public BrickProperty(BrickPropertyKey key, AttributeValue value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = value;
-			this.isDefaultProperty = false;
 		}
 
 		public BrickProperty(BrickPropertyKey key, ExpandoObject value)
+			: this (key, value, false)
 		{
-			this.key = key;
-			this.value = value;
-			this.isDefaultProperty = false;
 		}
 
 		private BrickProperty(BrickProperty property, bool isDefaultProperty)
+			: this (property.key, property.value, isDefaultProperty)
 		{
-			this.key = property.key;
-			this.value = property.value;
+		}
+
+		private BrickProperty(BrickPropertyKey key, object value, bool isDefaultProperty)
+		{
+			this.key = key;
+			this.value = value;
 			this.isDefaultProperty = isDefaultProperty;
 		}
 
