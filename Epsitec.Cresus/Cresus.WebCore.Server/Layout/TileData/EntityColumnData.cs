@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		}
 
 
-		public IList<ITileData> Tiles
+		public IList<AbstractTileData> Tiles
 		{
 			get;
 			set;

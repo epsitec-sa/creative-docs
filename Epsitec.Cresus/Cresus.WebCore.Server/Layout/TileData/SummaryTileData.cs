@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
 
 
-	internal sealed class SummaryTileData : AbstractSummaryTileData, ITileData
+	internal sealed class SummaryTileData : AbstractSummaryTileData
 	{
 
 
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		#region ITileData Members
 
 
-		public IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		public override IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
 			if (this.Template == null)
 			{
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 			return new SummaryTile ()
 			{
 				IsRoot = this.IsRoot,
-				EntityId = layoutBuilder.GetEntityId (this.EntityGetter(entity)),
+				EntityId = layoutBuilder.GetEntityId (this.EntityGetter (entity)),
 				IconClass = layoutBuilder.GetIconClass (this.EntityType, this.Icon),
 				SubViewMode = Tools.ViewModeToString (this.SubViewMode),
 				SubViewId = Tools.ViewIdToString (this.SubViewId),
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				EntityType = layoutBuilder.GetTypeName (this.Template.EntityType),
 				PropertyAccessorId = this.Template.PropertyAccessor.Id,
 				HideAddButton = this.HideAddButton,
-				HideRemoveButton = this.HideRemoveButton,	
+				HideRemoveButton = this.HideRemoveButton,
 			};
 		}
 

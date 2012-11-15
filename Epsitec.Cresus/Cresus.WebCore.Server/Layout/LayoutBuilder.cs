@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				.ToDictionary ();
 		}
 
-		private IEnumerable<ITileData> GetTileData(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		private IEnumerable<AbstractTileData> GetTileData(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
 			var brickWall = Mason.BuildBrickWall (entity, viewMode, viewId);
 
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public IEnumerable<AbstractTile> GetTiles(IEnumerable<ITileData> tileData, AbstractEntity entity)
+		public IEnumerable<AbstractTile> GetTiles(IEnumerable<AbstractTileData> tileData, AbstractEntity entity)
 		{
 			return tileData.SelectMany (td => td.ToTiles (this, entity));
 		}

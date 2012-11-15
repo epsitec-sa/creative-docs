@@ -120,7 +120,7 @@
     <Compile Include="Layout\Tile\EmptySummaryTile.cs" />
     <Compile Include="Layout\TileData\AbstractFieldData.cs" />
     <Compile Include="Layout\TileData\GlobalWarningData.cs" />
-    <Compile Include="Layout\TileData\ITileData.cs" />
+    <Compile Include="Layout\TileData\AbstractTileData.cs" />
     <Compile Include="Layout\Mason.cs" />
     <Compile Include="Layout\TileData\SeparatorData.cs" />
     <Compile Include="Layout\Tile\AbstractField.cs" />

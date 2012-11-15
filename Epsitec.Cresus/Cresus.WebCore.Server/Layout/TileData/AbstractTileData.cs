@@ -1,7 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 
 using System;
 
@@ -12,7 +13,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
 
 
-	internal sealed class CollectionTileData
+	internal abstract class AbstractTileData
 	{
 
 
@@ -37,25 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		}
 
 
-		public Func<AbstractEntity, FormattedText> TextGetter
-		{
-			get;
-			set;
-		}
-		
-		
-		public EntityCollectionPropertyAccessor PropertyAccessor
-		{
-			get;
-			set;
-		}
-
-
-		public Func<AbstractEntity, IEnumerable<AbstractEntity>> EntitiesGetter
-		{
-			get;
-			set;
-		}
+		public abstract IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity);
 
 
 	}

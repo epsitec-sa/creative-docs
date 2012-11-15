@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, Caches caches)
+		public static IEnumerable<AbstractTileData> BuildTileData(BrickWall brickWall, Caches caches)
 		{
 			bool isFirst = true;
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static ITileData BuildTileData(Brick brick, Caches caches, bool isFirst)
+		private static AbstractTileData BuildTileData(Brick brick, Caches caches, bool isFirst)
 		{
 			var viewMode = Carpenter.GetTileViewMode (brick);
 

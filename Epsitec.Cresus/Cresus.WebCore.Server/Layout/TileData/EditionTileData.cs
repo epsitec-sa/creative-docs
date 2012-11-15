@@ -15,32 +15,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 {
 
 
-	internal sealed class EditionTileData : ITileData
+	internal sealed class EditionTileData : AbstractTileData
 	{
 
 
 		// TODO Add CompactTitle, Text, CompactText ?
-
-
-		public string Icon
-		{
-			get;
-			set;
-		}
-
-
-		public Type EntityType
-		{
-			get;
-			set;
-		}
-		
-		
-		public Func<AbstractEntity, FormattedText> TitleGetter
-		{
-			get;
-			set;
-		}
 
 
 		public IList<AbstractEditionTilePartData> Bricks
@@ -64,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		#region ITileData Members
 
 
-		public IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity)
+		public override IEnumerable<AbstractTile> ToTiles(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
 			if (this.Bricks.Count > 0)
 			{
