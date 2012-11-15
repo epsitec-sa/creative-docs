@@ -10,8 +10,8 @@ namespace Epsitec.Cresus.Bricks
 	public class HorizontalGroupBrick<T, TParent> : ChildBrick<T, TParent>
 		where TParent : Brick
 	{
-		public HorizontalGroupBrick(TParent parent)
-			: base (parent, BrickPropertyKey.HorizontalGroup)
+		public HorizontalGroupBrick(BrickWall brickWall, TParent parent)
+			: base (brickWall, parent, BrickPropertyKey.HorizontalGroup)
 		{
 		}
 

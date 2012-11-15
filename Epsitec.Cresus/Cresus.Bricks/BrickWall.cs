@@ -29,8 +29,6 @@ namespace Epsitec.Cresus.Bricks
 
 		internal void NotifyBrickAdded(System.Type fieldType, Brick brick)
 		{
-			brick.DefineBrickWall (this);
-
 			var handler = this.BrickAdded;
 
 			if (handler != null)

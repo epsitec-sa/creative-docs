@@ -15,9 +15,11 @@ namespace Epsitec.Cresus.Bricks
 	/// </summary>
 	public abstract class Brick
 	{
-		protected Brick()
+		protected Brick(BrickWall brickWall, Expression resolver)
 		{
 			this.properties = new List<BrickProperty> ();
+			this.brickWall = brickWall;
+			this.resolver = resolver;
 		}
 
 
@@ -29,8 +31,17 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
+		internal Expression						Resolver
+		{
+			get
+			{
+				return this.resolver;
+			}
+		}
+
 
 		public abstract System.Type GetBrickType();
+
 
 		public System.Delegate GetResolver(System.Type expectedReturnType)
 		{
@@ -75,20 +86,6 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		internal void InheritResolver(Brick brick)
-		{
-			this.resolver = brick.resolver;
-		}
-
-		internal void DefineResolver(Expression resolver)
-		{
-			this.resolver = resolver;
-		}
-
-		internal void DefineBrickWall(BrickWall brickWall)
-		{
-			this.brickWall = brickWall;
-		}
 
 		internal void DebugDump(string prefix = "")
 		{
@@ -132,9 +129,8 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 
-
 		private readonly List<BrickProperty>	properties;
-		private BrickWall						brickWall;
-		private Expression						resolver;
+		private readonly BrickWall				brickWall;
+		private readonly Expression				resolver;
 	}
 }

@@ -7,8 +7,8 @@ namespace Epsitec.Cresus.Bricks
 	public class TemplateBrick<T, TParent> : ChildBrick<T, TParent>
 			where TParent : Brick
 	{
-		public TemplateBrick(TParent parent)
-			: base (parent, BrickPropertyKey.Template)
+		public TemplateBrick(BrickWall brickWall, TParent parent)
+			: base (brickWall, parent, BrickPropertyKey.Template)
 		{
 		}
 

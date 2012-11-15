@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.Bricks
 {
 	public class SimpleBrick<T> : Brick<T>
 	{
+		public SimpleBrick(BrickWall brickWall, Expression resolver)
+			: base (brickWall, resolver)
+		{
+		}
 
 		public SimpleBrick<T> Name(string value)
 		{
@@ -86,12 +90,9 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<TOutput> OfType<TOutput>()
 		{
-			var brick = new SimpleBrick<TOutput> ();
+			var brick = new SimpleBrick<TOutput> (this.BrickWall, this.Resolver);
 
 			this.AddProperty (new BrickProperty (BrickPropertyKey.OfType, brick));
-
-			brick.InheritResolver (this);
-			brick.DefineBrickWall (this.BrickWall);
 
 			return brick;
 		}
@@ -104,12 +105,12 @@ namespace Epsitec.Cresus.Bricks
 
 		public TemplateBrick<T, SimpleBrick<T>> Template()
 		{
-			return new TemplateBrick<T, SimpleBrick<T>> (this);
+			return new TemplateBrick<T, SimpleBrick<T>> (this.BrickWall, this);
 		}
 
 		public InputBrick<T, SimpleBrick<T>> Input()
 		{
-			return new InputBrick<T, SimpleBrick<T>> (this);
+			return new InputBrick<T, SimpleBrick<T>> (this.BrickWall, this);
 		}
 	}
 }

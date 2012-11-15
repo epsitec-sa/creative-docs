@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Bricks
 	public class InputBrick<T, TParent> : ChildBrick<T, TParent>
 		where TParent : Brick
 	{
-		public InputBrick(TParent parent)
-			: base(parent, BrickPropertyKey.Input)
+		public InputBrick(BrickWall brickWall, TParent parent)
+			: base(brickWall, parent, BrickPropertyKey.Input)
 		{
 		}
 
@@ -26,14 +26,14 @@ namespace Epsitec.Cresus.Bricks
 
 		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup(string value)
 		{
-			var group = new HorizontalGroupBrick<T, InputBrick<T, TParent>> (this);
+			var group = this.HorizontalGroup ();
 			group.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
 			return group;
 		}
 
 		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup()
 		{
-			return new HorizontalGroupBrick<T, InputBrick<T, TParent>> (this);
+			return new HorizontalGroupBrick<T, InputBrick<T, TParent>> (this.BrickWall, this);
 		}
 
 		public InputBrick<T, TParent> Field<TResult>(Expression<System.Func<T, TResult>> expression)

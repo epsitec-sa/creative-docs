@@ -3,12 +3,11 @@
 	public abstract class ChildBrick<T, TParent> : Brick<T>
 		where TParent : Brick
 	{
-		public ChildBrick(TParent parent, BrickPropertyKey brickPropertyKey)
+		public ChildBrick(BrickWall brickWall, TParent parent, BrickPropertyKey brickPropertyKey)
+			: base (brickWall, null)
 		{
-			parent.AddProperty (new BrickProperty (brickPropertyKey, this));
-
-			this.DefineBrickWall (parent.BrickWall);
 			this.parent = parent;
+			this.parent.AddProperty (new BrickProperty (brickPropertyKey, this));
 		}
 
 		public TParent End()

@@ -26,9 +26,7 @@ namespace Epsitec.Cresus.Bricks
 
 		private SimpleBrick<TBrick> AddSimpleBrick<TBrick>(Expression expression)
 		{
-			var brick = new SimpleBrick<TBrick> ();
-
-			brick.DefineResolver (expression);
+			var brick = new SimpleBrick<TBrick> (this, expression);
 
 			this.Add (brick);
 			this.NotifyBrickAdded (typeof (TBrick), brick);
