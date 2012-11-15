@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public static BrickWall BuildBrickWall(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			using (var controller = EntityViewControllerFactory.Create ("js", entity, viewMode, null, null, viewId, null, ResolutionMode.InspectOnly))
+			using (var controller = Mason.BuildController(entity, viewMode, viewId))
 			{
 				var brickWall = controller.CreateBrickWallForInspection ();
 
@@ -44,6 +44,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				return brickWall;
 			}
+		}
+
+
+		public static EntityViewController BuildController(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		{
+			var name = "js";
+			var resolutionMode = ResolutionMode.InspectOnly;
+
+			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode);
 		}
 
 
