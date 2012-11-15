@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Bricks
 			{
 				var wall = new BrickWall<Foo> ();
 
-				wall.AddBrick (x => x.Name)
+				wall.AddBrick (x => x.Bar)
 					.Name ("name")
 					.Icon ("icon")
 					.Title ("title")
@@ -111,7 +113,20 @@ namespace Epsitec.Cresus.Bricks
 			System.Diagnostics.Debug.WriteLine (string.Format ("Executed loop in {0} ms", watch.ElapsedMilliseconds));
 		}
 
-		class Foo
+		class DummyEntity : AbstractEntity
+		{
+			public override Common.Support.Druid GetEntityStructuredTypeId()
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			public override string GetEntityStructuredTypeKey()
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
+		class Foo : DummyEntity
 		{
 			public int Id
 			{
@@ -123,13 +138,19 @@ namespace Epsitec.Cresus.Bricks
 				get;
 				set;
 			}
+			public Bar Bar
+			{
+				get;
+				set;
+			}
 			public IList<Bar> Bars
 			{
 				get;
 				set;
 			}
 		}
-		class Bar
+
+		class Bar : DummyEntity
 		{
 			public int Value
 			{

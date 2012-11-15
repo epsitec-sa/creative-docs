@@ -1,6 +1,8 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,6 +10,7 @@ using System.Linq.Expressions;
 namespace Epsitec.Cresus.Bricks
 {
 	public class SimpleBrick<T> : Brick<T>
+		where T : AbstractEntity, new ()
 	{
 		public SimpleBrick(BrickWall brickWall, Expression resolver)
 			: base (brickWall, resolver)
@@ -89,6 +92,7 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 		public SimpleBrick<TOutput> OfType<TOutput>()
+			where TOutput: AbstractEntity, new()
 		{
 			var brick = new SimpleBrick<TOutput> (this.BrickWall, this.Resolver);
 

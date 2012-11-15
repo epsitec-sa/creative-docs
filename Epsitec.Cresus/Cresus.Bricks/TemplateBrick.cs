@@ -1,11 +1,15 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+
 using System.Linq.Expressions;
+
 namespace Epsitec.Cresus.Bricks
 {
 	public class TemplateBrick<T, TParent> : ChildBrick<T, TParent>
-			where TParent : Brick
+		where T : AbstractEntity, new ()
+		where TParent : Brick
 	{
 		public TemplateBrick(BrickWall brickWall, TParent parent)
 			: base (brickWall, parent, BrickPropertyKey.Template)

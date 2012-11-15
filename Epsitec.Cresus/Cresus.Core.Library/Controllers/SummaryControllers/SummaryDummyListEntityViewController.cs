@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	/// </summary>
 	/// <typeparam name="T">The type of the items.</typeparam>
 	public class SummaryDummyListEntityViewController<T> : SummaryViewController<DummyListEntity<T>>
-			where T : AbstractEntity
+			where T : AbstractEntity, new()
 	{
 		protected override void CreateBricks(BrickWall<DummyListEntity<T>> wall)
 		{

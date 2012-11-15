@@ -1,6 +1,7 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Dynamic;
 namespace Epsitec.Cresus.Bricks
 {
 	public class InputBrick<T, TParent> : ChildBrick<T, TParent>
+		where T : AbstractEntity, new ()
 		where TParent : Brick
 	{
 		public InputBrick(BrickWall brickWall, TParent parent)

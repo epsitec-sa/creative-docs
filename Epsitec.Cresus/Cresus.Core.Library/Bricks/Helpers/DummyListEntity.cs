@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Bricks.Helpers
 	/// </summary>
 	/// <typeparam name="T">The type of the items</typeparam>
 	public class DummyListEntity<T> : GenericEntity
-			where T : AbstractEntity
+			where T : AbstractEntity, new()
 	{
 		public DummyListEntity()
 			: base (Druid.Empty)
