@@ -57,6 +57,7 @@
     <Compile Include="Brick.cs" />
     <Compile Include="BrickProperty.cs" />
     <Compile Include="BrickPropertyKey.cs" />
+    <Compile Include="ChildBrick.cs" />
     <Compile Include="InputBrick.cs" />
     <Compile Include="HorizontalGroupBrick.cs" />
     <Compile Include="SimpleBrick.cs" />

@@ -10,15 +10,12 @@ using System.Dynamic;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class InputBrick<T, TParent> : Brick<T>
+	public class InputBrick<T, TParent> : ChildBrick<T, TParent>
 		where TParent : Brick
 	{
 		public InputBrick(TParent parent)
+			: base(parent, BrickPropertyKey.Input)
 		{
-			parent.AddProperty (new BrickProperty (BrickPropertyKey.Input, this));
-
-			this.DefineBrickWall (parent.BrickWall);
-			this.parent = parent;
 		}
 
 		public InputBrick<T, TParent> Title(string value)
@@ -104,12 +101,5 @@ namespace Epsitec.Cresus.Bricks
 			this.AddProperty (new BrickProperty (BrickPropertyKey.SearchPanel, expando));
 			return this;
 		}
-
-		public TParent End()
-		{
-			return this.parent;
-		}
-
-		readonly TParent parent;
 	}
 }

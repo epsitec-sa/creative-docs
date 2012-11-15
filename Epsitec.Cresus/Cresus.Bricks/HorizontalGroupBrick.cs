@@ -7,15 +7,12 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public class HorizontalGroupBrick<T, TParent> : Brick<T>
+	public class HorizontalGroupBrick<T, TParent> : ChildBrick<T, TParent>
 		where TParent : Brick
 	{
 		public HorizontalGroupBrick(TParent parent)
+			: base (parent, BrickPropertyKey.HorizontalGroup)
 		{
-			parent.AddProperty (new BrickProperty (BrickPropertyKey.HorizontalGroup, this));
-
-			this.DefineBrickWall (parent.BrickWall);
-			this.parent = parent;
 		}
 
 		public HorizontalGroupBrick<T, TParent> Field<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -41,12 +38,5 @@ namespace Epsitec.Cresus.Bricks
 			this.AddProperty (new BrickProperty (BrickPropertyKey.ReadOnly));
 			return this;
 		}
-
-		public TParent End()
-		{
-			return this.parent;
-		}
-
-		readonly TParent parent;
 	}
 }
