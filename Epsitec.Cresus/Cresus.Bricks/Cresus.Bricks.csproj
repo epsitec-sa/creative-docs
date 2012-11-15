@@ -53,14 +53,13 @@
     <Compile Include="BrickPropertyAddedEventArgs.cs" />
     <Compile Include="BrickPropertyCollection.cs" />
     <Compile Include="BrickWall.cs" />
-    <Compile Include="Brick`2.cs" />
+    <Compile Include="SimpleBrick.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="BrickProperty.cs" />
     <Compile Include="BrickPropertyKey.cs" />
     <Compile Include="ChildBrick.cs" />
     <Compile Include="InputBrick.cs" />
     <Compile Include="HorizontalGroupBrick.cs" />
-    <Compile Include="SimpleBrick.cs" />
     <Compile Include="Mortar.cs" />
     <Compile Include="Mortar`1.cs" />
     <Compile Include="Mortar`2.cs" />
