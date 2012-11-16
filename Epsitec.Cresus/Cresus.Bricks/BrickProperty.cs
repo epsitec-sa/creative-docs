@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		public System.Type						Type
+		public System.Type						TypeValue
 		{
 			get
 			{
