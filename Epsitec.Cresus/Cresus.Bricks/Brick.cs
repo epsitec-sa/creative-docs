@@ -103,6 +103,13 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 
+		protected static T AddProperty<T>(T brick, BrickProperty brickProperty)
+			where T : Brick
+		{
+			brick.AddProperty(brickProperty);
+			return brick;
+		}
+
 		public static void AddProperty(Brick brick, BrickProperty property)
 		{
 			brick.AddProperty (property, notify: false);

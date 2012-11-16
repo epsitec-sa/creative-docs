@@ -18,14 +18,12 @@ namespace Epsitec.Cresus.Bricks
 
 		public TemplateBrick<T, TParent> Icon(string value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Icon, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Icon, value));
 		}
 
 		public TemplateBrick<T, TParent> Title(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
 		}
 
 		public TemplateBrick<T, TParent> Title<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -35,8 +33,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public TemplateBrick<T, TParent> TitleCompact(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.TitleCompact, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.TitleCompact, value));
 		}
 
 		public TemplateBrick<T, TParent> TitleCompact<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -46,8 +43,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public TemplateBrick<T, TParent> Text(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Text, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Text, value));
 		}
 
 		public TemplateBrick<T, TParent> Text<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -57,8 +53,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public TemplateBrick<T, TParent> TextCompact(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.TextCompact, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.TextCompact, value));
 		}
 
 		public TemplateBrick<T, TParent> TextCompact<TResult>(Expression<System.Func<T, TResult>> expression)

@@ -20,26 +20,22 @@ namespace Epsitec.Cresus.Bricks
 
 		public HorizontalGroupBrick<T, TParent> Field<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Field, expression));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Field, expression));
 		}
 
 		public HorizontalGroupBrick<T, TParent> Width(int value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Width, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Width, value));
 		}
 
 		public HorizontalGroupBrick<T, TParent> Height(int value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Height, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Height, value));
 		}
 
 		public HorizontalGroupBrick<T, TParent> ReadOnly()
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.ReadOnly));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.ReadOnly));
 		}
 	}
 }

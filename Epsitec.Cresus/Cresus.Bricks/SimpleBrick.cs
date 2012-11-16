@@ -19,20 +19,17 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> Name(string value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Name, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Name, value));
 		}
 
 		public SimpleBrick<T> Icon(string value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Icon, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Icon, value));
 		}
 
 		public SimpleBrick<T> Title(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
 		}
 
 		public SimpleBrick<T> Title<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -42,8 +39,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> TitleCompact(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.TitleCompact, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.TitleCompact, value));
 		}
 
 		public SimpleBrick<T> TitleCompact<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -53,8 +49,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> Text(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Text, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Text, value));
 		}
 
 		public SimpleBrick<T> Text<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -64,8 +59,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> TextCompact(Mortar<T> value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.TextCompact, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.TextCompact, value));
 		}
 
 		public SimpleBrick<T> TextCompact<TResult>(Expression<System.Func<T, TResult>> expression)
@@ -75,20 +69,17 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> Separator()
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Separator));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Separator));
 		}
 
 		public SimpleBrick<T> GlobalWarning()
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.GlobalWarning));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.GlobalWarning));
 		}
 
 		public SimpleBrick<T> Attribute<TAttribute>(TAttribute attributeValue)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
 		}
 
 		public SimpleBrick<TOutput> OfType<TOutput>()
@@ -103,8 +94,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public SimpleBrick<T> Include<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Include, expression));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Include, expression));
 		}
 
 		public TemplateBrick<T, SimpleBrick<T>> Template()

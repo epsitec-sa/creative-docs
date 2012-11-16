@@ -22,8 +22,7 @@ namespace Epsitec.Cresus.Bricks
 
 		public InputBrick<T, TParent> Title(string value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
 		}
 
 		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup(string value)
@@ -40,44 +39,37 @@ namespace Epsitec.Cresus.Bricks
 
 		public InputBrick<T, TParent> Field<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Field, expression));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Field, expression));
 		}
 
 		public InputBrick<T, TParent> Width(int value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Width, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Width, value));
 		}
 
 		public InputBrick<T, TParent> Height(int value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Height, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Height, value));
 		}
 
 		public InputBrick<T, TParent> ReadOnly()
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.ReadOnly));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.ReadOnly));
 		}
 
 		public InputBrick<T, TParent> Password()
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Password));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Password));
 		}
 
 		public InputBrick<T, TParent> WithSpecialController(int mode = 0)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.SpecialController, mode));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.SpecialController, mode));
 		}
 
 		public InputBrick<T, TParent> PickFromCollection(System.Collections.IEnumerable value)
 		{
-			this.AddProperty (new BrickProperty (BrickPropertyKey.FromCollection, value));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FromCollection, value));
 		}
 
 		public InputBrick<T, TParent> Button(FormattedText title, FormattedText description, System.Action action)
@@ -88,8 +80,7 @@ namespace Epsitec.Cresus.Bricks
 			expando.ButtonDescription = description;
 			expando.ButtonAction      = action;
 
-			this.AddProperty (new BrickProperty (BrickPropertyKey.Button, expando));
-			return this;
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Button, expando));
 		}
 
 		public InputBrick<T, TParent> SearchPanel(FormattedText searchTitle, FormattedText actionTitle, System.Action<Epsitec.Common.Support.EntityEngine.AbstractEntity> action)
@@ -99,9 +90,8 @@ namespace Epsitec.Cresus.Bricks
 			expando.SearchTitle  = searchTitle;
 			expando.ButtonTitle  = actionTitle;
 			expando.ButtonAction = action;
-			
-			this.AddProperty (new BrickProperty (BrickPropertyKey.SearchPanel, expando));
-			return this;
+
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.SearchPanel, expando));
 		}
 	}
 }
