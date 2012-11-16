@@ -53,7 +53,8 @@ namespace Epsitec.Cresus.Core.Factories
 		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController,
 			int?                  controllerSubTypeId   = null,
 			NavigationPathElement navigationPathElement = null,
-			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError)
+			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError,
+			System.Type			  entityType			= null)
 		{
 			if (entity.IsNull ())
 			{
@@ -76,7 +77,12 @@ namespace Epsitec.Cresus.Core.Factories
 					Entity = entity,
 				};
 
-				return EntityViewControllerResolver.Resolve (mode, controllerSubTypeId, resolutionMode);
+				if (entityType == null)
+				{
+					entityType = entity.GetType ();
+				}
+
+				return EntityViewControllerResolver.Resolve (entityType, mode, controllerSubTypeId, resolutionMode);
 			}
 			finally
 			{

@@ -1,16 +1,13 @@
 //	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Orchestrators;
-using Epsitec.Cresus.Core.Orchestrators.Navigation;
+using Epsitec.Cresus.Core.Factories;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Resolvers
 {
@@ -20,14 +17,10 @@ namespace Epsitec.Cresus.Core.Resolvers
 	/// </summary>
 	internal static class EntityViewControllerResolver
 	{
-		public static EntityViewController Resolve(ViewControllerMode mode, int? controllerSubTypeId, ResolutionMode resolutionMode)
+		public static EntityViewController Resolve(System.Type entityType, ViewControllerMode mode, int? controllerSubTypeId, ResolutionMode resolutionMode)
 		{
 			mode = EntityViewControllerResolver.FilterMode (mode);
 
-			var name   = EntityViewControllerFactory.Default.ControllerName;
-			var entity = EntityViewControllerFactory.Default.Entity;
-			
-			var entityType     = entity.GetType ();
 			var controllerType = EntityViewControllerResolver.ResolveEntityViewController (entityType, mode, controllerSubTypeId);
 
 			if (controllerType == null)
@@ -49,7 +42,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 				{
 					System.Diagnostics.Debug.Assert (resolutionMode == ResolutionMode.ThrowOnError);
 
-					throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entity.GetType (), mode));
+					var name = EntityViewControllerFactory.Default.ControllerName;
+					throw new System.InvalidOperationException (string.Format ("Cannot create controller {0} for entity of type {1} using ViewControllerMode.{2}", name, entityType, mode));
 				}
 			}
 
