@@ -82,16 +82,16 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
 		}
 
+		public SimpleBrick<T> Include<TResult>(Expression<System.Func<T, TResult>> expression)
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Include, expression));
+		}
+
 		public SimpleBrick<TOutput> OfType<TOutput>()
 			where TOutput : AbstractEntity, new ()
 		{
 			var child = new SimpleBrick<TOutput> (this.BrickWall, this.Resolver);
 			return this.AddChild (child, BrickPropertyKey.OfType);
-		}
-
-		public SimpleBrick<T> Include<TResult>(Expression<System.Func<T, TResult>> expression)
-		{
-			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Include, expression));
 		}
 
 		public TemplateBrick<T, SimpleBrick<T>> Template()

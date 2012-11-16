@@ -25,12 +25,6 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
 		}
 
-		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup()
-		{
-			var child = new HorizontalGroupBrick<T, InputBrick<T, TParent>> (this);
-			return this.AddChild (child, BrickPropertyKey.HorizontalGroup);
-		}
-
 		public InputBrick<T, TParent> Field<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Field, expression));
@@ -86,6 +80,12 @@ namespace Epsitec.Cresus.Bricks
 			expando.ButtonAction = action;
 
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.SearchPanel, expando));
+		}
+
+		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup()
+		{
+			var child = new HorizontalGroupBrick<T, InputBrick<T, TParent>> (this);
+			return this.AddChild (child, BrickPropertyKey.HorizontalGroup);
 		}
 	}
 }
