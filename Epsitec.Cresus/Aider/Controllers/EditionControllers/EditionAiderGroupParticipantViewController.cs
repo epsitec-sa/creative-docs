@@ -14,7 +14,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-					.HorizontalGroup ("Date de début et de fin")
+					.HorizontalGroup ()
+						.Title ("Date de début et de fin")
 						.Field (x => x.StartDate)
 						.Field (x => x.EndDate)
 					.End ()

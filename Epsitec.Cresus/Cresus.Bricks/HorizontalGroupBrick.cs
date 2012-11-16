@@ -18,6 +18,16 @@ namespace Epsitec.Cresus.Bricks
 		{
 		}
 
+		public HorizontalGroupBrick<T, TParent> Title(Mortar<T> value)
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
+		}
+
+		public HorizontalGroupBrick<T, TParent> Title<TResult>(Expression<System.Func<T, TResult>> expression)
+		{
+			return this.Title (new Mortar<T, TResult> (expression));
+		}
+
 		public HorizontalGroupBrick<T, TParent> Field<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Field, expression));

@@ -25,13 +25,6 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
 		}
 
-		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup(string value)
-		{
-			var group = this.HorizontalGroup ();
-			group.AddProperty (new BrickProperty (BrickPropertyKey.Title, value));
-			return group;
-		}
-
 		public HorizontalGroupBrick<T, InputBrick<T, TParent>> HorizontalGroup()
 		{
 			return new HorizontalGroupBrick<T, InputBrick<T, TParent>> (this.BrickWall, this);
