@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Bricks
 		where T : AbstractEntity, new ()
 		where TParent : Brick
 	{
-		public HorizontalGroupBrick(BrickWall brickWall, TParent parent)
-			: base (brickWall, parent, BrickPropertyKey.HorizontalGroup)
+		public HorizontalGroupBrick(TParent parent)
+			: base (parent)
 		{
 		}
 

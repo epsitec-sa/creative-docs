@@ -16,5 +16,12 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return typeof (T);
 		}
+
+		protected TChild AddChild<TChild>(TChild child, BrickPropertyKey brickPropertyKey)
+			where TChild : Brick
+		{
+			this.AddProperty (new BrickProperty (brickPropertyKey, child));
+			return child;
+		}
 	}
 }

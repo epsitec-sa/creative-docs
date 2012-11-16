@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Bricks
 		where T : AbstractEntity, new ()
 		where TParent : Brick
 	{
-		public TemplateBrick(BrickWall brickWall, TParent parent)
-			: base (brickWall, parent, BrickPropertyKey.Template)
+		public TemplateBrick(TParent parent)
+			: base (parent)
 		{
 		}
 
