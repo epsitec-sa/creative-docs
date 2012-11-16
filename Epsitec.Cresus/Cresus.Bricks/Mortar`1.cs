@@ -4,7 +4,6 @@
 using Epsitec.Common.Types;
 
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
 {
