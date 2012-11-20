@@ -28,6 +28,8 @@ function() {
       return this;
     },
 
+    /* Additional methods */
+
     createComboBox: function() {
       return Ext.create('Ext.form.field.ComboBox', {
         displayField: 'name',

@@ -8,6 +8,7 @@ function() {
     alternateClassName: ['Epsitec.EntityPicker'],
 
     /* Config */
+
     width: 640,
     height: 480,
     layout: 'fit',
@@ -16,10 +17,12 @@ function() {
     title: Epsitec.Texts.getEntityPickerTitle(),
 
     /* Properties */
+
     callback: null,
     entityListPanel: null,
 
     /* Constructor */
+
     constructor: function(options) {
       var newOptions;
 
