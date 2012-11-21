@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				case PropertyAccessorType.Integer:
 					return EntityModule.ConvertForString (value, v => (long) v);
-				
+
 				default:
 					throw new NotImplementedException ();
 			}
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			AbstractEntity entity = null;
 
-			if (!string.IsNullOrEmpty (entityId))
+			if (!string.IsNullOrEmpty (entityId) && !Constants.KeyForNullValue.Equals (entityId))
 			{
 				entity = Tools.ResolveEntity (businessContext, entityId);
 			}
