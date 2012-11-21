@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new EntityReferenceField ()
 			{
-				PropertyAccessorId = entityReferencePropertyAccessor.Id,
+				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				TypeName = layoutBuilder.GetTypeName (entityReferencePropertyAccessor.Type),

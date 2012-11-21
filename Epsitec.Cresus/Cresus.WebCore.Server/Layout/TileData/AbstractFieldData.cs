@@ -18,6 +18,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		// TODO Add PickFromCollection, ReadOnly, Width, Height
 
 
+		public string Id
+		{
+			get;
+			set;
+		}
+
+
 		public FormattedText Title
 		{
 			get;

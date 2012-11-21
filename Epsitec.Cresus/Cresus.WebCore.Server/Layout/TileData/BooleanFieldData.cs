@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new BooleanField ()
 			{
-				PropertyAccessorId = booleanPropertyAccessor.Id,
+				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (bool?) booleanPropertyAccessor.GetValue (entity),

@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 			return new DecimalField ()
 			{
-				PropertyAccessorId = decimalPropertyAccessor.Id,
+				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (decimal?) decimalPropertyAccessor.GetValue (entity),

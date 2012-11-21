@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		{
 			return new TextField ()
 			{
-				PropertyAccessorId = textPropertyAccessor.Id,
+				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) textPropertyAccessor.GetValue (entity),
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		{
 			return new TextAreaField ()
 			{
-				PropertyAccessorId = textPropertyAccessor.Id,
+				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) textPropertyAccessor.GetValue (entity),

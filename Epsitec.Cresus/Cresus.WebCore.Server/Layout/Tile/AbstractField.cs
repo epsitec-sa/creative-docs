@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
-		public string PropertyAccessorId
+		public string Id
 		{
 			get;
 			set;
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			var brick = base.ToDictionary ();
 			
 			brick["title"] = this.Title;
-			brick["name"] = this.PropertyAccessorId;
+			brick["name"] = this.Id;
 			brick["readOnly"] = this.IsReadOnly;
 			brick["value"] = this.GetValue ();
 			brick["allowBlank"] = this.AllowBlank;

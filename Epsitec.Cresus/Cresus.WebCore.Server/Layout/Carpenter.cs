@@ -566,6 +566,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var fieldData = Carpenter.GetFieldData (propertyAccessor.PropertyAccessorType);
 
+			fieldData.Id = propertyAccessor.Id;
 			fieldData.Title = title;
 			fieldData.IsReadOnly = isReadOnly;
 			fieldData.PropertyAccessor = propertyAccessor;
