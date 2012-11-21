@@ -146,6 +146,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		private static Func<AbstractEntity, FormattedText> GetOptionalGetter(Brick brick, BrickPropertyKey key)
+		{
+			var property = Carpenter.GetOptionalBrickProperty (brick, key);
+
+			if (!property.HasValue)
+			{
+				return e => new FormattedText ();
+			}
+
+			return Carpenter.GetBrickValueGetterFromString (property.Value)
+				?? Carpenter.GetBrickValueGetterFromExpression<FormattedText> (brick, property.Value);
+		}
+
+
 		private static Func<AbstractEntity, FormattedText> GetMandatoryGetter(Brick brick, BrickPropertyKey key)
 		{
 			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
@@ -417,7 +431,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var horizontalGroupData = new HorizontalGroupData ()
 			{
-				Title = Carpenter.GetHorizontalGroupTitle (brick),
+				TitleGetter = Carpenter.GetOptionalGetter (brick, BrickPropertyKey.Title),
 			};
 
 			var horizontalBricks = Carpenter.BuildHorizontalFieldData (caches, brick);

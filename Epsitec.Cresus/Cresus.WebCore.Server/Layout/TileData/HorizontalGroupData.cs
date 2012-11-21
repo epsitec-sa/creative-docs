@@ -4,6 +4,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -17,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 	{
 
 
-		public FormattedText Title
+		public Func<AbstractEntity, FormattedText> TitleGetter
 		{
 			get;
 			set;
@@ -37,7 +39,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		{
 			return new HorizontalGroup ()
 			{
-				Title = this.Title.ToString (),
+				Title = this.TitleGetter (entity).ToString (),
 				Fields = this.Fields
 					.Select (f => f.ToAbstractField (layoutBuilder, entity))
 					.ToList (),
