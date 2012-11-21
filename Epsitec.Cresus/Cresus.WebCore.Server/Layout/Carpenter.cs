@@ -34,23 +34,21 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public static IEnumerable<AbstractTileData> BuildTileData(BrickWall brickWall, Caches caches)
+		public static IEnumerable<AbstractTileData> BuildTileData(ViewControllerMode viewMode, BrickWall brickWall, Caches caches)
 		{
 			bool isFirst = true;
 
 			foreach (var brick in brickWall.Bricks)
 			{
-				yield return Carpenter.BuildTileData (brick, caches, isFirst);
+				yield return Carpenter.BuildTileData (viewMode, brick, caches, isFirst);
 
 				isFirst = false;
 			}
 		}
 
 
-		private static AbstractTileData BuildTileData(Brick brick, Caches caches, bool isFirst)
+		private static AbstractTileData BuildTileData(ViewControllerMode viewMode, Brick brick, Caches caches, bool isFirst)
 		{
-			var viewMode = Carpenter.GetTileViewMode (brick);
-
 			switch (viewMode)
 			{
 				case ViewControllerMode.Creation:
@@ -67,22 +65,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				default:
 					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static ViewControllerMode GetTileViewMode(Brick brick)
-		{
-			var edition = Brick.ContainsProperty (brick, BrickPropertyKey.Include)
-					   || Brick.ContainsProperty (brick, BrickPropertyKey.Input);
-
-			if (edition)
-			{
-				return ViewControllerMode.Edition;
-			}
-			else
-			{
-				return ViewControllerMode.Summary;
 			}
 		}
 
