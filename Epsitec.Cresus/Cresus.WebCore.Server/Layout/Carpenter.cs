@@ -448,12 +448,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static AbstractFieldData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool inculdeTitle)
+		private static AbstractFieldData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool includeTitle)
 		{
 			var expression = fieldProperty.ExpressionValue;
 			var lambda = (LambdaExpression) expression;
 
-			var title = inculdeTitle
+			var title = includeTitle
 				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression)
 				: FormattedText.Empty;
 
