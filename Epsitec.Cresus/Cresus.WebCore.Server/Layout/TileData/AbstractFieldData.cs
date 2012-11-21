@@ -39,6 +39,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		}
 
 
+		public bool AllowBlank
+		{
+			get;
+			set;
+		}
+
+
 		public override sealed AbstractEditionTilePart ToAbstractEditionTilePart(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
 			return this.ToAbstractField (layoutBuilder, entity);

@@ -569,6 +569,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			fieldData.Title = title;
 			fieldData.IsReadOnly = isReadOnly;
 			fieldData.PropertyAccessor = propertyAccessor;
+			fieldData.AllowBlank = propertyAccessor.Property.IsNullable;
 
 			return fieldData;
 		}

@@ -22,7 +22,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				PropertyAccessorId = booleanPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = (bool?) booleanPropertyAccessor.GetValue (entity)
+				Value = (bool?) booleanPropertyAccessor.GetValue (entity),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 

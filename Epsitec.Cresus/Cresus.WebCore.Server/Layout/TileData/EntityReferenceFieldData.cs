@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				IsReadOnly = this.IsReadOnly,
 				TypeName = layoutBuilder.GetTypeName (entityReferencePropertyAccessor.Type),
 				Value = EntityValue.Create (layoutBuilder, target),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 

@@ -45,7 +45,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) textPropertyAccessor.GetValue (entity),
-				IsPassword = this.IsPassword
+				IsPassword = this.IsPassword,
+				AllowBlank = this.AllowBlank,
 			};
 		}
 
@@ -58,6 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) textPropertyAccessor.GetValue (entity),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 

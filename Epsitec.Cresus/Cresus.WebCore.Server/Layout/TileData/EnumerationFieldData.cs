@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				IsReadOnly = this.IsReadOnly,
 				Value = (string) enumerationPropertyAccessor.GetValue (entity),
 				TypeName = layoutBuilder.GetTypeName (enumerationPropertyAccessor.Type),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 

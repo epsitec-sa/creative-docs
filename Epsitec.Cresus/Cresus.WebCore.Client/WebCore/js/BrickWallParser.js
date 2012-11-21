@@ -141,7 +141,8 @@ function() {
           fieldLabel: brick.title,
           name: brick.name,
           readOnly: brick.readOnly,
-          labelSeparator: null
+          labelSeparator: null,
+          allowBlank: brick.allowBlank
         };
       },
 

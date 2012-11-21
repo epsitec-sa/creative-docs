@@ -22,7 +22,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				PropertyAccessorId = decimalPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = (decimal?) decimalPropertyAccessor.GetValue (entity)
+				Value = (decimal?) decimalPropertyAccessor.GetValue (entity),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 

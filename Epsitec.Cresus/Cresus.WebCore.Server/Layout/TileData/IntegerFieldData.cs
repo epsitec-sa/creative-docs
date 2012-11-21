@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				Value = (long?) integerPropertyAccessor.GetValue (entity),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 

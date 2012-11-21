@@ -30,6 +30,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		public bool AllowBlank
+		{
+			get;
+			set;
+		}
+
+
 		protected abstract object GetValue();
 
 
@@ -41,6 +48,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			brick["name"] = this.PropertyAccessorId;
 			brick["readOnly"] = this.IsReadOnly;
 			brick["value"] = this.GetValue ();
+			brick["allowBlank"] = this.AllowBlank;
 
 			return brick;
 		}

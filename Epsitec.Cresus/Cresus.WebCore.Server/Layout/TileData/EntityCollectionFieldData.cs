@@ -28,7 +28,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
 				TypeName = this.GetTypeName (layoutBuilder, entityCollectionPropertyAccessor.Type),
-				Values = targets.Select (t => EntityValue.Create (layoutBuilder, t)).ToList ()
+				Values = targets.Select (t => EntityValue.Create (layoutBuilder, t)).ToList (),
+				AllowBlank = this.AllowBlank,
 			};
 		}
 
