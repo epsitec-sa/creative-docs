@@ -524,21 +524,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static FormattedText GetHorizontalGroupTitle(Brick brick)
-		{
-			var titleProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Title);
-
-			if (titleProperty.HasValue)
-			{
-				return titleProperty.Value.StringValue;
-			}
-			else
-			{
-				return FormattedText.Empty;
-			}
-		}
-
-
 		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Caches caches, Brick brick)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
