@@ -74,7 +74,7 @@ function() {
     onSaveClick: function() {
       this.hideError();
       var form = this.getForm();
-      if (this.form.isValid()) {
+      if (form.isValid()) {
         this.setLoading();
         form.submit({
           success: function(form, action) {
