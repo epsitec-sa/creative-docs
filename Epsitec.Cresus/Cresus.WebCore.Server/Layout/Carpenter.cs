@@ -113,11 +113,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
 
-			summaryTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
+			summaryTileData.Icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
 			summaryTileData.EntityType = brick.GetBrickType ();
 
-			summaryTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
-			summaryTileData.TextGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Text);
+			summaryTileData.TitleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
+			summaryTileData.TextGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Text);
 
 			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData, caches);
 
@@ -140,13 +140,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static string GetMandatoryValue(Brick brick, BrickPropertyKey key)
+		private static string GetMandatoryString(Brick brick, BrickPropertyKey key)
 		{
 			return Carpenter.GetMandatoryBrickProperty (brick, key).StringValue;
 		}
 
 
-		private static Func<AbstractEntity, FormattedText> GetOptionalGetter(Brick brick, BrickPropertyKey key)
+		private static Func<AbstractEntity, FormattedText> GetOptionalTextGetter(Brick brick, BrickPropertyKey key)
 		{
 			var property = Carpenter.GetOptionalBrickProperty (brick, key);
 
@@ -155,17 +155,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				return e => new FormattedText ();
 			}
 
-			return Carpenter.GetBrickValueGetterFromString (property.Value)
-				?? Carpenter.GetBrickValueGetterFromExpression<FormattedText> (brick, property.Value);
+			return Carpenter.GetTextGetterFromString (property.Value)
+				?? Carpenter.GetTextGetterFromExpression<FormattedText> (brick, property.Value);
 		}
 
 
-		private static Func<AbstractEntity, FormattedText> GetMandatoryGetter(Brick brick, BrickPropertyKey key)
+		private static Func<AbstractEntity, FormattedText> GetMandatoryTextGetter(Brick brick, BrickPropertyKey key)
 		{
 			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
 
-			var textGetter = Carpenter.GetBrickValueGetterFromString (property)
-						  ?? Carpenter.GetBrickValueGetterFromExpression<FormattedText> (brick, property);
+			var textGetter = Carpenter.GetTextGetterFromString (property)
+						  ?? Carpenter.GetTextGetterFromExpression<FormattedText> (brick, property);
 
 			if (textGetter == null)
 			{
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static Func<AbstractEntity, FormattedText> GetBrickValueGetterFromString(BrickProperty property)
+		private static Func<AbstractEntity, FormattedText> GetTextGetterFromString(BrickProperty property)
 		{
 			Func<AbstractEntity, FormattedText> textGetter = null;
 
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static Func<AbstractEntity, T> GetBrickValueGetterFromExpression<T>(Brick brick, BrickProperty property)
+		private static Func<AbstractEntity, T> GetTextGetterFromExpression<T>(Brick brick, BrickProperty property)
 		{
 			var expressionValue = property.ExpressionValue as LambdaExpression;
 
@@ -321,10 +321,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				EntityType = templateBrick.GetBrickType (),
 				EntitiesGetter = Carpenter.GetEntitiesGetter (brick, propertyAccessor),
-				Icon = Carpenter.GetMandatoryValue (templateBrick, BrickPropertyKey.Icon),
+				Icon = Carpenter.GetMandatoryString (templateBrick, BrickPropertyKey.Icon),
 				PropertyAccessor = propertyAccessor,
-				TitleGetter = Carpenter.GetMandatoryGetter (templateBrick, BrickPropertyKey.Title),
-				TextGetter = Carpenter.GetMandatoryGetter (templateBrick, BrickPropertyKey.Text),
+				TitleGetter = Carpenter.GetMandatoryTextGetter (templateBrick, BrickPropertyKey.Title),
+				TextGetter = Carpenter.GetMandatoryTextGetter (templateBrick, BrickPropertyKey.Text),
 			};
 		}
 
@@ -354,9 +354,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var editionTileData = new EditionTileData ();
 
-			editionTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
+			editionTileData.Icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
 			editionTileData.EntityType = brick.GetBrickType ();
-			editionTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
+			editionTileData.TitleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
 
 			editionTileData.Bricks.AddRange (Carpenter.BuildEditionData (brick, caches));
 			editionTileData.Includes.AddRange (Carpenter.BuildIncludeData (brick));
@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var horizontalGroupData = new HorizontalGroupData ()
 			{
-				TitleGetter = Carpenter.GetOptionalGetter (brick, BrickPropertyKey.Title),
+				TitleGetter = Carpenter.GetOptionalTextGetter (brick, BrickPropertyKey.Title),
 			};
 
 			var horizontalBricks = Carpenter.BuildHorizontalFieldData (caches, brick);
@@ -556,7 +556,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				yield return new IncludeData ()
 				{
-					EntityGetter = Carpenter.GetBrickValueGetterFromExpression<AbstractEntity> (brick, includeProperty)
+					EntityGetter = Carpenter.GetTextGetterFromExpression<AbstractEntity> (brick, includeProperty)
 				};
 			}
 		}
