@@ -47,5 +47,10 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.ReadOnly));
 		}
+
+		public HorizontalGroupBrick<T, TParent> Password()
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Password));
+		}
 	}
 }
