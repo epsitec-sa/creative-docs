@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Bricks
 		where TParent : Brick
 	{
 		public TemplateBrick(TParent parent)
-			: base (parent)
+			: base (parent, true)
 		{
 		}
 

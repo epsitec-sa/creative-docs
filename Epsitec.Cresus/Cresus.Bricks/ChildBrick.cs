@@ -6,8 +6,8 @@ namespace Epsitec.Cresus.Bricks
 		where T : AbstractEntity, new ()
 		where TParent : Brick
 	{
-		public ChildBrick(TParent parent)
-			: base (parent.BrickWall, null)
+		public ChildBrick(TParent parent, bool includeResolver = false)
+			: base (parent.BrickWall, includeResolver ? parent.Resolver : null)
 		{
 			this.parent = parent;
 		}
