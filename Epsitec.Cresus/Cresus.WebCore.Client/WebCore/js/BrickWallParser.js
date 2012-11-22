@@ -46,7 +46,7 @@ function() {
       },
 
       parseSummaryTile: function(tile) {
-        var t = this.parseActionTile(tile);
+        var t = this.parseBaseTile(tile);
         t.xtype = 'epsitec.summarytile';
         t.html = tile.text;
         t.isRoot = tile.isRoot;
