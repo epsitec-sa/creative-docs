@@ -46,28 +46,23 @@ function() {
       },
 
       parseSummaryTile: function(tile) {
-        return {
-          xtype: 'epsitec.summarytile',
-          title: tile.title,
-          iconCls: tile.icon,
-          html: tile.text,
-          isRoot: tile.isRoot,
-          entityId: tile.entityId,
-          subViewMode: tile.subViewMode,
-          subViewId: tile.subViewId,
-          autoCreatorId: tile.autoCreatorId
-        };
+        var t = this.parseActionTile(tile);
+        t.xtype = 'epsitec.summarytile';
+        t.html = tile.text;
+        t.isRoot = tile.isRoot;
+        t.subViewMode = tile.subViewMode;
+        t.subViewId = tile.subViewId;
+        t.autoCreatorId = tile.autoCreatorId;
+        return t;
       },
 
       parseCollectionSummaryTile: function(tile) {
         var t = this.parseSummaryTile(tile);
-
         t.xtype = 'epsitec.collectionsummarytile';
         t.hideRemoveButton = tile.hideRemoveButton;
         t.hideAddButton = tile.hideAddButton;
         t.propertyAccessorId = tile.propertyAccessorId;
         t.entityType = tile.entityType;
-
         return t;
       },
 
@@ -80,12 +75,17 @@ function() {
       },
 
       parseEditionTile: function(tile) {
+        var t = this.parseBaseTile(tile);
+        t.xtype = 'epsitec.editiontile';
+        t.items = this.parseBricks(tile.bricks);
+        return t;
+      },
+
+      parseBaseTile: function(tile) {
         return {
-          xtype: 'epsitec.editiontile',
           title: tile.title,
           iconCls: tile.icon,
-          entityId: tile.entityId,
-          items: this.parseBricks(tile.bricks)
+          entityId: tile.entityId
         };
       },
 
