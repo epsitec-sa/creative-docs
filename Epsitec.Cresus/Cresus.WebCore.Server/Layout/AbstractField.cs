@@ -9,14 +9,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public string Title
+		public string Id
 		{
 			get;
 			set;
 		}
 
 
-		public string Id
+		public string Title
 		{
 			get;
 			set;
@@ -43,12 +43,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
-			
-			brick["title"] = this.Title;
+
 			brick["name"] = this.Id;
+			brick["title"] = this.Title;
 			brick["readOnly"] = this.IsReadOnly;
-			brick["value"] = this.GetValue ();
 			brick["allowBlank"] = this.AllowBlank;
+			brick["value"] = this.GetValue ();
 
 			return brick;
 		}
