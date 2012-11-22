@@ -453,13 +453,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var expression = fieldProperty.ExpressionValue;
 			var lambda = (LambdaExpression) expression;
 
-			var title = includeTitle
-				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression)
-				: FormattedText.Empty;
-
 			var propertyAccessorCache = caches.PropertyAccessorCache;
 			var	propertyAccessor = propertyAccessorCache.Get (lambda);
 			var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
+
+			var title = includeTitle
+				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (propertyAccessor)
+				: FormattedText.Empty;
 
 			var fieldData = Carpenter.BuildFieldData (propertyAccessor, title, isReadOnly);
 
@@ -502,9 +502,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static FormattedText GetFieldDataTitle(Expression expression)
+		private static FormattedText GetFieldDataTitle(AbstractPropertyAccessor propertyAccessor)
 		{
-			var caption = EntityInfo.GetFieldCaption (expression);
+			var caption = EntityInfo.GetFieldCaption (propertyAccessor.Property.CaptionId);
 
 			FormattedText title = FormattedText.Empty;
 

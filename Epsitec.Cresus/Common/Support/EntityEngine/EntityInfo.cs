@@ -182,8 +182,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public static Caption GetFieldCaption(PropertyInfo propertyInfo)
 		{
-			var id = EntityInfo.GetFieldCaptionId (propertyInfo);
+			return EntityInfo.GetFieldCaption (EntityInfo.GetFieldCaptionId (propertyInfo));
+		}
 
+		public static Caption GetFieldCaption(Druid id)
+		{
 			if (id.IsEmpty)
 			{
 				return null;
