@@ -1,10 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
+
+using System;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
@@ -13,6 +11,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 	internal sealed class TextFieldData : AbstractFieldData
 	{
+
+
+		public Func<AbstractEntity, string> ValueGetter
+		{
+			get;
+			set;
+		}
+
+
+		public bool IsMultiline
+		{
+			get;
+			set;
+		}
 
 
 		public bool IsPassword
@@ -24,41 +36,34 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 		
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
-
-			if (StringType.IsMultilineText (textPropertyAccessor.Property.Type))
-			{
-				return this.ToTextAreaField (entity, textPropertyAccessor);
-			}
-			else
-			{
-				return this.ToTextField (entity, textPropertyAccessor);
-			}
+			return this.IsMultiline
+				? this.ToTextAreaField (entity)
+				: this.ToTextField (entity);
 		}
 
 
-		private AbstractField ToTextField(AbstractEntity entity, TextPropertyAccessor textPropertyAccessor)
+		private AbstractField ToTextField(AbstractEntity entity)
 		{
 			return new TextField ()
 			{
 				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = (string) textPropertyAccessor.GetValue (entity),
+				Value = this.ValueGetter (entity),
 				IsPassword = this.IsPassword,
 				AllowBlank = this.AllowBlank,
 			};
 		}
 
 
-		private AbstractField ToTextAreaField(AbstractEntity entity, TextPropertyAccessor textPropertyAccessor)
+		private AbstractField ToTextAreaField(AbstractEntity entity)
 		{
 			return new TextAreaField ()
 			{
 				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = (string) textPropertyAccessor.GetValue (entity),
+				Value = this.ValueGetter (entity),
 				AllowBlank = this.AllowBlank,
 			};
 		}

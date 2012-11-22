@@ -2,8 +2,6 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 
 
@@ -26,13 +24,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 
 
 		public FormattedText Title
-		{
-			get;
-			set;
-		}
-
-
-		public AbstractPropertyAccessor PropertyAccessor
 		{
 			get;
 			set;

@@ -455,23 +455,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			var propertyAccessorCache = caches.PropertyAccessorCache;
 			var	propertyAccessor = propertyAccessorCache.Get (lambda);
-			var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
 
-			var title = includeTitle
-				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (propertyAccessor)
-				: FormattedText.Empty;
-
-			var fieldData = Carpenter.BuildFieldData (propertyAccessor, title, isReadOnly);
-
-			if (propertyAccessor.PropertyAccessorType == PropertyAccessorType.Text)
-			{
-				var isPassword = Carpenter.IsFieldDataPassword (brickProperties);
-				var textFieldData = (TextFieldData) fieldData;
-
-				textFieldData.IsPassword = isPassword;
-			}
-
-			return fieldData;
+			return Carpenter.BuildFieldData (propertyAccessor, brickProperties, includeTitle);
 		}
 
 
@@ -547,16 +532,145 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static AbstractFieldData BuildFieldData(AbstractPropertyAccessor propertyAccessor, FormattedText title, bool isReadOnly)
+		private static AbstractFieldData BuildFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
-			var fieldData = Carpenter.GetFieldData (propertyAccessor.PropertyAccessorType);
+			switch (propertyAccessor.PropertyAccessorType)
+			{
+				case PropertyAccessorType.Boolean:
+					return Carpenter.GetBooleanFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Date:
+					return Carpenter.GetDateFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Decimal:
+					return Carpenter.GetDecimalFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.EntityCollection:
+					return Carpenter.GetEntityCollectionFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.EntityReference:
+					return Carpenter.GetEntityReferenceFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Enumeration:
+					return Carpenter.GetEnumerationFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Integer:
+					return Carpenter.GetIntegerFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Text:
+					return Carpenter.GetTextFieldData (propertyAccessor, brickProperties, includeTitle);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static BooleanFieldData GetBooleanFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<BooleanFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (BooleanPropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => (bool?) castedAccessor.GetValue (e);
+
+			return fieldData;
+		}
+
+
+		private static DateFieldData GetDateFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<DateFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (DatePropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => (string) castedAccessor.GetValue (e);
+
+			return fieldData;
+		}
+
+
+		private static DecimalFieldData GetDecimalFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<DecimalFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (DecimalPropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => (decimal?) castedAccessor.GetValue (e);
+
+			return fieldData;
+		}
+
+
+		private static EntityCollectionFieldData GetEntityCollectionFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<EntityCollectionFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => castedAccessor.GetEntityCollection (e);
+			fieldData.CollectionType = castedAccessor.CollectionType;
+
+			return fieldData;
+		}
+
+
+		private static EntityReferenceFieldData GetEntityReferenceFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<EntityReferenceFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => castedAccessor.GetEntity (e);
+			fieldData.ReferenceType = castedAccessor.Type;
+
+			return fieldData;
+		}
+
+
+		private static EnumerationFieldData GetEnumerationFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<EnumerationFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (EnumerationPropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => (string) castedAccessor.GetValue (e);
+			fieldData.EnumerationType = castedAccessor.Type;
+
+			return fieldData;
+		}
+
+
+		private static IntegerFieldData GetIntegerFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<IntegerFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (IntegerPropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => (long?) castedAccessor.GetValue (e);
+
+			return fieldData;
+		}
+
+
+		private static TextFieldData GetTextFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var fieldData = Carpenter.GetBasicFieldData<TextFieldData> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (TextPropertyAccessor) propertyAccessor;
+			fieldData.ValueGetter = e => (string) castedAccessor.GetValue (e);
+			fieldData.IsMultiline = StringType.IsMultilineText (castedAccessor.Property.Type);
+			fieldData.IsPassword = Carpenter.IsFieldDataPassword (brickProperties);
+
+			return fieldData;
+		}
+
+
+		private static T GetBasicFieldData<T>(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+			where T : AbstractFieldData, new ()
+		{
+			var fieldData = new T ();
 
 			fieldData.Id = propertyAccessor.Id;
-			fieldData.Title = title;
-			fieldData.IsReadOnly = isReadOnly;
-			fieldData.PropertyAccessor = propertyAccessor;
+			fieldData.IsReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
 			fieldData.AllowBlank = propertyAccessor.Property.IsNullable;
-
+			fieldData.Title = includeTitle
+				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (propertyAccessor)
+				: FormattedText.Empty;
+			
 			return fieldData;
 		}
 

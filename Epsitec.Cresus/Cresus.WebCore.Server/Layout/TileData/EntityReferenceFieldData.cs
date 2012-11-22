@@ -1,8 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
+
+using System;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
@@ -13,18 +13,29 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 	{
 
 
+		public Func<AbstractEntity, AbstractEntity> ValueGetter
+		{
+			get;
+			set;
+		}
+
+
+		public Type ReferenceType
+		{
+			get;
+			set;
+		}
+
+
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var entityReferencePropertyAccessor = (EntityReferencePropertyAccessor) this.PropertyAccessor;
-			var target = entityReferencePropertyAccessor.GetEntity (entity);
-
 			return new EntityReferenceField ()
 			{
 				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				TypeName = layoutBuilder.GetTypeName (entityReferencePropertyAccessor.Type),
-				Value = EntityValue.Create (layoutBuilder, target),
+				TypeName = layoutBuilder.GetTypeName (this.ReferenceType),
+				Value = EntityValue.Create (layoutBuilder, this.ValueGetter (entity)),
 				AllowBlank = this.AllowBlank,
 			};
 		}

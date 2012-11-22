@@ -1,8 +1,8 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
+
+using System;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
@@ -13,17 +13,30 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 	{
 
 
+		public Func<AbstractEntity, string> ValueGetter
+		{
+			get;
+			set;
+		}
+
+
+		public Type EnumerationType
+		{
+			get;
+			set;
+		}
+
+
+
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var enumerationPropertyAccessor = (EnumerationPropertyAccessor) this.PropertyAccessor;
-
 			return new EnumerationField ()
 			{
 				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = (string) enumerationPropertyAccessor.GetValue (entity),
-				TypeName = layoutBuilder.GetTypeName (enumerationPropertyAccessor.Type),
+				Value = this.ValueGetter (entity),
+				TypeName = layoutBuilder.GetTypeName (this.EnumerationType),
 				AllowBlank = this.AllowBlank,
 			};
 		}

@@ -1,10 +1,10 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
 
 using System;
+
+using System.Collections.Generic;
 
 using System.Linq;
 
@@ -17,28 +17,31 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 	{
 
 
+		public Func<AbstractEntity, IEnumerable<AbstractEntity>> ValueGetter
+		{
+			get;
+			set;
+		}
+
+
+		public Type CollectionType
+		{
+			get;
+			set;
+		}
+
+
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var entityCollectionPropertyAccessor = (EntityCollectionPropertyAccessor) this.PropertyAccessor;
-			var targets = entityCollectionPropertyAccessor.GetEntityCollection (entity);
-
 			return new EntityCollectionField ()
 			{
 				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				TypeName = this.GetTypeName (layoutBuilder, entityCollectionPropertyAccessor.Type),
-				Values = targets.Select (t => EntityValue.Create (layoutBuilder, t)).ToList (),
+				TypeName = layoutBuilder.GetTypeName (this.CollectionType),
+				Values = this.ValueGetter (entity).Select (t => EntityValue.Create (layoutBuilder, t)).ToList (),
 				AllowBlank = this.AllowBlank,
 			};
-		}
-
-
-		private string GetTypeName(LayoutBuilder layoutBuilder, Type collectionType)
-		{
-			var entityType = collectionType.GetGenericArguments ()[0];
-			
-			return layoutBuilder.GetTypeName (entityType);
 		}
 
 

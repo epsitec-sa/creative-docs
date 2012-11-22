@@ -1,8 +1,8 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using Epsitec.Cresus.WebCore.Server.Layout.Tile;
+
+using System;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
@@ -13,16 +13,21 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.TileData
 	{
 
 
+		public Func<AbstractEntity, bool?> ValueGetter
+		{
+			get;
+			set;
+		}
+
+
 		public override AbstractField ToAbstractField(LayoutBuilder layoutBuilder, AbstractEntity entity)
 		{
-			var booleanPropertyAccessor = (BooleanPropertyAccessor) this.PropertyAccessor;
-
 			return new BooleanField ()
 			{
 				Id = this.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = (bool?) booleanPropertyAccessor.GetValue (entity),
+				Value = this.ValueGetter (entity),
 				AllowBlank = this.AllowBlank,
 			};
 		}
