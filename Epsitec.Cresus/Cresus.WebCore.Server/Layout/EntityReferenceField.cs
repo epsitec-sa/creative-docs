@@ -1,19 +1,12 @@
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
+namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class EnumerationField : AbstractField
+	internal sealed class EntityReferenceField : AbstractField
 	{
-
-
-		public string Value
-		{
-			get;
-			set;
-		}
 
 
 		public string TypeName
@@ -23,23 +16,30 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 		}
 
 
+		public EntityValue Value
+		{
+			get;
+			set;
+		}
+
+
 		protected override string GetEditionTilePartType()
 		{
-			return "enumerationField";
+			return "entityReferenceField";
 		}
 
 
 		protected override object GetValue()
 		{
-			return this.Value;
+			return this.Value.ToDictionary ();
 		}
-		
-		
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
 
-			brick["enumerationName"] = this.TypeName;
+			brick["entityName"] = this.TypeName;
 
 			return brick;
 		}
@@ -49,4 +49,3 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 
 
 }
-

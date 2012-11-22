@@ -1,16 +1,16 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-using Epsitec.Cresus.WebCore.Server.Layout.TileData;
+using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using System;
 
@@ -27,27 +27,29 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	/// <summary>
 	/// The goal of the Carpenter class is to transform brick walls in tiles. It takes as input the
 	/// a BrickWall which is a definition for the tiles. With the brick wall and the root entity
-	/// that is associated with it, it builds AbstractData objects which contain the data of the
-	/// tiles that must be displayed.
+	/// that is associated with it, it builds tiles objects that must be displayed.
 	/// </summary>
 	internal static class Carpenter
 	{
 
 
-		public static IEnumerable<AbstractTileData> BuildTileData(ViewControllerMode viewMode, BrickWall brickWall, Caches caches)
+		public static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, BrickWall brickWall, ViewControllerMode viewMode, AbstractEntity entity)
 		{
 			bool isFirst = true;
 
 			foreach (var brick in brickWall.Bricks)
 			{
-				yield return Carpenter.BuildTileData (viewMode, brick, caches, isFirst);
+				foreach (var tile in Carpenter.BuildTiles (businessContext, caches, brick, viewMode, entity, isFirst))
+				{
+					yield return tile;
+				}
 
 				isFirst = false;
 			}
 		}
 
 
-		private static AbstractTileData BuildTileData(ViewControllerMode viewMode, Brick brick, Caches caches, bool isFirst)
+		private static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, Brick brick, ViewControllerMode viewMode, AbstractEntity entity, bool isFirst)
 		{
 			switch (viewMode)
 			{
@@ -55,13 +57,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Edition:
-					return Carpenter.BuildEditionTileDataItem (brick, caches);
+					return Carpenter.BuildEditionTiles (businessContext, caches, brick, entity);
 
 				case ViewControllerMode.None:
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Summary:
-					return Carpenter.BuildSummaryTileDataItem (brick, caches, isFirst);
+					return Carpenter.BuildSummaryTiles (businessContext, caches, brick, entity, isFirst);
 
 				default:
 					throw new NotImplementedException ();
@@ -69,26 +71,22 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, Caches caches, bool isFirst)
+		private static IEnumerable<AbstractTile> BuildSummaryTiles(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity, bool isFirst)
 		{
-			var summaryTileData = Carpenter.CreateSummaryTileData ();
-
 			var summaryBrick = Carpenter.GetSummaryBrick (brick);
+			var templateBrick = Carpenter.GetOptionalTemplateBrick (summaryBrick);
 
-			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData, caches);
-
-			summaryTileData.IsRoot = isFirst;
-
-			return summaryTileData;
-		}
-
-
-		private static SummaryTileData CreateSummaryTileData()
-		{
-			return new SummaryTileData ()
+			if (templateBrick == null)
 			{
-				SubViewMode = ViewControllerMode.Edition
-			};
+				return new List<AbstractTile> ()
+				{
+					Carpenter.BuildSummaryTile (businessContext, caches, brick, entity, isFirst)
+				};
+			}
+			else
+			{
+				return Carpenter.BuildCollectionSummaryTiles (businessContext, caches, templateBrick, entity);
+			}
 		}
 
 
@@ -109,19 +107,68 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData, Caches caches)
+		private static Brick GetOptionalTemplateBrick(Brick brick)
 		{
-			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
+		    var brickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
 
-			summaryTileData.Icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
-			summaryTileData.EntityType = brick.GetBrickType ();
+			return brickProperty.HasValue
+				? brickProperty.Value.Brick
+				: null;
+		}
 
-			summaryTileData.TitleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
-			summaryTileData.TextGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Text);
 
-			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData, caches);
+		private static AbstractTile BuildSummaryTile(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity, bool isFirst)
+		{
+			var entityGetter = Carpenter.GetEntityGetter (brick);
+			var tileEntity = entityGetter (entity);
 
-			summaryTileData.Template = Carpenter.GetOptionalTemplate (brick, caches);
+			var entityId = Tools.GetEntityId (businessContext, tileEntity);
+
+			var iconUri = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
+			var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
+
+			var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
+			var title = titleGetter (tileEntity).ToString ();
+
+			var textGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Text);
+			var text = textGetter (tileEntity).ToString ();
+
+			var subViewMode = Tools.ViewModeToString (ViewControllerMode.Edition);
+			string autoCreatorId = null;
+			string subViewId = null;
+
+			foreach (var brickMode in Carpenter.GetBrickModes (brick))
+			{
+				switch (brickMode)
+				{
+					case BrickMode.DefaultToSummarySubView:
+						subViewMode = Tools.ViewModeToString (ViewControllerMode.Summary);
+						break;
+
+					case BrickMode.AutoCreateNullEntity:
+						autoCreatorId = caches.AutoCreatorCache.Get (brick.GetLambda ()).Id;
+						break;
+
+					default:
+						if (brickMode.IsSpecialController ())
+						{
+							subViewId = Tools.ViewIdToString (brickMode.GetControllerSubTypeId ());
+						}
+						break;
+				}
+			}
+
+			return new SummaryTile ()
+			{
+				EntityId = entityId,
+				IsRoot = isFirst,
+				SubViewMode = subViewMode,
+				SubViewId = subViewId,
+				AutoCreatorId = autoCreatorId,
+				IconClass = iconClass,
+				Title = title,
+				Text = text
+			};
 		}
 
 
@@ -137,6 +184,494 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				return x => (AbstractEntity) resolver.DynamicInvoke (x);
 			}
+		}
+
+
+		private static IEnumerable<BrickMode> GetBrickModes(Brick brick)
+		{
+			return from attribute in Brick.GetProperties (brick, BrickPropertyKey.Attribute)
+				   let value = attribute.AttributeValue
+				   where value != null
+				   where value.ContainsValue<BrickMode> ()
+				   select value.GetValue<BrickMode> ();
+		}
+
+
+		private static IEnumerable<AbstractTile> BuildCollectionSummaryTiles(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		{
+			var lambda = brick.GetLambda ();
+			var propertyAccessorCache = caches.PropertyAccessorCache;
+			var propertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessorCache.Get (lambda);
+
+			var tileEntitiesGetter = Carpenter.GetEntitiesGetter (brick, propertyAccessor);
+			var tileEntities = tileEntitiesGetter (entity);
+
+			var brickType = brick.GetBrickType ();
+
+			var icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
+			var iconClass = IconManager.GetCssClassName (icon, IconSize.Sixteen, brickType);
+
+			var entityType = Tools.TypeToString (brickType);
+
+			var propertyAccessorId = propertyAccessor.Id;
+
+			var subViewMode = Tools.ViewModeToString (ViewControllerMode.Edition);
+			string subViewId = null;
+			var hideAddButton = false;
+			var hideRemoveButton = false;
+			string autoCreatorId = null;
+			bool isRoot = false;
+
+			foreach (var brickMode in Carpenter.GetBrickModes (brick))
+			{
+				switch (brickMode)
+				{
+					case BrickMode.DefaultToSummarySubView:
+						subViewMode = Tools.ViewModeToString (ViewControllerMode.Summary);
+						break;
+
+					case BrickMode.HideAddButton:
+						hideAddButton = true;
+						break;
+
+					case BrickMode.HideRemoveButton:
+						hideRemoveButton = true;
+						break;
+
+					default:
+						if (brickMode.IsSpecialController ())
+						{
+							subViewId = InvariantConverter.ToString (brickMode.GetControllerSubTypeId ());
+						}
+						break;
+				}
+			}
+
+			if (tileEntities.Count == 0)
+			{
+				yield return new EmptySummaryTile ()
+				{
+					EntityId = null,
+					IsRoot = isRoot,
+					SubViewMode = subViewMode,
+					SubViewId = subViewId,
+					AutoCreatorId = autoCreatorId,
+					IconClass = iconClass,
+					Title = null,
+					Text = null,
+					EntityType = entityType,
+					PropertyAccessorId = propertyAccessorId,
+					HideAddButton = hideAddButton,
+					HideRemoveButton = hideRemoveButton,
+				};
+			}
+			else
+			{
+				foreach (var tileEntity in tileEntities)
+				{
+					var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
+					var title = titleGetter (tileEntity).ToString ();
+
+					var textGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Text);
+					var text = textGetter (tileEntity).ToString ();
+
+					yield return new CollectionSummaryTile ()
+					{
+						EntityId = Tools.GetEntityId (businessContext, tileEntity),
+						IsRoot = isRoot,
+						SubViewMode = subViewMode,
+						SubViewId = subViewId,
+						AutoCreatorId = autoCreatorId,
+						IconClass = iconClass,
+						Title = title,
+						Text = text,
+						EntityType = entityType,
+						PropertyAccessorId = propertyAccessorId,
+						HideAddButton = hideAddButton,
+						HideRemoveButton = hideRemoveButton,
+					};
+				}
+			}
+		}
+
+
+		private static Func<AbstractEntity, IList<AbstractEntity>> GetEntitiesGetter(Brick brick, EntityCollectionPropertyAccessor propertyAccessor)
+		{
+			Func<AbstractEntity, IList<AbstractEntity>> rawEntitiesGetter = e =>
+			{
+				return propertyAccessor.GetEntityCollection (e);
+			};
+
+			var collectionType = propertyAccessor.CollectionType;
+			var templateType = brick.GetBrickType ();
+
+			if (collectionType != templateType)
+			{
+				return e => rawEntitiesGetter (e)
+					.Where (t => templateType.IsAssignableFrom (t.GetType ()))
+					.Cast<AbstractEntity> ()
+					.ToList ();
+			}
+			else
+			{
+				return rawEntitiesGetter;
+			}
+		}
+
+
+		private static IEnumerable<AbstractTile> BuildEditionTiles(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		{
+			var bricks = Carpenter.BuildEditionTileParts (businessContext, caches, brick, entity).ToList ();
+
+			if (bricks.Count > 0)
+			{
+				var entityId = Tools.GetEntityId (businessContext, entity);
+
+				var iconUri = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
+				var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, entity.GetType ());
+
+				var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
+				var title = titleGetter (entity).ToString ();
+
+				yield return new EditionTile ()
+				{
+					EntityId = entityId,
+					IconClass = iconClass,
+					Title = title,
+					Bricks = bricks
+				};
+			}
+
+			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
+			{
+				var includedEntityGetter = Carpenter.GetGetterFromExpression<AbstractEntity> (brick, includeProperty);
+				var includedEntity = includedEntityGetter (entity);
+
+				var includedTiles = LayoutBuilder.GetTiles (businessContext, caches, includedEntity, ViewControllerMode.Edition, null);
+
+				foreach (var includedTile in includedTiles)
+				{
+					yield return includedTile;
+				}
+			}
+		}
+
+
+		private static IEnumerable<AbstractEditionTilePart> BuildEditionTileParts(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		{
+			foreach (var property in Brick.GetAllProperties (brick))
+			{
+				switch (property.Key)
+				{
+					case BrickPropertyKey.Input:
+						foreach (var inputPart in Carpenter.BuildInputParts (businessContext, caches, property.Brick, entity))
+						{
+							yield return inputPart;
+						}
+						break;
+
+					case BrickPropertyKey.Separator:
+						yield return new Separator ();
+						break;
+
+					case BrickPropertyKey.GlobalWarning:
+						yield return new GlobalWarning ();
+						break;
+
+					default:
+						// Nothing to do here. We simply ignore the property.
+						break;
+				}
+			}
+		}
+
+
+		private static IEnumerable<AbstractEditionTilePart> BuildInputParts(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		{
+			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
+
+			foreach (var brickProperty in brickProperties)
+			{
+				switch (brickProperty.Key)
+				{
+					case BrickPropertyKey.HorizontalGroup:
+						yield return Carpenter.BuildHorizontalGroup (businessContext, brickProperty.Brick, caches, entity);
+						break;
+
+					case BrickPropertyKey.Field:
+						yield return Carpenter.BuildField (businessContext, caches, entity, brickProperties, brickProperty, true);
+						break;
+				}
+			}
+		}
+
+
+		private static AbstractEditionTilePart BuildHorizontalGroup(BusinessContext businessContext, Brick brick, Caches caches, AbstractEntity entity)
+		{
+			var horizontalGroup = new HorizontalGroup ();
+
+			var titleGetter = Carpenter.GetOptionalTextGetter (brick, BrickPropertyKey.Title);
+			horizontalGroup.Title = titleGetter (entity).ToString ();
+
+			horizontalGroup.Fields = Carpenter.BuildHorizontalFields (businessContext, caches, brick, entity).ToList ();
+
+			return horizontalGroup;
+		}
+
+
+		private static IEnumerable<AbstractField> BuildHorizontalFields(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		{
+			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
+
+			foreach (var brickProperty in brickProperties)
+			{
+				yield return Carpenter.BuildField (businessContext, caches, entity, brickProperties, brickProperty, false);
+			}
+		}
+
+
+		private static AbstractField BuildField(BusinessContext businessContext, Caches caches, AbstractEntity entity, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool includeTitle)
+		{
+			var propertyAccessor = Carpenter.GetPropertyAccessor (caches, fieldProperty);
+
+			switch (propertyAccessor.PropertyAccessorType)
+			{
+				case PropertyAccessorType.Boolean:
+					return Carpenter.BuildBooleanField (entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Date:
+					return Carpenter.BuildDateField (entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Decimal:
+					return Carpenter.BuildDecimalField (entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.EntityCollection:
+					return Carpenter.BuildEntityCollectionField (businessContext, entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.EntityReference:
+					return Carpenter.BuildEntityReferenceField (businessContext, entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Enumeration:
+					return Carpenter.BuildEnumerationField (entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Integer:
+					return Carpenter.BuildIntegerField (entity, propertyAccessor, brickProperties, includeTitle);
+
+				case PropertyAccessorType.Text:
+					return Carpenter.BuildTextField (entity, propertyAccessor, brickProperties, includeTitle);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static AbstractPropertyAccessor GetPropertyAccessor(Caches caches, BrickProperty fieldProperty)
+		{
+			var lambda = (LambdaExpression) fieldProperty.ExpressionValue;
+
+			return  caches.PropertyAccessorCache.Get (lambda);
+		}
+
+
+		private static BooleanField BuildBooleanField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<BooleanField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (BooleanPropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, bool?> valueGetter = e => (bool?) castedAccessor.GetValue (e);
+			field.Value = valueGetter (entity);
+
+			return field;
+		}
+
+
+		private static DateField BuildDateField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<DateField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (DatePropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, string> valueGetter = e => (string) castedAccessor.GetValue (e);
+			field.Value = valueGetter (entity);
+
+			return field;
+		}
+
+
+		private static DecimalField BuildDecimalField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<DecimalField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (DecimalPropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, decimal?> valueGetter = e => (decimal?) castedAccessor.GetValue (e);
+			field.Value = valueGetter (entity);
+
+			return field;
+		}
+
+
+		private static EntityCollectionField BuildEntityCollectionField(BusinessContext businessContext, AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<EntityCollectionField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, IList<AbstractEntity>> valueGetter = e => castedAccessor.GetEntityCollection (e);
+			field.Values = valueGetter (entity)
+				.Select (e => Carpenter.BuildEntityValue (businessContext, e))
+				.ToList ();
+
+			field.TypeName = Tools.TypeToString (castedAccessor.CollectionType);
+
+			return field;
+		}
+
+
+		private static EntityReferenceField BuildEntityReferenceField(BusinessContext businessContext, AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<EntityReferenceField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, AbstractEntity> valueGetter = e => castedAccessor.GetEntity (e);
+			field.Value = Carpenter.BuildEntityValue (businessContext, valueGetter (entity));
+			field.TypeName = Tools.TypeToString (castedAccessor.Type);
+
+			return field;
+		}
+
+
+		private static EnumerationField BuildEnumerationField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<EnumerationField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (EnumerationPropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, string> valueGetter = e => (string) castedAccessor.GetValue (e);
+			field.Value = valueGetter (entity);
+			field.TypeName = Tools.TypeToString (castedAccessor.Type);
+
+			return field;
+		}
+
+
+		private static IntegerField BuildIntegerField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var field = Carpenter.BuildField<IntegerField> (propertyAccessor, brickProperties, includeTitle);
+
+			var castedAccessor = (IntegerPropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, long?> valueGetter = e => (long?) castedAccessor.GetValue (e);
+			field.Value = valueGetter (entity);
+
+			return field;
+		}
+
+
+		private static AbstractField BuildTextField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			var castedAccessor = (TextPropertyAccessor) propertyAccessor;
+			Func<AbstractEntity, string> valueGetter = e => (string) castedAccessor.GetValue (e);
+			var value = valueGetter (entity);
+
+			if (StringType.IsMultilineText (castedAccessor.Property.Type))
+			{
+				var field = Carpenter.BuildField<TextAreaField> (propertyAccessor, brickProperties, includeTitle);
+				field.Value = value;
+
+				return field;
+			}
+			else
+			{
+				var field = Carpenter.BuildField<TextField> (propertyAccessor, brickProperties, includeTitle);
+
+				field.IsPassword = Carpenter.IsPassword (brickProperties);
+				field.Value = value;
+
+				return field;
+			}
+		}
+
+
+		private static bool IsPassword(BrickPropertyCollection brickProperties)
+		{
+			return brickProperties.PeekAfter (BrickPropertyKey.Password, -1).HasValue;
+		}
+
+
+		private static T BuildField<T>(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+			where T : AbstractField, new ()
+		{
+			var field = new T ();
+
+			field.Id = propertyAccessor.Id;
+			field.IsReadOnly = Carpenter.IsReadOnly (brickProperties);
+			field.AllowBlank = propertyAccessor.Property.IsNullable;
+			field.Title = includeTitle
+		        ? Carpenter.GetFieldTitle (brickProperties, propertyAccessor).ToString ()
+		        : "";
+
+			return field;
+		}
+
+
+		private static bool IsReadOnly(BrickPropertyCollection brickProperties)
+		{
+			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
+		}
+
+
+		private static FormattedText GetFieldTitle(BrickPropertyCollection brickProperties, AbstractPropertyAccessor propertyAccessor)
+		{
+			return Carpenter.GetFieldTitle (brickProperties)
+				?? Carpenter.GetFieldTitle (propertyAccessor);
+		}
+
+
+		private static FormattedText? GetFieldTitle(BrickPropertyCollection brickProperties)
+		{
+			var titleProperty = brickProperties.PeekBefore (BrickPropertyKey.Title, -1);
+
+			if (titleProperty.HasValue)
+			{
+				return titleProperty.Value.StringValue;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		private static FormattedText GetFieldTitle(AbstractPropertyAccessor propertyAccessor)
+		{
+			var title = FormattedText.Empty;
+
+			var caption = EntityInfo.GetFieldCaption (propertyAccessor.Property.CaptionId);
+
+			if (caption != null)
+			{
+				title = caption.HasLabels
+					? caption.DefaultLabel
+					: caption.Description ?? caption.Name;
+			}
+
+			return title;
+		}
+
+
+		public static EntityValue BuildEntityValue(BusinessContext businessContext, AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return new EntityValue ()
+				{
+					Displayed = Res.Strings.EmptyValue.ToSimpleText (),
+					Submitted = Constants.KeyForNullValue,
+				};
+			}
+
+			return new EntityValue ()
+			{
+				Displayed = entity.GetCompactSummary ().ToString (),
+				Submitted = Tools.GetEntityId (businessContext, entity),
+			};
 		}
 
 
@@ -156,7 +691,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 
 			return Carpenter.GetTextGetterFromString (property.Value)
-				?? Carpenter.GetTextGetterFromExpression<FormattedText> (brick, property.Value);
+		        ?? Carpenter.GetGetterFromExpression<FormattedText> (brick, property.Value);
 		}
 
 
@@ -165,7 +700,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
 
 			var textGetter = Carpenter.GetTextGetterFromString (property)
-						  ?? Carpenter.GetTextGetterFromExpression<FormattedText> (brick, property);
+		                  ?? Carpenter.GetGetterFromExpression<FormattedText> (brick, property);
 
 			if (textGetter == null)
 			{
@@ -191,7 +726,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static Func<AbstractEntity, T> GetTextGetterFromExpression<T>(Brick brick, BrickProperty property)
+		private static Func<AbstractEntity, T> GetGetterFromExpression<T>(Brick brick, BrickProperty property)
 		{
 			var expressionValue = property.ExpressionValue as LambdaExpression;
 
@@ -201,18 +736,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				var expression = expressionValue.Compile ();
 
-				Func<AbstractEntity, T> rawTextGetter = x => (T) expression.DynamicInvoke (x);
-
-				var resolver = brick.GetResolver (null);
-
-				if (resolver == null)
-				{
-					textGetter = rawTextGetter;
-				}
-				else
-				{
-					textGetter = x => rawTextGetter ((AbstractEntity) resolver.DynamicInvoke (x));
-				}
+				textGetter = x => (T) expression.DynamicInvoke (x);
 			}
 
 			return textGetter;
@@ -240,472 +764,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 
 			return Brick.GetProperty (brick, key);
-		}
-
-
-		private static void PopulateSummaryTileDataWithAttributes(Brick brick, SummaryTileData summaryTileData, Caches caches)
-		{
-			foreach (var brickMode in Carpenter.GetBrickModes (brick))
-			{
-				Carpenter.PupulateSummaryTileDataWithAttribute (brick, brickMode, summaryTileData, caches);
-			}
-		}
-
-
-		private static IEnumerable<BrickMode> GetBrickModes(Brick brick)
-		{
-			return from attribute in Brick.GetProperties (brick, BrickPropertyKey.Attribute)
-				   let value = attribute.AttributeValue
-				   where value != null
-				   where value.ContainsValue<BrickMode> ()
-				   select value.GetValue<BrickMode> ();
-		}
-
-
-		private static void PupulateSummaryTileDataWithAttribute(Brick brick, BrickMode brickMode, SummaryTileData summaryTileData, Caches caches)
-		{
-			// TODO Implement other brick modes ?
-
-			switch (brickMode)
-			{
-				case BrickMode.DefaultToSummarySubView:
-					summaryTileData.SubViewMode = ViewControllerMode.Summary;
-					break;
-
-				case BrickMode.HideAddButton:
-					summaryTileData.HideAddButton = true;
-					break;
-
-				case BrickMode.HideRemoveButton:
-					summaryTileData.HideRemoveButton = true;
-					break;
-
-				case BrickMode.AutoCreateNullEntity:
-					summaryTileData.AutoCreator = caches.AutoCreatorCache.Get (brick.GetLambda ());
-					break;
-
-				default:
-					if (brickMode.IsSpecialController ())
-					{
-						summaryTileData.SubViewId = brickMode.GetControllerSubTypeId ();
-					}
-					break;
-			}
-		}
-
-
-		private static CollectionTileData GetOptionalTemplate(Brick brick, Caches caches)
-		{
-			var templateBrickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
-
-			if (templateBrickProperty.HasValue)
-			{
-				var templateBrick = templateBrickProperty.Value.Brick;
-
-				return Carpenter.GetTemplate (brick, templateBrick, caches);
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-
-		private static CollectionTileData GetTemplate(Brick brick, Brick templateBrick, Caches caches)
-		{
-			var lambda = brick.GetLambda ();
-			var propertyAccessorCache = caches.PropertyAccessorCache;
-			var propertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessorCache.Get (lambda);
-
-			return new CollectionTileData ()
-			{
-				EntityType = templateBrick.GetBrickType (),
-				EntitiesGetter = Carpenter.GetEntitiesGetter (brick, propertyAccessor),
-				Icon = Carpenter.GetMandatoryString (templateBrick, BrickPropertyKey.Icon),
-				PropertyAccessor = propertyAccessor,
-				TitleGetter = Carpenter.GetMandatoryTextGetter (templateBrick, BrickPropertyKey.Title),
-				TextGetter = Carpenter.GetMandatoryTextGetter (templateBrick, BrickPropertyKey.Text),
-			};
-		}
-
-
-		private static Func<AbstractEntity, IEnumerable<AbstractEntity>> GetEntitiesGetter(Brick brick, EntityCollectionPropertyAccessor propertyAccessor)
-		{
-			Func<AbstractEntity, IEnumerable<AbstractEntity>> rawEntitiesGetter = e =>
-			{
-				return (IEnumerable<AbstractEntity>) propertyAccessor.GetCollection (e);
-			};
-
-			var collectionType = propertyAccessor.CollectionType;
-			var templateType = brick.GetBrickType ();
-			
-			if (collectionType != templateType)
-			{
-				return e => rawEntitiesGetter (e).Where (t => templateType.IsAssignableFrom (t.GetType ()));
-			}
-			else
-			{
-				return rawEntitiesGetter;
-			}
-		}
-
-
-		private static EditionTileData BuildEditionTileDataItem(Brick brick, Caches caches)
-		{
-			var editionTileData = new EditionTileData ();
-
-			editionTileData.Icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
-			editionTileData.EntityType = brick.GetBrickType ();
-			editionTileData.TitleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
-
-			editionTileData.Bricks.AddRange (Carpenter.BuildEditionData (brick, caches));
-			editionTileData.Includes.AddRange (Carpenter.BuildIncludeData (brick));
-
-			return editionTileData;
-		}
-
-
-		private static IEnumerable<AbstractEditionTilePartData> BuildEditionData(Brick brick, Caches caches)
-		{
-			var editionData = new List<AbstractEditionTilePartData> ();
-
-			foreach (var property in Brick.GetAllProperties (brick))
-			{
-				switch (property.Key)
-				{
-					case BrickPropertyKey.Input:
-						editionData.AddRange (Carpenter.BuildInputData (property.Brick, caches));
-						break;
-
-					case BrickPropertyKey.Separator:
-						editionData.Add (Carpenter.BuildSeparatorData ());
-						break;
-
-					case BrickPropertyKey.GlobalWarning:
-						editionData.Add (Carpenter.BuildGlobalWarningData ());
-						break;
-
-					default:
-						// Nothing to do here. We simply ignore the property.
-						break;
-				}
-			}
-
-			return editionData;
-		}
-
-
-		private static AbstractEditionTilePartData BuildSeparatorData()
-		{
-			return new SeparatorData ();
-		}
-
-
-		private static AbstractEditionTilePartData BuildGlobalWarningData()
-		{
-			return new GlobalWarningData ();
-		}
-
-
-		private static IEnumerable<AbstractEditionTilePartData> BuildInputData(Brick brick, Caches caches)
-		{
-			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
-
-			foreach (var brickProperty in brickProperties)
-			{
-				switch (brickProperty.Key)
-				{
-					case BrickPropertyKey.HorizontalGroup:
-						yield return Carpenter.BuildHorizontalGroupData (caches, brickProperty.Brick);
-						break;
-
-					case BrickPropertyKey.Field:
-						yield return Carpenter.BuildFieldData (caches, brickProperties, brickProperty);
-						break;
-				}
-			}
-		}
-
-
-		private static AbstractEditionTilePartData BuildHorizontalGroupData(Caches caches, Brick brick)
-		{
-			var horizontalGroupData = new HorizontalGroupData ()
-			{
-				TitleGetter = Carpenter.GetOptionalTextGetter (brick, BrickPropertyKey.Title),
-			};
-
-			var horizontalBricks = Carpenter.BuildHorizontalFieldData (caches, brick);
-
-			horizontalGroupData.Fields.AddRange (horizontalBricks);
-
-			return horizontalGroupData;
-		}
-
-
-		private static AbstractEditionTilePartData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty)
-		{
-			return Carpenter.BuildFieldData (caches, brickProperties, fieldProperty, true);
-		}
-
-
-		private static AbstractFieldData BuildFieldData(Caches caches, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool includeTitle)
-		{
-			var expression = fieldProperty.ExpressionValue;
-			var lambda = (LambdaExpression) expression;
-
-			var propertyAccessorCache = caches.PropertyAccessorCache;
-			var	propertyAccessor = propertyAccessorCache.Get (lambda);
-
-			return Carpenter.BuildFieldData (propertyAccessor, brickProperties, includeTitle);
-		}
-
-
-		private static bool IsFieldDataReadOnly(BrickPropertyCollection brickProperties)
-		{
-			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
-		}
-
-
-		private static bool IsFieldDataPassword(BrickPropertyCollection brickProperties)
-		{
-			return brickProperties.PeekAfter (BrickPropertyKey.Password, -1).HasValue;
-		}
-
-
-		private static FormattedText? GetFieldDataTitle(BrickPropertyCollection brickProperties)
-		{
-			var titleProperty = brickProperties.PeekBefore (BrickPropertyKey.Title, -1);
-
-			if (titleProperty.HasValue)
-			{
-				return titleProperty.Value.StringValue;
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-
-		private static FormattedText GetFieldDataTitle(AbstractPropertyAccessor propertyAccessor)
-		{
-			var caption = EntityInfo.GetFieldCaption (propertyAccessor.Property.CaptionId);
-
-			FormattedText title = FormattedText.Empty;
-
-			if (caption != null)
-			{
-				if (caption.HasLabels)
-				{
-					title = caption.DefaultLabel;
-				}
-				else
-				{
-					title = caption.Description ?? caption.Name;
-				}
-			}
-
-			return title;
-		}
-
-
-		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Caches caches, Brick brick)
-		{
-			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
-			
-			return brickProperties.Select
-			(
-				b => Carpenter.BuildFieldData (caches, brickProperties, b, false)
-			);
-		}
-
-
-		private static IEnumerable<IncludeData> BuildIncludeData(Brick brick)
-		{
-			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
-			{
-				yield return new IncludeData ()
-				{
-					EntityGetter = Carpenter.GetTextGetterFromExpression<AbstractEntity> (brick, includeProperty)
-				};
-			}
-		}
-
-
-		private static AbstractFieldData BuildFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			switch (propertyAccessor.PropertyAccessorType)
-			{
-				case PropertyAccessorType.Boolean:
-					return Carpenter.GetBooleanFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.Date:
-					return Carpenter.GetDateFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.Decimal:
-					return Carpenter.GetDecimalFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.EntityCollection:
-					return Carpenter.GetEntityCollectionFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.EntityReference:
-					return Carpenter.GetEntityReferenceFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.Enumeration:
-					return Carpenter.GetEnumerationFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.Integer:
-					return Carpenter.GetIntegerFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				case PropertyAccessorType.Text:
-					return Carpenter.GetTextFieldData (propertyAccessor, brickProperties, includeTitle);
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static BooleanFieldData GetBooleanFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<BooleanFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (BooleanPropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => (bool?) castedAccessor.GetValue (e);
-
-			return fieldData;
-		}
-
-
-		private static DateFieldData GetDateFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<DateFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (DatePropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => (string) castedAccessor.GetValue (e);
-
-			return fieldData;
-		}
-
-
-		private static DecimalFieldData GetDecimalFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<DecimalFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (DecimalPropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => (decimal?) castedAccessor.GetValue (e);
-
-			return fieldData;
-		}
-
-
-		private static EntityCollectionFieldData GetEntityCollectionFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<EntityCollectionFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => castedAccessor.GetEntityCollection (e);
-			fieldData.CollectionType = castedAccessor.CollectionType;
-
-			return fieldData;
-		}
-
-
-		private static EntityReferenceFieldData GetEntityReferenceFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<EntityReferenceFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => castedAccessor.GetEntity (e);
-			fieldData.ReferenceType = castedAccessor.Type;
-
-			return fieldData;
-		}
-
-
-		private static EnumerationFieldData GetEnumerationFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<EnumerationFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (EnumerationPropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => (string) castedAccessor.GetValue (e);
-			fieldData.EnumerationType = castedAccessor.Type;
-
-			return fieldData;
-		}
-
-
-		private static IntegerFieldData GetIntegerFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<IntegerFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (IntegerPropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => (long?) castedAccessor.GetValue (e);
-
-			return fieldData;
-		}
-
-
-		private static TextFieldData GetTextFieldData(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-		{
-			var fieldData = Carpenter.GetBasicFieldData<TextFieldData> (propertyAccessor, brickProperties, includeTitle);
-
-			var castedAccessor = (TextPropertyAccessor) propertyAccessor;
-			fieldData.ValueGetter = e => (string) castedAccessor.GetValue (e);
-			fieldData.IsMultiline = StringType.IsMultilineText (castedAccessor.Property.Type);
-			fieldData.IsPassword = Carpenter.IsFieldDataPassword (brickProperties);
-
-			return fieldData;
-		}
-
-
-		private static T GetBasicFieldData<T>(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
-			where T : AbstractFieldData, new ()
-		{
-			var fieldData = new T ();
-
-			fieldData.Id = propertyAccessor.Id;
-			fieldData.IsReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
-			fieldData.AllowBlank = propertyAccessor.Property.IsNullable;
-			fieldData.Title = includeTitle
-				? Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (propertyAccessor)
-				: FormattedText.Empty;
-			
-			return fieldData;
-		}
-
-
-		private static AbstractFieldData GetFieldData(PropertyAccessorType type)
-		{
-			switch (type)
-			{
-				case PropertyAccessorType.Boolean:
-					return new BooleanFieldData ();
-
-				case PropertyAccessorType.Date:
-					return new DateFieldData ();
-
-				case PropertyAccessorType.Decimal:
-					return new DecimalFieldData ();
-
-				case PropertyAccessorType.EntityCollection:
-					return new EntityCollectionFieldData ();
-
-				case PropertyAccessorType.EntityReference:
-					return new EntityReferenceFieldData ();
-
-				case PropertyAccessorType.Enumeration:
-					return new EnumerationFieldData ();
-
-				case PropertyAccessorType.Integer:
-					return new IntegerFieldData ();
-
-				case PropertyAccessorType.Text:
-					return new TextFieldData ();
-
-				default:
-					throw new NotImplementedException ();
-			}
 		}
 
 

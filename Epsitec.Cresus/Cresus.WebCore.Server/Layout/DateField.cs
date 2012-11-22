@@ -1,8 +1,8 @@
-﻿namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
+namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class TextAreaField : AbstractField
+	internal sealed class DateField : AbstractField
 	{
 
 
@@ -15,7 +15,7 @@
 
 		protected override string GetEditionTilePartType()
 		{
-			return "textAreaField";
+			return "dateField";
 		}
 
 
@@ -29,3 +29,4 @@
 
 
 }
+

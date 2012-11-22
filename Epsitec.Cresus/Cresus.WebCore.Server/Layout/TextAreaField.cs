@@ -1,12 +1,12 @@
-﻿namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
+﻿namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class DecimalField : AbstractField
+	internal sealed class TextAreaField : AbstractField
 	{
 
 
-		public decimal? Value
+		public string Value
 		{
 			get;
 			set;
@@ -15,7 +15,7 @@
 
 		protected override string GetEditionTilePartType()
 		{
-			return "decimalField";
+			return "textAreaField";
 		}
 
 

@@ -5,7 +5,7 @@ using Epsitec.Cresus.WebCore.Server.NancyModules;
 using System.Collections.Generic;
 
 
-namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
+namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
@@ -33,25 +33,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout.Tile
 			{
 				{ "displayed", this.Displayed },
 				{ "submitted", this.Submitted },
-			};
-		}
-
-
-		public static EntityValue Create(LayoutBuilder layoutBuilder, AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				return new EntityValue ()
-				{
-					Displayed = Res.Strings.EmptyValue.ToSimpleText (),
-					Submitted = Constants.KeyForNullValue,
-				};
-			}
-
-			return new EntityValue ()
-			{
-				Displayed = entity.GetCompactSummary ().ToString (),
-				Submitted = layoutBuilder.GetEntityId (entity),
 			};
 		}
 
