@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
 			{
-				var includedEntityGetter = Carpenter.GetGetterFromExpression<AbstractEntity> (brick, includeProperty);
+				var includedEntityGetter = Carpenter.GetGetterFromExpression<AbstractEntity> (includeProperty);
 				var includedEntity = includedEntityGetter (entity);
 
 				var includedTiles = LayoutBuilder.GetTiles (businessContext, caches, includedEntity, ViewControllerMode.Edition, null);
@@ -691,7 +691,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 
 			return Carpenter.GetTextGetterFromString (property.Value)
-		        ?? Carpenter.GetGetterFromExpression<FormattedText> (brick, property.Value);
+		        ?? Carpenter.GetGetterFromExpression<FormattedText> (property.Value);
 		}
 
 
@@ -700,7 +700,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
 
 			var textGetter = Carpenter.GetTextGetterFromString (property)
-		                  ?? Carpenter.GetGetterFromExpression<FormattedText> (brick, property);
+		                  ?? Carpenter.GetGetterFromExpression<FormattedText> (property);
 
 			if (textGetter == null)
 			{
@@ -726,7 +726,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static Func<AbstractEntity, T> GetGetterFromExpression<T>(Brick brick, BrickProperty property)
+		private static Func<AbstractEntity, T> GetGetterFromExpression<T>(BrickProperty property)
 		{
 			var expressionValue = property.ExpressionValue as LambdaExpression;
 
