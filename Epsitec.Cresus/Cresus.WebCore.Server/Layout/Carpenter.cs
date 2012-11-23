@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				return new List<AbstractTile> ()
 				{
-					Carpenter.BuildSummaryTile (businessContext, caches, brick, entity, isFirst)
+					Carpenter.BuildSummaryTile (businessContext, caches, summaryBrick, entity, isFirst)
 				};
 			}
 			else
