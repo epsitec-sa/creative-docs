@@ -598,16 +598,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static T BuildField<T>(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 			where T : AbstractField, new ()
 		{
-			var field = new T ();
-
-			field.Id = propertyAccessor.Id;
-			field.IsReadOnly = Carpenter.IsReadOnly (brickProperties);
-			field.AllowBlank = propertyAccessor.Property.IsNullable;
-			field.Title = includeTitle
-		        ? Carpenter.GetFieldTitle (brickProperties, propertyAccessor).ToString ()
-		        : "";
-
-			return field;
+			var title = includeTitle
+				? Carpenter.GetFieldTitle (brickProperties, propertyAccessor).ToString ()
+				: "";
+			
+			return new T ()
+			{
+				Id = propertyAccessor.Id,
+				IsReadOnly = Carpenter.IsReadOnly (brickProperties),
+				AllowBlank = propertyAccessor.Property.IsNullable,
+				Title = title
+			};
 		}
 
 
