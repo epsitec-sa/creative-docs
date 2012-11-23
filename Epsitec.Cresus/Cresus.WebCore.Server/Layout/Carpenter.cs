@@ -29,17 +29,25 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	/// a BrickWall which is a definition for the tiles. With the brick wall and the root entity
 	/// that is associated with it, it builds tiles objects that must be displayed.
 	/// </summary>
-	internal static class Carpenter
+	internal sealed class Carpenter
 	{
 
 
-		public static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, BrickWall brickWall, ViewControllerMode viewMode, AbstractEntity entity)
+		public Carpenter(BusinessContext businessContext, Caches caches, AbstractEntity entity)
+		{
+			this.businessContext = businessContext;
+			this.caches = caches;
+			this.entity = entity;
+		}
+
+
+		public IEnumerable<AbstractTile> BuildTiles(BrickWall brickWall, ViewControllerMode viewMode)
 		{
 			bool isFirst = true;
 
 			foreach (var brick in brickWall.Bricks)
 			{
-				foreach (var tile in Carpenter.BuildTiles (businessContext, caches, brick, viewMode, entity, isFirst))
+				foreach (var tile in this.BuildTiles (brick, viewMode, isFirst))
 				{
 					yield return tile;
 				}
@@ -49,7 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, Brick brick, ViewControllerMode viewMode, AbstractEntity entity, bool isFirst)
+		private IEnumerable<AbstractTile> BuildTiles(Brick brick, ViewControllerMode viewMode, bool isFirst)
 		{
 			switch (viewMode)
 			{
@@ -57,13 +65,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Edition:
-					return Carpenter.BuildEditionTiles (businessContext, caches, brick, entity);
+					return this.BuildEditionTiles (brick);
 
 				case ViewControllerMode.None:
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Summary:
-					return Carpenter.BuildSummaryTiles (businessContext, caches, brick, entity, isFirst);
+					return this.BuildSummaryTiles (brick, isFirst);
 
 				default:
 					throw new NotImplementedException ();
@@ -71,7 +79,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractTile> BuildSummaryTiles(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity, bool isFirst)
+		private IEnumerable<AbstractTile> BuildSummaryTiles(Brick brick, bool isFirst)
 		{
 			var summaryBrick = Carpenter.GetSummaryBrick (brick);
 			var templateBrick = Carpenter.GetOptionalTemplateBrick (summaryBrick);
@@ -80,12 +88,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				return new List<AbstractTile> ()
 				{
-					Carpenter.BuildSummaryTile (businessContext, caches, summaryBrick, entity, isFirst)
+					this.BuildSummaryTile (summaryBrick, isFirst)
 				};
 			}
 			else
 			{
-				return Carpenter.BuildCollectionSummaryTiles (businessContext, caches, templateBrick, entity);
+				return this.BuildCollectionSummaryTiles (templateBrick);
 			}
 		}
 
@@ -117,12 +125,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static AbstractTile BuildSummaryTile(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity, bool isFirst)
+		private AbstractTile BuildSummaryTile(Brick brick, bool isFirst)
 		{
 			var entityGetter = Carpenter.GetEntityGetter (brick);
-			var tileEntity = entityGetter (entity);
+			var tileEntity = entityGetter (this.entity);
 
-			var entityId = Tools.GetEntityId (businessContext, tileEntity);
+			var entityId = Tools.GetEntityId (this.businessContext, tileEntity);
 
 			var iconUri = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
 			var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
@@ -146,7 +154,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 						break;
 
 					case BrickMode.AutoCreateNullEntity:
-						autoCreatorId = caches.AutoCreatorCache.Get (brick.GetLambda ()).Id;
+						autoCreatorId = this.caches.AutoCreatorCache.Get (brick.GetLambda ()).Id;
 						break;
 
 					default:
@@ -197,14 +205,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractTile> BuildCollectionSummaryTiles(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick)
 		{
 			var lambda = brick.GetLambda ();
-			var propertyAccessorCache = caches.PropertyAccessorCache;
+			var propertyAccessorCache = this.caches.PropertyAccessorCache;
 			var propertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessorCache.Get (lambda);
 
 			var tileEntitiesGetter = Carpenter.GetEntitiesGetter (brick, propertyAccessor);
-			var tileEntities = tileEntitiesGetter (entity);
+			var tileEntities = tileEntitiesGetter (this.entity);
 
 			var brickType = brick.GetBrickType ();
 
@@ -274,7 +282,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 					yield return new CollectionSummaryTile ()
 					{
-						EntityId = Tools.GetEntityId (businessContext, tileEntity),
+						EntityId = Tools.GetEntityId (this.businessContext, tileEntity),
 						IsRoot = isRoot,
 						SubViewMode = subViewMode,
 						SubViewId = subViewId,
@@ -315,19 +323,21 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractTile> BuildEditionTiles(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		private IEnumerable<AbstractTile> BuildEditionTiles(Brick brick)
 		{
-			var bricks = Carpenter.BuildEditionTileParts (businessContext, caches, brick, entity).ToList ();
+			var tileEntity = this.entity;
+
+			var bricks = this.BuildEditionTileParts (brick, tileEntity).ToList ();
 
 			if (bricks.Count > 0)
 			{
-				var entityId = Tools.GetEntityId (businessContext, entity);
+				var entityId = Tools.GetEntityId (this.businessContext, tileEntity);
 
 				var iconUri = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
-				var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, entity.GetType ());
+				var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
 
 				var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
-				var title = titleGetter (entity).ToString ();
+				var title = titleGetter (tileEntity).ToString ();
 
 				yield return new EditionTile ()
 				{
@@ -341,9 +351,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
 			{
 				var includedEntityGetter = Carpenter.GetGetterFromExpression<AbstractEntity> (includeProperty);
-				var includedEntity = includedEntityGetter (entity);
+				var includedEntity = includedEntityGetter (tileEntity);
 
-				var includedTiles = LayoutBuilder.GetTiles (businessContext, caches, includedEntity, ViewControllerMode.Edition, null);
+				var includedTiles = LayoutBuilder.GetTiles (this.businessContext, this.caches, includedEntity, ViewControllerMode.Edition, null);
 
 				foreach (var includedTile in includedTiles)
 				{
@@ -353,14 +363,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractEditionTilePart> BuildEditionTileParts(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		private IEnumerable<AbstractEditionTilePart> BuildEditionTileParts(Brick brick, AbstractEntity entity)
 		{
 			foreach (var property in Brick.GetAllProperties (brick))
 			{
 				switch (property.Key)
 				{
 					case BrickPropertyKey.Input:
-						foreach (var inputPart in Carpenter.BuildInputParts (businessContext, caches, property.Brick, entity))
+						foreach (var inputPart in this.BuildInputParts (property.Brick, entity))
 						{
 							yield return inputPart;
 						}
@@ -382,7 +392,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<AbstractEditionTilePart> BuildInputParts(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		private IEnumerable<AbstractEditionTilePart> BuildInputParts(Brick brick, AbstractEntity entity)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
 
@@ -391,44 +401,44 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				switch (brickProperty.Key)
 				{
 					case BrickPropertyKey.HorizontalGroup:
-						yield return Carpenter.BuildHorizontalGroup (businessContext, brickProperty.Brick, caches, entity);
+						yield return this.BuildHorizontalGroup (brickProperty.Brick, entity);
 						break;
 
 					case BrickPropertyKey.Field:
-						yield return Carpenter.BuildField (businessContext, caches, entity, brickProperties, brickProperty, true);
+						yield return this.BuildField (entity, brickProperties, brickProperty, true);
 						break;
 				}
 			}
 		}
 
 
-		private static AbstractEditionTilePart BuildHorizontalGroup(BusinessContext businessContext, Brick brick, Caches caches, AbstractEntity entity)
+		private AbstractEditionTilePart BuildHorizontalGroup(Brick brick, AbstractEntity entity)
 		{
 			var horizontalGroup = new HorizontalGroup ();
 
 			var titleGetter = Carpenter.GetOptionalTextGetter (brick, BrickPropertyKey.Title);
 			horizontalGroup.Title = titleGetter (entity).ToString ();
 
-			horizontalGroup.Fields = Carpenter.BuildHorizontalFields (businessContext, caches, brick, entity).ToList ();
+			horizontalGroup.Fields = this.BuildHorizontalFields (brick, entity).ToList ();
 
 			return horizontalGroup;
 		}
 
 
-		private static IEnumerable<AbstractField> BuildHorizontalFields(BusinessContext businessContext, Caches caches, Brick brick, AbstractEntity entity)
+		private IEnumerable<AbstractField> BuildHorizontalFields(Brick brick, AbstractEntity entity)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
 
 			foreach (var brickProperty in brickProperties)
 			{
-				yield return Carpenter.BuildField (businessContext, caches, entity, brickProperties, brickProperty, false);
+				yield return this.BuildField (entity, brickProperties, brickProperty, false);
 			}
 		}
 
 
-		private static AbstractField BuildField(BusinessContext businessContext, Caches caches, AbstractEntity entity, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool includeTitle)
+		private AbstractField BuildField(AbstractEntity entity, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool includeTitle)
 		{
-			var propertyAccessor = Carpenter.GetPropertyAccessor (caches, fieldProperty);
+			var propertyAccessor = this.GetPropertyAccessor (fieldProperty);
 
 			switch (propertyAccessor.PropertyAccessorType)
 			{
@@ -442,10 +452,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return Carpenter.BuildDecimalField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				case PropertyAccessorType.EntityCollection:
-					return Carpenter.BuildEntityCollectionField (businessContext, entity, propertyAccessor, brickProperties, includeTitle);
+					return this.BuildEntityCollectionField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				case PropertyAccessorType.EntityReference:
-					return Carpenter.BuildEntityReferenceField (businessContext, entity, propertyAccessor, brickProperties, includeTitle);
+					return this.BuildEntityReferenceField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				case PropertyAccessorType.Enumeration:
 					return Carpenter.BuildEnumerationField (entity, propertyAccessor, brickProperties, includeTitle);
@@ -462,11 +472,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static AbstractPropertyAccessor GetPropertyAccessor(Caches caches, BrickProperty fieldProperty)
+		private AbstractPropertyAccessor GetPropertyAccessor(BrickProperty fieldProperty)
 		{
 			var lambda = (LambdaExpression) fieldProperty.ExpressionValue;
 
-			return  caches.PropertyAccessorCache.Get (lambda);
+			return  this.caches.PropertyAccessorCache.Get (lambda);
 		}
 
 
@@ -506,14 +516,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static EntityCollectionField BuildEntityCollectionField(BusinessContext businessContext, AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		private EntityCollectionField BuildEntityCollectionField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
 			var field = Carpenter.BuildField<EntityCollectionField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
 			Func<AbstractEntity, IList<AbstractEntity>> valueGetter = e => castedAccessor.GetEntityCollection (e);
 			field.Values = valueGetter (entity)
-				.Select (e => Carpenter.BuildEntityValue (businessContext, e))
+				.Select (e => this.BuildEntityValue (e))
 				.ToList ();
 
 			field.TypeName = Tools.TypeToString (castedAccessor.CollectionType);
@@ -522,13 +532,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static EntityReferenceField BuildEntityReferenceField(BusinessContext businessContext, AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		private EntityReferenceField BuildEntityReferenceField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
 			var field = Carpenter.BuildField<EntityReferenceField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
 			Func<AbstractEntity, AbstractEntity> valueGetter = e => castedAccessor.GetEntity (e);
-			field.Value = Carpenter.BuildEntityValue (businessContext, valueGetter (entity));
+			field.Value = this.BuildEntityValue (valueGetter (entity));
 			field.TypeName = Tools.TypeToString (castedAccessor.Type);
 
 			return field;
@@ -653,7 +663,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public static EntityValue BuildEntityValue(BusinessContext businessContext, AbstractEntity entity)
+		public EntityValue BuildEntityValue(AbstractEntity entity)
 		{
 			if (entity == null)
 			{
@@ -667,7 +677,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return new EntityValue ()
 			{
 				Displayed = entity.GetCompactSummary ().ToString (),
-				Submitted = Tools.GetEntityId (businessContext, entity),
+				Submitted = Tools.GetEntityId (this.businessContext, entity),
 			};
 		}
 
@@ -762,6 +772,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			return Brick.GetProperty (brick, key);
 		}
+
+
+		private readonly BusinessContext businessContext;
+
+
+		private readonly Caches caches;
+
+
+		private readonly AbstractEntity entity;
 
 
 	}

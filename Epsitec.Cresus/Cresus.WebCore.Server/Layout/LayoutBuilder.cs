@@ -48,7 +48,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var brickWall = Mason.BuildBrickWall (entity, viewMode, viewId);
 
-			return Carpenter.BuildTiles (businessContext, caches, brickWall, viewMode, entity);
+			var carpenter = new Carpenter (businessContext, caches, entity);
+			return carpenter.BuildTiles (brickWall, viewMode);
 		}
 		
 		
