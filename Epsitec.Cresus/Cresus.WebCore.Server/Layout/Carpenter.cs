@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public Carpenter(BusinessContext businessContext, Caches caches, AbstractEntity entity)
+		private Carpenter(BusinessContext businessContext, Caches caches, AbstractEntity entity)
 		{
 			this.businessContext = businessContext;
 			this.caches = caches;
@@ -41,11 +41,39 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public IEnumerable<AbstractTile> BuildTiles(BrickWall brickWall, ViewControllerMode viewMode)
+		public static EntityColumn BuildEntityColumn(BusinessContext businessContext, Caches caches, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		{
+			var carpenter = new Carpenter (businessContext, caches, entity);
+
+			return carpenter.BuildEntityColumn (viewMode, viewId);
+		}
+
+
+		public static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		{
+			var carpenter = new Carpenter (businessContext, caches, entity);
+
+			return carpenter.BuildTiles (viewMode, viewId);
+		}
+
+
+		private	EntityColumn BuildEntityColumn(ViewControllerMode viewMode, int? viewId)
+		{
+			return new EntityColumn ()
+			{
+				EntityId = Tools.GetEntityId (this.businessContext, this.entity),
+				ViewMode = Tools.ViewModeToString (viewMode),
+				ViewId = Tools.ViewIdToString (viewId),
+				Tiles = this.BuildTiles (viewMode, viewId).ToList (),
+			};
+		}
+
+
+		private IEnumerable<AbstractTile> BuildTiles(ViewControllerMode viewMode, int? viewId)
 		{
 			bool isFirst = true;
 
-			foreach (var brick in brickWall.Bricks)
+			foreach (var brick in Mason.BuildBrickWall (entity, viewMode, viewId).Bricks)
 			{
 				foreach (var tile in this.BuildTiles (brick, viewMode, isFirst))
 				{
@@ -353,7 +381,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				var includedEntityGetter = Carpenter.GetGetterFromExpression<AbstractEntity> (includeProperty);
 				var includedEntity = includedEntityGetter (tileEntity);
 
-				var includedTiles = LayoutBuilder.GetTiles (this.businessContext, this.caches, includedEntity, ViewControllerMode.Edition, null);
+				var includedTiles = Carpenter.BuildTiles (this.businessContext, this.caches, includedEntity, ViewControllerMode.Edition, null);
 
 				foreach (var includedTile in includedTiles)
 				{
