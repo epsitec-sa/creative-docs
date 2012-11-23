@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -61,9 +62,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			return new EntityColumn ()
 			{
-				EntityId = Tools.GetEntityId (this.businessContext, this.entity),
-				ViewMode = Tools.ViewModeToString (viewMode),
-				ViewId = Tools.ViewIdToString (viewId),
+				EntityId = this.GetEntityId (this.entity),
+				ViewMode = Carpenter.GetViewMode (viewMode),
+				ViewId = Carpenter.GetViewId (viewId),
 				Tiles = this.BuildTiles (viewMode, viewId).ToList (),
 			};
 		}
@@ -155,71 +156,98 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private AbstractTile BuildSummaryTile(Brick brick, bool isFirst)
 		{
-			var entityGetter = Carpenter.GetEntityGetter (brick);
-			var tileEntity = entityGetter (this.entity);
-
-			var entityId = Tools.GetEntityId (this.businessContext, tileEntity);
-
-			var iconUri = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
-			var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
-
-			var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
-			var title = titleGetter (tileEntity).ToString ();
-
-			var textGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Text);
-			var text = textGetter (tileEntity).ToString ();
-
-			var subViewMode = Tools.ViewModeToString (ViewControllerMode.Edition);
-			string autoCreatorId = null;
-			string subViewId = null;
-
-			foreach (var brickMode in Carpenter.GetBrickModes (brick))
-			{
-				switch (brickMode)
-				{
-					case BrickMode.DefaultToSummarySubView:
-						subViewMode = Tools.ViewModeToString (ViewControllerMode.Summary);
-						break;
-
-					case BrickMode.AutoCreateNullEntity:
-						autoCreatorId = this.caches.AutoCreatorCache.Get (brick.GetLambda ()).Id;
-						break;
-
-					default:
-						if (brickMode.IsSpecialController ())
-						{
-							subViewId = Tools.ViewIdToString (brickMode.GetControllerSubTypeId ());
-						}
-						break;
-				}
-			}
-
+			var tileEntity = this.ResolveTileEntity (brick);
+			var brickModes = Carpenter.GetBrickModes (brick).ToSet ();
+			
 			return new SummaryTile ()
 			{
-				EntityId = entityId,
+				EntityId = this.GetEntityId (tileEntity),
 				IsRoot = isFirst,
-				SubViewMode = subViewMode,
-				SubViewId = subViewId,
-				AutoCreatorId = autoCreatorId,
-				IconClass = iconClass,
-				Title = title,
-				Text = text
+				SubViewMode = Carpenter.GetSubViewMode (brickModes),
+				SubViewId = Carpenter.GetSubViewId (brickModes),
+				AutoCreatorId = this.GetAutoCreatorId (brick, brickModes),
+				IconClass = Carpenter.GetIconClass (brick),
+				Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
+				Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text)
 			};
 		}
 
 
-		private static Func<AbstractEntity, AbstractEntity> GetEntityGetter(Brick brick)
+		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick)
+		{
+			var tileEntities = this.ResolveTileEntities (brick);
+			var brickModes = Carpenter.GetBrickModes (brick).ToSet ();
+
+			var subViewMode = Carpenter.GetSubViewMode (brickModes);
+			var subViewId = Carpenter.GetSubViewId (brickModes);
+			var hideAddButton = Carpenter.GetHideAddButton (brickModes);
+			var hideRemoveButton = Carpenter.GetHideRemoveButton (brickModes);
+			var iconClass = Carpenter.GetIconClass (brick);
+			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (brick.GetLambda ()).Id;
+
+			bool empty = true;
+
+			foreach (var tileEntity in tileEntities)
+			{
+				empty = false;
+
+				yield return new CollectionSummaryTile ()
+				{
+					EntityId = this.GetEntityId (tileEntity),
+					IsRoot = false,
+					SubViewMode = subViewMode,
+					SubViewId = subViewId,
+					AutoCreatorId = null,
+					IconClass = iconClass,
+					Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
+					Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text),
+					PropertyAccessorId = propertyAccessorId,
+					HideAddButton = hideAddButton,
+					HideRemoveButton = hideRemoveButton,
+				};
+			}
+
+			if (empty)
+			{
+				yield return new EmptySummaryTile ()
+				{
+					EntityId = null,
+					IsRoot = false,
+					SubViewMode = subViewMode,
+					SubViewId = subViewId,
+					AutoCreatorId = null,
+					IconClass = iconClass,
+					Title = null,
+					Text = null,
+					PropertyAccessorId = propertyAccessorId,
+					HideAddButton = hideAddButton,
+					HideRemoveButton = hideRemoveButton,
+				};
+			}
+		}
+
+
+		private AbstractEntity ResolveTileEntity(Brick brick)
 		{
 			var resolver = brick.GetResolver (null);
 
-			if (resolver == null)
-			{
-				return x => x;
-			}
-			else
-			{
-				return x => (AbstractEntity) resolver.DynamicInvoke (x);
-			}
+			return resolver == null
+				? this.entity
+				: (AbstractEntity) resolver.DynamicInvoke (this.entity);
+		}
+
+
+		private IEnumerable<AbstractEntity> ResolveTileEntities(Brick brick)
+		{
+			var brickType = brick.GetBrickType ();
+			var resolver = brick.GetResolver (null);
+
+			var entities = (IEnumerable<AbstractEntity>) resolver.DynamicInvoke (this.entity);
+
+			return from entity in entities
+				   let entityType = entity.GetType ()
+				   where entityType == brickType || brickType.IsAssignableFrom (entityType)
+				   select entity;
 		}
 
 
@@ -233,121 +261,43 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick)
+		private static string GetSubViewMode(ISet<BrickMode> brickModes)
 		{
-			var lambda = brick.GetLambda ();
-			var propertyAccessorCache = this.caches.PropertyAccessorCache;
-			var propertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessorCache.Get (lambda);
+			var viewMode = brickModes.Contains (BrickMode.DefaultToSummarySubView)
+				? ViewControllerMode.Summary
+				: ViewControllerMode.Edition;
 
-			var tileEntitiesGetter = Carpenter.GetEntitiesGetter (brick, propertyAccessor);
-			var tileEntities = tileEntitiesGetter (this.entity);
-
-			var brickType = brick.GetBrickType ();
-
-			var icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
-			var iconClass = IconManager.GetCssClassName (icon, IconSize.Sixteen, brickType);
-
-			var propertyAccessorId = propertyAccessor.Id;
-
-			var subViewMode = Tools.ViewModeToString (ViewControllerMode.Edition);
-			string subViewId = null;
-			var hideAddButton = false;
-			var hideRemoveButton = false;
-			string autoCreatorId = null;
-			bool isRoot = false;
-
-			foreach (var brickMode in Carpenter.GetBrickModes (brick))
-			{
-				switch (brickMode)
-				{
-					case BrickMode.DefaultToSummarySubView:
-						subViewMode = Tools.ViewModeToString (ViewControllerMode.Summary);
-						break;
-
-					case BrickMode.HideAddButton:
-						hideAddButton = true;
-						break;
-
-					case BrickMode.HideRemoveButton:
-						hideRemoveButton = true;
-						break;
-
-					default:
-						if (brickMode.IsSpecialController ())
-						{
-							subViewId = InvariantConverter.ToString (brickMode.GetControllerSubTypeId ());
-						}
-						break;
-				}
-			}
-
-			if (tileEntities.Count == 0)
-			{
-				yield return new EmptySummaryTile ()
-				{
-					EntityId = null,
-					IsRoot = isRoot,
-					SubViewMode = subViewMode,
-					SubViewId = subViewId,
-					AutoCreatorId = autoCreatorId,
-					IconClass = iconClass,
-					Title = null,
-					Text = null,
-					PropertyAccessorId = propertyAccessorId,
-					HideAddButton = hideAddButton,
-					HideRemoveButton = hideRemoveButton,
-				};
-			}
-			else
-			{
-				foreach (var tileEntity in tileEntities)
-				{
-					var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
-					var title = titleGetter (tileEntity).ToString ();
-
-					var textGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Text);
-					var text = textGetter (tileEntity).ToString ();
-
-					yield return new CollectionSummaryTile ()
-					{
-						EntityId = Tools.GetEntityId (this.businessContext, tileEntity),
-						IsRoot = isRoot,
-						SubViewMode = subViewMode,
-						SubViewId = subViewId,
-						AutoCreatorId = autoCreatorId,
-						IconClass = iconClass,
-						Title = title,
-						Text = text,
-						PropertyAccessorId = propertyAccessorId,
-						HideAddButton = hideAddButton,
-						HideRemoveButton = hideRemoveButton,
-					};
-				}
-			}
+			return Carpenter.GetViewMode (viewMode);
 		}
 
 
-		private static Func<AbstractEntity, IList<AbstractEntity>> GetEntitiesGetter(Brick brick, EntityCollectionPropertyAccessor propertyAccessor)
+		private string GetAutoCreatorId(Brick brick, ISet<BrickMode> brickModes)
 		{
-			Func<AbstractEntity, IList<AbstractEntity>> rawEntitiesGetter = e =>
-			{
-				return propertyAccessor.GetEntityCollection (e);
-			};
+			return brickModes.Contains (BrickMode.AutoCreateNullEntity)
+				? this.caches.AutoCreatorCache.Get (brick.GetLambda ()).Id
+				: null;
+		}
 
-			var collectionType = propertyAccessor.CollectionType;
-			var templateType = brick.GetBrickType ();
 
-			if (collectionType != templateType)
-			{
-				return e => rawEntitiesGetter (e)
-					.Where (t => templateType.IsAssignableFrom (t.GetType ()))
-					.Cast<AbstractEntity> ()
-					.ToList ();
-			}
-			else
-			{
-				return rawEntitiesGetter;
-			}
+		private static string GetSubViewId(ISet<BrickMode> brickModes)
+		{
+			var mode = brickModes.FirstOrDefault (m => m.IsSpecialController ());
+
+			return mode != default (BrickMode)
+				? Carpenter.GetViewId (mode.GetControllerSubTypeId ())
+				: null;
+		}
+
+
+		private static bool GetHideAddButton(ISet<BrickMode> brickModes)
+		{
+			return brickModes.Contains (BrickMode.HideAddButton);
+		}
+
+
+		private static bool GetHideRemoveButton(ISet<BrickMode> brickModes)
+		{
+			return brickModes.Contains (BrickMode.HideRemoveButton);
 		}
 
 
@@ -359,28 +309,18 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			if (bricks.Count > 0)
 			{
-				var entityId = Tools.GetEntityId (this.businessContext, tileEntity);
-
-				var iconUri = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
-				var iconClass = IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
-
-				var titleGetter = Carpenter.GetMandatoryTextGetter (brick, BrickPropertyKey.Title);
-				var title = titleGetter (tileEntity).ToString ();
-
 				yield return new EditionTile ()
 				{
-					EntityId = entityId,
-					IconClass = iconClass,
-					Title = title,
+					EntityId = this.GetEntityId (tileEntity),
+					IconClass = Carpenter.GetIconClass (brick),
+					Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
 					Bricks = bricks
 				};
 			}
 
 			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
 			{
-				var includedEntityGetter = Carpenter.GetGetterFromExpression<AbstractEntity> (includeProperty);
-				var includedEntity = includedEntityGetter (tileEntity);
-
+				var includedEntity = Carpenter.GetIncludedEntity (tileEntity, includeProperty);
 				var includedTiles = Carpenter.BuildTiles (this.businessContext, this.caches, includedEntity, ViewControllerMode.Edition, null);
 
 				foreach (var includedTile in includedTiles)
@@ -388,6 +328,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					yield return includedTile;
 				}
 			}
+		}
+
+
+		private static AbstractEntity GetIncludedEntity(AbstractEntity entity, BrickProperty property)
+		{
+			var expressionValue = (LambdaExpression) property.ExpressionValue;
+			
+			return (AbstractEntity) expressionValue.Compile ().DynamicInvoke (entity);
 		}
 
 
@@ -410,10 +358,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 					case BrickPropertyKey.GlobalWarning:
 						yield return new GlobalWarning ();
-						break;
-
-					default:
-						// Nothing to do here. We simply ignore the property.
 						break;
 				}
 			}
@@ -442,14 +386,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private AbstractEditionTilePart BuildHorizontalGroup(Brick brick, AbstractEntity entity)
 		{
-			var horizontalGroup = new HorizontalGroup ();
-
-			var titleGetter = Carpenter.GetOptionalTextGetter (brick, BrickPropertyKey.Title);
-			horizontalGroup.Title = titleGetter (entity).ToString ();
-
-			horizontalGroup.Fields = this.BuildHorizontalFields (brick, entity).ToList ();
-
-			return horizontalGroup;
+			return new HorizontalGroup ()
+			{
+				Title = Carpenter.GetOptionalText (entity, brick, BrickPropertyKey.Title),
+				Fields = this.BuildHorizontalFields (brick, entity).ToList ()
+			};
 		}
 
 
@@ -513,8 +454,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<BooleanField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (BooleanPropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, bool?> valueGetter = e => (bool?) castedAccessor.GetValue (e);
-			field.Value = valueGetter (entity);
+			field.Value = (bool?) castedAccessor.GetValue (entity);
 
 			return field;
 		}
@@ -525,8 +465,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<DateField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (DatePropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, string> valueGetter = e => (string) castedAccessor.GetValue (e);
-			field.Value = valueGetter (entity);
+			field.Value = (string) castedAccessor.GetValue (entity);
 
 			return field;
 		}
@@ -537,8 +476,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<DecimalField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (DecimalPropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, decimal?> valueGetter = e => (decimal?) castedAccessor.GetValue (e);
-			field.Value = valueGetter (entity);
+			field.Value = (decimal?) castedAccessor.GetValue (entity);
 
 			return field;
 		}
@@ -549,11 +487,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<EntityCollectionField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, IList<AbstractEntity>> valueGetter = e => castedAccessor.GetEntityCollection (e);
-			field.Values = valueGetter (entity)
+			field.Values = castedAccessor
+				.GetEntityCollection (entity)
 				.Select (e => this.BuildEntityValue (e))
 				.ToList ();
-
 			field.TypeName = Tools.TypeToString (castedAccessor.CollectionType);
 
 			return field;
@@ -565,8 +502,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<EntityReferenceField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, AbstractEntity> valueGetter = e => castedAccessor.GetEntity (e);
-			field.Value = this.BuildEntityValue (valueGetter (entity));
+			field.Value = this.BuildEntityValue (castedAccessor.GetEntity (entity));
 			field.TypeName = Tools.TypeToString (castedAccessor.Type);
 
 			return field;
@@ -578,8 +514,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<EnumerationField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (EnumerationPropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, string> valueGetter = e => (string) castedAccessor.GetValue (e);
-			field.Value = valueGetter (entity);
+			field.Value = (string) castedAccessor.GetValue (entity);
 			field.TypeName = Tools.TypeToString (castedAccessor.Type);
 
 			return field;
@@ -591,8 +526,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = Carpenter.BuildField<IntegerField> (propertyAccessor, brickProperties, includeTitle);
 
 			var castedAccessor = (IntegerPropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, long?> valueGetter = e => (long?) castedAccessor.GetValue (e);
-			field.Value = valueGetter (entity);
+			field.Value = (long?) castedAccessor.GetValue (entity);
 
 			return field;
 		}
@@ -601,8 +535,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static AbstractField BuildTextField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
 			var castedAccessor = (TextPropertyAccessor) propertyAccessor;
-			Func<AbstractEntity, string> valueGetter = e => (string) castedAccessor.GetValue (e);
-			var value = valueGetter (entity);
+			var value = (string) castedAccessor.GetValue (entity);
 
 			if (StringType.IsMultilineText (castedAccessor.Property.Type))
 			{
@@ -632,16 +565,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static T BuildField<T>(AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 			where T : AbstractField, new ()
 		{
-			var title = includeTitle
-				? Carpenter.GetFieldTitle (brickProperties, propertyAccessor).ToString ()
-				: "";
-			
 			return new T ()
 			{
 				Id = propertyAccessor.Id,
 				IsReadOnly = Carpenter.IsReadOnly (brickProperties),
 				AllowBlank = propertyAccessor.Property.IsNullable,
-				Title = title
+				Title = includeTitle
+					? Carpenter.GetFieldTitle (brickProperties) ?? Carpenter.GetFieldTitle (propertyAccessor)
+					: null,
 			};
 		}
 
@@ -652,42 +583,28 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static FormattedText GetFieldTitle(BrickPropertyCollection brickProperties, AbstractPropertyAccessor propertyAccessor)
-		{
-			return Carpenter.GetFieldTitle (brickProperties)
-				?? Carpenter.GetFieldTitle (propertyAccessor);
-		}
-
-
-		private static FormattedText? GetFieldTitle(BrickPropertyCollection brickProperties)
+		private static string GetFieldTitle(BrickPropertyCollection brickProperties)
 		{
 			var titleProperty = brickProperties.PeekBefore (BrickPropertyKey.Title, -1);
 
-			if (titleProperty.HasValue)
-			{
-				return titleProperty.Value.StringValue;
-			}
-			else
-			{
-				return null;
-			}
+			return titleProperty.HasValue
+				? titleProperty.Value.StringValue
+				: null;
 		}
 
 
-		private static FormattedText GetFieldTitle(AbstractPropertyAccessor propertyAccessor)
+		private static string GetFieldTitle(AbstractPropertyAccessor propertyAccessor)
 		{
-			var title = FormattedText.Empty;
-
 			var caption = EntityInfo.GetFieldCaption (propertyAccessor.Property.CaptionId);
 
 			if (caption != null)
 			{
-				title = caption.HasLabels
+				return caption.HasLabels
 					? caption.DefaultLabel
 					: caption.Description ?? caption.Name;
 			}
 
-			return title;
+			return null;
 		}
 
 
@@ -705,100 +622,115 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return new EntityValue ()
 			{
 				Displayed = entity.GetCompactSummary ().ToString (),
-				Submitted = Tools.GetEntityId (this.businessContext, entity),
+				Submitted = this.GetEntityId (entity),
 			};
 		}
 
 
-		private static string GetMandatoryString(Brick brick, BrickPropertyKey key)
-		{
-			return Carpenter.GetMandatoryBrickProperty (brick, key).StringValue;
-		}
-
-
-		private static Func<AbstractEntity, FormattedText> GetOptionalTextGetter(Brick brick, BrickPropertyKey key)
+		private static string GetOptionalText(AbstractEntity entity, Brick brick, BrickPropertyKey key)
 		{
 			var property = Carpenter.GetOptionalBrickProperty (brick, key);
 
 			if (!property.HasValue)
 			{
-				return e => new FormattedText ();
+				return null;
 			}
 
-			return Carpenter.GetTextGetterFromString (property.Value)
-		        ?? Carpenter.GetGetterFromExpression<FormattedText> (property.Value);
+			var stringValue = property.Value.StringValue;
+
+			if (stringValue != null)
+			{
+				return stringValue;
+			}
+
+			var expressionValue = property.Value.ExpressionValue as LambdaExpression;
+
+			if (expressionValue != null)
+			{
+				var objectValue = expressionValue.Compile ().DynamicInvoke (entity);
+
+				if (objectValue == null)
+				{
+					return null;
+				}
+				else if (objectValue is string)
+				{
+					return (string) objectValue;
+				}
+				else if (objectValue is FormattedText)
+				{
+					return ((FormattedText) objectValue).ToString ();
+				}
+				else
+				{
+					throw new NotSupportedException ();
+				}
+			}
+
+			return null;
 		}
 
 
-		private static Func<AbstractEntity, FormattedText> GetMandatoryTextGetter(Brick brick, BrickPropertyKey key)
+		private static string GetText(AbstractEntity entity, Brick brick, BrickPropertyKey key)
 		{
-			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
+			var text = Carpenter.GetOptionalText (entity, brick, key);
 
-			var textGetter = Carpenter.GetTextGetterFromString (property)
-		                  ?? Carpenter.GetGetterFromExpression<FormattedText> (property);
-
-			if (textGetter == null)
+			if (text == null)
 			{
 				throw new InvalidOperationException ("Text should have a value");
 			}
 
-			return textGetter;
-		}
-
-
-		private static Func<AbstractEntity, FormattedText> GetTextGetterFromString(BrickProperty property)
-		{
-			Func<AbstractEntity, FormattedText> textGetter = null;
-
-			var stringValue = property.StringValue;
-
-			if (stringValue != null)
-			{
-				textGetter = _ => (FormattedText) stringValue;
-			}
-
-			return textGetter;
-		}
-
-
-		private static Func<AbstractEntity, T> GetGetterFromExpression<T>(BrickProperty property)
-		{
-			var expressionValue = property.ExpressionValue as LambdaExpression;
-
-			Func<AbstractEntity, T> textGetter = null;
-
-			if (expressionValue != null)
-			{
-				var expression = expressionValue.Compile ();
-
-				textGetter = x => (T) expression.DynamicInvoke (x);
-			}
-
-			return textGetter;
+			return text;
 		}
 
 
 		private static BrickProperty? GetOptionalBrickProperty(Brick brick, BrickPropertyKey key)
 		{
-			if (Brick.ContainsProperty (brick, key))
-			{
-				return Brick.GetProperty (brick, key);
-			}
-			else
+			if (!Brick.ContainsProperty (brick, key))
 			{
 				return null;
 			}
+			
+			return Brick.GetProperty (brick, key);
 		}
 
 
-		private static BrickProperty GetMandatoryBrickProperty(Brick brick, BrickPropertyKey key)
+		private static BrickProperty GetBrickProperty(Brick brick, BrickPropertyKey key)
 		{
-			if (!Brick.ContainsProperty (brick, key))
+			var brickProperty = Carpenter.GetOptionalBrickProperty (brick, key);
+
+			if (!brickProperty.HasValue)
 			{
-				throw new InvalidOperationException ("brick property is missing !");
+				throw new NotSupportedException ("Brick property is missing.");
 			}
 
-			return Brick.GetProperty (brick, key);
+			return brickProperty.Value;
+		}
+
+
+		private string GetEntityId(AbstractEntity entity)
+		{
+			return Tools.GetEntityId (this.businessContext, entity);
+		}
+
+
+		private static string GetIconClass(Brick brick)
+		{
+			var iconUri = Carpenter.GetBrickProperty (brick, BrickPropertyKey.Icon).StringValue;
+			
+			return IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
+		}
+
+
+		private static string GetViewMode(ViewControllerMode viewMode)
+		{
+			return Tools.ViewModeToString (viewMode);
+		}
+
+
+		private static string GetViewId(int? viewId)
+		{
+			return Tools.ViewIdToString (viewId);
 		}
 
 
