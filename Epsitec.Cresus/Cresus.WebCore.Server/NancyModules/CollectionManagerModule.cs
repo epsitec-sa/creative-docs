@@ -83,13 +83,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string parentEntityId = Request.Form.parentEntityId;
 			var parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
 
-			string typeName = Request.Form.entityType;
-			var type = Tools.ParseType (typeName);
-			var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
-			var m = method.MakeGenericMethod (type);
-			var o = m.Invoke (businessContext, new object[0]);
-			var newEntity = o as AbstractEntity;
-
 			string propertyAccessorId = Request.Form.propertyAccessorId;
 			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
 			var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
@@ -98,6 +91,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				return CoreResponse.Failure ();
 			}
+
+			var type = propertyAccessor.CollectionType;
+			var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
+			var genericMethod = method.MakeGenericMethod (type);
+			var newEntity = (AbstractEntity) genericMethod.Invoke (businessContext, new object[0]);
 
 			using (businessContext.Bind (parentEntity, newEntity))
 			{

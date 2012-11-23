@@ -211,8 +211,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var icon = Carpenter.GetMandatoryString (brick, BrickPropertyKey.Icon);
 			var iconClass = IconManager.GetCssClassName (icon, IconSize.Sixteen, brickType);
 
-			var entityType = Tools.TypeToString (brickType);
-
 			var propertyAccessorId = propertyAccessor.Id;
 
 			var subViewMode = Tools.ViewModeToString (ViewControllerMode.Edition);
@@ -259,7 +257,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					IconClass = iconClass,
 					Title = null,
 					Text = null,
-					EntityType = entityType,
 					PropertyAccessorId = propertyAccessorId,
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,
@@ -285,7 +282,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 						IconClass = iconClass,
 						Title = title,
 						Text = text,
-						EntityType = entityType,
 						PropertyAccessorId = propertyAccessorId,
 						HideAddButton = hideAddButton,
 						HideRemoveButton = hideRemoveButton,

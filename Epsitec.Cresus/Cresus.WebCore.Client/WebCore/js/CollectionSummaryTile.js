@@ -12,7 +12,6 @@ function() {
     /* Properties */
 
     propertyAccessorId: null,
-    entityType: null,
     hideRemoveButton: false,
     hideAddButton: false,
 
@@ -61,7 +60,6 @@ function() {
         method: 'POST',
         params: {
           parentEntityId: this.column.entityId,
-          entityType: this.entityType,
           propertyAccessorId: this.propertyAccessorId
         },
         callback: this.addEntityCallback,

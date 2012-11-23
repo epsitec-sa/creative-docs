@@ -62,15 +62,13 @@ function() {
         t.hideRemoveButton = tile.hideRemoveButton;
         t.hideAddButton = tile.hideAddButton;
         t.propertyAccessorId = tile.propertyAccessorId;
-        t.entityType = tile.entityType;
         return t;
       },
 
       parseEmptySummaryTile: function(tile) {
         return {
           xtype: 'epsitec.emptysummarytile',
-          propertyAccessorId: tile.propertyAccessorId,
-          entityType: tile.entityType
+          propertyAccessorId: tile.propertyAccessorId
         };
       },
 

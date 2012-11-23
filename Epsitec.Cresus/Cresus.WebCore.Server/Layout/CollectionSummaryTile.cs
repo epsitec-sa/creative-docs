@@ -16,13 +16,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public string EntityType
-		{
-			get;
-			set;
-		}
-
-
 		public bool HideRemoveButton
 		{
 			get;
@@ -50,7 +43,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			tile["hideRemoveButton"] = this.HideRemoveButton;
 			tile["hideAddButton"] = this.HideAddButton;
 			tile["propertyAccessorId"] = this.PropertyAccessorId;
-			tile["entityType"] = this.EntityType;
 
 			return tile;
 		}
