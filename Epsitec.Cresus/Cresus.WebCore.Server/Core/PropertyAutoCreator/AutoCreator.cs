@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 		public AutoCreator(LambdaExpression lambda, string id)
 		{
 			this.id = id;
-			this.autoCreator = this.GetAutoCreator (lambda);
+			this.propertyAccessor = new EntityReferencePropertyAccessor (lambda, "");
 		}
 
 
@@ -36,37 +36,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 
 		public AbstractEntity Execute(BusinessContext businessContext, AbstractEntity entity)
 		{
-			return this.autoCreator (businessContext, entity);
-		}
-
-
-		private Func<BusinessContext, AbstractEntity, AbstractEntity> GetAutoCreator(LambdaExpression lambda)
-		{
-			var accessor = new EntityReferencePropertyAccessor (lambda, "");
-
-			var childType = accessor.Type;
+			var childType = this.propertyAccessor.Type;
 			var childTypeId = EntityInfo.GetTypeId (childType);
 
-			return (b, e) =>
+			var child = (AbstractEntity) this.propertyAccessor.GetValue (entity);
+
+			if (child.IsNull ())
 			{
-				var child = (AbstractEntity) accessor.GetValue (e);
+				child = businessContext.CreateEntity (childTypeId);
 
-				if (child.IsNull ())
-				{
-					child = b.CreateEntity (childTypeId);
+				propertyAccessor.SetValue (entity, child);
+			}
 
-					accessor.SetValue (e, child);
-				}
-
-				return child;
-			};
+			return child;
 		}
 
 
 		private readonly string id;
 
 
-		private readonly Func<BusinessContext, AbstractEntity, AbstractEntity> autoCreator;
+		private readonly EntityReferencePropertyAccessor propertyAccessor;
 
 
 
