@@ -409,30 +409,30 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var propertyAccessor = this.GetPropertyAccessor (fieldProperty);
 
-			switch (propertyAccessor.PropertyAccessorType)
+			switch (propertyAccessor.FieldType)
 			{
-				case PropertyAccessorType.Boolean:
+				case FieldType.Boolean:
 					return Carpenter.BuildBooleanField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.Date:
+				case FieldType.Date:
 					return Carpenter.BuildDateField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.Decimal:
+				case FieldType.Decimal:
 					return Carpenter.BuildDecimalField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.EntityCollection:
+				case FieldType.EntityCollection:
 					return this.BuildEntityCollectionField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.EntityReference:
+				case FieldType.EntityReference:
 					return this.BuildEntityReferenceField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.Enumeration:
+				case FieldType.Enumeration:
 					return Carpenter.BuildEnumerationField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.Integer:
+				case FieldType.Integer:
 					return Carpenter.BuildIntegerField (entity, propertyAccessor, brickProperties, includeTitle);
 
-				case PropertyAccessorType.Text:
+				case FieldType.Text:
 					return Carpenter.BuildTextField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				default:
@@ -453,8 +453,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<BooleanField> (propertyAccessor, brickProperties, includeTitle);
 
-			var castedAccessor = (BooleanPropertyAccessor) propertyAccessor;
-			field.Value = (bool?) castedAccessor.GetValue (entity);
+			var entityValue = propertyAccessor.GetValue (entity);
+			field.Value = ValueConverter.ConvertEntityToFieldForBool (entityValue);
 
 			return field;
 		}
@@ -464,8 +464,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<DateField> (propertyAccessor, brickProperties, includeTitle);
 
-			var castedAccessor = (DatePropertyAccessor) propertyAccessor;
-			field.Value = (string) castedAccessor.GetValue (entity);
+			var entityValue = propertyAccessor.GetValue (entity);
+			field.Value = ValueConverter.ConvertEntityToFieldForDate (entityValue);
 
 			return field;
 		}
@@ -475,8 +475,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<DecimalField> (propertyAccessor, brickProperties, includeTitle);
 
-			var castedAccessor = (DecimalPropertyAccessor) propertyAccessor;
-			field.Value = (decimal?) castedAccessor.GetValue (entity);
+			var entityValue = propertyAccessor.GetValue (entity);
+			field.Value = ValueConverter.ConvertEntityToFieldForDecimal (entityValue);
 
 			return field;
 		}
@@ -486,11 +486,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<EntityCollectionField> (propertyAccessor, brickProperties, includeTitle);
 
+			var fieldValue = (IEnumerable<AbstractEntity>) propertyAccessor.GetValue (entity);
+			field.Values = fieldValue.Select (e => this.BuildEntityValue (e)).ToList ();
+
 			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
-			field.Values = castedAccessor
-				.GetEntityCollection (entity)
-				.Select (e => this.BuildEntityValue (e))
-				.ToList ();
 			field.TypeName = Tools.TypeToString (castedAccessor.CollectionType);
 
 			return field;
@@ -501,9 +500,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<EntityReferenceField> (propertyAccessor, brickProperties, includeTitle);
 
-			var castedAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
-			field.Value = this.BuildEntityValue (castedAccessor.GetEntity (entity));
-			field.TypeName = Tools.TypeToString (castedAccessor.Type);
+			var fieldValue = (AbstractEntity) propertyAccessor.GetValue (entity);
+			field.Value = this.BuildEntityValue (fieldValue);
+			field.TypeName = Tools.TypeToString (propertyAccessor.Type);
 
 			return field;
 		}
@@ -513,9 +512,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<EnumerationField> (propertyAccessor, brickProperties, includeTitle);
 
-			var castedAccessor = (EnumerationPropertyAccessor) propertyAccessor;
-			field.Value = (string) castedAccessor.GetValue (entity);
-			field.TypeName = Tools.TypeToString (castedAccessor.Type);
+			var entityValue = propertyAccessor.GetValue (entity);
+			field.Value = ValueConverter.ConvertEntityToFieldForEnumeration (entityValue);
+			field.TypeName = Tools.TypeToString (propertyAccessor.Type);
 
 			return field;
 		}
@@ -525,8 +524,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = Carpenter.BuildField<IntegerField> (propertyAccessor, brickProperties, includeTitle);
 
-			var castedAccessor = (IntegerPropertyAccessor) propertyAccessor;
-			field.Value = (long?) castedAccessor.GetValue (entity);
+			var entityValue = propertyAccessor.GetValue (entity);
+			field.Value = ValueConverter.ConvertEntityToFieldForInteger (entityValue);
 
 			return field;
 		}
@@ -534,13 +533,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static AbstractField BuildTextField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
-			var castedAccessor = (TextPropertyAccessor) propertyAccessor;
-			var value = (string) castedAccessor.GetValue (entity);
+			var entityValue = propertyAccessor.GetValue (entity);
+			var fieldValue = ValueConverter.ConvertEntityToFieldForText (entityValue);
 
-			if (StringType.IsMultilineText (castedAccessor.Property.Type))
+			if (StringType.IsMultilineText (propertyAccessor.Property.Type))
 			{
 				var field = Carpenter.BuildField<TextAreaField> (propertyAccessor, brickProperties, includeTitle);
-				field.Value = value;
+				field.Value = fieldValue;
 
 				return field;
 			}
@@ -549,7 +548,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				var field = Carpenter.BuildField<TextField> (propertyAccessor, brickProperties, includeTitle);
 
 				field.IsPassword = Carpenter.IsPassword (brickProperties);
-				field.Value = value;
+				field.Value = fieldValue;
 
 				return field;
 			}

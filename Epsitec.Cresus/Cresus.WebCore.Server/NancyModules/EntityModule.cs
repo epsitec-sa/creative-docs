@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
 
 			var invalidItems = propertyAccessorsWithValues
-				.Where (i => !i.Item1.CheckValue (entity, i.Item2))
+				.Where (i => !i.Item1.CheckValue (i.Item2))
 				.ToList ();
 
 			if (invalidItems.Any ())
@@ -130,27 +130,25 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static object ConvertValue(BusinessContext businessContext, AbstractPropertyAccessor propertyAccessor, DynamicDictionaryValue value)
 		{
-			switch (propertyAccessor.PropertyAccessorType)
+			var fieldType = propertyAccessor.FieldType;
+			var valueType = propertyAccessor.Type;
+			
+			switch (fieldType)
 			{
-				case PropertyAccessorType.Boolean:
-					return EntityModule.ConvertForString (value, v => (bool) v);
+				case FieldType.Boolean:
+				case FieldType.Date:
+				case FieldType.Decimal:
+				case FieldType.Enumeration:
+				case FieldType.Integer:
+				case FieldType.Text:
+					return EntityModule.ConvertForValue (value, fieldType, valueType);
 
-				case PropertyAccessorType.Date:
-				case PropertyAccessorType.Enumeration:
-				case PropertyAccessorType.Text:
-					return EntityModule.ConvertForString (value, v => (string) v);
-
-				case PropertyAccessorType.Decimal:
-					return EntityModule.ConvertForString (value, v => (decimal) v);
-
-				case PropertyAccessorType.EntityCollection:
+				case FieldType.EntityCollection:
 					return EntityModule.ConvertForEntityCollection (businessContext, value);
 
-				case PropertyAccessorType.EntityReference:
+				case FieldType.EntityReference:
 					return EntityModule.ConvertForEntityReference (businessContext, value);
 
-				case PropertyAccessorType.Integer:
-					return EntityModule.ConvertForString (value, v => (long) v);
 
 				default:
 					throw new NotImplementedException ();
@@ -158,7 +156,43 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static object ConvertForString(DynamicDictionaryValue value, Func<DynamicDictionaryValue, object> converter)
+		private static object ConvertForValue(DynamicDictionaryValue value, FieldType fieldType, Type valueType)
+		{
+			object clientValue;
+
+			switch (fieldType)
+			{
+				case FieldType.Boolean:
+					clientValue = EntityModule.ConvertNancyValue (value, v => (bool) v);
+					break;
+
+				case FieldType.Date:
+				case FieldType.Enumeration:
+				case FieldType.Text:
+					clientValue = EntityModule.ConvertNancyValue (value, v => (string) v);
+					break;
+
+				case FieldType.Decimal:
+					clientValue = EntityModule.ConvertNancyValue (value, v => (decimal) v);
+					break;
+
+				case FieldType.Integer:
+					clientValue = EntityModule.ConvertNancyValue (value, v => (long) v);
+					break;
+
+				case FieldType.EntityCollection:
+				case FieldType.EntityReference:
+				default:
+					throw new NotImplementedException ();
+			}
+
+			var fieldValue = ValueConverter.ConvertClientToField (clientValue, fieldType, valueType);
+
+			return ValueConverter.ConvertFieldToEntity (fieldValue, fieldType, valueType);
+		}
+
+
+		private static object ConvertNancyValue(DynamicDictionaryValue value, Func<DynamicDictionaryValue, object> converter)
 		{
 			if (!value.HasValue || string.IsNullOrEmpty ((string) value))
 			{

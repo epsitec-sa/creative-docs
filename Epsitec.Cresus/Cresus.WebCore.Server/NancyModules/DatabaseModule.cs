@@ -253,14 +253,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var lambda = column.LambdaExpression;
 			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
-			var propertyAccessor = (AbstractStringPropertyAccessor) propertyAccessorCache.Get (lambda);
+			var propertyAccessor = propertyAccessorCache.Get (lambda);
+
+			var fieldType = propertyAccessor.FieldType;
+			var valueType = propertyAccessor.Type;
 
 			var type = (string) filter["type"];
 			var value = filter["value"];
 
 			if (type == "list")
 			{
-				return this.ParseColumnSetFilter (propertyAccessor, type, value);
+				return this.ParseColumnSetFilter (fieldType, valueType, type, value);
 			}
 			else
 			{
@@ -270,15 +273,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					comparison = "eq";
 				}
 
-				return this.ParseColumnComparisonFilter (propertyAccessor, type, comparison, value);
+				return this.ParseColumnComparisonFilter (fieldType, valueType, type, comparison, value);
 			}
 		}
 
 
-		private EntityColumnFilter ParseColumnSetFilter(AbstractStringPropertyAccessor propertyAccessor, string type, object value)
+		private EntityColumnFilter ParseColumnSetFilter(FieldType fieldType, Type valueType, string type, object value)
 		{
 			var valueArray = (object[]) value;
-			var constants = valueArray.Select (v => this.ParseConstant (propertyAccessor, type, v));
+			var constants = valueArray.Select (v => this.ParseConstant (fieldType, valueType, type, v));
 
 			var filterExpression = new ColumnFilterSetExpression ()
 			{
@@ -294,10 +297,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private EntityColumnFilter ParseColumnComparisonFilter(AbstractStringPropertyAccessor propertyAccessor, string type, object comparator, object value)
+		private EntityColumnFilter ParseColumnComparisonFilter(FieldType fieldType, Type valueType, string type, object comparator, object value)
 		{
 			var comparison = this.ParseComparison (type, comparator);
-			var constant = this.ParseConstant (propertyAccessor, type, value);
+			var constant = this.ParseConstant (fieldType, valueType, type, value);
 
 			var filterExpression = new ColumnFilterComparisonExpression ()
 			{
@@ -332,66 +335,67 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private ColumnFilterConstant ParseConstant(AbstractStringPropertyAccessor propertyAccessor, string type, object value)
+		private ColumnFilterConstant ParseConstant(FieldType fieldType, Type valueType, string type, object value)
 		{
-			var convertedValue = value;
+			var clientValue = value;
 
 			switch (type)
 			{
 				case "numeric":
-					switch (propertyAccessor.PropertyAccessorType)
+					switch (fieldType)
 					{
-						case PropertyAccessorType.Integer:
-							convertedValue = Convert.ToInt64 (convertedValue);
+						case FieldType.Integer:
+							clientValue = Convert.ToInt64 (value);
 							break;
 
-						case PropertyAccessorType.Decimal:
-							convertedValue = Convert.ToDecimal (convertedValue);
+						case FieldType.Decimal:
+							clientValue = Convert.ToDecimal (value);
 							break;
 					}
 					break;
 
 				case "string":
-					convertedValue = "%" + Constant.Escape ((string) convertedValue) + "%";
+					clientValue = "%" + Constant.Escape ((string) clientValue) + "%";
 					break;
 			}
 
-			convertedValue = propertyAccessor.ConvertValue (convertedValue);
+			var fieldValue = ValueConverter.ConvertClientToField (clientValue, fieldType, valueType);
+			var entityValue = ValueConverter.ConvertFieldToEntity (fieldValue, fieldType, valueType);
 
-			switch (propertyAccessor.PropertyAccessorType)
+			switch (fieldType)
 			{
-				case PropertyAccessorType.Boolean:
-					return ColumnFilterConstant.From ((bool?) convertedValue);
+				case FieldType.Boolean:
+					return ColumnFilterConstant.From ((bool?) entityValue);
 
-				case PropertyAccessorType.Date:
-					return ColumnFilterConstant.From ((Date?) convertedValue);
+				case FieldType.Date:
+					return ColumnFilterConstant.From ((Date?) entityValue);
 
-				case PropertyAccessorType.Decimal:
-					return ColumnFilterConstant.From ((decimal?) convertedValue);
+				case FieldType.Decimal:
+					return ColumnFilterConstant.From ((decimal?) entityValue);
 
-				case PropertyAccessorType.Enumeration:
-					return ColumnFilterConstant.From ((Enum) convertedValue);
+				case FieldType.Enumeration:
+					return ColumnFilterConstant.From ((Enum) entityValue);
 
-				case PropertyAccessorType.Integer:
-					if (convertedValue is short? || convertedValue is short)
+				case FieldType.Integer:
+					if (entityValue is short? || entityValue is short)
 					{
-						return ColumnFilterConstant.From ((short?) convertedValue);
+						return ColumnFilterConstant.From ((short?) entityValue);
 					}
-					else if (convertedValue is int? || convertedValue is int)
+					else if (entityValue is int? || entityValue is int)
 					{
-						return ColumnFilterConstant.From ((int?) convertedValue);
+						return ColumnFilterConstant.From ((int?) entityValue);
 					}
-					else if (convertedValue is long? || convertedValue is long)
+					else if (entityValue is long? || entityValue is long)
 					{
-						return ColumnFilterConstant.From ((long?) convertedValue);
+						return ColumnFilterConstant.From ((long?) entityValue);
 					}
 					else
 					{
 						throw new NotImplementedException ();
 					}
 
-				case PropertyAccessorType.Text:
-					return ColumnFilterConstant.From (FormattedText.CastToString (convertedValue));
+				case FieldType.Text:
+					return ColumnFilterConstant.From (FormattedText.CastToString (entityValue));
 
 				default:
 					throw new NotImplementedException ();

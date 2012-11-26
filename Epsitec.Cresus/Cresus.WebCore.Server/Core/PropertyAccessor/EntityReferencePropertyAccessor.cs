@@ -12,55 +12,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 
 		public EntityReferencePropertyAccessor(LambdaExpression lambda, string id)
-			: base (lambda, id)
+			: base (lambda, FieldType.EntityReference, id)
 		{
 		}
 
 
-		public override PropertyAccessorType PropertyAccessorType
-		{
-			get
-			{
-				return PropertyAccessorType.EntityReference;
-			}
-		}
-
-
-		public AbstractEntity GetEntity(AbstractEntity entity)
-		{
-			return (AbstractEntity) this.Getter.DynamicInvoke (entity);
-		}
-
-
-		public void SetEntity(AbstractEntity entity, AbstractEntity value)
-		{
-			this.Setter.DynamicInvoke (entity, value);
-		}
-
-
-		public bool CheckEntity(AbstractEntity entity, AbstractEntity value)
+		public override bool CheckValue(object value)
 		{
 			if (value == null)
 			{
 				return this.Property.IsNullable;
 			}
-			else
+
+			var entity = value as AbstractEntity;
+
+			if (entity == null)
 			{
-				return this.Type.IsAssignableFrom (value.GetType ());
+				return false;
 			}
-		}
 
-
-		public override void SetValue(AbstractEntity entity, object value)
-		{
-			this.SetEntity (entity, (AbstractEntity) value);
-		}
-
-
-		public override bool CheckValue(AbstractEntity entity, object value)
-		{
-			return (value == null || value is AbstractEntity)
-				&& this.CheckEntity (entity, (AbstractEntity) value);
+			return this.Type.IsAssignableFrom (value.GetType ());
 		}
 
 

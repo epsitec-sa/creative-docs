@@ -1,3 +1,5 @@
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
 using System.Collections.Generic;
 
 
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		protected override object GetValue()
 		{
-			return this.Value;
+			return ValueConverter.ConvertFieldToClientForText (this.Value);
 		}
 
 

@@ -13,6 +13,7 @@ using Nancy;
 
 using System;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				return CoreResponse.Failure ();
 			}
 
-			var collection = propertyAccessor.GetCollection (parentEntity);
+			var collection = (IList) propertyAccessor.GetValue (parentEntity);
 
 			var toDelete = collection.Cast<AbstractEntity> ().Where (c => businessContext.DataContext.GetNormalizedEntityKey (c).Equals (deletedKey));
 
@@ -99,7 +100,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (businessContext.Bind (parentEntity, newEntity))
 			{
-				var collection = propertyAccessor.GetCollection (parentEntity);
+				var collection = (IList) propertyAccessor.GetValue (parentEntity);
 				collection.Add (newEntity);
 
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);

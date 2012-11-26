@@ -1,3 +1,7 @@
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
+using System;
+
 using System.Collections.Generic;
 
 
@@ -9,7 +13,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public string Value
+		public Enum Value
 		{
 			get;
 			set;
@@ -31,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		protected override object GetValue()
 		{
-			return this.Value;
+			return ValueConverter.ConvertFieldToClientForEnumeration (this.Value);
 		}
 		
 		

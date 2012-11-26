@@ -1,4 +1,7 @@
-﻿namespace Epsitec.Cresus.WebCore.Server.Layout
+﻿using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
+
+namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
@@ -21,7 +24,7 @@
 
 		protected override object GetValue()
 		{
-			return this.Value;
+			return ValueConverter.ConvertFieldToClientForInteger (this.Value);
 		}
 
 

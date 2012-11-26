@@ -1,3 +1,8 @@
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+
+
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
@@ -6,7 +11,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public string Value
+		public Date? Value
 		{
 			get;
 			set;
@@ -21,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		protected override object GetValue()
 		{
-			return this.Value;
+			return ValueConverter.ConvertFieldToClientForDate (this.Value);
 		}
 
 

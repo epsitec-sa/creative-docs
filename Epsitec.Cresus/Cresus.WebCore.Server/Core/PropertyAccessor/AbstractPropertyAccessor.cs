@@ -16,10 +16,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 	{
 
 
-		public AbstractPropertyAccessor(LambdaExpression lambda, string id)
+		public AbstractPropertyAccessor(LambdaExpression lambda, FieldType fieldType, string id)
 		{
 			this.id = id;
 			this.type = lambda.ReturnType;
+			this.fieldType = fieldType;
 			this.property = EntityInfo.GetStructuredTypeField (lambda);
 
 			this.getter = lambda.Compile ();
@@ -51,9 +52,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public abstract PropertyAccessorType PropertyAccessorType
+		public FieldType FieldType
 		{
-			get;
+			get
+			{
+				return this.fieldType;
+			}
 		}
 
 
@@ -66,138 +70,54 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		protected Delegate Getter
+		public virtual object GetValue(AbstractEntity entity)
 		{
-			get
-			{
-				return this.getter;
-			}
+			return this.getter.DynamicInvoke (entity);
 		}
 
 
-		protected Delegate Setter
+		public virtual void SetValue(AbstractEntity entity, object value)
 		{
-			get
-			{
-				return this.setter;
-			}
+			this.setter.DynamicInvoke (entity, value);
 		}
 
 
-		public abstract void SetValue(AbstractEntity entity, object value);
-
-
-		public abstract bool CheckValue(AbstractEntity entity, object value);
+		public abstract bool CheckValue(object value);
 
 
 		public static AbstractPropertyAccessor Create(LambdaExpression lambda, string id)
 		{
-			var type = lambda.ReturnType;
+			var fieldType = FieldTypeSelector.GetFieldType (lambda.ReturnType);
 
-			if (AbstractPropertyAccessor.IsEntityCollectionType (type))
+			switch (fieldType)
 			{
-				return new EntityCollectionPropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsEntityReferenceType (type))
-			{
-				return new EntityReferencePropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsEnumerationType (type))
-			{
-				return new EnumerationPropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsDateType (type))
-			{
-				return new DatePropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsBooleanType (type))
-			{
-				return new BooleanPropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsIntegerType (type))
-			{
-				return new IntegerPropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsDecimalType (type))
-			{
-				return new DecimalPropertyAccessor (lambda, id);
-			}
-			else if (AbstractPropertyAccessor.IsTextType (type))
-			{
-				return new TextPropertyAccessor (lambda, id);
-			}
-			else
-			{
-				throw new NotSupportedException ();
+				case FieldType.EntityCollection:
+					return new EntityCollectionPropertyAccessor (lambda, id);
+
+				case FieldType.EntityReference:
+					return new EntityReferencePropertyAccessor (lambda, id);
+
+				case FieldType.Boolean:
+				case FieldType.Date:
+				case FieldType.Decimal:
+				case FieldType.Enumeration:
+				case FieldType.Integer:
+				case FieldType.Text:
+					return new ValuePropertyAccessor (lambda, fieldType, id);
+
+				default:
+					throw new NotImplementedException ();
 			}
 		}
-		
-
-		private static bool IsEntityCollectionType(Type type)
-		{
-			return type.IsGenericIListOfEntities ();
-		}
-
-
-		private static bool IsEntityReferenceType(Type type)
-		{
-			return type.IsEntity ();
-		}
-
-
-		private static bool IsDateType(Type type)
-		{
-			return type == typeof (Date)
-		        || type == typeof (Date?);
-		}
-
-
-		private static bool IsBooleanType(Type type)
-		{
-			return type == typeof (bool)
-		        || type == typeof (bool?);
-		}
-
-
-		private static bool IsEnumerationType(Type type)
-		{
-			var underlyingType = type.GetNullableTypeUnderlyingType ();
-
-			return type.IsEnum || (underlyingType != null && underlyingType.IsEnum);
-		}
-
-
-		private static bool IsIntegerType(Type type)
-		{
-			return type == typeof (short)
-		        || type == typeof (short?)
-		        || type == typeof (int)
-		        || type == typeof (int?)
-		        || type == typeof (long)
-		        || type == typeof (long?);
-		}
-
-
-		private static bool IsDecimalType(Type type)
-		{
-			return type == typeof (decimal)
-		        || type == typeof (decimal?);
-		}
-
-
-		private static bool IsTextType(Type type)
-		{
-			return type == typeof (string)
-		        || type == typeof (FormattedText)
-		        || type == typeof (FormattedText?);
-		}
-
 
 
 		private readonly string id;
 
 
 		private readonly Type type;
+
+
+		private readonly FieldType fieldType;
 
 
 		private readonly StructuredTypeField property;

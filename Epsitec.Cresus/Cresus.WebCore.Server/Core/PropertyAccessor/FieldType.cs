@@ -2,7 +2,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 
-	internal enum PropertyAccessorType
+	internal enum FieldType
 	{
 
 

@@ -49,13 +49,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 
 			return (b, e) =>
 			{
-				var child = accessor.GetEntity (e);
+				var child = (AbstractEntity) accessor.GetValue (e);
 
 				if (child.IsNull ())
 				{
 					child = b.CreateEntity (childTypeId);
 
-					accessor.SetEntity (e, child);
+					accessor.SetValue (e, child);
 				}
 
 				return child;

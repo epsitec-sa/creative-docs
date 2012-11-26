@@ -19,18 +19,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 
 		public EntityCollectionPropertyAccessor(LambdaExpression lambda, string id)
-			: base (lambda, id)
+			: base (lambda, FieldType.EntityCollection, id)
 		{
 			this.collectionType = lambda.ReturnType.GetGenericArguments ().Single ();
-		}
-
-
-		public override PropertyAccessorType PropertyAccessorType
-		{
-			get
-			{
-				return PropertyAccessorType.EntityCollection;
-			}
 		}
 
 
@@ -43,26 +34,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public IList GetCollection(AbstractEntity entity)
+		public override void SetValue(AbstractEntity entity, object value)
 		{
-			return (IList) this.Getter.DynamicInvoke (entity);
-		}
-
-
-		/// <remarks>
-		/// The collection returned by this method is not the original one but a copy. Therefore,
-		/// you should not modify it and expect the modifications to be propagated to the real
-		/// collection.
-		/// </remarks>
-		public IList<AbstractEntity> GetEntityCollection(AbstractEntity entity)
-		{
-			return this.GetCollection (entity).Cast<AbstractEntity> ().ToList ();
-		}
-
-
-		public void SetEntityCollection(AbstractEntity entity, IEnumerable<AbstractEntity> items)
-		{
-			var collection = this.GetCollection (entity);
+			var collection = (IList) this.GetValue (entity);
+			var items = (IEnumerable) value;
 
 			using (collection.SuspendNotifications ())
 			{
@@ -72,23 +47,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public bool CheckEntityCollection(AbstractEntity entity, IEnumerable<AbstractEntity> entities)
+		public override bool CheckValue(object value)
 		{
-			return entities.All (e => e != null)
-				&& entities.All (e => this.collectionType.IsAssignableFrom (e.GetType ()));
-		}
+			if (value == null)
+			{
+				return this.Property.IsNullable;
+			}
 
+			var collection = value as IEnumerable<AbstractEntity>;
 
-		public override void SetValue(AbstractEntity entity, object value)
-		{
-			this.SetEntityCollection (entity, (IEnumerable<AbstractEntity>) value);
-		}
+			if (collection == null)	
+			{
+				return false;
+			}
 
-
-		public override bool CheckValue(AbstractEntity entity, object value)
-		{
-			return (value == null || value is IEnumerable<AbstractEntity>)
-				&& this.CheckEntityCollection (entity, (IEnumerable<AbstractEntity>) value);
+			return collection.All (e => e != null)
+				&& collection.All (e => this.collectionType.IsAssignableFrom (e.GetType ()));
 		}
 
 

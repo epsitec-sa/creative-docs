@@ -92,10 +92,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		public object GetColumnData(Caches caches, AbstractEntity entity)
 		{
-			var propertyAccessor = caches.PropertyAccessorCache.Get (this.LambdaExpression);		
-			var stringPropertyAccessor = (AbstractStringPropertyAccessor) propertyAccessor;
+			var propertyAccessor = caches.PropertyAccessorCache.Get (this.LambdaExpression);
+			var fieldType = propertyAccessor.FieldType;
 
-			return stringPropertyAccessor.GetValue (entity);
+			var entityValue = propertyAccessor.GetValue (entity);
+			var fieldValue = ValueConverter.ConvertEntityToField (entityValue, fieldType);
+
+			return ValueConverter.ConvertFieldToClient (fieldValue, fieldType);
 		}
 
 
@@ -121,14 +124,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private Dictionary<string, object> GetColumnTypeData(Caches caches)
 		{
-			var propertyAccessorType = this.GetPropertyAccessorType (caches);
+			var fieldType = this.GetFieldType (caches);
 
 			var data = new Dictionary<string, object> ()
 			{
-				{ "type", this.GetPropertyAccessorTypeData (propertyAccessorType) },
+				{ "type", this.GetFieldTypeData (fieldType) },
 			};
 
-			if (propertyAccessorType == PropertyAccessorType.Enumeration)
+			if (fieldType == FieldType.Enumeration)
 			{
 				data["enumerationName"] = Tools.TypeToString (this.LambdaExpression.ReturnType);
 			}
@@ -137,39 +140,39 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private PropertyAccessorType GetPropertyAccessorType(Caches caches)
+		private FieldType GetFieldType(Caches caches)
 		{
 			var lambdaExpression = this.LambdaExpression;
 			var propertyAccessor = caches.PropertyAccessorCache.Get (lambdaExpression);
 
-			return propertyAccessor.PropertyAccessorType;
+			return propertyAccessor.FieldType;
 		}
 
 
-		private string GetPropertyAccessorTypeData(PropertyAccessorType type)
+		private string GetFieldTypeData(FieldType type)
 		{
 			switch (type)
 			{
-				case PropertyAccessorType.Boolean:
+				case FieldType.Boolean:
 					return "boolean";
 
-				case PropertyAccessorType.Date:
+				case FieldType.Date:
 					return "date";
 
-				case PropertyAccessorType.Integer:
+				case FieldType.Integer:
 					return "int";
 
-				case PropertyAccessorType.Enumeration:
+				case FieldType.Enumeration:
 					return "list";
 
-				case PropertyAccessorType.Decimal:
+				case FieldType.Decimal:
 					return "float";
 
-				case PropertyAccessorType.Text:
+				case FieldType.Text:
 					return "string";
 
-				case PropertyAccessorType.EntityReference:
-				case PropertyAccessorType.EntityCollection:
+				case FieldType.EntityReference:
+				case FieldType.EntityCollection:
 					throw new NotSupportedException ();
 
 				default:
@@ -185,9 +188,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "filterable", this.Filterable },
 			};
 
-			var propertyAccessorType = this.GetPropertyAccessorType (caches);
+			var fieldType = this.GetFieldType (caches);
 
-			if (this.Filterable && propertyAccessorType == PropertyAccessorType.Enumeration)
+			if (this.Filterable && fieldType == FieldType.Enumeration)
 			{
 				data["enumerationName"] = Tools.TypeToString (this.LambdaExpression.ReturnType);
 			}
