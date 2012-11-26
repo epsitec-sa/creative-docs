@@ -1,6 +1,10 @@
 Ext.define('Epsitec.cresus.webcore.Locale', {
   alternateClassName: ['Epsitec.Locale'],
   statics: {
+    getLocaleName: function() {
+      return 'en';
+    },
+
     getTexts: function() {
       return {
         globarWarning: '<i><b>WARNING:</b> The modifications made here will ' +

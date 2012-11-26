@@ -7,6 +7,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.require([
+  'Epsitec.cresus.webcore.Locale',
   'Epsitec.cresus.webcore.LoginPanel',
   'Epsitec.cresus.webcore.Menu',
   'Epsitec.cresus.webcore.TabManager',
@@ -26,6 +27,7 @@ function() {
     launch: function() {
       this.setupWindowTitle();
       this.fixLocalizationBug();
+      this.fixFrenchLocalizationError();
       this.showLoginPanel();
     },
 
@@ -52,6 +54,31 @@ function() {
       Ext.override(Ext.LoadMask, {
         msg: loadingText
       });
+    },
+
+    fixFrenchLocalizationError: function() {
+
+      // The french localization is wrong in extjs. This method corrects these
+      // errors.
+
+      var cm, exists;
+
+      cm = Ext.ClassManager,
+      exists = Ext.Function.bind(cm.get, cm);
+
+      if (Epsitec.Locale.getLocaleName() === 'fr') {
+        if (exists('Ext.util.Format')) {
+          Ext.apply(Ext.util.Format, {
+            thousandSeparator: '\'',
+            decimalSeparator: '.'
+          });
+        }
+
+        Ext.define('Ext.locale.fr.form.field.Number', {
+          override: 'Ext.form.field.Number',
+          decimalSeparator: '.'
+        });
+      }
     },
 
     showLoginPanel: function() {
