@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string propertyAccessorId = Request.Form.propertyAccessorId;
 			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
-			var propartyAccessor = propertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
+			var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
-			if (propartyAccessor == null)
+			if (propertyAccessor == null)
 			{
 				return CoreResponse.Failure ();
 			}
 
-			var collection = propartyAccessor.GetCollection (parentEntity);
+			var collection = propertyAccessor.GetCollection (parentEntity);
 
 			var toDelete = collection.Cast<AbstractEntity> ().Where (c => businessContext.DataContext.GetNormalizedEntityKey (c).Equals (deletedKey));
 
