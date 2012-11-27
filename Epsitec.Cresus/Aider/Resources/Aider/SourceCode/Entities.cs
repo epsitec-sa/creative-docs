@@ -6512,54 +6512,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ClearPassword</c> field.
-		///	designer:fld/LVAHC/LVG422
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVG422]", IsVirtual=true)]
-		public string ClearPassword
-		{
-			get
-			{
-				string value = default (string);
-				this.GetClearPassword (ref value);
-				return value;
-			}
-			set
-			{
-				string oldValue = this.ClearPassword;
-				if (oldValue != value || !this.IsFieldDefined("[LVG422]"))
-				{
-					this.OnClearPasswordChanging (oldValue, value);
-					this.SetClearPassword (value);
-					this.OnClearPasswordChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>ClearPasswordConfirmation</c> field.
-		///	designer:fld/LVAHC/LVG522
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVG522]", IsVirtual=true)]
-		public string ClearPasswordConfirmation
-		{
-			get
-			{
-				string value = default (string);
-				this.GetClearPasswordConfirmation (ref value);
-				return value;
-			}
-			set
-			{
-				string oldValue = this.ClearPasswordConfirmation;
-				if (oldValue != value || !this.IsFieldDefined("[LVG522]"))
-				{
-					this.OnClearPasswordConfirmationChanging (oldValue, value);
-					this.SetClearPasswordConfirmation (value);
-					this.OnClearPasswordConfirmationChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>IsAdministrator</c> field.
 		///	designer:fld/LVAHC/LVG622
 		///	</summary>
@@ -6590,17 +6542,9 @@ namespace Epsitec.Aider.Entities
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnPreferredScopeChanging(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
 		partial void OnPreferredScopeChanged(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
-		partial void OnClearPasswordChanging(string oldValue, string newValue);
-		partial void OnClearPasswordChanged(string oldValue, string newValue);
-		partial void OnClearPasswordConfirmationChanging(string oldValue, string newValue);
-		partial void OnClearPasswordConfirmationChanged(string oldValue, string newValue);
 		partial void OnIsAdministratorChanging(bool oldValue, bool newValue);
 		partial void OnIsAdministratorChanged(bool oldValue, bool newValue);
 		
-		partial void GetClearPassword(ref string value);
-		partial void SetClearPassword(string value);
-		partial void GetClearPasswordConfirmation(ref string value);
-		partial void SetClearPasswordConfirmation(string value);
 		partial void GetIsAdministrator(ref bool value);
 		partial void SetIsAdministrator(bool value);
 		

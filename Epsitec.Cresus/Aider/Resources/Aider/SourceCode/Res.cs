@@ -1824,10 +1824,6 @@ namespace Epsitec.Aider
 				{
 				}
 				
-				//	designer:cap/LVG422
-				public static readonly global::Epsitec.Common.Support.Druid ClearPassword = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 68);
-				//	designer:cap/LVG522
-				public static readonly global::Epsitec.Common.Support.Druid ClearPasswordConfirmation = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 69);
 				//	designer:cap/LVAJC
 				public static readonly global::Epsitec.Common.Support.Druid CustomScopes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 403);
 				//	designer:cap/LVG622
@@ -2115,12 +2111,44 @@ namespace Epsitec.Aider
 					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177282));
 				}
 			}
+			//	designer:str/LVG702
+			public static global::Epsitec.Common.Types.FormattedText AiderUserPasswordConfirmationTitle
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177287));
+				}
+			}
+			//	designer:str/LVG602
+			public static global::Epsitec.Common.Types.FormattedText AiderUserPasswordEmpty
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177286));
+				}
+			}
 			//	designer:str/LVG502
 			public static global::Epsitec.Common.Types.FormattedText AiderUserPasswordMismatch
 			{
 				get
 				{
 					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177285));
+				}
+			}
+			//	designer:str/LVG902
+			public static global::Epsitec.Common.Types.FormattedText AiderUserPasswordResetText
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177289));
+				}
+			}
+			//	designer:str/LVG802
+			public static global::Epsitec.Common.Types.FormattedText AiderUserPasswordResetTitle
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177288));
 				}
 			}
 			//	designer:str/LVG102
@@ -2206,12 +2234,44 @@ namespace Epsitec.Aider
 					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177282);
 				}
 			}
+			//	designer:str/LVG702
+			public static global::Epsitec.Common.Support.Druid AiderUserPasswordConfirmationTitle
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177287);
+				}
+			}
+			//	designer:str/LVG602
+			public static global::Epsitec.Common.Support.Druid AiderUserPasswordEmpty
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177286);
+				}
+			}
 			//	designer:str/LVG502
 			public static global::Epsitec.Common.Support.Druid AiderUserPasswordMismatch
 			{
 				get
 				{
 					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177285);
+				}
+			}
+			//	designer:str/LVG902
+			public static global::Epsitec.Common.Support.Druid AiderUserPasswordResetText
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177289);
+				}
+			}
+			//	designer:str/LVG802
+			public static global::Epsitec.Common.Support.Druid AiderUserPasswordResetTitle
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177288);
 				}
 			}
 			//	designer:str/LVG102

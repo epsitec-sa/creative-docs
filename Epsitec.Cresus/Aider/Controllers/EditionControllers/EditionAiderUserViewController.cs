@@ -25,13 +25,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			{
 				EditionAiderUserViewController.AddUserDataBrickReadonly (wall);
 			}
-
-			EditionAiderUserViewController.AddPasswordBrick (wall);
 		}
 
 		private static void AddUserDataBrick(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
+				.EnableAction (0)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Person)
@@ -45,6 +44,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
+				.EnableAction (0)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Person)
@@ -57,18 +57,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Disabled)
 						.ReadOnly ()
-				.End ();
-		}
-
-		private static void AddPasswordBrick(BrickWall<AiderUserEntity> wall)
-		{
-			wall.AddBrick ()
-				.Title (Res.Strings.AiderUserPasswordTitle)
-				.Input ()
-					.Field (x => x.ClearPassword)
-						.Password ()
-					.Field (x => x.ClearPasswordConfirmation)
-						.Password ()
 				.End ();
 		}
 	}

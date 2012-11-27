@@ -23,26 +23,6 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName);
 		}
 
-		partial void GetClearPassword(ref string value)
-		{
-			value = this.clearPassword;
-		}
-
-		partial void SetClearPassword(string value)
-		{
-			this.clearPassword = value;
-		}
-
-		partial void GetClearPasswordConfirmation(ref string value)
-		{
-			value = this.clearPasswordConfirmation;
-		}
-
-		partial void SetClearPasswordConfirmation(string value)
-		{
-			this.clearPasswordConfirmation = value;
-		}
-
 		partial void GetIsAdministrator(ref bool value)
 		{
 			if (!this.isAdministrator.HasValue)
@@ -58,8 +38,6 @@ namespace Epsitec.Aider.Entities
 			this.isAdministrator = value;
 		}
 
-		private string clearPassword;
-		private string clearPasswordConfirmation;
 		private bool? isAdministrator;
 	}
 }

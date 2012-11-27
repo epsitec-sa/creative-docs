@@ -77,7 +77,6 @@ namespace Epsitec.Aider.Rules
 			this.CheckLoginNameIsUnique (user);
 			AiderUserBusinessRules.UpdateDisplayName (user);
 			this.UpdateUserGroups (user);
-			AiderUserBusinessRules.UpdatePassword (user);
 		}
 
 
@@ -142,34 +141,6 @@ namespace Epsitec.Aider.Rules
 					g => g.UserPowerLevel != UserPowerLevel.None && g.UserPowerLevel <= powerLevel
 				);
 			}
-		}
-
-
-		private static void UpdatePassword(AiderUserEntity user)
-		{
-			var password = user.ClearPassword;
-			var confirmation = user.ClearPasswordConfirmation;
-
-			if (password == null && confirmation == null)
-			{
-				return;
-			}
-
-			if (password.Length < 8)
-			{
-				var message = Res.Strings.AiderUserPasswordTooShort.ToString ();
-
-				throw new BusinessRuleException (user, message);
-			}
-
-			if (password != confirmation)
-			{
-				var message = Res.Strings.AiderUserPasswordMismatch.ToString ();
-
-				throw new BusinessRuleException (user, message);
-			}
-
-			user.SetPassword (password);
 		}
 			
 
