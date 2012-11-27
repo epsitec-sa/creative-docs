@@ -425,7 +425,7 @@ namespace Epsitec.Aider.Entities
 				.Select (g => g.GetSummaryWithGroupName ())
 				.CreateSummarySequence (10, "...");
 
-			var text = string.Join ("\n", groups);
+			var text = TextFormatter.Join ("\n", groups);
 
 			return TextFormatter.FormatText (text);
 		}
