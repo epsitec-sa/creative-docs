@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Binders
 			}
 			else
 			{
-				return ValidationResult.CreateError ("Numéro de téléphone incorrect. Pour la Suisse, le numéro a le<br/>format <i>021 345 67 89</i>, par exemple.");
+				return ValidationResult.CreateError ("Numéro de téléphone incorrect. Pour la Suisse, le numéro a le format <i>021 345 67 89</i>, par exemple.");
 			}
 		}
 
