@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="AiderUserManager.cs" />
     <Compile Include="AiderUserSession.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController0.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
