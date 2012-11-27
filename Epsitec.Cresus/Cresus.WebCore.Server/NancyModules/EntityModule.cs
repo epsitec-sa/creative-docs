@@ -163,7 +163,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					DynamicDictionary form = Request.Form;
 					var arguments = this.GetArguments (actionExecutor, form, businessContext);
 
-					actionExecutor.Call (entity, arguments);
+					using (businessContext.Bind(entity))
+					{
+						actionExecutor.Call (entity, arguments);
+
+						businessContext.SaveChanges (LockingPolicy.KeepLock);
+					}			
 				}
 				catch (BusinessRuleException e)
 				{
