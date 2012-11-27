@@ -39,19 +39,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
-				if (EntityViewControllerFactory.Default.ResolutionMode == Resolvers.ResolutionMode.InspectOnly)
-				{
-					return;
-				}
-
 				this.viewControllerMode    = EntityViewControllerFactory.Default.Mode;
 				this.orchestrator          = orchestrator          ?? EntityViewControllerFactory.Default.Orchestrator;
 				this.navigationPathElement = navigationPathElement ?? EntityViewControllerFactory.Default.NavigationPathElement;
 				this.parentController      = parentController      ?? EntityViewControllerFactory.Default.ParentController;
 			}
 
-			//	Make sure we create the default business context :
-			var businessContext = this.BusinessContext;
+			//	Make sure we create the default business context if we require it.
+			if (this.orchestrator != null)
+			{
+				var dummy = this.BusinessContext;
+			}
 		}
 
 

@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		public static EntityViewController BuildController(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
 			var name = "js";
-			var resolutionMode = ResolutionMode.InspectOnly;
+			var resolutionMode = ResolutionMode.ThrowOnError;
 
 			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode);
 		}

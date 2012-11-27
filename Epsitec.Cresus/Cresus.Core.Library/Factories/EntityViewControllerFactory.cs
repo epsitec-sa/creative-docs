@@ -72,7 +72,6 @@ namespace Epsitec.Cresus.Core.Factories
 					NavigationPathElement = navigationPathElement,
 					ParentController = parentController,
 					ControllerName = name,
-					ResolutionMode = resolutionMode,
 					Entity = entity,
 				};
 
@@ -131,12 +130,6 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			public AbstractEntity				Entity
-			{
-				get;
-				set;
-			}
-
-			public ResolutionMode				ResolutionMode
 			{
 				get;
 				set;

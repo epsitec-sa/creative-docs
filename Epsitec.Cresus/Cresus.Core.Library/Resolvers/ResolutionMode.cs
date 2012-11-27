@@ -21,7 +21,5 @@ namespace Epsitec.Cresus.Core.Resolvers
 		/// Throws an exception if the type cannot be resolved.
 		/// </summary>
 		ThrowOnError,
-
-		InspectOnly,
 	}
 }
