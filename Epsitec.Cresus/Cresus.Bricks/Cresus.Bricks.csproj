@@ -46,6 +46,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="ActionBrick.cs" />
     <Compile Include="AttributeValue.cs" />
     <Compile Include="AttributeValue`1.cs" />
     <Compile Include="Brick`1.cs" />
@@ -53,6 +54,8 @@
     <Compile Include="BrickPropertyAddedEventArgs.cs" />
     <Compile Include="BrickPropertyCollection.cs" />
     <Compile Include="BrickWall.cs" />
+    <Compile Include="ActionFieldBrick.cs" />
+    <Compile Include="ActionExecutor.cs" />
     <Compile Include="SimpleBrick.cs" />
     <Compile Include="Brick.cs" />
     <Compile Include="BrickProperty.cs" />

@@ -1,4 +1,5 @@
 Ext.require([
+  'Epsitec.cresus.webcore.Action',
   'Epsitec.cresus.webcore.BrickWallParser',
   'Epsitec.cresus.webcore.Callback',
   'Epsitec.cresus.webcore.CallbackQueue',
@@ -287,6 +288,10 @@ function() {
         this.rightPanel.remove(this.columns[i], autoDestroy);
         this.columns.splice(i, 1);
       }
+    },
+
+    showAction: function(viewId, entityId, callback) {
+      Epsitec.Action.showDialog(viewId, entityId, callback);
     }
   });
 });

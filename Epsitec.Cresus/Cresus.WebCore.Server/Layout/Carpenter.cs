@@ -8,6 +8,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
@@ -16,6 +17,8 @@ using Epsitec.Cresus.WebCore.Server.NancyModules;
 using System;
 
 using System.Collections.Generic;
+
+using System.Globalization;
 
 using System.Linq;
 using System.Linq.Expressions;
@@ -90,6 +93,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			switch (viewMode)
 			{
+				case ViewControllerMode.Action:
+					return new List<ActionTile> ()
+					{
+						this.BuildActionTile (brick),
+					};
+
 				case ViewControllerMode.Creation:
 					throw new NotImplementedException ();
 
@@ -168,7 +177,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				AutoCreatorId = this.GetAutoCreatorId (brick, brickModes),
 				IconClass = Carpenter.GetIconClass (brick),
 				Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
-				Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text)
+				Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text),
+				Actions = Carpenter.BuildActionItems (tileEntity, brick).ToList (),
 			};
 		}
 
@@ -184,7 +194,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var hideRemoveButton = Carpenter.GetHideRemoveButton (brickModes);
 			var iconClass = Carpenter.GetIconClass (brick);
 			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (brick.GetLambda ()).Id;
-
+			var actions = new List<ActionItem>();
 			bool empty = true;
 
 			foreach (var tileEntity in tileEntities)
@@ -204,6 +214,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					PropertyAccessorId = propertyAccessorId,
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,
+					Actions = actions,
 				};
 			}
 
@@ -218,10 +229,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					AutoCreatorId = null,
 					IconClass = iconClass,
 					Title = null,
-					Text = null,
-					PropertyAccessorId = propertyAccessorId,
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,
+					Actions = actions,
 				};
 			}
 		}
@@ -314,7 +324,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					EntityId = this.GetEntityId (tileEntity),
 					IconClass = Carpenter.GetIconClass (brick),
 					Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
-					Bricks = bricks
+					Bricks = bricks,
+					Actions = Carpenter.BuildActionItems (tileEntity, brick).ToList (),
 				};
 			}
 
@@ -576,6 +587,234 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		private static IEnumerable<ActionItem> BuildActionItems(AbstractEntity entity, Brick brick)
+		{
+			return Brick.GetProperties (brick, BrickPropertyKey.EnableAction)
+				.Select (p => Carpenter.BuildActionItem (entity, p.IntValue.Value));
+		}
+
+
+		private static ActionItem BuildActionItem(AbstractEntity entity, int viewId)
+		{
+			var viewMode = ViewControllerMode.Action;
+
+			using (var controller = Mason.BuildController (entity, viewMode, viewId))
+			{
+				var iActionController = (IActionViewController) controller;
+
+				return new ActionItem ()
+				{
+					ViewId = InvariantConverter.ToString (viewId),
+					Title = iActionController.GetTitle ().ToString (),
+				};
+			}
+		}
+
+
+		private ActionTile BuildActionTile(Brick brick)
+		{
+			var tileEntity = this.entity;
+			var actionBrick = Carpenter.GetBrickProperty (brick, BrickPropertyKey.DefineAction).Brick;
+
+			return new ActionTile ()
+			{
+				EntityId = this.GetEntityId (tileEntity),
+				IconClass = Carpenter.GetIconClass(actionBrick),
+				Title = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Title),
+				Text = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Text),
+				Fields = this.BuildActionFields (tileEntity, actionBrick).ToList (),
+			};
+		}
+
+
+		private IEnumerable<AbstractField> BuildActionFields(AbstractEntity entity, Brick brick)
+		{
+			return Brick.GetProperties (brick, BrickPropertyKey.Field)
+				.Select ((b, i) => this.BuildActionField (entity, b.Brick, "id" + i));
+		}
+
+
+		private AbstractField BuildActionField(AbstractEntity entity, Brick brick, string id)
+		{
+			var actionFieldType = Carpenter.GetBrickProperty (brick, BrickPropertyKey.Type).TypeValue;
+			var fieldType = FieldTypeSelector.GetFieldType (actionFieldType);
+
+			switch (fieldType)
+			{
+				case FieldType.Boolean:
+					return Carpenter.BuildBooleanField (entity, brick, actionFieldType, id);
+
+				case FieldType.Date:
+					return Carpenter.BuildDateField (entity, brick, actionFieldType, id);
+
+				case FieldType.Decimal:
+					return Carpenter.BuildDecimalField (entity, brick, actionFieldType, id);
+
+				case FieldType.EntityCollection:
+					return this.BuildEntityCollectionField (entity, brick, actionFieldType, id);
+
+				case FieldType.EntityReference:
+					return this.BuildEntityReferenceField (entity, brick, actionFieldType, id);
+
+				case FieldType.Enumeration:
+					return Carpenter.BuildEnumerationField (entity, brick, actionFieldType, id);
+
+				case FieldType.Integer:
+					return Carpenter.BuildIntegerField (entity, brick, actionFieldType, id);
+
+				case FieldType.Text:
+					return Carpenter.BuildTextField (entity, brick, actionFieldType, id);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static BooleanField BuildBooleanField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+			var field = Carpenter.BuildField<BooleanField> (entity, brick, id, allowBlank);
+
+			var entityValue = Carpenter.GetValue (entity, brick);
+			field.Value = ValueConverter.ConvertEntityToFieldForBool (entityValue);
+
+			return field;
+		}
+
+
+		private static DateField BuildDateField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+			var field = Carpenter.BuildField<DateField> (entity, brick, id, allowBlank);
+
+			var entityValue = Carpenter.GetValue (entity, brick);
+			field.Value = ValueConverter.ConvertEntityToFieldForDate (entityValue);
+
+			return field;
+		}
+
+
+		private static DecimalField BuildDecimalField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+			var field = Carpenter.BuildField<DecimalField> (entity, brick, id, allowBlank);
+
+			var entityValue = Carpenter.GetValue (entity, brick);
+			field.Value = ValueConverter.ConvertEntityToFieldForDecimal (entityValue);
+
+			return field;
+		}
+
+
+		private EntityCollectionField BuildEntityCollectionField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var field = Carpenter.BuildField<EntityCollectionField> (entity, brick, id, true);
+
+			var fieldValue = (IEnumerable<AbstractEntity>) Carpenter.GetValue (entity, brick);
+			field.Values = fieldValue.Select (v => this.BuildEntityValue (v)).ToList ();
+
+			field.TypeName = Tools.TypeToString (actionFieldType.GetGenericArguments ().Single ());
+
+			return field;
+		}
+
+
+		private EntityReferenceField BuildEntityReferenceField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var field = Carpenter.BuildField<EntityReferenceField> (entity, brick, id, true);
+
+			var fieldValue = (AbstractEntity) Carpenter.GetValue (entity, brick);
+			field.Value = this.BuildEntityValue (fieldValue);
+
+			field.TypeName = Tools.TypeToString (actionFieldType);
+
+			return field;
+		}
+
+
+		private static EnumerationField BuildEnumerationField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+			var field = Carpenter.BuildField<EnumerationField> (entity, brick, id, allowBlank);
+
+			var entityValue = Carpenter.GetValue (entity, brick);
+			field.Value = ValueConverter.ConvertEntityToFieldForEnumeration (entityValue);
+
+			field.TypeName = Tools.TypeToString (actionFieldType);
+
+			return field;
+		}
+
+
+		private static IntegerField BuildIntegerField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+			var field = Carpenter.BuildField<IntegerField> (entity, brick, id, allowBlank);
+
+			var entityValue = Carpenter.GetValue (entity, brick);
+			field.Value = ValueConverter.ConvertEntityToFieldForInteger (entityValue);
+			
+			return field;
+		}
+
+
+		private static AbstractField BuildTextField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		{
+			var entityValue = Carpenter.GetValue (entity, brick);
+			var fieldValue = ValueConverter.ConvertEntityToFieldForText (entityValue);
+
+			var allowBlank = actionFieldType == typeof (string) || actionFieldType.IsNullable ();
+
+			if (Brick.ContainsProperty (brick, BrickPropertyKey.Multiline))
+			{
+				var field = Carpenter.BuildField<TextAreaField> (entity, brick, id, allowBlank);
+				field.Value = fieldValue;
+
+				return field;
+			}
+			else
+			{
+				var field = Carpenter.BuildField<TextField> (entity, brick, id, allowBlank);
+
+				field.IsPassword = Brick.ContainsProperty (brick, BrickPropertyKey.Password);
+				field.Value = fieldValue;
+
+				return field;
+			}
+		}
+
+
+		private static object GetValue(AbstractEntity entity, Brick brick)
+		{
+			var property = Brick.GetProperty (brick, BrickPropertyKey.Value);
+
+			var expressionValue = property.ExpressionValue as LambdaExpression;
+
+			if (expressionValue != null)
+			{
+				return expressionValue.Compile ().DynamicInvoke (entity);
+			}
+			else
+			{
+				return property.ObjectValue;
+			}
+		}
+
+
+		private static T BuildField<T>(AbstractEntity entity, Brick brick, string id, bool allowBlank)
+			where T : AbstractField, new ()
+		{
+			return new T ()
+			{
+				Id = id,
+				IsReadOnly = false,
+				AllowBlank = allowBlank,
+				Title = Carpenter.GetText (entity, brick, BrickPropertyKey.Title),
+			};
+		}
+
+
 		private static bool IsReadOnly(BrickPropertyCollection brickProperties)
 		{
 			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
@@ -716,7 +955,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static string GetIconClass(Brick brick)
 		{
 			var iconUri = Carpenter.GetBrickProperty (brick, BrickPropertyKey.Icon).StringValue;
-			
+
 			return IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
 		}
 

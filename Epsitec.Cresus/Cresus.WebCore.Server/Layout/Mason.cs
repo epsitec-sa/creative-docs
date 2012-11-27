@@ -150,6 +150,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				Mason.AddPropertyIfNotDefined (brick, BrickPropertyKey.Text, CollectionTemplate.DefaultEmptyText);
 			}
+			else if (Brick.ContainsProperty (brick, BrickPropertyKey.DefineAction))
+			{
+				var actionBrick = Brick.GetProperty (brick, BrickPropertyKey.DefineAction).Brick;
+				var icon = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
+
+
+				Mason.AddPropertyIfNotDefined (actionBrick, BrickPropertyKey.Icon, icon);
+			}
 			else
 			{
 				Mason.AddPropertyIfNotDefined (brick, BrickPropertyKey.Text, x => x.GetSummary ());

@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal class SummaryTile : AbstractTile
+	internal class SummaryTile : AbstractActionTile
 	{
 
 

@@ -7,11 +7,18 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class EditionTile : AbstractActionTile
+	internal sealed class ActionTile : AbstractTile
 	{
 
 
-		public IList<AbstractEditionTilePart> Bricks
+		public string Text
+		{
+			get;
+			set;
+		}
+
+
+		public IList<AbstractField> Fields
 		{
 			get;
 			set;
@@ -20,15 +27,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		protected override string GetTileType()
 		{
-			return "edition";
+			return "action";
 		}
 
 
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var tile = base.ToDictionary ();
-		
-			tile["bricks"] = this.Bricks.Select (i => i.ToDictionary ()).ToList ();	
+
+			tile["text"] = this.Text;
+			tile["fields"] = this.Fields.Select (f => f.ToDictionary ()).ToList ();
 
 			return tile;
 		}

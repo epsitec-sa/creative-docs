@@ -67,6 +67,11 @@ namespace Epsitec.Cresus.Bricks
 		{
 		}
 
+		public BrickProperty(BrickPropertyKey key, object value)
+			: this (key, value, false)
+		{
+		}
+
 		private BrickProperty(BrickProperty property, bool isDefaultProperty)
 			: this (property.key, property.value, isDefaultProperty)
 		{
@@ -156,6 +161,14 @@ namespace Epsitec.Cresus.Bricks
 			get
 			{
 				return this.value as System.Type;
+			}
+		}
+
+		public object							ObjectValue
+		{
+			get
+			{
+				return this.value;
 			}
 		}
 

@@ -40,13 +40,16 @@ function() {
           case 'edition':
             return this.parseEditionTile(tile);
 
+          case 'action':
+            return this.parseActionTile(tile);
+
           default:
             throw 'invalid tile type: ' + tile.type;
         }
       },
 
       parseSummaryTile: function(tile) {
-        var t = this.parseBaseTile(tile);
+        var t = this.parseBaseActionTile(tile);
         t.xtype = 'epsitec.summarytile';
         t.html = tile.text;
         t.isRoot = tile.isRoot;
@@ -73,9 +76,22 @@ function() {
       },
 
       parseEditionTile: function(tile) {
-        var t = this.parseBaseTile(tile);
+        var t = this.parseBaseActionTile(tile);
         t.xtype = 'epsitec.editiontile';
         t.items = this.parseBricks(tile.bricks);
+        return t;
+      },
+
+      parseActionTile: function(tile) {
+        var t = this.parseBaseTile(tile);
+        t.text = tile.text;
+        t.fields = this.parseBricks(tile.fields);
+        return t;
+      },
+
+      parseBaseActionTile: function(tile) {
+        var t = this.parseBaseTile(tile);
+        t.actions = tile.actions;
         return t;
       },
 

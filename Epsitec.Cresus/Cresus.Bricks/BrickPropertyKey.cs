@@ -35,10 +35,16 @@ namespace Epsitec.Cresus.Bricks
 		SpecialController,
 		GlobalWarning,
 		Password,
+		Multiline,
 
 		Button,
 		SearchPanel,
 
 		Include,
+
+		DefineAction,
+		EnableAction,
+		Value,
+		Type,
 	}
 }

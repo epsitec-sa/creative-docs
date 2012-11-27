@@ -1,10 +1,15 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.Layout;
 
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -12,6 +17,7 @@ using Nancy;
 
 using System;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -33,6 +39,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Post["/edit/{id}"] = p => this.Execute (b => this.Edit (b, p));
 			Post["/autoCreate"] = _ => this.Execute (b => this.AutoCreateNullEntity (b));
+			Post["/executeAction/{viewId}/{entityId}"] = p => this.Execute (b => this.ExecuteAction (b, p));
 		}
 
 
@@ -87,6 +94,24 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, Caches caches, DynamicDictionary form)
+		{
+			foreach (var propertyAccessorId in form.GetDynamicMemberNames ())
+			{
+				var propertyAccessorCache = caches.PropertyAccessorCache;
+				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
+
+				var fieldType = propertyAccessor.FieldType;
+				var valueType = propertyAccessor.Type;
+				var value = (DynamicDictionaryValue) form[propertyAccessorId];
+
+				var convertedValue = EntityModule.ConvertValue (businessContext, value, fieldType, valueType);
+
+				yield return Tuple.Create (propertyAccessor, convertedValue);
+			}
+		}
+
+
 		private Response AutoCreateNullEntity(BusinessContext businessContext)
 		{
 			// NOTE Should we add some locking here in order to ensure that we don't have two
@@ -112,27 +137,76 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (content);
 		}
 
-
-		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, Caches caches, DynamicDictionary form)
+		private Response ExecuteAction(BusinessContext businessContext, dynamic parameters)
 		{
-			foreach (var propertyAccessorId in form.GetDynamicMemberNames ())
+			var viewMode = ViewControllerMode.Action;
+			var viewId = Tools.ParseViewId ((string) parameters.viewId);
+			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
+
+			using (var viewController = Mason.BuildController (entity, viewMode, viewId))
 			{
-				var propertyAccessorCache = caches.PropertyAccessorCache;
-				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
-				var value = (DynamicDictionaryValue) form[propertyAccessorId];
+				var actionViewController = (IActionViewController) viewController;
+				var actionExecutor = actionViewController.GetExecutor ();
 
-				var convertedValue = EntityModule.ConvertValue (businessContext, propertyAccessor, value);
+				try
+				{
+					DynamicDictionary form = Request.Form;
+					var arguments = this.GetArguments (actionExecutor, form, businessContext);
 
-				yield return Tuple.Create (propertyAccessor, convertedValue);
+					actionExecutor.Call (entity, arguments);
+				}
+				catch (BusinessRuleException e)
+				{
+					var errors = new Dictionary<string, object> ()
+					{
+						{ "business", e.Message } 
+					};
+
+					return CoreResponse.FormFailure (errors);
+				}
 			}
+
+			return CoreResponse.Success ();
 		}
 
 
-		private static object ConvertValue(BusinessContext businessContext, AbstractPropertyAccessor propertyAccessor, DynamicDictionaryValue value)
+		private IList<object> GetArguments(ActionExecutor actionExecutor, DynamicDictionary form, BusinessContext businessContext)
 		{
-			var fieldType = propertyAccessor.FieldType;
-			var valueType = propertyAccessor.Type;
-			
+			var argumentTypes = actionExecutor.GetArgumentTypes ().ToList ();
+			var arguments = new List<object> ();
+			var argumentsCheck = new List<bool> ();
+
+			for (int i = 0; i < argumentTypes.Count; i++)
+			{
+				arguments.Add (null);
+				argumentsCheck.Add (false);
+			}
+
+			foreach (var name in form.GetDynamicMemberNames ())
+			{
+				var value = (DynamicDictionaryValue) form[name];
+
+				var index = int.Parse (name.Substring (2));
+				var argumentType = argumentTypes[index];
+				var fieldType = FieldTypeSelector.GetFieldType (argumentType);
+
+				var convertedValue = EntityModule.ConvertValue (businessContext, value, fieldType, argumentType);
+
+				arguments[index] = convertedValue;
+				argumentsCheck[index] = true;
+			}
+
+			if (argumentsCheck.Any (b => b == false))
+			{
+				throw new ArgumentException ("Missing arguments");
+			}
+
+			return arguments;
+		}
+
+
+		private static object ConvertValue(BusinessContext businessContext, DynamicDictionaryValue value, FieldType fieldType, Type valueType)
+		{
 			switch (fieldType)
 			{
 				case FieldType.Boolean:
@@ -144,7 +218,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					return EntityModule.ConvertForValue (value, fieldType, valueType);
 
 				case FieldType.EntityCollection:
-					return EntityModule.ConvertForEntityCollection (businessContext, value);
+					return EntityModule.ConvertForEntityCollection (businessContext, value, valueType);
 
 				case FieldType.EntityReference:
 					return EntityModule.ConvertForEntityReference (businessContext, value);
@@ -203,15 +277,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static object ConvertForEntityCollection(BusinessContext businessContext, DynamicDictionaryValue value)
+		private static object ConvertForEntityCollection(BusinessContext businessContext, DynamicDictionaryValue value, Type valueType)
 		{
 			var rawValue = (string) value.Value;
-			var sequence = rawValue.Split (";");
-
-			return sequence
+			var values = rawValue.Split (";")
 				.Where (id => !string.IsNullOrEmpty (id))
-				.Select (id => Tools.ResolveEntity (businessContext, id))
-				.ToList ();
+				.Select (id => Tools.ResolveEntity (businessContext, id));
+
+			var listType = typeof (List<>);
+			var genericListType = listType.MakeGenericType (valueType.GetGenericArguments ()[0]);
+
+			var list = (IList) Activator.CreateInstance (genericListType);
+			list.AddRange (values);
+
+			return list;
 		}
 
 

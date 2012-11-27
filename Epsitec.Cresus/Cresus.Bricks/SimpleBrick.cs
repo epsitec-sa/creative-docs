@@ -87,6 +87,11 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Include, expression));
 		}
 
+		public SimpleBrick<T> EnableAction(int controllerSubTypeId)
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableAction, controllerSubTypeId));
+		}
+
 		public SimpleBrick<TOutput> OfType<TOutput>()
 			where TOutput : AbstractEntity, new ()
 		{
@@ -104,6 +109,12 @@ namespace Epsitec.Cresus.Bricks
 		{
 			var child = new InputBrick<T, SimpleBrick<T>> (this);
 			return this.AddChild (child, BrickPropertyKey.Input);
+		}
+
+		public ActionBrick<T, SimpleBrick<T>> DefineAction()
+		{
+			var child = new ActionBrick<T, SimpleBrick<T>> (this);
+			return this.AddChild (child, BrickPropertyKey.DefineAction);
 		}
 	}
 }

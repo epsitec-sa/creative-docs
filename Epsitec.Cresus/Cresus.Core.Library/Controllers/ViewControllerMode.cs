@@ -40,5 +40,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// same as <see cref="Edition"/>.
 		/// </summary>
 		CreationOrEdition = 5,
+
+		/// <summary>
+		/// Use the action view controller.
+		/// </summary>
+		Action = 6,
 	}
 }

@@ -113,6 +113,10 @@ function() {
 
     removeToRight: function() {
       this.columnManager.removeRightColumns(this);
+    },
+
+    showAction: function(viewId, entityId, callback) {
+      this.columnManager.showAction(viewId, entityId, callback);
     }
   });
 });

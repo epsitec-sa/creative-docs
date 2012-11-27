@@ -70,6 +70,9 @@
     <Compile Include="Core\PropertyAccessor\FieldTypeSelector.cs" />
     <Compile Include="Core\PropertyAccessor\FieldType.cs" />
     <Compile Include="Core\PropertyAccessor\ValueConverter.cs" />
+    <Compile Include="Layout\AbstractActionTile.cs" />
+    <Compile Include="Layout\ActionItem.cs" />
+    <Compile Include="Layout\ActionTile.cs" />
     <Compile Include="Layout\DecimalField.cs" />
     <Compile Include="Layout\EntityValue.cs" />
     <Compile Include="Layout\IntegerField.cs" />
