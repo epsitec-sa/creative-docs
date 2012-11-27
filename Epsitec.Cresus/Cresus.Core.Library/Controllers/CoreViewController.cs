@@ -39,6 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			else
 			{
 				this.viewControllerMode    = EntityViewControllerFactory.Default.Mode;
+				this.businessContext       = EntityViewControllerFactory.Default.BusinessContext;
 				this.orchestrator          = orchestrator          ?? EntityViewControllerFactory.Default.Orchestrator;
 				this.navigationPathElement = navigationPathElement ?? EntityViewControllerFactory.Default.NavigationPathElement;
 				this.parentController      = parentController      ?? EntityViewControllerFactory.Default.ParentController;
@@ -80,7 +81,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			get
 			{
-				return this.orchestrator.DefaultBusinessContext;
+				return this.businessContext
+					?? this.orchestrator.DefaultBusinessContext;
 			}
 		}
 
@@ -258,5 +260,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly CoreViewController		parentController;
 		private readonly ViewControllerMode		viewControllerMode;
 		private readonly NavigationPathElement	navigationPathElement;
+		private readonly BusinessContext		businessContext;
 	}
 }

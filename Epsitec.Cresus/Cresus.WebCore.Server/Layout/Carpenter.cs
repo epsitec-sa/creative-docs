@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			bool isFirst = true;
 
-			foreach (var brick in Mason.BuildBrickWall (entity, viewMode, viewId).Bricks)
+			foreach (var brick in Mason.BuildBrickWall (this.businessContext, entity, viewMode, viewId).Bricks)
 			{
 				foreach (var tile in this.BuildTiles (brick, viewMode, isFirst))
 				{
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				IconClass = Carpenter.GetIconClass (brick),
 				Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
 				Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text),
-				Actions = Carpenter.BuildActionItems (tileEntity, brick).ToList (),
+				Actions = this.BuildActionItems (tileEntity, brick).ToList (),
 			};
 		}
 
@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					IconClass = Carpenter.GetIconClass (brick),
 					Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
 					Bricks = bricks,
-					Actions = Carpenter.BuildActionItems (tileEntity, brick).ToList (),
+					Actions = this.BuildActionItems (tileEntity, brick).ToList (),
 				};
 			}
 
@@ -587,18 +587,18 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable<ActionItem> BuildActionItems(AbstractEntity entity, Brick brick)
+		private IEnumerable<ActionItem> BuildActionItems(AbstractEntity entity, Brick brick)
 		{
 			return Brick.GetProperties (brick, BrickPropertyKey.EnableAction)
-				.Select (p => Carpenter.BuildActionItem (entity, p.IntValue.Value));
+				.Select (p => this.BuildActionItem (entity, p.IntValue.Value));
 		}
 
 
-		private static ActionItem BuildActionItem(AbstractEntity entity, int viewId)
+		private ActionItem BuildActionItem(AbstractEntity entity, int viewId)
 		{
 			var viewMode = ViewControllerMode.Action;
 
-			using (var controller = Mason.BuildController (entity, viewMode, viewId))
+			using (var controller = Mason.BuildController (this.businessContext, entity, viewMode, viewId))
 			{
 				var iActionController = (IActionViewController) controller;
 

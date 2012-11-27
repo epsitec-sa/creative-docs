@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var viewId = Tools.ParseViewId ((string) parameters.viewId);
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
 
-			using (var viewController = Mason.BuildController (entity, viewMode, viewId))
+			using (var viewController = Mason.BuildController (businessContext, entity, viewMode, viewId))
 			{
 				var actionViewController = (IActionViewController) viewController;
 				var actionExecutor = actionViewController.GetExecutor ();

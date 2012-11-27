@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Orchestrators;
@@ -49,10 +50,11 @@ namespace Epsitec.Cresus.Core.Factories
 		/// The <see cref="EntityViewController"/> if one could be found.
 		/// </returns>
 		/// <exception cref="System.InvalidOperationException">Throws <see cref="System.InvalidOperationException"/> if no controller could be found.</exception>
-		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController,
+		public static EntityViewController Create(string name, AbstractEntity entity, ViewControllerMode mode, DataViewOrchestrator orchestrator, CoreViewController parentController,
 			int?                  controllerSubTypeId   = null,
 			NavigationPathElement navigationPathElement = null,
-			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError)
+			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError,
+			BusinessContext       businessContext       = null)
 		{
 			if (entity.IsNull ())
 			{
@@ -72,6 +74,7 @@ namespace Epsitec.Cresus.Core.Factories
 					ParentController = parentController,
 					ControllerName = name,
 					Entity = entity,
+					BusinessContext = businessContext
 				};
 
 				return EntityViewControllerResolver.Resolve (entity.GetType (), mode, controllerSubTypeId, resolutionMode);
@@ -129,6 +132,12 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			public AbstractEntity				Entity
+			{
+				get;
+				set;
+			}
+
+			public BusinessContext				BusinessContext
 			{
 				get;
 				set;

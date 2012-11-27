@@ -4,6 +4,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Factories;
@@ -29,9 +30,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public static BrickWall BuildBrickWall(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static BrickWall BuildBrickWall(BusinessContext businessContext, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			using (var controller = Mason.BuildController (entity, viewMode, viewId))
+			using (var controller = Mason.BuildController (businessContext, entity, viewMode, viewId))
 			{
 				var brickWall = controller.BuildBrickWall ();
 
@@ -47,12 +48,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public static EntityViewController BuildController(AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
 			var name = "js";
 			var resolutionMode = ResolutionMode.ThrowOnError;
 
-			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode);
+			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode, businessContext);
 		}
 
 
