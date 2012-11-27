@@ -7,6 +7,7 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
@@ -17,8 +18,6 @@ using Epsitec.Cresus.WebCore.Server.NancyModules;
 using System;
 
 using System.Collections.Generic;
-
-using System.Globalization;
 
 using System.Linq;
 using System.Linq.Expressions;
@@ -848,7 +847,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public EntityValue BuildEntityValue(AbstractEntity entity)
 		{
-			if (entity == null)
+			if (entity == null || entity.IsNull ())
 			{
 				return new EntityValue ()
 				{
