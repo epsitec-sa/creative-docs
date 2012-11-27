@@ -14,12 +14,10 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
 
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
