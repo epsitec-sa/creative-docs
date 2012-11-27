@@ -3,8 +3,6 @@
 
 using Epsitec.Aider.Entities;
 
-using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
@@ -35,31 +33,7 @@ namespace Epsitec.Aider.Rules
 
 		private void SetupUserGroups(AiderUserEntity user)
 		{
-			this.AssignGroup (user, UserPowerLevel.Standard);
-		}
-
-
-		private void AssignGroup(AiderUserEntity user, UserPowerLevel powerLevel)
-		{
-			var group = this.GetGroup (powerLevel);
-
-			if (group != null)
-			{
-				user.UserGroups.Add (group);
-			}
-		}
-
-
-		private SoftwareUserGroupEntity GetGroup(UserPowerLevel powerLevel)
-		{
-			var example = new SoftwareUserGroupEntity ()
-			{
-				UserPowerLevel = powerLevel
-			};
-
-			var dataContext = this.GetBusinessContext ().DataContext;
-
-			return dataContext.GetByExample (example).FirstOrDefault ();
+			user.AssignGroup (this.GetBusinessContext (), UserPowerLevel.Standard);
 		}
 
 
@@ -76,7 +50,6 @@ namespace Epsitec.Aider.Rules
 			AiderUserBusinessRules.CheckLoginNameIsNotEmpty (user);
 			this.CheckLoginNameIsUnique (user);
 			AiderUserBusinessRules.UpdateDisplayName (user);
-			this.UpdateUserGroups (user);
 		}
 
 
@@ -114,33 +87,11 @@ namespace Epsitec.Aider.Rules
 		}
 			
 
-
 		private static void UpdateDisplayName(AiderUserEntity user)
 		{
 			user.DisplayName = user.Person.IsNotNull ()
 				? user.Person.DisplayName
 				: user.LoginName;
-		}
-
-
-		private void UpdateUserGroups(AiderUserEntity user)
-		{
-			var shouldBeAdmin = user.IsAdministrator;
-			var isAdmin = user.HasPowerLevel (UserPowerLevel.Administrator);
-
-			var powerLevel = UserPowerLevel.Administrator;
-			
-			if (!isAdmin && shouldBeAdmin)
-			{
-				this.AssignGroup (user, powerLevel);
-			}
-			else if (isAdmin && !shouldBeAdmin)
-			{
-				user.UserGroups.RemoveAll
-				(
-					g => g.UserPowerLevel != UserPowerLevel.None && g.UserPowerLevel <= powerLevel
-				);
-			}
 		}
 			
 

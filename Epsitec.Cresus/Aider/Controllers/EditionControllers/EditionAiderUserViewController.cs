@@ -31,12 +31,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.EnableAction (0)
+				.EnableAction (1)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Person)
 					.Field (x => x.LoginName)
 					.Field (x => x.Role)
-					.Field (x => x.IsAdministrator)
 					.Field (x => x.Disabled)
 				.End ();
 		}
@@ -52,8 +52,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.LoginName)
 						.ReadOnly ()
 					.Field (x => x.Role)
-						.ReadOnly ()
-					.Field (x => x.IsAdministrator)
 						.ReadOnly ()
 					.Field (x => x.Disabled)
 						.ReadOnly ()

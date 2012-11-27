@@ -1826,8 +1826,6 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAJC
 				public static readonly global::Epsitec.Common.Support.Druid CustomScopes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 403);
-				//	designer:cap/LVG622
-				public static readonly global::Epsitec.Common.Support.Druid IsAdministrator = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 70);
 				//	designer:cap/LVAIC
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 402);
 				//	designer:cap/LVAGD
@@ -2087,6 +2085,30 @@ namespace Epsitec.Aider
 		
 		public static class Strings
 		{
+			//	designer:str/LVGB02
+			public static global::Epsitec.Common.Types.FormattedText AiderUserAdminSelectionText
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177291));
+				}
+			}
+			//	designer:str/LVGA02
+			public static global::Epsitec.Common.Types.FormattedText AiderUserAdminSelectionTitle
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177290));
+				}
+			}
+			//	designer:str/LVGC02
+			public static global::Epsitec.Common.Types.FormattedText AiderUserAdminTitle
+			{
+				get
+				{
+					return global::Epsitec.Aider.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1342177292));
+				}
+			}
 			//	designer:str/LVG002
 			public static global::Epsitec.Common.Types.FormattedText AiderUserDataTitle
 			{
@@ -2210,6 +2232,30 @@ namespace Epsitec.Aider
 		
 		public static class StringIds
 		{
+			//	designer:str/LVGB02
+			public static global::Epsitec.Common.Support.Druid AiderUserAdminSelectionText
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177291);
+				}
+			}
+			//	designer:str/LVGA02
+			public static global::Epsitec.Common.Support.Druid AiderUserAdminSelectionTitle
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177290);
+				}
+			}
+			//	designer:str/LVGC02
+			public static global::Epsitec.Common.Support.Druid AiderUserAdminTitle
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1342177292);
+				}
+			}
 			//	designer:str/LVG002
 			public static global::Epsitec.Common.Support.Druid AiderUserDataTitle
 			{

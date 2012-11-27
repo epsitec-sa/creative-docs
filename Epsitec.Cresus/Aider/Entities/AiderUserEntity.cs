@@ -3,7 +3,10 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
+
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 
@@ -23,21 +26,26 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName);
 		}
 
-		partial void GetIsAdministrator(ref bool value)
+		public void AssignGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
 		{
-			if (!this.isAdministrator.HasValue)
+			var group = AiderUserEntity.GetSoftwareUserGroup (businessContext, powerLevel);
+
+			if (group != null)
 			{
-				this.isAdministrator = this.HasPowerLevel (UserPowerLevel.Administrator);
+				this.UserGroups.Add (group);
 			}
-
-			value = this.isAdministrator.Value;
 		}
 
-		partial void SetIsAdministrator(bool value)
+		private static SoftwareUserGroupEntity GetSoftwareUserGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
 		{
-			this.isAdministrator = value;
-		}
+			var example = new SoftwareUserGroupEntity ()
+			{
+				UserPowerLevel = powerLevel
+			};
 
-		private bool? isAdministrator;
+			var dataContext = businessContext.DataContext;
+
+			return dataContext.GetByExample (example).FirstOrDefault ();
+		}
 	}
 }

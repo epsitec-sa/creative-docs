@@ -6511,30 +6511,6 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>IsAdministrator</c> field.
-		///	designer:fld/LVAHC/LVG622
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVG622]", IsVirtual=true)]
-		public bool IsAdministrator
-		{
-			get
-			{
-				bool value = default (bool);
-				this.GetIsAdministrator (ref value);
-				return value;
-			}
-			set
-			{
-				bool oldValue = this.IsAdministrator;
-				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
-				{
-					this.OnIsAdministratorChanging (oldValue, value);
-					this.SetIsAdministrator (value);
-					this.OnIsAdministratorChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
@@ -6542,11 +6518,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnPreferredScopeChanging(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
 		partial void OnPreferredScopeChanged(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
-		partial void OnIsAdministratorChanging(bool oldValue, bool newValue);
-		partial void OnIsAdministratorChanged(bool oldValue, bool newValue);
 		
-		partial void GetIsAdministrator(ref bool value);
-		partial void SetIsAdministrator(bool value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

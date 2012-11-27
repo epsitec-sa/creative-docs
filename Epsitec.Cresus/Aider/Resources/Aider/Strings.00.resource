@@ -10,4 +10,7 @@
   <data name="AiderUserPasswordConfirmationTitle" id="G702">Confirmation</data>
   <data name="AiderUserPasswordResetTitle" id="G802">Réinititialisation du mot de passe</data>
   <data name="AiderUserPasswordResetText" id="G902">Veuillez entrer le nouveau mot de passe et la confirmation.</data>
+  <data name="AiderUserAdminSelectionTitle" id="GA02">Gestion des droits d&amp;apos;administrations</data>
+  <data name="AiderUserAdminSelectionText" id="GB02">Choissez si vous voulez activer les droits d&amp;apos;administrations pour cet utilisateur.</data>
+  <data name="AiderUserAdminTitle" id="GC02">Activer les droits d&amp;apos;administrations</data>
 </bundle>
