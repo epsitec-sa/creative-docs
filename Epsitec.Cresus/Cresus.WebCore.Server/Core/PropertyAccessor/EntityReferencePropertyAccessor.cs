@@ -1,5 +1,7 @@
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.Types;
+
 using System.Linq.Expressions;
 
 
@@ -17,7 +19,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public override bool CheckValue(object value)
+		public override IValidationResult CheckValue(object value)
+		{
+			var valid = this.CheckValueInternal (value);
+
+			return ValidationResult.Create (valid);
+		}
+
+
+		private bool CheckValueInternal(object value)
 		{
 			if (value == null)
 			{

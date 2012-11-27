@@ -1,6 +1,8 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Business;
@@ -51,18 +53,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
 
-			var invalidItems = propertyAccessorsWithValues
-				.Where (i => !i.Item1.CheckValue (i.Item2))
-				.ToList ();
+			var invalidItems = from item in propertyAccessorsWithValues
+							   let accessor = item.Item1
+							   let value = item.Item2
+							   let result = accessor.CheckValue (value)
+							   where !result.IsValid
+							   let id = accessor.Id
+							   let message = result.ErrorMessage.IsNullOrEmpty ()
+									? Res.Strings.IncorrectValue
+									: result.ErrorMessage
+							   select Tuple.Create (id, message);
 
-			if (invalidItems.Any ())
+			var errorItems = invalidItems.ToDictionary
+			(
+				i => i.Item1,
+				i => (object) i.Item2.ToString ()
+			);
+
+			if (errorItems.Any ())
 			{
-				var errors = invalidItems.ToDictionary (
-					i => i.Item1.Id,
-					i => (object) Res.Strings.IncorrectValue.ToSimpleText ()
-				);
-
-				return CoreResponse.FormFailure (errors);
+				return CoreResponse.FormFailure (errorItems);
 			}
 
 			using (businessContext.Bind (entity))

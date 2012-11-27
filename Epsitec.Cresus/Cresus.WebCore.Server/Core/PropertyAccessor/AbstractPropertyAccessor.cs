@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		public abstract bool CheckValue(object value);
+		public abstract IValidationResult CheckValue(object value);
 
 
 		public static AbstractPropertyAccessor Create(LambdaExpression lambda, string id)

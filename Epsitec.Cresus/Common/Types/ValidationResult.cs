@@ -62,6 +62,24 @@ namespace Epsitec.Common.Types
 
 
 		/// <summary>
+		/// Gets the invalid error result.
+		/// </summary>
+		public static readonly ValidationResult Error = new ValidationResult (ValidationState.Error);
+
+
+		/// <summary>
+		/// Create an validation result based on the given boolean.
+		/// </summary>
+		/// <param name="valid">True to create an ok result, false to create an error result.</param>
+		/// <returns>The result.</returns>
+		public static IValidationResult Create(bool valid)
+		{
+			return valid
+				? ValidationResult.Ok
+				: ValidationResult.Error;
+		}
+
+		/// <summary>
 		/// Creates an error.
 		/// </summary>
 		/// <param name="errorMessage">The error message.</param>
