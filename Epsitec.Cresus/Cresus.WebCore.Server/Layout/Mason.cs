@@ -33,12 +33,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			using (var controller = Mason.BuildController (entity, viewMode, viewId))
 			{
-				var brickWall = controller.CreateBrickWallForInspection ();
+				var brickWall = controller.BuildBrickWall ();
 
 				brickWall.BrickAdded += Mason.HandleBrickAdded;
 				brickWall.BrickPropertyAdded += Mason.HandleBrickPropertyAdded;
 
-				controller.BuildBricksForInspection (brickWall);
+				controller.BuildBricks (brickWall);
 
 				Mason.SetupMissingValues (brickWall);
 

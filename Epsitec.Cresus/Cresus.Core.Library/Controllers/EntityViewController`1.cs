@@ -102,16 +102,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			return bridge;
 		}
 
-		public sealed override BrickWall CreateBrickWallForInspection()
+		public sealed override BrickWall BuildBrickWall()
 		{
-			var wall = new BrickWall<T> ();
-			
-			return wall;
+			return new BrickWall<T> ();
 		}
 
-		public sealed override void BuildBricksForInspection(BrickWall wall)
+		public sealed override void BuildBricks(BrickWall wall)
 		{
-			this.CreateBricks (wall as BrickWall<T>);
+			this.CreateBricks ((BrickWall<T>) wall);
 		}
 
 		
