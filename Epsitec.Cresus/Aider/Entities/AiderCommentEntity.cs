@@ -3,9 +3,6 @@
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-
-
 namespace Epsitec.Aider.Entities
 {
 	public partial class AiderCommentEntity
