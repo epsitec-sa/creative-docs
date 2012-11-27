@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 			var collection = value as IEnumerable<AbstractEntity>;
 
-			if (collection == null)	
+			if (collection == null)
 			{
 				return false;
 			}
