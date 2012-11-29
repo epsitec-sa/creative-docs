@@ -271,6 +271,74 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void GetIndexNullAscendingTest()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person1 = dataContext.CreateEntity<NaturalPersonEntity> ();
+				var person2 = dataContext.CreateEntity<NaturalPersonEntity> ();
+				
+				dataContext.SaveChanges ();
+
+				var personKey1 = dataContext.GetNormalizedEntityKey(person1).Value;
+				var personKey2 = dataContext.GetNormalizedEntityKey (person2).Value;
+
+				var example = new NaturalPersonEntity ();
+				var request = Request.Create (example);
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						ValueField.Create (example, p => p.Firstname),
+						SortOrder.Ascending
+					)
+				);
+
+				using (var requestView = dataContext.GetRequestView (request))
+				{
+					Assert.AreEqual (0, requestView.GetIndex (personKey1));
+					Assert.AreEqual (1, requestView.GetIndex (personKey2));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetIndexNullDescendingTest()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person1 = dataContext.CreateEntity<NaturalPersonEntity> ();
+				var person2 = dataContext.CreateEntity<NaturalPersonEntity> ();
+
+				dataContext.SaveChanges ();
+
+				var personKey1 = dataContext.GetNormalizedEntityKey (person1).Value;
+				var personKey2 = dataContext.GetNormalizedEntityKey (person2).Value;
+
+				var example = new NaturalPersonEntity ();
+				var request = Request.Create (example);
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						ValueField.Create (example, p => p.Firstname),
+						SortOrder.Descending
+					)
+				);
+
+				using (var requestView = dataContext.GetRequestView (request))
+				{
+					Assert.AreEqual (3, requestView.GetIndex (personKey1));
+					Assert.AreEqual (4, requestView.GetIndex (personKey2));
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void ConcurrencyTest()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())

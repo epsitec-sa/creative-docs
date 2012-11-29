@@ -200,6 +200,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			// count the number of rows where the firstname is smaller or equal to the one of the
 			// entity that we are interested in. When we have that number, assuming that the order
 			// is strict and total, we substract 1 from it and we have the index.
+			// We cannot simply count the number of rows that come before our position in the order,
+			// because then we can't make the difference between the cases where the item is the
+			// first one or where the item is not in the list.
 
 			var innerBuilder = this.GetBuilder ();
 			var innerSelect = this.BuildInnerRequestForIndex (innerBuilder, request, entityKey);
@@ -289,67 +292,256 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlFunction BuildOuterRequestForIndexOrderByCondition(SqlFieldBuilder outerBuilder, SqlFieldBuilder innerBuilder, string innerQueryAlias, Request request)
 		{
+			// OK. Here there are lots of complicated stuff going on. I'll try to explain it the
+			// best as I can.
+			//
+			// We have n sort clauses, that I will call S1, S2, ..., SN-1, SN. Here we convert these
+			// sort clauses into a predicate that will return TRUE for each row in the dataset that
+			// come before or at the same position than the row in which we are interested.
+			// 
+			// I will call the rows of the data set RO (O for outer, as they are the row scanned in
+			// the outer part of the query) and RI the row that they are compared against (I for
+			// inner, as it is the single row returned by the inner part of the query). 
+			//
+			// Moreover, I define two functions. The function "equal" returns TRUE when the two rows
+			// are considered equal by the sort clause. The function "before" returns TRUE, when the
+			// first row is smaller than the other, according to the order of the sort clause. These
+			// two functions are defined more formally below.
+			// 
+			// So, for clauses S1, ..., SN we want to generate the following predicate:
+			// (before(O, I, S1))
+			// OR (equal(O, I, S1) AND before(O, I, S2))
+			// OR (equal(O, I, S1) AND equal(O, I, S2) AND equal(O, I, S3))
+			// ...
+			// OR (equal(O, I, S1) AND equal(O, I, S2) AND equal(O, I, S3) and ... and before(O, I, SN))
+			// OR (equal(O, I, S1) AND equal(O, I, S2) AND equal(O, I, S3) and ... and equal(O, I, SN))
+			//
+			// In english, that's what we want :
+			// RO is before RI according to S1
+			// or RO is equal to RI according to S1 and is before RI according to S2
+			// or RO is equal to RI according to S1 and S2 and is before RI according to S3
+			// ...
+			// or RO is equal to RI according to S1, S2, S3, ..., SN-1 and is before RI according to SN
+			// or RO is equal to RI according to S1, S2, S3, ..., SN
+			//
+			// Now I define more formally the two functions. They are complex because the values of
+			// the columns might be NULL, and SQL sucks with null values. For these definitions,
+			// consider that O and I are the values of the columns in which we are interested for
+			// the current sort clause. V is a placeholder for any value that is guaranteed to be
+			// NOT NULL.
+			//
+			// equals (O, I) => ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
+			// before (O, I) for ASC sort clauses => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
+			// before (O, I) for DESC sort clauses => (O IS NOT NULL) AND ((I IS NULL) OR (I < O))
+			//
+			// And now the explanation for these nasty expression, along with a proof that proves
+			// that these expression can never return NULL values and thus can safely be combined
+			// together or with other expressions without messing the overall result.
+			//
+			// equal (O, I) :
+			//
+			// I and O are equal in the order if and only if one of the two following conditions is
+			// true :
+			// - Both are NULL
+			// - Both are not NULL and they are equal
+			//
+			// The SQL expression for that is :
+			// ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
+			//     
+			// This expression always returns a boolean value because we can reduce it like that :
+			// - If O is not NULL and I is not NULL
+			//   => ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
+			//   => ((V IS NULL) AND (V IS NULL)) OR ((V IS NOT NULL) AND (V IS NOT NULL) AND (V = V))
+			//   No NULL left.
+			// - If O is NULL and I is not NULL
+			//   => ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
+			//   => ((NULL IS NULL) AND (V IS NULL)) OR ((NULL IS NOT NULL) AND (V IS NOT NULL) AND (NULL = V))
+			//   => (TRUE AND FALSE) OR (FALSE AND TRUE AND NULL)
+			//   => FALSE OR FALSE
+			//   No NULL left.
+			// - If O is not NULL and I is NULL
+			//   => ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
+			//   => ((V IS NULL) AND (NULL IS NULL)) OR ((V IS NOT NULL) AND (NULL IS NOT NULL) AND (V = NULL))
+			//   => (FALSE AND TRUE) OR (TRUE AND FALSE AND NULL)
+			//   => FALSE OR FALSE
+			//   No NULL left.
+			// - If O is NULL and I is NULL
+			//   => ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
+			//   => ((NULL IS NULL) AND (NULL IS NULL)) OR ((NULL IS NOT NULL) AND (NULL IS NOT NULL) AND (NULL = NULL))
+			//   => (TRUE AND TRUE) OR (FALSE AND FALSE AND NULL)
+			//   => TRUE OR FALSE
+			//   No NULL left.
+			//
+			// before (O, I) for ASC sort clauses :
+			//
+			// O is before I in the order if and only if one of the two following conditions is
+			// true :
+			// - O is NULL and I is not NULL
+			// - Both are not NULL and O is smaller than I
+			//
+			// The SQL expression for that is
+			// ((O IS NULL) AND (I IS NOT NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O < I))
+			// 
+ 			// This expression can be simplified with the boolean algebra to
+			// => ((O IS NULL) AND (I IS NOT NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O < I))
+			// => (I IS NOT NULL) AND ((O IS NULL) OR ((O IS NOT NULL) AND (O < I)))
+			// => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
+			//
+			// This expression always returns a boolean value because we can reduce it like that:
+			// - If O is not NULL and I is not NULL
+			//   => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
+			//   => (V IS NOT NULL) AND ((V IS NULL) OR (V < V))
+			//   => No NULL left.
+			// - If O is NULL and I is not NULL
+			//   => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
+			//   => (V IS NOT NULL) AND ((NULL IS NULL) OR (NULL < V))
+			//   => TRUE AND (TRUE OR NULL)
+			//   => TRUE AND (TRUE)
+			//   => No NULL left.
+			// - If O is not NULL and I is NULL
+			//   => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
+			//   => (NULL IS NOT NULL) AND ((V IS NULL) OR (V < NULL))
+			//   => FALSE AND (FALSE OR NULL)
+			//   => FALSE AND NULL
+			//   => FALSE
+			//   => No NULL left.
+			// - If O is NULL and I is NULL
+			//   => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
+			//   => (NULL IS NOT NULL) AND ((NULL IS NULL) OR (NULL < NULL))
+			//   => FALSE AND (TRUE OR NULL)
+			//   => FALSE AND TRUE
+			//   => No NULL left.
+			//
+			// before (O, I) for DESC sort clauses:
+			// 
+			// This function is the exact opposite as before (O, I) for ASC sort clauses. Therefore
+			// we simply have before-DESC (O, I) => before-ASC(I, O).
+			//
+			// An optimization might be to detect when the values are guaranteed to be not NULL. It
+			// would be the case for a SQL column with a NOT NULL constraint that is not accessed
+			// via a join on a collection. In this case, the functions could be defined as follow:
+			// 
+			// equals (O, I) => O = I
+			// before-ASC (O, I) => O < I
+			// before-DESC (O, I) => O > I
+			
+			// Holds the current condition. At the end, that's our condition.
 			SqlFunction condition = null;
+
+			// Holds the accumulator that is used to build new parts of the condition. It will
+			// contain expressions such as (S1O equal S1I AND ... AND SNO equal SNI).
 			SqlFunction accumulator = null;
 
 			foreach (var sortClause in request.SortClauses)
 			{
-				var opSort = this.GetComparisonOperatorForSortClause (sortClause);
-				var opEqual = SqlFunctionCode.CompareEqual;
-				var opAnd = SqlFunctionCode.LogicAnd;
-				var opOr = SqlFunctionCode.LogicOr;
-				
-				var outerColumn = sortClause.Field.CreateSqlField (outerBuilder);
-				var innerColumnData = sortClause.Field.CreateSqlField (innerBuilder);
-				var innerColumnName = this.GetAliasForInnerQueryForIndexField (innerColumnData);
-				var innerColumn = SqlField.CreateName (innerQueryAlias, innerColumnName);
+				// We get the columns for the current sort clause.
+				var fieldOuterColumn = sortClause.Field.CreateSqlField (outerBuilder);
+				var innerColumn = sortClause.Field.CreateSqlField (innerBuilder);
+				var innerColumnName = this.GetAliasForInnerQueryForIndexField (innerColumn);
+				var fieldInnerColumn = SqlField.CreateName (innerQueryAlias, innerColumnName);
 
-				var conditionPart = new SqlFunction (opSort, outerColumn, innerColumn);
-				
-				if (sortClause.SortOrder == SortOrder.Ascending)
-				{
-					var opNull = SqlFunctionCode.CompareIsNull;
-					var opNotNull = SqlFunctionCode.CompareIsNotNull;
+				// Now we build the two expressions that we will need later on.
+				var before = sortClause.SortOrder == SortOrder.Ascending
+					? this.CreateBeforeFunction (fieldOuterColumn, fieldInnerColumn)
+					: this.CreateBeforeFunction (fieldInnerColumn, fieldOuterColumn);
 
-					var partA = new SqlFunction (opNull, outerColumn);
-					var partB = new SqlFunction (opNotNull, innerColumn);
-
-					var fieldPartA = SqlField.CreateFunction (partA);
-					var fieldPartB = SqlField.CreateFunction (partB);
-
-					var part1 = new SqlFunction (opAnd, fieldPartA, fieldPartB);
-					var part2 = conditionPart;
-					
-					var fieldPart1 = SqlField.CreateFunction (part1);
-					var fieldPart2 = SqlField.CreateFunction (part2);
-					
-					conditionPart = new SqlFunction (opOr, fieldPart1, fieldPart2);
-				}
-				
-				var accumulatorPart = new SqlFunction (opEqual, outerColumn, innerColumn);
+				var equal = this.CreateEqualFunction (fieldOuterColumn, fieldInnerColumn);
 
 				if (accumulator == null)
 				{
-					condition = conditionPart;
-					accumulator = accumulatorPart;
+					// This is the first iteration, so we initialize the condition and
+					// accumulator variables.
+					condition = before;
+					accumulator = equal;
 				}
 				else
 				{
+					// We setup some stuff.
 					var fieldCondition = SqlField.CreateFunction (condition);
-					var fieldConditionPart = SqlField.CreateFunction (conditionPart);
-					
 					var fieldAccumulator = SqlField.CreateFunction (accumulator);
-					var fieldAccumulatorPart = SqlField.CreateFunction (accumulatorPart);
-					
-					var localCondition = new SqlFunction (opAnd, fieldConditionPart, fieldAccumulator);
+					var fieldBefore = SqlField.CreateFunction (before);
+					var fieldEqual = SqlField.CreateFunction (equal);
+				
+					// Creates the local part of the condition, based on the previous accumulator
+					// and the "before" condition.
+					var localCondition = new SqlFunction (SqlFunctionCode.LogicAnd, fieldAccumulator, fieldBefore);
 					var fieldLocalCondition = SqlField.CreateFunction (localCondition);
-					
-					accumulator = new SqlFunction (opAnd, fieldAccumulatorPart, fieldAccumulator);
-					condition = new SqlFunction (opOr, fieldCondition, fieldLocalCondition);
+
+					// Includes the local part of the condition to the condition.
+					condition = new SqlFunction (SqlFunctionCode.LogicOr, fieldCondition, fieldLocalCondition);
+
+					// Includes the current "equal" expression to the accumulator.
+					accumulator = new SqlFunction (SqlFunctionCode.LogicAnd, fieldAccumulator, fieldEqual);
 				}
 			}
 
-			return condition;
+			// Finally, we append the accumulator to the condition one last time.
+			var lastFieldCondition = SqlField.CreateFunction (condition);
+			var lastFieldAccumulator = SqlField.CreateFunction (accumulator);
+	
+			return new SqlFunction (SqlFunctionCode.LogicOr, lastFieldCondition, lastFieldAccumulator);		
+		}
+
+
+		private SqlFunction CreateEqualFunction(SqlField a, SqlField b)
+		{
+			// (A = B)
+			var areEqual = new SqlFunction (SqlFunctionCode.CompareEqual, a, b);
+			var areEqualField = SqlField.CreateFunction (areEqual);
+
+			// (A IS NULL)
+			var aIsNull = new SqlFunction (SqlFunctionCode.CompareIsNull, a);
+			var aIsNullField = SqlField.CreateFunction (aIsNull);
+
+			// (B IS NULL)
+			var bIsNull = new SqlFunction (SqlFunctionCode.CompareIsNull, b);
+			var bIsNullField = SqlField.CreateFunction (bIsNull);
+
+			// (A IS NULL) AND (B IS NULL)
+			var bothNull = new SqlFunction (SqlFunctionCode.LogicAnd, aIsNullField, bIsNullField);
+			var bothNullField = SqlField.CreateFunction (bothNull);
+
+			// (A IS NOT NULL)
+			var aIsNotNull = new SqlFunction (SqlFunctionCode.CompareIsNotNull, a);
+			var aIsNotNullField = SqlField.CreateFunction (aIsNotNull);
+
+			// (B IS NOT NULL)
+			var bIsNotNull = new SqlFunction (SqlFunctionCode.CompareIsNotNull, b);
+			var bIsNotNullField = SqlField.CreateFunction (bIsNotNull);
+
+			// (A IS NOT NULL) AND (B IS NOT NULL)
+			var bothNotNull = new SqlFunction (SqlFunctionCode.LogicAnd, aIsNotNullField, bIsNotNullField);
+			var bothNotNullField = SqlField.CreateFunction (bothNotNull);
+
+			// (A IS NOT NULL) AND (B IS NOT NULL) AND (A = B)
+			var bothNotNullOrEqual = new SqlFunction (SqlFunctionCode.LogicAnd, bothNotNullField, areEqualField);
+			var bothNotNullOrEqualField = SqlField.CreateFunction (bothNotNullOrEqual);
+
+			// ((A IS NULL) AND (B IS NULL)) OR ((A IS NOT NULL) AND (B IS NOT NULL) AND (A = B))
+			return new SqlFunction (SqlFunctionCode.LogicOr, bothNullField, bothNotNullOrEqualField);
+		}
+
+
+		private SqlFunction CreateBeforeFunction(SqlField a, SqlField b)
+		{
+			// (A < B)
+			var aIsSmaller = new SqlFunction (SqlFunctionCode.CompareLessThan, a, b);
+			var aIsSmallerField = SqlField.CreateFunction (aIsSmaller);
+
+			// (A IS NULL)
+			var aIsNull = new SqlFunction (SqlFunctionCode.CompareIsNull, a);
+			var aIsNullField = SqlField.CreateFunction (aIsNull);
+
+			// (A IS NULL) OR (A < B)
+			var aIsNullOrSmaller = new SqlFunction (SqlFunctionCode.LogicOr, aIsNullField, aIsSmallerField);
+			var aIsNullOrSmallerField = SqlField.CreateFunction (aIsNullOrSmaller);
+
+			// (B IS NOT NULL)
+			var bIsNotNull = new SqlFunction (SqlFunctionCode.CompareIsNotNull, b);
+			var bIsNotNullField = SqlField.CreateFunction (bIsNotNull);
+
+			// (B IS NOT NULL) AND ((A IS NULL) OR (A < B))
+			return new SqlFunction (SqlFunctionCode.LogicAnd, bIsNotNullField, aIsNullOrSmallerField);
 		}
 
 
