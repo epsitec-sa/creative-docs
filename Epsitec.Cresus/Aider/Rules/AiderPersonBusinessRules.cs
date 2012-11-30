@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Types;
@@ -39,18 +40,18 @@ namespace Epsitec.Aider.Rules
 			person.DisplayName = AiderPersonEntity.GetDisplayName (person);
 
 			this.VerifyParish (person);
-			
+
 			if (person.eCH_Person.DataSource != Enumerations.DataSource.Government)
 			{
 				switch (person.MrMrs)
 				{
-					case Enumerations.PersonMrMrs.Madame:
-					case Enumerations.PersonMrMrs.Mademoiselle:
-						person.eCH_Person.PersonSex = Enumerations.PersonSex.Female;
+					case PersonMrMrs.Madame:
+					case PersonMrMrs.Mademoiselle:
+						person.eCH_Person.PersonSex = PersonSex.Female;
 						break;
 
-					case Enumerations.PersonMrMrs.Monsieur:
-						person.eCH_Person.PersonSex = Enumerations.PersonSex.Male;
+					case PersonMrMrs.Monsieur:
+						person.eCH_Person.PersonSex = PersonSex.Male;
 						break;
 				}
 			}
@@ -87,7 +88,7 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			if (person.Warnings.Any (x => x.WarningType == Enumerations.WarningType.ParishMismatch))
+			if (person.Warnings.Any (x => x.WarningType == WarningType.ParishMismatch))
 			{
 				return;
 			}
@@ -95,7 +96,7 @@ namespace Epsitec.Aider.Rules
 			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
 
 			warning.Title       = new FormattedText ("La paroisse ne correspond pas à l'adresse principale");
-			warning.WarningType = Enumerations.WarningType.ParishMismatch;
+			warning.WarningType = WarningType.ParishMismatch;
 
 			if (businessContext.AcquireLock ())
 			{
