@@ -97,6 +97,10 @@ function() {
       this.columnManager.refreshColumnsToLeft(this);
     },
 
+    refreshAll: function() {
+      this.columnManager.refreshAllColumns();
+    },
+
     addEntityColumn: function(viewMode, viewId, entityId, refreshToLeft) {
       var callbackQueue = null;
       if (refreshToLeft) {

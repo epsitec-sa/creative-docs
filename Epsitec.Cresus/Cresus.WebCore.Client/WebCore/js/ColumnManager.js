@@ -121,6 +121,14 @@ function() {
       this.refreshColumns(0, columnId);
     },
 
+    refreshAllColumns: function() {
+      var columnId;
+      if (this.columns.length > 0) {
+        columnId = this.columns[this.columns.length - 1].columnId;
+        this.refreshColumns(0, columnId);
+      }
+    },
+
     refreshColumns: function(firstColumnId, lastColumnId) {
       var configs, nbConfigs, callbackQueue, callbackQueueCreator, i, column;
 
