@@ -70,15 +70,23 @@ namespace Epsitec.Aider.Rules
 
 			var businessContext = this.GetBusinessContext ();
 
-			var parish1 = ParishLocator.FindParish (businessContext, person.Household1.Address);
-			var parish2 = ParishLocator.FindParish (businessContext, person.Household2.Address);
+			var parishes = new List<AiderGroupEntity> ();
 
-			if ((parish1 == person.Parish.Group) ||
-				(parish2 == person.Parish.Group))
+			if (person.Household1.IsNotNull ())
+			{
+				parishes.Add (ParishLocator.FindParish (businessContext, person.Household1.Address));
+			}
+
+			if (person.Household2.IsNotNull ())
+			{
+				parishes.Add (ParishLocator.FindParish (businessContext, person.Household2.Address));
+			}
+
+			if (parishes.Contains (person.Parish.Group))
 			{
 				return;
 			}
-			
+
 			if (person.Warnings.Any (x => x.WarningType == Enumerations.WarningType.ParishMismatch))
 			{
 				return;
