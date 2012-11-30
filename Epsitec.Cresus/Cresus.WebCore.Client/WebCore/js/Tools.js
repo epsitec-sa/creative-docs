@@ -65,6 +65,10 @@ function() {
       },
 
       decodeResponse: function(response) {
+        if (this.isUndefined(response.responseText)) {
+          return null;
+        }
+
         try {
           return Ext.decode(response.responseText);
         }
