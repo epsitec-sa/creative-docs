@@ -2,13 +2,11 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
@@ -48,38 +46,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon ("Data.AiderGroup.Parish")
 				.Title (x => x.GetCompactSummary ())
 				.Text (this.Entity.GetParishDescription ());
-	//			.Attribute (BrickMode.DefaultToSummarySubView);
-//				.Attribute (BrickMode.SpecialController3);
-
-#if false
-			wall.AddBrick (x => x.AdditionalAddress1)
-				.Attribute (BrickMode.AutoCreateNullEntity)
-				.Title (this.GetAdditionalAddressTitle (this.Entity.AdditionalAddress1));
-
-			wall.AddBrick (x => x.AdditionalAddress2)
-				.Attribute (BrickMode.AutoCreateNullEntity)
-				.Title (this.GetAdditionalAddressTitle (this.Entity.AdditionalAddress2));
-
-			wall.AddBrick (x => x.AdditionalAddress3)
-				.Attribute (BrickMode.AutoCreateNullEntity)
-				.Title (this.GetAdditionalAddressTitle (this.Entity.AdditionalAddress3));
-
-			wall.AddBrick (x => x.AdditionalAddress4)
-				.Attribute (BrickMode.AutoCreateNullEntity)
-				.Title (this.GetAdditionalAddressTitle (this.Entity.AdditionalAddress4));
-#endif
 
 			wall.AddBrick (x => x.AdditionalAddresses)
-//				.Attribute (BrickMode.AutoGroup)
 				.Template ()
 					.Title (x => TextFormatter.FormatText (x.Type))
 				.End ();
-		}
-
-
-		private FormattedText GetAdditionalAddressTitle(AiderAddressEntity address)
-		{
-			return TextFormatter.FormatText ("Coordonées supplémentaires", "(~", address.Type, "~)");
 		}
 	}
 }
