@@ -116,11 +116,8 @@ function() {
       this.refreshColumns(columnId, columnId);
     },
 
-    refreshColumnsToLeft: function(column, includeColumn) {
+    refreshColumnsToLeft: function(column) {
       var columnId = column.columnId;
-      if (!includeColumn) {
-        columnId -= 1;
-      }
       this.refreshColumns(0, columnId);
     },
 

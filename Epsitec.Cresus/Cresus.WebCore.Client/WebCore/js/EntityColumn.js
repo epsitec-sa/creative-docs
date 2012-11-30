@@ -93,15 +93,15 @@ function() {
       this.columnManager.refreshColumn(this);
     },
 
-    refreshToLeft: function(includeCurrent) {
-      this.columnManager.refreshColumnsToLeft(this, includeCurrent);
+    refreshToLeft: function() {
+      this.columnManager.refreshColumnsToLeft(this);
     },
 
     addEntityColumn: function(viewMode, viewId, entityId, refreshToLeft) {
       var callbackQueue = null;
       if (refreshToLeft) {
         callbackQueue = Epsitec.CallbackQueue.create(
-            function() { this.refreshToLeft(true); },
+            function() { this.refreshToLeft(); },
             this
             );
       }

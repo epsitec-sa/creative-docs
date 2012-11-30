@@ -109,7 +109,7 @@ function() {
       if (this.isSelected()) {
         this.column.removeToRight();
       }
-      this.column.refreshToLeft(true);
+      this.column.refreshToLeft();
     }
   });
 });

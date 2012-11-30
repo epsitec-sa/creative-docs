@@ -110,7 +110,7 @@ function() {
         return;
       }
 
-      this.column.refreshToLeft(false);
+      this.column.refreshToLeft();
     },
 
     showError: function(error) {

@@ -77,7 +77,7 @@ function() {
     },
 
     handleActionCallback: function() {
-      this.column.refreshToLeft(true);
+      this.column.refreshToLeft();
     },
 
     select: function(selected) {
