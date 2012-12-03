@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 			else
 			{
-				return this.BuildCollectionSummaryTiles (templateBrick);
+				return this.BuildCollectionSummaryTiles (summaryBrick, templateBrick);
 			}
 		}
 
@@ -182,17 +182,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick)
+		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick summaryBrick, Brick templateBrick)
 		{
-			var tileEntities = this.ResolveTileEntities (brick);
-			var brickModes = Carpenter.GetBrickModes (brick).ToSet ();
+			var tileEntities = this.ResolveTileEntities (templateBrick);
+			var brickModes = Carpenter.GetBrickModes (summaryBrick).ToSet ();
 
 			var subViewMode = Carpenter.GetSubViewMode (brickModes);
 			var subViewId = Carpenter.GetSubViewId (brickModes);
 			var hideAddButton = Carpenter.GetHideAddButton (brickModes);
 			var hideRemoveButton = Carpenter.GetHideRemoveButton (brickModes);
-			var iconClass = Carpenter.GetIconClass (brick);
-			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (brick.GetLambda ()).Id;
+			var iconClass = Carpenter.GetIconClass (templateBrick);
+			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (templateBrick.GetLambda ()).Id;
 			var actions = new List<ActionItem>();
 			bool empty = true;
 
@@ -208,8 +208,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					SubViewId = subViewId,
 					AutoCreatorId = null,
 					IconClass = iconClass,
-					Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
-					Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text),
+					Title = Carpenter.GetText (tileEntity, templateBrick, BrickPropertyKey.Title),
+					Text = Carpenter.GetText (tileEntity, templateBrick, BrickPropertyKey.Text),
 					PropertyAccessorId = propertyAccessorId,
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,
