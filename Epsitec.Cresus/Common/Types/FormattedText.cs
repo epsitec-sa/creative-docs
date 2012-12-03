@@ -278,12 +278,12 @@ namespace Epsitec.Common.Types
 			return text.Split (separator, options);
 		}
 
-		public static FormattedText Join(string separator, IEnumerable<FormattedText> values)
+		public static FormattedText Join(FormattedText separator, IEnumerable<FormattedText> values)
 		{
 			return FormattedText.Join (separator, values.ToArray ());
 		}
 
-		public static FormattedText Join(string separator, params FormattedText[] values)
+		public static FormattedText Join(FormattedText separator, params FormattedText[] values)
 		{
 			List<string> list = new List<string> ();
 
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Types
 				list.Add (t.ToString ());
 			}
 
-			return new FormattedText (string.Join (separator, list.ToArray ()));
+			return new FormattedText (string.Join (separator.ToString (), list.ToArray ()));
 		}
 
 		public static FormattedText Concat(params FormattedText[] values)

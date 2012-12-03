@@ -110,7 +110,7 @@ namespace Epsitec.Common.Types
 
 		public FormattedText ToFormattedText(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 		{
-			return FormattedText.Join (" - ", this.Values);
+			return FormattedText.Join (FormattedText.FromSimpleText (" - "), this.Values);
 		}
 
 		#endregion

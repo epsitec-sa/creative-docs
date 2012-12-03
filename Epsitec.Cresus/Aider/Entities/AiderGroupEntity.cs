@@ -224,9 +224,7 @@ namespace Epsitec.Aider.Entities
 				.Select (g => g.GetCompactSummary ())
 				.CreateSummarySequence (10, "...");
 
-			var text = FormattedText.Join ("\n", groups);
-
-			return TextFormatter.FormatText (text);
+			return FormattedText.Join (FormattedText.FromSimpleText("\n"), groups);
 		}
 
 

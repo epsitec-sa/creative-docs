@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		{
 			get
 			{
-				return FormattedText.Join ("<br/>", this.errors.Select (x => FormattedText.FromSimpleText (string.Format ("{0}: {1}", x.LineNumber, x.Message))));
+				return FormattedText.Join (FormattedText.FromSimpleText ("\n"), this.errors.Select (x => FormattedText.FromSimpleText (string.Format ("{0}: {1}", x.LineNumber, x.Message))));
 			}
 		}
 

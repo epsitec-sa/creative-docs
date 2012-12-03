@@ -348,8 +348,8 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var extract = this.enumValues.Where (x => !string.IsNullOrEmpty (x.Value));
 
 			this.parameterEntity.Values = string.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.Value));
-			this.parameterEntity.ShortDescriptions = FormattedText.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.ShortDescription).ToArray ());
-			this.parameterEntity.LongDescriptions  = FormattedText.Join (AbstractArticleParameterDefinitionEntity.Separator, extract.Select (x => x.LongDescription ).ToArray ());
+			this.parameterEntity.ShortDescriptions = FormattedText.Join (FormattedText.FromSimpleText (AbstractArticleParameterDefinitionEntity.Separator), extract.Select (x => x.ShortDescription).ToArray ());
+			this.parameterEntity.LongDescriptions  = FormattedText.Join (FormattedText.FromSimpleText (AbstractArticleParameterDefinitionEntity.Separator), extract.Select (x => x.LongDescription).ToArray ());
 		}
 
 

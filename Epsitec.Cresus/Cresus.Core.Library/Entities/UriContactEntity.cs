@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Uri, "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
+			return TextFormatter.FormatText (this.Uri, "(", FormattedText.Join (FormattedText.FromSimpleText (", "), this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}
 
 		public override FormattedText GetCompactSummary()

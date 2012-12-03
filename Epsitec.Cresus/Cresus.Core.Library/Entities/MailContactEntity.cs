@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetTitle()
 		{
-			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
+			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (FormattedText.FromSimpleText (", "), this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}
 
 		public void ResetPersonAddress(LegalPersonEntity person)
