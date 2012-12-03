@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				try
 				{
-					businessContext.SaveChanges (LockingPolicy.KeepLock);
+					businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 				}
 				catch (BusinessRuleException e)
 				{
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var child = autoCreator.Execute (businessContext, entity);
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
 			var entityId = Tools.GetEntityId (businessContext, child);
 
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					{
 						actionExecutor.Call (entity, arguments);
 
-						businessContext.SaveChanges (LockingPolicy.KeepLock);
+						businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 					}			
 				}
 				catch (BusinessRuleException e)

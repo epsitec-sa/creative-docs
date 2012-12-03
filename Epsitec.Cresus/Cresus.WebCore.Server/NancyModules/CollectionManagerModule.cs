@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				collection.Remove (d);
 				businessContext.DeleteEntity (d);
 
-				businessContext.SaveChanges (LockingPolicy.KeepLock);
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 			}
 
 			return CoreResponse.Success ();

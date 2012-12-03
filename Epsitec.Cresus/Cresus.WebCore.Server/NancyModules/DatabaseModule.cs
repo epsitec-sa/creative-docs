@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (success)
 			{
-				businessContext.SaveChanges (LockingPolicy.KeepLock);
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 			}
 
 			return success
