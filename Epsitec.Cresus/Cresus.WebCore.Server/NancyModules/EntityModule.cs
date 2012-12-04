@@ -257,8 +257,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				case FieldType.Date:
 				case FieldType.Enumeration:
-				case FieldType.Text:
 					clientValue = EntityModule.ConvertNancyValue (value, v => (string) v);
+					break;
+
+				case FieldType.Text:
+					clientValue = EntityModule.ConvertNancyValue (value, v => (string) v) ?? "";
 					break;
 
 				case FieldType.Decimal:
