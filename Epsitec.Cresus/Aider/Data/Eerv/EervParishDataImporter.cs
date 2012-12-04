@@ -325,9 +325,7 @@ namespace Epsitec.Aider.Data.Eerv
 			// when there is no comment defined yet.
 
 			var comment = entity.Comment;
-
-			var escapedText = FormattedText.Escape (text);
-			var combinedText = TextFormatter.FormatText (comment.Text, "~\n\n", escapedText);
+			var combinedText = TextFormatter.FormatText (comment.Text, "~\n\n", text);
 
 			// HACK This is a temporary hack to avoid texts with 800 or more chars with are not
 			// allowed in this field. The type of the field should be corrected to allow texts of
