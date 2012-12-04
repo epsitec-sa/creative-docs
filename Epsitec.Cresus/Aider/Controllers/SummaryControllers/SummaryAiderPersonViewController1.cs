@@ -20,6 +20,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
+				.EnableAction (0)
+				.EnableAction (1)
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Text (x => x.GetPersonalDataSummary ());
 
@@ -35,12 +37,21 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				}
 			}
 
-			wall.AddBrick (x => x.Households)
-				.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
-				.Template ()
-					.Title ("Coordonnées du ménage")
-					.Text (x => x.GetAddressSummary ())
-				.End ();
+			if (this.Entity.Household1.IsNotNull ())
+			{
+				wall.AddBrick (x => x.Household1)
+					.Title ("Ménage principal")
+					.Text (x => x.Address.GetSummary ())
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
+
+			if (this.Entity.Household2.IsNotNull ())
+			{
+				wall.AddBrick (x => x.Household2)
+					.Title ("Ménage secondaire")
+					.Text (x => x.Address.GetSummary ())
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
 
 			wall.AddBrick (x => x.Parish)
 				.Icon ("Data.AiderGroup.Parish")

@@ -10,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System;
@@ -199,7 +200,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetIsHouseholdHead(ref bool value)
 		{
-			foreach (var household in this.Households)
+			foreach (var household in this.GetHouseholds ())
 			{
 				if ((household.Head1 == this) ||
 					(household.Head2 == this))
@@ -218,7 +219,7 @@ namespace Epsitec.Aider.Entities
 			{
 				//	This person is no longer the head of the household.
 
-				foreach (var household in this.Households)
+				foreach (var household in this.GetHouseholds())
 				{
 					if (household.Head1 == this)
 					{
@@ -294,17 +295,7 @@ namespace Epsitec.Aider.Entities
 			}
 			value = this.groupList;
 		}
-
-		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
-		{
-			if (this.householdList == null)
-			{
-				this.householdList = new Helpers.AiderPersonHouseholdList (this);
-			}
-
-			value = this.householdList;
-		}
-
+		
 		public IEnumerable<AiderHouseholdEntity> GetHouseholds()
 		{
 			var household1 = this.Household1;
@@ -431,6 +422,65 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void SetHousehold(BusinessContext businessContext, AiderHouseholdEntity newHousehold, bool isMainHousehold)
+		{
+			if (isMainHousehold)
+			{
+				this.SetHousehold1 (businessContext, newHousehold);
+			}
+			else
+			{
+				this.SetHousehold2 (businessContext, newHousehold);
+			}
+		}
+
+
+		public void SetHousehold1(BusinessContext businessContext, AiderHouseholdEntity newHousehold)
+		{
+			this.SetHousehold (businessContext, newHousehold, p => p.Household1, (p, h) => p.Household1 = h);
+		}
+
+
+		public void SetHousehold2(BusinessContext businessContext, AiderHouseholdEntity newHousehold)
+		{
+			this.SetHousehold (businessContext, newHousehold, p => p.Household2, (p, h) => p.Household2 = h);
+		}
+
+
+		private void SetHousehold(BusinessContext businessContext, AiderHouseholdEntity newHousehold, Func<AiderPersonEntity, AiderHouseholdEntity> getter, Action<AiderPersonEntity, AiderHouseholdEntity> setter)
+		{
+			var oldHousehold = getter (this);
+
+			if (oldHousehold == newHousehold)
+			{
+				return;
+			}
+
+			setter (this, newHousehold);
+
+			if (newHousehold.IsNotNull ())
+			{
+				newHousehold.Add (this);
+			}
+
+			if (oldHousehold.IsNotNull ())
+			{
+				oldHousehold.Remove (this);
+
+				if (oldHousehold.Members.Count == 0)
+				{
+					businessContext.DeleteEntity (oldHousehold);
+				}
+			}
+		}
+
+
+		public static AiderPersonEntity Create(BusinessContext businessContext)
+		{
+			return businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+		}
+
+
 		#region IAiderWarningExampleFactoryGetter Members
 
 		AiderWarningExampleFactory IAiderWarningExampleFactoryGetter.GetWarningExampleFactory()
@@ -444,7 +494,6 @@ namespace Epsitec.Aider.Entities
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
 		private AiderPersonAdditionalContactAddressList additionalAddresses;
-		private AiderPersonHouseholdList householdList;
 		private AiderPersonGroupList groupList;
 	}
 }

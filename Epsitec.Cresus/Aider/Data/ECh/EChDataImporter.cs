@@ -233,7 +233,7 @@ namespace Epsitec.Aider.Data.ECh
 
 			if (aiderPersonEntity != null)
 			{
-				aiderPersonEntity.Household2 = household;
+				aiderPersonEntity.SetHousehold2 (businessContext, household);
 
 				var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
@@ -259,7 +259,7 @@ namespace Epsitec.Aider.Data.ECh
 		private static Tuple<eCH_PersonEntity, AiderPersonEntity> ImportPerson(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
 		{
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-			aiderPersonEntity.Household1 = household;
+			aiderPersonEntity.SetHousehold1 (businessContext, household);
 
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 

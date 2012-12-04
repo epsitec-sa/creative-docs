@@ -2,14 +2,12 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
-using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
 

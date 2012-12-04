@@ -1,13 +1,9 @@
-﻿using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 
@@ -51,86 +47,122 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public FormattedText GetAddressSummary()
+		public FormattedText GetMembersTitle()
 		{
-			return this.Address.GetSummary ();
+			var nbMembers = this.Members.Count;
+
+			return TextFormatter.FormatText ("Membres (", nbMembers, ")");
+		}
+
+
+		public FormattedText GetMembersSummary()
+		{
+			var members = this.Members
+				   .Select (m => m.GetCompactSummary ())
+				   .CreateSummarySequence (10, "...");
+
+			return FormattedText.Join (FormattedText.FromSimpleText("\n"), members);
 		}
 
 
 		partial void GetMembers(ref IList<AiderPersonEntity> value)
 		{
-			// TODO Obtain the DataContext.
+			value = this.GetMembers ().AsReadOnlyCollection ();
+		}
 
-			BusinessContext businessContext = null;
 
-			if (businessContext == null)
+		private HashSet<AiderPersonEntity> GetMembers()
+		{
+			if (this.members == null)
 			{
-				// TMP stuff to have something in the collection.
+				this.members = new HashSet<AiderPersonEntity> ();
 
-				value = new List<AiderPersonEntity> ();
+				var businessContext = BusinessContextPool.GetCurrentContext (this);
+				var dataContext = businessContext.DataContext;
 
-				if (this.Head1.UnwrapNullEntity () != null)
+				if (dataContext.IsPersistent (this))
 				{
-					value.Add (this.Head1);
-				}
+					this.members.UnionWith (dataContext.GetByExample (new AiderPersonEntity ()
+					{
+						Household1 = this,
+					}));
 
-				if (this.Head2.UnwrapNullEntity () != null)
-				{
-					value.Add (this.Head2);
+					this.members.UnionWith (dataContext.GetByExample (new AiderPersonEntity ()
+					{
+						Household2 = this,
+					}));
 				}
-
-				value = value.AsReadOnlyCollection ();
 			}
-			else
+
+			return this.members;
+		}
+
+
+		public void Add(AiderPersonEntity newMember)
+		{
+			this.GetMembers ().Add (newMember);
+
+			if (this.Head1.IsNull ())
 			{
-				value = this.GetMembers (businessContext).AsReadOnlyCollection ();
+				this.Head1 = newMember;
 			}
 		}
 
 
-		public IEnumerable<AiderPersonEntity> GetMembers(BusinessContext businessContext)
+		public void Remove(AiderPersonEntity oldMember)
 		{
-			var example1 = new AiderPersonEntity ()
+			this.GetMembers ().Remove (oldMember);
+
+			if (this.Head1 == oldMember)
 			{
-				Household1 = this,
-			};
-
-			var example2 = new AiderPersonEntity ()
+				this.Head1 = null;
+			}
+			else if (this.Head2 == oldMember)
 			{
-				Household2 = this,
-			};
-
-			DataContext dataContext = businessContext.DataContext;
-
-			var members = new HashSet<AiderPersonEntity> ();
-
-			members.UnionWith (dataContext.GetByExample (example1));
-			members.UnionWith (dataContext.GetByExample (example2));
-
-			return members;
+				this.Head2 = null;
+			}
 		}
 
 
-		public IList<AiderPersonEntity> GetHeads()
+		public IEnumerable<AiderPersonEntity> GetHeads()
 		{
-			var heads = new List<AiderPersonEntity> ();
-
 			var head1 = this.Head1;
 
 			if (head1.IsNotNull ())
 			{
-				heads.Add (head1);
+				yield return head1;
 			}
 
 			var head2 = this.Head2;
 
 			if (head2.IsNotNull ())
 			{
-				heads.Add (head2);
+				yield return head2;
 			}
-
-			return heads;
 		}
+
+
+		public string GetDefaultLastname()
+		{
+			if (this.Head1.IsNotNull ())
+			{
+				return this.Head1.eCH_Person.PersonOfficialName;
+			}
+			else if (this.Head2.IsNotNull ())
+			{
+				return this.Head2.eCH_Person.PersonOfficialName;
+			}
+			else
+			{
+				return "";
+			}
+		}
+
+
+
+		// This property is only meant as an in memory cache of the members of the household. It
+		// will never be saved to the database.
+		private HashSet<AiderPersonEntity> members;
 
 
 	}

@@ -15,12 +15,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Head1)
 					.Field (x => x.Head2)
 				.End ();
-
-			wall.AddBrick ()
-				.Include (x => x.Address);
-
-			wall.AddBrick (x => x.Comment)
-				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
 	}
 }
