@@ -7,7 +7,7 @@ Ext.define('Epsitec.cresus.webcore.Locale', {
 
     getTexts: function() {
       return {
-        globarWarning: '<i><b>WARNING:</b> The modifications made here will ' +
+        globalWarning: '<i><b>WARNING:</b> The modifications made here will ' +
             'be propagated to every record.</i>',
         sortLabel: 'Sort',
         refreshLabel: 'Refresh',

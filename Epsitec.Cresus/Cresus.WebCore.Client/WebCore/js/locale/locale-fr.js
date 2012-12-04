@@ -7,7 +7,7 @@ Ext.define('Epsitec.cresus.webcore.Locale', {
 
     getTexts: function() {
       return {
-        globarWarning: '<i><b>ATTENTION:</b> Les modifications ' +
+        globalWarning: '<i><b>ATTENTION:</b> Les modifications ' +
             'effectu\u00E9es ici seront r\u00E9percut\u00E9es dans tous les ' +
             'enregistrements.</i>',
         sortLabel: 'Trier',

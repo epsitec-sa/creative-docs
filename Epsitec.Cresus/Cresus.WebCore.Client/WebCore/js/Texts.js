@@ -10,7 +10,7 @@ function() {
       texts: Epsitec.Locale.getTexts(),
 
       getGlobalWarning: function() {
-        return this.texts.globalwarning;
+        return this.texts.globalWarning;
       },
 
       getSortLabel: function() {
