@@ -109,13 +109,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				var formattedText = (FormattedText) value;
 
-				return formattedText.ToString ();
+				return formattedText.ToSimpleText ();
 			}
 			else if (value is FormattedText?)
 			{
 				var formattedText = (FormattedText?) value;
 
-				return formattedText.Value.ToString ();
+				return formattedText.HasValue
+					? formattedText.Value.ToSimpleText ()
+					: "";
 			}
 			else
 			{
@@ -404,11 +406,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		{
 			if (valueType == typeof (FormattedText?))
 			{
-				return (FormattedText?) (value);
+				return value == null
+					? (FormattedText?) FormattedText.Empty
+					: (FormattedText?) FormattedText.FromSimpleText (value);
 			}
 			else if (valueType == typeof (FormattedText))
 			{
-				return (FormattedText) value;
+				return FormattedText.FromSimpleText (value);
 			}
 			else if (valueType == typeof (string))
 			{
