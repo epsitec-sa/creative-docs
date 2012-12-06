@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					SubViewId = subViewId,
 					AutoCreatorId = null,
 					IconClass = iconClass,
-					Title = null,
+					Title = Carpenter.GetOptionalText (brick, BrickPropertyKey.Title),
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,
 					Actions = actions,
@@ -854,6 +854,24 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				Displayed = entity.GetCompactSummary ().ToString (),
 				Submitted = this.GetEntityId (entity),
 			};
+		}
+
+
+		private static string GetOptionalText(Brick brick, BrickPropertyKey key)
+		{
+			string result = null;
+
+			foreach (var property in Brick.GetProperties (brick, key).Reverse ())
+			{
+				result = property.StringValue;
+
+				if (result != null)
+				{
+					break;
+				}
+			}
+
+			return result;
 		}
 
 

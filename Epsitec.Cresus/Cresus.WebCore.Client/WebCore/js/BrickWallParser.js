@@ -69,10 +69,10 @@ function() {
       },
 
       parseEmptySummaryTile: function(tile) {
-        return {
-          xtype: 'epsitec.emptysummarytile',
-          propertyAccessorId: tile.propertyAccessorId
-        };
+        var t = this.parseBaseTile(tile);
+        t.xtype = 'epsitec.emptysummarytile';
+        t.propertyAccessorId = tile.propertyAccessorId;
+        return t;
       },
 
       parseEditionTile: function(tile) {
