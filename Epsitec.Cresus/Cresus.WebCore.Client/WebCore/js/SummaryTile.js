@@ -11,9 +11,7 @@ function() {
 
     /* Config */
 
-    margin: '0 0 5 0',
-    bodyCls: 'summary',
-    overCls: 'over-summary',
+    overCls: 'tile-over',
 
     /* Properties */
 

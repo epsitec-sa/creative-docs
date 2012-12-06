@@ -9,13 +9,20 @@ function() {
     /* Config */
 
     minHeight: 50,
+    border: false,
+    style: {
+      borderRight: '1px solid #99BCE8',
+      borderBottom: '1px solid #99BCE8',
+      borderLeft: '1px solid #99BCE8'
+    },
+    bodyCls: 'tile',
 
     /* Properties */
 
     column: null,
     entityId: null,
     selected: false,
-    selectedClass: 'selected-entity',
+    selectedClass: 'tile-selected',
 
     /* Constructor */
 

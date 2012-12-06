@@ -14,7 +14,7 @@ function() {
     /* Config */
 
     border: false,
-    margin: 5,
+    margin: '0 0 0 1',
 
     /* Properties */
 

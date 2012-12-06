@@ -15,10 +15,6 @@ function() {
 
     /* Config */
 
-    border: false,
-    frame: true,
-    margin: '0 0 5 0',
-    defaultType: 'textfield',
     defaults: {
       anchor: '100%'
     },
@@ -36,7 +32,10 @@ function() {
     constructor: function(options) {
       var newOptions = {
         url: 'proxy/entity/edit/' + options.entityId,
-        buttons: this.getButtons()
+        fbar: {
+          items: this.getButtons(),
+          cls: 'tile'
+        }
       };
       Ext.applyIf(newOptions, options);
 
@@ -48,6 +47,7 @@ function() {
       var resetButton, saveButton;
 
       resetButton = Ext.create('Ext.button.Button', {
+        margin: '0 5 0 0',
         text: Epsitec.Texts.getResetLabel(),
         listeners: {
           click: this.onResetClick,
@@ -56,6 +56,7 @@ function() {
       });
 
       saveButton = Ext.create('Ext.button.Button', {
+        margin: 0,
         text: Epsitec.Texts.getSaveLabel(),
         listeners: {
           click: this.onSaveClick,

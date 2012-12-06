@@ -53,7 +53,7 @@ function() {
         },
         container: {
           region: 'west',
-          bodyCls: 'border-right',
+          bodyCls: 'left-list',
           width: 300,
           resizable: true,
           resizeHandles: 'e'
