@@ -29,7 +29,6 @@ function() {
       this.callParent([options]);
 
       this.columns = [];
-      this.title = this.database.title;
       this.leftList = this.createLeftList(this.database);
       this.rightPanel = this.createRightPanel();
 
@@ -52,6 +51,8 @@ function() {
           )
         },
         container: {
+          title: database.title,
+          iconCls: database.iconSmall,
           region: 'west',
           bodyCls: 'left-list',
           width: 300,

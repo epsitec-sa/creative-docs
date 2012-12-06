@@ -3,12 +3,14 @@ Ext.require([
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.TabManager', {
-    extend: 'Ext.tab.Panel',
+    extend: 'Ext.panel.Panel',
     alternateClassName: ['Epsitec.TabManager'],
 
     /* Config */
 
+    border: false,
     plain: true,
+    layout: 'card',
 
     /* Properties */
 
@@ -37,7 +39,7 @@ function() {
       if (entityTab === null || entityTab.isDestroyed) {
         entityTab = Ext.create('Epsitec.ColumnManager', {
           database: database,
-          closable: true,
+          header: false,
           border: false
         });
 
@@ -45,7 +47,7 @@ function() {
         this.entityTabs[key] = entityTab;
       }
 
-      this.setActiveTab(entityTab);
+      this.showTab(entityTab);
     },
 
     showPageTab: function(title, url) {
@@ -54,7 +56,6 @@ function() {
       if (pageTab === null || pageTab.isDestroyed) {
         pageTab = Ext.create('Ext.panel.Panel', {
           title: title,
-          closable: true,
           border: false,
           id: url,
           loader: {
@@ -67,7 +68,11 @@ function() {
         this.pageTabs[url] = pageTab;
       }
 
-      this.setActiveTab(pageTab);
+      this.showTab(pageTab);
+    },
+
+    showTab: function(tab) {
+      this.getLayout().setActiveItem(tab);
     }
   });
 });

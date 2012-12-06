@@ -20,12 +20,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public override Dictionary<string, object> GetDataDictionary(IconSize iconSize)
+		public override Dictionary<string, object> GetDataDictionary()
 		{
-			var data = base.GetDataDictionary (iconSize);
+			var data = base.GetDataDictionary ();
 
 			data["items"] = this.items
-				.Select (i => i.GetDataDictionary (IconSize.Sixteen))
+				.Select (i => i.GetDataDictionary ())
 				.ToList ();
 
 			return data;

@@ -14,6 +14,9 @@ function() {
     /* Config */
 
     border: false,
+    style: {
+      borderTop: '1px solid #99BCE8'
+    },
     margin: '0 0 0 1',
 
     /* Properties */

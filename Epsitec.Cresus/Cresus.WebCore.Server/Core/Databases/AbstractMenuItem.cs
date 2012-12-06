@@ -11,13 +11,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public virtual Dictionary<string, object> GetDataDictionary(IconSize iconSize = IconSize.ThirtyTwo)
+		public virtual Dictionary<string, object> GetDataDictionary()
 		{
 			return new Dictionary<string, object> ()
 			{
 				{ "type", this.GetDataType () },
 				{ "title", this.GetTitle () },
-				{ "cssClass", this.GetIconClass (iconSize) },
+				{ "iconSmall", this.GetIconClass (IconSize.Sixteen) },
+				{ "iconLarge", this.GetIconClass(IconSize.ThirtyTwo) },
 			};
 		}
 

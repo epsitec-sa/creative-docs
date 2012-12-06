@@ -14,6 +14,7 @@ function() {
       xtype: 'hbox',
       align: 'stretch'
     },
+    cls: 'menu',
 
     /* Properties */
 
@@ -62,29 +63,29 @@ function() {
       menuItems = json.content.menu;
 
       for (i = 0; i < menuItems.length; i += 1) {
-        menuItem = this.createMenuItem(menuItems[i]);
+        menuItem = this.createMenuItem(menuItems[i], true);
         group.add(menuItem);
       }
     },
 
-    createMenuItem: function(menuItem) {
+    createMenuItem: function(menuItem, topLevel) {
       switch (menuItem.type) {
         case 'database':
-          return this.createDatabaseButton(menuItem);
+          return this.createDatabaseButton(menuItem, topLevel);
 
         case 'subMenu':
-          return this.createSubMenu(menuItem);
+          return this.createSubMenu(menuItem, topLevel);
 
         default:
           throw 'invalid menu item type: ' + menuItem.type;
       }
     },
 
-    createDatabaseButton: function(menuItem) {
+    createDatabaseButton: function(menuItem, topLevel) {
       return this.createButton({
         text: menuItem.title,
         handler: function() { this.databaseClickCallback(menuItem); },
-        iconCls: menuItem.cssClass
+        iconCls: this.getItemIconClass(menuItem, topLevel)
       });
     },
 
@@ -92,19 +93,19 @@ function() {
       this.application.tabManager.showEntityTab(database);
     },
 
-    createSubMenu: function(menuItem) {
+    createSubMenu: function(menuItem, topLevel) {
       var items, item, i;
 
       items = [];
 
       for (i = 0; i < menuItem.items.length; i += 1) {
-        item = this.createMenuItem(menuItem.items[i]);
+        item = this.createMenuItem(menuItem.items[i], false);
         items.push(item);
       }
 
       return {
         text: menuItem.title,
-        iconCls: menuItem.cssClass,
+        iconCls: this.getItemIconClass(menuItem, topLevel),
         scale: 'large',
         iconAlign: 'top',
         menu: {
@@ -113,6 +114,10 @@ function() {
           items: items
         }
       };
+    },
+
+    getItemIconClass: function(menuItem, topLevel) {
+      return topLevel ? menuItem.iconLarge : menuItem.iconSmall;
     },
 
     createScopeSelector: function() {
