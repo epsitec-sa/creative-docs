@@ -27,11 +27,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	/// <summary>
-	/// The goal of the Carpenter class is to transform brick walls in tiles. It takes as input the
-	/// a BrickWall which is a definition for the tiles. With the brick wall and the root entity
-	/// that is associated with it, it builds tiles objects that must be displayed.
-	/// </summary>
 	internal sealed class Carpenter
 	{
 
@@ -130,7 +125,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 			else
 			{
-				return this.BuildCollectionSummaryTiles (summaryBrick, templateBrick);
+				return this.BuildCollectionSummaryTiles (templateBrick);
 			}
 		}
 
@@ -182,17 +177,17 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick summaryBrick, Brick templateBrick)
+		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick)
 		{
-			var tileEntities = this.ResolveTileEntities (templateBrick);
-			var brickModes = Carpenter.GetBrickModes (summaryBrick).ToSet ();
+			var tileEntities = this.ResolveTileEntities (brick);
+			var brickModes = Carpenter.GetBrickModes (brick).ToSet ();
 
 			var subViewMode = Carpenter.GetSubViewMode (brickModes);
 			var subViewId = Carpenter.GetSubViewId (brickModes);
 			var hideAddButton = Carpenter.GetHideAddButton (brickModes);
 			var hideRemoveButton = Carpenter.GetHideRemoveButton (brickModes);
-			var iconClass = Carpenter.GetIconClass (templateBrick);
-			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (templateBrick.GetLambda ()).Id;
+			var iconClass = Carpenter.GetIconClass (brick);
+			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (brick.GetLambda ()).Id;
 			var actions = new List<ActionItem>();
 			bool empty = true;
 
@@ -208,8 +203,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					SubViewId = subViewId,
 					AutoCreatorId = null,
 					IconClass = iconClass,
-					Title = Carpenter.GetText (tileEntity, templateBrick, BrickPropertyKey.Title),
-					Text = Carpenter.GetText (tileEntity, templateBrick, BrickPropertyKey.Text),
+					Title = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Title),
+					Text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text),
 					PropertyAccessorId = propertyAccessorId,
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,

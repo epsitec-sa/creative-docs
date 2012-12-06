@@ -6,7 +6,6 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Resolvers;
 
@@ -21,11 +20,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	/// <summary>
-	/// The Mason is the dedicated factory of BrickWalls for the PanelBuilder class. Its single job
-	/// is to creates instances of the BrickWall class based on a given entity, the controller view
-	/// mode and the specific controller id.
-	/// </summary>
 	internal static class Mason
 	{
 
@@ -41,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				controller.BuildBricks (brickWall);
 
-				Mason.SetupMissingValues (brickWall);
+				Mason.SetupInheritedValues (brickWall);
 
 				return brickWall;
 			}
@@ -59,136 +53,113 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static void HandleBrickAdded(object sender, BrickAddedEventArgs e)
 		{
-			var brick = e.Brick;
-			var type = e.FieldType;
-
-			Mason.CreateDefaultProperties (brick, type);
+			Mason.CreateDefaultProperties (e.Brick);
 		}
 
 
 		private static void HandleBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
 		{
-			if (e.Property.Key == BrickPropertyKey.OfType)
+			var brickProperty = e.Property;
+			var childBrick = brickProperty.Brick;
+			var parentBrick = e.Brick;
+			
+			switch (brickProperty.Key)
 			{
-				var brick = e.Property.Brick;
-				var type = e.Property.Brick.GetBrickType ();
-				
-				Mason.CreateDefaultProperties (brick, type);
+				case BrickPropertyKey.OfType:
+					Mason.CreateDefaultProperties (childBrick);
+					break;
+
+				case BrickPropertyKey.Template:
+					Mason.CopyProperties
+					(
+						parentBrick, childBrick, BrickPropertyKey.Icon, BrickPropertyKey.Title,
+						BrickPropertyKey.Text
+					);
+					break;
+
+				case BrickPropertyKey.DefineAction:
+					Mason.CopyProperties (parentBrick, childBrick, BrickPropertyKey.Icon);
+					break;
 			}
 		}
 
 
-		private static void CreateDefaultProperties(Brick brick, Type type)
+		private static void CreateDefaultProperties(Brick brick)
 		{
-			var typeInfo = EntityInfo.GetStructuredType (type);
+			var type = brick.GetBrickType ();
+			var structuredType = EntityInfo.GetStructuredType (type);
 
-			if (typeInfo == null || typeInfo.Caption == null)
+			if (structuredType != null || structuredType.Caption != null)
 			{
-				return;
+				var caption = structuredType.Caption;
+				var icon = caption.Icon ?? "Data." + caption.Name;
+
+				Mason.CreateStringProperty (brick, BrickPropertyKey.Icon, icon);
+				Mason.CreateLabelProperty (brick, BrickPropertyKey.Title, structuredType.Caption);
 			}
 
-			var typeName = typeInfo.Caption.Name;
-			var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
-			var labels = typeInfo.Caption.Labels;
-
-			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
-			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
-
-			Brick.AddProperty (brick, nameProperty);
-			Brick.AddProperty (brick, iconProperty);
-
-			Mason.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
-			Mason.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
+			Mason.CreateExpressionProperty (brick, BrickPropertyKey.Text, x => x.GetSummary ());
 		}
 
 
-		private static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
+		private static void CopyProperties(Brick parent, Brick child, params BrickPropertyKey[] brickPropertyKeys)
 		{
-			if (i < labels.Count)
+			foreach (var brickProperty in Brick.GetProperties (parent))
 			{
-				BrickProperty property = new BrickProperty (key, labels[i]);
-				
-				Brick.AddProperty (brick, property);
+				if (Array.IndexOf (brickPropertyKeys, brickProperty.Key) >= 0)
+				{
+					Brick.AddProperty (child, brickProperty);
+				}
 			}
 		}
 
 
-		private static void SetupMissingValues(BrickWall brickWall)
+		private static void CreateStringProperty(Brick brick, BrickPropertyKey key, string value)
+		{
+			Brick.AddProperty (brick, new BrickProperty (key, value));
+		}
+
+
+		private static void CreateLabelProperty(Brick brick, BrickPropertyKey key, Caption caption)
+		{
+			var labels = caption.Labels;
+
+			if (labels.Count > 0)
+			{
+				Brick.AddProperty (brick, new BrickProperty (key, labels[0]));
+			}
+		}
+
+
+		private static void CreateExpressionProperty(Brick brick, BrickPropertyKey key, Expression<Func<AbstractEntity, FormattedText>> expression)
+		{
+			Brick.AddProperty (brick, new BrickProperty (key, expression));
+		}
+
+
+		private static void SetupInheritedValues(BrickWall brickWall)
 		{
 			foreach (var brick in brickWall.Bricks)
 			{
-				Mason.SetupMissingValues (brick);
+				Mason.SetupInheritedValues (brick);
 			}
 		}
 
 
-		private static void SetupMissingValues(Brick brick)
+		private static void SetupInheritedValues(Brick brick)
 		{
 			var currentBrick = brick;
 
-			while (currentBrick != null)
+			while (Brick.ContainsProperty (currentBrick, BrickPropertyKey.OfType))
 			{
-				if (!Brick.ContainsProperty (currentBrick, BrickPropertyKey.OfType))
-				{
-					Mason.SetupBrickDefaultValues (currentBrick);
-				}
-
 				currentBrick = Brick.GetProperty (currentBrick, BrickPropertyKey.OfType).Brick;
 			}
-		}
 
-
-		private static void SetupBrickDefaultValues(Brick brick)
-		{
 			if (Brick.ContainsProperty (brick, BrickPropertyKey.Template))
 			{
 				var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
-				var icon = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
 
-				Mason.AddPropertyIfNotDefined (templateBrick, BrickPropertyKey.Title, x => x.GetTitle ());
-				Mason.AddPropertyIfNotDefined (templateBrick, BrickPropertyKey.Text, x => x.GetSummary ());
-				Mason.AddPropertyIfNotDefined(templateBrick, BrickPropertyKey.Icon, icon);
-
-				Mason.AddPropertyIfNotDefined (brick, BrickPropertyKey.Text, CollectionTemplate.DefaultEmptyText);
-			}
-			else if (Brick.ContainsProperty (brick, BrickPropertyKey.DefineAction))
-			{
-				var actionBrick = Brick.GetProperty (brick, BrickPropertyKey.DefineAction).Brick;
-				var icon = Brick.GetProperty (brick, BrickPropertyKey.Icon).StringValue;
-
-
-				Mason.AddPropertyIfNotDefined (actionBrick, BrickPropertyKey.Icon, icon);
-			}
-			else
-			{
-				Mason.AddPropertyIfNotDefined (brick, BrickPropertyKey.Text, x => x.GetSummary ());
-			}
-		}
-
-
-		private static void AddPropertyIfNotDefined(Brick brick, BrickPropertyKey key, string text)
-		{
-			if (!Brick.ContainsProperty (brick, key))
-			{
-				Brick.AddProperty (brick, new BrickProperty (key, text));
-			}
-		}
-
-
-		private static void AddPropertyIfNotDefined(Brick brick, BrickPropertyKey key, Expression<Func<AbstractEntity, FormattedText>> expression)
-		{
-			if (!Brick.ContainsProperty (brick, key))
-			{
-				Brick.AddProperty (brick, new BrickProperty (key, expression));
-			}
-		}
-
-
-		private static void AddPropertyIfNotDefined(Brick brick, BrickPropertyKey key, FormattedText text)
-		{
-			if (!Brick.ContainsProperty (brick, key))
-			{
-				Brick.AddProperty (brick, new BrickProperty (key, text));
+				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.Attribute);
 			}
 		}
 
