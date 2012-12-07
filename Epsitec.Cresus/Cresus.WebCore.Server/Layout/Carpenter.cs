@@ -223,6 +223,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					AutoCreatorId = null,
 					IconClass = iconClass,
 					Title = Carpenter.GetOptionalText (brick, BrickPropertyKey.Title),
+					PropertyAccessorId = propertyAccessorId,
 					HideAddButton = hideAddButton,
 					HideRemoveButton = hideRemoveButton,
 					Actions = actions,
