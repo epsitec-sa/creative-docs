@@ -9,13 +9,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public string EntityId
-		{
-			get;
-			set;
-		}
-
-
 		public string Title
 		{
 			get;
@@ -40,7 +33,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			tile["type"] = this.GetTileType ();
 			tile["title"] = this.Title;
 			tile["icon"] = this.IconClass;
-			tile["entityId"] = this.EntityId;
 
 			return tile;
 		}

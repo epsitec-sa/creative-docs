@@ -1,17 +1,15 @@
 using System.Collections.Generic;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal abstract class AbstractActionTile : AbstractEntityTile
+	internal abstract class AbstractEntityTile : AbstractTile
 	{
 
 
-		public IList<ActionItem> Actions
+		public string EntityId
 		{
 			get;
 			set;
@@ -22,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var tile = base.ToDictionary ();
 
-			tile["actions"] = this.Actions.Select (a => a.ToDictionary ()).ToList ();
+			tile["entityId"] = this.EntityId;
 
 			return tile;
 		}

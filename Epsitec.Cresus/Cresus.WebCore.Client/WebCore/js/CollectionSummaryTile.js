@@ -12,8 +12,6 @@ function() {
     /* Properties */
 
     propertyAccessorId: null,
-    hideRemoveButton: false,
-    hideAddButton: false,
 
     /* Constructor */
 
@@ -78,7 +76,12 @@ function() {
       }
 
       entityId = json.content.key;
+      this.handleEntityCreated(entityId);
       this.addEntityColumn(entityId, true);
+    },
+
+    handleEntityCreated: function(entityId) {
+      // This method exists only to be derived in subclasses.
     },
 
     deleteEntityHandler: function() {
@@ -110,6 +113,24 @@ function() {
         this.column.removeToRight();
       }
       this.column.refreshToLeft();
+    },
+
+    getState: function() {
+      return {
+        type: 'collectionSummaryTile',
+        entityId: this.entityId,
+        propertyAccessorId: this.propertyAccessorId
+      };
+    },
+
+    setState: function(state) {
+      this.select(true);
+    },
+
+    isStateApplicable: function(state) {
+      return state.type === 'collectionSummaryTile' &&
+          state.entityId === this.entityId &&
+          state.propertyAccessorId === this.propertyAccessorId;
     }
   });
 });

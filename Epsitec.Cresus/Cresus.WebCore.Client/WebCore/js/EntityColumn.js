@@ -27,7 +27,6 @@ function() {
     viewMode: '1',
     viewId: 'null',
     selectedTile: null,
-    selectedEntityId: null,
 
     /* Constructor */
 
@@ -48,34 +47,66 @@ function() {
     /* Additional methods */
 
     getState: function() {
-      return {
-        selectedEntityId: this.selectedEntityId
-      };
+      if (this.selectedTile === null) {
+        return {
+          tileIndex: null,
+          tileState: null
+        };
+      }
+      else {
+        return {
+          tileIndex: this.items.items.indexOf(this.selectedTile),
+          tileState: this.selectedTile.getState()
+        };
+      }
     },
 
     setState: function(state) {
-      if (state.selectedEntityId !== null) {
-        this.selectTileWithEntityId(state.selectedEntityId);
+      var tileIndex, tileState;
+
+      tileIndex = state.tileIndex;
+      tileState = state.tileState;
+
+      if (tileIndex === null || tileState === null) {
+        return;
+      }
+      this.selectedTile = this.getTileForState(tileIndex, tileState);
+      if (this.selectedTile !== null) {
+        this.selectedTile.setState(tileState);
       }
     },
 
-    selectTileWithEntityId: function(entityId) {
-      var tileToSelect = this.getTileWithEntityId(entityId);
-      this.selectTile(tileToSelect);
-      if (tileToSelect === null) {
-        this.selectedEntityId = entityId;
-      }
-    },
+    getTileForState: function(tileIndex, tileState) {
 
-    getTileWithEntityId: function(entityId) {
-      var tiles, tile, i;
+      // Looks for a tile for which the state is applicable. Let i be the index
+      // of the selected tile in the previous entity column, then the tiles are
+      // examined in the following order: i, i-1, i+1, i-2, i+2, ... until it
+      // finds a tile for which the state is applicable or all tiles have been
+      // examined.
+
+      var up, down, tiles, tile;
+
+      up = tileIndex;
+      down = tileIndex - 1;
       tiles = this.items.items;
-      for (i = 0; i < tiles.length; i += 1) {
-        tile = tiles[i];
-        if (tile.entityId === entityId) {
-          return tile;
+
+      while (down >= 0 || up < tiles.length) {
+        if (up < tiles.length) {
+          tile = tiles[up];
+          if (tile.isStateApplicable(tileState)) {
+            return tile;
+          }
         }
+        if (down >= 0) {
+          tile = tiles[down];
+          if (tile.isStateApplicable(tileState)) {
+            return tile;
+          }
+        }
+        up += 1;
+        down -= 1;
       }
+
       return null;
     },
 
@@ -87,7 +118,6 @@ function() {
         this.selectedTile = tile;
         if (this.selectedTile !== null) {
           this.selectedTile.select(true);
-          this.selectedEntityId = this.selectedTile.entityId;
         }
       }
     },
@@ -112,7 +142,6 @@ function() {
             this
             );
       }
-      this.selectTileWithEntityId(entityId);
       this.columnManager.addEntityColumn(
           viewMode, viewId, entityId, this, callbackQueue
       );

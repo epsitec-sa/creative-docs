@@ -1,11 +1,11 @@
 Ext.require([
+  'Epsitec.cresus.webcore.EntityTile',
   'Epsitec.cresus.webcore.Texts',
-  'Epsitec.cresus.webcore.Tile',
   'Epsitec.cresus.webcore.Tools'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.SummaryTile', {
-    extend: 'Epsitec.cresus.webcore.Tile',
+    extend: 'Epsitec.cresus.webcore.EntityTile',
     alternateClassName: ['Epsitec.SummaryTile'],
     alias: 'widget.epsitec.summarytile',
 
@@ -15,7 +15,6 @@ function() {
 
     /* Properties */
 
-    isRoot: false,
     subViewMode: '2',
     subViewId: 'null',
     autoCreatorId: null,
@@ -67,6 +66,7 @@ function() {
     },
 
     addEntityColumn: function(entityId, refresh) {
+      this.column.selectTile(this);
       this.column.addEntityColumn(
           this.subViewMode, this.subViewId, entityId, refresh
       );
@@ -99,7 +99,23 @@ function() {
 
       newEntityId = json.content.entityId;
       refresh = this.entityId !== newEntityId;
-      this.addEntityColumn(newEntityId, refresh);
+      this.entityId = newEntityId;
+      this.addEntityColumn(this.entityId, refresh);
+    },
+
+    getState: function() {
+      return {
+        type: 'summaryTile',
+        entityId: this.entityId
+      };
+    },
+
+    setState: function(state) {
+      this.select(true);
+    },
+
+    isStateApplicable: function(state) {
+      return state.type === 'summaryTile' && state.entityId === this.entityId;
     }
   });
 });

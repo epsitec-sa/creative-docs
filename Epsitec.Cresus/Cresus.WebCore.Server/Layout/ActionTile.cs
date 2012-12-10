@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class ActionTile : AbstractTile
+	internal sealed class ActionTile : AbstractEntityTile
 	{
 
 

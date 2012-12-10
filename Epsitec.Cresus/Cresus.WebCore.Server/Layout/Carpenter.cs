@@ -188,7 +188,52 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var hideRemoveButton = Carpenter.GetHideRemoveButton (brickModes);
 			var iconClass = Carpenter.GetIconClass (brick);
 			var propertyAccessorId = this.caches.PropertyAccessorCache.Get (brick.GetLambda ()).Id;
-			var actions = new List<ActionItem>();
+
+			var autoGroup = Carpenter.GetAutoGroup (brickModes);
+			
+			return autoGroup
+				? this.BuildGroupedSummaryTile (brick, tileEntities, subViewMode, subViewId, hideAddButton, hideRemoveButton, iconClass, propertyAccessorId)
+				: this.BuildCollectionSummaryTiles (brick, tileEntities, subViewMode, subViewId, hideAddButton, hideRemoveButton, iconClass, propertyAccessorId);
+		}
+
+
+		private IEnumerable<AbstractTile> BuildGroupedSummaryTile(Brick brick, IEnumerable<AbstractEntity> tileEntities, string subViewMode, string subViewId, bool hideAddButton, bool hideRemoveButton, string iconClass, string propertyAccessorId)
+		{
+			yield return new GroupedSummaryTile
+			{
+				IsRoot = false,
+				SubViewMode = subViewMode,
+				SubViewId = subViewId,
+				IconClass = iconClass,
+				Title = Carpenter.GetOptionalText (brick, BrickPropertyKey.Title),
+				PropertyAccessorId = propertyAccessorId,
+				HideAddButton = hideAddButton,
+				HideRemoveButton = hideRemoveButton,
+				Items = this.BuildGroupdSummaryTileItems (brick, tileEntities).ToList (),
+			};
+		}
+
+
+		private IEnumerable<GroupedSummaryTileItem> BuildGroupdSummaryTileItems(Brick brick, IEnumerable<AbstractEntity> tileEntities)
+		{
+			foreach (var tileEntity in tileEntities)
+			{
+				var entityId = this.GetEntityId (tileEntity);
+				var text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text);
+				
+				yield return new GroupedSummaryTileItem ()
+				{
+					EntityId = entityId,
+					Text = text,
+				};
+			}
+		}
+
+
+		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick, IEnumerable<AbstractEntity> tileEntities, string subViewMode, string subViewId, bool hideAddButton, bool hideRemoveButton, string iconClass, string propertyAccessorId)
+		{
+			var actions = new List<ActionItem> ();
+			
 			bool empty = true;
 
 			foreach (var tileEntity in tileEntities)
@@ -303,6 +348,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static bool GetHideRemoveButton(ISet<BrickMode> brickModes)
 		{
 			return brickModes.Contains (BrickMode.HideRemoveButton);
+		}
+
+
+		private static bool GetAutoGroup(ISet<BrickMode> brickModes)
+		{
+			return brickModes.Contains (BrickMode.AutoGroup);
 		}
 
 

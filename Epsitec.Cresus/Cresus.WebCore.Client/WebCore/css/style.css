@@ -24,6 +24,11 @@ html, body {
   background-position: 100%, 50%;
 }
 
+.grouped-summary-tile {
+  margin: 0px;
+  background-color: #EBF4FF;
+}
+
 .left-list {
   border-top-width: 1px;
   border-right-width: 1px;

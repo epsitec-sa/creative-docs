@@ -5,6 +5,8 @@ Ext.require([
   'Epsitec.cresus.webcore.EntityCollectionField',
   'Epsitec.cresus.webcore.EntityReferenceField',
   'Epsitec.cresus.webcore.EnumerationField',
+  'Epsitec.cresus.webcore.GroupedSummaryTile',
+  'Epsitec.cresus.webcore.GroupedSummaryTileItem',
   'Epsitec.cresus.webcore.SummaryTile',
   'Epsitec.cresus.webcore.Texts'
 ],
@@ -30,6 +32,9 @@ function() {
         switch (tile.type) {
           case 'summary':
             return this.parseSummaryTile(tile);
+
+          case 'groupedSummary':
+            return this.parseGroupedSummaryTile(tile);
 
           case 'collectionSummary':
             return this.parseCollectionSummaryTile(tile);
@@ -57,6 +62,32 @@ function() {
         t.subViewId = tile.subViewId;
         t.autoCreatorId = tile.autoCreatorId;
         return t;
+      },
+
+      parseGroupedSummaryTile: function(tile) {
+        return {
+          xtype: 'epsitec.groupedsummarytile',
+          title: tile.title,
+          iconCls: tile.icon,
+          subViewMode: tile.subViewMode,
+          subViewId: tile.subViewId,
+          hideRemoveButton: tile.hideRemoveButton,
+          hideAddButton: tile.hideAddButton,
+          propertyAccessorId: tile.propertyAccessorId,
+          items: this.parseGroupedItems(tile.items)
+        };
+      },
+
+      parseGroupedItems: function(items) {
+        return items.map(this.parseGroupedItem, this);
+      },
+
+      parseGroupedItem: function(item) {
+        return {
+          xtype: 'epsitec.groupedsummarytileitem',
+          entityId: item.entityId,
+          html: item.text
+        };
       },
 
       parseCollectionSummaryTile: function(tile) {

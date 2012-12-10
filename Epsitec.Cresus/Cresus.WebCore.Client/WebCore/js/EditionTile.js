@@ -1,15 +1,15 @@
 Ext.require([
   'Epsitec.cresus.webcore.EntityCollectionField',
   'Epsitec.cresus.webcore.EntityReferenceField',
+  'Epsitec.cresus.webcore.EntityTile',
   'Epsitec.cresus.webcore.EnumerationField',
   'Epsitec.cresus.webcore.ErrorHandler',
   'Epsitec.cresus.webcore.Texts',
-  'Epsitec.cresus.webcore.Tools',
-  'Epsitec.cresus.webcore.Tile'
+  'Epsitec.cresus.webcore.Tools'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.EditionTile', {
-    extend: 'Epsitec.cresus.webcore.Tile',
+    extend: 'Epsitec.cresus.webcore.EntityTile',
     alternateClassName: ['Epsitec.EditionTile'],
     alias: 'widget.epsitec.editiontile',
 
@@ -133,6 +133,21 @@ function() {
         this.remove(this.errorField);
         this.errorField = null;
       }
+    },
+
+    getState: function() {
+      return {
+        type: 'edidionTile',
+        entityId: this.entityId
+      };
+    },
+
+    setState: function(state) {
+      // Nothing to do here.
+    },
+
+    isStateApplicable: function(state) {
+      return state.type === 'editionTile' && state.entityId === this.entityId;
     }
   });
 });
