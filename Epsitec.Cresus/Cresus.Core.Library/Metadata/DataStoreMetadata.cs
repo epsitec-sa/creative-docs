@@ -131,12 +131,12 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public DataSetMetadata FindDataSet(string name)
 		{
-			return this.dataSets.FirstOrDefault (x => x.DataSetName == name);
+			return this.dataSets.FirstOrDefault (x => x.DataSetName == name && x.IsDefault);
 		}
 
 		public DataSetMetadata FindDataSet(Command command)
 		{
-			return this.dataSets.FirstOrDefault (x => x.BaseShowCommand == command);
+			return this.dataSets.FirstOrDefault (x => x.BaseShowCommand == command && x.IsDefault);
 		}
 
 

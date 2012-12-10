@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			var entityType = Tools.ParseType (name);
 
 			var dataSets = this.dataStore.DataSets;
-			var dataSet = dataSets.FirstOrDefault (d => d.DataSetEntityType == entityType);
+			var dataSet = dataSets.FirstOrDefault (d => d.DataSetEntityType == entityType && d.IsDefault);
 
 			if (dataSet == null)
 			{

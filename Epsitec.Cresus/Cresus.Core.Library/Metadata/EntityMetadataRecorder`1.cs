@@ -4,8 +4,6 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.DataLayer.Expressions;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -20,8 +18,8 @@ namespace Epsitec.Cresus.Core.Metadata
 	public sealed class EntityMetadataRecorder<TEntity> : EntityMetadataRecorder
 			where TEntity : AbstractEntity, new()
 	{
-		public EntityMetadataRecorder()
-			: base (EntityInfo<TEntity>.GetTypeId ())
+		public EntityMetadataRecorder(string name)
+			: base (EntityInfo<TEntity>.GetTypeId (), name)
 		{
 			this.columns = new List<EntityColumnMetadata> ();
 		}

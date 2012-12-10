@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public abstract class EntityMetadataRecorder
 	{
-		protected EntityMetadataRecorder(Druid entityId)
+		protected EntityMetadataRecorder(Druid entityId, string name)
 		{
 			this.entityId = entityId;
+			this.name = name;
 		}
 
 		
@@ -46,6 +47,15 @@ namespace Epsitec.Cresus.Core.Metadata
 				return this.entityId;
 			}
 		}
+
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+		
 		
 
 		/// <summary>
@@ -55,10 +65,11 @@ namespace Epsitec.Cresus.Core.Metadata
 		/// <returns>The metadata information.</returns>
 		public EntityTableMetadata GetMetadata()
 		{
-			return new EntityTableMetadata (this.EntityId, this.Columns);
+			return new EntityTableMetadata (this.EntityId, this.Name, this.Columns);
 		}
 
 
 		private readonly Druid					entityId;
+		private readonly string					name;
 	}
 }

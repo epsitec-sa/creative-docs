@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Data;
@@ -21,10 +20,13 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public class DataSetMetadata : CoreMetadata
 	{
-		public DataSetMetadata(string dataSetName)
+		public DataSetMetadata(Druid entityId, string name, bool isDefault)
 		{
-			this.dataSetName = dataSetName;
-			
+			this.entityId = entityId;
+			this.name = name;
+			this.isDefault = isDefault;
+
+			this.dataSetName = EntityInfo.GetStructuredType (entityId).Caption.Name;
 			this.dataSetEntityType = DataSetGetter.GetRootEntityType (this.dataSetName);
 			this.baseShowCommand   = DataSetMetadata.ResolveShowCommand (this.dataSetName);
 
@@ -32,12 +34,36 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
-			: this (data[Strings.Name])
+			: this (Druid.Parse (data[Strings.EntityId]), data[Strings.Name], bool.Parse (data[Strings.IsDefault]))
 		{
 			this.DefineDisplayGroup (Druid.Parse (data[Strings.DisplayGroup]));
 		}
 
 		
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
+		public Druid							EntityId
+		{
+			get
+			{
+				return this.entityId;
+			}
+		}
+
+		public bool								IsDefault
+		{
+			get
+			{
+				return this.isDefault;
+			}
+		}
+
 		public string							DataSetName
 		{
 			get
@@ -164,18 +190,18 @@ namespace Epsitec.Cresus.Core.Metadata
 			var filter   = xml.Element (Strings.Filter);
 			var metadata = new DataSetMetadata (data);
 
-			var entityId = EntityInfo.GetTypeId (metadata.dataSetEntityType);
-
 			metadata.userRoles.AddRange (roles);
 			metadata.DefineFilter (EntityFilter.Restore (filter));
-			metadata.DefineEntityTableMetadata (tables.Single (t => t.EntityId == entityId));
+			metadata.DefineEntityTableMetadata (tables.Single (t => t.Name == metadata.Name && t.EntityId == metadata.EntityId));
 
 			return metadata;
 		}
 
 		private void Serialize(List<XAttribute> attributes)
 		{
-			attributes.Add (new XAttribute (Strings.Name, this.dataSetName));
+			attributes.Add (new XAttribute (Strings.EntityId, this.entityId.ToCompactString ()));
+			attributes.Add (new XAttribute (Strings.Name, this.name));
+			attributes.Add (new XAttribute (Strings.IsDefault, this.isDefault.ToString ()));
 			attributes.Add (new XAttribute (Strings.DisplayGroup, this.displayGroupCaptionId.ToCompactString ()));
 		}
 
@@ -195,7 +221,9 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private static class Strings
 		{
+			public static readonly string		EntityId = "eid";
 			public static readonly string		Name = "n";
+			public static readonly string		IsDefault = "df";
 			public static readonly string		DisplayGroup = "dg";
 			public static readonly string		UserRoles = "R";
 			public static readonly string		UserRole = "r";
@@ -205,6 +233,9 @@ namespace Epsitec.Cresus.Core.Metadata
 		#endregion
 
 
+		private readonly Druid					entityId;
+		private readonly string					name;
+		private readonly bool					isDefault;
 		private readonly string					dataSetName;
 		private readonly System.Type			dataSetEntityType;
 		private readonly Command				baseShowCommand;

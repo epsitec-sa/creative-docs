@@ -21,7 +21,7 @@ AiderFunctionDef = [LVA7A]
 
 <meta>
   <T>
-    <t eid="@AiderPerson">
+    <t eid="@AiderPerson" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
@@ -39,13 +39,13 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderGroup">
+    <t eid="@AiderGroup" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderGroupParticipant">
+    <t eid="@AiderGroupParticipant" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVAA4]" title="Groupe" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
@@ -59,7 +59,7 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderHousehold">$
+    <t eid="@AiderHousehold" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="Intitulé" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
@@ -77,7 +77,7 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderTown">
+    <t eid="@AiderTown" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVA95]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
@@ -91,7 +91,7 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderCountry">
+    <t eid="@AiderCountry" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderCountry:[LVAD5]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
@@ -101,7 +101,7 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderUser">
+    <t eid="@AiderUser" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
@@ -111,25 +111,25 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderUserRole">
+    <t eid="@AiderUserRole" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUserRole:[LVAMC]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderUserScope">
+    <t eid="@AiderUserScope" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUserScope:[LVAFC]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderGroupDef">
+    <t eid="@AiderGroupDef" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupDef:[LVA3A]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderFunctionDef">
+    <t eid="@AiderFunctionDef" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderFunctionDef:[LVA8A]" title="Nom" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
@@ -141,17 +141,17 @@ AiderFunctionDef = [LVA7A]
     </t>
   </T>
   <D>
-    <d n="AiderPerson" dg=""><R><r>@user</r></R></d>
-    <d n="AiderGroup" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
-    <d n="AiderGroupParticipant" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d n="AiderHousehold" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d n="AiderTown" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d n="AiderCountry" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d n="AiderUser" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d n="AiderUserRole" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d n="AiderUserScope" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d n="AiderGroupDef" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d n="AiderFunctionDef" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderPerson" n="default" df="true" dg=""><R><r>@user</r></R></d>
+    <d eid="@AiderGroup" n="default" df="true" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
+    <d eid="@AiderGroupParticipant" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderHousehold" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderTown" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderCountry" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderUser" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderUserRole" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderUserScope" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderGroupDef" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderFunctionDef" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
   </D>
   <G/>
 </meta>

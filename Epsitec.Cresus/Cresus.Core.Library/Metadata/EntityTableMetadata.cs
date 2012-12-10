@@ -18,14 +18,15 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public sealed class EntityTableMetadata : CoreMetadata
 	{
-		internal EntityTableMetadata(Druid entityId, IEnumerable<EntityColumnMetadata> columns)
+		internal EntityTableMetadata(Druid entityId, string name, IEnumerable<EntityColumnMetadata> columns)
 		{
 			this.entityId = entityId;
+			this.name = name;
 			this.columns  = new List<EntityColumnMetadata> (columns);
 		}
 
 		private EntityTableMetadata(IDictionary<string, string> data, IEnumerable<EntityColumnMetadata> columns)
-			: this (Druid.Parse (data[Strings.EntityId]), columns)
+			: this (Druid.Parse (data[Strings.EntityId]), data[Strings.Name], columns)
 		{
 		}
 
@@ -37,6 +38,15 @@ namespace Epsitec.Cresus.Core.Metadata
 				return this.entityId;
 			}
 		}
+
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
 
 		public System.Type						DataSetEntityType
 		{
@@ -112,6 +122,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		private void Serialize(List<XAttribute> attributes)
 		{
 			attributes.Add (new XAttribute (Strings.EntityId, this.entityId.ToCompactString ()));
+			attributes.Add (new XAttribute (Strings.Name, this.name));
 		}
 
 		private void Serialize(List<XElement> columns)
@@ -128,12 +139,14 @@ namespace Epsitec.Cresus.Core.Metadata
 		private static class Strings
 		{
 			public static readonly string		EntityId = "eid";
+			public static readonly string		Name	 = "n";
 			public static readonly string		Column   = "col";
 		}
 
 		#endregion
 
-		private readonly Druid					entityId;
+		private readonly Druid						entityId;
+		private readonly string						name;
 		private readonly List<EntityColumnMetadata>	columns;
 	}
 }
