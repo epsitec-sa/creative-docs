@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			return dataSets
 				.Where (d => d.DisplayGroupId.IsEmpty)
+				.Where (d => d.IsDisplayed)
 				.Select (d => new DatabaseMenuItem (d));
 		}
 
@@ -76,6 +77,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			return dataSets
 				.Where (d => !d.DisplayGroupId.IsEmpty)
+				.Where (d => d.IsDisplayed)
 				.GroupBy (d => d.DisplayGroupId)
 				.Select (g => new SubMenuItem (
 					SafeResourceResolver.Instance.GetCaption (g.Key),

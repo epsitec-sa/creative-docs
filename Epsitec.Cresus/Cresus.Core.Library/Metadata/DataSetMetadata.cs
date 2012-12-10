@@ -20,11 +20,12 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public class DataSetMetadata : CoreMetadata
 	{
-		public DataSetMetadata(Druid entityId, string name, bool isDefault)
+		public DataSetMetadata(Druid entityId, string name, bool isDefault, bool isDisplayed)
 		{
 			this.entityId = entityId;
 			this.name = name;
 			this.isDefault = isDefault;
+			this.isDisplayed = isDisplayed;
 
 			this.dataSetName = EntityInfo.GetStructuredType (entityId).Caption.Name;
 			this.dataSetEntityType = DataSetGetter.GetRootEntityType (this.dataSetName);
@@ -34,7 +35,13 @@ namespace Epsitec.Cresus.Core.Metadata
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
-			: this (Druid.Parse (data[Strings.EntityId]), data[Strings.Name], bool.Parse (data[Strings.IsDefault]))
+			: this
+		(
+			Druid.Parse (data[Strings.EntityId]),
+			data[Strings.Name],
+			bool.Parse (data[Strings.IsDefault]),
+			bool.Parse (data[Strings.IsDisplayed])
+		)
 		{
 			this.DefineDisplayGroup (Druid.Parse (data[Strings.DisplayGroup]));
 		}
@@ -61,6 +68,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			get
 			{
 				return this.isDefault;
+			}
+		}
+
+		public bool								IsDisplayed
+		{
+			get
+			{
+				return this.isDisplayed;
 			}
 		}
 
@@ -202,6 +217,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			attributes.Add (new XAttribute (Strings.EntityId, this.entityId.ToCompactString ()));
 			attributes.Add (new XAttribute (Strings.Name, this.name));
 			attributes.Add (new XAttribute (Strings.IsDefault, this.isDefault.ToString ()));
+			attributes.Add (new XAttribute (Strings.IsDisplayed, this.isDisplayed.ToString ()));
 			attributes.Add (new XAttribute (Strings.DisplayGroup, this.displayGroupCaptionId.ToCompactString ()));
 		}
 
@@ -224,6 +240,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public static readonly string		EntityId = "eid";
 			public static readonly string		Name = "n";
 			public static readonly string		IsDefault = "df";
+			public static readonly string		IsDisplayed = "d";
 			public static readonly string		DisplayGroup = "dg";
 			public static readonly string		UserRoles = "R";
 			public static readonly string		UserRole = "r";
@@ -236,6 +253,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly Druid					entityId;
 		private readonly string					name;
 		private readonly bool					isDefault;
+		private readonly bool					isDisplayed;
 		private readonly string					dataSetName;
 		private readonly System.Type			dataSetEntityType;
 		private readonly Command				baseShowCommand;

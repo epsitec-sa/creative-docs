@@ -141,17 +141,17 @@ AiderFunctionDef = [LVA7A]
     </t>
   </T>
   <D>
-    <d eid="@AiderPerson" n="default" df="true" dg=""><R><r>@user</r></R></d>
-    <d eid="@AiderGroup" n="default" df="true" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
-    <d eid="@AiderGroupParticipant" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d eid="@AiderHousehold" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d eid="@AiderTown" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d eid="@AiderCountry" n="default" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d eid="@AiderUser" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d eid="@AiderUserRole" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d eid="@AiderUserScope" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d eid="@AiderGroupDef" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d eid="@AiderFunctionDef" n="default" df="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderPerson" n="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
+    <d eid="@AiderGroup" n="default" df="true" d="true" dg=""><R><r>@user</r></R><f id="@AiderGroup"><C><c id="[LVAED]"><v><comp c="1" v="I0" /></v></c></C></f></d>
+    <d eid="@AiderGroupParticipant" n="default" d="false" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderHousehold" n="default" df="true" d="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderTown" n="default" df="true" d="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderCountry" n="default" df="true" d="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d eid="@AiderUser" n="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderUserRole" n="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderUserScope" n="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderGroupDef" n="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d eid="@AiderFunctionDef" n="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
   </D>
   <G/>
 </meta>
