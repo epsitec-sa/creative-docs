@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.Core.Orchestrators;
@@ -23,13 +25,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			public BrowserNavigationPathElement(BrowserViewController controller, EntityKey entityKey)
 			{
-				this.dataSetName     = controller.DataSetName;
-				this.entityKey       = entityKey;
+				this.dataSetCommandId = controller.DataSetMetadata.Command.Caption.Id;
+				this.entityKey = entityKey;
 			}
 
-			private BrowserNavigationPathElement (string dataSetName, string entityKey)
+			private BrowserNavigationPathElement (Druid dataSetCaptionId, string entityKey)
 			{
-				this.dataSetName = dataSetName;
+				this.dataSetCommandId = dataSetCaptionId;
 				this.entityKey   = EntityKey.Parse (entityKey).Value;
 			}
 
@@ -40,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			public override bool Navigate(NavigationOrchestrator navigator)
 			{
 				var browserViewController = navigator.BrowserViewController;
-				var dataSetMetadata = DataStoreMetadata.Current.FindDataSet (this.dataSetName);
+				var dataSetMetadata = DataStoreMetadata.Current.FindDataSet (this.dataSetCommandId);
 
 				browserViewController.SelectDataSet (dataSetMetadata);
 				browserViewController.SelectEntity (this.entityKey);
@@ -48,10 +50,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				return true;
 			}
-			
+
 			protected override string Serialize()
 			{
-				return string.Concat (BrowserNavigationPathElement.ClassIdPrefix, this.dataSetName, ".", this.entityKey.ToString ());
+				var prefix = BrowserNavigationPathElement.ClassIdPrefix;
+				var id = this.dataSetCommandId.ToCompactString ();
+				var key = this.entityKey.ToString ();
+
+				return string.Concat (prefix, id, ".", key);
 			}
 
 			protected override NavigationPathElement Deserialize(string data)
@@ -63,16 +69,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 					if (pos > 0)
 					{
-						return new BrowserNavigationPathElement (text.Substring (0, pos), text.Substring (pos+1));
+						var commandId = Druid.Parse (text.Substring (0, pos));
+						var entityKey = text.Substring (pos+1);
+						return new BrowserNavigationPathElement (commandId, entityKey);
 					}
 				}
-				
+
 				throw new System.FormatException (string.Format ("Invalid format; expected '{0}<DataSet>.<EntityKey>', got '{1}'", BrowserNavigationPathElement.ClassIdPrefix, data));
 			}
 
 			private const string				ClassIdPrefix = "Browser:";
 
-			private readonly string				dataSetName;
+			private readonly Druid				dataSetCommandId;
 			private readonly EntityKey			entityKey;
 		}
 

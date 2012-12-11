@@ -36,8 +36,10 @@ namespace Epsitec.Aider
 		}
 
 
-		public override IFilter GetAdditionalFilter(System.Type entityType, AbstractEntity example)
+		public override IFilter GetAdditionalFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
 		{
+			var entityType = dataSetMetadata.EntityTableMetadata.EntityType;
+
 			if (entityType == typeof (AiderUserEntity))
 			{
 				return this.GetAiderUserEntityFilter ((AiderUserEntity) example);
@@ -58,7 +60,7 @@ namespace Epsitec.Aider
 			return null;
 		}
 
-		public override IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
+		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
 		{
 			var pattern = this.GetActiveScopePathPattern ();
 
@@ -68,7 +70,9 @@ namespace Epsitec.Aider
 			}
 
 			pattern = AiderGroupIds.ReplacePlaceholders (pattern);
-			
+
+			var entityType = dataSetMetadata.EntityTableMetadata.EntityType;
+
 			if (entityType == typeof (AiderPersonEntity))
 			{
 				return this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern);

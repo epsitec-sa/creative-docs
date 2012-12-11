@@ -1,24 +1,18 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.BigList;
 using Epsitec.Common.BigList.Widgets;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Controllers.CreationControllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
-using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -49,27 +43,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public string							DataSetName
-		{
-			get
-			{
-				return this.dataSetName;
-			}
-		}
-
 		public DataSetMetadata					DataSetMetadata
 		{
 			get
 			{
 				return this.dataSetMetadata;
-			}
-		}
-
-		public System.Type						DataSetEntityType
-		{
-			get
-			{
-				return DataSetGetter.GetRootEntityType (this.dataSetName);
 			}
 		}
 
@@ -80,16 +58,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// <param name="dataSetName">Name of the data set.</param>
 		public void SelectDataSet(DataSetMetadata dataSetMetadata)
 		{
-			var dataSetName = dataSetMetadata.DataSetName;
-
-			if ((this.dataSetName != dataSetName) ||
-				(this.dataSetMetadata != dataSetMetadata))
+			if (this.dataSetMetadata != dataSetMetadata)
 			{
 				this.Orchestrator.ClearActiveEntity ();
 
 				this.DisposeBrowserListController ();
 
-				this.dataSetName     = dataSetName;
 				this.dataSetMetadata = dataSetMetadata;
 				
 				this.CreateBrowserListController ();
@@ -211,7 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.browserListController = new BrowserListController (this.Orchestrator, this.itemScrollList, this.DataSetEntityType, this.DataSetMetadata);
+			this.browserListController = new BrowserListController (this.Orchestrator, this.itemScrollList, this.DataSetMetadata);
 			
 			this.browserListController.CurrentChanged  += this.HandleBrowserListControllerCurrentChanged;
 			this.browserListController.CurrentChanging += this.HandleBrowserListControllerCurrentChanging;
@@ -308,7 +282,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData				data;
-		private string							dataSetName;
 		private DataSetMetadata					dataSetMetadata;
 
 		private FrameBox						topPanel;

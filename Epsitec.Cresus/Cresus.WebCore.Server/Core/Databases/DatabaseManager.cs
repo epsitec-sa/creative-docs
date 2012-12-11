@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Metadata;
 
@@ -141,19 +142,31 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Database GetDatabase(string name)
+		public Database GetDatabase(Druid commandId)
 		{
-			var entityType = Tools.ParseType (name);
-
-			var dataSets = this.dataStore.DataSets;
-			var dataSet = dataSets.FirstOrDefault (d => d.DataSetEntityType == entityType && d.IsDefault);
+			var dataSet = this.dataStore.FindDataSet (commandId);
 
 			if (dataSet == null)
 			{
-				throw new Exception ("The database '" + name + "' does not exist.");
+				var id = commandId.ToCompactString ();
+				
+				throw new Exception ("The database '" + id + "' does not exist.");
 			}
-			
+
 			return this.GetDatabase (dataSet);
+		}
+
+
+		public Druid GetDatabaseCommandId(Type entityType)
+		{
+			var dataSet = this.dataStore.FindDefaultDataSet (entityType);
+
+			if (dataSet == null)
+			{
+				throw new Exception ("The database '" + entityType.FullName + "' does not exist.");
+			}
+
+			return dataSet.Command.Caption.Id;
 		}
 
 

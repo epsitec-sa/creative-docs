@@ -26,7 +26,6 @@ namespace Epsitec.Cresus.Core.Data
 		protected DataSetAccessor(CoreData data, DataSetMetadata dataSetMetadata, IsolatedTransaction isolatedTransaction = null)
 		{
 			this.data            = data;
-			this.entityType      = dataSetMetadata.DataSetEntityType;
 			this.dataSetMetadata = dataSetMetadata;
 			this.dataContext     = this.data.CreateIsolatedDataContext ("DataSetAccessor");
 
@@ -163,20 +162,20 @@ namespace Epsitec.Cresus.Core.Data
 
 			var session = UserManager.Current.ActiveSession;
 
-			var scopeFilter = session.GetScopeFilter (this.entityType, example);
-			var tableSettings = session.GetTableSettings (this.entityType);
-			var additionalFilter = session.GetAdditionalFilter (this.entityType, example);
+			var scopeFilter = session.GetScopeFilter (this.dataSetMetadata, example);
+			var dataSetSettings = session.GetDataSetSettings (this.dataSetMetadata);
+			var additionalFilter = session.GetAdditionalFilter (this.dataSetMetadata, example);
 
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
 			request.AddCondition (this.dataContext, example, scopeFilter);
-			request.AddCondition (this.dataContext, example, tableSettings.Filter);
+			request.AddCondition (this.dataContext, example, dataSetSettings.Filter);
 			request.AddCondition (this.dataContext, example, additionalFilter);
 
 			IEnumerable<SortClause> sortClauses;
 
-			if (tableSettings != null)
+			if (dataSetSettings != null)
 			{
-				var settingsSort = tableSettings.Sort;
+				var settingsSort = dataSetSettings.Sort;
 
 				sortClauses = settingsSort.Select (sc => this.CreateSortClause (sc, example));
 			}
@@ -207,7 +206,6 @@ namespace Epsitec.Cresus.Core.Data
 
 		private readonly CoreData				data;
 		private readonly DataContext			dataContext;
-		private readonly System.Type			entityType;
 		private readonly IsolatedTransaction	isolatedTransaction;
 		private readonly DataSetMetadata		dataSetMetadata;
 		

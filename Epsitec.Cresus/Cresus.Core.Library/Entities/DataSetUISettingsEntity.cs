@@ -12,24 +12,24 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Entities
 {
-	partial class EntityUISettingsEntity
+	partial class DataSetUISettingsEntity
 	{
 		/// <summary>
-		/// Gets the display settings. This will deserialize the settings when accessed
+		/// Gets the table settings. This will deserialize the settings when accessed
 		/// for the first time.
 		/// </summary>
 		[System.Diagnostics.DebuggerBrowsable (System.Diagnostics.DebuggerBrowsableState.Never)]
-		public UserEntityEditionSettings		EditionSettings
+		public UserDataSetSettings			DataSetSettings
 		{
 			get
 			{
 				this.DeserializeSettingsIfNeeded ();
-				return this.editionSettings;
+				return this.dataSetSettings;
 			}
 			set
 			{
 				this.DeserializeSettingsIfNeeded ();
-				this.editionSettings = value ?? new UserEntityEditionSettings (Druid.Parse (this.EntityId));
+				this.dataSetSettings = value ?? new UserDataSetSettings (Druid.Parse (this.DataSetCommandId));
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			get
 			{
-				return this.editionSettings != null;
+				return this.dataSetSettings != null;
 			}
 		}
 
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Entities
 		private void SerializeSettings()
 		{
 			this.SerializedSettings.XmlData = new XElement (Xml.Settings,
-				this.editionSettings == null ? null : this.editionSettings.Save (Xml.EditionSettings));
+				this.dataSetSettings == null ? null : this.dataSetSettings.Save (Xml.DataSetSettings));
 		}
 
 		private void DeserializeSettingsIfNeeded()
@@ -68,11 +68,11 @@ namespace Epsitec.Cresus.Core.Entities
 			if (this.HasSettings == false)
 			{
 				var xml = this.SerializedSettings.IsNull () ? null : this.SerializedSettings.XmlData;
-				var entityId = Druid.Parse (this.EntityId);
+				var dataSetCommandId = Druid.Parse (this.DataSetCommandId);
 
-				this.editionSettings = xml == null
-					? new UserEntityEditionSettings (entityId)
-					: UserEntityEditionSettings.Restore (xml.Element (Xml.EditionSettings));
+				this.dataSetSettings = xml == null
+					? new UserDataSetSettings (dataSetCommandId)
+					: UserDataSetSettings.Restore (xml.Element (Xml.DataSetSettings));
 			}
 		}
 
@@ -80,10 +80,10 @@ namespace Epsitec.Cresus.Core.Entities
 		private static class Xml
 		{
 			public const string					Settings		= "settings";
-			public const string					EditionSettings	= "edition";
+			public const string					DataSetSettings	= "dataSet";
 		}
 
 
-		private UserEntityEditionSettings		editionSettings;
+		private UserDataSetSettings			dataSetSettings;
 	}
 }

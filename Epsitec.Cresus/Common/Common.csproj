@@ -663,7 +663,6 @@
     <Compile Include="Support\Settings.cs" />
     <Compile Include="Support\SimpleCallback`1.cs" />
     <Compile Include="Support\StringPacker.cs" />
-    <Compile Include="Support\StringPluralizer.cs" />
     <Compile Include="Support\Sync.cs" />
     <Compile Include="Support\Tasklet.cs" />
     <Compile Include="Support\TaskletJob.cs" />

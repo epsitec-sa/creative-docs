@@ -17,6 +17,7 @@ function() {
     /* Properties */
 
     databaseName: null,
+
     // This property is supposed to be an object with the following properties:
     // {
     //   displayed: ..., <- the value displayed to the user
@@ -28,7 +29,6 @@ function() {
 
     constructor: function(options) {
       var newOptions = {
-        databaseName: options.entityName,
         onTrigger1Click: this.onClearClick,
         onTrigger2Click: this.onPickClick
       };

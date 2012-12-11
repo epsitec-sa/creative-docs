@@ -31,20 +31,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private string GetName()
 		{
-			return Tools.TypeToString (this.dataSetMetadata.DataSetEntityType);
+			return Tools.DruidToString (this.dataSetMetadata.Command.Caption.Id);
 		}
 
 
 		protected override string GetTitle()
 		{
-			return this.dataSetMetadata.BaseShowCommand.Caption.DefaultLabel;
+			return this.dataSetMetadata.Command.Caption.DefaultLabel;
 		}
 
 
 		protected override string GetIconClass(IconSize iconSize)
 		{
-			var iconUri = this.dataSetMetadata.BaseShowCommand.Caption.Icon;
-			var type = this.dataSetMetadata.DataSetEntityType;
+			var iconUri = this.dataSetMetadata.Command.Caption.Icon;
+			var type = this.dataSetMetadata.EntityTableMetadata.EntityType;
 
 			return IconManager.GetCssClassName (iconUri, iconSize, type);
 		}

@@ -29,12 +29,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetLayout(BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
+			var databaseManager = this.CoreServer.DatabaseManager;
 
 			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
 			var viewMode = Tools.ParseViewMode ((string) parameters.viewMode);
 			var viewId = Tools.ParseViewId ((string) parameters.viewId);
 
-			var entityColumn = Carpenter.BuildEntityColumn (businessContext, caches, entity, viewMode, viewId);
+			var entityColumn = Carpenter.BuildEntityColumn (businessContext, caches, databaseManager, entity, viewMode, viewId);
 			var content = entityColumn.ToDictionary ();
 
 			return CoreResponse.Success (content);

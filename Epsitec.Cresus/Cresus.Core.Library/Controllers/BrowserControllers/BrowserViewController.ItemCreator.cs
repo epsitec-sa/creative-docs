@@ -10,16 +10,12 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
-using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Orchestrators;
-
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -35,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				this.browser      = browser;
 				this.orchestrator = this.browser.Orchestrator;
-				this.dataSetName  = this.browser.DataSetName;
+				this.dataSetEntityId  = this.browser.DataSetMetadata.EntityTableMetadata.EntityId;
 			}
 
 
@@ -112,10 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			private AbstractEntity CreateDummyEntity()
 			{
-				var rootEntityId = this.GetRootEntityId ();
-				var data = this.orchestrator.Data;
-
-				return data.CreateDummyEntity (rootEntityId);
+				return this.orchestrator.Data.CreateDummyEntity (this.dataSetEntityId);
 			}
 
 			private void DisposeDummyEntity(AbstractEntity entity)
@@ -131,7 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				{
 					//	Use a default creator for the root entity :
 
-					creator = (BusinessContext bc) => bc.CreateEntity (this.GetRootEntityId ());
+					creator = (BusinessContext bc) => bc.CreateEntity (this.dataSetEntityId);
 				}
 
 				CoreData        data    = this.orchestrator.Data;
@@ -169,23 +162,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return localEntity;
 			}
 
-			private Druid GetRootEntityId()
-			{
-				var data    = this.orchestrator.Data;
-				Druid druid = DataSetGetter.GetRootEntityId (this.dataSetName);
-
-				if (druid.IsEmpty)
-				{
-					throw new System.NotImplementedException (string.Format ("Support for entities belonging to data set {0} is not implemented", this.dataSetName));
-				}
-
-				return druid;
-			}
-
 			
 			private readonly BrowserViewController	browser;
 			private readonly DataViewOrchestrator	orchestrator;
-			private readonly string					dataSetName;
+			private readonly Druid					dataSetEntityId;
 		}
 	}
 }

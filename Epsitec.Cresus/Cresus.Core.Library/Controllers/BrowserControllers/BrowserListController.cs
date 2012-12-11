@@ -7,8 +7,6 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.DataLayer.Expressions;
-
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.Core.Entities;
@@ -23,15 +21,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListController : System.IDisposable
 	{
-		public BrowserListController(DataViewOrchestrator orchestrator, ItemScrollList scrollList, System.Type dataSetType, DataSetMetadata metadata)
+		public BrowserListController(DataViewOrchestrator orchestrator, ItemScrollList scrollList, DataSetMetadata metadata)
 		{
 			this.orchestrator    = orchestrator;
 			this.data            = orchestrator.Data;
 			this.itemScrollList  = scrollList;
-			this.dataSetType     = dataSetType;
 			this.dataSetMetadata = metadata;
-			
-			this.dataContext     = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+
+			var entityType		 = metadata.EntityTableMetadata.EntityType.Name;
+			var dataContextName	 = string.Format ("Browser.DataSet={0}", entityType);
+			this.dataContext     = this.data.CreateDataContext (dataContextName);
 
 			this.suspendUpdates  = new SafeCounter ();
 			this.context         = new BrowserListContext ();
@@ -176,7 +175,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetUpItemList()
 		{
-			this.collectionEntityId = EntityInfo.GetTypeId (this.dataSetType);
+			this.collectionEntityId = this.dataSetMetadata.EntityTableMetadata.EntityId;
 			this.UpdateAccessor ();
 			this.UpdateContentSortOrder ();
 			
@@ -232,7 +231,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private DataSetAccessor GetContentAccessor()
 		{
 			var component = this.data.GetComponent<DataSetGetter> ();
-			var accessor  = component.ResolveAccessor (this.dataSetType, this.dataSetMetadata);
+			var accessor  = component.ResolveAccessor (this.dataSetMetadata);
 
 			return accessor;
 		}
@@ -313,7 +312,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly DataViewOrchestrator	orchestrator;
 		private readonly CoreData				data;
 		private readonly ItemScrollList			itemScrollList;
-		private readonly System.Type			dataSetType;
 		private readonly DataSetMetadata		dataSetMetadata;
 		private readonly DataContext			dataContext;
 		private readonly SafeCounter			suspendUpdates;

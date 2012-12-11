@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyModules;
 
@@ -31,25 +32,26 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		private Carpenter(BusinessContext businessContext, Caches caches, AbstractEntity entity)
+		private Carpenter(BusinessContext businessContext, Caches caches, DatabaseManager databaseManager, AbstractEntity entity)
 		{
 			this.businessContext = businessContext;
 			this.caches = caches;
+			this.databaseManager = databaseManager;
 			this.entity = entity;
 		}
 
 
-		public static EntityColumn BuildEntityColumn(BusinessContext businessContext, Caches caches, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static EntityColumn BuildEntityColumn(BusinessContext businessContext, Caches caches, DatabaseManager databaseManager, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			var carpenter = new Carpenter (businessContext, caches, entity);
+			var carpenter = new Carpenter (businessContext, caches, databaseManager, entity);
 
 			return carpenter.BuildEntityColumn (viewMode, viewId);
 		}
 
 
-		public static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static IEnumerable<AbstractTile> BuildTiles(BusinessContext businessContext, Caches caches, DatabaseManager databaseManager, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
 		{
-			var carpenter = new Carpenter (businessContext, caches, entity);
+			var carpenter = new Carpenter (businessContext, caches, databaseManager, entity);
 
 			return carpenter.BuildTiles (viewMode, viewId);
 		}
@@ -378,7 +380,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
 			{
 				var includedEntity = Carpenter.GetIncludedEntity (tileEntity, includeProperty);
-				var includedTiles = Carpenter.BuildTiles (this.businessContext, this.caches, includedEntity, ViewControllerMode.Edition, null);
+				var includedTiles = Carpenter.BuildTiles (this.businessContext, this.caches, this.databaseManager, includedEntity, ViewControllerMode.Edition, null);
 
 				foreach (var includedTile in includedTiles)
 				{
@@ -547,7 +549,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			field.Values = fieldValue.Select (e => this.BuildEntityValue (e)).ToList ();
 
 			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
-			field.TypeName = Tools.TypeToString (castedAccessor.CollectionType);
+			field.DatabaseName = this.GetDatabaseName (castedAccessor.CollectionType);
 
 			return field;
 		}
@@ -559,7 +561,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			var fieldValue = (AbstractEntity) propertyAccessor.GetValue (entity);
 			field.Value = this.BuildEntityValue (fieldValue);
-			field.TypeName = Tools.TypeToString (propertyAccessor.Type);
+
+			field.DatabaseName = this.GetDatabaseName (propertyAccessor.Type);
 
 			return field;
 		}
@@ -760,7 +763,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var fieldValue = (IEnumerable<AbstractEntity>) Carpenter.GetValue (entity, brick);
 			field.Values = fieldValue.Select (v => this.BuildEntityValue (v)).ToList ();
 
-			field.TypeName = Tools.TypeToString (actionFieldType.GetGenericArguments ().Single ());
+			var entityType = actionFieldType.GetGenericArguments ().Single ();
+			field.DatabaseName = this.GetDatabaseName (entityType);
 
 			return field;
 		}
@@ -773,7 +777,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var fieldValue = (AbstractEntity) Carpenter.GetValue (entity, brick);
 			field.Value = this.BuildEntityValue (fieldValue);
 
-			field.TypeName = Tools.TypeToString (actionFieldType);
+			field.DatabaseName = this.GetDatabaseName (actionFieldType);
 
 			return field;
 		}
@@ -1034,10 +1038,21 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		private string GetDatabaseName(Type entityType)
+		{
+			var commandId = this.databaseManager.GetDatabaseCommandId (entityType);
+
+			return Tools.DruidToString (commandId);
+		}
+
+
 		private readonly BusinessContext businessContext;
 
 
 		private readonly Caches caches;
+
+
+		private readonly DatabaseManager databaseManager;
 
 
 		private readonly AbstractEntity entity;

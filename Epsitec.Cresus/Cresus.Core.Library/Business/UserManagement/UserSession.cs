@@ -52,32 +52,32 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
-		public UserEntityTableSettings GetTableSettings(System.Type entityType)
+		public UserDataSetSettings GetDataSetSettings(DataSetMetadata dataSet)
 		{
 			var context = this.userManager.BusinessContext;
 
-			return this.GetEntityUISettingsEntity (entityType, context).TableSettings;
+			return this.GetDataSetUISettingsEntity (dataSet, context).DataSetSettings;
 		}
 
-		public void SetTableSettings(System.Type entityType, UserEntityTableSettings settings)
+		public void SetDataSetSettings(DataSetMetadata dataSet, UserDataSetSettings settings)
 		{
 			var context = this.userManager.BusinessContext;
 
-			var entitySettings = this.GetEntityUISettingsEntity (entityType, context);
+			var entitySettings = this.GetDataSetUISettingsEntity (dataSet, context);
 
-			entitySettings.TableSettings = settings;
+			entitySettings.DataSetSettings = settings;
 			entitySettings.PersistSettings (context);
 
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 
 
-		public virtual IFilter GetAdditionalFilter(System.Type entityType, AbstractEntity example)
+		public virtual IFilter GetAdditionalFilter(DataSetMetadata dataSet, AbstractEntity example)
 		{
 			return null;
 		}
 
-		public virtual IFilter GetScopeFilter(System.Type entityType, AbstractEntity example)
+		public virtual IFilter GetScopeFilter(DataSetMetadata dataSet, AbstractEntity example)
 		{
 			return null;
 		}
@@ -110,15 +110,8 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 		}
 
-		private EntityUISettingsEntity GetEntityUISettingsEntity(System.Type entityType, BusinessContext context = null)
+		private DataSetUISettingsEntity GetDataSetUISettingsEntity(DataSetMetadata dataSet, BusinessContext context = null)
 		{
-			var entityId = EntityInfo.GetTypeId (entityType);
-
-			if (entityId.IsEmpty)
-			{
-				return null;
-			}
-
 			var softwareSettings = this.SoftwareUISettings;
 
 			if (softwareSettings == null)
@@ -126,21 +119,23 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return null;
 			}
 
-			var entityIdString = entityId.ToCompactString ();
-			var entitySettings = softwareSettings.EntityUISettings.FirstOrDefault (x => x.EntityId == entityIdString);
+			var commandId = dataSet.Command.Caption.Id;
+			var commandIdString = commandId.ToCompactString ();
+			
+			var dataSetSettings = softwareSettings
+				.DataSetUISettings
+				.FirstOrDefault (x => x.DataSetCommandId == commandIdString);
 
-			if ((entitySettings == null) &&
-				(context != null))
+			if (dataSetSettings == null && context != null)
 			{
-				entitySettings = context.CreateEntity<EntityUISettingsEntity> ();
-				entitySettings.EntityId = entityIdString;
-				entitySettings.TableSettings = new UserEntityTableSettings (entityId);
-				entitySettings.EditionSettings = new UserEntityEditionSettings (entityId);
+				dataSetSettings = context.CreateEntity<DataSetUISettingsEntity> ();
+				dataSetSettings.DataSetCommandId = commandIdString;
+				dataSetSettings.DataSetSettings = new UserDataSetSettings (commandId);
 
-				softwareSettings.EntityUISettings.Add (entitySettings);
+				softwareSettings.DataSetUISettings.Add (dataSetSettings);
 			}
 
-			return entitySettings;
+			return dataSetSettings;
 		}
 
 

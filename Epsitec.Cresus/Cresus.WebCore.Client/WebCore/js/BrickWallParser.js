@@ -233,7 +233,7 @@ function() {
 
         field.xtype = 'epsitec.entitycollectionfield';
         field.values = brick.value;
-        field.entityName = brick.entityName;
+        field.databaseName = brick.databaseName;
 
         return field;
       },
@@ -243,7 +243,7 @@ function() {
 
         field.xtype = 'epsitec.entityreferencefield';
         field.value = brick.value;
-        field.entityName = brick.entityName;
+        field.databaseName = brick.databaseName;
 
         return field;
       },

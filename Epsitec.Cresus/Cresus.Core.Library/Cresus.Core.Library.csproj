@@ -281,6 +281,7 @@
     <Compile Include="Entities\ContactGroupEntity.cs" />
     <Compile Include="Entities\ContactPersonEntity.cs" />
     <Compile Include="Entities\ContactPersonGroupEntity.cs" />
+    <Compile Include="Entities\DataSetUISettingsEntity.cs" />
     <Compile Include="Entities\CountryEntity.cs" />
     <Compile Include="Entities\CurrencyEntity.cs" />
     <Compile Include="Entities\DocumentCategoryEntity.cs" />
@@ -340,7 +341,7 @@
     <Compile Include="Helpers\EntityPreviewHelper.cs" />
     <Compile Include="IChartProvider.cs" />
     <Compile Include="Library\CoreInteractiveApp.cs" />
-    <Compile Include="Library\Settings\UserEntityTableSettings.cs" />
+    <Compile Include="Library\Settings\UserDataSetSettings.cs" />
     <Compile Include="Library\Settings\UserFilterSettings.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />
     <Compile Include="Library\ViewControllerComponent`1.cs" />

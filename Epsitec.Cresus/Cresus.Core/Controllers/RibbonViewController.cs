@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			foreach (var dataset in metadata.DataSets.Where (x => x.DisplayGroupId.IsEmpty && x.IsDisplayed))
 			{
-				section.Children.Add (this.CreateButton (dataset.BaseShowCommand));
+				section.Children.Add (this.CreateButton (dataset.Command));
 			}
 
 			this.CreateRibbonDatabaseSectionMenuButton (section);
@@ -838,7 +838,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			foreach (var dataSet in meta.DataSets.Where (x => x.DisplayGroupId.IsValid && x.IsDisplayed && x.MatchesAnyUserRole (roles)))
 			{
 				var caption = Epsitec.Common.Support.EntityEngine.SafeResourceResolver.Instance.GetCaption (dataSet.DisplayGroupId);
-				yield return new SubMenuItem (dataSet.BaseShowCommand, caption);
+				yield return new SubMenuItem (dataSet.Command, caption);
 			}
 
 

@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			public static readonly Epsitec.Common.Types.EnumType UserAuthenticationMethod = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
 			//	designer:cap/AVAE
 			public static readonly Epsitec.Common.Types.EnumType UserPowerLevel = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+			//	designer:cap/AVG002
+			public static readonly Epsitec.Common.Types.StructuredType DataSetUISettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 0));
 			//	designer:cap/AVAR
 			public static readonly Epsitec.Common.Types.StructuredType EntityUISettings = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 			//	designer:cap/AVAU
@@ -146,6 +148,18 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		
 		public static class Fields
 		{
+			public static class DataSetUISettings
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/AVG102
+				public static readonly global::Epsitec.Common.Support.Druid DataSetCommandId = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1);
+				//	designer:cap/AVG202
+				public static readonly global::Epsitec.Common.Support.Druid SerializedSettings = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 2);
+			}
+			
 			public static class EntityUISettings
 			{
 				internal static void _Initialize()
@@ -164,6 +178,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 				{
 				}
 				
+				//	designer:cap/AVG302
+				public static readonly global::Epsitec.Common.Support.Druid DataSetUISettings = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3);
 				//	designer:cap/AVAV
 				public static readonly global::Epsitec.Common.Support.Druid EntityUISettings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31);
 				//	designer:cap/AVA01
@@ -268,6 +284,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			Values._Initialize ();
 			Values.UserAuthenticationMethod._Initialize ();
 			Values.UserPowerLevel._Initialize ();
+			Fields.DataSetUISettings._Initialize ();
 			Fields.EntityUISettings._Initialize ();
 			Fields.SoftwareUISettings._Initialize ();
 			Fields.SoftwareUser._Initialize ();

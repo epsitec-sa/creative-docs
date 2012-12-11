@@ -4,7 +4,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Metadata;
@@ -69,18 +68,12 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			
 			this.OnChanged ();
 		}
-
-		private static string GetDataSetName(string commandName)
-		{
-			System.Diagnostics.Debug.Assert (commandName.StartsWith (DatabaseCommandHandler.ShowDatabaseCommandPrefix), string.Format ("Command {0} does not start with the expected {1} prefix", commandName, DatabaseCommandHandler.ShowDatabaseCommandPrefix));
-
-			return commandName.Substring (DatabaseCommandHandler.ShowDatabaseCommandPrefix.Length);
-		}
 		
-		private void UpdateActiveCommandState(string dataSetName)
-		{
-			var commandName  = string.Concat (DatabaseCommandHandler.ShowDatabaseCommandPrefix, dataSetName);
-			var commandState = this.databaseCommandStates.Where (state => state.Command.Name == commandName).FirstOrDefault ();
+		private void UpdateActiveCommandState(DataSetMetadata dataSetMetadata)
+		{			
+			var commandState = this.databaseCommandStates
+				.Where (state => state.Command == dataSetMetadata.Command)
+				.FirstOrDefault ();
 
 			if (commandState != null)
 			{
@@ -121,7 +114,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 			if (controller != null)
 			{
-				this.UpdateActiveCommandState (controller.DataSetName);
+				this.UpdateActiveCommandState (controller.DataSetMetadata);
 			}
 		}
 
@@ -131,7 +124,6 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 
 		private static readonly string DatabaseSelectionGroup = "DatabaseSelection";
-		private static readonly string ShowDatabaseCommandPrefix = "Base.Show";
 
 		private readonly CoreCommandDispatcher	commandDispatcher;
 		private readonly HashSet<CommandState>	databaseCommandStates;

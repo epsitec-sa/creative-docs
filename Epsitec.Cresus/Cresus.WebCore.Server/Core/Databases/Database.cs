@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			var flags = BindingFlags.NonPublic | BindingFlags.Static;
 			var method = typeof (Database).GetMethod ("CreateEntityImplementation", flags);
-			var genericMethod = method.MakeGenericMethod (this.DataSetMetadata.DataSetEntityType);
+			var genericMethod = method.MakeGenericMethod (this.DataSetMetadata.EntityTableMetadata.EntityType);
 			var arguments = new object[] { businessContext };
 
 			return (AbstractEntity) genericMethod.Invoke (null, arguments);

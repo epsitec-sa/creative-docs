@@ -39,6 +39,18 @@ namespace Epsitec.Cresus.WebCore.Server
 			return type.AssemblyQualifiedName;
 		}
 
+
+		public static Druid ParseDruid(string value)
+		{
+			return Druid.Parse (value);
+		}
+
+
+		public static string DruidToString(Druid value)
+		{
+			return value.ToCompactString ();
+		}
+
 		
 		public static ViewControllerMode ParseViewMode(string value)
 		{

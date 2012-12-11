@@ -5,7 +5,6 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
@@ -20,16 +19,20 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public class DataSetMetadata : CoreMetadata
 	{
-		public DataSetMetadata(Druid entityId, string name, bool isDefault, bool isDisplayed)
+		public DataSetMetadata(Druid commandId, Druid tableEntityId, string tableName, bool isDefault, bool isDisplayed)
 		{
-			this.entityId = entityId;
-			this.name = name;
+			this.command = Command.Find (commandId);
+
+			if (this.command == null)
+			{
+				var message = string.Format ("Show command '{0}' could not be located.", commandId);
+				throw new System.ArgumentException (message);
+			}
+
+			this.tableEntityId = tableEntityId;
+			this.tableName = tableName;
 			this.isDefault = isDefault;
 			this.isDisplayed = isDisplayed;
-
-			this.dataSetName = EntityInfo.GetStructuredType (entityId).Caption.Name;
-			this.dataSetEntityType = DataSetGetter.GetRootEntityType (this.dataSetName);
-			this.baseShowCommand   = DataSetMetadata.ResolveShowCommand (this.dataSetName);
 
 			this.userRoles = new List<string> ();
 		}
@@ -37,8 +40,9 @@ namespace Epsitec.Cresus.Core.Metadata
 		public DataSetMetadata(IDictionary<string, string> data)
 			: this
 		(
-			Druid.Parse (data[Strings.EntityId]),
-			data[Strings.Name],
+			Druid.Parse(data[Strings.CommandId]),
+			Druid.Parse (data[Strings.TableEntityId]),
+			data[Strings.TableName],
 			bool.Parse (data[Strings.IsDefault]),
 			bool.Parse (data[Strings.IsDisplayed])
 		)
@@ -46,20 +50,30 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.DefineDisplayGroup (Druid.Parse (data[Strings.DisplayGroup]));
 		}
 
-		
-		public string							Name
+
+
+
+		public Command							Command
 		{
 			get
 			{
-				return this.name;
+				return this.command;
 			}
 		}
 
-		public Druid							EntityId
+		public Druid							TableEntityId
 		{
 			get
 			{
-				return this.entityId;
+				return this.tableEntityId;
+			}
+		}
+		
+		public string							TableName
+		{
+			get
+			{
+				return this.tableName;
 			}
 		}
 
@@ -79,35 +93,11 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public string							DataSetName
+		public IList<string> UserRoles
 		{
 			get
 			{
-				return this.dataSetName;
-			}
-		}
-
-		public System.Type						DataSetEntityType
-		{
-			get
-			{
-				return this.dataSetEntityType;
-			}
-		}
-
-		public Command							BaseShowCommand
-		{
-			get
-			{
-				return this.baseShowCommand;
-			}
-		}
-
-		public string							EntityIconUri
-		{
-			get
-			{
-				return IconProvider.GetEntityIconUri ("Base." + this.DataSetName, this.DataSetEntityType);
+				return this.userRoles;
 			}
 		}
 
@@ -116,14 +106,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			get
 			{
 				return this.displayGroupCaptionId;
-			}
-		}
-
-		public IList<string>					UserRoles
-		{
-			get
-			{
-				return this.userRoles;
 			}
 		}
 
@@ -207,29 +189,19 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			metadata.userRoles.AddRange (roles);
 			metadata.DefineFilter (EntityFilter.Restore (filter));
-			metadata.DefineEntityTableMetadata (tables.Single (t => t.Name == metadata.Name && t.EntityId == metadata.EntityId));
+			metadata.DefineEntityTableMetadata (tables.Single (t => t.Name == metadata.TableName && t.EntityId == metadata.TableEntityId));
 
 			return metadata;
 		}
 
 		private void Serialize(List<XAttribute> attributes)
 		{
-			attributes.Add (new XAttribute (Strings.EntityId, this.entityId.ToCompactString ()));
-			attributes.Add (new XAttribute (Strings.Name, this.name));
+			attributes.Add (new XAttribute (Strings.CommandId, this.command.Caption.Id.ToCompactString ()));
+			attributes.Add (new XAttribute (Strings.TableEntityId, this.tableEntityId.ToCompactString ()));
+			attributes.Add (new XAttribute (Strings.TableName, this.tableName));
 			attributes.Add (new XAttribute (Strings.IsDefault, this.isDefault.ToString ()));
 			attributes.Add (new XAttribute (Strings.IsDisplayed, this.isDisplayed.ToString ()));
 			attributes.Add (new XAttribute (Strings.DisplayGroup, this.displayGroupCaptionId.ToCompactString ()));
-		}
-
-
-		private static Command ResolveShowCommand(string dataSetName)
-		{
-			var showName = "Base.Show" + dataSetName;
-			var showCmd  = Command.FindByName (showName);
-
-			System.Diagnostics.Debug.Assert (showCmd != null, string.Format ("Show command could not be located for data set '{0}'", dataSetName));
-
-			return showCmd;
 		}
 
 
@@ -237,8 +209,9 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private static class Strings
 		{
-			public static readonly string		EntityId = "eid";
-			public static readonly string		Name = "n";
+			public static readonly string		CommandId = "cid";
+			public static readonly string		TableEntityId = "teid";
+			public static readonly string		TableName = "tn";
 			public static readonly string		IsDefault = "df";
 			public static readonly string		IsDisplayed = "d";
 			public static readonly string		DisplayGroup = "dg";
@@ -250,13 +223,11 @@ namespace Epsitec.Cresus.Core.Metadata
 		#endregion
 
 
-		private readonly Druid					entityId;
-		private readonly string					name;
+		private readonly Command				command;
+		private readonly Druid					tableEntityId;
+		private readonly string					tableName;
 		private readonly bool					isDefault;
 		private readonly bool					isDisplayed;
-		private readonly string					dataSetName;
-		private readonly System.Type			dataSetEntityType;
-		private readonly Command				baseShowCommand;
 		private readonly List<string>			userRoles;
 
 		private Druid							displayGroupCaptionId;

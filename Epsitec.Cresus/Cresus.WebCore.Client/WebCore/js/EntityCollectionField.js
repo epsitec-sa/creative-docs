@@ -46,7 +46,7 @@ function() {
         width: '100%',
         minHeight: '50',
         maxHeight: '150',
-        databaseName: options.entityName
+        databaseName: options.databaseName
       });
     },
 

@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var mode = this.browserSettingsMode;
 
-			if (string.IsNullOrEmpty (this.browserViewController.DataSetName))
+			if (this.browserViewController.DataSetMetadata == null)
 			{
 				mode = BrowserSettingsMode.Disabled;
 			}

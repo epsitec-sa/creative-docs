@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -67,8 +68,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetDatabase(dynamic parameters)
 		{
-			string databaseName = parameters.name;
-			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
+			var databaseCommandId = Tools.ParseDruid ((string) parameters.name);
+			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
 
 			var content = database.GetDataDictionary (this.CoreServer.Caches);
 
@@ -137,13 +138,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetData(WorkerApp workerApp, dynamic parameters, Func<dynamic, DataSetAccessor, Core.Databases.Database, Response> responseGetter)
 		{
-			string databaseName = parameters.name;
-			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
-
-			var entityType = database.DataSetMetadata.DataSetEntityType;
+			var databaseCommandId = Tools.ParseDruid ((string) parameters.name);
+			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
 
 			var session = workerApp.UserManager.ActiveSession;
-			var settings = session.GetTableSettings (entityType);
+			var settings = session.GetDataSetSettings (database.DataSetMetadata);
 
 			string sort = DatabaseModule.GetOptionalParameter (Request.Query.sort);
 			var sorters = this.ParseSorters (database, sort);
@@ -156,7 +155,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			settings.Filter = entityFilter;
 
-			session.SetTableSettings (entityType, settings);
+			session.SetDataSetSettings (database.DataSetMetadata, settings);
 
 			var dataSetGetter = workerApp.DataSetGetter;
 
@@ -215,7 +214,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private EntityFilter ParseEntityFilter(Core.Databases.Database database, string filterParameter)
 		{
-			var entityType = database.DataSetMetadata.DataSetEntityType;
+			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
 			var entityId = EntityInfo.GetTypeId (entityType);
 			var entityFilter = new EntityFilter (entityId);
 
@@ -438,8 +437,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response CreateEntity(BusinessContext businessContext)
 		{
-			string databaseName = Request.Form.databaseName;
-			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseName);
+			var databaseCommandId = Tools.ParseDruid ((string) Request.Form.databaseName);
+			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
 
 			var dataContext = businessContext.DataContext;
 

@@ -47,15 +47,6 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-
-		public System.Type						DataSetEntityType
-		{
-			get
-			{
-				return EntityInfo.GetType (this.entityId);
-			}
-		}
-
 		public IList<EntityColumnMetadata>		Columns
 		{
 			get
@@ -63,12 +54,13 @@ namespace Epsitec.Cresus.Core.Metadata
 				return this.columns;
 			}
 		}
-		
-		public int								ColumnCount
+
+
+		public System.Type EntityType
 		{
 			get
 			{
-				return this.columns.Count;
+				return EntityInfo.GetType (this.entityId);
 			}
 		}
 

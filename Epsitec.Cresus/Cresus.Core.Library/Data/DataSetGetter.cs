@@ -1,20 +1,14 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.DataLayer.Context;
-
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Metadata;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -29,82 +23,31 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
-
 		public DataSetAccessor ResolveAccessor(DataSetMetadata metadata)
 		{
-			return this.ResolveAccessor (metadata.DataSetEntityType, metadata);
-		}
-
-		public DataSetAccessor ResolveAccessor(System.Type entityType, DataSetMetadata metadata)
-		{
-			return Resolver.ResolveAccessor (this.Host, entityType, metadata);
-		}
-		
-		public static Druid GetRootEntityId(string dataSetName)
-		{
-			return DataSetGetter.FindEntityId (dataSetName);
-		}
-
-		public static System.Type GetRootEntityType(string dataSetName)
-		{
-			return EntityInfo.GetType (DataSetGetter.GetRootEntityId (dataSetName));
-		}
-		
-		private static Druid FindEntityId(string dataSetName)
-		{
-			var type = DataSetGetter.FindStructuredType (dataSetName);
-			var entityId = type == null ? Druid.Empty : type.CaptionId;
-
-			if (entityId.IsEmpty)
-			{
-				throw new System.ArgumentException (string.Format ("The data set {0} cannot be mapped to any entity", dataSetName));
-			}
-
-			return entityId;
-		}
-		
-		private static StructuredType FindStructuredType(string dataSetName)
-		{
-			var types = from type in Infrastructure.GetManagedEntityStructuredTypes ()
-						where type.Flags.HasFlag (StructuredTypeFlags.StandaloneDisplay)
-						select new
-						{
-							Name = type.Caption.Name,
-							Type = type
-						};
-
-
-			foreach (var type in types)
-			{
-				if ((type.Name == dataSetName) ||
-					(StringPluralizer.GuessPluralForms (type.Name).Contains (dataSetName)))
-				{
-					return type.Type;
-				}
-			}
-
-			return null;
+			return Resolver.ResolveAccessor (this.Host, metadata);
 		}
 
 		#region Resolver Class
 
 		private abstract class Resolver
 		{
-			public static DataSetAccessor ResolveAccessor(CoreData data, System.Type entityType, DataSetMetadata metadata)
+			public static DataSetAccessor ResolveAccessor(CoreData data, DataSetMetadata metadata)
 			{
-				var resolver = Resolver.GetResolver (entityType);
-				return resolver.ResolveAccessor (data, metadata);
+				var resolver = Resolver.GetResolver (metadata);
+
+				return resolver.ResolveGenericAccessor (data, metadata);
 			}
 
 
-			protected abstract DataSetAccessor ResolveAccessor(CoreData data, DataSetMetadata metadata);
+			protected abstract DataSetAccessor ResolveGenericAccessor(CoreData data, DataSetMetadata metadata);
 
 			
-			private static Resolver GetResolver(System.Type entityType)
+			private static Resolver GetResolver(DataSetMetadata metadata)
 			{
-				System.Diagnostics.Debug.Assert (entityType != null);
-
-				return SingletonFactory.GetSingleton<Resolver> (typeof (Implementation<>), entityType);
+				var type = metadata.EntityTableMetadata.EntityType;
+				
+				return SingletonFactory.GetSingleton<Resolver> (typeof (Implementation<>), type);
 			}
 			
 
@@ -113,7 +56,7 @@ namespace Epsitec.Cresus.Core.Data
 			private sealed class Implementation<T> : Resolver
 				where T : AbstractEntity, new ()
 			{
-				protected override DataSetAccessor ResolveAccessor(CoreData data, DataSetMetadata metadata)
+				protected override DataSetAccessor ResolveGenericAccessor(CoreData data, DataSetMetadata metadata)
 				{
 					return new DataSetAccessor<T> (data, metadata);
 				}

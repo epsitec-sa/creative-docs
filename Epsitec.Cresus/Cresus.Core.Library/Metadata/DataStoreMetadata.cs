@@ -2,8 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
@@ -129,14 +127,22 @@ namespace Epsitec.Cresus.Core.Metadata
 			return this.tables.FirstOrDefault (x => x.EntityId == entityId);
 		}
 
-		public DataSetMetadata FindDataSet(string name)
+		public DataSetMetadata FindDefaultDataSet(System.Type entityType)
 		{
-			return this.dataSets.FirstOrDefault (x => x.DataSetName == name && x.IsDefault);
+			return this.dataSets.FirstOrDefault
+			(
+				x => x.EntityTableMetadata.EntityType == entityType && x.IsDefault
+			);
 		}
 
 		public DataSetMetadata FindDataSet(Command command)
 		{
-			return this.dataSets.FirstOrDefault (x => x.BaseShowCommand == command && x.IsDefault);
+			return this.FindDataSet (command.Caption.Id);
+		}
+
+		public DataSetMetadata FindDataSet(Druid commandId)
+		{
+			return this.dataSets.FirstOrDefault (x => x.Command.Caption.Id == commandId);
 		}
 
 

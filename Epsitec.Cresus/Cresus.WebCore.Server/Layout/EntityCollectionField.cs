@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public string TypeName
+		public string DatabaseName
 		{
 			get;
 			set;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var brick = base.ToDictionary ();
 
-			brick["entityName"] = this.TypeName;
+			brick["databaseName"] = this.DatabaseName;
 
 			return brick;
 		}

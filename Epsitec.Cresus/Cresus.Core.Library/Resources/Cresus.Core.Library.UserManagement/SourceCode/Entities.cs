@@ -9,6 +9,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVA2]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUserRoleEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVAR]", typeof (Epsitec.Cresus.Core.Entities.EntityUISettingsEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[AVAU]", typeof (Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[AVG002]", typeof (Epsitec.Cresus.Core.Entities.DataSetUISettingsEntity))]
 #region Epsitec.Cresus.Core.SoftwareUser Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -693,6 +694,18 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DataSetUISettings</c> field.
+		///	designer:fld/AVAU/AVG302
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVG302]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.DataSetUISettingsEntity> DataSetUISettings
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.DataSetUISettingsEntity> ("[AVG302]");
+			}
+		}
+		///	<summary>
 		///	The <c>SerializedCommandSetSettings</c> field.
 		///	designer:fld/AVAU/AVA01
 		///	</summary>
@@ -732,6 +745,89 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<SoftwareUISettingsEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.DataSetUISettings Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>DataSetUISettings</c> entity.
+	///	designer:cap/AVG002
+	///	</summary>
+	public partial class DataSetUISettingsEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>DataSetCommandId</c> field.
+		///	designer:fld/AVG002/AVG102
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVG102]")]
+		public string DataSetCommandId
+		{
+			get
+			{
+				return this.GetField<string> ("[AVG102]");
+			}
+			set
+			{
+				string oldValue = this.DataSetCommandId;
+				if (oldValue != value || !this.IsFieldDefined("[AVG102]"))
+				{
+					this.OnDataSetCommandIdChanging (oldValue, value);
+					this.SetField<string> ("[AVG102]", oldValue, value);
+					this.OnDataSetCommandIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SerializedSettings</c> field.
+		///	designer:fld/AVG002/AVG202
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[AVG202]")]
+		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedSettings
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVG202]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedSettings;
+				if (oldValue != value || !this.IsFieldDefined("[AVG202]"))
+				{
+					this.OnSerializedSettingsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVG202]", oldValue, value);
+					this.OnSerializedSettingsChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDataSetCommandIdChanging(string oldValue, string newValue);
+		partial void OnDataSetCommandIdChanged(string oldValue, string newValue);
+		partial void OnSerializedSettingsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedSettingsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DataSetUISettingsEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.DataSetUISettingsEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1002, 80, 0);	// [AVG002]
+		public static readonly string EntityStructuredTypeKey = "[AVG002]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<DataSetUISettingsEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

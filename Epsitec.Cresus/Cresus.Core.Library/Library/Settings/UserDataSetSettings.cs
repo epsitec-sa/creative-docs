@@ -11,21 +11,21 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.Library.Settings
 {
-	public sealed class UserEntityTableSettings : IXmlNodeClass
+	public sealed class UserDataSetSettings : IXmlNodeClass
 	{
-		public UserEntityTableSettings(Druid entityId)
+		public UserDataSetSettings(Druid dataSetCommandId)
 		{
-			this.entityId = entityId;
-			this.sort     = new List<ColumnRef<EntityColumnSort>> ();
-			this.display  = new List<ColumnRef<EntityColumnDisplay>> ();
+			this.dataSetCommandId = dataSetCommandId;
+			this.sort             = new List<ColumnRef<EntityColumnSort>> ();
+			this.display          = new List<ColumnRef<EntityColumnDisplay>> ();
 		}
 
 		
-		public Druid									EntityId
+		public Druid									DataSetCommandId
 		{
 			get
 			{
-				return this.entityId;
+				return this.dataSetCommandId;
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				: this.filter.Save (Xml.FilterItem);
 
 			return new XElement (xmlNodeName,
-				new XAttribute (Xml.EntityId, this.entityId.ToCompactString ()),
+				new XAttribute (Xml.DataSetCommandId, this.dataSetCommandId.ToCompactString ()),
 				new XElement (Xml.SortColumnList, this.sort.Select (x => x.Save (Xml.SortColumnItem))),
 				xmlFilter,
 				new XElement (Xml.DisplayColumnList, this.display.Select (x => x.Save (Xml.DisplayColumnItem))));
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		#endregion
 
-		public static UserEntityTableSettings Restore(XElement xml)
+		public static UserDataSetSettings Restore(XElement xml)
 		{
 			if (xml == null)
 			{
@@ -99,8 +99,8 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			 * 
 			 */
 
-			var entityId = Druid.Parse (xml.Attribute (Xml.EntityId));
-			var settings = new UserEntityTableSettings (entityId);
+			var dataSetCommandId = Druid.Parse (xml.Attribute (Xml.DataSetCommandId));
+			var settings = new UserDataSetSettings (dataSetCommandId);
 
 			settings.sort.AddRange (xml.Element (Xml.SortColumnList).Elements ().Select (x => ColumnRef.Restore<EntityColumnSort> (x)));
 
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 
 		private static class Xml
 		{
-			public const string					EntityId		   = "id";
+			public const string					DataSetCommandId   = "id";
 			public const string					SortColumnList     = "S";
 			public const string					SortColumnItem     = "s";
 			public const string					FilterItem		   = "f";
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		}
 
 
-		private readonly Druid									entityId;
+		private readonly Druid									dataSetCommandId;
 		private readonly List<ColumnRef<EntityColumnSort>>		sort;
 		private readonly List<ColumnRef<EntityColumnDisplay>>	display;
 		private EntityFilter									filter;
