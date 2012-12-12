@@ -91,14 +91,28 @@ namespace Epsitec.Cresus.Core.Resolvers
 			System.Type match;
 
 			var baseTypePrefix = EntityViewControllerResolver.GetViewControllerPrefix (mode);
-			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController`1");
-
-			//	Find all concrete classes which use either the generic SummaryViewController or the
-			//	generic EditionViewController base classes, which match the entity type (usually,
-			//	there should be exactly one such type).
+			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController");
+			var entityViewControllerType = typeof (EntityViewController);
+			
+			// Find all classes that :
+			// - are concrete
+			// - are a subtype of EntityViewController
+			// - whose direct super type has a name like "SummaryViewController,"
+			//   "SetViewController", "EditionViewController", ... and is a generic type
+			// - where the first generic type parameter of the direct super class is entityType
+			// Note the word "direct" in the clause above. That means that view controllers must
+			// directly inherit from their parent. So we must have for instance
+			// SummaryPersonViewController -> SummaryViewController but we can't have
+			// SummaryMaleViewController -> SummaryPersonViewController -> SummaryViewController and
+			// SummaryFemaleViewController -> SummaryPersonViewController -> SummaryViewController,
+			// as the direct super type of SummaryMaleViewController and of
+			// SummaryFemaleViewController would not be SummaryViewController. So there is room for
+			// improvement in this algorithm, but as I've got no time now, I'll leave it as it is
+			// now.
 
 			var controllerTypes = from type in Epsitec.Common.Types.TypeEnumerator.Instance.GetAllTypes ()
-								  where type.IsClass && !type.IsAbstract && type.BaseType != null
+								  where entityViewControllerType.IsAssignableFrom (type)
+								     && type.IsClass && !type.IsAbstract && type.BaseType != null
 								     && type.BaseType.IsGenericType && type.BaseType.Name.StartsWith (baseTypeName)
 								  select new
 								  {
@@ -117,7 +131,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			{
 				return match;
 			}
-			
+
 			//	No specific controller was found for the entity type; now search for a controller
 			//	which supports a base type of the given entity (e.g. AbstractContactEntity for a
 			//	MailContactEntity) :
@@ -145,7 +159,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 				//	We cannot use type equality, as the base entity type's FullName is null,
 				//	while the entity type's FullName is not. Fortunately, comparing the type
 				//	ToString() results is OK:
-				
+
 				types = from type in controllerTypes
 						where type.BaseEntityType.ToString () == entityTypeName
 						select type.Type;
