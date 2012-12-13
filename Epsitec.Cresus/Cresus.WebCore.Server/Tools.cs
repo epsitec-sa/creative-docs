@@ -1,11 +1,30 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.UserManagement;
+
+using Epsitec.Cresus.Core.Controllers;
+
+using Epsitec.Cresus.Core.Data;
+
+using Epsitec.Cresus.DataLayer.Context;
+
+using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
+using Epsitec.Cresus.WebCore.Server.NancyHosting;
+
+using Nancy;
 
 using System;
 
 using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server
@@ -54,6 +73,85 @@ namespace Epsitec.Cresus.WebCore.Server
 			};
 
 			return DisposableWrapper.CreateDisposable (action);
+		}
+
+
+		public static Response GetEntities(Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, int start, int limit)
+		{
+			var database = databaseManager.GetDatabase (databaseId);
+
+			Tools.SetupSortersAndFilters (caches, userManager, database, rawSorters, rawFilters);
+
+			using (var dataSetAccessor = dataSetAccessorGetter (database))
+			{
+				var dataContext = dataSetAccessor.IsolatedDataContext;
+
+				var total = dataSetAccessor.GetItemCount ();
+				var entities = dataSetAccessor.GetItems (start, limit)
+					.Select (e => database.GetEntityData (dataContext, caches, e))
+					.ToList ();
+
+				var content = new Dictionary<string, object> ()
+				{
+					{ "total", total },
+					{ "entities", entities },
+				};
+
+				return CoreResponse.Success (content);
+			}
+		}
+
+
+		public static Response GetEntityIndex(Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, string rawEntityKey)
+		{
+			var database = databaseManager.GetDatabase (databaseId);
+
+			Tools.SetupSortersAndFilters (caches, userManager, database, rawSorters, rawFilters);
+
+			var entityKey = EntityIO.ParseEntityId (rawEntityKey);
+
+			using (var dataSetAccessor = dataSetAccessorGetter (database))
+			{
+				int? index = dataSetAccessor.IndexOf (entityKey);
+
+				if (index == -1)
+				{
+					index = null;
+				}
+
+				var content = new Dictionary<string, object> ()
+			    {
+			        { "index", index },
+			    };
+
+				return CoreResponse.Success (content);
+			}
+		}
+
+
+		public static void SetupSortersAndFilters(Caches caches, UserManager userManager, Core.Databases.Database database, string rawSorters, string rawFilters)
+		{
+			var dataSetMetadata = database.DataSetMetadata;
+			
+			var session = userManager.ActiveSession;
+			var settings = session.GetDataSetSettings (dataSetMetadata);
+
+			var sorters = SorterIO.ParseSorters (caches, database, rawSorters);
+			var filter = FilterIO.ParseFilter (caches, database, rawFilters);
+
+			settings.Sort.Clear ();
+			settings.Sort.AddRange (sorters);
+			settings.Filter = filter;
+
+			session.SetDataSetSettings (dataSetMetadata, settings);
+		}
+
+
+		public static string GetOptionalParameter(dynamic parameter)
+		{
+			return parameter.HasValue
+				? parameter.Value
+				: null;
 		}
 
 
