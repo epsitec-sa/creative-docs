@@ -648,14 +648,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var viewMode = ViewControllerMode.Action;
 
-			using (var controller = Mason.BuildController (this.businessContext, entity, viewMode, viewId))
+			using (var controller = Mason.BuildController<IActionViewController> (this.businessContext, entity, viewMode, viewId))
 			{
-				var iActionController = (IActionViewController) controller;
-
 				return new ActionItem ()
 				{
 					ViewId = InvariantConverter.ToString (viewId),
-					Title = iActionController.GetTitle ().ToString (),
+					Title = controller.GetTitle ().ToString (),
 				};
 			}
 		}

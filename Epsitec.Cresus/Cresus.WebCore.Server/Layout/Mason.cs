@@ -51,6 +51,25 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		public static T BuildController<T>(BusinessContext businessContext, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+			where T : class
+		{
+			// Here I would simply be able to cast the controller, but it is not possible because
+			// I might want to cast it to an interface. The compiler won't let me cast it to an
+			// interface that is not in the controller type hierarchy. So I simulate the cast with
+			// the as operator and I throw an exception if the result is null.
+
+			var controller = Mason.BuildController (businessContext, entity, viewMode, viewId) as T;
+
+			if (controller == null)
+			{
+				throw new Exception ("Controller is not of expected type.");
+			}
+
+			return controller;
+		}
+
+
 		private static void HandleBrickAdded(object sender, BrickAddedEventArgs e)
 		{
 			Mason.CreateDefaultProperties (e.Brick);

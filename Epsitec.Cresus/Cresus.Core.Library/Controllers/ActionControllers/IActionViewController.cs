@@ -6,7 +6,7 @@ using System;
 
 namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
-	public interface IActionViewController
+	public interface IActionViewController : IDisposable
 	{
 		FormattedText GetTitle();
 
