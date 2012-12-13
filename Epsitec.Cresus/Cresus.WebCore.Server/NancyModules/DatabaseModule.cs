@@ -410,16 +410,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var success = true;
 
-			foreach (var entity in entities)
+			using (businessContext.Bind (entities))
 			{
-				using (businessContext.Bind (entity))
+				foreach (var entity in entities)
 				{
 					success = businessContext.DeleteEntity (entity);
-				}
 
-				if (!success)
-				{
-					break;
+					if (!success)
+					{
+						break;
+					}
 				}
 			}
 

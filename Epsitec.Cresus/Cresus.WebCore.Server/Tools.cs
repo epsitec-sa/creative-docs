@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public static IDisposable Bind(this BusinessContext businessContext, params AbstractEntity[] entities)
 		{
+			return businessContext.Bind ((IEnumerable<AbstractEntity>) entities);
+		}
+
+
+		public static IDisposable Bind(this BusinessContext businessContext, IEnumerable<AbstractEntity> entities)
+		{
 			var entitiesToDispose = new List<AbstractEntity> ();
 
 			try
