@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyModules;
 
@@ -62,8 +63,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return new EntityColumn ()
 			{
 				EntityId = this.GetEntityId (this.entity),
-				ViewMode = Carpenter.GetViewMode (viewMode),
-				ViewId = Carpenter.GetViewId (viewId),
+				ViewMode = DataIO.ViewModeToString (viewMode),
+				ViewId = DataIO.ViewIdToString (viewId),
 				Tiles = this.BuildTiles (viewMode, viewId).ToList (),
 			};
 		}
@@ -319,7 +320,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				? ViewControllerMode.Summary
 				: ViewControllerMode.Edition;
 
-			return Carpenter.GetViewMode (viewMode);
+			return DataIO.ViewModeToString (viewMode);
 		}
 
 
@@ -336,7 +337,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var mode = brickModes.FirstOrDefault (m => m.IsSpecialController ());
 
 			return mode != default (BrickMode)
-				? Carpenter.GetViewId (mode.GetControllerSubTypeId ())
+				? DataIO.ViewIdToString (mode.GetControllerSubTypeId ())
 				: null;
 		}
 
@@ -574,7 +575,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			var entityValue = propertyAccessor.GetValue (entity);
 			field.Value = ValueConverter.ConvertEntityToFieldForEnumeration (entityValue);
-			field.TypeName = Tools.TypeToString (propertyAccessor.Type);
+			field.TypeName = DataIO.TypeToString (propertyAccessor.Type);
 
 			return field;
 		}
@@ -791,7 +792,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var entityValue = Carpenter.GetValue (entity, brick);
 			field.Value = ValueConverter.ConvertEntityToFieldForEnumeration (entityValue);
 
-			field.TypeName = Tools.TypeToString (actionFieldType);
+			field.TypeName = DataIO.TypeToString (actionFieldType);
 
 			return field;
 		}
@@ -1014,7 +1015,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private string GetEntityId(AbstractEntity entity)
 		{
-			return Tools.GetEntityId (this.businessContext, entity);
+			return EntityIO.GetEntityId (this.businessContext, entity);
 		}
 
 
@@ -1026,23 +1027,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static string GetViewMode(ViewControllerMode viewMode)
-		{
-			return Tools.ViewModeToString (viewMode);
-		}
-
-
-		private static string GetViewId(int? viewId)
-		{
-			return Tools.ViewIdToString (viewId);
-		}
-
-
 		private string GetDatabaseName(Type entityType)
 		{
 			var commandId = this.databaseManager.GetDatabaseCommandId (entityType);
 
-			return Tools.DruidToString (commandId);
+			return DataIO.DruidToString (commandId);
 		}
 
 

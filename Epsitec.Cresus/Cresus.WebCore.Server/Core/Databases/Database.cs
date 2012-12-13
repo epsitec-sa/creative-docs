@@ -6,6 +6,8 @@ using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Context;
 
+using Epsitec.Cresus.WebCore.Server.Core.IO;
+
 using System;
 
 using System.Collections.Generic;
@@ -93,7 +95,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		public Dictionary<string, object> GetEntityData(DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
-			var id = Tools.GetEntityId (dataContext, entity);
+			var id = EntityIO.GetEntityId (dataContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
 
 			var data = new Dictionary<string, object> ()

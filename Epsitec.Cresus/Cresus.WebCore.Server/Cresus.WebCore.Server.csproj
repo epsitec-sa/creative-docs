@@ -66,6 +66,8 @@
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
     <Compile Include="Core\IdCache.cs" />
+    <Compile Include="Core\IO\DataIO.cs" />
+    <Compile Include="Core\IO\EntityIO.cs" />
     <Compile Include="Core\ItemCache.cs" />
     <Compile Include="Core\PropertyAccessor\FieldTypeSelector.cs" />
     <Compile Include="Core\PropertyAccessor\FieldType.cs" />

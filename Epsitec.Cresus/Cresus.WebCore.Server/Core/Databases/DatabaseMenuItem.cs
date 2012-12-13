@@ -1,5 +1,7 @@
 using Epsitec.Cresus.Core.Metadata;
 
+using Epsitec.Cresus.WebCore.Server.Core.IO;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private string GetName()
 		{
-			return Tools.DruidToString (this.dataSetMetadata.Command.Caption.Id);
+			return DataIO.DruidToString (this.dataSetMetadata.Command.Caption.Id);
 		}
 
 

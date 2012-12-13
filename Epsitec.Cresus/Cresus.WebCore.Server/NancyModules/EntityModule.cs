@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.Layout;
 
@@ -51,7 +52,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var propertyAccessorsWithValues = EntityModule.GetPropertyAccessorsWithValues (businessContext, this.CoreServer.Caches, form)
 				.ToList ();
 
-			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
+			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.id);
 
 			var invalidItems = from item in propertyAccessorsWithValues
 							   let accessor = item.Item1
@@ -129,7 +130,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var autoCreatorCache = this.CoreServer.Caches.AutoCreatorCache;
 
-			var entity = Tools.ResolveEntity (businessContext, (string) Request.Form.entityId);
+			var entity = EntityIO.ResolveEntity (businessContext, (string) Request.Form.entityId);
 			string autoCreatorId = Request.Form.autoCreatorId;
 			var autoCreator = autoCreatorCache.Get (autoCreatorId);
 
@@ -137,7 +138,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
-			var entityId = Tools.GetEntityId (businessContext, child);
+			var entityId = EntityIO.GetEntityId (businessContext, child);
 
 			var content = new Dictionary<string, object> ()
 			{
@@ -150,8 +151,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response ExecuteAction(BusinessContext businessContext, dynamic parameters)
 		{
 			var viewMode = ViewControllerMode.Action;
-			var viewId = Tools.ParseViewId ((string) parameters.viewId);
-			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
+			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
 
 			using (var viewController = Mason.BuildController (businessContext, entity, viewMode, viewId))
 			{
@@ -300,7 +301,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var rawValue = (string) value.Value;
 			var values = rawValue.Split (";")
 				.Where (id => !string.IsNullOrEmpty (id))
-				.Select (id => Tools.ResolveEntity (businessContext, id));
+				.Select (id => EntityIO.ResolveEntity (businessContext, id));
 
 			var listType = typeof (List<>);
 			var genericListType = listType.MakeGenericType (valueType.GetGenericArguments ()[0]);
@@ -320,7 +321,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (!string.IsNullOrEmpty (entityId) && !Constants.KeyForNullValue.Equals (entityId))
 			{
-				entity = Tools.ResolveEntity (businessContext, entityId);
+				entity = EntityIO.ResolveEntity (businessContext, entityId);
 			}
 
 			return entity;

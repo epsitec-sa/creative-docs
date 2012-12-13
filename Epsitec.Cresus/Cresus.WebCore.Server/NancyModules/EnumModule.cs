@@ -3,6 +3,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEnum(dynamic parameters)
 		{
 			string typeName = parameters.name;
-			var type = Tools.ParseType (typeName);
+			var type = DataIO.ParseType (typeName);
 
 			var values = EnumModule.GetValues (type).ToList ();
 

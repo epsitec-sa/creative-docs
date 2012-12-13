@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetDatabase(dynamic parameters)
 		{
-			var databaseCommandId = Tools.ParseDruid ((string) parameters.name);
+			var databaseCommandId = DataIO.ParseDruid ((string) parameters.name);
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
 
 			var content = database.GetDataDictionary (this.CoreServer.Caches);
@@ -118,7 +119,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEntityIndex(dynamic parameters, DataSetAccessor dataSet, Core.Databases.Database database)
 		{
 			string entityId = parameters.id;
-			var entityKey = Tools. ParseEntityId (entityId);
+			var entityKey = EntityIO. ParseEntityId (entityId);
 
 			int? index = dataSet.IndexOf (entityKey);
 
@@ -138,7 +139,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetData(WorkerApp workerApp, dynamic parameters, Func<dynamic, DataSetAccessor, Core.Databases.Database, Response> responseGetter)
 		{
-			var databaseCommandId = Tools.ParseDruid ((string) parameters.name);
+			var databaseCommandId = DataIO.ParseDruid ((string) parameters.name);
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
 
 			var session = workerApp.UserManager.ActiveSession;
@@ -404,15 +405,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response DeleteEntities(BusinessContext businessContext)
 		{
-			string rawEntityIds = Request.Form.entityIds;
-			var entityIds = rawEntityIds.Split (";");
+			var entityIds = (string) Request.Form.entityIds;
+			var entities = EntityIO.ResolveEntities (businessContext, entityIds).ToList ();
 
 			var success = true;
 
-			foreach (var entityId in entityIds)
+			foreach (var entity in entities)
 			{
-				var entity = Tools.ResolveEntity (businessContext, entityId);
-
 				using (businessContext.Bind (entity))
 				{
 					success = businessContext.DeleteEntity (entity);
@@ -437,7 +436,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response CreateEntity(BusinessContext businessContext)
 		{
-			var databaseCommandId = Tools.ParseDruid ((string) Request.Form.databaseName);
+			var databaseCommandId = DataIO.ParseDruid ((string) Request.Form.databaseName);
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
 
 			var dataContext = businessContext.DataContext;

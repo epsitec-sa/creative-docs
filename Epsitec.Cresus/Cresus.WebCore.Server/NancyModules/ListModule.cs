@@ -6,6 +6,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			string parentEntityId = Request.Form.parentEntityId;
 
-			var parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
+			var parentEntity = EntityIO.ResolveEntity (businessContext, parentEntityId);
 
 			string deletedEntityId = Request.Form.deletedEntityId;
 			var deletedKey = EntityKey.Parse (deletedEntityId);
@@ -82,7 +83,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response CreateEntity(BusinessContext businessContext)
 		{
 			string parentEntityId = Request.Form.parentEntityId;
-			var parentEntity = Tools.ResolveEntity (businessContext, parentEntityId);
+			var parentEntity = EntityIO.ResolveEntity (businessContext, parentEntityId);
 
 			string propertyAccessorId = Request.Form.propertyAccessorId;
 			var propertyAccessorCache = this.CoreServer.Caches.PropertyAccessorCache;
@@ -106,7 +107,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 			}
 
-			var key = Tools.GetEntityId (businessContext, newEntity);
+			var key = EntityIO.GetEntityId (businessContext, newEntity);
 
 			var content = new Dictionary<string, object> () {
 				{ "key", key }

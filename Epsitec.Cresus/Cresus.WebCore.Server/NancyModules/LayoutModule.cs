@@ -1,6 +1,7 @@
 ﻿using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Layout;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -31,9 +32,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var caches = this.CoreServer.Caches;
 			var databaseManager = this.CoreServer.DatabaseManager;
 
-			var entity = Tools.ResolveEntity (businessContext, (string) parameters.entityId);
-			var viewMode = Tools.ParseViewMode ((string) parameters.viewMode);
-			var viewId = Tools.ParseViewId ((string) parameters.viewId);
+			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
+			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
+			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
 
 			var entityColumn = Carpenter.BuildEntityColumn (businessContext, caches, databaseManager, entity, viewMode, viewId);
 			var content = entityColumn.ToDictionary ();

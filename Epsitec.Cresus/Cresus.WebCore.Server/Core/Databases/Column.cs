@@ -2,6 +2,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Metadata;
 
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
@@ -133,7 +134,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			if (fieldType == FieldType.Enumeration)
 			{
-				data["enumerationName"] = Tools.TypeToString (this.LambdaExpression.ReturnType);
+				data["enumerationName"] = DataIO.TypeToString (this.LambdaExpression.ReturnType);
 			}
 
 			return data;
@@ -192,7 +193,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			if (this.Filterable && fieldType == FieldType.Enumeration)
 			{
-				data["enumerationName"] = Tools.TypeToString (this.LambdaExpression.ReturnType);
+				data["enumerationName"] = DataIO.TypeToString (this.LambdaExpression.ReturnType);
 			}
 
 			return data;
