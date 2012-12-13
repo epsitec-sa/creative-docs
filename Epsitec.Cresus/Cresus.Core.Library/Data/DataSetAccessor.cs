@@ -49,6 +49,16 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		/// <summary>
+		/// Allows the DataSetAccessor to be customised with a filter that is not persisted in the
+		/// database.
+		/// </summary>
+		public IFilter							CustomFilter
+		{
+			get;
+			set;
+		}
+
 
 		public void MakeDependent()
 		{
@@ -170,6 +180,7 @@ namespace Epsitec.Cresus.Core.Data
 			request.AddCondition (this.dataContext, example, scopeFilter);
 			request.AddCondition (this.dataContext, example, dataSetSettings.Filter);
 			request.AddCondition (this.dataContext, example, additionalFilter);
+			request.AddCondition (this.dataContext, example, this.CustomFilter);
 
 			IEnumerable<SortClause> sortClauses;
 
