@@ -124,7 +124,7 @@
     <Compile Include="CoreServerProgram.cs" />
     <Compile Include="Core\WorkerApp.cs" />
     <Compile Include="NancyModules\AbstractCoreModule.cs" />
-    <Compile Include="NancyModules\CollectionManagerModule.cs" />
+    <Compile Include="NancyModules\ListModule.cs" />
     <Compile Include="NancyModules\EntityModule.cs" />
     <Compile Include="NancyModules\LayoutModule.cs" />
     <Compile Include="NancyModules\DatabaseModule.cs" />
