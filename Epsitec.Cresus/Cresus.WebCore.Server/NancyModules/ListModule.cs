@@ -26,12 +26,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// <summary>
 	/// Allows to add or delete an entity within a collection
 	/// </summary>
-	public class CollectionManagerModule : AbstractAuthenticatedModule
+	public class ListModule : AbstractAuthenticatedModule
 	{
 
 
-		public CollectionManagerModule(CoreServer coreServer)
-			: base (coreServer, "/collection")
+		public ListModule(CoreServer coreServer)
+			: base (coreServer, "/list")
 		{
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntity (b));
 			Post["/create"] = p => this.Execute (b => this.CreateEntity (b));

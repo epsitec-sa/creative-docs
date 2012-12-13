@@ -83,7 +83,7 @@ function() {
     addEntityHandler: function() {
       this.setLoading();
       Ext.Ajax.request({
-        url: 'proxy/collection/create',
+        url: 'proxy/list/create',
         method: 'POST',
         params: {
           parentEntityId: this.column.entityId,
@@ -115,7 +115,7 @@ function() {
 
       this.setLoading();
       Ext.Ajax.request({
-        url: 'proxy/collection/delete',
+        url: 'proxy/list/delete',
         method: 'POST',
         params: {
           parentEntityId: this.column.entityId,
