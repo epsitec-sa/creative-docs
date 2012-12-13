@@ -102,28 +102,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> action)
 		{
-			return this.Execute (username, sessionId, w =>
-			{
-				using (var businessContext = new BusinessContext (w.CoreData))
-				{
-					try
-					{
-						return action (businessContext);
-					}
-					finally
-					{
-						if (businessContext != null)
-						{
-							// We discard the BusinessContext so any unsaved changes won't be
-							// persisted to the database. Such changes could happen if an exception
-							// is thrown after some entities have been modified. In such a case, we
-							// want to make sure that the changed are not persisted to the databse.
-
-							businessContext.Discard ();
-						}
-					}
-				}
-			});
+			return this.Execute (username, sessionId, w => w.Execute (action));
 		}
 
 
@@ -146,6 +125,30 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 					this.userManager.SetActiveSessionId (null);
 				}
 			});
+		}
+
+
+		public T Execute<T>(Func<BusinessContext, T> action)
+		{
+			using (var businessContext = new BusinessContext (this.CoreData))
+			{
+				try
+				{
+					return action (businessContext);
+				}
+				finally
+				{
+					if (businessContext != null)
+					{
+						// We discard the BusinessContext so any unsaved changes won't be
+						// persisted to the database. Such changes could happen if an exception
+						// is thrown after some entities have been modified. In such a case, we
+						// want to make sure that the changed are not persisted to the databse.
+
+						businessContext.Discard ();
+					}
+				}
+			}
 		}
 
 
