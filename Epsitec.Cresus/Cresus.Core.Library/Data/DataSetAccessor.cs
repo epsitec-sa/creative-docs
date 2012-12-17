@@ -51,6 +51,16 @@ namespace Epsitec.Cresus.Core.Data
 
 
 		/// <summary>
+		/// The DataSetAccessor won't use the scope filters if this property is set to true.
+		/// </summary>
+		public bool								DisableScopeFilter
+		{
+			get;
+			set;
+		}
+
+
+		/// <summary>
 		/// This action will be called before the creation of the RequestView object, so you can
 		/// set up the Request as you want here.
 		/// </summary>
@@ -173,15 +183,20 @@ namespace Epsitec.Cresus.Core.Data
 
 			var session = UserManager.Current.ActiveSession;
 
-			var scopeFilter = session.GetScopeFilter (this.dataSetMetadata, example);
-			var dataSetSettings = session.GetDataSetSettings (this.dataSetMetadata);
-			var additionalFilter = session.GetAdditionalFilter (this.dataSetMetadata, example);
-
 			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
-			request.AddCondition (this.dataContext, example, scopeFilter);
-			request.AddCondition (this.dataContext, example, dataSetSettings.Filter);
-			request.AddCondition (this.dataContext, example, additionalFilter);
 
+			if (!this.DisableScopeFilter)
+			{
+				var scopeFilter = session.GetScopeFilter (this.dataSetMetadata, example);
+				request.AddCondition (this.dataContext, example, scopeFilter);
+			}
+
+			var dataSetSettings = session.GetDataSetSettings (this.dataSetMetadata);
+			request.AddCondition (this.dataContext, example, dataSetSettings.Filter);
+			
+			var additionalFilter = session.GetAdditionalFilter (this.dataSetMetadata, example);
+			request.AddCondition (this.dataContext, example, additionalFilter);
+			
 			IEnumerable<SortClause> sortClauses;
 
 			if (dataSetSettings != null)
