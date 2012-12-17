@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				var set = fields.Shuffle ().Take (10).ToList ();
 				var comparator = dice.NextDouble () > 0.5 ? SetComparator.In: SetComparator.NotIn;
 
-				var setComparison = new SetComparison (field, comparator, set);
+				var setComparison = new ValueSetComparison (field, comparator, set);
 
 				Assert.AreSame (field, setComparison.Field);
 				Assert.AreEqual (comparator, setComparison.Comparator);
@@ -67,24 +67,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SetComparison (null, SetComparator.In, new List<Value> () { field })
+				() => new ValueSetComparison (null, SetComparator.In, new List<Value> () { field })
 			);
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
-				() => new SetComparison (field, SetComparator.In, null)
+				() => new ValueSetComparison (field, SetComparator.In, null)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new SetComparison (field, SetComparator.In, new List<Value> ()
+				() => new ValueSetComparison (field, SetComparator.In, new List<Value> ()
 				{
 				})
 			);
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
-				() => new SetComparison (field, SetComparator.In, new List<Value> () { null })
+				() => new ValueSetComparison (field, SetComparator.In, new List<Value> () { null })
 			);
 		}
 

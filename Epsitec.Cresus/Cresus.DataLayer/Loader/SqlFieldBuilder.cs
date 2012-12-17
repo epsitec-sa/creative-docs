@@ -20,8 +20,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	{
 
 
-		public SqlFieldBuilder(DataContext dataContext)
+		public SqlFieldBuilder(LoaderQueryGenerator loaderQueryGenerator, DataContext dataContext)
 		{
+			this.loaderQueryGenerator = loaderQueryGenerator;
 			this.dataContext = dataContext;
 
 			this.aliasManager = new AliasManager ();
@@ -61,6 +62,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				return this.dataContext.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 			}
+		}
+
+
+		public SqlField BuildSqlFieldForSubQuery(Request request)
+		{
+			var subQuery = this.loaderQueryGenerator.BuildSelectForEntityKeys (request, this);
+
+			return SqlField.CreateSubQuery (subQuery);
 		}
 
 
@@ -358,6 +367,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		private readonly DataContext dataContext;
+
+
+		private readonly LoaderQueryGenerator loaderQueryGenerator;
 
 
 	}

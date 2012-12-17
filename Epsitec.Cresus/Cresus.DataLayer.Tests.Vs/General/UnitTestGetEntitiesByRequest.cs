@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void SetComparisonTest1()
+		public void ValueSetComparisonTest1()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				};
 
 				request.Conditions.Add (
-					new SetComparison (
+					new ValueSetComparison (
 						new ValueField (example, new Druid ("[J1AD2]")),
 						SetComparator.In,
 						new List<Constant> ()
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void SetComparisonTest2()
+		public void ValueSetComparisonTest2()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				};
 
 				request.Conditions.Add (
-					new SetComparison (
+					new ValueSetComparison (
 						new ValueField (example, new Druid ("[J1AD2]")),
 						SetComparator.NotIn,
 						new List<Constant> ()
@@ -263,6 +263,87 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				Assert.IsTrue (data.Count () == 1);
 				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData2 (d)));
+			}
+		}
+
+
+		[TestMethod]
+		public void SubQuerySetComparisonTest1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var example = new AbstractContactEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				var subExample = new NaturalPersonEntity ()
+				{
+					Firstname = "Alfred",
+				};
+
+				Request subRequest = new Request ()
+				{
+					RootEntity = subExample,
+				};
+
+				request.Conditions.Add (
+					new SubQuerySetComparison (
+						ReferenceField.Create (example, x => x.NaturalPerson),
+						SetComparator.In,
+						new SubQuery (subRequest)
+					)
+				);
+
+				AbstractContactEntity[] data = dataContext.GetByRequest<AbstractContactEntity> (request).ToArray ();
+				NaturalPersonEntity alfred = dataContext.GetByRequest<NaturalPersonEntity> (subRequest).Single ();
+
+				Assert.IsTrue (data.Count () == 2);
+				Assert.IsTrue (data.Any (c => c == alfred.Contacts[0]));
+				Assert.IsTrue (data.Any (c => c == alfred.Contacts[1]));
+			}
+		}
+
+
+		[TestMethod]
+		public void SubQuerySetComparisonTest2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				var subExample = new NaturalPersonEntity ()
+				{
+					Firstname = "Alfred",
+				};
+
+				Request subRequest = new Request ()
+				{
+					RootEntity = subExample,
+				};
+
+				request.Conditions.Add (
+					new SubQuerySetComparison (
+						InternalField.CreateId (example),
+						SetComparator.NotIn,
+						new SubQuery (subRequest)
+					)
+				);
+
+				NaturalPersonEntity[] data = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (data.Count () == 2);
+				Assert.IsTrue (data.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.IsTrue (data.Any (p => DatabaseCreator2.CheckHans (p)));
 			}
 		}
 

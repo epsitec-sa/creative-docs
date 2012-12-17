@@ -16,24 +16,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
 
-	public sealed class SetComparison : Comparison
+	public abstract class SetComparison : Comparison
 	{
 
 
-		public SetComparison(EntityField field, SetComparator comparator, IEnumerable<Value> set)
+		public SetComparison(EntityField field, SetComparator comparator)
 		{
 			field.ThrowIfNull ("field");
-			set.ThrowIfNull ("values");
-			set.ThrowIf (x => x.Any (v => v == null), "values cannot contain null elements");
 			
 			this.Field = field;
 			this.Comparator = comparator;
-			this.Set = set.ToList ();
-
-			if (this.Set.Count () == 0)
-			{
-				throw new ArgumentException ("values is empty");
-			}
 		}
 
 
@@ -51,22 +43,18 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		public IEnumerable<Value> Set
-		{
-			get;
-			private set;
-		}
-
-
 		internal override SqlFunction CreateSqlCondition(SqlFieldBuilder builder)
 		{
 			return new SqlFunction
 			(
 				EnumConverter.ToSqlFunctionCode (this.Comparator),
 				this.Field.CreateSqlField (builder),
-				SqlField.CreateSet (new SqlSet (this.Set.Select (v => v.CreateSqlField (builder))))
+				this.CreateSqlFieldForSet (builder)
 			);
 		}
+
+
+		internal abstract SqlField CreateSqlFieldForSet(SqlFieldBuilder builder);
 
 
 		internal override void CheckFields(FieldChecker checker)

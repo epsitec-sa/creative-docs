@@ -513,13 +513,13 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				expression = this.VisitMethodCallCompareTo (node);
 			}
-			else if (method == SqlMethods.IsInSetMethodInfo)
+			else if (method == SqlMethods.IsInValueSetMethodInfo)
 			{
-				expression = this.VisitMethodCallIsInSet (node);
+				expression = this.VisitMethodCallIsInValueSet (node);
 			}
-			else if (method == SqlMethods.IsNotInSetMethodInfo)
+			else if (method == SqlMethods.IsNotInValueSetMethodInfo)
 			{
-				expression = this.VisitMethodCallIsNotInSet (node);
+				expression = this.VisitMethodCallIsNotInValueSet (node);
 			}
 			else if (method.Name == "Any" && method.DeclaringType == typeof (Enumerable))
 			{
@@ -589,7 +589,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		private object VisitMethodCallIsInSet(MethodCallExpression methodCall)
+		private object VisitMethodCallIsInValueSet(MethodCallExpression methodCall)
 		{
 			// We must do all this weird stuff because of the behavior of NULL values in SQL, which
 			// implies that if we simply translate this to SQL will give incorrect results in the
@@ -606,7 +606,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		private object VisitMethodCallIsNotInSet(MethodCallExpression methodCall)
+		private object VisitMethodCallIsNotInValueSet(MethodCallExpression methodCall)
 		{
 			var entityField = (ValueField) this.VisitAndPop (methodCall.Arguments[0]);
 

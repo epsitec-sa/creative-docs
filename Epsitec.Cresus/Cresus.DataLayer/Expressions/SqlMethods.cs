@@ -51,21 +51,42 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			}
 		}
 
-		public static MethodInfo IsInSetMethodInfo
+
+		public static MethodInfo IsInValueSetMethodInfo
 		{
 			get
 			{
-				return SqlMethods.isInSetMethodInfo;
+				return SqlMethods.isInValueSetMethodInfo;
 			}
 		}
 
-		public static MethodInfo IsNotInSetMethodInfo
+
+		public static MethodInfo IsNotInValueSetMethodInfo
 		{
 			get
 			{
-				return SqlMethods.isNotInSetMethodInfo;
+				return SqlMethods.isNotInValueSetMethodInfo;
 			}
 		}
+
+
+		public static MethodInfo IsInSubquerySetMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isInSubquerySetMethodInfo;
+			}
+		}
+
+
+		public static MethodInfo IsNotInSubquerySetMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isNotInSubquerySetMethodInfo;
+			}
+		}
+
 
 		public static MethodInfo ConvertMethodInfo
 		{
@@ -137,6 +158,19 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			throw new NotImplementedException ();
 		}
 
+
+		public static bool IsInSet(AbstractEntity value, Request subQuery)
+		{
+			throw new NotImplementedException ();
+		}
+
+
+		public static bool IsNotInSet(AbstractEntity value, Request subQuery)
+		{
+			throw new NotImplementedException ();
+		}
+
+
 		/// <summary>
 		/// This method is used to convert between values of two different type. SQL is not type
 		/// safe so we can write a something like 'My string' = 42. However, The C# Expression Trees
@@ -163,8 +197,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			SqlMethods.compareToMethodInfo = typeof (SqlMethods).GetMethod ("CompareTo", new Type[] { typeof (string), typeof (string) });
 			SqlMethods.likeMethodInfo = typeof (SqlMethods).GetMethod ("Like", new Type[] { typeof (string), typeof (string) });
 			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new Type[] { typeof (string), typeof (string) });
-			SqlMethods.isInSetMethodInfo = typeof (SqlMethods).GetMethod ("IsInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
-			SqlMethods.isNotInSetMethodInfo = typeof (SqlMethods).GetMethod ("IsNotInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.isInValueSetMethodInfo = typeof (SqlMethods).GetMethod ("IsInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.isNotInValueSetMethodInfo = typeof (SqlMethods).GetMethod ("IsNotInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.isInSubquerySetMethodInfo = typeof (SqlMethods).GetMethod ("IsInSet", new Type[] { typeof (AbstractEntity), typeof (Request) });
+			SqlMethods.isNotInSubquerySetMethodInfo = typeof (SqlMethods).GetMethod ("IsNotInSet", new Type[] { typeof (AbstractEntity), typeof (Request) });
 			SqlMethods.convertMethodInfo = typeof (SqlMethods).GetMethod ("Convert");
 		}
 
@@ -172,8 +208,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		private static readonly MethodInfo compareToMethodInfo;
 		private static readonly MethodInfo likeMethodInfo;
 		private static readonly MethodInfo escapedLikeMethodInfo;
-		private static readonly MethodInfo isInSetMethodInfo;
-		private static readonly MethodInfo isNotInSetMethodInfo;
+		private static readonly MethodInfo isInValueSetMethodInfo;
+		private static readonly MethodInfo isNotInValueSetMethodInfo;
+		private static readonly MethodInfo isInSubquerySetMethodInfo;
+		private static readonly MethodInfo isNotInSubquerySetMethodInfo;
 		private static readonly MethodInfo convertMethodInfo;
 
 

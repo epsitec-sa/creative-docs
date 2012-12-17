@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		public override Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
 			var method = this.Predicate == ColumnFilterSetCode.In
-				? SqlMethods.IsInSetMethodInfo
-				: SqlMethods.IsNotInSetMethodInfo;
+				? SqlMethods.IsInValueSetMethodInfo
+				: SqlMethods.IsNotInValueSetMethodInfo;
 
 			var values = this.Values
 				.Select (v => ((ConstantExpression) v.GetExpression (example, parameter)).Value)

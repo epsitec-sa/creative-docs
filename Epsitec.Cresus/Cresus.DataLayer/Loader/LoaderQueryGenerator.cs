@@ -120,7 +120,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<EntityKey> GetEntityKeys(Request request, DbTransaction dbTransaction)
 		{
-			var sqlSelect = this.BuildSelectForEntityKeys (request);
+			var builder = this.GetBuilder ();
+			var sqlSelect = this.BuildSelectForEntityKeys (request, builder);
 
 			dbTransaction.SqlBuilder.SelectData (sqlSelect);
 
@@ -135,9 +136,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlSelect BuildSelectForEntityKeys(Request request)
+		public SqlSelect BuildSelectForEntityKeys(Request request, SqlFieldBuilder builder)
 		{
-			var builder = this.GetBuilder ();
 			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
 
 			var entityId = builder.BuildRootId (request.RequestedEntity);
@@ -1563,7 +1563,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlFieldBuilder GetBuilder()
 		{
-			return new SqlFieldBuilder (this.dataContext);
+			return new SqlFieldBuilder (this, this.dataContext);
 		}
 
 

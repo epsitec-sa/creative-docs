@@ -163,6 +163,9 @@
     <Compile Include="Expressions\SortOrder.cs" />
     <Compile Include="Expressions\LambdaComputer.cs" />
     <Compile Include="Expressions\SqlMethods.cs" />
+    <Compile Include="Expressions\SubQuery.cs" />
+    <Compile Include="Expressions\SubQuerySetComparison.cs" />
+    <Compile Include="Expressions\ValueSetComparison.cs" />
     <Compile Include="Loader\AliasManager.cs" />
     <Compile Include="Loader\Request`1.cs" />
     <Compile Include="Loader\EntityHelper.cs" />
