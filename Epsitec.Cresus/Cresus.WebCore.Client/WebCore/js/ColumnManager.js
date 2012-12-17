@@ -55,7 +55,7 @@ function() {
           iconCls: database.iconSmall,
           region: 'west',
           bodyCls: 'left-list',
-          width: 300,
+          width: 400,
           resizable: true,
           resizeHandles: 'e'
         }
@@ -73,15 +73,7 @@ function() {
       return Ext.create('Ext.panel.Panel', {
         region: 'center',
         border: false,
-        layout: {
-          type: 'table',
-          tdAttrs: {
-            valign: 'top'
-          }
-        },
-        defaults: {
-          width: 350
-        },
+        layout: 'hbox',
         autoScroll: true
       });
     },
