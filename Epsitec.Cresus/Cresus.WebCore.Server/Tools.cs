@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			using (var dataSetAccessor = dataSetAccessorGetter (database))
 			{
+				dataSetAccessor.MakeDependent ();
+
 				var dataContext = dataSetAccessor.IsolatedDataContext;
 
 				var total = dataSetAccessor.GetItemCount ();
@@ -112,6 +114,8 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			using (var dataSetAccessor = dataSetAccessorGetter (database))
 			{
+				dataSetAccessor.MakeDependent ();
+
 				int? index = dataSetAccessor.IndexOf (entityKey);
 
 				if (index == -1)

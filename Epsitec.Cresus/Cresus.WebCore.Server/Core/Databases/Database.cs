@@ -62,12 +62,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		public DataSetAccessor GetDataSetAccessor(DataSetGetter dataSetGetter)
 		{
-			var dataSet = this.DataSetMetadata;
-
-			var dataSetAccessor = dataSetGetter.ResolveAccessor (dataSet);
-			dataSetAccessor.MakeDependent ();
-
-			return dataSetAccessor;
+			return dataSetGetter.ResolveAccessor (this.DataSetMetadata);
 		}
 
 
