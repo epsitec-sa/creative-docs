@@ -12,8 +12,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.Database;
-
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
 

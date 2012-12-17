@@ -1,19 +1,31 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.DataLayer.Loader;
+
+using System;
+
 using System.Collections.Generic;
 
 using System.Reflection;
 
-namespace Epsitec.Cresus.Database
+
+namespace Epsitec.Cresus.DataLayer.Expressions
 {
+
+
 	/// <summary>
 	/// The <c>SqlMethods</c> class is inspired by what Microsoft implemented for LINQ to SQL.
 	/// See http://msdn.microsoft.com/en-us/library/bb302445.
 	/// </summary>
 	public static class SqlMethods
 	{
-		public static MethodInfo				CompareToMethodInfo
+
+
+		public static MethodInfo CompareToMethodInfo
 		{
 			get
 			{
@@ -21,7 +33,8 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static MethodInfo				LikeMethodInfo
+
+		public static MethodInfo LikeMethodInfo
 		{
 			get
 			{
@@ -29,7 +42,8 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static MethodInfo				EscapedLikeMethodInfo
+
+		public static MethodInfo EscapedLikeMethodInfo
 		{
 			get
 			{
@@ -37,7 +51,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static MethodInfo				IsInSetMethodInfo
+		public static MethodInfo IsInSetMethodInfo
 		{
 			get
 			{
@@ -45,7 +59,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public static MethodInfo				IsNotInSetMethodInfo
+		public static MethodInfo IsNotInSetMethodInfo
 		{
 			get
 			{
@@ -77,6 +91,7 @@ namespace Epsitec.Cresus.Database
 			return arg1.CompareTo (arg2);
 		}
 
+
 		/// <summary>
 		/// Determines whether a specific value matches a specified pattern. This method
 		/// is currently only supported when generating SQL queries based on expression
@@ -88,8 +103,9 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if the value matches the pattern; otherwise, <c>false</c>.</returns>
 		public static bool Like(string value, string pattern)
 		{
-			throw new System.NotSupportedException ();
+			throw new NotSupportedException ();
 		}
+
 
 		/// <summary>
 		/// Determines whether a specific value matches a specified pattern. This method
@@ -106,17 +122,19 @@ namespace Epsitec.Cresus.Database
 		/// </returns>
 		public static bool EscapedLike(string value, string pattern)
 		{
-			throw new System.NotSupportedException ();
+			throw new NotSupportedException ();
 		}
+
 
 		public static bool IsInSet(object value, IEnumerable<object> set)
 		{
-			throw new System.NotImplementedException ();
+			throw new NotImplementedException ();
 		}
+
 
 		public static bool IsNotInSet(object value, IEnumerable<object> set)
 		{
-			throw new System.NotImplementedException ();
+			throw new NotImplementedException ();
 		}
 
 		/// <summary>
@@ -136,25 +154,30 @@ namespace Epsitec.Cresus.Database
 		/// </exception>
 		public static TOut Convert<TIn, TOut>(TIn value)
 		{
-			throw new System.NotImplementedException ();
+			throw new NotImplementedException ();
 		}
 
-		
+
 		static SqlMethods()
 		{
-			SqlMethods.compareToMethodInfo   = typeof (SqlMethods).GetMethod ("CompareTo", new System.Type[] { typeof (string), typeof (string) });
-			SqlMethods.likeMethodInfo        = typeof (SqlMethods).GetMethod ("Like", new System.Type[] { typeof (string), typeof (string) });
-			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new System.Type[] { typeof (string), typeof (string) });
-			SqlMethods.isInSetMethodInfo	 = typeof (SqlMethods).GetMethod ("IsInSet", new System.Type[] { typeof (object), typeof (IEnumerable<object>) });
-			SqlMethods.isNotInSetMethodInfo	 = typeof (SqlMethods).GetMethod ("IsNotInSet", new System.Type[] { typeof (object), typeof (IEnumerable<object>) });
-			SqlMethods.convertMethodInfo	 = typeof (SqlMethods).GetMethod ("Convert");
+			SqlMethods.compareToMethodInfo = typeof (SqlMethods).GetMethod ("CompareTo", new Type[] { typeof (string), typeof (string) });
+			SqlMethods.likeMethodInfo = typeof (SqlMethods).GetMethod ("Like", new Type[] { typeof (string), typeof (string) });
+			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new Type[] { typeof (string), typeof (string) });
+			SqlMethods.isInSetMethodInfo = typeof (SqlMethods).GetMethod ("IsInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.isNotInSetMethodInfo = typeof (SqlMethods).GetMethod ("IsNotInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
+			SqlMethods.convertMethodInfo = typeof (SqlMethods).GetMethod ("Convert");
 		}
 
-		private static readonly MethodInfo		compareToMethodInfo;
-		private static readonly MethodInfo		likeMethodInfo;
-		private static readonly MethodInfo		escapedLikeMethodInfo;
-		private static readonly MethodInfo		isInSetMethodInfo;
-		private static readonly MethodInfo		isNotInSetMethodInfo;
-		private static readonly MethodInfo		convertMethodInfo;
+
+		private static readonly MethodInfo compareToMethodInfo;
+		private static readonly MethodInfo likeMethodInfo;
+		private static readonly MethodInfo escapedLikeMethodInfo;
+		private static readonly MethodInfo isInSetMethodInfo;
+		private static readonly MethodInfo isNotInSetMethodInfo;
+		private static readonly MethodInfo convertMethodInfo;
+
+
 	}
+
+
 }

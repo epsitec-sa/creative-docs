@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Metadata;
 
-using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -102,28 +102,28 @@ namespace Epsitec.Cresus.Core.Metadata
 					return Expression.NotEqual (parameter, expression);
 
 				case ColumnFilterComparisonCode.GreaterThan:
-					return Expression.GreaterThan (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+					return Expression.GreaterThan (Expression.Call (SqlMethods.CompareToMethodInfo, parameter, expression), zero);
 
 				case ColumnFilterComparisonCode.GreaterThanOrEqual:
-					return Expression.GreaterThanOrEqual (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+					return Expression.GreaterThanOrEqual (Expression.Call (SqlMethods.CompareToMethodInfo, parameter, expression), zero);
 
 				case ColumnFilterComparisonCode.LessThan:
-					return Expression.LessThan (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+					return Expression.LessThan (Expression.Call (SqlMethods.CompareToMethodInfo, parameter, expression), zero);
 
 				case ColumnFilterComparisonCode.LessThanOrEqual:
-					return Expression.LessThanOrEqual (Expression.Call (Epsitec.Cresus.Database.SqlMethods.CompareToMethodInfo, parameter, expression), zero);
+					return Expression.LessThanOrEqual (Expression.Call (SqlMethods.CompareToMethodInfo, parameter, expression), zero);
 
 				case ColumnFilterComparisonCode.Like:
-					return Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression);
+					return Expression.Call (SqlMethods.LikeMethodInfo, parameter, expression);
 
 				case ColumnFilterComparisonCode.LikeEscaped:
-					return Expression.Call (Epsitec.Cresus.Database.SqlMethods.EscapedLikeMethodInfo, parameter, expression);
+					return Expression.Call (SqlMethods.EscapedLikeMethodInfo, parameter, expression);
 
 				case ColumnFilterComparisonCode.NotLike:
-					return Expression.Not (Expression.Call (Epsitec.Cresus.Database.SqlMethods.LikeMethodInfo, parameter, expression));
+					return Expression.Not (Expression.Call (SqlMethods.LikeMethodInfo, parameter, expression));
 
 				case ColumnFilterComparisonCode.NotLikeEscaped:
-					return Expression.Not (Expression.Call (Epsitec.Cresus.Database.SqlMethods.EscapedLikeMethodInfo, parameter, expression));
+					return Expression.Not (Expression.Call (SqlMethods.EscapedLikeMethodInfo, parameter, expression));
 
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));

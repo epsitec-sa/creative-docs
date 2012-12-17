@@ -6,7 +6,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Metadata;
-using Epsitec.Cresus.Database;
+
+using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
 using System.Linq;

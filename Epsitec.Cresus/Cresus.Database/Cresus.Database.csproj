@@ -173,7 +173,6 @@
     <Compile Include="DbIndex.cs" />
     <Compile Include="DbCardinality.cs" />
     <Compile Include="DbCharacterEncoding.cs" />
-    <Compile Include="SqlMethods.cs" />
     <Compile Include="SqlSelectSetOp.cs" />
     <Compile Include="SqlSelectPredicate.cs" />
     <Compile Include="SqlJoinCode.cs" />
