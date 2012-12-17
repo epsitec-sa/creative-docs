@@ -25,7 +25,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon ("Data.AiderGroup.People")
 				.Title (p => p.GetParticipantsTitle ())
 				.Text (p => p.GetParticipantsSummary ())
-				.Attribute (BrickMode.SpecialController1);
+				.Attribute (BrickMode.DefaultToSetSubView)
+				.Attribute (BrickMode.SpecialController0);
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);

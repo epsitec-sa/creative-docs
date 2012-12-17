@@ -66,7 +66,6 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController1.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />
@@ -74,6 +73,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderUserRoleViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderUserScopeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderUserViewController.cs" />
+    <Compile Include="Controllers\SetControllers\SetAiderGroupViewController0.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderHouseholdViewController1.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController3.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />

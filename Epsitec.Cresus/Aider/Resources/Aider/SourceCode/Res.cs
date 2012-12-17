@@ -32,6 +32,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVA2D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 418));
+				//	designer:cap/LVG422
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupMembersDisplay = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 68));
+				//	designer:cap/LVG522
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupMembersPick = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 69));
 				//	designer:cap/LVG322
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupParticipant = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 67));
 				//	designer:cap/LVG102
@@ -73,6 +77,10 @@ namespace Epsitec.Aider
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVA2D
 				public const long ShowAiderGroupDef = 0x3F50000A0001A2L;
+				//	designer:cap/LVG422
+				public const long ShowAiderGroupMembersDisplay = 0x3F500050000044L;
+				//	designer:cap/LVG522
+				public const long ShowAiderGroupMembersPick = 0x3F500050000045L;
 				//	designer:cap/LVG322
 				public const long ShowAiderGroupParticipant = 0x3F500050000043L;
 				//	designer:cap/LVG102
