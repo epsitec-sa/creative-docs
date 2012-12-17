@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -17,12 +17,56 @@ namespace Epsitec.Common.Types
 		public Date(System.DateTime dateTime)
 		{
 			long dateTimeTicks = dateTime.ToLocalTime ().Ticks;
-			this.days = (int) (dateTimeTicks / Time.TicksPerDay);
+
+			if (dateTimeTicks == 0)
+			{
+				this.days = 0;
+			}
+			else
+			{
+				this.days = ((int) (dateTimeTicks / Time.TicksPerDay) << 4) | Date.FlagDayDefined | Date.FlagMonthDefined | Date.FlagYearDefined;
+			}
 		}
 
 		public Date(int year, int month, int day)
-			: this (new System.DateTime (year, month, day, 0, 0, 0, System.DateTimeKind.Local))
 		{
+			int flags = 0;
+
+			if (year == 0)
+			{
+				year = 1;
+			}
+			else
+			{
+				flags |= Date.FlagYearDefined;
+			}
+			if (month == 0)
+			{
+				month = 1;
+			}
+			else
+			{
+				flags |= Date.FlagMonthDefined;
+			}
+			if (day == 0)
+			{
+				day = 1;
+			}
+			else
+			{
+				flags |= Date.FlagDayDefined;
+			}
+
+			if (flags == 0)
+			{
+				this.days = 0;
+			}
+			else
+			{
+				var days = (int) (new System.DateTime (year, month, day).Ticks / Time.TicksPerDay);
+
+				this.days = (days << 4) | flags;
+			}
 		}
 
 		public Date(long ticks)
@@ -30,9 +74,9 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		private Date(int days, bool justToMakeSure)
+		private Date(int binary, bool justToMakeSure)
 		{
-			this.days = days;
+			this.days = binary;
 		}
 
 
@@ -40,7 +84,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.InternalDate.Day;
+				return this.HasDay ? this.InternalDate.Day : 0;
 			}
 		}
 
@@ -64,7 +108,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.InternalDate.Month;
+				return this.HasMonth ? this.InternalDate.Month : 0;
 			}
 		}
 
@@ -72,7 +116,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.InternalDate.Year;
+				return this.HasYear ? this.InternalDate.Year : 0;
 			}
 		}
 
@@ -80,7 +124,31 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.days * Time.TicksPerDay;
+				return this.InternalDays * Time.TicksPerDay;
+			}
+		}
+
+		public bool								HasDay
+		{
+			get
+			{
+				return (this.days & Date.FlagDayDefined) != 0;
+			}
+		}
+
+		public bool								HasMonth
+		{
+			get
+			{
+				return (this.days & Date.FlagMonthDefined) != 0;
+			}
+		}
+
+		public bool								HasYear
+		{
+			get
+			{
+				return (this.days & Date.FlagYearDefined) != 0;
 			}
 		}
 
@@ -93,7 +161,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static readonly Date				Null = new Date (-1, true);
+		public static readonly Date				Null = new Date (0, true);
 
 
 		public Date AddDays(int value)
@@ -257,7 +325,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (this.days == -1);
+				return (this.days == 0);
 			}
 		}
 
@@ -300,21 +368,26 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 
+		private int ToBinary()
+		{
+			return this.days;
+		}
+
 		#region Converter Class
 		private class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
-				int days = System.Int32.Parse (value, culture);
-				Date date = new Date (days, true);
+				int binary = System.Int32.Parse (value, System.Globalization.NumberStyles.HexNumber, culture);
+				Date date = new Date (binary, true);
 				return date;
 			}
 
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Date date = (Date) value;
-				long days = date.days;
-				return string.Format (culture, "{0}", days);
+				long binary = date.ToBinary ();
+				return string.Format (culture, "{0:X6}", binary);
 			}
 		}
 		#endregion
@@ -323,14 +396,29 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.IsNull)
-				{
-					throw new System.NullReferenceException ("Date is Null.");
-				}
-
-				return new System.DateTime (this.days * Time.TicksPerDay, System.DateTimeKind.Local);
+				return new System.DateTime (this.InternalDays * Time.TicksPerDay, System.DateTimeKind.Local);
 			}
 		}
+
+		private int								InternalDays
+		{
+			get
+			{
+				if (this.IsNull)
+				{
+					return 0;
+				}
+				else
+				{
+					return (this.days >> 4) & 0x000fffff;
+				}
+			}
+		}
+
+
+		private const int						FlagYearDefined  = 0x0004;
+		private const int						FlagMonthDefined = 0x0002;
+		private const int						FlagDayDefined   = 0x0001;
 
 		private readonly int					days;
 	}

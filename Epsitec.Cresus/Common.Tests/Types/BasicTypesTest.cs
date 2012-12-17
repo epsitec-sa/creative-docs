@@ -1,3 +1,6 @@
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
@@ -31,7 +34,7 @@ namespace Epsitec.Common.Tests.Types
 		public void CheckDefaultTypes()
 		{
 			Assert.IsNotNull (StringType.NativeDefault);
-			Assert.AreEqual ("Default.String", StringType.NativeDefault.Name);
+			Assert.AreEqual ("Default.StringNative", StringType.NativeDefault.Name);
 			Assert.IsTrue (StringType.NativeDefault.IsNullable);
 			
 			Assert.IsNotNull (IntegerType.Default);
@@ -270,6 +273,9 @@ namespace Epsitec.Common.Tests.Types
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (typeof (Date));
 
 			Date datePast = new Date (2006, 2, 15);
+			Date dateNoDay = new Date (2006, 2, 0);
+			Date dateNoMonth = new Date (2006, 0, 0);
+			Date dateOnlyDayMonth = new Date (0, 2, 15);
 			Date dateNow = new Date (System.DateTime.Now);
 			Date dateNull = Date.FromObject (null);
 
@@ -278,8 +284,24 @@ namespace Epsitec.Common.Tests.Types
 			Assert.IsTrue (datePast <= dateNow);
 			Assert.IsFalse (datePast > dateNow);
 			Assert.IsFalse (datePast >= dateNow);
+			Assert.IsTrue (datePast.HasDay);
+			Assert.IsTrue (datePast.HasMonth);
+			Assert.IsTrue (datePast.HasYear);
+			Assert.IsFalse (dateNoDay.HasDay);
+			Assert.IsFalse (dateNoMonth.HasMonth);
+			Assert.IsFalse (dateOnlyDayMonth.HasYear);
 
-			Assert.AreEqual ("732356", converter.ConvertToInvariantString (datePast));
+			Assert.AreEqual ("B2CC47", converter.ConvertToInvariantString (datePast));
+			Assert.AreEqual ("000000", converter.ConvertToInvariantString (dateNull));
+			Assert.AreEqual (datePast, converter.ConvertFromInvariantString ("B2CC47"));
+
+			Assert.AreEqual (new Date (2006, 2, 1).Ticks, dateNoDay.Ticks);
+			Assert.AreEqual ("B2CB66", converter.ConvertToInvariantString (dateNoDay));
+			
+			Assert.IsTrue (dateNoDay < new Date (2006, 2, 1));
+			Assert.IsTrue (dateNoDay > new Date (2006, 1, 31));
+			Assert.IsTrue (dateNoMonth < new Date (2006, 1, 1));
+			Assert.IsTrue (dateNoMonth > new Date (2005, 12, 31));
 			
 			Assert.IsTrue (dateNull.IsNull);
 		}
