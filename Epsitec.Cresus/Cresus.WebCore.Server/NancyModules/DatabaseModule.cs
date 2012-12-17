@@ -1,24 +1,11 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
-
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Business.UserManagement;
+﻿using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Metadata;
-
-using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
-using Nancy.Json;
 
 using System;
 
