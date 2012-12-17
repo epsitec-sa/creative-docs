@@ -1621,6 +1621,37 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 		[TestMethod]
+		public void IsInSetCall3()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var contact = new AbstractContactEntity ();
+				var subQuery = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity ()
+					{
+						Firstname = "Alfred"
+					}
+				};
+
+				this.Check
+				(
+					dataContext,
+					contact,
+					x => SqlMethods.IsInSet (x.NaturalPerson, subQuery),
+					new SubQuerySetComparison
+					(
+						ReferenceField.Create (contact, c => c.NaturalPerson),
+						SetComparator.In,
+						new SubQuery (subQuery)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
 		public void IsNotInSetCall1()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -1730,6 +1761,37 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 								new Constant ("c")
 							)
 						)
+					)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void IsNotInSetCall3()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var subRequest = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity ()
+					{
+						Firstname = "Alfred",
+					},
+				};
+
+				this.Check
+				(
+					dataContext,
+					person,
+					x => SqlMethods.IsNotInSet (x, subRequest),
+					new SubQuerySetComparison
+					(
+						InternalField.CreateId(person),
+						SetComparator.NotIn,
+						new SubQuery (subRequest)
 					)
 				);
 			}

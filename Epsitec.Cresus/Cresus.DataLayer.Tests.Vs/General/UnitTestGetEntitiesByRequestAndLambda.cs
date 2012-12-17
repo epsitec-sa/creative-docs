@@ -1065,6 +1065,34 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void IsInSetCall3()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var contact = new AbstractContactEntity ();
+				var subQuery = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity ()
+					{
+						Firstname = "Alfred"
+					}
+				};
+
+				var request = Request.Create (contact);
+				request.AddCondition(dataContext, contact, c => SqlMethods.IsInSet (c.NaturalPerson, subQuery));
+
+				var result = dataContext.GetByRequest<AbstractContactEntity> (request).ToArray ();
+				var alfred = dataContext.GetByRequest<NaturalPersonEntity> (subQuery).Single ();
+
+				Assert.IsTrue (result.Count () == 2);
+				Assert.IsTrue (result.Any (c => c == alfred.Contacts[0]));
+				Assert.IsTrue (result.Any (c => c == alfred.Contacts[1]));
+			}
+		}
+
+
+		[TestMethod]
 		public void IsNotInSetCall1()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -1107,6 +1135,33 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckGertrude (p)));
 				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckHans (p)));
 
+			}
+		}
+
+
+		[TestMethod]
+		public void IsNotInSetCall3()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var person = new NaturalPersonEntity ();
+				var subRequest = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity ()
+					{
+						Firstname = "Alfred",
+					},
+				};
+
+				var request = Request.Create (person);
+				request.AddCondition (dataContext, person, p => SqlMethods.IsNotInSet (p, subRequest));
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (result.Count () == 2);
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckHans (p)));
 			}
 		}
 

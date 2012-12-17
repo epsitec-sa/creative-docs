@@ -3,9 +3,8 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Database;
-
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System;
 
@@ -521,6 +520,14 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				expression = this.VisitMethodCallIsNotInValueSet (node);
 			}
+			else if (method == SqlMethods.IsInSubquerySetMethodInfo)
+			{
+				expression = this.VisitMethodCallIsInSubquerySet (node);
+			}
+			else if (method == SqlMethods.IsNotInSubquerySetMethodInfo)
+			{
+				expression = this.VisitMethodCallIsNotInSubquerySet (node);
+			}
 			else if (method.Name == "Any" && method.DeclaringType == typeof (Enumerable))
 			{
 				expression = this.VisitMethodCallAny (node);
@@ -677,6 +684,28 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		private object VisitMethodCallIsInSubquerySet(MethodCallExpression methodCall)
+		{
+			return new SubQuerySetComparison
+			(
+				(EntityField) this.VisitAndPop (methodCall.Arguments[0]),
+				SetComparator.In,
+				(SubQuery) this.VisitAndPop (methodCall.Arguments[1])
+			);
+		}
+
+
+		private object VisitMethodCallIsNotInSubquerySet(MethodCallExpression methodCall)
+		{
+			return new SubQuerySetComparison
+			(
+				(EntityField) this.VisitAndPop (methodCall.Arguments[0]),
+				SetComparator.NotIn,
+				(SubQuery) this.VisitAndPop (methodCall.Arguments[1])
+			);
+		}
+
+
 		private object VisitMethodCallConvert(MethodCallExpression methodCall)
 		{
 			// This is a dummy conversion method used to bypass the type safety checks of the
@@ -775,6 +804,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		protected override Expression VisitConstant(ConstantExpression node)
 		{
 			object value = node.Value;
+			
+			object result;
 
 			// If we have an entity at this point, we must get its row key and use that as a
 			// constant, since we have a lambda like x => x == myEntity and we want to check for
@@ -789,10 +820,18 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					throw new NotSupportedException ("Entity used as constant has no entity key.");
 				}
 
-				value = entityKey.Value.RowKey.Id.Value;
+				result = new Constant (entityKey.Value.RowKey.Id.Value);
+			}
+			else if (value is Request)
+			{
+				result = new SubQuery ((Request) value);
+			}
+			else
+			{
+				result = new Constant (value);
 			}
 
-			return this.PushAndReturn (node, new Constant (value));
+			return this.PushAndReturn (node, result);
 		}
 
 
