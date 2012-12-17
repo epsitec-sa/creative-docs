@@ -83,6 +83,8 @@
     <Compile Include="Layout\GroupedSummaryTileItem.cs" />
     <Compile Include="Layout\GroupedSummaryTile.cs" />
     <Compile Include="Layout\IntegerField.cs" />
+    <Compile Include="Layout\SetColumn.cs" />
+    <Compile Include="Layout\TileColumn.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="Core\AuthenticationManager.cs" />
     <Compile Include="Core\Databases\Column.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="NancyHosting\Dumper.cs" />
     <Compile Include="Core\Databases\Database.cs" />
     <Compile Include="NancyModules\ScopeModule.cs" />
+    <Compile Include="NancyModules\SetModule.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
     <Compile Include="Tools.cs" />

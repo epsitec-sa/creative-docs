@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 				case ViewControllerMode.Edition:
 				case ViewControllerMode.Creation:
 				case ViewControllerMode.Action:
+				case ViewControllerMode.Set:
 					return mode.ToString ();
 
 				case ViewControllerMode.None:

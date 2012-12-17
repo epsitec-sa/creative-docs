@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Core.Bricks
 		DefaultToCreationOrSummarySubView,
 		DefaultToCreationOrEditionSubView,
 
+		DefaultToSetSubView,
+
 		HideAddButton,
 		HideRemoveButton,
 

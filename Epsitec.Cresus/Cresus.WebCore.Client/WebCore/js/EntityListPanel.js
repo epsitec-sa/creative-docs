@@ -1,6 +1,8 @@
 Ext.require([
-  'Epsitec.cresus.webcore.EntityList',
-  'Epsitec.cresus.webcore.EditableEntityList',
+  'Epsitec.cresus.webcore.DatabaseEntityList',
+  'Epsitec.cresus.webcore.DatabaseEditableEntityList',
+  'Epsitec.cresus.webcore.SetEntityList',
+  'Epsitec.cresus.webcore.SetEditableEntityList',
   'Epsitec.cresus.webcore.Tools'
 ],
 function() {
@@ -26,19 +28,28 @@ function() {
 
     /* Additional methods */
 
-    setupEntityList: function(listOptions) {
+    setupEntityList: function(options) {
+      if (Ext.isDefined(options.databaseName)) {
+        this.setupDatabaseEntityList(options);
+      }
+      else {
+        this.setupSetEntityList(options);
+      }
+    },
+
+    setupDatabaseEntityList: function(options) {
       this.setLoading(true);
       Ext.Ajax.request({
-        url: 'proxy/database/definition/' + listOptions.databaseName,
+        url: 'proxy/database/definition/' + options.databaseName,
         callback: function(requestOptions, success, response) {
-          this.setupEntityListCallback(listOptions, success, response);
+          this.setupDatabaseEntityListCallback(options, success, response);
         },
         scope: this
       });
     },
 
-    setupEntityListCallback: function(options, success, response) {
-      var json, columnDefinitions, sorterDefinitions, type;
+    setupDatabaseEntityListCallback: function(options, success, response) {
+      var json;
 
       this.setLoading(false);
 
@@ -47,20 +58,21 @@ function() {
         return;
       }
 
-      columnDefinitions = json.content.columns;
-      sorterDefinitions = json.content.sorters;
-
-      type = options.editable ?
-          'Epsitec.EditableEntityList' : 'Epsitec.EntityList';
-
-      this.entityList = Ext.create(type, {
+      this.createEntityList(options.entityListTypeName, {
         databaseName: options.databaseName,
-        columnDefinitions: columnDefinitions,
-        sorterDefinitions: sorterDefinitions,
+        columnDefinitions: json.content.columns,
+        sorterDefinitions: json.content.sorters,
         multiSelect: options.multiSelect,
         onSelectionChange: options.onSelectionChange
       });
+    },
 
+    setupSetEntityList: function(options) {
+      this.createEntityList(options.entityListTypeName, options);
+    },
+
+    createEntityList: function(typeName, options) {
+      this.entityList = Ext.create(typeName, options);
       this.add(this.entityList);
     },
 

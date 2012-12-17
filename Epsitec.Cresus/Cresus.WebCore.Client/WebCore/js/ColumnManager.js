@@ -3,8 +3,9 @@ Ext.require([
   'Epsitec.cresus.webcore.BrickWallParser',
   'Epsitec.cresus.webcore.Callback',
   'Epsitec.cresus.webcore.CallbackQueue',
-  'Epsitec.cresus.webcore.EntityColumn',
   'Epsitec.cresus.webcore.EntityListPanel',
+  'Epsitec.cresus.webcore.SetColumn',
+  'Epsitec.cresus.webcore.TileColumn',
   'Epsitec.cresus.webcore.Tools'
 ],
 function() {
@@ -42,8 +43,8 @@ function() {
     createLeftList: function(database) {
       return Ext.create('Epsitec.EntityListPanel', {
         list: {
+          entityListTypeName: 'Epsitec.DatabaseEditableEntityList',
           databaseName: database.name,
-          editable: true,
           multiSelect: false,
           onSelectionChange: Epsitec.Callback.create(
               this.onEntityListSelectionChange,
@@ -198,12 +199,16 @@ function() {
     },
 
     createColumn: function(config, columnId) {
-      var parsedConfig = Epsitec.BrickWallParser.parseEntityColumn(config);
+      var typeName, parsedConfig;
 
+      parsedConfig = Epsitec.BrickWallParser.parseColumn(config);
       parsedConfig.columnId = columnId;
       parsedConfig.columnManager = this;
 
-      return Ext.create('Epsitec.EntityColumn', parsedConfig);
+      typeName = parsedConfig.typeName;
+      delete parsedConfig.typeName;
+
+      return Ext.create(typeName, parsedConfig);
     },
 
     addExistingColumn: function(column) {

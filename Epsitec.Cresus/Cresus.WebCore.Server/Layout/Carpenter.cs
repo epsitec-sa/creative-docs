@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Controllers.SetControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
@@ -60,7 +61,50 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private	EntityColumn BuildEntityColumn(ViewControllerMode viewMode, int? viewId)
 		{
-			return new EntityColumn ()
+			switch (viewMode)
+			{
+				case ViewControllerMode.Action:
+				case ViewControllerMode.Edition:
+				case ViewControllerMode.Summary:
+					return this.BuildTileColumn (viewMode, viewId);
+
+				case ViewControllerMode.Set:
+					return this.BuildSetColumn (viewMode, viewId);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private SetColumn BuildSetColumn(ViewControllerMode viewMode, int? viewId)
+		{
+			using (var controller = Mason.BuildController (this.businessContext, this.entity, viewMode, viewId))
+			{
+				var setController = (ISetViewController) controller;
+
+				var iconUri = setController.GetIcon ();
+				var entityType = this.entity.GetType ();
+				var displayDataSetId = setController.GetDisplayDataSetId ();
+				var pickDataSetId = setController.GetPickDataSetId ();
+
+				return new SetColumn ()
+				{
+					EntityId = this.GetEntityId (this.entity),
+					ViewMode = DataIO.ViewModeToString (viewMode),
+					ViewId = DataIO.ViewIdToString (viewId),
+					Icon = Carpenter.GetIconClass (iconUri, entityType),
+					Title = setController.GetTitle ().ToString (),
+					DisplayDatabase = this.databaseManager.GetDatabase (displayDataSetId),
+					PickDatabase = this.databaseManager.GetDatabase (pickDataSetId),
+				};
+			}
+		}
+
+
+		private TileColumn BuildTileColumn(ViewControllerMode viewMode, int? viewId)
+		{
+			return new TileColumn ()
 			{
 				EntityId = this.GetEntityId (this.entity),
 				ViewMode = DataIO.ViewModeToString (viewMode),
@@ -96,14 +140,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 						this.BuildActionTile (brick),
 					};
 
-				case ViewControllerMode.Creation:
-					throw new NotImplementedException ();
-
 				case ViewControllerMode.Edition:
 					return this.BuildEditionTiles (brick);
-
-				case ViewControllerMode.None:
-					throw new NotImplementedException ();
 
 				case ViewControllerMode.Summary:
 					return this.BuildSummaryTiles (brick, isFirst);
@@ -316,9 +354,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static string GetSubViewMode(ISet<BrickMode> brickModes)
 		{
-			var viewMode = brickModes.Contains (BrickMode.DefaultToSummarySubView)
-				? ViewControllerMode.Summary
-				: ViewControllerMode.Edition;
+			ViewControllerMode viewMode;
+
+			if (brickModes.Contains (BrickMode.DefaultToSummarySubView))
+			{
+				viewMode = ViewControllerMode.Summary;
+			}
+			else if (brickModes.Contains (BrickMode.DefaultToSetSubView))
+			{
+				viewMode = ViewControllerMode.Set;
+			}
+			else
+			{
+				viewMode = ViewControllerMode.Edition;
+			}
 
 			return DataIO.ViewModeToString (viewMode);
 		}
@@ -1020,8 +1069,15 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static string GetIconClass(Brick brick)
 		{
 			var iconUri = Carpenter.GetBrickProperty (brick, BrickPropertyKey.Icon).StringValue;
+			var entityType = brick.GetBrickType ();
 
-			return IconManager.GetCssClassName (iconUri, IconSize.Sixteen, brick.GetBrickType ());
+			return Carpenter.GetIconClass (iconUri, entityType);
+		}
+
+
+		private static string GetIconClass(string iconUri, Type entityType)
+		{
+			return IconManager.GetCssClassName (iconUri, IconSize.Sixteen, entityType);
 		}
 
 

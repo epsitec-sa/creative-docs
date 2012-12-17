@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Epsitec.Cresus.WebCore.Server.Core;
+
+using System.Collections.Generic;
 
 using System.Linq;
+
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class EntityColumn
+	internal abstract class EntityColumn
 	{
 
 
@@ -32,23 +35,19 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public IList<AbstractTile> Tiles
+		public abstract string GetColumnType();
+
+
+		public virtual Dictionary<string, object> ToDictionary(Caches caches)
 		{
-			get;
-			set;
-		}
+			var column = new Dictionary<string, object> ();
 
+			column["type"] = this.GetColumnType ();
+			column["entityId"] = this.EntityId;
+			column["viewMode"] = this.ViewMode;
+			column["viewId"] = this.ViewId;
 
-		public Dictionary<string, object> ToDictionary()
-		{
-			var entityColumn = new Dictionary<string, object> ();
-
-			entityColumn["entityId"] = this.EntityId;
-			entityColumn["viewMode"] = this.ViewMode;
-			entityColumn["viewId"] = this.ViewId;
-			entityColumn["tiles"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();
-
-			return entityColumn;
+			return column;
 		}
 
 

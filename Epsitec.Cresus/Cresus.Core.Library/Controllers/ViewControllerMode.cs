@@ -45,5 +45,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Use the action view controller.
 		/// </summary>
 		Action = 6,
+
+		/// <summary>
+		/// Use the set view controller.
+		/// </summary>
+		Set = 7,
 	}
 }

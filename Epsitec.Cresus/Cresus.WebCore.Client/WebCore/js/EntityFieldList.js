@@ -94,7 +94,7 @@ function() {
 
     onAddClick: function() {
       var callback = Epsitec.Callback.create(this.entityPickerCallback, this);
-      Epsitec.EntityPicker.show(this.databaseName, true, callback);
+      Epsitec.EntityPicker.showDatabase(this.databaseName, true, callback);
     },
 
     entityPickerCallback: function(items) {

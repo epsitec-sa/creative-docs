@@ -7,20 +7,51 @@ Ext.require([
   'Epsitec.cresus.webcore.EnumerationField',
   'Epsitec.cresus.webcore.GroupedSummaryTile',
   'Epsitec.cresus.webcore.GroupedSummaryTileItem',
+  'Epsitec.cresus.webcore.SetColumn',
   'Epsitec.cresus.webcore.SummaryTile',
-  'Epsitec.cresus.webcore.Texts'
+  'Epsitec.cresus.webcore.Texts',
+  'Epsitec.cresus.webcore.TileColumn'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.BrickWallParser', {
     alternateClassName: ['Epsitec.BrickWallParser'],
 
     statics: {
+      parseColumn: function(column) {
+        switch (column.type) {
+          case 'set':
+            return this.parseSetColumn(column);
+
+          case 'tile':
+            return this.parseTileColumn(column);
+
+          default:
+            throw 'invalid column type: ' + column.type;
+        }
+      },
+
+      parseSetColumn: function(column) {
+        var c = this.parseEntityColumn(column);
+        c.typeName = 'Epsitec.SetColumn';
+        c.title = column.title;
+        c.iconCls = column.icon;
+        c.displayDatabase = column.displayDatabase;
+        c.pickDatabase = column.pickDatabase;
+        return c;
+      },
+
+      parseTileColumn: function(column) {
+        var c = this.parseEntityColumn(column);
+        c.typeName = 'Epsitec.TileColumn';
+        c.items = this.parseTiles(column.tiles);
+        return c;
+      },
+
       parseEntityColumn: function(column) {
         return {
           entityId: column.entityId,
           viewMode: column.viewMode,
-          viewId: column.viewId,
-          items: this.parseTiles(column.tiles)
+          viewId: column.viewId
         };
       },
 

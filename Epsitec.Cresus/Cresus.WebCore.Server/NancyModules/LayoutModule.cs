@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
 
 			var entityColumn = Carpenter.BuildEntityColumn (businessContext, caches, databaseManager, entity, viewMode, viewId);
-			var content = entityColumn.ToDictionary ();
+			var content = entityColumn.ToDictionary (caches);
 
 			return CoreResponse.Success (content);
 		}

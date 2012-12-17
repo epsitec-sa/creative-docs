@@ -26,7 +26,7 @@ function() {
     constructor: function(options) {
       var newOptions;
 
-      this.entityListPanel = this.createEntityListPanel(options);
+      this.entityListPanel = this.createEntityListPanel(options.list);
 
       newOptions = {
         items: [this.entityListPanel],
@@ -45,13 +45,8 @@ function() {
 
     createEntityListPanel: function(options) {
       return Ext.create('Epsitec.EntityListPanel', {
-        container: {},
-        list: {
-          databaseName: options.databaseName,
-          editable: false,
-          multiSelect: options.multiSelect,
-          onSelectionChange: null
-        }
+        container: { },
+        list: options
       });
     },
 
@@ -86,10 +81,30 @@ function() {
     },
 
     statics: {
-      show: function(databaseName, multiSelect, callback) {
-        var entityPicker = Ext.create('Epsitec.EntityPicker', {
+      showDatabase: function(databaseName, multiSelect, callback) {
+        this.show(callback, {
+          entityListTypeName: 'Epsitec.DatabaseEntityList',
           databaseName: databaseName,
           multiSelect: multiSelect,
+          onSelectionChange: null
+        });
+      },
+
+      showSet: function(viewId, entityId, databaseDefinition, callback) {
+        this.show(callback, {
+          entityListTypeName: 'Epsitec.SetEntityList',
+          viewId: viewId,
+          entityId: entityId,
+          columnDefinitions: databaseDefinition.columns,
+          sorterDefinitions: databaseDefinition.sorters,
+          multiSelect: true,
+          onSelectionChange: null
+        });
+      },
+
+      show: function(callback, listOptions) {
+        var entityPicker = Ext.create('Epsitec.EntityPicker', {
+          list: listOptions,
           callback: callback
         });
         entityPicker.show();

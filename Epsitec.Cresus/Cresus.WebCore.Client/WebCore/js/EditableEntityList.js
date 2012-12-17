@@ -1,7 +1,5 @@
 Ext.require([
-  'Epsitec.cresus.webcore.EntityList',
-  'Epsitec.cresus.webcore.Texts',
-  'Epsitec.cresus.webcore.Tools'
+  'Epsitec.cresus.webcore.EntityList'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.EditableEntityList', {
@@ -12,7 +10,7 @@ function() {
 
     constructor: function(options) {
       var newOptions = {
-        toolbarButtons: this.createEditionButtons()
+        toolbarButtons: this.createEditionButtons(options)
       };
       Ext.applyIf(newOptions, options);
 
@@ -22,51 +20,35 @@ function() {
 
     /* Additional methods */
 
-    createEditionButtons: function() {
-      var buttonCreate, buttonDelete;
+    createEditionButtons: function(options) {
+      var buttonAdd, buttonRemove;
 
-      buttonCreate = Ext.create('Ext.Button', {
-        text: Epsitec.Texts.getCreateLabel(),
+      buttonAdd = Ext.create('Ext.Button', {
+        text: options.addLabel,
         iconCls: 'icon-add',
         listeners: {
-          click: this.onCreateHandler,
+          click: this.onAddHandler,
           scope: this
         }
       });
 
-      buttonDelete = Ext.create('Ext.Button', {
-        text: Epsitec.Texts.getDeleteLabel(),
+      buttonRemove = Ext.create('Ext.Button', {
+        text: options.removeLabel,
         iconCls: 'icon-remove',
         listeners: {
-          click: this.onDeleteHandler,
+          click: this.onRemoveHandler,
           scope: this
         }
       });
 
-      return [buttonCreate, buttonDelete];
+      return [buttonAdd, buttonRemove];
     },
 
-    onCreateHandler: function() {
-      if (this.filters.getFilterData().length > 0) {
-        Ext.MessageBox.confirm(
-            Epsitec.Texts.getWarningTitle(),
-            Epsitec.Texts.getEntityCreationWarningMessage(),
-            this.onCreateHandlerCallback,
-            this
-        );
-      }
-      else {
-        this.createEntity();
-      }
+    onAddHandler: function() {
+      this.handleAdd();
     },
 
-    onCreateHandlerCallback: function(buttonId) {
-      if (buttonId === 'yes') {
-        this.createEntity();
-      }
-    },
-
-    onDeleteHandler: function() {
+    onRemoveHandler: function() {
       var entityItems;
 
       entityItems = this.getSelectedItems();
@@ -74,61 +56,7 @@ function() {
         return;
       }
 
-      this.deleteEntities(entityItems);
-    },
-
-    createEntity: function() {
-      this.setLoading();
-      Ext.Ajax.request({
-        url: 'proxy/database/create',
-        method: 'POST',
-        params: {
-          databaseName: this.databaseName
-        },
-        callback: this.createEntityCallback,
-        scope: this
-      });
-    },
-
-    createEntityCallback: function(options, success, response) {
-      var json, entityId;
-
-      this.setLoading(false);
-
-      json = Epsitec.Tools.processResponse(success, response);
-      if (json === null) {
-        return;
-      }
-
-      entityId = json.content.id;
-      this.selectEntity(entityId);
-    },
-
-    deleteEntities: function(entityItems) {
-      this.setLoading();
-      Ext.Ajax.request({
-        url: 'proxy/database/delete',
-        method: 'POST',
-        params: {
-          databaseName: this.databaseName,
-          entityIds: entityItems.map(function(e) { return e.id; }).join(';')
-        },
-        callback: this.deleteEntitiesCallback,
-        scope: this
-      });
-    },
-
-    deleteEntitiesCallback: function(options, success, response) {
-      var json;
-
-      this.setLoading(false);
-
-      json = Epsitec.Tools.processResponse(success, response);
-      if (json === null) {
-        return;
-      }
-
-      this.reloadStore();
+      this.handleRemove(entityItems);
     }
   });
 });

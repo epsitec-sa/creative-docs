@@ -214,6 +214,8 @@
     <Compile Include="Controllers\PreviewViewController.cs" />
     <Compile Include="Controllers\ReferenceController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
+    <Compile Include="Controllers\SetControllers\ISetViewController.cs" />
+    <Compile Include="Controllers\SetControllers\SetViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\ISummaryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDummyListEntityViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryViewController.cs" />

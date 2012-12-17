@@ -44,7 +44,7 @@ function() {
 
     onPickClick: function() {
       var callback = Epsitec.Callback.create(this.entityPickerCallback, this);
-      Epsitec.EntityPicker.show(this.databaseName, false, callback);
+      Epsitec.EntityPicker.showDatabase(this.databaseName, false, callback);
     },
 
     entityPickerCallback: function(selectedItems) {
