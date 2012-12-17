@@ -126,8 +126,8 @@ function() {
       this.columnManager.refreshColumn(this);
     },
 
-    refreshToLeft: function() {
-      this.columnManager.refreshColumnsToLeft(this);
+    refreshToLeft: function(includeCurrent) {
+      this.columnManager.refreshColumnsToLeft(this, includeCurrent);
     },
 
     refreshAll: function() {
@@ -138,7 +138,7 @@ function() {
       var callbackQueue = null;
       if (refreshToLeft) {
         callbackQueue = Epsitec.CallbackQueue.create(
-            function() { this.refreshToLeft(); },
+            function() { this.refreshToLeft(true); },
             this
             );
       }

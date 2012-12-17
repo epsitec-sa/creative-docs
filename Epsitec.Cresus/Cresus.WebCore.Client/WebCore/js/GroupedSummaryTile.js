@@ -138,7 +138,7 @@ function() {
       }
 
       this.column.removeToRight();
-      this.column.refreshToLeft();
+      this.column.refreshToLeft(true);
     },
 
     handleItemClick: function(item) {

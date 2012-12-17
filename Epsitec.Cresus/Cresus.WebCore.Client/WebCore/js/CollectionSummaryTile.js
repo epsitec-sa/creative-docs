@@ -112,7 +112,7 @@ function() {
       if (this.isSelected()) {
         this.column.removeToRight();
       }
-      this.column.refreshToLeft();
+      this.column.refreshToLeft(true);
     },
 
     getState: function() {

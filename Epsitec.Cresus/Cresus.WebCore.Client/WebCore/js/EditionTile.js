@@ -111,7 +111,7 @@ function() {
         return;
       }
 
-      this.column.refreshToLeft();
+      this.column.refreshToLeft(true);
     },
 
     showError: function(error) {
