@@ -245,6 +245,12 @@ namespace Epsitec.Aider.Data.ECh
 			var xDateOfBirthChild = xDateOfBirth.Elements ().Single ();
 			var xDateOfBirthChildName = xDateOfBirthChild.Name;
 
+			if (xDateOfBirthChildName == EChXmlTags.ECh0044.Year)
+			{
+				int year = (int) xDateOfBirthChild;
+				return new Date (year, 0, 0);
+			}
+
 			if (xDateOfBirthChildName != EChXmlTags.ECh0044.YearMonthDay)
 			{
 				throw new FormatException ("Partial dates are not supported.");
