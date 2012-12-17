@@ -49,11 +49,12 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+
 		/// <summary>
-		/// Allows the DataSetAccessor to be customised with a filter that is not persisted in the
-		/// database.
+		/// This action will be called before the creation of the RequestView object, so you can
+		/// set up the Request as you want here.
 		/// </summary>
-		public IFilter							CustomFilter
+		public System.Action<DataContext, Request, AbstractEntity> Customizer
 		{
 			get;
 			set;
@@ -180,7 +181,6 @@ namespace Epsitec.Cresus.Core.Data
 			request.AddCondition (this.dataContext, example, scopeFilter);
 			request.AddCondition (this.dataContext, example, dataSetSettings.Filter);
 			request.AddCondition (this.dataContext, example, additionalFilter);
-			request.AddCondition (this.dataContext, example, this.CustomFilter);
 
 			IEnumerable<SortClause> sortClauses;
 
@@ -198,6 +198,11 @@ namespace Epsitec.Cresus.Core.Data
 			}
 
 			request.SortClauses.AddRange (sortClauses);
+
+			if (this.Customizer != null)
+			{
+				this.Customizer (this.dataContext, request, example);
+			}
 
 			return this.dataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
 		}
