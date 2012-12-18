@@ -1,17 +1,17 @@
 Ext.Loader.setConfig({
   enabled: true,
   paths: {
-    'Epsitec.cresus.webcore': 'js',
-    'Ext.ux': 'lib/extjs/examples/ux'
+    'Epsitec.cresus.webcore': './js',
+    'Ext.ux': './lib/extjs/examples/ux'
   }
 });
 
 Ext.require([
   'Epsitec.cresus.webcore.locale.Locale',
-  'Epsitec.cresus.webcore.LoginPanel',
-  'Epsitec.cresus.webcore.Menu',
-  'Epsitec.cresus.webcore.TabManager',
-  'Epsitec.cresus.webcore.Texts'
+  'Epsitec.cresus.webcore.ui.LoginPanel',
+  'Epsitec.cresus.webcore.ui.Menu',
+  'Epsitec.cresus.webcore.ui.TabManager',
+  'Epsitec.cresus.webcore.tools.Texts'
 ],
 function() {
   Ext.application({
