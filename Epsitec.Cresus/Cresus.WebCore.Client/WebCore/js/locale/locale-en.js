@@ -1,4 +1,4 @@
-Ext.define('Epsitec.cresus.webcore.Locale', {
+Ext.define('Epsitec.cresus.webcore.locale.Locale', {
   alternateClassName: ['Epsitec.Locale'],
   statics: {
     getLocaleName: function() {

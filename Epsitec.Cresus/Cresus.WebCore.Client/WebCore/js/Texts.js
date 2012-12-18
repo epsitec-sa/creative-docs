@@ -1,5 +1,5 @@
 Ext.require([
-  'Epsitec.cresus.webcore.Locale'
+  'Epsitec.cresus.webcore.locale.Locale'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.Texts', {

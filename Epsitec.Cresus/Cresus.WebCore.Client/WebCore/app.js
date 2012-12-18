@@ -7,7 +7,7 @@ Ext.Loader.setConfig({
 });
 
 Ext.require([
-  'Epsitec.cresus.webcore.Locale',
+  'Epsitec.cresus.webcore.locale.Locale',
   'Epsitec.cresus.webcore.LoginPanel',
   'Epsitec.cresus.webcore.Menu',
   'Epsitec.cresus.webcore.TabManager',
