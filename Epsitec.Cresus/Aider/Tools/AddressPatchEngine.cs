@@ -59,6 +59,20 @@ namespace Epsitec.Aider.Tools
 				return FixStatus.Invalid;
 			}
 
+			//	Try first to find exact matches (e.g. "RUE TEMPLE" or "CHEMIN COLLÈGE") before
+			//	applying the fuzzier logic, which can lead to false positives (e.g. "RUE NORD"
+			//	might match "RUE COLLÈGE" if no exact match could be found for it, since the
+			//	root of "RUE NORD" is "RUE", not "NORD" as one might expect).
+			
+			var normalizedStreetName = string.Join (" ", tokens);
+			var exactMatches = streets.Where (x => x.NormalizedStreetName == normalizedStreetName).ToList ();
+
+			if (exactMatches.Count > 0)
+			{
+				AddressPatchEngine.FixAddress (exactMatches, ref street, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town);
+				return FixStatus.Applied;
+			}
+
 			//	The tokens are words in upper case, without any accented letters. For instance
 			//	"CHEMIN"/"FONTENAY" or "AVENUE"/"QUATRE"/"MARRONNIERS".
 
@@ -74,20 +88,16 @@ namespace Epsitec.Aider.Tools
 				(n > 2) ? new string[] { tokens[n-3], tokens[n-2], tokens[n-1] } : null
 			};
 
-			List<SwissPostStreetInformation> matches = new List<SwissPostStreetInformation> ();
+			var fuzzyMatches = new List<SwissPostStreetInformation> ();
 
-			foreach (var shuffle in shuffles)
+			foreach (var shuffle in shuffles.Where (x => x != null))
 			{
-				if (shuffle != null)
-				{
-					matches.AddRange (streets.Where (x => x.MatchNameWithHeuristics (shuffle)));
-				}
+				fuzzyMatches.AddRange (streets.Where (x => x.MatchNameWithHeuristics (shuffle)));
 			}
 
-			if (matches.Count > 0)
+			if (fuzzyMatches.Count > 0)
 			{
-				AddressPatchEngine.FixAddress (matches, ref street, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town);
-
+				AddressPatchEngine.FixAddress (fuzzyMatches, ref street, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town);
 				return FixStatus.Applied;
 			}
 
