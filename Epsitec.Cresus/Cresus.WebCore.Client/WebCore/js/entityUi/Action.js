@@ -181,7 +181,7 @@ function() {
           return;
         }
 
-        options = Epsitec.BrickWallParser.parseEntityColumn(json.content);
+        options = Epsitec.BrickWallParser.parseColumn(json.content);
         options.callback = callback;
 
         dialog = Ext.create('Epsitec.Action', options);
