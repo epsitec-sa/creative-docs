@@ -553,7 +553,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var lambda = (LambdaExpression) fieldProperty.ExpressionValue;
 
-			return  this.caches.PropertyAccessorCache.Get (lambda);
+			return this.caches.PropertyAccessorCache.Get (lambda);
 		}
 
 
