@@ -34,6 +34,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				if (entityKey.HasValue)
 				{
 					entityId = entityKey.Value.ToString ();
+
+					// Here we replace the slash by the dash. That way, the entity ids won't mess up
+					// urls like url/with/entityId/inside by introducing an extra slash where it
+					// shouldn't.
+					entityId = entityId.Replace ('/', '-');
 				}
 			}
 
@@ -43,6 +48,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		public static EntityKey? ParseEntityId(string entityId)
 		{
+			entityId = entityId.Replace ('-', '/');
+
 			return EntityKey.Parse (entityId);
 		}
 
