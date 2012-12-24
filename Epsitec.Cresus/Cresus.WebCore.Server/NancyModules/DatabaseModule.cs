@@ -32,8 +32,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Get["/list"] = p => this.Execute (wa => this.GetDatabaseList (wa));
 			Get["/definition/{name}"] = p => this.GetDatabase (p);
-			Get["/get/{name}"] = p => this.Execute (wa => this.GetEntities (wa, p));
-			Get["/getindex/{name}/{id}"] = p => this.Execute (wa => this.GetEntityIndex (wa, p));
+			Get["/get/{name}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntities (wa, b, p)));
+			Get["/getindex/{name}/{id}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntityIndex (wa, b, p)));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetEntities(WorkerApp workerApp, dynamic parameters)
+		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 			var userManager = workerApp.UserManager;
@@ -88,13 +88,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			
 			return Tools.GetEntities
 			(
-				caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters,
-				rawFilters, start, limit
+				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
+				databaseId, rawSorters, rawFilters, start, limit
 			);
 		}
 
 
-		private Response GetEntityIndex(WorkerApp workerApp, dynamic parameters)
+		private Response GetEntityIndex(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
 			var userManager = workerApp.UserManager;
@@ -114,8 +114,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			return Tools.GetEntityIndex
 			(
-				caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters,
-				rawFilters, rawEntityKey
+				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
+				databaseId, rawSorters, rawFilters, rawEntityKey
 			);
 		}
 

@@ -37,7 +37,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		protected abstract object GetValue();
+		public object Value
+		{
+			get;
+			set;
+		}
 
 
 		public override Dictionary<string, object> ToDictionary()
@@ -48,7 +52,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			brick["title"] = this.Title;
 			brick["readOnly"] = this.IsReadOnly;
 			brick["allowBlank"] = this.AllowBlank;
-			brick["value"] = this.GetValue ();
+			brick["value"] = this.Value;
 
 			return brick;
 		}

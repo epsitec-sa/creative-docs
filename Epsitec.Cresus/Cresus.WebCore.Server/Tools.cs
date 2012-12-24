@@ -2,16 +2,10 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
-using Epsitec.Cresus.Core.Controllers;
-
 using Epsitec.Cresus.Core.Data;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
@@ -76,11 +70,11 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		public static Response GetEntities(Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, int start, int limit)
+		public static Response GetEntities(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, int start, int limit)
 		{
 			var database = databaseManager.GetDatabase (databaseId);
 
-			Tools.SetupSortersAndFilters (caches, userManager, database, rawSorters, rawFilters);
+			Tools.SetupSortersAndFilters (businessContext, caches, userManager, database, rawSorters, rawFilters);
 
 			using (var dataSetAccessor = dataSetAccessorGetter (database))
 			{
@@ -104,11 +98,11 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		public static Response GetEntityIndex(Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, string rawEntityKey)
+		public static Response GetEntityIndex(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, string rawEntityKey)
 		{
 			var database = databaseManager.GetDatabase (databaseId);
 
-			Tools.SetupSortersAndFilters (caches, userManager, database, rawSorters, rawFilters);
+			Tools.SetupSortersAndFilters (businessContext, caches, userManager, database, rawSorters, rawFilters);
 
 			var entityKey = EntityIO.ParseEntityId (rawEntityKey);
 
@@ -133,7 +127,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		public static void SetupSortersAndFilters(Caches caches, UserManager userManager, Core.Databases.Database database, string rawSorters, string rawFilters)
+		public static void SetupSortersAndFilters(BusinessContext businessContext, Caches caches, UserManager userManager, Core.Databases.Database database, string rawSorters, string rawFilters)
 		{
 			var dataSetMetadata = database.DataSetMetadata;
 			
@@ -141,7 +135,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			var settings = session.GetDataSetSettings (dataSetMetadata);
 
 			var sorters = SorterIO.ParseSorters (caches, database, rawSorters);
-			var filter = FilterIO.ParseFilter (caches, database, rawFilters);
+			var filter = FilterIO.ParseFilter (businessContext, caches, database, rawFilters);
 
 			settings.Sort.Clear ();
 			settings.Sort.AddRange (sorters);

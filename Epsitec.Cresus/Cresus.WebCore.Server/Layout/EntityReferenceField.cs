@@ -16,22 +16,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public EntityValue Value
-		{
-			get;
-			set;
-		}
-
-
 		protected override string GetEditionTilePartType()
 		{
 			return "entityReferenceField";
-		}
-
-
-		protected override object GetValue()
-		{
-			return this.Value.ToDictionary ();
 		}
 
 

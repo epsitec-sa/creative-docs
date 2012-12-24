@@ -84,8 +84,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				return Tools.GetEntities
 				(
-					caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters,
-					rawFilters, start, limit
+					businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
+					databaseId, rawSorters, rawFilters, start, limit
 				);
 			}
 		}

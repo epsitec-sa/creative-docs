@@ -112,11 +112,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var propertyAccessorCache = caches.PropertyAccessorCache;
 				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
 
-				var fieldType = propertyAccessor.FieldType;
 				var valueType = propertyAccessor.Type;
 				var value = (DynamicDictionaryValue) form[propertyAccessorId];
-
-				var convertedValue = EntityModule.ConvertValue (businessContext, value, fieldType, valueType);
+				var fieldType = propertyAccessor.FieldType;
+				
+				var convertedValue = FieldIO.ConvertFromClient (businessContext, value, valueType, fieldType);
 
 				yield return Tuple.Create (propertyAccessor, convertedValue);
 			}
@@ -203,9 +203,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				var index = int.Parse (name.Substring (2));
 				var argumentType = argumentTypes[index];
-				var fieldType = FieldTypeSelector.GetFieldType (argumentType);
-
-				var convertedValue = EntityModule.ConvertValue (businessContext, value, fieldType, argumentType);
+		
+				var convertedValue = FieldIO.ConvertFromClient (businessContext, value, argumentType);
 
 				arguments[index] = convertedValue;
 				argumentsCheck[index] = true;
@@ -217,111 +216,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			return arguments;
-		}
-
-
-		private static object ConvertValue(BusinessContext businessContext, DynamicDictionaryValue value, FieldType fieldType, Type valueType)
-		{
-			switch (fieldType)
-			{
-				case FieldType.Boolean:
-				case FieldType.Date:
-				case FieldType.Decimal:
-				case FieldType.Enumeration:
-				case FieldType.Integer:
-				case FieldType.Text:
-					return EntityModule.ConvertForValue (value, fieldType, valueType);
-
-				case FieldType.EntityCollection:
-					return EntityModule.ConvertForEntityCollection (businessContext, value, valueType);
-
-				case FieldType.EntityReference:
-					return EntityModule.ConvertForEntityReference (businessContext, value);
-
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static object ConvertForValue(DynamicDictionaryValue value, FieldType fieldType, Type valueType)
-		{
-			object clientValue;
-
-			switch (fieldType)
-			{
-				case FieldType.Boolean:
-					clientValue = EntityModule.ConvertNancyValue (value, v => (bool) v);
-					break;
-
-				case FieldType.Date:
-				case FieldType.Enumeration:
-					clientValue = EntityModule.ConvertNancyValue (value, v => (string) v);
-					break;
-
-				case FieldType.Text:
-					clientValue = EntityModule.ConvertNancyValue (value, v => (string) v) ?? "";
-					break;
-
-				case FieldType.Decimal:
-					clientValue = EntityModule.ConvertNancyValue (value, v => (decimal) v);
-					break;
-
-				case FieldType.Integer:
-					clientValue = EntityModule.ConvertNancyValue (value, v => (long) v);
-					break;
-
-				case FieldType.EntityCollection:
-				case FieldType.EntityReference:
-				default:
-					throw new NotImplementedException ();
-			}
-
-			var fieldValue = ValueConverter.ConvertClientToField (clientValue, fieldType, valueType);
-
-			return ValueConverter.ConvertFieldToEntity (fieldValue, fieldType, valueType);
-		}
-
-
-		private static object ConvertNancyValue(DynamicDictionaryValue value, Func<DynamicDictionaryValue, object> converter)
-		{
-			if (!value.HasValue || string.IsNullOrEmpty ((string) value))
-			{
-				return null;
-			}
-
-			return converter (value);
-		}
-
-
-		private static object ConvertForEntityCollection(BusinessContext businessContext, DynamicDictionaryValue value, Type valueType)
-		{
-			var rawValue = (string) value.Value;
-			var values = EntityIO.ResolveEntities (businessContext, rawValue);
-
-			var listType = typeof (List<>);
-			var genericListType = listType.MakeGenericType (valueType.GetGenericArguments ()[0]);
-
-			var list = (IList) Activator.CreateInstance (genericListType);
-			list.AddRange (values);
-
-			return list;
-		}
-
-
-		private static object ConvertForEntityReference(BusinessContext businessContext, DynamicDictionaryValue value)
-		{
-			var entityId = (string) value;
-
-			AbstractEntity entity = null;
-
-			if (!string.IsNullOrEmpty (entityId) && !Constants.KeyForNullValue.Equals (entityId))
-			{
-				entity = EntityIO.ResolveEntity (businessContext, entityId);
-			}
-
-			return entity;
 		}
 
 

@@ -2,6 +2,7 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -16,6 +17,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using Nancy;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.IO
@@ -26,7 +28,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 	{
 
 
-		public static EntityFilter ParseFilter(Caches caches, Core.Databases.Database database, string filterParameter)
+		public static EntityFilter ParseFilter(BusinessContext businessContext, Caches caches, Core.Databases.Database database, string filterParameter)
 		{
 			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
 			var entityId = EntityInfo.GetTypeId (entityType);
@@ -42,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					var column = FilterIO.ParseColumn (caches, database, filter);
 
 					var columnId = column.MetaData.Id;
-					var columnFilter = FilterIO.ParseColumnFilter (caches, column, filter);
+					var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
 					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
 
 					entityFilter.Columns.Add (columnRef);
@@ -62,7 +64,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		private static EntityColumnFilter ParseColumnFilter(Caches caches, Column column, Dictionary<string, object> filter)
+		private static EntityColumnFilter ParseColumnFilter(BusinessContext businessContext, Caches caches, Column column, Dictionary<string, object> filter)
 		{
 			var lambda = column.LambdaExpression;
 			var propertyAccessorCache = caches.PropertyAccessorCache;
@@ -76,7 +78,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			if (type == "list")
 			{
-				return FilterIO.ParseColumnSetFilter (fieldType, valueType, type, value);
+				return FilterIO.ParseColumnSetFilter (businessContext, fieldType, valueType, value);
 			}
 			else
 			{
@@ -86,15 +88,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					comparison = "eq";
 				}
 
-				return FilterIO.ParseColumnComparisonFilter (fieldType, valueType, type, comparison, value);
+				return FilterIO.ParseColumnComparisonFilter (businessContext, fieldType, valueType, type, comparison, value);
 			}
 		}
 
 
-		private static EntityColumnFilter ParseColumnSetFilter(FieldType fieldType, Type valueType, string type, object value)
+		private static EntityColumnFilter ParseColumnSetFilter(BusinessContext businessContext, FieldType fieldType, Type valueType, object value)
 		{
 			var valueArray = (object[]) value;
-			var constants = valueArray.Select (v => FilterIO.ParseConstant (fieldType, valueType, type, v));
+			var constants = valueArray.Select (v => FilterIO.ParseConstant (businessContext, fieldType, valueType, v));
 
 			var filterExpression = new ColumnFilterSetExpression ()
 			{
@@ -110,10 +112,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		private static EntityColumnFilter ParseColumnComparisonFilter(FieldType fieldType, Type valueType, string type, object comparator, object value)
+		private static EntityColumnFilter ParseColumnComparisonFilter(BusinessContext businessContext, FieldType fieldType, Type valueType, string type, object comparator, object value)
 		{
 			var comparison = FilterIO.ParseComparison (type, comparator);
-			var constant = FilterIO.ParseConstant (fieldType, valueType, type, value);
+			var constant = FilterIO.ParseConstant (businessContext, fieldType, valueType, value);
 
 			var filterExpression = new ColumnFilterComparisonExpression ()
 			{
@@ -148,32 +150,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		private static ColumnFilterConstant ParseConstant(FieldType fieldType, Type valueType, string type, object value)
+		private static ColumnFilterConstant ParseConstant(BusinessContext businessContext, FieldType fieldType, Type valueType, object value)
 		{
-			var clientValue = value;
-
-			switch (type)
-			{
-				case "numeric":
-					switch (fieldType)
-					{
-						case FieldType.Integer:
-							clientValue = Convert.ToInt64 (value);
-							break;
-
-						case FieldType.Decimal:
-							clientValue = Convert.ToDecimal (value);
-							break;
-					}
-					break;
-
-				case "string":
-					clientValue = "%" + Constant.Escape ((string) clientValue) + "%";
-					break;
-			}
-
-			var fieldValue = ValueConverter.ConvertClientToField (clientValue, fieldType, valueType);
-			var entityValue = ValueConverter.ConvertFieldToEntity (fieldValue, fieldType, valueType);
+			var nancyValue = new DynamicDictionaryValue (value);
+			var entityValue = FieldIO.ConvertFromClient (businessContext, nancyValue, valueType, fieldType);
 
 			switch (fieldType)
 			{
@@ -208,7 +188,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					}
 
 				case FieldType.Text:
-					return ColumnFilterConstant.From (FormattedText.CastToString (entityValue));
+					var pattern = Constant.Escape (FormattedText.CastToString (entityValue));
+					return ColumnFilterConstant.From ("%" + pattern + "%");
 
 				default:
 					throw new NotImplementedException ();

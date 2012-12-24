@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
@@ -18,22 +16,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public IList<EntityValue> Values
-		{
-			get;
-			set;
-		}
-
-
 		protected override string GetEditionTilePartType()
 		{
 			return "entityCollectionField";
-		}
-
-
-		protected override object GetValue()
-		{
-			return this.Values.Select (v => v.ToDictionary ()).ToList ();
 		}
 
 

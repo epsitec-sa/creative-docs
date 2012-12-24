@@ -2,6 +2,8 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Metadata;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
@@ -91,15 +93,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public object GetColumnData(Caches caches, AbstractEntity entity)
+		public object GetColumnData(DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
 			var propertyAccessor = caches.PropertyAccessorCache.Get (this.LambdaExpression);
-			var fieldType = propertyAccessor.FieldType;
+			var value = propertyAccessor.GetValue (entity);
 
-			var entityValue = propertyAccessor.GetValue (entity);
-			var fieldValue = ValueConverter.ConvertEntityToField (entityValue, fieldType);
-
-			return ValueConverter.ConvertFieldToClient (fieldValue, fieldType);
+			return FieldIO.ConvertToClient (dataContext, value, propertyAccessor.FieldType);
 		}
 
 

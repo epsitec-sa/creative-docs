@@ -1,6 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
-namespace Epsitec.Cresus.WebCore.Server.Layout
+﻿namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
@@ -8,22 +6,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public bool? Value
-		{
-			get;
-			set;
-		}
-
-
 		protected override string GetEditionTilePartType()
 		{
 			return "booleanField";
-		}
-
-
-		protected override object GetValue()
-		{
-			return ValueConverter.ConvertFieldToClientForBool (this.Value);
 		}
 
 		

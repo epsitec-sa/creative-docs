@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			{
 				var columnId = column.GetId (caches);
 
-				data[columnId] = column.GetColumnData (caches, entity);
+				data[columnId] = column.GetColumnData (dataContext, caches, entity);
 			}
 
 			return data;

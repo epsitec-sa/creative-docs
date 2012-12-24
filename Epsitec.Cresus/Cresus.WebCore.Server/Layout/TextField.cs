@@ -1,5 +1,3 @@
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using System.Collections.Generic;
 
 
@@ -9,13 +7,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 	internal sealed class TextField : AbstractField
 	{
-
-
-		public string Value
-		{
-			get;
-			set;
-		}
 
 
 		public bool IsPassword
@@ -28,12 +19,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		protected override string GetEditionTilePartType()
 		{
 			return "textField";
-		}
-
-
-		protected override object GetValue()
-		{
-			return ValueConverter.ConvertFieldToClientForText (this.Value);
 		}
 
 

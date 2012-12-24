@@ -1,5 +1,3 @@
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
 using System;
 
 using System.Collections.Generic;
@@ -13,13 +11,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public Enum Value
-		{
-			get;
-			set;
-		}
-
-
 		public string TypeName
 		{
 			get;
@@ -30,12 +21,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		protected override string GetEditionTilePartType()
 		{
 			return "enumerationField";
-		}
-
-
-		protected override object GetValue()
-		{
-			return ValueConverter.ConvertFieldToClientForEnumeration (this.Value);
 		}
 		
 		

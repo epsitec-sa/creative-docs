@@ -1,7 +1,4 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
-
-namespace Epsitec.Cresus.WebCore.Server.Layout
+﻿namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
@@ -9,22 +6,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public long? Value
-		{
-			get;
-			set;
-		}
-
-
 		protected override string GetEditionTilePartType()
 		{
 			return "integerField";
-		}
-
-
-		protected override object GetValue()
-		{
-			return ValueConverter.ConvertFieldToClientForInteger (this.Value);
 		}
 
 

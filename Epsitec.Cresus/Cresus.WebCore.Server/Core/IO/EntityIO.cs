@@ -56,17 +56,29 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		public static AbstractEntity ResolveEntity(BusinessContext businessContext, string entityId)
 		{
+			return EntityIO.ResolveEntity (businessContext.DataContext, entityId);
+		}
+
+
+		public static AbstractEntity ResolveEntity(DataContext dataContext, string entityId)
+		{
 			var entityKey = EntityIO.ParseEntityId (entityId);
 
-			return businessContext.DataContext.ResolveEntity (entityKey);
+			return dataContext.ResolveEntity (entityKey);
 		}
 
 
 		public static IEnumerable<AbstractEntity> ResolveEntities(BusinessContext businessContext, string entityIds)
 		{
+			return EntityIO.ResolveEntities (businessContext.DataContext, entityIds);
+		}
+
+
+		public static IEnumerable<AbstractEntity> ResolveEntities(DataContext dataContext, string entityIds)
+		{
 			return from id in entityIds.Split (';')
 				   where !string.IsNullOrEmpty (id)
-				   select EntityIO.ResolveEntity (businessContext, id);
+				   select EntityIO.ResolveEntity (dataContext, id);
 		}
 
 
