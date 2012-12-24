@@ -57,9 +57,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		public static IEnumerable<AbstractEntity> ResolveEntities(BusinessContext businessContext, string entityIds)
 		{
-			var ids = entityIds.Split (';');
-
-			return ids.Select (id => EntityIO.ResolveEntity (businessContext, id));
+			return from id in entityIds.Split (';')
+				   where !string.IsNullOrEmpty (id)
+				   select EntityIO.ResolveEntity (businessContext, id);
 		}
 
 
