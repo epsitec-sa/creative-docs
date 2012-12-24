@@ -17,6 +17,6 @@ namespace Epsitec.Cresus.Bricks
 			return this.parent;
 		}
 
-		readonly TParent parent;
+		private readonly TParent parent;
 	}
 }
