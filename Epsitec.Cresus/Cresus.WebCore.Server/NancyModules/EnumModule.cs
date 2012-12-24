@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetEnum(dynamic parameters)
 		{
-			string typeName = parameters.name;
-			var type = DataIO.ParseType (typeName);
+			string typeId = parameters.name;
+			var type = this.CoreServer.Caches.TypeCache.GetItem ((string) typeId);
 
 			var values = EnumModule.GetValues (type).ToList ();
 

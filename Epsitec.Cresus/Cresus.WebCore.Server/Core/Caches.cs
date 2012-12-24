@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.propertyAccessorCache = new PropertyAccessorCache ();
 			this.autoCreatorCache = new AutoCreatorCache ();
 			this.columnIdCache = new IdCache<string> ();
+			this.typeCache = new IdCache<Type> ();
 		}
 
 
@@ -48,11 +49,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		internal IdCache<Type> TypeCache
+		{
+			get
+			{
+				return this.typeCache;
+			}
+		}
+
+
 		public void Dispose()
 		{
 			this.propertyAccessorCache.Dispose ();
 			this.autoCreatorCache.Dispose ();
 			this.columnIdCache.Dispose ();
+			this.typeCache.Dispose ();
 		}
 
 
@@ -63,6 +74,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 
 		private readonly IdCache<string> columnIdCache;
+
+
+		private readonly IdCache<Type> typeCache;
 
 
 	}

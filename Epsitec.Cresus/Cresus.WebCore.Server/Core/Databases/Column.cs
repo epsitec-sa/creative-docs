@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			if (fieldType == FieldType.Enumeration)
 			{
-				data["enumerationName"] = DataIO.TypeToString (this.LambdaExpression.ReturnType);
+				data["enumerationName"] = caches.TypeCache.GetId (this.LambdaExpression.ReturnType);
 			}
 
 			return data;
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			if (this.Filterable && fieldType == FieldType.Enumeration)
 			{
-				data["enumerationName"] = DataIO.TypeToString (this.LambdaExpression.ReturnType);
+				data["enumerationName"] = caches.TypeCache.GetId (this.LambdaExpression.ReturnType);
 			}
 
 			return data;

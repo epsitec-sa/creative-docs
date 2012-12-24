@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return this.BuildEntityReferenceField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				case FieldType.Enumeration:
-					return Carpenter.BuildEnumerationField (entity, propertyAccessor, brickProperties, includeTitle);
+					return this.BuildEnumerationField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				case FieldType.Integer:
 					return Carpenter.BuildIntegerField (entity, propertyAccessor, brickProperties, includeTitle);
@@ -618,13 +618,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static EnumerationField BuildEnumerationField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		private EnumerationField BuildEnumerationField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
 			var field = Carpenter.BuildField<EnumerationField> (propertyAccessor, brickProperties, includeTitle, null);
 
 			var entityValue = propertyAccessor.GetValue (entity);
 			field.Value = ValueConverter.ConvertEntityToFieldForEnumeration (entityValue);
-			field.TypeName = DataIO.TypeToString (propertyAccessor.Type);
+			field.TypeName = this.caches.TypeCache.GetId (propertyAccessor.Type);
 
 			return field;
 		}
@@ -754,7 +754,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return this.BuildEntityReferenceField (entity, brick, actionFieldType, id);
 
 				case FieldType.Enumeration:
-					return Carpenter.BuildEnumerationField (entity, brick, actionFieldType, id);
+					return this.BuildEnumerationField (entity, brick, actionFieldType, id);
 
 				case FieldType.Integer:
 					return Carpenter.BuildIntegerField (entity, brick, actionFieldType, id);
@@ -831,7 +831,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static EnumerationField BuildEnumerationField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
+		private EnumerationField BuildEnumerationField(AbstractEntity entity, Brick brick, Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 			var field = Carpenter.BuildField<EnumerationField> (entity, brick, id, allowBlank);
@@ -839,7 +839,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var entityValue = Carpenter.GetValue (entity, brick);
 			field.Value = ValueConverter.ConvertEntityToFieldForEnumeration (entityValue);
 
-			field.TypeName = DataIO.TypeToString (actionFieldType);
+			field.TypeName = this.caches.TypeCache.GetId (actionFieldType);
 
 			return field;
 		}

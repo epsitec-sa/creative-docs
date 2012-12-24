@@ -1,13 +1,8 @@
 ﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Business;
-
 using Epsitec.Cresus.Core.Controllers;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System;
 
@@ -20,25 +15,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 	internal static class DataIO
 	{
-
-
-		public static Type ParseType(string value)
-		{
-			var type = Type.GetType (value, throwOnError: false, ignoreCase: false);
-
-			if (type == null)
-			{
-				throw new ArgumentException ();
-			}
-
-			return type;
-		}
-
-
-		public static string TypeToString(Type type)
-		{
-			return type.AssemblyQualifiedName;
-		}
 
 
 		public static Druid ParseDruid(string value)
