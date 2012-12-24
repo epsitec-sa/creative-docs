@@ -298,9 +298,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private static object ConvertForEntityCollection(BusinessContext businessContext, DynamicDictionaryValue value, Type valueType)
 		{
 			var rawValue = (string) value.Value;
-			var values = rawValue.Split (";")
-				.Where (id => !string.IsNullOrEmpty (id))
-				.Select (id => EntityIO.ResolveEntity (businessContext, id));
+			var values = EntityIO.ResolveEntities (businessContext, rawValue);
 
 			var listType = typeof (List<>);
 			var genericListType = listType.MakeGenericType (valueType.GetGenericArguments ()[0]);
