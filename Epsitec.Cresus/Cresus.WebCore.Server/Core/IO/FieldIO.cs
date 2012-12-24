@@ -58,7 +58,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 			else
 			{
-				return FieldIO.ConvertToClient (dataContext, value);
+				var fieldType = FieldTypeSelector.GetFieldType (value.GetType ());
+
+				return FieldIO.ConvertToClient (dataContext, value, fieldType);
 			}
 		}
 
@@ -93,15 +95,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		public static object ConvertToClient(BusinessContext businessContext, object value, FieldType? fieldType = null)
+		public static object ConvertToClient(BusinessContext businessContext, object value, FieldType fieldType)
 		{
 			return FieldIO.ConvertToClient (businessContext.DataContext, value, fieldType);
 		}
 
 
-		public static object ConvertToClient(DataContext dataContext, object value, FieldType? fieldType = null)
+		public static object ConvertToClient(DataContext dataContext, object value, FieldType fieldType)
 		{
-			switch (fieldType ?? FieldTypeSelector.GetFieldType (value.GetType ()))
+			switch (fieldType)
 			{
 				case FieldType.Boolean:
 					return FieldIO.ConvertBooleanToClient (value);
