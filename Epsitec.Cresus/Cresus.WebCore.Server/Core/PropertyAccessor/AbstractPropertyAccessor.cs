@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		public AbstractPropertyAccessor(LambdaExpression lambda, FieldType fieldType, string id)
 		{
 			this.id = id;
-			this.type = lambda.ReturnType;
+			this.lambda = lambda;
 			this.fieldType = fieldType;
 			this.property = EntityInfo.GetStructuredTypeField (lambda);
 
@@ -43,11 +43,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
+		public LambdaExpression Lambda
+		{
+			get
+			{
+				return this.lambda;
+			}
+		}
+
+
 		public Type Type
 		{
 			get
 			{
-				return this.type;
+				return this.lambda.ReturnType;
 			}
 		}
 
@@ -114,7 +123,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		private readonly string id;
 
 
-		private readonly Type type;
+		private readonly LambdaExpression lambda;
 
 
 		private readonly FieldType fieldType;
