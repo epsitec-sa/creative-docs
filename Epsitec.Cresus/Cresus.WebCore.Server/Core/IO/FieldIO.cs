@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		{
 			if (value == null)
 			{
-				return "null";
+				return null;
 			}
 			else if (value is IDictionary)
 			{
