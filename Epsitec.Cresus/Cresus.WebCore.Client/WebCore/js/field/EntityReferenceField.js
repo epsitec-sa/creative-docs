@@ -20,8 +20,8 @@ function() {
 
     // This property is supposed to be an object with the following properties:
     // {
-    //   displayed: ..., <- the value displayed to the user
-    //   submitted: ..., <- the value that is submitted to the server
+    //   id: ...,
+    //   summary: ...,
     // }
     currentValue: null,
 
@@ -53,8 +53,8 @@ function() {
       if (selectedItems.length === 1) {
         entityItem = selectedItems[0];
         value = {
-          displayed: entityItem.summary,
-          submitted: entityItem.id
+          id: entityItem.id,
+          summary: entityItem.summary
         };
       }
       else {
@@ -75,15 +75,15 @@ function() {
     },
 
     valueToRaw: function(value) {
-      if (value === null || value.displayed === null) {
+      if (value === null || value.summary === null) {
         return '';
       }
-      return value.displayed;
+      return value.summary;
     },
 
     rawToValue: function(object) {
       var value = this.currentValue;
-      if (value === null || value.displayed !== object) {
+      if (value === null || value.summary !== object) {
         return null;
       }
       return value;
@@ -93,10 +93,10 @@ function() {
       // We need to override the getSubmitValue function as we don't want to
       // send the whole value to the server, but only part of it.
       var value = this.getValue();
-      if (value === null || value.submitted === null) {
+      if (value === null || value.id === null) {
         return '';
       }
-      return value.submitted;
+      return value.id;
     }
   });
 });

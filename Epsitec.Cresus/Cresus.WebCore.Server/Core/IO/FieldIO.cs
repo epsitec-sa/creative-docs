@@ -244,24 +244,24 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		
 		private static object ConvertEntityToClient(DataContext dataContext, AbstractEntity entity)
 		{
-			string displayed;
-			string submitted;
+			string id;
+			string summary;
 			
-			if (entity == null || entity.IsNull ())
+			if (entity.IsNull ())
 			{
-				displayed = Res.Strings.EmptyValue.ToSimpleText ();
-				submitted = Constants.KeyForNullValue;
+				id = Constants.KeyForNullValue;
+				summary = Res.Strings.EmptyValue.ToSimpleText ();
 			}
 			else
 			{
-				displayed = entity.GetCompactSummary ().ToString ();
-				submitted = EntityIO.GetEntityId (dataContext, entity);
+				id = EntityIO.GetEntityId (dataContext, entity);
+				summary = entity.GetCompactSummary ().ToString ();
 			};
 
 			return new Dictionary<object, string> ()
 			{
-				{ "displayed", displayed },
-				{ "submitted", submitted },
+				{ "id", id },
+				{ "summary", summary },
 			};
 		}
 

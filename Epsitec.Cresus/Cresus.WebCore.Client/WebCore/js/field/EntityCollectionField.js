@@ -62,7 +62,7 @@ function() {
     getSubmitValue: function() {
       return this.entityFieldList
           .getItems()
-          .map(function(item) { return item.submitted; })
+          .map(function(item) { return item.id; })
           .join(';');
     },
 

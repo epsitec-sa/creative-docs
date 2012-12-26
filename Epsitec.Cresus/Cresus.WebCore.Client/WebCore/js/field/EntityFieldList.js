@@ -19,7 +19,7 @@ function() {
     hideHeaders: true,
     columns: [{
       flex: 1,
-      dataIndex: 'displayed'
+      dataIndex: 'summary'
     }],
 
     /* Properties */
@@ -100,8 +100,8 @@ function() {
     entityPickerCallback: function(items) {
       var records = items.map(function(item) {
         return Ext.create('Epsitec.EntityFieldListItem', {
-          submitted: item.id,
-          displayed: item.summary
+          id: item.id,
+          summary: item.summary
         });
       });
       this.store.add(records);

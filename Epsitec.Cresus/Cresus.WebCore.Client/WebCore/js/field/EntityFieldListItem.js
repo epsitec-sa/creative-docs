@@ -6,11 +6,11 @@ Ext.define('Epsitec.cresus.webcore.field.EntityFieldListItem', {
 
   fields: [
     {
-      name: 'submitted',
+      name: 'id',
       type: 'string'
     },
     {
-      name: 'displayed',
+      name: 'summary',
       type: 'string'
     }
   ],
@@ -19,8 +19,8 @@ Ext.define('Epsitec.cresus.webcore.field.EntityFieldListItem', {
 
   toItem: function() {
     return {
-      submitted: this.get('submitted'),
-      displayed: this.get('displayed')
+      id: this.get('id'),
+      summary: this.get('summary')
     };
   }
 });
