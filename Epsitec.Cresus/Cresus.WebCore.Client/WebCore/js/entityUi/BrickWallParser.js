@@ -216,6 +216,7 @@ function() {
         return {
           fieldLabel: brick.title,
           name: brick.name,
+          value: brick.value,
           readOnly: brick.readOnly,
           labelSeparator: null,
           allowBlank: brick.allowBlank
@@ -226,9 +227,11 @@ function() {
         var field = this.parseField(brick);
 
         field.xtype = 'checkboxfield';
-        field.checked = brick.value;
         field.inputValue = true;
         field.uncheckedValue = false;
+
+        field.checked = field.value;
+        delete field.value;
 
         // This is the way of setting the label to the side of the checkbox and
         // to align the checkbox on the right side of the form. It's kind of
@@ -242,48 +245,34 @@ function() {
 
       parseDateField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'datefield';
         field.format = 'd.m.Y';
-        field.value = brick.value;
-
         return field;
       },
 
       parseDecimalField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'numberfield';
-        field.value = brick.value;
-
         return field;
       },
 
       parseEntityCollectionField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'epsitec.entitycollectionfield';
-        field.values = brick.value;
         field.databaseName = brick.databaseName;
-
         return field;
       },
 
       parseEntityReferenceField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'epsitec.entityreferencefield';
-        field.value = brick.value;
         field.databaseName = brick.databaseName;
-
         return field;
       },
 
       parseEnumerationField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'epsitec.enumerationfield';
-        field.value = brick.value;
         field.enumerationName = brick.enumerationName;
 
         return field;
@@ -323,11 +312,8 @@ function() {
 
       parseIntegerField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'numberfield';
         field.allowDecimals = false;
-        field.value = brick.value;
-
         return field;
       },
 
@@ -347,18 +333,13 @@ function() {
 
       parseTextAreaField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'textareafield';
-        field.value = brick.value;
-
         return field;
       },
 
       parseTextField: function(brick) {
         var field = this.parseField(brick);
-
         field.xtype = 'textfield';
-        field.value = brick.value;
 
         if (brick.isPassword === true) {
           field.inputType = 'password';

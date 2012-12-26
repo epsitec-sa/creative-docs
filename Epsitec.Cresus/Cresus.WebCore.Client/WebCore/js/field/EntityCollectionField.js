@@ -29,7 +29,7 @@ function() {
       newOptions = {
         fieldLabel: options.fieldLabel,
         items: [this.entityFieldList, this.hiddenField],
-        originalValues: options.values
+        originalValues: options.value
       };
 
       this.callParent([newOptions]);
@@ -39,10 +39,10 @@ function() {
     /* Additional methods */
 
     createEntityFieldList: function(options) {
-      var values = options.values,
+      var value = options.value,
           readOnly = options.readOnly;
 
-      return Ext.create('Epsitec.EntityFieldList', values, readOnly, {
+      return Ext.create('Epsitec.EntityFieldList', value, readOnly, {
         width: '100%',
         minHeight: '50',
         maxHeight: '150',
