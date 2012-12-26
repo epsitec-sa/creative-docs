@@ -198,7 +198,7 @@ function() {
       var item;
       if (state.itemIndex !== null && state.entityId !== null)
       {
-        item = this.getItemWithEntityId(state.itemIndex, state.entityId);
+        item = this.getItemForState(state.itemIndex, state.entityId);
         this.selectItem(item);
       }
     },
