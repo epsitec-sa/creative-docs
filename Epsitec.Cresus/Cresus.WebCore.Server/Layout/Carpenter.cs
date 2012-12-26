@@ -15,7 +15,6 @@ using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using System;
 
