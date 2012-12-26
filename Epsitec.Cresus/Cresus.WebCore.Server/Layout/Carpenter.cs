@@ -631,7 +631,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static bool IsPassword(BrickPropertyCollection brickProperties)
 		{
-			return brickProperties.PeekAfter (BrickPropertyKey.Password, -1).HasValue;
+			var key = BrickPropertyKey.Password;
+			var brickProperty = Carpenter.GetBrickProperty (brickProperties, key);
+
+			return brickProperty.HasValue;
 		}
 
 
@@ -851,16 +854,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static bool IsReadOnly(BrickPropertyCollection brickProperties)
 		{
-			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
+			var key = BrickPropertyKey.ReadOnly;
+			var brickProperty = Carpenter.GetBrickProperty (brickProperties, key);
+			
+			return brickProperty.HasValue;
 		}
 
 
 		private static string GetFieldTitle(BrickPropertyCollection brickProperties)
 		{
-			var titleProperty = brickProperties.PeekBefore (BrickPropertyKey.Title, -1);
+			var key = BrickPropertyKey.Title;
+			var brickProperty = Carpenter.GetBrickProperty (brickProperties, key);
 
-			return titleProperty.HasValue
-				? titleProperty.Value.StringValue
+			return brickProperty.HasValue
+				? brickProperty.Value.StringValue
 				: null;
 		}
 
@@ -976,6 +983,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 
 			return brickProperty.Value;
+		}
+
+
+		private static BrickProperty? GetBrickProperty(BrickPropertyCollection brickProperties, BrickPropertyKey key)
+		{
+			return brickProperties.PeekAfter (key, -1);
 		}
 
 
