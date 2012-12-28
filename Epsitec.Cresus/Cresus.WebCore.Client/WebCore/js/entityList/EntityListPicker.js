@@ -1,24 +1,14 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
-  'Epsitec.cresus.webcore.tools.Texts'
+  'Epsitec.cresus.webcore.tools.EntityPicker'
 ],
 function() {
-  Ext.define('Epsitec.cresus.webcore.entityList.EntityPicker', {
-    extend: 'Ext.window.Window',
-    alternateClassName: ['Epsitec.EntityPicker'],
-
-    /* Config */
-
-    width: 640,
-    height: 480,
-    layout: 'fit',
-    modal: true,
-    border: false,
-    title: Epsitec.Texts.getEntityPickerTitle(),
+  Ext.define('Epsitec.cresus.webcore.entityList.EntityListPicker', {
+    extend: 'Epsitec.cresus.webcore.tools.EntityPicker',
+    alternateClassName: ['Epsitec.EntityListPicker'],
 
     /* Properties */
 
-    callback: null,
     entityListPanel: null,
 
     /* Constructor */
@@ -29,11 +19,7 @@ function() {
       this.entityListPanel = this.createEntityListPanel(options.list);
 
       newOptions = {
-        items: [this.entityListPanel],
-        buttons: [
-          this.createCancelButton(),
-          this.createOkButton()
-        ]
+        items: [this.entityListPanel]
       };
       Ext.applyIf(newOptions, options);
 
@@ -50,34 +36,8 @@ function() {
       });
     },
 
-    createCancelButton: function() {
-      return Ext.create('Ext.Button', {
-        text: Epsitec.Texts.getCancelLabel(),
-        handler: this.onCancelClick,
-        scope: this
-      });
-    },
-
-    createOkButton: function() {
-      return Ext.create('Ext.Button', {
-        text: Epsitec.Texts.getOkLabel(),
-        handler: this.onSaveClick,
-        scope: this
-      });
-    },
-
-    onSaveClick: function() {
-      var entityList, selectedItems;
-
-      entityList = this.entityListPanel.getEntityList();
-      selectedItems = entityList.getSelectedItems();
-
-      this.callback.execute([selectedItems]);
-      this.close();
-    },
-
-    onCancelClick: function() {
-      this.close();
+    getSelectedItems: function() {
+      return this.entityListPanel.getEntityList().getSelectedItems();
     },
 
     statics: {
@@ -103,11 +63,11 @@ function() {
       },
 
       show: function(callback, listOptions) {
-        var entityPicker = Ext.create('Epsitec.EntityPicker', {
+        var entityListPicker = Ext.create('Epsitec.EntityListPicker', {
           list: listOptions,
           callback: callback
         });
-        entityPicker.show();
+        entityListPicker.show();
       }
     }
   });

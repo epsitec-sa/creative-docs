@@ -1,5 +1,5 @@
 Ext.require([
-  'Epsitec.cresus.webcore.entityList.EntityPicker',
+  'Epsitec.cresus.webcore.entityList.EntityListPicker',
   'Epsitec.cresus.webcore.field.EntityFieldListItem',
   'Epsitec.cresus.webcore.tools.Callback',
   'Epsitec.cresus.webcore.tools.Texts'
@@ -94,7 +94,7 @@ function() {
 
     onAddClick: function() {
       var callback = Epsitec.Callback.create(this.entityPickerCallback, this);
-      Epsitec.EntityPicker.showDatabase(this.databaseName, true, callback);
+      Epsitec.EntityListPicker.showDatabase(this.databaseName, true, callback);
     },
 
     entityPickerCallback: function(items) {

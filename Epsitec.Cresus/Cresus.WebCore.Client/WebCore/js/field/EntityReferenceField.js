@@ -15,7 +15,7 @@ function() {
 
     onPickClick: function() {
       var callback = Epsitec.Callback.create(this.onPickClickCallback, this);
-      Epsitec.EntityPicker.showDatabase(this.databaseName, false, callback);
+      Epsitec.EntityListPicker.showDatabase(this.databaseName, false, callback);
     }
   });
 });

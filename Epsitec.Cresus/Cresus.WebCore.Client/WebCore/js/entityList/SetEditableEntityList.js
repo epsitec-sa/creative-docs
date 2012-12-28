@@ -36,7 +36,7 @@ function() {
 
     handleAdd: function() {
       var callback = Epsitec.Callback.create(this.handleAddCallback, this);
-      Epsitec.EntityPicker.showSet(
+      Epsitec.EntityListPicker.showSet(
           this.viewId, this.entityId, this.pickDatabaseDefinition, callback
       );
     },
