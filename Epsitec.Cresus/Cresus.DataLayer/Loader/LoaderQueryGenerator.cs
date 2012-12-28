@@ -545,22 +545,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlFunctionCode GetComparisonOperatorForSortClause(SortClause sortClause)
-		{
-			switch (sortClause.SortOrder)
-			{
-				case SortOrder.Ascending:
-					return SqlFunctionCode.CompareLessThanOrEqual;
-
-				case SortOrder.Descending:
-					return SqlFunctionCode.CompareGreaterThanOrEqual;
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
 		private string GetAliasForInnerQueryForIndexField(SqlField field)
 		{
 			return field.AsQualifier + "_" + field.AsName;
