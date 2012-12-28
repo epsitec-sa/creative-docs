@@ -48,20 +48,7 @@ function() {
     },
 
     entityPickerCallback: function(selectedItems) {
-      var entityItem, value;
-
-      if (selectedItems.length === 1) {
-        entityItem = selectedItems[0];
-        value = {
-          id: entityItem.id,
-          summary: entityItem.summary
-        };
-      }
-      else {
-        value = null;
-      }
-
-      this.setValue(value);
+      this.setValue(selectedItems.length === 1 ? selectedItems[0] : null);
     },
 
     setValue: function(value) {
