@@ -99,5 +99,18 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			return type.GetInterfaces ().Contains (typeof (T));
 		}
+
+		/// <summary>
+		/// Gets all the base types of the given one, including the given type.
+		/// </summary>
+		public static IEnumerable<System.Type> GetBaseTypes(this System.Type type)
+		{
+			while (type != null)
+			{
+				yield return type;
+
+				type = type.BaseType;
+			}
+		}
 	}
 }
