@@ -3,6 +3,8 @@
 
 using Epsitec.Cresus.Core.Entities;
 
+using System.Collections.Generic;
+
 namespace Epsitec.Aider.Data
 {
 	public static class AiderGroupIds
@@ -42,6 +44,16 @@ namespace Epsitec.Aider.Data
 			path = AiderGroupIds.ReplacePlaceholder (path, "<P>.", parishPath, 1);
 
 			return path;
+		}
+
+		public static IEnumerable<string> GetGroupChainPaths(string path)
+		{
+			var step =  AiderGroupIds.SubgroupLength;
+
+			for (int i = step; i <= path.Length; i += step)
+			{
+				yield return path.Substring (0, i);
+			}
 		}
 
 		private static string GetParishPath()

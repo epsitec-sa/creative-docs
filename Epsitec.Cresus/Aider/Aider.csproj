@@ -66,6 +66,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController1.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
+    <Compile Include="Controllers\SpecialFieldControllers\AiderGroupSpecialField.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />

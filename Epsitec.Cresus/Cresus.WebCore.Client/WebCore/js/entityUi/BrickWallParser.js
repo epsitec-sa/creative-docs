@@ -4,6 +4,7 @@ Ext.require([
   'Epsitec.cresus.webcore.field.EntityCollectionField',
   'Epsitec.cresus.webcore.field.EntityReferenceField',
   'Epsitec.cresus.webcore.field.EnumerationField',
+  'Epsitec.cresus.webcore.plugins.AiderGroupSpecialField',
   'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.EditionTile',
   'Epsitec.cresus.webcore.tile.EmptySummaryTile',

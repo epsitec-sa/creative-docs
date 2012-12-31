@@ -82,6 +82,7 @@ namespace Epsitec.Aider.Entities
 			var level = this.GroupLevel + 1;
 
 			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
+			request.AddSortClause (ValueField.Create (example, x => x.Path));
 
 			return dataContext.GetByRequest (request);
 		}
@@ -116,6 +117,20 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return aiderGroupParticipant;
+		}
+
+
+		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
+		{
+			var example = new AiderGroupEntity ()
+			{
+				GroupLevel = 0,
+			};
+
+			var request = Request.Create (example);
+			request.AddSortClause (ValueField.Create (example, x => x.Path));
+
+			return businessContext.DataContext.GetByRequest (request);
 		}
 
 
@@ -181,6 +196,20 @@ namespace Epsitec.Aider.Entities
 		public static string GetParishGroupName(string parishName)
 		{
 			return "Paroisse de " + parishName;
+		}
+
+
+		public IEnumerable<AiderGroupEntity> GetGroupChain(BusinessContext businessContext)
+		{
+			foreach (var path in AiderGroupIds.GetGroupChainPaths (this.Path))
+			{
+				var example = new AiderGroupEntity ()
+				{
+					Path = path
+				};
+
+				yield return businessContext.DataContext.GetByExample (example).Single ();
+			}
 		}
 
 
