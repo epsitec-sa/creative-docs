@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			else
 			{
 				id = EntityIO.GetEntityId (dataContext, entity);
-				summary = entity.GetCompactSummary ().ToString ();
+				summary = entity.GetCompactSummary ().ToSimpleText ();
 			};
 
 			return new Dictionary<object, string> ()
