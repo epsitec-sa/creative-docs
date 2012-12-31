@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Controllers.SetControllers;
+using Epsitec.Cresus.Core.Controllers.SpecialFieldControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
@@ -515,7 +516,33 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private AbstractField BuildField(AbstractEntity entity, BrickPropertyCollection brickProperties, BrickProperty fieldProperty, bool includeTitle)
 		{
 			var propertyAccessor = this.GetPropertyAccessor (fieldProperty);
+			var specialController = this.GetSpecialController (entity, brickProperties, propertyAccessor);
 
+			return specialController != null
+				? this.BuildSpecialField(entity, brickProperties, includeTitle, propertyAccessor, specialController)
+				: this.BuildRegularField (entity, brickProperties, includeTitle, propertyAccessor);
+		}
+
+
+		private SpecialFieldController GetSpecialController(AbstractEntity entity, BrickPropertyCollection brickProperties, AbstractPropertyAccessor propertyAccessor)
+		{
+			var key = BrickPropertyKey.SpecialFieldController;
+			var brickProperty = Carpenter.GetBrickProperty (brickProperties, key);
+
+			if (!brickProperty.HasValue)
+			{
+				return null;
+			}
+
+			var type = brickProperty.Value.TypeValue;
+			var lambda = propertyAccessor.Lambda;
+
+			return SpecialFieldController.Create (type, this.businessContext, entity, lambda);
+		}
+
+
+		private AbstractField BuildRegularField(AbstractEntity entity, BrickPropertyCollection brickProperties, bool includeTitle, AbstractPropertyAccessor propertyAccessor)
+		{
 			switch (propertyAccessor.FieldType)
 			{
 				case FieldType.Boolean:
@@ -553,6 +580,18 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var lambda = (LambdaExpression) fieldProperty.ExpressionValue;
 
 			return this.caches.PropertyAccessorCache.Get (lambda);
+		}
+
+
+		private SpecialField BuildSpecialField(AbstractEntity entity, BrickPropertyCollection brickProperties, bool includeTitle, AbstractPropertyAccessor propertyAccessor, SpecialFieldController controller)
+		{
+			var field = this.BuildField<SpecialField> (entity, propertyAccessor, brickProperties, includeTitle, null);
+
+			field.EntityId = EntityIO.GetEntityId (this.businessContext, entity);
+			field.ControllerName = this.caches.TypeCache.GetId (controller.GetType ());
+			field.FieldName = controller.GetWebFieldName ();
+
+			return field;
 		}
 
 
@@ -702,9 +741,34 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private AbstractField BuildActionField(AbstractEntity entity, Brick brick, string id)
 		{
+			var specialController = this.GetSpecialController (entity, brick);
+			
 			var actionFieldType = Carpenter.GetBrickProperty (brick, BrickPropertyKey.Type).TypeValue;
 			var fieldType = FieldTypeSelector.GetFieldType (actionFieldType);
 
+			return specialController != null
+				? this.BuildSpecialActionField (entity, brick, fieldType, id, specialController)
+				: this.BuildRegularActionField (entity, brick, fieldType, actionFieldType, id);
+		}
+
+
+		private SpecialFieldController GetSpecialController(AbstractEntity entity, Brick brick)
+		{
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.SpecialFieldController))
+			{
+				return null;
+			}
+
+			var brickProperty = Brick.GetProperty (brick, BrickPropertyKey.SpecialFieldController);
+			var type = brickProperty.TypeValue;
+			var value = Carpenter.GetValue (entity, brick);
+
+			return SpecialFieldController.Create (type, this.businessContext, entity, value);
+		}
+
+
+		private AbstractField BuildRegularActionField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		{
 			switch (fieldType)
 			{
 				case FieldType.Boolean:
@@ -734,6 +798,18 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				default:
 					throw new NotImplementedException ();
 			}
+		}
+
+
+		private SpecialField BuildSpecialActionField(AbstractEntity entity, Brick brick, FieldType fieldType, string id, SpecialFieldController controller)
+		{
+			var field = this.BuildField<SpecialField> (entity, brick, fieldType, id, true);
+
+			field.EntityId = EntityIO.GetEntityId (this.businessContext, entity);
+			field.ControllerName = this.caches.TypeCache.GetId (controller.GetType ());
+			field.FieldName = controller.GetWebFieldName ();
+
+			return field;
 		}
 
 

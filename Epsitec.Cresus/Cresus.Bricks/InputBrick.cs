@@ -55,6 +55,14 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.SpecialController, mode));
 		}
 
+		public InputBrick<T, TParent> WithSpecialField<TSpecialController>()
+		{
+			var key = BrickPropertyKey.SpecialFieldController;
+			var value = typeof (TSpecialController);
+
+			return Brick.AddProperty (this, new BrickProperty (key, value));
+		}
+
 		public InputBrick<T, TParent> PickFromCollection(System.Collections.IEnumerable value)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FromCollection, value));

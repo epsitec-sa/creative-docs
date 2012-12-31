@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Bricks
 		HorizontalGroup,
 		FromCollection,
 		SpecialController,
+		SpecialFieldController,
 		GlobalWarning,
 		Password,
 		Multiline,

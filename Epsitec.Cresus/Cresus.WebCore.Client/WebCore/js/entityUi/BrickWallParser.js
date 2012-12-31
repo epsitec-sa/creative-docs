@@ -201,6 +201,9 @@ function() {
           case 'separator':
             return this.parseSeparator(brick);
 
+          case 'specialField':
+            return this.parseSpecialField(brick);
+
           case 'textAreaField':
             return this.parseTextAreaField(brick);
 
@@ -329,6 +332,23 @@ function() {
             borderStyle: 'solid'
           }
         };
+      },
+
+      parseSpecialField: function(brick) {
+        var field = {
+          xtype: brick.fieldName,
+          entityId: brick.entityId,
+          controllerName: brick.controllerName,
+          fieldConfig: this.parseField(brick)
+        };
+
+        field.fieldLabel = field.fieldConfig.fieldLabel;
+        delete field.fieldConfig.fieldLabel;
+
+        field.labelSeparator = field.fieldConfig.labelSeparator;
+        delete field.fieldConfig.labelSeparator;
+
+        return field;
       },
 
       parseTextAreaField: function(brick) {

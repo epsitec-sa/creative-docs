@@ -179,6 +179,9 @@
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationViewController.cs" />
+    <Compile Include="Controllers\SpecialFieldControllers\SpecialFieldController.cs" />
+    <Compile Include="Controllers\SpecialFieldControllers\SpecialFieldController`2.cs" />
+    <Compile Include="Controllers\SpecialFieldControllers\SpecialFieldWebMethodAttribute.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionAccessor`3.cs" />
     <Compile Include="Controllers\DataAccessors\CollectionTemplate.cs" />
