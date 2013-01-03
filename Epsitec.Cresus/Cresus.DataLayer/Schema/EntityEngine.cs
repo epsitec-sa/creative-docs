@@ -82,8 +82,9 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			entityTypeIds.ThrowIfNull ("entityTypeIds");
 
 			System.Func<DbInfrastructure, IList<DbTable>, bool> action = (infrastructure, tables) =>
-
-				DbSchemaChecker.CheckSchema (infrastructure, tables);
+			{
+				return DbSchemaChecker.CheckSchema (infrastructure, tables);
+			};
 
 			return EntityEngine.ExecuteAction (access, entityTypeIds, action);
 		}
