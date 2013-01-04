@@ -113,6 +113,13 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rem Create empty directories required by Nginx manually because
+rem this stupid VS build tool does not copy empty directories to the
+rem output directory.
+if not exist "$(TargetDir)\Nginx\logs" mkdir "$(TargetDir)\Nginx\logs"
+if not exist "$(TargetDir)\Nginx\temp" mkdir "$(TargetDir)\Nginx\temp"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

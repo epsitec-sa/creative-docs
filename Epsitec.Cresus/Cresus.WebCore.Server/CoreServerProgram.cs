@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		private static readonly CultureInfo uiCulture = new CultureInfo ("fr-CH");
 
 
-		private static readonly FileInfo nGinxPath = new FileInfo ("C:\\nginx\\nginx.exe");
+		private static readonly FileInfo nGinxPath = new FileInfo ("Nginx\\nginx.exe");
 
 
 		private static readonly bool nGinxAutorun = true;
