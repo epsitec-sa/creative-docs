@@ -372,18 +372,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (match != null)
 			{
-				text = "Cette Personne correspond à la personne N° " + eervPerson.Id + " du fichier de la paroisse de " + parishName + ".";
-
-				text += "\nLa correspondance a été faite sur les critères suivants : ";
-				text += "\n - Nom de famille : " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Lastname);
-				text += "\n - Prénom : " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Firstname);
-				text += "\n - Date de naissance : " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.DateOfBirth);
-				text += "\n - Sexe : " + EervParishDataImporter.GetTextForSexMatch (match.Sex);
-				text += "\n - Adresse : " + EervParishDataImporter.GetTextForAddressMatch (match.Address);
+				text = "Correspondance avec la personne " + eervPerson.Id + " de la paroisse de " + parishName + ": ";
+				text += "\n- Nom: " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Lastname);
+				text += "\n- Prénom: " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Firstname);
+				text += "\n- Date de naissance: " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.DateOfBirth);
+				text += "\n- Sexe: " + EervParishDataImporter.GetTextForSexMatch (match.Sex);
+				text += "\n- Adresse: " + EervParishDataImporter.GetTextForAddressMatch (match.Address);
 			}
 			else
 			{
-				text = "Cette personne a été crée à partir de la personne N°" + eervPerson.Id + " du fichier de la paroisse de " + parishName + " et n'existe pas dans le registre cantonal des personnes protestantes.";
+				text = "Personne crée à partir de la personne " + eervPerson.Id + " de la paroisse de " + parishName + ", sans correspondance dans le fichier ECH.";
 			}
 
 			EervParishDataImporter.CombineComments (aiderPerson, text);
@@ -395,16 +393,14 @@ namespace Epsitec.Aider.Data.Eerv
 			switch (match)
 			{
 				case AddressMatch.Full:
-					return "rue, numéro, numéro postal et localité identiques";
+					return "complête";
 
 				case AddressMatch.None:
-					return "pas de correspondance";
-
-				case AddressMatch.StreetZipCity:
-					return "rue, numéro postal et localité identiques";
+					return "non";
 
 				case AddressMatch.ZipCity:
-					return "numéro postal et localité identiques";
+				case AddressMatch.StreetZipCity:
+					return "partielle";
 
 				default:
 					throw new NotImplementedException ();
@@ -417,13 +413,13 @@ namespace Epsitec.Aider.Data.Eerv
 			switch (match)
 			{
 				case true:
-					return "identique";
+					return "oui";
 
 				case false:
-					return "différent";
+					return "non";
 
 				case null:
-					return "indéterminé";
+					return "N/A";
 
 				default:
 					throw new NotImplementedException ();
@@ -442,7 +438,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			else
 			{
-				return "indéterminé";
+				return "N/A";
 			}
 		}
 
