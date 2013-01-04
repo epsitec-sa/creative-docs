@@ -36,6 +36,11 @@ namespace Epsitec.Aider.Data
 			return string.Format ("P{0:00}.", parishCode);
 		}
 
+		public static string CreateSubGroupPath(string superGroupPath, int groupNumber)
+		{
+			return superGroupPath + string.Format ("{0}{1:00}.", AiderGroupIds.GroupPrefix, groupNumber);
+		}
+
 		public static string ReplacePlaceholders(string path)
 		{
 			var parishPath = AiderGroupIds.GetParishPath ();

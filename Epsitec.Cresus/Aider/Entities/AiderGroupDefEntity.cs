@@ -43,8 +43,6 @@ namespace Epsitec.Aider.Entities
 			{
 				var subInfo  = new GroupPathInfo (subGroupDef.Name, subGroupDef.PathTemplate, group.Path + subGroupDef.PathTemplate.SubstringEnd (4), info.Level + 1);
 				var subGroup = subGroupDef.Instantiate (businessContext, subInfo);
-
-//-				AiderGroupRelationshipEntity.Create (businessContext, group, subGroup, GroupRelationshipType.Inclusion);
 			}
 
 			return group;

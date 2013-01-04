@@ -15,6 +15,8 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -58,6 +60,23 @@ namespace Epsitec.Aider.Entities
 			group.GroupDef = groupDefinition;
 
 			return group;
+		}
+
+
+		public static AiderGroupEntity CreateSubGroup(BusinessContext businessContext, AiderGroupEntity superGroup, string name, int subGroupNumber)
+		{
+			if (subGroupNumber > 99)
+			{
+				throw new NotSupportedException ("Groups cannot have more that 99 children.");
+			}
+
+			var subGroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
+
+			subGroup.Name = name;
+			subGroup.GroupLevel = superGroup.GroupLevel + 1;
+			subGroup.Path = AiderGroupIds.CreateSubGroupPath (superGroup.Path, subGroupNumber);
+
+			return subGroup;
 		}
 
 

@@ -878,19 +878,24 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignPersonInImportationGroup(BusinessContext businessContext, EervId parishId, List<AiderPersonEntity> aiderPersons)
 		{
-			var parishGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, parishId);
-			var importedGroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
-
-			importedGroup.Name = "Personnes importées";
-
-			AiderGroupRelationshipEntity.Create (businessContext, parishGroup, importedGroup, GroupRelationshipType.Inclusion);
+			var importationGroup = CreateImportationGroup (businessContext, parishId);
 
 			foreach (var aiderPerson in aiderPersons)
 			{
-				importedGroup.AddParticipant (businessContext, aiderPerson, null, null, null);
+				importationGroup.AddParticipant (businessContext, aiderPerson, null, null, null);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
+		}
+
+
+		private static AiderGroupEntity CreateImportationGroup(BusinessContext businessContext, EervId parishId)
+		{
+			var parishGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, parishId);
+			var name = "Personnes importées";
+			var count = parishGroup.Subgroups.Count + 1;
+
+			return AiderGroupEntity.CreateSubGroup (businessContext, parishGroup, name, count);
 		}
 
 
@@ -945,26 +950,13 @@ namespace Epsitec.Aider.Data.Eerv
 					// HACK This is a hack for group names greater than 200 chars that will throw an
 					// exception later. This need to be corrected.
 					var name = eervGroup.Name.Substring (0, Math.Min (200, eervGroup.Name.Length));
-
-					var level = aiderGroup.GroupLevel + 1;
-
-					var groupNumber = subgroups.Count + 1;
-
-					if (groupNumber > 99)
-					{
-						throw new NotSupportedException ("Groups cannot have more that 99 children.");
-					}
-					
-					var path = aiderGroup.Path + "G" + groupNumber + ".";
-
-					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, name, level, path);
-					//AiderGroupRelationshipEntity.Create (businessContext, aiderGroup, newAiderGroup, GroupRelationshipType.Inclusion);
+					var number = subgroups.Count + 1;
+					var newAiderGroup = AiderGroupEntity.CreateSubGroup (businessContext, aiderGroup, name, number);
 
 					subgroups.Add (newAiderGroup);
 					aiderSubGroupMapping[newAiderGroup] = new List<AiderGroupEntity> ();
 
 					aiderIdMapping[eervGroup.Id] = newAiderGroup;
-
 					groupMapping[eervGroup] = newAiderGroup;
 				}
 				else
