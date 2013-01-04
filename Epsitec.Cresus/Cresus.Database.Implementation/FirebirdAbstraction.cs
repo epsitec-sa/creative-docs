@@ -159,11 +159,17 @@ namespace Epsitec.Cresus.Database.Implementation
 		private void CreateDatabase()
 		{
 			System.Diagnostics.Debug.Assert (this.dbAccess.CreateDatabase);
-			
-			string path = this.GetDbFilePath ();
 
-			string connection = FirebirdAbstraction.MakeConnectionStringForDbCreation (this.dbAccess, path, this.serverType);
-			
+			string filePath = this.GetDbFilePath ();
+			string directoryPath = Path.GetDirectoryName (filePath);
+
+			if (!Directory.Exists (directoryPath))
+			{
+				Directory.CreateDirectory (directoryPath);
+			}
+
+			string connection = FirebirdAbstraction.MakeConnectionStringForDbCreation (this.dbAccess, filePath, this.serverType);
+
 			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fbPageSize, true, false);
 		}
 
