@@ -94,7 +94,6 @@
     <Compile Include="Data\Eerv\AiderEnumerator.cs" />
     <Compile Include="Data\Eerv\ParishAssigner.cs" />
     <Compile Include="Data\Eerv\GroupPathInfo.cs" />
-    <Compile Include="Entities\AiderGroupRelationshipEntity.cs" />
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
