@@ -57,6 +57,8 @@ namespace Epsitec.Aider.Data.ECh
 		{
 			var switzerland = AiderCountryEntity.FindOrCreate (businessContext, "CH", "Suisse");
 
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
+
 			var towns = EChDataImporter.ImportTowns (businessContext, echReportedPersons, switzerland);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
@@ -76,17 +78,21 @@ namespace Epsitec.Aider.Data.ECh
 
 			var towns = echReportedPersons
 				.Select (rp => rp.Address)
-				.Select (a => Tuple.Create (a.SwissZipCode, a.Town))
+				.Select (a => Tuple.Create (a.SwissZipCodeId, a.SwissZipCode, a.Town))
 				.Distinct ();
 
 			var aiderTowns = new List<AiderTownEntity> ();
+			var repository = new AiderTownRepository (businessContext);
+
+			repository.AddMissingSwissTowns ();
 
 			foreach (var town in towns)
 			{
-				var zipCode = town.Item1;
-				var name = town.Item2;
+				int zipOnrp = town.Item1;
+				int zipCode = town.Item2;
+				var name = town.Item3;
 
-				var aiderTown = AiderTownEntity.FindOrCreate (businessContext, switzerland, zipCode, name);
+				var aiderTown = repository.GetTown (zipOnrp);
 
 				aiderTowns.Add (aiderTown);
 			}

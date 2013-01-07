@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Collections;
@@ -18,7 +18,8 @@ namespace Epsitec.Data.Platform
 		{
 			IEnumerable<SwissPostZipInformation> zips = SwissPostZip.GetZips ();
 
-			this.nameByZip = new Dictionary<int, List<SwissPostZipInformation>> ();
+			this.nameByZip  = new Dictionary<int, List<SwissPostZipInformation>> ();
+			this.nameByOnrp = new Dictionary<int, SwissPostZipInformation> ();
 
 			foreach (var zip in zips)
 			{
@@ -31,6 +32,8 @@ namespace Epsitec.Data.Platform
 				}
 
 				list.Add (zip);
+
+				this.nameByOnrp[zip.OnrpCode] = zip;
 			}
 
 			foreach (var list in this.nameByZip.Values)
@@ -46,6 +49,15 @@ namespace Epsitec.Data.Platform
 		public IEnumerable<SwissPostZipInformation> FindAll()
 		{
 			return nameByZip.SelectMany (x => x.Value);
+		}
+
+		public SwissPostZipInformation FindByOnrpCode(int onrpCode)
+		{
+			SwissPostZipInformation zip;
+
+			this.nameByOnrp.TryGetValue (onrpCode, out zip);
+
+			return zip;
 		}
 
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode)
@@ -76,13 +88,13 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, string longName)
+		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, string name)
 		{
 			List<SwissPostZipInformation> list;
 			
 			if (this.nameByZip.TryGetValue (zipCode, out list))
 			{
-				return list.Where (x => x.LongName == longName);
+				return list.Where (x => x.MatchName (name));
 			}
 			else
 			{
@@ -144,7 +156,8 @@ namespace Epsitec.Data.Platform
 			return 0;
 		}
 
-		
+
 		private readonly Dictionary<int, List<SwissPostZipInformation>> nameByZip;
+		private readonly Dictionary<int, SwissPostZipInformation> nameByOnrp;
 	}
 }

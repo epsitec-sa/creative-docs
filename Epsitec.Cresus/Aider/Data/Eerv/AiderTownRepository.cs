@@ -1,16 +1,18 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Core.Business;
 
 using System;
 
 using System.Collections.Generic;
-
+using Epsitec.Common.Types;
+using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Data.Eerv
 {
-
-
 	/// <summary>
 	/// The AiderTownRepository class is useful to manage towns that might exist or not. You ask it
 	/// for at town and it creates it if it does not exist yet. It you ask for the same town again
@@ -18,8 +20,6 @@ namespace Epsitec.Aider.Data.Eerv
 	/// </summary>
 	internal sealed class AiderTownRepository
 	{
-
-
 		public AiderTownRepository(BusinessContext businessContext)
 		{
 			this.businessContext = businessContext;
@@ -28,6 +28,16 @@ namespace Epsitec.Aider.Data.Eerv
 			this.switzerland = AiderCountryEntity.Find (this.businessContext, "CH", "Suisse");
 		}
 
+		
+		public void AddMissingSwissTowns()
+		{
+			this.FillCache ();
+
+			foreach (var zip in SwissPostZipRepository.Current.FindAll ())
+			{
+				this.GetTown (zip.OnrpCode);
+			}
+		}
 
 		public AiderTownEntity GetTown(EervAddress address)
 		{
@@ -37,7 +47,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!this.aiderTowns.TryGetValue (key, out town))
 			{
-				town = this.GetOrCreate (address);
+				if (address.IsInSwitzerland ())
+				{
+					town = this.GetOrCreateSwissTown (InvariantConverter.ToInt (address.ZipCode), address.Town);
+				}
+				else
+				{
+					town = this.GetOrCreateForeignTown (address);
+				}
 
 				this.aiderTowns[key] = town;
 			}
@@ -45,23 +62,60 @@ namespace Epsitec.Aider.Data.Eerv
 			return town;
 		}
 
+		public AiderTownEntity GetTown(int zipOnrp)
+		{
+			var zip = SwissPostZipRepository.Current.FindByOnrpCode (zipOnrp);
 
-		private AiderTownEntity GetOrCreate(EervAddress address)
+			if (zip == null)
+			{
+				return null;
+			}
+
+			var key = Tuple.Create (InvariantConverter.ToString (zip.ZipCode), zip.LongName);
+
+			AiderTownEntity town;
+
+			if (!this.aiderTowns.TryGetValue (key, out town))
+			{
+				town = this.GetOrCreateSwissTown (zip.ZipCode, zip.LongName);
+				this.aiderTowns[key] = town;
+			}
+		
+			return town;
+		}
+
+
+		private void FillCache()
+		{
+			var example = new AiderTownEntity ()
+						{
+							Country = this.switzerland
+						};
+
+			var towns = this.businessContext.DataContext.GetByExample<AiderTownEntity> (example);
+
+			foreach (var town in towns)
+			{
+				var key = Tuple.Create (town.ZipCode, town.Name);
+
+				if (this.aiderTowns.ContainsKey (key) == false)
+				{
+					this.aiderTowns[key] = town;
+				}
+			}
+		}
+		
+		private AiderTownEntity GetOrCreateSwissTown(int zipCode, string name)
+		{
+			return AiderTownEntity.FindOrCreate (this.businessContext, this.switzerland, zipCode, name);
+		}
+
+		private AiderTownEntity GetOrCreateForeignTown(EervAddress address)
 		{
 			var name = address.Town;
+			var zipCode = address.ZipCode;
 
-			if (address.IsInSwitzerland ())
-			{
-				var zipCode = int.Parse (address.ZipCode);
-
-				return AiderTownEntity.FindOrCreate (this.businessContext, this.switzerland, zipCode, name);
-			}
-			else
-			{
-				var zipCode = address.ZipCode;
-
-				return AiderTownEntity.FindOrCreate (this.businessContext, zipCode, name);
-			}
+			return AiderTownEntity.FindOrCreate (this.businessContext, zipCode, name);
 		}
 
 
@@ -72,9 +126,5 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 		private readonly Dictionary<Tuple<string, string>, AiderTownEntity> aiderTowns;
-
-
 	}
-
-
 }
