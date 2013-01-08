@@ -1893,7 +1893,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			int column = this.controller.ArrayController.SelectedColumn;
-			this.controller.ArrayController.SetSelectedRow (this.dataAccessor.FirstEditedRow + this.firstVisibleLine, column);
+			this.arrayController.SetSelectedRow (this.dataAccessor.FirstEditedRow + this.firstVisibleLine, column);
+
+			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+			this.arrayController.ColorHilite = UIBuilder.HiliteColor;
+			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
 #if false
 			//	Met à jour l'ascenseur.
