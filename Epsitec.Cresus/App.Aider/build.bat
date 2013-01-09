@@ -1,9 +1,40 @@
+@echo off
+
 @rem Set the current working directory to the directory of this batch file so we can launch it from
 @rem anywhere.
 cd /d %~dp0
 
-@rem There are many solutions and configurations involved here. Below is the details about them.
+@rem If the first argument is -noprompt, skip the user confirmation
+if "%1"=="-noprompt" goto skipConfirmation
 
+@rem Ask the user if is really wants to revert everything in its svn repositories
+echo This script will:
+echo - Revert all changes to %~dp0..\..\Epsitec
+echo - Delete all unversionned items in %~dp0..\..\Epsitec
+echo - Delete all ignored items in %~dp0..\..\Epsitec
+echo - Revert all changes to %~dp0..\
+echo - Delete all unversionned items in %~dp0..\
+echo - Delete all ignored items in %~dp0..\
+choice /M "Are you sure that you want ton continue"
+if %ERRORLEVEL% neq 1 exit /B
+
+:skipConfirmation
+
+@echo on
+
+@rem Revert all changes to the two repositories.
+svn revert -R ..\..\Epsitec
+svn revert -R ..\
+
+@rem Delete all unversionned files and folders in the two repositories.
+for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
+for /f "usebackq tokens=2*" %%i in (`svn status ..\ ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
+
+@rem Delete all ignored files and folders in the two repositories
+for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\ ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+
+@rem There are many solutions and configurations involved here. Below is the details about them.
 @rem - Epsitec.Cresus.sln, Release, Mixed Platforms
 @rem   That's the solution and the configuration that we want to build.
 @rem - Epsitec.Cresus.sln, Debug, Mixed Platforms
@@ -21,24 +52,6 @@ cd /d %~dp0
 @rem   This solution is referenced by Epsitec.Cresus.sln, Release, Mixed Platforms
 @rem - Epsitec.SwissPost.Webservices.sln, Debug, ANY CPU
 @rem   This solution is referenced by Epsitec.Cresus.sln, Debug, Mixed Platforms
-
-@rem Clean all the solutions that will be built by this script.
-msbuild /property:Configuration=Debug;Platform="ANY CPU" /target:Clean ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Release;Platform="ANY CPU" /target:Clean ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Debug;Platform="ANY CPU" /target:Clean ..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.ShellPE.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Release;Platform="ANY CPU" /target:Clean ..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.ShellPE.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Debug;Platform="Mixed Platforms" /target:Clean ..\..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.SwissPost.Webservices.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Release;Platform="Mixed Platforms" /target:Clean ..\..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.SwissPost.Webservices.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Debug;Platform="Mixed Platforms" /target:Clean ..\Epsitec.Cresus.sln
-if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /property:Configuration=Debug;Platform="Mixed Platforms" /target:Clean ..\Epsitec.Cresus.sln
-if %ERRORLEVEL% neq 0 exit /B 1
 
 @rem Build the solutions.
 msbuild /verbosity:minimal /property:Configuration=Debug;Platform="ANY CPU" /target:Build ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe.sln
