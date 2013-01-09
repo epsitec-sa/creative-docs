@@ -12,14 +12,11 @@ namespace Epsitec.Cresus.Compta
 		
 		public static class Commands
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Compta.PériodePrécédente, null);
 				}
 				
 				//	designer:cap/OVKR4
@@ -32,6 +29,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Edit.Accept, null);
 				}
 				
 				//	designer:cap/OVKN1
@@ -58,6 +56,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (File.Close, null);
 				}
 				
 				//	designer:cap/OVK06
@@ -80,6 +79,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Global.Settings, null);
 				}
 				
 				//	designer:cap/OVK52
@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Modèle.Insert0, null);
 				}
 				
 				//	designer:cap/OVK74
@@ -118,6 +119,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Multi.Auto, null);
 				}
 				
 				//	designer:cap/OVK02
@@ -148,6 +150,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Navigator.Menu, null);
 				}
 				
 				//	designer:cap/OVK45
@@ -162,6 +165,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Panel.Filter, null);
 				}
 				
 				//	designer:cap/OVK53
@@ -180,6 +184,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Présentation.Balance, null);
 				}
 				
 				//	designer:cap/OVKD1
@@ -212,6 +217,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Select.Down, null);
 				}
 				
 				//	designer:cap/OVK93
@@ -225,16 +231,8 @@ namespace Epsitec.Cresus.Compta
 		
 		public static class CommandIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Compta
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVKR4
 				public const long PériodePrécédente = 0x3F80001400009BL;
 				//	designer:cap/OVKS4
@@ -243,10 +241,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Edit
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVKN1
 				public const long Accept = 0x3F800014000037L;
 				//	designer:cap/OVKO1
@@ -269,10 +263,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class File
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK06
 				public const long Close = 0x3F8000140000C0L;
 				//	designer:cap/OVK16
@@ -291,20 +281,12 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Global
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK52
 				public const long Settings = 0x3F800014000045L;
 			}
 			
 			public static class Modèle
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK74
 				public const long Insert0 = 0x3F800014000087L;
 				//	designer:cap/OVK64
@@ -329,10 +311,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Multi
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK02
 				public const long Auto = 0x3F800014000040L;
 				//	designer:cap/OVKS1
@@ -359,10 +337,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Navigator
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK45
 				public const long Menu = 0x3F8000140000A4L;
 				//	designer:cap/OVKV4
@@ -373,10 +347,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Panel
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK53
 				public const long Filter = 0x3F800014000065L;
 				//	designer:cap/OVK13
@@ -391,10 +361,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Présentation
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVKD1
 				public const long Balance = 0x3F80001400002DL;
 				//	designer:cap/OVKF1
@@ -423,10 +389,6 @@ namespace Epsitec.Cresus.Compta
 			
 			public static class Select
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/OVK93
 				public const long Down = 0x3F800014000069L;
 				//	designer:cap/OVKA3
@@ -441,12 +403,14 @@ namespace Epsitec.Cresus.Compta
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (Compta, null);
 			}
 			
 			public static class Enum
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Enum.CatégorieDeCompte, null);
 				}
 				
 				//	designer:cap/OVK62
@@ -487,22 +451,10 @@ namespace Epsitec.Cresus.Compta
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Enum
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class CatégorieDeCompte
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/OVK82
 					public static global::Epsitec.Common.Types.Caption Actif
 					{
@@ -563,10 +515,6 @@ namespace Epsitec.Cresus.Compta
 				
 				public static class TypeDeCompte
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/OVKH2
 					public static global::Epsitec.Common.Types.Caption Bloqué
 					{
@@ -626,6 +574,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Compta.CodesTVA, null);
 				}
 				
 				//	designer:cap/OVKN6
@@ -658,6 +607,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaBudget.Description, null);
 				}
 				
 				//	designer:cap/OVKO4
@@ -672,6 +622,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaCodeTVA.Chiffre, null);
 				}
 				
 				//	designer:cap/OVKK6
@@ -696,6 +647,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaCompte.Budgets, null);
 				}
 				
 				//	designer:cap/OVKQ4
@@ -728,6 +680,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaEcriture.CodeTVA, null);
 				}
 				
 				//	designer:cap/OVKL
@@ -768,6 +721,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaJournal.Description, null);
 				}
 				
 				//	designer:cap/OVKH4
@@ -784,6 +738,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaLibellé.Libellé, null);
 				}
 				
 				//	designer:cap/OVKO3
@@ -796,6 +751,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaListeTVA.Nom, null);
 				}
 				
 				//	designer:cap/OVK97
@@ -810,6 +766,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaModèle.Code, null);
 				}
 				
 				//	designer:cap/OVKU3
@@ -832,6 +789,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaMonnaie.Arrondi, null);
 				}
 				
 				//	designer:cap/OVK48
@@ -858,6 +816,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaPériode.DateDébut, null);
 				}
 				
 				//	designer:cap/OVKJ3
@@ -878,6 +837,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaPiècesGenerator.Format, null);
 				}
 				
 				//	designer:cap/OVK66
@@ -898,6 +858,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaTauxTVA.DateDébut, null);
 				}
 				
 				//	designer:cap/OVK27
@@ -910,6 +871,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ComptaUtilisateur.Admin, null);
 				}
 				
 				//	designer:cap/OVKU5
@@ -939,6 +901,11 @@ namespace Epsitec.Cresus.Compta
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -988,7 +955,6 @@ namespace Epsitec.Cresus.Compta
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Compta");
-			Commands._Initialize ();
 			Commands.Compta._Initialize ();
 			Commands.Edit._Initialize ();
 			Commands.File._Initialize ();
@@ -999,22 +965,8 @@ namespace Epsitec.Cresus.Compta
 			Commands.Panel._Initialize ();
 			Commands.Présentation._Initialize ();
 			Commands.Select._Initialize ();
-			CommandIds._Initialize ();
-			CommandIds.Compta._Initialize ();
-			CommandIds.Edit._Initialize ();
-			CommandIds.File._Initialize ();
-			CommandIds.Global._Initialize ();
-			CommandIds.Modèle._Initialize ();
-			CommandIds.Multi._Initialize ();
-			CommandIds.Navigator._Initialize ();
-			CommandIds.Panel._Initialize ();
-			CommandIds.Présentation._Initialize ();
-			CommandIds.Select._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
-			Values._Initialize ();
-			Values.Enum.CatégorieDeCompte._Initialize ();
-			Values.Enum.TypeDeCompte._Initialize ();
 			Fields.Compta._Initialize ();
 			Fields.ComptaBudget._Initialize ();
 			Fields.ComptaCodeTVA._Initialize ();
@@ -1029,10 +981,12 @@ namespace Epsitec.Cresus.Compta
 			Fields.ComptaPiècesGenerator._Initialize ();
 			Fields.ComptaTauxTVA._Initialize ();
 			Fields.ComptaUtilisateur._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

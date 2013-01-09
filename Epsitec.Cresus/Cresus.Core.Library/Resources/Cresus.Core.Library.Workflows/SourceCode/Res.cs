@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (IWorkflowHost, null);
 			}
 			
 			//	designer:cap/DVAJ1
@@ -42,16 +43,8 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class WorkflowNodeAttributes
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/DVAK1
 				public static global::Epsitec.Common.Types.Caption Auto
 				{
@@ -80,10 +73,6 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			
 			public static class WorkflowState
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/DVA71
 				public static global::Epsitec.Common.Types.Caption Active
 				{
@@ -176,10 +165,6 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			
 			public static class WorkflowTransitionType
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/DVA11
 				public static global::Epsitec.Common.Types.Caption Call
 				{
@@ -214,6 +199,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IWorkflowHost.Workflow, null);
 				}
 				
 				//	designer:cap/DVA31
@@ -224,6 +210,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Workflow.Threads, null);
 				}
 				
 				//	designer:cap/DVAO
@@ -234,6 +221,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (WorkflowCall.Continuation, null);
 				}
 				
 				//	designer:cap/DVAF
@@ -244,6 +232,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (WorkflowDefinition.SerializedDesign, null);
 				}
 				
 				//	designer:cap/DVAN
@@ -260,6 +249,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (WorkflowEdge.Continuation, null);
 				}
 				
 				//	designer:cap/DVAC
@@ -278,6 +268,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (WorkflowNode.Attributes, null);
 				}
 				
 				//	designer:cap/DVAN1
@@ -290,6 +281,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (WorkflowStep.Date, null);
 				}
 				
 				//	designer:cap/DVAR
@@ -306,6 +298,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (WorkflowThread.CallGraph, null);
 				}
 				
 				//	designer:cap/DVAJ
@@ -327,6 +320,11 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -377,10 +375,6 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Workflows");
 			Types._Initialize ();
-			Values._Initialize ();
-			Values.WorkflowNodeAttributes._Initialize ();
-			Values.WorkflowState._Initialize ();
-			Values.WorkflowTransitionType._Initialize ();
 			Fields.IWorkflowHost._Initialize ();
 			Fields.Workflow._Initialize ();
 			Fields.WorkflowCall._Initialize ();
@@ -389,10 +383,12 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			Fields.WorkflowNode._Initialize ();
 			Fields.WorkflowStep._Initialize ();
 			Fields.WorkflowThread._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

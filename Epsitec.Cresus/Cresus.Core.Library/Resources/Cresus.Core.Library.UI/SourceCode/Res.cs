@@ -14,6 +14,11 @@ namespace Epsitec.Cresus.Core.Library.UI
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -55,14 +60,20 @@ namespace Epsitec.Cresus.Core.Library.UI
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.UI");
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

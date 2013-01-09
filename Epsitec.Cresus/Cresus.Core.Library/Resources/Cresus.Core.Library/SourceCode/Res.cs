@@ -12,14 +12,11 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Commands
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Edition
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Edition.DiscardRecord, null);
 				}
 				
 				//	designer:cap/EVA8
@@ -32,6 +29,7 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Focus.CloseView, null);
 				}
 				
 				//	designer:cap/EVA21
@@ -60,6 +58,7 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (History.NavigateBackward, null);
 				}
 				
 				//	designer:cap/EVA5
@@ -71,16 +70,8 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class CommandIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Edition
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVA8
 				public const long DiscardRecord = 0x3EE0000A000008L;
 				//	designer:cap/EVA7
@@ -89,10 +80,6 @@ namespace Epsitec.Cresus.Core.Library
 			
 			public static class Focus
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVA21
 				public const long CloseView = 0x3EE0000A000022L;
 				//	designer:cap/EVAV
@@ -117,10 +104,6 @@ namespace Epsitec.Cresus.Core.Library
 			
 			public static class History
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVA5
 				public const long NavigateBackward = 0x3EE0000A000005L;
 				//	designer:cap/EVA6
@@ -131,16 +114,8 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Captions
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class ActionButton
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVAS
 				public static global::Epsitec.Common.Types.Caption Create
 				{
@@ -171,16 +146,8 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class CaptionIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class ActionButton
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVAS
 				public const long Create = 0x3EE0000A00001CL;
 				//	designer:cap/EVAT
@@ -193,10 +160,6 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Types
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			//	designer:cap/EVA
 			public static readonly Epsitec.Common.Types.EnumType EnumValueCardinality = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/EVAN
@@ -211,16 +174,8 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class EnumValueCardinality
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVA4
 				public static global::Epsitec.Common.Types.Caption Any
 				{
@@ -257,10 +212,6 @@ namespace Epsitec.Cresus.Core.Library
 			
 			public static class MergeSettingsMode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVAP
 				public static global::Epsitec.Common.Types.Caption Exclusive
 				{
@@ -289,10 +240,6 @@ namespace Epsitec.Cresus.Core.Library
 			
 			public static class TileEditionMode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVAC
 				public static global::Epsitec.Common.Types.Caption ReadOnly
 				{
@@ -321,10 +268,6 @@ namespace Epsitec.Cresus.Core.Library
 			
 			public static class TileVisibilityMode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVAG
 				public static global::Epsitec.Common.Types.Caption Hidden
 				{
@@ -361,10 +304,6 @@ namespace Epsitec.Cresus.Core.Library
 			
 			public static class UserCategory
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/EVAJ
 				public static global::Epsitec.Common.Types.Caption Any
 				{
@@ -405,6 +344,11 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -454,29 +398,15 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library");
-			Commands._Initialize ();
 			Commands.Edition._Initialize ();
 			Commands.Focus._Initialize ();
 			Commands.History._Initialize ();
-			CommandIds._Initialize ();
-			CommandIds.Edition._Initialize ();
-			CommandIds.Focus._Initialize ();
-			CommandIds.History._Initialize ();
-			Captions._Initialize ();
-			Captions.ActionButton._Initialize ();
-			CaptionIds._Initialize ();
-			CaptionIds.ActionButton._Initialize ();
-			Types._Initialize ();
-			Values._Initialize ();
-			Values.EnumValueCardinality._Initialize ();
-			Values.MergeSettingsMode._Initialize ();
-			Values.TileEditionMode._Initialize ();
-			Values.TileVisibilityMode._Initialize ();
-			Values.UserCategory._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

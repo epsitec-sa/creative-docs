@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowEntity.EntityStructuredTypeId;
@@ -258,6 +259,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSerializedArgsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		partial void OnSerializedArgsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowThreadEntity.EntityStructuredTypeId;
@@ -397,6 +399,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnAttributesChanging(global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes oldValue, global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes newValue);
 		partial void OnAttributesChanged(global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes oldValue, global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -622,6 +625,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnTransitionActionsChanging(string oldValue, string newValue);
 		partial void OnTransitionActionsChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowEdgeEntity.EntityStructuredTypeId;
@@ -752,6 +756,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnExecutingUserCodeChanging(string oldValue, string newValue);
 		partial void OnExecutingUserCodeChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.WorkflowStepEntity.EntityStructuredTypeId;
@@ -809,6 +814,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnContinuationChanging(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
 		partial void OnContinuationChanged(global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity oldValue, global::Epsitec.Cresus.Core.Entities.WorkflowNodeEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -927,6 +933,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnWorkflowDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnSerializedDesignChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
 		partial void OnSerializedDesignChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

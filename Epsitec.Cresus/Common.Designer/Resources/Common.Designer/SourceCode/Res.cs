@@ -12,16 +12,8 @@ namespace Epsitec.Common.Designer
 		
 		public static class Captions
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Aspect
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3003C
 				public static global::Epsitec.Common.Types.Caption ButtonAspect
 				{
@@ -34,10 +26,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Command
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3007C
 				public static global::Epsitec.Common.Types.Caption ButtonAspect
 				{
@@ -50,16 +38,8 @@ namespace Epsitec.Common.Designer
 			
 			public static class Dialog
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class TableConfiguration
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300QC
 					public static global::Epsitec.Common.Types.Caption Add
 					{
@@ -121,10 +101,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Editor
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3003D
 				public static global::Epsitec.Common.Types.Caption LocatorGoto
 				{
@@ -135,10 +111,6 @@ namespace Epsitec.Common.Designer
 				}
 				public static class Forms
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/302L1
 					public static global::Epsitec.Common.Types.Caption Auto
 					{
@@ -263,10 +235,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class Structured
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3008C
 					public static global::Epsitec.Common.Types.Caption Add
 					{
@@ -325,10 +293,6 @@ namespace Epsitec.Common.Designer
 					}
 					public static class Relation
 					{
-						internal static void _Initialize()
-						{
-						}
-						
 						//	designer:cap/300PC
 						public static global::Epsitec.Common.Types.Caption Collection
 						{
@@ -358,10 +322,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class Type
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/302
 					public static global::Epsitec.Common.Types.Caption Create
 					{
@@ -399,10 +359,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Form
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/302G
 				public static global::Epsitec.Common.Types.Caption BackColor
 				{
@@ -551,10 +507,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Geometry
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3003
 				public static global::Epsitec.Common.Types.Caption BottomMargin
 				{
@@ -647,10 +599,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Grid
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/30048
 				public static global::Epsitec.Common.Types.Caption BottomBorder
 				{
@@ -781,10 +729,6 @@ namespace Epsitec.Common.Designer
 				}
 				public static class Mode
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30052
 					public static global::Epsitec.Common.Types.Caption Absolute
 					{
@@ -814,10 +758,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Layout
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/300D
 				public static global::Epsitec.Common.Types.Caption AnchoredHorizontalAttachment
 				{
@@ -878,10 +818,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class PanelMode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/300JC
 				public static global::Epsitec.Common.Types.Caption Default
 				{
@@ -918,16 +854,8 @@ namespace Epsitec.Common.Designer
 			
 			public static class Types
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class Type
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300HC
 					public static global::Epsitec.Common.Types.Caption Binary
 					{
@@ -1047,42 +975,22 @@ namespace Epsitec.Common.Designer
 		
 		public static class CaptionIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Aspect
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3003C
 				public const long ButtonAspect = 0x300000000183L;
 			}
 			
 			public static class Command
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3007C
 				public const long ButtonAspect = 0x300000000187L;
 			}
 			
 			public static class Dialog
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class TableConfiguration
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300QC
 					public const long Add = 0x30000000019AL;
 					//	designer:cap/300UC
@@ -1102,18 +1010,10 @@ namespace Epsitec.Common.Designer
 			
 			public static class Editor
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3003D
 				public const long LocatorGoto = 0x3000000001A3L;
 				public static class Forms
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/302L1
 					public const long Auto = 0x300002000035L;
 					//	designer:cap/302M
@@ -1148,10 +1048,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class Structured
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3008C
 					public const long Add = 0x300000000188L;
 					//	designer:cap/300DC
@@ -1168,10 +1064,6 @@ namespace Epsitec.Common.Designer
 					public const long Remove = 0x300000000189L;
 					public static class Relation
 					{
-						internal static void _Initialize()
-						{
-						}
-						
 						//	designer:cap/300PC
 						public const long Collection = 0x300000000199L;
 						//	designer:cap/300OC
@@ -1183,10 +1075,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class Type
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/302
 					public const long Create = 0x300002000000L;
 					//	designer:cap/3021
@@ -1200,10 +1088,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Form
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/302G
 				public const long BackColor = 0x300002000010L;
 				//	designer:cap/30271
@@ -1244,10 +1128,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Geometry
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/3003
 				public const long BottomMargin = 0x300000000003L;
 				//	designer:cap/3007
@@ -1274,10 +1154,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Grid
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/30048
 				public const long BottomBorder = 0x300000000104L;
 				//	designer:cap/300N
@@ -1312,10 +1188,6 @@ namespace Epsitec.Common.Designer
 				public const long TopBorder = 0x3000000000E4L;
 				public static class Mode
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30052
 					public const long Absolute = 0x300000000045L;
 					//	designer:cap/30053
@@ -1327,10 +1199,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class Layout
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/300D
 				public const long AnchoredHorizontalAttachment = 0x30000000000DL;
 				//	designer:cap/300E
@@ -1349,10 +1217,6 @@ namespace Epsitec.Common.Designer
 			
 			public static class PanelMode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/300JC
 				public const long Default = 0x300000000193L;
 				//	designer:cap/300KC
@@ -1365,16 +1229,8 @@ namespace Epsitec.Common.Designer
 			
 			public static class Types
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class Type
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300HC
 					public const long Binary = 0x300000000191L;
 					//	designer:cap/300D9
@@ -1410,14 +1266,11 @@ namespace Epsitec.Common.Designer
 		
 		public static class Types
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class FieldDescription
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (FieldDescription.BackColorType, null);
 				}
 				
 				//	designer:cap/3028
@@ -1448,6 +1301,7 @@ namespace Epsitec.Common.Designer
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ObjectModifier.AnchoredHorizontalAttachment, null);
 				}
 				
 				//	designer:cap/3006B
@@ -1472,6 +1326,7 @@ namespace Epsitec.Common.Designer
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Widgets.ButtonClass, null);
 				}
 				
 				//	designer:cap/3006C
@@ -1481,22 +1336,10 @@ namespace Epsitec.Common.Designer
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class FieldDescription
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class BackColorType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/302A
 					public static global::Epsitec.Common.Types.Caption Gray
 					{
@@ -1533,10 +1376,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class BoxLayoutType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30K41
 					public static global::Epsitec.Common.Types.Caption Grid
 					{
@@ -1573,10 +1412,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class BoxPaddingType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/302H1
 					public static global::Epsitec.Common.Types.Caption Compact
 					{
@@ -1605,10 +1440,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class CommandButtonClass
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30KU
 					public static global::Epsitec.Common.Types.Caption Default
 					{
@@ -1645,10 +1476,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class ContainerLayoutMode
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30251
 					public static global::Epsitec.Common.Types.Caption HorizontalFlow
 					{
@@ -1669,10 +1496,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class FontColorType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30K4
 					public static global::Epsitec.Common.Types.Caption Blue
 					{
@@ -1709,10 +1532,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class FontFaceType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30KR
 					public static global::Epsitec.Common.Types.Caption Black
 					{
@@ -1749,10 +1568,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class FontSizeType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30KD
 					public static global::Epsitec.Common.Types.Caption Large
 					{
@@ -1789,10 +1604,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class FontStyleType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30K7
 					public static global::Epsitec.Common.Types.Caption Bold
 					{
@@ -1829,10 +1640,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class FrameEdges
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30231
 					public static global::Epsitec.Common.Types.Caption Bottom
 					{
@@ -1869,10 +1676,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class SeparatorType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3025
 					public static global::Epsitec.Common.Types.Caption Compact
 					{
@@ -1901,10 +1704,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class Verbosity
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/30KF1
 					public static global::Epsitec.Common.Types.Caption Compact
 					{
@@ -1942,16 +1741,8 @@ namespace Epsitec.Common.Designer
 			
 			public static class ObjectModifier
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class AnchoredHorizontalAttachment
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3005B
 					public static global::Epsitec.Common.Types.Caption Fill
 					{
@@ -1980,10 +1771,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class AnchoredVerticalAttachment
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3007B
 					public static global::Epsitec.Common.Types.Caption Bottom
 					{
@@ -2012,10 +1799,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class ChildrenPlacement
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300QA
 					public static global::Epsitec.Common.Types.Caption Anchored
 					{
@@ -2052,10 +1835,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class GridMode
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3000B
 					public static global::Epsitec.Common.Types.Caption Absolute
 					{
@@ -2084,10 +1863,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class StackedHorizontalAlignment
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300KB
 					public static global::Epsitec.Common.Types.Caption Center
 					{
@@ -2124,10 +1899,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class StackedHorizontalAttachment
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300DB
 					public static global::Epsitec.Common.Types.Caption Fill
 					{
@@ -2156,10 +1927,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class StackedVerticalAlignment
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300SB
 					public static global::Epsitec.Common.Types.Caption BaseLine
 					{
@@ -2204,10 +1971,6 @@ namespace Epsitec.Common.Designer
 				
 				public static class StackedVerticalAttachment
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/300FB
 					public static global::Epsitec.Common.Types.Caption Bottom
 					{
@@ -2237,16 +2000,8 @@ namespace Epsitec.Common.Designer
 			
 			public static class Widgets
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class ButtonClass
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/3004C
 					public static global::Epsitec.Common.Types.Caption DialogButton
 					{
@@ -2280,6 +2035,11 @@ namespace Epsitec.Common.Designer
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			public static class Action
 			{
 				//	designer:str/300O1
@@ -12975,68 +12735,15 @@ namespace Epsitec.Common.Designer
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Designer");
-			Captions._Initialize ();
-			Captions.Aspect._Initialize ();
-			Captions.Command._Initialize ();
-			Captions.Dialog.TableConfiguration._Initialize ();
-			Captions.Editor._Initialize ();
-			Captions.Editor.Forms._Initialize ();
-			Captions.Editor.Structured._Initialize ();
-			Captions.Editor.Structured.Relation._Initialize ();
-			Captions.Editor.Type._Initialize ();
-			Captions.Form._Initialize ();
-			Captions.Geometry._Initialize ();
-			Captions.Grid._Initialize ();
-			Captions.Grid.Mode._Initialize ();
-			Captions.Layout._Initialize ();
-			Captions.PanelMode._Initialize ();
-			Captions.Types.Type._Initialize ();
-			CaptionIds._Initialize ();
-			CaptionIds.Aspect._Initialize ();
-			CaptionIds.Command._Initialize ();
-			CaptionIds.Dialog.TableConfiguration._Initialize ();
-			CaptionIds.Editor._Initialize ();
-			CaptionIds.Editor.Forms._Initialize ();
-			CaptionIds.Editor.Structured._Initialize ();
-			CaptionIds.Editor.Structured.Relation._Initialize ();
-			CaptionIds.Editor.Type._Initialize ();
-			CaptionIds.Form._Initialize ();
-			CaptionIds.Geometry._Initialize ();
-			CaptionIds.Grid._Initialize ();
-			CaptionIds.Grid.Mode._Initialize ();
-			CaptionIds.Layout._Initialize ();
-			CaptionIds.PanelMode._Initialize ();
-			CaptionIds.Types.Type._Initialize ();
-			Types._Initialize ();
 			Types.FieldDescription._Initialize ();
 			Types.ObjectModifier._Initialize ();
 			Types.Widgets._Initialize ();
-			Values._Initialize ();
-			Values.FieldDescription.BackColorType._Initialize ();
-			Values.FieldDescription.BoxLayoutType._Initialize ();
-			Values.FieldDescription.BoxPaddingType._Initialize ();
-			Values.FieldDescription.CommandButtonClass._Initialize ();
-			Values.FieldDescription.ContainerLayoutMode._Initialize ();
-			Values.FieldDescription.FontColorType._Initialize ();
-			Values.FieldDescription.FontFaceType._Initialize ();
-			Values.FieldDescription.FontSizeType._Initialize ();
-			Values.FieldDescription.FontStyleType._Initialize ();
-			Values.FieldDescription.FrameEdges._Initialize ();
-			Values.FieldDescription.SeparatorType._Initialize ();
-			Values.FieldDescription.Verbosity._Initialize ();
-			Values.ObjectModifier.AnchoredHorizontalAttachment._Initialize ();
-			Values.ObjectModifier.AnchoredVerticalAttachment._Initialize ();
-			Values.ObjectModifier.ChildrenPlacement._Initialize ();
-			Values.ObjectModifier.GridMode._Initialize ();
-			Values.ObjectModifier.StackedHorizontalAlignment._Initialize ();
-			Values.ObjectModifier.StackedHorizontalAttachment._Initialize ();
-			Values.ObjectModifier.StackedVerticalAlignment._Initialize ();
-			Values.ObjectModifier.StackedVerticalAttachment._Initialize ();
-			Values.Widgets.ButtonClass._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

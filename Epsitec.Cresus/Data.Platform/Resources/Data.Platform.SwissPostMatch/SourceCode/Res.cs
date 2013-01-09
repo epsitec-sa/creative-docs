@@ -14,6 +14,7 @@ namespace Epsitec.Data.Platform
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (MatchStreet, null);
 			}
 			
 			//	designer:cap/MVA
@@ -26,6 +27,7 @@ namespace Epsitec.Data.Platform
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (MatchStreet.AddressPostcode, null);
 				}
 				
 				//	designer:cap/MVA2
@@ -59,6 +61,11 @@ namespace Epsitec.Data.Platform
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -110,10 +117,12 @@ namespace Epsitec.Data.Platform
 			Res._manager.DefineDefaultModuleName ("Data.Platform.SwissPostMatch");
 			Types._Initialize ();
 			Fields.MatchStreet._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

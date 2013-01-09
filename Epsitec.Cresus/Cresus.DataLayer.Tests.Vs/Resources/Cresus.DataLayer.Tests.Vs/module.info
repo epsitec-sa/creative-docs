@@ -2,6 +2,6 @@
 <ModuleInfo id="51" name="Cresus.DataLayer.Tests.Vs" layer="s" textMode="String" assemblies="Cresus.DataLayer.Tests.Vs" namespace="Epsitec.Cresus.DataLayer.Tests.Vs">
   <Versions>
     <Version id="1" build="109" date="2011-02-09T10:05:06.9748289Z" />
-    <Version id="8" build="9" date="2012-06-04T12:13:20.2278076Z" />
+    <Version id="8" build="10" date="2013-01-09T12:36:54.8574570Z" />
   </Versions>
 </ModuleInfo>

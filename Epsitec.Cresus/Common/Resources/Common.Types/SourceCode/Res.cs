@@ -12,10 +12,6 @@ namespace Epsitec.Common.Types
 		
 		public static class Types
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			//	designer:cap/100G
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
 			//	designer:cap/1011
@@ -46,6 +42,7 @@ namespace Epsitec.Common.Types
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Default.Boolean, null);
 				}
 				
 				//	designer:cap/1003
@@ -95,16 +92,8 @@ namespace Epsitec.Common.Types
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class BindingMode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/100B
 				public static global::Epsitec.Common.Types.Caption None
 				{
@@ -149,10 +138,6 @@ namespace Epsitec.Common.Types
 			
 			public static class CultureMapSource
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/1014
 				public static global::Epsitec.Common.Types.Caption DynamicMerge
 				{
@@ -181,10 +166,6 @@ namespace Epsitec.Common.Types
 			
 			public static class DataLifetimeExpectancy
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10K4
 				public static global::Epsitec.Common.Types.Caption Immutable
 				{
@@ -221,10 +202,6 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldMembership
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/100S
 				public static global::Epsitec.Common.Types.Caption Inherited
 				{
@@ -253,10 +230,6 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldOptions
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10AQ
 				public static global::Epsitec.Common.Types.Caption CollationAccentInsensitive
 				{
@@ -325,10 +298,6 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldRelation
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/100Q
 				public static global::Epsitec.Common.Types.Caption Collection
 				{
@@ -357,10 +326,6 @@ namespace Epsitec.Common.Types
 			
 			public static class FieldSource
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10022
 				public static global::Epsitec.Common.Types.Caption Expression
 				{
@@ -381,10 +346,6 @@ namespace Epsitec.Common.Types
 			
 			public static class StringComparisonBehavior
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10A7
 				public static global::Epsitec.Common.Types.Caption CurrentCulture
 				{
@@ -437,10 +398,6 @@ namespace Epsitec.Common.Types
 			
 			public static class StringSearchBehavior
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10A1
 				public static global::Epsitec.Common.Types.Caption ExactMatch
 				{
@@ -485,10 +442,6 @@ namespace Epsitec.Common.Types
 			
 			public static class StructuredTypeClass
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/100V
 				public static global::Epsitec.Common.Types.Caption Entity
 				{
@@ -517,10 +470,6 @@ namespace Epsitec.Common.Types
 			
 			public static class StructuredTypeFlags
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10K9
 				public static global::Epsitec.Common.Types.Caption AbstractClass
 				{
@@ -573,10 +522,6 @@ namespace Epsitec.Common.Types
 			
 			public static class TimeResolution
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/10071
 				public static global::Epsitec.Common.Types.Caption Days
 				{
@@ -653,10 +598,6 @@ namespace Epsitec.Common.Types
 			
 			public static class TypeCode
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/100O1
 				public static global::Epsitec.Common.Types.Caption Binary
 				{
@@ -793,6 +734,11 @@ namespace Epsitec.Common.Types
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			//	designer:str/10A
 			public static global::Epsitec.Common.Types.FormattedText CopyrightHolder
 			{
@@ -896,26 +842,13 @@ namespace Epsitec.Common.Types
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Types");
-			Types._Initialize ();
 			Types.Default._Initialize ();
-			Values._Initialize ();
-			Values.BindingMode._Initialize ();
-			Values.CultureMapSource._Initialize ();
-			Values.DataLifetimeExpectancy._Initialize ();
-			Values.FieldMembership._Initialize ();
-			Values.FieldOptions._Initialize ();
-			Values.FieldRelation._Initialize ();
-			Values.FieldSource._Initialize ();
-			Values.StringComparisonBehavior._Initialize ();
-			Values.StringSearchBehavior._Initialize ();
-			Values.StructuredTypeClass._Initialize ();
-			Values.StructuredTypeFlags._Initialize ();
-			Values.TimeResolution._Initialize ();
-			Values.TypeCode._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

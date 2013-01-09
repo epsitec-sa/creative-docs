@@ -12,16 +12,13 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Commands
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			//	designer:cap/L0K22
 			public static readonly global::Epsitec.Common.Widgets.Command Feedback = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 66));
 			public static class Base
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Base.ShowAbstractArticleParameterDefinition, null);
 				}
 				
 				//	designer:cap/L0KU1
@@ -132,6 +129,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Clipboard.Copy, null);
 				}
 				
 				//	designer:cap/L0K5
@@ -146,6 +144,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Edition.Preview, null);
 				}
 				
 				//	designer:cap/L0A3C
@@ -158,6 +157,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (File.ExportAccountingEntries, null);
 				}
 				
 				//	designer:cap/L0KA2
@@ -170,6 +170,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Global.ShowDebug, null);
 				}
 				
 				//	designer:cap/L0KO
@@ -184,6 +185,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Test.Crash, null);
 				}
 				
 				//	designer:cap/L0A
@@ -193,18 +195,10 @@ namespace Epsitec.Cresus.Core
 		
 		public static class CommandIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			//	designer:cap/L0K22
 			public const long Feedback = 0x1500014000042L;
 			public static class Base
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0KU1
 				public const long ShowAbstractArticleParameterDefinition = 0x150001400003EL;
 				//	designer:cap/L0ABL
@@ -311,10 +305,6 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Clipboard
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0K5
 				public const long Copy = 0x1500014000005L;
 				//	designer:cap/L0K6
@@ -325,10 +315,6 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Edition
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0A3C
 				public const long Preview = 0x150000A000183L;
 				//	designer:cap/L0K
@@ -337,10 +323,6 @@ namespace Epsitec.Cresus.Core
 			
 			public static class File
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0KA2
 				public const long ExportAccountingEntries = 0x150001400004AL;
 				//	designer:cap/L0KD
@@ -349,10 +331,6 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Global
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0KO
 				public const long ShowDebug = 0x1500014000018L;
 				//	designer:cap/L0K1
@@ -363,10 +341,6 @@ namespace Epsitec.Cresus.Core
 			
 			public static class Test
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0A
 				public const long Crash = 0x150000A000000L;
 			}
@@ -375,16 +349,8 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Captions
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class DatabaseSubmenu
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0ADL
 				public static global::Epsitec.Common.Types.Caption Articles
 				{
@@ -439,16 +405,8 @@ namespace Epsitec.Cresus.Core
 		
 		public static class CaptionIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class DatabaseSubmenu
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/L0ADL
 				public const long Articles = 0x150000A0002ADL;
 				//	designer:cap/L0ACL
@@ -469,6 +427,11 @@ namespace Epsitec.Cresus.Core
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			public static class Error
 			{
 				//	designer:str/L0A
@@ -636,28 +599,18 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core");
-			Commands._Initialize ();
 			Commands.Base._Initialize ();
 			Commands.Clipboard._Initialize ();
 			Commands.Edition._Initialize ();
 			Commands.File._Initialize ();
 			Commands.Global._Initialize ();
 			Commands.Test._Initialize ();
-			CommandIds._Initialize ();
-			CommandIds.Base._Initialize ();
-			CommandIds.Clipboard._Initialize ();
-			CommandIds.Edition._Initialize ();
-			CommandIds.File._Initialize ();
-			CommandIds.Global._Initialize ();
-			CommandIds.Test._Initialize ();
-			Captions._Initialize ();
-			Captions.DatabaseSubmenu._Initialize ();
-			CaptionIds._Initialize ();
-			CaptionIds.DatabaseSubmenu._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

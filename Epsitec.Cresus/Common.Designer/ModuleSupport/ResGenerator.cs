@@ -101,9 +101,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			this.formatter.WriteCodeLine ();
 
 			this.formatter.WriteBeginMethod (CodeHelper.PublicStaticMethodAttributes, "void Initialize()");
-
-			//	TODO: emit code to initialize nested classes
-
+			this.formatter.WriteCodeLine ("System.Object.Equals (Res._manager, null);");
 			this.formatter.WriteEndMethod ();
 			this.formatter.WriteCodeLine ();
 
@@ -209,7 +207,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 		}
 
-		private void GenerateInitializer(string prefix, string field = null)
+		private void GenerateInitializer(string prefix, string field)
 		{
 			var fullClass = new System.Text.StringBuilder ();
 			
@@ -234,6 +232,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 
 			this.formatter.WriteBeginMethod (CodeHelper.InternalStaticMethodAttributes, "void _Initialize()");
+			this.formatter.WriteCodeLine ("System.Object.Equals (" + field + ", null);");
+
 			this.formatter.WriteEndMethod ();
 			this.formatter.WriteCodeLine ();
 		}
@@ -244,7 +244,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			bool addNewline = false;
 
 			this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, "Commands");
-			this.GenerateInitializer ("Commands");
 
 			string[] fields   = new string[cmdFields.Count];
 			string[] sortKeys = new string[cmdFields.Count];
@@ -381,7 +380,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			bool addNewline = false;
 
 			this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, className);
-			this.GenerateInitializer (className);
 
 			string[] fields   = new string[capFields.Count];
 			string[] sortKeys = new string[capFields.Count];
@@ -434,8 +432,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string elem = args[0];
 
 					this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
-
-					this.GenerateInitializer (className, field);
 
 					if (prefix.Length == 0)
 					{
@@ -596,7 +592,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			bool addNewline = false;
 
 			this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, "Types");
-			this.GenerateInitializer ("Types");
 
 			string[] fields   = new string[typFields.Count];
 			string[] sortKeys = new string[typFields.Count];
@@ -620,6 +615,20 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			string[] wellKnownPrefixes = new string[] { "CollectionType.", "StructuredType." };
 
+			var fieldToInitialize = (
+					from p in wellKnownPrefixes
+					from f in fields
+					let subst = f.Substring (4)
+					where subst.StartsWith (p)
+					select subst.Substring (p.Length)
+				 )
+				 .FirstOrDefault ();
+
+			if (fieldToInitialize != null)
+			{
+				this.GenerateInitializer ("Types", fieldToInitialize);
+			}
+			
 			for (int i = 0; i < fields.Length; i++)
 			{
 				string field = fields[i].Substring (4);
@@ -734,7 +743,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			bool addNewline = false;
 
 			this.formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, bundleId);
-			
+			this.GenerateInitializer (bundleId, "_stringsBundle");
+
 			string[] fields   = bundle.FieldNames;
 			string[] sortKeys = new string[fields.Length];
 

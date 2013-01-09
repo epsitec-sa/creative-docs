@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Images
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (Image, null);
 			}
 			
 			//	designer:cap/9VA
@@ -32,6 +33,7 @@ namespace Epsitec.Cresus.Core.Library.Images
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Image.ImageBlob, null);
 				}
 				
 				//	designer:cap/9VAB
@@ -46,6 +48,7 @@ namespace Epsitec.Cresus.Core.Library.Images
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ImageBlob.BitsPerPixel, null);
 				}
 				
 				//	designer:cap/9VAA
@@ -66,6 +69,7 @@ namespace Epsitec.Cresus.Core.Library.Images
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ImageCategory.CompatibleGroups, null);
 				}
 				
 				//	designer:cap/9VA3
@@ -77,6 +81,11 @@ namespace Epsitec.Cresus.Core.Library.Images
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -130,10 +139,12 @@ namespace Epsitec.Cresus.Core.Library.Images
 			Fields.Image._Initialize ();
 			Fields.ImageBlob._Initialize ();
 			Fields.ImageCategory._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

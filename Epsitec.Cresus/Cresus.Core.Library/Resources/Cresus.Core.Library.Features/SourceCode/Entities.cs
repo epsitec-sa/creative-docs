@@ -174,6 +174,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDisabledSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		partial void OnDisabledSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.ProductFeatureEntity.EntityStructuredTypeId;
@@ -322,6 +323,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSettingsChanging(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		partial void OnSettingsChanged(global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity oldValue, global::Epsitec.Cresus.Core.Entities.SoftwareUISettingsEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.ProductCustomizationEntity.EntityStructuredTypeId;
@@ -456,6 +458,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ProductFeatureEntity> ("[JVA6]");
 			}
 		}
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

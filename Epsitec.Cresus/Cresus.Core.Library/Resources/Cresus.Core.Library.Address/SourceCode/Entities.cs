@@ -1261,7 +1261,7 @@ namespace Epsitec.Cresus.Core.Entities
 		///	The <c>EditionStreetAndHouseNumber</c> field.
 		///	designer:fld/FVAR/FVA43
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVA43]")]
+		[global::Epsitec.Common.Support.EntityField ("[FVA43]", IsVirtual=true)]
 		public string EditionStreetAndHouseNumber
 		{
 			get
@@ -1285,7 +1285,7 @@ namespace Epsitec.Cresus.Core.Entities
 		///	The <c>EditionPostBoxNumber</c> field.
 		///	designer:fld/FVAR/FVA53
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVA53]")]
+		[global::Epsitec.Common.Support.EntityField ("[FVA53]", IsVirtual=true)]
 		public string EditionPostBoxNumber
 		{
 			get

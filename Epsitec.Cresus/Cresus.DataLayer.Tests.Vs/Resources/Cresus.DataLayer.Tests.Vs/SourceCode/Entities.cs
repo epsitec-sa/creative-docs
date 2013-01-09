@@ -1663,7 +1663,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		///	The <c>FavouriteBeer</c> field.
 		///	designer:fld/J1AJ1/J1G002
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[J1G002]")]
+		[global::Epsitec.Common.Support.EntityField ("[J1G002]", IsVirtual=true)]
 		public string FavouriteBeer
 		{
 			get
@@ -1687,7 +1687,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		///	The <c>FavouriteBeerMates</c> field.
 		///	designer:fld/J1AJ1/J1G102
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[J1G102]")]
+		[global::Epsitec.Common.Support.EntityField ("[J1G102]", IsVirtual=true)]
 		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity> FavouriteBeerMates
 		{
 			get

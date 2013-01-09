@@ -12,16 +12,8 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static class Captions
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class ActionButton
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVK9
 				public static global::Epsitec.Common.Types.Caption Print
 				{
@@ -36,16 +28,8 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static class CaptionIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class ActionButton
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVK9
 				public const long Print = 0x3F100014000009L;
 			}
@@ -56,6 +40,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (AbstractDocument, null);
 			}
 			
 			//	designer:cap/HVAF
@@ -68,8 +53,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			public static readonly Epsitec.Common.Types.EnumType DocumentType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/HVAP1
 			public static readonly Epsitec.Common.Types.EnumType PageType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 57));
-			//	designer:cap/HVK3
-			public static readonly Epsitec.Common.Types.EnumType PrintableEntities = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/HVA4
 			public static readonly Epsitec.Common.Types.StructuredType AbstractDocument = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
 			//	designer:cap/HVA1
@@ -90,16 +73,8 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class DocumentFlowDirection
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVAI
 				public static global::Epsitec.Common.Types.Caption Incoming
 				{
@@ -136,10 +111,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			
 			public static class DocumentSource
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVAO
 				public static global::Epsitec.Common.Types.Caption External
 				{
@@ -176,10 +147,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			
 			public static class DocumentState
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVAR
 				public static global::Epsitec.Common.Types.Caption Draft
 				{
@@ -248,10 +215,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			
 			public static class DocumentType
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVK1
 				public static global::Epsitec.Common.Types.Caption ArticleDefinitionSummary
 				{
@@ -416,10 +379,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			
 			public static class PageType
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/HVAR1
 				public static global::Epsitec.Common.Types.Caption All
 				{
@@ -486,54 +445,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 				}
 			}
 			
-			public static class PrintableEntities
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/HVK8
-				public static global::Epsitec.Common.Types.Caption ArticleDefinition
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
-					}
-				}
-				//	designer:cap/HVK5
-				public static global::Epsitec.Common.Types.Caption DocumentMetadata
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
-					}
-				}
-				//	designer:cap/HVK6
-				public static global::Epsitec.Common.Types.Caption MailContact
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
-					}
-				}
-				//	designer:cap/HVK4
-				public static global::Epsitec.Common.Types.Caption None
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
-					}
-				}
-				//	designer:cap/HVK7
-				public static global::Epsitec.Common.Types.Caption Relation
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
-					}
-				}
-			}
-			
 		}
 		
 		public static class Fields
@@ -542,6 +453,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AbstractDocument.VariantId, null);
 				}
 				
 				//	designer:cap/HVA42
@@ -552,6 +464,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (DocumentCategory.DocumentFlowDirection, null);
 				}
 				
 				//	designer:cap/HVAJ1
@@ -572,6 +485,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (DocumentCategoryMapping.DocumentCategories, null);
 				}
 				
 				//	designer:cap/HVAO1
@@ -584,6 +498,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (DocumentMetadata.BusinessDocument, null);
 				}
 				
 				//	designer:cap/HVAL1
@@ -602,6 +517,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (DocumentOptions.SerializedData, null);
 				}
 				
 				//	designer:cap/HVAA
@@ -612,6 +528,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (DocumentPrintingUnits.SerializedData, null);
 				}
 				
 				//	designer:cap/HVAB
@@ -622,6 +539,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (SerializedDocumentBlob.Data, null);
 				}
 				
 				//	designer:cap/HVAD
@@ -633,6 +551,11 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			public static class BusinessDocument
 			{
 				public static class Column
@@ -926,18 +849,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Documents");
-			Captions._Initialize ();
-			Captions.ActionButton._Initialize ();
-			CaptionIds._Initialize ();
-			CaptionIds.ActionButton._Initialize ();
 			Types._Initialize ();
-			Values._Initialize ();
-			Values.DocumentFlowDirection._Initialize ();
-			Values.DocumentSource._Initialize ();
-			Values.DocumentState._Initialize ();
-			Values.DocumentType._Initialize ();
-			Values.PageType._Initialize ();
-			Values.PrintableEntities._Initialize ();
 			Fields.AbstractDocument._Initialize ();
 			Fields.DocumentCategory._Initialize ();
 			Fields.DocumentCategoryMapping._Initialize ();
@@ -945,10 +857,12 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			Fields.DocumentOptions._Initialize ();
 			Fields.DocumentPrintingUnits._Initialize ();
 			Fields.SerializedDocumentBlob._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

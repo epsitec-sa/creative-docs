@@ -3,5 +3,6 @@
   <Versions>
     <Version id="2" build="8" date="2011-01-19T13:29:53.0154670Z" />
     <Version id="1" build="7" date="2011-02-01T14:39:47.7123021Z" />
+    <Version id="8" build="1" date="2013-01-09T12:25:03.8164615Z" />
   </Versions>
 </ModuleInfo>

@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (DataSetUISettings, null);
 			}
 			
 			//	designer:cap/AVAM
@@ -36,16 +37,8 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class UserAuthenticationMethod
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/AVAQ
 				public static global::Epsitec.Common.Types.Caption Disabled
 				{
@@ -82,10 +75,6 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			
 			public static class UserPowerLevel
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/AVAI
 				public static global::Epsitec.Common.Types.Caption Administrator
 				{
@@ -152,6 +141,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (DataSetUISettings.DataSetCommandId, null);
 				}
 				
 				//	designer:cap/AVG102
@@ -164,6 +154,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (EntityUISettings.EntityId, null);
 				}
 				
 				//	designer:cap/AVAS
@@ -176,6 +167,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (SoftwareUISettings.DataSetUISettings, null);
 				}
 				
 				//	designer:cap/AVG302
@@ -190,6 +182,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (SoftwareUser.AuthenticationMethod, null);
 				}
 				
 				//	designer:cap/AVAB
@@ -216,6 +209,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (SoftwareUserGroup.Disabled, null);
 				}
 				
 				//	designer:cap/AVA3
@@ -231,6 +225,11 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -281,18 +280,17 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.UserManagement");
 			Types._Initialize ();
-			Values._Initialize ();
-			Values.UserAuthenticationMethod._Initialize ();
-			Values.UserPowerLevel._Initialize ();
 			Fields.DataSetUISettings._Initialize ();
 			Fields.EntityUISettings._Initialize ();
 			Fields.SoftwareUISettings._Initialize ();
 			Fields.SoftwareUser._Initialize ();
 			Fields.SoftwareUserGroup._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

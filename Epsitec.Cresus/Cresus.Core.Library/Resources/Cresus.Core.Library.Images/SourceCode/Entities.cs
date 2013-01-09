@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnImageCategoryChanging(global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity newValue);
 		partial void OnImageCategoryChanged(global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.ImageEntity.EntityStructuredTypeId;
@@ -247,6 +248,7 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.ImageCategoryEntity.EntityStructuredTypeId;
@@ -349,6 +351,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -686,6 +689,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDpiChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnBitsPerPixelChanging(int oldValue, int newValue);
 		partial void OnBitsPerPixelChanged(int oldValue, int newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

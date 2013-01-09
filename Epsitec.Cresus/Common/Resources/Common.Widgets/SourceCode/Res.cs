@@ -78,6 +78,7 @@ namespace Epsitec.Common.Widgets
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ColorPalette.Load, null);
 				}
 				
 				//	designer:cap/001
@@ -94,11 +95,6 @@ namespace Epsitec.Common.Widgets
 				public static readonly global::Epsitec.Common.Widgets.Command SelectLightColors = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 4));
 				//	designer:cap/0015
 				public static readonly global::Epsitec.Common.Widgets.Command SelectRainbowColors = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 5));
-			}
-			
-			internal static void _Initialize()
-			{
-				ColorPalette._Initialize ();
 			}
 		}
 		
@@ -190,6 +186,11 @@ namespace Epsitec.Common.Widgets
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			public static class AbstractTextField
 			{
 				public static class Menu
@@ -941,17 +942,33 @@ namespace Epsitec.Common.Widgets
 				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
 			}
 			
+			public static global::System.String GetString(params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
 			#region Internal Support Code
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				string field = string.Join (".", path);
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Common.Widgets.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Common.Widgets.Res.Strings.GetString (druid));
+			}
+			
+			private static global::System.String GetString(string bundle, params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
+			private static global::System.String GetString(global::Epsitec.Common.Support.Druid druid)
+			{
+				return _stringsBundle[druid].AsString;
 			}
 			
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
@@ -959,15 +976,765 @@ namespace Epsitec.Common.Widgets
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+			public static class AbstractTextField
+			{
+				public static class Menu
+				{
+					//	designer:str/0001
+					public static global::Epsitec.Common.Support.Druid Copy
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (1);
+						}
+					}
+					//	designer:str/0
+					public static global::Epsitec.Common.Support.Druid Cut
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (0);
+						}
+					}
+					//	designer:str/0003
+					public static global::Epsitec.Common.Support.Druid Delete
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (3);
+						}
+					}
+					//	designer:str/0002
+					public static global::Epsitec.Common.Support.Druid Paste
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (2);
+						}
+					}
+					//	designer:str/0004
+					public static global::Epsitec.Common.Support.Druid SelectAll
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (4);
+						}
+					}
+				}
+			}
+			
+			public static class ColorPalette
+			{
+				//	designer:str/000B
+				public static global::Epsitec.Common.Support.Druid OpenPalette
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (11);
+					}
+				}
+				//	designer:str/0005
+				public static global::Epsitec.Common.Support.Druid Options
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (5);
+					}
+				}
+				//	designer:str/0009
+				public static global::Epsitec.Common.Support.Druid PaletteDark
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (9);
+					}
+				}
+				//	designer:str/0006
+				public static global::Epsitec.Common.Support.Druid PaletteDefault
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (6);
+					}
+				}
+				//	designer:str/000A
+				public static global::Epsitec.Common.Support.Druid PaletteGray
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (10);
+					}
+				}
+				//	designer:str/0008
+				public static global::Epsitec.Common.Support.Druid PaletteLight
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (8);
+					}
+				}
+				//	designer:str/0007
+				public static global::Epsitec.Common.Support.Druid PaletteRainbow
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (7);
+					}
+				}
+				//	designer:str/000C
+				public static global::Epsitec.Common.Support.Druid SavePalette
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (12);
+					}
+				}
+			}
+			
+			public static class ColorSelector
+			{
+				//	designer:str/00081
+				public static global::Epsitec.Common.Support.Druid Close
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (40);
+					}
+				}
+				//	designer:str/000T
+				public static global::Epsitec.Common.Support.Druid LongAlpha
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (29);
+					}
+				}
+				//	designer:str/00041
+				public static global::Epsitec.Common.Support.Druid LongBlack
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (36);
+					}
+				}
+				//	designer:str/000S
+				public static global::Epsitec.Common.Support.Druid LongBlue
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (28);
+					}
+				}
+				//	designer:str/00011
+				public static global::Epsitec.Common.Support.Druid LongCyan
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (33);
+					}
+				}
+				//	designer:str/00051
+				public static global::Epsitec.Common.Support.Druid LongGray
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (37);
+					}
+				}
+				//	designer:str/000R
+				public static global::Epsitec.Common.Support.Druid LongGreen
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (27);
+					}
+				}
+				//	designer:str/00061
+				public static global::Epsitec.Common.Support.Druid LongHexa
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (38);
+					}
+				}
+				//	designer:str/000U
+				public static global::Epsitec.Common.Support.Druid LongHue
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (30);
+					}
+				}
+				//	designer:str/00021
+				public static global::Epsitec.Common.Support.Druid LongMagenta
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (34);
+					}
+				}
+				//	designer:str/000Q
+				public static global::Epsitec.Common.Support.Druid LongRed
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (26);
+					}
+				}
+				//	designer:str/000V
+				public static global::Epsitec.Common.Support.Druid LongSaturation
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (31);
+					}
+				}
+				//	designer:str/00001
+				public static global::Epsitec.Common.Support.Druid LongValue
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (32);
+					}
+				}
+				//	designer:str/00031
+				public static global::Epsitec.Common.Support.Druid LongYellow
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (35);
+					}
+				}
+				//	designer:str/00071
+				public static global::Epsitec.Common.Support.Druid Picker
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (39);
+					}
+				}
+				//	designer:str/000G
+				public static global::Epsitec.Common.Support.Druid ShortAlpha
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (16);
+					}
+				}
+				//	designer:str/000N
+				public static global::Epsitec.Common.Support.Druid ShortBlack
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (23);
+					}
+				}
+				//	designer:str/000F
+				public static global::Epsitec.Common.Support.Druid ShortBlue
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (15);
+					}
+				}
+				//	designer:str/000K
+				public static global::Epsitec.Common.Support.Druid ShortCyan
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (20);
+					}
+				}
+				//	designer:str/000O
+				public static global::Epsitec.Common.Support.Druid ShortGray
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (24);
+					}
+				}
+				//	designer:str/000E
+				public static global::Epsitec.Common.Support.Druid ShortGreen
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (14);
+					}
+				}
+				//	designer:str/000P
+				public static global::Epsitec.Common.Support.Druid ShortHexa
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (25);
+					}
+				}
+				//	designer:str/000H
+				public static global::Epsitec.Common.Support.Druid ShortHue
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (17);
+					}
+				}
+				//	designer:str/000L
+				public static global::Epsitec.Common.Support.Druid ShortMagenta
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (21);
+					}
+				}
+				//	designer:str/000D
+				public static global::Epsitec.Common.Support.Druid ShortRed
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (13);
+					}
+				}
+				//	designer:str/000I
+				public static global::Epsitec.Common.Support.Druid ShortSaturation
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (18);
+					}
+				}
+				//	designer:str/000J
+				public static global::Epsitec.Common.Support.Druid ShortValue
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (19);
+					}
+				}
+				//	designer:str/000M
+				public static global::Epsitec.Common.Support.Druid ShortYellow
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (22);
+					}
+				}
+				public static class ColorSpace
+				{
+					//	designer:str/000A1
+					public static global::Epsitec.Common.Support.Druid Cmyk
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (42);
+						}
+					}
+					//	designer:str/000B1
+					public static global::Epsitec.Common.Support.Druid Gray
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (43);
+						}
+					}
+					//	designer:str/00091
+					public static global::Epsitec.Common.Support.Druid Rgb
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (41);
+						}
+					}
+				}
+			}
+			
+			public static class Dialog
+			{
+				public static class Button
+				{
+					//	designer:str/000E1
+					public static global::Epsitec.Common.Support.Druid Cancel
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (46);
+						}
+					}
+					//	designer:str/000D1
+					public static global::Epsitec.Common.Support.Druid No
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (45);
+						}
+					}
+					//	designer:str/000F1
+					public static global::Epsitec.Common.Support.Druid OK
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (47);
+						}
+					}
+					//	designer:str/000C1
+					public static global::Epsitec.Common.Support.Druid Yes
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (44);
+						}
+					}
+				}
+			}
+			
+			public static class EditArray
+			{
+				//	designer:str/000L1
+				public static global::Epsitec.Common.Support.Druid Delete
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (53);
+					}
+				}
+				//	designer:str/000K1
+				public static global::Epsitec.Common.Support.Druid InsertAfter
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (52);
+					}
+				}
+				//	designer:str/000J1
+				public static global::Epsitec.Common.Support.Druid InsertBefore
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (51);
+					}
+				}
+				//	designer:str/000N1
+				public static global::Epsitec.Common.Support.Druid MoveDown
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (55);
+					}
+				}
+				//	designer:str/000M1
+				public static global::Epsitec.Common.Support.Druid MoveUp
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (54);
+					}
+				}
+				//	designer:str/000H1
+				public static global::Epsitec.Common.Support.Druid StartEdition
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (49);
+					}
+				}
+				//	designer:str/000G1
+				public static global::Epsitec.Common.Support.Druid StartReadOnly
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (48);
+					}
+				}
+				//	designer:str/000I1
+				public static global::Epsitec.Common.Support.Druid StartSearch
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (50);
+					}
+				}
+			}
+			
+			public static class IconButtonsCombo
+			{
+				//	designer:str/000Q1
+				public static global::Epsitec.Common.Support.Druid Menu
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (58);
+					}
+				}
+				//	designer:str/000P1
+				public static global::Epsitec.Common.Support.Druid Next
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (57);
+					}
+				}
+				//	designer:str/000O1
+				public static global::Epsitec.Common.Support.Druid Prev
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (56);
+					}
+				}
+			}
+			
+			public static class Shortcut
+			{
+				public static class Template
+				{
+					//	designer:str/000K2
+					public static global::Epsitec.Common.Support.Druid TextWithShortcut
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (84);
+						}
+					}
+				}
+			}
+			
+			public static class ShortcutEditor
+			{
+				public static class Code
+				{
+					//	designer:str/000H2
+					public static global::Epsitec.Common.Support.Druid None
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (81);
+						}
+					}
+					//	designer:str/000J2
+					public static global::Epsitec.Common.Support.Druid Tooltip
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (83);
+						}
+					}
+				}
+				
+				public static class Modifier
+				{
+					//	designer:str/000G2
+					public static global::Epsitec.Common.Support.Druid None
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (80);
+						}
+					}
+					//	designer:str/000I2
+					public static global::Epsitec.Common.Support.Druid Tooltip
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (82);
+						}
+					}
+				}
+			}
+			
+			public static class TextNavigator
+			{
+				public static class Action
+				{
+					//	designer:str/000T1
+					public static global::Epsitec.Common.Support.Druid Delete
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (61);
+						}
+					}
+					//	designer:str/000S1
+					public static global::Epsitec.Common.Support.Druid Insert
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (60);
+						}
+					}
+					//	designer:str/000R1
+					public static global::Epsitec.Common.Support.Druid Modify
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (59);
+						}
+					}
+					//	designer:str/000U1
+					public static global::Epsitec.Common.Support.Druid Style
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (62);
+						}
+					}
+					//	designer:str/000V1
+					public static global::Epsitec.Common.Support.Druid Tab
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (63);
+						}
+					}
+				}
+			}
+			
+			public static class TextRuler
+			{
+				//	designer:str/00062
+				public static global::Epsitec.Common.Support.Druid Bold
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (70);
+					}
+				}
+				//	designer:str/00032
+				public static global::Epsitec.Common.Support.Druid ButtonBold
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (67);
+					}
+				}
+				//	designer:str/00042
+				public static global::Epsitec.Common.Support.Druid ButtonItalic
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (68);
+					}
+				}
+				//	designer:str/00052
+				public static global::Epsitec.Common.Support.Druid ButtonUnderline
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (69);
+					}
+				}
+				//	designer:str/000A2
+				public static global::Epsitec.Common.Support.Druid Color
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (74);
+					}
+				}
+				//	designer:str/00092
+				public static global::Epsitec.Common.Support.Druid DefaultColor
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (73);
+					}
+				}
+				//	designer:str/000F2
+				public static global::Epsitec.Common.Support.Druid FontDefault
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (79);
+					}
+				}
+				//	designer:str/00012
+				public static global::Epsitec.Common.Support.Druid FontName
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (65);
+					}
+				}
+				//	designer:str/00022
+				public static global::Epsitec.Common.Support.Druid FontSize
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (66);
+					}
+				}
+				//	designer:str/00072
+				public static global::Epsitec.Common.Support.Druid Italic
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (71);
+					}
+				}
+				//	designer:str/000C2
+				public static global::Epsitec.Common.Support.Druid ListFix
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (76);
+					}
+				}
+				//	designer:str/000B2
+				public static global::Epsitec.Common.Support.Druid ListNum
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (75);
+					}
+				}
+				//	designer:str/00002
+				public static global::Epsitec.Common.Support.Druid Tab
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (64);
+					}
+				}
+				//	designer:str/00082
+				public static global::Epsitec.Common.Support.Druid Underline
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (72);
+					}
+				}
+				public static class Tooltip
+				{
+					//	designer:str/000E2
+					public static global::Epsitec.Common.Support.Druid Deleted
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (78);
+						}
+					}
+					//	designer:str/000D2
+					public static global::Epsitec.Common.Support.Druid Unit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (77);
+						}
+					}
+				}
+			}
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Widgets");
-			Commands._Initialize ();
+			Commands.ColorPalette._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

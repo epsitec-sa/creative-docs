@@ -14,12 +14,14 @@ namespace Demo.Demo5juin
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (Adresse, null);
 			}
 			
 			public static class String
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (String.Multiline, null);
 				}
 				
 				//	designer:cap/632
@@ -76,6 +78,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Adresse.Case, null);
 				}
 				
 				//	designer:cap/630A3
@@ -100,6 +103,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AdressePlus.Téléphone, null);
 				}
 				
 				//	designer:cap/6322
@@ -110,6 +114,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Affaire.Client, null);
 				}
 				
 				//	designer:cap/630S2
@@ -132,6 +137,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Article.ArticlesEnStock, null);
 				}
 				
 				//	designer:cap/630E1
@@ -156,6 +162,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ArticleStock.Article, null);
 				}
 				
 				//	designer:cap/630I1
@@ -176,6 +183,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ArticleVisserie.Dimension, null);
 				}
 				
 				//	designer:cap/6312
@@ -188,6 +196,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (CodeTva.DateDébutValidité, null);
 				}
 				
 				//	designer:cap/630F
@@ -202,6 +211,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (EmplacementStock.Allée, null);
 				}
 				
 				//	designer:cap/630U1
@@ -218,6 +228,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Facture.AdresseFacturation, null);
 				}
 				
 				//	designer:cap/630F2
@@ -250,6 +261,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Monnaie.Date, null);
 				}
 				
 				//	designer:cap/630C
@@ -264,6 +276,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (MouvementStock.Date, null);
 				}
 				
 				//	designer:cap/630R1
@@ -280,6 +293,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (MoyenDePaiement.Désignation, null);
 				}
 				
 				//	designer:cap/630R2
@@ -290,6 +304,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Paiement.Moyen, null);
 				}
 				
 				//	designer:cap/63033
@@ -302,6 +317,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Position.Article, null);
 				}
 				
 				//	designer:cap/63042
@@ -318,6 +334,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Prix.ArrondiTva, null);
 				}
 				
 				//	designer:cap/630J
@@ -338,6 +355,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (PrixCompose.Prix, null);
 				}
 				
 				//	designer:cap/630M
@@ -354,6 +372,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (PrixSimple.Monnaie, null);
 				}
 				
 				//	designer:cap/63063
@@ -366,6 +385,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (RabaisSurArticle.CodeRaison, null);
 				}
 				
 				//	designer:cap/63092
@@ -378,6 +398,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Rappel.Facture, null);
 				}
 				
 				//	designer:cap/630O2
@@ -396,6 +417,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Stock.Articles, null);
 				}
 				
 				//	designer:cap/630G1
@@ -408,6 +430,7 @@ namespace Demo.Demo5juin
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Unite.Code, null);
 				}
 				
 				//	designer:cap/63012
@@ -425,6 +448,11 @@ namespace Demo.Demo5juin
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -466,6 +494,10 @@ namespace Demo.Demo5juin
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		//	Code mapping for 'Form' resources
 		
 		//	Code mapping for 'Form' resources
@@ -501,10 +533,12 @@ namespace Demo.Demo5juin
 			Fields.Rappel._Initialize ();
 			Fields.Stock._Initialize ();
 			Fields.Unite._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

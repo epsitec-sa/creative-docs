@@ -322,6 +322,7 @@ namespace Epsitec.Data.Platform.Entities
 		partial void OnPrepositionCodeChanging(int oldValue, int newValue);
 		partial void OnPrepositionCodeChanged(int oldValue, int newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Data.Platform.Entities.MatchStreetEntity.EntityStructuredTypeId;

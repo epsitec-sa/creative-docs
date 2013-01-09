@@ -357,6 +357,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnBusinessDocumentChanging(global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity newValue);
 		partial void OnBusinessDocumentChanged(global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractDocumentEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentMetadataEntity.EntityStructuredTypeId;
@@ -587,6 +588,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDocumentSourceChanging(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
 		partial void OnDocumentSourceChanged(global::Epsitec.Cresus.Core.Business.DocumentSource oldValue, global::Epsitec.Cresus.Core.Business.DocumentSource newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentCategoryEntity.EntityStructuredTypeId;
@@ -714,6 +716,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -843,6 +846,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.DocumentPrintingUnitsEntity.EntityStructuredTypeId;
@@ -918,6 +922,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnVariantIdChanging(int? oldValue, int? newValue);
 		partial void OnVariantIdChanged(int? oldValue, int? newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1067,6 +1072,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.SerializedDocumentBlobEntity.EntityStructuredTypeId;
@@ -1188,6 +1194,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnPrintableEntityChanging(string oldValue, string newValue);
 		partial void OnPrintableEntityChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1311,6 +1318,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

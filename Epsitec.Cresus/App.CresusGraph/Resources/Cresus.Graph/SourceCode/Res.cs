@@ -16,6 +16,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ChartOptions.ShowSeriesCaptions, null);
 				}
 				
 				//	designer:cap/BVAT
@@ -28,6 +29,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (File.ExportImage, null);
 				}
 				
 				//	designer:cap/BVA5
@@ -38,6 +40,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (General.DownloadUpdate, null);
 				}
 				
 				//	designer:cap/BVAN
@@ -50,6 +53,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (GraphType.UseBarChartHorizontal, null);
 				}
 				
 				//	designer:cap/BVA2
@@ -62,14 +66,6 @@ namespace Epsitec.Cresus
 				public static readonly global::Epsitec.Common.Widgets.Command UseLineChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 				//	designer:cap/BVAR
 				public static readonly global::Epsitec.Common.Widgets.Command UsePieChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
-			}
-			
-			internal static void _Initialize()
-			{
-				ChartOptions._Initialize ();
-				File._Initialize ();
-				General._Initialize ();
-				GraphType._Initialize ();
 			}
 		}
 		
@@ -321,9 +317,9 @@ namespace Epsitec.Cresus
 				public static class Options
 				{
 					//	designer:cap/BVA3
-					public static readonly global::Epsitec.Common.Support.Druid AccumulateValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
+					public const long AccumulateValues = 0x3EB0000A000003L;
 					//	designer:cap/BVA4
-					public static readonly global::Epsitec.Common.Support.Druid StackValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4);
+					public const long StackValues = 0x3EB0000A000004L;
 				}
 			}
 			
@@ -332,58 +328,58 @@ namespace Epsitec.Cresus
 				public static class DataImport
 				{
 					//	designer:cap/BVA9
-					public static readonly global::Epsitec.Common.Support.Druid WhatToDo = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
+					public const long WhatToDo = 0x3EB0000A000009L;
 					//	designer:cap/BVAB
-					public static readonly global::Epsitec.Common.Support.Druid WhatToDoAdd = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
+					public const long WhatToDoAdd = 0x3EB0000A00000BL;
 					//	designer:cap/BVAC
-					public static readonly global::Epsitec.Common.Support.Druid WhatToDoCancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
+					public const long WhatToDoCancel = 0x3EB0000A00000CL;
 					//	designer:cap/BVAA
-					public static readonly global::Epsitec.Common.Support.Druid WhatToDoMerge = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
+					public const long WhatToDoMerge = 0x3EB0000A00000AL;
 					public static class Failure
 					{
 						//	designer:cap/BVA8
-						public static readonly global::Epsitec.Common.Support.Druid MultipleSources = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
+						public const long MultipleSources = 0x3EB0000A000008L;
 						//	designer:cap/BVA7
-						public static readonly global::Epsitec.Common.Support.Druid NoSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+						public const long NoSource = 0x3EB0000A000007L;
 					}
 				}
 				
 				public static class LicenseInvalid
 				{
 					//	designer:cap/BVAE
-					public static readonly global::Epsitec.Common.Support.Druid Option1BuyGraph = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14);
+					public const long Option1BuyGraph = 0x3EB0000A00000EL;
 					//	designer:cap/BVAI
-					public static readonly global::Epsitec.Common.Support.Druid Option1UpdateGraph = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
+					public const long Option1UpdateGraph = 0x3EB0000A000012L;
 					//	designer:cap/BVAG
-					public static readonly global::Epsitec.Common.Support.Druid Option2UpdateCompta = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16);
+					public const long Option2UpdateCompta = 0x3EB0000A000010L;
 					//	designer:cap/BVAF
-					public static readonly global::Epsitec.Common.Support.Druid Option3Quit = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15);
+					public const long Option3Quit = 0x3EB0000A00000FL;
 					//	designer:cap/BVAD
-					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
+					public const long Question = 0x3EB0000A00000DL;
 					//	designer:cap/BVAH
-					public static readonly global::Epsitec.Common.Support.Druid QuestionStandalone = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
+					public const long QuestionStandalone = 0x3EB0000A000011L;
 				}
 				
 				public static class Quit
 				{
 					//	designer:cap/BVAK
-					public static readonly global::Epsitec.Common.Support.Druid Option1Save = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20);
+					public const long Option1Save = 0x3EB0000A000014L;
 					//	designer:cap/BVAL
-					public static readonly global::Epsitec.Common.Support.Druid Option2DoNotSave = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
+					public const long Option2DoNotSave = 0x3EB0000A000015L;
 					//	designer:cap/BVAM
-					public static readonly global::Epsitec.Common.Support.Druid Option3Cancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22);
+					public const long Option3Cancel = 0x3EB0000A000016L;
 					//	designer:cap/BVAJ
-					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
+					public const long Question = 0x3EB0000A000013L;
 				}
 				
 				public static class Update
 				{
 					//	designer:cap/BVAP
-					public static readonly global::Epsitec.Common.Support.Druid Option1DownloadAndInstall = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
+					public const long Option1DownloadAndInstall = 0x3EB0000A000019L;
 					//	designer:cap/BVAQ
-					public static readonly global::Epsitec.Common.Support.Druid Option2Cancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
+					public const long Option2Cancel = 0x3EB0000A00001AL;
 					//	designer:cap/BVAO
-					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
+					public const long Question = 0x3EB0000A000018L;
 				}
 			}
 			
@@ -393,6 +389,11 @@ namespace Epsitec.Cresus
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			public static class Application
 			{
 				//	designer:str/BVA
@@ -443,17 +444,33 @@ namespace Epsitec.Cresus
 				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
 			}
 			
+			public static global::System.String GetString(params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
 			#region Internal Support Code
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
-				string field = string.Join (".", path);
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Res.Strings.GetString (bundle, path));
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (global::Epsitec.Cresus.Res.Strings.GetString (druid));
+			}
+			
+			private static global::System.String GetString(string bundle, params string[] path)
+			{
+				string field = string.Join (".", path);
+				return _stringsBundle[field].AsString;
+			}
+			
+			private static global::System.String GetString(global::Epsitec.Common.Support.Druid druid)
+			{
+				return _stringsBundle[druid].AsString;
 			}
 			
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
@@ -461,15 +478,67 @@ namespace Epsitec.Cresus
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+			public static class Application
+			{
+				//	designer:str/BVA
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772160);
+					}
+				}
+			}
+			
+			public static class DataPicker
+			{
+				//	designer:str/BVA1
+				public static global::Epsitec.Common.Support.Druid Title
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772161);
+					}
+				}
+			}
+			
+			public static class Message
+			{
+				//	designer:str/BVA2
+				public static global::Epsitec.Common.Support.Druid FreePiccoloBecauseOfCompta
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772162);
+					}
+				}
+				//	designer:str/BVA3
+				public static global::Epsitec.Common.Support.Druid MoreThanPiccolo
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772163);
+					}
+				}
+			}
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Graph");
-			Commands._Initialize ();
+			Commands.ChartOptions._Initialize ();
+			Commands.File._Initialize ();
+			Commands.General._Initialize ();
+			Commands.GraphType._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

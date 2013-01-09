@@ -14,6 +14,11 @@ namespace Epsitec.Cresus.WebCore.Server
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			//	designer:str/A1G302
 			public static global::Epsitec.Common.Types.FormattedText EmptyValue
 			{
@@ -127,10 +132,12 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.WebCore.Server");
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

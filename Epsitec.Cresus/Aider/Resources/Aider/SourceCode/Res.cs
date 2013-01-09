@@ -12,14 +12,11 @@ namespace Epsitec.Aider
 		
 		public static class Commands
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Base
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Base.ShowAiderAddress, null);
 				}
 				
 				//	designer:cap/LVG202
@@ -57,16 +54,8 @@ namespace Epsitec.Aider
 		
 		public static class CommandIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Base
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/LVG202
 				public const long ShowAiderAddress = 0x3F500050000002L;
 				//	designer:cap/LVG402
@@ -103,16 +92,8 @@ namespace Epsitec.Aider
 		
 		public static class Captions
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class DatabaseSubmenu
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/LVA4D
 				public static global::Epsitec.Common.Types.Caption Definitions
 				{
@@ -135,16 +116,8 @@ namespace Epsitec.Aider
 		
 		public static class CaptionIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class DatabaseSubmenu
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/LVA4D
 				public const long Definitions = 0x3F50000A0001A4L;
 				//	designer:cap/LVA5D
@@ -157,12 +130,14 @@ namespace Epsitec.Aider
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (AiderAddress, null);
 			}
 			
 			public static class Enum
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Enum.AddressType, null);
 				}
 				
 				//	designer:cap/LVAT5
@@ -225,6 +200,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (String.GroupPath, null);
 				}
 				
 				//	designer:cap/LVAOC
@@ -315,22 +291,10 @@ namespace Epsitec.Aider
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Enum
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class AddressType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAU5
 					public static global::Epsitec.Common.Types.Caption Default
 					{
@@ -375,10 +339,6 @@ namespace Epsitec.Aider
 				
 				public static class ContactRole
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAI7
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -391,10 +351,6 @@ namespace Epsitec.Aider
 				
 				public static class DataSource
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA12
 					public static global::Epsitec.Common.Types.Caption Government
 					{
@@ -415,10 +371,6 @@ namespace Epsitec.Aider
 				
 				public static class EventParticipantRole
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAF3
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -431,10 +383,6 @@ namespace Epsitec.Aider
 				
 				public static class EventType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAU3
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -447,10 +395,6 @@ namespace Epsitec.Aider
 				
 				public static class FunctionType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAIA
 					public static global::Epsitec.Common.Types.Caption GroupParticipant
 					{
@@ -487,10 +431,6 @@ namespace Epsitec.Aider
 				
 				public static class GroupClassification
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA8D
 					public static global::Epsitec.Common.Types.Caption Canton
 					{
@@ -567,10 +507,6 @@ namespace Epsitec.Aider
 				
 				public static class GroupLevel
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA36
 					public static global::Epsitec.Common.Types.Caption Default
 					{
@@ -583,10 +519,6 @@ namespace Epsitec.Aider
 				
 				public static class GroupNodeType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVASA
 					public static global::Epsitec.Common.Types.Caption Leaf
 					{
@@ -631,10 +563,6 @@ namespace Epsitec.Aider
 				
 				public static class GroupParticipantRole
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAH3
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -647,10 +575,6 @@ namespace Epsitec.Aider
 				
 				public static class GroupRelationshipType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAMA
 					public static global::Epsitec.Common.Types.Caption Exclusion
 					{
@@ -679,10 +603,6 @@ namespace Epsitec.Aider
 				
 				public static class HousholdMrMrs
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA29
 					public static global::Epsitec.Common.Types.Caption Auto
 					{
@@ -727,10 +647,6 @@ namespace Epsitec.Aider
 				
 				public static class Language
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAL7
 					public static global::Epsitec.Common.Types.Caption French
 					{
@@ -751,10 +667,6 @@ namespace Epsitec.Aider
 				
 				public static class LegalPersonType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA57
 					public static global::Epsitec.Common.Types.Caption Business
 					{
@@ -783,10 +695,6 @@ namespace Epsitec.Aider
 				
 				public static class Mutability
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA0B
 					public static global::Epsitec.Common.Types.Caption Customizable
 					{
@@ -815,10 +723,6 @@ namespace Epsitec.Aider
 				
 				public static class PersonConfession
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVGB02
 					public static global::Epsitec.Common.Types.Caption Anglican
 					{
@@ -935,10 +839,6 @@ namespace Epsitec.Aider
 				
 				public static class PersonDeclarationStatus
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAP2
 					public static global::Epsitec.Common.Types.Caption Declared
 					{
@@ -975,10 +875,6 @@ namespace Epsitec.Aider
 				
 				public static class PersonMrMrs
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAJ1
 					public static global::Epsitec.Common.Types.Caption Madame
 					{
@@ -1015,10 +911,6 @@ namespace Epsitec.Aider
 				
 				public static class PersonRelationshipType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAK3
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -1031,10 +923,6 @@ namespace Epsitec.Aider
 				
 				public static class PersonSex
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAP1
 					public static global::Epsitec.Common.Types.Caption Female
 					{
@@ -1063,10 +951,6 @@ namespace Epsitec.Aider
 				
 				public static class PesonMaritalStatus
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAG1
 					public static global::Epsitec.Common.Types.Caption Dissolved
 					{
@@ -1135,10 +1019,6 @@ namespace Epsitec.Aider
 				
 				public static class PesonNationalityStatus
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAS1
 					public static global::Epsitec.Common.Types.Caption Defined
 					{
@@ -1167,10 +1047,6 @@ namespace Epsitec.Aider
 				
 				public static class PlacePersonRole
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA56
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -1183,10 +1059,6 @@ namespace Epsitec.Aider
 				
 				public static class RemovalReason
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAP6
 					public static global::Epsitec.Common.Types.Caption Deceased
 					{
@@ -1231,10 +1103,6 @@ namespace Epsitec.Aider
 				
 				public static class UserRole
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA76
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -1247,10 +1115,6 @@ namespace Epsitec.Aider
 				
 				public static class ValidationState
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVAD6
 					public static global::Epsitec.Common.Types.Caption Deleted
 					{
@@ -1303,10 +1167,6 @@ namespace Epsitec.Aider
 				
 				public static class WarningType
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					//	designer:cap/LVA4C
 					public static global::Epsitec.Common.Types.Caption Generic
 					{
@@ -1350,6 +1210,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderAddress.AddressLine1, null);
 				}
 				
 				//	designer:cap/LVA15
@@ -1386,6 +1247,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderComment.Text, null);
 				}
 				
 				//	designer:cap/LVA88
@@ -1396,6 +1258,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderContact.AdditionalAddress1, null);
 				}
 				
 				//	designer:cap/LVAC8
@@ -1420,6 +1283,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderCountry.IsoCode, null);
 				}
 				
 				//	designer:cap/LVAC5
@@ -1432,6 +1296,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderData.DocumentData, null);
 				}
 				
 				//	designer:cap/LVAP8
@@ -1446,6 +1311,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderDataManager.User, null);
 				}
 				
 				//	designer:cap/LVASC
@@ -1456,6 +1322,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderEvent.Date, null);
 				}
 				
 				//	designer:cap/LVAQ3
@@ -1474,6 +1341,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderEventParticipant.Event, null);
 				}
 				
 				//	designer:cap/LVAB3
@@ -1488,6 +1356,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderFunctionDef.Id, null);
 				}
 				
 				//	designer:cap/LVA6D
@@ -1502,6 +1371,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderGroup.GroupDef, null);
 				}
 				
 				//	designer:cap/LVADA
@@ -1522,6 +1392,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderGroupDef.Classification, null);
 				}
 				
 				//	designer:cap/LVA1C
@@ -1542,6 +1413,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderGroupEvent.Event, null);
 				}
 				
 				//	designer:cap/LVAE8
@@ -1554,6 +1426,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderGroupParticipant.Group, null);
 				}
 				
 				//	designer:cap/LVA84
@@ -1568,6 +1441,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderGroupPlace.Group, null);
 				}
 				
 				//	designer:cap/LVAH5
@@ -1580,6 +1454,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderGroupRelationship.Group1, null);
 				}
 				
 				//	designer:cap/LVAO4
@@ -1594,6 +1469,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderHousehold.Address, null);
 				}
 				
 				//	designer:cap/LVAT2
@@ -1614,6 +1490,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderLegalPerson.Address, null);
 				}
 				
 				//	designer:cap/LVAT6
@@ -1632,6 +1509,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderLegalPersonContact.AdditionalAddress1, null);
 				}
 				
 				//	designer:cap/LVAP9
@@ -1660,6 +1538,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPerson.AdditionalAddress1, null);
 				}
 				
 				//	designer:cap/LVAM4
@@ -1722,6 +1601,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPersonalNote.Owner, null);
 				}
 				
 				//	designer:cap/LVAUC
@@ -1736,6 +1616,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPersonData.Person, null);
 				}
 				
 				//	designer:cap/LVAM8
@@ -1746,6 +1627,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPersonRelationship.Comment, null);
 				}
 				
 				//	designer:cap/LVAG4
@@ -1762,6 +1644,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPersonWarning.Person, null);
 				}
 				
 				//	designer:cap/LVAMB
@@ -1772,6 +1655,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPlace.Address, null);
 				}
 				
 				//	designer:cap/LVA24
@@ -1786,6 +1670,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderPlacePerson.Function, null);
 				}
 				
 				//	designer:cap/LVAEA
@@ -1800,6 +1685,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderRelationshipType.Description, null);
 				}
 				
 				//	designer:cap/LVA63
@@ -1812,6 +1698,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderTown.Country, null);
 				}
 				
 				//	designer:cap/LVAA5
@@ -1830,6 +1717,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderUser.CustomScopes, null);
 				}
 				
 				//	designer:cap/LVAJC
@@ -1846,6 +1734,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderUserRole.DefaultScopes, null);
 				}
 				
 				//	designer:cap/LVANC
@@ -1858,6 +1747,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderUserScope.GroupPath, null);
 				}
 				
 				//	designer:cap/LVAQC
@@ -1872,6 +1762,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (AiderWarningAction.IconUri, null);
 				}
 				
 				//	designer:cap/LVAHB
@@ -1886,6 +1777,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (eCH_Address.AddressLine1, null);
 				}
 				
 				//	designer:cap/LVA32
@@ -1912,6 +1804,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (eCH_Person.Address1, null);
 				}
 				
 				//	designer:cap/LVAC2
@@ -1958,6 +1851,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (eCH_ReportedPerson.Address, null);
 				}
 				
 				//	designer:cap/LVAB2
@@ -1974,6 +1868,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IAddress.AddressLine1, null);
 				}
 				
 				//	designer:cap/LVAL
@@ -2006,6 +1901,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IAiderWarning.Actions, null);
 				}
 				
 				//	designer:cap/LVAJB
@@ -2024,6 +1920,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IComment.Comment, null);
 				}
 				
 				//	designer:cap/LVAA8
@@ -2034,6 +1931,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IDateRange.EndDate, null);
 				}
 				
 				//	designer:cap/LVAO3
@@ -2046,6 +1944,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IManagedItem.DataManager, null);
 				}
 				
 				//	designer:cap/LVAT7
@@ -2058,6 +1957,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Origin.Canton, null);
 				}
 				
 				//	designer:cap/LVAE
@@ -2070,6 +1970,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (SoftwareMutationLogEntry.EntityId, null);
 				}
 				
 				//	designer:cap/LVAE9
@@ -2084,6 +1985,7 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (SoftwareSession.SessionData, null);
 				}
 				
 				//	designer:cap/LVAC9
@@ -2095,6 +1997,11 @@ namespace Epsitec.Aider
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			//	designer:str/LVGB02
 			public static global::Epsitec.Common.Types.FormattedText AiderUserAdminSelectionText
 			{
@@ -2352,45 +2259,10 @@ namespace Epsitec.Aider
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Aider");
-			Commands._Initialize ();
 			Commands.Base._Initialize ();
-			CommandIds._Initialize ();
-			CommandIds.Base._Initialize ();
-			Captions._Initialize ();
-			Captions.DatabaseSubmenu._Initialize ();
-			CaptionIds._Initialize ();
-			CaptionIds.DatabaseSubmenu._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Types.String._Initialize ();
-			Values._Initialize ();
-			Values.Enum.AddressType._Initialize ();
-			Values.Enum.ContactRole._Initialize ();
-			Values.Enum.DataSource._Initialize ();
-			Values.Enum.EventParticipantRole._Initialize ();
-			Values.Enum.EventType._Initialize ();
-			Values.Enum.FunctionType._Initialize ();
-			Values.Enum.GroupClassification._Initialize ();
-			Values.Enum.GroupLevel._Initialize ();
-			Values.Enum.GroupNodeType._Initialize ();
-			Values.Enum.GroupParticipantRole._Initialize ();
-			Values.Enum.GroupRelationshipType._Initialize ();
-			Values.Enum.HousholdMrMrs._Initialize ();
-			Values.Enum.Language._Initialize ();
-			Values.Enum.LegalPersonType._Initialize ();
-			Values.Enum.Mutability._Initialize ();
-			Values.Enum.PersonConfession._Initialize ();
-			Values.Enum.PersonDeclarationStatus._Initialize ();
-			Values.Enum.PersonMrMrs._Initialize ();
-			Values.Enum.PersonRelationshipType._Initialize ();
-			Values.Enum.PersonSex._Initialize ();
-			Values.Enum.PesonMaritalStatus._Initialize ();
-			Values.Enum.PesonNationalityStatus._Initialize ();
-			Values.Enum.PlacePersonRole._Initialize ();
-			Values.Enum.RemovalReason._Initialize ();
-			Values.Enum.UserRole._Initialize ();
-			Values.Enum.ValidationState._Initialize ();
-			Values.Enum.WarningType._Initialize ();
 			Fields.AiderAddress._Initialize ();
 			Fields.AiderComment._Initialize ();
 			Fields.AiderContact._Initialize ();
@@ -2433,10 +2305,12 @@ namespace Epsitec.Aider
 			Fields.Origin._Initialize ();
 			Fields.SoftwareMutationLogEntry._Initialize ();
 			Fields.SoftwareSession._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

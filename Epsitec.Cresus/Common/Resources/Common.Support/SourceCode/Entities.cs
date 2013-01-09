@@ -83,6 +83,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceBaseEntity.EntityStructuredTypeId;
@@ -131,6 +132,7 @@ namespace Epsitec.Common.Support.Entities
 		
 		partial void OnTextChanging(string oldValue, string newValue);
 		partial void OnTextChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -216,6 +218,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnIconChanging(string oldValue, string newValue);
 		partial void OnIconChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -325,6 +328,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnStatefullChanged(bool oldValue, bool newValue);
 		partial void OnGroupChanging(string oldValue, string newValue);
 		partial void OnGroupChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -470,6 +474,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnNullableChanged(bool oldValue, bool newValue);
 		partial void OnDefaultValueChanging(global::System.Object oldValue, global::System.Object newValue);
 		partial void OnDefaultValueChanged(global::System.Object oldValue, global::System.Object newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -640,6 +645,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnFlagsChanging(global::Epsitec.Common.Types.StructuredTypeFlags oldValue, global::Epsitec.Common.Types.StructuredTypeFlags newValue);
 		partial void OnFlagsChanged(global::Epsitec.Common.Types.StructuredTypeFlags oldValue, global::Epsitec.Common.Types.StructuredTypeFlags newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceStructuredTypeEntity.EntityStructuredTypeId;
@@ -688,6 +694,7 @@ namespace Epsitec.Common.Support.Entities
 		
 		partial void OnKeyCodeChanging(string oldValue, string newValue);
 		partial void OnKeyCodeChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -978,6 +985,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnIsInterfaceDefinitionChanging(bool oldValue, bool newValue);
 		partial void OnIsInterfaceDefinitionChanged(bool oldValue, bool newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.FieldEntity.EntityStructuredTypeId;
@@ -1098,6 +1106,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnSmallStepChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnLargeStepChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnLargeStepChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1292,6 +1301,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnTimeStepChanging(global::System.TimeSpan oldValue, global::System.TimeSpan newValue);
 		partial void OnTimeStepChanged(global::System.TimeSpan oldValue, global::System.TimeSpan newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceDateTimeTypeEntity.EntityStructuredTypeId;
@@ -1461,6 +1471,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnDefaultComparisonBehaviorChanging(global::Epsitec.Common.Types.StringComparisonBehavior oldValue, global::Epsitec.Common.Types.StringComparisonBehavior newValue);
 		partial void OnDefaultComparisonBehaviorChanged(global::Epsitec.Common.Types.StringComparisonBehavior oldValue, global::Epsitec.Common.Types.StringComparisonBehavior newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceStringTypeEntity.EntityStructuredTypeId;
@@ -1509,6 +1520,7 @@ namespace Epsitec.Common.Support.Entities
 		
 		partial void OnMimeTypeChanging(string oldValue, string newValue);
 		partial void OnMimeTypeChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1559,6 +1571,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnItemTypeChanging(global::System.Type oldValue, global::System.Type newValue);
 		partial void OnItemTypeChanged(global::System.Type oldValue, global::System.Type newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.ResourceCollectionTypeEntity.EntityStructuredTypeId;
@@ -1607,6 +1620,7 @@ namespace Epsitec.Common.Support.Entities
 		
 		partial void OnSystemTypeChanging(global::System.Type oldValue, global::System.Type newValue);
 		partial void OnSystemTypeChanged(global::System.Type oldValue, global::System.Type newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1668,6 +1682,7 @@ namespace Epsitec.Common.Support.Entities
 		
 		partial void OnSystemTypeChanging(global::System.Type oldValue, global::System.Type newValue);
 		partial void OnSystemTypeChanged(global::System.Type oldValue, global::System.Type newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1742,6 +1757,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnCultureMapSourceChanging(global::Epsitec.Common.Support.CultureMapSource oldValue, global::Epsitec.Common.Support.CultureMapSource newValue);
 		partial void OnCultureMapSourceChanged(global::Epsitec.Common.Support.CultureMapSource oldValue, global::Epsitec.Common.Support.CultureMapSource newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.EnumValueEntity.EntityStructuredTypeId;
@@ -1815,6 +1831,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnCultureMapSourceChanging(global::Epsitec.Common.Support.CultureMapSource oldValue, global::Epsitec.Common.Support.CultureMapSource newValue);
 		partial void OnCultureMapSourceChanged(global::Epsitec.Common.Support.CultureMapSource oldValue, global::Epsitec.Common.Support.CultureMapSource newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Support.Entities.InterfaceIdEntity.EntityStructuredTypeId;
@@ -1887,6 +1904,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnBundleChanged(global::System.Object oldValue, global::System.Object newValue);
 		partial void OnBundleAuxChanging(global::System.Object oldValue, global::System.Object newValue);
 		partial void OnBundleAuxChanged(global::System.Object oldValue, global::System.Object newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1984,6 +2002,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnDefaultSizeChanged(string oldValue, string newValue);
 		partial void OnRootEntityIdChanging(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
 		partial void OnRootEntityIdChanged(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2129,6 +2148,7 @@ namespace Epsitec.Common.Support.Entities
 		partial void OnDefaultSizeChanged(string oldValue, string newValue);
 		partial void OnRootEntityIdChanging(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
 		partial void OnRootEntityIdChanged(global::Epsitec.Common.Support.Druid oldValue, global::Epsitec.Common.Support.Druid newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -2,5 +2,6 @@
 <ModuleInfo id="6" name="Common.Dialogs" layer="s" textMode="FormattedText" namespace="Epsitec.Common.Dialogs">
   <Versions>
     <Version id="1" build="18" date="2011-03-04T14:37:15.3960023Z" />
+    <Version id="8" build="1" date="2013-01-09T12:29:54.7368688Z" />
   </Versions>
 </ModuleInfo>

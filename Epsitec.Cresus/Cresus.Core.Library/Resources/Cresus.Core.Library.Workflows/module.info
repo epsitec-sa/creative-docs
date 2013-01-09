@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1005" name="Cresus.Core.Library.Workflows" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.Workflows">
   <Versions>
-    <Version id="8" build="2" date="2011-04-26T08:11:11.5364520Z" />
     <Version id="1" build="34" date="2012-01-04T05:24:26.8608046Z" />
+    <Version id="8" build="3" date="2013-01-09T12:35:23.4973291Z" />
   </Versions>
 </ModuleInfo>

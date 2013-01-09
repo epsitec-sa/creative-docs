@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (UnitOfMeasure, null);
 			}
 			
 			//	designer:cap/IVA5
@@ -26,16 +27,8 @@ namespace Epsitec.Cresus.Core.Library.Measures
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class UnitOfMeasureCategory
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/IVAE
 				public static global::Epsitec.Common.Types.Caption Energy
 				{
@@ -118,6 +111,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (UnitOfMeasure.Category, null);
 				}
 				
 				//	designer:cap/IVA4
@@ -136,6 +130,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (UnitOfMeasureGroup.Category, null);
 				}
 				
 				//	designer:cap/IVAG
@@ -149,6 +144,11 @@ namespace Epsitec.Cresus.Core.Library.Measures
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -199,14 +199,14 @@ namespace Epsitec.Cresus.Core.Library.Measures
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Measures");
 			Types._Initialize ();
-			Values._Initialize ();
-			Values.UnitOfMeasureCategory._Initialize ();
 			Fields.UnitOfMeasure._Initialize ();
 			Fields.UnitOfMeasureGroup._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

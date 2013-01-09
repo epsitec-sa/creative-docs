@@ -108,6 +108,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.MonnaieEntity.EntityStructuredTypeId;
@@ -204,6 +205,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnTauxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDateDébutValiditéChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDateDébutValiditéChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -374,6 +376,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnTtcChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnTtcChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.PrixEntity.EntityStructuredTypeId;
@@ -482,6 +485,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnTotalTtcChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnTotalTvaChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnTotalTvaChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -688,6 +692,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnQuantitéEnStockChanging(int oldValue, int newValue);
 		partial void OnQuantitéEnStockChanged(int oldValue, int newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.ArticleEntity.EntityStructuredTypeId;
@@ -748,6 +753,7 @@ namespace Demo.Demo5juin.Entities
 		
 		partial void OnDésignationChanging(string oldValue, string newValue);
 		partial void OnDésignationChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -918,6 +924,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnQuantitéEnStockChanging(int oldValue, int newValue);
 		partial void OnQuantitéEnStockChanged(int oldValue, int newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.ArticleStockEntity.EntityStructuredTypeId;
@@ -1038,6 +1045,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnModifQuantitéChanged(int oldValue, int newValue);
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1160,6 +1168,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnCasierChanging(string oldValue, string newValue);
 		partial void OnCasierChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.EmplacementStockEntity.EntityStructuredTypeId;
@@ -1281,6 +1290,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnMultipleUnitéDeBaseChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMultipleUnitéDeBaseChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.UniteEntity.EntityStructuredTypeId;
@@ -1390,6 +1400,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnUnitéChanging(global::Demo.Demo5juin.Entities.UniteEntity oldValue, global::Demo.Demo5juin.Entities.UniteEntity newValue);
 		partial void OnUnitéChanged(global::Demo.Demo5juin.Entities.UniteEntity oldValue, global::Demo.Demo5juin.Entities.UniteEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.PositionEntity.EntityStructuredTypeId;
@@ -1462,6 +1473,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnPourcentChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCodeRaisonChanging(int oldValue, int newValue);
 		partial void OnCodeRaisonChanged(int oldValue, int newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1764,6 +1776,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnTotalFacturéChanging(global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue, global::Demo.Demo5juin.Entities.PrixComposeEntity newValue);
 		partial void OnTotalFacturéChanged(global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue, global::Demo.Demo5juin.Entities.PrixComposeEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.FactureEntity.EntityStructuredTypeId;
@@ -1909,6 +1922,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnTotalRappelChanging(global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue, global::Demo.Demo5juin.Entities.PrixComposeEntity newValue);
 		partial void OnTotalRappelChanged(global::Demo.Demo5juin.Entities.PrixComposeEntity oldValue, global::Demo.Demo5juin.Entities.PrixComposeEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.RappelEntity.EntityStructuredTypeId;
@@ -1957,6 +1971,7 @@ namespace Demo.Demo5juin.Entities
 		
 		partial void OnDésignationChanging(string oldValue, string newValue);
 		partial void OnDésignationChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2103,6 +2118,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnFactureChanging(global::Demo.Demo5juin.Entities.FactureEntity oldValue, global::Demo.Demo5juin.Entities.FactureEntity newValue);
 		partial void OnFactureChanged(global::Demo.Demo5juin.Entities.FactureEntity oldValue, global::Demo.Demo5juin.Entities.FactureEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.AffaireEntity.EntityStructuredTypeId;
@@ -2176,6 +2192,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnValeurChanging(global::Demo.Demo5juin.Entities.PrixSimpleEntity oldValue, global::Demo.Demo5juin.Entities.PrixSimpleEntity newValue);
 		partial void OnValeurChanged(global::Demo.Demo5juin.Entities.PrixSimpleEntity oldValue, global::Demo.Demo5juin.Entities.PrixSimpleEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.PaiementEntity.EntityStructuredTypeId;
@@ -2248,6 +2265,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMonnaieChanging(global::Demo.Demo5juin.Entities.MonnaieEntity oldValue, global::Demo.Demo5juin.Entities.MonnaieEntity newValue);
 		partial void OnMonnaieChanged(global::Demo.Demo5juin.Entities.MonnaieEntity oldValue, global::Demo.Demo5juin.Entities.MonnaieEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2466,6 +2484,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnPaysChanging(string oldValue, string newValue);
 		partial void OnPaysChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.AdresseEntity.EntityStructuredTypeId;
@@ -2539,6 +2558,7 @@ namespace Demo.Demo5juin.Entities
 		partial void OnDimensionChanging(string oldValue, string newValue);
 		partial void OnDimensionChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Demo.Demo5juin.Entities.ArticleVisserieEntity.EntityStructuredTypeId;
@@ -2587,6 +2607,7 @@ namespace Demo.Demo5juin.Entities
 		
 		partial void OnTéléphoneChanging(string oldValue, string newValue);
 		partial void OnTéléphoneChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

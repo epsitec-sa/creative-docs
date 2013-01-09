@@ -2,6 +2,6 @@
 <ModuleInfo id="50" name="Common.Tests.Vs" layer="s" textMode="String" namespace="Epsitec.Common.Tests.Vs">
   <Versions>
     <Version id="1" build="88" date="2011-02-08T13:15:35.4831292Z" />
-    <Version id="8" build="17" date="2011-04-26T07:17:26.6289978Z" />
+    <Version id="8" build="18" date="2013-01-09T12:25:59.5265395Z" />
   </Versions>
 </ModuleInfo>

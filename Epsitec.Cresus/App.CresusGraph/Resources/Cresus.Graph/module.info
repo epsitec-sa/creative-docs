@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="1003" name="Cresus.Graph" layer="A" namespace="Epsitec.Cresus" textMode="FormattedText">
+<ModuleInfo id="1003" name="Cresus.Graph" layer="A" textMode="FormattedText" namespace="Epsitec.Cresus">
   <Versions>
     <Version id="1" build="29" date="2010-08-05T14:38:40.5675030Z" />
     <Version id="9" build="1" date="2010-08-11T07:02:52.3947972Z" />
+    <Version id="8" build="1" date="2013-01-09T12:21:46.7261856Z" />
   </Versions>
 </ModuleInfo>

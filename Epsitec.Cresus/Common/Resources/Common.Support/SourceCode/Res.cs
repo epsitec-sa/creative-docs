@@ -14,6 +14,7 @@ namespace Epsitec.Common.Support
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (EnumValue, null);
 			}
 			
 			//	designer:cap/70062
@@ -64,6 +65,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (EnumValue.CaptionId, null);
 				}
 				
 				//	designer:cap/700A2
@@ -76,6 +78,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Field.Caption, null);
 				}
 				
 				//	designer:cap/700E1
@@ -108,6 +111,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (InterfaceId.CaptionId, null);
 				}
 				
 				//	designer:cap/701A
@@ -120,6 +124,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceBase.Comment, null);
 				}
 				
 				//	designer:cap/700A
@@ -132,6 +137,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceBaseFile.Bundle, null);
 				}
 				
 				//	designer:cap/701Q
@@ -144,6 +150,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceBaseType.DefaultController, null);
 				}
 				
 				//	designer:cap/70001
@@ -162,6 +169,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceBinaryType.MimeType, null);
 				}
 				
 				//	designer:cap/70012
@@ -172,6 +180,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceCaption.Description, null);
 				}
 				
 				//	designer:cap/700C
@@ -186,6 +195,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceCollectionType.ItemType, null);
 				}
 				
 				//	designer:cap/70082
@@ -196,6 +206,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceCommand.DefaultParameter, null);
 				}
 				
 				//	designer:cap/700M
@@ -212,6 +223,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceDateTimeType.DateStep, null);
 				}
 				
 				//	designer:cap/700S1
@@ -234,6 +246,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceEnumType.SystemType, null);
 				}
 				
 				//	designer:cap/700C2
@@ -246,6 +259,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceForm.DefaultSize, null);
 				}
 				
 				//	designer:cap/70101
@@ -264,6 +278,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceNumericType.LargeStep, null);
 				}
 				
 				//	designer:cap/700L1
@@ -280,6 +295,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceOtherType.SystemType, null);
 				}
 				
 				//	designer:cap/70072
@@ -290,6 +306,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourcePanel.DefaultSize, null);
 				}
 				
 				//	designer:cap/701T
@@ -304,6 +321,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceString.Text, null);
 				}
 				
 				//	designer:cap/7008
@@ -314,6 +332,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceStringType.DefaultComparisonBehavior, null);
 				}
 				
 				//	designer:cap/70A1
@@ -334,6 +353,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ResourceStructuredType.BaseType, null);
 				}
 				
 				//	designer:cap/700D1
@@ -356,6 +376,7 @@ namespace Epsitec.Common.Support
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Shortcut.KeyCode, null);
 				}
 				
 				//	designer:cap/700R
@@ -367,6 +388,11 @@ namespace Epsitec.Common.Support
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			//	designer:str/7001
 			public static global::Epsitec.Common.Types.FormattedText Author
 			{
@@ -456,6 +482,58 @@ namespace Epsitec.Common.Support
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+			//	designer:str/7001
+			public static global::Epsitec.Common.Support.Druid Author
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (1);
+				}
+			}
+			public static class CodeGenerator
+			{
+				//	designer:str/701
+				public static global::Epsitec.Common.Support.Druid SourceFileHeader
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (16777216);
+					}
+				}
+			}
+			
+			//	designer:str/7003
+			public static global::Epsitec.Common.Support.Druid CopyrightHolder
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (3);
+				}
+			}
+			public static class Image
+			{
+				//	designer:str/7
+				public static global::Epsitec.Common.Support.Druid Description
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (0);
+					}
+				}
+			}
+			
+			//	designer:str/7002
+			public static global::Epsitec.Common.Support.Druid Null
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (2);
+				}
+			}
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
@@ -481,10 +559,12 @@ namespace Epsitec.Common.Support
 			Fields.ResourceStringType._Initialize ();
 			Fields.ResourceStructuredType._Initialize ();
 			Fields.Shortcut._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

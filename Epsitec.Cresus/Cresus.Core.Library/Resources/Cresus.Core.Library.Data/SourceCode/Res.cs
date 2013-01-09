@@ -12,14 +12,11 @@ namespace Epsitec.Cresus.Core.Library.Data
 		
 		public static class Commands
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Base
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Base.ShowGeneric, null);
 				}
 				
 				//	designer:cap/8VA71
@@ -29,16 +26,8 @@ namespace Epsitec.Cresus.Core.Library.Data
 		
 		public static class CommandIds
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Base
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				//	designer:cap/8VA71
 				public const long ShowGeneric = 0x3E80000A000027L;
 			}
@@ -49,18 +38,21 @@ namespace Epsitec.Cresus.Core.Library.Data
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (Comment, null);
 			}
 			
 			public static class Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Data.Enum.AttributeState, null);
 				}
 				
 				public static class Enum
 				{
 					internal static void _Initialize()
 					{
+						System.Object.Equals (Data.Enum.AttributeState, null);
 					}
 					
 					//	designer:cap/8VAO1
@@ -73,6 +65,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 				{
 					internal static void _Initialize()
 					{
+						System.Object.Equals (Data.Numeric.Variant, null);
 					}
 					
 					//	designer:cap/8VAH1
@@ -83,6 +76,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 				{
 					internal static void _Initialize()
 					{
+						System.Object.Equals (Data.String.CommandId, null);
 					}
 					
 					//	designer:cap/8VAG1
@@ -144,28 +138,12 @@ namespace Epsitec.Cresus.Core.Library.Data
 		
 		public static class Values
 		{
-			internal static void _Initialize()
-			{
-			}
-			
 			public static class Data
 			{
-				internal static void _Initialize()
-				{
-				}
-				
 				public static class Enum
 				{
-					internal static void _Initialize()
-					{
-					}
-					
 					public static class AttributeState
 					{
-						internal static void _Initialize()
-						{
-						}
-						
 						//	designer:cap/8VAR1
 						public static global::Epsitec.Common.Types.Caption Active
 						{
@@ -202,10 +180,6 @@ namespace Epsitec.Cresus.Core.Library.Data
 					
 					public static class AttributeType
 					{
-						internal static void _Initialize()
-						{
-						}
-						
 						//	designer:cap/8VA82
 						public static global::Epsitec.Common.Types.Caption Event
 						{
@@ -258,6 +232,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Comment.Text, null);
 				}
 				
 				//	designer:cap/8VAR
@@ -268,6 +243,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (EntityAttribute.AttributeCategory, null);
 				}
 				
 				//	designer:cap/8VA22
@@ -278,6 +254,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (EntityAttributeCategory.AttributeType, null);
 				}
 				
 				//	designer:cap/8VAA2
@@ -288,6 +265,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (GeneratorDefinition.Entity, null);
 				}
 				
 				//	designer:cap/8VAA1
@@ -306,6 +284,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IComments.Comments, null);
 				}
 				
 				//	designer:cap/8VAT
@@ -316,6 +295,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IDataHash.StrongHash, null);
 				}
 				
 				//	designer:cap/8VAD
@@ -328,6 +308,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IDateMetadata.CreationDate, null);
 				}
 				
 				//	designer:cap/8VAH
@@ -340,6 +321,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IDateRange.BeginDate, null);
 				}
 				
 				//	designer:cap/8VAO
@@ -352,6 +334,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IDateTimeRange.BeginDate, null);
 				}
 				
 				//	designer:cap/8VAK
@@ -364,6 +347,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IEntityAttribute.AttributeState, null);
 				}
 				
 				//	designer:cap/8VAT1
@@ -384,6 +368,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IFileMetadata.FileMimeType, null);
 				}
 				
 				//	designer:cap/8VAG
@@ -398,6 +383,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IFreezable.IsFrozen, null);
 				}
 				
 				//	designer:cap/8VAC2
@@ -408,6 +394,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IItemCode.Code, null);
 				}
 				
 				//	designer:cap/8VA5
@@ -418,6 +405,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IItemCodeUniversalReference.RefCode, null);
 				}
 				
 				//	designer:cap/8VAJ1
@@ -430,6 +418,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IItemRank.Rank, null);
 				}
 				
 				//	designer:cap/8VA1
@@ -440,6 +429,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ILifetime.IsArchive, null);
 				}
 				
 				//	designer:cap/8VA3
@@ -450,6 +440,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (INameDescription.Description, null);
 				}
 				
 				//	designer:cap/8VA8
@@ -462,6 +453,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IPreferred.IsPreferred, null);
 				}
 				
 				//	designer:cap/8VAE2
@@ -472,6 +464,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (IReferenceNumber.IdA, null);
 				}
 				
 				//	designer:cap/8VA11
@@ -486,6 +479,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (Language.IsoLanguageCode, null);
 				}
 				
 				//	designer:cap/8VAV
@@ -496,6 +490,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (XmlBlob.Data, null);
 				}
 				
 				//	designer:cap/8VA51
@@ -507,6 +502,11 @@ namespace Epsitec.Cresus.Core.Library.Data
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			public static class Error
 			{
 				//	designer:str/8VA
@@ -590,21 +590,61 @@ namespace Epsitec.Cresus.Core.Library.Data
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+			public static class Error
+			{
+				//	designer:str/8VA
+				public static global::Epsitec.Common.Support.Druid CannotConnectToLocalDatabase
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772160);
+					}
+				}
+				//	designer:str/8VA1
+				public static global::Epsitec.Common.Support.Druid IncompatibleDatabase
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772161);
+					}
+				}
+			}
+			
+			public static class Hint
+			{
+				public static class Error
+				{
+					//	designer:str/8VA2
+					public static global::Epsitec.Common.Support.Druid CannotConnectToLocalDatabase
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (167772162);
+						}
+					}
+					//	designer:str/8VA3
+					public static global::Epsitec.Common.Support.Druid IncompatibleDatabase
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (167772163);
+						}
+					}
+				}
+			}
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Data");
-			Commands._Initialize ();
 			Commands.Base._Initialize ();
-			CommandIds._Initialize ();
-			CommandIds.Base._Initialize ();
 			Types._Initialize ();
 			Types.Data.Enum._Initialize ();
 			Types.Data.Numeric._Initialize ();
 			Types.Data.String._Initialize ();
-			Values._Initialize ();
-			Values.Data.Enum.AttributeState._Initialize ();
-			Values.Data.Enum.AttributeType._Initialize ();
 			Fields.Comment._Initialize ();
 			Fields.EntityAttribute._Initialize ();
 			Fields.EntityAttributeCategory._Initialize ();
@@ -626,10 +666,12 @@ namespace Epsitec.Cresus.Core.Library.Data
 			Fields.IReferenceNumber._Initialize ();
 			Fields.Language._Initialize ();
 			Fields.XmlBlob._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

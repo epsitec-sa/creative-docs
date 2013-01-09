@@ -66,6 +66,7 @@ namespace Epsitec.Common.Tests.Vs.Entities
 		partial void OnNullableValueChanging(int? oldValue, int? newValue);
 		partial void OnNullableValueChanged(int? oldValue, int? newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity.EntityStructuredTypeId;
@@ -115,6 +116,7 @@ namespace Epsitec.Common.Tests.Vs.Entities
 		partial void OnReferenceChanging(global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity oldValue, global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity newValue);
 		partial void OnReferenceChanged(global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity oldValue, global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Common.Tests.Vs.Entities.ReferenceDataEntity.EntityStructuredTypeId;
@@ -150,6 +152,7 @@ namespace Epsitec.Common.Tests.Vs.Entities
 				return this.GetFieldCollection<global::Epsitec.Common.Tests.Vs.Entities.ValueDataEntity> ("[I1A6]");
 			}
 		}
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

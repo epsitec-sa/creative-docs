@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 		{
 			internal static void _Initialize()
 			{
+				System.Object.Equals (ProductCustomization, null);
 			}
 			
 			//	designer:cap/JVA3
@@ -30,6 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ProductCustomization.Settings, null);
 				}
 				
 				//	designer:cap/JVA4
@@ -40,6 +42,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ProductFeature.DisabledSettings, null);
 				}
 				
 				//	designer:cap/JVA2
@@ -52,6 +55,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 				internal static void _Initialize()
 				{
+					System.Object.Equals (ProductSettings.LicensedFeatures, null);
 				}
 				
 				//	designer:cap/JVA6
@@ -63,6 +67,11 @@ namespace Epsitec.Cresus.Core.Library.Features
 		
 		public static class Strings
 		{
+			internal static void _Initialize()
+			{
+				System.Object.Equals (_stringsBundle, null);
+			}
+			
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -104,6 +113,10 @@ namespace Epsitec.Cresus.Core.Library.Features
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
@@ -112,10 +125,12 @@ namespace Epsitec.Cresus.Core.Library.Features
 			Fields.ProductCustomization._Initialize ();
 			Fields.ProductFeature._Initialize ();
 			Fields.ProductSettings._Initialize ();
+			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
+			System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager
