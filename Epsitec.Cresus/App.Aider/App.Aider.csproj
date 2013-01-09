@@ -57,6 +57,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
+    <None Include="build.bat" />
+    <None Include="Production\app.config" />
+    <None Include="Production\nginx.conf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aider\Aider.csproj">
