@@ -1365,6 +1365,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>StreetUserFriendly</c> field.
+		///	designer:fld/LVA22/LVAKD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAKD]", IsVirtual=true)]
+		public string StreetUserFriendly
+		{
+			get
+			{
+				string value = default (string);
+				this.GetStreetUserFriendly (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.StreetUserFriendly;
+				if (oldValue != value || !this.IsFieldDefined("[LVAKD]"))
+				{
+					this.OnStreetUserFriendlyChanging (oldValue, value);
+					this.SetStreetUserFriendly (value);
+					this.OnStreetUserFriendlyChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>HouseNumber</c> field.
 		///	designer:fld/LVA22/LVA52
 		///	</summary>
@@ -1501,6 +1525,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnAddressLine1Changed(string oldValue, string newValue);
 		partial void OnStreetChanging(string oldValue, string newValue);
 		partial void OnStreetChanged(string oldValue, string newValue);
+		partial void OnStreetUserFriendlyChanging(string oldValue, string newValue);
+		partial void OnStreetUserFriendlyChanged(string oldValue, string newValue);
 		partial void OnHouseNumberChanging(string oldValue, string newValue);
 		partial void OnHouseNumberChanged(string oldValue, string newValue);
 		partial void OnTownChanging(string oldValue, string newValue);
@@ -1514,6 +1540,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnCountryChanging(string oldValue, string newValue);
 		partial void OnCountryChanged(string oldValue, string newValue);
 		
+		partial void GetStreetUserFriendly(ref string value);
+		partial void SetStreetUserFriendly(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1876,6 +1904,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>StreetUserFriendly</c> field.
+		///	designer:fld/LVAJ2/LVAJD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJD]", IsVirtual=true)]
+		public string StreetUserFriendly
+		{
+			get
+			{
+				string value = default (string);
+				this.GetStreetUserFriendly (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.StreetUserFriendly;
+				if (oldValue != value || !this.IsFieldDefined("[LVAJD]"))
+				{
+					this.OnStreetUserFriendlyChanging (oldValue, value);
+					this.SetStreetUserFriendly (value);
+					this.OnStreetUserFriendlyChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>HouseNumber</c> field.
 		///	designer:fld/LVAJ2/LVA35
 		///	</summary>
@@ -2082,6 +2134,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPostBoxChanged(string oldValue, string newValue);
 		partial void OnStreetChanging(string oldValue, string newValue);
 		partial void OnStreetChanged(string oldValue, string newValue);
+		partial void OnStreetUserFriendlyChanging(string oldValue, string newValue);
+		partial void OnStreetUserFriendlyChanged(string oldValue, string newValue);
 		partial void OnHouseNumberChanging(int? oldValue, int? newValue);
 		partial void OnHouseNumberChanged(int? oldValue, int? newValue);
 		partial void OnHouseNumberComplementChanging(string oldValue, string newValue);
@@ -2101,6 +2155,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnWebChanging(string oldValue, string newValue);
 		partial void OnWebChanged(string oldValue, string newValue);
 		
+		partial void GetStreetUserFriendly(ref string value);
+		partial void SetStreetUserFriendly(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

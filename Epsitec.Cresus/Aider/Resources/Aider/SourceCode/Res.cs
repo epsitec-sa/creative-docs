@@ -1372,6 +1372,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PostBox = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 185);
 				//	designer:cap/LVA25
 				public static readonly global::Epsitec.Common.Support.Druid Street = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 162);
+				//	designer:cap/LVAJD
+				public static readonly global::Epsitec.Common.Support.Druid StreetUserFriendly = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 435);
 				//	designer:cap/LVA55
 				public static readonly global::Epsitec.Common.Support.Druid Town = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 165);
 				//	designer:cap/LVAE6
@@ -1894,6 +1896,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid HouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69);
 				//	designer:cap/LVA42
 				public static readonly global::Epsitec.Common.Support.Druid Street = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 68);
+				//	designer:cap/LVAKD
+				public static readonly global::Epsitec.Common.Support.Druid StreetUserFriendly = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 436);
 				//	designer:cap/LVAPB
 				public static readonly global::Epsitec.Common.Support.Druid SwissZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 377);
 				//	designer:cap/LVAQB

@@ -11,8 +11,8 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 		
 		
-		// NOTE The house number complement of the addresses aretotally discarded by this comaparer
-		// implementation.
+		// NOTE The house number complement of the addresses are not taken in account by
+		// this comparer.
 		
 		
 		#region IEqualityComparer<eCH_AddressEntity> Members

@@ -1,6 +1,7 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
@@ -15,6 +16,80 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	public static class SwissPostStreet
 	{
+		public static string ConvertToUserFriendlyStreetName(string street)
+		{
+			if (string.IsNullOrEmpty (street))
+			{
+				return street;
+			}
+
+			int pos = street.LastIndexOf (',');
+
+			if (pos < 0)
+			{
+				return street;
+			}
+
+			var root = street.Substring (0, pos);
+			var prefix = street.Substring (pos+1).Trim ();
+
+			if (prefix.Length > 0)
+			{
+				char end = prefix.LastCharacter ();
+
+				switch (end)
+				{
+					case '-':
+						return string.Concat (prefix, root);
+					
+					default:
+						return string.Concat (prefix, " ", root);
+				}
+			}
+			else
+			{
+				return root;
+			}
+		}
+
+		public static string ConvertFromUserFriendlyStreetName(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+
+			var repository = SwissPostStreetRepository.Current;
+			var street = repository.MapUserFriendlyStreetNameToSwissPostStreet (value);
+
+			if (street != null)
+			{
+				return street;
+			}
+
+			var normalizedName = SwissPostStreet.NormalizeStreetName (value);
+			var matchingInfos  = repository.Streets.Where (x => x.NormalizedStreetName == normalizedName);
+
+			var found = matchingInfos.FirstOrDefault ();
+
+			if (found != null)
+			{
+				return found.StreetName;
+			}
+
+			var tokens  = SwissPostStreet.TokenizeStreetName (value).ToArray ();
+			matchingInfos = repository.Streets.Where (x => x.MatchNameWithHeuristics (tokens));
+			
+			found = matchingInfos.FirstOrDefault ();
+
+			if (found != null)
+			{
+				return found.StreetName;
+			}
+
+			return value;
+		}
+
 		/// <summary>
 		/// Tokenizes the name of the street by exploding it into uppercase tokens, without
 		/// any accents, ordering the name in the normal reading order (i.e. "Lac, au Grand-"

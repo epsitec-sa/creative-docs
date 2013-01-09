@@ -13,11 +13,11 @@ namespace Epsitec.Data.Platform
 	{
 		private SwissPostStreetRepository()
 		{
-			IEnumerable<SwissPostStreetInformation> streets = SwissPostStreet.GetStreets ();
-
+			this.streets = new List<SwissPostStreetInformation> (SwissPostStreet.GetStreets ());
 			this.streetByZip = new Dictionary<int, List<SwissPostStreetInformation>> ();
+			this.userFriendlyStreetNameToSwissPostStreetMap = new Dictionary<string, string> ();
 
-			foreach (var street in streets)
+			foreach (var street in this.streets)
 			{
 				List<SwissPostStreetInformation> list;
 
@@ -28,9 +28,35 @@ namespace Epsitec.Data.Platform
 				}
 
 				list.Add (street);
+
+				var swissPostStreetName    = street.StreetName;
+				var userFriendlyStreetName = SwissPostStreet.ConvertToUserFriendlyStreetName (swissPostStreetName);
+
+				//	Make sure that a given user friendly name always maps to the same postal name.
+				//	This should be the case, since the data comes from the MAT[CH] Street database.
+
+				if (this.userFriendlyStreetNameToSwissPostStreetMap.ContainsKey (userFriendlyStreetName))
+				{
+					var oldName = this.userFriendlyStreetNameToSwissPostStreetMap[userFriendlyStreetName];
+					var newName = swissPostStreetName;
+
+					if (oldName != newName)
+					{
+						System.Diagnostics.Debug.WriteLine ("MAT[CH]street not consistent: {0} -> {1} and {2}", userFriendlyStreetName, oldName, newName);
+					}
+				}
+
+				this.userFriendlyStreetNameToSwissPostStreetMap[userFriendlyStreetName] = swissPostStreetName;
 			}
 		}
 
+		public IList<SwissPostStreetInformation> Streets
+		{
+			get
+			{
+				return this.streets.AsReadOnly ();
+			}
+		}
 
 		public static readonly SwissPostStreetRepository Current = new SwissPostStreetRepository ();
 
@@ -65,6 +91,22 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public string MapUserFriendlyStreetNameToSwissPostStreet(string street)
+		{
+			string result;
+
+			if (this.userFriendlyStreetNameToSwissPostStreetMap.TryGetValue (street, out result))
+			{
+				return result;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		private readonly Dictionary<int, List<SwissPostStreetInformation>> streetByZip;
+		private readonly Dictionary<string, string> userFriendlyStreetNameToSwissPostStreetMap;
+		private readonly List<SwissPostStreetInformation> streets;
 	}
 }

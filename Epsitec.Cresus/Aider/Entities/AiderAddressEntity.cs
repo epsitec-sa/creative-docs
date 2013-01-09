@@ -1,5 +1,5 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Entities
 {
@@ -21,7 +22,7 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
-				this.Street, this.HouseNumber, this.HouseNumberComplement, "\n",
+				this.StreetUserFriendly, this.HouseNumber, this.HouseNumberComplement, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
@@ -82,7 +83,7 @@ namespace Epsitec.Aider.Entities
 		public IEnumerable<FormattedText> GetAddressLines()
 		{
 			yield return this.AddressLine1;
-			yield return StringUtils.Join (" ", this.Street, this.HouseNumber, this.HouseNumberComplement);
+			yield return StringUtils.Join (" ", this.StreetUserFriendly, this.HouseNumber, this.HouseNumberComplement);
 			yield return this.PostBox;
 			yield return StringUtils.Join (" ", StringUtils.Join ("-", this.Town.Country.IsoCode, this.Town.ZipCode), this.Town.Name);
 			yield return this.Town.Country.Name;
@@ -110,6 +111,16 @@ namespace Epsitec.Aider.Entities
 			{
 				yield return TextFormatter.FormatField (() => this.Fax);
 			}
+		}
+		
+		partial void GetStreetUserFriendly(ref string value)
+		{
+			value = SwissPostStreet.ConvertToUserFriendlyStreetName (this.Street);
+		}
+
+		partial void SetStreetUserFriendly(string value)
+		{
+			this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (value);
 		}
 	}
 }

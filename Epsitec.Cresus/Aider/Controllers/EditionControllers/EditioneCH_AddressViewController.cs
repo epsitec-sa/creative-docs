@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Input ()
 						.Field (x => x.AddressLine1)
 							.ReadOnly ()
-						.Field (x => x.Street)
+						.Field (x => x.StreetUserFriendly)
 							.ReadOnly ()
 						.Field (x => x.HouseNumber)
 							.ReadOnly ()
