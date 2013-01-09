@@ -353,14 +353,15 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 		private void GenerateCaptions(ResourceBundle bundle, List<string> capFields)
 		{
-			this.GenerateGenericCaptions (bundle, capFields, "Captions", (delta, localDruid) =>
-{
-	this.formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat (@"global::Epsitec.Common.Types.Caption ", delta));
-	this.formatter.WriteBeginGetter (CodeAttributes.Default);
-	this.formatter.WriteCodeLine ("return global::", this.defaultNamespace, ".Res.", "_manager", ".GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ", localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ", localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
-	this.formatter.WriteEndGetter ();
-	this.formatter.WriteEndProperty ();
-});
+			this.GenerateGenericCaptions (bundle, capFields, "Captions",
+				(delta, localDruid) =>
+				{
+					this.formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat (@"global::Epsitec.Common.Types.Caption ", delta));
+					this.formatter.WriteBeginGetter (CodeAttributes.Default);
+					this.formatter.WriteCodeLine ("return global::", this.defaultNamespace, ".Res.", "_manager", ".GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ", localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ", localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
+					this.formatter.WriteEndGetter ();
+					this.formatter.WriteEndProperty ();
+				});
 		}
 
 		private void GenerateCaptionIds(ResourceBundle bundle, List<string> capFields)
@@ -475,14 +476,15 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 		private void GenerateValues(ResourceBundle bundle, List<string> valFields)
 		{
-			this.GenerateGenericCaptions (bundle, valFields, "Values", (delta, localDruid) =>
-{
-	this.formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat (@"global::Epsitec.Common.Types.Caption ", delta));
-	this.formatter.WriteBeginGetter (CodeAttributes.Default);
-	this.formatter.WriteCodeLine ("return global::", this.defaultNamespace, ".Res.", "_manager", ".GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ", localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ", localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
-	this.formatter.WriteEndGetter ();
-	this.formatter.WriteEndProperty ();
-});
+			this.GenerateGenericCaptions (bundle, valFields, "Values",
+				(delta, localDruid) =>
+				{
+					this.formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat (@"global::Epsitec.Common.Types.Caption ", delta));
+					this.formatter.WriteBeginGetter (CodeAttributes.Default);
+					this.formatter.WriteCodeLine ("return global::", this.defaultNamespace, ".Res.", "_manager", ".GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ", localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ", localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
+					this.formatter.WriteEndGetter ();
+					this.formatter.WriteEndProperty ();
+				});
 		}
 
 
