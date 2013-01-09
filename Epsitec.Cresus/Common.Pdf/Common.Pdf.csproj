@@ -37,6 +37,10 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AntiGrain.NET, Version=2.4.1016.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\AntiGrain.NET.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,7 +53,27 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="CharacterHash.cs" />
+    <Compile Include="CharacterList.cs" />
+    <Compile Include="ColorConversion.cs" />
+    <Compile Include="ColorForce.cs" />
+    <Compile Include="Export.cs" />
+    <Compile Include="ExportPdfInfo.cs" />
+    <Compile Include="FontHash.cs" />
+    <Compile Include="FontList.cs" />
+    <Compile Include="ImageCompression.cs" />
+    <Compile Include="ImageFileReference.cs" />
+    <Compile Include="ImageSurface.cs" />
+    <Compile Include="PdfComplexSurfaceType.cs" />
+    <Compile Include="PdfExportException.cs" />
+    <Compile Include="PdfExportPageOffset.cs" />
+    <Compile Include="PdfFontType.cs" />
+    <Compile Include="PdfFunctionType.cs" />
+    <Compile Include="PdfImageStream.cs" />
+    <Compile Include="Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringBuffer.cs" />
+    <Compile Include="Writer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
@@ -61,6 +85,12 @@
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\External\AntiGrain.Win32.dll">
+      <Link>AntiGrain.Win32.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
