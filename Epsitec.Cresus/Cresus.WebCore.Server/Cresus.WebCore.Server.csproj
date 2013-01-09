@@ -265,10 +265,7 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Nginx\logs\" />
-    <Folder Include="Nginx\temp\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Nginx\html\50x.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -276,7 +273,13 @@
     <Content Include="Nginx\html\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Nginx\logs\dummy.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Nginx\nginx.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Nginx\temp\dummy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\about.html">
