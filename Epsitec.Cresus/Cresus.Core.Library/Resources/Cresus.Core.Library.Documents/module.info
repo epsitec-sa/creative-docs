@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="1009" name="Cresus.Core.Library.Documents" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library.Documents" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.Documents">
+<ModuleInfo id="1009" name="Cresus.Core.Library.Documents" layer="s" textMode="FormattedText" assemblies="Cresus.Core.Library" namespace="Epsitec.Cresus.Core" namespaceRes="Epsitec.Cresus.Core.Library.Documents">
   <Versions>
     <Version id="8" build="1" date="2011-04-26T07:11:24.1412647Z" />
     <Version id="2" build="29" date="2011-12-01T14:24:04.9302944Z" />
