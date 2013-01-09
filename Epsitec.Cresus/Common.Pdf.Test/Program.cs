@@ -15,7 +15,7 @@ namespace Common.Pdf.Test
 
 			var info = new ExportPdfInfo ();
 			var export = new Export (info);
-			var message = export.ExportToFile ("test.pdf", 1, Program.Renderer);
+			var message = export.ExportToFile ("test.pdf", 2, Program.Renderer);
 
 			if (string.IsNullOrEmpty (message))
 			{
@@ -31,6 +31,19 @@ namespace Common.Pdf.Test
 		}
 
 		private static void Renderer(Port port, int page)
+		{
+			if (page == 1)
+			{
+				Program.Renderer1 (port);
+			}
+
+			if (page == 2)
+			{
+				Program.Renderer2 (port);
+			}
+		}
+
+		private static void Renderer1(Port port)
 		{
 			{
 				var path = new Path ();
@@ -64,6 +77,19 @@ namespace Common.Pdf.Test
 			{
 				port.Color = Color.FromName ("Black");
 				port.PaintText (100.0, 400.0, "Tralala en noir", Font.GetFont ("Times New Roman", "Regular"), 50.0);
+			}
+		}
+
+		private static void Renderer2(Port port)
+		{
+			{
+				port.Color = Color.FromName ("Red");
+				port.PaintText (100.0, 100.0, "Arial immense", Font.GetFont ("Arial", "Regular"), 500.0);
+			}
+
+			{
+				port.Color = Color.FromName ("Black");
+				port.PaintText (100.0, 400.0, "Times grand", Font.GetFont ("Times New Roman", "Regular"), 300.0);
 			}
 		}
 	}
