@@ -12,6 +12,7 @@ namespace Epsitec.Data.Platform
 		{
 			var streetRepo = SwissPostStreetRepository.Current;
 			var zipRepo    = SwissPostZipRepository.Current;
+			var countries  = Iso3166.GetCountries ("FR").ToArray ();
 		}
 	}
 }
