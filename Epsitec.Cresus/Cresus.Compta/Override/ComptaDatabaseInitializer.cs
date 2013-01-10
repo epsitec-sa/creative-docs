@@ -23,8 +23,6 @@ namespace Epsitec.Cresus.Compta.Override
 		private void CreateCompta()
 		{
 			this.BusinessContext.CreateAndRegisterEntity<ComptaEntity> ();
-
-			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 	}
 }
