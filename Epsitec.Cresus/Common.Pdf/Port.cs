@@ -3,17 +3,23 @@
 
 using Epsitec.Common.Drawing;
 using System.Collections.Generic;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Pdf
 {
 	/// <summary>
 	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.
+	/// L'origine graphique est en bas à gauche.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	public class Port : IPaintPort
 	{
-		public Port()
+		public Port(FontHash fontHash, CharacterHash characterHash)
 		{
+			this.fontHash      = fontHash;
+			this.characterHash = characterHash;
+
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 			this.Reset();
 		}
@@ -42,6 +48,12 @@ namespace Epsitec.Common.Pdf
 			this.Init();
 		}
 
+
+		public bool IsPreProcessText
+		{
+			get;
+			set;
+		}
 
 		public ColorForce ColorForce
 		{
@@ -391,6 +403,11 @@ namespace Epsitec.Common.Pdf
 		
 		public void PaintOutline(Path path)
 		{
+			if (this.IsPreProcessText)
+			{
+				return;
+			}
+
 			this.SetTransform(this.transform);
 			this.SetWidth(this.lineWidth);
 			this.SetCap(this.lineCap);
@@ -405,7 +422,12 @@ namespace Epsitec.Common.Pdf
 		
 		public void PaintSurface(Path path)
 		{
-			this.SetTransform(this.transform);
+			if (this.IsPreProcessText)
+			{
+				return;
+			}
+
+			this.SetTransform (this.transform);
 			this.SetFillColor(this.color);
 			this.DoFill(path);
 			this.PutEOL();
@@ -414,6 +436,11 @@ namespace Epsitec.Common.Pdf
 		
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
+			if (this.IsPreProcessText)
+			{
+				return;
+			}
+
 			int n = glyphs.Length;
 			if ( n == 0 )  return;
 			if ( n == 1 && glyphs[0] >= 0xffff )  return;
@@ -503,17 +530,77 @@ namespace Epsitec.Common.Pdf
 				this.PutEOL();
 			}
 		}
-		
-		public double PaintText(double x, double y, string text, Font font, double size)
+
+
+		public void PaintText(double x, double y, Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
 		{
-			if ( this.fontHash == null )  // textes en courbes ?
+			if (this.IsPreProcessText)
+			{
+				this.PreProcessText (boxSize, formattedText, font, fontSize, style);
+			}
+			else
+			{
+				var textLayout = this.GetTextLayout (boxSize, formattedText, font, fontSize, style);
+				textLayout.PaintCallback (new Point (x, y), this.TextLayoutRenderer);
+			}
+		}
+
+		private void PreProcessText(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
+		{
+			var textLayout = this.GetTextLayout (boxSize, formattedText, font, fontSize, style);
+			TextLayout.OneCharStructure[] fix = textLayout.ComputeStructure ();
+
+			foreach (TextLayout.OneCharStructure oneChar in fix)
+			{
+				if (oneChar.Character != 0 && oneChar.Font != null)  // garde-fou
+				{
+					var cl = new CharacterList (oneChar);
+					if (!this.characterHash.ContainsKey (cl))
+					{
+						this.characterHash.Add (cl, null);
+					}
+				}
+			}
+		}
+
+		private TextLayout GetTextLayout(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
+		{
+			if (style == null)
+			{
+				style = new TextStyle ();  // style par défaut
+			}
+
+			return new TextLayout (style)
+			{
+				FormattedText   = formattedText,
+				DefaultFont     = font,
+				DefaultFontSize = fontSize,
+				LayoutSize      = boxSize,
+			};
+		}
+
+		private void TextLayoutRenderer(Point pos, string text, Font font, double fontSize, FontClassInfo[] infos, RichColor color)
+		{
+			this.RichColor = color;
+			this.PaintText (pos.X, pos.Y, text, font, fontSize);
+		}
+
+
+		public double PaintText(double x, double y, string text, Font font, double fontSize)
+		{
+			if (this.IsPreProcessText)
+			{
+				return 0;
+			}
+
+			if (this.fontHash == null)  // textes en courbes ?
 			{
 				int n = text.Length;
 				if ( n == 0 )  return 0.0;
 
 				var path = new Path();
 				double width = 0.0;
-				double ox = 0.0;
+				double ox;
 				double[] glyphX;
 				ushort[] glyph;
 				byte[]   glyphN;
@@ -523,18 +610,16 @@ namespace Epsitec.Common.Pdf
 				System.Diagnostics.Debug.Assert(glyph.Length == n);
 				System.Diagnostics.Debug.Assert(glyphN.Length == n);
 
-				Drawing.Transform ft = font.SyntheticTransform;
-				ft = ft.Scale(size);
+				Transform ft = font.SyntheticTransform;
+				ft = ft.Scale(fontSize);
 
 				for ( int i=0 ; i<n ; i++ )
 				{
-					path.Append(font, glyph[i], ft.XX, ft.XY, ft.YX, ft.YY, ft.TX+x, ft.TY+y);
-					
-					x += (glyphX[i]-ox) * size;
-					ox = glyphX[i];
+					ox = x + glyphX[i] * fontSize;
+					path.Append(font, glyph[i], ft.XX, ft.XY, ft.YX, ft.YY, ft.TX+ox, ft.TY+y);
 				}
 
-				width = glyphX[n-1] * size;
+				width = glyphX[n-1] * fontSize;
 
 				this.SetTransform(this.transform);
 				this.SetFillColor(this.color);
@@ -567,11 +652,12 @@ namespace Epsitec.Common.Pdf
 				this.PutCommand("BT ");  // voir [*] page 375
 
 				int lastFontPage = -1;
-				double ox = 0.0;
-				double lastX = 0.0;
-				double lastY = 0.0;
+				double ox;
+
 				for ( int i=0 ; i<n ; i++ )
 				{
+					ox = x + glyphX[i] * fontSize;
+
 					int unicode = (int) text[i];
 					int code = fl.GetUnicodeIndex(unicode);
 					System.Diagnostics.Debug.Assert(code != -1);
@@ -584,30 +670,25 @@ namespace Epsitec.Common.Pdf
 							this.PutCommand("> Tj ");  // voir [*] page 377
 						}
 						this.PutCommand(Export.GetFontShortName(fl.Id, fontPage));
-						this.PutValue(size);
+						this.PutValue(fontSize);
 						this.PutCommand("Tf ");
-						this.PutPoint(new Point(x-lastX, y-lastY));
+						this.PutPoint(new Point(ox, y));
 						this.PutCommand("Td <");  // voir [*] page 376
 
-						lastX = x;
-						lastY = y;
 						lastFontPage = fontPage;
 					}
 
 					this.PutCommand(Export.GetFontIndex (code));
-
-					x += (glyphX[i]-ox) * size;
-					ox = glyphX[i];
 				}
 
 				this.PutCommand("> Tj ET ");
 				this.PutEOL();
 
-				return glyphX[n-1] * size;
+				return glyphX[n-1] * fontSize;
 			}
 		}
 		
-		public double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos)
+		public double PaintText(double x, double y, string text, Font font, double fontSize, FontClassInfo[] infos)
 		{
 			for ( int i=0 ; i<infos.Length ; i++ )
 			{
@@ -615,12 +696,12 @@ namespace Epsitec.Common.Pdf
 					 infos[i].GlyphClass == GlyphClass.Space )
 				{
 					string[] texts = text.Split(new char[] { ' ', (char) 160 });
-					double spaceW = font.GetCharAdvance(' ') * size * infos[i].Scale;
+					double spaceW = font.GetCharAdvance(' ') * fontSize * infos[i].Scale;
 					double totalW = 0.0;
 					
 					for ( int j=0 ; j<texts.Length ; j++ )
 					{
-						double w = this.PaintText(x, y, texts[j], font, size) + spaceW;
+						double w = this.PaintText(x, y, texts[j], font, fontSize) + spaceW;
 						
 						totalW += w;
 						x      += w;
@@ -630,7 +711,7 @@ namespace Epsitec.Common.Pdf
 				}
 			}
 			
-			return this.PaintText(x, y, text, font, size);
+			return this.PaintText(x, y, text, font, fontSize);
 		}
 		
 		
@@ -665,6 +746,11 @@ namespace Epsitec.Common.Pdf
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
+			if (this.IsPreProcessText)
+			{
+				return;
+			}
+
 			System.Diagnostics.Debug.Assert (fillX == 0.0);
 			System.Diagnostics.Debug.Assert (fillY == 0.0);
 			System.Diagnostics.Debug.Assert (System.Math.Abs (fillWidth-1.0) < 0.000001);
@@ -700,7 +786,6 @@ namespace Epsitec.Common.Pdf
 		public StringBuffer GetPDF()
 		{
 			//	Donne tout le texte PDF généré.
-
 			try
 			{
 				return this.stringBuilder;
@@ -894,7 +979,7 @@ namespace Epsitec.Common.Pdf
 			}
 		}
 
-		public void PutPath(Path path)
+		private void PutPath(Path path)
 		{
 			//	Met un chemin quelconque.
 			PathElement[] elements;
@@ -959,7 +1044,7 @@ namespace Epsitec.Common.Pdf
 			}
 		}
 
-		public void PutTransform(Transform matrix)
+		private void PutTransform(Transform matrix)
 		{
 			//	Met une matrice de transformation.
 			if ( matrix.XX != 1.0 ||
@@ -1030,7 +1115,7 @@ namespace Epsitec.Common.Pdf
 			if ( this.colorForce == ColorForce.Gray    )  this.PutCommand("g ");
 		}
 
-		public void PutColor(RichColor color)
+		private void PutColor(RichColor color)
 		{
 			//	Met une couleur (sans alpha).
 			ColorSpace cs = color.ColorSpace;
@@ -1059,7 +1144,7 @@ namespace Epsitec.Common.Pdf
 			}
 		}
 
-		public void PutPoint(Point pos)
+		private void PutPoint(Point pos)
 		{
 			//	Met un point.
 			this.PutValue(pos.X);
@@ -1079,7 +1164,7 @@ namespace Epsitec.Common.Pdf
 			this.stringBuilder.Append(" ");
 		}
 
-		public void PutInt(int num)
+		private void PutInt(int num)
 		{
 			//	Met un entier.
 			this.stringBuilder.Append(num.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -1114,19 +1199,6 @@ namespace Epsitec.Common.Pdf
 			}
 		}
 
-		private void PutCommandStroke()
-		{
-			//	Met une commande de tracé.
-			if ( this.fillMode == FillMode.NonZero )
-			{
-				this.PutCommand("W ");  // nonzero stroke, voir [*] page 205
-			}
-			else
-			{
-				this.PutCommand("W* ");  // even-odd stroke
-			}
-		}
-
 		public void PutCommand(string cmd)
 		{
 			//	Met une commande quelconque.
@@ -1134,7 +1206,7 @@ namespace Epsitec.Common.Pdf
 		}
 
 
-		public static string StringBBox(Rectangle bbox)
+		private static string StringBBox(Rectangle bbox)
 		{
 			//	Met une commande "/BBox [x0 y0 x1 y1]".
 			return Port.StringBBox("/BBox", bbox);
@@ -1152,7 +1224,7 @@ namespace Epsitec.Common.Pdf
 			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "/Length {0}", length);
 		}
 
-		public static string StringValue(double num)
+		private static string StringValue(double num)
 		{
 			//	Met une valeur avec 2 décimales.
 			return Port.StringValue(num, 2);
@@ -1188,7 +1260,7 @@ namespace Epsitec.Common.Pdf
 		}
 
 
-		public ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
+		private ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche l'image à utiliser.
 			if (this.imageSurfaceList == null)
@@ -1217,6 +1289,7 @@ namespace Epsitec.Common.Pdf
 		private IEnumerable<ImageSurface>		imageSurfaceList;
 		private ImageSurface					lastImageSurface;
 		private FontHash						fontHash;
+		private CharacterHash					characterHash;
 
 		private ColorForce						colorForce;
 		private int								defaultDecimals;

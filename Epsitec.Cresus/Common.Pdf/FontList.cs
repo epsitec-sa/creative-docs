@@ -146,11 +146,9 @@ namespace Epsitec.Common.Pdf
 				for ( int i=0 ; i<fl.CharacterCount ; i++ )
 				{
 					CharacterList cl = fl.GetCharacter(i);
-					string f = cl.Font.FaceName;
-					string b = cl.Bold ? "+Bold" : "";
-					string j = cl.Italic ? "+Italic" : "";
+					string n = cl.OpenTypeFont.FontIdentity.FullName;
 					string c = cl.Unicode.ToString();
-					System.Console.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "  >  font={0}{1}{2} char={3}", f, b,j, c));
+					System.Console.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "  >  font={0} char={1}", n, c));
 				}
 			}
 #endif

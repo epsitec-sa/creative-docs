@@ -1,15 +1,15 @@
 //	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-
 using System.Collections.Generic;
 using System;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Pdf
 {
 	using CultureInfo=System.Globalization.CultureInfo;
-	using Epsitec.Common.Drawing.Platform;
+
 	/// <summary>
 	/// La classe Export implémente la publication d'un document PDF.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
@@ -19,6 +19,8 @@ namespace Epsitec.Common.Pdf
 	{
 		public Export(ExportPdfInfo info)
 		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+
 			this.info = info;
 			this.zoom = 1.0;
 			this.pages = new List<int> ();
@@ -69,7 +71,7 @@ namespace Epsitec.Common.Pdf
 				this.ClearFonts ();
 			}
 
-			return "";  // ok
+			return null;  // ok
 		}
 
 		private void ExportPdf(string path)
@@ -80,6 +82,8 @@ namespace Epsitec.Common.Pdf
 
 			using (var writer = this.CreateWriter (path))
 			{
+				this.PreProcessTexts (port);
+
 				this.EmitHeaderOutlines (writer);
 				this.EmitHeaderPages (writer);
 				this.EmitPageObjects (writer);
@@ -124,8 +128,11 @@ namespace Epsitec.Common.Pdf
 
 		private Port CreatePort()
 		{
-			var port = new Port ();
+			FontHash fontHash = this.info.TextToCurve ? null : this.fontHash;
+
+			var port = new Port (fontHash, this.characterHash);
 			port.PushColorModifier (new ColorModifierCallback (this.FinalOutputColorModifier));
+
 			return port;
 		}
 		private Writer CreateWriter(string path)
@@ -164,7 +171,7 @@ namespace Epsitec.Common.Pdf
 			string author       = Export.GetEscapedString (Support.Globals.Properties.GetProperty<string> ("PDF:Author"));
 			string creator      = Export.GetEscapedString (Support.Globals.Properties.GetProperty<string> ("PDF:Creator"));
 			string producer     = Export.GetEscapedString (Support.Globals.Properties.GetProperty<string> ("PDF:Producer") ?? string.Format ("{0}, {1}", defaultProducer, defaultCopyright));
-			string creationDate = Export.GetDateString (Support.Globals.Properties.GetProperty<System.DateTime> ("PDF:CreationDate", System.DateTime.Now));
+			string creationDate = Export.GetDateString    (Support.Globals.Properties.GetProperty<System.DateTime> ("PDF:CreationDate", System.DateTime.Now));
 
 			writer.WriteObjectDef ("Info");
 			writer.WriteString (string.Concat ("<< /Title (", titleName, ") "));
@@ -177,14 +184,31 @@ namespace Epsitec.Common.Pdf
 			return writer;
 		}
 
-		
-		private FontHash GetFontHash()
+
+		private void PreProcessTexts(Port port)
 		{
-			FontHash fontHash = this.info.TextCurve ? null : this.fontHash;
-			return fontHash;
+			if (this.info.TextToCurve)
+			{
+				return;
+			}
+
+			//	Il faut passer en revue tous les caractères de tous les textes, pour
+			//	pouvoir ensuite créer les polices pdf.
+			{
+				port.IsPreProcessText = true;
+
+				foreach (var page in this.pages)
+				{
+					this.renderer (port, page);  // pré-prossessing des textes de la page
+				}
+
+				port.IsPreProcessText = false;
+			}
+
+			FontList.CreateFonts (this.fontHash, this.characterHash);
 		}
 
-		
+
 		private void EmitHeaderOutlines(Writer writer)
 		{
 			//	Objet outlines.
@@ -363,7 +387,7 @@ namespace Epsitec.Common.Pdf
 					writer.WriteString (">> ");
 				}
 
-				if (!this.info.TextCurve)
+				if (!this.info.TextToCurve)
 				{
 					writer.WriteString ("/Font << ");
 					foreach (System.Collections.DictionaryEntry dict in this.fontHash)
@@ -1008,7 +1032,7 @@ namespace Epsitec.Common.Pdf
 				zip = null;
 			}
 
-			Port port = new Port ();
+			Port port = new Port (null, null);
 			port.Reset ();
 			port.PutASCII85 (data);
 			Export.debugTotal += data.Length;
@@ -1070,7 +1094,7 @@ namespace Epsitec.Common.Pdf
 
 			System.Diagnostics.Debug.Assert (jpeg != null);
 
-			Port port = new Port ();
+			Port port = new Port (null, null);
 			port.PutASCII85 (jpeg);
 			Export.debugTotal += jpeg.Length;
 			port.PutEOL ();
@@ -1246,10 +1270,11 @@ namespace Epsitec.Common.Pdf
 		#region Fonts
 		private void EmitFonts(Writer writer)
 		{
-			if (this.info.TextCurve)
+			if (this.info.TextToCurve)
 			{
 				return;
 			}
+
 			//	Crée toutes les fontes.
 			foreach (System.Collections.DictionaryEntry dict in this.fontHash)
 			{
@@ -1264,7 +1289,9 @@ namespace Epsitec.Common.Pdf
 					{
 						count = font.CharacterCount%Export.charPerFont;
 						if (count == 0)
+						{
 							count = Export.charPerFont;
+						}
 					}
 
 					this.CreateFontBase (writer, font, fontPage, count);
@@ -1427,7 +1454,7 @@ namespace Epsitec.Common.Pdf
 			path.Append (drawingFont, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 
 
-			var port = new Port ()
+			var port = new Port (null, null)
 			{
 				ColorForce      = ColorForce.Nothing,  // pas de commande de couleur !
 				DefaultDecimals = 4,

@@ -23,7 +23,7 @@ namespace Epsitec.Common.Pdf
 			this.cropMarksLength  = 100.0;  // 10mm
 			this.cropMarksWidth   = 1.0;    // 0.1mm
 			this.cropMarksOffset  = 50.0;   // 5mm
-			this.textCurve        = false;
+			this.textToCurve      = false;
 			this.execute          = true;
 			this.colorConversion  = ColorConversion.None;
 			this.imageCompression = ImageCompression.ZIP;
@@ -204,15 +204,15 @@ namespace Epsitec.Common.Pdf
 			}
 		}
 
-		public bool TextCurve
+		public bool TextToCurve
 		{
 			get
 			{
-				return this.textCurve;
+				return this.textToCurve;
 			}
 			set
 			{
-				this.textCurve = value;
+				this.textToCurve = value;
 			}
 		}
 
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Pdf
 		private double					cropMarksWidth;
 		private double					cropMarksOffset;
 		private double?					cropMarksOffsetX, cropMarksOffsetY;
-		private bool					textCurve;
+		private bool					textToCurve;
 		private bool					execute;
 		private ColorConversion			colorConversion;
 		private ImageCompression		imageCompression;

@@ -38,17 +38,26 @@ namespace Epsitec.Common.Pdf
 
 		public int Unicode
 		{
-			get { return this.unicode; }
+			get
+			{
+				return this.unicode;
+			}
 		}
 
 		public int[] Unicodes
 		{
-			get { return this.unicodes; }
+			get
+			{
+				return this.unicodes;
+			}
 		}
 
 		public ushort Glyph
 		{
-			get { return this.glyph; }
+			get
+			{
+				return this.glyph;
+			}
 		}
 
 		public double Width
@@ -71,7 +80,10 @@ namespace Epsitec.Common.Pdf
 
 		public OpenType.Font OpenTypeFont
 		{
-			get { return this.openTypeFont; }
+			get
+			{
+				return this.openTypeFont;
+			}
 		}
 
 		public override bool Equals(object obj)

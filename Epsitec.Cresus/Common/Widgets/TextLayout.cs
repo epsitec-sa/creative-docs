@@ -2121,6 +2121,54 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public void PaintCallback(Drawing.Point pos, System.Action<Drawing.Point, string, Drawing.Font, double, Drawing.FontClassInfo[], Drawing.RichColor> renderer)
+		{
+			//	"Dessine" tous les caractères (et seulement les caractères) au moyen d'un callback.
+			this.UpdateLayout ();
+
+			bool firstBlock = true;
+			double offsetY = 0.0;
+
+			foreach (JustifBlock block in this.blocks)
+			{
+				if (!block.Visible)
+				{
+					continue;
+				}
+
+				if (firstBlock)
+				{
+					firstBlock = false;
+					double shift = block.IsImage ? block.ImageAscender : block.Font.Ascender * block.FontSize;
+					offsetY = System.Math.Floor (shift) - shift + 1;
+				}
+
+				if (block.IsImage || block.Tab || block.List)
+				{
+					continue;
+				}
+
+				if (!string.IsNullOrEmpty (block.Text))
+				{
+					double x = pos.X+block.Pos.X;
+					double y = pos.Y+block.Pos.Y;
+
+					Drawing.RichColor color;
+					if (block.Anchor)
+					{
+						color = new Drawing.RichColor (this.AnchorColor);
+					}
+					else
+					{
+						color = block.GetFontColor ();
+					}
+
+					renderer (new Drawing.Point (x, y-offsetY), block.Text, block.Font, block.FontSize, block.Infos, color);
+				}
+			}
+		}
+
+
 		private void UnderlinePoints(Drawing.IPaintPort graphics, JustifBlock block,
 									 Drawing.Point pos,
 									 out Drawing.Point p1, out Drawing.Point p2)
