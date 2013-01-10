@@ -40,6 +40,7 @@ namespace Epsitec.Data.Platform
 				switch (end)
 				{
 					case '-':
+					case '\'':
 						return string.Concat (prefix, root);
 					
 					default:
@@ -52,7 +53,7 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public static string ConvertFromUserFriendlyStreetName(string value)
+		public static string ConvertFromUserFriendlyStreetName(int zipCode, string value)
 		{
 			if (string.IsNullOrEmpty (value))
 			{
@@ -60,7 +61,7 @@ namespace Epsitec.Data.Platform
 			}
 
 			var repository = SwissPostStreetRepository.Current;
-			var street = repository.MapUserFriendlyStreetNameToSwissPostStreet (value);
+			var street = repository.MapUserFriendlyStreetNameToSwissPostStreet (zipCode, value);
 
 			if (street != null)
 			{
@@ -68,7 +69,7 @@ namespace Epsitec.Data.Platform
 			}
 
 			var normalizedName = SwissPostStreet.NormalizeStreetName (value);
-			var matchingInfos  = repository.Streets.Where (x => x.NormalizedStreetName == normalizedName);
+			var matchingInfos  = repository.FindStreets (zipCode).Where (x => x.NormalizedStreetName == normalizedName);
 
 			var found = matchingInfos.FirstOrDefault ();
 
@@ -78,7 +79,7 @@ namespace Epsitec.Data.Platform
 			}
 
 			var tokens  = SwissPostStreet.TokenizeStreetName (value).ToArray ();
-			matchingInfos = repository.Streets.Where (x => x.MatchNameWithHeuristics (tokens));
+			matchingInfos = repository.FindStreets (zipCode).Where (x => x.MatchNameWithHeuristics (tokens));
 			
 			found = matchingInfos.FirstOrDefault ();
 

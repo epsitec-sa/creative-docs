@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Collections;
@@ -31,22 +31,23 @@ namespace Epsitec.Data.Platform
 
 				var swissPostStreetName    = street.StreetName;
 				var userFriendlyStreetName = SwissPostStreet.ConvertToUserFriendlyStreetName (swissPostStreetName);
+				var zipStreetKey           = SwissPostStreetRepository.GetZipStreetKey (street.ZipCode, userFriendlyStreetName);
 
 				//	Make sure that a given user friendly name always maps to the same postal name.
 				//	This should be the case, since the data comes from the MAT[CH] Street database.
 
-				if (this.userFriendlyStreetNameToSwissPostStreetMap.ContainsKey (userFriendlyStreetName))
+				if (this.userFriendlyStreetNameToSwissPostStreetMap.ContainsKey (zipStreetKey))
 				{
-					var oldName = this.userFriendlyStreetNameToSwissPostStreetMap[userFriendlyStreetName];
+					var oldName = this.userFriendlyStreetNameToSwissPostStreetMap[zipStreetKey];
 					var newName = swissPostStreetName;
 
 					if (oldName != newName)
 					{
-						System.Diagnostics.Debug.WriteLine ("MAT[CH]street not consistent: {0} -> {1} and {2}", userFriendlyStreetName, oldName, newName);
+						System.Diagnostics.Debug.WriteLine ("MAT[CH]street not consistent: {0} -> {1} and {2}", zipStreetKey, oldName, newName);
 					}
 				}
 
-				this.userFriendlyStreetNameToSwissPostStreetMap[userFriendlyStreetName] = swissPostStreetName;
+				this.userFriendlyStreetNameToSwissPostStreetMap[zipStreetKey] = swissPostStreetName;
 			}
 		}
 
@@ -91,11 +92,12 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public string MapUserFriendlyStreetNameToSwissPostStreet(string street)
+		public string MapUserFriendlyStreetNameToSwissPostStreet(int zipCode, string street)
 		{
+			string key = SwissPostStreetRepository.GetZipStreetKey (zipCode, street);
 			string result;
 
-			if (this.userFriendlyStreetNameToSwissPostStreetMap.TryGetValue (street, out result))
+			if (this.userFriendlyStreetNameToSwissPostStreetMap.TryGetValue (key, out result))
 			{
 				return result;
 			}
@@ -103,6 +105,12 @@ namespace Epsitec.Data.Platform
 			{
 				return null;
 			}
+		}
+
+		
+		private static string GetZipStreetKey(int zipCode, string street)
+		{
+			return string.Format ("{0:0000}.{1}", zipCode, street);
 		}
 
 		private readonly Dictionary<int, List<SwissPostStreetInformation>> streetByZip;

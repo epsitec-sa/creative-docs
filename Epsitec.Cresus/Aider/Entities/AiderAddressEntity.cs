@@ -7,12 +7,13 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Data.Platform;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Entities
 {
@@ -120,7 +121,18 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetStreetUserFriendly(string value)
 		{
-			this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (value);
+			var town = this.Town;
+
+			if ((town.IsNull ()) ||
+				(town.SwissZipCode == null))
+			{
+				this.Street = value;
+			}
+			else
+			{
+				int zipCode = town.SwissZipCode.Value;
+				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, value);
+			}
 		}
 	}
 }

@@ -1,17 +1,19 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Tools;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
+
+using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
-
 using System.Linq;
-using Epsitec.Aider.Tools;
-using Epsitec.Data.Platform;
 
 
 namespace Epsitec.Aider.Entities
@@ -57,7 +59,14 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetStreetUserFriendly(string value)
 		{
-			this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (value);
+			if (this.SwissZipCode == 0)
+			{
+				this.Street = value;
+			}
+			else
+			{
+				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (this.SwissZipCode, value);
+			}
 		}
 	}
 }
