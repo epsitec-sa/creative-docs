@@ -63,7 +63,7 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreDataManager (coreDataManager =>
 			{
-				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile");
+				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:");
 				
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
@@ -76,12 +76,12 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreDataManager (coreDataManager =>
 			{
-				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile");
-				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile");
-				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile");
-				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile");
-				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile");
-				var eervIdFile = AiderProgram.GetFile (args, "-idfile");
+				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:");
+				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile:");
+				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile:");
+				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:");
+				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:");
+				var eervIdFile = AiderProgram.GetFile (args, "-idfile:");
 
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
