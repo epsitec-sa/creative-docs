@@ -31,10 +31,9 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public CoreServerProgram()
 		{
-			this.SetupParameters ();
-
 			ConsoleCreator.RunWithConsole (() =>
 			{
+				this.SetupParameters ();
 				this.Initialize
 				(
 					uiCulture: CoreServerProgram.uiCulture,
