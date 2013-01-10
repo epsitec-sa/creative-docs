@@ -57,8 +57,9 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="AiderUserManager.cs" />
-    <Compile Include="AiderUserSession.cs" />
+    <Compile Include="Override\AiderDatabaseInitializer.cs" />
+    <Compile Include="Override\AiderUserManager.cs" />
+    <Compile Include="Override\AiderUserSession.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController0.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController1.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController1.cs" />

@@ -15,18 +15,16 @@ namespace Epsitec.Cresus.Core.Maintenance
 			this.Reset ();
 		}
 
-
 		private void Reset()
 		{
 			Epsitec.Cresus.Core.CoreData.ForceDatabaseCreationRequest = true;
 
 			using (var app = new MaintenanceApp ())
 			{
-				Hack.PopulateUsers (new BusinessContext (app.CoreData));
+				app.CoreData.InitializeDatabase ();
 			}
 
 			Epsitec.Cresus.Core.CoreData.ForceDatabaseCreationRequest = false;
 		}
-
 	}
 }

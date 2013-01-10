@@ -3,6 +3,7 @@ DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication"
 DefineTypeSubstitution ("UserManager", "AiderUserManager")
 DefineTypeSubstitution ("UserSession", "AiderUserSession")
 DefineTypeSubstitution ("SoftwareUserEntity", "AiderUserEntity")
+DefineTypeSubstitution ("DatabaseInitializer", "AiderDatabaseInitializer")
 
 user = [AVAK]
 submenuDefs = [LVA4D]

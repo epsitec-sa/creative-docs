@@ -7,6 +7,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
@@ -469,7 +470,17 @@ namespace Epsitec.Cresus.Core
 			CoreData.CreateUserDatabase (file, dbAccess);
 		}
 
+		public void InitializeDatabase()
+		{
+			var initializer = CoreContext.New<DatabaseInitializer> ();
 
+			using (var businessContext = new BusinessContext (this))
+			{
+				initializer.Run (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock);
+			}
+		}
 		
 		
 		

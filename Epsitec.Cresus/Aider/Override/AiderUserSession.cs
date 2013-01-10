@@ -1,10 +1,10 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Entities;
+
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -17,7 +17,7 @@ using Epsitec.Cresus.Core.Metadata;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Override
 {
 	public sealed class AiderUserSession : UserSession
 	{

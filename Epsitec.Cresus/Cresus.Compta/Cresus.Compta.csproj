@@ -124,6 +124,7 @@
     <Compile Include="Options\Data\SoldesOptions.cs" />
     <Compile Include="Options\Data\RésuméPériodiqueOptions.cs" />
     <Compile Include="Options\Data\RésuméTVAOptions.cs" />
+    <Compile Include="Override\ComptaDatabaseInitializer.cs" />
     <Compile Include="Search\Controllers\TemporalController.cs" />
     <Compile Include="Search\Controllers\TemporalControllerOld.cs" />
     <Compile Include="Search\Controllers\TopTemporalController.cs" />

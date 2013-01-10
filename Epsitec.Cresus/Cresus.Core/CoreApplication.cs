@@ -38,11 +38,6 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		protected override void InitializeEmptyDatabase()
-		{
-			Hack.PopulateUsers (new BusinessContext (this.Data));
-		}
-
 		protected override void CreateManualComponents(IList<System.Action> initializers)
 		{
 			var orchestrator = new DataViewOrchestrator (this);

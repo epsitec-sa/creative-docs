@@ -4,7 +4,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 
@@ -69,17 +68,6 @@ namespace Epsitec.Cresus.Compta
 		protected override void CreateManualComponents(IList<System.Action> initializers)
 		{
 			initializers.Add (this.InitializeApplication);
-		}
-
-		protected override void InitializeEmptyDatabase()
-		{
-			var businessContext = new BusinessContext (this.Data);
-			
-			Hack.PopulateUsers (businessContext);
-
-			var compta = businessContext.CreateAndRegisterEntity<ComptaEntity> ();
-
-			businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 
 		protected override System.Xml.Linq.XDocument LoadApplicationState()

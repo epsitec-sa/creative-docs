@@ -1,15 +1,16 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Entities;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Aider.Entities;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Override
 {
 	public sealed class AiderUserManager : UserManager
 	{

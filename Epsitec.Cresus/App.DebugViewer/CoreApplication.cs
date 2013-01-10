@@ -50,10 +50,6 @@ namespace Epsitec.Cresus.DebugViewer
 			initializers.Add (this.InitializeApplication);
 		}
 
-		protected override void InitializeEmptyDatabase()
-		{
-		}
-
 		protected override System.Xml.Linq.XDocument LoadApplicationState()
 		{
 			return null;

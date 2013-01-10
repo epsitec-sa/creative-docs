@@ -346,6 +346,7 @@
     <Compile Include="Helpers\EntityPreviewHelper.cs" />
     <Compile Include="IChartProvider.cs" />
     <Compile Include="Library\CoreInteractiveApp.cs" />
+    <Compile Include="Library\DatabaseInitializer.cs" />
     <Compile Include="Library\Settings\UserDataSetSettings.cs" />
     <Compile Include="Library\Settings\UserFilterSettings.cs" />
     <Compile Include="Library\ViewControllerComponent.cs" />

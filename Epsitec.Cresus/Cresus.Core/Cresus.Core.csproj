@@ -210,7 +210,6 @@
     <Compile Include="Dialogs\SettingsTabPages\PrinterOptionsTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\QueryAccessor.cs" />
     <Compile Include="Dialogs\SettingsTabPages\SearchMode.cs" />
-    <Compile Include="Hack.cs" />
     <Compile Include="Dialogs\SettingsTabPages\LoggingTabPage.cs" />
     <Compile Include="Dialogs\SettingsTabPages\MaintenanceTabPage.cs" />
     <Compile Include="Helpers\StatusHelperCardinality.cs" />

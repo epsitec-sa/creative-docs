@@ -93,8 +93,6 @@ namespace Epsitec.Cresus.Core.Library
 			base.Dispose (disposing);
 		}
 
-		protected abstract void InitializeEmptyDatabase();
-
 		protected abstract void CreateManualComponents(IList<System.Action> initializers);
 
 		protected abstract void SaveApplicationState(XDocument doc);
@@ -125,7 +123,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			if (this.Data.ForceDatabaseCreation)
 			{
-				this.InitializeEmptyDatabase ();
+				this.Data.InitializeDatabase ();
 			}
 
 			this.OnSetupDataDone ();
