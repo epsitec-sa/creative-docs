@@ -23,105 +23,115 @@ namespace Epsitec.Aider
 	{
 		public static void Main(string[] args)
 		{
-			SwissPost.Initialize ();
-
-#if false
-			Tests.TestPostMatch.TestMatchStreet ();		
-			return;
-#endif
-
-#if false
-			AiderProgram.TestEChImporter ();
-			return;
-#endif
-
-#if false
-			AiderProgram.TestDatabaseCreation ();
-			return;
-#endif
-
-#if false
-			var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
-			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (eervGroupDefinitionFile).ToList ();
-
-			var functionArray = groupDefinitions.Where (x => x.GroupClassification == Enumerations.GroupClassification.Function && x.GroupLevel == 1).ToArray ();
-			var topLevel = groupDefinitions.Where (x => x.GroupLevel == 0).ToArray ();
-#endif
-
-			CoreProgram.Main (args);
-		}
-
-		private static void TestEChImporter()
-		{
-			new eCH_Importer ().ParseAll ();
-		}
-
-		private static void TestDatabaseCreation()
-		{
-			var hack = new Epsitec.Data.Platform.Entities.MatchStreetEntity ();
-
-			CoreData.ForceDatabaseCreationRequest = true;
-
-			var lines = CoreContext.ReadCoreContextSettingsFile ().ToList ();
-			CoreContext.ParseOptionalSettingsFile (lines);
-			CoreContext.StartAsInteractive ();
-			Services.Initialize ();
-
-			using (var app = new CoreApplication ())
+			if (args.Length >= 1)
 			{
-				app.SetupApplication ();
+				if (args.Contains ("-echimportation"))
+				{
+					AiderProgram.RunEchImportation (args);
+					return;
+				}
 
-				var coreDataManager = new CoreDataManager (app.Data);
+				if (args.Contains ("-eervmainimportation"))
+				{
+					AiderProgram.RunEervMainImportation (args);
+					return;
+				}
 
-				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2012-04-18.xml");
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile, 1000);
-				EChDataImporter.Import (coreDataManager, eChReportedPersons);
+				if (args.Contains ("-eervparishimportation"))
+				{
+					AiderProgram.RunEervParishImportation (args);
+					return;
+				}
+			}
+
+			AiderProgram.RunNormalMode (args);
+		}
+
+		private static void RunEchImportation(string[] args)
+		{
+			AiderProgram.RunWithCoreDataManager (coreDataManager =>
+			{
+				var eChDataFile = AiderProgram.GetFile (args, "-echfile:");
 				
-				var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
+				
+				EChDataImporter.Import (coreDataManager, eChReportedPersons);
+			});
+		}
+
+		private static void RunEervMainImportation(string[] args)
+		{
+			AiderProgram.RunWithCoreDataManager (coreDataManager =>
+			{
+				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile");
+				
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 
 				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
+			});
+		}
 
-#if false
-				var eervFileGroups = new List<Tuple<FileInfo, FileInfo, FileInfo, FileInfo, FileInfo>> ()
+		private static void RunEervParishImportation(string[] args)
+		{
+			AiderProgram.RunWithCoreDataManager (coreDataManager =>
+			{
+				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile");
+				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile");
+				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile");
+				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile");
+				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile");
+				var eervIdFile = AiderProgram.GetFile (args, "-idfile");
+
+				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
+				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
+				var parishRepository = ParishAddressRepository.Current;
+
+				foreach (var eervParishDatum in eervParishData)
 				{
-					Tuple.Create
-					(
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Ids.xlsx")
-					),
-					Tuple.Create
-					(
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Personnes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Activites.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Groupes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\SuperGroupes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Ids.xlsx")
-					),
-				};
-
-				foreach (var eervFileGroup in eervFileGroups)
-				{
-					var eervPersonsFile = eervFileGroup.Item1;
-					var eervActivityFile = eervFileGroup.Item2;
-					var eervGroupFile = eervFileGroup.Item3;
-					var eervSuperGroupFile = eervFileGroup.Item4;
-					var eervIdFile = eervFileGroup.Item5;
-
-					var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
-
-					foreach (var eervParishDatum in eervParishData)
-					{
-						EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
-					}
+					EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
 				}
-#endif
+			});
+		}
+
+		private static void RunWithCoreDataManager(Action<CoreDataManager> action)
+		{
+			SwissPost.Initialize ();
+			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
+			CoreContext.StartAsInteractive ();
+			Services.Initialize ();
+
+			using (var application = new CoreApplication ())
+			{
+				application.SetupApplication ();
+
+				var coreDataManager = new CoreDataManager (application.Data);
+
+				action (coreDataManager);
+
 				Services.ShutDown ();
 			}
+		}
+
+		private static FileInfo GetFile(string[] args, string key)
+		{
+			foreach (var arg in args)
+			{
+				if (arg.StartsWith (key))
+				{
+					var path = arg.Substring (key.Length);
+
+					return new FileInfo (path);
+				}
+			}
+
+			throw new Exception ("Argument " + key + " is missing!");
+		}
+
+		private static void RunNormalMode(string[] args)
+		{
+			SwissPost.Initialize ();
+			CoreProgram.Main (args);
 		}
 	}
 }
