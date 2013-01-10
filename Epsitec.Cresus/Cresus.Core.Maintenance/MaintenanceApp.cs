@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 		{
 			get
 			{
-				return this.CoreData;
+				return this.coreData;
 			}
 		}
 
