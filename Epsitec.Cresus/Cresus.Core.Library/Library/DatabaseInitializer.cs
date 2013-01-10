@@ -186,10 +186,13 @@ namespace Epsitec.Cresus.Core.Library
 			this.CreateUser
 			(
 				displayName: "Root",
-				userLogin: "Root",
-				userPassword: "mySuperRootPassword",
+				userLogin: "root",
+				userPassword: "mysuperrootpassword",
 				authentificationMethod: UserAuthenticationMethod.Password,
-				groups: this.groupAdministrator
+				groups: new SoftwareUserGroupEntity[] {
+					this.groupAdministrator,
+					this.GroupStandard
+				}
 			);
 		}
 
@@ -238,8 +241,9 @@ namespace Epsitec.Cresus.Core.Library
 				userPassword: "admin",
 				authentificationMethod: UserAuthenticationMethod.Password,
 				groups: new SoftwareUserGroupEntity[] {
+					this.GroupAdministrator,
 					this.GroupDeveloper,
-					this.GroupAdministrator
+					this.groupStandard
 				}
 			);
 		}
