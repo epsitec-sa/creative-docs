@@ -164,7 +164,6 @@
     <Compile Include="Data\ECh\EChPerson.cs" />
     <Compile Include="Data\ECh\EChPlace.cs" />
     <Compile Include="Data\ECh\EChReportedPerson.cs" />
-    <Compile Include="Data\ECh\eCH_Importer.cs" />
     <Compile Include="Data\ECh\EChXmlTags.cs" />
     <Compile Include="Enumerations\DataSource.cs" />
     <Compile Include="Enumerations\FunctionType.cs" />
