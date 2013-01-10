@@ -11,11 +11,16 @@ namespace Epsitec.Cresus.Core.Override
 {
 	public class CoreDatabaseInitializer : DatabaseInitializer
 	{
-		public override void Run(BusinessContext businessContext)
+		public CoreDatabaseInitializer(BusinessContext businessContext)
+			: base (businessContext)
 		{
-			base.Run (businessContext);
+		}
 
-			this.CreateTestUsers (businessContext);
+		public override void Run()
+		{
+			base.Run ();
+
+			this.CreateTestUsers ();
 		}
 	}
 }

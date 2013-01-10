@@ -7,19 +7,24 @@ namespace Epsitec.Cresus.Compta.Override
 {
 	public class ComptaDatabaseInitializer : DatabaseInitializer
 	{
-		public override void Run(BusinessContext businessContext)
+		public ComptaDatabaseInitializer(BusinessContext businessContext)
+			: base (businessContext)
 		{
-			base.Run (businessContext);
-
-			this.CreateTestUsers (businessContext);
-			this.CreateCompta (businessContext);
 		}
 
-		private void CreateCompta(BusinessContext businessContext)
+		public override void Run()
 		{
-			businessContext.CreateAndRegisterEntity<ComptaEntity> ();
+			base.Run ();
 
-			businessContext.SaveChanges (LockingPolicy.ReleaseLock);
+			this.CreateTestUsers ();
+			this.CreateCompta ();
+		}
+
+		private void CreateCompta()
+		{
+			this.BusinessContext.CreateAndRegisterEntity<ComptaEntity> ();
+
+			this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 		}
 	}
 }

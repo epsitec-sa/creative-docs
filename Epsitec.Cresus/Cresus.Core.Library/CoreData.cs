@@ -472,11 +472,11 @@ namespace Epsitec.Cresus.Core
 
 		public void InitializeDatabase()
 		{
-			var initializer = CoreContext.New<DatabaseInitializer> ();
-
 			using (var businessContext = new BusinessContext (this))
 			{
-				initializer.Run (businessContext);
+				var initializer = CoreContext.New<DatabaseInitializer> (businessContext);
+
+				initializer.Run ();
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}

@@ -10,9 +10,15 @@ namespace Epsitec.Aider.Override
 	{
 
 
-		public override void Run(BusinessContext businessContext)
+		public AiderDatabaseInitializer(BusinessContext businessContext)
+			: base (businessContext)
 		{
-			base.Run (businessContext);
+		}
+		
+
+		public override void Run()
+		{
+			base.Run ();
 		}
 
 

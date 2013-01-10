@@ -14,6 +14,11 @@ namespace Epsitec.Cresus.Core.Library
 	/// </summary>
 	public class DatabaseInitializer
 	{
+		public DatabaseInitializer(BusinessContext businessContext)
+		{
+			this.businessContext = businessContext;
+		}
+
 		/// <summary>
 		/// This method is called to initialize the database with initial data after its creation.
 		/// </summary>
@@ -22,11 +27,19 @@ namespace Epsitec.Cresus.Core.Library
 		/// by the caller of this method.
 		/// </remarks>
 		/// <param name="businessContext">The BusinessContext used to create entities. </param>
-		public virtual void Run(BusinessContext businessContext)
+		public virtual void Run()
 		{
-			this.CreateBasicRoles (businessContext);
-			this.CreateBasicGroups (businessContext);
-			this.CreateBasicUsers (businessContext);
+			this.CreateBasicRoles ();
+			this.CreateBasicGroups ();
+			this.CreateBasicUsers ();
+		}
+
+		protected BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
 		}
 
 		protected SoftwareUserRoleEntity RoleMain
@@ -85,19 +98,18 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		private void CreateBasicRoles(BusinessContext businessContext)
+		private void CreateBasicRoles()
 		{
 			this.roleMain = this.CreateRole
 			(
-                businessContext: businessContext, 
                 code: "?", 
                 name: "Principal"
 			);
 		}
 
-		protected SoftwareUserRoleEntity CreateRole(BusinessContext businessContext, string code, string name)
+		protected SoftwareUserRoleEntity CreateRole(string code, string name)
 		{
-			var role = businessContext.CreateAndRegisterEntity<SoftwareUserRoleEntity> ();
+			var role = this.businessContext.CreateAndRegisterEntity<SoftwareUserRoleEntity> ();
 
 			role.Code = code;
 			role.Name = name;
@@ -105,11 +117,10 @@ namespace Epsitec.Cresus.Core.Library
 			return role;
 		}
 
-		private void CreateBasicGroups(BusinessContext businessContext)
+		private void CreateBasicGroups()
 		{
 			this.groupSystem = this.CreateUserGroup
 			(
-				businessContext: businessContext,
 				role: this.RoleMain,
 				name: "Système",
 				code: "?",
@@ -118,7 +129,6 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.groupDeveloper = this.CreateUserGroup
 			(
-				businessContext: businessContext,
 				role: this.RoleMain,
 				name: "Développeurs",
 				code: "?",
@@ -127,7 +137,6 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.groupAdministrator = this.CreateUserGroup
 			(
-				businessContext: businessContext,
 				role: this.RoleMain,
 				name: "Administrateurs",
 				code: "?",
@@ -136,7 +145,6 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.groupPowerUser = this.CreateUserGroup
 			(
-				businessContext: businessContext,
 				role: this.RoleMain,
 				name: "Utilisateurs avec pouvoir",
 				code: "?",
@@ -145,7 +153,6 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.groupStandard = this.CreateUserGroup
 			(
-				businessContext: businessContext,
 				role: this.RoleMain,
 				name: "Utilisateurs standards",
 				code: "?",
@@ -154,7 +161,6 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.groupRestricted = this.CreateUserGroup
 			(
-				businessContext: businessContext,
 				role: this.RoleMain,
 				name: "Utilisateurs restreints",
 				code: "?",
@@ -162,9 +168,9 @@ namespace Epsitec.Cresus.Core.Library
 			);
 		}
 
-		protected SoftwareUserGroupEntity CreateUserGroup(BusinessContext businessContext, SoftwareUserRoleEntity role, string name, string code, UserPowerLevel level)
+		protected SoftwareUserGroupEntity CreateUserGroup(SoftwareUserRoleEntity role, string name, string code, UserPowerLevel level)
 		{
-			var group = businessContext.CreateAndRegisterEntity<SoftwareUserGroupEntity> ();
+			var group = this.businessContext.CreateAndRegisterEntity<SoftwareUserGroupEntity> ();
 
 			group.Code = code;
 			group.Name = name;
@@ -175,11 +181,10 @@ namespace Epsitec.Cresus.Core.Library
 			return group;
 		}
 
-		private void CreateBasicUsers(BusinessContext businessContext)
+		private void CreateBasicUsers()
 		{
 			this.CreateUser
 			(
-				businessContext: businessContext,
 				displayName: "Root",
 				userLogin: "Root",
 				userPassword: "mySuperRootPassword",
@@ -188,16 +193,15 @@ namespace Epsitec.Cresus.Core.Library
 			);
 		}
 
-		protected void CreateTestUsers(BusinessContext businessContext)
+		protected void CreateTestUsers()
 		{
 			this.CreateUser
 			(
-				businessContext: businessContext,
 				displayName: "Pierre Arnaud",
 				userLogin: "arnaud",
 				userPassword: "smaky",
 				authentificationMethod: UserAuthenticationMethod.System,
-				groups: new SoftwareUserGroupEntity[] { 
+				groups: new SoftwareUserGroupEntity[] {
 					this.GroupDeveloper,
 					this.GroupStandard
 				}
@@ -205,12 +209,11 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.CreateUser
 			(
-				businessContext: businessContext,
 				displayName: "Marc Bettex",
 				userLogin: "Marc",
 				userPassword: "tiger",
 				authentificationMethod: UserAuthenticationMethod.System,
-				groups: new SoftwareUserGroupEntity[] { 
+				groups: new SoftwareUserGroupEntity[] {
 					this.GroupDeveloper,
 					this.GroupStandard
 				}
@@ -218,12 +221,11 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.CreateUser
 			(
-				businessContext: businessContext,
 				displayName: "Daniel Roux",
 				userLogin: "Daniel",
 				userPassword: "blupi",
 				authentificationMethod: UserAuthenticationMethod.System,
-				groups: new SoftwareUserGroupEntity[] { 
+				groups: new SoftwareUserGroupEntity[] {
 					this.GroupDeveloper,
 					this.GroupStandard
 				}
@@ -231,31 +233,30 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.CreateUser
 			(
-				businessContext: businessContext,
 				displayName: "Epsitec",
 				userLogin: "Epsitec",
 				userPassword: "admin",
 				authentificationMethod: UserAuthenticationMethod.Password,
-				groups: new SoftwareUserGroupEntity[] { 
+				groups: new SoftwareUserGroupEntity[] {
 					this.GroupDeveloper,
 					this.GroupAdministrator
 				}
 			);
 		}
 
-		protected SoftwareUserEntity CreateUser(BusinessContext businessContext, FormattedText displayName, string userLogin, string userPassword, UserAuthenticationMethod authentificationMethod, params SoftwareUserGroupEntity[] groups)
+		protected SoftwareUserEntity CreateUser(FormattedText displayName, string userLogin, string userPassword, UserAuthenticationMethod authentificationMethod, params SoftwareUserGroupEntity[] groups)
 		{
 			var userType = CoreContext.ResolveType (typeof (SoftwareUserEntity));
 			var userDruid = EntityInfo.GetTypeId (userType);
 
-			var user = (SoftwareUserEntity) businessContext.CreateEntity (userDruid);
-			businessContext.Register (user);
+			var user = (SoftwareUserEntity) this.businessContext.CreateEntity (userDruid);
+			this.businessContext.Register (user);
 
 			user.AuthenticationMethod = authentificationMethod;
 			user.DisplayName = displayName;
 			user.LoginName = userLogin;
 			user.SetPassword (userPassword);
-			user.CustomUISettings = businessContext.CreateAndRegisterEntity<SoftwareUISettingsEntity> ();
+			user.CustomUISettings = this.businessContext.CreateAndRegisterEntity<SoftwareUISettingsEntity> ();
 
 			foreach (var group in groups)
 			{
@@ -272,5 +273,7 @@ namespace Epsitec.Cresus.Core.Library
 		private SoftwareUserGroupEntity groupPowerUser;
 		private SoftwareUserGroupEntity groupStandard;
 		private SoftwareUserGroupEntity groupRestricted;
+
+		private readonly BusinessContext businessContext;
 	}
 }
