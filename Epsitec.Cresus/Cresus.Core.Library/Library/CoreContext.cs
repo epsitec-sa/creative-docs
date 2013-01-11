@@ -4,7 +4,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +32,14 @@ namespace Epsitec.Cresus.Core.Library
 			get
 			{
 				return CoreContext.isServer;
+			}
+		}
+
+		public static bool						EnableSnapshotService
+		{
+			get
+			{
+				return CoreContext.enableSnapshotService;
 			}
 		}
 
@@ -147,6 +154,11 @@ namespace Epsitec.Cresus.Core.Library
 		public static void DefineTypeSubstitution(string baseClassName, string implClassName)
 		{
 			CoreContext.typeSubstitutions[baseClassName] = implClassName;
+		}
+
+		public static void DefineEnableSnapshotService(bool enableSnapshotService)
+		{
+			CoreContext.enableSnapshotService = enableSnapshotService;
 		}
 		
 		private static void AddMetadata(CoreMetadata metadata)
@@ -519,6 +531,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static bool						startupCalled;
 		private static bool						isInteractive;
 		private static bool						isServer;
+		private static bool						enableSnapshotService;
 		
 		private static CoreDatabaseType			databaseType;
 		private static string					databaseName;

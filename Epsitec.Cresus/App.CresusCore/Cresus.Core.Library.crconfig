@@ -1,6 +1,7 @@
 DefineDatabase ("core", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
 DefineTypeSubstitution ("DatabaseInitializer", "CoreDatabaseInitializer")
+DefineEnableSnapshotService (true);
 
 user = [AVAK]
 

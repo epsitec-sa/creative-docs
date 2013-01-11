@@ -4,6 +4,7 @@ DefineTypeSubstitution ("UserManager", "AiderUserManager")
 DefineTypeSubstitution ("UserSession", "AiderUserSession")
 DefineTypeSubstitution ("SoftwareUserEntity", "AiderUserEntity")
 DefineTypeSubstitution ("DatabaseInitializer", "AiderDatabaseInitializer")
+DefineEnableSnapshotService (false);
 
 user = [AVAK]
 submenuDefs = [LVA4D]

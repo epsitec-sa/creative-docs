@@ -39,15 +39,20 @@ namespace Epsitec.Cresus.Core
 			Library.CoreContext.StartAsInteractive ();
 			Library.UI.Services.Initialize ();
 
-			var snapshotService = new Library.Business.CoreSnapshotService ();
+			var  snapshotService = CoreContext.EnableSnapshotService
+				? new Library.Business.CoreSnapshotService ()
+				: null;
 
 			using (var app = CoreContext.CreateApplication<CoreInteractiveApp> () ?? new CoreApplication ())
 			{
 				System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
 
 				app.SetupApplication ();
-				
-				snapshotService.NotifyApplicationStarted (app);
+
+				if (snapshotService != null)
+				{
+					snapshotService.NotifyApplicationStarted (app);
+				}
 
 				SplashScreen.DismissSplashScreen ();
 

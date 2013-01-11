@@ -1,3 +1,4 @@
 DefineDatabase ("compta", "localhost");
 DefineApplicationClass ("Cresus.Compta.dll", "Epsitec.Cresus.Compta.ComptaApplication");
 DefineTypeSubstitution ("DatabaseInitializer", "ComptaDatabaseInitializer")
+DefineEnableSnapshotService (true);
