@@ -1,4 +1,8 @@
-﻿using Epsitec.Common.Support;
+﻿using Epsitec.Common.Debug;
+
+using Epsitec.Common.IO;
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
@@ -17,6 +21,8 @@ using Nancy;
 using System;
 
 using System.Collections.Generic;
+
+using System.Diagnostics;
 
 using System.Linq;
 
@@ -150,6 +156,20 @@ namespace Epsitec.Cresus.WebCore.Server
 			return parameter.HasValue
 				? parameter.Value
 				: null;
+		}
+
+
+		[Conditional ("DEBUG")]
+		public static void LogMessage(string message)
+		{
+			Logger.LogToConsole (message);
+		}
+
+
+		public static void LogError(string message)
+		{
+			Tools.LogMessage (message);
+			ErrorLogger.LogErrorMessage (message);
 		}
 
 

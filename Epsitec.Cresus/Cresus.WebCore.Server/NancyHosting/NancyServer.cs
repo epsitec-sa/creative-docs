@@ -1,6 +1,4 @@
-﻿using Epsitec.Common.IO;
-
-using Epsitec.Common.Support;
+﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.WebCore.Server.Core;
@@ -56,7 +54,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		{
 			try
 			{
-				Logger.LogToConsole ("Received http request: " + httpRequest.Url);
+				Tools.LogMessage ("Received http request: " + httpRequest.Url);
 
 				var stopwatch = Stopwatch.StartNew ();
 
@@ -74,14 +72,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				var message = "Answered http request: " + httpRequest.Url
 					+ " in " + stopwatch.ElapsedMilliseconds + " ms";
 
-				Logger.LogToConsole (message);
+				Tools.LogMessage (message);
 			}
 			catch (Exception e)
 			{
 				var message = "Uncaught exception while processing http request :\n"
 					+ e.GetFullText ();
 
-				Logger.LogToConsole (message);
+				Tools.LogError (message);
 			}
 		}
 

@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.IO;
+﻿using Epsitec.Common.Debug;
+using Epsitec.Common.IO;
 using Epsitec.Common.Support.Extensions;
 
 using Nancy;
@@ -40,9 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				error = "Details are not available";
 			}
 
-			var message = "Uncaught exception while processing nancy request: " + error;
-
-			Logger.LogToConsole (message);
+			Tools.LogError ("Uncaught exception while processing nancy request: " + error);
 		}
 
 
