@@ -90,7 +90,6 @@
     <Compile Include="Core\AuthenticationManager.cs" />
     <Compile Include="Core\Databases\Column.cs" />
     <Compile Include="NancyModules\Constants.cs" />
-    <Compile Include="NancyHosting\Dumper.cs" />
     <Compile Include="Core\Databases\Database.cs" />
     <Compile Include="NancyModules\ScopeModule.cs" />
     <Compile Include="NancyModules\SetModule.cs" />

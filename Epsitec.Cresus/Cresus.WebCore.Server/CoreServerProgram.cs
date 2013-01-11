@@ -115,8 +115,6 @@ namespace Epsitec.Cresus.WebCore.Server
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
 			using (var nancyServer = new NancyServer (coreServer, uri))
 			{
-				Dumper.Instance.IsEnabled = CoreServerProgram.enableDumper;
-
 				Logger.LogToConsole ("Server launched");
 				Logger.LogToConsole ("Press [ENTER] to shut down");
 				Console.ReadLine ();
@@ -155,9 +153,6 @@ namespace Epsitec.Cresus.WebCore.Server
 
 
 		private static readonly bool nGinxAutorun = true;
-
-
-		private static readonly bool enableDumper = false;
 
 
 	}

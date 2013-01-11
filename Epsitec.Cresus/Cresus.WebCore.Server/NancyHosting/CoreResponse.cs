@@ -114,8 +114,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		private static Response CreateResponse(Dictionary<string, object> jsonData, HttpStatusCode code)
 		{
-			Dumper.Instance.Dump (code, jsonData);
-
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
 				StatusCode = HttpStatusCode.OK,
