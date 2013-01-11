@@ -5,7 +5,9 @@ using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
 using Epsitec.Data.Platform;
 
 using Epsitec.Cresus.Core.Entities;
@@ -32,7 +34,7 @@ namespace Epsitec.Aider.Rules
 				{
 					if (string.IsNullOrEmpty (postBox))
 					{
-						throw new BusinessRuleException (address, "Le nom de rue est obligatoire.");
+						throw new BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
 					}
 					else
 					{
@@ -49,7 +51,7 @@ namespace Epsitec.Aider.Rules
 					return;
 				}
 				
-				throw new BusinessRuleException (address, "Le nom de la rue n'a pas été trouvé pour cette localité.");
+				throw new BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Globalization;
@@ -60,7 +60,19 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		
+
+		/// <summary>
+		/// This method is used to spot texts in the source code which should be extracted
+		/// into a resource file, rather than being specified as a constant string.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The text.</returns>
+		public static string Text(string text)
+		{
+			return text;
+		}
+
+
 		public static string ExtractPrefix(string id)
 		{
 			if (id != null)
