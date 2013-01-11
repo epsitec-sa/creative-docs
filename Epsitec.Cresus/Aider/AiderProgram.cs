@@ -33,10 +33,7 @@ namespace Epsitec.Aider
 		{
 			GeneralExceptionCatcher.Setup ();
 			GeneralExceptionCatcher.AbortOnException = true;
-			GeneralExceptionCatcher.AddExceptionHandler (e =>
-			{
-				ErrorLogger.LogException (e, "logs.txt");
-			});
+			GeneralExceptionCatcher.AddExceptionHandler (e => ErrorLogger.LogException (e));
 		}
 
 		private static void Run(string[] args)
