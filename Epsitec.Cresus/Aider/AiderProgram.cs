@@ -52,11 +52,28 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreDataManager (coreDataManager =>
 			{
 				var eChDataFile = AiderProgram.GetFile (args, "-echfile:");
-				
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
-				
+				var mode = AiderProgram.GetString (args, "-mode:");
+
+				var maxCount = AiderProgram.GetMaxCount (mode);
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile, maxCount);
+
 				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 			});
+		}
+
+		private static int GetMaxCount(string mode)
+		{
+			if (mode == "full")
+			{
+				return int.MaxValue;
+			}
+			
+			if (mode == "partial")
+			{
+				return 1000;
+			}
+			
+			throw new Exception ("Invalid mode");
 		}
 
 		private static void RunEervMainImportation(string[] args)
@@ -115,13 +132,18 @@ namespace Epsitec.Aider
 
 		private static FileInfo GetFile(string[] args, string key)
 		{
+			var path = AiderProgram.GetString (args, key);
+
+			return new FileInfo (path);
+		}
+
+		private static string GetString(string[] args, string key)
+		{
 			foreach (var arg in args)
 			{
 				if (arg.StartsWith (key))
 				{
-					var path = arg.Substring (key.Length);
-
-					return new FileInfo (path);
+					return arg.Substring (key.Length);
 				}
 			}
 
