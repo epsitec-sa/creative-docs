@@ -21,7 +21,7 @@ namespace Common.Pdf.Test
 
 			Console.WriteLine ("1) 2 pages basiques");
 			Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
-			Console.WriteLine ("3) 3 pages contenant un tableau de 100 lignes");
+			Console.WriteLine ("3) 4 pages contenant un tableau de 100 lignes");
 			string choice = Console.ReadLine ();
 
 			int result = 1;
@@ -61,7 +61,7 @@ namespace Common.Pdf.Test
 			//	Génération d'un document fixe de 2 pages.
 			var info = new ExportPdfInfo ();
 			var export = new Export (info);
-			return export.ExportToFile ("test.pdf", 2, Program.Renderer1);
+			return export.ExportToFile ("test1.pdf", 2, Program.Renderer1);
 		}
 
 		private static void Renderer1(Port port, int page)
@@ -155,12 +155,12 @@ namespace Common.Pdf.Test
 				PaintFrame = true,
 			};
 
-			return stikers.GeneratePdf("test.pdf", 100, Program.Test2Accessor, info, setup);
+			return stikers.GeneratePdf("test2.pdf", 100, Program.Test2Accessor, info, setup);
 		}
 
 		private static FormattedText Test2Accessor(int rank)
 		{
-			return string.Format ("Monsieur<br/>Jean <b>Dupond</b> #{0}<br/>Place du Marché 45<br/>1000 Lausanne", (rank+1).ToString ());
+			return string.Format ("Monsieur<br/>Jean-Paul <b>Dupond</b> #{0}<br/>Place du Marché 45<br/>1000 Lausanne", (rank+1).ToString ());
 		}
 
 
@@ -176,7 +176,7 @@ namespace Common.Pdf.Test
 
 			var setup = new ArraySetup ()
 			{
-				Header = "<font size=\"400\">Tableau de test bidon</font><br/>Deuxième ligne de l'en-tête",
+				Header = "<font size=\"80\">Tableau de test bidon</font><br/>Deuxième ligne de l'en-tête",
 				Footer = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
 			};
 
@@ -190,11 +190,16 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("Ville",    300.0));
 			columns.Add (new ColumnDefinition ("Remarque", null, fontSize: 20.0));
 
-			return array.GeneratePdf ("test.pdf", 100, columns, Program.Test3Accessor, info, setup);
+			return array.GeneratePdf ("test3.pdf", 100, columns, Program.Test3Accessor, info, setup);
 		}
 
 		private static FormattedText Test3Accessor(int row, int column)
 		{
+			if (row == 5 && column == 3)
+			{
+				return "<font size=\"50\">Grand</font>";
+			}
+
 			if (row >= 20 && row <= 50)
 			{
 				switch (column)
@@ -204,7 +209,9 @@ namespace Common.Pdf.Test
 					case 2:
 						return "Julie";
 					case 3:
-						return string.Format ("<i>Dubosson</i> #{0}", (row+1).ToString ());
+						return "<i>Dubosson</i>";
+					case 4:
+						return "Av. de la Gare 12<br/>Case postale 1234";
 				}
 			}
 
@@ -215,9 +222,9 @@ namespace Common.Pdf.Test
 					return Program.histoire;
 				}
 
-				if (row == 2 || row == 12)
+				if (row == 2 || row == 12 || row == 99)
 				{
-					return "À modifier";
+					return "À modifier...";
 				}
 			}
 
@@ -228,9 +235,9 @@ namespace Common.Pdf.Test
 				case 1:
 					return "Monsieur";
 				case 2:
-					return "Jean";
+					return "Jean-Paul";
 				case 3:
-					return string.Format("<b>Dupond</b> #{0}", (row+1).ToString ());
+					return "<b>Dupond</b>";
 				case 4:
 					return "Place du Marché 45";
 				case 5:
