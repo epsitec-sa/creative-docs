@@ -25,7 +25,7 @@ namespace Epsitec.Common.Pdf.Array
 			this.BorderThickness      = 1.0;
 			this.HeaderMargins        = new Margins (0.0, 0.0, 0.0, 50.0);
 			this.FooterMargins        = new Margins (0.0, 0.0, 50.0, 0.0);
-			this.LabelBackgroundColor = Color.FromBrightness (0.9);
+			this.LabelBackgroundColor = Color.FromBrightness (0.9);  // gris très clair
 			this.EvenBackgroundColor  = Color.Empty;
 			this.OddBackgroundColor   = Color.Empty;
 		}
@@ -46,6 +46,7 @@ namespace Epsitec.Common.Pdf.Array
 
 		public TextStyle TextStyle
 		{
+			//	Style pour tous les textes du tableau.
 			set;
 			get;
 		}
@@ -59,6 +60,8 @@ namespace Epsitec.Common.Pdf.Array
 
 		public Margins HeaderMargins
 		{
+			//	Marges autour du texte de header.
+			//	On utilise généralement uniquement Margins.Bottom.
 			set;
 			get;
 		}
@@ -72,6 +75,8 @@ namespace Epsitec.Common.Pdf.Array
 
 		public Margins FooterMargins
 		{
+			//	Marges autour du texte de footer.
+			//	On utilise généralement uniquement Margins.Top.
 			set;
 			get;
 		}

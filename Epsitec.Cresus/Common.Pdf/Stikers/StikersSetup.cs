@@ -83,6 +83,7 @@ namespace Epsitec.Common.Pdf.Stikers
 
 		public TextStyle TextStyle
 		{
+			//	Style pour tous les textes des étiquettes.
 			set;
 			get;
 		}
