@@ -37,6 +37,7 @@ namespace Epsitec.Common.Pdf.Stikers
 
 		public StikersSetup()
 		{
+			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins   = new Margins (100.0);
 			this.StikerSize    = new Size (620.0, 400.0);
 			this.StikerMargins = new Margins (50.0);

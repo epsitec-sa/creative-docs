@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Pdf.Engine
 {
-	class PdfExportException : System.Exception
+	public class PdfExportException : System.Exception
 	{
 		public PdfExportException(string message)
 		{

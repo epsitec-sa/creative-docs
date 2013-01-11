@@ -22,25 +22,25 @@ namespace Common.Pdf.Test
 			int result = 1;
 			int.TryParse (choice, out result);
 
-			string message = null;
+			PdfExportException ex = null;
 
 			switch (result)
 			{
 				case 1:
-					message = Program.Test1 ();
+					ex = Program.Test1 ();
 					break;
 				case 2:
-					message = Program.Test2 ();
+					ex = Program.Test2 ();
 					break;
 			}
 
-			if (string.IsNullOrEmpty (message))
+			if (ex == null)
 			{
 				Console.WriteLine ("Export ok");
 			}
 			else
 			{
-				Console.WriteLine ("message = " + message);
+				Console.WriteLine ("message = " + ex.Message);
 			}
 
 			Console.WriteLine ("Fin du test de Epsitec.Common.Pdf");
@@ -48,7 +48,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static string Test1()
+		private static PdfExportException Test1()
 		{
 			//	Génération d'un document fixe de 2 pages.
 			var info = new ExportPdfInfo ();
@@ -135,7 +135,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static string Test2()
+		private static PdfExportException Test2()
 		{
 			//	Génération d'étiquettes.
 			var stikers = new Stikers ();
