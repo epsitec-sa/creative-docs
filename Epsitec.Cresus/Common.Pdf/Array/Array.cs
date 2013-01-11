@@ -105,6 +105,7 @@ namespace Epsitec.Common.Pdf.Array
 		private void RenderRow(Port port, int row, double y)
 		{
 			//	Effectue le rendu d'une ligne complète.
+			//	La ligne -1 correspond aux labels des colonnes.
 			double x = this.setup.PageMargins.Left;
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
@@ -120,6 +121,7 @@ namespace Epsitec.Common.Pdf.Array
 		private void RenderCell(Port port, int row, int column, double x, double y)
 		{
 			//	Effectue le rendu d'une cellule.
+			//	La ligne -1 correspond aux labels des colonnes.
 			var def = this.columnDefinitions[column];
 			var h   = (row == -1) ? this.labelHeight : this.rowHeights[row];
 			var box = new Rectangle (x, y-h, this.columnWidths[column], h);
@@ -127,13 +129,15 @@ namespace Epsitec.Common.Pdf.Array
 			var path = new Path ();
 			path.AppendRectangle (box);
 
-			var color = this.GetColor (row, column);
+			//	Dessine le fond.
+			var color = this.GetCellColor (row, column);
 			if (!color.IsEmpty)
 			{
 				port.Color = color;
 				port.PaintSurface (path);
 			}
 
+			//	Dessine le cadre.
 			if (this.setup.BorderThickness > 0)
 			{
 				port.LineWidth = this.setup.BorderThickness;
@@ -141,11 +145,13 @@ namespace Epsitec.Common.Pdf.Array
 				port.PaintOutline (path);
 			}
 
-			box.Deflate (this.setup.CellMargins);
-			var text = this.GetText (row, column);
+			//	Dessine le texte contenu.
+			var text = this.GetCellText (row, column);
 			if (!text.IsNullOrEmpty ())
 			{
-				var style = new TextStyle()
+				box.Deflate (this.setup.CellMargins);
+
+				var style = new TextStyle ()
 				{
 					Alignment = def.Alignment,
 				};
@@ -157,7 +163,7 @@ namespace Epsitec.Common.Pdf.Array
 
 		private void ConstantJustification()
 		{
-			//	Calcule les hauteurs de tous les éléments fixes.
+			//	Calcule les hauteurs de tous les éléments fixes (header et footer).
 			this.headerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.HeaderText, this.font, this.setup.FontSize);
 			this.footerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.FooterText, this.font, this.setup.FontSize);
 
@@ -226,7 +232,7 @@ namespace Epsitec.Common.Pdf.Array
 
 				if (def.ColumnType == ColumnType.Stretch && def.StretchFactor != 0)
 				{
-					this.columnWidths[column] = residual / def.StretchFactor;
+					this.columnWidths[column] = residual * (def.StretchFactor / totalStretch);
 				}
 			}
 		}
@@ -239,7 +245,7 @@ namespace Epsitec.Common.Pdf.Array
 
 			for (int row = -1; row < this.rowCount; row++)  // -1 -> tient compte de la ligne des labels
 			{
-				var text = this.GetText (row, column);
+				var text = this.GetCellText (row, column);
 
 				if (!text.IsNullOrEmpty ())
 				{
@@ -301,12 +307,13 @@ namespace Epsitec.Common.Pdf.Array
 		{
 			//	Calcule la hauteur nécessaire pour une ligne, en fonction de la
 			//	colonne la plus haute.
+			//	La ligne -1 correspond aux labels des colonnes.
 			double height = 0;
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
 				var width = this.columnWidths[column] - this.setup.CellMargins.Width;
-				var text = this.GetText (row, column);
+				var text = this.GetCellText (row, column);
 
 				if (!text.IsNullOrEmpty ())
 				{
@@ -318,8 +325,10 @@ namespace Epsitec.Common.Pdf.Array
 			return height + this.setup.CellMargins.Height;
 		}
 
+
 		private double UsableWidth
 		{
+			//	Retourne la largeur utilisable dans une page.
 			get
 			{
 				return this.info.PageSize.Width - this.setup.PageMargins.Width;
@@ -328,14 +337,18 @@ namespace Epsitec.Common.Pdf.Array
 
 		private double UsableHeight
 		{
+			//	Retourne la hauteur utilisable dans une page.
 			get
 			{
 				return this.info.PageSize.Height - this.setup.PageMargins.Height;
 			}
 		}
 
-		private Color GetColor(int row, int column)
+
+		private Color GetCellColor(int row, int column)
 		{
+			//	Retourne la couleur de fond à utiliser pour une cellule.
+			//	La ligne -1 correspond aux labels des colonnes.
 			if (row == -1)  // label ?
 			{
 				return this.setup.LabelBackgroundColor;
@@ -353,7 +366,7 @@ namespace Epsitec.Common.Pdf.Array
 			}
 		}
 
-		private FormattedText GetText(int row, int column)
+		private FormattedText GetCellText(int row, int column)
 		{
 			//	Retourne le texte contenu dans une cellule.
 			//	La ligne -1 correspond aux labels des colonnes.

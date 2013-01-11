@@ -31,11 +31,11 @@ namespace Epsitec.Common.Pdf.Stikers
 		//     |     |  +-------+  |  |  +-------+  |   .     |--
 		//     |     |             |  |             |   .     | |  StikerMargins.Bottom
 		//     |     +-------------+  +-------------+   .     |--
-		//     |                                        .     |
+		//     |                                        .     | |  reste
 		//     |  . . . . . . . . . . . . . . . . . . . . . . |--
 		//     |                                        .     | |  PageMargins.Bottom
 		//     +----------------------------------------------+--
-		//           |<----------->|            >|--|<
+		//           |<----------->|            >|--|<->|  reste
 		//           StikerSize.Width     StikerMargins.Right
 
 		public StikersSetup()

@@ -22,6 +22,7 @@ namespace Common.Pdf.Test
 			Console.WriteLine ("1) 2 pages basiques");
 			Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
 			Console.WriteLine ("3) 4 pages contenant un tableau de 100 lignes");
+			Console.WriteLine ("4) 4 pages contenant un tableau de 50 lignes");
 			string choice = Console.ReadLine ();
 
 			int result = 1;
@@ -39,6 +40,9 @@ namespace Common.Pdf.Test
 					break;
 				case 3:
 					ex = Program.Test3 ();
+					break;
+				case 4:
+					ex = Program.Test4 ();
 					break;
 			}
 
@@ -166,7 +170,7 @@ namespace Common.Pdf.Test
 
 		private static PdfExportException Test3()
 		{
-			//	Génération d'étiquettes.
+			//	Génération d'un tableau.
 			var array = new Epsitec.Common.Pdf.Array.Array ();
 
 			var info = new ExportPdfInfo ()
@@ -176,7 +180,7 @@ namespace Common.Pdf.Test
 
 			var setup = new ArraySetup ()
 			{
-				HeaderText = "<font size=\"80\">Tableau de test bidon</font><br/>Deuxième ligne de l'en-tête",
+				HeaderText = "<font size=\"80\">Tableau de test en mode paysage</font><br/>Deuxième ligne de l'en-tête",
 				FooterText = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
 				EvenBackgroundColor = Color.FromHexa ("ffffee"),  // jaune 
 				OddBackgroundColor  = Color.FromHexa ("ebf8ff"),  // bleu
@@ -192,10 +196,39 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic));
 			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
 
-			return array.GeneratePdf ("test3.pdf", 100, columns, Program.Test3Accessor, info, setup);
+			return array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayAccessor, info, setup);
 		}
 
-		private static FormattedText Test3Accessor(int row, int column)
+		private static PdfExportException Test4()
+		{
+			//	Génération d'un tableau.
+			var array = new Epsitec.Common.Pdf.Array.Array ();
+
+			var info = new ExportPdfInfo ()
+			{
+			};
+
+			var setup = new ArraySetup ()
+			{
+				PageMargins = new Margins(100.0),
+				FontSize = 40.0,
+				HeaderText = "<font size=\"80\">Tableau de test en mode portrait</font><br/>Deuxième ligne de l'en-tête",
+				FooterText = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
+			};
+
+			var columns = new List<ColumnDefinition> ();
+			columns.Add (new ColumnDefinition ("N°",       ColumnType.Stretch, stretchFactor: 1.0, alignment: ContentAlignment.TopCenter));
+			columns.Add (new ColumnDefinition ("Titre",    ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Nom",      ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Prénom",   ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Adresse",  ColumnType.Stretch, stretchFactor: 2.0));
+			columns.Add (new ColumnDefinition ("NPA",      ColumnType.Automatic, alignment: ContentAlignment.BottomRight));
+			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic, alignment: ContentAlignment.BottomLeft));
+
+			return array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayAccessor, info, setup);
+		}
+
+		private static FormattedText TestArrayAccessor(int row, int column)
 		{
 			if (row == 5 && column == 3)
 			{

@@ -542,7 +542,9 @@ namespace Epsitec.Common.Pdf.Engine
 			else
 			{
 				var textLayout = Port.GetTextLayout (new Size (10000, 10000), formattedText, font, fontSize, style);
-				return textLayout.GetSingleLineSize ();
+				var size = textLayout.GetSingleLineSize ();
+				size.Width += 1.0;  // il faut ajouter un chouia (0.1mm) pour éviter des plantées dans TextLayout !
+				return size;
 			}
 		}
 
