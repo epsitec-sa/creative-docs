@@ -4,8 +4,8 @@
 @rem anywhere.
 cd /d %~dp0
 
-@rem If the first argument is -noprompt, skip the user confirmation
-if "%1"=="-noprompt" goto skipConfirmation
+@rem If the first argument is -nocleanup, skip the svn cleanup
+if "%1"=="-nocleanup" goto skipCleanup
 
 @rem Ask the user if is really wants to revert everything in its svn repositories
 echo This script will:
@@ -15,10 +15,8 @@ echo - Delete all ignored items in %~dp0..\..\Epsitec
 echo - Revert all changes to %~dp0..\
 echo - Delete all unversionned items in %~dp0..\
 echo - Delete all ignored items in %~dp0..\
-choice /M "Are you sure that you want ton continue"
+choice /M "Are you sure that you want to continue"
 if %ERRORLEVEL% neq 1 exit /B
-
-:skipConfirmation
 
 @echo on
 
@@ -33,6 +31,8 @@ for /f "usebackq tokens=2*" %%i in (`svn status ..\ ^| findstr /r "^\?"`) do svn
 @rem Delete all ignored files and folders in the two repositories
 for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
 for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\ ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+
+:skipCleanup
 
 @rem There are many solutions and configurations involved here. Below is the details about them.
 @rem - Epsitec.Cresus.sln, Release, Mixed Platforms
