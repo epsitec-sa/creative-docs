@@ -1,4 +1,7 @@
-﻿using System;
+﻿//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
@@ -50,48 +53,56 @@ namespace Epsitec.Common.Pdf.Stikers
 
 		public Margins PageMargins
 		{
+			//	Marges globales de la page.
 			set;
 			get;
 		}
 
 		public Size StikerSize
 		{
+			//	Dimensions d'une étiquette.
 			set;
 			get;
 		}
 
 		public Margins StikerMargins
 		{
+			//	Marges à l'intérieur d'une étiquette, pour le texte.
 			set;
 			get;
 		}
 
 		public Size StikerGap
 		{
+			//	Espace vide entre les étiquettes.
 			set;
 			get;
 		}
 
 		public string FontFace
 		{
+			//	Nom de la police de caractères.
 			set;
 			get;
 		}
 
 		public string FontStyle
 		{
+			//	Style de la police de caractères, généralement "Regular".
 			set;
 			get;
 		}
 
 		public double FontSize
 		{
+			//	Taille de la police de caractères (en dixièmes de millimètres).
 			set;
 			get;
 		}
 
 		public bool PaintFrame
 		{
+			//	Indique s'il faut imprimer un cadre rectangulaire gris pour délimiter chaque étiquette.
 			set;
 			get;
 		}

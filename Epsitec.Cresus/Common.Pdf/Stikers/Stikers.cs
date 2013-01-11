@@ -1,4 +1,7 @@
-﻿using System;
+﻿//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
@@ -13,15 +16,14 @@ namespace Epsitec.Common.Pdf.Stikers
 		{
 		}
 
-		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> accessor, StikersSetup setup)
+		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> accessor, ExportPdfInfo info, StikersSetup setup)
 		{
-			this.count = count;
+			this.count    = count;
 			this.accessor = accessor;
-			this.setup = setup;
-			this.info = new ExportPdfInfo ();
+			this.info     = info;
+			this.setup    = setup;
 
 			this.stikersPerPage = this.StikersPerPage;
-			this.font = Font.GetFont (this.setup.FontFace, this.setup.FontStyle);
 
 			if (this.stikersPerPage < 1)
 			{
@@ -29,6 +31,7 @@ namespace Epsitec.Common.Pdf.Stikers
 			}
 
 			int pageCount = (this.count + this.stikersPerPage - 1) / this.stikersPerPage;
+			this.font = Font.GetFont (this.setup.FontFace, this.setup.FontStyle);
 
 			var export = new Export (this.info);
 			return export.ExportToFile (path, pageCount, this.Renderer);

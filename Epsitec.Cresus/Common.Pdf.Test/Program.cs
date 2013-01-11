@@ -1,4 +1,7 @@
-﻿using System;
+﻿//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,8 +18,8 @@ namespace Common.Pdf.Test
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 
-			Console.WriteLine ("1) Document fixe de 2 pages");
-			Console.WriteLine ("2) Etiquettes");
+			Console.WriteLine ("1) 2 pages basiques");
+			Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
 			string choice = Console.ReadLine ();
 
 			int result = 1;
@@ -140,12 +143,14 @@ namespace Common.Pdf.Test
 			//	Génération d'étiquettes.
 			var stikers = new Stikers ();
 
+			var info = new ExportPdfInfo ();
+
 			var setup = new StikersSetup ()
 			{
 				PaintFrame = true,
 			};
 
-			return stikers.GeneratePdf("test.pdf", 100, Program.Test2Accessor, setup);
+			return stikers.GeneratePdf("test.pdf", 100, Program.Test2Accessor, info, setup);
 		}
 
 		private static FormattedText Test2Accessor(int rank)
