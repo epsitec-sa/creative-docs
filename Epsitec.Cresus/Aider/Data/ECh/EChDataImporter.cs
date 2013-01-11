@@ -34,17 +34,17 @@ namespace Epsitec.Aider.Data.ECh
 
 		public static void Import(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons)
 		{
-			var townDataToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
+			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
 
-			EChDataImporter.ImportPersons (coreDataManager, eChReportedPersons, townDataToEntityKey);
+			EChDataImporter.ImportPersons (coreDataManager, eChReportedPersons, zipCodeIdToEntityKey);
 
 			coreDataManager.CoreData.ResetIndexes ();
 		}
 
 
-		private static Dictionary<Tuple<int, string>, EntityKey> ImportTowns(CoreDataManager coreDataManager, IEnumerable<EChReportedPerson> echReportedPersons)
+		private static Dictionary<int, EntityKey> ImportTowns(CoreDataManager coreDataManager, IEnumerable<EChReportedPerson> echReportedPersons)
 		{
-			Func<BusinessContext, Dictionary<Tuple<int, string>, EntityKey>> function = b =>
+			Func<BusinessContext, Dictionary<int, EntityKey>> function = b =>
 			{
 				return EChDataImporter.ImportTowns (b, echReportedPersons);
 			};
@@ -53,55 +53,36 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static Dictionary<Tuple<int, string>, EntityKey> ImportTowns(BusinessContext businessContext, IEnumerable<EChReportedPerson> echReportedPersons)
+		private static Dictionary<int, EntityKey> ImportTowns(BusinessContext businessContext, IEnumerable<EChReportedPerson> echReportedPersons)
 		{
-			var switzerland = AiderCountryEntity.FindOrCreate (businessContext, "CH", "Suisse");
+			var repository = EChDataImporter.ImportTowns (businessContext);
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
-
-			var towns = EChDataImporter.ImportTowns (businessContext, echReportedPersons, switzerland);
-
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
-
-			return towns.ToDictionary
-			(
-				t => Tuple.Create (t.SwissZipCode.Value, t.Name),
-				t => businessContext.DataContext.GetNormalizedEntityKey (t).Value
-			);
+			return echReportedPersons
+				.Select (rp => rp.Address.SwissZipCodeId)
+				.Distinct ()
+				.Select (id => repository.GetTown (id))
+				.ToDictionary
+				(
+					t => t.SwissZipCodeId.Value,
+					t => businessContext.DataContext.GetNormalizedEntityKey (t).Value
+				);
 		}
 
 
-		private static IEnumerable<AiderTownEntity> ImportTowns(BusinessContext businessContext, IEnumerable<EChReportedPerson> echReportedPersons, AiderCountryEntity switzerland)
+		private static AiderTownRepository ImportTowns(BusinessContext businessContext)
 		{
-			// TODO Do we need to care about the zip code, the swiss zip code add on and the
-			// swiss zip code id that are either in AiderTownEntity or in EChAddress ?
-
-			var towns = echReportedPersons
-				.Select (rp => rp.Address)
-				.Select (a => Tuple.Create (a.SwissZipCodeId, a.SwissZipCode, a.Town))
-				.Distinct ();
-
-			var aiderTowns = new List<AiderTownEntity> ();
+			AiderCountryEntity.FindOrCreate (businessContext, "CH", "Suisse");
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			
 			var repository = new AiderTownRepository (businessContext);
-
 			repository.AddMissingSwissTowns ();
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
 
-			foreach (var town in towns)
-			{
-				int zipOnrp = town.Item1;
-				int zipCode = town.Item2;
-				var name = town.Item3;
-
-				var aiderTown = repository.GetTown (zipOnrp);
-
-				aiderTowns.Add (aiderTown);
-			}
-
-			return aiderTowns;
+			return repository;
 		}
 
 
-		private static void ImportPersons(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons, Dictionary<Tuple<int, string>, EntityKey> townDataToEntityKey)
+		private static void ImportPersons(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			int batchSize = 1000;
 			int nbBatches = 0;
@@ -115,7 +96,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				Action<BusinessContext> action = b =>
 				{
-					EChDataImporter.ImportBatch (b, batch, eChPersonIdToEntityKey, townDataToEntityKey);
+					EChDataImporter.ImportBatch (b, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey);
 				};
 
 				coreDataManager.Execute (action);
@@ -127,7 +108,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportBatch(BusinessContext businessContext, IEnumerable<EChReportedPerson> batch, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<Tuple<int, string>, EntityKey> townDataToEntityKey)
+		private static void ImportBatch(BusinessContext businessContext, IEnumerable<EChReportedPerson> batch, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			// NOTE This dictionary will store the mapping between the eChpersonIds and the
 			// entities for the entities that have been processed but not yet saved to the
@@ -137,7 +118,7 @@ namespace Epsitec.Aider.Data.ECh
 
 			foreach (var eChReportedPerson in batch)
 			{
-				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, townDataToEntityKey);
+				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
@@ -174,7 +155,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static eCH_ReportedPersonEntity ImportHousehold(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson, Dictionary<Tuple<int, string>, EntityKey> townDataToEntityKey)
+		private static eCH_ReportedPersonEntity ImportHousehold(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			var eChReportedPersonEntity = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
 			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
@@ -182,7 +163,7 @@ namespace Epsitec.Aider.Data.ECh
 			var eChAddress = eChReportedPerson.Address;
 
 			var eChAddressEntity = EChDataImporter.ImportEchAddressEntity (businessContext, eChAddress);
-			var aiderAddressEntity = EChDataImporter.ImportAiderAddressEntity (businessContext, eChAddress, townDataToEntityKey);
+			var aiderAddressEntity = EChDataImporter.ImportAiderAddressEntity (businessContext, eChAddress, zipCodeIdToEntityKey);
 
 			eChReportedPersonEntity.Address = eChAddressEntity;
 			aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
@@ -300,7 +281,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static AiderAddressEntity ImportAiderAddressEntity(BusinessContext businessContext, EChAddress eChAddress, Dictionary<Tuple<int, string>, EntityKey> townDataToEntityKey)
+		private static AiderAddressEntity ImportAiderAddressEntity(BusinessContext businessContext, EChAddress eChAddress, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			var aiderAddressEntity = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 
@@ -312,7 +293,7 @@ namespace Epsitec.Aider.Data.ECh
 				houseNumberComplement = null;
 			}
 
-			var townEntityKey = townDataToEntityKey[Tuple.Create (eChAddress.SwissZipCode, eChAddress.Town)];
+			var townEntityKey = zipCodeIdToEntityKey[eChAddress.SwissZipCodeId];
 			var town = businessContext.ResolveEntity<AiderTownEntity> (townEntityKey);
 
 			aiderAddressEntity.Type = AddressType.Default;
