@@ -16,7 +16,7 @@ namespace Epsitec.Common.Pdf.Array
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins = new Margins (200.0, 100.0, 100.0, 100.0);
-			this.CellMargins = new Margins (20.0);
+			this.CellMargins = new Margins (10.0);
 			this.FontFace    = "Arial";
 			this.FontStyle   = "Regular";
 			this.FontSize    = 30.0;

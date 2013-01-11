@@ -533,6 +533,32 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
+		public static Size GetTextSingleLineSize(FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
+		{
+			if (formattedText.IsNullOrEmpty ())
+			{
+				return Size.Empty;
+			}
+			else
+			{
+				var textLayout = Port.GetTextLayout (new Size (10000, 10000), formattedText, font, fontSize, style);
+				return textLayout.GetSingleLineSize ();
+			}
+		}
+
+		public static double GetTextHeight(double width, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
+		{
+			if (formattedText.IsNullOrEmpty ())
+			{
+				return 0;
+			}
+			else
+			{
+				var textLayout = Port.GetTextLayout (new Size (width, 10000), formattedText, font, fontSize, style);
+				return textLayout.FindTextHeight ();
+			}
+		}
+
 		public void PaintText(Rectangle box, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
 		{
 			if (this.IsPreProcessText)
@@ -541,14 +567,14 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 			else
 			{
-				var textLayout = this.GetTextLayout (box.Size, formattedText, font, fontSize, style);
+				var textLayout = Port.GetTextLayout (box.Size, formattedText, font, fontSize, style);
 				textLayout.PaintCallback (box.BottomLeft, this.TextLayoutRenderer);
 			}
 		}
 
 		private void PreProcessText(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
 		{
-			var textLayout = this.GetTextLayout (boxSize, formattedText, font, fontSize, style);
+			var textLayout = Port.GetTextLayout (boxSize, formattedText, font, fontSize, style);
 			TextLayout.OneCharStructure[] fix = textLayout.ComputeStructure ();
 
 			foreach (TextLayout.OneCharStructure oneChar in fix)
@@ -564,7 +590,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		private TextLayout GetTextLayout(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
+		private static TextLayout GetTextLayout(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
 		{
 			if (style == null)
 			{

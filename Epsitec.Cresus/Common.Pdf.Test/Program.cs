@@ -181,10 +181,11 @@ namespace Common.Pdf.Test
 			};
 
 			var columns = new List<ColumnDefinition> ();
+			columns.Add (new ColumnDefinition ("N°",        80.0, ContentAlignment.TopRight));
 			columns.Add (new ColumnDefinition ("Titre",    200.0));
 			columns.Add (new ColumnDefinition ("Nom",      300.0));
 			columns.Add (new ColumnDefinition ("Prénom",   300.0));
-			columns.Add (new ColumnDefinition ("Adresse",  300.0));
+			columns.Add (new ColumnDefinition ("Adresse",  400.0));
 			columns.Add (new ColumnDefinition ("NPA",      150.0, ContentAlignment.TopRight));
 			columns.Add (new ColumnDefinition ("Ville",    300.0));
 			columns.Add (new ColumnDefinition ("Remarque", null, fontSize: 20.0));
@@ -198,16 +199,16 @@ namespace Common.Pdf.Test
 			{
 				switch (column)
 				{
-					case 0:
-						return "Madame";
 					case 1:
-						return "Julie";
+						return "Madame";
 					case 2:
+						return "Julie";
+					case 3:
 						return string.Format ("<i>Dubosson</i> #{0}", (row+1).ToString ());
 				}
 			}
 
-			if (column == 6)
+			if (column == 7)
 			{
 				if (row == 10)
 				{
@@ -223,16 +224,18 @@ namespace Common.Pdf.Test
 			switch (column)
 			{
 				case 0:
-					return "Monsieur";
+					return (row+1).ToString ();
 				case 1:
-					return "Jean";
+					return "Monsieur";
 				case 2:
-					return string.Format("<b>Dupond</b> #{0}", (row+1).ToString ());
+					return "Jean";
 				case 3:
-					return "Place du Marché 45";
+					return string.Format("<b>Dupond</b> #{0}", (row+1).ToString ());
 				case 4:
-					return (1000+row).ToString ();
+					return "Place du Marché 45";
 				case 5:
+					return (1000+row).ToString ();
+				case 6:
 					return "Lausanne";
 			}
 
