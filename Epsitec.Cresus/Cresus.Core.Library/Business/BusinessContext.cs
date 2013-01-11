@@ -338,6 +338,12 @@ namespace Epsitec.Cresus.Core.Business
 			return this.ActiveEntity as T;
 		}
 
+		public T ResolveEntity<T>(EntityKey? entityKey)
+			where T : AbstractEntity
+		{
+			return (T) this.DataContext.ResolveEntity (entityKey);
+		}
+
 		/// <summary>
 		/// Adds a master entity of a specific type. See <seealso cref="GerMasterEntity{T}"/>.
 		/// </summary>
