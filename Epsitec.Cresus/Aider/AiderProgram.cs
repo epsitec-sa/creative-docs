@@ -31,9 +31,11 @@ namespace Epsitec.Aider
 
 		private static void SetupExceptionCatcher()
 		{
+#if !DEBUG
 			GeneralExceptionCatcher.Setup ();
 			GeneralExceptionCatcher.AbortOnException = true;
 			GeneralExceptionCatcher.AddExceptionHandler (e => ErrorLogger.LogException (e));
+#endif
 		}
 
 		private static void Run(string[] args)
