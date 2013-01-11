@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Pdf
+namespace Epsitec.Common.Engine.Pdf
 {
 	using CultureInfo = System.Globalization.CultureInfo;
 

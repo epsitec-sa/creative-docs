@@ -1,7 +1,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.OpenType;
 
-namespace Epsitec.Common.Pdf
+namespace Epsitec.Common.Engine.Pdf
 {
 	/// <summary>
 	/// La classe FontList enregistre les informations sur chaque police.

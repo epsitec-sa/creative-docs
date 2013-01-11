@@ -2,7 +2,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.OpenType;
 using Epsitec.Common.Text;
 
-namespace Epsitec.Common.Pdf
+namespace Epsitec.Common.Engine.Pdf
 {
 	/// <summary>
 	/// La classe CharacterList enregistre les informations sur chaque caractère.

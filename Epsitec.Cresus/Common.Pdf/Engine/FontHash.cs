@@ -1,11 +1,11 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Pdf
+namespace Epsitec.Common.Engine.Pdf
 {
-	public class CharacterHash : System.Collections.Hashtable
+	public class FontHash : System.Collections.Hashtable
 	{
-		public CharacterHash()
+		public FontHash()
 		{
 		}
 	}

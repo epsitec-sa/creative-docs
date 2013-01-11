@@ -3,7 +3,7 @@
 
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Pdf
+namespace Epsitec.Common.Engine.Pdf
 {
 	class PdfExportPageOffset
 	{

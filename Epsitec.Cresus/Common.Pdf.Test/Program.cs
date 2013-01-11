@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Pdf;
+using Epsitec.Common.Engine.Pdf;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 

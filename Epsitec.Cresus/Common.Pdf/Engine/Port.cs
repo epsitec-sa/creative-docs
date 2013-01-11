@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Common.Pdf
+namespace Epsitec.Common.Engine.Pdf
 {
 	/// <summary>
 	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.

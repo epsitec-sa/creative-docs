@@ -49,27 +49,27 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="CharacterHash.cs" />
-    <Compile Include="CharacterList.cs" />
-    <Compile Include="ColorConversion.cs" />
-    <Compile Include="ColorForce.cs" />
-    <Compile Include="Export.cs" />
-    <Compile Include="ExportPdfInfo.cs" />
-    <Compile Include="FontHash.cs" />
-    <Compile Include="FontList.cs" />
-    <Compile Include="ImageCompression.cs" />
-    <Compile Include="ImageFileReference.cs" />
-    <Compile Include="ImageSurface.cs" />
-    <Compile Include="PdfComplexSurfaceType.cs" />
-    <Compile Include="PdfExportException.cs" />
-    <Compile Include="PdfExportPageOffset.cs" />
-    <Compile Include="PdfFontType.cs" />
-    <Compile Include="PdfFunctionType.cs" />
-    <Compile Include="PdfImageStream.cs" />
-    <Compile Include="Port.cs" />
+    <Compile Include="Engine\CharacterHash.cs" />
+    <Compile Include="Engine\CharacterList.cs" />
+    <Compile Include="Engine\ColorConversion.cs" />
+    <Compile Include="Engine\ColorForce.cs" />
+    <Compile Include="Engine\Export.cs" />
+    <Compile Include="Engine\ExportPdfInfo.cs" />
+    <Compile Include="Engine\FontHash.cs" />
+    <Compile Include="Engine\FontList.cs" />
+    <Compile Include="Engine\ImageCompression.cs" />
+    <Compile Include="Engine\ImageFileReference.cs" />
+    <Compile Include="Engine\ImageSurface.cs" />
+    <Compile Include="Engine\PdfComplexSurfaceType.cs" />
+    <Compile Include="Engine\PdfExportException.cs" />
+    <Compile Include="Engine\PdfExportPageOffset.cs" />
+    <Compile Include="Engine\PdfFontType.cs" />
+    <Compile Include="Engine\PdfFunctionType.cs" />
+    <Compile Include="Engine\PdfImageStream.cs" />
+    <Compile Include="Engine\Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringBuffer.cs" />
-    <Compile Include="Writer.cs" />
+    <Compile Include="Engine\StringBuffer.cs" />
+    <Compile Include="Engine\Writer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
