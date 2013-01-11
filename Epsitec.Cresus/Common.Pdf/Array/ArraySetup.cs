@@ -17,9 +17,11 @@ namespace Epsitec.Common.Pdf.Array
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins          = new Margins (200.0, 100.0, 100.0, 100.0);
 			this.CellMargins          = new Margins (10.0);
-			this.FontFace             = "Arial";
-			this.FontStyle            = "Regular";
-			this.FontSize             = 30.0;
+			this.TextStyle            = new TextStyle ()
+			{
+				Font     = Font.GetFont ("Arial", "Regular"),
+				FontSize = 30.0,
+			};
 			this.BorderThickness      = 1.0;
 			this.HeaderMargins        = new Margins (0.0, 0.0, 0.0, 50.0);
 			this.FooterMargins        = new Margins (0.0, 0.0, 50.0, 0.0);
@@ -42,23 +44,8 @@ namespace Epsitec.Common.Pdf.Array
 			get;
 		}
 
-		public string FontFace
+		public TextStyle TextStyle
 		{
-			//	Nom de la police de caractères.
-			set;
-			get;
-		}
-
-		public string FontStyle
-		{
-			//	Style de la police de caractères, généralement "Regular".
-			set;
-			get;
-		}
-
-		public double FontSize
-		{
-			//	Taille de la police de caractères (en dixièmes de millimètres).
 			set;
 			get;
 		}

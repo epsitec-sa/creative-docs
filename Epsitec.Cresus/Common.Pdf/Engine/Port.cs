@@ -533,7 +533,7 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		public static Size GetTextSingleLineSize(FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
+		public static Size GetTextSingleLineSize(FormattedText formattedText, TextStyle style)
 		{
 			if (formattedText.IsNullOrEmpty ())
 			{
@@ -541,14 +541,14 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 			else
 			{
-				var textLayout = Port.GetTextLayout (new Size (10000, 10000), formattedText, font, fontSize, style);
+				var textLayout = Port.GetTextLayout (new Size (10000, 10000), formattedText, style);
 				var size = textLayout.GetSingleLineSize ();
 				size.Width += 1.0;  // il faut ajouter un chouia (0.1mm) pour éviter des plantées dans TextLayout !
 				return size;
 			}
 		}
 
-		public static double GetTextHeight(double width, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
+		public static double GetTextHeight(double width, FormattedText formattedText, TextStyle style)
 		{
 			if (formattedText.IsNullOrEmpty ())
 			{
@@ -556,27 +556,27 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 			else
 			{
-				var textLayout = Port.GetTextLayout (new Size (width, 10000), formattedText, font, fontSize, style);
+				var textLayout = Port.GetTextLayout (new Size (width, 10000), formattedText, style);
 				return textLayout.FindTextHeight ();
 			}
 		}
 
-		public void PaintText(Rectangle box, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
+		public void PaintText(Rectangle box, FormattedText formattedText, TextStyle style)
 		{
 			if (this.IsPreProcessText)
 			{
-				this.PreProcessText (box.Size, formattedText, font, fontSize, style);
+				this.PreProcessText (box.Size, formattedText, style);
 			}
 			else
 			{
-				var textLayout = Port.GetTextLayout (box.Size, formattedText, font, fontSize, style);
+				var textLayout = Port.GetTextLayout (box.Size, formattedText, style);
 				textLayout.PaintCallback (box.BottomLeft, this.TextLayoutRenderer);
 			}
 		}
 
-		private void PreProcessText(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
+		private void PreProcessText(Size boxSize, FormattedText formattedText, TextStyle style)
 		{
-			var textLayout = Port.GetTextLayout (boxSize, formattedText, font, fontSize, style);
+			var textLayout = Port.GetTextLayout (boxSize, formattedText, style);
 			TextLayout.OneCharStructure[] fix = textLayout.ComputeStructure ();
 
 			foreach (TextLayout.OneCharStructure oneChar in fix)
@@ -592,19 +592,14 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		private static TextLayout GetTextLayout(Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style)
+		private static TextLayout GetTextLayout(Size boxSize, FormattedText formattedText, TextStyle style)
 		{
-			if (style == null)
-			{
-				style = new TextStyle ();  // style par défaut
-			}
+			System.Diagnostics.Debug.Assert (style != null);
 
 			return new TextLayout (style)
 			{
-				FormattedText   = formattedText,
-				DefaultFont     = font,
-				DefaultFontSize = fontSize,
-				LayoutSize      = boxSize,
+				FormattedText = formattedText,
+				LayoutSize    = boxSize,
 			};
 		}
 

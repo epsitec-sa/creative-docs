@@ -27,8 +27,6 @@ namespace Epsitec.Common.Pdf.Array
 			this.info              = info;
 			this.setup             = setup;
 
-			this.font = Font.GetFont (this.setup.FontFace, this.setup.FontStyle);
-
 			this.ConstantJustification ();
 			this.HorizontalJustification ();
 			this.VerticalJustification ();
@@ -74,7 +72,7 @@ namespace Epsitec.Common.Pdf.Array
 			{
 				var box = new Rectangle (this.setup.PageMargins.Left, y-this.headerHeight, this.UsableWidth, this.headerHeight);
 				box.Deflate (this.setup.HeaderMargins);
-				port.PaintText (box, this.setup.HeaderText, this.font, this.setup.FontSize);
+				port.PaintText (box, this.setup.HeaderText, this.setup.TextStyle);
 
 				y -= this.headerHeight;
 			}
@@ -98,7 +96,7 @@ namespace Epsitec.Common.Pdf.Array
 			{
 				var box = new Rectangle (this.setup.PageMargins.Left, this.setup.PageMargins.Bottom, this.UsableWidth, this.footerHeight);
 				box.Deflate (this.setup.FooterMargins);
-				port.PaintText (box, this.setup.FooterText, this.font, this.setup.FontSize);
+				port.PaintText (box, this.setup.FooterText, this.setup.TextStyle);
 			}
 		}
 
@@ -151,12 +149,12 @@ namespace Epsitec.Common.Pdf.Array
 			{
 				box.Deflate (this.setup.CellMargins);
 
-				var style = new TextStyle ()
+				var style = new TextStyle (this.setup.TextStyle)
 				{
 					Alignment = def.Alignment,
 				};
 
-				port.PaintText (box, text, this.font, this.setup.FontSize, style);
+				port.PaintText (box, text, style);
 			}
 		}
 
@@ -164,8 +162,8 @@ namespace Epsitec.Common.Pdf.Array
 		private void ConstantJustification()
 		{
 			//	Calcule les hauteurs de tous les éléments fixes (header et footer).
-			this.headerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.HeaderText, this.font, this.setup.FontSize);
-			this.footerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.FooterText, this.font, this.setup.FontSize);
+			this.headerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.HeaderText, this.setup.TextStyle);
+			this.footerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.FooterText, this.setup.TextStyle);
 
 			if (this.headerHeight > 0)
 			{
@@ -249,7 +247,7 @@ namespace Epsitec.Common.Pdf.Array
 
 				if (!text.IsNullOrEmpty ())
 				{
-					double w = Port.GetTextSingleLineSize (text, this.font, this.setup.FontSize).Width;
+					double w = Port.GetTextSingleLineSize (text, this.setup.TextStyle).Width;
 					w += this.setup.CellMargins.Width;
 					width = System.Math.Max (width, w);
 				}
@@ -317,7 +315,7 @@ namespace Epsitec.Common.Pdf.Array
 
 				if (!text.IsNullOrEmpty ())
 				{
-					double h = Port.GetTextHeight (width, text, this.font, this.setup.FontSize);
+					double h = Port.GetTextHeight (width, text, this.setup.TextStyle);
 					height = System.Math.Max (height, h);
 				}
 			}
@@ -390,7 +388,6 @@ namespace Epsitec.Common.Pdf.Array
 		private Func<int, int, FormattedText> accessor;
 		private ArraySetup setup;
 		private ExportPdfInfo info;
-		private Font font;
 		private double labelHeight;
 		private double headerHeight;
 		private double footerHeight;

@@ -107,8 +107,25 @@ namespace Common.Pdf.Test
 				port.PaintSurface (path);
 			}
 
-			port.PaintText (new Rectangle(100.0, 400.0, 2000, 100), FormattedText.FromSimpleText ("Plus petit tralala..."), Font.GetFont ("Times New Roman", "Regular"), 50.0);
-			port.PaintText (new Rectangle(100.0, 300.0, 2000, 100), FormattedText.FromSimpleText ("Grand tralala..."), Font.GetFont ("Arial", "Regular"), 100.0);
+			{
+				var style = new TextStyle ()
+				{
+					Font = Font.GetFont ("Times New Roman", "Regular"),
+					FontSize = 50.0,
+				};
+
+				port.PaintText (new Rectangle (100.0, 400.0, 2000, 100), FormattedText.FromSimpleText ("Plus petit tralala..."), style);
+			}
+
+			{
+				var style = new TextStyle ()
+				{
+					Font = Font.GetFont ("Arial", "Regular"),
+					FontSize = 100.0,
+				};
+
+				port.PaintText (new Rectangle (100.0, 300.0, 2000, 100), FormattedText.FromSimpleText ("Grand tralala..."), style);
+			}
 		}
 
 		private static void Renderer12(Port port)
@@ -117,8 +134,25 @@ namespace Common.Pdf.Test
 			Program.PaintTextBox (port, new Rectangle (100, 1400, 800, 400), Program.histoire, 40);
 			Program.PaintTextBox (port, new Rectangle (100, 800, 500, 500), "Voici un texte contenant un mot assez long anti-constitutionnellement pour forcer les césures dans les mots.", 40);
 
-			port.PaintText (new Rectangle(100.0, 300.0, 2000, 100), "Times <font size=\"150\">grand</font> et <font color=\"#ff0000\">rouge</font>, super !", Font.GetFont ("Times New Roman", "Regular"), 100.0);
-			port.PaintText (new Rectangle(100.0, 100.0, 2000, 100), "Arial avec un mot en <b>gras</b> et un autre en <i>italique</i>.", Font.GetFont ("Arial", "Regular"), 50.0);
+			{
+				var style = new TextStyle ()
+				{
+					Font = Font.GetFont ("Times New Roman", "Regular"),
+					FontSize = 100.0,
+				};
+
+				port.PaintText (new Rectangle (100.0, 300.0, 2000, 100), "Times <font size=\"150\">grand</font> et <font color=\"#ff0000\">rouge</font>, super !", style);
+			}
+
+			{
+				var style = new TextStyle ()
+				{
+					Font = Font.GetFont ("Arial", "Regular"),
+					FontSize = 50.0,
+				};
+
+				port.PaintText (new Rectangle (100.0, 100.0, 2000, 100), "Arial avec un mot en <b>gras</b> et un autre en <i>italique</i>.", style);
+			}
 		}
 
 		private static void PaintTextBox(Port port, Rectangle box, FormattedText text, double fontSize)
@@ -138,12 +172,14 @@ namespace Common.Pdf.Test
 
 			var style = new TextStyle
 			{
+				Font       = Font.GetFont("Arial", "Regular"),
+				FontSize   = fontSize,
 				Alignment  = ContentAlignment.BottomLeft,
 				BreakMode  = TextBreakMode.Hyphenate,
 				JustifMode = TextJustifMode.All,
 			};
 
-			port.PaintText (box, text, Font.GetFont ("Arial", "Regular"), fontSize, style);
+			port.PaintText (box, text, style);
 		}
 
 
@@ -211,10 +247,10 @@ namespace Common.Pdf.Test
 			var setup = new ArraySetup ()
 			{
 				PageMargins = new Margins(100.0),
-				FontSize = 40.0,
 				HeaderText = "<font size=\"80\">Tableau de test en mode portrait</font><br/>Deuxième ligne de l'en-tête",
 				FooterText = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
 			};
+			setup.TextStyle.FontSize = 40.0;
 
 			var columns = new List<ColumnDefinition> ();
 			columns.Add (new ColumnDefinition ("N°",       ColumnType.Stretch, stretchFactor: 1.0, alignment: ContentAlignment.TopCenter));

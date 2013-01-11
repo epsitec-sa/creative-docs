@@ -45,9 +45,11 @@ namespace Epsitec.Common.Pdf.Stikers
 			this.StikerSize    = new Size (620.0, 400.0);
 			this.StikerMargins = new Margins (50.0);
 			this.StikerGap     = new Size (10.0, 10.0);
-			this.FontFace      = "Arial";
-			this.FontStyle     = "Regular";
-			this.FontSize      = 30.0;
+			this.TextStyle     = new TextStyle ()
+			{
+				Font     = Font.GetFont("Arial", "Regular"),
+				FontSize = 30.0,
+			};
 			this.PaintFrame    = false;
 		}
 
@@ -79,23 +81,8 @@ namespace Epsitec.Common.Pdf.Stikers
 			get;
 		}
 
-		public string FontFace
+		public TextStyle TextStyle
 		{
-			//	Nom de la police de caractères.
-			set;
-			get;
-		}
-
-		public string FontStyle
-		{
-			//	Style de la police de caractères, généralement "Regular".
-			set;
-			get;
-		}
-
-		public double FontSize
-		{
-			//	Taille de la police de caractères (en dixièmes de millimètres).
 			set;
 			get;
 		}

@@ -27,7 +27,6 @@ namespace Epsitec.Common.Pdf.Stikers
 			}
 
 			int pageCount = (this.count + this.stikersPerPage - 1) / this.stikersPerPage;
-			this.font = Font.GetFont (this.setup.FontFace, this.setup.FontStyle);
 
 			var export = new Export (this.info);
 			return export.ExportToFile (path, pageCount, this.RenderPage);
@@ -59,7 +58,7 @@ namespace Epsitec.Common.Pdf.Stikers
 						}
 
 						bounds.Deflate (this.setup.StikerMargins);
-						port.PaintText (bounds, text, this.font, this.setup.FontSize);
+						port.PaintText (bounds, text, this.setup.TextStyle);
 					}
 				}
 			}
@@ -106,7 +105,6 @@ namespace Epsitec.Common.Pdf.Stikers
 		private StikersSetup setup;
 		private ExportPdfInfo info;
 		private int stikersPerPage;
-		private Font font;
 		private int count;
 	}
 }
