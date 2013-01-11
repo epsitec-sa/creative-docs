@@ -185,6 +185,7 @@ namespace Epsitec.Aider.Data.ECh
 			var aiderAddressEntity = EChDataImporter.ImportAiderAddressEntity (businessContext, eChAddress, townDataToEntityKey);
 
 			eChReportedPersonEntity.Address = eChAddressEntity;
+			aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
 			aiderHousehold.Address = aiderAddressEntity;
 
 			var eChAdult1 = eChReportedPerson.Adult1;
@@ -234,7 +235,7 @@ namespace Epsitec.Aider.Data.ECh
 			}
 			else if (eChPersonIdToEntityKey.TryGetValue (eChPerson.Id, out entityKey))
 			{
-				aiderPersonEntity = (AiderPersonEntity) businessContext.DataContext.ResolveEntity (entityKey);
+				aiderPersonEntity = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
 			}
 
 			if (aiderPersonEntity != null)
@@ -265,6 +266,7 @@ namespace Epsitec.Aider.Data.ECh
 		private static Tuple<eCH_PersonEntity, AiderPersonEntity> ImportPerson(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
 		{
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+			
 			aiderPersonEntity.SetHousehold1 (businessContext, household);
 
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
@@ -289,6 +291,11 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
 			eChPersonEntity.Address1 = eChAddressEntity;
 
+			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex);
+			aiderPersonEntity.CallName = EChDataImporter.GuessCallName (eChPerson.FirstNames);
+			aiderPersonEntity.DisplayName = AiderPersonEntity.GetDisplayName (aiderPersonEntity);
+			aiderPersonEntity.Confession = PersonConfession.Protestant;
+
 			return Tuple.Create (eChPersonEntity, aiderPersonEntity);
 		}
 
@@ -306,8 +313,9 @@ namespace Epsitec.Aider.Data.ECh
 			}
 
 			var townEntityKey = townDataToEntityKey[Tuple.Create (eChAddress.SwissZipCode, eChAddress.Town)];
-			var town = (AiderTownEntity) businessContext.DataContext.ResolveEntity (townEntityKey);
+			var town = businessContext.ResolveEntity<AiderTownEntity> (townEntityKey);
 
+			aiderAddressEntity.Type = AddressType.Default;
 			aiderAddressEntity.AddressLine1 = eChAddress.AddressLine1;
 			aiderAddressEntity.Street = eChAddress.Street;
 			aiderAddressEntity.HouseNumber = houseNumber;
@@ -333,6 +341,38 @@ namespace Epsitec.Aider.Data.ECh
 
 			return eChAddressEntity;
 		}
+
+		
+		private static string GuessCallName(string firstName)
+		{
+			int pos = firstName.IndexOf (' ');
+
+			if (pos < 0)
+			{
+				return firstName;
+			}
+			else
+			{
+				return firstName.Substring (0, pos);
+			}
+		}
+
+
+		private static PersonMrMrs GuessMrMrs(PersonSex personSex)
+		{
+			switch (personSex)
+			{
+				case PersonSex.Female:
+					return PersonMrMrs.Madame;
+				case PersonSex.Male:
+					return PersonMrMrs.Monsieur;
+				case PersonSex.Unknown:
+					return PersonMrMrs.None;
+			}
+
+			throw new System.NotSupportedException ();
+		}
+
 
 
 	}

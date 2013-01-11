@@ -503,9 +503,9 @@ namespace Epsitec.Aider.Data.Eerv
 					? match.Item1
 					: newEntities[eervPerson];
 
-				var aiderPerson = businessContext.DataContext.ResolveEntity (entityKey);
+				var aiderPerson = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
 
-				eervToAiderPersons[eervPerson] = (AiderPersonEntity) aiderPerson;
+				eervToAiderPersons[eervPerson] = aiderPerson;
 			}
 
 			return eervToAiderPersons;
@@ -868,7 +868,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
 		{
 			var aiderPersons = aiderPersonKeys
-				.Select (k => (AiderPersonEntity) businessContext.DataContext.ResolveEntity (k))
+				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
 				.ToList ();
 
 			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
