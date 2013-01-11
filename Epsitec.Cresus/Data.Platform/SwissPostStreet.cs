@@ -16,6 +16,13 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	public static class SwissPostStreet
 	{
+		/// <summary>
+		/// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
+		/// that is "Neuchâtel, rue de") into a user friendly street name (such as
+		/// "rue de Neuchâtel 32").
+		/// </summary>
+		/// <param name="street">The Swiss Post street name.</param>
+		/// <returns>The user friendly street name.</returns>
 		public static string ConvertToUserFriendlyStreetName(string street)
 		{
 			if (string.IsNullOrEmpty (street))
@@ -53,42 +60,32 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public static string ConvertFromUserFriendlyStreetName(int zipCode, string value)
+		/// <summary>
+		/// Converts a user friendly street name to a Swiss Post street name, as defined
+		/// by the MAT[CH]street database. This requires a ZIP code in order to match the
+		/// correct street name, as the encoding is not unique.
+		/// </summary>
+		/// <param name="zipCode">The zip code.</param>
+		/// <param name="street">The user friendly street name.</param>
+		/// <returns>The Swiss Post street name or <c>null</c> if the name could not be
+		/// resolved back using the MAT[CH]street database.</returns>
+		public static string ConvertFromUserFriendlyStreetName(int zipCode, string street)
 		{
-			if (string.IsNullOrEmpty (value))
-			{
-				return value;
-			}
-
-			var repository = SwissPostStreetRepository.Current;
-			var street = repository.MapUserFriendlyStreetNameToSwissPostStreet (zipCode, value);
-
-			if (street != null)
+			if (string.IsNullOrEmpty (street))
 			{
 				return street;
 			}
 
-			var normalizedName = SwissPostStreet.NormalizeStreetName (value);
-			var matchingInfos  = repository.FindStreets (zipCode).Where (x => x.NormalizedStreetName == normalizedName);
+			var repository = SwissPostStreetRepository.Current;
+			var matchStreet = repository.FindStreetFromUserFriendlyStreetNameDictionary (zipCode, street)
+				/**/       ?? repository.FindStreetFromStreetName (zipCode, street);
 
-			var found = matchingInfos.FirstOrDefault ();
-
-			if (found != null)
+			if (matchStreet != null)
 			{
-				return found.StreetName;
+				return matchStreet.StreetName;
 			}
 
-			var tokens  = SwissPostStreet.TokenizeStreetName (value).ToArray ();
-			matchingInfos = repository.FindStreets (zipCode).Where (x => x.MatchNameWithHeuristics (tokens));
-			
-			found = matchingInfos.FirstOrDefault ();
-
-			if (found != null)
-			{
-				return found.StreetName;
-			}
-
-			return value;
+			return null;
 		}
 
 		/// <summary>

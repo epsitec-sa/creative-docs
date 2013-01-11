@@ -131,7 +131,7 @@ namespace Epsitec.Aider.Entities
 			else
 			{
 				int zipCode = town.SwissZipCode.Value;
-				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, value);
+				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, value) ?? value;
 			}
 		}
 	}

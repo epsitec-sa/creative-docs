@@ -65,7 +65,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (this.SwissZipCode, value);
+				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (this.SwissZipCode, value) ?? value;
 			}
 		}
 	}

@@ -15,7 +15,7 @@ namespace Epsitec.Data.Platform
 		{
 			this.streets = new List<SwissPostStreetInformation> (SwissPostStreet.GetStreets ());
 			this.streetByZip = new Dictionary<int, List<SwissPostStreetInformation>> ();
-			this.userFriendlyStreetNameToSwissPostStreetMap = new Dictionary<string, string> ();
+			this.streetByUserFriendlyStreetName = new Dictionary<string, SwissPostStreetInformation> ();
 
 			foreach (var street in this.streets)
 			{
@@ -36,9 +36,9 @@ namespace Epsitec.Data.Platform
 				//	Make sure that a given user friendly name always maps to the same postal name.
 				//	This should be the case, since the data comes from the MAT[CH] Street database.
 
-				if (this.userFriendlyStreetNameToSwissPostStreetMap.ContainsKey (zipStreetKey))
+				if (this.streetByUserFriendlyStreetName.ContainsKey (zipStreetKey))
 				{
-					var oldName = this.userFriendlyStreetNameToSwissPostStreetMap[zipStreetKey];
+					var oldName = this.streetByUserFriendlyStreetName[zipStreetKey].StreetName;
 					var newName = swissPostStreetName;
 
 					if (oldName != newName)
@@ -47,7 +47,7 @@ namespace Epsitec.Data.Platform
 					}
 				}
 
-				this.userFriendlyStreetNameToSwissPostStreetMap[zipStreetKey] = swissPostStreetName;
+				this.streetByUserFriendlyStreetName[zipStreetKey] = street;
 			}
 		}
 
@@ -92,12 +92,44 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public string MapUserFriendlyStreetNameToSwissPostStreet(int zipCode, string street)
+		public SwissPostStreetInformation FindStreetFromStreetName(int zipCode, string street)
 		{
-			string key = SwissPostStreetRepository.GetZipStreetKey (zipCode, street);
-			string result;
+			var normalizedName = SwissPostStreet.NormalizeStreetName (street);
+			var matchingInfos  = this.FindStreets (zipCode).Where (x => x.NormalizedStreetName == normalizedName);
 
-			if (this.userFriendlyStreetNameToSwissPostStreetMap.TryGetValue (key, out result))
+			var found = matchingInfos.FirstOrDefault ();
+
+			if (found != null)
+			{
+				return found;
+			}
+
+			var tokens  = SwissPostStreet.TokenizeStreetName (street).ToArray ();
+			matchingInfos = this.FindStreets (zipCode).Where (x => x.MatchNameWithHeuristics (tokens));
+
+			found = matchingInfos.FirstOrDefault ();
+
+			return found;
+		}
+
+		public bool IsStreetKnown(int zipCode, string street)
+		{
+			if (this.FindStreetFromStreetName (zipCode, street) == null)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		internal SwissPostStreetInformation FindStreetFromUserFriendlyStreetNameDictionary(int zipCode, string street)
+		{
+			SwissPostStreetInformation result;
+			string key = SwissPostStreetRepository.GetZipStreetKey (zipCode, street);
+
+			if (this.streetByUserFriendlyStreetName.TryGetValue (key, out result))
 			{
 				return result;
 			}
@@ -107,14 +139,13 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		
 		private static string GetZipStreetKey(int zipCode, string street)
 		{
 			return string.Format ("{0:0000}.{1}", zipCode, street);
 		}
 
 		private readonly Dictionary<int, List<SwissPostStreetInformation>> streetByZip;
-		private readonly Dictionary<string, string> userFriendlyStreetNameToSwissPostStreetMap;
+		private readonly Dictionary<string, SwissPostStreetInformation> streetByUserFriendlyStreetName;
 		private readonly List<SwissPostStreetInformation> streets;
 	}
 }
