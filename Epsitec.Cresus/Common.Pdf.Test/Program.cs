@@ -8,6 +8,7 @@ using System.Text;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Pdf.Stikers;
+using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Types;
 
 namespace Common.Pdf.Test
@@ -20,6 +21,7 @@ namespace Common.Pdf.Test
 
 			Console.WriteLine ("1) 2 pages basiques");
 			Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
+			Console.WriteLine ("3) 3 pages contenant un tableau de 100 lignes");
 			string choice = Console.ReadLine ();
 
 			int result = 1;
@@ -34,6 +36,9 @@ namespace Common.Pdf.Test
 					break;
 				case 2:
 					ex = Program.Test2 ();
+					break;
+				case 3:
+					ex = Program.Test3 ();
 					break;
 			}
 
@@ -156,6 +161,82 @@ namespace Common.Pdf.Test
 		private static FormattedText Test2Accessor(int rank)
 		{
 			return string.Format ("Monsieur<br/>Jean <b>Dupond</b> #{0}<br/>Place du Marché 45<br/>1000 Lausanne", (rank+1).ToString ());
+		}
+
+
+		private static PdfExportException Test3()
+		{
+			//	Génération d'étiquettes.
+			var array = new Epsitec.Common.Pdf.Array.Array ();
+
+			var info = new ExportPdfInfo ()
+			{
+				PageSize = new Size (2970.0, 2100.0),  // A4 horizontal
+			};
+
+			var setup = new ArraySetup ()
+			{
+				Header = "<font size=\"400\">Tableau de test bidon</font><br/>Deuxième ligne de l'en-tête",
+				Footer = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
+			};
+
+			var columns = new List<ColumnDefinition> ();
+			columns.Add (new ColumnDefinition ("Titre",    200.0));
+			columns.Add (new ColumnDefinition ("Nom",      300.0));
+			columns.Add (new ColumnDefinition ("Prénom",   300.0));
+			columns.Add (new ColumnDefinition ("Adresse",  300.0));
+			columns.Add (new ColumnDefinition ("NPA",      150.0, ContentAlignment.TopRight));
+			columns.Add (new ColumnDefinition ("Ville",    300.0));
+			columns.Add (new ColumnDefinition ("Remarque", null, fontSize: 20.0));
+
+			return array.GeneratePdf ("test.pdf", 100, columns, Program.Test3Accessor, info, setup);
+		}
+
+		private static FormattedText Test3Accessor(int row, int column)
+		{
+			if (row >= 20 && row <= 50)
+			{
+				switch (column)
+				{
+					case 0:
+						return "Madame";
+					case 1:
+						return "Julie";
+					case 2:
+						return string.Format ("<i>Dubosson</i> #{0}", (row+1).ToString ());
+				}
+			}
+
+			if (column == 6)
+			{
+				if (row == 10)
+				{
+					return Program.histoire;
+				}
+
+				if (row == 2 || row == 12)
+				{
+					return "À modifier";
+				}
+			}
+
+			switch (column)
+			{
+				case 0:
+					return "Monsieur";
+				case 1:
+					return "Jean";
+				case 2:
+					return string.Format("<b>Dupond</b> #{0}", (row+1).ToString ());
+				case 3:
+					return "Place du Marché 45";
+				case 4:
+					return (1000+row).ToString ();
+				case 5:
+					return "Lausanne";
+			}
+
+			return null;
 		}
 
 

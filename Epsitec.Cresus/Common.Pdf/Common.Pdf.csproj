@@ -49,6 +49,9 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Array\Array.cs" />
+    <Compile Include="Array\ArraySetup.cs" />
+    <Compile Include="Array\ColumnDefinition.cs" />
     <Compile Include="Engine\CharacterHash.cs" />
     <Compile Include="Engine\CharacterList.cs" />
     <Compile Include="Engine\ColorConversion.cs" />

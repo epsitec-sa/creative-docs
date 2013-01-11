@@ -12,10 +12,6 @@ namespace Epsitec.Common.Pdf.Stikers
 {
 	public class Stikers
 	{
-		public Stikers()
-		{
-		}
-
 		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> accessor, ExportPdfInfo info, StikersSetup setup)
 		{
 			this.count    = count;
