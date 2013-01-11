@@ -181,14 +181,14 @@ namespace Common.Pdf.Test
 			};
 
 			var columns = new List<ColumnDefinition> ();
-			columns.Add (new ColumnDefinition ("N°",        80.0, ContentAlignment.TopRight));
-			columns.Add (new ColumnDefinition ("Titre",    200.0));
-			columns.Add (new ColumnDefinition ("Nom",      300.0));
-			columns.Add (new ColumnDefinition ("Prénom",   300.0));
-			columns.Add (new ColumnDefinition ("Adresse",  400.0));
-			columns.Add (new ColumnDefinition ("NPA",      150.0, ContentAlignment.TopRight));
-			columns.Add (new ColumnDefinition ("Ville",    300.0));
-			columns.Add (new ColumnDefinition ("Remarque", null, fontSize: 20.0));
+			columns.Add (new ColumnDefinition ("N°",       ColumnType.Absolute, absoluteWidth: 100.0, alignment: ContentAlignment.TopRight));
+			columns.Add (new ColumnDefinition ("Titre",    ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Nom",      ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Prénom",   ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Adresse",  ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("NPA",      ColumnType.Automatic, alignment: ContentAlignment.TopRight));
+			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
 
 			return array.GeneratePdf ("test3.pdf", 100, columns, Program.Test3Accessor, info, setup);
 		}
@@ -197,7 +197,7 @@ namespace Common.Pdf.Test
 		{
 			if (row == 5 && column == 3)
 			{
-				return "<font size=\"50\">Grand</font>";
+				return "<font size=\"50\"><b>Grand !</b></font>";
 			}
 
 			if (row >= 20 && row <= 50)

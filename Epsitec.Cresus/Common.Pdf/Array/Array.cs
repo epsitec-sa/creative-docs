@@ -14,8 +14,9 @@ namespace Epsitec.Common.Pdf.Array
 	{
 		public Array()
 		{
-			this.rowHeights = new List<double> ();
-			this.rowPages   = new List<int> ();
+			this.columnWidths = new List<double> ();
+			this.rowHeights   = new List<double> ();
+			this.rowPages     = new List<int> ();
 		}
 
 		public PdfExportException GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, FormattedText> accessor, ExportPdfInfo info, ArraySetup setup)
@@ -28,6 +29,7 @@ namespace Epsitec.Common.Pdf.Array
 
 			this.font = Font.GetFont (this.setup.FontFace, this.setup.FontStyle);
 
+			this.HorizontalJustification ();
 			this.VerticalJustification ();
 
 			int pageCount = this.rowPages.Last ();
@@ -57,14 +59,14 @@ namespace Epsitec.Common.Pdf.Array
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
 				this.RenderCell (port, row, column, x, y);
-				x += this.GetColumnWidth (column);
+				x += this.columnWidths[column];
 			}
 		}
 
 		private void RenderCell(Port port, int row, int column, double x, double y)
 		{
 			var h = this.rowHeights[row];
-			var box = new Rectangle (x, y-h, this.GetColumnWidth (column), h);
+			var box = new Rectangle (x, y-h, this.columnWidths[column], h);
 
 			var path = new Path ();
 			path.AppendRectangle (box);
@@ -76,6 +78,86 @@ namespace Epsitec.Common.Pdf.Array
 			box.Deflate (this.setup.CellMargins);
 			var text = this.accessor (row, column);
 			port.PaintText (box, text, this.font, this.setup.FontSize);
+		}
+
+
+		private void HorizontalJustification()
+		{
+			//	Calcule les largeurs des colonnes.
+			this.columnWidths.Clear ();
+
+			//	Calcule les largeurs des colonnes absolues et automatiques.
+			for (int column = 0; column < this.columnDefinitions.Count; column++)
+			{
+				var def = this.columnDefinitions[column];
+				double width;
+
+				if (def.ColumnType == ColumnType.Absolute)
+				{
+					width = def.AbsoluteWidth;
+				}
+				else if (def.ColumnType == ColumnType.Stretch)
+				{
+					width = 0;
+				}
+				else
+				{
+					width = this.ComputeColomnWidth(column);
+				}
+
+				this.columnWidths.Add (width);
+			}
+
+			//	Calcule les largeurs des colonnes "stretch".
+			double totalWidthUsed = 0;
+			double totalStretch = 0;
+
+			for (int column = 0; column < this.columnDefinitions.Count; column++)
+			{
+				var def = this.columnDefinitions[column];
+
+				if (def.ColumnType == ColumnType.Stretch)
+				{
+					totalStretch += def.StretchFactor;
+				}
+				else
+				{
+					totalWidthUsed += this.columnWidths[column];
+				}
+			}
+
+			//	Réparti de façon uniforme l'espace restant entre toutes les colonnes élastiques.
+			double residual = this.info.PageSize.Width - this.setup.PageMargins.Width - totalWidthUsed;
+
+			for (int column = 0; column < this.columnDefinitions.Count; column++)
+			{
+				var def = this.columnDefinitions[column];
+
+				if (def.ColumnType == ColumnType.Stretch && def.StretchFactor != 0)
+				{
+					this.columnWidths[column] = residual / def.StretchFactor;
+				}
+			}
+		}
+
+		private double ComputeColomnWidth(int column)
+		{
+			//	Calcule la largeur nécessaire pour une colonne, selon le contenu.
+			double width = 0;
+
+			for (int row = 0; row < this.rowCount; row++)
+			{
+				var text = this.accessor (row, column);
+
+				if (!text.IsNullOrEmpty ())
+				{
+					double w = Port.GetTextSingleLineSize (text, this.font, this.setup.FontSize).Width;
+					w += this.setup.CellMargins.Width;
+					width = System.Math.Max (width, w);
+				}
+			}
+
+			return width;
 		}
 
 
@@ -116,7 +198,7 @@ namespace Epsitec.Common.Pdf.Array
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
-				var width = this.GetColumnWidth (column) - this.setup.CellMargins.Width;
+				var width = this.columnWidths[column] - this.setup.CellMargins.Width;
 				var text = this.accessor(row, column);
 
 				if (!text.IsNullOrEmpty ())
@@ -129,37 +211,8 @@ namespace Epsitec.Common.Pdf.Array
 			return height + this.setup.CellMargins.Height;
 		}
 
-		private double GetColumnWidth(int column)
-		{
-			var def = this.columnDefinitions[column];
 
-			if (def.Width.HasValue)
-			{
-				return def.Width.Value;
-			}
-			else
-			{
-				double total = 0;
-				int undefined = 0;
-
-				foreach (var cd in this.columnDefinitions)
-				{
-					if (cd.Width.HasValue)
-					{
-						total += cd.Width.Value;
-					}
-					else
-					{
-						undefined++;
-					}
-				}
-
-				//	Réparti de façon uniforme l'espace restant entre toutes les colonnes élastiques.
-				return (this.info.PageSize.Width - this.setup.PageMargins.Width - total) / undefined;
-			}
-		}
-
-
+		private readonly List<double> columnWidths;
 		private readonly List<double> rowHeights;
 		private readonly List<int> rowPages;
 
