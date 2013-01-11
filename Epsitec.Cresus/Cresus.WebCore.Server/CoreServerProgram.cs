@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
@@ -11,13 +11,9 @@ using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using System;
-
 using System.Configuration;
-
 using System.Globalization;
-
 using System.IO;
-
 using System.Threading;
 
 
@@ -47,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server
 					uri: this.baseUri,
 					nbCoreWorkers: this.nbCoreWorkers
 				);
-			});
+			}, 200);
 		}
 
 

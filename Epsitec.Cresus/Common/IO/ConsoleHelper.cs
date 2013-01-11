@@ -24,8 +24,9 @@ namespace Epsitec.Common.IO
 		/// new console can't be created, an exception will be thrown and the action won't be
 		/// executed.
 		/// </summary>
-		/// <param name="action">The action to execute</param>
-		public static void RunWithConsole(Action action)
+		/// <param name="action">The action to execute.</param>
+		/// <param name="windowWidth">Width of the window (or zero).</param>
+		public static void RunWithConsole(Action action, int windowWidth = 0)
 		{
 			bool success = false;
 
@@ -36,6 +37,12 @@ namespace Epsitec.Common.IO
 				if (!success)
 				{
 					throw new Exception ("The console could not be created.");
+				}
+
+				if (windowWidth > 0)
+				{
+					System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+					System.Console.SetBufferSize (windowWidth, System.Console.BufferHeight);
 				}
 
 				action ();
