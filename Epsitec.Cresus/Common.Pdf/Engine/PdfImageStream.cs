@@ -3,7 +3,7 @@
 
 using System.Xml.Linq;
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	public class PdfImageStream : System.IDisposable
 	{

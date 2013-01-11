@@ -1,7 +1,7 @@
 using Epsitec.Common.Drawing;
 using System.Collections.Generic;
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	public enum ColorForce
 	{

@@ -1,5 +1,5 @@
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	public enum PdfComplexSurfaceType
 	{

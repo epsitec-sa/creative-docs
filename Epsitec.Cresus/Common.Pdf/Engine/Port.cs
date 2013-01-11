@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
 	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.
+	/// L'unité est le dixième de millimètre.
 	/// L'origine graphique est en bas à gauche.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>

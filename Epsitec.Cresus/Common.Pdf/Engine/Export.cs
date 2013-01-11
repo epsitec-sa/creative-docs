@@ -6,7 +6,7 @@ using System;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	using CultureInfo=System.Globalization.CultureInfo;
 

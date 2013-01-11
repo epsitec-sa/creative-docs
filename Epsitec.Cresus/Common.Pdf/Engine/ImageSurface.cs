@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Drawing.Platform;
 using System.Xml.Linq;
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
 	/// La classe ImageSurface enregistre les informations sur une image bitmap.

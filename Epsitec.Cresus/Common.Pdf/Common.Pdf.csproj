@@ -70,6 +70,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\StringBuffer.cs" />
     <Compile Include="Engine\Writer.cs" />
+    <Compile Include="Stikers\Stikers.cs" />
+    <Compile Include="Stikers\StikersSetup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

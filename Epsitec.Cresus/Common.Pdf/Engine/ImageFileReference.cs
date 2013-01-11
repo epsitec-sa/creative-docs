@@ -1,7 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
 	/// The <c>ImageFileReference</c> class is used to reference a data file, which may

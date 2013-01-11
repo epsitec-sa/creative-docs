@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Engine.Pdf;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Pdf.Engine;
+using Epsitec.Common.Pdf.Stikers;
 using Epsitec.Common.Types;
 
 namespace Common.Pdf.Test
@@ -13,13 +13,26 @@ namespace Common.Pdf.Test
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine ("Début du test de Epsitec.Common.Pdf");
-
 			Epsitec.Common.Widgets.Widget.Initialize ();
 
-			var info = new ExportPdfInfo ();
-			var export = new Export (info);
-			var message = export.ExportToFile ("test.pdf", 2, Program.Renderer);
+			Console.WriteLine ("1) Document fixe de 2 pages");
+			Console.WriteLine ("2) Etiquettes");
+			string choice = Console.ReadLine ();
+
+			int result = 1;
+			int.TryParse (choice, out result);
+
+			string message = null;
+
+			switch (result)
+			{
+				case 1:
+					message = Program.Test1 ();
+					break;
+				case 2:
+					message = Program.Test2 ();
+					break;
+			}
 
 			if (string.IsNullOrEmpty (message))
 			{
@@ -34,20 +47,29 @@ namespace Common.Pdf.Test
 			Console.ReadLine ();
 		}
 
-		private static void Renderer(Port port, int page)
+
+		private static string Test1()
+		{
+			//	Génération d'un document fixe de 2 pages.
+			var info = new ExportPdfInfo ();
+			var export = new Export (info);
+			return export.ExportToFile ("test.pdf", 2, Program.Renderer1);
+		}
+
+		private static void Renderer1(Port port, int page)
 		{
 			if (page == 1)
 			{
-				Program.Renderer1 (port);
+				Program.Renderer11 (port);
 			}
 
 			if (page == 2)
 			{
-				Program.Renderer2 (port);
+				Program.Renderer12 (port);
 			}
 		}
 
-		private static void Renderer1(Port port)
+		private static void Renderer11(Port port)
 		{
 			{
 				var path = new Path ();
@@ -77,7 +99,7 @@ namespace Common.Pdf.Test
 			port.PaintText (100.0, 300.0, new Size (2000, 100), FormattedText.FromSimpleText ("Grand tralala..."), Font.GetFont ("Arial", "Regular"), 100.0);
 		}
 
-		private static void Renderer2(Port port)
+		private static void Renderer12(Port port)
 		{
 			Program.PaintTextBox (port, new Rectangle (100, 2000, 1000, 500), Program.histoire, 30);
 			Program.PaintTextBox (port, new Rectangle (100, 1400, 800, 400), Program.histoire, 40);
@@ -111,6 +133,26 @@ namespace Common.Pdf.Test
 
 			port.PaintText (box.Left, box.Bottom, box.Size, text, Font.GetFont ("Arial", "Regular"), fontSize, style);
 		}
+
+
+		private static string Test2()
+		{
+			//	Génération d'étiquettes.
+			var stikers = new Stikers ();
+
+			var setup = new StikersSetup ()
+			{
+				PaintFrame = true,
+			};
+
+			return stikers.GeneratePdf("test.pdf", 100, Program.Test2Accessor, setup);
+		}
+
+		private static FormattedText Test2Accessor(int rank)
+		{
+			return string.Format ("Monsieur<br/>Jean <b>Dupond</b> #{0}<br/>Place du Marché 45<br/>1000 Lausanne", (rank+1).ToString ());
+		}
+
 
 		private static string histoire = "Midi, l'heure du crime ! Un jeune vieillard assis-debout sur une pierre en bois lisait son journal plié en quatre dans sa poche à la lueur d'une bougie éteinte. Le tonnerre grondait en silence et les éclairs brillaient sombres dans la nuit claire. Il monta quatre à quatre les trois marches qui descendaient au grenier et vit par le trou de la serrure bouchée un nègre blanc qui déterrait un mort pour le manger vivant. N'écoutant que son courage de pleutre mal léché, il sortit son épée de fils de fer barbelés et leur coupa la tête au ras des pieds.";
 	}

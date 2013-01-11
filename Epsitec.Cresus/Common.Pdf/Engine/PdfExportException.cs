@@ -1,7 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	class PdfExportException : System.Exception
 	{
@@ -9,6 +9,7 @@ namespace Epsitec.Common.Engine.Pdf
 		{
 			this.message = message;
 		}
+
 		public string Message
 		{
 			get
@@ -16,6 +17,7 @@ namespace Epsitec.Common.Engine.Pdf
 				return this.message;
 			}
 		}
+		
 		private readonly string message;
 	}
 }

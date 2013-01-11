@@ -1,7 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Common.Engine.Pdf
+namespace Epsitec.Common.Pdf.Engine
 {
 	public enum PdfFunctionType
 	{
@@ -15,6 +15,6 @@ namespace Epsitec.Common.Engine.Pdf
 		// blue or yellow
 		Color4 = 5,
 		// black
-		Alpha = 6
+		Alpha = 6,
 	}
 }
