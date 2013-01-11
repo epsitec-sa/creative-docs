@@ -35,16 +35,18 @@ namespace Epsitec.Common.Pdf.Array
 			int pageCount = this.rowPages.Last ();
 
 			var export = new Export (this.info);
-			return export.ExportToFile (path, pageCount, this.Renderer);
+			return export.ExportToFile (path, pageCount, this.RenderPage);
 		}
 
-		private void Renderer(Port port, int page)
+
+		private void RenderPage(Port port, int page)
 		{
+			//	Effectue le rendu d'une page complète.
 			double y = this.info.PageSize.Height - this.setup.PageMargins.Top;
 
 			for (int row = 0; row < this.rowCount; row++)
 			{
-				if (this.rowPages[row] == page)
+				if (this.rowPages[row] == page)  // ligne dans cette page ?
 				{
 					this.RenderRow (port, row, y);
 					y -= this.rowHeights[row];
@@ -54,30 +56,47 @@ namespace Epsitec.Common.Pdf.Array
 
 		private void RenderRow(Port port, int row, double y)
 		{
+			//	Effectue le rendu d'une ligne complète.
 			double x = this.setup.PageMargins.Left;
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
-				this.RenderCell (port, row, column, x, y);
-				x += this.columnWidths[column];
+				if (this.columnWidths[column] > 0)
+				{
+					this.RenderCell (port, row, column, x, y);
+					x += this.columnWidths[column];
+				}
 			}
 		}
 
 		private void RenderCell(Port port, int row, int column, double x, double y)
 		{
-			var h = this.rowHeights[row];
+			//	Effectue le rendu d'une cellule.
+			var def = this.columnDefinitions[column];
+			var h   = this.rowHeights[row];
 			var box = new Rectangle (x, y-h, this.columnWidths[column], h);
 
-			var path = new Path ();
-			path.AppendRectangle (box);
+			if (this.setup.BorderThickness > 0)
+			{
+				var path = new Path ();
+				path.AppendRectangle (box);
 
-			port.LineWidth = 1.0;  // épaisseur de 0.1mm
-			port.Color = Color.FromBrightness (0);  // noir
-			port.PaintOutline (path);
+				port.LineWidth = this.setup.BorderThickness;
+				port.Color = Color.FromBrightness (0);  // noir
+				port.PaintOutline (path);
+			}
 
 			box.Deflate (this.setup.CellMargins);
 			var text = this.accessor (row, column);
-			port.PaintText (box, text, this.font, this.setup.FontSize);
+			if (!text.IsNullOrEmpty ())
+			{
+				var style = new TextStyle()
+				{
+					Alignment = def.Alignment,
+				};
+
+				port.PaintText (box, text, this.font, this.setup.FontSize, style);
+			}
 		}
 
 
@@ -142,7 +161,8 @@ namespace Epsitec.Common.Pdf.Array
 
 		private double ComputeColomnWidth(int column)
 		{
-			//	Calcule la largeur nécessaire pour une colonne, selon le contenu.
+			//	Calcule la largeur nécessaire pour une colonne, selon le contenu
+			//	le plus large.
 			double width = 0;
 
 			for (int row = 0; row < this.rowCount; row++)
@@ -194,6 +214,8 @@ namespace Epsitec.Common.Pdf.Array
 
 		private double ComputeRowHeight(int row)
 		{
+			//	Calcule la hauteur nécessaire pour une ligne, en fonction de la
+			//	cellule la plus haute.
 			double height = 0;
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)

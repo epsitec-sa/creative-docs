@@ -24,6 +24,7 @@ namespace Epsitec.Common.Pdf.Array
 
 		public FormattedText Title
 		{
+			//	Titre de la colonne, imprimé dans l'en-tête.
 			set;
 			get;
 		}
@@ -45,15 +46,15 @@ namespace Epsitec.Common.Pdf.Array
 		{
 			//	Facteur multiplicatif, en mode ColumnType.Stretch.
 			//	Par exemple:
-			//		A: Absolute, AbsoluteWidth = 100
-			//		B: Stretch,  StretchFactor = 1
-			//		C: Stretch,  StretchFactor = 2
+			//		Colonne A: Absolute, AbsoluteWidth = 100
+			//		Colonne B: Stretch,  StretchFactor = 1
+			//		Colonne C: Stretch,  StretchFactor = 2
 			//	Si la largeur à disposition est de 700, les colonnes auront:
-			//		A: 100
-			//		B: 200
-			//		C: 400
+			//		Colonne A: 100
+			//		Colonne B: 200
+			//		Colonne C: 400
 			//	Autrement dit, les colonnes Stretch se partagent la place restante,
-			//	selon les facteurs de stretch.
+			//	répartie selon les facteurs de stretch (StretchFactor).
 			set;
 			get;
 		}

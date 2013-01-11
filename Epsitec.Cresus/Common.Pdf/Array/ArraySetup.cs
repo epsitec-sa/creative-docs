@@ -15,11 +15,12 @@ namespace Epsitec.Common.Pdf.Array
 		public ArraySetup()
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
-			this.PageMargins = new Margins (200.0, 100.0, 100.0, 100.0);
-			this.CellMargins = new Margins (10.0);
-			this.FontFace    = "Arial";
-			this.FontStyle   = "Regular";
-			this.FontSize    = 30.0;
+			this.PageMargins     = new Margins (200.0, 100.0, 100.0, 100.0);
+			this.CellMargins     = new Margins (10.0);
+			this.FontFace        = "Arial";
+			this.FontStyle       = "Regular";
+			this.FontSize        = 30.0;
+			this.BorderThickness = 1.0;
 		}
 
 		public Margins PageMargins
@@ -65,6 +66,14 @@ namespace Epsitec.Common.Pdf.Array
 
 		public FormattedText Footer
 		{
+			set;
+			get;
+		}
+
+		public double BorderThickness
+		{
+			//	Epaisseur des traits d'encadrement du tableau.
+			//	Mettre 0 pour supprimer ces traits.
 			set;
 			get;
 		}
