@@ -176,8 +176,10 @@ namespace Common.Pdf.Test
 
 			var setup = new ArraySetup ()
 			{
-				Header = "<font size=\"80\">Tableau de test bidon</font><br/>Deuxième ligne de l'en-tête",
-				Footer = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
+				HeaderText = "<font size=\"80\">Tableau de test bidon</font><br/>Deuxième ligne de l'en-tête",
+				FooterText = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
+				EvenBackgroundColor = Color.FromHexa ("ffffee"),  // jaune 
+				OddBackgroundColor  = Color.FromHexa ("ebf8ff"),  // bleu
 			};
 
 			var columns = new List<ColumnDefinition> ();

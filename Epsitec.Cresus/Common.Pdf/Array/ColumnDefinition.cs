@@ -24,7 +24,7 @@ namespace Epsitec.Common.Pdf.Array
 
 		public FormattedText Title
 		{
-			//	Titre de la colonne, imprimé dans l'en-tête.
+			//	Titre de la colonne, imprimé au sommet de chaque page.
 			set;
 			get;
 		}

@@ -30,10 +30,10 @@ namespace Epsitec.Common.Pdf.Stikers
 			this.font = Font.GetFont (this.setup.FontFace, this.setup.FontStyle);
 
 			var export = new Export (this.info);
-			return export.ExportToFile (path, pageCount, this.Renderer);
+			return export.ExportToFile (path, pageCount, this.RenderPage);
 		}
 
-		private void Renderer(Port port, int page)
+		private void RenderPage(Port port, int page)
 		{
 			for (int y = 0; y < this.VerticalStikersCount; y++)
 			{

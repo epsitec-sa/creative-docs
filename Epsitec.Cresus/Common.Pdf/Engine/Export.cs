@@ -36,17 +36,17 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		public PdfExportException ExportToFile(string path, int pageCount, Action<Port, int> renderer)
+		public PdfExportException ExportToFile(string path, int pageCount, Action<Port, int> renderPage)
 		{
 			//	Exporte le document dans un fichier.
 			//	Le renderer reçoit le port et le numéro de la page à générer (1..n).
 			//	Retourne une éventuelle erreur, ou une chaîne vide.
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty(path));
 			System.Diagnostics.Debug.Assert (pageCount > 0);
-			System.Diagnostics.Debug.Assert (renderer != null);
+			System.Diagnostics.Debug.Assert (renderPage != null);
 
-			this.pageCount = pageCount;
-			this.renderer = renderer;
+			this.pageCount  = pageCount;
+			this.renderPage = renderPage;
 
 			this.pages.Clear ();
 			this.pages.AddRange (this.Pages);
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 				foreach (var page in this.pages)
 				{
-					this.renderer (port, page);  // pré-prossessing des textes de la page
+					this.renderPage (port, page);  // pré-prossessing des textes de la page
 				}
 
 				port.IsPreProcessText = false;
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			port.Reset ();
 			var gtBeforeZoom = this.SetupTransformForPageExport (port, currentPageOffset);
-			this.renderer (port, page);  // effectue le rendu de la page
+			this.renderPage (port, page);  // effectue le rendu de la page
 			port.Transform = gtBeforeZoom;
 
 			this.CropToBleedBox (port, page);  // efface ce qui dépasse de la BleedBox
@@ -1543,7 +1543,7 @@ namespace Epsitec.Common.Pdf.Engine
 		private readonly List<int>				pages;
 
 		private int								pageCount;
-		private Action<Port, int>				renderer;
+		private Action<Port, int>				renderPage;
 		private List<ImageSurface>				imageSurfaces;
 		private CharacterHash					characterHash;
 		private FontHash						fontHash;
