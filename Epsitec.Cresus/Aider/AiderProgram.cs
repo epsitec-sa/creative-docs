@@ -6,6 +6,8 @@ using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Tools;
 
+using Epsitec.Common.Debug;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
@@ -22,6 +24,22 @@ namespace Epsitec.Aider
 	public static class AiderProgram
 	{
 		public static void Main(string[] args)
+		{
+			AiderProgram.SetupExceptionCatcher ();
+			AiderProgram.Run (args);
+		}
+
+		private static void SetupExceptionCatcher()
+		{
+			GeneralExceptionCatcher.Setup ();
+			GeneralExceptionCatcher.AbortOnException = true;
+			GeneralExceptionCatcher.AddExceptionHandler (e =>
+			{
+				ErrorLogger.LogException (e, "logs.txt");
+			});
+		}
+
+		private static void Run(string[] args)
 		{
 			if (args.Length >= 1)
 			{
