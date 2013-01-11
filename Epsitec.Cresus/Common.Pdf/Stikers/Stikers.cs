@@ -59,7 +59,7 @@ namespace Epsitec.Common.Pdf.Stikers
 						}
 
 						bounds.Deflate (this.setup.StikerMargins);
-						port.PaintText (bounds.Left, bounds.Bottom, bounds.Size, text, this.font, this.setup.FontSize);
+						port.PaintText (bounds, text, this.font, this.setup.FontSize);
 					}
 				}
 			}

@@ -533,16 +533,16 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		public void PaintText(double x, double y, Size boxSize, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
+		public void PaintText(Rectangle box, FormattedText formattedText, Font font, double fontSize, TextStyle style = null)
 		{
 			if (this.IsPreProcessText)
 			{
-				this.PreProcessText (boxSize, formattedText, font, fontSize, style);
+				this.PreProcessText (box.Size, formattedText, font, fontSize, style);
 			}
 			else
 			{
-				var textLayout = this.GetTextLayout (boxSize, formattedText, font, fontSize, style);
-				textLayout.PaintCallback (new Point (x, y), this.TextLayoutRenderer);
+				var textLayout = this.GetTextLayout (box.Size, formattedText, font, fontSize, style);
+				textLayout.PaintCallback (box.BottomLeft, this.TextLayoutRenderer);
 			}
 		}
 
