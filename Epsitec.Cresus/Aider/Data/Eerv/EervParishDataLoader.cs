@@ -56,27 +56,30 @@ namespace Epsitec.Aider.Data.Eerv
 				var activities = EervParishDataLoader.GetParishData (groupedActivities, parishId);
 				var groups = EervParishDataLoader.GetParishData (groupedGroups, parishId);
 
-				var rawPersons = persons.Select (t => t.Item1).ToList ();
-				var rawGroups = groups.Select (t => t.Item1).ToList ();
-				
-				var idToHouseholds = households.ToDictionary (h => h.Id);
-				var idToPersons = rawPersons.ToDictionary (p => p.Id);
-				var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
-				var idToGroups = rawGroups.ToDictionary (g => g.Id);
+				if (persons.Count > 0)
+				{
+					var rawPersons = persons.Select (t => t.Item1).ToList ();
+					var rawGroups = groups.Select (t => t.Item1).ToList ();
 
-				var filteredActivities = EervParishDataLoader
-					.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups)
-					.ToList ();
+					var idToHouseholds = households.ToDictionary (h => h.Id);
+					var idToPersons = rawPersons.ToDictionary (p => p.Id);
+					var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
+					var idToGroups = rawGroups.ToDictionary (g => g.Id);
 
-				var rawActivities = filteredActivities.Select (t => t.Item1).ToList ();
+					var filteredActivities = EervParishDataLoader
+						.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups)
+						.ToList ();
 
-				EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
-				EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
-				EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
+					var rawActivities = filteredActivities.Select (t => t.Item1).ToList ();
 
-				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
+					EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
+					EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
+					EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
 
-				yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups, rawActivities);
+					EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
+
+					yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups, rawActivities);
+				}
 			}
 		}
 
