@@ -65,6 +65,8 @@
     <None Include="build.bat" />
     <None Include="Production\app.config" />
     <None Include="Production\nginx.conf" />
+    <None Include="Production\certificate.crt" />
+    <None Include="Production\certificate.key" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aider\Aider.csproj">

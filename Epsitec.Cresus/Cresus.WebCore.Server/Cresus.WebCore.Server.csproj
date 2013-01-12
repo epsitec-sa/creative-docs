@@ -226,6 +226,8 @@
     <None Include="Resources\Cresus.WebCore.Server\Strings.en.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\test-certificate.crt" />
+    <None Include="Resources\test-certificate.key" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">

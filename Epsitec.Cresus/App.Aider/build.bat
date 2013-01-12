@@ -83,5 +83,10 @@ xcopy /e ..\Cresus.WebCore.Client\WebCore bin\Build\aider\client
 copy Production\app.config bin\Build\aider\server\App.Aider.exe.config
 copy Production\nginx.conf bin\Build\aider\server\Nginx\conf\nginx.conf
 
+@rem Copy the production certificate and keys
+mkdir bin\Build\aider\server\certificate
+copy Production\certificate.crt bin\Build\aider\server\certificate\certificate.crt
+copy Production\certificate.key bin\Build\aider\server\certificate\certificate.key
+
 @rem Zip the build.
 ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\aider.zip bin\Build\aider
