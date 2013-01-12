@@ -68,8 +68,8 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreDataManager (coreDataManager =>
 			{
-				var eChDataFile = AiderProgram.GetFile (args, "-echfile:");
-				var mode = AiderProgram.GetString (args, "-mode:");
+				var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
+				var mode = AiderProgram.GetString (args, "-mode:", false);
 
 				var maxCount = AiderProgram.GetMaxCount (mode);
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, maxCount);
@@ -80,7 +80,7 @@ namespace Epsitec.Aider
 
 		private static int GetMaxCount(string mode)
 		{
-			if (mode == "full")
+			if (mode == "full" || mode == null)
 			{
 				return int.MaxValue;
 			}
@@ -97,7 +97,7 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreDataManager (coreDataManager =>
 			{
-				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:");
+				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:", true);
 				
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
@@ -110,12 +110,12 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreDataManager (coreDataManager =>
 			{
-				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:");
-				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile:");
-				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile:");
-				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:");
-				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:");
-				var eervIdFile = AiderProgram.GetFile (args, "-idfile:");
+				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:", true);
+				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile:", true);
+				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile:", false);
+				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:", false);
+				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:", false);
+				var eervIdFile = AiderProgram.GetFile (args, "-idfile:", true);
 
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
@@ -147,14 +147,16 @@ namespace Epsitec.Aider
 			}
 		}
 
-		private static FileInfo GetFile(string[] args, string key)
+		private static FileInfo GetFile(string[] args, string key, bool mandatory)
 		{
-			var path = AiderProgram.GetString (args, key);
+			var path = AiderProgram.GetString (args, key, mandatory);
 
-			return new FileInfo (path);
+			return path != null
+				? new FileInfo (path)
+				: null;
 		}
 
-		private static string GetString(string[] args, string key)
+		private static string GetString(string[] args, string key, bool mandatory)
 		{
 			foreach (var arg in args)
 			{
@@ -164,7 +166,12 @@ namespace Epsitec.Aider
 				}
 			}
 
-			throw new Exception ("Argument " + key + " is missing!");
+			if (mandatory)
+			{
+				throw new Exception ("Argument " + key + " is missing!");
+			}
+
+			return null;
 		}
 
 		private static void RunNormalMode(string[] args)
