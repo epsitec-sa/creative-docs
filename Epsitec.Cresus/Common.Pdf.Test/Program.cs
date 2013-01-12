@@ -10,6 +10,7 @@ using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Pdf.Stikers;
 using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Types;
+using Epsitec.Common.Pdf.Common;
 
 namespace Common.Pdf.Test
 {
@@ -186,7 +187,6 @@ namespace Common.Pdf.Test
 		private static PdfExportException Test2()
 		{
 			//	Génération d'étiquettes.
-			var stikers = new Stikers ();
 
 			var info = new ExportPdfInfo ();
 
@@ -195,7 +195,10 @@ namespace Common.Pdf.Test
 				PaintFrame = true,
 			};
 
-			return stikers.GeneratePdf("test2.pdf", 100, Program.Test2Accessor, info, setup);
+			var stikers = new Stikers (info, setup);
+			Program.AddFixElements (stikers, setup);
+
+			return stikers.GeneratePdf ("test2.pdf", 100, Program.Test2Accessor);
 		}
 
 		private static FormattedText Test2Accessor(int rank)
@@ -207,8 +210,6 @@ namespace Common.Pdf.Test
 		private static PdfExportException Test3()
 		{
 			//	Génération d'un tableau.
-			var array = new Epsitec.Common.Pdf.Array.Array ();
-
 			var info = new ExportPdfInfo ()
 			{
 				PageSize = new Size (2970.0, 2100.0),  // A4 horizontal
@@ -217,10 +218,13 @@ namespace Common.Pdf.Test
 			var setup = new ArraySetup ()
 			{
 				HeaderText = "<font size=\"80\">Tableau de test en mode paysage</font><br/>Deuxième ligne de l'en-tête",
-				FooterText = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
+				FooterText = "Fin du tableau",
 				EvenBackgroundColor = Color.FromHexa ("ffffee"),  // jaune 
 				OddBackgroundColor  = Color.FromHexa ("ebf8ff"),  // bleu
 			};
+
+			var array = new Epsitec.Common.Pdf.Array.Array (info, setup);
+			Program.AddFixElements (array, setup);
 
 			var columns = new List<ColumnDefinition> ();
 			columns.Add (new ColumnDefinition ("N°",       ColumnType.Absolute, absoluteWidth: 100.0, alignment: ContentAlignment.TopRight));
@@ -232,14 +236,12 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic));
 			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
 
-			return array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayAccessor, info, setup);
+			return array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayAccessor);
 		}
 
 		private static PdfExportException Test4()
 		{
 			//	Génération d'un tableau.
-			var array = new Epsitec.Common.Pdf.Array.Array ();
-
 			var info = new ExportPdfInfo ()
 			{
 			};
@@ -248,9 +250,12 @@ namespace Common.Pdf.Test
 			{
 				PageMargins = new Margins(100.0),
 				HeaderText = "<font size=\"80\">Tableau de test en mode portrait</font><br/>Deuxième ligne de l'en-tête",
-				FooterText = "<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>",
+				FooterText = "Fin du tableau",
 			};
 			setup.TextStyle.FontSize = 40.0;
+
+			var array = new Epsitec.Common.Pdf.Array.Array (info, setup);
+			Program.AddFixElements (array, setup);
 
 			var columns = new List<ColumnDefinition> ();
 			columns.Add (new ColumnDefinition ("N°",       ColumnType.Stretch, stretchFactor: 1.0, alignment: ContentAlignment.TopCenter));
@@ -261,7 +266,7 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("NPA",      ColumnType.Automatic, alignment: ContentAlignment.BottomRight));
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic, alignment: ContentAlignment.BottomLeft));
 
-			return array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayAccessor, info, setup);
+			return array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayAccessor);
 		}
 
 		private static FormattedText TestArrayAccessor(int row, int column)
@@ -323,6 +328,24 @@ namespace Common.Pdf.Test
 			}
 
 			return null;
+		}
+
+
+		private static void AddFixElements(CommonPdf common, CommonSetup setup)
+		{
+			common.AddWatermark ("SPECIMEN");
+
+			var style = new TextStyle (setup.TextStyle)
+			{
+				FontSize = 20.0,
+			};
+
+			common.AddTopLeftLayer ("Crésus", 50.0, style: style);
+			common.AddTopCenterLayer ("— Document test —", 50.0, style: style);
+			common.AddTopRightLayer ("EPSITEC SA", 50.0, style: style);
+
+			common.AddBottomLeftLayer ("<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>", 50.0, style: style);
+			common.AddBottomRightLayer ("Page {0}", 50.0, style: style);
 		}
 
 

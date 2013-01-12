@@ -1027,7 +1027,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 			if (compression == ImageCompression.ZIP)  // compression ZIP ?
 			{
-				byte[] zip = Common.IO.DeflateCompressor.Compress (data, 9);  // 9 = compression forte mais lente
+				byte[] zip = IO.DeflateCompressor.Compress (data, 9);  // 9 = compression forte mais lente
 				data = zip;
 				zip = null;
 			}

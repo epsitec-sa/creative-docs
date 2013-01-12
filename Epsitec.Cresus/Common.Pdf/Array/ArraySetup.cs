@@ -7,21 +7,17 @@ using System.Linq;
 using System.Text;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.Pdf.Common;
 
 namespace Epsitec.Common.Pdf.Array
 {
-	public class ArraySetup
+	public class ArraySetup : CommonSetup
 	{
-		public ArraySetup()
+		public ArraySetup() : base()
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins          = new Margins (200.0, 100.0, 100.0, 100.0);
 			this.CellMargins          = new Margins (10.0);
-			this.TextStyle            = new TextStyle ()
-			{
-				Font     = Font.GetFont ("Arial", "Regular"),
-				FontSize = 30.0,
-			};
 			this.BorderThickness      = 1.0;
 			this.HeaderMargins        = new Margins (0.0, 0.0, 0.0, 50.0);
 			this.FooterMargins        = new Margins (0.0, 0.0, 50.0, 0.0);
@@ -30,23 +26,9 @@ namespace Epsitec.Common.Pdf.Array
 			this.OddBackgroundColor   = Color.Empty;
 		}
 
-		public Margins PageMargins
-		{
-			//	Marges globales de la page.
-			set;
-			get;
-		}
-
 		public Margins CellMargins
 		{
 			//	Marges dans une cellule
-			set;
-			get;
-		}
-
-		public TextStyle TextStyle
-		{
-			//	Style pour tous les textes du tableau.
 			set;
 			get;
 		}

@@ -6,18 +6,22 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Common.Pdf.Engine;
+using Epsitec.Common.Pdf.Common;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Pdf.Stikers
 {
-	public class Stikers
+	public class Stikers : CommonPdf
 	{
-		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> accessor, ExportPdfInfo info, StikersSetup setup)
+		public Stikers(ExportPdfInfo info, CommonSetup setup)
+			: base (info, setup)
+		{
+		}
+
+		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> accessor)
 		{
 			this.count    = count;
 			this.accessor = accessor;
-			this.info     = info;
-			this.setup    = setup;
 
 			this.stikersPerPage = this.StikersPerPage;
 
@@ -34,6 +38,8 @@ namespace Epsitec.Common.Pdf.Stikers
 
 		private void RenderPage(Port port, int page)
 		{
+			this.RenderLayers (port, page);
+
 			for (int y = 0; y < this.VerticalStikersCount; y++)
 			{
 				for (int x = 0; x < this.HorizontalStikersCount; x++)
@@ -47,7 +53,7 @@ namespace Epsitec.Common.Pdf.Stikers
 
 						var bounds = this.GetStikerBounds (rankIntoPage);
 
-						if (this.setup.PaintFrame)
+						if (this.Setup.PaintFrame)
 						{
 							var path = new Path ();
 							path.AppendRectangle (bounds);
@@ -57,8 +63,8 @@ namespace Epsitec.Common.Pdf.Stikers
 							port.PaintOutline (path);
 						}
 
-						bounds.Deflate (this.setup.StikerMargins);
-						port.PaintText (bounds, text, this.setup.TextStyle);
+						bounds.Deflate (this.Setup.StikerMargins);
+						port.PaintText (bounds, text, this.Setup.TextStyle);
 					}
 				}
 			}
@@ -70,10 +76,10 @@ namespace Epsitec.Common.Pdf.Stikers
 			int x = rankIntoPage % this.HorizontalStikersCount;
 			int y = rankIntoPage / this.HorizontalStikersCount;
 
-			double ox = this.setup.PageMargins.Left + (this.setup.StikerSize.Width  + this.setup.StikerGap.Width ) * x;
-			double oy = this.setup.PageMargins.Top  + (this.setup.StikerSize.Height + this.setup.StikerGap.Height) * y;
+			double ox = this.Setup.PageMargins.Left + (this.Setup.StikerSize.Width  + this.Setup.StikerGap.Width) * x;
+			double oy = this.Setup.PageMargins.Top  + (this.Setup.StikerSize.Height + this.Setup.StikerGap.Height) * y;
 
-			return new Rectangle (ox, this.info.PageSize.Height - this.setup.StikerSize.Height - oy, this.setup.StikerSize.Width, this.setup.StikerSize.Height);
+			return new Rectangle (ox, this.info.PageSize.Height - this.Setup.StikerSize.Height - oy, this.Setup.StikerSize.Width, this.Setup.StikerSize.Height);
 		}
 
 		private int StikersPerPage
@@ -88,7 +94,7 @@ namespace Epsitec.Common.Pdf.Stikers
 		{
 			get
 			{
-				return (int) ((this.info.PageSize.Width - this.setup.PageMargins.Width + this.setup.StikerGap.Width) / (this.setup.StikerSize.Width + this.setup.StikerGap.Width));
+				return (int) ((this.info.PageSize.Width - this.Setup.PageMargins.Width + this.Setup.StikerGap.Width) / (this.Setup.StikerSize.Width + this.Setup.StikerGap.Width));
 			}
 		}
 
@@ -96,14 +102,21 @@ namespace Epsitec.Common.Pdf.Stikers
 		{
 			get
 			{
-				return (int) ((this.info.PageSize.Height - this.setup.PageMargins.Height + this.setup.StikerGap.Height) / (this.setup.StikerSize.Height + this.setup.StikerGap.Height));
+				return (int) ((this.info.PageSize.Height - this.Setup.PageMargins.Height + this.Setup.StikerGap.Height) / (this.Setup.StikerSize.Height + this.Setup.StikerGap.Height));
+			}
+		}
+
+
+		private StikersSetup Setup
+		{
+			get
+			{
+				return this.setup as StikersSetup;
 			}
 		}
 
 
 		private Func<int, FormattedText> accessor;
-		private StikersSetup setup;
-		private ExportPdfInfo info;
 		private int stikersPerPage;
 		private int count;
 	}

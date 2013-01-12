@@ -6,26 +6,26 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Common.Pdf.Engine;
+using Epsitec.Common.Pdf.Common;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Pdf.Array
 {
-	public class Array
+	public class Array : CommonPdf
 	{
-		public Array()
+		public Array(ExportPdfInfo info, CommonSetup setup)
+			: base (info, setup)
 		{
 			this.columnWidths = new List<double> ();
 			this.rowHeights   = new List<double> ();
 			this.rowPages     = new List<int> ();
 		}
 
-		public PdfExportException GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, FormattedText> accessor, ExportPdfInfo info, ArraySetup setup)
+		public PdfExportException GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, FormattedText> accessor)
 		{
 			this.rowCount          = rowCount;
 			this.columnDefinitions = columnDefinitions;
 			this.accessor          = accessor;
-			this.info              = info;
-			this.setup             = setup;
 
 			this.ConstantJustification ();
 			this.HorizontalJustification ();
@@ -65,14 +65,16 @@ namespace Epsitec.Common.Pdf.Array
 		private void RenderPage(Port port, int page)
 		{
 			//	Effectue le rendu d'une page complète.
-			double y = this.info.PageSize.Height - this.setup.PageMargins.Top;
+			this.RenderLayers (port, page);
+
+			double y = this.info.PageSize.Height - this.Setup.PageMargins.Top;
 
 			//	Imprime le header au sommet de la première page.
 			if (page == 1 && this.headerHeight > 0)
 			{
-				var box = new Rectangle (this.setup.PageMargins.Left, y-this.headerHeight, this.UsableWidth, this.headerHeight);
-				box.Deflate (this.setup.HeaderMargins);
-				port.PaintText (box, this.setup.HeaderText, this.setup.TextStyle);
+				var box = new Rectangle (this.Setup.PageMargins.Left, y-this.headerHeight, this.UsableWidth, this.headerHeight);
+				box.Deflate (this.Setup.HeaderMargins);
+				port.PaintText (box, this.Setup.HeaderText, this.Setup.TextStyle);
 
 				y -= this.headerHeight;
 			}
@@ -94,9 +96,9 @@ namespace Epsitec.Common.Pdf.Array
 			//	Imprime le footer au bas de la dernière page.
 			if (page == this.pageCount && this.footerHeight > 0)
 			{
-				var box = new Rectangle (this.setup.PageMargins.Left, this.setup.PageMargins.Bottom, this.UsableWidth, this.footerHeight);
-				box.Deflate (this.setup.FooterMargins);
-				port.PaintText (box, this.setup.FooterText, this.setup.TextStyle);
+				var box = new Rectangle (this.Setup.PageMargins.Left, this.Setup.PageMargins.Bottom, this.UsableWidth, this.footerHeight);
+				box.Deflate (this.Setup.FooterMargins);
+				port.PaintText (box, this.Setup.FooterText, this.Setup.TextStyle);
 			}
 		}
 
@@ -104,7 +106,7 @@ namespace Epsitec.Common.Pdf.Array
 		{
 			//	Effectue le rendu d'une ligne complète.
 			//	La ligne -1 correspond aux labels des colonnes.
-			double x = this.setup.PageMargins.Left;
+			double x = this.Setup.PageMargins.Left;
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
@@ -136,9 +138,9 @@ namespace Epsitec.Common.Pdf.Array
 			}
 
 			//	Dessine le cadre.
-			if (this.setup.BorderThickness > 0)
+			if (this.Setup.BorderThickness > 0)
 			{
-				port.LineWidth = this.setup.BorderThickness;
+				port.LineWidth = this.Setup.BorderThickness;
 				port.Color = Color.FromBrightness (0);  // noir
 				port.PaintOutline (path);
 			}
@@ -147,9 +149,9 @@ namespace Epsitec.Common.Pdf.Array
 			var text = this.GetCellText (row, column);
 			if (!text.IsNullOrEmpty ())
 			{
-				box.Deflate (this.setup.CellMargins);
+				box.Deflate (this.Setup.CellMargins);
 
-				var style = new TextStyle (this.setup.TextStyle)
+				var style = new TextStyle (this.Setup.TextStyle)
 				{
 					Alignment = def.Alignment,
 				};
@@ -161,18 +163,18 @@ namespace Epsitec.Common.Pdf.Array
 
 		private void ConstantJustification()
 		{
-			//	Calcule les hauteurs de tous les éléments fixes (header et footer).
-			this.headerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.HeaderText, this.setup.TextStyle);
-			this.footerHeight = Port.GetTextHeight (this.UsableWidth, this.setup.FooterText, this.setup.TextStyle);
+			//	Calcule les hauteurs des éléments fixes (header et footer).
+			this.headerHeight = Port.GetTextHeight (this.UsableWidth, this.Setup.HeaderText, this.Setup.TextStyle);
+			this.footerHeight = Port.GetTextHeight (this.UsableWidth, this.Setup.FooterText, this.Setup.TextStyle);
 
 			if (this.headerHeight > 0)
 			{
-				this.headerHeight += this.setup.HeaderMargins.Height;
+				this.headerHeight += this.Setup.HeaderMargins.Height;
 			}
 
 			if (this.footerHeight > 0)
 			{
-				this.footerHeight += this.setup.FooterMargins.Height;
+				this.footerHeight += this.Setup.FooterMargins.Height;
 			}
 		}
 
@@ -238,7 +240,7 @@ namespace Epsitec.Common.Pdf.Array
 		private double ComputeColomnWidth(int column)
 		{
 			//	Calcule la largeur nécessaire pour une colonne, selon le contenu
-			//	le plus large.
+			//	le plus large (mode ColumnType.Automatic).
 			double width = 0;
 
 			for (int row = -1; row < this.rowCount; row++)  // -1 -> tient compte de la ligne des labels
@@ -247,8 +249,8 @@ namespace Epsitec.Common.Pdf.Array
 
 				if (!text.IsNullOrEmpty ())
 				{
-					double w = Port.GetTextSingleLineSize (text, this.setup.TextStyle).Width;
-					w += this.setup.CellMargins.Width;
+					double w = Port.GetTextSingleLineSize (text, this.Setup.TextStyle).Width;
+					w += this.Setup.CellMargins.Width;
 					width = System.Math.Max (width, w);
 				}
 			}
@@ -286,6 +288,8 @@ namespace Epsitec.Common.Pdf.Array
 					page++;
 					dispo = this.UsableHeight;
 					dispo -= this.labelHeight;
+
+					dispo -= this.rowHeights[row];
 				}
 
 				this.rowPages.Add (page);
@@ -310,17 +314,17 @@ namespace Epsitec.Common.Pdf.Array
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
-				var width = this.columnWidths[column] - this.setup.CellMargins.Width;
+				var width = this.columnWidths[column] - this.Setup.CellMargins.Width;
 				var text = this.GetCellText (row, column);
 
 				if (!text.IsNullOrEmpty ())
 				{
-					double h = Port.GetTextHeight (width, text, this.setup.TextStyle);
+					double h = Port.GetTextHeight (width, text, this.Setup.TextStyle);
 					height = System.Math.Max (height, h);
 				}
 			}
 
-			return height + this.setup.CellMargins.Height;
+			return height + this.Setup.CellMargins.Height;
 		}
 
 
@@ -329,7 +333,7 @@ namespace Epsitec.Common.Pdf.Array
 			//	Retourne la largeur utilisable dans une page.
 			get
 			{
-				return this.info.PageSize.Width - this.setup.PageMargins.Width;
+				return this.info.PageSize.Width - this.Setup.PageMargins.Width;
 			}
 		}
 
@@ -338,7 +342,7 @@ namespace Epsitec.Common.Pdf.Array
 			//	Retourne la hauteur utilisable dans une page.
 			get
 			{
-				return this.info.PageSize.Height - this.setup.PageMargins.Height;
+				return this.info.PageSize.Height - this.Setup.PageMargins.Height;
 			}
 		}
 
@@ -349,17 +353,17 @@ namespace Epsitec.Common.Pdf.Array
 			//	La ligne -1 correspond aux labels des colonnes.
 			if (row == -1)  // label ?
 			{
-				return this.setup.LabelBackgroundColor;
+				return this.Setup.LabelBackgroundColor;
 			}
 			else
 			{
 				if (row % 2 == 0)
 				{
-					return this.setup.EvenBackgroundColor;
+					return this.Setup.EvenBackgroundColor;
 				}
 				else
 				{
-					return this.setup.OddBackgroundColor;
+					return this.Setup.OddBackgroundColor;
 				}
 			}
 		}
@@ -379,6 +383,15 @@ namespace Epsitec.Common.Pdf.Array
 		}
 
 
+		private ArraySetup Setup
+		{
+			get
+			{
+				return this.setup as ArraySetup;
+			}
+		}
+
+
 		private readonly List<double> columnWidths;
 		private readonly List<double> rowHeights;
 		private readonly List<int> rowPages;
@@ -386,8 +399,6 @@ namespace Epsitec.Common.Pdf.Array
 		private int rowCount;
 		private List<ColumnDefinition> columnDefinitions;
 		private Func<int, int, FormattedText> accessor;
-		private ArraySetup setup;
-		private ExportPdfInfo info;
 		private double labelHeight;
 		private double headerHeight;
 		private double footerHeight;

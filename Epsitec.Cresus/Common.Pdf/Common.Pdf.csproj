@@ -53,6 +53,9 @@
     <Compile Include="Array\ArraySetup.cs" />
     <Compile Include="Array\ColumnDefinition.cs" />
     <Compile Include="Array\ColumnType.cs" />
+    <Compile Include="Common\CommonPdf.cs" />
+    <Compile Include="Common\CommonSetup.cs" />
+    <Compile Include="Common\Layer.cs" />
     <Compile Include="Engine\CharacterHash.cs" />
     <Compile Include="Engine\CharacterList.cs" />
     <Compile Include="Engine\ColorConversion.cs" />

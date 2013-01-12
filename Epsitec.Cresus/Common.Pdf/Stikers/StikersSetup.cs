@@ -5,10 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Pdf.Common;
 
 namespace Epsitec.Common.Pdf.Stikers
 {
-	public class StikersSetup
+	public class StikersSetup : CommonSetup
 	{
 		// PageMargins.Left  StikerGap.Width       PageMargins.Right
 		//     |<--->|            >|--|<                |<--->| v
@@ -38,26 +39,14 @@ namespace Epsitec.Common.Pdf.Stikers
 		//           |<----------->|            >|--|<->|  reste
 		//           StikerSize.Width     StikerMargins.Right
 
-		public StikersSetup()
+		public StikersSetup() : base()
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins   = new Margins (100.0);
 			this.StikerSize    = new Size (620.0, 400.0);
 			this.StikerMargins = new Margins (50.0);
 			this.StikerGap     = new Size (10.0, 10.0);
-			this.TextStyle     = new TextStyle ()
-			{
-				Font     = Font.GetFont("Arial", "Regular"),
-				FontSize = 30.0,
-			};
 			this.PaintFrame    = false;
-		}
-
-		public Margins PageMargins
-		{
-			//	Marges globales de la page.
-			set;
-			get;
 		}
 
 		public Size StikerSize
@@ -77,13 +66,6 @@ namespace Epsitec.Common.Pdf.Stikers
 		public Size StikerGap
 		{
 			//	Espace vide entre les étiquettes.
-			set;
-			get;
-		}
-
-		public TextStyle TextStyle
-		{
-			//	Style pour tous les textes des étiquettes.
 			set;
 			get;
 		}
