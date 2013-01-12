@@ -72,23 +72,26 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var lines = new List<List<string>> ();
 
-			using (var workbook = new XLWorkbook (input.FullName))
+			if (input != null)
 			{
-				var worksheet = workbook.Worksheets.First();
-
-				foreach (var row in worksheet.RowsUsed())
+				using (var workbook = new XLWorkbook (input.FullName))
 				{
-					var line = new List<string> ();
+					var worksheet = workbook.Worksheets.First ();
 
-					foreach (var cell in row.CellsUsed ())
+					foreach (var row in worksheet.RowsUsed ())
 					{
-						var columnIndex = cell.Address.ColumnNumber - 1;
-						var value = cell.GetValue<string> ();
+						var line = new List<string> ();
 
-						line.InsertAtIndex (columnIndex, value);
+						foreach (var cell in row.CellsUsed ())
+						{
+							var columnIndex = cell.Address.ColumnNumber - 1;
+							var value = cell.GetValue<string> ();
+
+							line.InsertAtIndex (columnIndex, value);
+						}
+
+						lines.Add (line);
 					}
-
-					lines.Add (line);
 				}
 			}
 
