@@ -13,12 +13,12 @@ html, body {
 }
 
 .tile-over .tile {
-  background: #FFE680;
+  background: #FFCC00;
   cursor: pointer;
 }
 
 .tile-selected .tile {
-  background-color: #FFE680;
+  background-color: #FFCC00;
   background-image: url('../images/Static/tile-arrow.png');
   background-repeat: no-repeat;
   background-position: 100%, 50%;
