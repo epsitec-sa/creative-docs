@@ -878,7 +878,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignPersonInImportationGroup(BusinessContext businessContext, EervId parishId, List<AiderPersonEntity> aiderPersons)
 		{
-			var importationGroup = CreateImportationGroup (businessContext, parishId);
+			var importationGroup = EervParishDataImporter.FindOrCreateImportationGroup (businessContext, parishId);
 
 			foreach (var aiderPerson in aiderPersons)
 			{
@@ -889,13 +889,22 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity CreateImportationGroup(BusinessContext businessContext, EervId parishId)
+		private static AiderGroupEntity FindOrCreateImportationGroup(BusinessContext businessContext, EervId parishId)
 		{
 			var parishGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, parishId);
 			var name = "Personnes importées";
-			var count = parishGroup.Subgroups.Count + 1;
 
-			return AiderGroupEntity.CreateSubGroup (businessContext, parishGroup, name, count);
+			var importationGroup = parishGroup
+				.Subgroups
+				.FirstOrDefault (g => g.Name == name);
+
+			if (importationGroup == null)
+			{
+				var count = parishGroup.Subgroups.Count + 1;
+				importationGroup = AiderGroupEntity.CreateSubGroup (businessContext, parishGroup, name, count);
+			}
+
+			return importationGroup;
 		}
 
 
