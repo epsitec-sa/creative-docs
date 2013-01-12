@@ -62,7 +62,14 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					yield return EervDataReader.GetRecord (line, indexMapping);
+					var record = EervDataReader.GetRecord (line, indexMapping);
+
+					var isEmpty = record.All (r => string.IsNullOrWhiteSpace (r.Value));
+
+					if (!isEmpty)
+					{
+						yield return record;
+					}
 				}
 			}
 		}
