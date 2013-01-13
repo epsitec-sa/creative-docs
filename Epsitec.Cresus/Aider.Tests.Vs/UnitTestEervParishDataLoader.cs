@@ -27,7 +27,9 @@ namespace Aider.Tests.Vs
 		public void LoadEervHouseholdsTest()
 		{
 			var records = EervDataReader.ReadPersons (this.PersonsFile);
-			var households = EervParishDataLoader.LoadEervHouseholds (records).ToList ();
+			var households = new EervParishDataLoader()
+				.LoadEervHouseholds (records)
+				.ToList ();
 
 			Assert.AreEqual (4594, households.Count);
 
@@ -77,7 +79,9 @@ namespace Aider.Tests.Vs
 		public void LoadEervLegalPersonsTest()
 		{
 			var records = EervDataReader.ReadPersons (this.PersonsFile);
-			var legalPersons = EervParishDataLoader.LoadEervLegalPersons (records).ToList ();
+			var legalPersons = new EervParishDataLoader()
+				.LoadEervLegalPersons (records)
+				.ToList ();
 
 			Assert.AreEqual (34, legalPersons.Count);
 

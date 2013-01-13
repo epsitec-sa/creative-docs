@@ -56,7 +56,9 @@ namespace Aider.Tests.Vs
 				var eervSuperGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx");
 				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx");
 				var eervIdFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Ids.xlsx");
-				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
+				var eervParishData = new EervParishDataLoader()
+					.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile)
+					.ToList ();
 
 				foreach (var eervParishDatum in eervParishData)
 				{
