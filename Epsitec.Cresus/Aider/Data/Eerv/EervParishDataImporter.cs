@@ -50,11 +50,13 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var matches = EervParishDataImporter.FindMatches (coreDataManager, eervParishData);
 			var newEntities = EervParishDataImporter.ProcessMatches (coreDataManager, eervParishData.Id.Name, matches);
-
+			var mapping = EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
+			
 			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
 			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, eervParishData.Id, newEntities.Values);
+			EervParishDataImporter.AssignToImportationGroup (coreDataManager, eervParishData.Id, mapping.Values);
 
-			return EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
+			return mapping;
 		}
 
 
@@ -872,12 +874,23 @@ namespace Epsitec.Aider.Data.Eerv
 				.ToList ();
 
 			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
-			EervParishDataImporter.AssignPersonInImportationGroup (businessContext, parishId, aiderPersons);
 		}
 
 
-		private static void AssignPersonInImportationGroup(BusinessContext businessContext, EervId parishId, List<AiderPersonEntity> aiderPersons)
+		private static void AssignToImportationGroup(CoreDataManager coreDataManager, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
 		{
+			coreDataManager.Execute (b =>
+				EervParishDataImporter.AssignToImportationGroup (b, parishId, aiderPersonKeys)
+			);
+		}
+
+
+		private static void AssignToImportationGroup(BusinessContext businessContext, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
+		{
+			var aiderPersons = aiderPersonKeys
+				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
+				.ToList ();
+
 			var importationGroup = EervParishDataImporter.FindOrCreateImportationGroup (businessContext, parishId);
 
 			foreach (var aiderPerson in aiderPersons)
