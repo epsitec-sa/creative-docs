@@ -44,7 +44,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.MrMrs)
 					.Field (x => x.Title)
 					.Field (x => x.eCH_Person.AdultMaritalStatus)
-					.Field (x => x.IsHouseholdHead)
 					.Field (x => x.Confession)
 					.Field (x => x.Profession)
 					.Field (x => x.Language)
