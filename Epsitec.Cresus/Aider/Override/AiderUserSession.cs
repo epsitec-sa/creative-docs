@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Override
 
 			if (entityType == typeof (AiderPersonEntity))
 			{
-				return pattern == null
+				return string.IsNullOrEmpty (pattern)
 					? null
 					: this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern + "%");
 			}
