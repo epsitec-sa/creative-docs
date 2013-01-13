@@ -63,23 +63,17 @@ namespace Epsitec.Aider.Override
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
 		{
 			var pattern = this.GetActiveScopePathPattern ();
-
-			if (pattern == null)
-			{
-				return null;
-			}
-
-			pattern = AiderGroupIds.ReplacePlaceholders (pattern);
-
 			var entityType = dataSetMetadata.EntityTableMetadata.EntityType;
 
 			if (entityType == typeof (AiderPersonEntity))
 			{
-				return this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern);
+				return pattern == null
+					? null
+					: this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern + "%");
 			}
 			else if (entityType == typeof (AiderGroupEntity))
 			{
-				return this.GetAiderGroupEntityFilter ((AiderGroupEntity) example, pattern);
+				return this.GetAiderGroupEntityFilter ((AiderGroupEntity) example, pattern + AiderGroupIds.SubgroupSqlWildcard);
 			}
 			
 			return null;
@@ -113,19 +107,14 @@ namespace Epsitec.Aider.Override
 				return null;
 			}
 
-			var scopeGroupPath = scope.GroupPath;
-			
-			if (string.IsNullOrEmpty (scopeGroupPath))
+			var pattern = scope.GroupPath;
+
+			if (pattern != null)
 			{
-				System.Diagnostics.Debug.WriteLine ("Scope path : %");
-				return null;
+				pattern = AiderGroupIds.ReplacePlaceholders (pattern);
 			}
 
-			var path = scopeGroupPath + "%";
-
-			System.Diagnostics.Debug.WriteLine ("Scope path : " + path);
-
-			return path;
+			return pattern;
 		}
 
 
