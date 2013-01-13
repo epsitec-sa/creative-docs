@@ -29,6 +29,7 @@ function() {
       this.fixLocalizationBug();
       this.fixFrenchLocalizationError();
       this.fixFilterMenuLocalizationError();
+      this.fixBooleanColumnLocalizationError();
       this.showLoginPanel();
     },
 
@@ -113,6 +114,23 @@ function() {
         });
         Ext.override(Ext.ux.grid.menu.ListMenu, {
           loadingText: 'Chargement...'
+        });
+      }
+    },
+
+    fixBooleanColumnLocalizationError: function() {
+
+      // This column is not localized, so we do it here.
+
+      var cm, exists;
+
+      cm = Ext.ClassManager;
+      exists = Ext.Function.bind(cm.get, cm);
+
+      if (Epsitec.Locale.getLocaleName() === 'fr') {
+        Ext.override(Ext.grid.column.Boolean, {
+          falseText: 'Non',
+          trueText: 'Oui'
         });
       }
     },
