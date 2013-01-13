@@ -64,7 +64,8 @@
     <None Include="app.config" />
     <None Include="build.bat" />
     <None Include="Production\app.config" />
-    <None Include="Production\nginx.conf" />
+    <None Include="Production\nginx-maintenance.conf" />
+    <None Include="Production\nginx-server.conf" />
     <None Include="Production\certificate.crt" />
     <None Include="Production\certificate.key" />
   </ItemGroup>

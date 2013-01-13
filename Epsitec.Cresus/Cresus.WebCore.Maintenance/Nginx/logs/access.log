@@ -1,0 +1,5 @@
+127.0.0.1 - - [13/Jan/2013:11:03:36 +0100] "GET / HTTP/1.1" 200 191 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0"
+127.0.0.1 - - [13/Jan/2013:11:03:36 +0100] "GET /favicon.ico HTTP/1.1" 404 142 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0"
+127.0.0.1 - - [13/Jan/2013:11:10:04 +0100] "GET / HTTP/1.1" 301 184 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0"
+127.0.0.1 - - [13/Jan/2013:11:10:04 +0100] "GET / HTTP/1.1" 304 0 "-" "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/18.0"
+127.0.0.1 - - [13/Jan/2013:11:10:09 +0100] "-" 400 0 "-" "-"

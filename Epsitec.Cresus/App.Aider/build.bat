@@ -71,17 +71,22 @@ if %ERRORLEVEL% neq 0 exit /B 1
 msbuild /verbosity:minimal /property:Configuration=Release;Platform="Mixed Platforms" /target:Build ..\Epsitec.Cresus.sln
 if %ERRORLEVEL% neq 0 exit /B 1
 
-@rem Copy the client and server directories to the output folder.
+@rem Copy the client, maintenance and server directories to the output folder.
 rmdir /s /q bin\Build
 mkdir bin\Build\aider
-mkdir bin\Build\aider\server
 mkdir bin\Build\aider\client
-xcopy /e bin\Release bin\Build\aider\server
+mkdir bin\Build\aider\maintenance
+mkdir bin\Build\aider\server
 xcopy /e ..\Cresus.WebCore.Client\WebCore bin\Build\aider\client
+xcopy /e ..\Cresus.WebCore.Maintenance bin\Build\aider\maintenance
+xcopy /e bin\Release bin\Build\aider\server
 
-@rem Replace the debug config files with the production ones.
+@rem Copy the production config file.
 copy Production\app.config bin\Build\aider\server\App.Aider.exe.config
-copy Production\nginx.conf bin\Build\aider\server\Nginx\conf\nginx.conf
+
+@rem Copy the production nginx config files.
+copy Production\nginx-maintenance.conf bin\Build\aider\maintenance\Nginx\conf\nginx.conf
+copy Production\nginx-server.conf bin\Build\aider\server\Nginx\conf\nginx.conf
 
 @rem Copy the production certificate and keys
 mkdir bin\Build\aider\server\certificate
