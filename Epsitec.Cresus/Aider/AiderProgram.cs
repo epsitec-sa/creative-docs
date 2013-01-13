@@ -116,14 +116,22 @@ namespace Epsitec.Aider
 				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:", false);
 				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:", false);
 				var eervIdFile = AiderProgram.GetFile (args, "-idfile:", true);
+				var loadOnly = AiderProgram.GetBool (args, "-loadOnly:", false);
 
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
-				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
-				var parishRepository = ParishAddressRepository.Current;
 
-				foreach (var eervParishDatum in eervParishData)
+				var eervParishData = new EervParishDataLoader ()
+					.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile)
+					.ToList ();
+
+				if (!loadOnly.GetValueOrDefault ())
 				{
-					EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
+					var parishRepository = ParishAddressRepository.Current;
+
+					foreach (var eervParishDatum in eervParishData)
+					{
+						EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
+					}
 				}
 			});
 		}
@@ -154,6 +162,15 @@ namespace Epsitec.Aider
 			return path != null
 				? new FileInfo (path)
 				: null;
+		}
+
+		private static bool? GetBool(string[] args, string key, bool mandatory)
+		{
+			var value = AiderProgram.GetString (args, key, mandatory);
+
+			return value != null
+				? (bool?) bool.Parse (value)
+				: (bool?) null;
 		}
 
 		private static string GetString(string[] args, string key, bool mandatory)

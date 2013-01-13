@@ -230,7 +230,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static string NormalizeText(string data)
+		public static string NormalizeText(string data)
 		{
 			if (data == null)
 			{

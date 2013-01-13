@@ -1,5 +1,7 @@
 ﻿using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.IO;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
@@ -8,8 +10,6 @@ using Epsitec.Common.Types;
 using System;
 
 using System.Collections.Generic;
-
-using System.Diagnostics;
 
 using System.IO;
 
@@ -20,11 +20,18 @@ namespace Epsitec.Aider.Data.Eerv
 {
 
 
-	internal static class EervParishDataLoader
+	internal class EervParishDataLoader
 	{
 
 
-		public static IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile, FileInfo idFile)
+		public EervParishDataLoader(bool displayWarnings = false)
+		{
+			this.townCorrections = new HashSet<Tuple<string, string>> ();
+			this.townChecker = new TownChecker ();
+		}
+
+
+		public IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile, FileInfo idFile)
 		{
 			var idRecords = EervDataReader.ReadIds (idFile).ToList ();
 			var personRecords = EervDataReader.ReadPersons (personFile).ToList ();
@@ -34,9 +41,9 @@ namespace Epsitec.Aider.Data.Eerv
 			EervParishDataLoader.FixPersonRecords (personRecords);
 
 			var allIds = EervParishDataLoader.LoadEervIds (idRecords).ToList ();
-			var allHouseholds = EervParishDataLoader.LoadEervHouseholds (personRecords).ToList ();
+			var allHouseholds = this.LoadEervHouseholds (personRecords).ToList ();
 			var allPersons = EervParishDataLoader.LoadEervPersons (personRecords).ToList ();
-			var allLegalPersons = EervParishDataLoader.LoadEervLegalPersons (personRecords).ToList ();
+			var allLegalPersons = this.LoadEervLegalPersons (personRecords).ToList ();
 			var allActivities = EervParishDataLoader.LoadEervActivities (activityRecords).ToList ();
 			var allGroups = EervParishDataLoader.LoadEervGroups (groupRecords).ToList ();
 
@@ -369,7 +376,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervHousehold, string>> LoadEervHouseholds(IEnumerable<Dictionary<PersonHeader, string>> records)
+		internal IEnumerable<Tuple<EervHousehold, string>> LoadEervHouseholds(IEnumerable<Dictionary<PersonHeader, string>> records)
 		{
 			HashSet<string> processedIds = new HashSet<string> ();
 
@@ -383,7 +390,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 					if (!processedIds.Contains (householdId))
 					{
-						yield return EervParishDataLoader.GetEervHousehold (record);
+						yield return this.GetEervHousehold (record);
 
 						processedIds.Add (householdId);
 					}
@@ -392,11 +399,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Tuple<EervHousehold, string> GetEervHousehold(Dictionary<PersonHeader, string> record)
+		private Tuple<EervHousehold, string> GetEervHousehold(Dictionary<PersonHeader, string> record)
 		{
 			var id = record[PersonHeader.HouseholdId];
 
-			var address = EervParishDataLoader.GetAddress (record);
+			var address = this.GetAddress (record);
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);
 
 			var remarks = record[PersonHeader.RemarksHousehold];
@@ -450,11 +457,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervLegalPerson, string>> LoadEervLegalPersons(IEnumerable<Dictionary<PersonHeader, string>> records)
+		internal IEnumerable<Tuple<EervLegalPerson, string>> LoadEervLegalPersons(IEnumerable<Dictionary<PersonHeader, string>> records)
 		{
 			return from record in records
 				   where !EervParishDataLoader.IsEervPerson (record)
-				   select EervParishDataLoader.GetEervLegalPerson (record);
+				   select this.GetEervLegalPerson (record);
 		}
 
 
@@ -534,12 +541,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Tuple<EervLegalPerson, string> GetEervLegalPerson(Dictionary<PersonHeader, string> record)
+		private Tuple<EervLegalPerson, string> GetEervLegalPerson(Dictionary<PersonHeader, string> record)
 		{
 			var id = record[PersonHeader.PersonId];
 			var name = record[PersonHeader.CorporateName];
 
-			var address = EervParishDataLoader.GetAddress (record);
+			var address = this.GetAddress (record);
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);
 			var contactPerson = EervParishDataLoader.GetEervPerson (record).Item1.Item1;
 
@@ -551,7 +558,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervAddress GetAddress(Dictionary<PersonHeader, string> record)
+		private EervAddress GetAddress(Dictionary<PersonHeader, string> record)
 		{
 			var rawStreetNamePart1 = record[PersonHeader.StreetNamePart1];
 			var rawStreetNamePart2 = record[PersonHeader.StreetNamePart2];
@@ -563,6 +570,27 @@ namespace Epsitec.Aider.Data.Eerv
 			var houseNumberComplement = record[PersonHeader.HouseNumberComplement];
 			var zipCode = record[PersonHeader.ZipCode];
 			var town = record[PersonHeader.Town];
+
+			var result = this.townChecker.Validate (zipCode, town);
+			var newZipCode = result.Item1;
+			var newTown = result.Item2;
+
+			if (newZipCode != zipCode || newTown != town)
+			{
+				var key = Tuple.Create (zipCode, town);
+
+				if (!this.townCorrections.Contains (key))
+				{
+					this.townCorrections.Add (key);
+
+					var message = "town correction "
+						+ "(" + zipCode + "," + town + ")"
+						+ " => "
+						+ "(" + newZipCode + "," + newTown + ")";
+
+					EervParishDataLoader.Warn (message);
+				}
+			}
 
 			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town);
 		}
@@ -757,14 +785,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void Warn(string warning)
 		{
-			if (EervParishDataLoader.displayWarnings)
-			{
-				Debug.WriteLine ("Warning: " + warning);
-			}
+			Logger.LogToConsole ("Warning: " + warning);
 		}
 
 
-		private static readonly bool displayWarnings = false;
+		private readonly HashSet<Tuple<string, string>> townCorrections;
+
+
+		private readonly TownChecker townChecker;
 
 
 	}
