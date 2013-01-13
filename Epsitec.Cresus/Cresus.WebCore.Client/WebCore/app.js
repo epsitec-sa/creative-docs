@@ -28,6 +28,7 @@ function() {
       this.setupWindowTitle();
       this.fixLocalizationBug();
       this.fixFrenchLocalizationError();
+      this.fixFilterMenuLocalizationError();
       this.showLoginPanel();
     },
 
@@ -77,6 +78,41 @@ function() {
         Ext.define('Ext.locale.fr.form.field.Number', {
           override: 'Ext.form.field.Number',
           decimalSeparator: '.'
+        });
+      }
+    },
+
+    fixFilterMenuLocalizationError: function() {
+
+      // This menu is not localized, so we do it here.
+
+      var cm, exists;
+
+      cm = Ext.ClassManager;
+      exists = Ext.Function.bind(cm.get, cm);
+
+      if (Epsitec.Locale.getLocaleName() === 'fr') {
+        Ext.override(Ext.ux.grid.FiltersFeature, {
+          menuFilterText: 'Filtres'
+        });
+        Ext.override(Ext.ux.grid.menu.RangeMenu, {
+          menuItemCfgs: {
+            emptyText: 'Entrez un nombre...',
+            selectOnFocus: false,
+            width: 200
+          }
+        });
+        Ext.override(Ext.ux.grid.filter.DateFilter, {
+          afterText: 'Apr\u00E8s le',
+          beforeText: 'Avant le',
+          onText: 'Le'
+        });
+        Ext.override(Ext.ux.grid.filter.BooleanFilter, {
+          yesText: 'Oui',
+          noText: 'Non'
+        });
+        Ext.override(Ext.ux.grid.menu.ListMenu, {
+          loadingText: 'Chargement...'
         });
       }
     },
