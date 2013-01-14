@@ -18,10 +18,10 @@ namespace Epsitec.Common.Pdf.Stikers
 		{
 		}
 
-		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> accessor)
+		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> dataAccessor)
 		{
-			this.count    = count;
-			this.accessor = accessor;
+			this.count        = count;
+			this.dataAccessor = dataAccessor;
 
 			this.stikersPerPage = this.StikersPerPage;
 
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Pdf.Stikers
 
 					if (rank < this.count)
 					{
-						var text = this.accessor (rank);
+						var text = this.dataAccessor (rank);
 
 						var bounds = this.GetStikerBounds (rankIntoPage);
 
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Pdf.Stikers
 		}
 
 
-		private Func<int, FormattedText> accessor;
+		private Func<int, FormattedText> dataAccessor;
 		private int stikersPerPage;
 		private int count;
 	}

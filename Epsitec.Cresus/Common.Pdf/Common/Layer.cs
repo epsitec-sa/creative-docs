@@ -55,13 +55,7 @@ namespace Epsitec.Common.Pdf.Common
 			var box = new Rectangle (Point.Zero, this.info.PageSize);
 			box.Deflate (this.TextMargins);
 
-			var text = this.Text;
-
-			//	{0} est remplacé par le numéro de la page.
-			if (text.ToString ().Contains ("{0}"))
-			{
-				text = text.ToString ().Replace ("{0}", page.ToString ());
-			}
+			var text = GetFinalText (this.Text, page);
 
 			var style = this.TextStyle;
 			if (style == null)
@@ -86,6 +80,18 @@ namespace Epsitec.Common.Pdf.Common
 				port.Transform = t;
 			}
 		}
+
+		private FormattedText GetFinalText(FormattedText text, int page)
+		{
+			//	{0} est remplacé par le numéro de la page.
+			if (text.ToString ().Contains ("{0}"))
+			{
+				text = text.ToString ().Replace ("{0}", page.ToString ());
+			}
+
+			return text;
+		}
+
 
 		private readonly ExportPdfInfo info;
 		private readonly CommonSetup setup;

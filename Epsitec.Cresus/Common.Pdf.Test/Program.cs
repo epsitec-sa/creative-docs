@@ -20,44 +20,51 @@ namespace Common.Pdf.Test
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
 
-			Console.WriteLine ("1) 2 pages basiques");
-			Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
-			Console.WriteLine ("3) 4 pages contenant un tableau de 100 lignes");
-			Console.WriteLine ("4) 4 pages contenant un tableau de 50 lignes");
-			string choice = Console.ReadLine ();
-
-			int result = 1;
-			int.TryParse (choice, out result);
-
-			PdfExportException ex = null;
-
-			switch (result)
+			while (true)
 			{
-				case 1:
-					ex = Program.Test1 ();
-					break;
-				case 2:
-					ex = Program.Test2 ();
-					break;
-				case 3:
-					ex = Program.Test3 ();
-					break;
-				case 4:
-					ex = Program.Test4 ();
-					break;
-			}
+				Console.WriteLine ("1) 2 pages basiques");
+				Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
+				Console.WriteLine ("3) 4 pages contenant un tableau de 100 lignes");
+				Console.WriteLine ("4) 4 pages contenant un tableau de 50 lignes");
+				string choice = Console.ReadLine ();
 
-			if (ex == null)
-			{
-				Console.WriteLine ("Export ok");
-			}
-			else
-			{
-				Console.WriteLine ("message = " + ex.Message);
+				int result = 1;
+				if (!int.TryParse (choice, out result))
+				{
+					break;
+				}
+
+				PdfExportException ex = null;
+
+				switch (result)
+				{
+					case 1:
+						ex = Program.Test1 ();
+						break;
+					case 2:
+						ex = Program.Test2 ();
+						break;
+					case 3:
+						ex = Program.Test3 ();
+						break;
+					case 4:
+						ex = Program.Test4 ();
+						break;
+				}
+
+				if (ex == null)
+				{
+					Console.WriteLine ("Export ok");
+				}
+				else
+				{
+					Console.WriteLine ("message = " + ex.Message);
+				}
+
+				Console.WriteLine ("");
 			}
 
 			Console.WriteLine ("Fin du test de Epsitec.Common.Pdf");
-			Console.ReadLine ();
 		}
 
 
@@ -187,8 +194,10 @@ namespace Common.Pdf.Test
 		private static PdfExportException Test2()
 		{
 			//	Génération d'étiquettes.
-
-			var info = new ExportPdfInfo ();
+			var info = new ExportPdfInfo ()
+			{
+				PrintCropMarks = true,
+			};
 
 			var setup = new StikersSetup ()
 			{
@@ -198,10 +207,10 @@ namespace Common.Pdf.Test
 			var stikers = new Stikers (info, setup);
 			Program.AddFixElements (stikers, setup);
 
-			return stikers.GeneratePdf ("test2.pdf", 100, Program.Test2Accessor);
+			return stikers.GeneratePdf ("test2.pdf", 100, Program.Test2DataAccessor);
 		}
 
-		private static FormattedText Test2Accessor(int rank)
+		private static FormattedText Test2DataAccessor(int rank)
 		{
 			return string.Format ("Monsieur<br/>Jean-Paul <b>Dupond</b> #{0}<br/>Place du Marché 45<br/>1000 Lausanne", (rank+1).ToString ());
 		}
@@ -236,7 +245,7 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic));
 			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
 
-			return array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayAccessor);
+			return array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayDataAccessor);
 		}
 
 		private static PdfExportException Test4()
@@ -266,19 +275,19 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("NPA",      ColumnType.Automatic, alignment: ContentAlignment.BottomRight));
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic, alignment: ContentAlignment.BottomLeft));
 
-			return array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayAccessor);
+			return array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayDataAccessor);
 		}
 
-		private static FormattedText TestArrayAccessor(int row, int column)
+		private static CellContent TestArrayDataAccessor(int row, int column)
 		{
 			if (row == 5 && column == 3)
 			{
-				return "<font size=\"50\"><b>Grand !</b></font>";
+				return new CellContent ("<font size=\"50\"><b>Grand !</b></font>");
 			}
 
 			if (row == 55 && column == 5)
 			{
-				return "<font color=\"#ff0000\">F-75001</font>";
+				return new CellContent ("<font color=\"White\">F-75001</font>", Color.FromName ("Blue"));
 			}
 
 			if (row >= 20 && row <= 50)
@@ -286,13 +295,13 @@ namespace Common.Pdf.Test
 				switch (column)
 				{
 					case 1:
-						return "Madame";
+						return new CellContent ("Madame");
 					case 2:
-						return "Julie";
+						return new CellContent ("Julie", Color.FromName ("Yellow"));
 					case 3:
-						return "<i>Dubosson</i>";
+						return new CellContent ("<i>Dubosson</i>");
 					case 4:
-						return "Av. de la Gare 12<br/>Case postale 1234";
+						return new CellContent ("Av. de la Gare 12<br/>Case postale 1234");
 				}
 			}
 
@@ -300,31 +309,31 @@ namespace Common.Pdf.Test
 			{
 				if (row == 10)
 				{
-					return Program.histoire;
+					return new CellContent (Program.histoire);
 				}
 
 				if (row == 2 || row == 12 || row == 99)
 				{
-					return "À modifier...";
+					return new CellContent ("À modifier...");
 				}
 			}
 
 			switch (column)
 			{
 				case 0:
-					return (row+1).ToString ();
+					return new CellContent ((row+1).ToString ());
 				case 1:
-					return "Monsieur";
+					return new CellContent ("Monsieur");
 				case 2:
-					return "Jean-Paul";
+					return new CellContent ("Jean-Paul");
 				case 3:
-					return "<b>Dupond</b>";
+					return new CellContent ("<b>Dupond</b>");
 				case 4:
-					return "Place du Marché 45";
+					return new CellContent ("Place du Marché 45");
 				case 5:
-					return (1000+row).ToString ();
+					return new CellContent ((1000+row).ToString ());
 				case 6:
-					return "Lausanne";
+					return new CellContent ("Lausanne");
 			}
 
 			return null;

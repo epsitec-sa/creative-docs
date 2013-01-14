@@ -21,11 +21,11 @@ namespace Epsitec.Common.Pdf.Array
 			this.rowPages     = new List<int> ();
 		}
 
-		public PdfExportException GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, FormattedText> accessor)
+		public PdfExportException GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, CellContent> dataAccessor)
 		{
 			this.rowCount          = rowCount;
 			this.columnDefinitions = columnDefinitions;
-			this.accessor          = accessor;
+			this.dataAccessor      = dataAccessor;
 
 			this.ConstantJustification ();
 			this.HorizontalJustification ();
@@ -129,11 +129,12 @@ namespace Epsitec.Common.Pdf.Array
 			var path = new Path ();
 			path.AppendRectangle (box);
 
+			var content = this.GetCellContent (row, column);
+
 			//	Dessine le fond.
-			var color = this.GetCellColor (row, column);
-			if (!color.IsEmpty)
+			if (!content.BackgroundColor.IsEmpty)
 			{
-				port.Color = color;
+				port.Color = content.BackgroundColor;
 				port.PaintSurface (path);
 			}
 
@@ -146,8 +147,7 @@ namespace Epsitec.Common.Pdf.Array
 			}
 
 			//	Dessine le texte contenu.
-			var text = this.GetCellText (row, column);
-			if (!text.IsNullOrEmpty ())
+			if (!content.Text.IsNullOrEmpty ())
 			{
 				box.Deflate (this.Setup.CellMargins);
 
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Pdf.Array
 					Alignment = def.Alignment,
 				};
 
-				port.PaintText (box, text, style);
+				port.PaintText (box, content.Text, style);
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Pdf.Array
 
 			for (int row = -1; row < this.rowCount; row++)  // -1 -> tient compte de la ligne des labels
 			{
-				var text = this.GetCellText (row, column);
+				var text = this.GetCellContent (row, column).Text;
 
 				if (!text.IsNullOrEmpty ())
 				{
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Pdf.Array
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
 				var width = this.columnWidths[column] - this.Setup.CellMargins.Width;
-				var text = this.GetCellText (row, column);
+				var text = this.GetCellContent (row, column).Text;
 
 				if (!text.IsNullOrEmpty ())
 				{
@@ -347,38 +347,38 @@ namespace Epsitec.Common.Pdf.Array
 		}
 
 
-		private Color GetCellColor(int row, int column)
+		private CellContent GetCellContent(int row, int column)
 		{
-			//	Retourne la couleur de fond à utiliser pour une cellule.
+			//	Retourne le contenu d'une cellule.
 			//	La ligne -1 correspond aux labels des colonnes.
 			if (row == -1)  // label ?
 			{
-				return this.Setup.LabelBackgroundColor;
+				return new CellContent (this.columnDefinitions[column].Title, this.Setup.LabelBackgroundColor);
 			}
 			else
 			{
-				if (row % 2 == 0)
-				{
-					return this.Setup.EvenBackgroundColor;
-				}
-				else
-				{
-					return this.Setup.OddBackgroundColor;
-				}
-			}
-		}
+				var content = this.dataAccessor(row, column);
 
-		private FormattedText GetCellText(int row, int column)
-		{
-			//	Retourne le texte contenu dans une cellule.
-			//	La ligne -1 correspond aux labels des colonnes.
-			if (row == -1)  // label ?
-			{
-				return this.columnDefinitions[column].Title;
-			}
-			else
-			{
-				return this.accessor(row, column);
+				if (content == null)
+				{
+					return new CellContent ("");
+				}
+
+				var color = content.BackgroundColor;
+
+				if (color.IsEmpty)
+				{
+					if (row % 2 == 0)
+					{
+						color = this.Setup.EvenBackgroundColor;
+					}
+					else
+					{
+						color = this.Setup.OddBackgroundColor;
+					}
+				}
+
+				return new CellContent (content.Text, color);
 			}
 		}
 
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Pdf.Array
 
 		private int rowCount;
 		private List<ColumnDefinition> columnDefinitions;
-		private Func<int, int, FormattedText> accessor;
+		private Func<int, int, CellContent> dataAccessor;
 		private double labelHeight;
 		private double headerHeight;
 		private double footerHeight;

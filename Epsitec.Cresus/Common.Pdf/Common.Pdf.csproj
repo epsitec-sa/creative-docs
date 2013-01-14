@@ -51,6 +51,7 @@
     </Compile>
     <Compile Include="Array\Array.cs" />
     <Compile Include="Array\ArraySetup.cs" />
+    <Compile Include="Array\CellContent.cs" />
     <Compile Include="Array\ColumnDefinition.cs" />
     <Compile Include="Array\ColumnType.cs" />
     <Compile Include="Common\CommonPdf.cs" />
