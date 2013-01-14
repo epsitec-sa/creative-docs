@@ -99,9 +99,13 @@ namespace Epsitec.Cresus.WebCore.Server
 			Thread.CurrentThread.CurrentUICulture = uiCulture;
 			
 			TypeRosetta.InitializeResources ();
+			Logger.LogToConsole ("Type resources initialized");
+
 			CoreContext.ExecutePendingSetupFunctions ();
+			Logger.LogToConsole ("Setup functions executed");
 
 			IconManager.BuildIcons (clientDirectory.FullName);
+			Logger.LogToConsole ("Icons built");
 
 			Logger.LogToConsole ("Server set up");
 		}

@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core.Databases;
+﻿using Epsitec.Common.IO;
+
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
 
 using System;
 
@@ -21,6 +23,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.authenticationManager = new AuthenticationManager (coreWorkerPool);
 			this.databaseManager = new DatabaseManager ();
 			this.caches = new Caches ();
+
+			Logger.LogToConsole ("Core server started");
 		}
 
 

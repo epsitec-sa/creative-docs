@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support;
+﻿using Epsitec.Common.IO;
+
+using Epsitec.Common.Support;
 
 using Epsitec.Common.Types.Collections.Concurrent;
 
@@ -30,10 +32,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				var coreWorker = new CoreWorker (uiCulture);
 
 				this.workers.Add (coreWorker);
-				this.idleWorkers.Add (coreWorker);				
+				this.idleWorkers.Add (coreWorker);
+
+				Logger.LogToConsole ("Core worker #" + (i + 1) + " started");
 			}
 
 			this.safeSectionManager = new SafeSectionManager ();
+
+			Logger.LogToConsole ("Core worker pool started");
 		}
 
 

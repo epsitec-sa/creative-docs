@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support;
+﻿using Epsitec.Common.IO;
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.WebCore.Server.Core;
@@ -41,6 +43,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			bootStrapper.Initialise ();
 			this.engine = bootStrapper.GetEngine ();
+
+			Logger.LogToConsole ("Nancy server started");
 		}
 
 

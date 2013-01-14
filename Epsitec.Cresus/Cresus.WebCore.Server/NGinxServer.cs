@@ -1,3 +1,5 @@
+using Epsitec.Common.IO;
+
 using System;
 
 using System.Diagnostics;
@@ -18,6 +20,8 @@ namespace Epsitec.Cresus.WebCore.Server
 			this.path = path;
 
 			this.Start ();
+
+			Logger.LogToConsole ("Nginx started");
 		}
 
 
