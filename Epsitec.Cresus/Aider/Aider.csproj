@@ -77,7 +77,6 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderUserScopeViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderUserViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController0.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderHouseholdViewController1.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController3.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupDefViewController.cs" />
