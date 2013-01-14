@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Entities
 
 		public AiderGroupEntity CreateSubGroup(BusinessContext businessContext, string name, int subGroupNumber)
 		{
-			if (subGroupNumber > 99)
+			if (subGroupNumber > AiderGroupIds.MaxSubGroupNumber)
 			{
 				throw new Exception ("Group number too high");
 			}
@@ -74,10 +74,17 @@ namespace Epsitec.Aider.Entities
 			var subGroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
 
 			subGroup.Name = name;
-			subGroup.GroupLevel = this.GroupLevel + 1;
-			subGroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subGroupNumber);
+
+			this.SetupSubGroup (subGroup, subGroupNumber);
 
 			return subGroup;
+		}
+
+
+		public void SetupSubGroup(AiderGroupEntity subGroup, int subGroupNumber)
+		{
+			subGroup.GroupLevel = this.GroupLevel + 1;
+			subGroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subGroupNumber);
 		}
 
 
@@ -94,12 +101,15 @@ namespace Epsitec.Aider.Entities
 			// We look for a number that is not used yet in the subgroups.
 
 			var usedNumbers = this.Subgroups
+				// We check for that in case the group we want to compute the number has already
+				// been added to the list, like in the AiderGroupSubGroupList class.
+				.Where (g => !string.IsNullOrEmpty (g.Path))
 				.Select (g => AiderGroupIds.GetGroupNumber (g.Path))
 				.ToSet ();
 
 			int? number = null;
 
-			for (int i = 1; i < 100; i++)
+			for (int i = AiderGroupIds.MinSubGroupNumber; i < AiderGroupIds.MaxSubGroupNumber + 1; i++)
 			{
 				if (!usedNumbers.Contains (i))
 				{
@@ -273,10 +283,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.subgroupsList == null)
 			{
-				var context = BusinessContextPool.GetCurrentContext (this);
-
-				this.subgroupsList = new List<AiderGroupEntity> ();
-				this.subgroupsList.AddRange (this.FindSubgroups (context));
+				this.subgroupsList = new AiderGroupSubGroupList (this);;
 			}
 
 			value = this.subgroupsList;
@@ -371,7 +378,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private List<AiderGroupEntity> subgroupsList;
+		private AiderGroupSubGroupList subgroupsList;
 		private AiderGroupPersonList participantsList;
 
 		private static readonly int maxGroupLevel = 6;

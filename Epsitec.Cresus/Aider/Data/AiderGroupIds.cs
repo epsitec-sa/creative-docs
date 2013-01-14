@@ -26,6 +26,8 @@ namespace Epsitec.Aider.Data
 		public const string SubgroupSqlWildcard = "___.";
 
 		public const int SubgroupLength         = 4;
+		public const int MinSubGroupNumber		= 1;
+		public const int MaxSubGroupNumber		= 99;
 
 
 		public static string GetRegionId(int regionCode)
