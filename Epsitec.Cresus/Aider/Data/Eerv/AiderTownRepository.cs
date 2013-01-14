@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Data.Eerv
 			this.businessContext = businessContext;
 
 			this.aiderTowns = new Dictionary<Tuple<string, string>, AiderTownEntity> ();
-			this.switzerland = AiderCountryEntity.Find (this.businessContext, "CH", "Suisse");
+			this.switzerland = AiderCountryEntity.Find (this.businessContext, "CH");
 		}
 
 		

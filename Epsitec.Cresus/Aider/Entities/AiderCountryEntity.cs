@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderCountryEntity FindOrCreate(BusinessContext businessContext, string isoCode, string name)
 		{
-			var country = AiderCountryEntity.Find (businessContext, isoCode, name);
+			var country = AiderCountryEntity.Find (businessContext, isoCode);
 
 			if (country == null)
 			{
@@ -51,11 +51,10 @@ namespace Epsitec.Aider.Entities
 			return country;
 		}
 
-		public static AiderCountryEntity Find(BusinessContext businessContext, string isoCode, string name)
+		public static AiderCountryEntity Find(BusinessContext businessContext, string isoCode)
 		{
 			var example = new AiderCountryEntity ()
 			{
-				Name = name,
 				IsoCode = isoCode,
 			};
 

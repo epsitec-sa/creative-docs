@@ -34,11 +34,34 @@ namespace Epsitec.Aider.Data.ECh
 
 		public static void Import(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons)
 		{
+			EChDataImporter.ImportCountries (coreDataManager);
 			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
 
 			EChDataImporter.ImportPersons (coreDataManager, eChReportedPersons, zipCodeIdToEntityKey);
 
 			coreDataManager.CoreData.ResetIndexes ();
+		}
+
+
+		private static void ImportCountries(CoreDataManager coreDataManager)
+		{
+			coreDataManager.Execute (b => EChDataImporter.ImportCountries (b));
+		}
+
+
+		private static void ImportCountries(BusinessContext businessContext)
+		{
+			var countries = Iso3166.GetCountries ("FR");
+
+			foreach (var country in countries)
+			{
+				var isoCode = country.IsoAlpha2;
+				var name = country.Name;
+
+				AiderCountryEntity.FindOrCreate (businessContext, isoCode, name);
+			}
+
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 
 
@@ -71,9 +94,6 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static AiderTownRepository ImportTowns(BusinessContext businessContext)
 		{
-			AiderCountryEntity.FindOrCreate (businessContext, "CH", "Suisse");
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
-			
 			var repository = new AiderTownRepository (businessContext);
 			repository.AddMissingSwissTowns ();
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
