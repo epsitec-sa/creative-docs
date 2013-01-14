@@ -913,8 +913,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (importationGroup == null)
 			{
+				// TODO Don't use the count here. I don't want to them know in order not to break
+				// something before the demo :-P
+
 				var count = parishGroup.Subgroups.Count + 1;
-				importationGroup = AiderGroupEntity.CreateSubGroup (businessContext, parishGroup, name, count);
+				importationGroup = parishGroup.CreateSubGroup (businessContext, name, count);
 			}
 
 			return importationGroup;
@@ -969,11 +972,15 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var subgroups = aiderSubGroupMapping[aiderGroup];
 					
+					// TODO Don't use the count here. This might lead to lots of simplifications
+					// but I don't want to them know in order not to break something before the
+					// demo :-P
+
 					// HACK This is a hack for group names greater than 200 chars that will throw an
 					// exception later. This need to be corrected.
 					var name = eervGroup.Name.Substring (0, Math.Min (200, eervGroup.Name.Length));
 					var number = subgroups.Count + 1;
-					var newAiderGroup = AiderGroupEntity.CreateSubGroup (businessContext, aiderGroup, name, number);
+					var newAiderGroup = aiderGroup.CreateSubGroup (businessContext, name, number);
 
 					subgroups.Add (newAiderGroup);
 					aiderSubGroupMapping[newAiderGroup] = new List<AiderGroupEntity> ();

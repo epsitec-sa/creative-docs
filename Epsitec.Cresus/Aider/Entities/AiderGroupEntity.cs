@@ -64,20 +64,56 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderGroupEntity CreateSubGroup(BusinessContext businessContext, AiderGroupEntity superGroup, string name, int subGroupNumber)
+		public AiderGroupEntity CreateSubGroup(BusinessContext businessContext, string name, int subGroupNumber)
 		{
 			if (subGroupNumber > 99)
 			{
-				throw new NotSupportedException ("Groups cannot have more that 99 children.");
+				throw new Exception ("Group number too high");
 			}
 
 			var subGroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
 
 			subGroup.Name = name;
-			subGroup.GroupLevel = superGroup.GroupLevel + 1;
-			subGroup.Path = AiderGroupIds.CreateSubGroupPath (superGroup.Path, subGroupNumber);
+			subGroup.GroupLevel = this.GroupLevel + 1;
+			subGroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subGroupNumber);
 
 			return subGroup;
+		}
+
+
+		public AiderGroupEntity CreateSubGroup(BusinessContext businessContext, string name)
+		{
+			var nextSubGroupNumber = this.GetNextSubGroupNumber ();
+
+			return this.CreateSubGroup (businessContext, name, nextSubGroupNumber);
+		}
+
+
+		public int GetNextSubGroupNumber()
+		{
+			// We look for a number that is not used yet in the subgroups.
+
+			var usedNumbers = this.Subgroups
+				.Select (g => AiderGroupIds.GetGroupNumber (g.Path))
+				.ToSet ();
+
+			int? number = null;
+
+			for (int i = 1; i < 100; i++)
+			{
+				if (!usedNumbers.Contains (i))
+				{
+					number = i;
+					break;
+				}
+			}
+
+			if (!number.HasValue)
+			{
+				throw new Exception ("Too many subgroups.");
+			}
+
+			return number.Value;
 		}
 
 

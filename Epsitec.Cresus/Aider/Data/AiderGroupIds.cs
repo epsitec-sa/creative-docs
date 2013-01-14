@@ -43,6 +43,13 @@ namespace Epsitec.Aider.Data
 			return superGroupPath + string.Format ("{0}{1:00}.", AiderGroupIds.GroupPrefix, groupNumber);
 		}
 
+		public static int GetGroupNumber(string path)
+		{
+			var part = path.Substring (path.Length - 3, 2);
+
+			return int.Parse (part);
+		}
+
 		public static string ReplacePlaceholders(string path)
 		{
 			var parishPath = AiderGroupIds.GetParishPath ();
