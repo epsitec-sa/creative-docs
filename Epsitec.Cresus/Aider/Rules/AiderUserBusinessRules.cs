@@ -26,8 +26,15 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplySetupRule(AiderUserEntity user)
 		{
+			this.SetupAuthenticationMethod (user);
 			this.SetupUserGroups (user);
 			this.SetupCustomUISettings (user);
+		}
+
+
+		private void SetupAuthenticationMethod(AiderUserEntity user)
+		{
+			user.AuthenticationMethod = UserAuthenticationMethod.Password;
 		}
 
 
