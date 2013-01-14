@@ -12,8 +12,9 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System;
 
@@ -258,7 +259,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetParticipantsTitle()
 		{
-			var nbParticipants = this.Participants.Count;
+			var nbParticipants = this.GetNbParticipants ();
 
 			return TextFormatter.FormatText ("Particpants (", nbParticipants, ")");
 		}
@@ -266,11 +267,71 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetParticipantsSummary()
 		{
-			var groups = this.Participants
-				.Select (g => g.GetCompactSummary ())
-				.CreateSummarySequence (10, "...");
+			int count = 10;
 
-			return FormattedText.Join (FormattedText.FromSimpleText("\n"), groups);
+			var groups = this.GetParticipants (count + 1)
+				.Select (g => g.GetCompactSummary ())
+				.CreateSummarySequence (count, "...");
+
+			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), groups);
+		}
+
+
+		private int GetNbParticipants()
+		{
+			var businessContext = BusinessContextPool.GetCurrentContext (this);
+			var dataContext = businessContext.DataContext;
+
+			var request = AiderGroupEntity.CreateParticipantRequest (dataContext, this, false);
+
+			return dataContext.GetCount (request);
+		}
+
+
+		private IEnumerable<AiderPersonEntity> GetParticipants(int count)
+		{
+			var businessContext = BusinessContextPool.GetCurrentContext (this);
+			var dataContext = businessContext.DataContext;
+
+			var request = AiderGroupEntity.CreateParticipantRequest (dataContext, this, true);
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
+		}
+
+
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool sort)
+		{
+			var echPerson = new eCH_PersonEntity ();
+
+			var aiderPerson = new AiderPersonEntity ()
+			{
+				eCH_Person = echPerson
+			};
+
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				Person = aiderPerson
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+				RequestedEntity = aiderPerson,
+			};
+
+			request.AddCondition (dataContext, participation, g => g.Group == group);
+			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
+			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
+
+			if (sort)
+			{
+				request.AddSortClause (ValueField.Create (echPerson, p => p.PersonOfficialName), SortOrder.Ascending);
+				request.AddSortClause (ValueField.Create (echPerson, p => p.PersonFirstNames), SortOrder.Ascending);
+			}
+
+			return request;
 		}
 
 

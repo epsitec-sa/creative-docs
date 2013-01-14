@@ -2,7 +2,6 @@
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
@@ -27,30 +26,7 @@ namespace Epsitec.Aider.Entities.Helpers
 			var businessContext = BusinessContextPool.GetCurrentContext (this.entity);
 			var dataContext = businessContext.DataContext;
 
-			var echPerson = new eCH_PersonEntity ();
-
-			var aiderPerson = new AiderPersonEntity ()
-			{
-				eCH_Person = echPerson
-			};
-
-			var participation = new AiderGroupParticipantEntity ()
-			{
-				Person = aiderPerson
-			};
-
-			var request = new Request ()
-			{
-				RootEntity = participation,
-				RequestedEntity = aiderPerson,
-			};
-
-			request.AddCondition (dataContext, participation, g => g.Group == this.entity);
-			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
-			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
-
-			request.AddSortClause (ValueField.Create (echPerson, p => p.PersonOfficialName), SortOrder.Ascending);
-			request.AddSortClause (ValueField.Create (echPerson, p => p.PersonFirstNames), SortOrder.Ascending);
+			var request = AiderGroupEntity.CreateParticipantRequest (dataContext, this.entity, true);
 
 			return dataContext.GetByRequest<AiderPersonEntity> (request);
 		}
