@@ -3,18 +3,19 @@
 
 using Epsitec.Aider.Entities;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderGroupViewController : EditionViewController<AiderGroupEntity>
 	{
-		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderGroupEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
-					.HorizontalGroup()
+					.HorizontalGroup ()
 						.Title ("Dates de début et de fin")
 						.Field (x => x.StartDate)
 						.Field (x => x.EndDate)
@@ -23,13 +24,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.GroupLevel).ReadOnly ()
 					.Field (x => x.GroupDef)
 					.Field (x => x.Name)
-//-					.Field (x => x.Description)
-				.End ()
-//-				.Input ()
-//-					.Field (x => x.Root)
-//-				.End ()
-				.Input ()
-					.Field (x => x.Comment.Text)
 				.End ();
 		}
 	}
