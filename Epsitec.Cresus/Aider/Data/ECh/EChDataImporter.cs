@@ -279,6 +279,10 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.PersonSex = eChPerson.Sex;
 			eChPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
 			eChPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
+			if (eChPerson.NationalityStatus == PersonNationalityStatus.Defined)
+			{
+				eChPersonEntity.Nationality = AiderCountryEntity.Find (businessContext, eChPerson.NationalCountryCode);
+			}
 			eChPersonEntity.Origins = eChPerson.OriginPlaces
 				.Select (p => p.Name + " (" + p.Canton + ")")
 				.Join ("\n");
@@ -288,7 +292,7 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.DataSource = Enumerations.DataSource.Government;
 			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
 			eChPersonEntity.RemovalReason = RemovalReason.None;
-
+			
 			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
 			eChPersonEntity.Address1 = eChAddressEntity;
 
