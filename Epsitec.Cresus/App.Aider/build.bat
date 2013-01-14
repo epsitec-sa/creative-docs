@@ -90,7 +90,7 @@ copy Production\nginx-server.conf bin\Build\aider\server\Nginx\conf\nginx.conf
 
 @rem Copy the production certificate and keys
 mkdir bin\Build\aider\server\certificate
-copy Production\certificate.crt bin\Build\aider\server\certificate\certificate.crt
+copy Production\certificate.pem bin\Build\aider\server\certificate\certificate.pem
 copy Production\certificate.key bin\Build\aider\server\certificate\certificate.key
 
 @rem Zip the build.
