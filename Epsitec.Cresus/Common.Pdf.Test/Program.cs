@@ -9,6 +9,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Pdf.Stikers;
 using Epsitec.Common.Pdf.Array;
+using Epsitec.Common.Pdf.TextDocument;
 using Epsitec.Common.Types;
 using Epsitec.Common.Pdf.Common;
 
@@ -26,6 +27,8 @@ namespace Common.Pdf.Test
 				Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
 				Console.WriteLine ("3) 4 pages contenant un tableau de 100 lignes");
 				Console.WriteLine ("4) 4 pages contenant un tableau de 50 lignes");
+				Console.WriteLine ("5) 6 pages contenant un texte plein");
+				Console.WriteLine ("6) 4 pages contenant un texte plein");
 				string choice = Console.ReadLine ();
 
 				int result = 1;
@@ -49,6 +52,12 @@ namespace Common.Pdf.Test
 						break;
 					case 4:
 						ex = Program.Test4 ();
+						break;
+					case 5:
+						ex = Program.Test5 ();
+						break;
+					case 6:
+						ex = Program.Test6 ();
 						break;
 				}
 
@@ -226,8 +235,8 @@ namespace Common.Pdf.Test
 
 			var setup = new ArraySetup ()
 			{
-				HeaderText = "<font size=\"80\">Tableau de test en mode paysage</font><br/>Deuxième ligne de l'en-tête",
-				FooterText = "Fin du tableau",
+				HeaderText = "<font color=\"Blue\"><font size=\"80\">Tableau de test en mode paysage</font><br/>Deuxième ligne de l'en-tête</font>",
+				FooterText = "<font color=\"Blue\">Fin du tableau</font>",
 				EvenBackgroundColor = Color.FromHexa ("ffffee"),  // jaune 
 				OddBackgroundColor  = Color.FromHexa ("ebf8ff"),  // bleu
 			};
@@ -258,8 +267,8 @@ namespace Common.Pdf.Test
 			var setup = new ArraySetup ()
 			{
 				PageMargins = new Margins(100.0),
-				HeaderText = "<font size=\"80\">Tableau de test en mode portrait</font><br/>Deuxième ligne de l'en-tête",
-				FooterText = "Fin du tableau",
+				HeaderText = "<font color=\"Blue\"><font size=\"80\">Tableau de test en mode portrait</font><br/>Deuxième ligne de l'en-tête</font>",
+				FooterText = "<font color=\"Blue\">Fin du tableau</font>",
 			};
 			setup.TextStyle.FontSize = 40.0;
 
@@ -340,6 +349,72 @@ namespace Common.Pdf.Test
 		}
 
 
+		private static PdfExportException Test5()
+		{
+			//	Génération d'un tableau.
+			var info = new ExportPdfInfo ()
+			{
+			};
+
+			var setup = new TextDocumentSetup ()
+			{
+				PageMargins = new Margins (250.0),
+				HeaderText = "<font color=\"Blue\"><font size=\"80\">Texte de test en mode portrait</font><br/>Deuxième ligne de l'en-tête</font>",
+				FooterText = "<font color=\"Blue\">Fin du texte</font>",
+			};
+			setup.TextStyle.FontSize = 48.0;
+
+			var doc = new Epsitec.Common.Pdf.TextDocument.TextDocument (info, setup);
+			Program.AddFixElements (doc, setup);
+
+			string h = Program.histoire.Replace ("assis-debout", "<i>assis-debout</i>").Replace ("descendaient", "<i>descendaient</i>");
+
+			var builder = new System.Text.StringBuilder ();
+			for (int i=0; i<20; i++)
+			{
+				builder.Append (string.Format ("<font size=\"80\"><b>#{0}</b></font><br/>", (i+1).ToString ()));
+				builder.Append (h);
+				builder.Append ("<br/><br/>");
+			}
+
+			return doc.GeneratePdf ("test5.pdf", builder.ToString ());
+		}
+
+
+		private static PdfExportException Test6()
+		{
+			//	Génération d'un tableau.
+			var info = new ExportPdfInfo ()
+			{
+			};
+
+			var setup = new TextDocumentSetup ()
+			{
+				PageMargins = new Margins (250.0),
+				HeaderText = "<font color=\"Blue\"><font size=\"80\">Texte de test en mode portrait</font><br/>Deuxième ligne de l'en-tête</font>",
+				FooterText = "<font color=\"Blue\">Fin du texte</font>",
+			};
+			setup.TextStyle.Font = Font.GetFont ("Times New Roman", "Regular");
+			setup.TextStyle.FontSize = 48.0;
+
+			var doc = new Epsitec.Common.Pdf.TextDocument.TextDocument (info, setup);
+			Program.AddFixElements (doc, setup);
+
+			string h = Program.histoire.Replace ("assis-debout", "<i>assis-debout</i>").Replace ("descendaient", "<i>descendaient</i>");
+
+			var builder = new System.Text.StringBuilder ();
+			for (int i=0; i<20; i++)
+			{
+				builder.Append (string.Format ("<font size=\"80\"><b>#{0}</b></font><br/>", (i+1).ToString ()));
+				builder.Append (string.Format ("<font size=\"{0}\">", (20+i*2).ToString ()));
+				builder.Append (h);
+				builder.Append ("<br/></font><br/>");
+			}
+
+			return doc.GeneratePdf ("test6.pdf", builder.ToString ());
+		}
+
+
 		private static void AddFixElements(CommonPdf common, CommonSetup setup)
 		{
 			common.AddWatermark ("SPECIMEN");
@@ -349,12 +424,12 @@ namespace Common.Pdf.Test
 				FontSize = 20.0,
 			};
 
-			common.AddTopLeftLayer ("Crésus", 50.0, style: style);
-			common.AddTopCenterLayer ("— Document test —", 50.0, style: style);
-			common.AddTopRightLayer ("EPSITEC SA", 50.0, style: style);
+			common.AddTopLeftLayer ("<font color=\"Blue\">Crésus</font>", 50.0, style: style);
+			common.AddTopCenterLayer ("<font color=\"Blue\">— Document test —</font>", 50.0, style: style);
+			common.AddTopRightLayer ("<font color=\"Blue\">EPSITEC SA</font>", 50.0, style: style);
 
-			common.AddBottomLeftLayer ("<i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i>", 50.0, style: style);
-			common.AddBottomRightLayer ("Page {0}", 50.0, style: style);
+			common.AddBottomLeftLayer ("<font color=\"Blue\"><i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i></font>", 50.0, style: style);
+			common.AddBottomRightLayer ("<font color=\"Blue\">Page {0}</font>", 50.0, style: style);
 		}
 
 

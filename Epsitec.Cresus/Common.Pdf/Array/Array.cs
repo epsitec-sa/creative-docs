@@ -288,7 +288,6 @@ namespace Epsitec.Common.Pdf.Array
 					page++;
 					dispo = this.UsableHeight;
 					dispo -= this.labelHeight;
-
 					dispo -= this.rowHeights[row];
 				}
 

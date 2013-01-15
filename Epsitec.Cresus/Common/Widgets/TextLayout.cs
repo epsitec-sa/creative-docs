@@ -2121,9 +2121,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public void PaintCallback(Drawing.Point pos, System.Action<Drawing.Point, string, Drawing.Font, double, Drawing.FontClassInfo[], Drawing.RichColor> renderer)
+		public void PaintCallback(Drawing.Point pos, int? firstLine, int? lastLine, System.Action<Drawing.Point, string, Drawing.Font, double, Drawing.FontClassInfo[], Drawing.RichColor> renderer)
 		{
 			//	"Dessine" tous les caractères (et seulement les caractères) au moyen d'un callback.
+			//	Si firstLine/lastLine contienent des valeurs, on ne dessine que ces lignes.
+			//	Mais attention, pos donne toujours la position de la première ligne !
 			this.UpdateLayout ();
 
 			bool firstBlock = true;
@@ -2131,16 +2133,17 @@ namespace Epsitec.Common.Widgets
 
 			foreach (JustifBlock block in this.blocks)
 			{
-				if (!block.Visible)
-				{
-					continue;
-				}
-
 				if (firstBlock)
 				{
 					firstBlock = false;
 					double shift = block.IsImage ? block.ImageAscender : block.Font.Ascender * block.FontSize;
 					offsetY = System.Math.Floor (shift) - shift + 1;
+				}
+
+				if (firstLine.HasValue && lastLine.HasValue && 
+					(block.IndexLine < firstLine.Value || block.IndexLine > lastLine.Value))
+				{
+					continue;
 				}
 
 				if (block.IsImage || block.Tab || block.List)

@@ -80,6 +80,8 @@
     <Compile Include="Engine\Writer.cs" />
     <Compile Include="Stikers\Stikers.cs" />
     <Compile Include="Stikers\StikersSetup.cs" />
+    <Compile Include="TextDocument\TextDocumentSetup.cs" />
+    <Compile Include="TextDocument\TextDocument.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

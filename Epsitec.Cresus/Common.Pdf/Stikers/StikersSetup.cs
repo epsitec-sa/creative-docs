@@ -39,7 +39,8 @@ namespace Epsitec.Common.Pdf.Stikers
 		//           |<----------->|            >|--|<->|  reste
 		//           StikerSize.Width     StikerMargins.Right
 
-		public StikersSetup() : base()
+		public StikersSetup()
+			: base ()
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins   = new Margins (100.0);
@@ -73,6 +74,7 @@ namespace Epsitec.Common.Pdf.Stikers
 		public bool PaintFrame
 		{
 			//	Indique s'il faut imprimer un cadre rectangulaire gris pour délimiter chaque étiquette.
+			//	Utile lors de la phase de mise en place.
 			set;
 			get;
 		}

@@ -561,7 +561,32 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
+		public static double[] GetTextLineHeights(double width, FormattedText formattedText, TextStyle style)
+		{
+			if (formattedText.IsNullOrEmpty ())
+			{
+				return null;
+			}
+			else
+			{
+				var textLayout = Port.GetTextLayout (new Size (width, 10000), formattedText, style);
+
+				var heights = new double[textLayout.TotalLineCount];
+				for (int i=0; i<heights.Length; i++)
+				{
+					heights[i] = textLayout.GetLineHeight (i);
+				}
+
+				return heights;
+			}
+		}
+
 		public void PaintText(Rectangle box, FormattedText formattedText, TextStyle style)
+		{
+			this.PaintText (box, null, null, formattedText, style);
+		}
+
+		public void PaintText(Rectangle box, int? firstLine, int? lastLine, FormattedText formattedText, TextStyle style)
 		{
 			if (this.IsPreProcessText)
 			{
@@ -570,7 +595,7 @@ namespace Epsitec.Common.Pdf.Engine
 			else
 			{
 				var textLayout = Port.GetTextLayout (box.Size, formattedText, style);
-				textLayout.PaintCallback (box.BottomLeft, this.TextLayoutRenderer);
+				textLayout.PaintCallback (box.BottomLeft, firstLine, lastLine, this.TextLayoutRenderer);
 			}
 		}
 
