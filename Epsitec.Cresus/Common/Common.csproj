@@ -360,6 +360,7 @@
     <Compile Include="FormEngine\IFormResourceProvider.cs" />
     <Compile Include="FormEngine\Serialization.cs" />
     <Compile Include="FormEngine\Xml.cs" />
+    <Compile Include="IO\Web.cs" />
     <Compile Include="Support\EntityEngine\EntityColumn.cs" />
     <Compile Include="Support\EntityEngine\EntityField.cs" />
     <Compile Include="Support\EntityEngine\EntityFieldConverter.cs" />
