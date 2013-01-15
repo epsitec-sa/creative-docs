@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -21,14 +21,16 @@ namespace Epsitec.Data.Platform
 		}
 
 
-		public static IEnumerable<string> GetAlpha2Codes()
+		public static IEnumerable<string> GetAlpha2Codes(string[] cache = null)
 		{
 			if (Iso3166.list_en1_semic_3_txt == null)
 			{
-				Iso3166.list_en1_semic_3_txt = Iso3166.DownloadLines ("http://www.iso.org/iso/list-en1-semic-3.txt").ToArray ();
+				Iso3166.list_en1_semic_3_txt = Iso3166.LoadAlpha2Codes ();
 			}
 
-			var codes = from line in Iso3166.list_en1_semic_3_txt.Skip (2)
+			var source = cache ?? Iso3166.list_en1_semic_3_txt;
+
+			var codes = from line in source.Skip (2)
 						let pos = line.IndexOf (';')
 						where pos > 0
 						select line.Substring (pos+1);
@@ -47,7 +49,12 @@ namespace Epsitec.Data.Platform
 			//	We are querying the GeoNames server, which provides up to 30'000 replies
 			//	par day with our free account.
 
-			string key = string.Concat (code, "-", language);
+			if (Iso3166.geoNamesCountryInformationCache.Count == 0)
+			{
+				Iso3166.geoNamesCountryInformationCache = Iso3166.LoadCountryInformation ();
+			}
+
+			string key = Iso3166.GetCountryKey (code, language);
 			GeoNamesCountryInformation info;
 
 			if (Iso3166.geoNamesCountryInformationCache.TryGetValue (key, out info))
@@ -55,10 +62,31 @@ namespace Epsitec.Data.Platform
 				return info;
 			}
 
-			string uri = string.Format ("http://api.geonames.org/countryInfoCSV?lang={0}&country={1}&username=epsitec", language, code);
-			string[] values = Iso3166.DownloadLines (uri).Skip (1).First ().Split ('\t');
+			info = Iso3166.MaintenanceDownloadCountryInformation (code, language);
 
-			info = new GeoNamesCountryInformation ()
+			Iso3166.geoNamesCountryInformationCache[key] = info;
+
+			return info;
+		}
+
+		public static string GetCountryKey(string code, string language)
+		{
+			return string.Concat (code, "-", language);
+		}
+
+		
+		
+		public static string[] MaintenanceDownloadAlpha2CodesTextFile()
+		{
+			return Iso3166.DownloadLines ("http://www.iso.org/iso/list-en1-semic-3.txt").ToArray ();
+		}
+
+		public static GeoNamesCountryInformation MaintenanceDownloadCountryInformation(string code, string language)
+		{
+			var uri    = string.Format ("http://api.geonames.org/countryInfoCSV?lang={0}&country={1}&username=epsitec", language, code);
+			var values = Iso3166.DownloadLines (uri).Skip (1).First ().Split ('\t');
+
+			var info = new GeoNamesCountryInformation ()
 			{
 				IsoAlpha2  = values[0],
 				IsoAlpha3  = values[1],
@@ -71,24 +99,46 @@ namespace Epsitec.Data.Platform
 				Currency   = values[10]
 			};
 
-			Iso3166.geoNamesCountryInformationCache[key] = info;
-
 			return info;
+		}
+
+		public static Dictionary<string, GeoNamesCountryInformation> MaintenanceCreateCountryInfoCache()
+		{
+			return new Dictionary<string, GeoNamesCountryInformation> ();
+		}
+
+		public static string MaintenanceSerializeCountryInfoCache(Dictionary<string, GeoNamesCountryInformation> cache)
+		{
+			return ServiceStack.Text.JsonSerializer.SerializeToString (cache);
+		}
+
+		
+		
+		private static string[] LoadAlpha2Codes()
+		{
+			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
+			var path     = "Epsitec.Data.Platform.DataFiles.alpha2codes.txt";
+
+			using (var stream = assembly.GetManifestResourceStream (path))
+			{
+				return Epsitec.Common.IO.StringLineExtractor.GetLines (stream).ToArray ();
+			}
+		}
+
+		private static Dictionary<string, GeoNamesCountryInformation> LoadCountryInformation()
+		{
+			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
+			var path     = "Epsitec.Data.Platform.DataFiles.CountryInfo.zip";
+			var json     = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, path, System.Text.Encoding.Default);
+
+			return ServiceStack.Text.JsonSerializer.DeserializeFromString<Dictionary<string, GeoNamesCountryInformation>> (json);
 		}
 
 		private static IEnumerable<string> DownloadLines(string uri)
 		{
-			string value;
-
-			using (WebClient client = new WebClient ())
-			{
-				byte[] data = client.DownloadData (uri);
-				value = System.Text.Encoding.UTF8.GetString (data);
-			}
-
-			return value.Split ('\n').Select (x => x.TrimEnd (' ', '\r'));
+			return Epsitec.Common.IO.Web.DownloadLines (uri, System.Text.Encoding.UTF8);
 		}
-
+		
 		private static Dictionary<string, GeoNamesCountryInformation> geoNamesCountryInformationCache;
 		private static string[] list_en1_semic_3_txt;
 	}
