@@ -45,7 +45,7 @@ namespace Epsitec.Data.Platform
 				shortName = shortName.Substring (0, shortName.Length - 3);
 			}
 
-			this.alternateName = TextConverter.ConvertToUpperAndStripAccents (shortName);
+			this.alternateName = SwissPostZipInformation.ConvertToAlternateName (shortName);
 		}
 
 
@@ -56,10 +56,18 @@ namespace Epsitec.Data.Platform
 		/// <returns><c>true</c> if the name matches this instance; otherwise, <c>false</c>.</returns>
 		public bool MatchName(string name)
 		{
-			var altName = TextConverter.ConvertToUpperAndStripAccents (name);
-
-			return (this.alternateName == altName)
+			return this.MatchAlternateName (SwissPostZipInformation.ConvertToAlternateName (name))
 				|| string.Equals (name, this.LongName, System.StringComparison.OrdinalIgnoreCase);
+		}
+
+		internal bool MatchAlternateName(string altName)
+		{
+			return this.alternateName == altName;
+		}
+
+		public static string ConvertToAlternateName(string shortName)
+		{
+			return TextConverter.ConvertToUpperAndStripAccents (shortName);
 		}
 
 		public override string ToString()

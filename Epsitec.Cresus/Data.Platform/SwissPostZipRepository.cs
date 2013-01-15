@@ -48,7 +48,7 @@ namespace Epsitec.Data.Platform
 		
 		public IEnumerable<SwissPostZipInformation> FindAll()
 		{
-			return nameByZip.SelectMany (x => x.Value);
+			return this.nameByZip.SelectMany (x => x.Value);
 		}
 
 		public SwissPostZipInformation FindByOnrpCode(int onrpCode)
@@ -72,6 +72,12 @@ namespace Epsitec.Data.Platform
 			{
 				return EmptyList<SwissPostZipInformation>.Instance;
 			}
+		}
+
+		public IEnumerable<SwissPostZipInformation> FindZips(string name)
+		{
+			var altName = SwissPostZipInformation.ConvertToAlternateName (name);
+			return this.FindAll ().Where (x => x.MatchAlternateName (altName)|| string.Equals (name, x.LongName, System.StringComparison.OrdinalIgnoreCase));
 		}
 
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, int zipComplement)
@@ -102,6 +108,27 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public int FindOnrp(int onrpCode, int zipCode, string name)
+		{
+			if (this.nameByOnrp.ContainsKey (onrpCode))
+			{
+				return onrpCode;
+			}
+			else
+			{
+				var info = this.FindZips (zipCode, name).Concat (this.FindZips (name)).FirstOrDefault ();
+
+				if (info != null)
+				{
+					return info.OnrpCode;
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine ("ONRP code not found for {0} {1} (old ONRP was {2})", zipCode, name, onrpCode);
+					return 0;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Sorts the zip records of a same zip code. The domiciles/mixed come before PO boxes,
