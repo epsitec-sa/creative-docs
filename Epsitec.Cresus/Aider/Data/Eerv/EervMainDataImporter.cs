@@ -3,8 +3,6 @@ using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
@@ -24,7 +22,8 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			EervMainDataImporter.ImportGroupDefinitions (coreDataManager, eervData);
 
-			EervMainDataImporter.ImportRegionsAndParishes (coreDataManager, parishRepository);
+			EervMainDataImporter.ImportGlobalGroups (coreDataManager, eervData);
+			EervMainDataImporter.ImportRegionAndParishGroups (coreDataManager, parishRepository);
 
 			EervMainDataImporter.AssignPersonsToParishes (coreDataManager, parishRepository);
 
@@ -87,16 +86,52 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportRegionsAndParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
+		private static void ImportGlobalGroups(CoreDataManager coreDataManager, EervMainData eervData)
 		{
-			coreDataManager.Execute(b =>
+			coreDataManager.Execute (b => EervMainDataImporter.ImportGlobalGroups (b, eervData));
+		}
+
+
+		private static void ImportGlobalGroups(BusinessContext businessContext, EervMainData eervData)
+		{
+			var rootAiderGroupDefs =
+				from eervGroupDef in eervData.GroupDefinitions
+				where eervGroupDef.GroupLevel == 0
+				let path = eervGroupDef.GetPathTemplate ()
+				where !path.StartsWith (AiderGroupIds.Region)
+					&& !path.StartsWith (AiderGroupIds.Parish)
+					&& !path.StartsWith (AiderGroupIds.Function)
+				let example = new AiderGroupDefEntity ()
+				{
+					PathTemplate = path
+				}
+				select businessContext.DataContext.GetByExample (example).Single ();
+
+			foreach (var aiderGroupDef in rootAiderGroupDefs)
 			{
-				EervMainDataImporter.ImportRegionsAndParishes(b, parishRepository);
+				aiderGroupDef.Instantiate (businessContext, new GroupPathInfo
+				(
+					name: aiderGroupDef.Name,
+					template: aiderGroupDef.PathTemplate,
+					output: aiderGroupDef.PathTemplate,
+					level: 0
+				));
+			}
+
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
+		}
+
+
+		private static void ImportRegionAndParishGroups(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
+		{
+			coreDataManager.Execute (b =>
+			{
+				EervMainDataImporter.ImportRegionAndParishGroups (b, parishRepository);
 			});
 		}
 
 
-		private static void ImportRegionsAndParishes(BusinessContext businessContext, ParishAddressRepository parishRepository)
+		private static void ImportRegionAndParishGroups(BusinessContext businessContext, ParishAddressRepository parishRepository)
 		{
 			var regions = EervMainDataImporter.GetRegions (parishRepository);
 
