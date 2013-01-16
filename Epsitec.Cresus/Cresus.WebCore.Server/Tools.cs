@@ -24,6 +24,8 @@ using System.Collections.Generic;
 
 using System.Diagnostics;
 
+using System.IO;
+
 using System.Linq;
 
 
@@ -169,7 +171,26 @@ namespace Epsitec.Cresus.WebCore.Server
 		public static void LogError(string message)
 		{
 			Tools.LogMessage (message);
-			ErrorLogger.LogErrorMessage (message);
+
+			var path = Tools.GetErrorFilePath ();
+			ErrorLogger.LogErrorMessage (message, path);
+		}
+
+
+		private static string GetErrorFilePath()
+		{
+			var d = DateTime.Now;
+			var template = "crash {0} {1:0000}-{2:00}-{3:00} {4:00}-{5:00}-{6:00}.log";
+			var name = string.Format (template, Guid.NewGuid(), d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second);
+			
+			return Path.Combine
+			(
+				Environment.GetFolderPath (Environment.SpecialFolder.CommonApplicationData),
+				"Epsitec",
+				"WebCore",
+				"Logs",
+				name
+			);
 		}
 
 
