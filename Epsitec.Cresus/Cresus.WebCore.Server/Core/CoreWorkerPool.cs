@@ -13,6 +13,10 @@ using System.Collections.Generic;
 
 using System.Globalization;
 
+using System.Linq;
+
+using System.Threading;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -24,22 +28,60 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public CoreWorkerPool(int nbCoreWorkers, CultureInfo uiCulture)
 		{
-			this.workers = new List<CoreWorker>();
+			this.workers = new List<CoreWorker> ();
 			this.idleWorkers = new BlockingBag<CoreWorker> ();
 
-			for (int i = 0; i < nbCoreWorkers; i++)
+			foreach (var worker in this.StartCoreWorkers (nbCoreWorkers, uiCulture))
 			{
-				var coreWorker = new CoreWorker (uiCulture);
-
-				this.workers.Add (coreWorker);
-				this.idleWorkers.Add (coreWorker);
-
-				Logger.LogToConsole ("Core worker #" + (i + 1) + " started");
+				this.workers.Add (worker);
+				this.idleWorkers.Add (worker);
 			}
 
 			this.safeSectionManager = new SafeSectionManager ();
 
 			Logger.LogToConsole ("Core worker pool started");
+		}
+
+
+		private IList<CoreWorker> StartCoreWorkers(int nbCoreWorkers, CultureInfo uiCulture)
+		{
+			var exclusion = new object ();
+			var workers = new List<CoreWorker> ();
+
+			// Here we start the first core worker alone. So we are sure that any code that must be
+			// run to initialize global stuff that is not yet initialized is initialized on a single
+			// thread and so that we don't have race conditions or other threading problems.
+			this.StartCoreWorker (1, uiCulture, exclusion, workers);
+
+			var threads = Enumerable
+				.Range (2, nbCoreWorkers)
+				.Select (i => new Thread (() => this.StartCoreWorker (i + 1, uiCulture, exclusion, workers)))
+				.ToList ();
+
+			foreach (var thread in threads)
+			{
+				thread.Start ();
+			}
+
+			foreach (var thread in threads)
+			{
+				thread.Join ();
+			}
+
+			return workers;
+		}
+
+
+		private void StartCoreWorker(int id, CultureInfo uiCulture, object exclusion, List<CoreWorker> workers)
+		{
+			var worker = new CoreWorker (uiCulture);
+
+			Logger.LogToConsole ("Core worker #" + id + " started");
+
+			lock (exclusion)
+			{
+				workers.Add (worker);
+			}
 		}
 
 
