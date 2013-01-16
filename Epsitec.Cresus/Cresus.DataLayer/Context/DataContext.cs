@@ -1565,6 +1565,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		void System.IDisposable.Dispose()
 		{
 			this.Dipose (true);
+			System.GC.SuppressFinalize (this);
 		}
 
 		#endregion
