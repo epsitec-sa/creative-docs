@@ -13,9 +13,7 @@ using System.Collections.Generic;
 
 using System.Globalization;
 
-using System.Linq;
-
-using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core
@@ -45,43 +43,37 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private IList<CoreWorker> StartCoreWorkers(int nbCoreWorkers, CultureInfo uiCulture)
 		{
-			var exclusion = new object ();
 			var workers = new List<CoreWorker> ();
 
-			// Here we start the first core worker alone. So we are sure that any code that must be
-			// run to initialize global stuff that is not yet initialized is initialized on a single
-			// thread and so that we don't have race conditions or other threading problems.
-			this.StartCoreWorker (1, uiCulture, exclusion, workers);
-
-			var threads = Enumerable
-				.Range (2, nbCoreWorkers)
-				.Select (i => new Thread (() => this.StartCoreWorker (i + 1, uiCulture, exclusion, workers)))
-				.ToList ();
-
-			foreach (var thread in threads)
+			if (nbCoreWorkers > 0)
 			{
-				thread.Start ();
-			}
+				// Here we start the first core worker alone. So we are sure that any code that must be
+				// run to initialize global stuff that is not yet initialized is initialized on a single
+				// thread and so that we don't have race conditions or other threading problems.
 
-			foreach (var thread in threads)
-			{
-				thread.Join ();
+				var firstWorker = new CoreWorker (uiCulture);
+				Logger.LogToConsole ("Core worker #1 started");
+
+				workers.Add (firstWorker);
+
+				if (nbCoreWorkers > 1)
+				{
+					var exclusion = new object ();
+
+					Parallel.For (2, nbCoreWorkers + 1, i =>
+					{
+						var newWorker = new CoreWorker (uiCulture);
+						Logger.LogToConsole ("Core worker #" + i + " started");
+
+						lock (exclusion)
+						{
+							workers.Add (newWorker);
+						}
+					});
+				}
 			}
 
 			return workers;
-		}
-
-
-		private void StartCoreWorker(int id, CultureInfo uiCulture, object exclusion, List<CoreWorker> workers)
-		{
-			var worker = new CoreWorker (uiCulture);
-
-			Logger.LogToConsole ("Core worker #" + id + " started");
-
-			lock (exclusion)
-			{
-				workers.Add (worker);
-			}
 		}
 
 
