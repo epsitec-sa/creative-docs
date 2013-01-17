@@ -48,6 +48,7 @@ namespace Epsitec.Common.Pdf.TextDocument
 			}
 
 			//	Imprime le texte.
+#if false
 			var bounds = new Rectangle (Point.Zero, this.info.PageSize);
 			bounds.Deflate (this.setup.PageMargins.Left, this.setup.PageMargins.Right, topMargin, this.setup.PageMargins.Bottom);
 
@@ -72,6 +73,25 @@ namespace Epsitec.Common.Pdf.TextDocument
 			bounds.Offset (0, h);
 
 			port.PaintText (bounds, firstLine, lastLine, this.text, this.Setup.TextStyle);
+#else
+			var clipRect = new Rectangle (Point.Zero, this.info.PageSize);
+			clipRect.Deflate (this.setup.PageMargins.Left, this.setup.PageMargins.Right, topMargin, this.setup.PageMargins.Bottom);
+
+			double h = 0;
+			for (int i=0; i<this.linePages.Count; i++)
+			{
+				if (this.linePages[i] >= page)
+				{
+					break;
+				}
+
+				h += this.lineHeights[i];
+			}
+
+			var bounds = new Rectangle (clipRect.Left, clipRect.Bottom, clipRect.Width, clipRect.Height + h);
+
+			port.PaintText (bounds, clipRect, this.text, this.Setup.TextStyle);
+#endif
 
 			//	Imprime le footer au bas de la dernière page.
 			if (page == this.pageCount && this.footerHeight > 0)

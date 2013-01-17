@@ -235,11 +235,10 @@ namespace Common.Pdf.Test
 
 			var setup = new ArraySetup ()
 			{
-				HeaderText = "<font color=\"Blue\"><font size=\"80\">Tableau de test en mode paysage</font><br/>Deuxième ligne de l'en-tête</font>",
-				FooterText = "<font color=\"Blue\">Fin du tableau</font>",
 				EvenBackgroundColor = Color.FromHexa ("ffffee"),  // jaune 
 				OddBackgroundColor  = Color.FromHexa ("ebf8ff"),  // bleu
 			};
+			Program.AddHeaderAndFooter (setup);
 
 			var array = new Epsitec.Common.Pdf.Array.Array (info, setup);
 			Program.AddFixElements (array, setup);
@@ -267,10 +266,9 @@ namespace Common.Pdf.Test
 			var setup = new ArraySetup ()
 			{
 				PageMargins = new Margins(100.0),
-				HeaderText = "<font color=\"Blue\"><font size=\"80\">Tableau de test en mode portrait</font><br/>Deuxième ligne de l'en-tête</font>",
-				FooterText = "<font color=\"Blue\">Fin du tableau</font>",
 			};
 			setup.TextStyle.FontSize = 40.0;
+			Program.AddHeaderAndFooter (setup);
 
 			var array = new Epsitec.Common.Pdf.Array.Array (info, setup);
 			Program.AddFixElements (array, setup);
@@ -359,12 +357,11 @@ namespace Common.Pdf.Test
 			var setup = new TextDocumentSetup ()
 			{
 				PageMargins = new Margins (250.0),
-				HeaderText = "<font color=\"Blue\"><font size=\"80\">Texte de test en mode portrait</font><br/>Deuxième ligne de l'en-tête</font>",
-				FooterText = "<font color=\"Blue\">Fin du texte</font>",
 			};
 			setup.TextStyle.FontSize = 48.0;
+			Program.AddHeaderAndFooter (setup);
 
-			var doc = new Epsitec.Common.Pdf.TextDocument.TextDocument (info, setup);
+			var doc = new TextDocument (info, setup);
 			Program.AddFixElements (doc, setup);
 
 			string h = Program.histoire.Replace ("assis-debout", "<i>assis-debout</i>").Replace ("descendaient", "<i>descendaient</i>");
@@ -391,11 +388,10 @@ namespace Common.Pdf.Test
 			var setup = new TextDocumentSetup ()
 			{
 				PageMargins = new Margins (250.0),
-				HeaderText = "<font color=\"Blue\"><font size=\"80\">Texte de test en mode portrait</font><br/>Deuxième ligne de l'en-tête</font>",
-				FooterText = "<font color=\"Blue\">Fin du texte</font>",
 			};
 			setup.TextStyle.Font = Font.GetFont ("Times New Roman", "Regular");
 			setup.TextStyle.FontSize = 48.0;
+			Program.AddHeaderAndFooter (setup);
 
 			var doc = new Epsitec.Common.Pdf.TextDocument.TextDocument (info, setup);
 			Program.AddFixElements (doc, setup);
@@ -430,6 +426,28 @@ namespace Common.Pdf.Test
 
 			common.AddBottomLeftLayer ("<font color=\"Blue\"><i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i></font>", 50.0, style: style);
 			common.AddBottomRightLayer ("<font color=\"Blue\">Page {0}</font>", 50.0, style: style);
+		}
+
+		private static void AddHeaderAndFooter(CommonSetup setup)
+		{
+			const string headerText = "<font color=\"Red\"><font size=\"80\">En-tête</font><br/>Deuxième ligne de l'en-tête</font>";
+			const string footerText = "<font color=\"Red\">Pied de page</font>";
+
+			if (setup is ArraySetup)
+			{
+				var s = setup as ArraySetup;
+
+				s.HeaderText = headerText;
+				s.FooterText = footerText;
+			}
+
+			if (setup is TextDocumentSetup)
+			{
+				var s = setup as TextDocumentSetup;
+
+				s.HeaderText = headerText;
+				s.FooterText = footerText;
+			}
 		}
 
 

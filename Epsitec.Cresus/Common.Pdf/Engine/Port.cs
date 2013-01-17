@@ -583,10 +583,10 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void PaintText(Rectangle box, FormattedText formattedText, TextStyle style)
 		{
-			this.PaintText (box, null, null, formattedText, style);
+			this.PaintText (box, Rectangle.MaxValue, formattedText, style);
 		}
 
-		public void PaintText(Rectangle box, int? firstLine, int? lastLine, FormattedText formattedText, TextStyle style)
+		public void PaintText(Rectangle box, Rectangle clipRect, FormattedText formattedText, TextStyle style)
 		{
 			if (this.IsPreProcessText)
 			{
@@ -595,7 +595,7 @@ namespace Epsitec.Common.Pdf.Engine
 			else
 			{
 				var textLayout = Port.GetTextLayout (box.Size, formattedText, style);
-				textLayout.PaintCallback (box.BottomLeft, firstLine, lastLine, this.TextLayoutRenderer);
+				textLayout.Paint (box.BottomLeft, this, clipRect, Color.Empty, GlyphPaintStyle.Normal);
 			}
 		}
 
@@ -739,6 +739,7 @@ namespace Epsitec.Common.Pdf.Engine
 		
 		public double PaintText(double x, double y, string text, Font font, double fontSize, FontClassInfo[] infos)
 		{
+#if false
 			for ( int i=0 ; i<infos.Length ; i++ )
 			{
 				if ( infos[i].Scale != 1.00 &&
@@ -759,6 +760,7 @@ namespace Epsitec.Common.Pdf.Engine
 					return totalW-spaceW;
 				}
 			}
+#endif
 			
 			return this.PaintText(x, y, text, font, fontSize);
 		}

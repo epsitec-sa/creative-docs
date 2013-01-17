@@ -2121,57 +2121,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public void PaintCallback(Drawing.Point pos, int? firstLine, int? lastLine, System.Action<Drawing.Point, string, Drawing.Font, double, Drawing.FontClassInfo[], Drawing.RichColor> renderer)
-		{
-			//	"Dessine" tous les caractères (et seulement les caractères) au moyen d'un callback.
-			//	Si firstLine/lastLine contienent des valeurs, on ne dessine que ces lignes.
-			//	Mais attention, pos donne toujours la position de la première ligne !
-			this.UpdateLayout ();
-
-			bool firstBlock = true;
-			double offsetY = 0.0;
-
-			foreach (JustifBlock block in this.blocks)
-			{
-				if (firstBlock)
-				{
-					firstBlock = false;
-					double shift = block.IsImage ? block.ImageAscender : block.Font.Ascender * block.FontSize;
-					offsetY = System.Math.Floor (shift) - shift + 1;
-				}
-
-				if (firstLine.HasValue && lastLine.HasValue && 
-					(block.IndexLine < firstLine.Value || block.IndexLine > lastLine.Value))
-				{
-					continue;
-				}
-
-				if (block.IsImage || block.Tab || block.List)
-				{
-					continue;
-				}
-
-				if (!string.IsNullOrEmpty (block.Text))
-				{
-					double x = pos.X+block.Pos.X;
-					double y = pos.Y+block.Pos.Y;
-
-					Drawing.RichColor color;
-					if (block.Anchor)
-					{
-						color = new Drawing.RichColor (this.AnchorColor);
-					}
-					else
-					{
-						color = block.GetFontColor ();
-					}
-
-					renderer (new Drawing.Point (x, y-offsetY), block.Text, block.Font, block.FontSize, block.Infos, color);
-				}
-			}
-		}
-
-
 		private void UnderlinePoints(Drawing.IPaintPort graphics, JustifBlock block,
 									 Drawing.Point pos,
 									 out Drawing.Point p1, out Drawing.Point p2)
