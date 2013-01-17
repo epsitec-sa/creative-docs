@@ -235,8 +235,8 @@ namespace Common.Pdf.Test
 
 			var setup = new ArraySetup ()
 			{
-				EvenBackgroundColor = Color.FromHexa ("ffffee"),  // jaune 
-				OddBackgroundColor  = Color.FromHexa ("ebf8ff"),  // bleu
+				EvenBackgroundColor = Color.FromAlphaColor(0.1, Color.FromHexa ("ffff00")),  // jaune 
+				OddBackgroundColor  = Color.FromAlphaColor(0.1, Color.FromHexa ("00aaff")),  // bleu
 			};
 			Program.AddHeaderAndFooter (setup);
 
@@ -304,7 +304,7 @@ namespace Common.Pdf.Test
 					case 1:
 						return new CellContent ("Madame");
 					case 2:
-						return new CellContent ("Julie", Color.FromName ("Yellow"));
+						return new CellContent ("Julie", Color.FromAlphaColor(0.2, Color.FromName ("Red")));
 					case 3:
 						return new CellContent ("<i>Dubosson</i>");
 					case 4:
@@ -358,7 +358,7 @@ namespace Common.Pdf.Test
 			{
 				PageMargins = new Margins (250.0),
 			};
-			setup.TextStyle.FontSize = 48.0;
+			setup.TextStyle.FontSize = 52.0;
 			Program.AddHeaderAndFooter (setup);
 
 			var doc = new TextDocument (info, setup);
@@ -431,7 +431,7 @@ namespace Common.Pdf.Test
 		private static void AddHeaderAndFooter(CommonSetup setup)
 		{
 			const string headerText = "<font color=\"Red\"><font size=\"80\">En-tête</font><br/>Deuxième ligne de l'en-tête</font>";
-			const string footerText = "<font color=\"Red\">Pied de page</font>";
+			const string footerText = "<font color=\"Red\"><font size=\"80\">Pied de page</font><br/>Deuxième ligne du pied de page</font>";
 
 			if (setup is ArraySetup)
 			{

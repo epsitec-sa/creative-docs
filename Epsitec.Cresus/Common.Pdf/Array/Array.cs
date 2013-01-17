@@ -356,14 +356,21 @@ namespace Epsitec.Common.Pdf.Array
 			}
 			else
 			{
+				FormattedText text;
+				Color color;
+
 				var content = this.dataAccessor(row, column);
 
 				if (content == null)
 				{
-					return new CellContent ("");
+					text = "";
+					color = Color.Empty;
 				}
-
-				var color = content.BackgroundColor;
+				else
+				{
+					text = content.Text;
+					color = content.BackgroundColor;
+				}
 
 				if (color.IsEmpty)
 				{
@@ -377,7 +384,7 @@ namespace Epsitec.Common.Pdf.Array
 					}
 				}
 
-				return new CellContent (content.Text, color);
+				return new CellContent (text, color);
 			}
 		}
 

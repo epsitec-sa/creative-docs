@@ -1,8 +1,8 @@
 //	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Drawing;
 using System.Collections.Generic;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
@@ -21,39 +21,59 @@ namespace Epsitec.Common.Pdf.Engine
 			this.fontHash      = fontHash;
 			this.characterHash = characterHash;
 
+			this.complexSurfaceList = new List<ComplexSurface> ();
+			this.imageSurfaceList   = new List<ImageSurface> ();
 			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 			this.Reset();
+
+			this.nextComplexSurfaceId = 1;
 		}
 
 		public void Reset()
 		{
 			//	Réinitialise le port, mais surtout pas le stack des modificateurs de couleurs.
-			this.colorForce      = ColorForce.Default;
-			this.defaultDecimals = 2;
-			this.LineWidth       = 1.0;
-			this.lineJoin        = JoinStyle.MiterRevert;
-			this.lineCap         = CapStyle.Square;
-			this.lineDash        = false;
-			this.lineDashPen1    = 0.0;
-			this.lineDashGap1    = 0.0;
-			this.lineDashPen2    = 0.0;
-			this.lineDashGap2    = 0.0;
-			this.lineDashPen3    = 0.0;
-			this.lineDashGap3    = 0.0;
-			this.lineMiterLimit  = 5.0;
-			this.originalColor   = RichColor.FromBrightness(0.0);
-			this.color           = RichColor.FromBrightness(0.0);
-			this.transform       = Transform.Identity;
-			this.fillMode        = FillMode.NonZero;
+			this.colorForce       = ColorForce.Default;
+			this.defaultDecimals  = 2;
+			this.LineWidth        = 1.0;
+			this.lineJoin         = JoinStyle.MiterRevert;
+			this.lineCap          = CapStyle.Square;
+			this.lineDash         = false;
+			this.lineDashPen1     = 0.0;
+			this.lineDashGap1     = 0.0;
+			this.lineDashPen2     = 0.0;
+			this.lineDashGap2     = 0.0;
+			this.lineDashPen3     = 0.0;
+			this.lineDashGap3     = 0.0;
+			this.lineMiterLimit   = 5.0;
+			this.originalColor    = RichColor.FromBrightness(0.0);
+			this.color            = RichColor.FromBrightness(0.0);
+			this.complexSurfaceId = -1;
+			this.complexType      = PdfComplexSurfaceType.ExtGState;
+			this.transform        = Transform.Identity;
+			this.fillMode         = FillMode.NonZero;
 
 			this.Init();
 		}
 
 
-		public bool IsPreProcessText
+		public bool IsPreProcess
 		{
 			get;
 			set;
+		}
+
+		public int CurrentPage
+		{
+			get;
+			set;
+		}
+
+		public List<ComplexSurface> ComplexSurfaces
+		{
+			get
+			{
+				return this.complexSurfaceList;
+			}
 		}
 
 		public ColorForce ColorForce
@@ -236,6 +256,7 @@ namespace Epsitec.Common.Pdf.Engine
 			set
 			{
 				this.color = value;
+				this.UpdateComplexSurfaceColor ();
 			}
 		}
 
@@ -248,6 +269,7 @@ namespace Epsitec.Common.Pdf.Engine
 			set
 			{
 				this.color.Basic = value;
+				this.UpdateComplexSurfaceColor ();
 			}
 		}
 
@@ -404,40 +426,67 @@ namespace Epsitec.Common.Pdf.Engine
 		
 		public void PaintOutline(Path path)
 		{
-			if (this.IsPreProcessText)
+			if (this.IsPreProcess)
 			{
-				return;
+				this.AddComplexColor (this.color);
 			}
-
-			this.SetTransform(this.transform);
-			this.SetWidth(this.lineWidth);
-			this.SetCap(this.lineCap);
-			this.SetJoin(this.lineJoin);
-			this.SetDash(this.lineDash, this.lineDashPen1, this.lineDashGap1, this.lineDashPen2, this.lineDashGap2, this.lineDashPen3, this.lineDashGap3);
-			this.SetLimit(this.lineMiterLimit);
-			this.SetStrokeColor(this.color);
-			this.PutPath(path);
-			this.PutCommand("S ");  // stroke, voir [*] page 200
-			this.PutEOL();
+			else
+			{
+				this.SetTransform (this.transform);
+				this.SetWidth (this.lineWidth);
+				this.SetCap (this.lineCap);
+				this.SetJoin (this.lineJoin);
+				this.SetDash (this.lineDash, this.lineDashPen1, this.lineDashGap1, this.lineDashPen2, this.lineDashGap2, this.lineDashPen3, this.lineDashGap3);
+				this.SetLimit (this.lineMiterLimit);
+				this.SetStrokeColor (this.color);
+				this.PutPath (path);
+				this.PutCommand ("S ");  // stroke, voir [*] page 200
+				this.PutEOL ();
+			}
 		}
 		
 		public void PaintSurface(Path path)
 		{
-			if (this.IsPreProcessText)
+			if (this.IsPreProcess)
+			{
+				this.AddComplexColor (this.color);
+			}
+			else
+			{
+				this.SetTransform (this.transform);
+				this.SetFillColor (this.color);
+				this.DoFill (path);
+				this.PutEOL ();
+			}
+		}
+
+		private void AddComplexColor(RichColor color)
+		{
+			if (color.A == 1.0)  // couleur opaque ?
 			{
 				return;
 			}
 
-			this.SetTransform (this.transform);
-			this.SetFillColor(this.color);
-			this.DoFill(path);
-			this.PutEOL();
+			//	S'il s'agit d'une couleur transparente, on ajoute une surface complexe
+			//	qui s'y réfère.
+			foreach (var x in this.complexSurfaceList)
+			{
+				if (x.Page == this.CurrentPage &&
+					x.Type == ComplexSurfaceType.TransparencyRegular &&
+					x.Color == color)
+				{
+					return;
+				}
+			}
+
+			var cs = new ComplexSurface (this.CurrentPage, color, this.nextComplexSurfaceId++);
+			this.complexSurfaceList.Add (cs);
 		}
 		
 		
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
-			if (this.IsPreProcessText)
+			if (this.IsPreProcess)
 			{
 				return;
 			}
@@ -588,7 +637,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void PaintText(Rectangle box, Rectangle clipRect, FormattedText formattedText, TextStyle style)
 		{
-			if (this.IsPreProcessText)
+			if (this.IsPreProcess)
 			{
 				this.PreProcessText (box.Size, formattedText, style);
 			}
@@ -628,16 +677,10 @@ namespace Epsitec.Common.Pdf.Engine
 			};
 		}
 
-		private void TextLayoutRenderer(Point pos, string text, Font font, double fontSize, FontClassInfo[] infos, RichColor color)
-		{
-			this.RichColor = color;
-			this.PaintText (pos.X, pos.Y, text, font, fontSize);
-		}
-
 
 		public double PaintText(double x, double y, string text, Font font, double fontSize)
 		{
-			if (this.IsPreProcessText)
+			if (this.IsPreProcess)
 			{
 				return 0;
 			}
@@ -740,6 +783,7 @@ namespace Epsitec.Common.Pdf.Engine
 		public double PaintText(double x, double y, string text, Font font, double fontSize, FontClassInfo[] infos)
 		{
 #if false
+			// Ce code ne fonctionne pas. Et je ne sais plus à quoi il sert !
 			for ( int i=0 ; i<infos.Length ; i++ )
 			{
 				if ( infos[i].Scale != 1.00 &&
@@ -797,7 +841,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-			if (this.IsPreProcessText)
+			if (this.IsPreProcess)
 			{
 				return;
 			}
@@ -851,59 +895,163 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			//	Initialise tous les paramètres graphiques à des valeurs différentes
 			//	des valeurs utilisées par la suite, ou aux valeurs par défaut.
-			this.stringBuilder = new StringBuffer ();
-			this.currentWidth = -1.0;
-			this.currentCap = (CapStyle) 999;
-			this.currentJoin = (JoinStyle) 999;
-			this.currentDash = false;
-			this.currentPen1 = 0.0;
-			this.currentGap1 = 0.0;
-			this.currentPen2 = 0.0;
-			this.currentGap2 = 0.0;
-			this.currentLimit = -1.0;
-			this.currentStrokeColor = RichColor.Empty;
-			this.currentFillColor = RichColor.Empty;
+			this.stringBuilder           = new StringBuffer ();
+			this.currentWidth            = -1.0;
+			this.currentCap              = (CapStyle) 999;
+			this.currentJoin             = (JoinStyle) 999;
+			this.currentDash             = false;
+			this.currentPen1             = 0.0;
+			this.currentGap1             = 0.0;
+			this.currentPen2             = 0.0;
+			this.currentGap2             = 0.0;
+			this.currentLimit            = -1.0;
+			this.currentStrokeColor      = RichColor.Empty;
+			this.currentFillColor        = RichColor.Empty;
 			this.currentComplexSurfaceId = -1;
-			this.currentTransform = Transform.Identity;
+			this.currentTransform        = Transform.Identity;
 		}
 
 		private void SetStrokeColor(RichColor color)
 		{
 			//	Spécifie la couleur de trait.
-			if (this.currentStrokeColor != color)
+			if (this.currentStrokeColor != color || this.currentComplexSurfaceId != this.complexSurfaceId)
 			{
-				if ( this.currentStrokeColor.ColorSpace != color.ColorSpace )
+				if (this.currentComplexSurfaceId != -1)
 				{
-					this.PutStrokingColorSpace(color);
+					this.PutCommand (Export.GetComplexSurfaceShortName (0, PdfComplexSurfaceType.ExtGState));
+					this.PutCommand ("gs ");  // graphic state, voir [*] page 189
+				}
+
+				if (this.currentStrokeColor.ColorSpace != color.ColorSpace)
+				{
+					this.PutStrokingColorSpace (color);
 				}
 
 				this.currentStrokeColor = color;
+				this.currentComplexSurfaceId = this.complexSurfaceId;
 
-				this.PutStrokingColor(color);
+				this.PutStrokingColor (color);
+
+				if (this.complexSurfaceId != -1)
+				{
+					ComplexSurface cs = this.GetComplexSurface (this.complexSurfaceId);
+
+					if (cs.Type == ComplexSurfaceType.TransparencyRegular  ||
+						cs.Type == ComplexSurfaceType.TransparencyGradient)
+					{
+						this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, this.complexType));
+						this.PutCommand ("gs ");  // graphic state, voir [*] page 189
+					}
+				}
 			}
 		}
 
 		private void SetFillColor(RichColor color)
 		{
 			//	Spécifie la couleur de surface.
-			if (this.currentFillColor != color)
+			if (this.currentFillColor != color || this.currentComplexSurfaceId != this.complexSurfaceId)
 			{
-				if ( this.currentFillColor.ColorSpace != color.ColorSpace )
+				if (this.currentComplexSurfaceId != -1)
 				{
-					this.PutFillingColorSpace(color);
+					this.PutCommand (Export.GetComplexSurfaceShortName (0, PdfComplexSurfaceType.ExtGState));
+					this.PutCommand ("gs ");  // graphic state, voir [*] page 189
+				}
+
+				if (this.currentFillColor.ColorSpace != color.ColorSpace)
+				{
+					this.PutFillingColorSpace (color);
 				}
 
 				this.currentFillColor = color;
+				this.currentComplexSurfaceId = this.complexSurfaceId;
 
-				this.PutFillingColor(color);
+				this.PutFillingColor (color);
+
+				if (this.complexSurfaceId != -1)
+				{
+					ComplexSurface cs = this.GetComplexSurface (this.complexSurfaceId);
+
+					if (cs.Type == ComplexSurfaceType.TransparencyRegular)
+					{
+						this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, this.complexType));
+						this.PutCommand ("gs ");  // graphic state, voir [*] page 189
+					}
+					else if (cs.Type == ComplexSurfaceType.TransparencyPattern &&
+							 this.complexType != PdfComplexSurfaceType.ExtGState)
+					{
+						this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, this.complexType));
+						this.PutCommand ("gs ");  // graphic state, voir [*] page 189
+					}
+					else if (cs.Type == ComplexSurfaceType.TransparencyGradient)
+					{
+						this.PutCommand ("q ");
+						this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, this.complexType));
+						this.PutCommand ("gs ");  // graphic state, voir [*] page 189
+					}
+				}
 			}
 		}
 
 		private void DoFill(Path path)
 		{
 			//	Rempli la surface du chemin défini.
-			this.PutPath(path);
-			this.PutCommandFill();
+			if (this.complexSurfaceId == -1 || this.complexType != PdfComplexSurfaceType.ExtGState)
+			{
+				this.PutPath (path);
+				this.PutCommandFill ();
+			}
+			else
+			{
+				ComplexSurface cs = this.GetComplexSurface (this.complexSurfaceId);
+
+				if (cs.Type == ComplexSurfaceType.OpaqueGradient)
+				{
+					this.PutPath (path);
+					this.PutCommand ("q ");  // save, voir [*] page 189
+					this.PutCommandStroke ();
+					this.PutCommand ("n ");
+					//?this.PutTransform (cs.Matrix);  // current clipping, voir [*] page 205
+					this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, PdfComplexSurfaceType.ShadingColor));
+					this.PutCommand ("sh Q ");  // shading, voir [*] page 273
+				}
+				else if (cs.Type == ComplexSurfaceType.TransparencyGradient)
+				{
+					this.PutPath (path);
+					this.PutCommandStroke ();
+					this.PutCommand ("n ");
+					//?this.PutTransform (cs.Matrix);  // current clipping, voir [*] page 205
+					this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, PdfComplexSurfaceType.ShadingColor));
+					this.PutCommand ("sh Q ");  // shading, voir [*] page 273
+				}
+				else if (cs.Type == ComplexSurfaceType.OpaquePattern       ||
+						 cs.Type == ComplexSurfaceType.TransparencyPattern)
+				{
+					this.PutPath (path);
+					this.PutCommand ("q ");  // save, voir [*] page 189
+					this.PutCommandStroke ();
+					this.PutCommand ("n ");
+					this.PutCommand (Export.GetComplexSurfaceShortName (this.complexSurfaceId, PdfComplexSurfaceType.XObject));
+					this.PutCommand ("Do Q ");  // external object, voir [*] page 302
+				}
+				else
+				{
+					this.PutPath (path);
+					this.PutCommandFill ();
+				}
+			}
+		}
+
+		private void UpdateComplexSurfaceColor()
+		{
+			int id = -1;
+
+			if (this.color.A < 1.0)  // couleur unie transparente ?
+			{
+				id = this.SearchComplexColor (this.CurrentPage, this.color);
+			}
+
+			this.complexSurfaceId = id;
+			this.complexType = PdfComplexSurfaceType.ExtGState;
 		}
 
 		private void SetWidth(double width)
@@ -1250,6 +1398,19 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
+		private void PutCommandStroke()
+		{
+			//	Met une commande de tracé.
+			if (this.fillMode == FillMode.NonZero)
+			{
+				this.PutCommand ("W ");  // nonzero stroke, voir [*] page 205
+			}
+			else
+			{
+				this.PutCommand ("W* ");  // even-odd stroke
+			}
+		}
+
 		public void PutCommand(string cmd)
 		{
 			//	Met une commande quelconque.
@@ -1311,6 +1472,32 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
+		private ComplexSurface GetComplexSurface(int id)
+		{
+			//	Cherche la surface complexe d'après son identificateur.
+			foreach (ComplexSurface cs in this.complexSurfaceList)
+			{
+				if (cs.Id == id)
+				{
+					return cs;
+				}
+			}
+			return null;
+		}
+
+		private int SearchComplexColor(int page, RichColor color)
+		{
+			//	Cherche la surface complexe à utiliser pour une couleur transparente.
+			foreach (ComplexSurface cs in this.complexSurfaceList)
+			{
+				if (cs.Page == page && cs.Color == color)
+				{
+					return cs.Id;
+				}
+			}
+			return -1;
+		}
+
 		private ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche l'image à utiliser.
@@ -1337,7 +1524,10 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		private IEnumerable<ImageSurface>		imageSurfaceList;
+		private readonly List<ComplexSurface>	complexSurfaceList;
+		private readonly List<ImageSurface>		imageSurfaceList;
+		private readonly Stack<ColorModifierCallback> stackColorModifier;
+
 		private ImageSurface					lastImageSurface;
 		private FontHash						fontHash;
 		private CharacterHash					characterHash;
@@ -1357,7 +1547,9 @@ namespace Epsitec.Common.Pdf.Engine
 		private double							lineMiterLimit;
 		private RichColor						originalColor;
 		private RichColor						color;
-		readonly Stack<ColorModifierCallback>	stackColorModifier;
+		private int								nextComplexSurfaceId;
+		private int								complexSurfaceId;
+		private PdfComplexSurfaceType			complexType;
 		private Transform						transform;
 		private FillMode						fillMode;
 		private ImageFilter						imageFilter;

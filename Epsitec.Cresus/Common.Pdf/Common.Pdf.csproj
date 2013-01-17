@@ -61,6 +61,8 @@
     <Compile Include="Engine\CharacterList.cs" />
     <Compile Include="Engine\ColorConversion.cs" />
     <Compile Include="Engine\ColorForce.cs" />
+    <Compile Include="Engine\ComplexSurface.cs" />
+    <Compile Include="Engine\ComplexSurfaceType.cs" />
     <Compile Include="Engine\Export.cs" />
     <Compile Include="Engine\ExportPdfInfo.cs" />
     <Compile Include="Engine\FontHash.cs" />

@@ -82,13 +82,14 @@ namespace Epsitec.Common.Pdf.Engine
 
 			using (var writer = this.CreateWriter (path))
 			{
-				this.PreProcessTexts (port);
+				this.PreProcess (port);
 
 				this.EmitHeaderOutlines (writer);
 				this.EmitHeaderPages (writer);
 				this.EmitPageObjects (writer);
-				this.EmitPageObjectResources (writer);
+				this.EmitPageObjectResources (writer, port);
 
+				this.EmitComplexSurfaces (writer, port);
 				this.EmitImageSurfaces (writer, port);
 				this.EmitFonts (writer);
 
@@ -185,24 +186,24 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		private void PreProcessTexts(Port port)
+		private void PreProcess(Port port)
 		{
-			if (this.info.TextToCurve)
-			{
-				return;
-			}
-
 			//	Il faut passer en revue tous les caractères de tous les textes, pour
 			//	pouvoir ensuite créer les polices pdf.
+			//	Il faut également passer en revue toutes les surfaces complexes, en
+			//	l'occurrence les surfaces transparentes.
 			{
-				port.IsPreProcessText = true;
+				port.IsPreProcess = true;
 
 				foreach (var page in this.pages)
 				{
-					this.renderPage (port, page);  // pré-prossessing des textes de la page
+					port.Reset ();
+					port.CurrentPage = page;
+
+					this.renderPage (port, page);  // pré-prossessing de la page
 				}
 
-				port.IsPreProcessText = false;
+				port.IsPreProcess = false;
 			}
 
 			FontList.CreateFonts (this.fontHash, this.characterHash);
@@ -358,7 +359,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		private void EmitPageObjectResources(Writer writer)
+		private void EmitPageObjectResources(Writer writer, Port port)
 		{
 			//	Un objet pour les ressources de chaque page.
 			foreach (var page in this.pages)
@@ -366,11 +367,45 @@ namespace Epsitec.Common.Pdf.Engine
 				writer.WriteObjectDef (Export.GetPageResourceName (page));
 				writer.WriteString ("<< /ProcSet [/PDF /Text /ImageB /ImageC] ");
 
-				if (this.imageSurfaces.Count > 0)
+				int tcs = this.GetPageComplexSurfaceCount (port, page);
+				if (tcs > 0 || this.imageSurfaces.Count > 0)
 				{
 					writer.WriteString ("/ExtGState << ");
 					writer.WriteString (Export.GetComplexSurfaceShortName (0, PdfComplexSurfaceType.ExtGState));
 					writer.WriteObjectRef (Export.GetComplexSurfaceName (0, PdfComplexSurfaceType.ExtGState));
+					for (int index=0; index<tcs; index++)
+					{
+						ComplexSurface cs = this.GetComplexSurface (port, page, index);
+						System.Diagnostics.Debug.Assert (cs != null);
+						if (cs.Type == ComplexSurfaceType.TransparencyRegular  ||
+							cs.Type == ComplexSurfaceType.TransparencyGradient)
+						{
+							writer.WriteString (Export.GetComplexSurfaceShortName (cs.Id, PdfComplexSurfaceType.ExtGState));
+							writer.WriteObjectRef (Export.GetComplexSurfaceName (cs.Id, PdfComplexSurfaceType.ExtGState));
+						}
+						if (cs.Type == ComplexSurfaceType.TransparencyPattern)
+						{
+							writer.WriteString (Export.GetComplexSurfaceShortName (cs.Id, PdfComplexSurfaceType.ExtGStateP1));
+							writer.WriteObjectRef (Export.GetComplexSurfaceName (cs.Id, PdfComplexSurfaceType.ExtGStateP1));
+
+							writer.WriteString (Export.GetComplexSurfaceShortName (cs.Id, PdfComplexSurfaceType.ExtGStateP2));
+							writer.WriteObjectRef (Export.GetComplexSurfaceName (cs.Id, PdfComplexSurfaceType.ExtGStateP2));
+						}
+					}
+					writer.WriteString (">> ");
+
+					writer.WriteString ("/Shading << ");
+					for (int index=0; index<tcs; index++)
+					{
+						ComplexSurface cs = this.GetComplexSurface (port, page, index);
+						System.Diagnostics.Debug.Assert (cs != null);
+						if (cs.Type == ComplexSurfaceType.OpaqueGradient       ||
+							cs.Type == ComplexSurfaceType.TransparencyGradient)
+						{
+							writer.WriteString (Export.GetComplexSurfaceShortName (cs.Id, PdfComplexSurfaceType.ShadingColor));
+							writer.WriteObjectRef (Export.GetComplexSurfaceName (cs.Id, PdfComplexSurfaceType.ShadingColor));
+						}
+					}
 					writer.WriteString (">> ");
 
 					writer.WriteString ("/XObject << ");
@@ -411,6 +446,8 @@ namespace Epsitec.Common.Pdf.Engine
 		private void EmitSinglePageContents(Writer writer, Port port, Point currentPageOffset, int page)
 		{
 			port.Reset ();
+			port.CurrentPage = page;
+
 			var gtBeforeZoom = this.SetupTransformForPageExport (port, currentPageOffset);
 			this.renderPage (port, page);  // effectue le rendu de la page
 			port.Transform = gtBeforeZoom;
@@ -688,6 +725,84 @@ namespace Epsitec.Common.Pdf.Engine
 				port.PaintSurface (path);
 			}
 		}
+
+
+		#region ComplexSurface
+		private int GetPageComplexSurfaceCount(Port port, int page)
+		{
+			//	Calcule le nombre de surfaces complexes dans une page.
+			int total = 0;
+
+			foreach (var cs in port.ComplexSurfaces)
+			{
+				if (cs.Page == page)
+				{
+					total++;
+				}
+			}
+
+			return total;
+		}
+
+		private ComplexSurface GetComplexSurface(Port port, int page, int index)
+		{
+			//	Donne une surface complexe.
+			int ip = 0;
+
+			foreach (var cs in port.ComplexSurfaces)
+			{
+				if (cs.Page == page)
+				{
+					if (ip++ == index)
+					{
+						return cs;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private void EmitComplexSurfaces(Writer writer, Port port)
+		{
+			//	Crée toutes les surfaces complexes.
+			//	Crée le ExtGState numéro 0, pour annuler une transparence.
+			writer.WriteObjectDef (Export.GetComplexSurfaceName (0, PdfComplexSurfaceType.ExtGState));
+			writer.WriteLine ("<< /CA 1 /ca 1 >> endobj");
+
+			for (int i=0; i<port.ComplexSurfaces.Count; i++)
+			{
+				ComplexSurface cs = port.ComplexSurfaces[i];
+
+				switch (cs.Type)
+				{
+					case ComplexSurfaceType.TransparencyRegular:
+						this.CreateComplexSurfaceTransparencyRegular (writer, port, cs);
+						break;
+				}
+			}
+		}
+
+		private void CreateComplexSurfaceTransparencyRegular(Writer writer, Port port, ComplexSurface cs)
+		{
+			//	Crée une surface transparente unie.
+			double a = cs.Color.A;
+			this.CreateComplexSurfaceAlpha (writer, a, cs.Id, PdfComplexSurfaceType.ExtGState);
+		}
+
+		private void CreateComplexSurfaceAlpha(Writer writer, double alpha, int id, PdfComplexSurfaceType type)
+		{
+			//	Crée un ExtGState pour une transparence unie.
+			writer.WriteObjectDef (Export.GetComplexSurfaceName (id, type));
+			Port port = new Port (null, null);
+			port.PutCommand ("<< /CA ");  // voir [*] page 192
+			port.PutValue (alpha, 3);
+			port.PutCommand ("/ca ");
+			port.PutValue (alpha, 3);
+			port.PutCommand (">> endobj");
+			writer.WriteString (port.GetPDF ());
+		}
+		#endregion
 
 
 		#region Images
