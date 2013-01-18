@@ -3246,6 +3246,8 @@ namespace Epsitec.Cresus.Database
 				table.Columns.AddRange (columns);
 				table.DefinePrimaryKey (columns[0]);
 
+				table.AddIndex ("IDX_ASC_CR_TABLE_DEF_NAME", SqlSortOrder.Ascending, columns[1]);
+
 				return table;
 			}
 
@@ -3271,6 +3273,8 @@ namespace Epsitec.Cresus.Database
 				table.Columns.AddRange (columns);
 				table.DefinePrimaryKey (columns[0]);
 
+				table.AddIndex ("IDX_ASC_CR_COLUMN_DEF_TABLE", SqlSortOrder.Ascending, columns[4]);
+
 				return table;
 			}
 
@@ -3292,6 +3296,8 @@ namespace Epsitec.Cresus.Database
 				table.DefineCategory (DbElementCat.Internal);
 				table.Columns.AddRange (columns);
 				table.DefinePrimaryKey (columns[0]);
+
+				table.AddIndex ("IDX_ASC_CR_TYPE_DEF_NAME", SqlSortOrder.Ascending, columns[1]);
 
 				return table;
 			}
