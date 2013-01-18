@@ -78,6 +78,13 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static bool						UseEmbeddedDatabaseClient
+		{
+			get
+			{
+				return CoreContext.useEmbeddedDatabaseClient;
+			}
+		}
 
 		public static T CreateApplication<T>()
 			where T : CoreApp
@@ -119,6 +126,11 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			CoreContext.databaseName = name;
 			CoreContext.databaseHost = host;
+		}
+
+		public static void EnableEmbeddedDatabaseClient(bool enabled)
+		{
+			CoreContext.useEmbeddedDatabaseClient = enabled;
 		}
 
 		public static void DefineApplicationClass(string assemblyName, string typeName)
@@ -536,6 +548,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static CoreDatabaseType			databaseType;
 		private static string					databaseName;
 		private static string					databaseHost;
+		private static bool						useEmbeddedDatabaseClient;
 
 		private static System.Type				applicationType;
 		

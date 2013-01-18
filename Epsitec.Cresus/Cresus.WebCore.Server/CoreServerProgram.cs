@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			ConsoleCreator.RunWithConsole (() =>
 			{
 				this.SetupParameters ();
+				this.SetupDatabaseClient ();
 				this.Initialize
 				(
 					uiCulture: CoreServerProgram.uiCulture,
@@ -79,6 +80,12 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Number of CoreWorkers: " + this.nbCoreWorkers);
 
 			Logger.LogToConsole ("Configuration read");
+		}
+
+
+		private void SetupDatabaseClient()
+		{
+			CoreContext.EnableEmbeddedDatabaseClient (true);
 		}
 
 

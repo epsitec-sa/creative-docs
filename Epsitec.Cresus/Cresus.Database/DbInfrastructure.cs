@@ -409,13 +409,21 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The database file name.</param>
 		/// <param name="host">The host where the database is.</param>
+		/// <param name="server">
+		/// <c>true</c> to connect to the database by using the server.
+		/// <c>false</c> to connect to the database by using the embedded client.
+		/// </param>
 		/// <returns>The database access.</returns>
-		public static DbAccess CreateDatabaseAccess(string name, string host = "localhost")
+		public static DbAccess CreateDatabaseAccess(string name, string host = "localhost", bool server = true)
 		{
 			ExceptionThrower.ThrowIfNullOrEmpty (name, "name");
 			ExceptionThrower.ThrowIfNullOrEmpty (host, "host");
 
-			return new DbAccess ("Firebird", name, host, "sysdba", "masterkey", false);
+			var provider = server
+				? "Firebird"
+				: "FirebirdEmbedded";
+
+			return new DbAccess (provider, name, host, "sysdba", "masterkey", false);
 		}
 
 		/// <summary>
