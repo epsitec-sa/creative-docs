@@ -10,23 +10,22 @@ namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
 	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.
-	/// L'unité est le dixième de millimètre.
+	/// L'unité est le dixième de millimètre (2100 = 21cm).
 	/// L'origine graphique est en bas à gauche.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	public class Port : IPaintPort
 	{
-		public Port(FontHash fontHash, CharacterHash characterHash)
+		public Port()
 		{
-			this.fontHash      = fontHash;
-			this.characterHash = characterHash;
-
-			this.complexSurfaceList = new List<ComplexSurface> ();
-			this.imageSurfaceList   = new List<ImageSurface> ();
-			this.stackColorModifier = new Stack<ColorModifierCallback> ();
-			this.Reset();
-
+			this.fontHash             = new FontHash ();
+			this.characterHash        = new CharacterHash ();
+			this.complexSurfaces      = new List<ComplexSurface> ();
+			this.imageSurfaces        = new List<ImageSurface> ();
+			this.stackColorModifier   = new Stack<ColorModifierCallback> ();
 			this.nextComplexSurfaceId = 1;
+
+			this.Reset();
 		}
 
 		public void Reset()
@@ -55,6 +54,26 @@ namespace Epsitec.Common.Pdf.Engine
 			this.Init();
 		}
 
+		public void Dispose()
+		{
+			this.fontHash.Clear ();
+			this.characterHash.Clear ();
+
+			//	Libère toutes les images.
+			foreach (ImageSurface image in this.imageSurfaces)
+			{
+				image.Dispose ();
+			}
+
+			this.imageSurfaces.Clear ();
+		}
+
+
+		public bool TextToCurve
+		{
+			get;
+			set;
+		}
 
 		public bool IsPreProcess
 		{
@@ -68,13 +87,39 @@ namespace Epsitec.Common.Pdf.Engine
 			set;
 		}
 
+
+		public FontHash FontHash
+		{
+			get
+			{
+				return this.fontHash;
+			}
+		}
+
+		public CharacterHash CharacterHash
+		{
+			get
+			{
+				return this.characterHash;
+			}
+		}
+
 		public List<ComplexSurface> ComplexSurfaces
 		{
 			get
 			{
-				return this.complexSurfaceList;
+				return this.complexSurfaces;
 			}
 		}
+
+		public List<ImageSurface> ImageSurfaces
+		{
+			get
+			{
+				return this.imageSurfaces;
+			}
+		}
+
 
 		public ColorForce ColorForce
 		{
@@ -469,7 +514,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 			//	S'il s'agit d'une couleur transparente, on ajoute une surface complexe
 			//	qui s'y réfère.
-			foreach (var x in this.complexSurfaceList)
+			foreach (var x in this.complexSurfaces)
 			{
 				if (x.Page == this.CurrentPage &&
 					x.Type == ComplexSurfaceType.TransparencyRegular &&
@@ -480,7 +525,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 
 			var cs = new ComplexSurface (this.CurrentPage, color, this.nextComplexSurfaceId++);
-			this.complexSurfaceList.Add (cs);
+			this.complexSurfaces.Add (cs);
 		}
 		
 		
@@ -495,7 +540,7 @@ namespace Epsitec.Common.Pdf.Engine
 			if ( n == 0 )  return;
 			if ( n == 1 && glyphs[0] >= 0xffff )  return;
 			
-			if ( this.fontHash == null )  // textes en courbes ?
+			if (this.TextToCurve)  // textes en courbes ?
 			{
 				Path path = new Path();
 				Transform ft = font.SyntheticTransform;
@@ -685,7 +730,7 @@ namespace Epsitec.Common.Pdf.Engine
 				return 0;
 			}
 
-			if (this.fontHash == null)  // textes en courbes ?
+			if (this.TextToCurve)  // textes en courbes ?
 			{
 				int n = text.Length;
 				if ( n == 0 )  return 0.0;
@@ -851,7 +896,7 @@ namespace Epsitec.Common.Pdf.Engine
 			System.Diagnostics.Debug.Assert (System.Math.Abs (fillWidth-1.0) < 0.000001);
 			System.Diagnostics.Debug.Assert (System.Math.Abs (fillHeight-1.0) < 0.000001);
 			
-			if (this.imageSurfaceList == null)
+			if (this.imageSurfaces == null)
 			{
 				return;
 			}
@@ -1475,7 +1520,7 @@ namespace Epsitec.Common.Pdf.Engine
 		private ComplexSurface GetComplexSurface(int id)
 		{
 			//	Cherche la surface complexe d'après son identificateur.
-			foreach (ComplexSurface cs in this.complexSurfaceList)
+			foreach (ComplexSurface cs in this.complexSurfaces)
 			{
 				if (cs.Id == id)
 				{
@@ -1488,7 +1533,7 @@ namespace Epsitec.Common.Pdf.Engine
 		private int SearchComplexColor(int page, RichColor color)
 		{
 			//	Cherche la surface complexe à utiliser pour une couleur transparente.
-			foreach (ComplexSurface cs in this.complexSurfaceList)
+			foreach (ComplexSurface cs in this.complexSurfaces)
 			{
 				if (cs.Page == page && cs.Color == color)
 				{
@@ -1501,13 +1546,13 @@ namespace Epsitec.Common.Pdf.Engine
 		private ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
 		{
 			//	Cherche l'image à utiliser.
-			if (this.imageSurfaceList == null)
+			if (this.imageSurfaces == null)
 			{
 				this.lastImageSurface = null;
 			}
 			else
 			{
-				this.lastImageSurface = ImageSurface.Search (this.imageSurfaceList, filename, size, crop, filter);
+				this.lastImageSurface = ImageSurface.Search (this.imageSurfaces, filename, size, crop, filter);
 			}
 
 			return this.lastImageSurface;
@@ -1524,14 +1569,13 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		private readonly List<ComplexSurface>	complexSurfaceList;
-		private readonly List<ImageSurface>		imageSurfaceList;
-		private readonly Stack<ColorModifierCallback> stackColorModifier;
+		private readonly FontHash						fontHash;
+		private readonly CharacterHash					characterHash;
+		private readonly List<ComplexSurface>			complexSurfaces;
+		private readonly List<ImageSurface>				imageSurfaces;
+		private readonly Stack<ColorModifierCallback>	stackColorModifier;
 
 		private ImageSurface					lastImageSurface;
-		private FontHash						fontHash;
-		private CharacterHash					characterHash;
-
 		private ColorForce						colorForce;
 		private int								defaultDecimals;
 		private double							lineWidth;

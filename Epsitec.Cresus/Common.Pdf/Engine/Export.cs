@@ -65,11 +65,6 @@ namespace Epsitec.Common.Pdf.Engine
 			{
 				return ex;  // retourne l'erreur
 			}
-			finally
-			{
-				this.ClearImageSurfaces ();
-				this.ClearFonts ();
-			}
 
 			return null;  // ok
 		}
@@ -91,11 +86,13 @@ namespace Epsitec.Common.Pdf.Engine
 
 				this.EmitComplexSurfaces (writer, port);
 				this.EmitImageSurfaces (writer, port);
-				this.EmitFonts (writer);
+				this.EmitFonts (writer, port);
 
 				this.EmitPageContents (writer, port);
 				this.ExportEnd (writer);
 			}
+
+			port.Dispose ();
 		}
 
 		private void DisplayPdf(string path)
@@ -115,9 +112,6 @@ namespace Epsitec.Common.Pdf.Engine
 			this.jpegQuality      = this.info.JpegQuality;
 			this.imageMinDpi      = this.info.ImageMinDpi;
 			this.imageMaxDpi      = this.info.ImageMaxDpi;
-			this.imageSurfaces    = new List<ImageSurface> ();
-			this.characterHash    = new CharacterHash ();
-			this.fontHash         = new FontHash ();
 		}
 
 		private void ExportEnd(Writer writer)
@@ -129,9 +123,11 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private Port CreatePort()
 		{
-			FontHash fontHash = this.info.TextToCurve ? null : this.fontHash;
+			var port = new Port ()
+			{
+				TextToCurve = this.info.TextToCurve,
+			};
 
-			var port = new Port (fontHash, this.characterHash);
 			port.PushColorModifier (new ColorModifierCallback (this.FinalOutputColorModifier));
 
 			return port;
@@ -206,7 +202,7 @@ namespace Epsitec.Common.Pdf.Engine
 				port.IsPreProcess = false;
 			}
 
-			FontList.CreateFonts (this.fontHash, this.characterHash);
+			FontList.CreateFonts (port.FontHash, port.CharacterHash);
 		}
 
 
@@ -368,7 +364,7 @@ namespace Epsitec.Common.Pdf.Engine
 				writer.WriteString ("<< /ProcSet [/PDF /Text /ImageB /ImageC] ");
 
 				int tcs = this.GetPageComplexSurfaceCount (port, page);
-				if (tcs > 0 || this.imageSurfaces.Count > 0)
+				if (tcs > 0 || port.ImageSurfaces.Count > 0)
 				{
 					writer.WriteString ("/ExtGState << ");
 					writer.WriteString (Export.GetComplexSurfaceShortName (0, PdfComplexSurfaceType.ExtGState));
@@ -409,7 +405,7 @@ namespace Epsitec.Common.Pdf.Engine
 					writer.WriteString (">> ");
 
 					writer.WriteString ("/XObject << ");
-					foreach (ImageSurface image in this.imageSurfaces)
+					foreach (ImageSurface image in port.ImageSurfaces)
 					{
 						if (!image.Exists)
 						{
@@ -425,7 +421,7 @@ namespace Epsitec.Common.Pdf.Engine
 				if (!this.info.TextToCurve)
 				{
 					writer.WriteString ("/Font << ");
-					foreach (System.Collections.DictionaryEntry dict in this.fontHash)
+					foreach (System.Collections.DictionaryEntry dict in port.FontHash)
 					{
 						FontList font = dict.Key as FontList;
 						int totalPages = (font.CharacterCount+Export.charPerFont-1)/Export.charPerFont;
@@ -794,7 +790,7 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			//	Crée un ExtGState pour une transparence unie.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (id, type));
-			Port port = new Port (null, null);
+			Port port = new Port ();
 			port.PutCommand ("<< /CA ");  // voir [*] page 192
 			port.PutValue (alpha, 3);
 			port.PutCommand ("/ca ");
@@ -811,7 +807,7 @@ namespace Epsitec.Common.Pdf.Engine
 			//	Crée toutes les images.
 			Export.debugTotal = 0;
 
-			foreach (ImageSurface image in this.imageSurfaces)
+			foreach (ImageSurface image in port.ImageSurfaces)
 			{
 				if (this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObject, PdfComplexSurfaceType.XObjectMask))
 				{
@@ -1147,7 +1143,7 @@ namespace Epsitec.Common.Pdf.Engine
 				zip = null;
 			}
 
-			Port port = new Port (null, null);
+			Port port = new Port ();
 			port.Reset ();
 			port.PutASCII85 (data);
 			Export.debugTotal += data.Length;
@@ -1209,7 +1205,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 			System.Diagnostics.Debug.Assert (jpeg != null);
 
-			Port port = new Port (null, null);
+			Port port = new Port ();
 			port.PutASCII85 (jpeg);
 			Export.debugTotal += jpeg.Length;
 			port.PutEOL ();
@@ -1364,26 +1360,11 @@ namespace Epsitec.Common.Pdf.Engine
 
 			return data;
 		}
-
-		private void ClearImageSurfaces()
-		{
-			if (this.imageSurfaces != null)
-			{
-				//	Libère toutes les images.
-				foreach (ImageSurface image in this.imageSurfaces)
-				{
-					image.Dispose ();
-				}
-
-				this.imageSurfaces.Clear ();
-				this.imageSurfaces = null;
-			}
-		}
 		#endregion
 
 
 		#region Fonts
-		private void EmitFonts(Writer writer)
+		private void EmitFonts(Writer writer, Port port)
 		{
 			if (this.info.TextToCurve)
 			{
@@ -1391,7 +1372,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 
 			//	Crée toutes les fontes.
-			foreach (System.Collections.DictionaryEntry dict in this.fontHash)
+			foreach (System.Collections.DictionaryEntry dict in port.FontHash)
 			{
 				FontList font = dict.Key as FontList;
 
@@ -1409,11 +1390,11 @@ namespace Epsitec.Common.Pdf.Engine
 						}
 					}
 
-					this.CreateFontBase (writer, font, fontPage, count);
-					this.CreateFontEncoding (writer, font, fontPage, count);
-					this.CreateFontCharProcs (writer, font, fontPage, count);
-					this.CreateFontWidths (writer, font, fontPage, count);
-					this.CreateFontToUnicode (writer, font, fontPage, count);
+					this.CreateFontBase       (writer, font, fontPage, count);
+					this.CreateFontEncoding   (writer, font, fontPage, count);
+					this.CreateFontCharProcs  (writer, font, fontPage, count);
+					this.CreateFontWidths     (writer, font, fontPage, count);
+					this.CreateFontToUnicode  (writer, font, fontPage, count);
 					this.CreateFontCharacters (writer, font, fontPage, count);
 				}
 			}
@@ -1569,7 +1550,7 @@ namespace Epsitec.Common.Pdf.Engine
 			path.Append (drawingFont, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 
 
-			var port = new Port (null, null)
+			var port = new Port ()
 			{
 				ColorForce      = ColorForce.Nothing,  // pas de commande de couleur !
 				DefaultDecimals = 4,
@@ -1594,13 +1575,6 @@ namespace Epsitec.Common.Pdf.Engine
 			writer.WriteLine ("stream");
 			writer.WriteString (pdf);
 			writer.WriteLine ("endstream endobj");
-		}
-
-		private void ClearFonts()
-		{
-			//	Libère toutes les fontes.
-			this.characterHash = null;
-			this.fontHash = null;
 		}
 		#endregion
 
@@ -1659,9 +1633,6 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private int								pageCount;
 		private Action<Port, int>				renderPage;
-		private List<ImageSurface>				imageSurfaces;
-		private CharacterHash					characterHash;
-		private FontHash						fontHash;
 		private ColorConversion					colorConversion;
 		private ImageCompression				imageCompression;
 		private double							jpegQuality;
