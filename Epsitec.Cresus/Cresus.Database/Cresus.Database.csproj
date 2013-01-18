@@ -144,11 +144,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Cache\DbTypeDefs.cs" />
-    <Compile Include="Cache\Generic.cs" />
-    <Compile Include="Cache\DbTables.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Collections\DbTypeDefList.cs" />
     <Compile Include="Collections\GenericList.cs">
       <SubType>Code</SubType>

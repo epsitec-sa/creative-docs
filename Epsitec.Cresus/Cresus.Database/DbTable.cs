@@ -863,8 +863,8 @@ namespace Epsitec.Cresus.Database
 			relationTable.relationSourceTableName = sourceTableName;
 			relationTable.relationTargetTableName = targetTableName;
 
-			DbTypeDef refIdType  = infrastructure.ResolveLoadedDbType (Tags.TypeKeyId);
-			DbTypeDef rankType   = infrastructure.ResolveLoadedDbType (Tags.TypeCollectionRank);
+			DbTypeDef refIdType  = infrastructure.ResolveDbType (Tags.TypeKeyId);
+			DbTypeDef rankType   = infrastructure.ResolveDbType (Tags.TypeCollectionRank);
 
 			relationTable.Columns.Add (new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
 			{

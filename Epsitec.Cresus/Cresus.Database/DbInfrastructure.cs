@@ -46,7 +46,10 @@ namespace Epsitec.Cresus.Database
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
 
-			this.dbKeysCache = new Dictionary<string, Dictionary<string, DbKey[]>> ();
+			this.typeNameCache = new Dictionary<string, DbTypeDef> ();
+			this.typeKeyCache = new Dictionary<DbKey, DbTypeDef> ();
+			this.tableNameCache = new Dictionary<string, DbTable> ();
+			this.tableKeyCache = new Dictionary<DbKey, DbTable> ();
 		}
 
 		/// <summary>
@@ -1344,12 +1347,22 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definition.</returns>
 		public DbTable ResolveDbTable(string tableName)
 		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			DbTable table;
+
+			lock (this.tableNameCache)
 			{
-				DbTable value = this.ResolveDbTable (transaction, tableName);
-				transaction.Commit ();
-				return value;
+				if (!this.tableNameCache.TryGetValue (tableName, out table))
+				{
+					using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+					{
+						table = this.LoadDbTables (transaction, tableName).FirstOrDefault ();
+
+						transaction.Commit ();
+					}
+				}
 			}
+
+			return table;
 		}
 
 		/// <summary>
@@ -1362,92 +1375,54 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definition.</returns>
 		public DbTable ResolveDbTable(DbTransaction transaction, string tableName)
 		{
-			System.Diagnostics.Debug.Assert (transaction != null);
+			DbTable table;
 
-			DbKey key = this.FindDbTableKey (transaction, tableName);
-			return this.ResolveDbTable (transaction, key);
-		}
-
-		/// <summary>
-		/// Resolves the database table definition with the specified key. This
-		/// will return the same object when called multiple times with the same
-		/// key, unless the cache is cleared with <c>ClearCaches</c>.
-		/// </summary>
-		/// <param name="key">The key to the table metadata.</param>
-		/// <returns>The table definition.</returns>
-		public DbTable ResolveDbTable(DbKey key)
-		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			lock (this.tableNameCache)
 			{
-				DbTable value = this.ResolveDbTable (transaction, key);
-				transaction.Commit ();
-				return value;
-			}
-		}
-
-		/// <summary>
-		/// Resolves the database table definition with the specified key. This
-		/// will return the same object when called multiple times with the same
-		/// key, unless the cache is cleared with <c>ClearCaches</c>.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="key">The key to the table metadata.</param>
-		/// <returns>The table definition.</returns>
-		public DbTable ResolveDbTable(DbTransaction transaction, DbKey key)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			if (key.IsEmpty)
-			{
-				return null;
-			}
-
-			lock (this.tableCache)
-			{
-				DbTable table = this.tableCache[key];
-				
-				if (table == null)
+				if (!this.tableNameCache.TryGetValue (tableName, out table))
 				{
-					List<DbTable> tables = this.LoadDbTable (transaction, key);
-					
-					if (tables.Count > 0)
-					{
-						System.Diagnostics.Debug.Assert (tables.Count == 1);
-						System.Diagnostics.Debug.Assert (tables[0].Key == key);
-						System.Diagnostics.Debug.Assert (this.tableCache[key] == tables[0]);
-						
-						table = tables[0];
-					}
+					table = this.LoadDbTables (transaction, tableName).FirstOrDefault ();
 				}
-				
-				return table;
 			}
+
+			return table;
 		}
 
-		public DbTable ResolveDbTable(Druid tableId)
+		/// <summary>
+		/// Resolves the database table definition with the specified key. This
+		/// will return the same object when called multiple times with the same
+		/// key, unless the cache is cleared with <c>ClearCaches</c>.
+		/// </summary>
+		/// <param name="transaction">The transaction to use.</param>
+		/// <param name="tableKey">The key to the table metadata.</param>
+		/// <returns>The table definition.</returns>
+		private DbTable ResolveDbTable(DbTransaction transaction, DbKey tableKey)
 		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction(DbTransactionMode.ReadOnly))
+			DbTable table;
+
+			lock (this.tableNameCache)
 			{
-				DbTable table = this.ResolveDbTable (transaction, tableId);
-
-				transaction.Commit ();
-
-				return table;
+				if (!this.tableKeyCache.TryGetValue (tableKey, out table))
+				{
+					table = this.LoadDbTables (transaction, tableKey).FirstOrDefault ();
+				}
 			}
+
+			return table;
 		}
-		
+
 		/// <summary>
 		/// Resolves the database table definition with the specified id. This
 		/// will return the same object when called multiple times with the same
 		/// id, unless the cache is cleared with <c>ClearCaches</c>.
 		/// </summary>
-		/// <param name="transaction">The transaction.</param>
 		/// <param name="tableId">The table id.</param>
 		/// <returns>The table definition.</returns>
-		public DbTable ResolveDbTable(DbTransaction transaction, Druid tableId)
+		public DbTable ResolveDbTable(Druid tableId)
 		{
 			DbTable templateTable = new DbTable (tableId);
-			return this.ResolveDbTable (transaction, templateTable.Name);
+
+			return this.ResolveDbTable (templateTable.Name);
 		}
 
 		/// <summary>
@@ -1475,8 +1450,13 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The table definitions or an empty array.</returns>
 		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category)
 		{
-			List<DbTable> list = this.LoadDbTable (transaction, DbKey.Empty);
-			
+			List<DbTable> list;
+
+			lock (this.tableNameCache)
+			{
+				list = this.LoadDbTablesWithCondition (transaction, null);
+			}
+
 			if (category != DbElementCat.Any)
 			{
 				list.RemoveAll
@@ -1571,12 +1551,22 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(string typeName)
 		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			DbTypeDef result;
+
+			lock (this.typeNameCache)
 			{
-				DbTypeDef value = this.ResolveDbType (transaction, typeName);
-				transaction.Commit ();
-				return value;
+				if (!this.typeNameCache.TryGetValue (typeName, out result))
+				{
+					using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+					{
+						result = this.LoadDbTypes (transaction, typeName).FirstOrDefault ();
+
+						transaction.Commit ();
+					}
+				}
 			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -1587,40 +1577,25 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The type definition or <c>null</c>.</returns>
 		public DbTypeDef ResolveDbType(DbTransaction transaction, string typeName)
 		{
-			DbTypeDef value;
+			DbTypeDef result;
 
-			if (this.internalTypes.TryGetValue (typeName, out value))
+			lock (this.typeNameCache)
 			{
-				return value;
+				if (!this.typeNameCache.TryGetValue (typeName, out result))
+				{
+					result = this.LoadDbTypes (transaction, typeName).FirstOrDefault ();
+				}
 			}
 
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			DbKey key = this.FindDbTypeKey (transaction, typeName);
-			value = this.ResolveDbType (transaction, key);
-			
-			return value;
-		}
-
-		public DbTypeDef ResolveDbType(INamedType type)
-		{
-			using (DbTransaction transaction = this.InheritOrBeginTransaction(DbTransactionMode.ReadOnly))
-			{
-				DbTypeDef typeDef = this.ResolveDbType (transaction, type);
-
-				transaction.Commit ();
-
-				return typeDef;
-			}
+			return result;
 		}
 
 		/// <summary>
 		/// Resolves a type definition from an <see cref="INamedType"/> instance.
 		/// </summary>
-		/// <param name="transaction">The transaction.</param>
 		/// <param name="type">The type object.</param>
 		/// <returns>The type definition or <c>null</c>.</returns>
-		public DbTypeDef ResolveDbType(DbTransaction transaction, INamedType type)
+		public DbTypeDef ResolveDbType(INamedType type)
 		{
 			if (type == null)
 			{
@@ -1628,61 +1603,29 @@ namespace Epsitec.Cresus.Database
 			}
 
 			DbTypeDef templateType = new DbTypeDef (type);
-			return this.ResolveDbType (transaction, templateType.Name);
-		}
 
-		/// <summary>
-		/// Resolves a type definition from its key.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="key">The metadata key for the type.</param>
-		/// <returns>The type definition or <c>null</c>.</returns>
-		private DbTypeDef ResolveDbType(DbTransaction transaction, DbKey key)
-		{
-			if (key.IsEmpty)
-			{
-				return null;
-			}
-
-			lock (this.typeCache)
-			{
-				DbTypeDef typeDef = this.typeCache[key];
-				
-				if (typeDef == null)
-				{
-					List<DbTypeDef> types = this.LoadDbType (transaction, key);
-					
-					if (types.Count > 0)
-					{
-						System.Diagnostics.Debug.Assert (types.Count == 1);
-						System.Diagnostics.Debug.Assert (types[0].Key == key);
-						System.Diagnostics.Debug.Assert (this.typeCache[key] == types[0]);
-
-						typeDef = types[0] as DbTypeDef;
-					}
-				}
-				
-				return typeDef;
-			}
+			return this.ResolveDbType (templateType.Name);
 		}
 
 		/// <summary>
 		/// Resolves a type definition from its name.
 		/// </summary>
-		/// <param name="typeName">Name of the type.</param>
+		/// <param name="transaction">The transaction to use.</param>
+		/// <param name="typeKey">Name of the type.</param>
 		/// <returns>The type definition or <c>null</c>.</returns>
-		public DbTypeDef ResolveLoadedDbType(string typeName)
+		public DbTypeDef ResolveDbType(DbTransaction transaction, DbKey typeKey)
 		{
-			DbTypeDef value;
+			DbTypeDef result;
 
-			if (this.internalTypes.TryGetValue (typeName, out value))
+			lock (this.typeNameCache)
 			{
-				return value;
+				if (!this.typeKeyCache.TryGetValue (typeKey, out result))
+				{
+					result = this.LoadDbTypes (transaction, typeKey).FirstOrDefault ();
+				}
 			}
-			else
-			{
-				return null;
-			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -1707,7 +1650,15 @@ namespace Epsitec.Cresus.Database
 		public DbTypeDef[] FindDbTypes(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			return this.LoadDbType (transaction, DbKey.Empty).ToArray ();
+
+			List<DbTypeDef> types;
+
+			lock (this.typeNameCache)
+			{
+				types = this.LoadDbTypesWithCondition (transaction, null);
+			}
+
+			return types.ToArray ();
 		}
 
 		internal IEnumerable<DbTypeDef> FindBuiltInDbTypes()
@@ -1717,21 +1668,19 @@ namespace Epsitec.Cresus.Database
 
 		private void RemoveFromCache(DbTable table)
 		{
-			this.tableCache[table.Key] = null;
-
-			if (this.dbKeysCache.ContainsKey (Tags.TableTableDef))
+			lock (this.tableNameCache)
 			{
-				this.dbKeysCache[Tags.TableTableDef].Remove (table.Name);
+				this.tableNameCache.Remove (table.Name);
+				this.tableKeyCache.Remove (table.Key);
 			}
 		}
 
 		private void RemoveFromCache(DbTypeDef type)
 		{
-			this.typeCache[type.Key] = null;
-
-			if (this.dbKeysCache.ContainsKey (Tags.TableTypeDef))
+			lock (this.typeNameCache)
 			{
-				this.dbKeysCache[Tags.TableTableDef].Remove (type.Name);
+				this.typeNameCache.Remove (type.Name);
+				this.typeKeyCache.Remove (type.Key);
 			}
 		}
 
@@ -1741,17 +1690,15 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		public void ClearCaches()
 		{
-			lock (this.dbKeysCache)
+			lock (this.typeNameCache)
 			{
-				this.dbKeysCache.Clear ();
+				this.typeNameCache.Clear ();
+				this.typeKeyCache.Clear ();
 			}
-			lock (this.tableCache)
+			lock (this.tableNameCache)
 			{
-				this.tableCache.ClearCache ();
-			}
-			lock (this.typeCache)
-			{
-				this.typeCache.ClearCache ();
+				this.tableNameCache.Clear ();
+				this.tableKeyCache.Clear ();
 			}
 		}
 		
@@ -2498,81 +2445,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		
-		/// <summary>
-		/// Finds the key for the specified table.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="name">The table name.</param>
-		/// <returns>The key to the table metadata.</returns>
-		public DbKey FindDbTableKey(DbTransaction transaction, string name)
-		{
-			return this.FindDbKeys (transaction, Tags.TableTableDef, name).FirstOrDefault ();
-		}
-
-		/// <summary>
-		/// Finds the key for the specified type.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="name">The type name.</param>
-		/// <returns>The key to the type metadata.</returns>
-		public DbKey FindDbTypeKey(DbTransaction transaction, string name)
-		{
-			return this.FindDbKeys (transaction, Tags.TableTypeDef, name).FirstOrDefault ();
-		}
-
-		internal IEnumerable<DbKey> FindDbKeys(DbTransaction transaction, string tableName, string rowName)
-		{
-			DbKey[] dbKeys;
-			
-			if (this.dbKeysCache.ContainsKey (tableName) && this.dbKeysCache[tableName].ContainsKey (rowName))
-			{
-				dbKeys = this.dbKeysCache[tableName][rowName];
-			}
-			else
-			{
-				dbKeys = this.FindDbKeysWithQuery (transaction, tableName, rowName).ToArray ();
-
-				if (dbKeys.Length > 0)
-				{
-					if (!this.dbKeysCache.ContainsKey (tableName))
-					{
-						this.dbKeysCache[tableName] = new Dictionary<string, DbKey[]> ();
-					}
-
-					this.dbKeysCache[tableName][rowName] = dbKeys;
-				}
-			}
-
-			return dbKeys;
-		}
-
-		/// <summary>
-		/// Finds the keys for the named rows in the specified table.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="tableName">Name of the table.</param>
-		/// <param name="rowName">Name of the row or rows.</param>
-		/// <returns>The keys.</returns>
-		internal IEnumerable<DbKey> FindDbKeysWithQuery(DbTransaction transaction, string tableName, string rowName)
-		{
-			SqlSelect query = new SqlSelect ();
-			
-			query.Fields.Add ("T_ID",   SqlField.CreateName ("T", Tags.ColumnId));
-			
-			query.Tables.Add ("T", SqlField.CreateName (tableName));
-			
-			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", Tags.ColumnName), SqlField.CreateConstant (rowName, DbRawType.String)));
-			
-			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
-
-			foreach (System.Data.DataRow row in dataTable.Rows)
-			{
-				long  id = InvariantConverter.ToLong (row["T_ID"]);
-
-				yield return new DbKey (id);
-			}
-		}
 
 		/// <summary>
 		/// Counts the rows of the specified table which have a matching value in
@@ -2614,13 +2486,52 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Loads the table definitions based on the metadata table key and the
-		/// specified search mode.
+		/// Loads the table definitions.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="key">The table key or <c>DbKey.Empty</c> to load all table definitions based on the search mode.</param>
+		/// <param name="name">The table name or null to load all table definitions.</param>
 		/// <returns>The table definitions.</returns>
-		public List<DbTable> LoadDbTable(DbTransaction transaction, DbKey key)
+		private List<DbTable> LoadDbTables(DbTransaction transaction, string name)
+		{
+			SqlFunction condition = null;
+
+			if (name != null)
+			{
+				condition = new SqlFunction
+				(
+					SqlFunctionCode.CompareEqual,
+					SqlField.CreateName ("T_TABLE", Tags.ColumnName),
+					SqlField.CreateConstant (name, DbRawType.String)
+				);
+			}
+
+			return this.LoadDbTablesWithCondition (transaction, condition);
+		}
+
+		/// <summary>
+		/// Loads the table definitions.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The table key or <c>DbKey.Empty</c> to load all table definitions.</param>
+		/// <returns>The table definitions.</returns>
+		private List<DbTable> LoadDbTables(DbTransaction transaction, DbKey key)
+		{
+			SqlFunction condition = null;
+
+			if (key != DbKey.Empty)
+			{
+				condition = new SqlFunction
+				(
+					SqlFunctionCode.CompareEqual,
+					SqlField.CreateName ("T_TABLE", Tags.ColumnId),
+					SqlField.CreateConstant (key.Id, DbKey.RawTypeForId)
+				);
+			}
+
+			return this.LoadDbTablesWithCondition (transaction, condition);
+		}
+
+		private List<DbTable> LoadDbTablesWithCondition(DbTransaction transaction, SqlFunction condition)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 
@@ -2647,25 +2558,16 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
 			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
 
-			query.OrderBy.Add ("C_ID", SqlField.CreateName ("T_COLUMN", Tags.ColumnId), SqlSortOrder.Ascending);
-
 			//	Tables to query :
 
 			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
 			query.Tables.Add ("T_COLUMN", SqlField.CreateName (Tags.TableColumnDef));
 
-			if (key.IsEmpty)
-			{
-				//	Extract all tables and columns...
+			DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
-			}
-			else
+			if (condition != null)
 			{
-				//	Extract only matching tables...
-
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", key);
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, key);
+				query.Conditions.Add (condition);
 			}
 
 			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
@@ -2692,22 +2594,21 @@ namespace Epsitec.Cresus.Database
 					string tableInfo = InvariantConverter.ToString (row["T_INFO"]);
 					string tableName = InvariantConverter.ToString (row["T_NAME"]);
 					string tableDisplayName = InvariantConverter.ToString (row["T_D_NAME"]);
-					DbKey  tableKey  = key.IsEmpty ? new DbKey (rowId) : key;
+					DbKey  tableKey  = new DbKey (rowId);
 
-					dbTable = this.tableCache[tableKey];
-
-					if (dbTable == null)
+					if (!this.tableNameCache.TryGetValue (tableName, out dbTable))
 					{
 						//	The table is not yet loaded in the cache, so deserialize
 						//	it and initialize it, then put it into the cache :
 
 						dbTable = DbTools.DeserializeFromXml<DbTable> (tableInfo);
-						recycle = false;
-
 						dbTable.DefineDisplayName (tableDisplayName);
 						dbTable.DefineKey (tableKey);
 
-						this.tableCache[tableKey] = dbTable;
+						this.tableNameCache[tableName] = dbTable;
+						this.tableKeyCache[tableKey] = dbTable;
+
+						recycle = false;
 					}
 					else
 					{
@@ -2777,30 +2678,69 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Loads the type definitions based on the metadata type key and the
-		/// specified search mode.
+		/// Loads type definitions.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		/// <param name="key">The type key or <c>DbKey.Empty</c> to load all type definitions based on the search mode.</param>
+		/// <param name="name">The name of the type to load or null to load all type definitions.</param>
 		/// <returns>The type definitions.</returns>
-		public List<DbTypeDef> LoadDbType(DbTransaction transaction, DbKey key)
+		private List<DbTypeDef> LoadDbTypes(DbTransaction transaction, string name)
+		{
+			SqlFunction condition = null;
+
+			if (name != null)
+			{
+				condition = new SqlFunction
+				(
+					SqlFunctionCode.CompareEqual,
+					SqlField.CreateName ("T_TYPE", Tags.ColumnName),
+					SqlField.CreateConstant (name, DbRawType.String)
+				);
+			}
+
+			return this.LoadDbTypesWithCondition (transaction, condition);
+		}
+
+		/// <summary>
+		/// Loads type definitions.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="key">The key of the type to load or <c>DbKey.Empty</c> to load all type definitions.</param>
+		/// <returns>The type definitions.</returns>
+		private List<DbTypeDef> LoadDbTypes(DbTransaction transaction, DbKey key)
+		{
+			SqlFunction condition = null;
+
+			if (key != DbKey.Empty)
+			{
+				condition = new SqlFunction
+				(
+					SqlFunctionCode.CompareEqual,
+					SqlField.CreateName ("T_TYPE", Tags.ColumnId),
+					SqlField.CreateConstant (key.Id, DbKey.RawTypeForId)
+				);
+			}
+
+			return this.LoadDbTypesWithCondition (transaction, condition);
+		}
+
+		private List<DbTypeDef> LoadDbTypesWithCondition(DbTransaction transaction, SqlFunction condition)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			
+
 			SqlSelect query = new SqlSelect ();
-			
-			query.Fields.Add ("T_ID",     SqlField.CreateName ("T_TYPE", Tags.ColumnId));
-			query.Fields.Add ("T_NAME",   SqlField.CreateName ("T_TYPE", Tags.ColumnName));
+
+			query.Fields.Add ("T_ID", SqlField.CreateName ("T_TYPE", Tags.ColumnId));
+			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnName));
 			query.Fields.Add ("T_D_NAME", SqlField.CreateName ("T_TYPE", Tags.ColumnDisplayName));
-			query.Fields.Add ("T_INFO",   SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
-			
+			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", Tags.ColumnInfoXml));
+
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (Tags.TableTypeDef));
-			
-			if (!key.IsEmpty)
+
+			if (condition != null)
 			{
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", key);
+				query.Conditions.Add (condition);
 			}
-			
+
 			System.Data.DataTable dataTable = this.ExecuteSqlSelect (transaction, query, 0);
 			List<DbTypeDef> types = new List<DbTypeDef> ();
 
@@ -2812,22 +2752,23 @@ namespace Epsitec.Cresus.Database
 				string typeInfo        = InvariantConverter.ToString (row["T_INFO"]);
 				DbKey  typeKey		   = new DbKey (typeId);
 
-				DbTypeDef typeDef = this.typeCache[typeKey];
+				DbTypeDef typeDef = null;
 
-				if (typeDef == null)
+				if (!this.typeNameCache.TryGetValue (typeName, out typeDef))
 				{
 					typeDef = DbTools.DeserializeFromXml<DbTypeDef> (typeInfo);
-
 					typeDef.DefineDisplayName (typeDisplayName);
-					typeDef.DefineKey (new DbKey (typeId));
+					typeDef.DefineKey (typeKey);
 
-					this.typeCache[typeKey] = typeDef;
+					this.typeNameCache[typeName] = typeDef;
+					this.typeKeyCache[typeKey] = typeDef;
 				}
 
 				types.Add (typeDef);
 			}
-			
+
 			return types;
+
 		}
 
 		/// <summary>
@@ -3649,9 +3590,10 @@ namespace Epsitec.Cresus.Database
 		private readonly DbTableList internalTables;
 		private readonly DbTypeDefList internalTypes;
 
-		private readonly Cache.DbTypeDefs		typeCache = new Cache.DbTypeDefs ();
-		private readonly Cache.DbTables			tableCache = new Cache.DbTables ();
-		private Dictionary<string, Dictionary<string, DbKey[]>> dbKeysCache;
+		private readonly Dictionary<string, DbTypeDef>	typeNameCache;
+		private readonly Dictionary<DbKey, DbTypeDef>	typeKeyCache;
+		private readonly Dictionary<string, DbTable>	tableNameCache;
+		private readonly Dictionary<DbKey, DbTable>		tableKeyCache;
 
 		private List<DbTransaction>				liveTransactions;
 		private List<IDbAbstraction>			releaseRequested;
