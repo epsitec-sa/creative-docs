@@ -1,5 +1,6 @@
 ﻿#define LOCALHOST
 #define REMOTE_HOST_MARC
+#define FBSERVER
 
 
 using Epsitec.Common.Support;
@@ -36,7 +37,13 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Helpers
 			string host = "WIN-CDMPHQRQD03";
 #endif
 
-			return new DbAccess ("Firebird", "UTD_DATABASE", host, "sysdba", "masterkey", false);
+#if FBSERVER
+			string provider = "Firebird";
+#elif FBEMBEDDED
+			string provider = "FirebirdEmbedded";
+#endif
+
+			return new DbAccess (provider, "UTD_DATABASE", host, "sysdba", "masterkey", false);
 		}
 
 
