@@ -695,7 +695,11 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private void PreProcessText(Size boxSize, FormattedText formattedText, TextStyle style)
 		{
+			//	Préprocessing d'un texte. On construit la Hashtable de tous les
+			//	caractères utilisés, et on collectionne les images utilisées.
 			var textLayout = Port.GetTextLayout (boxSize, formattedText, style);
+
+			//	On s'occupe des caractères.
 			TextLayout.OneCharStructure[] fix = textLayout.ComputeStructure ();
 
 			foreach (TextLayout.OneCharStructure oneChar in fix)
@@ -706,6 +710,37 @@ namespace Epsitec.Common.Pdf.Engine
 					if (!this.characterHash.ContainsKey (cl))
 					{
 						this.characterHash.Add (cl, null);
+					}
+				}
+			}
+
+			//	On s'occupe des images.
+			Dictionary<string, string> parameters;
+			int offset = 0;
+			while (offset < textLayout.Text.Length)
+			{
+				var tag = TextLayout.ParseTag (textLayout.Text, ref offset, out parameters);
+
+				if (tag == TextLayout.Tag.Image)
+				{
+					if (parameters.ContainsKey ("src"))
+					{
+						var filename = parameters["src"];
+
+						Image image = null;
+						try
+						{
+							image = Bitmap.FromFile (filename);
+						}
+						catch
+						{
+						}
+
+						if (image != null)
+						{
+							//	Le préprocessing d'une image n'a pas besoin des informations géométriques !
+							this.PaintImage (image, 0, 0, 0, 0);
+						}
 					}
 				}
 			}
@@ -882,6 +917,9 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
+			//	Tous les modes ne sont pas supportés. imageOriginX/imageOriginY doivent être nuls,
+			//	et imageWidth/imageHeight doivent correspondre aux dimensions de l'image.
+			//	Autrement dit, il faut dessiner toute l'image.
 			if (this.IsPreProcess)
 			{
 				long uniqueId = ImageSurface.GetUniqueId (bitmap);
@@ -913,9 +951,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 				this.TranslateTransform (fillX, fillY);
 				this.TranslateTransform (fillWidth/2, fillHeight/2);
-				double sx = fillWidth;
-				double sy = -fillHeight;
-				this.ScaleTransform (sx, sy, 0.0, 0.0);
+				this.ScaleTransform (fillWidth, -fillHeight, 0.0, 0.0);
 				this.TranslateTransform (-0.5, -0.5);
 				this.SetTransform (this.transform);
 

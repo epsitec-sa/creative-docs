@@ -135,6 +135,8 @@ namespace Epsitec.Common.Drawing
 			public Color WaveColor   = Color.Empty;
 			public Color BackColor   = Color.Empty;
 			public Image Image       = null;
+			public double ImageWidth  = 0.0;
+			public double ImageHeight = 0.0;
 			public double VerticalOffset = 0.0;
 			public string Replacement = null;
 			public string Locale      = null;

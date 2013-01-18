@@ -1968,8 +1968,8 @@ namespace Epsitec.Common.Widgets
 					image.DefineColor (uniqueColor.Basic);
 					image.DefineAdorner (adorner);
 
-					double dx = image.Width;
-					double dy = image.Height;
+					double dx = block.ImageWidth;
+					double dy = block.ImageHeight;
 					double ix = pos.X+block.Pos.X;
 					double iy = pos.Y+block.Pos.Y+block.ImageDescender - offsetY; //+block.VerticalOffset;
 
@@ -4087,7 +4087,8 @@ namespace Epsitec.Common.Widgets
 							  Stack<FontItem> fontStack,
 							  SupplItem supplItem,
 							  int partIndex, ref int startIndex, int currentIndex,
-							  Drawing.Image image, double verticalOffset, string replacement = null)
+							  Drawing.Image image, double verticalOffset, string replacement = null,
+							  double imageWidth = 0, double imageHeight = 0)
 		{
 			if ( currentIndex-startIndex == 0 )  return;
 
@@ -4098,6 +4099,8 @@ namespace Epsitec.Common.Widgets
 			run.Start  = startIndex-partIndex;
 			run.Length = currentIndex-startIndex;
 			run.Image  = image;
+			run.ImageWidth = imageWidth;
+			run.ImageHeight = imageHeight;
 			run.VerticalOffset = verticalOffset;
 			run.Replacement = replacement;
 			this.FontToRun(run, font, fontItem, supplItem);
@@ -4226,6 +4229,8 @@ namespace Epsitec.Common.Widgets
 							case Tag.Image:
 								System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
 								string imageName = parameters["src"];
+								double imageWidth = 0;
+								double imageHeight = 0;
 								double verticalOffset = 0;
 
 								Drawing.Image image = this.ResolveImage (imageName);
@@ -4234,6 +4239,18 @@ namespace Epsitec.Common.Widgets
 								{
 									string s = parameters["voff"];
 									verticalOffset = double.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+								}
+								
+								if (parameters.ContainsKey("width"))
+								{
+									string s = parameters["width"];
+									imageWidth = double.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+								}
+								
+								if (parameters.ContainsKey("height"))
+								{
+									string s = parameters["height"];
+									imageHeight = double.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 								}
 								
 								if ( image is Drawing.Canvas )
@@ -4302,7 +4319,7 @@ namespace Epsitec.Common.Widgets
 							
 								buffer.Append(TextLayout.CodeObject);
 								currentIndex ++;
-								this.PutRun(runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image, verticalOffset);
+								this.PutRun(runList, fontStack, supplItem, partIndex, ref startIndex, currentIndex, image, verticalOffset, null, imageWidth, imageHeight);
 								break;
 
 							case Tag.LineBreak:
@@ -4594,16 +4611,18 @@ noText:
 							if ( run.Image != null )
 							{
 								Drawing.Image image = run.Image;
-								double dx = image.Width;
-								double dy = image.Height;
+								double dx = run.ImageWidth  == 0 ? image.Width  : run.ImageWidth;
+								double dy = run.ImageHeight == 0 ? image.Height : run.ImageHeight;
 
 								double fontAscender  = font.Ascender;
 								double fontDescender = font.Descender;
 								double fontHeight    = fontAscender-fontDescender;
 
-								block.Image = image;
-								block.Text  = TextLayout.CodeObject.ToString();
-								block.Width = dx;
+								block.Image       = image;
+								block.ImageWidth  = dx;
+								block.ImageHeight = dy;
+								block.Text        = TextLayout.CodeObject.ToString();
+								block.Width       = dx;
 							
 								if ( image.IsOriginDefined )
 								{
@@ -5149,6 +5168,11 @@ noText:
 				System.Diagnostics.Debug.WriteLine (string.Format ("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory ()));
 			}
 
+			if (image == null)
+			{
+				image = Drawing.Bitmap.FromFile (imageName);
+			}
+
 			return image;
 		}
 		
@@ -5537,6 +5561,8 @@ noText:
 			public bool						HasReplacement;
 			public Drawing.Point			Pos;		// sur la ligne de base
 			public Drawing.Image			Image;		// image bitmap
+			public double					ImageWidth;
+			public double					ImageHeight;
 			public double					ImageAscender;
 			public double					ImageDescender;
 //-			public double					VerticalOffset;

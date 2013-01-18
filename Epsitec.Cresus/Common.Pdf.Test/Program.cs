@@ -125,7 +125,7 @@ namespace Common.Pdf.Test
 
 			Program.RenderRectangle (port, new Rectangle (80, 980, 1040, 184), Color.FromName ("Yellow"));
 			{
-				var image = Bitmap.FromFile ("S:\\Epsitec.Cresus\\External\\epsitec.png");
+				var image = Bitmap.FromFile (Program.logo);
 				port.PaintImage (image, new Rectangle (100.0, 1000.0, 1000, 144));
 			}
 			Program.RenderRectangle (port, new Rectangle (520, 850, 400, 400), Color.FromAlphaColor (0.2, Color.FromName ("Blue")));
@@ -419,9 +419,10 @@ namespace Common.Pdf.Test
 				FontSize = 20.0,
 			};
 
-			common.AddTopLeftLayer ("<font color=\"Blue\">Crésus</font>", 50.0, style: style);
+			var tagImage = string.Format ("<img src=\"{0}\" width=\"200.0\" height=\"28.8\"/>", Program.logo);
+			common.AddTopLeftLayer (tagImage, 50.0, style: style);
 			common.AddTopCenterLayer ("<font color=\"Blue\">— Document test —</font>", 50.0, style: style);
-			common.AddTopRightLayer ("<font color=\"Blue\">EPSITEC SA</font>", 50.0, style: style);
+			common.AddTopRightLayer ("<font color=\"Blue\">Crésus</font>", 50.0, style: style);
 
 			common.AddBottomLeftLayer ("<font color=\"Blue\"><i>Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</i></font>", 50.0, style: style);
 			common.AddBottomRightLayer ("<font color=\"Blue\">Page {0}</font>", 50.0, style: style);
@@ -450,6 +451,7 @@ namespace Common.Pdf.Test
 		}
 
 
+		private static string logo = "S:\\Epsitec.Cresus\\External\\epsitec.png";
 		private static string histoire = "Midi, l'heure du crime ! Un jeune vieillard assis-debout sur une pierre en bois lisait son journal plié en quatre dans sa poche à la lueur d'une bougie éteinte. Le tonnerre grondait en silence et les éclairs brillaient sombres dans la nuit claire. Il monta quatre à quatre les trois marches qui descendaient au grenier et vit par le trou de la serrure bouchée un nègre blanc qui déterrait un mort pour le manger vivant. N'écoutant que son courage de pleutre mal léché, il sortit son épée de fils de fer barbelés et leur coupa la tête au ras des pieds.";
 	}
 }
