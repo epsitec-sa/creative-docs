@@ -1,8 +1,6 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-
 using Epsitec.Cresus.Database.Exceptions;
 
 using FirebirdSql.Data.FirebirdClient;
@@ -227,7 +225,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		internal string GetDbFilePath()
 		{
-			return FirebirdAbstraction.MakeDbFilePath (this.dbAccess, this.engineType);
+			return FirebirdAbstraction.MakeDbFilePath (this.dbAccess);
 		}
 		
 		public static string MakeConnectionStringForDbCreation(DbAccess dbAccess, string path, FbServerType serverType)
@@ -324,28 +322,14 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public static string MakeDbFilePath(DbAccess dbAccess, EngineType engineType)
+		public static string MakeDbFilePath(DbAccess dbAccess)
 		{
 			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.Database);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			switch (engineType)
-			{
-				case EngineType.Embedded:
-					buffer.Append (Globals.Directories.UserAppData);
-					buffer.Append (System.IO.Path.DirectorySeparatorChar);
-					break;
-				
-				case EngineType.Server:
-					buffer.Append (FirebirdAbstraction.fbRootDbPath);
-					buffer.Append (System.IO.Path.DirectorySeparatorChar);
-					break;
-				
-				default:
-					throw new Database.Exceptions.FactoryException (string.Format ("EngineType {0} not supported.", engineType));
-			}
 
+			buffer.Append (FirebirdAbstraction.fbRootDbPath);
+			buffer.Append (System.IO.Path.DirectorySeparatorChar);
 			buffer.Append (dbAccess.Database);
 			buffer.Append (FirebirdAbstraction.fbDbFileExtension);
 			

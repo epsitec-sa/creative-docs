@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			return new string[]
 			{
-				FirebirdAbstraction.MakeDbFilePath (dbAccess, EngineType.Embedded)
+				FirebirdAbstraction.MakeDbFilePath (dbAccess)
 			};
 		}
 
