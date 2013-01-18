@@ -3587,8 +3587,8 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 
-		private readonly DbTableList internalTables;
-		private readonly DbTypeDefList internalTypes;
+		private readonly DbTableList			internalTables;
+		private readonly DbTypeDefList			internalTypes;
 
 		private readonly Dictionary<string, DbTypeDef>	typeNameCache;
 		private readonly Dictionary<DbKey, DbTypeDef>	typeKeyCache;
