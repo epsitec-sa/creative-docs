@@ -63,12 +63,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 					Parallel.For (2, nbCoreWorkers + 1, i =>
 					{
 						var newWorker = new CoreWorker (uiCulture);
-						Logger.LogToConsole ("Core worker #" + i + " started");
+
+						int nb;
 
 						lock (exclusion)
 						{
 							workers.Add (newWorker);
+							nb = workers.Count;
 						}
+
+						Logger.LogToConsole ("Core worker #" + nb + " started");
 					});
 				}
 			}
