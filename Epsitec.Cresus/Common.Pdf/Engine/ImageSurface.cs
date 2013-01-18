@@ -1,7 +1,8 @@
+//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using System.Collections.Generic;
-
 using Epsitec.Common.Drawing.Platform;
 using System.Xml.Linq;
 
@@ -14,26 +15,45 @@ namespace Epsitec.Common.Pdf.Engine
 	/// </summary>
 	public sealed class ImageSurface : System.IDisposable
 	{
-		private ImageSurface()
+		public ImageSurface(long uniqueId, int id, Image image)
 		{
+			this.uniqueId = uniqueId;
+			this.id       = id;
+			this.image    = image;
+
+			this.nativeBitmap = NativeBitmap.Create (this.image.BitmapImage.NativeBitmap);
 		}
 
-		public ImageSurface(ImageFileReference file, Size bitmapSize, Size imageSize, Margins crop, ImageFilter filter, int id)
+		public Image Image
 		{
-			this.imageName = file.Path;
-			this.imageSize = imageSize;
-			this.crop      = crop;
-			this.filter    = filter;
-			this.id        = id;
+			get
+			{
+				return this.image;
+			}
+		}
 
-			this.BitmapSize    = bitmapSize;
-			this.fileReference = file;
+		public NativeBitmap NativeBitmap
+		{
+			get
+			{
+				return this.nativeBitmap;
+			}
+		}
+
+		public long UniqueId
+		{
+			get
+			{
+				return this.uniqueId;
+			}
 		}
 
 		public Size BitmapSize
 		{
-			get;
-			set;
+			get
+			{
+				return this.bitmapSize;
+			}
 		}
 
 		public Size ImageSize
@@ -42,14 +62,6 @@ namespace Epsitec.Common.Pdf.Engine
 			get
 			{
 				return this.imageSize;
-			}
-		}
-
-		public string FilePath
-		{
-			get
-			{
-				return this.fileReference == null ? null : this.fileReference.Path;
 			}
 		}
 
@@ -89,6 +101,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
+#if false
 		public double MinDpi
 		{
 			get;
@@ -112,6 +125,7 @@ namespace Epsitec.Common.Pdf.Engine
 			get;
 			set;
 		}
+#endif
 
 		public PdfImageStream ImageStream
 		{
@@ -131,12 +145,6 @@ namespace Epsitec.Common.Pdf.Engine
 			set;
 		}
 
-		public BitmapColorType ColorType
-		{
-			get;
-			set;
-		}
-
 		public ColorConversion ColorConversion
 		{
 			get;
@@ -149,106 +157,58 @@ namespace Epsitec.Common.Pdf.Engine
 			set;
 		}
 
-		public bool IsTransparent
-		{
-			get;
-			set;
-		}
-
 		public void Dispose()
 		{
-			if (this.fileReference != null)
-			{
-				this.fileReference.Dispose ();
-			}
 			if (this.ImageStream != null)
 			{
 				this.ImageStream.Dispose ();
 			}
 		}
 
-		
-		internal string GetDebugInformation()
+
+		public static long GetUniqueId(Image image)
 		{
-			return ImageSurface.Serialize (this);
+			//	Retourne un identificateur unique basé sur les données de l'image.
+			//	Deux objets Image différents ayant les mêmes contenus doivent rendre
+			//	le même identificateur.
+			//	TODO: C'est une implémentation bricolée, il faudra faire mieux !!!
+			var bytes = image.BitmapImage.GetRawBitmapBytes ();
+			long sum = 0;
+			int i = 0;
+
+			foreach (var b in bytes)
+			{
+				sum += b;
+				sum ^= ImageSurface.randomXor[(i++) % ImageSurface.randomXor.Length];
+			}
+
+			return sum;
 		}
 
-
-		public void Update(string source)
+		private static long[] randomXor =
 		{
-			var xml = XDocument.Parse (source);
-			var surface = xml.Element ("surface");
+			0x12345678,
+			0xa340bbcf,
+			0x029d4588,
+			0x33333333,
+			0x51860178,
+			0xff505620,
+			0x55dac972,
+			0x224411dd,
+			0x5079ee40,
+			0x10030f00,
+			0x9445b4c2,
+			0x30405588,
+			0x09aaffc3,
+		};
 
-			this.BitmapSize    = Size.Parse ((string) surface.Attribute ("bitmapSize"));
-			this.ColorType     = Epsitec.Common.Types.InvariantConverter.ToEnum<BitmapColorType> ((string) surface.Attribute ("colorType"));
-		}
 
-		public static string Serialize(ImageSurface item)
+		public static ImageSurface Search(IEnumerable<ImageSurface> list, long uniqueId)
 		{
-			var xml = new XDocument (
-				new XElement ("surface",
-					new XAttribute ("imageName", item.imageName),
-					new XAttribute ("imageSize", item.imageSize.ToString ()),
-					new XAttribute ("bitmapSize", item.BitmapSize.ToString ()),
-					new XAttribute ("colorType", item.ColorType.ToString ()),
-					new XAttribute ("colorConv", item.ColorConversion.ToString ()),
-					new XAttribute ("jpegQuality", item.JpegQuality),
-					new XAttribute ("surfaceType", item.SurfaceType.ToString ()),
-					new XAttribute ("compression", item.ImageCompression.ToString ()),
-					new XAttribute ("crop", item.crop.ToString ()),
-					new XAttribute ("filter", item.filter.ToString ()),
-					new XAttribute ("id", item.id),
-					new XAttribute ("file", item.fileReference.Path),
-					new XAttribute ("minDPI", item.MinDpi),
-					new XAttribute ("maxDPI", item.MaxDpi),
-					new XAttribute ("dx", item.DX),
-					new XAttribute ("dy", item.DY),
-					new XAttribute ("transparent", item.IsTransparent),
-					PdfImageStream.ToXml (item.ImageStream)
-					));
-
-			return xml.ToString ();
-		}
-
-		public static ImageSurface Deserialize(string source)
-		{
-			var xml = XDocument.Parse (source);
-			var surface = xml.Element ("surface");
-
-			var item = new ImageSurface ();
-
-			item.imageName        = (string) surface.Attribute ("imageName");
-			item.imageSize        = Size.Parse ((string) surface.Attribute ("imageSize"));
-			item.BitmapSize       = Size.Parse ((string) surface.Attribute ("bitmapSize"));
-			item.ColorType        = Epsitec.Common.Types.InvariantConverter.ToEnum<BitmapColorType> ((string) surface.Attribute ("colorType"));
-			item.ColorConversion  = Epsitec.Common.Types.InvariantConverter.ToEnum<ColorConversion> ((string) surface.Attribute ("colorConv"));
-			item.JpegQuality      = (double) surface.Attribute ("jpegQuality");
-			item.SurfaceType      = Epsitec.Common.Types.InvariantConverter.ToEnum<PdfComplexSurfaceType> ((string) surface.Attribute ("surfaceType"));
-			item.ImageCompression = Epsitec.Common.Types.InvariantConverter.ToEnum<ImageCompression> ((string) surface.Attribute ("compression"));
-			item.crop             = Margins.Parse ((string) surface.Attribute ("crop"));
-			item.filter           = ImageFilter.Parse ((string) surface.Attribute ("filter"));
-			item.id               = (int) surface.Attribute ("id");
-			item.fileReference    = new ImageFileReference ((string) surface.Attribute ("file"));
-			item.MinDpi           = (double) surface.Attribute ("minDPI");
-			item.MaxDpi           = (double) surface.Attribute ("maxDPI");
-			item.DX               = (int) surface.Attribute ("dx");
-			item.DY               = (int) surface.Attribute ("dy");
-			item.IsTransparent    = (bool) surface.Attribute ("transparent");
-			item.ImageStream      = PdfImageStream.FromXml (surface);
-
-			return item;
-		}
-
-
-		public static ImageSurface Search(IEnumerable<ImageSurface> list, string filename, Size size, Margins crop, ImageFilter filter)
-		{
-			//	Cherche une image d'après son nom dans une liste.
+			//	Cherche une image dans une liste.
 			foreach (ImageSurface image in list)
 			{
-				if ((image.imageName == filename) &&
-					(image.filter   == filter) &&
-					(Size.Equal (image.imageSize, size, 0.001)) &&
-					(Margins.Equal (image.crop, crop, 0.001)))
+				if (image.uniqueId == uniqueId)
 				{
 					return image;
 				}
@@ -257,11 +217,14 @@ namespace Epsitec.Common.Pdf.Engine
 			return null;
 		}
 
-		private string						imageName;
-		private Size						imageSize;
-		private Margins						crop;
-		private ImageFilter					filter;
-		private int							id;
-		private ImageFileReference			fileReference;
+
+		private readonly long			uniqueId;
+		private readonly Image			image;
+		private readonly NativeBitmap	nativeBitmap;
+		private readonly Size			imageSize;
+		private readonly Size			bitmapSize;
+		private readonly Margins		crop;
+		private readonly ImageFilter	filter;
+		private readonly int			id;
 	}
 }

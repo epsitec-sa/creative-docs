@@ -407,10 +407,10 @@ namespace Epsitec.Common.Pdf.Engine
 					writer.WriteString ("/XObject << ");
 					foreach (ImageSurface image in port.ImageSurfaces)
 					{
-						if (!image.Exists)
-						{
-							continue;
-						}
+						//?if (!image.Exists)
+						//?{
+						//?	continue;
+						//?}
 
 						writer.WriteString (Export.GetComplexSurfaceShortName (image.Id, PdfComplexSurfaceType.XObject));
 						writer.WriteObjectRef (Export.GetComplexSurfaceName (image.Id, PdfComplexSurfaceType.XObject));
@@ -809,7 +809,11 @@ namespace Epsitec.Common.Pdf.Engine
 
 			foreach (ImageSurface image in port.ImageSurfaces)
 			{
-				if (this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObject, PdfComplexSurfaceType.XObjectMask))
+				bool isTransparent = image.NativeBitmap.IsTransparent;
+
+                this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObject, PdfComplexSurfaceType.XObjectMask);
+
+				if (isTransparent)
 				{
 					this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObjectMask, PdfComplexSurfaceType.None);
 				}
@@ -818,23 +822,16 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		private bool CreateImageSurface(Writer writer, ImageSurface image,
-										PdfComplexSurfaceType baseType, PdfComplexSurfaceType maskType)
+		private void CreateImageSurface(Writer writer, ImageSurface image, PdfComplexSurfaceType baseType, PdfComplexSurfaceType maskType)
 		{
-			ImageCompression compression = this.GetCompressionMode (baseType);
-
 			//	Crée une image.
-
-			image.MinDpi = this.imageMinDpi;
-			image.MaxDpi = this.imageMaxDpi;
-
+			ImageCompression compression = this.GetCompressionMode (baseType);
 			image = this.ProcessImageAndCreatePdfStream (image, baseType, compression);
 			
 			Export.EmitImageHeader (writer, baseType, image, compression, this.colorConversion);
-
 			writer.WriteString (image.ImageStream.Code);
 
-			if (maskType == PdfComplexSurfaceType.XObjectMask && image.IsTransparent)
+			if (maskType == PdfComplexSurfaceType.XObjectMask && image.NativeBitmap.IsTransparent)
 			{
 				writer.WriteString ("/SMask ");
 				writer.WriteObjectRef (Export.GetComplexSurfaceName (image.Id, maskType));
@@ -845,48 +842,7 @@ namespace Epsitec.Common.Pdf.Engine
 			writer.WriteStream (image.ImageStream.Stream);
 			writer.WriteLine ("endstream endobj");
 
-			bool transparent = image.IsTransparent;
-
 			image.Dispose ();
-
-			return transparent;
-		}
-
-		private static NativeBitmap PrepareImage(ImageSurface image)
-		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage, image:\n{0}", image == null ? "<null>" : image.GetDebugInformation()));
-			double imageMinDpi = image.MinDpi;
-			double imageMaxDpi = image.MaxDpi;
-
-			int dx = image.DX;
-			int dy = image.DY;
-
-			NativeBitmap fi = Export.LoadImage (image);
-
-			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage, before crop and resizing:\n{0}", fi == null ? "<null>" : fi.ToString()));
-			fi = Export.CropImage (image, fi);
-			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage, After crop:\n{0}", fi == null ? "<null>" : fi.ToString()));
-
-			// --------------- 06-02-2012 15:45 -----------------
-			// Start of JFC modification : For debug purpose
-			// --------------------------------------------------
-			// Original Code :
-
-			fi = Export.ResizeImage (image, fi, imageMinDpi, imageMaxDpi, out dx, out dy);
-			// Modified Code :
-//+			dx = fi.Width;
-//+			dy = fi.Height;
-			// --------------------------------------------------
-			// End of JFC modification (06-févr.-2012 15:45)
-			// --------------------------------------------------
-			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: after crop & resize, Size={0}x{1}\n{2}", dx, dy, fi == null ? "<null>" : fi.ToString()));
-
-			image.ColorType     = fi.ColorType;
-			image.IsTransparent = fi.IsTransparent;
-			image.DX            = dx;
-			image.DY            = dy;
-
-			return fi;
 		}
 
 		private ImageSurface ProcessImageAndCreatePdfStream(ImageSurface image, PdfComplexSurfaceType baseType, ImageCompression compression)
@@ -896,94 +852,37 @@ namespace Epsitec.Common.Pdf.Engine
 			image.SurfaceType      = baseType;
 			image.ImageCompression = compression;
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("ProcessImageAndCreatePdfStream> SurfaceType={0}, ImageCompression={1}, ColorConversion={2}, Quality={3}", baseType, compression, this.colorConversion, this.jpegQuality));
-
-#if true
-			image = Export.LaunchProcessImageAndCreatePdfStream (image);
-
-			var source = ImageSurface.Serialize (image);
-			
-			System.Diagnostics.Debug.WriteLine ("----------------------------------------------------------------------");
-			System.Diagnostics.Debug.WriteLine (source);
-			System.Diagnostics.Debug.WriteLine ("----------------------------------------------------------------------");
-			
+			Export.ProcessImageAndCreatePdfStream (image);
 			return image;
-#else
-			Export.ExecuteProcessImageAndCreatePdfStream (image);
-			return image;
-#endif
 		}
 
-		private static ImageSurface LaunchProcessImageAndCreatePdfStream(ImageSurface image)
-		{
-			string path = System.IO.Path.GetTempFileName ();
-
-			try
-			{
-				System.IO.File.WriteAllText (path, ImageSurface.Serialize (image), System.Text.Encoding.UTF8);
-
-				const string program="Common.Document.ExportEngine.exe";
-
-				string exe1 = System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.Executable, program);
-				string exe2 = System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.InitialDirectory, program);
-				string exe3 = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (typeof (Export).Assembly.Location), program);
-
-				string exe = System.IO.File.Exists (exe1) ? exe1 :
-							 System.IO.File.Exists (exe2) ? exe2 :
-							 exe3;
-
-				string args = string.Concat (@"""", path, @"""");
-				var process = System.Diagnostics.Process.Start (exe, args);
-
-				process.WaitForExit ();
-
-				return ImageSurface.Deserialize (System.IO.File.ReadAllText (path, System.Text.Encoding.UTF8));
-			}
-			finally
-			{
-				System.IO.File.Delete (path);
-			}
-		}
-
-		public static void ExecuteProcessImageAndCreatePdfStream(ImageSurface image)
-		{
-			Export.InternalProcessImageAndCreatePdfStream (image);
-		}
-
-
-		private static void InternalProcessImageAndCreatePdfStream(ImageSurface image)
+		private static void ProcessImageAndCreatePdfStream(ImageSurface image)
 		{
 			PdfComplexSurfaceType baseType        = image.SurfaceType;
 			ImageCompression      compression     = image.ImageCompression;
 			ColorConversion       colorConversion = image.ColorConversion;
-			
+
+			NativeBitmap fi = image.NativeBitmap;
 			double jpegQuality = image.JpegQuality;
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("ProcessImageAndCreatePdfStream: SurfaceType={0}, ImageCompression={1}, ColorConversion={2}, Quality={3}", baseType, compression, colorConversion, jpegQuality));
-
-			using (NativeBitmap fi = Export.PrepareImage (image))
+			if (compression == ImageCompression.JPEG)  // compression JPEG ?
 			{
-				if (compression == ImageCompression.JPEG)  // compression JPEG ?
-				{
-					image.ImageStream = Export.EmitJpegImageSurface (baseType, fi, colorConversion, jpegQuality);
-				}
-				else	// compression ZIP ou aucune ?
-				{
-					image.ImageStream = Export.EmitLosslessImageSurface (baseType, image, compression, fi, colorConversion);
-				}
+				image.ImageStream = Export.EmitJpegImageSurface (baseType, fi, colorConversion, jpegQuality);
+			}
+			else	// compression ZIP ou aucune ?
+			{
+				image.ImageStream = Export.EmitLosslessImageSurface (baseType, image, compression, fi, colorConversion);
 			}
 		}
 
 		private static void EmitImageHeader(Writer writer, PdfComplexSurfaceType baseType, ImageSurface image, ImageCompression compression, ColorConversion colorConversion)
 		{
-			int dx = image.DX;
-			int dy = image.DY;
-
 			//	Génération de l'en-tête.
+			int dx = (int) image.Image.Width;
+			int dy = (int) image.Image.Height;
+
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (image.Id, baseType));
 			writer.WriteString ("<< /Subtype /Image ");
-
-			System.Diagnostics.Debug.WriteLine (string.Format ("EmitHeader: {0} XML={1}", baseType, image.GetDebugInformation ()));
 
 			if (baseType == PdfComplexSurfaceType.XObject)
 			{
@@ -997,7 +896,7 @@ namespace Epsitec.Common.Pdf.Engine
 				}
 				else
 				{
-					switch (image.ColorType)
+					switch (image.NativeBitmap.ColorType)
 					{
 						case BitmapColorType.MinIsBlack:
 						case BitmapColorType.MinIsWhite:
@@ -1022,7 +921,7 @@ namespace Epsitec.Common.Pdf.Engine
 							break;
 
 						default:
-							throw new System.InvalidOperationException (string.Format ("ColorType.{0} not recognized", image.ColorType));
+							throw new System.InvalidOperationException (string.Format ("ColorType.{0} not recognized", image.NativeBitmap.ColorType));
 					}
 				}
 			}
@@ -1045,8 +944,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 		private static PdfImageStream EmitLosslessImageSurface(PdfComplexSurfaceType baseType, ImageSurface image, ImageCompression compression, NativeBitmap fi, ColorConversion colorConversion)
 		{
-			int dx = image.DX;
-			int dy = image.DY;
+			int dx = (int) image.Image.Width;
+			int dy = (int) image.Image.Height;
 
 			int bpp = 3;
 			if (baseType == PdfComplexSurfaceType.XObject)
@@ -1065,7 +964,7 @@ namespace Epsitec.Common.Pdf.Engine
 				}
 				else
 				{
-					switch (image.ColorType)
+					switch (fi.ColorType)
 					{
 						case BitmapColorType.MinIsBlack:
 						case BitmapColorType.MinIsWhite:
@@ -1165,10 +1064,10 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			bool isGray = false;
 
-			if ((colorConversion == ColorConversion.ToGray) ||
-				(baseType == PdfComplexSurfaceType.XObjectMask) ||
-				(fi.ColorType == BitmapColorType.MinIsBlack) ||
-				(fi.ColorType == BitmapColorType.MinIsWhite))
+			if (colorConversion == ColorConversion.ToGray     ||
+				baseType == PdfComplexSurfaceType.XObjectMask ||
+				fi.ColorType == BitmapColorType.MinIsBlack    ||
+				fi.ColorType == BitmapColorType.MinIsWhite    )
 			{
 				isGray = true;
 			}
@@ -1215,118 +1114,14 @@ namespace Epsitec.Common.Pdf.Engine
 			return new PdfImageStream ("/Filter [/ASCII85Decode /DCTDecode] ", port.GetPDF ());  // voir [*] page 43
 		}
 
-		private static NativeBitmap LoadImage(ImageSurface image)
-		{
-			return NativeBitmap.Load (image.FilePath);
-		}
-
-		private static NativeBitmap CropImage(ImageSurface image, NativeBitmap fi)
-		{
-			Margins crop = image.Crop;
-			if (crop != Margins.Zero)  // recadrage nécessaire ?
-			{
-				var cropped = fi.Crop ((int) crop.Left, (int) crop.Top, fi.Width-(int) (crop.Left+crop.Right), fi.Height-(int) (crop.Top+crop.Bottom));
-				fi.Dispose ();
-				fi = cropped;
-			}
-
-			return fi;
-		}
-
-		/// <summary>
-		/// Rescales image to limit its printed resolution to what is sufficient for
-		/// printing (usually 300 dpi)
-		/// </summary>
-		private static NativeBitmap ResizeImage(ImageSurface image, NativeBitmap fi, double imageMinDpi, double imageMaxDpi, out int dx, out int dy)
-		{
-			dx = fi.Width;
-			dy = fi.Height;
-			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
-			//	Une image sans filtrage n'est jamais mise à l'échelle !
-			const double tenthMillimeterPerInch = 254;
-			double currentDpiX = dx * tenthMillimeterPerInch / image.ImageSize.Width;      	// Image size is expressed in mm/10 !!!
-			double currentDpiY = dy * tenthMillimeterPerInch / image.ImageSize.Height;
-			System.Diagnostics.Debug.WriteLine("Current Dpi: {0} x {1}", currentDpiX, currentDpiY);
-			double finalDpiX = currentDpiX;
-			double finalDpiY = currentDpiY;
-
-			if (imageMinDpi != 0.0)
-			{
-				finalDpiX = System.Math.Max (finalDpiX, imageMinDpi);
-				finalDpiY = System.Math.Max (finalDpiY, imageMinDpi);
-			}
-
-			if (imageMaxDpi != 0.0)
-			{
-				finalDpiX = System.Math.Min (finalDpiX, imageMaxDpi);
-				finalDpiY = System.Math.Min (finalDpiY, imageMaxDpi);
-			}
-			System.Diagnostics.Debug.WriteLine("Final Dpi:   {0} x {1}", finalDpiX, finalDpiY);
-
-			bool resizeRequired = false;
-
-			// --------------- 07-02-2012 14:52 ------------------
-			//+ Start of JFC modification: This is a workaround to compensate the fact that either image.ImageSize.Width or image.ImageSize.Height
-			//+ 						   may be not correct (for example square source image inserted as a thin rectangle will have its height equal
-			//+                            to its width)
-			// --------------------------------------------------
-			//  Original Code:
-//+			if (currentDpiX != finalDpiX || currentDpiY != finalDpiY)
-//+			{
-//+				dx = (int) System.Math.Ceiling ((dx+0.5)*finalDpiX/currentDpiX);
-//+				dy = (int) System.Math.Ceiling ((dy+0.5)*finalDpiY/currentDpiY);
-
-//+				if (dx < 1)
-//+				{
-//+					dx = 1;
-//+				}
-//+				if (dy < 1)
-//+				{
-//+					dy = 1;
-//+				}
-
-//+				resizeRequired = true;
-//+				System.Diagnostics.Debug.WriteLine("Dpi are different, resizeRequired: {0}", resizeRequired);
-//+			}
-			//  Modified Code:
-			System.Diagnostics.Debug.WriteLine("Export.ResizeImage: USING TEMPORARY WORKAROUND !!!!!");
-			var usedCurrentDpi = System.Math.Min(currentDpiX, currentDpiY);
-			var usedFinalDpi   = (usedCurrentDpi == currentDpiX) ? finalDpiX : finalDpiY;
-			if (usedCurrentDpi != usedFinalDpi)
-			{
-				dx = (int) System.Math.Ceiling ((dx + 0.5) * usedFinalDpi / usedCurrentDpi);
-				dy = (int) System.Math.Ceiling ((dy + 0.5) * usedFinalDpi / usedCurrentDpi);
-
-				dx = System.Math.Max(1, dx);
-				dy = System.Math.Max(1, dy);
-
-				resizeRequired = true;
-				System.Diagnostics.Debug.WriteLine("Dpi are different, resize is required:, now, dx = {0}, dy = {1}", dx, dy);
-			}
-			// --------------------------------------------------
-			// End of JFC modification (07-févr.-2012 14:52)
-			// --------------------------------------------------
-
-			if (resizeRequired)
-			{
-				//	TODO: take into account the value of 'image.Filter'
-
-				var resized = fi.Rescale (dx, dy);
-				fi.Dispose ();
-				fi = resized;
-			}
-
-			return fi;
-		}
-
 		private ImageCompression GetCompressionMode(PdfComplexSurfaceType baseType)
 		{
 			//	Ajuste le mode de compression possible.
 			ImageCompression compression = this.imageCompression;
 
-			if ((baseType == PdfComplexSurfaceType.XObject) &&
-				(this.colorConversion == ColorConversion.ToCmyk) &&
-				(compression == ImageCompression.JPEG)) // cmyk impossible en jpg !
+			if (baseType == PdfComplexSurfaceType.XObject &&
+				this.colorConversion == ColorConversion.ToCmyk &&
+				compression == ImageCompression.JPEG) // cmyk impossible en jpg !
 			{
 				return ImageCompression.ZIP;  // utilise la compression sans pertes
 			}
@@ -1341,8 +1136,7 @@ namespace Epsitec.Common.Pdf.Engine
 			var plan = fi.GetChannel (channel);
 			bool invert = false;
 
-			if ((plan == null) &&
-				(channel == BitmapColorChannel.Alpha))
+			if (plan == null &&	channel == BitmapColorChannel.Alpha)
 			{
 				plan = fi.GetChannel (BitmapColorChannel.Red);
 				invert = true;

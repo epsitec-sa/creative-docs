@@ -39,6 +39,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,7 +69,6 @@
     <Compile Include="Engine\FontHash.cs" />
     <Compile Include="Engine\FontList.cs" />
     <Compile Include="Engine\ImageCompression.cs" />
-    <Compile Include="Engine\ImageFileReference.cs" />
     <Compile Include="Engine\ImageSurface.cs" />
     <Compile Include="Engine\PdfComplexSurfaceType.cs" />
     <Compile Include="Engine\PdfExportException.cs" />

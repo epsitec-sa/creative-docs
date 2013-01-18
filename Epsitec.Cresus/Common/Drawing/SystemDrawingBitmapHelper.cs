@@ -550,7 +550,7 @@ namespace Epsitec.Common.Drawing.Platform
 			{
 				int stride = raw.Stride;
 				byte* buffer = (byte*) raw.Scan0.ToPointer () + (dy-1) * stride;
-				byte[] rawDst = new byte[dx*3];
+				byte[] rawDst = new byte[dx*4];
 					
 				for (int y = 0; y < dy; y++)
 				{
@@ -597,7 +597,7 @@ namespace Epsitec.Common.Drawing.Platform
 			{
 				int stride = raw.Stride;
 				byte* buffer = (byte*) raw.Scan0.ToPointer () + (dy-1) * stride;
-				byte[] rawDst = new byte[dx*3];
+				byte[] rawDst = new byte[dx*4];
 					
 				for (int y = 0; y < dy; y++)
 				{

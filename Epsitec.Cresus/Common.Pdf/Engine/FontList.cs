@@ -165,7 +165,8 @@ namespace Epsitec.Common.Pdf.Engine
 					return fl;
 				}
 			}
-			return null;
+
+			throw new System.InvalidOperationException ();
 		}
 
 

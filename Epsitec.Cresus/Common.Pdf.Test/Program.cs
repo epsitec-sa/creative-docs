@@ -101,37 +101,13 @@ namespace Common.Pdf.Test
 		private static void Renderer11(Port port)
 		{
 			{
-				var path = new Path ();
-				path.MoveTo (100.0, 100.0);
-				path.LineTo (100.0, 200.0);
-				path.LineTo (200.0, 200.0);
-				path.LineTo (200.0, 100.0);
-				path.Close ();
-
-				port.Color = Color.FromName ("Red");
-				port.PaintSurface (path);
-			}
-
-			{
-				var path = new Path ();
-				path.MoveTo (100.0, 1000.0);
-				path.LineTo (100.0, 2000.0);
-				path.LineTo (1100.0, 2000.0);
-				path.LineTo (1100.0, 1000.0);
-				path.Close ();
-
-				port.Color = Color.FromName ("Green");
-				port.PaintSurface (path);
-			}
-
-			{
 				var style = new TextStyle ()
 				{
 					Font = Font.GetFont ("Times New Roman", "Regular"),
 					FontSize = 50.0,
 				};
 
-				port.PaintText (new Rectangle (100.0, 400.0, 2000, 100), FormattedText.FromSimpleText ("Plus petit tralala..."), style);
+				port.PaintText (new Rectangle (100.0, 2800.0, 2000, 100), FormattedText.FromSimpleText ("Petit tralala en Times..."), style);
 			}
 
 			{
@@ -141,8 +117,18 @@ namespace Common.Pdf.Test
 					FontSize = 100.0,
 				};
 
-				port.PaintText (new Rectangle (100.0, 300.0, 2000, 100), FormattedText.FromSimpleText ("Grand tralala..."), style);
+				port.PaintText (new Rectangle (100.0, 2700.0, 2000, 100), FormattedText.FromSimpleText ("Grand tralala en Arial..."), style);
 			}
+
+			Program.RenderRectangle (port, new Rectangle (100, 2500, 100, 100), Color.FromName ("Red"));
+			Program.RenderRectangle (port, new Rectangle (100, 1900, 500, 500), Color.FromName ("Green"));
+
+			Program.RenderRectangle (port, new Rectangle (80, 980, 1040, 184), Color.FromName ("Yellow"));
+			{
+				var image = Bitmap.FromFile ("S:\\Epsitec.Cresus\\External\\epsitec.png");
+				port.PaintImage (image, new Rectangle (100.0, 1000.0, 1000, 144));
+			}
+			Program.RenderRectangle (port, new Rectangle (520, 850, 400, 400), Color.FromAlphaColor (0.2, Color.FromName ("Blue")));
 		}
 
 		private static void Renderer12(Port port)
@@ -410,6 +396,19 @@ namespace Common.Pdf.Test
 			return doc.GeneratePdf ("test6.pdf", builder.ToString ());
 		}
 
+
+		private static void RenderRectangle(Port port, Rectangle rect, Color color)
+		{
+			var path = new Path ();
+			path.MoveTo (rect.Left, rect.Bottom);
+			path.LineTo (rect.Left, rect.Top);
+			path.LineTo (rect.Right, rect.Top);
+			path.LineTo (rect.Right, rect.Bottom);
+			path.Close ();
+
+			port.Color = color;
+			port.PaintSurface (path);
+		}
 
 		private static void AddFixElements(CommonPdf common, CommonSetup setup)
 		{

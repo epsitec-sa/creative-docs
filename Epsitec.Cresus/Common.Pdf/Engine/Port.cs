@@ -24,6 +24,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.imageSurfaces        = new List<ImageSurface> ();
 			this.stackColorModifier   = new Stack<ColorModifierCallback> ();
 			this.nextComplexSurfaceId = 1;
+			this.nextImageSurfaceId   = 1;
 
 			this.Reset();
 		}
@@ -563,7 +564,6 @@ namespace Epsitec.Common.Pdf.Engine
 			else	// textes en fontes ?
 			{
 				FontList fl = FontList.Search(this.fontHash, font);
-				System.Diagnostics.Debug.Assert(fl != null);
 
 				this.SetTransform(this.transform);
 				this.SetFillColor(this.color);
@@ -769,7 +769,6 @@ namespace Epsitec.Common.Pdf.Engine
 			else	// textes en fontes ?
 			{
 				FontList fl = FontList.Search(this.fontHash, font);
-				System.Diagnostics.Debug.Assert(fl != null);
 
 				int n = text.Length;
 				if ( n == 0 )  return 0.0;
@@ -858,9 +857,6 @@ namespace Epsitec.Common.Pdf.Engine
 		#region PaintImage
 		public void PaintImage(Image bitmap, Rectangle fill)
 		{
-			//	Cette classe implémente une version restreinte de PaintImage.
-			//	La position et les dimensions de l'image doivent être définies par
-			//	une transformation, et le rectangle doit être égal à (0,0,1,1).
 			this.PaintImage(bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
@@ -888,37 +884,47 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			if (this.IsPreProcess)
 			{
-				return;
-			}
+				long uniqueId = ImageSurface.GetUniqueId (bitmap);
 
-			System.Diagnostics.Debug.Assert (fillX == 0.0);
-			System.Diagnostics.Debug.Assert (fillY == 0.0);
-			System.Diagnostics.Debug.Assert (System.Math.Abs (fillWidth-1.0) < 0.000001);
-			System.Diagnostics.Debug.Assert (System.Math.Abs (fillHeight-1.0) < 0.000001);
-			
-			if (this.imageSurfaces == null)
+				var imageSurface = ImageSurface.Search (this.imageSurfaces, uniqueId);
+
+				if (imageSurface == null)
+				{
+					imageSurface = new ImageSurface (uniqueId, this.nextImageSurfaceId++, bitmap);
+					this.imageSurfaces.Add (imageSurface);
+				}
+			}
+			else
 			{
-				return;
+				System.Diagnostics.Debug.Assert (imageOriginX == 0);
+				System.Diagnostics.Debug.Assert (imageOriginY == 0);
+				System.Diagnostics.Debug.Assert (imageWidth == bitmap.Width);
+				System.Diagnostics.Debug.Assert (imageHeight == bitmap.Height);
+
+				long uniqueId = ImageSurface.GetUniqueId (bitmap);
+				var imageSurface = ImageSurface.Search (this.imageSurfaces, uniqueId);
+
+				if (imageSurface == null)
+				{
+					return;
+				}
+
+				var ot = this.Transform;
+
+				this.TranslateTransform (fillX, fillY);
+				this.TranslateTransform (fillWidth/2, fillHeight/2);
+				double sx = fillWidth;
+				double sy = -fillHeight;
+				this.ScaleTransform (sx, sy, 0.0, 0.0);
+				this.TranslateTransform (-0.5, -0.5);
+				this.SetTransform (this.transform);
+
+				this.PutCommand (Export.GetComplexSurfaceShortName (imageSurface.Id, PdfComplexSurfaceType.XObject));
+				this.PutCommand ("Do ");  // external object, voir [*] page 302
+				this.PutEOL ();
+
+				this.Transform = ot;
 			}
-
-			ImageSurface image = this.lastImageSurface;
-
-#if false
-			if (bitmap != null)
-			{
-				image = ImageSurface.Search (this.imageSurfaceList, bitmap.UniqueId, this.imageFinalSize, this.imageCrop, this.imageFilter);
-			}
-#endif
-
-			if (image == null)
-			{
-				return;
-			}
-
-			this.SetTransform (this.transform);
-			this.PutCommand (Export.GetComplexSurfaceShortName (image.Id, PdfComplexSurfaceType.XObject));
-			this.PutCommand ("Do ");  // external object, voir [*] page 302
-			this.PutEOL ();
 		}
 		#endregion
 		
@@ -1543,21 +1549,6 @@ namespace Epsitec.Common.Pdf.Engine
 			return -1;
 		}
 
-		private ImageSurface SearchImageSurface(string filename, Size size, Margins crop, ImageFilter filter)
-		{
-			//	Cherche l'image à utiliser.
-			if (this.imageSurfaces == null)
-			{
-				this.lastImageSurface = null;
-			}
-			else
-			{
-				this.lastImageSurface = ImageSurface.Search (this.imageSurfaces, filename, size, crop, filter);
-			}
-
-			return this.lastImageSurface;
-		}
-
 
 		private static void BezierS1ToS2(Point p1, ref Point s1, ref Point s2, Point p2)
 		{
@@ -1575,7 +1566,6 @@ namespace Epsitec.Common.Pdf.Engine
 		private readonly List<ImageSurface>				imageSurfaces;
 		private readonly Stack<ColorModifierCallback>	stackColorModifier;
 
-		private ImageSurface					lastImageSurface;
 		private ColorForce						colorForce;
 		private int								defaultDecimals;
 		private double							lineWidth;
@@ -1592,6 +1582,7 @@ namespace Epsitec.Common.Pdf.Engine
 		private RichColor						originalColor;
 		private RichColor						color;
 		private int								nextComplexSurfaceId;
+		private int								nextImageSurfaceId;
 		private int								complexSurfaceId;
 		private PdfComplexSurfaceType			complexType;
 		private Transform						transform;
