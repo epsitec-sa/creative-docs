@@ -297,9 +297,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				foreach (string path in probePaths)
 				{
-					if (System.IO.File.Exists (System.IO.Path.Combine (path, dllName)))
+					var dirPath = System.IO.Path.Combine (path, "FirebirdEmbedded");
+
+					if (System.IO.File.Exists (System.IO.Path.Combine (dirPath, dllName)))
 					{
-						dllPath = path;
+						dllPath = dirPath;
 						break;
 					}
 				}
