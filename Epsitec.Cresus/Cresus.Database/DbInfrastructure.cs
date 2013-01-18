@@ -1459,13 +1459,7 @@ namespace Epsitec.Cresus.Database
 
 			if (category != DbElementCat.Any)
 			{
-				list.RemoveAll
-					(
-						delegate (DbTable table)
-						{
-							return table.Category != category;
-						}
-					);
+				list.RemoveAll (t => t.Category != category);
 			}
 			
 			return list.ToArray ();
