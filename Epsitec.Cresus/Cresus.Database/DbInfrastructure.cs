@@ -218,7 +218,14 @@ namespace Epsitec.Cresus.Database
 			try
 			{
 				this.ConnectToDatabase (access);
-				this.LoadCoreTables ();
+
+				using (var transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					this.PreloadAllTableAndTypes (transaction);
+					this.LoadCoreTables (transaction);
+
+					transaction.Commit ();
+				}
 			}
 			catch
 			{
@@ -249,20 +256,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private void LoadCoreTables()
+		private void LoadCoreTables(DbTransaction transaction)
 		{
 			try
 			{
-				using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
-					this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
+				this.internalTables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 
-					this.types.ResolveTypes (transaction);
-
-					transaction.Commit ();
-				}
+				this.types.ResolveTypes (transaction);
 			}
 			catch (System.Exception ex)
 			{
@@ -296,6 +298,31 @@ namespace Epsitec.Cresus.Database
 
 			return expectedTables.All (t => this.internalTables[t.Name] != null)
 				&& DbSchemaChecker.CheckSchema (this, expectedTables);
+		}
+
+		private void PreloadAllTableAndTypes(DbTransaction transaction)
+		{
+			// When this method is called, we don't know yet if the database matches what we
+			// expect. We have no way to know if the core tables are well defined or not. So we try
+			// to load everything and if anything happens we clear all caches. In this case, the
+			// tables and types will be loaded on demand when they are required.
+
+			try
+			{
+				lock (this.typeNameCache)
+				{
+					this.LoadDbTypesWithCondition (transaction, null);
+				}
+
+				lock (this.tableNameCache)
+				{
+					this.LoadDbTablesWithCondition (transaction, null);
+				}
+			}
+			catch (System.Exception)
+			{
+				this.ClearCaches ();
+			}
 		}
 
 		/// <summary>
