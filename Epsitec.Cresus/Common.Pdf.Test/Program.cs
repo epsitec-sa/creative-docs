@@ -309,6 +309,11 @@ namespace Common.Pdf.Test
 				{
 					return new CellContent ("À modifier...");
 				}
+
+				if ((row >= 14 && row <= 20) || row == 52 || row == 98)
+				{
+					return new CellContent (string.Format ("<img src=\"{0}\" width=\"50\" height=\"50\"/> Changement d'adresse", Program.warning));
+				}
 			}
 
 			switch (column)
@@ -357,7 +362,15 @@ namespace Common.Pdf.Test
 			{
 				builder.Append (string.Format ("<font size=\"80\"><b>#{0}</b></font><br/>", (i+1).ToString ()));
 				builder.Append (h);
-				builder.Append ("<br/><br/>");
+
+				if (i==4)
+				{
+					builder.Append (string.Format ("<br/><img src=\"{0}\" width=\"600\" height=\"600\"/><br/>", Program.warning));
+				}
+				else
+				{
+					builder.Append ("<br/><br/>");
+				}
 			}
 
 			return doc.GeneratePdf ("test5.pdf", builder.ToString ());
@@ -452,6 +465,7 @@ namespace Common.Pdf.Test
 
 
 		private static string logo = "S:\\Epsitec.Cresus\\External\\epsitec.png";
+		private static string warning = "S:\\Epsitec.Cresus\\External\\warning.tif";
 		private static string histoire = "Midi, l'heure du crime ! Un jeune vieillard assis-debout sur une pierre en bois lisait son journal plié en quatre dans sa poche à la lueur d'une bougie éteinte. Le tonnerre grondait en silence et les éclairs brillaient sombres dans la nuit claire. Il monta quatre à quatre les trois marches qui descendaient au grenier et vit par le trou de la serrure bouchée un nègre blanc qui déterrait un mort pour le manger vivant. N'écoutant que son courage de pleutre mal léché, il sortit son épée de fils de fer barbelés et leur coupa la tête au ras des pieds.";
 	}
 }

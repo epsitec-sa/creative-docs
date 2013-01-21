@@ -518,6 +518,7 @@ namespace Epsitec.Common.Drawing.Platform
 				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
 					return SystemDrawingBitmapHelper.Create24bppImage (bitmap);
 				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+				case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
 					return SystemDrawingBitmapHelper.Create32bppImage (bitmap);
 				case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
 					return SystemDrawingBitmapHelper.Create8bppImage (bitmap);

@@ -2849,7 +2849,34 @@ namespace Epsitec.Common.Widgets
 
 			JustifBlock fb = this.blocks[0];
 			JustifBlock lb = this.blocks[this.blocks.Count-1];
-			return (fb.Pos.Y+fb.Font.Ascender*fb.FontSize) - (lb.Pos.Y+lb.Font.Descender*lb.FontSize);
+
+			double a = System.Math.Max (TextLayout.GetBlockAscender  (fb), TextLayout.GetBlockAscender  (lb));
+			double d = System.Math.Max (TextLayout.GetBlockDescender (fb), TextLayout.GetBlockDescender (lb));
+			return a - d;
+		}
+
+		private static double GetBlockAscender(JustifBlock block)
+		{
+			if (block.IsImage)
+			{
+				return block.ImageAscender;
+			}
+			else
+			{
+				return block.Font.Ascender * block.FontSize;
+			}
+		}
+
+		private static double GetBlockDescender(JustifBlock block)
+		{
+			if (block.IsImage)
+			{
+				return block.ImageDescender;
+			}
+			else
+			{
+				return block.Font.Descender * block.FontSize;
+			}
 		}
 		
 		
