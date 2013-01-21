@@ -34,7 +34,8 @@ namespace Epsitec.Aider.Rules
 				{
 					if (string.IsNullOrEmpty (postBox))
 					{
-						throw new BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
+						return;
+//-						throw new BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
 					}
 					else
 					{
@@ -51,7 +52,7 @@ namespace Epsitec.Aider.Rules
 					return;
 				}
 				
-				throw new BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
+//-				throw new BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
 			}
 		}
 	}
