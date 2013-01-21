@@ -30,6 +30,7 @@ function() {
       this.fixFrenchLocalizationError();
       this.fixFilterMenuLocalizationError();
       this.fixBooleanColumnLocalizationError();
+      this.fixBackspaceHandling();
       this.showLoginPanel();
     },
 
@@ -37,6 +38,34 @@ function() {
 
     setupWindowTitle: function() {
       window.document.title = Epsitec.Texts.getWindowTitle();
+    },
+
+    fixBackspaceHandling: function() {
+
+      // Prevent the backspace key from navigating back.
+
+      Ext.EventManager.on(document, 'keydown', function (event) {
+
+        var doPrevent = false;
+
+        if (event.keyCode === 8) {
+          
+          var d = event.srcElement || event.target;
+          var tagName = d.tagName.toUpperCase();
+          var tagType = d.type.toUpperCase();
+          
+          if ((tagName === 'INPUT' && (tagType === 'TEXT' || tagType === 'PASSWORD'))
+           || (tagName === 'TEXTAREA')) {
+            doPrevent = d.readOnly || d.disabled;
+          } else {
+            doPrevent = true;
+          }
+        }
+        
+        if (doPrevent) {
+          event.preventDefault();
+        }
+      });
     },
 
     fixLocalizationBug: function() {
