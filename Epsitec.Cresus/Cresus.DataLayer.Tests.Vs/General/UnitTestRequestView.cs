@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SimpleTest1()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var keys = dataContext.GetByExample (new NaturalPersonEntity ())
 					.Select (e => dataContext.GetNormalizedEntityKey (e).Value)
@@ -75,8 +75,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SimpleTest2()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var keys = dataContext.GetByExample (new NaturalPersonEntity ())
 					.OrderByDescending (p => p.Lastname)
@@ -117,8 +117,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SimpleTest3()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				Request request = new Request ()
 				{
@@ -139,8 +139,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ComplexTest()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var keys = dataContext.GetByExample (new NaturalPersonEntity ())
 					.OrderByDescending (p => p.Lastname)
@@ -248,8 +248,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetIndexNullTest()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var example = new NaturalPersonEntity ()
 				{
@@ -273,8 +273,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetIndexNullAscendingTest()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 				var person2 = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -307,8 +307,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetIndexNullDescendingTest()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 				var person2 = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -341,8 +341,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ConcurrencyTest()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = Request.Create (new NaturalPersonEntity ());
 
@@ -390,8 +390,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsolationTest()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = Request.Create (new NaturalPersonEntity ());
 

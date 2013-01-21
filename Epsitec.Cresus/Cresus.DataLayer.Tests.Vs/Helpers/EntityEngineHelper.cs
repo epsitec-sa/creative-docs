@@ -1,8 +1,11 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Database;
+
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
+
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
@@ -15,10 +18,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 
 		public static EntityEngine ConnectToTestDatabase()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			var entityIds = EntityEngineHelper.GetEntityTypeIds ();
 
-			return EntityEngine.Connect (access, entityIds);
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				return EntityEngine.Connect (dbInfrastructure, entityIds);
+			}
+		}
+
+
+		public static EntityEngine ConnectToTestDatabase(DbInfrastructure dbInfrastructure)
+		{
+			var entityIds = EntityEngineHelper.GetEntityTypeIds ();
+
+			return EntityEngine.Connect (dbInfrastructure, entityIds);
 		}
 
 

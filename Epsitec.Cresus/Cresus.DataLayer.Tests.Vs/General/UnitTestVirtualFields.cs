@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void Test()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));

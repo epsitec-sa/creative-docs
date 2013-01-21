@@ -208,6 +208,25 @@ namespace Epsitec.Cresus.Database
 			return true;
 		}
 
+		public static DbInfrastructure Connect(DbAccess access)
+		{
+			var dbInfrastructure = new DbInfrastructure ();
+
+			try
+			{
+				dbInfrastructure.AttachToDatabase (access);
+			}
+			catch
+			{
+				dbInfrastructure.Dispose ();
+
+				throw;
+			}
+
+			return dbInfrastructure;
+		}
+
+
 		public void AttachToDatabase(DbAccess access)
 		{
 			if (this.access.IsValid)

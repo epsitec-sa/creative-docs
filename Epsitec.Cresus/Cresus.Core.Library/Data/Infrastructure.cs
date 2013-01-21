@@ -95,12 +95,14 @@ namespace Epsitec.Cresus.Core.Data
 
 				if (createDatabase)
 				{
-					Infrastructure.CreateDatabase (access);
-					Infrastructure.CreateDatabaseSchemas (access, managedEntityTypeIds);
+					this.dbInfrastructure = Infrastructure.CreateDatabase (access);
+					Infrastructure.CreateDatabaseSchemas (this.dbInfrastructure, managedEntityTypeIds);
 				}
 				else
 				{
-					bool valid = Infrastructure.VerifyDatabaseSchemas (access, managedEntityTypeIds);
+					this.dbInfrastructure = Infrastructure.ConnectToDatabase (access);
+
+					bool valid = Infrastructure.VerifyDatabaseSchemas (this.dbInfrastructure, managedEntityTypeIds);
 
 					if (!valid)
 					{
@@ -110,7 +112,7 @@ namespace Epsitec.Cresus.Core.Data
 
 						if (updateAllowed)
 						{
-							updateSuccess = Infrastructure.UpdateDatabaseSchemas (access, managedEntityTypeIds);
+							updateSuccess = Infrastructure.UpdateDatabaseSchemas (this.dbInfrastructure, managedEntityTypeIds);
 						}
 
 						if (!updateAllowed)
@@ -124,7 +126,7 @@ namespace Epsitec.Cresus.Core.Data
 					}
 				}
 
-				return Infrastructure.ConnectToDatabase (access, managedEntityTypeIds);
+				return Infrastructure.ConnectToDatabase (this.dbInfrastructure, managedEntityTypeIds);
 			}
 			catch (System.Exception ex)
 			{
@@ -140,22 +142,32 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		private static void CreateDatabase(DbAccess access)
+		private static DbInfrastructure CreateDatabase(DbAccess access)
 		{
-			using (DbInfrastructure dbInfrastructure = new DbInfrastructure ())
-			{
-				dbInfrastructure.CreateDatabase (access);
-			}
+			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
+
+			dbInfrastructure.CreateDatabase (access);
+
+			return dbInfrastructure;
 		}
 
-		private static void CreateDatabaseSchemas(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
+		private static DbInfrastructure ConnectToDatabase(DbAccess access)
 		{
-			EntityEngine.Create (access, managedEntityTypeIds);
+			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
+
+			dbInfrastructure.AttachToDatabase (access);
+
+			return dbInfrastructure;
 		}
 
-		private static bool VerifyDatabaseSchemas(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
+		private static void CreateDatabaseSchemas(DbInfrastructure dbInfrastructure, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			return EntityEngine.Check (access, managedEntityTypeIds);
+			EntityEngine.Create (dbInfrastructure, managedEntityTypeIds);
+		}
+
+		private static bool VerifyDatabaseSchemas(DbInfrastructure dbInfrastructure, IEnumerable<Druid> managedEntityTypeIds)
+		{
+			return EntityEngine.Check (dbInfrastructure, managedEntityTypeIds);
 		}
 
 		private static bool IsDatabasesSchemaUpdateAllowed(bool allowDatabaseUpdate)
@@ -177,11 +189,11 @@ namespace Epsitec.Cresus.Core.Data
 			return updateAllowed;
 		}
 
-		private static bool UpdateDatabaseSchemas(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
+		private static bool UpdateDatabaseSchemas(DbInfrastructure dbInfrastructure, IEnumerable<Druid> managedEntityTypeIds)
 		{
 			try
 			{
-				EntityEngine.Update (access, managedEntityTypeIds);
+				EntityEngine.Update (dbInfrastructure, managedEntityTypeIds);
 
 				return true;
 			}
@@ -193,11 +205,11 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		private static DataInfrastructure ConnectToDatabase(DbAccess access, IEnumerable<Druid> managedEntityTypeIds)
+		private static DataInfrastructure ConnectToDatabase(DbInfrastructure dbInfrastructure, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			EntityEngine entityEngine = EntityEngine.Connect (access, managedEntityTypeIds);
+			EntityEngine entityEngine = EntityEngine.Connect (dbInfrastructure, managedEntityTypeIds);
 
-			return new DataInfrastructure (access, entityEngine);
+			return new DataInfrastructure (dbInfrastructure, entityEngine);
 		}
 
 		#region IDisposable Members
@@ -209,6 +221,10 @@ namespace Epsitec.Cresus.Core.Data
 				if (this.dataInfrastructure != null)
 				{
 					this.dataInfrastructure.Dispose ();
+				}
+				if (this.dbInfrastructure != null)
+				{
+					this.dbInfrastructure.Dispose ();
 				}
 
 				this.isDisposed = true;		
@@ -271,7 +287,9 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+
 		private readonly DataInfrastructure		dataInfrastructure;
+		private DbInfrastructure				dbInfrastructure;
 		private ConnectionManager				connectionManager;
 		private bool							isDisposed;
 	}

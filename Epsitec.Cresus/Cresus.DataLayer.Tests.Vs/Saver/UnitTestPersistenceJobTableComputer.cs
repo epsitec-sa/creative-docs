@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ConstructorTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				new PersistenceJobTableComputer (dataContext);
 			}
@@ -61,8 +61,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void GetAffectedTablesArgumentCheck()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
@@ -103,10 +103,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				List<DbTable> tables1 = new List<DbTable> ()
                 {
-                    dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AB1]")),
-                    dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AJ1]")),
-					dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AA1]")),
-                    dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityFieldTable (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
+                    db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AB1]")),
+                    db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AJ1]")),
+					db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AA1]")),
+                    db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityFieldTable (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
                 };
 
 				List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
@@ -130,14 +130,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
 				ValuePersistenceJob job = new ValuePersistenceJob (entity, localEntityId, fieldIdsWithValues, false, jobType);
 
-				DbTable table = dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (localEntityId);
+				DbTable table = db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (localEntityId);
 				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
 				Assert.IsTrue (tables.Count == 1);
@@ -161,14 +161,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
 				ReferencePersistenceJob job = new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
 
-				DbTable table = dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (localEntityId);
+				DbTable table = db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (localEntityId);
 				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
 				Assert.IsTrue (tables.Count == 1);
@@ -193,14 +193,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				PersistenceJobTableComputer computer = new PersistenceJobTableComputer (dataContext);
 
 				CollectionPersistenceJob job = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
 
-				DbTable table = dataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
+				DbTable table = db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 				List<DbTable> tables = computer.GetAffectedTables (job).ToList ();
 
 				Assert.IsTrue (tables.Count == 1);

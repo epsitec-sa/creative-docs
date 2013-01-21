@@ -39,7 +39,9 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void SimpleTest1()
 		{
-			using (var dataInfrastructure = DatabaseHelper.CreateDataInfrastructure ())
+
+			using (var dbInfrastructure = DatabaseHelper.CreateDbInfrastructure ())
+			using (var dataInfrastructure = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure))
 			{
 				dataInfrastructure.OpenConnection ("id");
 
@@ -55,8 +57,10 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void SimpleTest2()
 		{
-			using (var dataInfrastructure1 = DatabaseHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure2 = DatabaseHelper.CreateDataInfrastructure ())
+			using (var dbInfrastructure1 = DatabaseHelper.CreateDbInfrastructure ())
+			using (var dbInfrastructure2 = DatabaseHelper.CreateDbInfrastructure ())
+			using (var dataInfrastructure1 = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure1))
+			using (var dataInfrastructure2 = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure2))
 			{
 				string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 				string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();
@@ -108,10 +112,14 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Data
 		[TestMethod]
 		public void GetLockOwnersAndCreationTimeTest()
 		{
-			using (var dataInfrastructure1 = DatabaseHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure2 = DatabaseHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure3 = DatabaseHelper.CreateDataInfrastructure ())
-			using (var dataInfrastructure4 = DatabaseHelper.CreateDataInfrastructure ())
+			using (var dbInfrastructure1 = DatabaseHelper.CreateDbInfrastructure())
+			using (var dbInfrastructure2 = DatabaseHelper.CreateDbInfrastructure ())
+			using (var dbInfrastructure3 = DatabaseHelper.CreateDbInfrastructure ())
+			using (var dbInfrastructure4 = DatabaseHelper.CreateDbInfrastructure ())
+			using (var dataInfrastructure1 = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure1))
+			using (var dataInfrastructure2 = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure2))
+			using (var dataInfrastructure3 = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure3))
+			using (var dataInfrastructure4 = DatabaseHelper.CreateDataInfrastructure (dbInfrastructure4))
 			{
 				string cId1 = new ConnectionUserIdentity (new ItemCode ("id1")).ToString ();
 				string cId2 = new ConnectionUserIdentity (new ItemCode ("id2")).ToString ();

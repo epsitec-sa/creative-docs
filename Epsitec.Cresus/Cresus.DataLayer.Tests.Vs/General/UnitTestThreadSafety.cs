@@ -39,8 +39,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			TestHelper.Initialize ();
 
-			DbInfrastructureHelper.ResetTestDatabase ();
-			DatabaseCreator1.PopulateDatabase (DatabaseSize.Small);
+			using (var dbInfrastructure = DbInfrastructureHelper.ResetTestDatabase ())
+			{
+				DatabaseCreator1.PopulateDatabase (dbInfrastructure, DatabaseSize.Small);
+			}
 		}
 
 
@@ -473,22 +475,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			var dataInfrastructures = new List<DataInfrastructure> ();
+			var dbs = new List<DB> ();
 			var dataContexts = new List<DataContext> ();
 
 			try
 			{
 				for (int i = 0; i < nbDataInfrastructures; i++)
 				{
-					var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase (entityEngine);
+					var db = DB.ConnectToTestDatabase (entityEngine);
 
-					dataInfrastructures.Add (dataInfrastructure);
+					dbs.Add (db);
 
 					for (int j = 0; j < nbDataContextsPerDataInfrastructure; j++)
 					{
 						bool cache = isCache (i, j);
 
-						var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: cache);
+						var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: cache);
 
 						initialization (dataContext);
 
@@ -535,9 +537,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.Dispose ();
 				}
 
-				foreach (var dataInfrastructure in dataInfrastructures)
+				foreach (var db in dbs)
 				{
-					dataInfrastructure.Dispose ();
+					db.Dispose ();
 				}
 			}
 		}

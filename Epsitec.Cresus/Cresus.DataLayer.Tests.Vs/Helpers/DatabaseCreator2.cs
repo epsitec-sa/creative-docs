@@ -21,31 +21,39 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 
 	internal static class DatabaseCreator2
 	{
-		
+
 
 		public static void ResetEmptyTestDatabase()
 		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			DatabaseCreator2.RegisterSchema ();
+			using (var dbInsfrastructure = DbInfrastructureHelper.ResetTestDatabase ())
+			{
+				DatabaseCreator2.RegisterSchema (dbInsfrastructure);
+			}
 		}
 
 
 		public static void ResetPopulatedTestDatabase()
 		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			DatabaseCreator2.RegisterSchema ();
-
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var dbInfrastructure = DbInfrastructureHelper.ResetTestDatabase ())
 			{
-				DatabaseCreator2.PopulateDatabase (dataContext);
+				DatabaseCreator2.RegisterSchema (dbInfrastructure);
+
+				var entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
+
+				using (var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					dataInfrastructure.OpenConnection ("id");
+
+					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+					{
+						DatabaseCreator2.PopulateDatabase (dataContext);
+					}
+				}
 			}
 		}
 
 
-		public static void RegisterSchema()
+		public static void RegisterSchema(DbInfrastructure dbInfrastructure)
 		{
 			List<Druid> entityIds = new List<Druid> ()
 			{
@@ -56,9 +64,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 				EntityInfo<ValueDataEntity>.GetTypeId (),
 			};
 
-			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-
-			EntityEngine.Create (access, entityIds);
+			EntityEngine.Create (dbInfrastructure, entityIds);
 		}
 
 

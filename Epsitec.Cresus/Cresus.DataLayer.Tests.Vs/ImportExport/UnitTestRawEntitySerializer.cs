@@ -73,15 +73,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 		private void SimpleExportImport(RawExportMode exportMode, RawImportMode importMode)
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, exportMode);
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, importMode);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					bool decrementIds = importMode == RawImportMode.DecrementIds;
 
@@ -148,20 +148,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 		private void CleanDatabase(RawImportMode mode)
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))));
 					Assert.IsNotNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2))));
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.CleanDatabase (file, dbInfrastructure, mode);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					Assert.IsNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1))));
 					Assert.IsNull (dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2))));
@@ -256,15 +256,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		[TestMethod]
 		public void ExportImportWithoutSomeTables()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -322,15 +322,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		[TestMethod]
 		public void ExportImportWithoutSomeColumns()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -373,15 +373,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		[TestMethod]
 		public void ExportImportWithColumnRemovedInDatabase()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 
@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -445,15 +445,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		[TestMethod]
 		public void ExportImportWithTableRemovedInDatabase()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -492,15 +492,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		[TestMethod]
 		public void ExportImportWithNonNullableColumnAddedInDatabase()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));
@@ -531,9 +531,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		[TestMethod]
 		public void ExportImportWithColumnChangedToNonNullableInDatabase()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity hans = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 
@@ -544,11 +544,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				FileInfo file = new FileInfo ("test.xml");
 
-				EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+				EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-				DbInfrastructure dbInfrastructure = dataInfrastructure.DbInfrastructure;
-				EntityTypeEngine typeEngine = dataInfrastructure.EntityEngine.EntityTypeEngine;
-				EntitySchemaEngine schemaEngine = dataInfrastructure.EntityEngine.EntitySchemaEngine;
+				DbInfrastructure dbInfrastructure = db.DataInfrastructure.DbInfrastructure;
+				EntityTypeEngine typeEngine = db.DataInfrastructure.EntityEngine.EntityTypeEngine;
+				EntitySchemaEngine schemaEngine = db.DataInfrastructure.EntityEngine.EntitySchemaEngine;
 
 				RawEntitySerializer.Export (file, dbInfrastructure, typeEngine, schemaEngine, RawExportMode.UserData);
 
@@ -566,7 +566,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 				
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (2)));

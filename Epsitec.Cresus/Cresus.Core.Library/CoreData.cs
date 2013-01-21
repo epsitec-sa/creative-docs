@@ -512,14 +512,17 @@ namespace Epsitec.Cresus.Core
 
 			IEnumerable<Druid> managedEntityIds = Infrastructure.GetManagedEntityIds ();
 
-			EntityEngine.Create (dbAccess, managedEntityIds);
-			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
-
-			using (var dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			using (var dbInfrastructure = DbInfrastructure.Connect (dbAccess))
 			{
-				dataInfrastructure.OpenConnection ("root");
+				EntityEngine.Create (dbInfrastructure, managedEntityIds);
+				EntityEngine entityEngine = EntityEngine.Connect (dbInfrastructure, managedEntityIds);
 
-				CoreData.ImportDatabase (file, dataInfrastructure, importMode);
+				using (var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					dataInfrastructure.OpenConnection ("root");
+
+					CoreData.ImportDatabase (file, dataInfrastructure, importMode);
+				}
 			}
 		}
 
@@ -537,13 +540,16 @@ namespace Epsitec.Cresus.Core
 		{
 			IEnumerable<Druid> managedEntityIds = Infrastructure.GetManagedEntityIds ();
 
-			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
-
-			using (var dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			using (var dbInfrastructure = DbInfrastructure.Connect (dbAccess))
 			{
-				dataInfrastructure.OpenConnection ("root");
+				EntityEngine entityEngine = EntityEngine.Connect (dbInfrastructure, managedEntityIds);
 
-				CoreData.ImportSharedData (file, dataInfrastructure);
+				using (var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					dataInfrastructure.OpenConnection ("root");
+
+					CoreData.ImportSharedData (file, dataInfrastructure);
+				}
 			}
 		}
 		
@@ -561,13 +567,16 @@ namespace Epsitec.Cresus.Core
 		{
 			IEnumerable<Druid> managedEntityIds = Infrastructure.GetManagedEntityIds ();
 
-			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
-
-			using (var dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			using (var dbInfrastructure = DbInfrastructure.Connect (dbAccess))
 			{
-				dataInfrastructure.OpenConnection ("root");
+				EntityEngine entityEngine = EntityEngine.Connect (dbInfrastructure, managedEntityIds);
 
-				CoreData.ExportDatabase (file, dataInfrastructure, exportOnlyUserData);
+				using (var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					dataInfrastructure.OpenConnection ("root");
+
+					CoreData.ExportDatabase (file, dataInfrastructure, exportOnlyUserData);
+				}
 			}
 		}
 

@@ -35,8 +35,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			DatabaseCreator2.ResetPopulatedTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				for (int i = 0; i < 5; i++)
 				{
@@ -53,8 +53,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnaryComparisonTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -83,8 +83,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void BinaryComparisonTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -112,8 +112,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void BinaryComparisonTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -140,8 +140,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void BinaryComparisonTest3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -172,8 +172,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void BinaryComparisonTest4()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -203,8 +203,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ValueSetComparisonTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -237,8 +237,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ValueSetComparisonTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -270,8 +270,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SubQuerySetComparisonTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var example = new AbstractContactEntity ();
 
@@ -311,8 +311,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SubQuerySetComparisonTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var example = new NaturalPersonEntity ();
 
@@ -351,8 +351,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnaryOperationTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -384,8 +384,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void BinaryOperationTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -421,8 +421,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void DoubleRequest1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -457,8 +457,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void DoubleRequest2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -497,8 +497,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void InnerRequest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -529,8 +529,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void LikeRequest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -562,9 +562,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void LikeEscapeRequest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity country1 = DataContextHelper.CreateCountry (dataContext, "c1", "test%test");
 					CountryEntity country2 = DataContextHelper.CreateCountry (dataContext, "c2", "test_test");
@@ -574,7 +574,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity example = new CountryEntity ();
 
@@ -600,7 +600,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (countries.Any (c => c.Name == "testxxtest"));
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity example = new CountryEntity ();
 
@@ -625,7 +625,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (countries.Any (c => c.Name == "test#test"));
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity example = new CountryEntity ();
 
@@ -650,7 +650,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (countries.Any (c => c.Name == "test%test"));
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity example = new CountryEntity ();
 
@@ -675,7 +675,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (countries.Any (c => c.Name == "test_test"));
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity example = new CountryEntity ();
 
@@ -706,8 +706,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RequestedEntityRequest1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
@@ -729,8 +729,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RequestedEntityRequest2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
@@ -754,8 +754,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RequestedEntityRequest3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
 
@@ -777,8 +777,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnBooleanField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -808,8 +808,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnBooleanField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -839,8 +839,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnByteArrayField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -869,8 +869,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnByteArrayField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -900,8 +900,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDateTimeField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -930,8 +930,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDateTimeField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -961,8 +961,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDateTimeField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -992,8 +992,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDateField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1022,8 +1022,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDateField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1053,8 +1053,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDateField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1084,8 +1084,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1114,8 +1114,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1145,8 +1145,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1175,8 +1175,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnEnumField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1205,8 +1205,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnEnumField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1236,8 +1236,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnIntegerField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1266,8 +1266,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnIntegerField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1297,8 +1297,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnIntegerField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1327,8 +1327,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1357,8 +1357,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1388,8 +1388,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1419,8 +1419,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnStringField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1449,8 +1449,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnStringField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1480,8 +1480,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnStringField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1510,8 +1510,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnTimeField1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1540,8 +1540,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnTimeField2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1571,8 +1571,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectBasedOnTimeField3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ();
 
@@ -1602,8 +1602,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetSortedObjects1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -1633,8 +1633,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetSortedObjects2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -1664,8 +1664,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetSortedObjects3()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -1698,8 +1698,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetSortedObjects4()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -1739,8 +1739,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetSortedObjects5()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -1783,8 +1783,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetSortedObjects6()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -1814,8 +1814,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectsWithSkipAndTake1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -1860,8 +1860,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void GetObjectsWithOrderBySkipAndTake()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
@@ -1895,8 +1895,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ValueFieldTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -1924,8 +1924,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReferenceFieldTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -1953,8 +1953,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CollectionFieldTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				UriContactEntity contact = new UriContactEntity ();
@@ -1985,8 +1985,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void InternalFieldTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 
@@ -2014,8 +2014,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SignificantFieldTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
 				UriContactEntity contact = new UriContactEntity ()

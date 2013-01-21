@@ -38,8 +38,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ArgumentCheck()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -69,9 +69,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegistredEmptyEntitiesTest1()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -98,9 +98,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegistredEmptyEntitiesTest2()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -127,9 +127,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegistredEmptyEntitiesTest3()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
@@ -151,9 +151,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest1()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -181,9 +181,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest2()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -212,9 +212,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest3()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -242,9 +242,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest4()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
@@ -267,9 +267,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest5()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -300,9 +300,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest6()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -333,9 +333,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest7()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
@@ -366,9 +366,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnregistredEmptyEntitiesTest8()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
@@ -394,9 +394,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UpdateEmptyEmptyEntitiesStatusTest1()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
@@ -418,9 +418,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UpdateEmptyEmptyEntitiesStatusTest2()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contact = dataContext.CreateEntity<UriContactEntity> ();
 
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 
@@ -446,16 +446,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreateEmptyEntityTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contact = dataContext.CreateEntityAndRegisterAsEmpty<UriContactEntity> ();
 
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					var contacts = dataContext.GetByExample (new AbstractContactEntity ());
 

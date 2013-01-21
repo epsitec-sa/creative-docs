@@ -39,9 +39,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new InfoManager (dbinfrastructure, null)
+					() => new InfoManager (dbInfrastructure, null)
 				);
 			}
 		}
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				InfoManager manager = new InfoManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 

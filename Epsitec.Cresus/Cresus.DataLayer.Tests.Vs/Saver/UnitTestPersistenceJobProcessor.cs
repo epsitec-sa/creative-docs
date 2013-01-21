@@ -45,8 +45,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void PersistenceJobProcessorConstructorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				new PersistenceJobProcessor (dataContext);
 			}
@@ -66,14 +66,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
-				using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+				using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 				{
-					EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+					EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
@@ -99,9 +99,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsDeleteTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -114,9 +114,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -126,14 +126,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					Assert.IsTrue (newKeys.Count == 0);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					Assert.IsNull (entity);
 				}
 
-				EntityDeletionEntry newEntry = dataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (1))
+				EntityDeletionEntry newEntry = db.DataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (1))
 					.Where (e => e.EntityTypeId == EntityInfo<NaturalPersonEntity>.GetTypeId () && e.EntityId == 1000000001).Single ();
 
 				Assert.IsNotNull (newEntry);
@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		{
 			DbKey newKey;
 
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -172,9 +172,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					newKey = newKeys.First ().Value;
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					CountryEntity entity = dataContext.ResolveEntity<CountryEntity> (newKey);
 
@@ -201,9 +201,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsInsertReferenceTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -226,9 +226,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					Assert.IsTrue (newKeys.Count == 0);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
@@ -254,9 +254,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsInsertCollectionTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -281,9 +281,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					Assert.IsTrue (newKeys.Count == 0);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
@@ -314,9 +314,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsUpdateValueTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -341,9 +341,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					Assert.IsTrue (newKeys.Count == 0);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -369,9 +369,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsUpdateReferenceTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -404,9 +404,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					Assert.IsTrue (newKeys.Count == 0);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
@@ -433,9 +433,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		[TestMethod]
 		public void ProcessJobsUpdateCollectionTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -460,9 +460,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					Assert.IsTrue (newKeys.Count == 0);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
@@ -497,9 +497,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 			DbKey key2;
 			DbKey key3;
 
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					PersistenceJobProcessor processor = new PersistenceJobProcessor (dataContext);
 
@@ -629,9 +629,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
-					using (DbTransaction transaction = dataInfrastructure.DbInfrastructure.BeginTransaction ())
+					using (DbTransaction transaction = db.DataInfrastructure.DbInfrastructure.BeginTransaction ())
 					{
-						EntityModificationEntry entry = dataInfrastructure.CreateEntityModificationEntry ();
+						EntityModificationEntry entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
 						newKeys = processor.ProcessJobs (transaction, entry, jobs).ToDictionary (p => p.Key, p => p.Value);
 
@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					key3 = newKeys[contact3];
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person1 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity person2 = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));

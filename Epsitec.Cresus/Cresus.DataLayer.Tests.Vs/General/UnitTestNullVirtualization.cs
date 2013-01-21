@@ -38,11 +38,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationWithoutModificationDepth1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				for (int i = 0; i < 2; i++)
 				{
-					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 					{
 						NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -71,11 +71,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationWithoutModificationDepth2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				for (int i = 0; i < 2; i++)
 				{
-					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 					{
 						UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -116,9 +116,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationWIthModificationDepth1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -173,9 +173,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationWithModificationDepth2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -246,9 +246,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationAndReplacementDepth1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -308,9 +308,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationAndReplacementDepth2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					UriContactEntity contact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 
@@ -391,9 +391,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationModificationAndAssignation()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -464,9 +464,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationAndRemoval()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -514,9 +514,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void SetToNull()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -545,7 +545,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -568,9 +568,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationRemovalAndModification()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -622,7 +622,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 
@@ -648,9 +648,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationAssignationAndModification()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -687,7 +687,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -721,9 +721,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreationAssignationRemovalAndModification()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -783,7 +783,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsNull (gertrude.PreferredLanguage);
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity albert = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -826,9 +826,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void UnwrapNullEntityTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 					LanguageEntity language = gertrude.PreferredLanguage;
@@ -849,9 +849,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void WrapNullEntityTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
 					LanguageEntity language = gertrude.PreferredLanguage;
@@ -875,7 +875,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
@@ -894,9 +894,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreateNullEntityAndModify()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.CreateNullEntity<NaturalPersonEntity> (freeze: false);
 
@@ -915,7 +915,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
@@ -934,9 +934,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreateNullEntityAndDiscard()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.CreateNullEntity<NaturalPersonEntity> (freeze: false);
 
@@ -948,7 +948,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
@@ -961,9 +961,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CreateReadOnlyNullEntity()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.CreateNullEntity<NaturalPersonEntity> (freeze: true);
 
@@ -982,7 +982,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, enableNullVirtualization: true))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 

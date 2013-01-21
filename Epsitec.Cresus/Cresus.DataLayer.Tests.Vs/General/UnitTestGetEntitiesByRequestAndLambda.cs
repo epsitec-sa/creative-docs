@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularNotEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -96,8 +96,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularNotEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -115,8 +115,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularGreater()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -133,8 +133,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularGreaterInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -151,8 +151,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularGreaterOrEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -170,8 +170,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularGreaterOrEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -189,8 +189,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularLower()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -207,8 +207,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularLowerInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -225,8 +225,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularLowerOrEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -244,8 +244,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularLowerOrEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -263,8 +263,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -281,8 +281,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -299,8 +299,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringNotEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -318,8 +318,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringNotEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -337,8 +337,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringGreater()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -355,8 +355,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringGreaterInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -373,8 +373,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringGreaterOrEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -392,8 +392,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringGreaterOrEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -411,8 +411,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringLower()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -429,8 +429,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringLowerInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -447,8 +447,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringLowerOrEqual()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -466,8 +466,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringLowerOrEqualInverted()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -485,8 +485,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void Not()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -504,8 +504,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularIsNull()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -521,8 +521,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularIsNullReversed()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -538,8 +538,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularIsNotNull()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -558,8 +558,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void RegularIsNotNullReversed()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -578,8 +578,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringIsNull()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -595,8 +595,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringIsNullReversed()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -612,8 +612,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringIsNotNull()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -632,8 +632,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void StringIsNotNullReversed()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -652,8 +652,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsLike()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -670,8 +670,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsLikeEscape()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -689,8 +689,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void And()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -707,8 +707,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void Or()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -726,8 +726,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void MemberChain()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ()
 				{
@@ -748,8 +748,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ConstantCapturedVariable()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -768,8 +768,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ConstantCapturedPropertyAccess()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -788,8 +788,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ConstantCapturedMethodCall()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -808,8 +808,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ConstantCapturedMember()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -826,8 +826,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ConstantMathOperation()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -844,8 +844,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void EvaluableOperationWithinNonEvaluableOperation()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -863,8 +863,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void NullableMember()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var gender = new PersonGenderEntity ();
 				var request = Request.Create (gender);
@@ -880,8 +880,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void Conversion1()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -897,8 +897,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void Conversion2()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var valueDataEntity = new ValueDataEntity ();
 				var request = Request.Create (valueDataEntity);
@@ -915,8 +915,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void EntityComparison1()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person1 = new NaturalPersonEntity ();
 				var person2 = dataContext.GetByExample (new NaturalPersonEntity ()).First ();
@@ -935,8 +935,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void EntityComparison2()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var gender = dataContext.GetByExample (new PersonGenderEntity ()).First ();
@@ -955,8 +955,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void AnyCall1()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var contact = new UriContactEntity ();
@@ -976,8 +976,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void AnyCall2()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var contact = new UriContactEntity ();
@@ -997,8 +997,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void AnyCall3()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var contact = new UriContactEntity ();
@@ -1020,8 +1020,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsInSetCall1()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var firstnames = new List<string> () { "Alfred", "Gertrude" };
@@ -1040,8 +1040,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsInSetCall2()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var nullFirstNamePerson = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -1067,8 +1067,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsInSetCall3()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var contact = new AbstractContactEntity ();
 				var subQuery = new Request ()
@@ -1095,8 +1095,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsNotInSetCall1()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var firstnames = new List<string> () { "Alfred", "Gertrude" };
@@ -1114,8 +1114,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsNotInSetCall2()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var nullFirstNamePerson = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -1142,8 +1142,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void IsNotInSetCall3()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 				var subRequest = new Request ()
@@ -1169,8 +1169,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void Convert()
 		{
-			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var person = new NaturalPersonEntity ();
 

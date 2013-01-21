@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new EntityDeletionLog (dbinfrastructure, null)
+					() => new EntityDeletionLog (dbInfrastructure, null)
 				);
 			}
 		}
@@ -61,11 +61,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateEntryArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityDeletionLog log = new EntityDeletionLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityDeletionLog log = new EntityDeletionLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -88,11 +88,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetEntriesNewerThanArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityDeletionLog log = new EntityDeletionLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityDeletionLog log = new EntityDeletionLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -105,11 +105,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateAndGetEntriesNewerThan()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityDeletionLog log = new EntityDeletionLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityDeletionLog log = new EntityDeletionLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				var samples = this.GetSamples ().ToList ();
 

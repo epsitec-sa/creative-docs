@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			XDocument xDocument;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
 				{
@@ -62,15 +62,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				xDocument = XmlEntitySerializer.Serialize (dataContext, exportableEntities, externalEntities, discardedEntities);
 			}
 
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			DatabaseCreator2.RegisterSchema ();
-
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dbInfrastructure = DbInfrastructureHelper.ResetTestDatabase ())
 			{
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+				DatabaseCreator2.RegisterSchema (dbInfrastructure);
+			}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			{
+				XmlEntitySerializer.Deserialize (db.DataInfrastructure, xDocument);
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -85,9 +86,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			XDocument xDocument;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -111,9 +112,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+				XmlEntitySerializer.Deserialize (db.DataInfrastructure, xDocument);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -130,9 +131,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			XDocument xDocument;
 		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -156,9 +157,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+				XmlEntitySerializer.Deserialize (db.DataInfrastructure, xDocument);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -175,9 +176,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			XDocument xDocument;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 
@@ -196,9 +197,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+				XmlEntitySerializer.Deserialize (db.DataInfrastructure, xDocument);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000002)));
 
@@ -227,9 +228,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			XDocument xDocument;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -253,9 +254,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+				XmlEntitySerializer.Deserialize (db.DataInfrastructure, xDocument);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000005)));
 
@@ -270,9 +271,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			XDocument xDocument;
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					UriContactEntity uriContact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
@@ -302,9 +303,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 					dataContext.SaveChanges ();
 				}
 
-				XmlEntitySerializer.Deserialize (dataInfrastructure, xDocument);
+				XmlEntitySerializer.Deserialize (db.DataInfrastructure, xDocument);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002)));

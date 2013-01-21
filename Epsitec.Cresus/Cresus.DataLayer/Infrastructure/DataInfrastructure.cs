@@ -50,18 +50,15 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <summary>
 		/// Creates a new instance of <c>DataInfrastructure</c>.
 		/// </summary>
-		/// <param name="access">The <see cref="DbAccess"/> used to connect to the Database.</param>
+		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to query the Database.</param>
 		/// <param name="entityEngine">The instance of <see cref="EntityEngine"/> used by this object.</param>
-		public DataInfrastructure(DbAccess access, EntityEngine entityEngine)
+		public DataInfrastructure(DbInfrastructure dbInfrastructure , EntityEngine entityEngine)
 		{
-			access.ThrowIf (a => a.IsEmpty, "access is empty");
+			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 			entityEngine.ThrowIfNull ("entityEngine");
 
 			this.entityEngine = entityEngine;
-
-			this.dbInfrastructure = new DbInfrastructure ();
-
-			this.dbInfrastructure.AttachToDatabase (access);
+			this.dbInfrastructure = dbInfrastructure;
 
 			this.infoManager = new InfoManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
 			this.uidManager = new UidManager (this.dbInfrastructure, this.entityEngine.ServiceSchemaEngine);
@@ -183,11 +180,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 					}
 
 					this.dataContextPool.Dispose ();
-				}
-
-				if (this.dbInfrastructure != null)
-				{
-					this.dbInfrastructure.Dispose ();
 				}
 
 				this.IsDisposed = true;

@@ -347,8 +347,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckRootEntity()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = new Request ();
 
@@ -363,8 +363,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckRequestedEntity()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = new Request ()
 				{
@@ -383,8 +383,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckSkipAndTakeTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = new Request ()
 				{
@@ -414,8 +414,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckConditionsTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = new Request ()
 				{
@@ -480,8 +480,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckSortClausesTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = new Request ()
 				{
@@ -546,8 +546,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckSignificantFieldsTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				var request = new Request ()
 				{
@@ -591,8 +591,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckCycleDetectionTest1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				foreach (var entity in this.GetGraphsWithCycle ())
 				{
@@ -613,8 +613,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		[TestMethod]
 		public void CheckCycleDetectionTest2()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				foreach (var entity in this.GetGraphsWithoutCycle (dataContext))
 				{

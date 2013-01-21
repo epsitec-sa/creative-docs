@@ -41,185 +41,196 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void CreateArgumentCheck()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			var entityTypeIds = EntityEngineHelper.GetEntityTypeIds ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Create (DbAccess.Empty, entityTypeIds)
-			);
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Create (null, entityTypeIds)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Create (access, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Create (dbInfrastructure, null)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void CheckArgumentCheck()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			var entityTypeIds = EntityEngineHelper.GetEntityTypeIds ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Check (DbAccess.Empty, entityTypeIds)
-			);
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Check (null, entityTypeIds)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Check (access, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Check (dbInfrastructure, null)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void UpdateArgumentCheck()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			var entityTypeIds = EntityEngineHelper.GetEntityTypeIds ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Update (DbAccess.Empty, entityTypeIds)
-			);
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Update (null, entityTypeIds)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Update (access, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Update (dbInfrastructure, null)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void ConnectArgumentCheck()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			var entityTypeIds = EntityEngineHelper.GetEntityTypeIds ();
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Connect (DbAccess.Empty, entityTypeIds)
-			);
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Connect (null, entityTypeIds)
+				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => EntityEngine.Connect (access, null)
-			);
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => EntityEngine.Connect (dbInfrastructure, null)
+				);
+			}
 		}
 
 
 		[TestMethod]
 		public void CreateAndCheckTest()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 			var partialEntityTypeIds = this.GetPartialEntityTypeIds ().ToList ();
 			var completeEntityTypeIds = EntityEngineHelper.GetEntityTypeIds ().ToList ();
 
-			Assert.IsFalse (EntityEngine.Check (access, completeEntityTypeIds));
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				Assert.IsFalse (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds));
 
-			EntityEngine.Create (access, partialEntityTypeIds);
+				EntityEngine.Create (dbInfrastructure, partialEntityTypeIds);
 
-			Assert.IsTrue (EntityEngine.Check (access, completeEntityTypeIds));
+				Assert.IsTrue (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds));
+			}
 		}
 
 
 		[TestMethod]
 		public void UpdateAndCheckTest1()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			
-			var entityTypeIds1 = this.GetSubGraphOfEntityTypeIds ();
-			var partialEntityTypeIds1 = entityTypeIds1.Item1;
-			var completeEntityTypeIds1 = entityTypeIds1.Item2;
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				var entityTypeIds1 = this.GetSubGraphOfEntityTypeIds ();
+				var partialEntityTypeIds1 = entityTypeIds1.Item1;
+				var completeEntityTypeIds1 = entityTypeIds1.Item2;
 
-			var partialEntityTypeIds2 = this.GetPartialEntityTypeIds ().ToList ();
-			var completeEntityTypeIds2 = EntityEngineHelper.GetEntityTypeIds ().ToList ();
+				var partialEntityTypeIds2 = this.GetPartialEntityTypeIds ().ToList ();
+				var completeEntityTypeIds2 = EntityEngineHelper.GetEntityTypeIds ().ToList ();
 
-			Assert.IsFalse (EntityEngine.Check (access, completeEntityTypeIds1));
-			Assert.IsFalse (EntityEngine.Check (access, completeEntityTypeIds2));
+				Assert.IsFalse (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds1));
+				Assert.IsFalse (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds2));
 
-			EntityEngine.Create (access, partialEntityTypeIds1);
+				EntityEngine.Create (dbInfrastructure, partialEntityTypeIds1);
 
-			Assert.IsTrue (EntityEngine.Check (access, completeEntityTypeIds1));
-			Assert.IsFalse (EntityEngine.Check (access, completeEntityTypeIds2));
+				Assert.IsTrue (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds1));
+				Assert.IsFalse (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds2));
 
-			EntityEngine.Update (access, partialEntityTypeIds2);
+				EntityEngine.Update (dbInfrastructure, partialEntityTypeIds2);
 
-			Assert.IsTrue (EntityEngine.Check (access, completeEntityTypeIds1));
-			Assert.IsTrue (EntityEngine.Check (access, completeEntityTypeIds2));
+				Assert.IsTrue (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds1));
+				Assert.IsTrue (EntityEngine.Check (dbInfrastructure, completeEntityTypeIds2));
+			}
 		}
 
 
 		[TestMethod]
 		public void UpdateAndCheckTest2()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-
-			var entityTypeIds = this.GetSubGraphOfEntityTypeIds ().Item2;
-
-			EntityEngine.Create (access, entityTypeIds);
-
-			Assert.IsTrue (EntityEngine.Check (access, entityTypeIds));
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
+				var entityTypeIds = this.GetSubGraphOfEntityTypeIds ().Item2;
+
+				EntityEngine.Create (dbInfrastructure, entityTypeIds);
+
+				Assert.IsTrue (EntityEngine.Check (dbInfrastructure, entityTypeIds));
+
 				DbTable connectionTable = dbInfrastructure.ResolveDbTable (ConnectionManager.TableFactory.TableName);
 				DbColumn column = connectionTable.Columns[ConnectionManager.TableFactory.ColumnStatusName];
 
 				dbInfrastructure.RemoveColumnFromTable (connectionTable, column);
+
+				Assert.IsFalse (EntityEngine.Check (dbInfrastructure, entityTypeIds));
+
+				EntityEngine.Update (dbInfrastructure, entityTypeIds);
+
+				Assert.IsTrue (EntityEngine.Check (dbInfrastructure, entityTypeIds));
 			}
-
-			Assert.IsFalse (EntityEngine.Check (access, entityTypeIds));
-
-			EntityEngine.Update (access, entityTypeIds);
-
-			Assert.IsTrue (EntityEngine.Check (access, entityTypeIds));
 		}
 
 
 		[TestMethod]
 		public void ConnectTest()
 		{
-			var access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			var partialEntityTypeIds = this.GetPartialEntityTypeIds ().ToList ();
-			var completeEntityTypeIds = EntityEngineHelper.GetEntityTypeIds ().ToList ();
-
-			EntityEngine.Create (access, partialEntityTypeIds);
-
-			EntityEngine engine = EntityEngine.Connect (access, partialEntityTypeIds);
-
-			Assert.IsNotNull (engine);
-			Assert.IsNotNull (engine.EntityTypeEngine);
-			Assert.IsNotNull (engine.EntitySchemaEngine);
-			Assert.IsNotNull (engine.ServiceSchemaEngine);
-
-			var expectedTypeIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
-			var actualTypeIds = engine.EntityTypeEngine.GetEntityTypes ().Select (t => t.CaptionId).OrderBy (id => id.ToLong ()).ToList ();
-
-			CollectionAssert.AreEqual (expectedTypeIds, actualTypeIds);
-
-			var expectedEntityTableIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
-
-			foreach (var tableId in expectedEntityTableIds)
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				Assert.IsNotNull (engine.EntitySchemaEngine.GetEntityTable (tableId));
-			}
-			
-			var serviceTableNames = new List<string> ()
-			{
-				ConnectionManager.TableFactory.TableName,
-				EntityDeletionLog.TableFactory.TableName,
-				EntityModificationLog.TableFactory.TableName,
-				InfoManager.TableFactory.TableName,
-				LockManager.TableFactory.TableName,
-				UidManager.TableFactory.TableName,
-			};
+				var partialEntityTypeIds = this.GetPartialEntityTypeIds ().ToList ();
+				var completeEntityTypeIds = EntityEngineHelper.GetEntityTypeIds ().ToList ();
 
-			foreach (var serviceTableName in serviceTableNames)
-			{
-				Assert.IsNotNull (engine.ServiceSchemaEngine.GetServiceTable (serviceTableName));
+				EntityEngine.Create (dbInfrastructure, partialEntityTypeIds);
+
+				EntityEngine engine = EntityEngine.Connect (dbInfrastructure, partialEntityTypeIds);
+
+				Assert.IsNotNull (engine);
+				Assert.IsNotNull (engine.EntityTypeEngine);
+				Assert.IsNotNull (engine.EntitySchemaEngine);
+				Assert.IsNotNull (engine.ServiceSchemaEngine);
+
+				var expectedTypeIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
+				var actualTypeIds = engine.EntityTypeEngine.GetEntityTypes ().Select (t => t.CaptionId).OrderBy (id => id.ToLong ()).ToList ();
+
+				CollectionAssert.AreEqual (expectedTypeIds, actualTypeIds);
+
+				var expectedEntityTableIds = completeEntityTypeIds.OrderBy (id => id.ToLong ()).ToList ();
+
+				foreach (var tableId in expectedEntityTableIds)
+				{
+					Assert.IsNotNull (engine.EntitySchemaEngine.GetEntityTable (tableId));
+				}
+
+				var serviceTableNames = new List<string> ()
+				{
+					ConnectionManager.TableFactory.TableName,
+					EntityDeletionLog.TableFactory.TableName,
+					EntityModificationLog.TableFactory.TableName,
+					InfoManager.TableFactory.TableName,
+					LockManager.TableFactory.TableName,
+					UidManager.TableFactory.TableName,
+				};
+
+				foreach (var serviceTableName in serviceTableNames)
+				{
+					Assert.IsNotNull (engine.ServiceSchemaEngine.GetServiceTable (serviceTableName));
+				}
 			}
 		}
 

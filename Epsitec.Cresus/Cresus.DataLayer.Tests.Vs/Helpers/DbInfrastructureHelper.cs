@@ -20,14 +20,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		}
 
 
-		public static void CreateTestDatabase()
+		public static DbInfrastructure CreateTestDatabase()
 		{
-			using (DbInfrastructure infrastructure = new DbInfrastructure ())
-			{
-				DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			
+			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
-				infrastructure.CreateDatabase (access);
-			}
+			infrastructure.CreateDatabase (access);
+
+			return infrastructure;
 		}
 
 
@@ -39,14 +40,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		}
 
 
-		public static void ResetTestDatabase()
+		public static DbInfrastructure ResetTestDatabase()
 		{
 			if (DbInfrastructureHelper.CheckDatabaseExistence ())
 			{
 				DbInfrastructureHelper.DeleteTestDatabase ();
 			}
 
-			DbInfrastructureHelper.CreateTestDatabase ();
+			return DbInfrastructureHelper.CreateTestDatabase ();
 		}
 
 

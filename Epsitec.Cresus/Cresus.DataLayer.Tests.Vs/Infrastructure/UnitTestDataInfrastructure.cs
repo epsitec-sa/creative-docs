@@ -48,10 +48,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetDatabaseTime()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				System.DateTime t1 = dataInfrastructure.GetDatabaseTime ();
-				System.DateTime t2 = dataInfrastructure.DbInfrastructure.GetDatabaseTime ();
+				System.DateTime t1 = db.DataInfrastructure.GetDatabaseTime ();
+				System.DateTime t2 = db.DataInfrastructure.DbInfrastructure.GetDatabaseTime ();
 
 				Assert.IsTrue (t1 - t2 <= System.TimeSpan.FromMilliseconds (100));
 			}
@@ -61,11 +61,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void AddQueryLogArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => dataInfrastructure.AddQueryLog (null)
+					() => db.DataInfrastructure.AddQueryLog (null)
 				);
 			}
 		}
@@ -74,11 +74,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void RemoveQueryLogArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => dataInfrastructure.RemoveQueryLog (null)
+					() => db.DataInfrastructure.RemoveQueryLog (null)
 				);
 			}
 		}
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void AddAndRemoveQueryLog()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<AbstractLog> logs = new List<AbstractLog> ();
 
@@ -96,9 +96,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					MemoryLog log = new MemoryLog (10);
 
 					logs.Add (log);
-					dataInfrastructure.AddQueryLog (log);
+					db.DataInfrastructure.AddQueryLog (log);
 
-					Assert.IsTrue (logs.SetEquals (dataInfrastructure.DbInfrastructure.QueryLogs));
+					Assert.IsTrue (logs.SetEquals (db.DataInfrastructure.DbInfrastructure.QueryLogs));
 				}
 
 				while (logs.Any ())
@@ -106,32 +106,36 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					AbstractLog log = logs[0];
 
 					logs.RemoveAt (0);
-					dataInfrastructure.RemoveQueryLog (log);
+					db.DataInfrastructure.RemoveQueryLog (log);
 
-					Assert.IsTrue (logs.SetEquals (dataInfrastructure.DbInfrastructure.QueryLogs));
+					Assert.IsTrue (logs.SetEquals (db.DataInfrastructure.DbInfrastructure.QueryLogs));
 				}
 			}
 		}
-		
+
 
 		[TestMethod]
 		public void ConnectionSimpleCase1()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				Assert.IsNull (dataInfrastructure.Connection);
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				dataInfrastructure.OpenConnection ("connexion");
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					Assert.IsNull (dataInfrastructure.Connection);
 
-				Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
-				Assert.AreEqual ("connexion", dataInfrastructure.Connection.Identity);
+					dataInfrastructure.OpenConnection ("connexion");
 
-				dataInfrastructure.CloseConnection ();
+					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+					Assert.AreEqual ("connexion", dataInfrastructure.Connection.Identity);
 
-				Assert.AreEqual (ConnectionStatus.Closed, dataInfrastructure.Connection.Status);
+					dataInfrastructure.CloseConnection ();
+
+					Assert.AreEqual (ConnectionStatus.Closed, dataInfrastructure.Connection.Status);
+				}
 			}
 		}
 
@@ -140,24 +144,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void ConnectionSimpleCase2()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
-
-			DbId cId;
-
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				Assert.IsNull (dataInfrastructure.Connection);
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				dataInfrastructure.OpenConnection ("connexion");
+				DbId cId;
 
-				Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
-				Assert.AreEqual ("connexion", dataInfrastructure.Connection.Identity);
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					Assert.IsNull (dataInfrastructure.Connection);
 
-				cId = dataInfrastructure.Connection.Id;
-			}
+					dataInfrastructure.OpenConnection ("connexion");
 
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
+					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+					Assert.AreEqual ("connexion", dataInfrastructure.Connection.Identity);
+
+					cId = dataInfrastructure.Connection.Id;
+				}
+
 				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Assert.AreEqual (ConnectionStatus.Closed, manager.GetConnection (cId).Status);
@@ -169,29 +174,33 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void ConnectionSimpleCase3()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				Assert.IsNull (dataInfrastructure.Connection);
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				dataInfrastructure.OpenConnection ("connexion");
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					Assert.IsNull (dataInfrastructure.Connection);
 
-				Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
-				Assert.AreEqual ("connexion", dataInfrastructure.Connection.Identity);
+					dataInfrastructure.OpenConnection ("connexion");
 
-				DbId cId = dataInfrastructure.Connection.Id;
+					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+					Assert.AreEqual ("connexion", dataInfrastructure.Connection.Identity);
 
-				ConnectionManager manager = new ConnectionManager (dataInfrastructure.DbInfrastructure, entityEngine.ServiceSchemaEngine);
+					DbId cId = dataInfrastructure.Connection.Id;
 
-				manager.CloseConnection (cId);
+					ConnectionManager manager = new ConnectionManager (dataInfrastructure.DbInfrastructure, entityEngine.ServiceSchemaEngine);
 
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => dataInfrastructure.CloseConnection ()
-				);
+					manager.CloseConnection (cId);
 
-				dataInfrastructure.Dispose ();
+					ExceptionAssert.Throw<System.InvalidOperationException>
+					(
+						() => dataInfrastructure.CloseConnection ()
+					);
+
+					dataInfrastructure.Dispose ();
+				}
 			}
 		}
 
@@ -200,20 +209,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void ConnectionSimpleCase4()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				Assert.IsNull (dataInfrastructure.Connection);
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				for (int i = 0; i < 10; i++)
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
 				{
-					dataInfrastructure.OpenConnection ("connexion" + i);
+					Assert.IsNull (dataInfrastructure.Connection);
 
-					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
-					Assert.AreEqual ("connexion" + i, dataInfrastructure.Connection.Identity);
+					for (int i = 0; i < 10; i++)
+					{
+						dataInfrastructure.OpenConnection ("connexion" + i);
 
-					dataInfrastructure.CloseConnection ();
+						Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+						Assert.AreEqual ("connexion" + i, dataInfrastructure.Connection.Identity);
+
+						dataInfrastructure.CloseConnection ();
+					}
 				}
 			}
 		}
@@ -223,27 +236,31 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void ConnectionInterruptionCase()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				Assert.IsNull (dataInfrastructure.Connection);
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				dataInfrastructure.OpenConnection ("connexion");
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					Assert.IsNull (dataInfrastructure.Connection);
 
-				Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+					dataInfrastructure.OpenConnection ("connexion");
 
-				System.Threading.Thread.Sleep (3000);
+					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
 
-				dataInfrastructure.RefreshConnectionData ();
+					System.Threading.Thread.Sleep (3000);
 
-				Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+					dataInfrastructure.RefreshConnectionData ();
 
-				dataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (2));
-				Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
 
-				dataInfrastructure.RefreshConnectionData ();
-				Assert.AreEqual (ConnectionStatus.Interrupted, dataInfrastructure.Connection.Status);
+					dataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (2));
+					Assert.AreEqual (ConnectionStatus.Open, dataInfrastructure.Connection.Status);
+
+					dataInfrastructure.RefreshConnectionData ();
+					Assert.AreEqual (ConnectionStatus.Interrupted, dataInfrastructure.Connection.Status);
+				}
 			}
 		}
 
@@ -251,18 +268,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConnectionInvalidBehavior()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.KeepConnectionAlive ()
+					() => db.DataInfrastructure.KeepConnectionAlive ()
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds(2))
+					() => db.DataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (2))
 				);
 			}
 		}
@@ -272,36 +289,42 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void AreAllLocksAvailableArgumentCheck()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => dataInfrastructure.AreLocksAvailable (null)
-				);
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					dataInfrastructure.OpenConnection ("id");
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.AreLocksAvailable (new List<string> () { })
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => dataInfrastructure.AreLocksAvailable (null)
+					);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.AreLocksAvailable (new List<string> () { "" })
-				);
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.AreLocksAvailable (new List<string> ()
+						{
+						})
+					);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.AreLocksAvailable (new List<string> () { null })
-				);
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.AreLocksAvailable (new List<string> () { "" })
+					);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.AreLocksAvailable (new List<string> () { "l1", "l1" })
-				);
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.AreLocksAvailable (new List<string> () { null })
+					);
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.AreLocksAvailable (new List<string> () { "l1", "l1" })
+					);
+				}
 			}
 		}
 
@@ -310,36 +333,42 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void CreateLockTransactionArgumentCheck()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
-				dataInfrastructure.OpenConnection ("id");
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ExceptionAssert.Throw<System.ArgumentNullException>
-				(
-					() => dataInfrastructure.CreateLockTransaction (null)
-				);
+				using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
+				{
+					dataInfrastructure.OpenConnection ("id");
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.CreateLockTransaction (new List<string> () { })
-				);
+					ExceptionAssert.Throw<System.ArgumentNullException>
+					(
+						() => dataInfrastructure.CreateLockTransaction (null)
+					);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.CreateLockTransaction (new List<string> () { "" })
-				);
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.CreateLockTransaction (new List<string> ()
+						{
+						})
+					);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.CreateLockTransaction (new List<string> () { null })
-				);
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.CreateLockTransaction (new List<string> () { "" })
+					);
 
-				ExceptionAssert.Throw<System.ArgumentException>
-				(
-					() => dataInfrastructure.CreateLockTransaction (new List<string> () { "l1", "l1" })
-				);
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.CreateLockTransaction (new List<string> () { null })
+					);
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataInfrastructure.CreateLockTransaction (new List<string> () { "l1", "l1" })
+					);
+				}
 			}
 		}
 
@@ -347,18 +376,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateLockTransactionAndAreLocksAvailableInvalidBehavior()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.AreLocksAvailable (new List<string> () { "lock" })
+					() => db.DataInfrastructure.AreLocksAvailable (new List<string> () { "lock" })
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.CreateLockTransaction (new List<string> () { "lock" })
+					() => db.DataInfrastructure.CreateLockTransaction (new List<string> () { "lock" })
 				);
 			}
 		}
@@ -368,43 +397,48 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void CreateLockTransactionAndAreLocksAvailable()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (access, entityEngine))
-			using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructure.Connect (access))
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructure.Connect (access))
 			{
-				dataInfrastructure1.OpenConnection ("c1");
-				dataInfrastructure2.OpenConnection("c2");
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure1);
 
-				Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-				Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-
-				using (LockTransaction l1 = dataInfrastructure1.CreateLockTransaction (new List<string> () { "l1" }))
-				using (LockTransaction l2 = dataInfrastructure2.CreateLockTransaction (new List<string> () { "l2" }))
+				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1, entityEngine))
+				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2, entityEngine))
 				{
-					l1.Lock ();
-
-					Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-					Assert.IsFalse (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l2" }));
-
-					l2.Lock ();
-
-					Assert.IsFalse (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-					Assert.IsFalse (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1" }));
-					Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l2" }));
-
-					l1.Release ();
-
-					Assert.IsFalse (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
-					Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1" }));
-
-					l2.Release ();
+					dataInfrastructure1.OpenConnection ("c1");
+					dataInfrastructure2.OpenConnection ("c2");
 
 					Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
 					Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+
+					using (LockTransaction l1 = dataInfrastructure1.CreateLockTransaction (new List<string> () { "l1" }))
+					using (LockTransaction l2 = dataInfrastructure2.CreateLockTransaction (new List<string> () { "l2" }))
+					{
+						l1.Lock ();
+
+						Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsFalse (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l2" }));
+
+						l2.Lock ();
+
+						Assert.IsFalse (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsFalse (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1" }));
+						Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l2" }));
+
+						l1.Release ();
+
+						Assert.IsFalse (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1" }));
+
+						l2.Release ();
+
+						Assert.IsTrue (dataInfrastructure1.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+						Assert.IsTrue (dataInfrastructure2.AreLocksAvailable (new List<string> () { "l1", "l2" }));
+					}
 				}
 			}
 		}
@@ -414,69 +448,76 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void CleanInactiveLocks()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (access, entityEngine))
-			using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (access, entityEngine))
-			using (DataInfrastructure dataInfrastructure3 = new DataInfrastructure (access, entityEngine))
-			using (DataInfrastructure dataInfrastructure4 = new DataInfrastructure (access, entityEngine))
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructure.Connect (access))
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructure.Connect (access))
+			using (DbInfrastructure dbInfrastructure3 = DbInfrastructure.Connect (access))
+			using (DbInfrastructure dbInfrastructure4 = DbInfrastructure.Connect (access))
 			{
-				dataInfrastructure1.OpenConnection ("1");
-				dataInfrastructure2.OpenConnection ("2");
-				dataInfrastructure3.OpenConnection ("3");
-				dataInfrastructure4.OpenConnection ("4");
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure1);
 
-				Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
-				Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
-				Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
-
-				using (LockTransaction t1 = dataInfrastructure1.CreateLockTransaction (new List<string> { "1" }))
-				using (LockTransaction t2 = dataInfrastructure2.CreateLockTransaction (new List<string> { "2" }))
-				using (LockTransaction t3 = dataInfrastructure3.CreateLockTransaction (new List<string> { "3" }))
+				using (DataInfrastructure dataInfrastructure1 = new DataInfrastructure (dbInfrastructure1, entityEngine))
+				using (DataInfrastructure dataInfrastructure2 = new DataInfrastructure (dbInfrastructure2, entityEngine))
+				using (DataInfrastructure dataInfrastructure3 = new DataInfrastructure (dbInfrastructure3, entityEngine))
+				using (DataInfrastructure dataInfrastructure4 = new DataInfrastructure (dbInfrastructure4, entityEngine))
 				{
-
-					t1.Lock ();
-					t2.Lock ();
-					t3.Lock ();
-
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
-
-					dataInfrastructure2.CloseConnection ();
-
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
-
-					for (int i = 0; i < 3; i++)
-					{
-						dataInfrastructure1.KeepConnectionAlive ();
-						dataInfrastructure4.KeepConnectionAlive ();
-						dataInfrastructure4.KillDeadConnections (System.TimeSpan.FromSeconds (3));
-
-						System.Threading.Thread.Sleep (1000);
-					}
-
-					dataInfrastructure4.KeepConnectionAlive ();
-					dataInfrastructure4.KillDeadConnections (System.TimeSpan.FromSeconds (3));
-
-					Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
-					Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
-					Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
-
-					dataInfrastructure1.CloseConnection ();
-
-					System.Threading.Thread.Sleep (3000);
-
-					dataInfrastructure4.KeepConnectionAlive ();
-					dataInfrastructure4.KillDeadConnections (System.TimeSpan.FromSeconds (3));
+					dataInfrastructure1.OpenConnection ("1");
+					dataInfrastructure2.OpenConnection ("2");
+					dataInfrastructure3.OpenConnection ("3");
+					dataInfrastructure4.OpenConnection ("4");
 
 					Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
 					Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
 					Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
 
-					dataInfrastructure4.CloseConnection ();
+					using (LockTransaction t1 = dataInfrastructure1.CreateLockTransaction (new List<string> { "1" }))
+					using (LockTransaction t2 = dataInfrastructure2.CreateLockTransaction (new List<string> { "2" }))
+					using (LockTransaction t3 = dataInfrastructure3.CreateLockTransaction (new List<string> { "3" }))
+					{
+
+						t1.Lock ();
+						t2.Lock ();
+						t3.Lock ();
+
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
+
+						dataInfrastructure2.CloseConnection ();
+
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
+
+						for (int i = 0; i < 3; i++)
+						{
+							dataInfrastructure1.KeepConnectionAlive ();
+							dataInfrastructure4.KeepConnectionAlive ();
+							dataInfrastructure4.KillDeadConnections (System.TimeSpan.FromSeconds (3));
+
+							System.Threading.Thread.Sleep (1000);
+						}
+
+						dataInfrastructure4.KeepConnectionAlive ();
+						dataInfrastructure4.KillDeadConnections (System.TimeSpan.FromSeconds (3));
+
+						Assert.IsFalse (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
+						Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
+						Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
+
+						dataInfrastructure1.CloseConnection ();
+
+						System.Threading.Thread.Sleep (3000);
+
+						dataInfrastructure4.KeepConnectionAlive ();
+						dataInfrastructure4.KillDeadConnections (System.TimeSpan.FromSeconds (3));
+
+						Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "1" }));
+						Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "2" }));
+						Assert.IsTrue (dataInfrastructure4.AreLocksAvailable (new List<string> { "3" }));
+
+						dataInfrastructure4.CloseConnection ();
+					}
 				}
 			}
 		}
@@ -485,16 +526,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetDatabaseInfoArgumentCheck()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.GetDatabaseInfo (null)
+					() => db.DataInfrastructure.GetDatabaseInfo (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.GetDatabaseInfo ("")
+					() => db.DataInfrastructure.GetDatabaseInfo ("")
 				);
 			}
 		}
@@ -503,16 +544,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void SetDatabaseInfoArgumentCheck()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.SetDatabaseInfo (null, "test")
+					() => db.DataInfrastructure.SetDatabaseInfo (null, "test")
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.SetDatabaseInfo ("", "test")
+					() => db.DataInfrastructure.SetDatabaseInfo ("", "test")
 				);
 			}
 		}
@@ -521,18 +562,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetSetAndExistsInfoInvalidBehavior()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.GetDatabaseInfo ("key")
+					() => db.DataInfrastructure.GetDatabaseInfo ("key")
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.SetDatabaseInfo ("key", "value")
+					() => db.DataInfrastructure.SetDatabaseInfo ("key", "value")
 				);
 			}
 		}
@@ -541,7 +582,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetAndSetInfo()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				Dictionary<string, string> info = new Dictionary<string, string> ();
 
@@ -552,16 +593,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				foreach (string key in info.Keys)
 				{
-					Assert.IsNull (dataInfrastructure.GetDatabaseInfo (key));
+					Assert.IsNull (db.DataInfrastructure.GetDatabaseInfo (key));
 				}
 
 				for (int i = 0; i < 10; i++)
 				{
 					foreach (string key in info.Keys.ToList ())
 					{
-						dataInfrastructure.SetDatabaseInfo (key, info[key]);
+						db.DataInfrastructure.SetDatabaseInfo (key, info[key]);
 
-						Assert.AreEqual (info[key], dataInfrastructure.GetDatabaseInfo (key));
+						Assert.AreEqual (info[key], db.DataInfrastructure.GetDatabaseInfo (key));
 
 						info[key] = this.GetRandomString ();
 					}
@@ -569,12 +610,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				foreach (string key in info.Keys)
 				{
-					dataInfrastructure.SetDatabaseInfo (key, null);
+					db.DataInfrastructure.SetDatabaseInfo (key, null);
 				}
 
 				foreach (string key in info.Keys)
 				{
-					Assert.IsNull (dataInfrastructure.GetDatabaseInfo (key));
+					Assert.IsNull (db.DataInfrastructure.GetDatabaseInfo (key));
 				}
 			}
 		}
@@ -583,28 +624,28 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void UidGeneratorInvalidBehaviorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.GetUidGenerator ("name")
+					() => db.DataInfrastructure.GetUidGenerator ("name")
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.DeleteUidGenerator ("name")
+					() => db.DataInfrastructure.DeleteUidGenerator ("name")
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.DoesUidGeneratorExists ("name")
+					() => db.DataInfrastructure.DoesUidGeneratorExists ("name")
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.CreateUidGenerator ("name", new List<UidSlot> () { new UidSlot (1, 2) })
+					() => db.DataInfrastructure.CreateUidGenerator ("name", new List<UidSlot> () { new UidSlot (1, 2) })
 				);
 			}
 		}
@@ -613,7 +654,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateAndExistsUidGeneratorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				for (int i = 0; i < 2; i++)
 				{
@@ -626,9 +667,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 						new UidSlot (0, 9),
 					};
 
-					Assert.IsFalse (dataInfrastructure.DoesUidGeneratorExists (name));
+					Assert.IsFalse (db.DataInfrastructure.DoesUidGeneratorExists (name));
 
-					var generator = dataInfrastructure.CreateUidGenerator (name, slots);
+					var generator = db.DataInfrastructure.CreateUidGenerator (name, slots);
 
 					Assert.AreEqual ("myCounter" + i, generator.Name);
 					Assert.AreEqual (3, generator.Slots.Count);
@@ -640,7 +681,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					Assert.AreEqual (20, generator.Slots[2].MinValue);
 					Assert.AreEqual (29, generator.Slots[2].MaxValue);
 
-					Assert.IsTrue (dataInfrastructure.DoesUidGeneratorExists (name));
+					Assert.IsTrue (db.DataInfrastructure.DoesUidGeneratorExists (name));
 				}
 			}
 		}
@@ -649,7 +690,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void DeleteAndExistsUidGeneratorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<int> countersRemoved = new List<int> ();
 				List<int> countersCreated = new List<int> ();
@@ -670,19 +711,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		                new UidSlot (10, 19),
 		            };
 
-					dataInfrastructure.CreateUidGenerator (name + i, slots);
+					db.DataInfrastructure.CreateUidGenerator (name + i, slots);
 
 					countersCreated.Add (i);
 					countersRemoved.Remove (i);
 
 					foreach (int j in countersCreated)
 					{
-						Assert.IsTrue (dataInfrastructure.DoesUidGeneratorExists (name + j));
+						Assert.IsTrue (db.DataInfrastructure.DoesUidGeneratorExists (name + j));
 					}
 
 					foreach (int j in countersRemoved)
 					{
-						Assert.IsFalse (dataInfrastructure.DoesUidGeneratorExists (name + j));
+						Assert.IsFalse (db.DataInfrastructure.DoesUidGeneratorExists (name + j));
 					}
 				}
 
@@ -690,19 +731,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				{
 					string name = "myCounter";
 
-					dataInfrastructure.DeleteUidGenerator (name + i);
+					db.DataInfrastructure.DeleteUidGenerator (name + i);
 
 					countersCreated.Remove (i);
 					countersRemoved.Add (i);
 
 					foreach (int j in countersCreated)
 					{
-						Assert.IsTrue (dataInfrastructure.DoesUidGeneratorExists(name + j));
+						Assert.IsTrue (db.DataInfrastructure.DoesUidGeneratorExists (name + j));
 					}
 
 					foreach (int j in countersRemoved)
 					{
-						Assert.IsFalse (dataInfrastructure.DoesUidGeneratorExists (name + j));
+						Assert.IsFalse (db.DataInfrastructure.DoesUidGeneratorExists (name + j));
 					}
 				}
 			}
@@ -712,7 +753,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetUidGeneratorTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				for (int i = 0; i < 10; i++)
 				{
@@ -725,14 +766,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		                new UidSlot (10, 19),
 		            };
 
-					dataInfrastructure.CreateUidGenerator (name, slots);
+					db.DataInfrastructure.CreateUidGenerator (name, slots);
 				}
 
 				for (int i = 0; i < 10; i++)
 				{
 					string name = "myCounter" + i;
 
-					UidGenerator generator = dataInfrastructure.GetUidGenerator (name);
+					UidGenerator generator = db.DataInfrastructure.GetUidGenerator (name);
 
 					Assert.IsNotNull (generator);
 					Assert.AreEqual (generator.Name, name);
@@ -751,7 +792,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetUidGeneratorNextUidTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				for (int i = 0; i < 3; i++)
 				{
@@ -764,14 +805,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		                new UidSlot (10, 19),
 		            };
 
-					dataInfrastructure.CreateUidGenerator (name, slots);
+					db.DataInfrastructure.CreateUidGenerator (name, slots);
 				}
 
 				for (int i = 0; i < 3; i++)
 				{
 					string name = "myCounter" + i;
 
-					UidGenerator generator = dataInfrastructure.GetUidGenerator (name);
+					UidGenerator generator = db.DataInfrastructure.GetUidGenerator (name);
 
 					for (int j = 0; j < 30; j++)
 					{
@@ -790,21 +831,21 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateEntityDeletionEntryArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.CreateEntityDeletionEntry (DbId.Empty, Druid.FromLong (1), new DbId (1))
+					() => db.DataInfrastructure.CreateEntityDeletionEntry (DbId.Empty, Druid.FromLong (1), new DbId (1))
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.CreateEntityDeletionEntry (new DbId(1), Druid.Empty, new DbId (1))
+					() => db.DataInfrastructure.CreateEntityDeletionEntry (new DbId (1), Druid.Empty, new DbId (1))
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.CreateEntityDeletionEntry (new DbId (1), Druid.FromLong (1), DbId.Empty)
+					() => db.DataInfrastructure.CreateEntityDeletionEntry (new DbId (1), Druid.FromLong (1), DbId.Empty)
 				);
 			}
 		}
@@ -813,11 +854,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetEntityDeletionEntriesNewerThanArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.GetEntityDeletionEntriesNewerThan (DbId.Empty)
+					() => db.DataInfrastructure.GetEntityDeletionEntriesNewerThan (DbId.Empty)
 				);
 			}
 		}
@@ -826,18 +867,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void EntityDeletionEntryInvalidBehavior()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.CreateEntityDeletionEntry (new DbId (1), Druid.FromLong (1), new DbId (1))
+					() => db.DataInfrastructure.CreateEntityDeletionEntry (new DbId (1), Druid.FromLong (1), new DbId (1))
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (1))
+					() => db.DataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (1))
 				);
 			}
 		}
@@ -846,19 +887,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void EntityDeletionEntryTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<EntityDeletionEntry> entries = new List<EntityDeletionEntry> ();
 
 				for (int i = 1; i < 10; i++)
 				{
-					var entry = dataInfrastructure.CreateEntityDeletionEntry (new DbId (i), Druid.FromLong (i + 1), new DbId (i + 2));
+					var entry = db.DataInfrastructure.CreateEntityDeletionEntry (new DbId (i), Druid.FromLong (i + 1), new DbId (i + 2));
 
 					entries.Add (entry);
 
 					for (int j = 1; j <= i; j++)
 					{
-						var data = dataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (j));
+						var data = db.DataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (j));
 
 						CollectionAssert.AreEqual (entries.Skip (j - 1).Select (e => e.EntryId).ToList (), data.Select (e => e.EntryId).ToList ());
 					}
@@ -870,18 +911,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void EntityModificationEntryInvalidBehavior()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				dataInfrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.CreateEntityModificationEntry ()
+					() => db.DataInfrastructure.CreateEntityModificationEntry ()
 				);
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => dataInfrastructure.GetLatestEntityModificationEntry ()
+					() => db.DataInfrastructure.GetLatestEntityModificationEntry ()
 				);
 			}
 		}
@@ -890,13 +931,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void EntityModificationEntryTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				for (int i = 1; i < 10; i++)
 				{
-					var entry = dataInfrastructure.CreateEntityModificationEntry ();
+					var entry = db.DataInfrastructure.CreateEntityModificationEntry ();
 
-					var data = dataInfrastructure.GetLatestEntityModificationEntry ();
+					var data = db.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 					Assert.AreEqual (entry.EntryId, data.EntryId);
 				}
@@ -907,16 +948,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void DeleteDataContextArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => dataInfrastructure.DeleteDataContext (null)
+					() => db.DataInfrastructure.DeleteDataContext (null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => dataInfrastructure.DeleteDataContext (new DataContext (dataInfrastructure))
+					() => db.DataInfrastructure.DeleteDataContext (new DataContext (db.DataInfrastructure))
 				);
 			}
 		}
@@ -925,11 +966,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ContainsDataContextArgumentCheck()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => dataInfrastructure.ContainsDataContext (null)
+					() => db.DataInfrastructure.ContainsDataContext (null)
 				);
 			}
 		}
@@ -938,19 +979,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void DataContextTests()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<DataContext> dataContexts = new List<DataContext> ();
 
 				for (int i = 0; i < 10; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 
 					foreach (DataContext d in dataContexts)
 					{
-						Assert.IsTrue (dataInfrastructure.ContainsDataContext (d));
+						Assert.IsTrue (db.DataInfrastructure.ContainsDataContext (d));
 					}
 				}
 
@@ -958,18 +999,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				{
 					DataContext dataContext = dataContexts[0];
 
-					Assert.IsTrue (dataInfrastructure.ContainsDataContext (dataContext));
+					Assert.IsTrue (db.DataInfrastructure.ContainsDataContext (dataContext));
 					Assert.IsFalse (dataContext.IsDisposed);
 
 					dataContexts.Remove (dataContext);
-					dataInfrastructure.DeleteDataContext (dataContext);
+					db.DataInfrastructure.DeleteDataContext (dataContext);
 
-					Assert.IsFalse (dataInfrastructure.ContainsDataContext (dataContext));
+					Assert.IsFalse (db.DataInfrastructure.ContainsDataContext (dataContext));
 					Assert.IsTrue (dataContext.IsDisposed);
 
 					foreach (DataContext d in dataContexts)
 					{
-						Assert.IsTrue (dataInfrastructure.ContainsDataContext (d));
+						Assert.IsTrue (db.DataInfrastructure.ContainsDataContext (d));
 					}
 				}
 			}
@@ -979,7 +1020,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ThreadSafetyTest()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
 				var time = System.DateTime.Now;
@@ -996,18 +1037,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 						var key = System.Guid.NewGuid ().ToString ();
 						var value = System.Guid.NewGuid ().ToString ();
 
-						if (dataInfrastructure.Connection != null)
+						if (db.DataInfrastructure.Connection != null)
 						{
-							dataInfrastructure.RefreshConnectionData ();
+							db.DataInfrastructure.RefreshConnectionData ();
 						}
 
-						if (dataInfrastructure.Connection != null && dataInfrastructure.Connection.Status == ConnectionStatus.Open)
+						if (db.DataInfrastructure.Connection != null && db.DataInfrastructure.Connection.Status == ConnectionStatus.Open)
 						{
 							if (dice.NextDouble () > 0.999)
 							{
 								try
 								{
-									dataInfrastructure.CloseConnection ();
+									db.DataInfrastructure.CloseConnection ();
 								}
 								catch (System.InvalidOperationException)
 								{
@@ -1017,11 +1058,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 							}
 						}
 
-						if (dataInfrastructure.Connection == null || dataInfrastructure.Connection.Status != ConnectionStatus.Open)
+						if (db.DataInfrastructure.Connection == null || db.DataInfrastructure.Connection.Status != ConnectionStatus.Open)
 						{
 							try
 							{
-								dataInfrastructure.OpenConnection ("myId");
+								db.DataInfrastructure.OpenConnection ("myId");
 							}
 							catch (System.InvalidOperationException)
 							{
@@ -1039,7 +1080,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 						            System.Guid.NewGuid().ToString (),
 						        };
 
-							LockTransaction lockTransaction = dataInfrastructure.CreateLockTransaction (lockNames);
+							LockTransaction lockTransaction = db.DataInfrastructure.CreateLockTransaction (lockNames);
 
 							lockTransactions.Add (lockTransaction);
 
@@ -1071,10 +1112,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 						try
 						{
-							dataInfrastructure.SetDatabaseInfo (key, value);
+							db.DataInfrastructure.SetDatabaseInfo (key, value);
 							data[key] = value;
 
-							Assert.AreEqual (value, dataInfrastructure.GetDatabaseInfo (key));
+							Assert.AreEqual (value, db.DataInfrastructure.GetDatabaseInfo (key));
 						}
 						catch (System.InvalidOperationException)
 						{
@@ -1089,10 +1130,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 							try
 							{
-								dataInfrastructure.SetDatabaseInfo (k, null);
+								db.DataInfrastructure.SetDatabaseInfo (k, null);
 								data.Remove (k);
 
-								Assert.IsNull (dataInfrastructure.GetDatabaseInfo (k));
+								Assert.IsNull (db.DataInfrastructure.GetDatabaseInfo (k));
 							}
 							catch (System.InvalidOperationException)
 							{
@@ -1117,11 +1158,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					{
 						if (startTime < System.DateTime.Now && System.DateTime.Now < stopTime)
 						{
-							if (dataInfrastructure.Connection != null && dataInfrastructure.Connection.Status == ConnectionStatus.Open)
+							if (db.DataInfrastructure.Connection != null && db.DataInfrastructure.Connection.Status == ConnectionStatus.Open)
 							{
 								try
 								{
-									dataInfrastructure.KeepConnectionAlive ();
+									db.DataInfrastructure.KeepConnectionAlive ();
 								}
 								catch (System.InvalidOperationException)
 								{
@@ -1144,11 +1185,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				{
 					while (System.DateTime.Now - time <= duration)
 					{
-						if (dataInfrastructure.Connection != null && dataInfrastructure.Connection.Status == ConnectionStatus.Open)
+						if (db.DataInfrastructure.Connection != null && db.DataInfrastructure.Connection.Status == ConnectionStatus.Open)
 						{
 							try
 							{
-								dataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (1));
+								db.DataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (1));
 							}
 							catch (System.InvalidOperationException)
 							{
@@ -1173,38 +1214,38 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConcurrencyTest()
 		{
-			var infrastructures = Enumerable
+			var dbs = Enumerable
 				.Range (0, 10)
-				.Select (e => DataInfrastructureHelper.ConnectToTestDatabase ())
+				.Select (e => DB.ConnectToTestDatabase ())
 				.ToList ();
 
-			foreach (var infrastructure in infrastructures)
+			foreach (var db in dbs)
 			{
-				infrastructure.CloseConnection ();
+				db.DataInfrastructure.CloseConnection ();
 			}
 
 			try
 			{
 				var time = System.DateTime.Now;
 
-				var threads = infrastructures.Select (i => new System.Threading.Thread (() =>
+				var threads = dbs.Select (i => new System.Threading.Thread (() =>
 				{
 					while (System.DateTime.Now - time <= System.TimeSpan.FromMilliseconds (15000))
 					{
-						i.OpenConnection ("id");
+						i.DataInfrastructure.OpenConnection ("id");
 
-						var lockManager = new LockManager (i.DbInfrastructure, i.EntityEngine.ServiceSchemaEngine);
+						var lockManager = new LockManager (i.DbInfrastructure, i.DataInfrastructure.EntityEngine.ServiceSchemaEngine);
 
-						lockManager.RequestLocks (i.Connection.Id, new List<string> ()
+						lockManager.RequestLocks (i.DataInfrastructure.Connection.Id, new List<string> ()
 						{
 							this.GetRandomString(),
 							this.GetRandomString(),
 							this.GetRandomString()
 						});
 
-						i.KillDeadConnections (System.TimeSpan.FromSeconds (5));
+						i.DataInfrastructure.KillDeadConnections (System.TimeSpan.FromSeconds (5));
 
-						i.CloseConnection ();
+						i.DataInfrastructure.CloseConnection ();
 					}
 				})).ToList ();
 
@@ -1220,9 +1261,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 			}
 			finally
 			{
-				foreach (var infrastructure in infrastructures)
+				foreach (var db in dbs)
 				{
-					infrastructure.Dispose ();
+					db.DataInfrastructure.Dispose ();
 				}
 			}
 		}

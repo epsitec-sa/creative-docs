@@ -1,5 +1,6 @@
 ﻿#define LOCALHOST
 #define REMOTE_HOST_MARC
+#define FBEMBEDDED
 
 
 using Epsitec.Common.Support;
@@ -9,7 +10,11 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 
+using System;
+
 using System.Collections.Generic;
+
+using System.Threading;
 
 
 namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
@@ -35,9 +40,8 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
 				infrastructure.CreateDatabase (access);
+				EntityEngine.Create (infrastructure, new List<Druid> ());
 			}
-
-			EntityEngine.Create (access, new List<Druid> ());
 		}
 
 
@@ -45,7 +49,16 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 		{
 			DbAccess access = DatabaseHelper.GetDbAccessForTestDatabase ();
 
-			DbInfrastructure.DropDatabase (access);
+			try
+			{
+				DbInfrastructure.DropDatabase (access);
+			}
+			catch (Exception)
+			{
+				Thread.Sleep (500);
+
+				DbInfrastructure.DropDatabase (access);
+			}
 		}
 
 
@@ -72,13 +85,11 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 		}
 
 
-		public static DataInfrastructure CreateDataInfrastructure()
+		public static DataInfrastructure CreateDataInfrastructure(DbInfrastructure dbInfrastructure)
 		{
-			DbAccess dbAccess = DatabaseHelper.GetDbAccessForTestDatabase ();
+			EntityEngine engine = EntityEngine.Connect (dbInfrastructure, new Druid[0]);
 
-			EntityEngine engine = EntityEngine.Connect (dbAccess, new Druid[0]);
-
-			return new DataInfrastructure (dbAccess, engine);
+			return new DataInfrastructure (dbInfrastructure, engine);
 		}
 
 
@@ -89,6 +100,12 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 			string host = "localhost";
 #elif REMOTE_HOST_MARC
 			string host = "WIN-CDMPHQRQD03";
+#endif
+
+#if FBSERVER
+			string provider = "Firebird";
+#elif FBEMBEDDED
+			string provider = "FirebirdEmbedded";
 #endif
 
 			return new DbAccess ("Firebird", "UTD_CORE", host, "sysdba", "masterkey", false);

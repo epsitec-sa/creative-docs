@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new ConnectionManager (dbinfrastructure, null)
+					() => new ConnectionManager (dbInfrastructure, null)
 				);
 			}
 		}
@@ -61,11 +61,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void OpenConnectionArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -83,11 +83,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CloseConnectionArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -100,11 +100,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetConnectionArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -117,11 +117,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void KeepConnectionAliveArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -134,11 +134,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CloseConnectionInvalidBehavior()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 
@@ -171,11 +171,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void OpenAndCloseConnection()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				DbId connectionId = manager.OpenConnection ("connection").Id;
 
@@ -193,11 +193,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void KeepConnectionAliveInvalidBehavior()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 
@@ -230,11 +230,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void KeepConnectionAlive()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				DbId connectionId = manager.OpenConnection ("connection").Id;
 
@@ -266,11 +266,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void KillDeadConnections()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				DbId connectionId1 = manager.OpenConnection ("connection1").Id;
 				DbId connectionId2 = manager.OpenConnection ("connection2").Id;
@@ -307,11 +307,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetOpenConnections()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager manager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager manager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				List<DbId> connectionIds = new List<DbId> ();
 

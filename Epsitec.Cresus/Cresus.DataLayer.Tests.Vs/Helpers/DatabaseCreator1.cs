@@ -195,10 +195,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		}
 
 
-		public static void PopulateDatabase(DatabaseSize size)
+		public static void PopulateDatabase(DbInfrastructure dbInfrastructure, DatabaseSize size)
 		{
-			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			
 			List<Druid> entityIds = new List<Druid> ()
 			{
 				EntityInfo<NaturalPersonEntity>.GetTypeId (),
@@ -208,126 +206,132 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 				EntityInfo<ValueDataEntity>.GetTypeId (),
 			};
 			
-			EntityEngine.Create (access, entityIds);
+			EntityEngine.Create (dbInfrastructure, entityIds);
+			
+			var entityEngine = EntityEngine.Connect (dbInfrastructure, entityIds);
 
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))
 			{
-				System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
+				dataInfrastructure.OpenConnection ("id");
 
-				int nbContactRoles = DatabaseCreator1.NbElements["contactRoles"][size];
-				ContactRoleEntity[] contactRoles = DataContextHelper.CreateContactRoles (dataContext, nbContactRoles);
-				dataContext.SaveChanges ();
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					System.Diagnostics.Debug.WriteLine ("Populating database. This might take a few minutes");
 
-				int nbUriComments = DatabaseCreator1.NbElements["uriComments"][size];
-				CommentEntity[] uriComments = DataContextHelper.CreateComments (dataContext, nbUriComments);
-				dataContext.SaveChanges ();
+					int nbContactRoles = DatabaseCreator1.NbElements["contactRoles"][size];
+					ContactRoleEntity[] contactRoles = DataContextHelper.CreateContactRoles (dataContext, nbContactRoles);
+					dataContext.SaveChanges ();
 
-				int nbUriSchemes = DatabaseCreator1.NbElements["uriSchemes"][size];
-				UriSchemeEntity[] uriSchemes = DataContextHelper.CreateUriSchemes (dataContext, nbUriSchemes);
-				dataContext.SaveChanges ();
+					int nbUriComments = DatabaseCreator1.NbElements["uriComments"][size];
+					CommentEntity[] uriComments = DataContextHelper.CreateComments (dataContext, nbUriComments);
+					dataContext.SaveChanges ();
 
-				int nbUriContacts = DatabaseCreator1.NbElements["uriContacts"][size];
-				UriContactEntity[] uriContacts = DataContextHelper.CreateUriContacts (dataContext, uriSchemes, nbUriContacts);
-				dataContext.SaveChanges ();
+					int nbUriSchemes = DatabaseCreator1.NbElements["uriSchemes"][size];
+					UriSchemeEntity[] uriSchemes = DataContextHelper.CreateUriSchemes (dataContext, nbUriSchemes);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignRoles (uriContacts, contactRoles);
-				dataContext.SaveChanges ();
+					int nbUriContacts = DatabaseCreator1.NbElements["uriContacts"][size];
+					UriContactEntity[] uriContacts = DataContextHelper.CreateUriContacts (dataContext, uriSchemes, nbUriContacts);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignComments (uriContacts, uriComments);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignRoles (uriContacts, contactRoles);
+					dataContext.SaveChanges ();
 
-				int nbTelecomComments = DatabaseCreator1.NbElements["telecomComments"][size];
-				CommentEntity[] telecomComments = DataContextHelper.CreateComments (dataContext, nbTelecomComments);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignComments (uriContacts, uriComments);
+					dataContext.SaveChanges ();
 
-				int nbTelecomTypes = DatabaseCreator1.NbElements["telecomTypes"][size];
-				TelecomTypeEntity[] telecomTypes = DataContextHelper.CreateTelecomTypes (dataContext, nbTelecomTypes);
-				dataContext.SaveChanges ();
+					int nbTelecomComments = DatabaseCreator1.NbElements["telecomComments"][size];
+					CommentEntity[] telecomComments = DataContextHelper.CreateComments (dataContext, nbTelecomComments);
+					dataContext.SaveChanges ();
 
-				int nbTelecomContacts = DatabaseCreator1.NbElements["telecomContacts"][size];
-				TelecomContactEntity[] telecomContacts = DataContextHelper.CreateTelecomContacts (dataContext, telecomTypes, nbTelecomContacts);
-				dataContext.SaveChanges ();
+					int nbTelecomTypes = DatabaseCreator1.NbElements["telecomTypes"][size];
+					TelecomTypeEntity[] telecomTypes = DataContextHelper.CreateTelecomTypes (dataContext, nbTelecomTypes);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignRoles (telecomContacts, contactRoles);
-				dataContext.SaveChanges ();
+					int nbTelecomContacts = DatabaseCreator1.NbElements["telecomContacts"][size];
+					TelecomContactEntity[] telecomContacts = DataContextHelper.CreateTelecomContacts (dataContext, telecomTypes, nbTelecomContacts);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignComments (telecomContacts, telecomComments);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignRoles (telecomContacts, contactRoles);
+					dataContext.SaveChanges ();
 
-				int nbMailComments = DatabaseCreator1.NbElements["mailComments"][size];
-				CommentEntity[] mailComments = DataContextHelper.CreateComments (dataContext, nbMailComments);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignComments (telecomContacts, telecomComments);
+					dataContext.SaveChanges ();
 
-				int nbCountries = DatabaseCreator1.NbElements["countries"][size];
-				CountryEntity[] countries = DataContextHelper.CreateCountries (dataContext, nbCountries);
-				dataContext.SaveChanges ();
+					int nbMailComments = DatabaseCreator1.NbElements["mailComments"][size];
+					CommentEntity[] mailComments = DataContextHelper.CreateComments (dataContext, nbMailComments);
+					dataContext.SaveChanges ();
 
-				int nbRegions = DatabaseCreator1.NbElements["regions"][size];
-				RegionEntity[] regions = DataContextHelper.CreateRegions (dataContext, countries, nbRegions);
-				dataContext.SaveChanges ();
+					int nbCountries = DatabaseCreator1.NbElements["countries"][size];
+					CountryEntity[] countries = DataContextHelper.CreateCountries (dataContext, nbCountries);
+					dataContext.SaveChanges ();
 
-				int nbLocations = DatabaseCreator1.NbElements["locations"][size];
-				LocationEntity[] locations = DataContextHelper.CreateLocations (dataContext, regions, nbLocations);
-				dataContext.SaveChanges ();
+					int nbRegions = DatabaseCreator1.NbElements["regions"][size];
+					RegionEntity[] regions = DataContextHelper.CreateRegions (dataContext, countries, nbRegions);
+					dataContext.SaveChanges ();
 
-				int nbStreets = DatabaseCreator1.NbElements["streets"][size];
-				StreetEntity[] streets = DataContextHelper.CreateStreets (dataContext, nbStreets);
-				dataContext.SaveChanges ();
+					int nbLocations = DatabaseCreator1.NbElements["locations"][size];
+					LocationEntity[] locations = DataContextHelper.CreateLocations (dataContext, regions, nbLocations);
+					dataContext.SaveChanges ();
 
-				int nbPostBoxes = DatabaseCreator1.NbElements["postBoxes"][size];
-				PostBoxEntity[] postBoxes = DataContextHelper.CreatePostBoxes (dataContext, nbPostBoxes);
-				dataContext.SaveChanges ();
+					int nbStreets = DatabaseCreator1.NbElements["streets"][size];
+					StreetEntity[] streets = DataContextHelper.CreateStreets (dataContext, nbStreets);
+					dataContext.SaveChanges ();
 
-				int nbAddresses = DatabaseCreator1.NbElements["addresses"][size];
-				AddressEntity[] addresses = DataContextHelper.CreateAddresses (dataContext, streets, postBoxes, locations, nbAddresses);
-				dataContext.SaveChanges ();
+					int nbPostBoxes = DatabaseCreator1.NbElements["postBoxes"][size];
+					PostBoxEntity[] postBoxes = DataContextHelper.CreatePostBoxes (dataContext, nbPostBoxes);
+					dataContext.SaveChanges ();
 
-				int nbMailContacts = DatabaseCreator1.NbElements["mailContacts"][size];
-				MailContactEntity[] mailContacts = DataContextHelper.CreateMailContact (dataContext, addresses, nbMailContacts);
-				dataContext.SaveChanges ();
+					int nbAddresses = DatabaseCreator1.NbElements["addresses"][size];
+					AddressEntity[] addresses = DataContextHelper.CreateAddresses (dataContext, streets, postBoxes, locations, nbAddresses);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignRoles (mailContacts, contactRoles);
-				dataContext.SaveChanges ();
+					int nbMailContacts = DatabaseCreator1.NbElements["mailContacts"][size];
+					MailContactEntity[] mailContacts = DataContextHelper.CreateMailContact (dataContext, addresses, nbMailContacts);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignComments (mailContacts, mailComments);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignRoles (mailContacts, contactRoles);
+					dataContext.SaveChanges ();
 
-				int nbLanguages = DatabaseCreator1.NbElements["languages"][size];
-				LanguageEntity[] languages = DataContextHelper.CreateLanguages (dataContext, nbLanguages);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignComments (mailContacts, mailComments);
+					dataContext.SaveChanges ();
 
-				int nbTitles = DatabaseCreator1.NbElements["titles"][size];
-				PersonTitleEntity[] titles = DataContextHelper.CreatePersonTitles (dataContext, nbTitles);
-				dataContext.SaveChanges ();
+					int nbLanguages = DatabaseCreator1.NbElements["languages"][size];
+					LanguageEntity[] languages = DataContextHelper.CreateLanguages (dataContext, nbLanguages);
+					dataContext.SaveChanges ();
 
-				int nbGenders = DatabaseCreator1.NbElements["genders"][size];
-				PersonGenderEntity[] genders = DataContextHelper.CreatePersonGenders (dataContext, nbGenders);
-				dataContext.SaveChanges ();
+					int nbTitles = DatabaseCreator1.NbElements["titles"][size];
+					PersonTitleEntity[] titles = DataContextHelper.CreatePersonTitles (dataContext, nbTitles);
+					dataContext.SaveChanges ();
 
-				int nbLegalPersonTypes = DatabaseCreator1.NbElements["legalPersonTypes"][size];
-				LegalPersonTypeEntity[] legalPersonTypes = DataContextHelper.CreateLegalPersonTypes (dataContext, nbLegalPersonTypes);
-				dataContext.SaveChanges ();
+					int nbGenders = DatabaseCreator1.NbElements["genders"][size];
+					PersonGenderEntity[] genders = DataContextHelper.CreatePersonGenders (dataContext, nbGenders);
+					dataContext.SaveChanges ();
 
-				int nbNaturalPersons = DatabaseCreator1.NbElements["naturalPersons"][size];
-				NaturalPersonEntity[] naturalPersons = DataContextHelper.CreateNaturalPersons (dataContext, languages, titles, genders, nbNaturalPersons);
-				dataContext.SaveChanges ();
+					int nbLegalPersonTypes = DatabaseCreator1.NbElements["legalPersonTypes"][size];
+					LegalPersonTypeEntity[] legalPersonTypes = DataContextHelper.CreateLegalPersonTypes (dataContext, nbLegalPersonTypes);
+					dataContext.SaveChanges ();
 
-				int nbLegalPersons = DatabaseCreator1.NbElements["legalPersons"][size];
-				LegalPersonEntity[] legalPersons = DataContextHelper.CreateLegalPersons (dataContext, languages, legalPersonTypes, nbLegalPersons);
-				dataContext.SaveChanges ();
+					int nbNaturalPersons = DatabaseCreator1.NbElements["naturalPersons"][size];
+					NaturalPersonEntity[] naturalPersons = DataContextHelper.CreateNaturalPersons (dataContext, languages, titles, genders, nbNaturalPersons);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignContacts (uriContacts, naturalPersons, legalPersons);
-				dataContext.SaveChanges ();
+					int nbLegalPersons = DatabaseCreator1.NbElements["legalPersons"][size];
+					LegalPersonEntity[] legalPersons = DataContextHelper.CreateLegalPersons (dataContext, languages, legalPersonTypes, nbLegalPersons);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignContacts (telecomContacts, naturalPersons, legalPersons);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignContacts (uriContacts, naturalPersons, legalPersons);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignContacts (mailContacts, naturalPersons, legalPersons);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignContacts (telecomContacts, naturalPersons, legalPersons);
+					dataContext.SaveChanges ();
 
-				DataContextHelper.AssignParents (legalPersons);
-				dataContext.SaveChanges ();
+					DataContextHelper.AssignContacts (mailContacts, naturalPersons, legalPersons);
+					dataContext.SaveChanges ();
+
+					DataContextHelper.AssignParents (legalPersons);
+					dataContext.SaveChanges ();
+				}
 			}
 		}
 

@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			DbKey key = new DbKey (new DbId (1000000001));
 					
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (key);
 					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (key);
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext2.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (key);
 
@@ -72,10 +72,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			DbKey keycontact = new DbKey (new DbId (1000000004));
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (keyPerson);
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					// Marc
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (keycontact);
@@ -122,10 +122,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			DbKey keyPerson = new DbKey (new DbId (1000000003));
 			DbKey keycontact = new DbKey (new DbId (1000000001));
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					AbstractContactEntity contact1 = dataContext1.ResolveEntity<AbstractContactEntity> (keycontact);
 					AbstractContactEntity contact2 = dataContext2.ResolveEntity<AbstractContactEntity> (keycontact);
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					// Marc
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					AbstractContactEntity contact = dataContext.ResolveEntity<AbstractContactEntity> (keycontact);
@@ -173,10 +173,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			DbKey keycontactB = new DbKey (new DbId (1000000002));
 			DbKey keycontactC = new DbKey (new DbId (1000000003));
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					AbstractContactEntity contactA1 = dataContext1.ResolveEntity<AbstractContactEntity> (keycontactA);
 					AbstractContactEntity contactA2 = dataContext2.ResolveEntity<AbstractContactEntity> (keycontactA);
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					// Marc
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					AbstractContactEntity contactA = dataContext.ResolveEntity<AbstractContactEntity> (keycontactA);
@@ -230,10 +230,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (keyPerson);
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					dataContext2.SaveChanges ();
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (keyPerson);
 
@@ -264,10 +264,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			DbKey keyTitle = new DbKey (new DbId (1000000001));
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (keyPerson);
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					// Marc
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (keyPerson);
 
@@ -308,10 +308,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			DbKey keyContact = new DbKey (new DbId (1000000004));
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (keyPerson);
 					NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (keyPerson);
@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					// Marc
 				}
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (keyPerson);
 

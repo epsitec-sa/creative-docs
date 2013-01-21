@@ -39,9 +39,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
-					() => new EntityModificationLog (dbinfrastructure, null)
+					() => new EntityModificationLog (dbInfrastructure, null)
 				);
 			}
 		}
@@ -59,11 +59,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateEntryArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityModificationLog log = new EntityModificationLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityModificationLog log = new EntityModificationLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -76,11 +76,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetEntryArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityModificationLog log = new EntityModificationLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityModificationLog log = new EntityModificationLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -93,11 +93,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void DeleteEntryArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityModificationLog log = new EntityModificationLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityModificationLog log = new EntityModificationLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -110,11 +110,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void DoesEntryExistsArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityModificationLog log = new EntityModificationLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityModificationLog log = new EntityModificationLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -127,11 +127,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateExistsGetDeleteLogEntry()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityModificationLog log = new EntityModificationLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityModificationLog log = new EntityModificationLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				foreach (DbId dbId in this.GetDbIdSamples ())
 				{
@@ -159,11 +159,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetLatestLogEntry()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				EntityModificationLog log = new EntityModificationLog (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				EntityModificationLog log = new EntityModificationLog (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				List<DbId> sampleIds = this.GetDbIdSamples ().ToList ();
 

@@ -41,14 +41,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				TestHelper.WriteStartTest ("Database creation", UnitTestPerformance.logFile);
 
-				DbInfrastructureHelper.ResetTestDatabase ();
-
-				TestHelper.MeasureAndWriteTime (
-					"database population".PadRight (40),
-					UnitTestPerformance.logFile,
-					() => DatabaseCreator1.PopulateDatabase (UnitTestPerformance.databaseSize),
-					1
-				);
+				using (var dbInfrastructure = DbInfrastructureHelper.ResetTestDatabase ())
+				{
+					TestHelper.MeasureAndWriteTime (
+						"database population".PadRight (40),
+						UnitTestPerformance.logFile,
+						() => DatabaseCreator1.PopulateDatabase (dbInfrastructure, UnitTestPerformance.databaseSize),
+						1
+					);
+				}
 			}
 			else
 			{
@@ -503,8 +504,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				UnitTestPerformance.logFile,
 				() =>
 				{					
-					using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+					using (DB db = DB.ConnectToTestDatabase ())
+					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 					{
 						action (dataContext);
 					}
@@ -516,14 +517,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ExecuteWarmupLevel2(string title, System.Action<DataContext> action, int nbRuns)
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				TestHelper.MeasureAndWriteTime (
 					title,
 					UnitTestPerformance.logFile,
 					() =>
 					{
-						using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+						using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 						{
 							action (dataContext);
 						}
@@ -536,8 +537,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ExecuteWarmupLevel3(string title, System.Action<DataContext> action, int nbRun)
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				action (dataContext);
 

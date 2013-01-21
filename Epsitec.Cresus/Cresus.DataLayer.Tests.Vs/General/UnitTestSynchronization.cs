@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestUpdateValue()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestUpdateReference()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestUpdateCollection()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestDeleteEntityReference()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestDeleteEntityCollection()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestRemoveValue()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -309,7 +309,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestRemoveReference()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -317,7 +317,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -350,7 +350,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestRemoveCollectionItem()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestRemoveAllCollectionItems()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -432,7 +432,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestUpdateReferenceWithNewEntity()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -476,7 +476,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void TestUpdateCollectionWithNewEntity()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -484,7 +484,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}
@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void DeleteEntity()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
 
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				for (int i = 0; i < nbDataContexts; i++)
 				{
-					DataContext dataContext = dataInfrastructure.CreateDataContext ();
+					DataContext dataContext = db.DataInfrastructure.CreateDataContext ();
 
 					dataContexts.Add (dataContext);
 				}

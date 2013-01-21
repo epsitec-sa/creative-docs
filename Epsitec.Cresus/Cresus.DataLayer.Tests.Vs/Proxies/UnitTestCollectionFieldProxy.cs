@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void CollectionFieldProxyConstructorTest()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid fieldId = Druid.Parse ("[J1AC1]");
@@ -60,10 +60,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void CollectionFieldProxyConstructorArgumentCheck()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity person = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					Druid fieldId = Druid.Parse ("[J1AC1]");
@@ -106,8 +106,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void DiscardWriteEntityValueTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid fieldId = Druid.Parse ("[J1AC1]");
@@ -124,8 +124,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void GetReadEntityValueTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				IList contacts1 = person.Contacts as IList;
@@ -148,8 +148,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void GetWriteEntityValueTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid fieldId = Druid.Parse ("[J1AC1]");
@@ -165,8 +165,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void PromoteToRealInstanceTest1()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				IList contacts1 = person.Contacts as IList;
@@ -185,8 +185,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void PromoteToRealInstanceTest2()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 				Druid fieldId = Druid.Parse ("[J1AC1]");
@@ -203,10 +203,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		[TestMethod]
 		public void PromoteToRealInstanceTest3()
 		{
-			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2))
+			using (DB db1 = DB.ConnectToTestDatabase ())
+			using (DB db2 = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
 			{
 				NaturalPersonEntity person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity person2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));

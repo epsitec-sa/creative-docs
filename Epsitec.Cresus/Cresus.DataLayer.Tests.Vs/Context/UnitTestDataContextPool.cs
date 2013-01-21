@@ -45,20 +45,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
 		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
 				foreach (DataContext dataContext in dataContexts)
@@ -94,34 +94,34 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
 				List<DataContext> dataContexts2 = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
 				foreach (DataContext dataContext in dataContexts1)
@@ -165,22 +165,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void GetEnumeratorTest1()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
 				foreach (DataContext dataContext in dataContexts1)
@@ -210,22 +210,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEnumeratorTest2()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts1 = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
 				foreach (DataContext dataContext in dataContexts1)
@@ -263,25 +263,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void FindDataContextTest1()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
-				DataContext dataContext11 = dataInfrastructure.CreateDataContext ();
+				DataContext dataContext11 = db.DataInfrastructure.CreateDataContext ();
 
 				foreach (DataContext dataContext in dataContexts)
 				{
@@ -309,25 +309,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void FindEntityKeyTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
-				DataContext dataContext11 = dataInfrastructure.CreateDataContext ();
+				DataContext dataContext11 = db.DataInfrastructure.CreateDataContext ();
 
 				foreach (DataContext dataContext in dataContexts)
 				{
@@ -361,22 +361,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void RemoveTest()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
 
 				List<DataContext> dataContexts = new List<DataContext> ()
 				{
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
-					dataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
+					db.DataInfrastructure.CreateDataContext (),
 				};
 
 				foreach (DataContext dataContext in dataContexts)
@@ -426,13 +426,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		public void AreEqualDatabaseInstancesTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
 
-				DataContext dataContext1 = dataInfrastructure.CreateDataContext ();
-				DataContext dataContext2 = dataInfrastructure.CreateDataContext ();
-				DataContext dataContext3 = dataInfrastructure.CreateDataContext ();
+				DataContext dataContext1 = db.DataInfrastructure.CreateDataContext ();
+				DataContext dataContext2 = db.DataInfrastructure.CreateDataContext ();
+				DataContext dataContext3 = db.DataInfrastructure.CreateDataContext ();
 
 				dataContextPool.Add (dataContext1);
 				dataContextPool.Add (dataContext2);

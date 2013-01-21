@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void EntitySerializationManagerConstructorTest()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				new EntitySerializationManager (dataContext);
 			}
@@ -64,8 +64,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void SerializeArgumentCheck()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -78,8 +78,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void DeserializeArgumentCheck()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
@@ -102,8 +102,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void SerializeAndDeserialize()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				EntitySerializationManager serializer = new EntitySerializationManager (dataContext);
 
@@ -121,8 +121,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 		[TestMethod]
 		public void Deserialize()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 

@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void LockTransactionConstructorArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				LockManager manager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager manager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				List<string> lockNames = new List<string> ()
                 {
@@ -96,12 +96,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void StateMachine1()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");
@@ -157,12 +157,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void StateMachine2()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c = connectionManager.OpenConnection ("c");
 
@@ -213,12 +213,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void SimpleCase()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");
@@ -253,12 +253,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ComplexeCase()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");
@@ -309,12 +309,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ReEntrency1()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");
@@ -346,12 +346,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ReEntrency2()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");
@@ -383,12 +383,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetLockOwnersTest()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");
@@ -429,12 +429,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void DisposeTest()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				ConnectionManager connectionManager = new ConnectionManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
-				LockManager lockManager = new LockManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				ConnectionManager connectionManager = new ConnectionManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
+				LockManager lockManager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				Connection c1 = connectionManager.OpenConnection ("c1");
 				Connection c2 = connectionManager.OpenConnection ("c2");

@@ -98,7 +98,7 @@
     <Compile Include="Context\UnitTestDataContextPool.cs" />
     <Compile Include="Context\UnitTestEntityCache.cs" />
     <Compile Include="Context\UnitTestEntityKey.cs" />
-    <Compile Include="Helpers\DataInfrastructureHelper.cs" />
+    <Compile Include="Helpers\DB.cs" />
     <Compile Include="Helpers\DbInfrastructureHelper.cs" />
     <Compile Include="Helpers\EntityEngineHelper.cs" />
     <Compile Include="ImportExport\UnitTestRawEntitySerializer.cs" />

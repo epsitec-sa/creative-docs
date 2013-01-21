@@ -37,11 +37,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void CreateUidGeneratorArgumentCheck()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				UidManager manager = new UidManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				UidManager manager = new UidManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 				
 				string name = "test";
 				List<UidSlot> slots = new List<UidSlot> ()
@@ -106,11 +106,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				UidManager manager = new UidManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				UidManager manager = new UidManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				string name = "myCounter";
 
@@ -131,11 +131,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetNextUidTest1()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				UidManager manager = new UidManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				UidManager manager = new UidManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				string name = "myCounter";
 
@@ -161,11 +161,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		[TestMethod]
 		public void GetNextUidTest2()
 		{
-			using (DbInfrastructure dbinfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
-				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase ();
+				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
-				UidManager manager = new UidManager (dbinfrastructure, entityEngine.ServiceSchemaEngine);
+				UidManager manager = new UidManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				string name = "myCounter";
 

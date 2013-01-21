@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextEntities1()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly:true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly:true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -60,9 +60,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextEntities2()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -76,8 +76,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions1()
 		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				ExceptionAssert.Throw<ReadOnlyException>
 				(
@@ -105,8 +105,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions2()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -131,9 +131,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions3()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -148,8 +148,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions4()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity albert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -183,9 +183,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ValueSynchronizationBackDoor()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -212,9 +212,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReferenceSynchronizationBackDoor()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -244,9 +244,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void CollectionSynchronizationBackDoor()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -292,9 +292,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void DeleteSynchronizationBackDoor()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -330,8 +330,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void DeletePropagationBackDoor()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure, readOnly: false))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				AbstractContactEntity contact = alfred.Contacts[0];
@@ -357,10 +357,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		[TestMethod]
 		public void ReloadBackDoor()
 		{
-			using (DataInfrastructure dataInfrastructure1 = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataInfrastructure dataInfrastructure2 = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure1, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure2, readOnly: true))
+			using (DB db1 = DB.ConnectToTestDatabase ())
+			using (DB db2 = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, readOnly: false))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));

@@ -176,8 +176,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 				
-				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DB db = DB.ConnectToTestDatabase ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					this.ThreadInsertionLoop (dataContext, startIndex, nbInsertions);
 				}
@@ -232,8 +232,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 				
-				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DB db = DB.ConnectToTestDatabase ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					this.ThreadCheckLoop (nbInsertions, startIndex, dataContext);
 				}
@@ -270,8 +270,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			int nbTotalInsertions = nbThreads * nbInsertions;
 		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				List<NaturalPersonEntity> persons = new List<NaturalPersonEntity> ();
 
@@ -306,8 +306,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ConflictingValueUpdateSetup()
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -324,8 +324,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 				
-				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DB db = DB.ConnectToTestDatabase ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					this.ThreadConflictingValueUpdatesLoop (nbInsertions, startIndex, dataContext);
 				}
@@ -377,8 +377,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ConflictingReferenceUpdateSetup()
 		{			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 				PersonGenderEntity gender1 = dataContext.CreateEntity<PersonGenderEntity> ();
@@ -395,8 +395,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 			
-				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DB db = DB.ConnectToTestDatabase ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					this.ThreadConflictingReferenceUpdatesLoop (nbInsertions, startIndex, dataContext);
 				}
@@ -464,8 +464,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ConflictingCollectionUpdateSetup(int nbContacts)
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.CreateEntity<NaturalPersonEntity> ();
 
@@ -485,8 +485,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 			
-				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DB db = DB.ConnectToTestDatabase ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					this.ThreadConflictingCollectionUpdatesLoop (nbInsertions, startIndex, dataContext, nbContacts, nbContactsToUse);
 				}
@@ -531,8 +531,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void CheckConflictingCollectionUpdates(int nbContactsToUse)
 		{		
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -565,7 +565,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ConflictingSetup()
 		{
-			DatabaseCreator1.PopulateDatabase (DatabaseSize.Small);
+			using (var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DatabaseCreator1.PopulateDatabase (dbInfrastructure, DatabaseSize.Small);
+			}
 		}
 
 
@@ -575,8 +578,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				int startIndex = threadNumber * nbInsertions;
 				
-				using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DB db = DB.ConnectToTestDatabase ())
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					this.ThreadConflictingLoop (nbInsertions, startIndex, dataContext);
 				}

@@ -45,8 +45,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = dataInfrastructure.CreateDataContext (true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = db.DataInfrastructure.CreateDataContext (true))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -68,11 +68,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				ImportExportManager.Import (file, dataInfrastructure);
+				ImportExportManager.Import (file, db.DataInfrastructure);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = dataInfrastructure.CreateDataContext(true))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = db.DataInfrastructure.CreateDataContext (true))
 			{
 				NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				UriContactEntity contact = dataContext.CreateEntity<UriContactEntity> ();
@@ -113,11 +113,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				ImportExportManager.Import (file, dataInfrastructure);
+				ImportExportManager.Import (file, db.DataInfrastructure);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -152,8 +152,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				List<AbstractEntity> entities = new List<AbstractEntity> ()
 				{
@@ -165,11 +165,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
 
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				ImportExportManager.Import (file, dataInfrastructure);
+				ImportExportManager.Import (file, db.DataInfrastructure);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -202,8 +202,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		{
 			FileInfo file = new FileInfo ("test.xml");
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				List<AbstractEntity> entities = new List<AbstractEntity> ()
 				{
@@ -215,11 +215,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
 			
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				ImportExportManager.Import (file, dataInfrastructure);
+				ImportExportManager.Import (file, db.DataInfrastructure);
 
-				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
