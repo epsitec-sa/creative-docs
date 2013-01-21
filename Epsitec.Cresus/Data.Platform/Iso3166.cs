@@ -71,7 +71,7 @@ namespace Epsitec.Data.Platform
 
 		public static string GetCountryKey(string code, string language)
 		{
-			return string.Concat (code, "-", language);
+			return string.Concat (code.ToUpperInvariant (), "-", language.ToLowerInvariant ());
 		}
 
 		
