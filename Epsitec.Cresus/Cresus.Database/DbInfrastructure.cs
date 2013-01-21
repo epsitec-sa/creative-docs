@@ -2587,6 +2587,8 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
 			query.Fields.Add ("C_TARGET", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefTarget));
 
+			query.OrderBy.Add ("C_ID", SqlField.CreateName ("T_COLUMN", Tags.ColumnId), SqlSortOrder.Ascending);
+
 			//	Tables to query :
 
 			query.Tables.Add ("T_TABLE", SqlField.CreateName (Tags.TableTableDef));
