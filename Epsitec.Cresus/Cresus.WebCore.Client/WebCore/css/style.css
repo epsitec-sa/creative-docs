@@ -89,3 +89,12 @@ html, body {
   width: 16px;
   background-image: url('../images/Static/sort-descending.png') !important;
 }
+
+input[readonly] {
+	background-color:#EEEEEE;
+	color:#444444;
+}
+
+.x-form-text, textarea.x-form-field {
+	background-image: none;
+}
