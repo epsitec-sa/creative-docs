@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle ("Epsitec.Common")]
 [assembly: AssemblyDescription ("Common Library for the Epsitec Framework")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2012, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2013, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
 
 [assembly: NamespaceShortcut ("Epsitec.Common.Types",   "ComTyp")]
 [assembly: NamespaceShortcut ("Epsitec.Common.Support", "ComSup")]
