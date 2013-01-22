@@ -90,4 +90,5 @@
   <data id="AO">&lt;s:data id="_0" f:Labels="{Collection {Text 'Virtual field'}}" /&gt;</data>
   <data id="AQ">&lt;s:data id="_0" f:Labels="{Collection {Text 'Collation a=à'}}" /&gt;</data>
   <data id="AP">&lt;s:data id="_0" f:Labels="{Collection {Text 'Collation a=A'}}" /&gt;</data>
+  <data id="G002">&lt;s:data id="_0" f:Labels="{Collection {Text 'Delayed loading'}}" /&gt;</data>
 </bundle>
