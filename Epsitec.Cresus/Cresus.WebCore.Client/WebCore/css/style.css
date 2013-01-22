@@ -90,7 +90,7 @@ html, body {
   background-image: url('../images/Static/sort-descending.png') !important;
 }
 
-input[readonly] {
+input[readonly], textarea[readonly] {
 	background-color:#EEEEEE;
 	color:#444444;
 }
