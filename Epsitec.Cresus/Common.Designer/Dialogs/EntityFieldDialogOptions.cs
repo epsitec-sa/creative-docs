@@ -23,6 +23,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.IsIndexDescending = options.HasFlag (FieldOptions.IndexDescending);
 			this.IsCaseInsensitive = options.HasFlag (FieldOptions.CollationCaseInsensitive);
 			this.IsAccentInsensitive = options.HasFlag (FieldOptions.CollationAccentInsensitive);
+			this.IsDisablePrefetch = options.HasFlag (FieldOptions.DisablePrefetch);
 		}
 
 		public bool								IsNullable
@@ -61,6 +62,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			set;
 		}
 		public bool								IsAccentInsensitive
+		{
+			get;
+			set;
+		}
+		public bool								IsDisablePrefetch
 		{
 			get;
 			set;
@@ -129,6 +135,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			else
 			{
 				initialValue &= ~FieldOptions.CollationCaseInsensitive;
+			}
+
+			if (this.IsDisablePrefetch)
+			{
+				initialValue |= FieldOptions.DisablePrefetch;
+			}
+			else
+			{
+				initialValue &= ~FieldOptions.DisablePrefetch;
 			}
 
 			return initialValue;

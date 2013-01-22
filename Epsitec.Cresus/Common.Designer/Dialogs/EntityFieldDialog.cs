@@ -219,6 +219,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsAccentInsensitive.Clicked += this.HandleRadioClicked;
 				this.buttonIsAccentInsensitive.TabIndex = tabIndex++;
 
+				this.buttonIsDisablePrefetch = new CheckButton (leftFooter);
+				this.buttonIsDisablePrefetch.AutoToggle = false;
+				this.buttonIsDisablePrefetch.Text = "Désactive <i>prefetch</i> auto";
+				this.buttonIsDisablePrefetch.PreferredWidth = 140;
+				this.buttonIsDisablePrefetch.Margins = new Margins (0, 0, 0, 4);
+				this.buttonIsDisablePrefetch.Dock = DockStyle.Top;
+				this.buttonIsDisablePrefetch.TabIndex = tabIndex++;
+				this.buttonIsDisablePrefetch.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsDisablePrefetch.Clicked += this.HandleRadioClicked;
+				this.buttonIsDisablePrefetch.TabIndex = tabIndex++;
+
 				this.buttonIndexAscending = new CheckButton (leftFooter);
 				this.buttonIndexAscending.AutoToggle = false;
 				this.buttonIndexAscending.Text = "Index ascendant";
@@ -630,6 +641,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonIsVirtual.ActiveState = this.options.IsVirtual ? ActiveState.Yes : ActiveState.No;
 			this.buttonIsCaseInsensitive.ActiveState = this.options.IsCaseInsensitive ? ActiveState.Yes : ActiveState.No;
 			this.buttonIsAccentInsensitive.ActiveState = this.options.IsAccentInsensitive ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsDisablePrefetch.ActiveState = this.options.IsDisablePrefetch ? ActiveState.Yes : ActiveState.No;
 			this.buttonIndexAscending.ActiveState = this.options.IsIndexAscending ? ActiveState.Yes : ActiveState.No;
 			this.buttonIndexDescending.ActiveState = this.options.IsIndexDescending ? ActiveState.Yes : ActiveState.No;
 			this.buttonIsReference.ActiveState = this.options.IsCollection ? ActiveState.No : ActiveState.Yes;
@@ -756,6 +768,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (button == this.buttonIsAccentInsensitive)
 			{
 				this.options.IsAccentInsensitive = !this.options.IsAccentInsensitive;
+				this.UpdateRadios ();
+				this.UpdateRelationSample ();
+			}
+
+			if (button == this.buttonIsDisablePrefetch)
+			{
+				this.options.IsDisablePrefetch = !this.options.IsDisablePrefetch;
 				this.UpdateRadios ();
 				this.UpdateRelationSample ();
 			}
@@ -911,6 +930,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private CheckButton						buttonIsVirtual;
 		private CheckButton						buttonIsCaseInsensitive;
 		private CheckButton						buttonIsAccentInsensitive;
+		private CheckButton						buttonIsDisablePrefetch;
 		private CheckButton						buttonIndexAscending;
 		private CheckButton						buttonIndexDescending;
 		private RadioButton						buttonIsReference;
