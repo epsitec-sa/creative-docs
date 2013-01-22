@@ -221,7 +221,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonIsDisablePrefetch = new CheckButton (leftFooter);
 				this.buttonIsDisablePrefetch.AutoToggle = false;
-				this.buttonIsDisablePrefetch.Text = "Désactive <i>prefetch</i> auto";
+				this.buttonIsDisablePrefetch.Text = "Chargement différé";
 				this.buttonIsDisablePrefetch.PreferredWidth = 140;
 				this.buttonIsDisablePrefetch.Margins = new Margins (0, 0, 0, 4);
 				this.buttonIsDisablePrefetch.Dock = DockStyle.Top;
