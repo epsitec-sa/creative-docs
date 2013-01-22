@@ -1,4 +1,4 @@
-//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -10,11 +10,11 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	[DesignerVisible]
 	[System.Flags]
-	public enum FieldOptions : byte
+	public enum FieldOptions : ushort
 	{
 		// NOTE This enumeration is used within StructuredTypeField where it can be serialized. The
 		// serialization process combines this value with other in a single integer in order to gain
-		// space. Currently, only the least significant byte of this value will be persisted because
+		// space. Currently, only the least significant 12 bits of this value will be persisted because
 		// of shifting and masking. If you ever increase the number of values of this enumeration in
 		// such a way that requires it to be a short or a bigger type, you must adapt the existing
 		// code in StructuredTypeField in order to ensure that all values can be persisted there.
@@ -62,5 +62,11 @@ namespace Epsitec.Common.Types
 		/// insensitive collation (i.e. "a" is equal to "à"/"ä"/...).
 		/// </summary>
 		CollationAccentInsensitive = 0x40,
+
+		/// <summary>
+		/// The field might contain large amounts of data and should not be prefetched
+		/// when a query does not explicitely require its value. This is useful for BLOBs.
+		/// </summary>
+		DisablePrefetch=0x80,
 	}
 }

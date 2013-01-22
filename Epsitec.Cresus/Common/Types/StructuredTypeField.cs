@@ -1,4 +1,4 @@
-//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -699,8 +699,8 @@ namespace Epsitec.Common.Types
 		const int								MembershipMask	= 0x03;		//	2-bit, offset 4
 		const int								SourceShift		= 6;		//	0x000003c0
 		const int								SourceMask		= 0x0f;		//	4-bit, offset 6
-		const int								OptionsShift	= 10;		//	0x0000fc00
-		const int								OptionsMask		= 0xff;		//	8-bit, offset 10
+		const int								OptionsShift	= 10;		//	0x000ffc00
+		const int								OptionsMask		= 0xfff;	//	12-bit, offset 10
 		
 		private readonly string					id;
 		protected INamedType					type;
