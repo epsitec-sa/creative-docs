@@ -34,7 +34,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestInitialize]
 		public void TestInitialize()
 		{
-			DbInfrastructureHelper.ResetTestDatabase ();
+			using (DbInfrastructureHelper.ResetTestDatabase ())
+			{
+			}
 		}
 
 
