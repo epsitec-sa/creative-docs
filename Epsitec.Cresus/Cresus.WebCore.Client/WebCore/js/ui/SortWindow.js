@@ -39,9 +39,9 @@ function() {
       newOptions = {
         items: [this.leftGrid, this.rightGrid],
         buttons: [
+          this.createOkButton(),
           this.createResetButton(),
           this.createCancelButton(),
-          this.createOkButton()
         ]
       };
       Ext.applyIf(newOptions, options);
