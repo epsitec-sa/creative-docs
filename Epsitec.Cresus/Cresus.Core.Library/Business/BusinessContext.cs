@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Core.Business
 			this.dataChangedCounter = new SafeCounter ();
 			this.lockMonitors       = new List<LockMonitor> ();
 
+			this.enableReload = enableReload;
+
 			this.data        = this.pool.Host;
 			this.dataContext = this.pool.CreateDataContext (this, enableReload);
 			
@@ -79,6 +81,14 @@ namespace Epsitec.Cresus.Core.Business
 			get
 			{
 				return this.dataContextDiscarded;
+			}
+		}
+
+		public bool								EnableReload
+		{
+			get
+			{
+				return this.enableReload;
 			}
 		}
 
@@ -1218,7 +1228,11 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
 
-			this.ReloadEntities ();
+			if (this.EnableReload)
+			{
+				this.ReloadEntities ();
+			}
+
 			this.NotifyExternalChanges ();
 		}
 
@@ -1258,6 +1272,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly Stack<DelayedUpdate>	delayedUpdates;
 		private readonly SafeCounter			dataChangedCounter;
 		private readonly List<LockMonitor>		lockMonitors;
+		private readonly bool					enableReload;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
