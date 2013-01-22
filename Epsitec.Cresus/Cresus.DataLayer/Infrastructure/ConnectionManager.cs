@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -25,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// A connection might be automatically closed by calls to the methodKillDeadConnections if
 	/// it has not given any sign of life with the KeepConnectionAlive method recently.
 	/// </summary>
-    internal sealed class ConnectionManager
+	internal sealed class ConnectionManager
 	{
 
 
@@ -308,7 +311,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private static readonly TableBuilder tableFactory = new TableBuilder ();
 
 
-        public class TableBuilder : ITableFactory
+		public class TableBuilder : ITableFactory
 		{
 
 

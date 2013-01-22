@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
@@ -96,7 +99,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		private static EntityColumnFilter ParseColumnSetFilter(BusinessContext businessContext, FieldType fieldType, Type valueType, object value)
 		{
 			var valueArray = (object[]) value;
-			var constants = valueArray.Select (v => FilterIO.ParseConstant (businessContext, fieldType, valueType, v));
+			var constants = valueArray.Select (v => FilterIO.ParseConstant (businessContext, fieldType, valueType, v, ColumnFilterComparisonCode.Undefined));
 
 			var filterExpression = new ColumnFilterSetExpression ()
 			{
@@ -115,7 +118,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		private static EntityColumnFilter ParseColumnComparisonFilter(BusinessContext businessContext, FieldType fieldType, Type valueType, string type, object comparator, object value)
 		{
 			var comparison = FilterIO.ParseComparison (type, comparator);
-			var constant = FilterIO.ParseConstant (businessContext, fieldType, valueType, value);
+			var constant = FilterIO.ParseConstant (businessContext, fieldType, valueType, value, comparison);
 
 			var filterExpression = new ColumnFilterComparisonExpression ()
 			{
@@ -131,7 +134,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		{
 			if (type == "string")
 			{
-				return ColumnFilterComparisonCode.LikeEscaped;
+				return ColumnFilterComparisonCode.StartsWithEscaped;
 			}
 
 			switch ((string) comparator)
@@ -150,7 +153,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		private static ColumnFilterConstant ParseConstant(BusinessContext businessContext, FieldType fieldType, Type valueType, object value)
+		private static ColumnFilterConstant ParseConstant(BusinessContext businessContext, FieldType fieldType, Type valueType, object value, ColumnFilterComparisonCode comparison)
 		{
 			var nancyValue = new DynamicDictionaryValue (value);
 			var entityValue = FieldIO.ConvertFromClient (businessContext, nancyValue, valueType, fieldType);
@@ -189,7 +192,25 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 				case FieldType.Text:
 					var pattern = Constant.Escape (FormattedText.CastToString (entityValue));
-					return ColumnFilterConstant.From ("%" + pattern + "%");
+
+					switch (comparison)
+					{
+						case ColumnFilterComparisonCode.Contains:
+						case ColumnFilterComparisonCode.ContainsEscaped:
+						case ColumnFilterComparisonCode.NotContains:
+						case ColumnFilterComparisonCode.NotContainsEscaped:
+							return ColumnFilterConstant.From ("%" + pattern + "%");
+
+						case ColumnFilterComparisonCode.StartsWith:
+						case ColumnFilterComparisonCode.StartsWithEscaped:
+						case ColumnFilterComparisonCode.NotStartsWith:
+						case ColumnFilterComparisonCode.NotStartsWithEscaped:
+							return ColumnFilterConstant.From (pattern + "%");
+
+						default:
+							return ColumnFilterConstant.From (pattern);
+					}
+
 
 				default:
 					throw new NotImplementedException ();

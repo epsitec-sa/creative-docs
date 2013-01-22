@@ -113,16 +113,20 @@ namespace Epsitec.Cresus.Core.Metadata
 				case ColumnFilterComparisonCode.LessThanOrEqual:
 					return Expression.LessThanOrEqual (Expression.Call (SqlMethods.CompareToMethodInfo, parameter, expression), zero);
 
-				case ColumnFilterComparisonCode.Like:
+				case ColumnFilterComparisonCode.Contains:
+				case ColumnFilterComparisonCode.StartsWith:
 					return Expression.Call (SqlMethods.LikeMethodInfo, parameter, expression);
 
-				case ColumnFilterComparisonCode.LikeEscaped:
+				case ColumnFilterComparisonCode.ContainsEscaped:
+				case ColumnFilterComparisonCode.StartsWithEscaped:
 					return Expression.Call (SqlMethods.EscapedLikeMethodInfo, parameter, expression);
 
-				case ColumnFilterComparisonCode.NotLike:
+				case ColumnFilterComparisonCode.NotContains:
+				case ColumnFilterComparisonCode.NotStartsWith:
 					return Expression.Not (Expression.Call (SqlMethods.LikeMethodInfo, parameter, expression));
 
-				case ColumnFilterComparisonCode.NotLikeEscaped:
+				case ColumnFilterComparisonCode.NotContainsEscaped:
+				case ColumnFilterComparisonCode.NotStartsWithEscaped:
 					return Expression.Not (Expression.Call (SqlMethods.EscapedLikeMethodInfo, parameter, expression));
 
 				default:

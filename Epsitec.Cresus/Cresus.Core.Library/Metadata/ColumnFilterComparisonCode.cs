@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -16,9 +16,15 @@ namespace Epsitec.Cresus.Core.Metadata
 		GreaterThan,
 		LessThanOrEqual,
 		GreaterThanOrEqual,
-		Like,
-		LikeEscaped,
-		NotLike,
-		NotLikeEscaped
+		
+		Contains,								//	LIKE %x%
+		ContainsEscaped,
+		NotContains,
+		NotContainsEscaped,
+
+		StartsWith,								//	LIKE x%
+		StartsWithEscaped,
+		NotStartsWith,
+		NotStartsWithEscaped,
 	}
 }

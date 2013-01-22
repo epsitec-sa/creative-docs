@@ -24,11 +24,7 @@ AiderFunctionDef = [LVA7A]
 <meta>
   <T>
     <t eid="@AiderPerson" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAK2]" title="Prénom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
