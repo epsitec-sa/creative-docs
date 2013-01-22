@@ -77,10 +77,10 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		internal DataContext CreateDataContext(BusinessContext context)
+		internal DataContext CreateDataContext(BusinessContext context, bool enableReload)
 		{
 			string name = string.Format ("BusinessContext #{0}", context.UniqueId);
-			return this.Host.CreateDataContext (name);
+			return this.Host.CreateDataContext (name, enableReload);
 		}
 
 		internal void DisposeDataContext(BusinessContext context, DataContext dataContext)

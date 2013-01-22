@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public T Execute<T>(Func<BusinessContext, T> action)
 		{
-			using (var businessContext = new BusinessContext (this.CoreData))
+			using (var businessContext = new BusinessContext (this.CoreData, false))
 			{
 				try
 				{

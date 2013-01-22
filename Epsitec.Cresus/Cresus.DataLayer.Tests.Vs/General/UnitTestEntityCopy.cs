@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 				{
 					NaturalPersonEntity entity1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity entity2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void CopyToSelfTest()
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -96,8 +96,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 				{
 					NaturalPersonEntity entity1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity entity2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -124,8 +124,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
-				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
-				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 				{
 					foreach (AbstractEntity entity in this.GetSampleEntities (dataContext1))
 					{

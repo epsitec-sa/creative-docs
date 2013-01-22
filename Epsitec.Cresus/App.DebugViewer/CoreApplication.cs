@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DebugViewer
 			dialog.ShowDialog ();
 			System.Environment.Exit (0);
 
-			this.businessContext = new BusinessContext (this.Data);
+			this.businessContext = new BusinessContext (this.Data, true);
 
 			var window = this.Window;
 

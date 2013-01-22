@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void ReloadValueModifiedInMemory()
 		{			
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -68,8 +68,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void ReloadReferenceModifiedInMemory()
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				LanguageEntity french = dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
@@ -130,8 +130,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				LanguageEntity french1 = dataContext1.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000001)));
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void ReloadCollectionModifiedInMemory()
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				UriContactEntity contact1 = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
@@ -199,8 +199,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				UriContactEntity contact1A = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void ReloadEntityDeletedInMemory()
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -271,8 +271,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void ReloadNonPersistentEntities()
 		{		
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
 
 				NaturalPersonEntity albertLeVert = dataContext.CreateEntity<NaturalPersonEntity> ();
@@ -332,8 +332,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity gertrude2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
@@ -363,8 +363,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity gertrude2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));

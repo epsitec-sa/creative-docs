@@ -110,7 +110,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="infrastructure">The <see cref="DbInfrastructure"/> that will be used to talk to the database.</param>
 		/// <param name="enableNullVirtualization">Tells whether to enable the virtualization of null <see cref="AbstractEntity"/> or not.</param>
 		/// <param name="isReadOnly">Tells whether the new instance will contain only read only entities.</param>
-		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false, bool isReadOnly = false)
+		/// <param name="enableReload">Tells whether to enable the reload feature or not.</param>
+		internal DataContext(DataInfrastructure infrastructure, bool enableNullVirtualization = false, bool isReadOnly = false, bool enableReload = false)
 		{
 			this.uniqueId = System.Threading.Interlocked.Increment (ref DataContext.nextUniqueId);
 			this.DataInfrastructure = infrastructure;
@@ -122,6 +123,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.IsReadOnly = isReadOnly;
 			this.EnableNullVirtualization = enableNullVirtualization;
+			this.enableReload = enableReload;
 
 			this.entitiesCache = new EntityCache (this.TypeEngine);
 			this.emptyEntities = new HashSet<AbstractEntity> ();
@@ -272,6 +274,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			get;
 			private set;
+		}
+
+		/// <summary>
+		/// Tells whether the Reload() method can be called on this instance.
+		/// </summary>
+		/// <remarks>
+		/// The Reload() feature is expensive because it requires us to fetch more data when making
+		/// requests to get entity data from the database. In the worst case, it will double the
+		/// number of queries made. This is the reason there is a way to disable this feature.
+		/// </remarks>
+		public bool								EnableReload
+		{
+			get
+			{
+				return this.enableReload;
+			}
 		}
 
 		/// <summary>
@@ -990,9 +1008,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// won't be touched.
 		/// </summary>
 		/// <returns><c>true</c> if a modification occured, <c>false</c> if none occured.</returns>
+		/// <exception cref="System.InvalidOperation">If the reaload feature is disabled for this instance.</exception>
 		public bool Reload()
 		{
 			this.AssertDataContextIsNotDisposed ();
+
+			if (!this.EnableReload)
+			{
+				throw new System.InvalidOperationException ("Reload is not enabled");
+			}
 
 			bool changes;
 
@@ -1895,6 +1919,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="sender"/> is not in read only mode but <paramref name="receiver"/> is.</exception>
 		/// <exception cref="System.ObjectDisposedException">If <paramref name="sender"/> has been disposed.</exception>
 		/// <exception cref="System.ObjectDisposedException">If <paramref name="receiver"/> has been disposed.</exception>
+		/// <exception cref="System.InvalidOperationException">If <paramref name="sender"/> has the reload disabled and the <paramref name="receiver"/> has the reload enabled.</exception>
 		public static TEntity CopyEntity<TEntity>(DataContext sender, TEntity entity, DataContext receiver) where TEntity : AbstractEntity
 		{
 			sender.ThrowIfNull ("sender");
@@ -1906,6 +1931,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (!sender.IsReadOnly)
 			{
 				receiver.ThrowIfReadOnly ();
+			}
+
+			if (!sender.EnableReload && receiver.EnableReload)
+			{
+				var message = "Reload is enabled on the receiver but not on the sender.";
+
+				throw new System.InvalidOperationException (message);
 			}
 
 			if (sender == receiver)
@@ -1927,7 +1959,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				entityKey = sender.GetNormalizedEntityKey (entity).Value;
 				entityTypeId = entity.GetEntityStructuredTypeId ();
 
-				senderEntityLogId = sender.entitiesCache.GetLogId (entity).Value;
+				senderEntityLogId = sender.entitiesCache.GetLogId (entity) ?? 0;
 				data = sender.SerializationManager.Serialize (entity, senderEntityLogId);
 			}
 
@@ -1942,13 +1974,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				TEntity copiedEntity = (TEntity) receiver.DataLoader.DeserializeEntityData (data);
 
-				receiver.entitiesCache.DefineEntityModificationEntryId (copiedEntity, senderEntityLogId);
-
-				long? receiverLogId = receiver.entitiesCache.GetLogId (entityTypeId);
-
-				if (!receiverLogId.HasValue || receiverLogId.Value > senderEntityLogId)
+				if (receiver.EnableReload)
 				{
-					receiver.entitiesCache.DefineEntityModificationEntryId (entityTypeId, senderEntityLogId);
+					receiver.entitiesCache.DefineEntityModificationEntryId (copiedEntity, senderEntityLogId);
+
+					long? receiverLogId = receiver.entitiesCache.GetLogId (entityTypeId);
+
+					if (!receiverLogId.HasValue || receiverLogId.Value > senderEntityLogId)
+					{
+						receiver.entitiesCache.DefineEntityModificationEntryId (entityTypeId, senderEntityLogId);
+					}
 				}
 
 				return copiedEntity;
@@ -1966,6 +2001,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private static long							nextUniqueId;					//	next unique ID
 		private readonly long						uniqueId;						//	unique ID associated with this instance
 
+		private readonly bool						enableReload;
 
 		private readonly ReaderWriterLockSlim		dataContextLock;				//  lock used to access thread safe methods in the DataContext
 		private readonly System.TimeSpan			lockTimeOut;					//  maximum time that we can wait for locks.

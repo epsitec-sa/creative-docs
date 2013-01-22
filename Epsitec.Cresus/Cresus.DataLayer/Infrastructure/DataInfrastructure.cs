@@ -501,9 +501,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
-		public DataContext CreateDataContext(bool enableNullVirtualization = false, bool readOnly = false)
+		public DataContext CreateDataContext(bool enableNullVirtualization = false, bool readOnly = false, bool enableReload = false)
 		{
-			DataContext dataContext = new DataContext (this, enableNullVirtualization, readOnly);
+			DataContext dataContext = new DataContext (this, enableNullVirtualization, readOnly, enableReload);
 
 			this.dataContextPool.Add (dataContext);
 

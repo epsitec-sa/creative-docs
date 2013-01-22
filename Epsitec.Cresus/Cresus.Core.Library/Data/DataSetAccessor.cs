@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			this.data            = data;
 			this.dataSetMetadata = dataSetMetadata;
-			this.dataContext     = this.data.CreateIsolatedDataContext ("DataSetAccessor");
+			this.dataContext     = this.data.CreateIsolatedDataContext ("DataSetAccessor", false);
 
 			this.isolatedTransaction = isolatedTransaction;
 		}

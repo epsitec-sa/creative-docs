@@ -86,6 +86,14 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static bool						DisableUserManagerReload
+		{
+			get
+			{
+				return CoreContext.disableUserManagerReload;
+			}
+		}
+
 		public static T CreateApplication<T>()
 			where T : CoreApp
 		{
@@ -119,6 +127,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			CoreContext.startupCalled = true;
 			CoreContext.isServer      = true;
+			CoreContext.disableUserManagerReload = true;
 		}
 
 
@@ -544,6 +553,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static bool						isInteractive;
 		private static bool						isServer;
 		private static bool						enableSnapshotService;
+		private static bool						disableUserManagerReload;
 		
 		private static CoreDatabaseType			databaseType;
 		private static string					databaseName;

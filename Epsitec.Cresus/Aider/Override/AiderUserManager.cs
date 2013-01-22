@@ -14,8 +14,8 @@ namespace Epsitec.Aider.Override
 {
 	public sealed class AiderUserManager : UserManager
 	{
-		public AiderUserManager(CoreData data)
-			: base (data)
+		public AiderUserManager(CoreData data, bool enableReload)
+			: base (data, enableReload)
 		{
 		}
 

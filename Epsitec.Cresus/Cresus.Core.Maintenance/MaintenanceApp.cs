@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 		public MaintenanceApp()
 		{
 			this.coreData = this.GetComponent<CoreData> ();
-			this.businessContext = new BusinessContext (this.coreData);
+			this.businessContext = new BusinessContext (this.coreData, true);
 
 			Services.SetApplication (this);
 		}

@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Compta
 
 		private void InitializeApplication()
 		{
-			this.businessContext = new BusinessContext (this.Data);
+			this.businessContext = new BusinessContext (this.Data, true);
 			var compta = this.Data.GetRepository<ComptaEntity> ().GetAllEntities ().FirstOrDefault ();
 
 			var window = this.Window;

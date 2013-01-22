@@ -21,9 +21,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 	/// </summary>
 	public class UserManager : CoreDataComponent
 	{
-		protected UserManager(CoreData data)
+		protected UserManager(CoreData data, bool enableReload)
 			: base (data)
 		{
+			this.enableReload = enableReload;
 			this.sessions = new Dictionary<string, UserSession> ();
 		}
 
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				if (this.businessContext == null)
 				{
-					this.businessContext = new BusinessContext (this.Host);
+					this.businessContext = new BusinessContext (this.Host, this.enableReload);
 					this.businessContext.GlobalLock = GlobalLocks.UserManagement;
 				}
 
@@ -535,7 +536,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			public CoreDataComponent Create(CoreData data)
 			{
-				return CoreContext.New<UserManager> (data);
+				var enableReload = !CoreContext.DisableUserManagerReload;
+					
+				return CoreContext.New<UserManager> (data, enableReload);
 			}
 
 			public System.Type GetComponentType()
@@ -556,6 +559,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		private string							authenticatedUserCode;
 		private string							activeSessionId;
 		private BusinessContext					businessContext;
+		private readonly bool					enableReload;
 		private readonly Dictionary<string, UserSession>	sessions;
 	}
 }

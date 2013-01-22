@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				latestEntityModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
+				latestEntityModificationEntry = this.GetLatestEntityModificationEntry ();
 				entityData = this.LoaderQueryGenerator.GetEntitiesData (request);
 
 				dbTransaction.Commit ();
@@ -247,13 +247,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			entity.ThrowIfNull ("entity");
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
-			EntityData entityData;
 			EntityModificationEntry latestEntityModificationEntry;
+			EntityData entityData;
 			
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
+				latestEntityModificationEntry = this.GetLatestEntityModificationEntry ();
 				entityData = this.LoaderQueryGenerator.GetReferenceField (entity, fieldId);
-				latestEntityModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 				dbTransaction.Commit ();
 			}
@@ -285,20 +285,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			entity.ThrowIfNull ("entity");
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId cannot be empty");
 
+			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
-			EntityModificationEntry latestModificationEntry;
 			
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
+				latestEntityModificationEntry = this.GetLatestEntityModificationEntry ();
 				entityData = this.LoaderQueryGenerator.GetCollectionField (entity, fieldId);
-				latestModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 				dbTransaction.Commit ();
 			}
 			
 			var entities = entityData.Select (d => this.DeserializeEntityData (d)).ToList ();
 
-			this.AssignModificationEntryIds (latestModificationEntry, entities);
+			this.AssignModificationEntryIds (latestEntityModificationEntry, entities);
 
 			return entities;
 		}
@@ -406,6 +406,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return modifications;
 		}
 
+		private EntityModificationEntry GetLatestEntityModificationEntry()
+		{
+			return this.DataContext.EnableReload
+				? this.DataInfrastructure.GetLatestEntityModificationEntry ()
+				: null;
+		}
+
 		/// <summary>
 		/// Assigns the log ids to the entity types in the associated DataContext.
 		/// </summary>
@@ -413,6 +420,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="entities">The <see cref="AbstractEntity"/> for which to assign the new log ids.</param>
 		private void AssignModificationEntryIds(EntityModificationEntry entityModificationEntry, IEnumerable<AbstractEntity> entities)
 		{
+			if (!this.DataContext.EnableReload)
+			{
+				return;
+			}
+
 			var entityTypeIds = entities
 				.Select (e => e.GetEntityStructuredTypeId ())
 				.Distinct ()

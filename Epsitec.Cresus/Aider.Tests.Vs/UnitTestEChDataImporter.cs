@@ -92,7 +92,7 @@ namespace Aider.Tests.Vs
 
 		private void AddStuffToDatabase(CoreData coreData)
 		{
-			using (var businessContext = new BusinessContext (coreData))
+			using (var businessContext = new BusinessContext (coreData, false))
 			{
 				var countries = this.GenerateCountries (businessContext).ToList ();
 				var towns = this.GenerateTowns (businessContext, countries).ToList ();

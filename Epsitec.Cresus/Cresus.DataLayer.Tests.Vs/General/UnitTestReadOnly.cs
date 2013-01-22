@@ -359,8 +359,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			using (DB db1 = DB.ConnectToTestDatabase ())
 			using (DB db2 = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, readOnly: false))
-			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, readOnly: true))
+			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db1.DataInfrastructure, readOnly: false, enableReload: true))
+			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db2.DataInfrastructure, readOnly: true, enableReload: true))
 			{
 				NaturalPersonEntity alfred1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				NaturalPersonEntity alfred2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));

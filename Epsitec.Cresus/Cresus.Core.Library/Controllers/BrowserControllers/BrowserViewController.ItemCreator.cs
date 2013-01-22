@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 
 				CoreData        data    = this.orchestrator.Data;
-				BusinessContext context = new BusinessContext (data);
+				BusinessContext context = new BusinessContext (data, true);
 
 				//	Create a real entity which will immediately be persisted to the database,
 				//	so that it has an entity key. Saving an empty entity would do nothing, so

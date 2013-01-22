@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			var entityType		 = metadata.EntityTableMetadata.EntityType.Name;
 			var dataContextName	 = string.Format ("Browser.DataSet={0}", entityType);
-			this.dataContext     = this.data.CreateDataContext (dataContextName);
+			this.dataContext     = this.data.CreateDataContext (dataContextName, true);
 
 			this.suspendUpdates  = new SafeCounter ();
 			this.context         = new BrowserListContext ();

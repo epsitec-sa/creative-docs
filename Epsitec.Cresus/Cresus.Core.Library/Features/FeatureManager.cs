@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Features
 			{
 				if (this.businessContext == null)
 				{
-					this.businessContext = new BusinessContext (this.data);
+					this.businessContext = new BusinessContext (this.data, true);
 					this.businessContext.GlobalLock = GlobalLocks.FeatureManagement;
 				}
 

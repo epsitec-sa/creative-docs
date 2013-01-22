@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.businessContexts   = new List<BusinessContext> ();
 			this.activeTransitions  = new List<WorkflowTransition> ();
 			this.actionButtonInfos  = new List<ActionButtonInfo> ();
-			this.dataContext        = this.data.CreateDataContext ("WorkflowController");
+			this.dataContext        = this.data.CreateDataContext ("WorkflowController", true);
 		}
 
 

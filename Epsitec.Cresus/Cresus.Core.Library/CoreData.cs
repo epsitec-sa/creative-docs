@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (dataContext == null)
 			{
-				dataContext = this.CreateDataContext (name);
+				dataContext = this.CreateDataContext (name, true);
 			}
 			
 			return dataContext;
@@ -301,17 +301,21 @@ namespace Epsitec.Cresus.Core
 		}
 		
 		
-		public DataContext CreateDataContext(string name)
+		public DataContext CreateDataContext(string name, bool enableReload)
 		{
-			var context = this.DataInfrastructure.CreateDataContext (true);
+			var context = this.DataInfrastructure.CreateDataContext
+			(
+				enableNullVirtualization: true,
+				enableReload: enableReload
+			);
 			context.Name = name;
 
 			return context;
 		}
 
-		public DataContext CreateIsolatedDataContext(string name)
+		public DataContext CreateIsolatedDataContext(string name, bool enableReload)
 		{
-			var context = this.CreateDataContext (name);
+			var context = this.CreateDataContext (name, enableReload);
 			context.Isolate ();
 			return context;
 		}
@@ -472,7 +476,7 @@ namespace Epsitec.Cresus.Core
 
 		public void InitializeDatabase()
 		{
-			using (var businessContext = new BusinessContext (this))
+			using (var businessContext = new BusinessContext (this, false))
 			{
 				var initializer = CoreContext.New<DatabaseInitializer> (businessContext);
 

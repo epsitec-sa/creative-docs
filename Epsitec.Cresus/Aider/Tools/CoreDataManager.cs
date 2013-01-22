@@ -60,7 +60,7 @@ namespace Epsitec.Aider.Tools
 
 		public BusinessContext Create()
 		{
-			return new BusinessContext (this.CoreData);
+			return new BusinessContext (this.CoreData, false);
 		}
 
 

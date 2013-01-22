@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Business
 {
 	public sealed class BusinessContext : IIsDisposed, ICoreManualComponent
 	{
-		public BusinessContext(CoreData data)
+		public BusinessContext(CoreData data, bool enableReload)
 		{
 			this.pool     = data.GetComponent<BusinessContextPool> ();
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Business
 			this.lockMonitors       = new List<LockMonitor> ();
 
 			this.data        = this.pool.Host;
-			this.dataContext = this.pool.CreateDataContext (this);
+			this.dataContext = this.pool.CreateDataContext (this, enableReload);
 			
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 			

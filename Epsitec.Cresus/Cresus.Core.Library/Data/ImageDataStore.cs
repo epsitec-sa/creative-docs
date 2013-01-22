@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Core.Data
 			int contextId   = ImageDataStore.GetNextContextId ();
 			var contextName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "ImageDataStore #{0}", contextId);
 			
-			this.context = this.Host.CreateDataContext (contextName);
+			this.context = this.Host.CreateDataContext (contextName, true);
 		}
 
 		private void DisposeDataContext()
