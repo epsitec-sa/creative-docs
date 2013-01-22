@@ -397,12 +397,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		/// <returns></returns>
 		public SoftwareUserEntity FindUser(string loginName)
 		{
-			var softwareUserRepository = this.Host.GetRepository<SoftwareUserEntity> ();
+			var example = new SoftwareUserEntity ()
+			{
+				LoginName = loginName
+			};
 
-			var example = softwareUserRepository.CreateExample();
-			example.LoginName = loginName;
-
-			return softwareUserRepository.GetByExample (example).FirstOrDefault ();
+			return this.BusinessContext.DataContext.GetByExample (example).FirstOrDefault ();
 		}
 
 		/// <summary>
