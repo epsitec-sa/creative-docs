@@ -1972,6 +1972,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>HouseNumberAndComplement</c> field.
+		///	designer:fld/LVAJ2/LVAMD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAMD]", IsVirtual=true)]
+		public string HouseNumberAndComplement
+		{
+			get
+			{
+				string value = default (string);
+				this.GetHouseNumberAndComplement (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.HouseNumberAndComplement;
+				if (oldValue != value || !this.IsFieldDefined("[LVAMD]"))
+				{
+					this.OnHouseNumberAndComplementChanging (oldValue, value);
+					this.SetHouseNumberAndComplement (value);
+					this.OnHouseNumberAndComplementChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Town</c> field.
 		///	designer:fld/LVAJ2/LVA55
 		///	</summary>
@@ -2140,6 +2164,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnHouseNumberChanged(int? oldValue, int? newValue);
 		partial void OnHouseNumberComplementChanging(string oldValue, string newValue);
 		partial void OnHouseNumberComplementChanged(string oldValue, string newValue);
+		partial void OnHouseNumberAndComplementChanging(string oldValue, string newValue);
+		partial void OnHouseNumberAndComplementChanged(string oldValue, string newValue);
 		partial void OnTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnPhone1Changing(string oldValue, string newValue);
@@ -2157,6 +2183,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void GetStreetUserFriendly(ref string value);
 		partial void SetStreetUserFriendly(string value);
+		partial void GetHouseNumberAndComplement(ref string value);
+		partial void SetHouseNumberAndComplement(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3532,6 +3560,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>SwissCantonCode</c> field.
+		///	designer:fld/LVA65/LVALD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVALD]")]
+		public string SwissCantonCode
+		{
+			get
+			{
+				return this.GetField<string> ("[LVALD]");
+			}
+			set
+			{
+				string oldValue = this.SwissCantonCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVALD]"))
+				{
+					this.OnSwissCantonCodeChanging (oldValue, value);
+					this.SetField<string> ("[LVALD]", oldValue, value);
+					this.OnSwissCantonCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ZipCode</c> field.
 		///	designer:fld/LVA65/LVAH8
 		///	</summary>
@@ -3602,6 +3652,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSwissZipCodeChanged(int? oldValue, int? newValue);
 		partial void OnSwissZipCodeIdChanging(int? oldValue, int? newValue);
 		partial void OnSwissZipCodeIdChanged(int? oldValue, int? newValue);
+		partial void OnSwissCantonCodeChanging(string oldValue, string newValue);
+		partial void OnSwissCantonCodeChanged(string oldValue, string newValue);
 		partial void OnZipCodeChanging(string oldValue, string newValue);
 		partial void OnZipCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
