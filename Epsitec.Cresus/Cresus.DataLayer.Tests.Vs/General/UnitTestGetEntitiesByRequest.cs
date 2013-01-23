@@ -2044,6 +2044,49 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		}
 
 
+		[TestMethod]
+		public void DistinctTest()
+		{
+			using (DB db = DB.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			{
+				var example = new UriContactEntity ()
+				{
+					UriScheme = new UriSchemeEntity ()
+				};
+
+				var request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example.UriScheme
+				};
+
+				request.Conditions.Add (
+					new ValueSetComparison
+					(
+						InternalField.CreateId (example),
+						SetComparator.In,
+						new List<Constant> ()
+						{
+							new Constant (1000000001),
+							new Constant (1000000002),
+						}
+					)
+				);
+
+				var result1 = dataContext.GetByRequest (request);
+				Assert.AreEqual (2, result1.Count);
+				Assert.AreEqual (result1[0], result1[1]);
+
+				request.Distinct = true;
+
+				var result2 = dataContext.GetByRequest (request);
+				Assert.AreEqual (1, result2.Count);
+				Assert.AreEqual (result2[0], result1[0]);
+			}
+		}
+
+
 	}
 
 

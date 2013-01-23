@@ -99,6 +99,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		/// <summary>
+		/// Forces the use of the DISTINCT modifier on the SQL query.
+		/// </summary>
+		public bool Distinct
+		{
+			get;
+			set;
+		}
+
+
 		public List<DataExpression> Conditions
 		{
 			get

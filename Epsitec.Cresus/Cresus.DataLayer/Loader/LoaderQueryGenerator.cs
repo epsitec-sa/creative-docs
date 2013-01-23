@@ -1482,6 +1482,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private bool UseDistinct(Request request)
 		{
+			if (request.Distinct)
+			{
+				return true;
+			}
+
 			// The only queries that must contain a DISTINCT clause are the queries where a
 			// collection is involved. If a collection is involved in a WHERE or a ORDER BY clause,
 			// there might be duplicate rows in the result if the collection contains more than one
