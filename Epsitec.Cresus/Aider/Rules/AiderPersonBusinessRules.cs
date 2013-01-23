@@ -35,15 +35,33 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
 		{
+			AiderPersonBusinessRules.UpdateCallName (person);
+			AiderPersonBusinessRules.UpdateDisplayName (person);
+			AiderPersonBusinessRules.UpdatePersonSex (person);
+
+			this.VerifyParish (person);
+		}
+
+		public override void ApplyValidateRule(AiderPersonEntity person)
+		{
+			AiderPersonBusinessRules.ValidateMrMrs (person);
+		}
+
+		private static void UpdateCallName(AiderPersonEntity person)
+		{
 			if (string.IsNullOrWhiteSpace (person.CallName))
 			{
 				person.CallName = eCH_PersonEntity.GetDefaultFirstName (person.eCH_Person);
 			}
+		}
 
+		private static void UpdateDisplayName(AiderPersonEntity person)
+		{
 			person.DisplayName = AiderPersonEntity.GetDisplayName (person);
+		}
 
-			this.VerifyParish (person);
-
+		private static void UpdatePersonSex(AiderPersonEntity person)
+		{
 			if (person.eCH_Person.DataSource != Enumerations.DataSource.Government)
 			{
 				switch (person.MrMrs)
@@ -59,12 +77,40 @@ namespace Epsitec.Aider.Rules
 				}
 			}
 		}
-
-		public override void ApplyValidateRule(AiderPersonEntity entity)
+		private static void ValidateMrMrs(AiderPersonEntity person)
 		{
-			//	TODO: ensure that person's MrMrs is compatible with person's sex
-		}
+			var eCH = person.eCH_Person;
 
+			if ((eCH.IsNull ()) ||
+				(eCH.PersonSex == PersonSex.Unknown))
+			{
+				return;
+			}
+
+			switch (person.MrMrs)
+			{
+				case PersonMrMrs.Monsieur:
+					if (eCH.PersonSex == PersonSex.Male)
+					{
+						return;
+					}
+					break;
+
+				case PersonMrMrs.Madame:
+				case PersonMrMrs.Mademoiselle:
+					if (eCH.PersonSex == PersonSex.Female)
+					{
+						return;
+					}
+					break;
+
+				case PersonMrMrs.None:
+					return;
+			}
+
+			throw new BusinessRuleException (person, "Vérifiez l'appellation: elle ne correspond pas au sexe de la personne.");
+		}
+		
 		private void VerifyParish(AiderPersonEntity person)
 		{
 			if (person.Parish.IsNull ())
