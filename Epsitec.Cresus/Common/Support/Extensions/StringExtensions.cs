@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -381,6 +381,46 @@ namespace Epsitec.Common.Support.Extensions
 			}
 
 			return valid;
+		}
+
+		public static System.Tuple<string, string> SplitAfter(this string value, System.Predicate<char> predicate)
+		{
+			int pos = 0;
+			int len = value == null ? 0 : value.Length;
+
+			while (pos < len)
+			{
+				if (predicate (value[pos]))
+				{
+					pos++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			return value.SplitAfter (pos);
+		}
+
+		public static System.Tuple<string, string> SplitAfter(this string value, int pos)
+		{
+			if (value == null)
+			{
+				return new System.Tuple<string, string> (null, null);
+			}
+			else if (pos == value.Length)
+			{
+				return new System.Tuple<string, string> (value, "");
+			}
+			else if (pos == 0)
+			{
+				return new System.Tuple<string, string> ("", value);
+			}
+			else
+			{
+				return new System.Tuple<string, string> (value.Substring (0, pos), value.Substring (pos));
+			}
 		}
 
 		/// <summary>
