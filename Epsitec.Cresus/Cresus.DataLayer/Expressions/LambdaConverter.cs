@@ -604,7 +604,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			// column is NULL will never be returned. The same applies for the
 			// VisitMethodVallIsNotInSet method.
 
-			var entityField = (ValueField) this.VisitAndPop (methodCall.Arguments[0]);
+			var entityField = (EntityField) this.VisitAndPop (methodCall.Arguments[0]);
 
 			var constant = (ConstantExpression) methodCall.Arguments[1];
 			var values = (IEnumerable<object>) constant.Value;
@@ -647,7 +647,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		private DataExpression GetIsInSetValuesTest(ValueField valueField, IEnumerable<object> values)
+		private DataExpression GetIsInSetValuesTest(EntityField valueField, IEnumerable<object> values)
 		{
 			// Firstly, we convert the sequence of values into a sequence of expression using the
 			// following rule.
@@ -663,7 +663,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		private DataExpression GetSetValueTest(ValueField valueField, object value)
+		private DataExpression GetSetValueTest(EntityField valueField, object value)
 		{
 			if (value == null)
 			{
