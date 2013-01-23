@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library.Settings;
 
 using System.Collections.Generic;
@@ -43,15 +42,10 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		
-		public void PersistSettings(BusinessContext context)
+		public void PersistSettings()
 		{
 			if (this.HasSettings)
 			{
-				if (this.SerializedSettings.IsNull ())
-				{
-					this.SerializedSettings = context.CreateEntity<XmlBlobEntity> ();
-				}
-
 				this.SerializeSettings ();
 			}
 		}
@@ -59,15 +53,25 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private void SerializeSettings()
 		{
-			this.SerializedSettings.XmlData = new XElement (Xml.Settings,
-				this.editionSettings == null ? null : this.editionSettings.Save (Xml.EditionSettings));
+			var xml = new XElement (Xml.Settings,
+				this.editionSettings == null
+					? null
+					: this.editionSettings.Save (Xml.EditionSettings)
+			);
+
+			var newValue = DataSetUISettingsEntity.XmlToByteArray (xml);
+
+			if (!ArrayEqualityComparer<byte>.Instance.Equals (newValue, this.SerializedSettings))
+			{
+				this.SerializedSettings = newValue;
+			}
 		}
 
 		private void DeserializeSettingsIfNeeded()
 		{
 			if (this.HasSettings == false)
 			{
-				var xml = this.SerializedSettings.IsNull () ? null : this.SerializedSettings.XmlData;
+				var xml = DataSetUISettingsEntity.ByteArrayToXml (this.SerializedSettings);
 				var entityId = Druid.Parse (this.EntityId);
 
 				this.editionSettings = xml == null

@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			var entitySettings = this.GetDataSetUISettingsEntity (dataSet, context);
 
 			entitySettings.DataSetSettings = settings;
-			entitySettings.PersistSettings (context);
+			entitySettings.PersistSettings ();
 
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 		}

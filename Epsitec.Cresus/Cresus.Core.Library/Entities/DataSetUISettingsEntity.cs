@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library.Settings;
 
 using System.Collections.Generic;
@@ -43,15 +42,10 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 		
-		public void PersistSettings(BusinessContext context)
+		public void PersistSettings()
 		{
 			if (this.HasSettings)
 			{
-				if (this.SerializedSettings.IsNull ())
-				{
-					this.SerializedSettings = context.CreateEntity<XmlBlobEntity> ();
-				}
-
 				this.SerializeSettings ();
 			}
 		}
@@ -59,21 +53,58 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private void SerializeSettings()
 		{
-			this.SerializedSettings.XmlData = new XElement (Xml.Settings,
-				this.dataSetSettings == null ? null : this.dataSetSettings.Save (Xml.DataSetSettings));
+			var xml = new XElement (Xml.Settings,
+				this.dataSetSettings == null
+					? null
+					: this.dataSetSettings.Save (Xml.DataSetSettings)
+			);
+
+			var newValue = DataSetUISettingsEntity.XmlToByteArray (xml);
+
+			if (!ArrayEqualityComparer<byte>.Instance.Equals(newValue, this.SerializedSettings))
+			{
+				this.SerializedSettings = newValue;
+			}
 		}
 
 		private void DeserializeSettingsIfNeeded()
 		{
 			if (this.HasSettings == false)
 			{
-				var xml = this.SerializedSettings.IsNull () ? null : this.SerializedSettings.XmlData;
+				var xml = DataSetUISettingsEntity.ByteArrayToXml (this.SerializedSettings);
 				var dataSetCommandId = Druid.Parse (this.DataSetCommandId);
 
 				this.dataSetSettings = xml == null
 					? new UserDataSetSettings (dataSetCommandId)
 					: UserDataSetSettings.Restore (xml.Element (Xml.DataSetSettings));
 			}
+		}
+
+
+		public static byte[] XmlToByteArray(XElement xml)
+		{
+			if (xml == null)
+			{
+				return null;
+			}
+			
+			var str = xml.ToString(SaveOptions.DisableFormatting);
+			var encoding = new System.Text.UTF8Encoding ();
+
+			return encoding.GetBytes (str);
+		}
+
+		public static XElement ByteArrayToXml(byte[] data)
+		{
+			if (data == null)
+			{
+				return null;
+			}
+
+			var encoding = new System.Text.UTF8Encoding ();
+			var str = encoding.GetString (data);
+
+			return XElement.Parse (str);
 		}
 
 

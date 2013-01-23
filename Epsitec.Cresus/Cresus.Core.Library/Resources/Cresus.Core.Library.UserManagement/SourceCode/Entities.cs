@@ -625,19 +625,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/AVAR/AVAT
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[AVAT]")]
-		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedSettings
+		public global::System.Byte[] SerializedSettings
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVAT]");
+				return this.GetField<global::System.Byte[]> ("[AVAT]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedSettings;
+				global::System.Byte[] oldValue = this.SerializedSettings;
 				if (oldValue != value || !this.IsFieldDefined("[AVAT]"))
 				{
 					this.OnSerializedSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVAT]", oldValue, value);
+					this.SetField<global::System.Byte[]> ("[AVAT]", oldValue, value);
 					this.OnSerializedSettingsChanged (oldValue, value);
 				}
 			}
@@ -645,8 +645,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnEntityIdChanging(string oldValue, string newValue);
 		partial void OnEntityIdChanged(string oldValue, string newValue);
-		partial void OnSerializedSettingsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
-		partial void OnSerializedSettingsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedSettingsChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnSerializedSettingsChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -791,19 +791,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/AVG002/AVG202
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[AVG202]")]
-		public global::Epsitec.Cresus.Core.Entities.XmlBlobEntity SerializedSettings
+		public global::System.Byte[] SerializedSettings
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVG202]");
+				return this.GetField<global::System.Byte[]> ("[AVG202]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue = this.SerializedSettings;
+				global::System.Byte[] oldValue = this.SerializedSettings;
 				if (oldValue != value || !this.IsFieldDefined("[AVG202]"))
 				{
 					this.OnSerializedSettingsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Core.Entities.XmlBlobEntity> ("[AVG202]", oldValue, value);
+					this.SetField<global::System.Byte[]> ("[AVG202]", oldValue, value);
 					this.OnSerializedSettingsChanged (oldValue, value);
 				}
 			}
@@ -811,8 +811,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnDataSetCommandIdChanging(string oldValue, string newValue);
 		partial void OnDataSetCommandIdChanged(string oldValue, string newValue);
-		partial void OnSerializedSettingsChanging(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
-		partial void OnSerializedSettingsChanged(global::Epsitec.Cresus.Core.Entities.XmlBlobEntity oldValue, global::Epsitec.Cresus.Core.Entities.XmlBlobEntity newValue);
+		partial void OnSerializedSettingsChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnSerializedSettingsChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
