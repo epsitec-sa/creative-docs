@@ -88,6 +88,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
+		public void LoadRelatedData(DataContext dataContext, IEnumerable<AbstractEntity> entities)
+		{
+			var expressions = this.Columns.Select (c => c.LambdaExpression);
+
+			dataContext.LoadRelatedData (entities, expressions);
+		}
+
+
 		public Dictionary<string, object> GetEntityData(DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
 			var id = EntityIO.GetEntityId (dataContext, entity);

@@ -91,14 +91,18 @@ namespace Epsitec.Cresus.WebCore.Server
 				var dataContext = dataSetAccessor.IsolatedDataContext;
 
 				var total = dataSetAccessor.GetItemCount ();
-				var entities = dataSetAccessor.GetItems (start, limit)
+				var entities = dataSetAccessor.GetItems (start, limit);
+				
+				database.LoadRelatedData (dataContext, entities);
+				
+				var data = entities
 					.Select (e => database.GetEntityData (dataContext, caches, e))
 					.ToList ();
 
 				var content = new Dictionary<string, object> ()
 				{
 					{ "total", total },
-					{ "entities", entities },
+					{ "entities", data },
 				};
 
 				return CoreResponse.Success (content);
