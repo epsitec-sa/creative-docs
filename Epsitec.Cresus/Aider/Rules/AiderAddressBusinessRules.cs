@@ -21,7 +21,38 @@ namespace Epsitec.Aider.Rules
 	[BusinessRule]
 	internal class AiderAddressBusinessRules : GenericBusinessRule<AiderAddressEntity>
 	{
+		public override void ApplyUpdateRule(AiderAddressEntity address)
+		{
+			AiderAddressBusinessRules.UpdateHouserNumber (address);
+		}
+
 		public override void ApplyValidateRule(AiderAddressEntity address)
+		{
+			AiderAddressBusinessRules.ValidateSwissPostAddress (address);
+		}
+
+		private static void UpdateHouserNumber(AiderAddressEntity address)
+		{
+			var complement = address.HouseNumberComplement;
+
+			if (string.IsNullOrEmpty (complement))
+			{
+				return;
+			}
+
+			if (complement.Length == 1)
+			{
+				complement = complement.ToUpperInvariant ();
+			}
+			else
+			{
+				complement = complement.ToLowerInvariant ();
+			}
+
+			address.HouseNumberComplement = complement;
+		}
+
+		private static void ValidateSwissPostAddress(AiderAddressEntity address)
 		{
 			if ((address.Town.IsNotNull ()) &&
 				(address.Town.SwissZipCode.HasValue))
@@ -34,8 +65,7 @@ namespace Epsitec.Aider.Rules
 				{
 					if (string.IsNullOrEmpty (postBox))
 					{
-						return;
-//-						throw new BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
+						throw new BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
 					}
 					else
 					{
@@ -48,11 +78,11 @@ namespace Epsitec.Aider.Rules
 				if (repo.IsStreetKnown (zipCode, street))
 				{
 					//	OK, the ZIP and street are defined in MAT[CH]street
-					
+
 					return;
 				}
-				
-//-				throw new BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
+
+				throw new BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
 			}
 		}
 	}
