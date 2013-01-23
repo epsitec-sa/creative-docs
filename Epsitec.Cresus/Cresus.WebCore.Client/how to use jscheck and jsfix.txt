@@ -30,3 +30,16 @@ These scripts need two external tools:
 
 Finaly, you must add the two directories where google closure linter and where
 jshint are installed to you PATH environment variable.
+
+---------------------------------------------------------------------------------
+
+There is also a JSLint version for Visual Studio. See following blog post for
+a detailed description:
+
+http://blog.stevensanderson.com/2012/08/17/using-jshint-inside-visual-studio-the-basics/
+
+Install the tool from Visual Studio, using Tools > Extension Manager and look
+for JSLint online. This will then add the JSLint tool, which must first be
+configured by importing the vs10-jslint.xml file into the settings: open
+Tools > JS Lint Options and in the second tab, click Import.
+
