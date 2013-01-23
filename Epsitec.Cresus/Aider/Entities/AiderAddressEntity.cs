@@ -134,5 +134,47 @@ namespace Epsitec.Aider.Entities
 				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, value) ?? value;
 			}
 		}
+
+		partial void GetHouseNumberAndComplement(ref string value)
+		{
+			var houseNumber = this.HouseNumber.HasValue ? InvariantConverter.ToString (this.HouseNumber.Value) : "";
+			var complement  = this.HouseNumberComplement ?? "";
+
+			value = string.Concat (houseNumber, " ", complement).Trim ();
+		}
+
+		partial void SetHouseNumberAndComplement(string value)
+		{
+			if (string.IsNullOrWhiteSpace (value))
+			{
+				this.HouseNumber = null;
+				this.HouseNumberComplement = null;
+			}
+			else
+			{
+				var tuple = value.SplitAfter (x => char.IsDigit (x));
+
+				var number = tuple.Item1;
+				var compl  = tuple.Item2;
+
+				if (string.IsNullOrEmpty (number))
+				{
+					this.HouseNumber = null;
+				}
+				else
+				{
+					this.HouseNumber = InvariantConverter.ToInt (number);
+				}
+
+				if (string.IsNullOrWhiteSpace (compl))
+				{
+					this.HouseNumberComplement = null;
+				}
+				else
+				{
+					this.HouseNumberComplement = compl.Trim ();
+				}
+			}
+		}
 	}
 }
