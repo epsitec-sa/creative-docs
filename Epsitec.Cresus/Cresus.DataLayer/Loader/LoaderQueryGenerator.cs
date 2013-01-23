@@ -687,11 +687,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private IEnumerable<StructuredTypeField> GetValueFields(Druid leafEntityTypeId)
 		{
 			return from field in this.TypeEngine.GetValueFields (leafEntityTypeId)
-			       where field.Type.SystemType != typeof (byte[])
-			       let fieldId = field.CaptionId
-			       let fieldName = fieldId.ToResourceId ()
-			       orderby fieldName
-			       select field;
+				   where !field.Options.HasFlag (FieldOptions.DisablePrefetch)
+				   let fieldId = field.CaptionId
+				   let fieldName = fieldId.ToResourceId ()
+				   orderby fieldName
+				   select field;
 		}
 
 

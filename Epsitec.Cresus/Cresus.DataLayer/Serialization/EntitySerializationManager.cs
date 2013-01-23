@@ -339,13 +339,13 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			{
 				case FieldRelation.None:
 
-					if (!entityData.ValueData.ContainsValue (field.CaptionId) && field.Type.SystemType == typeof (byte[]))
+					if (entityData.ValueData.ContainsValue (field.CaptionId))
 					{
-						this.InsertProxyForField (entity, field);
+						this.DeserializeEntityLocalFieldValue (entity, entityData, field);
 					}
 					else
 					{
-						this.DeserializeEntityLocalFieldValue (entity, entityData, field);
+						this.InsertProxyForField (entity, field);
 					}
 
 					break;
