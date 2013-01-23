@@ -1008,7 +1008,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// won't be touched.
 		/// </summary>
 		/// <returns><c>true</c> if a modification occured, <c>false</c> if none occured.</returns>
-		/// <exception cref="System.InvalidOperation">If the reaload feature is disabled for this instance.</exception>
+		/// <exception cref="System.InvalidOperationException">If the reaload feature is disabled for this instance.</exception>
 		public bool Reload()
 		{
 			this.AssertDataContextIsNotDisposed ();
