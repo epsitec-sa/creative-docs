@@ -179,6 +179,16 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 		/// <summary>
+		/// Sets the authenticated user, based on the user entity.
+		/// </summary>
+		/// <param name="user">The user entity.</param>
+		/// <remarks>The entity must have been obtained by this instance.</remarks>
+		public void SetAuthenticatedUser(SoftwareUserEntity user)
+		{
+			this.SetAuthenticatedUser (user, NotificationMode.OnChange);
+		}
+
+		/// <summary>
 		/// Sets the active session id.
 		/// </summary>
 		/// <param name="sessionId">The session id.</param>
@@ -222,10 +232,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return;
 			}
 
-			this.SetAuthenticatedUser (user);
+			this.SetAuthenticatedUserInternal (user);
 		}
 
-		protected virtual void SetAuthenticatedUser(SoftwareUserEntity user)
+		protected virtual void SetAuthenticatedUserInternal(SoftwareUserEntity user)
 		{
 			this.OnAuthenticatedUserChanging ();
 			this.authenticatedUser = user;

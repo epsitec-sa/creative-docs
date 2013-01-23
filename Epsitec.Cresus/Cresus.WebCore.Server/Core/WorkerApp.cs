@@ -9,6 +9,8 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.Core.Data;
 
+using Epsitec.Cresus.Core.Entities;
+
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
@@ -114,14 +116,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				{
 					var user = this.userManager.FindUser (username);
 
-					this.userManager.SetAuthenticatedUser (user.Code);
+					this.userManager.SetAuthenticatedUser (user);
 					this.userManager.SetActiveSessionId (sessionId);
 
 					return action (this);
 				}
 				finally
 				{
-					this.userManager.SetAuthenticatedUser (null);
+					this.userManager.SetAuthenticatedUser ((SoftwareUserEntity) null);
 					this.userManager.SetActiveSessionId (null);
 				}
 			});
