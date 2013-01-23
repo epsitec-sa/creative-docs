@@ -21,6 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
+using System.Linq.Expressions;
 
 using System.Threading;
 
@@ -125,6 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.EnableNullVirtualization = enableNullVirtualization;
 			this.enableReload = enableReload;
 
+			this.relatedDataLoader = new RelatedDataLoader (this);
 			this.entitiesCache = new EntityCache (this.TypeEngine);
 			this.emptyEntities = new HashSet<AbstractEntity> ();
 			this.entitiesToDelete = new HashSet<AbstractEntity> ();
@@ -1194,6 +1196,29 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
+		/// Ensures that all the entities that are targeted by the given set of lambda expression
+		/// from the given sequence of entities are loaded in the DataContext.
+		/// </summary>
+		/// <remarks>
+		/// This is usefull if you have a list of persons, and that you know that for all these
+		/// persons you will access their household, the address of their household and the town
+		/// of the address of their household. In this case, you would use the lambdas
+		/// - p => p.household
+		/// - p => p.household.address
+		/// - p => p.household.town
+		/// Only the access to properties to single entities are considered. If you provide a lambda
+		/// like p => p.town.name where name is a string, only p => p.town will be considered. If
+		/// you provide a lambda like p => p.address.neighbors where neighbors is a collection, only
+		/// p => p.address.neighbors will be considered. In addition virtual properties are not
+		/// considered as they make no sense from the database point of view.
+		/// </remarks>
+		public void LoadRelatedData(IEnumerable<AbstractEntity> entities, IEnumerable<LambdaExpression> expressions)
+		{
+			this.relatedDataLoader.LoadRelatedData (entities, expressions);
+		}
+
+
+		/// <summary>
 		/// Create a new <see cref="AbstractRequestView"/>. See the constructor of that class for
 		/// more info.
 		/// </summary>
@@ -2007,6 +2032,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly System.TimeSpan			lockTimeOut;					//  maximum time that we can wait for locks.
 
 
+		private readonly RelatedDataLoader			relatedDataLoader;
 		private readonly EntityCache				entitiesCache;					//	entities managed by this instance
 		private readonly HashSet<AbstractEntity>	emptyEntities;					//	entities registered as empty
 		private readonly HashSet<AbstractEntity>	entitiesToDelete;				//	entities to be deleted

@@ -88,6 +88,7 @@
     <Compile Include="General\UnitTestForeignEntities.cs" />
     <Compile Include="General\UnitTestGetCount.cs" />
     <Compile Include="General\UnitTestReadOnly.cs" />
+    <Compile Include="General\UnitTestRelatedDataLoader.cs" />
     <Compile Include="General\UnitTestRequestView.cs" />
     <Compile Include="General\UnitTestThreadSafety.cs" />
     <Compile Include="General\UnitTestVirtualFields.cs" />
