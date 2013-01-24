@@ -142,7 +142,7 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
-    <Content Include="..\External\AntiGrain.Win32.dll">
+    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

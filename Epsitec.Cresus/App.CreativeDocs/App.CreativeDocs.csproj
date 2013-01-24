@@ -154,7 +154,7 @@
     <None Include="uac.manifest">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="..\External\AntiGrain.Win32.dll">
+    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

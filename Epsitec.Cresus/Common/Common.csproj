@@ -55,7 +55,7 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
     <Reference Include="AntiGrain.NET">
-      <HintPath>..\External\AntiGrain.NET.dll</HintPath>
+      <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Reference Include="AntiGrain.NET">
-      <HintPath>..\External\AntiGrain.NET.dll</HintPath>
+      <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\External\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -1522,7 +1522,7 @@
     <EmbeddedResource Include="..\external\images\bitmap\box-64x48.png">
       <Link>Dialogs\Images\box-64x48.png</Link>
     </EmbeddedResource>
-    <Content Include="..\External\AntiGrain.Win32.dll">
+    <Content Include="..\External\agg-2.4.x\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

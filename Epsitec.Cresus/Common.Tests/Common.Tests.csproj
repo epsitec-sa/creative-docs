@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="AntiGrain.NET, Version=2.4.1016.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\AntiGrain.NET.dll</HintPath>
+      <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\External\nunit-2.4.x\nunit.framework.dll</HintPath>
