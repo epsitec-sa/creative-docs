@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetMembers(ref IList<AiderPersonEntity> value)
 		{
-			value = this.GetMembers ().AsReadOnlyCollection ();
+			value = this.GetMembers ().OrderBy (x => x.eCH_Person.PersonDateOfBirth).AsReadOnlyCollection ();
 		}
 
 

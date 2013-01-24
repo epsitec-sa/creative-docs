@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Controllers;
@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.DisplayName);
+			return TextFormatter.FormatText (this.DisplayName, "(~", this.ComputeAge (), "~)");
 		}
 
 
@@ -52,6 +52,34 @@ namespace Epsitec.Aider.Entities
 				this.eCH_Person.PersonDateOfBirth, "~ – ~", this.eCH_Person.PersonDateOfDeath, "\n",
 				this.Confession, "~\n",
 				this.Profession, "~\n");
+		}
+
+		
+		public int? ComputeAge()
+		{
+			if (this.eCH_Person.IsNull ())
+			{
+				return null;
+			}
+
+			var birthdate = this.eCH_Person.PersonDateOfBirth;
+
+			if (birthdate == null)
+			{
+				return null;
+			}
+
+			var now = Date.Today;
+
+			if ((now.Month >= birthdate.Value.Month) &&
+				(now.Day >= birthdate.Value.Day))
+			{
+				return now.Year - birthdate.Value.Year;
+			}
+			else
+			{
+				return now.Year - birthdate.Value.Year - 1;
+			}
 		}
 
 

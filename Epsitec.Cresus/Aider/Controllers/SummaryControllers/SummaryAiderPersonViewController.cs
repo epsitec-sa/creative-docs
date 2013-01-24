@@ -25,7 +25,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
-				.Title (x => TextFormatter.FormatText (x.CallName, x.eCH_Person.PersonOfficialName, "(~", x.OriginalName, "~)"))
+				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
+//				.Title (x => TextFormatter.FormatText (x.CallName, x.eCH_Person.PersonOfficialName, "(~", x.OriginalName, "~)"))
 				.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.Parish.Group.Name).ApplyBold(), "", "\n", TextFormatter.Command.IfElseEmpty, x.Household1.Address.GetPostalAddress ()))
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController1);
