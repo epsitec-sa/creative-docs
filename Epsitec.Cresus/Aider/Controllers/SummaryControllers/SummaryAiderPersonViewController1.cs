@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
 
@@ -60,9 +61,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.AdditionalAddresses)
 				.AttributeIf (BrickMode.HideAddButton, this.Entity.AdditionalAddresses.Count > 3)
+				.Title ("Coordonnées supplémentaires")
 				.Template ()
-					.Title (x => TextFormatter.FormatText (x.Type))
+					.Title (x => this.GetAdditionalAddressTitle (x))
 				.End ();
+		}
+
+		private FormattedText GetAdditionalAddressTitle(AiderAddressEntity address)
+		{
+			var meaningfullType = address.Type != AddressType.Default
+							   && address.Type != AddressType.None;
+
+			return meaningfullType
+				? TextFormatter.FormatText ("Coordonnées (", address.Type, ")")
+				: TextFormatter.FormatText ("Coordonnées supplémentaires");
 		}
 	}
 }
