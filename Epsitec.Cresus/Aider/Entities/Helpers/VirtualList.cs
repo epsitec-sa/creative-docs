@@ -147,7 +147,15 @@ namespace Epsitec.Aider.Entities.Helpers
 			}
 			else
 			{
-				fieldSetter (entity, EntityNullReferenceVirtualizer.CreateNullEntity<T> ());
+				// Originaly, we would put an entity created by the EntityNullReferenceVirtualizer,
+				// but this would cause problems. For more details, you can go look on the bug #2242
+				// in Mantis.
+				// The only problem with using null, is that if you access the entity via the
+				// property and not the list, you will get null, and you don't expect that because
+				// of the EntityNullReferenceVirtualizer. But in practice, this is not a problem in
+				// WebCore because never do this kind of stuff.
+
+				fieldSetter (entity, null);
 			}
 		}
 
