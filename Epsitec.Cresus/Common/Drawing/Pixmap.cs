@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing.Platform;
@@ -36,7 +36,13 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						AntiGrain.Buffer.Resize (this.aggBuffer, value.Width, value.Height, 32);
+						bool ok = AntiGrain.Buffer.Resize (this.aggBuffer, value.Width, value.Height, 32);
+
+						if (ok == false)
+						{
+							System.Diagnostics.Trace.WriteLine (string.Format ("Could not allocate buffer for {0} x {1}", value.Width, value.Height));
+							throw new System.Exception ("Buffer could not be resized");
+						}
 					}
 					
 					this.size = value;
