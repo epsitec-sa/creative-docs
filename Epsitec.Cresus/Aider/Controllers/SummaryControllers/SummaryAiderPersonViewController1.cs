@@ -59,6 +59,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (this.Entity.GetParishDescription ());
 
 			wall.AddBrick (x => x.AdditionalAddresses)
+				.AttributeIf (BrickMode.HideAddButton, this.Entity.AdditionalAddresses.Count > 3)
 				.Template ()
 					.Title (x => TextFormatter.FormatText (x.Type))
 				.End ();
