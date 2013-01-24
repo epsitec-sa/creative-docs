@@ -70,9 +70,10 @@ function() {
     },
 
     getButtons: function() {
-      var cancelButton = this.createCancelButton();
-      var okButton = this.createOkButton();
-      return [okButton, cancelButton];
+      return [
+        this.createOkButton(),
+        this.createCancelButton()
+      ];
     },
 
     createCancelButton: function() {

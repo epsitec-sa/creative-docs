@@ -21,10 +21,11 @@ function() {
     /* Constructor */
 
     constructor: function(options) {
-      var cancelButton = this.createCancelButton();
-      var okButton = this.createOkButton();
       var newOptions = {
-        buttons: [okButton, cancelButton]
+        buttons: [
+          this.createOkButton(),
+          this.createCancelButton()
+        ]
       };
       Ext.applyIf(newOptions, options);
 

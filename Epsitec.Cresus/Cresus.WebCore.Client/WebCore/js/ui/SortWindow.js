@@ -41,7 +41,7 @@ function() {
         buttons: [
           this.createOkButton(),
           this.createResetButton(),
-          this.createCancelButton(),
+          this.createCancelButton()
         ]
       };
       Ext.applyIf(newOptions, options);

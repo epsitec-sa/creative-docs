@@ -48,7 +48,7 @@ function() {
 
       Ext.EventManager.on(document, 'keydown', function(event) {
 
-        var doPrevent = false, d, tagName, tagType;
+        var doPrevent = false, d, tagName, tagType, isTextField, isTextArea;
 
         if (event.keyCode === 8) {
 
@@ -56,8 +56,11 @@ function() {
           tagName = d.tagName.toUpperCase();
           tagType = d.type.toUpperCase();
 
-          if ((tagName === 'INPUT' && (tagType === 'TEXT' || tagType === 'PASSWORD')) ||
-              (tagName === 'TEXTAREA')) {
+          isTextField = tagName === 'INPUT' &&
+              (tagType === 'TEXT' || tagType === 'PASSWORD');
+          isTextArea = tagName === 'TEXTAREA';
+
+          if (isTextField || isTextArea) {
             doPrevent = d.readOnly || d.disabled;
           } else {
             doPrevent = true;
