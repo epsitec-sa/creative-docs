@@ -1,3 +1,5 @@
+/*jslint white: true */
+
 Ext.Loader.setConfig({
   enabled: true,
   paths: {
@@ -44,24 +46,24 @@ function() {
 
       // Prevent the backspace key from navigating back.
 
-      Ext.EventManager.on(document, 'keydown', function (event) {
+      Ext.EventManager.on(document, 'keydown', function(event) {
 
-        var doPrevent = false;
+        var doPrevent = false, d, tagName, tagType;
 
         if (event.keyCode === 8) {
-          
-          var d = event.srcElement || event.target;
-          var tagName = d.tagName.toUpperCase();
-          var tagType = d.type.toUpperCase();
-          
-          if ((tagName === 'INPUT' && (tagType === 'TEXT' || tagType === 'PASSWORD'))
-           || (tagName === 'TEXTAREA')) {
+
+          d = event.srcElement || event.target;
+          tagName = d.tagName.toUpperCase();
+          tagType = d.type.toUpperCase();
+
+          if ((tagName === 'INPUT' && (tagType === 'TEXT' || tagType === 'PASSWORD')) ||
+              (tagName === 'TEXTAREA')) {
             doPrevent = d.readOnly || d.disabled;
           } else {
             doPrevent = true;
           }
         }
-        
+
         if (doPrevent) {
           event.preventDefault();
         }
