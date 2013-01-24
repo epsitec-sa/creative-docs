@@ -1,4 +1,4 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -232,10 +232,10 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				return;
 			}
 
-			this.SetAuthenticatedUserInternal (user);
+			this.ChangeAuthenticatedUser (user);
 		}
 
-		protected virtual void SetAuthenticatedUserInternal(SoftwareUserEntity user)
+		protected virtual void ChangeAuthenticatedUser(SoftwareUserEntity user)
 		{
 			this.OnAuthenticatedUserChanging ();
 			this.authenticatedUser = user;
