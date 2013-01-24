@@ -82,6 +82,16 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Attribute, new AttributeValue<TAttribute> (attributeValue)));
 		}
 
+		public SimpleBrick<T> AttributeIf<TAttribute>(TAttribute attributeValue, bool condition)
+		{
+			if (condition)
+			{
+				this.Attribute (attributeValue);
+			}
+
+			return this;
+		}
+
 		public SimpleBrick<T> Include<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Include, expression));
