@@ -110,6 +110,14 @@ namespace Epsitec.Common.Types
 
 		public FormattedText ToFormattedText(System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
 		{
+			var value = this.EnumValue;
+			
+			if ((value != null) &&
+				(value.Caption != null))
+			{
+				return value.Caption.DefaultLabelOrName;
+			}
+
 			return FormattedText.Join (FormattedText.FromSimpleText (" - "), this.Values);
 		}
 

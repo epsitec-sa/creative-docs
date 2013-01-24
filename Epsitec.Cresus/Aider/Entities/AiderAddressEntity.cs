@@ -31,11 +31,10 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (
-				new FormattedText ("<b>Adresse</b>\n~"),
 				this.GetPostalAddress (), "~\n",
-				TextFormatter.FormatField (() => this.Phone1), "~(fixe 1)\n",
-				TextFormatter.FormatField (() => this.Phone2), "~(fixe 2)\n",
-				TextFormatter.FormatField (() => this.Mobile), "~(mobile)\n",
+				TextFormatter.FormatField (() => this.Phone1), "~,~",
+				TextFormatter.FormatField (() => this.Phone2), "~,~",
+				TextFormatter.FormatField (() => this.Mobile), "\n",
 				TextFormatter.FormatField (() => this.Fax), "~(fax)\n",
 				UriFormatter.ToFormattedText (this.Email), "~\n",
 				UriFormatter.ToFormattedText (this.Web));
