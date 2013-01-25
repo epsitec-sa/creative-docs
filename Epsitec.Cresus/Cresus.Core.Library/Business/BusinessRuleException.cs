@@ -14,10 +14,6 @@ namespace Epsitec.Cresus.Core.Business
 	[System.Serializable]
 	public sealed class BusinessRuleException : System.Exception
 	{
-		public BusinessRuleException()
-		{
-		}
-
 		public BusinessRuleException(string message)
 			: this (null, message)
 		{
