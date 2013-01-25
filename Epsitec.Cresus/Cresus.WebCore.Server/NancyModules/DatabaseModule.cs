@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (coreServer, "/database")
 		{
 			Get["/list"] = p => this.Execute (wa => this.GetDatabaseList (wa));
-			Get["/definition/{name}"] = p => this.GetDatabase (p);
+			Get["/definition/{name}"] = p => this.Execute (wa => this.GetDatabase (wa, p));
 			Get["/get/{name}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntities (wa, b, p)));
 			Get["/getindex/{name}/{id}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntityIndex (wa, b, p)));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
@@ -55,11 +55,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetDatabase(dynamic parameters)
+		private Response GetDatabase(WorkerApp workerApp, dynamic parameters)
 		{
-			var databaseCommandId = DataIO.ParseDruid ((string) parameters.name);
-			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
+			var userManager = workerApp.UserManager;
+			var commandId = DataIO.ParseDruid ((string) parameters.name);
 
+			var database = this.CoreServer.DatabaseManager.GetDatabase (userManager, commandId);		
 			var content = database.GetDataDictionary (this.CoreServer.Caches);
 
 			return CoreResponse.Success (content);

@@ -87,38 +87,50 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private Database GetDatabase(DataSetMetadata dataSet)
+		private Database GetDatabase(DataSetMetadata dataSet, IEnumerable<ColumnRef<EntityColumnSort>> customSorters)
 		{
 			var entityTable = dataSet.EntityTableMetadata;
 
-			IEnumerable<Column> columns;
-			IEnumerable<Sorter> sorters;
+			var columns = this.GetColumns (entityTable);
 
-			if (entityTable == null)
-			{
-				columns = Enumerable.Empty<Column> ();
-				sorters = Enumerable.Empty<Sorter> ();
-			}
-			else
-			{
-				columns = this.GetColumns (entityTable);
-				sorters = this.GetSorters (entityTable, columns);
-			}
-
-			return new Database(dataSet, columns, sorters);
+			var sorters = customSorters == null
+				? this.GetSorters (entityTable, columns)
+				: this.GetSorters (customSorters, columns);
+			
+			return new Database (dataSet, columns, sorters);
 		}
 
 
 		private IEnumerable<Column> GetColumns(EntityTableMetadata entityTable)
 		{
+			if (entityTable == null)
+			{
+				return Enumerable.Empty<Column> ();
+			}
+
 			return entityTable.Columns
 				.Select (c => new Column (c))
 				.ToList ();
 		}
 
 
+		private IEnumerable<Sorter> GetSorters(IEnumerable<ColumnRef<EntityColumnSort>> customSorters, IEnumerable<Column> columns)
+		{
+			return from customSorter in customSorters
+				   let column = columns.FirstOrDefault (c => c.Name == customSorter.Id)
+				   where column != null
+				   let sortOrder = this.GetSortOrder (customSorter.Value.SortOrder)
+				   select new Sorter (column, sortOrder);
+		}
+
+
 		private IEnumerable<Sorter> GetSorters(EntityTableMetadata entityTable, IEnumerable<Column> columns)
 		{
+			if (entityTable == null)
+			{
+				return Enumerable.Empty<Sorter> ();
+			}
+
 			return from entityColumn in entityTable.GetSortColumns ()
 				   let column = columns.First (c => c.MetaData == entityColumn)
 				   let sortOrder = this.GetSortOrder (entityColumn.DefaultSort.SortOrder)
@@ -142,18 +154,40 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
+		public Database GetDatabase(UserManager userManager, Druid commandId)
+		{
+			var dataSet = this.GetDataSet (commandId);
+
+			var customSettings = userManager.ActiveSession.GetDataSetSettings (dataSet);
+
+			var customSorters = customSettings.Sort.Count > 0
+				? customSettings.Sort
+				: null;
+
+			return this.GetDatabase (dataSet, customSorters);
+		}
+
+
 		public Database GetDatabase(Druid commandId)
+		{
+			var dataSet = this.GetDataSet (commandId);
+
+			return this.GetDatabase (dataSet, null);
+		}
+
+
+		private DataSetMetadata GetDataSet(Druid commandId)
 		{
 			var dataSet = this.dataStore.FindDataSet (commandId);
 
 			if (dataSet == null)
 			{
 				var id = commandId.ToCompactString ();
-				
+
 				throw new Exception ("The database '" + id + "' does not exist.");
 			}
 
-			return this.GetDatabase (dataSet);
+			return dataSet;
 		}
 
 
