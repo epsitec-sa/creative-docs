@@ -91,10 +91,10 @@ html, body {
 }
 
 input[readonly], textarea[readonly] {
-	background-color:#EEEEEE;
-	color:#444444;
+  background-color:#EEEEEE;
+  color:#444444;
 }
 
 .x-form-text, textarea.x-form-field {
-	background-image: none;
+  background-image: none;
 }
