@@ -217,7 +217,7 @@ function() {
       },
 
       parseField: function(brick) {
-        return {
+        var field = {
           fieldLabel: brick.title,
           name: brick.name,
           value: brick.value,
@@ -225,6 +225,12 @@ function() {
           labelSeparator: null,
           allowBlank: brick.allowBlank
         };
+
+        if (field.readOnly) {
+          field.fieldCls = 'input-readonly';
+        }
+
+        return field;
       },
 
       parseBooleanField: function(brick) {

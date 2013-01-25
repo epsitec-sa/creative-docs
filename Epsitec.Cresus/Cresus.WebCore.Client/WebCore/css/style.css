@@ -90,9 +90,23 @@ html, body {
   background-image: url('../images/Static/sort-descending.png') !important;
 }
 
-input[readonly], textarea[readonly] {
+.input-readonly {
   background-color:#EEEEEE;
   color:#444444;
+}
+
+.grid-readonly .x-grid-row .x-grid-cell {
+  background-color:#EEEEEE;
+  border-top-style: none;
+  border-bottom-color: #AAAAAA;
+  border-bottom-style: solid;
+}
+
+.grid-readonly .x-grid-row-alt .x-grid-cell {
+  background-color: #DDDDDD;
+  border-top-style: none;
+  border-bottom-color: #AAAAAA;
+  border-bottom-style: solid;
 }
 
 .x-form-text, textarea.x-form-field {

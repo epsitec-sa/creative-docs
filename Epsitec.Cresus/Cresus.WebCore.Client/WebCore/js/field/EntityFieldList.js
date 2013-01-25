@@ -37,7 +37,10 @@ function() {
         }
       };
 
-      if (!readOnly) {
+      if (readOnly) {
+        newOptions.cls = 'grid-readonly';
+      }
+      else {
         newOptions.tbar = this.createTBar();
         newOptions.viewConfig.plugins = {
           ptype: 'gridviewdragdrop'
