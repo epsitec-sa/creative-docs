@@ -1606,7 +1606,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		internal void Dispose()
 		{
-			this.Dipose (true);
+			((System.IDisposable) this).Dispose ();
 		}
 
 		#region IDisposable Members
