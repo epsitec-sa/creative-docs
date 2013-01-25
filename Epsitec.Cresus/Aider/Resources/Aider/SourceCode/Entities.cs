@@ -1119,6 +1119,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroup</c> field.
+		///	designer:fld/LVAF/LVG622
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG622]", IsVirtual=true)]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
+		{
+			get
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity value = default (global::Epsitec.Aider.Entities.AiderGroupEntity);
+				this.GetParishGroup (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
+				{
+					this.OnParishGroupChanging (oldValue, value);
+					this.SetParishGroup (value);
+					this.OnParishGroupChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1156,6 +1180,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnIsHouseholdHeadChanging(bool oldValue, bool newValue);
 		partial void OnIsHouseholdHeadChanged(bool oldValue, bool newValue);
+		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
@@ -1168,6 +1194,8 @@ namespace Epsitec.Aider.Entities
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
 		partial void GetIsHouseholdHead(ref bool value);
 		partial void SetIsHouseholdHead(bool value);
+		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
+		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

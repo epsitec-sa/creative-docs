@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Data;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
@@ -119,6 +120,13 @@ namespace Epsitec.Aider.Rules
 			}
 
 			var businessContext = this.GetBusinessContext ();
+
+			if (person.Parish.Group.GroupDef.PathTemplate != AiderGroupIds.Parish)
+			{
+				var message = "Vous devez sélectionner un groupe de paroisse pour la paroisse.";
+
+				throw new BusinessRuleException (message);
+			}
 
 			var parishes = new List<AiderGroupEntity> ();
 

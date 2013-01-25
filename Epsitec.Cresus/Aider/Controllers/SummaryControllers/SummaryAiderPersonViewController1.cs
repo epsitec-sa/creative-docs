@@ -54,10 +54,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
 
-			wall.AddBrick (x => x.Parish)
+			wall.AddBrick (x => x.ParishGroup)
 				.Icon ("Data.AiderGroup.Parish")
-				.Title (x => x.GetCompactSummary ())
-				.Text (this.Entity.GetParishDescription ());
+				.Title ("Paroisse")
+				.Attribute (BrickMode.DefaultToSummarySubView);
 
 			wall.AddBrick (x => x.AdditionalAddresses)
 				.AttributeIf (BrickMode.HideAddButton, this.Entity.AdditionalAddresses.Count > 3)

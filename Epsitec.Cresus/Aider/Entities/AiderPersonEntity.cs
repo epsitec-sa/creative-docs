@@ -368,6 +368,28 @@ namespace Epsitec.Aider.Entities
 			value.AddRange (warnings);
 		}
 
+		partial void GetParishGroup(ref AiderGroupEntity value)
+		{
+			value = this.Parish.Group; 
+		}
+
+		partial void SetParishGroup(AiderGroupEntity value)
+		{
+			if (this.Parish.Group == value)
+			{
+				return;
+			}
+
+			if (value == null)
+			{
+				BusinessContextPool.GetCurrentContext (this).DeleteEntity (this.Parish.Group);
+			}
+			else
+			{
+				this.Parish.Group = value;
+			}
+		}
+
 		
 		internal static string GetDisplayName(AiderPersonEntity person)
 		{
@@ -397,37 +419,6 @@ namespace Epsitec.Aider.Entities
 			{
 				return prefix + suffix + "French";
 			}
-		}
-		
-		internal FormattedText GetParishDescription()
-		{
-			if (this.Parish.IsNull ())
-			{
-				return FormattedText.Empty;
-			}
-
-			var parish = this.Parish;
-
-			return TextFormatter.FormatText ("Dans la paroisse depuis", parish.StartDate, "\n\n~", parish.Comment.Text);
-
-			/*
-			var context    = BusinessContextPool.GetCurrentContext (this);
-			var repository = context.GetRepository<AiderGroupParticipantEntity> ();
-			var example    = repository.CreateExample ();
-
-			example.Group = this.Parish;
-			
-			var participant = repository.GetByExample (example).FirstOrDefault ();
-
-			if (participant.IsNull ())
-			{
-				return FormattedText.Empty;
-			}
-			var distantPast = new Date (1900, 1, 1);
-
-			var groups = repository.GetAllEntities ().OrderByDescending (x => x.EndDate ?? x.StartDate ?? distantPast).ToArray ();
-			*/
-
 		}
 
 
