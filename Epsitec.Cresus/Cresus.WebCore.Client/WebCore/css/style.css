@@ -90,9 +90,9 @@ html, body {
   background-image: url('../images/Static/sort-descending.png') !important;
 }
 
-.input-readonly {
-  background-color:#EEEEEE;
-  color:#444444;
+.input-readonly .x-form-field {
+  background-color: #EEEEEE;
+  color: #444444;
 }
 
 .grid-readonly .x-grid-row .x-grid-cell {

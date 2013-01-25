@@ -217,20 +217,15 @@ function() {
       },
 
       parseField: function(brick) {
-        var field = {
+        return {
           fieldLabel: brick.title,
           name: brick.name,
           value: brick.value,
           readOnly: brick.readOnly,
+          readOnlyCls: 'input-readonly',
           labelSeparator: null,
           allowBlank: brick.allowBlank
         };
-
-        if (field.readOnly) {
-          field.fieldCls = 'input-readonly';
-        }
-
-        return field;
       },
 
       parseBooleanField: function(brick) {
