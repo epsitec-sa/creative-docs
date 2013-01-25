@@ -67,11 +67,11 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 			}
 			else
 			{
-				// TODO Here we fetch all the subgroups but we simply want to know if there are any.
-				// A simple optimization would be to build a query that does exactly that, but for
-				// now it is not possible because
+				// Here we could make a request to check whether the group has subgroups or not but
+				// currently this is too costly so we don't to it.
+
 				subgroupList = null;
-				hasSubgroups = group.Subgroups.Count > 0;
+				hasSubgroups = null;
 			}
 
 			return this.GetGroupData (group, subgroupList, hasSubgroups);
