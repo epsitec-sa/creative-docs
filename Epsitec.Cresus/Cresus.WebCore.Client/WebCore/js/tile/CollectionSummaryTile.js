@@ -66,7 +66,7 @@ function() {
     },
 
     addEntityCallback: function(options, success, response) {
-      var json, entityId;
+      var json, entityId, state;
 
       this.setLoading(false);
 
@@ -76,12 +76,12 @@ function() {
       }
 
       entityId = json.content.key;
-      this.handleEntityCreated(entityId);
-      this.addEntityColumn(entityId, true);
-    },
+      state = this.getTileState(entityId, this.propertyAccessorId);
 
-    handleEntityCreated: function(entityId) {
-      // This method exists only to be derived in subclasses.
+      this.column.selectState(state);
+      this.column.addEntityColumn(
+          this.subViewMode, this.subViewId, entityId, true
+      );
     },
 
     deleteEntityHandler: function() {
@@ -116,10 +116,14 @@ function() {
     },
 
     getState: function() {
+      return this.getTileState(this.entityId, this.propertyAccessorId);
+    },
+
+    getTileState: function(entityId, propertyAccessorId) {
       return {
         type: 'collectionSummaryTile',
-        entityId: this.entityId,
-        propertyAccessorId: this.propertyAccessorId
+        entityId: entityId,
+        propertyAccessorId: propertyAccessorId
       };
     },
 

@@ -28,10 +28,6 @@ function() {
 
     bodyClickHandler: function() {
       this.addEntityHandler();
-    },
-
-    handleEntityCreated: function(entityId) {
-      this.entityId = entityId;
     }
   });
 });

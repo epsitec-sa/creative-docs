@@ -22,6 +22,7 @@ function() {
     /* Properties */
 
     selectedTile: null,
+    selectedState: null,
 
     /* Constructor */
 
@@ -42,18 +43,24 @@ function() {
     /* Additional methods */
 
     getState: function() {
-      if (this.selectedTile === null) {
-        return {
-          tileIndex: null,
-          tileState: null
-        };
+      var tileIndex, tileState;
+
+      tileIndex = null;
+      tileState = null;
+
+      if (this.selectedTile !== null) {
+        tileIndex = this.items.items.indexOf(this.selectedTile);
+        tileState = this.selectedTile.getState();
       }
-      else {
-        return {
-          tileIndex: this.items.items.indexOf(this.selectedTile),
-          tileState: this.selectedTile.getState()
-        };
+      else if (this.selectedState !== null) {
+        tileIndex = 0;
+        tileState = this.selectedState;
       }
+
+      return {
+        tileIndex: tileIndex,
+        tileState: tileState
+      };
     },
 
     setState: function(state) {
@@ -65,7 +72,9 @@ function() {
       if (tileIndex === null || tileState === null) {
         return;
       }
+
       this.selectedTile = this.getTileForState(tileIndex, tileState);
+
       if (this.selectedTile !== null) {
         this.selectedTile.setState(tileState);
       }
@@ -105,7 +114,22 @@ function() {
       return null;
     },
 
+    // This method should be called when you want to select a tile that already
+    // exists.
     selectTile: function(tile) {
+      this.selectStateInternal(null);
+      this.selectTileInternal(tile);
+    },
+
+    // This method should be called when you want to select a tile that does not
+    // exist yet, such as when you create a collection tile for a new entity and
+    // want it selected when the ui is refreshed.
+    selectState: function(state) {
+      this.selectStateInternal(state);
+      this.selectTileInternal(null);
+    },
+
+    selectTileInternal: function(tile) {
       if (this.selectedTile !== tile) {
         if (this.selectedTile !== null) {
           this.selectedTile.select(false);
@@ -115,6 +139,10 @@ function() {
           this.selectedTile.select(true);
         }
       }
+    },
+
+    selectStateInternal: function(state) {
+      this.selectedState = state;
     }
   });
 });
