@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -217,6 +217,29 @@ namespace Epsitec.Common.Types
 			return this.days.GetHashCode ();
 		}
 
+
+		public int? ComputeAge()
+		{
+			return this.ComputeAge (Date.Today);
+		}
+
+		public int? ComputeAge(Date today)
+		{
+			if (this.IsNull)
+			{
+				return null;
+			}
+
+			if ((today.Month >= this.Month) &&
+				(today.Day >= this.Day))
+			{
+				return today.Year - this.Year;
+			}
+			else
+			{
+				return today.Year - this.Year - 1;
+			}
+		}
 
 		public static Date FromObject(object value)
 		{

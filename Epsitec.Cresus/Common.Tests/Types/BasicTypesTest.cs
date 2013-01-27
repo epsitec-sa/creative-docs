@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using NUnit.Framework;
@@ -304,6 +304,12 @@ namespace Epsitec.Common.Tests.Types
 			Assert.IsTrue (dateNoMonth > new Date (2005, 12, 31));
 			
 			Assert.IsTrue (dateNull.IsNull);
+
+			Assert.AreEqual (0, new Date (2006, 8, 28).ComputeAge (new Date (2006, 8, 28)));
+			Assert.AreEqual (0, new Date (2006, 8, 28).ComputeAge (new Date (2007, 8, 27)));
+			Assert.AreEqual (6, new Date (2006, 8, 28).ComputeAge (new Date (2013, 1, 24)));
+			Assert.AreEqual (6, new Date (2006, 8, 28).ComputeAge (new Date (2013, 8, 27)));
+			Assert.AreEqual (7, new Date (2006, 8, 28).ComputeAge (new Date (2013, 8, 28)));
 		}
 
 		[Test]
