@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -260,6 +260,12 @@ namespace Epsitec.Cresus.Core.Library
 			foreach (var current in lines)
 			{
 				string line = current;
+
+				if ((line.StartsWith ("//")) ||
+					(line.StartsWith ("#")))
+				{
+					continue;
+				}
 
 				if (line.Contains ('@'))
 				{
