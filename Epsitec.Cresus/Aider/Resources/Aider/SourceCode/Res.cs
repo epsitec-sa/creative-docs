@@ -1373,9 +1373,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AiderGroup.GroupDef, null);
+					System.Object.Equals (AiderGroup.Description, null);
 				}
 				
+				//	designer:cap/LVAND
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 439);
 				//	designer:cap/LVADA
 				public static readonly global::Epsitec.Common.Support.Druid GroupDef = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 333);
 				//	designer:cap/LVAED
