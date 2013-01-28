@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void Test()
+		public void SimpleTest()
 		{
 			using (var db = DB.ConnectToTestDatabase ())
 			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -51,6 +51,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Title.ComptatibleGenders),
 					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Gender),
 					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.FavouriteBeer),
+				};
+
+				dataContext.LoadRelatedData (entities, expression);
+			}
+		}
+
+
+		[TestMethod]
+		public void EmptySetTest()
+		{
+			using (var db = DB.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
+			{
+				var entities = dataContext.GetByExample (new UriContactEntity ()).Skip (3).Take (1).ToList ();
+				var expression = new List<LambdaExpression> ()
+				{
+					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.Uri),
+					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson),
+					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Title),
 				};
 
 				dataContext.LoadRelatedData (entities, expression);

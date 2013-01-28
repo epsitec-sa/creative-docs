@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				
 				List<Constant> subChainIds;
 
-				if (results.TryGetValue (subChain, out subChainIds) || subChainIds.Count == 0)
+				if (results.TryGetValue (subChain, out subChainIds) && subChainIds.Count > 0)
 				{
 					results[chain] = this.LoadData (chain.Last (), subChainIds);
 				}
