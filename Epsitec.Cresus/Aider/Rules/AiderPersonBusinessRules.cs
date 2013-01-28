@@ -141,9 +141,9 @@ namespace Epsitec.Aider.Rules
 
 			if (person.Parish.Group.GroupDef.PathTemplate != AiderGroupIds.Parish)
 			{
-				var message = Resources.Text ("Vous devez sélectionner un groupe de paroisse pour la paroisse.");
-
-				Logic.BusinessRuleException (person, message);
+				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
+				
+				return;
 			}
 
 			var parishes = new List<AiderGroupEntity> ();
