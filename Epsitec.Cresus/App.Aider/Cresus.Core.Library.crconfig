@@ -32,10 +32,10 @@ AiderFunctionDef = [LVA7A]
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVADB].[LVA84].[LVAA4]" title="Paroisse" canSort="False" canFilter="False">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
+#      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVADB].[LVA84].[LVAA4]" title="Paroisse" canSort="False" canFilter="False">
+#	<sort o="None" />
+#	<disp m="Visible" />
+#      </col>
     </t>
     <t eid="@AiderGroup" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
