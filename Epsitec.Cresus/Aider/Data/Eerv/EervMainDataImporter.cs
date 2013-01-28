@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Data.Eerv
 				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
@@ -118,7 +118,7 @@ namespace Epsitec.Aider.Data.Eerv
 				));
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
@@ -138,7 +138,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var regionGroups = EervMainDataImporter.CreateRegionGroups (businessContext, regions);
 			var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, regionGroups, regions);
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 

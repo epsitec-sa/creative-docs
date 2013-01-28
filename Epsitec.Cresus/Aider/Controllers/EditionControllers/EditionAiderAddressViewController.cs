@@ -24,6 +24,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Phone1)
 					.Field (x => x.Phone2)
 					.Field (x => x.Mobile)
+					.Field (x => x.Fax)
 					.Field (x => x.Email)
 					.Field (x => x.Web)
 				.End ();

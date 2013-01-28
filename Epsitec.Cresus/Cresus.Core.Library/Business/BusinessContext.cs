@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -484,7 +484,7 @@ namespace Epsitec.Cresus.Core.Business
 		public void SaveChanges(LockingPolicy lockingPolicy, EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
 			this.ClearDummyEntities ();
-			this.ApplyRulesBeforeSaveChanges ();
+			this.ApplyRulesBeforeSaveChanges (entitySaveMode);
 
 			if (this.ContainsChanges ())
 			{
@@ -526,7 +526,7 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		private void ApplyRulesBeforeSaveChanges()
+		private void ApplyRulesBeforeSaveChanges(EntitySaveMode entitySaveMode)
 		{
 			if (this.asyncUpdatePending)
 			{
@@ -664,16 +664,19 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		public void ApplyRulesToRegisteredEntities(RuleType ruleType)
+		public void ApplyRulesToRegisteredEntities(RuleType ruleType, EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
-			this.entityRecords.ForEach (x => x.Logic.ApplyRule (ruleType, x.Entity));
+			bool ignore = entitySaveMode.HasFlag (EntitySaveMode.IgnoreValidationErrors);
+
+			this.entityRecords.ForEach (record => record.Logic.ApplyRule (ruleType, record.Entity, disableBusinessRuleExceptions: ignore));
 		}
 
-		public T ApplyRules<T>(RuleType ruleType, T entity)
+		public T ApplyRules<T>(RuleType ruleType, T entity, EntitySaveMode entitySaveMode = EntitySaveMode.None)
 			where T : AbstractEntity
 		{
+			bool ignore = entitySaveMode.HasFlag (EntitySaveMode.IgnoreValidationErrors);
 			var logic = this.CreateLogic (entity);
-			logic.ApplyRule (ruleType, entity);
+			logic.ApplyRule (ruleType, entity, disableBusinessRuleExceptions: ignore);
 			return entity;
 		}
 

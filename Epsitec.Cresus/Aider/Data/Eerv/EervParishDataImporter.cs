@@ -139,7 +139,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 			return newEntities.ToDictionary
 			(
@@ -463,7 +463,7 @@ namespace Epsitec.Aider.Data.Eerv
 				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderTowns);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
@@ -791,7 +791,7 @@ namespace Epsitec.Aider.Data.Eerv
 				EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, parishName, legalPerson);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
@@ -898,7 +898,7 @@ namespace Epsitec.Aider.Data.Eerv
 				importationGroup.AddParticipant (businessContext, aiderPerson, null, null, null);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
@@ -994,7 +994,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 			return groupMapping.ToDictionary
 			(

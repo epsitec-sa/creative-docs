@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Rules
 			{
 				var message = Res.Strings.AiderUserLoginNameEmpty.ToString ();
 
-				throw new BusinessRuleException (user, message);
+				Logic.BusinessRuleException (user, message);
 			}
 		}
 
@@ -89,7 +89,7 @@ namespace Epsitec.Aider.Rules
 			{
 				var message = Res.Strings.AiderUserLoginNameDuplicate.ToString ();
 
-				throw new BusinessRuleException (user, message);
+				Logic.BusinessRuleException (user, message);
 			}
 		}
 			

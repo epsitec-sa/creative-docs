@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -13,8 +13,9 @@ namespace Epsitec.Cresus.Core.Business
 	[System.Flags]
 	public enum EntitySaveMode
 	{
-		None			= 0,
+		None					= 0,
 
-		IncludeEmpty	= 0x0001,
+		IncludeEmpty			= 0x0001,
+		IgnoreValidationErrors	= 0x0002,
 	}
 }

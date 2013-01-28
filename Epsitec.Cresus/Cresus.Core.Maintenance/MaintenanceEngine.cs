@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} locations -> {1} ms", count, watch.ElapsedMilliseconds));
 			watch.Restart ();
-			context.SaveChanges (LockingPolicy.KeepLock);
+			context.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} locations -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 			}
 			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} cantons -> {1} ms", count, watch.ElapsedMilliseconds));
 			watch.Restart ();
-			context.SaveChanges (LockingPolicy.KeepLock);
+			context.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} cantons -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} countries -> {1} ms", count, watch.ElapsedMilliseconds));
 			watch.Restart ();
-			context.SaveChanges (LockingPolicy.KeepLock);
+			context.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} countries -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 

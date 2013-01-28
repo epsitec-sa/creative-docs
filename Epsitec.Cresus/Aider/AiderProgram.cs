@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace Epsitec.Aider
 {
-	public static class AiderProgram
+	public static partial class AiderProgram
 	{
 		public static void Main(string[] args)
 		{
@@ -42,6 +42,12 @@ namespace Epsitec.Aider
 		{
 			if (args.Length >= 1)
 			{
+				if (args.Contains ("-testfullimport"))
+				{
+					AiderProgram.TestFullImport ();
+					return;
+				}
+
 				if (args.Contains ("-echimportation"))
 				{
 					AiderProgram.RunEchImportation (args);

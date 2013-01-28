@@ -54,6 +54,8 @@ namespace Epsitec.Aider.Rules
 
 		private static void ValidateSwissPostAddress(AiderAddressEntity address)
 		{
+			return;
+
 			if ((address.Town.IsNotNull ()) &&
 				(address.Town.SwissZipCode.HasValue))
 			{
@@ -65,24 +67,20 @@ namespace Epsitec.Aider.Rules
 				{
 					if (string.IsNullOrEmpty (postBox))
 					{
-						throw new BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
+						Logic.BusinessRuleException (address, Resources.Text ("Le nom de rue est obligatoire."));
 					}
-					else
-					{
-						return;
-					}
+					
+					return;
 				}
 
 				var repo = SwissPostStreetRepository.Current;
 
-				if (repo.IsStreetKnown (zipCode, street))
+				if (repo.IsStreetKnown (zipCode, street) == false)
 				{
-					//	OK, the ZIP and street are defined in MAT[CH]street
+					//	The ZIP and street are not defined in MAT[CH]street
 
-					return;
+					Logic.BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
 				}
-
-				throw new BusinessRuleException (address, Resources.Text ("Le nom de la rue n'a pas été trouvé pour cette localité."));
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Data;
@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Rules
 {
@@ -97,8 +98,25 @@ namespace Epsitec.Aider.Rules
 					}
 					break;
 
-				case PersonMrMrs.Madame:
 				case PersonMrMrs.Mademoiselle:
+					if (eCH.PersonSex == PersonSex.Female)
+					{
+						if ((eCH.AdultMaritalStatus == PersonMaritalStatus.Single) ||
+							(eCH.AdultMaritalStatus == PersonMaritalStatus.Unmarried) ||
+							(eCH.AdultMaritalStatus == PersonMaritalStatus.None))
+						{
+							//	OK
+						}
+						else
+						{
+							Logic.BusinessRuleException (person, Resources.Text ("Cette femme n'est pas célibataire. L'appellation 'Mademoiselle' n'est donc pas appropriée dans son cas."));
+						}
+
+						return;
+					}
+					break;
+
+				case PersonMrMrs.Madame:
 					if (eCH.PersonSex == PersonSex.Female)
 					{
 						return;
@@ -109,7 +127,7 @@ namespace Epsitec.Aider.Rules
 					return;
 			}
 
-			throw new BusinessRuleException (person, "Vérifiez l'appellation: elle ne correspond pas au sexe de la personne.");
+			Logic.BusinessRuleException (person, Resources.Text ("Vérifiez l'appellation: elle ne correspond pas au sexe de la personne."));
 		}
 		
 		private void VerifyParish(AiderPersonEntity person)
@@ -123,9 +141,9 @@ namespace Epsitec.Aider.Rules
 
 			if (person.Parish.Group.GroupDef.PathTemplate != AiderGroupIds.Parish)
 			{
-				var message = "Vous devez sélectionner un groupe de paroisse pour la paroisse.";
+				var message = Resources.Text ("Vous devez sélectionner un groupe de paroisse pour la paroisse.");
 
-				throw new BusinessRuleException (message);
+				Logic.BusinessRuleException (person, message);
 			}
 
 			var parishes = new List<AiderGroupEntity> ();
@@ -152,7 +170,7 @@ namespace Epsitec.Aider.Rules
 
 			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
 
-			warning.Title       = new FormattedText ("La paroisse ne correspond pas à l'adresse principale");
+			warning.Title       = Resources.Text ("La paroisse ne correspond pas à l'adresse principale");
 			warning.WarningType = WarningType.ParishMismatch;
 
 			if (businessContext.AcquireLock ())

@@ -61,7 +61,7 @@ namespace Epsitec.Aider.Data.ECh
 				AiderCountryEntity.FindOrCreate (businessContext, isoCode, name);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
@@ -96,7 +96,7 @@ namespace Epsitec.Aider.Data.ECh
 		{
 			var repository = new AiderTownRepository (businessContext);
 			repository.AddMissingSwissTowns ();
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 			return repository;
 		}
@@ -141,7 +141,7 @@ namespace Epsitec.Aider.Data.ECh
 				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock);
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 			// NOTE Now that the changes are saved, the newly created entities have an
 			// entity key which we can store in the dictionary.
@@ -296,7 +296,7 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
 			eChPersonEntity.Address1 = eChAddressEntity;
 
-			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex);
+			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
 			aiderPersonEntity.CallName = EChDataImporter.GuessCallName (eChPerson.FirstNames);
 			aiderPersonEntity.DisplayName = AiderPersonEntity.GetDisplayName (aiderPersonEntity);
 			aiderPersonEntity.Confession = PersonConfession.Protestant;
@@ -363,14 +363,27 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static PersonMrMrs GuessMrMrs(PersonSex personSex)
+		private static PersonMrMrs GuessMrMrs(PersonSex personSex, Date dateOfBirth, PersonMaritalStatus maritalStatus)
 		{
+			int? age = dateOfBirth.ComputeAge ();
+
 			switch (personSex)
 			{
 				case PersonSex.Female:
-					return PersonMrMrs.Madame;
+					if ((age.HasValue) &&
+						(age.Value < 20) &&
+						(maritalStatus == PersonMaritalStatus.None || maritalStatus == PersonMaritalStatus.Unmarried || maritalStatus == PersonMaritalStatus.Single))
+					{
+						return PersonMrMrs.Mademoiselle;
+					}
+					else
+					{
+						return PersonMrMrs.Madame;
+					}
+
 				case PersonSex.Male:
 					return PersonMrMrs.Monsieur;
+				
 				case PersonSex.Unknown:
 					return PersonMrMrs.None;
 			}

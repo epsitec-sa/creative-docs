@@ -68,17 +68,9 @@ namespace Epsitec.Aider.Entities
 			{
 				return null;
 			}
-
-			var now = Date.Today;
-
-			if ((now.Month >= birthdate.Value.Month) &&
-				(now.Day >= birthdate.Value.Day))
-			{
-				return now.Year - birthdate.Value.Year;
-			}
 			else
 			{
-				return now.Year - birthdate.Value.Year - 1;
+				return birthdate.Value.ComputeAge ();
 			}
 		}
 

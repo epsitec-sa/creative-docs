@@ -1,7 +1,8 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.DataLayer.Context;
@@ -39,12 +40,23 @@ namespace Epsitec.Cresus.Core.Business
 		/// </summary>
 		/// <param name="ruleType">The business rule.</param>
 		/// <param name="entity">The entity.</param>
-		public void ApplyRule(RuleType ruleType, AbstractEntity entity)
+		public void ApplyRule(RuleType ruleType, AbstractEntity entity, bool disableBusinessRuleExceptions = false)
 		{
 			GenericBusinessRule rule   = this.ResolveRule (ruleType);
 			System.Action       action = () => rule.Apply (ruleType, entity);
 
-			this.ApplyAction (action);
+			bool savedMode = this.disableBusinessRuleExceptions;
+			
+			this.disableBusinessRuleExceptions = disableBusinessRuleExceptions;
+			
+			try
+			{
+				this.ApplyAction (action);
+			}
+			finally
+			{
+				this.disableBusinessRuleExceptions = savedMode;
+			}
 		}
 
 		/// <summary>
@@ -166,6 +178,9 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
+
+
+
 		/// <summary>
 		/// Gets a value indicating whether the business logic context is not available.
 		/// </summary>
@@ -200,6 +215,42 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		
+		public static void BusinessRuleException<T>(T entity, string message)
+			where T : AbstractEntity
+		{
+			if ((Logic.current != null) &&
+				(Logic.current.disableBusinessRuleExceptions))
+			{
+				System.Diagnostics.Trace.WriteLine (
+					string.Format ("BusinessRuleException on entity #{0} / {1}.\n{2}",
+					entity.GetEntitySerialId (),
+					typeof (T).FullName,
+					message));
+			}
+			else
+			{
+				throw new BusinessRuleException (entity, message);
+			}
+		}
+
+		public static void BusinessRuleException<T>(T entity, FormattedText message)
+			where T : AbstractEntity
+		{
+			if ((Logic.current != null) &&
+				(Logic.current.disableBusinessRuleExceptions))
+			{
+				System.Diagnostics.Trace.WriteLine (string.Format ("BusinessRuleException on entity #{0} / {1}.\n{2}",
+					entity.GetEntitySerialId (),
+					typeof (T).FullName,
+					message.ToSimpleText ()));
+			}
+			else
+			{
+				throw new BusinessRuleException (entity, message);
+			}
+		}
+
+		
 		
 		[System.ThreadStatic]
 		private static Logic					current;
@@ -209,5 +260,6 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly Dictionary<RuleType, GenericBusinessRule> rules;
 		private readonly CoreComponentHostImplementation<ICoreManualComponent> components;
 		private Logic							link;
+		private bool							disableBusinessRuleExceptions;
 	}
 }

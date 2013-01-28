@@ -58,6 +58,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="Entities\Helpers\AiderGroupSubGroupList.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
     <Compile Include="Override\AiderUserManager.cs" />
