@@ -1401,6 +1401,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVA1C
 				public static readonly global::Epsitec.Common.Support.Druid Classification = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
+				//	designer:cap/LVAOD
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 440);
 				//	designer:cap/LVA2B
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 354);
 				//	designer:cap/LVA3A
