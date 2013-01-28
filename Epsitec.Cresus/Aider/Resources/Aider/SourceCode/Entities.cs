@@ -38,7 +38,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVACC]", typeof (Epsitec.Aider.Entities.AiderUserScopeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAHC]", typeof (Epsitec.Aider.Entities.AiderUserEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAKC]", typeof (Epsitec.Aider.Entities.AiderUserRoleEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVATC]", typeof (Epsitec.Aider.Entities.AiderPersonalNoteEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -6791,131 +6790,6 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderUserRoleEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Aider.AiderPersonalNote Entity
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>AiderPersonalNote</c> entity.
-	///	designer:cap/LVATC
-	///	</summary>
-	public partial class AiderPersonalNoteEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
-	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/LVATC/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>Person</c> field.
-		///	designer:fld/LVATC/LVA0D
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA0D]")]
-		public global::Epsitec.Aider.Entities.AiderPersonEntity Person
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVA0D]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Person;
-				if (oldValue != value || !this.IsFieldDefined("[LVA0D]"))
-				{
-					this.OnPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVA0D]", oldValue, value);
-					this.OnPersonChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Owner</c> field.
-		///	designer:fld/LVATC/LVAUC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAUC]")]
-		public global::Epsitec.Aider.Entities.AiderUserEntity Owner
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVAUC]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.Owner;
-				if (oldValue != value || !this.IsFieldDefined("[LVAUC]"))
-				{
-					this.OnOwnerChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVAUC]", oldValue, value);
-					this.OnOwnerChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Text</c> field.
-		///	designer:fld/LVATC/LVAVC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAVC]")]
-		public string Text
-		{
-			get
-			{
-				return this.GetField<string> ("[LVAVC]");
-			}
-			set
-			{
-				string oldValue = this.Text;
-				if (oldValue != value || !this.IsFieldDefined("[LVAVC]"))
-				{
-					this.OnTextChanging (oldValue, value);
-					this.SetField<string> ("[LVAVC]", oldValue, value);
-					this.OnTextChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnOwnerChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		partial void OnOwnerChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		partial void OnTextChanging(string oldValue, string newValue);
-		partial void OnTextChanged(string oldValue, string newValue);
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Aider.Entities.AiderPersonalNoteEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Aider.Entities.AiderPersonalNoteEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 413);	// [LVATC]
-		public static readonly string EntityStructuredTypeKey = "[LVATC]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPersonalNoteEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

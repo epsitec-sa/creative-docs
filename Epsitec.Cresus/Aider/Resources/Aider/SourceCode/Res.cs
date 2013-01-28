@@ -247,8 +247,6 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderLegalPersonContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 259));
 			//	designer:cap/LVAF
 			public static readonly Epsitec.Common.Types.StructuredType AiderPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
-			//	designer:cap/LVATC
-			public static readonly Epsitec.Common.Types.StructuredType AiderPersonalNote = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 413));
 			//	designer:cap/LVAL8
 			public static readonly Epsitec.Common.Types.StructuredType AiderPersonData = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 277));
 			//	designer:cap/LVAV2
@@ -1605,21 +1603,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Warnings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 376);
 			}
 			
-			public static class AiderPersonalNote
-			{
-				internal static void _Initialize()
-				{
-					System.Object.Equals (AiderPersonalNote.Owner, null);
-				}
-				
-				//	designer:cap/LVAUC
-				public static readonly global::Epsitec.Common.Support.Druid Owner = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 414);
-				//	designer:cap/LVA0D
-				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 416);
-				//	designer:cap/LVAVC
-				public static readonly global::Epsitec.Common.Support.Druid Text = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 415);
-			}
-			
 			public static class AiderPersonData
 			{
 				internal static void _Initialize()
@@ -2292,7 +2275,6 @@ namespace Epsitec.Aider
 			Fields.AiderLegalPerson._Initialize ();
 			Fields.AiderLegalPersonContact._Initialize ();
 			Fields.AiderPerson._Initialize ();
-			Fields.AiderPersonalNote._Initialize ();
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();
 			Fields.AiderPersonWarning._Initialize ();
