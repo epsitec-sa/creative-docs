@@ -219,13 +219,13 @@ function() {
       while (down >= 0 || up < items.length) {
         if (up < items.length) {
           item = items[up];
-          if (true) {
+          if (item.entityId === entityId) {
             return item;
           }
         }
         if (down >= 0) {
           item = items[down];
-          if (true) {
+          if (item.entityId === entityId) {
             return items;
           }
         }
