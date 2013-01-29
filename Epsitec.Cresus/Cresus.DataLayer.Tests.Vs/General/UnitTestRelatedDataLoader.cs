@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
+﻿using Epsitec.Common.Support;
+
+using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,14 +45,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				var entities = dataContext.GetByExample (new UriContactEntity ()).Take (2).ToList ();
 				var expression = new List<LambdaExpression> ()
 				{
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.Uri),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.UriScheme),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Lastname),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Lastname),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Title),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Title.ComptatibleGenders),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Gender),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.FavouriteBeer),
+					LambdaUtils.Convert ((UriContactEntity c) => c.Uri),
+					LambdaUtils.Convert ((UriContactEntity c) => c.UriScheme),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.Lastname),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.Lastname),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.Title),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.Title.ComptatibleGenders),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.Gender),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.FavouriteBeer),
 				};
 
 				dataContext.LoadRelatedData (entities, expression);
@@ -67,19 +69,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				var entities = dataContext.GetByExample (new UriContactEntity ()).Skip (3).Take (1).ToList ();
 				var expression = new List<LambdaExpression> ()
 				{
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.Uri),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson),
-					UnitTestRelatedDataLoader.Convert ((UriContactEntity c) => c.NaturalPerson.Title),
+					LambdaUtils.Convert ((UriContactEntity c) => c.Uri),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson),
+					LambdaUtils.Convert ((UriContactEntity c) => c.NaturalPerson.Title),
 				};
 
 				dataContext.LoadRelatedData (entities, expression);
 			}
-		}
-
-
-		private static LambdaExpression Convert<T1, T2>(Expression<Func<T1, T2>> func)
-		{
-			return (LambdaExpression) func;
 		}
 
 	}
