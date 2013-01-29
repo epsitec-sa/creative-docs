@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Factories;
@@ -94,32 +95,30 @@ namespace Epsitec.Cresus.Core.Resolvers
 			var baseTypePrefix = EntityViewControllerResolver.GetViewControllerPrefix (mode);
 			var baseTypeName   = string.Concat (baseTypePrefix, "ViewController");
 			var entityViewControllerType = typeof (EntityViewController);
-			
+
 			// Find all classes that :
 			// - are concrete
 			// - are a subtype of EntityViewController
-			// - whose direct super type has a name like "SummaryViewController,"
-			//   "SetViewController", "EditionViewController", ... and is a generic type
+			// - have a super type with a name like "SummaryViewController,", "SetViewController",
+			// - "EditionViewController", ... and is a generic type
 			// - where the first generic type parameter of the direct super class is entityType
-			// Note the word "direct" in the clause above. That means that view controllers must
-			// directly inherit from their parent. So we must have for instance
-			// SummaryPersonViewController -> SummaryViewController but we can't have
-			// SummaryMaleViewController -> SummaryPersonViewController -> SummaryViewController and
-			// SummaryFemaleViewController -> SummaryPersonViewController -> SummaryViewController,
-			// as the direct super type of SummaryMaleViewController and of
-			// SummaryFemaleViewController would not be SummaryViewController. So there is room for
-			// improvement in this algorithm, but as I've got no time now, I'll leave it as it is
-			// now.
 
-			var controllerTypes = from type in Epsitec.Common.Types.TypeEnumerator.Instance.GetAllTypes ()
-								  where entityViewControllerType.IsAssignableFrom (type)
-								     && type.IsClass && !type.IsAbstract && type.BaseType != null
-								     && type.BaseType.IsGenericType && type.BaseType.Name.StartsWith (baseTypeName)
-								  select new
-								  {
-									  Type = type,
-									  BaseEntityType = type.BaseType.GetGenericArguments ()[0]
-								  };
+			var controllerTypes =
+			(
+				from type in TypeEnumerator.Instance.GetAllTypes ()
+				where entityViewControllerType.IsAssignableFrom (type)
+					&& type.IsClass
+					&& !type.IsAbstract
+				let baseType = type
+					.GetBaseTypes ()
+					.FirstOrDefault (bt => bt.IsGenericType && bt.Name.StartsWith (baseTypeName))
+				where baseType != null
+				select new
+				{
+					Type = type,
+					BaseEntityType = baseType.GetGenericArguments ()[0]
+				}
+			).ToList ();
 
 			var types = from type in controllerTypes
 						where type.BaseEntityType == entityType
