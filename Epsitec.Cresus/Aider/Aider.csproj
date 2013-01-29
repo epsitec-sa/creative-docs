@@ -59,7 +59,10 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AiderProgram.Test.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Entities\Helpers\AiderGroupSubGroupList.cs" />
+    <Compile Include="Enumerations\ContactType.cs" />
+    <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
     <Compile Include="Override\AiderUserManager.cs" />
     <Compile Include="Override\AiderUserSession.cs" />
