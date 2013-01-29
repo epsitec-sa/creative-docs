@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private IEnumerable<AbstractTile> BuildCollectionSummaryTiles(Brick brick)
 		{
-			var tileEntities = this.ResolveTileEntities (brick);
+			var tileEntities = this.ResolveTileEntities (brick).ToList ();
 			var brickModes = Carpenter.GetBrickModes (brick).ToSet ();
 
 			var subViewMode = Carpenter.GetSubViewMode (brickModes);
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private IEnumerable<AbstractTile> BuildGroupedSummaryTile(Brick brick, IEnumerable<AbstractEntity> tileEntities, string subViewMode, string subViewId, bool hideAddButton, bool hideRemoveButton, string iconClass, string propertyAccessorId)
+		private IEnumerable<AbstractTile> BuildGroupedSummaryTile(Brick brick, List<AbstractEntity> tileEntities, string subViewMode, string subViewId, bool hideAddButton, bool hideRemoveButton, string iconClass, string propertyAccessorId)
 		{
 			yield return new GroupedSummaryTile
 			{
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				IconClass = iconClass,
 				Title = Carpenter.GetOptionalText (brick, BrickPropertyKey.Title),
 				PropertyAccessorId = propertyAccessorId,
-				HideAddButton = hideAddButton,
+				HideAddButton = hideAddButton || tileEntities.Count == 0,
 				HideRemoveButton = hideRemoveButton,
 				Items = this.BuildGroupdSummaryTileItems (brick, tileEntities).ToList (),
 			};
