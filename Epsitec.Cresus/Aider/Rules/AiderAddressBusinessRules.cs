@@ -54,8 +54,6 @@ namespace Epsitec.Aider.Rules
 
 		private static void ValidateSwissPostAddress(AiderAddressEntity address)
 		{
-			return;
-
 			if ((address.Town.IsNotNull ()) &&
 				(address.Town.SwissZipCode.HasValue))
 			{
