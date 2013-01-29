@@ -724,7 +724,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return new ActionTile ()
 			{
 				EntityId = this.GetEntityId (tileEntity),
-				IconClass = Carpenter.GetIconClass(actionBrick),
+				IconClass = Carpenter.GetIconClass (actionBrick),
 				Title = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Title),
 				Text = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Text),
 				Fields = this.BuildActionFields (tileEntity, actionBrick).ToList (),
