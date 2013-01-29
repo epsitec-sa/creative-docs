@@ -45,6 +45,11 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Multiline));
 		}
 
+		public ActionFieldBrick<T, TField, TParent> ReadOnly()
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.ReadOnly));
+		}
+
 		public ActionFieldBrick<T, TField, TParent> WithSpecialField<TSpecialController>()
 		{
 			var key = BrickPropertyKey.SpecialFieldController;

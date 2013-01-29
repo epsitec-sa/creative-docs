@@ -902,7 +902,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return new T ()
 			{
 				Id = id,
-				IsReadOnly = false,
+				IsReadOnly = Brick.ContainsProperty (brick, BrickPropertyKey.ReadOnly),
 				AllowBlank = allowBlank,
 				Title = Carpenter.GetText (entity, brick, BrickPropertyKey.Title),
 				Value = FieldIO.ConvertToClient (this.businessContext, value, fieldType),
