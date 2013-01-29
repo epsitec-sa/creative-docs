@@ -1,6 +1,8 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Tools;
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -11,6 +13,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using System.Linq.Expressions;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -82,12 +85,18 @@ namespace Epsitec.Aider.Data.Eerv
 			request.RequestedEntity = aiderPersonExample;
 			var aiderPersons = dataContext.GetByRequest<AiderPersonEntity> (request);
 
-			request.RequestedEntity = aiderPersonExample.eCH_Person;
-			dataContext.GetByRequest<eCH_PersonEntity> (request);
+			var lambdas = new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.eCH_Person),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household1),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household2),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household1.Address),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household2.Address),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household1.Address.Town),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household2.Address.Town),
+			};
 
-			// NOTE Here it would be nice to load also the entities related to the AiderPersons,
-			// like the addresses, households, cities, etc. But for now we can't as there is no way
-			// to express that request with the DataContext.
+			dataContext.LoadRelatedData (aiderPersons, lambdas);
 
 			return aiderPersons;
 		}
