@@ -48,7 +48,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		public static EntityKey? ParseEntityId(string entityId)
 		{
-			if (string.IsNullOrEmpty (entityId))
+			if ((string.IsNullOrEmpty (entityId)) ||
+				(entityId == "null"))
 			{
 				return null;
 			}
