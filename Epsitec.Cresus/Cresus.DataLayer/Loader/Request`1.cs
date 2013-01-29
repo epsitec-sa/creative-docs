@@ -3,17 +3,6 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Database;
-
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Expressions;
-
-using System;
-using System.Collections.Generic;
-
-using System.Linq.Expressions;
-
-
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
@@ -27,20 +16,28 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	{
 
 
-		public Request()
-		{
-		}
-
-		public new TEntity						RootEntity
+		public new TEntity RootEntity
 		{
 			get
 			{
 				return (TEntity) base.RootEntity;
 			}
-
 			set
 			{
 				base.RootEntity = value;
+			}
+		}
+
+
+		public new TEntity RequestedEntity
+		{
+			get
+			{
+				return (TEntity) base.RequestedEntity;
+			}
+			set
+			{
+				base.RequestedEntity = value;
 			}
 		}
 
