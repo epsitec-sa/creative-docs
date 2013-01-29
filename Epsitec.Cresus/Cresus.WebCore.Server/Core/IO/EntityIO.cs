@@ -48,6 +48,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		public static EntityKey? ParseEntityId(string entityId)
 		{
+			if (string.IsNullOrEmpty (entityId))
+			{
+				return null;
+			}
+
 			entityId = entityId.Replace ('-', '/');
 
 			return EntityKey.Parse (entityId);
