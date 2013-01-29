@@ -1,4 +1,4 @@
-//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -45,13 +45,12 @@ namespace Epsitec.Common.Types
 			if ((EnumLister.designerVisibleEnumCache == null) ||
 				(EnumLister.designerVisibleEnumCacheGeneration != EnumLister.generation))
 			{
-				List<System.Type> types = new List<System.Type> ();
+				var types           = new List<System.Type> ();
+				var designerVisible = typeof (DesignerVisibleAttribute).FullName;
 
 				foreach (System.Type type in EnumLister.GetPublicEnums ())
 				{
-					object[] attributes = type.GetCustomAttributes (typeof (DesignerVisibleAttribute), false);
-					
-					if (attributes.Length > 0)
+					if (type.GetCustomAttributes (false).Any (x => x.GetType ().FullName == designerVisible))
 					{
 						types.Add (type);
 					}
