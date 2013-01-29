@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (coreServer, "/layout")
 		{
 			Get["/{viewMode}/{viewId}/{entityId}"] = p => this.Execute (b => this.GetLayout (b, p));
+			Get["/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p => this.Execute (b => this.GetLayout (b, p));
 		}
 
 
@@ -33,10 +34,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var databaseManager = this.CoreServer.DatabaseManager;
 
 			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
+			var additionalEntity = EntityIO.ResolveEntity (businessContext, (string) parameters.additionalEntityId);
 			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
 			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
 
-			var entityColumn = Carpenter.BuildEntityColumn (businessContext, caches, databaseManager, entity, viewMode, viewId);
+			var entityColumn = Carpenter.BuildEntityColumn (businessContext, caches, databaseManager, entity, additionalEntity, viewMode, viewId);
 			var content = entityColumn.ToDictionary (caches);
 
 			return CoreResponse.Success (content);

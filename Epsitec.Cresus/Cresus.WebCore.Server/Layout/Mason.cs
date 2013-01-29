@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	{
 
 
-		public static BrickWall BuildBrickWall(BusinessContext businessContext, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static BrickWall BuildBrickWall(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 		{
-			using (var controller = Mason.BuildController (businessContext, entity, viewMode, viewId))
+			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
 				var brickWall = controller.BuildBrickWall ();
 
@@ -42,16 +42,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 		{
 			var name = "js";
 			var resolutionMode = ResolutionMode.ThrowOnError;
 
-			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode, businessContext);
+			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode, businessContext, additionalEntity);
 		}
 
 
-		public static T BuildController<T>(BusinessContext businessContext, AbstractEntity entity, ViewControllerMode viewMode, int? viewId)
+		public static T BuildController<T>(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 			where T : class
 		{
 			// Here I would simply be able to cast the controller, but it is not possible because
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			// interface that is not in the controller type hierarchy. So I simulate the cast with
 			// the as operator and I throw an exception if the result is null.
 
-			var controller = Mason.BuildController (businessContext, entity, viewMode, viewId) as T;
+			var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId) as T;
 
 			if (controller == null)
 			{
@@ -179,6 +179,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
 
 				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.Attribute);
+				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.EnableAction);
 			}
 		}
 

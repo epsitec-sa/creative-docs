@@ -20,6 +20,9 @@ function() {
     statics: {
       parseColumn: function(column) {
         switch (column.type) {
+          case 'action':
+            return this.parseActionColumn(column);
+
           case 'set':
             return this.parseSetColumn(column);
 
@@ -45,6 +48,13 @@ function() {
         var c = this.parseEntityColumn(column);
         c.typeName = 'Epsitec.TileColumn';
         c.items = this.parseTiles(column.tiles);
+        return c;
+      },
+
+      parseActionColumn: function(column) {
+        var c = this.parseTileColumn(column);
+        delete c.typeName;
+        c.additionalEntityId = column.additionalEntityId;
         return c;
       },
 
@@ -106,7 +116,8 @@ function() {
           hideRemoveButton: tile.hideRemoveButton,
           hideAddButton: tile.hideAddButton,
           propertyAccessorId: tile.propertyAccessorId,
-          items: this.parseGroupedItems(tile.items)
+          items: this.parseGroupedItems(tile.items),
+          actions: this.parseActions(tile.actions)
         };
       },
 
@@ -132,9 +143,8 @@ function() {
       },
 
       parseEmptySummaryTile: function(tile) {
-        var t = this.parseBaseTile(tile);
+        var t = this.parseCollectionSummaryTile(tile);
         t.xtype = 'epsitec.emptysummarytile';
-        t.propertyAccessorId = tile.propertyAccessorId;
         return t;
       },
 
@@ -154,7 +164,7 @@ function() {
 
       parseBaseActionTile: function(tile) {
         var t = this.parseBaseTile(tile);
-        t.actions = tile.actions;
+        t.actions = this.parseActions(tile.actions);
         return t;
       },
 
@@ -163,6 +173,18 @@ function() {
           title: tile.title,
           iconCls: tile.icon,
           entityId: tile.entityId
+        };
+      },
+
+      parseActions: function(actions) {
+        return actions.map(this.parseAction, this);
+      },
+
+      parseAction: function(action) {
+        return {
+          title: action.title,
+          viewId: action.viewId,
+          requiresAdditionalEntity: action.requiresAdditionalEntity
         };
       },
 

@@ -60,7 +60,11 @@ function() {
     },
 
     showAction: function(viewId, entityId, callback) {
-      this.columnManager.showAction(viewId, entityId, callback);
+      this.columnManager.showAction(viewId, entityId, null, callback);
+    },
+
+    showTemplateAction: function(viewId, entityId, callback) {
+      this.columnManager.showAction(viewId, this.entityId, entityId, callback);
     }
   });
 });

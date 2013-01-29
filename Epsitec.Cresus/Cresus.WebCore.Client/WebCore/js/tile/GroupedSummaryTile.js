@@ -56,6 +56,11 @@ function() {
 
     /* Additional methods */
 
+    initComponent: function() {
+      this.selectItem(null);
+      this.callParent();
+    },
+
     createCollectionTools: function(options) {
       var tools = Ext.Array.clone(options.tools || []);
 
@@ -172,6 +177,16 @@ function() {
       if (this.selectedItem !== null) {
         this.selectedItem.select(true);
       }
+
+      this.updateActionMenuState(this.selectedItem !== null);
+    },
+
+    // Overrides the method defined in EntityTile.
+    showAction: function(viewId, callback) {
+      var entityId = this.selectedItem === null ?
+          null : this.selectedItem.entityId;
+
+      this.column.showTemplateAction(viewId, entityId, callback);
     },
 
     getState: function() {

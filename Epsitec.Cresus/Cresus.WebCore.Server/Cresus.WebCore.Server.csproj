@@ -79,6 +79,7 @@
     <Compile Include="Layout\AbstractEntityTile.cs" />
     <Compile Include="Layout\ActionItem.cs" />
     <Compile Include="Layout\ActionTile.cs" />
+    <Compile Include="Layout\ActionColumn.cs" />
     <Compile Include="Layout\DecimalField.cs" />
     <Compile Include="Layout\GroupedSummaryTileItem.cs" />
     <Compile Include="Layout\GroupedSummaryTile.cs" />

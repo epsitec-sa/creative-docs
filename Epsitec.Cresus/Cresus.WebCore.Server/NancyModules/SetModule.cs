@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var viewId = DataIO.ParseViewId (rawViewId);
 			var viewMode = ViewControllerMode.Set;
 
-			using (var controller = Mason.BuildController<ISetViewController> (businessContext, entity, viewMode, viewId))
+			using (var controller = Mason.BuildController<ISetViewController> (businessContext, entity, null, viewMode, viewId))
 			{
 				var dataSetGetter = workerApp.DataSetGetter;
 				var dataStore = workerApp.DataStoreMetaData;
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (businessContext.Bind (entity))
 			using (businessContext.Bind (entities))
-			using (var controller = Mason.BuildController<ISetViewController> (businessContext, entity, viewMode, viewId))
+			using (var controller = Mason.BuildController<ISetViewController> (businessContext, entity, null, viewMode, viewId))
 			{
 				action (controller, entities);
 

@@ -54,7 +54,8 @@ namespace Epsitec.Cresus.Core.Factories
 			int?                  controllerSubTypeId   = null,
 			NavigationPathElement navigationPathElement = null,
 			ResolutionMode        resolutionMode        = ResolutionMode.ThrowOnError,
-			BusinessContext       businessContext       = null)
+			BusinessContext       businessContext       = null,
+			AbstractEntity        additionalEntity      = null)
 		{
 			if (entity.IsNull ())
 			{
@@ -74,6 +75,7 @@ namespace Epsitec.Cresus.Core.Factories
 					ParentController = parentController,
 					ControllerName = name,
 					Entity = entity,
+					AdditionalEntity = additionalEntity,
 					BusinessContext = businessContext
 				};
 
@@ -132,6 +134,12 @@ namespace Epsitec.Cresus.Core.Factories
 			}
 
 			public AbstractEntity				Entity
+			{
+				get;
+				set;
+			}
+
+			public AbstractEntity				AdditionalEntity
 			{
 				get;
 				set;

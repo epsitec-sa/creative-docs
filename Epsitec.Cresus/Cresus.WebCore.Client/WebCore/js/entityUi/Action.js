@@ -38,10 +38,15 @@ function() {
     /* Additional methods */
 
     getForm: function(options) {
+      var prefix, entityId, additionalEntityId;
+
+      prefix = 'proxy/entity/executeAction/' + options.viewId;
+      entityId = options.entityId;
+      additionalEntityId = options.additionalEntityId;
+
       return Ext.create('Ext.form.Panel', {
         xtype: 'form',
-        url: 'proxy/entity/executeAction/' + options.viewId + '/' +
-            options.entityId,
+        url: Epsitec.Action.getUrl(prefix, entityId, additionalEntityId),
         border: false,
         autoScroll: true,
         frame: true,
@@ -163,9 +168,10 @@ function() {
     /* Static methods */
 
     statics: {
-      showDialog: function(viewId, entityId, callback) {
+      showDialog: function(viewId, entityId, additionalEntityId, callback) {
+        var prefix = 'proxy/layout/6/' + viewId;
         Ext.Ajax.request({
-          url: 'proxy/layout/6/' + viewId + '/' + entityId,
+          url: this.getUrl(prefix, entityId, additionalEntityId),
           callback: function(options, success, response) {
             this.showDialogCallback(success, response, callback);
           },
@@ -181,11 +187,21 @@ function() {
           return;
         }
 
-        options = Epsitec.BrickWallParser.parseColumn(json.content);
+        options = Epsitec.BrickWallParser.parseActionColumn(json.content);
         options.callback = callback;
 
         dialog = Ext.create('Epsitec.Action', options);
         dialog.show();
+      },
+
+      getUrl: function(prefix, entityId, additionalEntityId) {
+        var url = prefix + '/' + entityId;
+
+        if (additionalEntityId !== null) {
+          url += '/' + additionalEntityId;
+        }
+
+        return url;
       }
     }
   });

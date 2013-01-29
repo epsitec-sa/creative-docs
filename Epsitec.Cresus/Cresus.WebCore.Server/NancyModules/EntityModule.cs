@@ -20,7 +20,6 @@ using Nancy;
 
 using System;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -43,6 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Post["/edit/{id}"] = p => this.Execute (b => this.Edit (b, p));
 			Post["/autoCreate"] = _ => this.Execute (b => this.AutoCreateNullEntity (b));
 			Post["/executeAction/{viewId}/{entityId}"] = p => this.Execute (b => this.ExecuteAction (b, p));
+			Post["/executeAction/{viewId}/{entityId}/{additionalEntityId}"] = p => this.Execute (b => this.ExecuteAction (b, p));
 		}
 
 
@@ -153,8 +153,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var viewMode = ViewControllerMode.Action;
 			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
 			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
+			var additionalEntity = EntityIO.ResolveEntity (businessContext, (string) parameters.additionalEntityId);
 
-			using (var controller = Mason.BuildController<IActionViewController> (businessContext, entity, viewMode, viewId))
+			using (var controller = Mason.BuildController<IActionViewController> (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
 				var actionExecutor = controller.GetExecutor ();
 
@@ -163,7 +164,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					DynamicDictionary form = Request.Form;
 					var arguments = this.GetArguments (actionExecutor, form, businessContext);
 
-					using (businessContext.Bind(entity))
+					using (businessContext.Bind (entity))
+					using (businessContext.Bind (additionalEntity))
 					{
 						actionExecutor.Call (arguments);
 

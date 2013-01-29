@@ -60,6 +60,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		public IList<ActionItem> Actions
+		{
+			get;
+			set;
+		}
+
+
 		protected override string GetTileType()
 		{
 			return "groupedSummary";
@@ -77,6 +84,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			tile["hideAddButton"] = this.HideAddButton;
 			tile["propertyAccessorId"] = this.PropertyAccessorId;
 			tile["items"] = this.Items.Select (i => i.ToDictionary ()).ToList ();
+			tile["actions"] = this.Actions.Select (a => a.ToDictionary ()).ToList ();
 
 			return tile;
 		}

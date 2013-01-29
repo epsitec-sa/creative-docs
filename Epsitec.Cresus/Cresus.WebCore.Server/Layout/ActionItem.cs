@@ -23,12 +23,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		public bool RequiresAdditionalEntity
+		{
+			get;
+			set;
+		}
+
+
 		public Dictionary<string, object> ToDictionary()
 		{
 			return new Dictionary<string, object> ()
 			{
 				{ "viewId", this.ViewId },
 				{ "title", this.Title },
+				{ "requiresAdditionalEntity", this.RequiresAdditionalEntity },
 			};
 		}
 

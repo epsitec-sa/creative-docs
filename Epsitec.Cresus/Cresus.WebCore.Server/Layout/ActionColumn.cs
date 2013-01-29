@@ -10,11 +10,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal class TileColumn : EntityColumn
+	internal sealed class ActionColumn : TileColumn
 	{
 
 
-		public IList<AbstractTile> Tiles
+		public string AdditionalEntityId
 		{
 			get;
 			set;
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public override string GetColumnType()
 		{
-			return "tile";
+			return "action";
 		}
 
 
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var column = base.ToDictionary (caches);
 
-			column["tiles"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();
+			column["additionalEntityId"] = this.AdditionalEntityId;
 
 			return column;
 		}

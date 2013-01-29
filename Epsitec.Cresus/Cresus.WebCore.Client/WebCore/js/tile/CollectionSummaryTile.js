@@ -115,6 +115,11 @@ function() {
       this.column.refreshToLeft(true);
     },
 
+    // Overrides the method defined in EntityTile.
+    showAction: function(viewId, callback) {
+      this.column.showTemplateAction(viewId, this.entityId, callback);
+    },
+
     getState: function() {
       return this.getTileState(this.entityId, this.propertyAccessorId);
     },

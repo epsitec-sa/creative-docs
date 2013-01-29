@@ -296,8 +296,8 @@ function() {
       }
     },
 
-    showAction: function(viewId, entityId, callback) {
-      Epsitec.Action.showDialog(viewId, entityId, callback);
+    showAction: function(viewId, entityId, additionalEntityId, callback) {
+      Epsitec.Action.showDialog(viewId, entityId, additionalEntityId, callback);
     }
   });
 });

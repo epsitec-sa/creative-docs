@@ -160,6 +160,8 @@
     <Compile Include="Controllers\ActionControllers\ActionItemGenerator.cs" />
     <Compile Include="Controllers\ActionControllers\ActionItemLayout.cs" />
     <Compile Include="Controllers\ActionControllers\ActionViewController.cs" />
+    <Compile Include="Controllers\ActionControllers\ITemplateActionViewController.cs" />
+    <Compile Include="Controllers\ActionControllers\TemplateActionViewController.cs" />
     <Compile Include="Controllers\ActionControllers\IActionViewController.cs" />
     <Compile Include="Controllers\ActionViewController.cs" />
     <Compile Include="Controllers\ActionViewControllerMode.cs" />
