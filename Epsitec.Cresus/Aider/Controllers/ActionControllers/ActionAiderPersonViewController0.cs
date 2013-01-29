@@ -27,14 +27,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderPersonEntity, bool> (this.Execute);
+			return ActionExecutor.Create<bool> (this.Execute);
 		}
 
 
-		private void Execute(AiderPersonEntity person, bool isMainHousehold)
+		private void Execute(bool isMainHousehold)
 		{
+			var person = this.Entity;
+
 			var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			
+
 			person.SetHousehold (this.BusinessContext, newHousehold, isMainHousehold);
 		}
 		

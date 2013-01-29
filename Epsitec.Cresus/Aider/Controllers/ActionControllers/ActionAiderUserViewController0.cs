@@ -28,12 +28,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderUserEntity, string, string> (ActionAiderUserViewController0.Execute);
+			return ActionExecutor.Create<string, string> (this.Execute);
 		}
 
 
-		private static void Execute(AiderUserEntity user, string password, string confirmation)
+		private void Execute(string password, string confirmation)
 		{
+			var user = this.Entity;
+
 			if (password == null)
 			{
 				var message = Res.Strings.AiderUserPasswordEmpty.ToString ();

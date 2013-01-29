@@ -1,6 +1,4 @@
-﻿using Epsitec.Common.Support.EntityEngine;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -18,24 +16,14 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return this.action.Method
 				.GetParameters ()
-				.Skip (1)
 				.Select (p => p.ParameterType);
 		}
 
-		public void Call(AbstractEntity entity, IList<object> arguments)
+		public void Call(IList<object> arguments)
 		{
-			var args = new object[arguments.Count + 1];
-
-			args[0] = entity;
-
-			for (int i = 0; i < arguments.Count; i++)
-			{
-				args[i + 1] = arguments[i];
-			}
-
 			try
 			{
-				this.action.DynamicInvoke (args);
+				this.action.DynamicInvoke (arguments.ToArray ());
 			}
 			catch (TargetInvocationException e)
 			{
@@ -48,68 +36,57 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		public static ActionExecutor Create<T>(Action<T> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create(Action action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1>(Action<T, T1> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1>(Action<T1> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2>(Action<T, T1, T2> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2>(Action<T1, T2> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3>(Action<T, T1, T2, T3> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3>(Action<T1, T2, T3> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4>(Action<T, T1, T2, T3, T4> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4>(Action<T1, T2, T3, T4> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4, T5>(Action<T, T1, T2, T3, T4, T5> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4, T5, T6>(Action<T, T1, T2, T3, T4, T5, T6> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4, T5, T6, T7>(Action<T, T1, T2, T3, T4, T5, T6, T7> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4, T5, T6, T7, T8>(Action<T, T1, T2, T3, T4, T5, T6, T7, T8> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4, T5, T6, T7, T8, T9>(Action<T, T1, T2, T3, T4, T5, T6, T7, T8, T9> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4, T5, T6, T7, T8, T9>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> action)
 		{
 			return new ActionExecutor (action);
 		}
 
-		public static ActionExecutor Create<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(Action<T, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> action)
-			where T : AbstractEntity, new ()
+		public static ActionExecutor Create<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> action)
 		{
 			return new ActionExecutor (action);
 		}

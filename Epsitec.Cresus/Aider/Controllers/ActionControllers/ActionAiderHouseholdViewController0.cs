@@ -27,12 +27,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderHouseholdEntity, string, string> (this.Execute);
+			return ActionExecutor.Create<string, string> (this.Execute);
 		}
 
 
-		private void Execute(AiderHouseholdEntity household, string firstname, string lastname)
+		private void Execute(string firstname, string lastname)
 		{
+			var household = this.Entity;
+
 			var newPerson = AiderPersonEntity.Create (this.BusinessContext);
 
 			newPerson.eCH_Person.PersonFirstNames = firstname;

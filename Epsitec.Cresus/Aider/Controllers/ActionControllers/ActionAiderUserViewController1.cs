@@ -30,12 +30,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderUserEntity, bool> (this.Execute);
+			return ActionExecutor.Create<bool> (this.Execute);
 		}
 
 
-		private void Execute(AiderUserEntity user, bool shouldBeAdmin)
+		private void Execute(bool shouldBeAdmin)
 		{
+			var user = this.Entity;
+
 			var powerLevel = UserPowerLevel.Administrator;
 
 			var isAdmin = user.HasPowerLevel (powerLevel);

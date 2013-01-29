@@ -31,12 +31,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderPersonEntity, AiderHouseholdEntity, AiderHouseholdEntity> (this.Execute);
+			return ActionExecutor.Create<AiderHouseholdEntity, AiderHouseholdEntity> (this.Execute);
 		}
 
 
-		private void Execute(AiderPersonEntity person, AiderHouseholdEntity household1, AiderHouseholdEntity household2)
+		private void Execute(AiderHouseholdEntity household1, AiderHouseholdEntity household2)
 		{
+			var person = this.Entity;
+
 			if (household1.IsNull ())
 			{
 				throw new BusinessRuleException (person, "Le ménage principal est obligatoire.");

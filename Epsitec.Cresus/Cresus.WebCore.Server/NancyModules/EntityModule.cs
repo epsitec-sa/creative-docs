@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 					using (businessContext.Bind(entity))
 					{
-						actionExecutor.Call (entity, arguments);
+						actionExecutor.Call (arguments);
 
 						businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 					}			
