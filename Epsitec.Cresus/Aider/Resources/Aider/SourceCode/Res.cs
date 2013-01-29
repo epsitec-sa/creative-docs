@@ -21,6 +21,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVG202
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderAddress = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 2));
+				//	designer:cap/LVAFE
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 463));
 				//	designer:cap/LVG402
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
 				//	designer:cap/LVA3D
@@ -58,6 +60,8 @@ namespace Epsitec.Aider
 			{
 				//	designer:cap/LVG202
 				public const long ShowAiderAddress = 0x3F500050000002L;
+				//	designer:cap/LVAFE
+				public const long ShowAiderContact = 0x3F50000A0001CFL;
 				//	designer:cap/LVG402
 				public const long ShowAiderCountry = 0x3F500050000004L;
 				//	designer:cap/LVA3D

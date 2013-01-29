@@ -9,6 +9,7 @@ DefineEnableSnapshotService (false);
 user = [AVAK]
 submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
+AiderContact = [LVARD]
 AiderPerson = [LVAF]
 AiderGroup = [LVA54]
 AiderGroupParticipant = [LVA73]
@@ -23,6 +24,20 @@ AiderFunctionDef = [LVA7A]
 
 <meta>
   <T>
+    <t eid="@AiderContact" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Nom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="Paroisse" canSort="False" canFilter="False">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+    </t>
     <t eid="@AiderPerson" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
 	<sort o="None" />
@@ -163,6 +178,7 @@ AiderFunctionDef = [LVA7A]
     </t>
   </T>
   <D>
+    <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>

@@ -403,4 +403,5 @@
   <data name="Fld.AiderContact.DisplayName" id="ACE">&lt;s:data id="_0" f:Name="DisplayName" /&gt;</data>
   <data name="Fld.AiderContact.DisplayAddress" id="ADE">&lt;s:data id="_0" f:Name="DisplayAddress" /&gt;</data>
   <data name="Fld.AiderContact.DisplayParish" id="AEE">&lt;s:data id="_0" f:Name="DisplayParish" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderContact" id="AFE">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderContact" f:Description="Montre la base des contacts" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderContact.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Contacts'}}" /&gt;</data>
 </bundle>
