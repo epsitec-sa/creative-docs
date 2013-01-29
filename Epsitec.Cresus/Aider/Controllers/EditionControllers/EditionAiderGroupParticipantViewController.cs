@@ -1,10 +1,10 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
@@ -16,13 +16,17 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.HorizontalGroup ()
-						.Title ("Date de début et de fin")
+						.Title ("Date d'entrée et de sortie")
 						.Field (x => x.StartDate)
+							.ReadOnly ()
 						.Field (x => x.EndDate)
+							.ReadOnly ()
 					.End ()
 					.Field (x => x.Group)
-						.WithSpecialField<AiderGroupSpecialField<AiderGroupParticipantEntity>> ()
+						.ReadOnly ()
 					.Field (x => x.Person)
+						.ReadOnly ()
+					.Field (x => x.Comment.Text)
 				.End ();
 		}
 	}

@@ -51,16 +51,15 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
 			// Here we add a condition that ensures that we will display only the
-			// AiderGroupParticipantEntity whose group is the current entity.
+			// AiderGroupParticipantEntity whose group is the current entity and that are valid
+			// today.
 
 			dataSetAccessor.Customizer = (dataContext, request, example) =>
 			{
-				request.AddCondition<AiderGroupParticipantEntity>
-				(
-					dataContext,
-					(AiderGroupParticipantEntity) example,
-					x => x.Group == entity
-				);
+				var participation = (AiderGroupParticipantEntity) example;
+
+				request.AddCondition (dataContext, participation, x => x.Group == entity);
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
 			};
 		}
 
@@ -93,10 +92,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			foreach (var entity in entitiesToAdd)
 			{
-				var participation = this.BusinessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
-
-				participation.Group = this.Entity;
-				participation.Person = entity;
+				AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, entity, this.Entity, Date.Today, "");
 			}
 		}
 
@@ -105,7 +101,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			foreach (var entity in entitiesToRemove)
 			{
-				this.BusinessContext.DeleteEntity (entity);
+				entity.StopParticipation (Date.Today);
 			}
 		}
 

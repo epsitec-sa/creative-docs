@@ -3,9 +3,15 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
+
+using Epsitec.Cresus.DataLayer.Loader;
+
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.Entities
 {
@@ -29,6 +35,104 @@ namespace Epsitec.Aider.Entities
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield break;
+		}
+
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate, FormattedText comment)
+		{
+			var participation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
+
+			participation.Person = person;
+			participation.Group = group;
+			participation.StartDate = startDate;
+			participation.Comment.Text = comment;
+
+			return participation;
+		}
+
+		public void StopParticipation(Date endDate)
+		{
+			this.EndDate = endDate;
+		}
+
+		public void StopParticipation(Date endDate, FormattedText comment)
+		{
+			this.StopParticipation (endDate);
+
+			this.Comment.Text = comment;
+		}
+
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool sort, bool current, bool returnPersons)
+		{
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				Person = new AiderPersonEntity (),
+				Group = new AiderGroupEntity (),
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+			};
+
+			if (returnPersons)
+			{
+				request.RequestedEntity = participation.Person;
+			}
+
+			request.AddCondition (dataContext, participation, g => g.Group == group);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+			}
+
+			if (sort)
+			{
+				request.AddSortClause (ValueField.Create (participation.Person, p => p.DisplayName), SortOrder.Ascending);
+			}
+
+			return request;
+		}
+
+
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderPersonEntity person, bool sort, bool current, bool returnGroups)
+		{
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				Person = new AiderPersonEntity (),
+				Group = new AiderGroupEntity (),
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+			};
+
+			if (returnGroups)
+			{
+				request.RequestedEntity = participation.Group;
+			}
+
+			request.AddCondition (dataContext, participation, g => g.Person == person);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+			}
+
+			if (sort)
+			{
+				request.AddSortClause (ValueField.Create (participation.Group, g => g.Name), SortOrder.Ascending);
+			}
+
+			return request;
+		}
+
+
+		public static void AddCurrentCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation)
+		{
+			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
+			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
 		}
 	}
 }

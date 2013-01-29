@@ -59,6 +59,8 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AiderProgram.Test.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Entities\Helpers\AiderGroupSubGroupList.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
@@ -105,8 +107,6 @@
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Entities\AiderWarningActionEntity.cs" />
-    <Compile Include="Entities\Helpers\AiderGroupPersonList.cs" />
-    <Compile Include="Entities\Helpers\AiderPersonGroupList.cs" />
     <Compile Include="Entities\Helpers\VirtualEventList.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderUserBusinessRules.cs" />

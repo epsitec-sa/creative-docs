@@ -19,7 +19,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick (p => p.Groups)
-				.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.AutoGroup)
+				.EnableAction (2)
+				.EnableAction (3)
 				.Template ()
 					.Text (g => g.GetSummaryWithGroupName ())
 				.End ();

@@ -311,8 +311,15 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.groupList == null)
 			{
-				this.groupList = new AiderPersonGroupList (this);
+				var dataContext = BusinessContextPool.GetCurrentContext (this).DataContext;
+
+				var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
+
+				this.groupList = dataContext
+					.GetByRequest<AiderGroupParticipantEntity> (request)
+					.AsReadOnlyCollection ();
 			}
+
 			value = this.groupList;
 		}
 		
@@ -505,6 +512,6 @@ namespace Epsitec.Aider.Entities
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
 		private AiderPersonAdditionalContactAddressList additionalAddresses;
-		private AiderPersonGroupList groupList;
+		private IList<AiderGroupParticipantEntity> groupList;
 	}
 }

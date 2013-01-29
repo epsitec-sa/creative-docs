@@ -291,12 +291,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetParticipants(ref IList<AiderPersonEntity> value)
 		{
-			if (this.participantsList == null)
-			{
-				this.participantsList = new AiderGroupPersonList (this);
-			}
-
-			value = this.participantsList;
+			throw new NotImplementedException ();
 		}
 
 
@@ -325,7 +320,7 @@ namespace Epsitec.Aider.Entities
 			var businessContext = BusinessContextPool.GetCurrentContext (this);
 			var dataContext = businessContext.DataContext;
 
-			var request = AiderGroupEntity.CreateParticipantRequest (dataContext, this, false);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
 
 			return dataContext.GetCount (request);
 		}
@@ -336,7 +331,8 @@ namespace Epsitec.Aider.Entities
 			var businessContext = BusinessContextPool.GetCurrentContext (this);
 			var dataContext = businessContext.DataContext;
 
-			var request = AiderGroupEntity.CreateParticipantRequest (dataContext, this, true);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
+			
 			request.Skip = 0;
 			request.Take = count;
 
@@ -344,42 +340,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool sort)
-		{
-			var echPerson = new eCH_PersonEntity ();
-
-			var aiderPerson = new AiderPersonEntity ()
-			{
-				eCH_Person = echPerson
-			};
-
-			var participation = new AiderGroupParticipantEntity ()
-			{
-				Person = aiderPerson
-			};
-
-			var request = new Request ()
-			{
-				RootEntity = participation,
-				RequestedEntity = aiderPerson,
-			};
-
-			request.AddCondition (dataContext, participation, g => g.Group == group);
-			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
-			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
-
-			if (sort)
-			{
-				request.AddSortClause (ValueField.Create (echPerson, p => p.PersonOfficialName), SortOrder.Ascending);
-				request.AddSortClause (ValueField.Create (echPerson, p => p.PersonFirstNames), SortOrder.Ascending);
-			}
-
-			return request;
-		}
-
-
 		private AiderGroupSubGroupList subgroupsList;
-		private AiderGroupPersonList participantsList;
 
 		private static readonly int maxGroupLevel = 6;
 
