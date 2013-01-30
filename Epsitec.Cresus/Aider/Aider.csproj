@@ -62,6 +62,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController0.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController4.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\Helpers\AiderGroupSubGroupList.cs" />

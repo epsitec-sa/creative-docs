@@ -1,7 +1,9 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
 using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
@@ -40,11 +42,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case Enumerations.ContactType.PersonAddress:
 					if (contact.Person.IsNotNull ())
 					{
-						wall.AddBrick (x => x.Person);
+						wall.AddBrick (x => x.Person)
+							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Address.IsNotNull ())
 					{
-						wall.AddBrick (x => x.Address);
+						wall.AddBrick ()
+							.Title (TextFormatter.FormatText (contact.AddressType))
+							.Text (contact.Address.GetSummary ())
+							.Icon ("Data.AiderAddress")
+							.Attribute (BrickMode.SpecialController1);
 					}
 					break;
 

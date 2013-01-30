@@ -156,10 +156,10 @@
   <data name="Fld.AiderPlacePerson.Place" id="AR5">&lt;s:data id="_0" f:Name="Place" /&gt;</data>
   <data name="Fld.AiderPlacePerson.Person" id="AS5">&lt;s:data id="_0" f:Name="Person" /&gt;</data>
   <data name="Typ.StructuredType.AiderPlacePerson" id="AQ5">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="*aT" /&gt;&lt;s:type id="_3" s:name="*S" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="AiderPlacePerson" f:_2.ComplexType="{ObjRef _2}" f:Labels="{Collection {Text 'Personne liée au lieu'}}" /&gt;&lt;s:data id="_2" f:Class="Entity" f:SerializedDesignerLayouts="&amp;lt;Layout id=\&amp;quot;0\&amp;quot;&amp;gt;&amp;lt;Boxes&amp;gt;&amp;lt;Box&amp;gt;&amp;lt;ID&amp;gt;[LVAQ5]&amp;lt;/ID&amp;gt;&amp;lt;Bds&amp;gt;40;32;200;228&amp;lt;/Bds&amp;gt;&amp;lt;Ext&amp;gt;True&amp;lt;/Ext&amp;gt;&amp;lt;Clr&amp;gt;Blue&amp;lt;/Clr&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VAN]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;&amp;amp;lt;invalid&amp;amp;gt;&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VAO]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[100H]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[8VAP]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[100H]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[LVA98]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;&amp;amp;lt;invalid&amp;amp;gt;&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[LVAA8]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[LVA78]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[LVAG6]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[LVA46]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[LVAS5]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[LVAF]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;Field&amp;gt;&amp;lt;Cap&amp;gt;[LVAR5]&amp;lt;/Cap&amp;gt;&amp;lt;Dst&amp;gt;[LVAV3]&amp;lt;/Dst&amp;gt;&amp;lt;/Field&amp;gt;&amp;lt;/Box&amp;gt;&amp;lt;/Boxes&amp;gt;&amp;lt;/Layout&amp;gt;" f:DefaultLifetimeExpectancy="Stable" f:Flags="GenerateSchema, GenerateRepository, StandaloneDisplay, StandaloneCreation" f:Fields="{Collection {Text '[LVAEA];[LVA7A];0;[LVAEA];1'}, {Text '[LVAS5];[LVAF];1;[LVAS5];1'}, {Text '[LVAR5];[LVAV3];2;[LVAR5];1'}}" f:InterfaceIds="{Collection {Text '[8VAN]'}, {Text '[LVA98]'}}" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
-  <data name="Val.Enum.AddressType.Default" id="AU5">&lt;s:data id="_0" f:Name="Default" f:Labels="{Collection {Text 'principal'}}" /&gt;</data>
-  <data name="Val.Enum.AddressType.Professional" id="AV5">&lt;s:data id="_0" f:Name="Professional" f:Labels="{Collection {Text 'professionnel'}}" /&gt;</data>
-  <data name="Val.Enum.AddressType.Private" id="A06">&lt;s:data id="_0" f:Name="Private" f:Labels="{Collection {Text 'privé'}}" /&gt;</data>
-  <data name="Val.Enum.AddressType.Secondary" id="A16">&lt;s:data id="_0" f:Name="Secondary" f:Labels="{Collection {Text 'secondaire'}}" /&gt;</data>
+  <data name="Val.Enum.AddressType.Default" id="AU5">&lt;s:data id="_0" f:Name="Default" f:Labels="{Collection {Text 'Adresse principale'}}" /&gt;</data>
+  <data name="Val.Enum.AddressType.Professional" id="AV5">&lt;s:data id="_0" f:Name="Professional" f:Labels="{Collection {Text 'Adresse professionnelle'}}" /&gt;</data>
+  <data name="Val.Enum.AddressType.Private" id="A06">&lt;s:data id="_0" f:Name="Private" f:Labels="{Collection {Text 'Adresse privée'}}" /&gt;</data>
+  <data name="Val.Enum.AddressType.Secondary" id="A16">&lt;s:data id="_0" f:Name="Secondary" f:Labels="{Collection {Text 'Adresse secondaire'}}" /&gt;</data>
   <data name="Typ.Enum.AddressType" id="AT5">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.AddressType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.AddressType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA4B]'}, {Text '1 [LVAU5]'}, {Text '2 [LVAV5]'}, {Text '3 [LVA06]'}, {Text '4 [LVA16]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.AddressType, Aider/None" f:Labels="{Collection {Text 'Type d&amp;amp;apos;adresse'}}" /&gt;</data>
   <data name="Val.Enum.GroupLevel.Default" id="A36">&lt;s:data id="_0" f:Name="Default" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Typ.Enum.GroupLevel" id="A26">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupLevel" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupLevel, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA36]'}}" /&gt;</data>
@@ -301,7 +301,7 @@
   <data name="Fld.AiderPerson.Parents" id="GM02">&lt;s:data id="_0" f:Name="Parents" f:Labels="{Collection {Text 'Parents'}}" /&gt;</data>
   <data name="Fld.AiderPerson.Housemates" id="GN02">&lt;s:data id="_0" f:Name="Housemates" f:Labels="{Collection {Text 'Membres du ménage'}}" /&gt;</data>
   <data name="Fld.AiderPerson.AdditionalAddresses" id="A3B">&lt;s:data id="_0" f:Name="AdditionalAddresses" f:Labels="{Collection {Text 'Adresses supplémentaires'}}" /&gt;</data>
-  <data name="Val.Enum.AddressType.None" id="A4B">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
+  <data name="Val.Enum.AddressType.None" id="A4B">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Adresse indéfinie'}}" /&gt;</data>
   <data name="Fld.AiderAddress.Fax" id="A5B">&lt;s:data id="_0" f:Name="Fax" f:Labels="{Collection {Text 'Fax'}}" /&gt;</data>
   <data name="Fld.AiderAddress.Mobile" id="A6B">&lt;s:data id="_0" f:Name="Mobile" f:Labels="{Collection {Text 'Téléphone mobile'}}" /&gt;</data>
   <data name="Typ.String.PhoneNumber" id="A7B">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Types.StringType" /&gt;&lt;s:data id="_0" f:Name="String.PhoneNumber" f:Description="Numéro de téléphone (réseau fixe ou mobile, fax)" f:_1.SystemType="C:System.String" f:_1.IsNullable="True" f:_1.DefaultController="FieldBinder" f:_1.DefaultControllerParameters="PhoneNumber" f:_1.DefaultValue="System.String, mscorlib/" f:_2.MinLength="10" f:_2.MaxLength="16" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
@@ -392,16 +392,16 @@
   <data name="Val.Enum.HouseholdRole.None" id="A2E">&lt;s:data id="_0" f:Name="None" /&gt;</data>
   <data name="Val.Enum.HouseholdRole.Head" id="A3E">&lt;s:data id="_0" f:Name="Head" /&gt;</data>
   <data name="Typ.Enum.HouseholdRole" id="A1E">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.HouseholdRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.HouseholdRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA2E]'}, {Text '1 [LVA3E]'}}" /&gt;</data>
-  <data name="Fld.AiderContact.ContactType" id="A4E">&lt;s:data id="_0" f:Name="ContactType" /&gt;</data>
-  <data name="Fld.AiderContact.Person" id="A5E">&lt;s:data id="_0" f:Name="Person" /&gt;</data>
-  <data name="Fld.AiderContact.Household" id="A6E">&lt;s:data id="_0" f:Name="Household" /&gt;</data>
-  <data name="Fld.AiderContact.LegalPerson" id="A7E">&lt;s:data id="_0" f:Name="LegalPerson" /&gt;</data>
-  <data name="Fld.AiderContact.Address" id="A8E">&lt;s:data id="_0" f:Name="Address" /&gt;</data>
-  <data name="Fld.AiderContact.HouseholdRole" id="A9E">&lt;s:data id="_0" f:Name="HouseholdRole" /&gt;</data>
-  <data name="Fld.AiderContact.LegalPersonContactRole" id="AAE">&lt;s:data id="_0" f:Name="LegalPersonContactRole" /&gt;</data>
-  <data name="Fld.AiderContact.AddressType" id="ABE">&lt;s:data id="_0" f:Name="AddressType" /&gt;</data>
-  <data name="Fld.AiderContact.DisplayName" id="ACE">&lt;s:data id="_0" f:Name="DisplayName" /&gt;</data>
-  <data name="Fld.AiderContact.DisplayAddress" id="ADE">&lt;s:data id="_0" f:Name="DisplayAddress" /&gt;</data>
-  <data name="Fld.AiderContact.DisplayParish" id="AEE">&lt;s:data id="_0" f:Name="DisplayParish" /&gt;</data>
+  <data name="Fld.AiderContact.ContactType" id="A4E">&lt;s:data id="_0" f:Name="ContactType" f:Labels="{Collection {Text 'Type de contact'}}" /&gt;</data>
+  <data name="Fld.AiderContact.Person" id="A5E">&lt;s:data id="_0" f:Name="Person" f:Labels="{Collection {Text 'Personne'}}" /&gt;</data>
+  <data name="Fld.AiderContact.Household" id="A6E">&lt;s:data id="_0" f:Name="Household" f:Labels="{Collection {Text 'Ménage'}}" /&gt;</data>
+  <data name="Fld.AiderContact.LegalPerson" id="A7E">&lt;s:data id="_0" f:Name="LegalPerson" f:Labels="{Collection {Text 'Entreprise, association ou organisation'}}" /&gt;</data>
+  <data name="Fld.AiderContact.Address" id="A8E">&lt;s:data id="_0" f:Name="Address" f:Labels="{Collection {Text 'Adresse supplémentaire'}}" /&gt;</data>
+  <data name="Fld.AiderContact.HouseholdRole" id="A9E">&lt;s:data id="_0" f:Name="HouseholdRole" f:Labels="{Collection {Text 'Rôle au sein du ménage'}}" /&gt;</data>
+  <data name="Fld.AiderContact.LegalPersonContactRole" id="AAE">&lt;s:data id="_0" f:Name="LegalPersonContactRole" f:Labels="{Collection {Text 'Rôle de la personne de contact'}}" /&gt;</data>
+  <data name="Fld.AiderContact.AddressType" id="ABE">&lt;s:data id="_0" f:Name="AddressType" f:Labels="{Collection {Text 'Type d&amp;amp;apos;adresse'}}" /&gt;</data>
+  <data name="Fld.AiderContact.DisplayName" id="ACE">&lt;s:data id="_0" f:Name="DisplayName" f:Labels="{Collection {Text 'Nom'}}" /&gt;</data>
+  <data name="Fld.AiderContact.DisplayAddress" id="ADE">&lt;s:data id="_0" f:Name="DisplayAddress" f:Labels="{Collection {Text 'Adresse'}}" /&gt;</data>
+  <data name="Fld.AiderContact.DisplayParish" id="AEE">&lt;s:data id="_0" f:Name="DisplayParish" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
   <data name="Cmd.Base.ShowAiderContact" id="AFE">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderContact" f:Description="Montre la base des contacts" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderContact.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Contacts'}}" /&gt;</data>
 </bundle>
