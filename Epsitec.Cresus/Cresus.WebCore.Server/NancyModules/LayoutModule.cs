@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Core.Business;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.IO;

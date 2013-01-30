@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -133,7 +136,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			bool isFirst = true;
 
-			foreach (var brick in Mason.BuildBrickWall (this.businessContext, entity, this.additionalEntity, viewMode, viewId).Bricks)
+			var wall = Mason.BuildBrickWall (this.businessContext, entity, this.additionalEntity, viewMode, viewId);
+
+			if (wall == null)
+			{
+				yield break;
+			}
+			
+			foreach (var brick in wall.Bricks)
 			{
 				foreach (var tile in this.BuildTiles (brick, viewMode, isFirst))
 				{

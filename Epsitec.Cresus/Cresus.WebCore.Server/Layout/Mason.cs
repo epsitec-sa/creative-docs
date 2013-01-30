@@ -1,3 +1,6 @@
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
@@ -28,6 +31,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
+				if (controller == null)
+				{
+					return null;
+				}
+
 				var brickWall = controller.BuildBrickWall ();
 
 				brickWall.BrickAdded += Mason.HandleBrickAdded;
@@ -45,7 +53,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 		{
 			var name = "js";
-			var resolutionMode = ResolutionMode.ThrowOnError;
+			var resolutionMode = ResolutionMode.NullOnError;
 
 			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode, businessContext, additionalEntity);
 		}
