@@ -28,5 +28,31 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (this.DisplayName);
 		}
+
+		public void RefreshCache()
+		{
+			if (this.Person.IsNotNull ())
+			{
+				this.DisplayName = this.Person.DisplayName;
+			}
+			else
+			{
+				this.DisplayName = "—";
+			}
+
+			if (this.Address.IsNotNull ())
+			{
+				this.DisplayAddress = this.Address.GetCompactSummary ().ToSimpleText ();
+			}
+			else
+			{
+				this.DisplayAddress = "";
+			}
+
+			if (this.Household.IsNotNull ())
+			{
+				this.DisplayAddress = this.Household.Address.GetCompactSummary ().ToSimpleText ();
+			}
+		}
 	}
 }

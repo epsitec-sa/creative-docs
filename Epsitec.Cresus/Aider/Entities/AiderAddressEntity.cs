@@ -19,11 +19,34 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderAddressEntity
 	{
+		public string StreetRoot
+		{
+			get
+			{
+				var street = this.Street;
+
+				if (string.IsNullOrEmpty (street))
+				{
+					return street;
+				}
+
+				int pos = street.IndexOf (',');
+
+				if (pos < 0)
+				{
+					return street;
+				}
+				else
+				{
+					return street.Substring (0, pos);
+				}
+			}
+		}
 		public FormattedText GetPostalAddress()
 		{
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
-				this.StreetUserFriendly, this.HouseNumber, this.HouseNumberComplement, "\n",
+				this.StreetUserFriendly, this.HouseNumberAndComplement, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
@@ -42,7 +65,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Type);
+			return TextFormatter.FormatText (this.Town.ZipCode, this.Town.Name, "~,~", this.StreetRoot);
 		}
 
 		public override EntityStatus GetEntityStatus()

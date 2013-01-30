@@ -19,9 +19,9 @@ namespace Epsitec.Aider.Rules
 	[BusinessRule]
 	internal class AiderContactBusinessRules : GenericBusinessRule<AiderContactEntity>
 	{
-		public override void ApplySetupRule(AiderContactEntity contact)
+		public override void ApplyUpdateRule(AiderContactEntity contact)
 		{
-			//	TODO: ...
+			contact.RefreshCache ();
 		}
 	}
 }
