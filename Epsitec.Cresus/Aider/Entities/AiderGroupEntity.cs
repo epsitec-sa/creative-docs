@@ -256,7 +256,7 @@ namespace Epsitec.Aider.Entities
 
 		public static string GetRegionGroupName(int regionNumber)
 		{
-			return "Région " + InvariantConverter.ToString (regionNumber);
+			return string.Format("Région {0:00}", regionNumber);
 		}
 
 		public static string GetParishGroupName(string parishName)
