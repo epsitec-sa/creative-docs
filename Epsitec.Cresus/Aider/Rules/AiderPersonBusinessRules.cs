@@ -17,6 +17,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Rules
 {
+
 	[BusinessRule]
 	internal class AiderPersonBusinessRules : GenericBusinessRule<AiderPersonEntity>
 	{

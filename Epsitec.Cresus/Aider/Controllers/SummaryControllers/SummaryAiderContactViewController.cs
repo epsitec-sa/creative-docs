@@ -15,24 +15,51 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
+			var contact = this.Entity;
+
+			if ((contact.Person.IsNull ()) &&
+				(contact.LegalPerson.IsNull ()))
+			{
+				wall.AddBrick ()
+					.EnableAction (0);
+			}
+
 			switch (this.Entity.ContactType)
 			{
 				case Enumerations.ContactType.PersonHousehold:
-					wall.AddBrick (x => x.Person);
-					wall.AddBrick (x => x.Household);
+					if (contact.Person.IsNotNull ())
+					{
+						wall.AddBrick (x => x.Person);
+					}
+					if (contact.Household.IsNotNull ())
+					{
+						wall.AddBrick (x => x.Household);
+					}
 					break;
 
 				case Enumerations.ContactType.PersonAddress:
-					wall.AddBrick (x => x.Person);
-					wall.AddBrick (x => x.Address);
+					if (contact.Person.IsNotNull ())
+					{
+						wall.AddBrick (x => x.Person);
+					}
+					if (contact.Address.IsNotNull ())
+					{
+						wall.AddBrick (x => x.Address);
+					}
 					break;
 
 				case Enumerations.ContactType.Legal:
-					if (this.Entity.Person.IsNotNull ())
+					if (contact.Person.IsNotNull ())
 					{
 						wall.AddBrick ().Include (x => x.Person);
 					}
-					wall.AddBrick (x => x.LegalPerson);
+					if (contact.LegalPerson.IsNotNull ())
+					{
+						wall.AddBrick (x => x.LegalPerson);
+					}
+					break;
+				
+				default:
 					break;
 			}
 		}
