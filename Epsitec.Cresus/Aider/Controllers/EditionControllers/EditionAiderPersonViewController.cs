@@ -56,6 +56,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ()
 				.Input ()
 					.Field (x => x.ParishGroup)
+						.ReadOnly ()
 						.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 				.End ();
 		}
@@ -90,6 +91,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ()
 				.Input ()
 					.Field (x => x.ParishGroup)
+						.ReadOnly ()
 						.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 				.End ();
 		}

@@ -26,6 +26,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Text (x => x.GetPersonalDataSummary ());
 
+#if false
 			if (this.Entity.IsGovernmentDefined ())
 			{
 				// TODO Make those two tiles without edition tiles when they are clicked.
@@ -37,6 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					wall.AddBrick (x => x.eCH_Person.Address2);
 				}
 			}
+#endif
 
 			if (this.Entity.Household1.IsNotNull ())
 			{
