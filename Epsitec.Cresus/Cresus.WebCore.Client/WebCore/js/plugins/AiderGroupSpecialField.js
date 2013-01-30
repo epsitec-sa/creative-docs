@@ -22,6 +22,7 @@ function() {
       var field = Ext.create('Epsitec.AiderGroupField', {
         allowBlank: this.fieldConfig.allowBlank,
         readOnly: this.fieldConfig.readOnly,
+        readOnlyCls: 'input-readonly',
         value: this.fieldConfig.value,
         name: this.fieldConfig.name,
         flex: 1,
