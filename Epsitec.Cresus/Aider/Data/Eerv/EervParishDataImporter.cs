@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var mapping = EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 			
 			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
-			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, eervParishData.Id, newEntities.Values);
+			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, newEntities.Values);
 			EervParishDataImporter.AssignToImportationGroup (coreDataManager, eervParishData.Id, mapping.Values);
 
 			return mapping;
@@ -859,15 +859,15 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
 		{
 			coreDataManager.Execute (b =>
-				EervParishDataImporter.AssignToParishes (b, parishRepository, parishId, aiderPersonKeys)
+				EervParishDataImporter.AssignToParishes (b, parishRepository, aiderPersonKeys)
 			);
 		}
 
 
-		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
 		{
 			var aiderPersons = aiderPersonKeys
 				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
