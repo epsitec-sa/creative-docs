@@ -1,6 +1,8 @@
 //	Copyright © 2003-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +72,17 @@ namespace Epsitec.Common.Support
 		public static string Text(string text)
 		{
 			return text;
+		}
+
+		/// <summary>
+		/// This method is used to spot texts in the source code which should be extracted
+		/// into a resource file, rather than being specified as a constant formatted string.
+		/// </summary>
+		/// <param name="text">The formatted text source.</param>
+		/// <returns>The formatted text.</returns>
+		public static FormattedText FormattedText(string text)
+		{
+			return new FormattedText (text);
 		}
 
 
