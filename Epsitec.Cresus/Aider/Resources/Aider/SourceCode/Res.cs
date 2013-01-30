@@ -1352,7 +1352,7 @@ namespace Epsitec.Aider
 				//	designer:cap/LVACE
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 460);
 				//	designer:cap/LVAEE
-				public static readonly global::Epsitec.Common.Support.Druid DisplayParish = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 462);
+				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 462);
 				//	designer:cap/LVA6E
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 454);
 				//	designer:cap/LVA9E
@@ -1564,6 +1564,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAT2
 				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
+				//	designer:cap/LVAGE
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 464);
 				//	designer:cap/LVAV4
 				public static readonly global::Epsitec.Common.Support.Druid Head1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
 				//	designer:cap/LVA05
@@ -1649,6 +1651,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid CodeId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86);
 				//	designer:cap/LVAI5
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
+				//	designer:cap/LVAIE
+				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 466);
 				//	designer:cap/LVAS8
 				public static readonly global::Epsitec.Common.Support.Druid Data = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 284);
 				//	designer:cap/LVAI4
@@ -1663,6 +1667,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Household1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
 				//	designer:cap/LVAG9
 				public static readonly global::Epsitec.Common.Support.Druid Household2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 304);
+				//	designer:cap/LVAJE
+				public static readonly global::Epsitec.Common.Support.Druid Households = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 467);
 				//	designer:cap/LVGN02
 				public static readonly global::Epsitec.Common.Support.Druid Housemates = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 23);
 				//	designer:cap/LVA9C

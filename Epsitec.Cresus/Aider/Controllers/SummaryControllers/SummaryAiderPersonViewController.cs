@@ -26,6 +26,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.EnableAction (4)
+				.EnableAction (5)
+//				.EnableAction (6)
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 //				.Title (x => TextFormatter.FormatText (x.CallName, x.eCH_Person.PersonOfficialName, "(~", x.OriginalName, "~)"))

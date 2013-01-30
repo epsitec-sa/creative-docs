@@ -33,7 +33,7 @@ AiderFunctionDef = [LVA7A]
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="Paroisse" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="NPA" canSort="False" canFilter="False">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>

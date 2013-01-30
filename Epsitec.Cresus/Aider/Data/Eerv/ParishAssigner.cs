@@ -37,7 +37,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			// TODO Assign to two parishes if the person has two households ?
 
-			var address = person.GetHouseholds ().First ().Address;
+			var address = person.Households.First ().Address;
 			var parishGroup = ParishAssigner.FindParishGroup (businessContext, parishRepository, parishNameToGroups, address);
 
 			if (parishGroup == null)

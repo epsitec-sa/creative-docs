@@ -1142,6 +1142,34 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Contacts</c> field.
+		///	designer:fld/LVAF/LVAIE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAIE]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> Contacts
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity>);
+				this.GetContacts (ref value);
+				return value;
+			}
+		}
+		///	<summary>
+		///	The <c>Households</c> field.
+		///	designer:fld/LVAF/LVAJE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJE]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> Households
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity>);
+				this.GetHouseholds (ref value);
+				return value;
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1195,6 +1223,8 @@ namespace Epsitec.Aider.Entities
 		partial void SetIsHouseholdHead(bool value);
 		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
+		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
+		partial void GetHouseholds(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1699,6 +1729,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DisplayName</c> field.
+		///	designer:fld/LVAI2/LVAGE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAGE]")]
+		public string DisplayName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAGE]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName;
+				if (oldValue != value || !this.IsFieldDefined("[LVAGE]"))
+				{
+					this.OnDisplayNameChanging (oldValue, value);
+					this.SetField<string> ("[LVAGE]", oldValue, value);
+					this.OnDisplayNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Address</c> field.
 		///	designer:fld/LVAI2/LVAT2
 		///	</summary>
@@ -1783,6 +1835,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnHouseholdMrMrsChanged(global::Epsitec.Aider.Enumerations.HouseholdMrMrs oldValue, global::Epsitec.Aider.Enumerations.HouseholdMrMrs newValue);
 		partial void OnHouseholdNameChanging(string oldValue, string newValue);
 		partial void OnHouseholdNameChanged(string oldValue, string newValue);
+		partial void OnDisplayNameChanging(string oldValue, string newValue);
+		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnHead1Changing(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
@@ -6751,11 +6805,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DisplayParish</c> field.
+		///	The <c>DisplayZipCode</c> field.
 		///	designer:fld/LVARD/LVAEE
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAEE]")]
-		public string DisplayParish
+		public string DisplayZipCode
 		{
 			get
 			{
@@ -6763,12 +6817,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				string oldValue = this.DisplayParish;
+				string oldValue = this.DisplayZipCode;
 				if (oldValue != value || !this.IsFieldDefined("[LVAEE]"))
 				{
-					this.OnDisplayParishChanging (oldValue, value);
+					this.OnDisplayZipCodeChanging (oldValue, value);
 					this.SetField<string> ("[LVAEE]", oldValue, value);
-					this.OnDisplayParishChanged (oldValue, value);
+					this.OnDisplayZipCodeChanged (oldValue, value);
 				}
 			}
 		}
@@ -6793,8 +6847,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnDisplayAddressChanging(string oldValue, string newValue);
 		partial void OnDisplayAddressChanged(string oldValue, string newValue);
-		partial void OnDisplayParishChanging(string oldValue, string newValue);
-		partial void OnDisplayParishChanged(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

@@ -489,7 +489,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static List<AiderHouseholdEntity> GetAiderHouseholds(IEnumerable<AiderPersonEntity> aiderPersons)
 		{
-			return aiderPersons.SelectMany (m => m.GetHouseholds ()).Distinct ().ToList ();
+			return aiderPersons.SelectMany (m => m.Households).Distinct ().ToList ();
 		}
 
 

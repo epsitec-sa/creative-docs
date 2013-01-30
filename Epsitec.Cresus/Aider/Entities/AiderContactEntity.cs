@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Entities
 					return Resources.FormattedText ("Ce contact n'est pas défini.<br/><br/>Utilisez une <i>action</i> pour associer ce contact à une personne ou à une entreprise.");
 			}
 
-			return TextFormatter.FormatText (this.DisplayName, "\n", this.DisplayParish, "\n", this.DisplayAddress);
+			return TextFormatter.FormatText (this.DisplayName, "\n", this.DisplayZipCode, this.DisplayAddress);
 		}
 		
 		public override FormattedText GetCompactSummary()
@@ -40,19 +40,30 @@ namespace Epsitec.Aider.Entities
 				this.DisplayName = "—";
 			}
 
-			if (this.Address.IsNotNull ())
+			if ((this.Address.IsNotNull ()) &&
+				(this.Address.Town.IsNotNull ()))
 			{
-				this.DisplayAddress = this.Address.GetCompactSummary ().ToSimpleText ();
+				this.RefreshDisplayAddressAndZipCode (this.Address);
 			}
 			else
 			{
 				this.DisplayAddress = "";
+				this.DisplayZipCode = "";
 			}
 
 			if (this.Household.IsNotNull ())
 			{
-				this.DisplayAddress = this.Household.Address.GetCompactSummary ().ToSimpleText ();
+				this.RefreshDisplayAddressAndZipCode (this.Household.Address);
 			}
+		}
+		
+		private void RefreshDisplayAddressAndZipCode(AiderAddressEntity address)
+		{
+			var town    = address.Town;
+			var country = town.Country;
+
+			this.DisplayAddress = address.GetDisplayAddress ().ToSimpleText ();
+			this.DisplayZipCode = country.IsoCode == "CH" ? town.ZipCode : country.IsoCode + "-" + town.ZipCode;
 		}
 	}
 }

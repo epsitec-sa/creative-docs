@@ -42,6 +42,7 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		
 		public FormattedText GetPostalAddress()
 		{
 			return TextFormatter.FormatText (
@@ -49,6 +50,11 @@ namespace Epsitec.Aider.Entities
 				this.StreetUserFriendly, this.HouseNumberAndComplement, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
+		}
+
+		public FormattedText GetDisplayAddress()
+		{
+			return TextFormatter.FormatText (this.Town.Name, "~,~", this.StreetRoot);
 		}
 
 		public override FormattedText GetSummary()

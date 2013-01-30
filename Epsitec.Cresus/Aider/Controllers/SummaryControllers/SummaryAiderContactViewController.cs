@@ -31,11 +31,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case Enumerations.ContactType.PersonHousehold:
 					if (contact.Person.IsNotNull ())
 					{
-						wall.AddBrick (x => x.Person);
+						wall.AddBrick (x => x.Person)
+							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Household.IsNotNull ())
 					{
-						wall.AddBrick (x => x.Household);
+						wall.AddBrick ()
+							.Title (Resources.Text ("Ménage associé"))
+							.Text (contact.Household.GetSummary ())
+							.Icon ("Data.AiderHousehold")
+							.Attribute (BrickMode.SpecialController2);
 					}
 					break;
 
@@ -58,7 +63,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case Enumerations.ContactType.Legal:
 					if (contact.Person.IsNotNull ())
 					{
-						wall.AddBrick ().Include (x => x.Person);
+						wall.AddBrick ().Include (x => x.Person)
+							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.LegalPerson.IsNotNull ())
 					{

@@ -323,23 +323,6 @@ namespace Epsitec.Aider.Entities
 			value = this.groupList;
 		}
 		
-		public IEnumerable<AiderHouseholdEntity> GetHouseholds()
-		{
-			var household1 = this.Household1;
-
-			if (household1.IsNotNull())
-			{
-				yield return household1;
-			}
-
-			var household2 = this.Household2;
-
-			if (household2.IsNotNull ())
-			{
-				yield return household2;
-			}
-		}
-
 		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
 		{
 			if (this.additionalAddresses == null)
@@ -387,6 +370,32 @@ namespace Epsitec.Aider.Entities
 			{
 				this.Parish.Group = value;
 			}
+		}
+
+		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
+		{
+			value = this.GetHouseholds ().OrderBy (x => x.DisplayName).AsReadOnlyCollection ();
+		}
+
+		private IEnumerable<AiderHouseholdEntity> GetHouseholds()
+		{
+			if (this.households == null)
+			{
+				this.households = new HashSet<AiderHouseholdEntity> ();
+				
+				var businessContext = BusinessContextPool.GetCurrentContext (this);
+				var dataContext     = businessContext.DataContext;
+
+				if (dataContext.IsPersistent (this))
+				{
+					var example  = new AiderContactEntity () { Person = this };
+					var contacts = dataContext.GetByExample (example);
+
+					this.households.UnionWith (contacts.Where (x => x.Household.IsNotNull ()).Select (x => x.Household));
+				}
+			}
+
+			return this.households;
 		}
 
 		
@@ -452,18 +461,15 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
 		public void SetHousehold1(BusinessContext businessContext, AiderHouseholdEntity newHousehold)
 		{
 			this.SetHousehold (businessContext, newHousehold, p => p.Household1, (p, h) => p.Household1 = h);
 		}
 
-
 		public void SetHousehold2(BusinessContext businessContext, AiderHouseholdEntity newHousehold)
 		{
 			this.SetHousehold (businessContext, newHousehold, p => p.Household2, (p, h) => p.Household2 = h);
 		}
-
 
 		private void SetHousehold(BusinessContext businessContext, AiderHouseholdEntity newHousehold, Func<AiderPersonEntity, AiderHouseholdEntity> getter, Action<AiderPersonEntity, AiderHouseholdEntity> setter)
 		{
@@ -513,5 +519,6 @@ namespace Epsitec.Aider.Entities
 
 		private AiderPersonAdditionalContactAddressList additionalAddresses;
 		private IList<AiderGroupParticipantEntity> groupList;
+		private HashSet<AiderHouseholdEntity> households;
 	}
 }
