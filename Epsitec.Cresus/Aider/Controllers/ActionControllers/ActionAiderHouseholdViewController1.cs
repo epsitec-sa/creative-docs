@@ -35,21 +35,26 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		}
 
 
-		private void Execute(AiderPersonEntity person, bool isMainHousehold)
+		private void Execute(AiderPersonEntity person, bool isPersonHead)
 		{
 			var household = this.Entity;
 
 			if (person.IsNull ())
 			{
-				throw new BusinessRuleException (household, "Aucune persone sélectionnée.");
+				throw new BusinessRuleException (household, "Aucune personne n'a été sélectionnée.");
 			}
 
 			if (household.Members.Contains (person))
 			{
-				throw new BusinessRuleException (household, "La personne sélectionnée appartien déjà au ménage.");
+				throw new BusinessRuleException (household, "La personne sélectionnée appartient déjà au ménage.");
 			}
 
-			person.SetHousehold (this.BusinessContext, household, isMainHousehold);
+			var newContact = this.BusinessContext.CreateAndRegisterEntity<AiderContactEntity> ();
+
+			newContact.Person = person;
+			newContact.Household = this.Entity;
+			newContact.ContactType = Enumerations.ContactType.PersonHousehold;
+			newContact.HouseholdRole = isPersonHead ? Enumerations.HouseholdRole.Head : Enumerations.HouseholdRole.None;
 		}
 
 
@@ -61,7 +66,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Nouveau membre")
 				.End ()
 				.Field<bool> ()
-					.Title ("Ménage principal")
+					.Title ("Le nouveau membre est un chef du ménage")
 					.InitialValue (true)
 				.End ()
 			.End ();

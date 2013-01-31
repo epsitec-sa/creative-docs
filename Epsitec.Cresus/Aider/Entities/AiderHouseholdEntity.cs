@@ -19,35 +19,98 @@ namespace Epsitec.Aider.Entities
 
 	public partial class AiderHouseholdEntity
 	{
+		public override FormattedText GetCompactSummary()
+		{
+			if (string.IsNullOrEmpty (this.DisplayName))
+			{
+				this.RefreshCache ();
+			}
 
+			return TextFormatter.FormatText (this.DisplayName, "~,", this.Address.GetStreetZipAndTownAddress ());
+		}
 
 		public override FormattedText GetSummary()
 		{
+			if (string.IsNullOrEmpty (this.DisplayName))
+			{
+				this.RefreshCache ();
+			}
+
+			return TextFormatter.FormatText (this.DisplayName, "~\n", this.Address.GetPostalAddress ());
+		}
+
+		private void RefreshCache()
+		{
+			if (string.IsNullOrEmpty (this.HouseholdName))
+			{
+				this.DisplayName = this.BuildDisplayName ();
+			}
+			else
+			{
+				this.DisplayName = this.HouseholdName;
+			}
+		}
+
+		private string BuildDisplayName()
+		{
+			var headTitle = "";
 			var headNames = new List<string> ();
 
-			var headName1 = this.Head1.eCH_Person.PersonOfficialName;
-			var headName2 = this.Head2.eCH_Person.PersonOfficialName;
+			this.GetMembers ();
 
-			if (headName1 != null)
+			var heads = this.contacts.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).ToList ();
+			var men   = heads.Where (x => x.eCH_Person.PersonSex == Enumerations.PersonSex.Male);
+			var women = heads.Where (x => x.eCH_Person.PersonSex == Enumerations.PersonSex.Female);
+
+			var order = this.HouseholdMrMrs;
+
+			switch (order)
 			{
-				headNames.Add (headName1);
+				case Enumerations.HouseholdMrMrs.None:
+				case Enumerations.HouseholdMrMrs.Auto:
+				case Enumerations.HouseholdMrMrs.Famille:
+				case Enumerations.HouseholdMrMrs.MonsieurEtMadame:
+					headNames.AddRange (men.Select (x => x.GetShortFullName ()));
+					headNames.AddRange (women.Select (x => x.GetShortFullName ()));
+					break;
+				case Enumerations.HouseholdMrMrs.MadameEtMonsieur:
+					headNames.AddRange (women.Select (x => x.GetShortFullName ()));
+					headNames.AddRange (men.Select (x => x.GetShortFullName ()));
+					break;
 			}
 
-			if (headName2 != null)
+			if (headNames.Count == 0)
 			{
-				headNames.Add (headName2);
+				var contact = this.contacts.Select (x => x.Person.GetShortFullName ()).FirstOrDefault ();
+
+				if (contact != null)
+				{
+					headNames.Add (contact);
+				}
 			}
 
-			var text = "Famille " + headNames.Distinct ().Join (" ");
+			switch (order)
+			{
+				case Enumerations.HouseholdMrMrs.None:
+				case Enumerations.HouseholdMrMrs.Auto:
+				case Enumerations.HouseholdMrMrs.Famille:
+					headTitle = this.members.Count == 1 ? EnumKeyValues.GetEnumKeyValue (this.members[0].MrMrs).Values.LastOrDefault ().ToSimpleText () : "Famille";
+					break;
 
-			return TextFormatter.FormatText (text);
+				case Enumerations.HouseholdMrMrs.MonsieurEtMadame:
+					headTitle = "M. et Mme";
+					break;
+
+				case Enumerations.HouseholdMrMrs.MadameEtMonsieur:
+					headTitle = "Mme et M.";
+					break;
+			}
+
+			headNames.Insert (0, headTitle);
+
+			return StringUtils.Join (" ", headNames.Distinct ().ToArray ());
 		}
 
-
-		public override FormattedText GetCompactSummary()
-		{
-			return this.GetSummary ();
-		}
 
 
 		public FormattedText GetMembersTitle()
@@ -78,7 +141,8 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.members == null)
 			{
-				this.members = new List<AiderPersonEntity> ();
+				this.contacts = new List<AiderContactEntity> ();
+				this.members  = new List<AiderPersonEntity> ();
 
 				var businessContext = BusinessContextPool.GetCurrentContext (this);
 				var dataContext = businessContext.DataContext;
@@ -91,10 +155,12 @@ namespace Epsitec.Aider.Entities
 					};
 
 					var contacts = dataContext.GetByExample (example);
-					var alive    = contacts.Where (x => x.Person.eCH_Person.PersonDateOfDeath == null).ToList ();
+					var alive    = contacts.Where (x => x.Person.IsAlive).ToList ();
 					var heads    = alive.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
 					var others   = alive.Where (x => x.HouseholdRole != Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-					
+
+					this.contacts.AddRange (alive);
+
 					this.members.AddRange (heads);
 					this.members.AddRange (others);
 				}
@@ -168,6 +234,7 @@ namespace Epsitec.Aider.Entities
 
 		// This property is only meant as an in memory cache of the members of the household. It
 		// will never be saved to the database.
+		private List<AiderContactEntity> contacts;
 		private List<AiderPersonEntity> members;
 
 

@@ -32,6 +32,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (contact.Person.IsNotNull ())
 					{
 						wall.AddBrick (x => x.Person)
+							.Icon (contact.Person.GetIconName ("Data"))
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Household.IsNotNull ())
@@ -41,6 +42,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Text (contact.Household.GetSummary ())
 							.Icon ("Data.AiderHousehold")
 							.Attribute (BrickMode.SpecialController2);
+
+						if (contact.Household.Members.Count > 1)
+						{
+							wall.AddBrick (x => x.Household.Members)
+								.Title (Resources.Text ("Membres du ménage"))
+								.Icon ("Data.AiderPersons")
+								.Attribute (BrickMode.HideAddButton)
+								.Attribute (BrickMode.HideRemoveButton)
+								.Attribute (BrickMode.AutoGroup)
+								.Template ()
+								.End ()
+								.Attribute (BrickMode.DefaultToSummarySubView);
+						}
 					}
 					break;
 
@@ -48,6 +62,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (contact.Person.IsNotNull ())
 					{
 						wall.AddBrick (x => x.Person)
+							.Icon (contact.Person.GetIconName ("Data"))
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Address.IsNotNull ())
@@ -61,15 +76,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 
 				case Enumerations.ContactType.Legal:
-					if (contact.Person.IsNotNull ())
-					{
-						wall.AddBrick ().Include (x => x.Person)
-							.Attribute (BrickMode.DefaultToSummarySubView);
-					}
-					if (contact.LegalPerson.IsNotNull ())
-					{
-						wall.AddBrick (x => x.LegalPerson);
-					}
+					//	TODO: ...
 					break;
 				
 				default:

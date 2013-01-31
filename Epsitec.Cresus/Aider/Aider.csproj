@@ -293,6 +293,7 @@
     <EmbeddedResource Include="Images\Data.ech_address.icon" />
     <EmbeddedResource Include="Images\Base.AiderContact.icon" />
     <EmbeddedResource Include="Images\Data.AiderContact.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPersons.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

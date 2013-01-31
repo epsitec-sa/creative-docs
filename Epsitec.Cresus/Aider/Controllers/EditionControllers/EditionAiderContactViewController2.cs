@@ -17,10 +17,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title (Resources.Text ("Adresse du ménage"))
+				.Title (Resources.Text ("Détails du ménage"))
 				.Icon ("Data.AiderAddress")
 				.Input ()
 					.Field (x => x.HouseholdRole)
+					.Field (x => x.Household.HouseholdMrMrs)
+					.Field (x => x.Household.HouseholdName)
 				.End ()
 				.Input ()
 					.Field (x => x.Household.Address.Town)

@@ -57,6 +57,17 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Town.Name, "~,~", this.StreetRoot);
 		}
 
+		public FormattedText GetShortStreetAddress()
+		{
+			return TextFormatter.FormatText (this.StreetRoot, this.HouseNumberAndComplement);
+		}
+
+		public FormattedText GetStreetZipAndTownAddress()
+		{
+			return TextFormatter.FormatText (this.GetShortStreetAddress (), "~,", this.Town.ZipCode, this.Town.Name);
+		}
+
+
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (

@@ -54,6 +54,13 @@ namespace Epsitec.Aider.Entities
 				this.Profession, "~\n");
 		}
 
+		public bool IsAlive
+		{
+			get
+			{
+				return this.eCH_Person.IsNull () || this.eCH_Person.PersonDateOfDeath == null;
+			}
+		}
 		
 		public int? ComputeAge()
 		{
@@ -150,6 +157,45 @@ namespace Epsitec.Aider.Entities
 			this.eCH_Person.PersonFirstNames,
 			this.eCH_Person.PersonOfficialName
 			);
+		}
+
+		public string GetShortCallName()
+		{
+			var callname = this.CallName;
+
+			if (string.IsNullOrEmpty (callname))
+			{
+				return "";
+			}
+
+			var split = callname.Split (' ', '-');
+
+			return string.Concat (split.Select (x => AiderPersonEntity.GetNameAbbreviation (x)).ToArray ());
+		}
+
+		public static string GetNameAbbreviation(string name)
+		{
+			name = name.ToLowerInvariant ();
+
+			if ((name.StartsWith ("ch")) ||
+				(name.StartsWith ("ph")))
+			{
+				var c1 = name.Substring (0, 1).ToUpperInvariant ();
+				var c2 = name.Substring (1, 1);
+
+				return string.Concat (c1, c2, ".");
+			}
+			else
+			{
+				var c1 = name.Substring (0, 1).ToUpperInvariant ();
+
+				return string.Concat (c1, ".");
+			}
+		}
+
+		public string GetShortFullName()
+		{
+			return StringUtils.Join (" ", this.GetShortCallName (), this.eCH_Person.PersonOfficialName);
 		}
 
 
