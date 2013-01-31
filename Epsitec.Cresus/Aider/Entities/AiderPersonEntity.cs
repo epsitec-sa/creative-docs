@@ -377,18 +377,26 @@ namespace Epsitec.Aider.Entities
 			value = this.GetHouseholds ().OrderBy (x => x.DisplayName).AsReadOnlyCollection ();
 		}
 
+		partial void GetContacts(ref IList<AiderContactEntity> value)
+		{
+			value = this.GetContacts ().OrderBy (x => x.DisplayAddress).AsReadOnlyCollection ();
+		}
+
 		private IEnumerable<AiderHouseholdEntity> GetHouseholds()
 		{
 			if (this.households == null)
 			{
 				this.households = new HashSet<AiderHouseholdEntity> ();
-				
+
 				var businessContext = BusinessContextPool.GetCurrentContext (this);
 				var dataContext     = businessContext.DataContext;
 
 				if (dataContext.IsPersistent (this))
 				{
-					var example  = new AiderContactEntity () { Person = this };
+					var example  = new AiderContactEntity ()
+					{
+						Person = this
+					};
 					var contacts = dataContext.GetByExample (example);
 
 					this.households.UnionWith (contacts.Where (x => x.Household.IsNotNull ()).Select (x => x.Household));
@@ -396,6 +404,30 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return this.households;
+		}
+
+		private IEnumerable<AiderContactEntity> GetContacts()
+		{
+			if (this.contacts == null)
+			{
+				this.contacts = new HashSet<AiderContactEntity> ();
+
+				var businessContext = BusinessContextPool.GetCurrentContext (this);
+				var dataContext     = businessContext.DataContext;
+
+				if (dataContext.IsPersistent (this))
+				{
+					var example  = new AiderContactEntity ()
+					{
+						Person = this
+					};
+					var contacts = dataContext.GetByExample (example);
+
+					this.contacts.UnionWith (contacts);
+				}
+			}
+
+			return this.contacts;
 		}
 
 		
@@ -520,5 +552,6 @@ namespace Epsitec.Aider.Entities
 		private AiderPersonAdditionalContactAddressList additionalAddresses;
 		private IList<AiderGroupParticipantEntity> groupList;
 		private HashSet<AiderHouseholdEntity> households;
+		private HashSet<AiderContactEntity> contacts;
 	}
 }

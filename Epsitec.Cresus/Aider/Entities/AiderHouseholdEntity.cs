@@ -1,5 +1,8 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -67,30 +70,33 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetMembers(ref IList<AiderPersonEntity> value)
 		{
-			value = this.GetMembers ().OrderBy (x => x.eCH_Person.PersonDateOfBirth).AsReadOnlyCollection ();
+			value = this.GetMembers ().AsReadOnlyCollection ();
 		}
 
 
-		private HashSet<AiderPersonEntity> GetMembers()
+		private IList<AiderPersonEntity> GetMembers()
 		{
 			if (this.members == null)
 			{
-				this.members = new HashSet<AiderPersonEntity> ();
+				this.members = new List<AiderPersonEntity> ();
 
 				var businessContext = BusinessContextPool.GetCurrentContext (this);
 				var dataContext = businessContext.DataContext;
 
 				if (dataContext.IsPersistent (this))
 				{
-					this.members.UnionWith (dataContext.GetByExample (new AiderPersonEntity ()
+					var example = new AiderContactEntity ()
 					{
-						Household1 = this,
-					}));
+						Household = this,
+					};
 
-					this.members.UnionWith (dataContext.GetByExample (new AiderPersonEntity ()
-					{
-						Household2 = this,
-					}));
+					var contacts = dataContext.GetByExample (example);
+					var alive    = contacts.Where (x => x.Person.eCH_Person.PersonDateOfDeath == null).ToList ();
+					var heads    = alive.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+					var others   = alive.Where (x => x.HouseholdRole != Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+					
+					this.members.AddRange (heads);
+					this.members.AddRange (others);
 				}
 			}
 
@@ -162,7 +168,7 @@ namespace Epsitec.Aider.Entities
 
 		// This property is only meant as an in memory cache of the members of the household. It
 		// will never be saved to the database.
-		private HashSet<AiderPersonEntity> members;
+		private List<AiderPersonEntity> members;
 
 
 	}

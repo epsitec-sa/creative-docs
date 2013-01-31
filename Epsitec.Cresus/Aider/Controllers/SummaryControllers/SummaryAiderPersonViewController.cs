@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Aider.Entities;
@@ -54,6 +55,31 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			//wall.AddBrick (x => x.Relationships)
 			//    .Attribute (BrickMode.DefaultToSummarySubView)
 			//    .Attribute (BrickMode.SpecialController2);
+
+			var households = this.Entity.Households;
+			var contacts   = this.Entity.Contacts;
+
+			if (households.Any ())
+			{
+				wall.AddBrick (x => x.Households)
+					.Title (households.Count > 1 ? Resources.Text ("Ménages") : Resources.Text ("Ménage"))
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Template ()
+					.End ()
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
+
+			wall.AddBrick (x => x.Contacts)
+				.Title (contacts.Count > 1 ? Resources.Text ("Contacts") : Resources.Text ("Contact"))
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ()
+				.Attribute (BrickMode.DefaultToSummarySubView);
+
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);

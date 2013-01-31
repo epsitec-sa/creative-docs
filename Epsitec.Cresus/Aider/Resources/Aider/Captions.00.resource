@@ -389,8 +389,8 @@
   <data name="Val.Enum.ContactType.PersonAddress" id="AVD">&lt;s:data id="_0" f:Name="PersonAddress" /&gt;</data>
   <data name="Val.Enum.ContactType.Legal" id="A0E">&lt;s:data id="_0" f:Name="Legal" /&gt;</data>
   <data name="Typ.Enum.ContactType" id="ASD">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.ContactType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.ContactType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATD]'}, {Text '1 [LVAUD]'}, {Text '2 [LVAVD]'}, {Text '3 [LVA0E]'}}" /&gt;</data>
-  <data name="Val.Enum.HouseholdRole.None" id="A2E">&lt;s:data id="_0" f:Name="None" /&gt;</data>
-  <data name="Val.Enum.HouseholdRole.Head" id="A3E">&lt;s:data id="_0" f:Name="Head" /&gt;</data>
+  <data name="Val.Enum.HouseholdRole.None" id="A2E">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Membre'}}" /&gt;</data>
+  <data name="Val.Enum.HouseholdRole.Head" id="A3E">&lt;s:data id="_0" f:Name="Head" f:Labels="{Collection {Text 'Chef de famille'}}" /&gt;</data>
   <data name="Typ.Enum.HouseholdRole" id="A1E">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.HouseholdRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.HouseholdRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA2E]'}, {Text '1 [LVA3E]'}}" /&gt;</data>
   <data name="Fld.AiderContact.ContactType" id="A4E">&lt;s:data id="_0" f:Name="ContactType" f:Labels="{Collection {Text 'Type de contact'}}" /&gt;</data>
   <data name="Fld.AiderContact.Person" id="A5E">&lt;s:data id="_0" f:Name="Person" f:Labels="{Collection {Text 'Personne'}}" /&gt;</data>
