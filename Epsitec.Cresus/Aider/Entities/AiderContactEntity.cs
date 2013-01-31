@@ -40,6 +40,11 @@ namespace Epsitec.Aider.Entities
 				this.DisplayName = "—";
 			}
 
+			if (this.Household.IsNotNull ())
+			{
+				this.Address = this.Household.Address;
+			}
+
 			if ((this.Address.IsNotNull ()) &&
 				(this.Address.Town.IsNotNull ()))
 			{
@@ -49,11 +54,6 @@ namespace Epsitec.Aider.Entities
 			{
 				this.DisplayAddress = "";
 				this.DisplayZipCode = "";
-			}
-
-			if (this.Household.IsNotNull ())
-			{
-				this.RefreshDisplayAddressAndZipCode (this.Household.Address);
 			}
 		}
 		
