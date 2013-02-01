@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string, string> (this.Execute);
+			return ActionExecutor.Create<string, string, bool> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
@@ -40,19 +40,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Nom")
 					.InitialValue (h => h.GetDefaultLastname ())
 				.End ()
+				.Field<bool> ()
+					.Title ("Le nouveau membre est un chef du ménage")
+					.InitialValue (false)
+				.End ()
 			.End ();
 		}
 		
-		private void Execute(string firstname, string lastname)
+		private void Execute(string firstname, string lastname, bool isPersonHead)
 		{
 			var household = this.Entity;
 
-			var newPerson = AiderPersonEntity.Create (this.BusinessContext);
+			var member = this.BusinessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 
-			newPerson.eCH_Person.PersonFirstNames = firstname;
-			newPerson.eCH_Person.PersonOfficialName = lastname;
+			member.eCH_Person.PersonFirstNames = firstname;
+			member.eCH_Person.PersonOfficialName = lastname;
 
-			newPerson.SetHousehold1 (this.BusinessContext, household);
+			AiderContactEntity.Create(this.BusinessContext, member, household, isPersonHead);
 		}
 	}
 }
