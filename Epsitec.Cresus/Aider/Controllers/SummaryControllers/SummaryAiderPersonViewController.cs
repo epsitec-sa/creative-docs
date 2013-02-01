@@ -31,11 +31,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 //				.EnableAction (6)
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
+				.Text (x => x.GetPersonalDataSummary ())
 //				.Title (x => TextFormatter.FormatText (x.CallName, x.eCH_Person.PersonOfficialName, "(~", x.OriginalName, "~)"))
-				.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.Parish.Group.Name).ApplyBold(), "", "\n", TextFormatter.Command.IfElseEmpty, x.Household1.Address.GetPostalAddress ()))
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.SpecialController1);
+//				.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.Parish.Group.Name).ApplyBold(), "", "\n", TextFormatter.Command.IfElseEmpty, x.Household1.Address.GetPostalAddress ()))
+//				.Attribute (BrickMode.DefaultToSummarySubView)
+//				.Attribute (BrickMode.SpecialController1)
+			;
 
+			wall.AddBrick (x => x.ParishGroup)
+				.Icon ("Data.AiderGroup.Parish")
+				.Title ("Paroisse")
+				.Attribute (BrickMode.DefaultToSummarySubView);
+			
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.People")
 				.Title (p => p.GetGroupTitle ())
