@@ -43,29 +43,8 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName, "~\n", this.Address.GetPostalAddress ());
 		}
 
-		public string GetDisplayName()
-		{
-			// HACK This is a temporary method required for the demo of the 01.02.2013. It should
-			// be removed later on.
-
-			this.RefreshCacheIfNeeded ();
-
-			return this.DisplayName;
-		}
-
 		public void RefreshCacheIfNeeded()
 		{
-			// HACK This is a temporary hack for the demo of the 01.02.2013. It should be removed
-			// later on. When building the data for the left list, the BusinessContext is null
-			// because this entity belongs to the DataContext of the DataSetAccessor. This
-			// dataContext is not associated to any BusinessContext. We need a correct fix for that
-			// but I don't have the time to do it now.
-
-			if (BusinessContextPool.GetCurrentContext (this) == null)
-			{
-				return;
-			}
-
 			if (string.IsNullOrEmpty (this.DisplayName))
 			{
 				this.RefreshCache ();
