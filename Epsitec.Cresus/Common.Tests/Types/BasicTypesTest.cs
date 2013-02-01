@@ -310,6 +310,8 @@ namespace Epsitec.Common.Tests.Types
 			Assert.AreEqual (6, new Date (2006, 8, 28).ComputeAge (new Date (2013, 1, 24)));
 			Assert.AreEqual (6, new Date (2006, 8, 28).ComputeAge (new Date (2013, 8, 27)));
 			Assert.AreEqual (7, new Date (2006, 8, 28).ComputeAge (new Date (2013, 8, 28)));
+			Assert.AreEqual (69, new Date (1943, 1, 3).ComputeAge (new Date (2013, 1, 2)));
+			Assert.AreEqual (70, new Date (1943, 1, 3).ComputeAge (new Date (2013, 2, 1)));
 		}
 
 		[Test]

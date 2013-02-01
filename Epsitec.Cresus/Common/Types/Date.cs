@@ -230,8 +230,8 @@ namespace Epsitec.Common.Types
 				return null;
 			}
 
-			if ((today.Month >= this.Month) &&
-				(today.Day >= this.Day))
+			if ((today.Month > this.Month) ||
+				(today.Month == this.Month) && (today.Day >= this.Day))
 			{
 				return today.Year - this.Year;
 			}
