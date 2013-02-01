@@ -164,7 +164,6 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderTownViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonRelationshipViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderCommentViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController1.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryeCH_AddressViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderAddressViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderCountryViewController.cs" />

@@ -89,7 +89,6 @@ namespace Epsitec.Aider.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				a.Accumulate (this.Type == Enumerations.AddressType.None ? EntityStatus.Empty : EntityStatus.Valid);
 				a.Accumulate (this.AddressLine1.GetEntityStatus ().TreatAsOptional ());
 
 				if (string.IsNullOrWhiteSpace (this.Street))

@@ -1317,8 +1317,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid StreetUserFriendly = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 435);
 				//	designer:cap/LVA55
 				public static readonly global::Epsitec.Common.Support.Druid Town = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 165);
-				//	designer:cap/LVAE6
-				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 206);
 				//	designer:cap/LVAI8
 				public static readonly global::Epsitec.Common.Support.Druid Web = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 274);
 			}

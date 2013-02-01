@@ -1897,28 +1897,6 @@ namespace Epsitec.Aider.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Type</c> field.
-		///	designer:fld/LVAJ2/LVAE6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAE6]")]
-		public global::Epsitec.Aider.Enumerations.AddressType Type
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.AddressType> ("[LVAE6]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.AddressType oldValue = this.Type;
-				if (oldValue != value || !this.IsFieldDefined("[LVAE6]"))
-				{
-					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.AddressType> ("[LVAE6]", oldValue, value);
-					this.OnTypeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>AddressLine1</c> field.
 		///	designer:fld/LVAJ2/LVA15
 		///	</summary>
@@ -2231,8 +2209,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		
-		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.AddressType oldValue, global::Epsitec.Aider.Enumerations.AddressType newValue);
-		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.AddressType oldValue, global::Epsitec.Aider.Enumerations.AddressType newValue);
 		partial void OnAddressLine1Changing(string oldValue, string newValue);
 		partial void OnAddressLine1Changed(string oldValue, string newValue);
 		partial void OnPostBoxChanging(string oldValue, string newValue);
