@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types.Collections;
@@ -29,6 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		internal DataContextPool()
 		{
 			this.dataContexts = new Dictionary<long, DataContext> ();
+			this.lockDataContexts = new ReaderWriterLockWrapper ();
 
 			DataContextPool.Register (this);
 		}
@@ -46,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			string name = dataContext.Name ?? "";
 			System.Diagnostics.Debug.WriteLine ("Added context #" + dataContext.UniqueId + ", " + name);
 
-			lock (this.dataContexts)
+			using (this.lockDataContexts.LockWrite ())
 			{
 				this.dataContexts.Add (dataContext.UniqueId, dataContext);
 			}
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			string name = dataContext.Name ?? "";
 			System.Diagnostics.Debug.WriteLine ("Removed context #" + dataContext.UniqueId + ", " + name);
 
-			lock (this.dataContexts)
+			using (this.lockDataContexts.LockWrite ())
 			{
 				return this.dataContexts.Remove (dataContext.UniqueId);
 			}
@@ -80,7 +82,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			dataContext.ThrowIfNull ("dataContext");
 
-			lock (this.dataContexts)
+			using (this.lockDataContexts.LockRead ())
 			{
 				return this.dataContexts.ContainsKey (dataContext.UniqueId);
 			}
@@ -117,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			DataContext context = null;
 
-			lock (this.dataContexts)
+			using (this.lockDataContexts.LockRead ())
 			{
 				this.dataContexts.TryGetValue (contextId, out context);
 			}
@@ -212,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The <see cref="DataContext"/> managed by this pool.</returns>
 		public IEnumerator<DataContext> GetEnumerator()
 		{
-			lock (this.dataContexts)
+			using (this.lockDataContexts.LockRead ())
 			{
 				return this.dataContexts.Values.ToList ().GetEnumerator ();
 			}
@@ -241,6 +243,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void Dispose()
 		{
 			DataContextPool.Unregister (this);
+			this.lockDataContexts.Dispose ();
 		}
 
 		#endregion
@@ -261,7 +264,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns>The <see cref="DataContext"/> if there is one; otherwise, <c>null</c>.</returns>
 		public static DataContext GetDataContext(AbstractEntity entity)
 		{
-			lock (DataContextPool.pools)
+			using (DataContextPool.lockPools.LockRead ())
 			{
 				long dataContextId = DataContextPool.GetDataContextId (entity);
 
@@ -310,7 +313,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		private static void Register(DataContextPool pool)
 		{
-			lock (DataContextPool.pools)
+			using (DataContextPool.lockPools.LockWrite ())
 			{
 				DataContextPool.pools.Add (pool);
 			}
@@ -318,15 +321,19 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		private static void Unregister(DataContextPool pool)
 		{
-			lock (DataContextPool.pools)
+			using (DataContextPool.lockPools.LockWrite ())
 			{
 				DataContextPool.pools.Remove (pool);
 			}
 		}
 
-		private static WeakList<DataContextPool> pools = new WeakList<DataContextPool> ();
+
+		private readonly static WeakList<DataContextPool> pools = new WeakList<DataContextPool> ();
+		private readonly static ReaderWriterLockWrapper lockPools = new ReaderWriterLockWrapper ();
 
 		
-		private readonly Dictionary<long, DataContext> dataContexts;		//	collection of associated DataContext instances
+		private readonly Dictionary<long, DataContext> dataContexts;
+		private readonly ReaderWriterLockWrapper lockDataContexts;
+
 	}
 }
