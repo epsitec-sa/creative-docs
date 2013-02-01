@@ -39,9 +39,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick ()
 							.Title (Resources.Text ("Ménage associé"))
-							.Text (contact.Household.GetSummary ())
+							.Text (contact.Household.DisplayName)
 							.Icon ("Data.AiderHousehold")
 							.Attribute (BrickMode.SpecialController2);
+
+						if (contact.Address.IsNotNull ())
+						{
+							wall.AddBrick ()
+								.Title (Resources.Text ("Adresse du ménage"))
+								.Text (contact.Address.GetSummary ())
+								.Icon ("Data.AiderAddress")
+								.Attribute (BrickMode.SpecialController1);
+						}
 
 						if (contact.Household.Members.Count > 1)
 						{

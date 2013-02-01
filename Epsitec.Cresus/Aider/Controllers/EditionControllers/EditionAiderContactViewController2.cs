@@ -23,21 +23,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.HouseholdRole)
 					.Field (x => x.Household.HouseholdMrMrs)
 					.Field (x => x.Household.HouseholdName)
-				.End ()
-				.Input ()
-					.Field (x => x.Household.Address.Town)
-					.Field (x => x.Household.Address.AddressLine1)
-					.Field (x => x.Household.Address.StreetUserFriendly)
-					.Field (x => x.Household.Address.HouseNumberAndComplement)
-					.Field (x => x.Household.Address.PostBox)
-				.End ()
-				.Input ()
-					.Field (x => x.Household.Address.Phone1)
-					.Field (x => x.Household.Address.Phone2)
-					.Field (x => x.Household.Address.Mobile)
-					.Field (x => x.Household.Address.Fax)
-					.Field (x => x.Household.Address.Email)
-					.Field (x => x.Household.Address.Web)
 				.End ();
 		}
 	}

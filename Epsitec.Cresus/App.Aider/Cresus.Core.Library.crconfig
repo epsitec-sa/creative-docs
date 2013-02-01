@@ -29,11 +29,11 @@ AiderFunctionDef = [LVA7A]
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="NPA" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="NPA" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
