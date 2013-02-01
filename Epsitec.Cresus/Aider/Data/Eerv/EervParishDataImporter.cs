@@ -756,16 +756,14 @@ namespace Epsitec.Aider.Data.Eerv
 				var eervPerson = newMember.Key;
 				var aiderPerson = newMember.Value;
 
-				var role = eervHousehold.Heads.Contains (eervPerson)
-									? HouseholdRole.Head
-				 					: HouseholdRole.None;
+				var isHead = eervHousehold.Heads.Contains (eervPerson);
 
 				var contact = AiderContactEntity.Create
 				(
 					businessContext,
 					aiderPerson,
 					aiderHousehold,
-					role
+					isHead
 				);
 
 				var personContacts = aiderPersonToContacts[aiderPerson];

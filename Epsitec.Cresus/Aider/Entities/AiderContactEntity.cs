@@ -67,6 +67,17 @@ namespace Epsitec.Aider.Entities
 			this.DisplayZipCode = country.IsoCode == "CH" ? town.ZipCode : country.IsoCode + "-" + town.ZipCode;
 		}
 
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, bool isHead)
+		{
+			var role = isHead
+				? HouseholdRole.Head
+				: HouseholdRole.None;
+
+			return AiderContactEntity.Create (businessContext, person, household, role);
+		}
+
+
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
 		{
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);

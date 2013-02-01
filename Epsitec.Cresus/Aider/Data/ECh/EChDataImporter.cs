@@ -331,11 +331,9 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold, eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool isChild = false)
 		{
-			var role = isHead1 || isHead2
-				? HouseholdRole.Head
-				: HouseholdRole.None;
+			var isHead = isHead1 || isHead2;
 
-			AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, role);
+			AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, isHead);
 
 			var eChPerson = aiderPerson.eCH_Person;
 
