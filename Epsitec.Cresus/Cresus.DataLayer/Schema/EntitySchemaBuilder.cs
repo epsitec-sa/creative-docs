@@ -93,6 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				entityTable.Columns.Add (column);
 
 				EntitySchemaBuilder.AddIndexes (entityTable, column, entityType, field);
+				EntitySchemaBuilder.AddCombinedIndexes (entityTable, column, entityType, field);
 			}
 
 			foreach (var field in entityTypeEngine.GetLocalReferenceFields (entityTypeId))
@@ -349,6 +350,39 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				string indexName = string.Join (separator, prefix, "DESC", typeName, fieldName);
 
 				table.AddIndex (indexName, SqlSortOrder.Descending, column);
+			}
+		}
+
+
+		/// <summary>
+		/// Adds the appropriate combined indexes to the given column and the id column in the given
+		/// table, which correspond to the given type and field.
+		/// </summary>
+		/// <param name="table">The table to which to add the index.</param>
+		/// <param name="column">The column to index.</param>
+		/// <param name="type">The type definition that defines the entity which corresponds to the table.</param>
+		/// <param name="field">The field definition that corresponds to the column.</param>
+		private static void AddCombinedIndexes(DbTable table, DbColumn column, StructuredType type, StructuredTypeField field)
+		{
+			string typeName = Druid.ToFullString (type.CaptionId.ToLong ());
+			string fieldName = Druid.ToFullString (field.CaptionId.ToLong ());
+			const string prefix = "IDX";
+			const string separator = "_";
+
+			var idColumn = table.PrimaryKeys.Single ();
+
+			if (field.Options.HasFlag (FieldOptions.IndexAscending))
+			{
+				string indexName = string.Join (separator, prefix, "ASC", typeName, fieldName, "ID");
+
+				table.AddIndex (indexName, SqlSortOrder.Ascending, column, idColumn);
+			}
+
+			if (field.Options.HasFlag (FieldOptions.IndexDescending))
+			{
+				string indexName = string.Join (separator, prefix, "DESC", typeName, fieldName, "ID");
+
+				table.AddIndex (indexName, SqlSortOrder.Descending, column, idColumn);
 			}
 		}
 

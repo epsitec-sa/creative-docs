@@ -267,8 +267,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 			Assert.AreEqual (nbColumns, table.Columns.Count);
 
-			int nbValueIndexAsc = localValueFields.Count (f => f.Options.HasFlag (FieldOptions.IndexAscending));
-			int nbValueIndexDesc = localValueFields.Count (f => f.Options.HasFlag (FieldOptions.IndexDescending));
+			int nbValueIndexAsc = 2 * localValueFields.Count (f => f.Options.HasFlag (FieldOptions.IndexAscending));
+			int nbValueIndexDesc = 2 * localValueFields.Count (f => f.Options.HasFlag (FieldOptions.IndexDescending));
 			int nbReferenceIndexAsc = localReferenceFields.Count (f => f.Options.HasFlag (FieldOptions.IndexAscending));
 			int nbReferenceIndexDesc = localReferenceFields.Count (f => f.Options.HasFlag (FieldOptions.IndexDescending));
 			int nbIndexes = nbValueIndexAsc + nbValueIndexDesc + nbReferenceIndexAsc + nbReferenceIndexDesc;
