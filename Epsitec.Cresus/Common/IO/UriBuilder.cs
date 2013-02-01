@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.IO
 {
@@ -61,6 +62,27 @@ namespace Epsitec.Common.IO
 			}
 
 			this.SetupPathAndQueryAndFragment (part2);
+		}
+
+		static UriBuilder()
+		{
+			string pattern;
+
+			//	Taken from Phil Haack's blog, based on RFC 2821/2822.
+			//	http://haacked.com/archive/2007/08/21/i-knew-how-to-validate-an-email-address-until-i.aspx
+
+			pattern = @"^(?!\.)(""([^""\r\\]|\\[""\r\\])*""|" +
+				/**/  @"([-a-z0-9!#$%&'*+\/=?^_`{|}~]|(?<!\.)\.)*)(?<!\.)" +
+				/**/  @"@[a-z0-9][\w\.-]*[a-z0-9]\.[a-z][a-z\.]*[a-z]$";
+
+			UriBuilder.mailValidationRegex = new Regex (pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+			//	Common Regular Expressions (MSDN) for URL validation
+			//	http://msdn.microsoft.com/en-us/library/ff650303.aspx
+
+			pattern = @"^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?$";
+
+			UriBuilder.urlValidationRegex = new Regex (pattern, RegexOptions.Compiled);
 		}
 
 
@@ -164,6 +186,50 @@ namespace Epsitec.Common.IO
 		}
 
 
+		/// <summary>
+		/// Determines whether the URI is a valid address, according to the mailto: protocol.
+		/// </summary>
+		/// <param name="fullUri">The full URI.</param>
+		/// <returns>
+		///   <c>true</c> if the specified full URI is a valid mailto: address; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool IsValidMailTo(string fullUri)
+		{
+			if (string.IsNullOrEmpty (fullUri))
+			{
+				return false;
+			}
+
+			string prefix = "mailto:";
+
+			if (fullUri.StartsWith (prefix))
+			{
+				var email = fullUri.Substring (prefix.Length);
+
+				if (UriBuilder.mailValidationRegex.IsMatch (email))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+
+		public static bool IsValidUrl(string fullUri)
+		{
+			if (string.IsNullOrEmpty (fullUri))
+			{
+				return false;
+			}
+			
+			if (UriBuilder.mailValidationRegex.IsMatch (fullUri))
+			{
+				return true;
+			}
+
+			return false;
+		}
+		
 		public static string GetSchemeName(string fullUri)
 		{
 			if (string.IsNullOrEmpty (fullUri))
@@ -208,10 +274,12 @@ namespace Epsitec.Common.IO
 
 			string officialSuffix = null;
 			string officialName;
+			string partialUri;
 			
 			var schemeName = UriBuilder.GetSchemeName (fullUri);
 
-			if (schemeName.Length == 0)
+			if ((schemeName.Length == 0) ||
+				(schemeName.StartsWith ("www")))
 			{
 				if ((!fullUri.StartsWith ("www")) &&
 					(fullUri.Contains ("@")))
@@ -221,45 +289,41 @@ namespace Epsitec.Common.IO
 				}
 				else
 				{
-					officialName = "http";
-				}
-			}
-			else
-			{
-				if (schemeName.StartsWith ("www"))
-				{
-					schemeName   = "";
-					officialName = "http";
-				}
-				else
-				{
-					officialName = schemeName;
-				}
-			}
-
-			var schemeSuffix = UriBuilder.GetSchemeSuffix (schemeName, fullUri);
-
-			switch (schemeName)
-			{
-				case "http":
-				case "https":
-				case "ftp":
-				case "file":
+					officialName   = "http";
 					officialSuffix = "://";
-					break;
-				default:
-					officialSuffix = officialSuffix ?? schemeSuffix;
-					break;
-			}
+				}
 
-			if (officialSuffix == schemeSuffix)
-			{
-				return fullUri;
+				partialUri = fullUri;
 			}
 			else
 			{
-				return officialName + officialSuffix + fullUri.Substring (schemeName.Length + schemeSuffix.Length);
+				var schemeSuffix = UriBuilder.GetSchemeSuffix (schemeName, fullUri);
+
+				switch (schemeName)
+				{
+					case "http":
+					case "https":
+					case "ftp":
+					case "file":
+						officialName   = schemeName;
+						officialSuffix = "://";
+						break;
+					
+					default:
+						officialName   = schemeName;
+						officialSuffix = officialSuffix ?? schemeSuffix;
+						break;
+				}
+				
+				if (officialSuffix == schemeSuffix)
+				{
+					return fullUri;
+				}
+
+				partialUri = fullUri.Substring (schemeName.Length + schemeSuffix.Length);
 			}
+
+			return officialName + officialSuffix + partialUri;
 		}
 
 
@@ -430,5 +494,9 @@ namespace Epsitec.Common.IO
 
 
 		private string							path;
+
+
+		private static readonly Regex			mailValidationRegex;
+		private static readonly Regex			urlValidationRegex;
 	}
 }
