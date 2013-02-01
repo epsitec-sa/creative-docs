@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Metadata;
 
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			this.data            = data;
 			this.dataSetMetadata = dataSetMetadata;
-			this.dataContext     = this.data.CreateIsolatedDataContext ("DataSetAccessor", false);
+			this.businessContext = this.data.CreateIsolatedBusinessContext ("DataSetAccessor", false);
 
 			this.isolatedTransaction = isolatedTransaction;
 		}
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			get
 			{
-				return this.dataContext;
+				return this.businessContext.DataContext;
 			}
 		}
 
@@ -140,9 +141,10 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			if (disposing)
 			{
-				if (this.dataContext.IsDisposed == false)
+				if (this.businessContext.IsDisposed == false)
 				{
-					this.data.DisposeDataContext (this.dataContext);
+					this.businessContext.Discard ();
+					this.businessContext.Dispose ();
 				}
 
 				this.DisposeRequestView ();
@@ -183,19 +185,19 @@ namespace Epsitec.Cresus.Core.Data
 
 			var session = UserManager.Current.ActiveSession;
 
-			request.AddCondition (this.dataContext, example, this.dataSetMetadata.Filter);
+			request.AddCondition (this.IsolatedDataContext, example, this.dataSetMetadata.Filter);
 
 			if (!this.DisableScopeFilter)
 			{
 				var scopeFilter = session.GetScopeFilter (this.dataSetMetadata, example);
-				request.AddCondition (this.dataContext, example, scopeFilter);
+				request.AddCondition (this.IsolatedDataContext, example, scopeFilter);
 			}
 
 			var dataSetSettings = session.GetDataSetSettings (this.dataSetMetadata);
-			request.AddCondition (this.dataContext, example, dataSetSettings.Filter);
+			request.AddCondition (this.IsolatedDataContext, example, dataSetSettings.Filter);
 			
 			var additionalFilter = session.GetAdditionalFilter (this.dataSetMetadata, example);
-			request.AddCondition (this.dataContext, example, additionalFilter);
+			request.AddCondition (this.IsolatedDataContext, example, additionalFilter);
 			
 			IEnumerable<SortClause> sortClauses;
 
@@ -216,10 +218,10 @@ namespace Epsitec.Cresus.Core.Data
 
 			if (this.Customizer != null)
 			{
-				this.Customizer (this.dataContext, request, example);
+				this.Customizer (this.IsolatedDataContext, request, example);
 			}
 
-			return this.dataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
+			return this.IsolatedDataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
 		}
 
 		private SortClause CreateSortClause(ColumnRef<EntityColumnSort> sortColumn, AbstractEntity example)
@@ -236,7 +238,7 @@ namespace Epsitec.Cresus.Core.Data
 
 
 		private readonly CoreData				data;
-		private readonly DataContext			dataContext;
+		private readonly BusinessContext		businessContext;
 		private readonly IsolatedTransaction	isolatedTransaction;
 		private readonly DataSetMetadata		dataSetMetadata;
 		

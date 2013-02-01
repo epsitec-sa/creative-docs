@@ -313,11 +313,13 @@ namespace Epsitec.Cresus.Core
 			return context;
 		}
 
-		public DataContext CreateIsolatedDataContext(string name, bool enableReload)
+		public BusinessContext CreateIsolatedBusinessContext(string name, bool enableReload)
 		{
-			var context = this.CreateDataContext (name, enableReload);
-			context.Isolate ();
-			return context;
+			var businessContext = new BusinessContext (this, enableReload);
+
+			businessContext.DataContext.Isolate ();
+
+			return businessContext;
 		}
 
 
