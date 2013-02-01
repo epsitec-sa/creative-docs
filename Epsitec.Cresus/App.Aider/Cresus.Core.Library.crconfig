@@ -77,15 +77,7 @@ AiderFunctionDef = [LVA7A]
       </col>
     </t>
     <t eid="@AiderHousehold" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="Intitulé" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAV4].[LVAI4]" title="Parent 1" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA05].[LVAI4]" title="Parent 2" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAGE]" title="Intitulé" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
