@@ -155,7 +155,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public void AddIdSortClause(AbstractEntity example)
 		{
-			this.sortClauses.Add (new SortClause (InternalField.CreateId (example), SortOrder.Ascending));
+			// If we have one sort clause, we use its sort order as we can hopefully benefit from
+			// the combined index which would be in the same order, if there is such a combined
+			// index.
+
+			var sortOrder = this.SortClauses.Count == 1
+				? this.SortClauses[0].SortOrder
+				: SortOrder.Ascending;
+
+			this.sortClauses.Add (new SortClause (InternalField.CreateId (example), sortOrder));
 		}
 
 
