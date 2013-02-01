@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName, "~\n", this.Address.GetPostalAddress ());
 		}
 
-		private void RefreshCache()
+		public void RefreshCache()
 		{
 			if (string.IsNullOrEmpty (this.HouseholdName))
 			{

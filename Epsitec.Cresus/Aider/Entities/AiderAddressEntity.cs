@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.FormatField (() => this.Mobile), "\n",
 				TextFormatter.FormatField (() => this.Fax), "~(fax)\n",
 				UriFormatter.ToFormattedText (this.Email), "~\n",
-				UriFormatter.ToFormattedText (this.Web));
+				UriFormatter.ToFormattedText (this.Web, "_blank"));
 		}
 
 		public override FormattedText GetCompactSummary()

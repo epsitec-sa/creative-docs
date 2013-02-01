@@ -22,6 +22,11 @@ namespace Epsitec.Aider.Rules
 		public override void ApplyUpdateRule(AiderContactEntity contact)
 		{
 			contact.RefreshCache ();
+
+			if (contact.Household.IsNotNull ())
+			{
+				contact.Household.RefreshCache ();
+			}
 		}
 	}
 }

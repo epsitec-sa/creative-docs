@@ -19,5 +19,10 @@ namespace Epsitec.Aider.Rules
 
 			household.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 		}
+
+		public override void ApplyUpdateRule(AiderHouseholdEntity household)
+		{
+			household.RefreshCache ();
+		}
 	}
 }

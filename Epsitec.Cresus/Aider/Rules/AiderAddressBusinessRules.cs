@@ -5,6 +5,7 @@ using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
+using Epsitec.Common.IO;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
@@ -29,6 +30,34 @@ namespace Epsitec.Aider.Rules
 		public override void ApplyValidateRule(AiderAddressEntity address)
 		{
 			AiderAddressBusinessRules.ValidateSwissPostAddress (address);
+			AiderAddressBusinessRules.ValidateWeb (address);
+			AiderAddressBusinessRules.ValidateEmail (address);
+		}
+
+		private static void ValidateEmail(AiderAddressEntity address)
+		{
+			var email = address.Email;
+
+			if ((string.IsNullOrWhiteSpace (email)) ||
+				(UriBuilder.IsValidMailTo (UriBuilder.FixScheme (email))))
+			{
+				return;
+			}
+
+			Logic.BusinessRuleException (address, Resources.Text ("L'adresse e-mail n'est pas valide."));
+		}
+
+		private static void ValidateWeb(AiderAddressEntity address)
+		{
+			var uri = address.Web;
+
+			if ((string.IsNullOrWhiteSpace (uri)) ||
+				(UriBuilder.IsValidUrl (UriBuilder.FixScheme (uri))))
+			{
+				return;
+			}
+			
+			Logic.BusinessRuleException (address, Resources.Text ("L'adresse web n'est pas valide."));
 		}
 
 		private static void UpdateHouserNumber(AiderAddressEntity address)
