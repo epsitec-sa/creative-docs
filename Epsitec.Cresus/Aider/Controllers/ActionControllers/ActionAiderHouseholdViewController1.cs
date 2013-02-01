@@ -49,12 +49,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (household, "La personne sélectionnée appartient déjà au ménage.");
 			}
 
-			var newContact = this.BusinessContext.CreateAndRegisterEntity<AiderContactEntity> ();
-
-			newContact.Person = person;
-			newContact.Household = this.Entity;
-			newContact.ContactType = Enumerations.ContactType.PersonHousehold;
-			newContact.HouseholdRole = isPersonHead ? Enumerations.HouseholdRole.Head : Enumerations.HouseholdRole.None;
+			AiderContactEntity.Create (this.BusinessContext, person, household, isPersonHead);
 		}
 
 
