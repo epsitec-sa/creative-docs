@@ -47,7 +47,7 @@ function() {
       var resetButton, saveButton;
 
       resetButton = Ext.create('Ext.button.Button', {
-        margin: '0 5 0 0',
+        margin: '0 0 0 0',
         text: Epsitec.Texts.getResetLabel(),
         listeners: {
           click: this.onResetClick,
@@ -56,7 +56,7 @@ function() {
       });
 
       saveButton = Ext.create('Ext.button.Button', {
-        margin: 0,
+        margin: '0 5 0 0',
         text: Epsitec.Texts.getSaveLabel(),
         listeners: {
           click: this.onSaveClick,
@@ -64,7 +64,7 @@ function() {
         }
       });
 
-      return [resetButton, saveButton];
+      return [saveButton, resetButton];
     },
 
     onResetClick: function() {

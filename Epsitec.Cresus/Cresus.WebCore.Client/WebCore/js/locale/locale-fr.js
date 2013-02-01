@@ -20,7 +20,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         createLabel: 'Cr\u00E9er',
         deleteLabel: 'D\u00E9truire',
         resetLabel: 'R\u00E9initialiser',
-        saveLabel: 'Enregistrer',
+        saveLabel: '<b>Enregistrer</b>',
         okLabel: 'Ok',
         cancelLabel: 'Annuler',
         emptySummaryText: 'Vide',
