@@ -243,11 +243,6 @@ namespace Aider.Tests.Vs
 
 			while (isEmpty)
 			{
-				if (dice.NextDouble () > 0.5)
-				{
-					address.Type = this.GetRandomEnum<AddressType> ();
-				}
-
 				if (forceMailAddress || dice.NextDouble () > 0.5)
 				{
 					var streetPrefix = this.GetRandomElement ("Rue du", "Chemin du", "Place du", "Avenue du");
