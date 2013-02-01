@@ -245,7 +245,10 @@ namespace Epsitec.Cresus.Database
 			{
 				foreach (var i in DbSchemaUpdater.JoinOnName (t.Item1.Indexes, t.Item2.Indexes))
 				{
-					yield return Tuple.Create (t.Item2, i.Item2);
+					if (!DbSchemaChecker.AreDbIndexEqual (i.Item1, i.Item2))
+					{
+						yield return Tuple.Create (t.Item2, i.Item2);
+					}
 				}
 			}
 		}
