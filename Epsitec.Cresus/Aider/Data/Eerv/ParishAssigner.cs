@@ -1,9 +1,8 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Tools;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 
@@ -20,37 +19,46 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void AssignToParishes(ParishAddressRepository parishRepository,  BusinessContext businessContext,  IEnumerable<AiderPersonEntity> persons)
+		public static void AssignToParishes(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderContactEntity> contacts)
 		{
 			var parishNameToGroups = new Dictionary<string, AiderGroupEntity> ();
 
-			foreach (var person in persons)
+			foreach (var contact in contacts)
 			{
-				ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person);
+				var address = contact.Address;
+				var person = contact.Person;
+
+				if (person.IsNotNull () && address.IsNotNull ())
+				{
+					ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person, address);
+				}
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
-		private static void AssignToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderPersonEntity person)
+		private static void AssignToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderPersonEntity person, AiderAddressEntity address)
 		{
-			// TODO Assign to two parishes if the person has two households ?
+			if (address.Town.IsNull ())
+			{
+				return;
+			}
 
-			var address = person.Households.First ().Address;
 			var parishGroup = ParishAssigner.FindParishGroup (businessContext, parishRepository, parishNameToGroups, address);
 
 			if (parishGroup == null)
 			{
 				var nameText = person.DisplayName;
 				var addressText = address.GetSummary ().ToSimpleText ().Replace ("\n", "; ");
+				var format = "WARNING: parish not found for {0} at address {1}";
 
-				Debug.WriteLine ("WARNING: parish not found for " + nameText + " at address " + addressText);
+				Debug.WriteLine (string.Format (format, nameText, addressText));
+
+				return;
 			}
-			else
-			{
-				ParishAssigner.AssignToParish (businessContext, person, parishGroup);
-			}
+
+			ParishAssigner.AssignToParish (businessContext, person, parishGroup);
 		}
 
 
@@ -79,7 +87,12 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignToParish(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity parishGroup)
 		{
-			person.Parish = parishGroup.AddParticipant (businessContext, person, Date.Today, null, null);
+			var participation = parishGroup.AddParticipant (businessContext, person, null, null, null);
+
+			if (person.Parish.IsNull ())
+			{
+				person.Parish = participation;
+			}
 		}
 
 

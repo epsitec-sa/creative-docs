@@ -7,7 +7,6 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -51,7 +50,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var matches = EervParishDataImporter.FindMatches (coreDataManager, eervParishData);
 			var newEntities = EervParishDataImporter.ProcessMatches (coreDataManager, eervParishData.Id.Name, matches);
 			var mapping = EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
-			
+
 			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
 			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, newEntities.Values);
 			EervParishDataImporter.AssignToImportationGroup (coreDataManager, eervParishData.Id, mapping.Values);
@@ -274,20 +273,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (hasEmail || hasMobile)
 			{
-				// NOTE Here we need to check this because the list is implemented by 4 fields and
-				// we don't want to skip the address in this case. It will probably never happen,
-				// but in case it does, it won't go unnoticed.
-				if (aiderPerson.AdditionalAddresses.Count >= 4)
-				{
-					throw new InvalidOperationException ();
-				}
-
-				var address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+				var contact = AiderContactEntity.Create (businessContext, aiderPerson, AddressType.Default);
+				var address = contact.Address;
 
 				EervParishDataImporter.SetEmail (address, email);
 				EervParishDataImporter.SetPhoneNumber (address, mobile, (a, s) => a.Mobile = s);
-
-				aiderPerson.AdditionalAddresses.Add (address);
 			}
 		}
 
@@ -445,7 +435,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatches(CoreDataManager coreDataManager, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessHouseholdMatches
+		(
+			CoreDataManager coreDataManager,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
+			Dictionary<EervPerson, EntityKey> newEntities,
+			IEnumerable<EervHousehold> eervHouseholds
+		)
 		{
 			coreDataManager.Execute (b =>
 			{
@@ -454,46 +450,190 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatches(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessHouseholdMatches
+		(
+			BusinessContext businessContext,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
+			Dictionary<EervPerson, EntityKey> newEntities,
+			IEnumerable<EervHousehold> eervHouseholds
+		)
 		{
 			var aiderTowns = new AiderTownRepository (businessContext);
 
+			var aiderPersons = EervParishDataImporter.GetAiderPersons
+			(
+				businessContext,
+				matches,
+				newEntities
+			);
+
+			var aiderContacts = EervParishDataImporter.GetAiderContacts (aiderPersons);
+
+			var aiderPersonToContacts = EervParishDataImporter.GetAiderPersonToContacts
+			(
+				aiderContacts,
+				aiderPersons
+			);
+
+			var aiderHouseholdToContacts = EervParishDataImporter.GetAiderHouseholdToContacts
+			(
+				aiderContacts
+			);
+
 			foreach (var eervHousehold in eervHouseholds)
 			{
-				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderTowns);
+				EervParishDataImporter.ProcessHouseholdMatch
+				(
+					businessContext,
+					matches,
+					newEntities,
+					eervHousehold,
+					aiderTowns,
+					aiderPersonToContacts,
+					aiderHouseholdToContacts
+				);
 			}
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+			businessContext.SaveChanges
+			(
+				LockingPolicy.KeepLock,
+				EntitySaveMode.IgnoreValidationErrors
+			);
 		}
 
 
-		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, AiderTownRepository aiderTowns)
+		private static Dictionary<AiderPersonEntity, List<AiderContactEntity>> GetAiderPersonToContacts
+		(
+			IList<AiderContactEntity> aiderContacts,
+			IList<AiderPersonEntity> aiderPersons
+		)
 		{
-			var eervToAiderPersons = EervParishDataImporter.GetEervToAiderPersons (businessContext, matches, newEntities, eervHousehold);
-			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (eervToAiderPersons.Values);
+			var aiderPersonToContacts = aiderContacts
+				.GroupBy (c => c.Person)
+				.ToDictionary (g => g.Key, g => g.ToList ());
+
+			foreach (var aiderPerson in aiderPersons)
+			{
+				if (!aiderPersonToContacts.ContainsKey (aiderPerson))
+				{
+					aiderPersonToContacts[aiderPerson] = new List<AiderContactEntity> ();
+				}
+			}                
+			
+			return aiderPersonToContacts;
+		}
+
+
+		private static Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> GetAiderHouseholdToContacts
+		(
+			IList<AiderContactEntity> aiderContacts
+		)
+		{
+			return aiderContacts
+				.GroupBy (c => c.Household)
+				.ToDictionary (g => g.Key, g => g.ToList ());
+		}
+
+
+		private static IList<AiderPersonEntity> GetAiderPersons
+		(
+			BusinessContext businessContext,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
+			Dictionary<EervPerson, EntityKey> newEntities
+		)
+		{
+			var dataContext = businessContext.DataContext;
+
+			return matches.Values
+				.Where (v => v != null)
+				.Select (v => v.Item1)
+				.Concat (newEntities.Values)
+				.Select (pk => (AiderPersonEntity) dataContext.ResolveEntity (pk))
+				.ToList ();
+		}
+
+
+		private static IList<AiderContactEntity> GetAiderContacts(IList<AiderPersonEntity> persons)
+		{
+			return persons
+				.SelectMany (p => p.Households)
+				.Distinct ()
+				.SelectMany (h => h.Contacts)
+				.ToList ();
+		}
+
+
+		private static void ProcessHouseholdMatch
+		(
+			BusinessContext businessContext,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
+			Dictionary<EervPerson, EntityKey> newEntities,
+			EervHousehold eervHousehold,
+			AiderTownRepository aiderTowns,
+			Dictionary<AiderPersonEntity, List<AiderContactEntity>> aiderPersonToContacts,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
+		{
+			var eervToAiderPersons = EervParishDataImporter.GetEervToAiderPersons
+			(
+				businessContext,
+				matches,
+				newEntities,
+				eervHousehold
+			);
+			
+			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds
+			(
+				eervToAiderPersons.Values,
+				aiderPersonToContacts
+			);
 
 			if (aiderHouseholds.Count == 0)
 			{
-				EervParishDataImporter.CreateHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderTowns);
+			    EervParishDataImporter.CreateHousehold
+				(
+					businessContext,
+					eervHousehold,
+					eervToAiderPersons,
+					aiderTowns,
+					aiderPersonToContacts,
+					aiderHouseholdToContacts
+				);
 			}
 			else if (aiderHouseholds.Count == 1)
 			{
-				EervParishDataImporter.ExpandHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholds.Single ());
+			    EervParishDataImporter.ExpandHousehold
+				(
+					businessContext,
+					eervHousehold,
+					eervToAiderPersons,
+					aiderHouseholds.Single (),
+					aiderPersonToContacts,
+					aiderHouseholdToContacts
+				);
 			}
 			else
 			{
-				EervParishDataImporter.CombineHouseholds (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholds);
+				EervParishDataImporter.CombineHouseholds
+				(
+					businessContext,
+					eervHousehold,
+					eervToAiderPersons,
+					aiderHouseholds,
+					aiderPersonToContacts,
+					aiderHouseholdToContacts
+				);
 			}
 		}
 
 
-		private static List<AiderHouseholdEntity> GetAiderHouseholds(IEnumerable<AiderPersonEntity> aiderPersons)
-		{
-			return aiderPersons.SelectMany (m => m.Households).Distinct ().ToList ();
-		}
-
-
-		private static Dictionary<EervPerson, AiderPersonEntity> GetEervToAiderPersons(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold)
+		private static Dictionary<EervPerson, AiderPersonEntity> GetEervToAiderPersons
+		(
+			BusinessContext businessContext,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
+			Dictionary<EervPerson, EntityKey> newEntities,
+			EervHousehold eervHousehold
+		)
 		{
 			var eervToAiderPersons = new Dictionary<EervPerson, AiderPersonEntity> ();
 
@@ -502,8 +642,8 @@ namespace Epsitec.Aider.Data.Eerv
 				var match = matches[eervPerson];
 
 				var entityKey = match != null
-					? match.Item1
-					: newEntities[eervPerson];
+		            ? match.Item1
+		            : newEntities[eervPerson];
 
 				var aiderPerson = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
 
@@ -514,31 +654,137 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void CreateHousehold(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, AiderTownRepository aiderTowns)
+		private static List<AiderHouseholdEntity> GetAiderHouseholds
+		(
+			IEnumerable<AiderPersonEntity> aiderPersons,
+			Dictionary<AiderPersonEntity, List<AiderContactEntity>> aiderPersonToContacts
+		)
+		{
+			return aiderPersons
+				.Where (p => aiderPersonToContacts.ContainsKey (p))
+				.SelectMany (p => aiderPersonToContacts[p])
+				.Select (c => c.Household)
+				.Distinct ()
+				.ToList ();
+		}
+
+
+		private static void CreateHousehold
+		(
+			BusinessContext businessContext,
+			EervHousehold eervHousehold,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
+			AiderTownRepository aiderTowns,
+			Dictionary<AiderPersonEntity, List<AiderContactEntity>> aiderPersonToContacts,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
 		{
 			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			
-			EervParishDataImporter.ExpandHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderHousehold);
-			EervParishDataImporter.CombineAddress (aiderTowns, aiderHousehold.Address, eervHousehold.Address);
+
+			aiderHouseholdToContacts[aiderHousehold] = new List<AiderContactEntity> ();
+
+			EervParishDataImporter.ExpandHousehold
+			(
+				businessContext,
+				eervHousehold,
+				eervToAiderPersons,
+				aiderHousehold,
+				aiderPersonToContacts,
+				aiderHouseholdToContacts
+			);
+
+			EervParishDataImporter.CombineAddress
+			(
+				aiderTowns,
+				aiderHousehold.Address,
+				eervHousehold.Address
+			);
 		}
 
 
-		private static void ExpandHousehold(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, AiderHouseholdEntity aiderHousehold)
+		private static void ExpandHousehold
+		(
+			BusinessContext businessContext,
+			EervHousehold eervHousehold,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
+			AiderHouseholdEntity aiderHousehold,
+			Dictionary<AiderPersonEntity, List<AiderContactEntity>> aiderPersonToContacts,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
 		{
-			var personsToAdd = eervToAiderPersons.Values.Except (aiderHousehold.Members).ToList ();
+			EervParishDataImporter.CombineMembers
+			(
+				businessContext,
+				eervHousehold,
+				eervToAiderPersons,
+				aiderHousehold,
+				aiderPersonToContacts,
+				aiderHouseholdToContacts
+			);
 
-			foreach (var person in personsToAdd)
-			{
-				person.SetHousehold1 (businessContext, aiderHousehold);
-			}
+		    EervParishDataImporter.CombineComments (aiderHousehold, eervHousehold.Remarks);
 
-			EervParishDataImporter.CombineHeadData (eervHousehold, eervToAiderPersons, aiderHousehold);
-			EervParishDataImporter.CombineComments (aiderHousehold, eervHousehold.Remarks);
-			EervParishDataImporter.CombineCoordinates (aiderHousehold.Address, eervHousehold.Coordinates);
+		    EervParishDataImporter.CombineCoordinates
+			(
+				aiderHousehold.Address,
+				eervHousehold.Coordinates
+			);
 		}
 
 
-		private static void CombineHouseholds(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, List<AiderHouseholdEntity> aiderHouseholds)
+		private static void CombineMembers
+		(
+			BusinessContext businessContext,
+			EervHousehold eervHousehold,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
+			AiderHouseholdEntity aiderHousehold,
+			Dictionary<AiderPersonEntity, List<AiderContactEntity>> aiderPersonToContacts,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
+		{
+			var householdContacts = aiderHouseholdToContacts[aiderHousehold];
+
+			var currentMembers = householdContacts
+				.Select (c => c.Person)
+				.ToList ();
+
+			var newMembers = eervToAiderPersons
+				.Where (p => !currentMembers.Contains (p.Value));
+
+			foreach (var newMember in newMembers)
+			{
+				var eervPerson = newMember.Key;
+				var aiderPerson = newMember.Value;
+
+				var role = eervHousehold.Heads.Contains (eervPerson)
+									? HouseholdRole.Head
+				 					: HouseholdRole.None;
+
+				var contact = AiderContactEntity.Create
+				(
+					businessContext,
+					aiderPerson,
+					aiderHousehold,
+					role
+				);
+
+				var personContacts = aiderPersonToContacts[aiderPerson];
+
+				householdContacts.Add (contact);
+				personContacts.Add (contact);
+			}
+		}
+
+
+		private static void CombineHouseholds
+		(
+			BusinessContext businessContext,
+			EervHousehold eervHousehold,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
+			List<AiderHouseholdEntity> aiderHouseholds,
+			Dictionary<AiderPersonEntity, List<AiderContactEntity>> aiderPersonToContacts,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
 		{
 			var effectiveHouseholds = aiderHouseholds
 				.GroupBy (h => h.Address, AiderAddressEntityComparer.Instance);
@@ -549,52 +795,90 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var households = effectiveHousehold.ToList ();
 
-				var mainEffectiveHousehold = EervParishDataImporter.CombineEffectiveHouseholds (businessContext, households);
+				var mainEffectiveHousehold = EervParishDataImporter.CombineEffectiveHouseholds
+				(
+					businessContext,
+					households,
+					aiderHouseholdToContacts
+				);
 
 				mainHouseholds.Add (mainEffectiveHousehold);
 			}
 
-			var mainHousehold = EervParishDataImporter.GetMainHousehold (mainHouseholds);
+			var mainHousehold = EervParishDataImporter.GetMainHousehold
+			(
+				mainHouseholds,
+				aiderHouseholdToContacts
+			);
 
-			EervParishDataImporter.ExpandHousehold (businessContext, eervHousehold, eervToAiderPersons, mainHousehold);
+			EervParishDataImporter.ExpandHousehold
+			(
+				businessContext,
+				eervHousehold,
+				eervToAiderPersons,
+				mainHousehold,
+				aiderPersonToContacts,
+				aiderHouseholdToContacts
+			);
 		}
 
 
-		private static AiderHouseholdEntity CombineEffectiveHouseholds(BusinessContext businessContext, List<AiderHouseholdEntity> aiderHouseholds)
+		private static AiderHouseholdEntity CombineEffectiveHouseholds
+		(
+			BusinessContext businessContext,
+			List<AiderHouseholdEntity> aiderHouseholds,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
 		{
-			var mainHousehold = EervParishDataImporter.GetMainHousehold (aiderHouseholds);
-			var secondaryHouseholds = aiderHouseholds.Where (h => h!= mainHousehold);
+			var mainHousehold = EervParishDataImporter.GetMainHousehold
+			(
+				aiderHouseholds,
+				aiderHouseholdToContacts
+			);
+			
+			var secondaryHouseholds = aiderHouseholds.Where (h => h != mainHousehold);
 
 			foreach (var secondaryHousehold in secondaryHouseholds)
 			{
-				EervParishDataImporter.CombineEffectiveHouseholds (businessContext, mainHousehold, secondaryHousehold);
+				EervParishDataImporter.CombineEffectiveHouseholds
+				(
+					businessContext,
+					mainHousehold,
+					secondaryHousehold,
+					aiderHouseholdToContacts
+				);
 			}
 
 			return mainHousehold;
 		}
 
 
-		private static AiderHouseholdEntity GetMainHousehold(List<AiderHouseholdEntity> aiderHouseholds)
+		private static AiderHouseholdEntity GetMainHousehold
+		(
+			List<AiderHouseholdEntity> aiderHouseholds,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
 		{
 			return aiderHouseholds
-				.OrderByDescending (h => h.Members.Count)
+				.OrderByDescending (h => aiderHouseholdToContacts[h].Count)
 				.First ();
 		}
 
 
-		private static void CombineEffectiveHouseholds(BusinessContext businessContext, AiderHouseholdEntity mainHousehold, AiderHouseholdEntity secondaryHousehold)
+		private static void CombineEffectiveHouseholds
+		(
+			BusinessContext businessContext,
+			AiderHouseholdEntity mainHousehold,
+			AiderHouseholdEntity secondaryHousehold,
+			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
+		)
 		{
-			foreach (var person in secondaryHousehold.Members)
+			var secondaryHouseholdContacts = aiderHouseholdToContacts[secondaryHousehold];
+			
+			foreach (var contact in secondaryHouseholdContacts)
 			{
-				if (person.Household1 == secondaryHousehold)
-				{
-					person.SetHousehold1 (businessContext, mainHousehold);
-				}
-
-				if (person.Household2 == secondaryHousehold)
-				{
-					person.SetHousehold2 (businessContext, mainHousehold);
-				}
+				contact.Household = mainHousehold;
+				contact.HouseholdRole = HouseholdRole.None;
 			}
 
 			var comment = secondaryHousehold.Comment;
@@ -612,9 +896,8 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			businessContext.DeleteEntity (secondaryHousehold);
-
-			// TODO Copy info of deleted households to the proper main household ?
 		}
+
 
 		private static void CombineAddress(AiderTownRepository aiderTowns, AiderAddressEntity aiderAddress, EervAddress eervAddress)
 		{
@@ -749,29 +1032,6 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void CombineHeadData(EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, AiderHouseholdEntity aiderHousehold)
-		{
-			var headsA = eervHousehold.Heads.Select (p => eervToAiderPersons[p]).ToList ();
-			var headsB = aiderHousehold.GetHeads ();
-
-			var childrenA = eervHousehold.Children.Select (p => eervToAiderPersons[p]).ToList ();
-
-			var heads = headsA.Concat (headsB).Distinct ().Except (childrenA).ToList ();
-
-			// If we have more that two heads, we have a mistake somewhere (maybe a false positive
-			// or something) and we remove the heads from the eerv data until we have the right
-			// number.
-
-			for (int i = headsA.Count - 1; heads.Count > 2; i--)
-			{
-				heads.Remove (headsA[i]);
-			}
-
-			aiderHousehold.Head1 = heads.Count > 0 ? heads[0] : null;
-			aiderHousehold.Head2 = heads.Count > 1 ? heads[1] : null;
-		}
-
-
 		private static void ImportEervLegalPersons(CoreDataManager coreDataManager, EervParishData eervParishData)
 		{
 			coreDataManager.Execute (b =>
@@ -799,63 +1059,91 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var aiderLegalPerson = businessContext.CreateAndRegisterEntity<AiderLegalPersonEntity> ();
 
-			// NOTE It happens often that the corporate name is empty but that the firstname or the
-			// lastname is filled with the value that should have been in the corporate name field.
-			var emptyCorporateName = string.IsNullOrWhiteSpace (legalPerson.Name);
+			aiderLegalPerson.Name = EervParishDataImporter.GetCorporateName (legalPerson);
+			
+			var aiderContact = AiderContactEntity.Create (businessContext, aiderLegalPerson);
+			var aiderAddress = aiderContact.Address;
 
-			if (!emptyCorporateName)
-			{
-				aiderLegalPerson.Name = legalPerson.Name;
-			}
-			else
-			{
-				var lastname = legalPerson.ContactPerson.Lastname;
-				var firstname = legalPerson.ContactPerson.Firstname;
-
-				if (!string.IsNullOrWhiteSpace (lastname))
-				{
-					aiderLegalPerson.Name = lastname;
-				}
-				else if (!string.IsNullOrWhiteSpace (firstname))
-				{
-					aiderLegalPerson.Name = firstname;
-				}
-			}
-
-			var aiderAddress = aiderLegalPerson.Address;
 			EervParishDataImporter.CombineAddress (aiderTowns, aiderAddress, legalPerson.Address);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.Coordinates);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.ContactPerson.Coordinates);
 
-			var contactPerson = legalPerson.ContactPerson;
-			var aiderLegalPersonContact = businessContext.CreateAndRegisterEntity<AiderLegalPersonContactEntity> ();
+			EervParishDataImporter.ImportEervLegalPersonPerson (businessContext, aiderContact, legalPerson);
 
-			if (!emptyCorporateName)
+			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
+			EervParishDataImporter.CombineComments (aiderLegalPerson, comment);
+		}
+
+
+		private static string GetCorporateName(EervLegalPerson legalPerson)
+		{
+			// NOTE It happens often that the corporate name is empty but that the firstname or the
+			// lastname is filled with the value that should have been in the corporate name field.
+			
+			if (!string.IsNullOrWhiteSpace (legalPerson.Name))
 			{
-				aiderLegalPersonContact.LegalPerson = aiderLegalPerson;
-				aiderLegalPersonContact.FirstName = contactPerson.Firstname;
-				aiderLegalPersonContact.LastName = contactPerson.Lastname;
-				aiderLegalPersonContact.PersonSex = contactPerson.Sex;
+				return legalPerson.Name;
+			}
+			else if (!string.IsNullOrWhiteSpace (legalPerson.ContactPerson.Lastname))
+			{
+				return legalPerson.ContactPerson.Lastname;
+			}
+			else if (!string.IsNullOrWhiteSpace (legalPerson.ContactPerson.Firstname))
+			{
+				return legalPerson.ContactPerson.Firstname;
+			}
+			else
+			{
+				throw new NotImplementedException ();
+			}
+		}
 
-				var honorific = contactPerson.Honorific;
 
-				if (!string.IsNullOrEmpty (honorific))
+		private static void ImportEervLegalPersonPerson(BusinessContext businessContext, AiderContactEntity aiderContact, EervLegalPerson legalPerson)
+		{
+			// NOTE If the corporate name is empty, we used the first or last name as corporate
+			// name. Therefore, we assume that there is no contact person there.
+
+			if (string.IsNullOrWhiteSpace (legalPerson.Name))
+			{
+				return;
+			}
+
+			var contactPerson = legalPerson.ContactPerson;
+
+			if (string.IsNullOrWhiteSpace (contactPerson.Firstname))
+			{
+				return;
+			}
+
+			if (string.IsNullOrWhiteSpace (contactPerson.Lastname))
+			{
+				return;
+			}
+			
+			var aiderPerson = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+
+			aiderPerson.eCH_Person.PersonFirstNames = contactPerson.Firstname;
+			aiderPerson.eCH_Person.PersonOfficialName = contactPerson.Lastname;
+			aiderPerson.eCH_Person.PersonSex = contactPerson.Sex;
+
+			var honorific = contactPerson.Honorific;
+
+			if (!string.IsNullOrEmpty (honorific))
+			{
+				var title =	EervParishDataImporter.GetHonorific (honorific);
+
+				if (title != PersonMrMrs.None)
 				{
-					var title =	EervParishDataImporter.GetHonorific (honorific);
-
-					if (title != PersonMrMrs.None)
-					{
-						aiderLegalPersonContact.MrMrs = title;
-					}
-					else
-					{
-						aiderLegalPersonContact.Title = honorific;
-					}
+					aiderPerson.MrMrs = title;
+				}
+				else
+				{
+					aiderPerson.Title = honorific;
 				}
 			}
 
-			var comment = "Ce contact a été crée à partir de la personne N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
-			EervParishDataImporter.CombineComments (aiderLegalPerson, comment);
+			aiderContact.Person = aiderPerson;
 		}
 
 
@@ -869,11 +1157,12 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
 		{
-			var aiderPersons = aiderPersonKeys
+			var aiderContacts = aiderPersonKeys
 				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
+				.SelectMany (p => p.Contacts)
 				.ToList ();
 
-			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
+			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderContacts);
 		}
 
 

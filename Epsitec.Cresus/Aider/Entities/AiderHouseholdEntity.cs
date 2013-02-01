@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -19,6 +21,14 @@ namespace Epsitec.Aider.Entities
 
 	public partial class AiderHouseholdEntity
 	{
+		public IList<AiderContactEntity> Contacts
+		{
+			get
+			{
+				return this.GetContacts ().AsReadOnlyCollection ();
+			}
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			if (string.IsNullOrEmpty (this.DisplayName))
@@ -141,8 +151,25 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.members == null)
 			{
-				this.contacts = new List<AiderContactEntity> ();
 				this.members  = new List<AiderPersonEntity> ();
+
+				var contacts = this.GetContacts ();
+				var heads    = contacts.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+				var others   = contacts.Where (x => x.HouseholdRole != Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+
+				this.members.AddRange (heads);
+				this.members.AddRange (others);
+			}
+
+			return this.members;
+		}
+
+
+		private IList<AiderContactEntity> GetContacts()
+		{
+			if (this.contacts == null)
+			{
+				this.contacts = new List<AiderContactEntity> ();
 
 				var businessContext = BusinessContextPool.GetCurrentContext (this);
 				var dataContext = businessContext.DataContext;
@@ -155,18 +182,13 @@ namespace Epsitec.Aider.Entities
 					};
 
 					var contacts = dataContext.GetByExample (example);
-					var alive    = contacts.Where (x => x.Person.IsAlive).ToList ();
-					var heads    = alive.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-					var others   = alive.Where (x => x.HouseholdRole != Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+					var alive    = contacts.Where (x => x.Person.IsAlive);
 
 					this.contacts.AddRange (alive);
-
-					this.members.AddRange (heads);
-					this.members.AddRange (others);
 				}
 			}
 
-			return this.members;
+			return this.contacts;
 		}
 
 

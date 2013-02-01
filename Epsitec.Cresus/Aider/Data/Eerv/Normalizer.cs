@@ -1,4 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
@@ -10,6 +11,8 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Data.Platform;
+
+using System;
 
 using System.Collections.Generic;
 
@@ -48,25 +51,27 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (household.Head1 != null)
 			{
-				normalizedHousehold.Head1 = Normalizer.Normalize (household.Head1, normalizedPersons);
+				var normalizedAdult1 = Normalizer.Normalize (household.Head1, normalizedPersons);
+
+				normalizedHousehold.Heads.Add (normalizedAdult1);
 			}
 
 			if (household.Head2 != null)
 			{
-				normalizedHousehold.Head2 = Normalizer.Normalize (household.Head2, normalizedPersons);
+				var normalizedAdult2 = Normalizer.Normalize (household.Head2, normalizedPersons);
+
+				normalizedHousehold.Heads.Add (normalizedAdult2);
 			}
 
-			normalizedHousehold.Children = household.Children
-				.Select (c => Normalizer.Normalize (c, normalizedPersons))
-				.ToList ();
+			foreach (var child in household.Children)
+			{
+				var normalizedChild = Normalizer.Normalize (child, normalizedPersons);
+
+				normalizedHousehold.Children.Add (normalizedChild);
+			}
 
 			foreach (var member in normalizedHousehold.Members)
 			{
-				if (member.Households == null)
-				{
-					member.Households = new List<NormalizedHousehold> ();
-				}
-
 				member.Households.Add (normalizedHousehold);
 			}
 
@@ -81,7 +86,7 @@ namespace Epsitec.Aider.Data.Eerv
 				Firstnames = Normalizer.NormalizeComposedName (person.Firstname),
 				Lastnames = Normalizer.NormalizeComposedName (person.Lastname),
 				DateOfBirth = person.DateOfBirth,
-				Sex = person.Sex,
+				Sex = person.Sex
 			};
 
 			normalizedPersons[normalizedPerson] = person;
@@ -105,73 +110,115 @@ namespace Epsitec.Aider.Data.Eerv
 		public static Dictionary<NormalizedPerson, EntityKey> Normalize(CoreDataManager coreDataManager)
 		{
 			var keyToHouseholds = new Dictionary<EntityKey, NormalizedHousehold> ();
+			var keyToPersons = new Dictionary<EntityKey, NormalizedPerson> ();
+
 			var personToKeys = new Dictionary<NormalizedPerson, EntityKey> ();
 
 			AiderEnumerator.Execute
 			(
 				coreDataManager,
-				(b, p) => Normalizer.Normalize (b, p, personToKeys, keyToHouseholds)
+				(b, c) => Normalizer.Normalize (b, c, personToKeys, keyToHouseholds, keyToPersons)
 			);
 
 			return personToKeys;
 		}
 
 
-		private static void Normalize(BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons, Dictionary<NormalizedPerson, EntityKey> personToKeys, Dictionary<EntityKey, NormalizedHousehold> keyToHouseholds)
+		private static void Normalize(BusinessContext businessContext, IEnumerable<AiderContactEntity> contacts, Dictionary<NormalizedPerson, EntityKey> personToKeys, Dictionary<EntityKey, NormalizedHousehold> keyToHouseholds, Dictionary<EntityKey, NormalizedPerson> keyToPersons)
 		{
 			var dataContext = businessContext.DataContext;
 
-			foreach (var person in persons)
+			foreach (var contact in contacts)
 			{
-				var personKey = dataContext.GetNormalizedEntityKey (person).Value;
-				var normalizedPerson = Normalizer.Normalize (person);
-
-				personToKeys[normalizedPerson] = personKey;
-
-				Normalizer.Normalize (person, normalizedPerson, person.Household1, keyToHouseholds, dataContext);
-				Normalizer.Normalize (person, normalizedPerson, person.Household2, keyToHouseholds, dataContext);
+				Normalizer.Normalize (dataContext, contact, personToKeys, keyToHouseholds, keyToPersons);
 			}
 		}
 
 
-		private static void Normalize(AiderPersonEntity person, NormalizedPerson normalizedPerson, AiderHouseholdEntity household, Dictionary<EntityKey, NormalizedHousehold> keyToHouseholds, DataContext dataContext)
+		private static void Normalize(DataContext dataContext, AiderContactEntity contact, Dictionary<NormalizedPerson, EntityKey> personToKeys, Dictionary<EntityKey, NormalizedHousehold> keyToHouseholds, Dictionary<EntityKey, NormalizedPerson> keyToPersons)
 		{
-			if (household.IsNotNull ())
+			var type = contact.ContactType;
+
+			if (type != ContactType.PersonAddress && type != ContactType.PersonHousehold)
 			{
-				var householdKey = dataContext.GetNormalizedEntityKey (household).Value;
+				return;
+			}
 
-				NormalizedHousehold normalizedHousehold;
+			var person = contact.Person;
 
-				if (!keyToHouseholds.TryGetValue (householdKey, out normalizedHousehold))
+			if (person.IsNull ())
+			{
+				return;
+			}
+
+			var normalizedPerson = Normalizer.Normalize (dataContext, person, personToKeys, keyToPersons);
+
+			if (type == ContactType.PersonHousehold)
+			{
+				var household = contact.Household;
+
+				if (household.IsNotNull ())
 				{
-					normalizedHousehold = Normalizer.Normalize (household);
+					var normalizedHousehold = Normalizer.Normalize (dataContext, household, keyToHouseholds);
 
-					keyToHouseholds[householdKey] = normalizedHousehold;
-				}
+					normalizedPerson.Households.Add (normalizedHousehold);
 
-				normalizedPerson.Households.Add (normalizedHousehold);
-
-				bool isChild = true;
-
-				if (household.Head1 == person)
-				{
-					normalizedHousehold.Head1 = normalizedPerson;
-					
-					isChild = false;
-				}
-
-				if (household.Head2 == person)
-				{
-					normalizedHousehold.Head2 = normalizedPerson;
-
-					isChild = false;
-				}
-
-				if (isChild)
-				{
-					normalizedHousehold.Children.Add (normalizedPerson);
+					if (contact.HouseholdRole == HouseholdRole.Head)
+					{
+						normalizedHousehold.Heads.Add (normalizedPerson);
+					}
+					else
+					{
+						normalizedHousehold.Children.Add (normalizedPerson);
+					}
 				}
 			}
+			else
+			{
+				var address = contact.Address;
+
+				if (address.IsNotNull () && address.Town.IsNotNull ())
+				{
+					var normalizedAddress = Normalizer.Normalize (address);
+
+					normalizedPerson.PersonalAddresses.Add (normalizedAddress);
+				}
+			}
+		}
+
+
+		private static NormalizedPerson Normalize(DataContext dataContext, AiderPersonEntity person, Dictionary<NormalizedPerson, EntityKey> personToKeys, Dictionary<EntityKey, NormalizedPerson> keyToPersons)
+		{
+			var personKey = dataContext.GetNormalizedEntityKey (person).Value;
+
+			NormalizedPerson normalizedPerson;
+
+			if (!keyToPersons.TryGetValue (personKey, out normalizedPerson))
+			{
+				normalizedPerson = Normalizer.Normalize (person);
+
+				keyToPersons[personKey] = normalizedPerson;
+				personToKeys[normalizedPerson] = personKey;
+			}
+
+			return normalizedPerson;
+		}
+
+
+		private static NormalizedHousehold Normalize(DataContext dataContext, AiderHouseholdEntity household, Dictionary<EntityKey, NormalizedHousehold> keyToHouseholds)
+		{
+			var householdKey = dataContext.GetNormalizedEntityKey (household).Value;
+
+			NormalizedHousehold normalizedHousehold;
+
+			if (!keyToHouseholds.TryGetValue (householdKey, out normalizedHousehold))
+			{
+				normalizedHousehold = Normalizer.Normalize (household);
+
+				keyToHouseholds[householdKey] = normalizedHousehold;
+			}
+
+			return normalizedHousehold;
 		}
 
 
@@ -179,8 +226,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			return new NormalizedHousehold ()
 			{
-				Address = Normalizer.Normalize (household.Address),
-				Children = new List<NormalizedPerson> ()
+				Address = Normalizer.Normalize (household.Address)
 			};
 		}
 
@@ -195,7 +241,6 @@ namespace Epsitec.Aider.Data.Eerv
 				Lastnames = Normalizer.NormalizeComposedName (eChPerson.PersonOfficialName),
 				DateOfBirth = eChPerson.PersonDateOfBirth,
 				Sex = eChPerson.PersonSex,
-				Households = new List<NormalizedHousehold> (),
 			};
 		}
 

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Aider.Data.Eerv
 {
@@ -9,22 +11,28 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public NormalizedPerson Head1
+		public NormalizedHousehold()
+		{
+			this.Heads = new List<NormalizedPerson> ();
+			this.Children = new List<NormalizedPerson> ();
+		}
+
+
+		public List<NormalizedPerson> Heads
 		{
 			get;
 			set;
 		}
-
-
-		public NormalizedPerson Head2
-		{
-			get;
-			set;
-		}
-
 
 
 		public List<NormalizedPerson> Children
+		{
+			get;
+			set;
+		}
+
+
+		public NormalizedAddress Address
 		{
 			get;
 			set;
@@ -35,29 +43,8 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			get
 			{
-				if (this.Head1 != null)
-				{
-					yield return this.Head1;
-				}
-
-				if (this.Head2 != null)
-				{
-					yield return this.Head2;
-				}
-
-				foreach (var child in this.Children)
-				{
-					yield return child;
-				}
+				return this.Heads.Concat (this.Children);
 			}
-		}
-
-
-
-		public NormalizedAddress Address
-		{
-			get;
-			set;
 		}
 
 

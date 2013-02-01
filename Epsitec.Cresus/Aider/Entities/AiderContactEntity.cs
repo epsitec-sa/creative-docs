@@ -1,11 +1,12 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,7 +18,7 @@ namespace Epsitec.Aider.Entities
 		{
 			switch (this.ContactType)
 			{
-				case Enumerations.ContactType.None:
+				case ContactType.None:
 					return Resources.FormattedText ("Ce contact n'est pas défini.<br/><br/>Utilisez une <i>action</i> pour associer ce contact à une personne ou à une entreprise.");
 			}
 
@@ -64,6 +65,48 @@ namespace Epsitec.Aider.Entities
 
 			this.DisplayAddress = address.GetDisplayAddress ().ToSimpleText ();
 			this.DisplayZipCode = country.IsoCode == "CH" ? town.ZipCode : country.IsoCode + "-" + town.ZipCode;
+		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
+		{
+			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
+
+			contact.Person = person;
+			contact.Address = household.Address;
+			contact.Household = household;
+			contact.HouseholdRole = role;
+
+			return contact;
+		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AddressType type)
+		{
+			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonAddress);
+
+			contact.Person = person;
+			contact.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+			contact.AddressType = type;
+
+			return contact;
+		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
+		{
+			var contact = AiderContactEntity.Create (businessContext, ContactType.Legal);
+
+			contact.LegalPerson = legalPerson;
+			contact.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+
+			return contact;
+		}
+
+		private static AiderContactEntity Create(BusinessContext businessContext, ContactType type)
+		{
+			var contact = businessContext.CreateAndRegisterEntity<AiderContactEntity> ();
+
+			contact.ContactType = type;
+
+			return contact;
 		}
 	}
 }

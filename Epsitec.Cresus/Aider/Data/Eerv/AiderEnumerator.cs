@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -24,20 +25,19 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
+		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderContactEntity>> action)
 		{
-			int size = 1000;
+			const int size = 1000;
 
 			for (int i = 0; ;i += size)
 			{
 				int skip = i;
-				int take = size;
 
 				bool done = false;
 
 				coreDataManager.Execute (b =>
 				{
-					var batch = AiderEnumerator.GetPersonBatch (b, skip, take);
+					var batch = AiderEnumerator.GetBatch (b.DataContext, skip, size);
 
 					if (batch.Any ())
 					{
@@ -57,48 +57,33 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<AiderPersonEntity> GetPersonBatch(BusinessContext businessContext, int skip, int take)
+		private static IList<AiderContactEntity> GetBatch(DataContext dataContext, int skip, int take)
 		{
-			var dataContext = businessContext.DataContext;
-
-			var aiderPersonExample = new AiderPersonEntity ();
-			var eChPersonExample = new eCH_PersonEntity ();
-
-			aiderPersonExample.eCH_Person = eChPersonExample;
+			var aiderContact = new AiderContactEntity ();
 
 			var request = new Request ()
 			{
-				RootEntity = aiderPersonExample,
+				RootEntity = aiderContact,
 				Skip = skip,
 				Take = take,
 			};
 
-			request.SortClauses.Add
-			(
-				new SortClause
-				(
-					InternalField.CreateId (aiderPersonExample),
-					SortOrder.Ascending
-				)
-			);
+			request.AddSortClause (InternalField.CreateId (aiderContact));
 
-			request.RequestedEntity = aiderPersonExample;
-			var aiderPersons = dataContext.GetByRequest<AiderPersonEntity> (request);
+			var aiderContacts = dataContext.GetByRequest<AiderContactEntity> (request);
 
-			var lambdas = new List<LambdaExpression> ()
+			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
 			{
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.eCH_Person),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household1),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household2),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household1.Address),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household2.Address),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household1.Address.Town),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Household2.Address.Town),
-			};
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Person),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Person.eCH_Person),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address.Town),
+			});
 
-			dataContext.LoadRelatedData (aiderPersons, lambdas);
-
-			return aiderPersons;
+			return aiderContacts;
 		}
 	}
 

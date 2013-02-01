@@ -9,6 +9,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -193,34 +194,32 @@ namespace Epsitec.Aider.Data.ECh
 
 			if (eChAdult1 != null)
 			{
-				var result = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
+				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1);
 
-				eChReportedPersonEntity.Adult1 = result.Item1;
-				aiderHousehold.Head1 = result.Item2;
+				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
 			}
 
 			var eChAdult2 = eChReportedPerson.Adult2;
 
 			if (eChAdult2 != null)
 			{
-				var result = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
+				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2);
 
-				eChReportedPersonEntity.Adult2 = result.Item1;
-				aiderHousehold.Head2 = result.Item2;
+				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);
 			}
 
 			foreach (var eChChild in eChReportedPerson.Children)
 			{
-				var result = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
+				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild);
 
-				eChReportedPersonEntity.Children.Add (result.Item1);
+				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
 			}
 
 			return eChReportedPersonEntity;
 		}
 
 
-		private static Tuple<eCH_PersonEntity, AiderPersonEntity> ImportPerson(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
+		private static AiderPersonEntity ImportPerson(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson)
 		{
 			EntityKey entityKey;
 			AiderPersonEntity aiderPersonEntity;
@@ -238,38 +237,24 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				aiderPersonEntity = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
 			}
-
-			if (aiderPersonEntity != null)
-			{
-				aiderPersonEntity.SetHousehold2 (businessContext, household);
-
-				var eChPersonEntity = aiderPersonEntity.eCH_Person;
-
-				eChPersonEntity.ReportedPerson2 = eChReportedPersonEntity;
-				eChPersonEntity.Address2 = eChAddressEntity;
-
-				return Tuple.Create (eChPersonEntity, aiderPersonEntity);
-			}
 			else
 			{
-				var result = EChDataImporter.ImportPerson (businessContext, eChPerson, eChReportedPersonEntity, eChAddressEntity, household);
+				aiderPersonEntity = EChDataImporter.ImportPerson (businessContext, eChPerson);
 
 				// NOTE We add the newly created entity to the dictionary of the entities that have
 				// been created but not yet saved.
 
-				eChPersonIdToEntity[eChPerson.Id] = result.Item2;
-
-				return result;
+				eChPersonIdToEntity[eChPerson.Id] = aiderPersonEntity;
 			}
+
+			return aiderPersonEntity;
 		}
 
 
-		private static Tuple<eCH_PersonEntity, AiderPersonEntity> ImportPerson(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
+		private static AiderPersonEntity ImportPerson(BusinessContext businessContext, EChPerson eChPerson)
 		{
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 			
-			aiderPersonEntity.SetHousehold1 (businessContext, household);
-
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
 			eChPersonEntity.PersonId = eChPerson.Id;
@@ -292,16 +277,13 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.DataSource = Enumerations.DataSource.Government;
 			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
 			eChPersonEntity.RemovalReason = RemovalReason.None;
-			
-			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
-			eChPersonEntity.Address1 = eChAddressEntity;
 
 			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
 			aiderPersonEntity.CallName = EChDataImporter.GuessCallName (eChPerson.FirstNames);
 			aiderPersonEntity.DisplayName = AiderPersonEntity.GetDisplayName (aiderPersonEntity);
 			aiderPersonEntity.Confession = PersonConfession.Protestant;
 
-			return Tuple.Create (eChPersonEntity, aiderPersonEntity);
+			return aiderPersonEntity;
 		}
 
 
@@ -320,7 +302,6 @@ namespace Epsitec.Aider.Data.ECh
 			var townEntityKey = zipCodeIdToEntityKey[eChAddress.SwissZipCodeId];
 			var town = businessContext.ResolveEntity<AiderTownEntity> (townEntityKey);
 
-			aiderAddressEntity.Type = AddressType.Default;
 			aiderAddressEntity.AddressLine1 = eChAddress.AddressLine1;
 			aiderAddressEntity.Street = eChAddress.Street;
 			aiderAddressEntity.HouseNumber = houseNumber;
@@ -345,6 +326,42 @@ namespace Epsitec.Aider.Data.ECh
 			eChAddressEntity.Country = eChAddress.CountryCode;
 
 			return eChAddressEntity;
+		}
+
+
+		private static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold, eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool isChild = false)
+		{
+			var role = isHead1 || isHead2
+				? HouseholdRole.Head
+				: HouseholdRole.None;
+
+			AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, role);
+
+			var eChPerson = aiderPerson.eCH_Person;
+
+			if (eChPerson.ReportedPerson1.IsNull ())
+			{
+				eChPerson.ReportedPerson1 = eChReportedPerson;
+				eChPerson.Address1 = eChReportedPerson.Address;
+			}
+			else
+			{
+				eChPerson.ReportedPerson2 = eChReportedPerson;
+				eChPerson.Address2 = eChReportedPerson.Address;
+			}
+
+			if (isHead1)
+			{
+				eChReportedPerson.Adult1 = eChPerson;
+			}
+			else if (isHead2)
+			{
+				eChReportedPerson.Adult2 = eChPerson;
+			}
+			else
+			{
+				eChReportedPerson.Children.Add (eChPerson);
+			}
 		}
 
 		

@@ -17,6 +17,13 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
+		public NormalizedPerson()
+		{
+			this.Households = new List<NormalizedHousehold> ();
+			this.PersonalAddresses = new List<NormalizedAddress> ();
+		}
+
+
 		public string[] Firstnames
 		{
 			get;
@@ -70,12 +77,16 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public IEnumerable<NormalizedAddress> Addresses
+		public List<NormalizedAddress> PersonalAddresses
 		{
-			get
-			{
-				return this.Households.Select (h => h.Address);
-			}
+			get;
+			set;
+		}
+
+
+		public IEnumerable<NormalizedAddress> GetAddresses()
+		{
+			return this.Households.Select (h => h.Address).Concat (this.PersonalAddresses);
 		}
 
 
@@ -85,7 +96,7 @@ namespace Epsitec.Aider.Data.Eerv
 				+ " " + this.Lastnames.Join (" ")
 				+ "(" + this.DateOfBirth 
 				+ ", " + this.Sex
-				+ ", " + string.Join (" | ", this.Addresses)
+				+ ", " + string.Join (" | ", this.GetAddresses ())
 				+ ")";
 		}
 

@@ -136,7 +136,7 @@ namespace Epsitec.Aider.Data.Eerv
 				? (bool?) null
 				: EervParishDataMatcher.IsSexMatch(p.Sex, p2.Sex);
 
-			var address = EervParishDataMatcher.GetAddressSimilarity(p.Addresses, p2.Addresses);
+			var address = EervParishDataMatcher.GetAddressSimilarity (p.GetAddresses (), p2.GetAddresses ());
 
 			return new MatchData()
 			{
@@ -525,7 +525,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static IEnumerable<Tuple<NormalizedPerson, Tuple<double, double, double, bool, AddressMatch>>> GetFuzzyMatches(NormalizedPerson person, IEnumerable<NormalizedPerson> persons, double minSfn, double minSln)
 		{
 			var p1 = person;
-			
+
 			return from p2 in persons
 				   let sfn = JaroWinkler.ComputeJaroWinklerDistance (p1.Firstname, p2.Firstname)
 				   where sfn >= minSfn
@@ -533,7 +533,7 @@ namespace Epsitec.Aider.Data.Eerv
 				   where sln >= minSln
 				   let sdb = EervParishDataMatcher.GetDateSimilarity (p1.DateOfBirth, p2.DateOfBirth)
 				   let ssx = EervParishDataMatcher.IsSexMatch (p1, p2, true)
-				   let sad = EervParishDataMatcher.GetAddressSimilarity (p1.Addresses, p2.Addresses)
+				   let sad = EervParishDataMatcher.GetAddressSimilarity (p1.GetAddresses (), p2.GetAddresses ())
 				   let metric = EervParishDataMatcher.GetMetric (sfn, sln, sdb, ssx, p1.DateOfBirth, p2.DateOfBirth, p1.Sex, p2.Sex)
 				   orderby metric descending
 				   select Tuple.Create (p2, Tuple.Create (sfn, sln, sdb, ssx, sad));
@@ -670,9 +670,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static bool AreAddressesSimilar(NormalizedPerson eervPerson, NormalizedPerson aiderPerson, AddressMatch match)
 		{
-			foreach (var eervAddress in eervPerson.Addresses)
+			foreach (var eervAddress in eervPerson.GetAddresses ())
 			{
-				foreach (var aiderAddress in aiderPerson.Addresses)
+				foreach (var aiderAddress in aiderPerson.GetAddresses ())
 				{
 					var similarity = EervParishDataMatcher.GetAddressSimilarity (eervAddress, aiderAddress);
 
