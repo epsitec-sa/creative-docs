@@ -771,55 +771,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Household1</c> field.
-		///	designer:fld/LVAF/LVAL4
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAL4]")]
-		public global::Epsitec.Aider.Entities.AiderHouseholdEntity Household1
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVAL4]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue = this.Household1;
-				if (oldValue != value || !this.IsFieldDefined("[LVAL4]"))
-				{
-					this.OnHousehold1Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVAL4]", oldValue, value);
-					this.OnHousehold1Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Household2</c> field.
-		///	designer:fld/LVAF/LVAG9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAG9]")]
-		public global::Epsitec.Aider.Entities.AiderHouseholdEntity Household2
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVAG9]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue = this.Household2;
-				if (oldValue != value || !this.IsFieldDefined("[LVAG9]"))
-				{
-					this.OnHousehold2Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVAG9]", oldValue, value);
-					this.OnHousehold2Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>AdditionalAddress1</c> field.
+		///	The <c>MainAddress</c> field.
 		///	designer:fld/LVAF/LVAM4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAM4]")]
-		public global::Epsitec.Aider.Entities.AiderAddressEntity AdditionalAddress1
+		public global::Epsitec.Aider.Entities.AiderAddressEntity MainAddress
 		{
 			get
 			{
@@ -827,78 +783,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.AdditionalAddress1;
+				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.MainAddress;
 				if (oldValue != value || !this.IsFieldDefined("[LVAM4]"))
 				{
-					this.OnAdditionalAddress1Changing (oldValue, value);
+					this.OnMainAddressChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAM4]", oldValue, value);
-					this.OnAdditionalAddress1Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>AdditionalAddress2</c> field.
-		///	designer:fld/LVAF/LVAU4
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU4]")]
-		public global::Epsitec.Aider.Entities.AiderAddressEntity AdditionalAddress2
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAU4]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.AdditionalAddress2;
-				if (oldValue != value || !this.IsFieldDefined("[LVAU4]"))
-				{
-					this.OnAdditionalAddress2Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAU4]", oldValue, value);
-					this.OnAdditionalAddress2Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>AdditionalAddress3</c> field.
-		///	designer:fld/LVAF/LVAI9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAI9]")]
-		public global::Epsitec.Aider.Entities.AiderAddressEntity AdditionalAddress3
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAI9]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.AdditionalAddress3;
-				if (oldValue != value || !this.IsFieldDefined("[LVAI9]"))
-				{
-					this.OnAdditionalAddress3Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAI9]", oldValue, value);
-					this.OnAdditionalAddress3Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>AdditionalAddress4</c> field.
-		///	designer:fld/LVAF/LVAJ9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAJ9]")]
-		public global::Epsitec.Aider.Entities.AiderAddressEntity AdditionalAddress4
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAJ9]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.AdditionalAddress4;
-				if (oldValue != value || !this.IsFieldDefined("[LVAJ9]"))
-				{
-					this.OnAdditionalAddress4Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAJ9]", oldValue, value);
-					this.OnAdditionalAddress4Changed (oldValue, value);
+					this.OnMainAddressChanged (oldValue, value);
 				}
 			}
 		}
@@ -1053,20 +943,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>AdditionalAddresses</c> field.
-		///	designer:fld/LVAF/LVA3B
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA3B]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> AdditionalAddresses
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity>);
-				this.GetAdditionalAddresses (ref value);
-				return value;
-			}
-		}
-		///	<summary>
 		///	The <c>Relationships</c> field.
 		///	designer:fld/LVAF/LVAAB
 		///	</summary>
@@ -1095,30 +971,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>IsHouseholdHead</c> field.
-		///	designer:fld/LVAF/LVA9C
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA9C]", IsVirtual=true)]
-		public bool IsHouseholdHead
-		{
-			get
-			{
-				bool value = default (bool);
-				this.GetIsHouseholdHead (ref value);
-				return value;
-			}
-			set
-			{
-				bool oldValue = this.IsHouseholdHead;
-				if (oldValue != value || !this.IsFieldDefined("[LVA9C]"))
-				{
-					this.OnIsHouseholdHeadChanging (oldValue, value);
-					this.SetIsHouseholdHead (value);
-					this.OnIsHouseholdHeadChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>ParishGroup</c> field.
 		///	designer:fld/LVAF/LVG622
 		///	</summary>
@@ -1143,6 +995,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Households</c> field.
+		///	designer:fld/LVAF/LVALE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVALE]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> Households
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity>);
+				this.GetHouseholds (ref value);
+				return value;
+			}
+		}
+		///	<summary>
 		///	The <c>Contacts</c> field.
 		///	designer:fld/LVAF/LVAIE
 		///	</summary>
@@ -1153,20 +1019,6 @@ namespace Epsitec.Aider.Entities
 			{
 				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity>);
 				this.GetContacts (ref value);
-				return value;
-			}
-		}
-		///	<summary>
-		///	The <c>Households</c> field.
-		///	designer:fld/LVAF/LVAJE
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAJE]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> Households
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity>);
-				this.GetHouseholds (ref value);
 				return value;
 			}
 		}
@@ -1187,26 +1039,14 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnLanguageChanging(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
 		partial void OnLanguageChanged(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
-		partial void OnHousehold1Changing(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
-		partial void OnHousehold1Changed(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
-		partial void OnHousehold2Changing(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
-		partial void OnHousehold2Changed(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
-		partial void OnAdditionalAddress1Changing(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress1Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress2Changing(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress2Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress3Changing(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress3Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress4Changing(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAdditionalAddress4Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		partial void OnMainAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		partial void OnMainAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnConfessionChanging(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnProfessionChanging(string oldValue, string newValue);
 		partial void OnProfessionChanged(string oldValue, string newValue);
 		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
-		partial void OnIsHouseholdHeadChanging(bool oldValue, bool newValue);
-		partial void OnIsHouseholdHeadChanged(bool oldValue, bool newValue);
 		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		
@@ -1216,15 +1056,12 @@ namespace Epsitec.Aider.Entities
 		partial void GetChildren(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetParents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetHousemates(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
-		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value);
 		partial void GetRelationships(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
-		partial void GetIsHouseholdHead(ref bool value);
-		partial void SetIsHouseholdHead(bool value);
 		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
-		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetHouseholds(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value);
+		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

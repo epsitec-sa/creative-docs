@@ -1630,19 +1630,9 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AiderPerson.AdditionalAddress1, null);
+					System.Object.Equals (AiderPerson.CallName, null);
 				}
 				
-				//	designer:cap/LVAM4
-				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 150);
-				//	designer:cap/LVAU4
-				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 158);
-				//	designer:cap/LVAI9
-				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress3 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 306);
-				//	designer:cap/LVAJ9
-				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress4 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 307);
-				//	designer:cap/LVA3B
-				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddresses = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 355);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
 				//	designer:cap/LVGL02
@@ -1663,18 +1653,14 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Events = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 282);
 				//	designer:cap/LVAR8
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 283);
-				//	designer:cap/LVAL4
-				public static readonly global::Epsitec.Common.Support.Druid Household1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
-				//	designer:cap/LVAG9
-				public static readonly global::Epsitec.Common.Support.Druid Household2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 304);
-				//	designer:cap/LVAJE
-				public static readonly global::Epsitec.Common.Support.Druid Households = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 467);
+				//	designer:cap/LVALE
+				public static readonly global::Epsitec.Common.Support.Druid Households = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 469);
 				//	designer:cap/LVGN02
 				public static readonly global::Epsitec.Common.Support.Druid Housemates = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 23);
-				//	designer:cap/LVA9C
-				public static readonly global::Epsitec.Common.Support.Druid IsHouseholdHead = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 393);
 				//	designer:cap/LVAO7
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
+				//	designer:cap/LVAM4
+				public static readonly global::Epsitec.Common.Support.Druid MainAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 150);
 				//	designer:cap/LVAT
 				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 				//	designer:cap/LVAL2

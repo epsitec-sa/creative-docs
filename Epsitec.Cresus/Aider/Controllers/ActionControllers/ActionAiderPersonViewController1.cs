@@ -49,23 +49,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (person, "Le ménage secondaire doit être différent du ménage principal.");
 			}
 
-			person.SetHousehold1 (this.BusinessContext, household1);
-			person.SetHousehold2 (this.BusinessContext, household2);
+			throw new System.NotImplementedException ();
 		}
 
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
+			//	TODO
 			form
 				.Title ("Gérer les ménages")
-				.Field<AiderHouseholdEntity> ()
-					.Title ("Ménage principal")
-					.InitialValue (x => x.Household1)
-				.End ()
-				.Field<AiderHouseholdEntity> ()
-					.Title ("Ménage secondaire")
-					.InitialValue (x => x.Household2)
-				.End ()
 			.End ();
 		}
 	}

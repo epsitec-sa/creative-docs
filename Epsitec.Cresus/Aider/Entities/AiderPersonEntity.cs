@@ -100,36 +100,8 @@ namespace Epsitec.Aider.Entities
 				yield return fullNameText;
 			}
 
-			// Gets the default mail address
-			var defaultMailaddress = this.GetMailAddresses ().FirstOrDefault ();
-
-			if (defaultMailaddress.IsNotNull ())
-			{
-				var addressLines = defaultMailaddress
-				.GetAddressLines ()
-				.Where (l => !l.IsNullOrWhiteSpace ());
-
-				foreach (var mailAddressLine in addressLines)
-				{
-					yield return mailAddressLine;
-				}
-			}
-
-			// Gets the default phone
-			var defaultPhone = this.GetPhones ().FirstOrDefault ();
-
-			if (defaultPhone != null)
-			{
-				yield return "Tel: " + defaultPhone;
-			}
-
-			// Gets the default email
-			var defaultEmailAddress = this.GetEmailAddresses ().FirstOrDefault ();
-
-			if (defaultEmailAddress != null)
-			{
-				yield return "Email: " + defaultEmailAddress;
-			}
+			//	Gets the default mail address
+			//	TODO: ...
 		}
 
 
@@ -199,58 +171,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<AiderAddressEntity> GetMailAddresses()
-		{
-			return this.GetAddresses ().Where (a => a.Town.IsNotNull ());
-		}
-
-
-		public IEnumerable<FormattedText> GetPhones()
-		{
-			return this.GetAddresses ().SelectMany (a => a.GetPhones ());
-		}
-
-
-		public IEnumerable<string> GetEmailAddresses()
-		{
-			return this.GetAddresses ().Select (a => a.Email).Where (e => !e.IsNullOrWhiteSpace ());
-		}
-
-
-		public IEnumerable<AiderAddressEntity> GetAddresses()
-		{
-			if (this.Household1.IsNotNull () && this.Household1.Address.IsNotNull ())
-			{
-				yield return this.Household1.Address;
-			}
-
-			if (this.Household2.IsNotNull () && this.Household2.Address.IsNotNull ())
-			{
-				yield return this.Household2.Address;
-			}
-
-			if (this.AdditionalAddress1.IsNotNull ())
-			{
-				yield return this.AdditionalAddress1;
-			}
-
-			if (this.AdditionalAddress2.IsNotNull ())
-			{
-				yield return this.AdditionalAddress2;
-			}
-
-			if (this.AdditionalAddress3.IsNotNull ())
-			{
-				yield return this.AdditionalAddress3;
-			}
-
-			if (this.AdditionalAddress4.IsNotNull ())
-			{
-				yield return this.AdditionalAddress4;
-			}
-		}
-
-
 		public bool IsGovernmentDefined()
 		{
 			return this.eCH_Person.DataSource == Enumerations.DataSource.Government;
@@ -264,79 +184,11 @@ namespace Epsitec.Aider.Entities
 			return this.Housemates.Concat (this.Children).Concat (this.Parents);
 		}
 
-		partial void GetIsHouseholdHead(ref bool value)
-		{
-			foreach (var household in this.GetHouseholds ())
-			{
-				if ((household.Head1 == this) ||
-					(household.Head2 == this))
-				{
-					value = true;
-					return;
-				}
-			}
-
-			value = false;
-		}
-
-		partial void OnIsHouseholdHeadChanged(bool oldValue, bool newValue)
-		{
-			if (newValue == false)
-			{
-				//	This person is no longer the head of the household.
-
-				foreach (var household in this.GetHouseholds())
-				{
-					if (household.Head1 == this)
-					{
-						household.Head1 = household.Head2;
-						household.Head2 = household.GetEntityContext ().CreateEmptyEntity<AiderPersonEntity> ();
-					}
-					else if (household.Head2 == this)
-					{
-						household.Head2 = household.GetEntityContext ().CreateEmptyEntity<AiderPersonEntity> ();
-					}
-				}
-			}
-			else
-			{
-				//	Make this person the head of the household. If there is already one or
-				//	two heads defined, replace the oldest one. This only considers the first
-				//	household if there are two of them.
-
-				if ((this.Household1.IsNull ()) &&
-					(this.Household2.IsNull ()))
-				{
-					//	No op
-				}
-				else if (this.Household1.IsNotNull ())
-				{
-					this.Household1.Head2 = this.Household1.Head1;
-					this.Household1.Head1 = this;
-				}
-				else
-				{
-					this.Household2.Head2 = this.Household2.Head1;
-					this.Household2.Head1 = this;
-				}
-			}
-		}
-
 		partial void GetHousemates(ref IList<AiderPersonEntity> value)
 		{
-			IEnumerable<AiderPersonEntity> housemates = Enumerable.Empty<AiderPersonEntity> ();
+			value = new List<AiderPersonEntity> ();
 
-			if (this.Household1.IsNotNull ())
-			{
-				housemates = housemates.Concat (this.Household1.Members);
-			}
-
-			if (this.Household2.IsNotNull ())
-			{
-				housemates = housemates.Concat (this.Household2.Members);
-			}
-
-			value = housemates.Where (p => p != this).ToList ();
+			//	TODO
 		}
 
 		partial void GetChildren(ref IList<AiderPersonEntity> value)
@@ -369,16 +221,6 @@ namespace Epsitec.Aider.Entities
 			value = this.groupList;
 		}
 		
-		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
-		{
-			if (this.additionalAddresses == null)
-			{
-				this.additionalAddresses = new Helpers.AiderPersonAdditionalContactAddressList (this);
-			}
-
-			value = this.additionalAddresses;
-		}
-
 		partial void GetRelationships(ref IList<AiderPersonRelationshipEntity> value)
 		{
 			value = new List<AiderPersonRelationshipEntity> ();
@@ -516,56 +358,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void SetHousehold(BusinessContext businessContext, AiderHouseholdEntity newHousehold, bool isMainHousehold)
-		{
-			if (isMainHousehold)
-			{
-				this.SetHousehold1 (businessContext, newHousehold);
-			}
-			else
-			{
-				this.SetHousehold2 (businessContext, newHousehold);
-			}
-		}
-
-		public void SetHousehold1(BusinessContext businessContext, AiderHouseholdEntity newHousehold)
-		{
-			this.SetHousehold (businessContext, newHousehold, p => p.Household1, (p, h) => p.Household1 = h);
-		}
-
-		public void SetHousehold2(BusinessContext businessContext, AiderHouseholdEntity newHousehold)
-		{
-			this.SetHousehold (businessContext, newHousehold, p => p.Household2, (p, h) => p.Household2 = h);
-		}
-
-		private void SetHousehold(BusinessContext businessContext, AiderHouseholdEntity newHousehold, Func<AiderPersonEntity, AiderHouseholdEntity> getter, Action<AiderPersonEntity, AiderHouseholdEntity> setter)
-		{
-			var oldHousehold = getter (this);
-
-			if (oldHousehold == newHousehold)
-			{
-				return;
-			}
-
-			setter (this, newHousehold);
-
-			if (newHousehold.IsNotNull ())
-			{
-				newHousehold.Add (this);
-			}
-
-			if (oldHousehold.IsNotNull ())
-			{
-				oldHousehold.Remove (this);
-
-				if (oldHousehold.Members.Count == 0)
-				{
-					businessContext.DeleteEntity (oldHousehold);
-				}
-			}
-		}
-
-
 		#region IAiderWarningExampleFactoryGetter Members
 
 		AiderWarningExampleFactory IAiderWarningExampleFactoryGetter.GetWarningExampleFactory()
@@ -578,7 +370,6 @@ namespace Epsitec.Aider.Entities
 
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
-		private AiderPersonAdditionalContactAddressList additionalAddresses;
 		private IList<AiderGroupParticipantEntity> groupList;
 		private HashSet<AiderHouseholdEntity> households;
 		private HashSet<AiderContactEntity> contacts;

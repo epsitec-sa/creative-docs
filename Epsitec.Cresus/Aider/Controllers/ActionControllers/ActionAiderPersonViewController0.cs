@@ -46,7 +46,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var person       = this.Entity;
 			var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
 
-			person.SetHousehold (this.BusinessContext, newHousehold, isMainHousehold);
+			//	TODO#PA
+
+			throw new System.NotImplementedException ();
 		}
 	}
 }

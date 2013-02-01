@@ -33,7 +33,10 @@ namespace Epsitec.Aider.Rules
 			person.eCH_Person = eChPerson;
 
 			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			person.Household1 = aiderHousehold;
+
+			//	TODO#PA
+			
+			throw new System.NotImplementedException ();
 		}
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
@@ -149,15 +152,17 @@ namespace Epsitec.Aider.Rules
 
 			var parishes = new List<AiderGroupEntity> ();
 
-			if (person.Household1.IsNotNull ())
-			{
-				parishes.Add (ParishLocator.FindParish (businessContext, person.Household1.Address));
-			}
+			//	TODO#PA
 
-			if (person.Household2.IsNotNull ())
-			{
-				parishes.Add (ParishLocator.FindParish (businessContext, person.Household2.Address));
-			}
+			//if (person.Household1.IsNotNull ())
+			//{
+			//    parishes.Add (ParishLocator.FindParish (businessContext, person.Household1.Address));
+			//}
+
+			//if (person.Household2.IsNotNull ())
+			//{
+			//    parishes.Add (ParishLocator.FindParish (businessContext, person.Household2.Address));
+			//}
 
 			if (parishes.Contains (person.Parish.Group))
 			{

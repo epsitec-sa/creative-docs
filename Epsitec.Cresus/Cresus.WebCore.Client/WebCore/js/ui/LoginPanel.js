@@ -82,7 +82,7 @@ function () {
         }
       });
 
-      //  Set focus with a small dealy, to make sure the view was properly rendered before:
+      //  Set focus with a small delay, to make sure the view was properly rendered before:
       usernameField.focus(true, 100);
 
       return [header, usernameField, passwordField];
