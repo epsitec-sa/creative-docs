@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ModuleInfo id="20" name="Cresus.Database" layer="s" namespace="Epsitec.Cresus.Database" textMode="FormattedText">
+<ModuleInfo id="20" name="Cresus.Database" layer="s" textMode="FormattedText" namespace="Epsitec.Cresus.Database">
   <Versions>
     <Version id="1" build="1" date="2007-11-16T07:59:44.4785000Z" />
+    <Version id="8" build="1" date="2013-02-01T19:05:37.5090864Z" />
   </Versions>
 </ModuleInfo>
