@@ -33,6 +33,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick (x => x.Person)
 							.Icon (contact.Person.GetIconName ("Data"))
+							.Text (x => x.GetCompactSummary ())
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Household.IsNotNull ())
@@ -61,6 +62,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Attribute (BrickMode.HideRemoveButton)
 								.Attribute (BrickMode.AutoGroup)
 								.Template ()
+									.Text (x => x.GetCompactSummary ())
 								.End ()
 								.Attribute (BrickMode.DefaultToSummarySubView);
 						}
