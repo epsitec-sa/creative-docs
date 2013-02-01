@@ -577,12 +577,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderPersonEntity Create(BusinessContext businessContext)
-		{
-			return businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-		}
-
-
 		#region IAiderWarningExampleFactoryGetter Members
 
 		AiderWarningExampleFactory IAiderWarningExampleFactoryGetter.GetWarningExampleFactory()
