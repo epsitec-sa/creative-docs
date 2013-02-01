@@ -432,21 +432,10 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.households == null)
 			{
-				this.households = new HashSet<AiderHouseholdEntity> ();
-
-				var businessContext = BusinessContextPool.GetCurrentContext (this);
-				var dataContext     = businessContext.DataContext;
-
-				if (dataContext.IsPersistent (this))
-				{
-					var example  = new AiderContactEntity ()
-					{
-						Person = this
-					};
-					var contacts = dataContext.GetByExample (example);
-
-					this.households.UnionWith (contacts.Where (x => x.Household.IsNotNull ()).Select (x => x.Household));
-				}
+				this.households = this.Contacts
+					.Where (x => x.Household.IsNotNull ())
+					.Select (x => x.Household)
+					.ToSet ();
 			}
 
 			return this.households;
