@@ -1361,6 +1361,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 455);
 				//	designer:cap/LVAAE
 				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContactRole = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 458);
+				//	designer:cap/LVAKE
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 468);
 				//	designer:cap/LVA5E
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 453);
 			}

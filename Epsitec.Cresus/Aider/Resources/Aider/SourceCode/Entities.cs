@@ -6826,6 +6826,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVARD/LVAKE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAKE]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAKE]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVAKE]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVAKE]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnContactTypeChanging(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
@@ -6849,6 +6871,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayAddressChanged(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
