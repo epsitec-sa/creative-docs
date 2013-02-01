@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (string.IsNullOrEmpty (this.DisplayName))
 			{
-				this.RefreshCache ();
+//				this.RefreshCache ();
 			}
 
 			return TextFormatter.FormatText (this.DisplayName, "~,", this.Address.GetStreetZipAndTownAddress ());
@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (string.IsNullOrEmpty (this.DisplayName))
 			{
-				this.RefreshCache ();
+//				this.RefreshCache ();
 			}
 
 			return TextFormatter.FormatText (this.DisplayName, "~\n", this.Address.GetPostalAddress ());

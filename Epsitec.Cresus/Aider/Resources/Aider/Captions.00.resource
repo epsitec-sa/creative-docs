@@ -402,10 +402,10 @@
   <data name="Fld.AiderContact.AddressType" id="ABE">&lt;s:data id="_0" f:Name="AddressType" f:Labels="{Collection {Text 'Type d&amp;amp;apos;adresse'}}" /&gt;</data>
   <data name="Fld.AiderContact.DisplayName" id="ACE">&lt;s:data id="_0" f:Name="DisplayName" f:Labels="{Collection {Text 'Nom'}}" /&gt;</data>
   <data name="Fld.AiderContact.DisplayAddress" id="ADE">&lt;s:data id="_0" f:Name="DisplayAddress" f:Labels="{Collection {Text 'Adresse'}}" /&gt;</data>
-  <data name="Fld.AiderContact.DisplayZipCode" id="AEE">&lt;s:data id="_0" f:Name="DisplayZipCode" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
+  <data name="Fld.AiderContact.DisplayZipCode" id="AEE">&lt;s:data id="_0" f:Name="DisplayZipCode" f:Labels="{Collection {Text 'NPA'}}" /&gt;</data>
   <data name="Cmd.Base.ShowAiderContact" id="AFE">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderContact" f:Description="Montre la base des contacts" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderContact.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'Contacts'}}" /&gt;</data>
   <data name="Fld.AiderHousehold.DisplayName" id="AGE">&lt;s:data id="_0" f:Name="DisplayName" /&gt;</data>
   <data name="Fld.AiderPerson.Contacts" id="AIE">&lt;s:data id="_0" f:Name="Contacts" /&gt;</data>
   <data name="Fld.AiderPerson.Households" id="AJE">&lt;s:data id="_0" f:Name="Households" /&gt;</data>
-  <data name="Fld.AiderContact.ParishGroupPathCache" id="AKE">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
+  <data name="Fld.AiderContact.ParishGroupPathCache" id="AKE">&lt;s:data id="_0" f:Name="ParishGroupPathCache" f:Labels="{Collection {Text 'ID du groupe paroissial'}}" /&gt;</data>
 </bundle>
