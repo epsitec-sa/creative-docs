@@ -40,7 +40,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick ()
 							.Title (Resources.Text ("Ménage associé"))
-							.Text (contact.Household.DisplayName)
+							// HACK This should be contact.Household.DisplayName.
+							.Text (contact.Household.GetDisplayName ())
 							.Icon ("Data.AiderHousehold")
 							.Attribute (BrickMode.SpecialController2);
 
