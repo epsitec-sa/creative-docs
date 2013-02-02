@@ -66,6 +66,7 @@ function () {
         allowBlank: false,
         listeners: {
           specialkey: this.onSpecialKeyPressed,
+          afterrender: function() { usernameField.focus(); },
           scope: this
         }
       });
@@ -81,9 +82,6 @@ function () {
           scope: this
         }
       });
-
-      //  Set focus with a small delay, to make sure the view was properly rendered before:
-      usernameField.focus(true, 100);
 
       return [header, usernameField, passwordField];
     },
