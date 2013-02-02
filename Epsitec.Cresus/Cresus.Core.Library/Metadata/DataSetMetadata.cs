@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public class DataSetMetadata : CoreMetadata
 	{
-		public DataSetMetadata(Druid commandId, Druid tableEntityId, string tableName, bool isDefault, bool isDisplayed)
+		public DataSetMetadata(Druid commandId, Druid tableEntityId, string tableName, bool isDefault, bool isDisplayed, bool enableCreate, bool enableDelete)
 		{
 			this.command = Command.Find (commandId);
 
@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.tableName = tableName;
 			this.isDefault = isDefault;
 			this.isDisplayed = isDisplayed;
+			this.enableCreate = enableCreate;
+			this.enableDelete = enableDelete;
 
 			this.userRoles = new List<string> ();
 		}
@@ -44,7 +46,9 @@ namespace Epsitec.Cresus.Core.Metadata
 			Druid.Parse (data[Strings.TableEntityId]),
 			data[Strings.TableName],
 			bool.Parse (data[Strings.IsDefault]),
-			bool.Parse (data[Strings.IsDisplayed])
+			bool.Parse (data[Strings.IsDisplayed]),
+			bool.Parse (data[Strings.EnableCreate]),
+			bool.Parse (data[Strings.EnableDelete])
 		)
 		{
 			this.DefineDisplayGroup (Druid.Parse (data[Strings.DisplayGroup]));
@@ -90,6 +94,22 @@ namespace Epsitec.Cresus.Core.Metadata
 			get
 			{
 				return this.isDisplayed;
+			}
+		}
+
+		public bool								EnableCreate
+		{
+			get
+			{
+				return this.enableCreate;
+			}
+		}
+
+		public bool								EnableDelete
+		{
+			get
+			{
+				return this.enableDelete;
 			}
 		}
 
@@ -201,6 +221,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			attributes.Add (new XAttribute (Strings.TableName, this.tableName));
 			attributes.Add (new XAttribute (Strings.IsDefault, this.isDefault.ToString ()));
 			attributes.Add (new XAttribute (Strings.IsDisplayed, this.isDisplayed.ToString ()));
+			attributes.Add (new XAttribute (Strings.EnableCreate, this.enableCreate.ToString ()));
+			attributes.Add (new XAttribute (Strings.EnableDelete, this.enableDelete.ToString ()));
 			attributes.Add (new XAttribute (Strings.DisplayGroup, this.displayGroupCaptionId.ToCompactString ()));
 		}
 
@@ -214,6 +236,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			public static readonly string		TableName = "tn";
 			public static readonly string		IsDefault = "df";
 			public static readonly string		IsDisplayed = "d";
+			public static readonly string		EnableCreate = "ec";
+			public static readonly string		EnableDelete = "ed";
 			public static readonly string		DisplayGroup = "dg";
 			public static readonly string		UserRoles = "R";
 			public static readonly string		UserRole = "r";
@@ -229,6 +253,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly bool					isDefault;
 		private readonly bool					isDisplayed;
 		private readonly List<string>			userRoles;
+		private readonly bool					enableCreate;
+		private readonly bool					enableDelete;
 
 		private Druid							displayGroupCaptionId;
 		private EntityFilter					filter;

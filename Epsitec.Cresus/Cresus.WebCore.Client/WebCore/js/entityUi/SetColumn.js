@@ -47,6 +47,8 @@ function() {
           entityId: options.entityId,
           columnDefinitions: options.displayDatabase.columns,
           sorterDefinitions: options.displayDatabase.sorters,
+          enableCreate: options.displayDatabase.enableCreate,
+          enableDelete: options.displayDatabase.enableDelete,
           pickDatabaseDefinition: options.pickDatabase,
           multiSelect: true,
           onSelectionChange: null

@@ -25,11 +25,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters)
+		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters, bool enableCreate, bool enableDelete)
 		{
 			this.dataSetMetadata = dataSetMetadata;
 			this.columns = columns.ToList ();
 			this.sorters = sorters.ToList ();
+			this.enableCreate = enableCreate;
+			this.enableDelete = enableDelete;
 		}
 
 
@@ -58,6 +60,24 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				return this.sorters;
 			}
 		}
+
+
+		public bool EnableCreate
+		{
+			get
+			{
+				return this.enableCreate;
+			}
+		}
+
+
+		public bool EnableDelete
+		{
+			get
+			{
+				return this.enableDelete;
+			}
+		}		
 
 
 		public DataSetAccessor GetDataSetAccessor(DataSetGetter dataSetGetter)
@@ -130,6 +150,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			return new Dictionary<string, object> ()
 			{
+				{ "enableCreate", this.EnableCreate },
+				{ "enableDelete", this.EnableDelete },
 				{ "columns", columns },
 				{ "sorters", sorters },
 			};
@@ -143,6 +165,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly List<Sorter> sorters;
+
+
+		private readonly bool enableCreate;
+
+
+		private readonly bool enableDelete;
 
 
 	}

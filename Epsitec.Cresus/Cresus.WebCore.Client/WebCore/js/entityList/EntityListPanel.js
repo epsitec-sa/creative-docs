@@ -62,6 +62,8 @@ function() {
         databaseName: options.databaseName,
         columnDefinitions: json.content.columns,
         sorterDefinitions: json.content.sorters,
+        enableCreate: json.content.enableCreate,
+        enableDelete: json.content.enableDelete,
         multiSelect: options.multiSelect,
         onSelectionChange: options.onSelectionChange
       });

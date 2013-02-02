@@ -96,8 +96,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			var sorters = customSorters == null
 				? this.GetSorters (entityTable, columns)
 				: this.GetSorters (customSorters, columns);
+
+			var enableCreate = dataSet.EnableCreate;
+			var enableDelete = dataSet.EnableDelete;
 			
-			return new Database (dataSet, columns, sorters);
+			return new Database (dataSet, columns, sorters, enableCreate, enableDelete);
 		}
 
 

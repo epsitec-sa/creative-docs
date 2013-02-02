@@ -170,20 +170,20 @@ AiderFunctionDef = [LVA7A]
     </t>
   </T>
   <D>
-    <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-    <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVAID]" teid="@AiderUserRole" tn="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVA3D]" teid="@AiderFunctionDef" tn="default" df="true" d="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVG522]" teid="@AiderPerson" tn="groupMembers" df="false" d="false" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="true" ed="true" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
+    <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVAID]" teid="@AiderUserRole" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVA3D]" teid="@AiderFunctionDef" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVG522]" teid="@AiderPerson" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
   </D>
   <G/>
 </meta>

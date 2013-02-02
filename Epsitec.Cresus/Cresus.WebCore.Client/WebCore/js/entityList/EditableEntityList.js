@@ -21,27 +21,31 @@ function() {
     /* Additional methods */
 
     createEditionButtons: function(options) {
-      var buttonAdd, buttonRemove;
+      var buttons = [];
 
-      buttonAdd = Ext.create('Ext.Button', {
-        text: options.addLabel,
-        iconCls: 'icon-add',
-        listeners: {
-          click: this.onAddHandler,
-          scope: this
-        }
-      });
+      if (options.enableCreate) {
+        buttons.push(Ext.create('Ext.Button', {
+          text: options.addLabel,
+          iconCls: 'icon-add',
+          listeners: {
+            click: this.onAddHandler,
+            scope: this
+          }
+        }));
+      }
 
-      buttonRemove = Ext.create('Ext.Button', {
-        text: options.removeLabel,
-        iconCls: 'icon-remove',
-        listeners: {
-          click: this.onRemoveHandler,
-          scope: this
-        }
-      });
+      if (options.enableDelete) {
+        buttons.push(Ext.create('Ext.Button', {
+          text: options.removeLabel,
+          iconCls: 'icon-remove',
+          listeners: {
+            click: this.onRemoveHandler,
+            scope: this
+          }
+        }));
+      }
 
-      return [buttonAdd, buttonRemove];
+      return buttons;
     },
 
     onAddHandler: function() {
