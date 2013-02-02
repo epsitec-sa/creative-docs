@@ -161,24 +161,14 @@ namespace Aider.Tests.Vs
 
 		private void AddStuffToPerson(BusinessContext businessContext, List<AiderTownEntity> towns, AiderPersonEntity aiderPerson)
 		{
-			if (dice.NextDouble () > 0.5)
-			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress1, towns, false);
-			}
+			var nbAddresses = dice.Next (0, 5);
 
-			if (dice.NextDouble () > 0.5)
+			for (int i = 0; i < nbAddresses; i++)
 			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress2, towns, false);
-			}
+				var contactType = this.GetRandomEnum<AddressType> ();
+				var contact = AiderContactEntity.Create (businessContext, aiderPerson, contactType);
 
-			if (dice.NextDouble () > 0.5)
-			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress3, towns, false);
-			}
-
-			if (dice.NextDouble () > 0.5)
-			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress4, towns, false);
+				this.GenerateAddress (contact.Address, towns, false);
 			}
 
 			if (dice.NextDouble () > 0.1)
@@ -237,7 +227,7 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private AiderAddressEntity GenerateAddress(AiderAddressEntity address, List<AiderTownEntity> towns, bool forceMailAddress)
+		private void GenerateAddress(AiderAddressEntity address, List<AiderTownEntity> towns, bool forceMailAddress)
 		{
 			bool isEmpty = true;
 
@@ -304,8 +294,6 @@ namespace Aider.Tests.Vs
 					isEmpty = false;
 				}
 			}
-
-			return address;
 		}
 
 
