@@ -1,5 +1,6 @@
 Ext.require([
-  'Epsitec.cresus.webcore.tools.CallbackQueue'
+  'Epsitec.cresus.webcore.tools.CallbackQueue',
+  'Epsitec.cresus.webcore.tools.ViewMode'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.entityUi.EntityColumn', {
@@ -15,7 +16,7 @@ function() {
     columnId: null,
     columnManager: null,
     entityId: null,
-    viewMode: '1',
+    viewMode: Epsitec.ViewMode.summary,
     viewId: 'null',
 
     /* Additional methods */
@@ -61,13 +62,13 @@ function() {
 
     showAction: function(viewId, entityId, callback) {
       this.columnManager.showAction(
-          '6', viewId, entityId, null, callback
+          Epsitec.ViewMode.action, viewId, entityId, null, callback
       );
     },
 
     showTemplateAction: function(viewId, entityId, callback) {
       this.columnManager.showAction(
-          '6', viewId, this.entityId, entityId, callback
+          Epsitec.ViewMode.action, viewId, this.entityId, entityId, callback
       );
     }
   });

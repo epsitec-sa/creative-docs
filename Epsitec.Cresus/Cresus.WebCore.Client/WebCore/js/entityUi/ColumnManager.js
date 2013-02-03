@@ -7,7 +7,8 @@ Ext.require([
   'Epsitec.cresus.webcore.entityUi.TypeAction',
   'Epsitec.cresus.webcore.tools.Callback',
   'Epsitec.cresus.webcore.tools.CallbackQueue',
-  'Epsitec.cresus.webcore.tools.Tools'
+  'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.tools.ViewMode'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.entityUi.ColumnManager', {
@@ -65,9 +66,10 @@ function() {
     },
 
     onEntityListSelectionChange: function(entityItems) {
+      var viewMode = Epsitec.ViewMode.summary;
       this.removeAllColumns();
       if (entityItems.length === 1) {
-        this.addEntityColumn('1', 'null', entityItems[0].id);
+        this.addEntityColumn(viewMode, 'null', entityItems[0].id);
       }
     },
 

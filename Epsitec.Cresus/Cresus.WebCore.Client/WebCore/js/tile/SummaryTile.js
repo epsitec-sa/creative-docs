@@ -1,7 +1,8 @@
 Ext.require([
   'Epsitec.cresus.webcore.tile.EntityTile',
   'Epsitec.cresus.webcore.tools.Texts',
-  'Epsitec.cresus.webcore.tools.Tools'
+  'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.tools.ViewMode'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.tile.SummaryTile', {
@@ -15,7 +16,7 @@ function() {
 
     /* Properties */
 
-    subViewMode: '2',
+    subViewMode: Epsitec.ViewMode.edition,
     subViewId: 'null',
     autoCreatorId: null,
 

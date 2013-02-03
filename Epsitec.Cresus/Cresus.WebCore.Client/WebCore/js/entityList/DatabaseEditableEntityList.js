@@ -3,7 +3,8 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.Callback',
   'Epsitec.cresus.webcore.tools.ErrorHandler',
   'Epsitec.cresus.webcore.tools.Texts',
-  'Epsitec.cresus.webcore.tools.Tools'
+  'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.tools.ViewMode'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.entityList.DatabaseEditableEntityList', {
@@ -118,11 +119,15 @@ function() {
     },
 
     deleteEntityWithView: function(entityItem) {
-      var callback = Epsitec.Callback.create(
+      var callback, viewMode;
+
+      callback = Epsitec.Callback.create(
           this.deleteEntityWithViewCallback, this);
 
+      viewMode = Epsitec.ViewMode.brickDeletion;
+
       Epsitec.EntityAction.showDialog(
-          '9', this.creationViewId, entityItem.id, null, callback
+          viewMode, this.creationViewId, entityItem.id, null, callback
       );
     },
 

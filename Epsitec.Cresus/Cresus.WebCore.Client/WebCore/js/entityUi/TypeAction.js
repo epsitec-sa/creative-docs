@@ -1,7 +1,8 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.Action',
   'Epsitec.cresus.webcore.entityUi.BrickWallParser',
-  'Epsitec.cresus.webcore.tools.Tools'
+  'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.tools.ViewMode'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.entityUi.TypeAction', {
@@ -24,7 +25,8 @@ function() {
 
     statics: {
       showDialog: function(viewId, typeId, callback) {
-        var url = 'proxy/layout/type/8/' + viewId + '/' + typeId;
+        var url = 'proxy/layout/type/' + Epsitec.ViewMode.brickCreation + '/' +
+            viewId + '/' + typeId;
 
         Epsitec.Action.showDialog(url, 'Epsitec.TypeAction', callback);
       }
