@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//   can possibly have an entity which is not dummy at this point.
 
 			return this.DataContext.Contains (this.entity)
-				|| this is IBrickCreationViewController
+				|| this is BrickCreationViewController<T>
 				|| (this.Orchestrator != null && this.Orchestrator.Data.IsDummyEntity (this.entity));
 		}
 

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 	// the Carpenter and the UiBuilder assume that there is an entity. All this would be a lot
 	// of work and I really don't have the time to do it right now.
 
-	public abstract class BrickCreationViewController<T> : EntityViewController<T>, IBrickCreationViewController
+	public abstract class BrickCreationViewController<T> : EntityViewController<T>, IFunctionExecutorProvider
 			where T : AbstractEntity, new ()
 	{
 		protected sealed override void CreateBricks(BrickWall<T> wall)
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		protected abstract void GetForm(ActionBrick<T, SimpleBrick<T>> action);
 
-		#region IBrickCreationViewController Members
+		#region IFunctionExecutorProvider Members
 
 		public abstract FunctionExecutor GetExecutor();
 

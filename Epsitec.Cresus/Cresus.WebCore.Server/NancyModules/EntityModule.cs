@@ -184,16 +184,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				try
 				{
-					var actionController = controller as IActionViewController;
-					var creationController = controller as IBrickCreationViewController;
+					var actionProvider = controller as IActionExecutorProvider;
+					var functionProvider = controller as IFunctionExecutorProvider;
 
-					if (actionController != null)
+					if (actionProvider != null)
 					{
-						return this.ExecuteAction (businessContext, actionController, entity, additionalEntity);
+						return this.ExecuteAction (businessContext, actionProvider, entity, additionalEntity);
 					}
-					else if (creationController != null)
+					else if (functionProvider != null)
 					{
-						return this.ExecuteAction (businessContext, creationController, entity, additionalEntity);
+						return this.ExecuteAction (businessContext, functionProvider, entity, additionalEntity);
 					}
 					else
 					{
@@ -213,9 +213,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response ExecuteAction(BusinessContext businessContext, IActionViewController controller, AbstractEntity entity, AbstractEntity additionalEntity)
+		private Response ExecuteAction(BusinessContext businessContext, IActionExecutorProvider actionProvider, AbstractEntity entity, AbstractEntity additionalEntity)
 		{
-			var executor = controller.GetExecutor ();
+			var executor = actionProvider.GetExecutor ();
 
 			DynamicDictionary form = Request.Form;
 			var arguments = this.GetArguments (executor, form, businessContext);
@@ -232,9 +232,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response ExecuteAction(BusinessContext businessContext, IBrickCreationViewController controller, AbstractEntity entity, AbstractEntity additionalEntity)
+		private Response ExecuteAction(BusinessContext businessContext, IFunctionExecutorProvider functionProvider, AbstractEntity entity, AbstractEntity additionalEntity)
 		{
-			var executor = controller.GetExecutor ();
+			var executor = functionProvider.GetExecutor ();
 
 			DynamicDictionary form = Request.Form;
 			var arguments = this.GetArguments (executor, form, businessContext);

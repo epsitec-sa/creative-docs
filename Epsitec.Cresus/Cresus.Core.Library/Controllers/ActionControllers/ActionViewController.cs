@@ -8,7 +8,7 @@ using System;
 
 namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
-	public abstract class ActionViewController<T> : EntityViewController<T>, IActionViewController
+	public abstract class ActionViewController<T> : EntityViewController<T>, IActionViewController, IActionExecutorProvider
 		where T : AbstractEntity, new ()
 	{
 		protected sealed override void CreateBricks(BrickWall<T> wall)
@@ -25,6 +25,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		#region IActionViewController Members
 
 		public abstract FormattedText GetTitle();
+
+		#endregion
+
+		#region IActionExecutorProvider Members
 
 		public abstract ActionExecutor GetExecutor();
 

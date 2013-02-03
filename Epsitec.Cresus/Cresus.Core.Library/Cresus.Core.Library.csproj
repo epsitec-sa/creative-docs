@@ -180,9 +180,10 @@
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationViewController.cs" />
-    <Compile Include="Controllers\CreationControllers\IBrickCreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
     <Compile Include="Controllers\CreationControllers\ICreationViewController.cs" />
+    <Compile Include="Controllers\IActionExecutorProvider.cs" />
+    <Compile Include="Controllers\IFunctionExecutorProvider.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\SpecialFieldController.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\SpecialFieldController`2.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\SpecialFieldWebMethodAttribute.cs" />
