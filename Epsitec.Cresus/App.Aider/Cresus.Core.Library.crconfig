@@ -171,7 +171,7 @@ AiderFunctionDef = [LVA7A]
   </T>
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="true" ed="true" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
