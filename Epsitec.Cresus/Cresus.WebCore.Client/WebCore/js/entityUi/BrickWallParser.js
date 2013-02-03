@@ -20,14 +20,17 @@ function() {
     statics: {
       parseColumn: function(column) {
         switch (column.type) {
-          case 'action':
-            return this.parseActionColumn(column);
+          case 'entityaction':
+            return this.parseEntityActionColumn(column);
 
           case 'set':
             return this.parseSetColumn(column);
 
           case 'tile':
             return this.parseTileColumn(column);
+
+          case 'typeaction':
+            return this.parseTypeActionColumn(column);
 
           default:
             throw 'invalid column type: ' + column.type;
@@ -51,10 +54,23 @@ function() {
         return c;
       },
 
+      parseEntityActionColumn: function(column) {
+        var c = this.parseActionColumn(column);
+        c.additionalEntityId = column.additionalEntityId;
+        return c;
+      },
+
+      parseTypeActionColumn: function(column) {
+        var c = this.parseActionColumn(column);
+        delete c.entityId;
+        c.entityTypeId = column.entityTypeId;
+        return c;
+      },
+
+
       parseActionColumn: function(column) {
         var c = this.parseTileColumn(column);
         delete c.typeName;
-        c.additionalEntityId = column.additionalEntityId;
         return c;
       },
 

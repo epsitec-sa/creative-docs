@@ -10,6 +10,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.entity        = EntityViewControllerFactory.Default.Entity as T;
 
 			System.Diagnostics.Debug.Assert (this.DataContext != null, "No DataContext");
-			System.Diagnostics.Debug.Assert (this.DataContext.Contains (this.entity) || this.Orchestrator.Data.IsDummyEntity (this.entity), "Invalid entity");
+			System.Diagnostics.Debug.Assert (this.CheckDummyEntity (), "Invalid entity");
 
 			EntityNullReferenceVirtualizer.PatchNullReferences (this.entity);
 		}
@@ -57,6 +58,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				return () => this.entity;
 			}
+		}
+
+		private bool CheckDummyEntity()
+		{
+			// Here we check that the entity is not a dummy entity, i.e. that it comes from our
+			// DataContext. There are two exceptions.
+			// - If it is registered as a dummy entity in the orchestrator, if we have an
+			//   orchestrator.
+			// - If the controller is an IBrickCreationViewController. That's because in this case,
+			//   the job of the controller is precisely to create the entity, so there is no way we
+			//   can possibly have an entity which is not dummy at this point.
+
+			return this.DataContext.Contains (this.entity)
+				|| this is IBrickCreationViewController
+				|| (this.Orchestrator != null && this.Orchestrator.Data.IsDummyEntity (this.entity));
 		}
 
 

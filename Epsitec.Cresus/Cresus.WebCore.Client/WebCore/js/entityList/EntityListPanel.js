@@ -64,6 +64,8 @@ function() {
         sorterDefinitions: json.content.sorters,
         enableCreate: json.content.enableCreate,
         enableDelete: json.content.enableDelete,
+        creationViewId: json.content.creationViewId,
+        entityTypeId: json.content.entityTypeId,
         multiSelect: options.multiSelect,
         onSelectionChange: options.onSelectionChange
       });

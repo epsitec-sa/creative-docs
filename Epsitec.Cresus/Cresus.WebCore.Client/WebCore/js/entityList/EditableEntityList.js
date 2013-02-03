@@ -6,6 +6,10 @@ function() {
     extend: 'Epsitec.cresus.webcore.entityList.EntityList',
     alternateClassName: ['Epsitec.EditableEntityList'],
 
+    /* Properties */
+
+    creationViewId: null,
+
     /* Constructor */
 
     constructor: function(options) {

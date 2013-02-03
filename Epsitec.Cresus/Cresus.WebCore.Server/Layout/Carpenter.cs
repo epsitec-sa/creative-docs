@@ -67,6 +67,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			switch (viewMode)
 			{
 				case ViewControllerMode.Action:
+				case ViewControllerMode.BrickCreation:
 					return this.BuildActionColumn (viewMode, viewId);
 
 				case ViewControllerMode.Edition:
@@ -109,14 +110,28 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private TileColumn BuildActionColumn(ViewControllerMode viewMode, int? viewId)
 		{
-			return new ActionColumn ()
+			if (this.businessContext.DataContext.Contains (this.entity))
 			{
-				EntityId = this.GetEntityId (this.entity),
-				AdditionalEntityId = this.GetEntityId (this.additionalEntity),
-				ViewMode = DataIO.ViewModeToString (viewMode),
-				ViewId = DataIO.ViewIdToString (viewId),
-				Tiles = this.BuildTiles (viewMode, viewId).ToList (),
-			};
+				return new EntityActionColumn ()
+				{
+					EntityId = this.GetEntityId (this.entity),
+					AdditionalEntityId = this.GetEntityId (this.additionalEntity),
+					ViewMode = DataIO.ViewModeToString (viewMode),
+					ViewId = DataIO.ViewIdToString (viewId),
+					Tiles = this.BuildTiles (viewMode, viewId).ToList (),
+				};
+			}
+			else
+			{
+				return new TypeActionColumn
+				{
+					EntityId = null,
+					EntityTypeId = this.caches.TypeCache.GetId (this.entity.GetType ()),
+					ViewMode = DataIO.ViewModeToString (viewMode),
+					ViewId = DataIO.ViewIdToString (viewId),
+					Tiles = this.BuildTiles (viewMode, viewId).ToList (),
+				};
+			}
 		}
 
 
@@ -160,6 +175,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			switch (viewMode)
 			{
 				case ViewControllerMode.Action:
+				case ViewControllerMode.BrickCreation:
 					return new List<ActionTile> ()
 					{
 						this.BuildActionTile (brick),

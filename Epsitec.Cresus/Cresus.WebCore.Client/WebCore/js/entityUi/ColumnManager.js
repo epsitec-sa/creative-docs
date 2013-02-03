@@ -1,9 +1,10 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
-  'Epsitec.cresus.webcore.entityUi.Action',
   'Epsitec.cresus.webcore.entityUi.BrickWallParser',
+  'Epsitec.cresus.webcore.entityUi.EntityAction',
   'Epsitec.cresus.webcore.entityUi.SetColumn',
   'Epsitec.cresus.webcore.entityUi.TileColumn',
+  'Epsitec.cresus.webcore.entityUi.TypeAction',
   'Epsitec.cresus.webcore.tools.Callback',
   'Epsitec.cresus.webcore.tools.CallbackQueue',
   'Epsitec.cresus.webcore.tools.Tools'
@@ -161,7 +162,7 @@ function() {
         loadingColumn.setLoading();
       }
       Ext.Ajax.request({
-        url: 'proxy/layout/' + vMode + '/' + vId + '/' + entityId,
+        url: 'proxy/layout/entity/' + vMode + '/' + vId + '/' + entityId,
         callback: function(options, success, response) {
           this.executeCallback(success, response, loadingColumn, callbackQueue);
         },
@@ -296,8 +297,10 @@ function() {
       }
     },
 
-    showAction: function(viewId, entityId, additionalEntityId, callback) {
-      Epsitec.Action.showDialog(viewId, entityId, additionalEntityId, callback);
+    showAction: function(viewMode, viewId, entityId, aEntityId, callback) {
+      Epsitec.EntityAction.showDialog(
+          viewMode, viewId, entityId, aEntityId, callback
+      );
     }
   });
 });

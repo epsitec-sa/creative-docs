@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
-	internal sealed class ActionColumn : TileColumn
+	internal sealed class EntityActionColumn : TileColumn
 	{
 
 
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public override string GetColumnType()
 		{
-			return "action";
+			return "entityaction";
 		}
 
 

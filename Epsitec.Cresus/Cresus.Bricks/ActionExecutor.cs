@@ -5,25 +5,18 @@ using System.Reflection;
 
 namespace Epsitec.Cresus.Bricks
 {
-	public sealed class ActionExecutor
+	public sealed class ActionExecutor : AbstractExecutor
 	{
 		private ActionExecutor(Delegate action)
+			: base (action)
 		{
-			this.action = action;
-		}
-
-		public IEnumerable<Type> GetArgumentTypes()
-		{
-			return this.action.Method
-				.GetParameters ()
-				.Select (p => p.ParameterType);
 		}
 
 		public void Call(IList<object> arguments)
 		{
 			try
 			{
-				this.action.DynamicInvoke (arguments.ToArray ());
+				this.Action.DynamicInvoke (arguments.ToArray ());
 			}
 			catch (TargetInvocationException e)
 			{
@@ -90,7 +83,5 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return new ActionExecutor (action);
 		}
-
-		private readonly Delegate action;
 	}
 }

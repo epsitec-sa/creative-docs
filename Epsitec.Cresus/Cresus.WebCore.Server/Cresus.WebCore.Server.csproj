@@ -79,7 +79,7 @@
     <Compile Include="Layout\AbstractEntityTile.cs" />
     <Compile Include="Layout\ActionItem.cs" />
     <Compile Include="Layout\ActionTile.cs" />
-    <Compile Include="Layout\ActionColumn.cs" />
+    <Compile Include="Layout\EntityActionColumn.cs" />
     <Compile Include="Layout\DecimalField.cs" />
     <Compile Include="Layout\GroupedSummaryTileItem.cs" />
     <Compile Include="Layout\GroupedSummaryTile.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Layout\SetColumn.cs" />
     <Compile Include="Layout\SpecialField.cs" />
     <Compile Include="Layout\TileColumn.cs" />
+    <Compile Include="Layout\TypeActionColumn.cs" />
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="Core\AuthenticationManager.cs" />
     <Compile Include="Core\Databases\Column.cs" />

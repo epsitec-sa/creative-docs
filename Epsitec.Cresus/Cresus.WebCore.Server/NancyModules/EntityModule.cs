@@ -8,6 +8,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
@@ -41,8 +42,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Post["/edit/{id}"] = p => this.Execute (b => this.Edit (b, p));
 			Post["/autoCreate"] = _ => this.Execute (b => this.AutoCreateNullEntity (b));
-			Post["/executeAction/{viewId}/{entityId}"] = p => this.Execute (b => this.ExecuteAction (b, p));
-			Post["/executeAction/{viewId}/{entityId}/{additionalEntityId}"] = p => this.Execute (b => this.ExecuteAction (b, p));
+			Post["/action/entity/{viewMode}/{viewId}/{entityId}"] = p => this.Execute (b => this.ExecuteEntityAction (b, p));
+			Post["/action/entity/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p => this.Execute (b => this.ExecuteEntityAction (b, p));
+			Post["/action/type/{viewMode}/{viewId}/{typeId}"] = p => this.Execute (b => this.ExecuteTypeAction (b, p));
 		}
 
 
@@ -138,7 +140,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
-			var entityId = EntityIO.GetEntityId (businessContext, child);
+			return this.CreateEntityIdResponse (businessContext, child);
+		}
+
+
+		private Response CreateEntityIdResponse(BusinessContext businessContext, AbstractEntity entity)
+		{
+			var entityId = EntityIO.GetEntityId (businessContext, entity);
 
 			var content = new Dictionary<string, object> ()
 			{
@@ -148,46 +156,104 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (content);
 		}
 
-		private Response ExecuteAction(BusinessContext businessContext, dynamic parameters)
+
+		private Response ExecuteTypeAction(BusinessContext businessContext, dynamic parameters)
 		{
-			var viewMode = ViewControllerMode.Action;
-			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+			var type = this.CoreServer.Caches.TypeCache.GetItem ((string) parameters.typeId);
+			var dummyEntity = (AbstractEntity) Activator.CreateInstance (type);
+
+			return this.ExecuteAction (businessContext, dummyEntity, null, parameters);
+		}
+
+
+		private Response ExecuteEntityAction(BusinessContext businessContext, dynamic parameters)
+		{
 			var entity = EntityIO.ResolveEntity (businessContext, (string) parameters.entityId);
 			var additionalEntity = EntityIO.ResolveEntity (businessContext, (string) parameters.additionalEntityId);
 
-			using (var controller = Mason.BuildController<IActionViewController> (businessContext, entity, additionalEntity, viewMode, viewId))
-			{
-				var actionExecutor = controller.GetExecutor ();
+			return this.ExecuteAction (businessContext, entity, additionalEntity, parameters);
+		}
 
+
+		private Response ExecuteAction(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, dynamic parameters)
+		{
+			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
+			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
+			
+			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
+			{
 				try
 				{
-					DynamicDictionary form = Request.Form;
-					var arguments = this.GetArguments (actionExecutor, form, businessContext);
+					var actionController = controller as IActionViewController;
+					var creationController = controller as IBrickCreationViewController;
 
-					using (businessContext.Bind (entity))
-					using (businessContext.Bind (additionalEntity))
+					if (actionController != null)
 					{
-						actionExecutor.Call (arguments);
-
-						businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
-					}			
+						return this.ExecuteAction (businessContext, actionController, entity, additionalEntity);
+					}
+					else if (creationController != null)
+					{
+						return this.ExecuteAction (businessContext, creationController, entity, additionalEntity);
+					}
+					else
+					{
+						return CoreResponse.Failure ();
+					}
 				}
 				catch (BusinessRuleException e)
 				{
 					var errors = new Dictionary<string, object> ()
 					{
-						{ "business", e.Message } 
+						{ "business", e.Message }
 					};
 
 					return CoreResponse.FormFailure (errors);
 				}
+			}
+		}
+
+
+		private Response ExecuteAction(BusinessContext businessContext, IActionViewController controller, AbstractEntity entity, AbstractEntity additionalEntity)
+		{
+			var executor = controller.GetExecutor ();
+
+			DynamicDictionary form = Request.Form;
+			var arguments = this.GetArguments (executor, form, businessContext);
+
+			using (businessContext.Bind (entity))
+			using (businessContext.Bind (additionalEntity))
+			{
+				executor.Call (arguments);
+
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 			}
 
 			return CoreResponse.Success ();
 		}
 
 
-		private IList<object> GetArguments(ActionExecutor actionExecutor, DynamicDictionary form, BusinessContext businessContext)
+		private Response ExecuteAction(BusinessContext businessContext, IBrickCreationViewController controller, AbstractEntity entity, AbstractEntity additionalEntity)
+		{
+			var executor = controller.GetExecutor ();
+
+			DynamicDictionary form = Request.Form;
+			var arguments = this.GetArguments (executor, form, businessContext);
+
+			AbstractEntity newEntity;
+
+			using (businessContext.Bind (entity))
+			using (businessContext.Bind (additionalEntity))
+			{
+				newEntity = executor.Call (arguments);
+
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+			}
+
+			return this.CreateEntityIdResponse (businessContext, newEntity);
+		}
+
+
+		private IList<object> GetArguments(AbstractExecutor actionExecutor, DynamicDictionary form, BusinessContext businessContext)
 		{
 			var argumentTypes = actionExecutor.GetArgumentTypes ().ToList ();
 			var arguments = new List<object> ();

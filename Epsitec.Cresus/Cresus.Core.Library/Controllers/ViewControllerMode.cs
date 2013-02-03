@@ -50,5 +50,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Use the set view controller.
 		/// </summary>
 		Set = 7,
+
+		/// <summary>
+		/// Use the brick creation view controller.
+		/// </summary>
+		// This should really be called simply Creation and the value that is actually Creation
+		// should be called SpecialCreation or something. But I don't have the time to refactor that
+		// now. CreationOrSummary and CreationOrEdition should also be renamed. It looks like it
+		// should be simple to refactor that, but I know that the name of the value is used in the
+		// resolution of the controllers and it might be more complex that expected to do the
+		// refactoring.
+		BrickCreation = 8,
 	}
 }

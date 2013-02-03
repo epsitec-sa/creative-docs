@@ -1,5 +1,6 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EditableEntityList',
+  'Epsitec.cresus.webcore.tools.Callback',
   'Epsitec.cresus.webcore.tools.ErrorHandler',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools'
@@ -12,6 +13,7 @@ function() {
     /* Properties */
 
     databaseName: null,
+    entityTypeId: null,
 
     /* Constructor */
 
@@ -50,6 +52,28 @@ function() {
     },
 
     createEntity: function() {
+      if (this.creationViewId === null) {
+        this.createEntityWithoutView();
+      }
+      else {
+        this.createEntityWithView();
+      }
+    },
+
+    createEntityWithView: function() {
+      var callback = Epsitec.Callback.create(
+          this.createEntityWithViewCallback, this);
+
+      Epsitec.TypeAction.showDialog(
+          this.creationViewId, this.entityTypeId, callback
+      );
+    },
+
+    createEntityWithViewCallback: function(entityId) {
+      this.selectEntity(entityId);
+    },
+
+    createEntityWithoutView: function() {
       this.setLoading();
       Ext.Ajax.request({
         url: 'proxy/database/create',
@@ -57,12 +81,12 @@ function() {
         params: {
           databaseName: this.databaseName
         },
-        callback: this.createEntityCallback,
+        callback: this.createEntityWithoutViewCallback,
         scope: this
       });
     },
 
-    createEntityCallback: function(options, success, response) {
+    createEntityWithoutViewCallback: function(options, success, response) {
       var json, entityId;
 
       this.setLoading(false);

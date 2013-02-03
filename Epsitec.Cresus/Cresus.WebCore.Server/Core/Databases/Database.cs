@@ -25,13 +25,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters, bool enableCreate, bool enableDelete)
+		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters, bool enableCreate, bool enableDelete, int? creationViewId)
 		{
 			this.dataSetMetadata = dataSetMetadata;
 			this.columns = columns.ToList ();
 			this.sorters = sorters.ToList ();
 			this.enableCreate = enableCreate;
 			this.enableDelete = enableDelete;
+			this.creationViewId = creationViewId;
 		}
 
 
@@ -77,7 +78,24 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			{
 				return this.enableDelete;
 			}
-		}		
+		}
+
+
+		public int? CreationViewId
+		{
+			get
+			{
+				return this.creationViewId;
+			}
+		}
+
+		public Type EntityType
+		{
+			get
+			{
+				return this.DataSetMetadata.EntityTableMetadata.EntityType;
+			}
+		}
 
 
 		public DataSetAccessor GetDataSetAccessor(DataSetGetter dataSetGetter)
@@ -90,7 +108,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			var flags = BindingFlags.NonPublic | BindingFlags.Static;
 			var method = typeof (Database).GetMethod ("CreateEntityImplementation", flags);
-			var genericMethod = method.MakeGenericMethod (this.DataSetMetadata.EntityTableMetadata.EntityType);
+			var genericMethod = method.MakeGenericMethod (this.EntityType);
 			var arguments = new object[] { businessContext };
 
 			return (AbstractEntity) genericMethod.Invoke (null, arguments);
@@ -152,6 +170,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			{
 				{ "enableCreate", this.EnableCreate },
 				{ "enableDelete", this.EnableDelete },
+				{ "entityTypeId", caches.TypeCache.GetId (this.EntityType) },
+				{ "creationViewId", this.CreationViewId },
 				{ "columns", columns },
 				{ "sorters", sorters },
 			};
@@ -171,6 +191,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly bool enableDelete;
+
+
+		private readonly int? creationViewId;
 
 
 	}

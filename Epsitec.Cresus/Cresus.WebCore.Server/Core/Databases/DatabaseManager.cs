@@ -99,8 +99,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			var enableCreate = dataSet.EnableCreate;
 			var enableDelete = dataSet.EnableDelete;
+			var creationViewId = dataSet.CreationViewId;
 			
-			return new Database (dataSet, columns, sorters, enableCreate, enableDelete);
+			return new Database (dataSet, columns, sorters, enableCreate, enableDelete, creationViewId);
 		}
 
 
