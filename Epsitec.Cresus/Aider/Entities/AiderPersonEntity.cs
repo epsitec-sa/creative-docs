@@ -70,14 +70,19 @@ namespace Epsitec.Aider.Entities
 			}
 
 			var birthdate = this.eCH_Person.PersonDateOfBirth;
+			var deathdate = this.eCH_Person.PersonDateOfDeath;
 
 			if (birthdate == null)
 			{
 				return null;
 			}
-			else
+			else if (deathdate == null)
 			{
 				return birthdate.Value.ComputeAge ();
+			}
+			else
+			{
+				return birthdate.Value.ComputeAge (deathdate.Value);
 			}
 		}
 
