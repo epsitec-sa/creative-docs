@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				case ViewControllerMode.Action:
 				case ViewControllerMode.BrickCreation:
+				case ViewControllerMode.BrickDeletion:
 					return this.BuildActionColumn (viewMode, viewId);
 
 				case ViewControllerMode.Edition:
@@ -176,6 +177,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				case ViewControllerMode.Action:
 				case ViewControllerMode.BrickCreation:
+				case ViewControllerMode.BrickDeletion:
 					return new List<ActionTile> ()
 					{
 						this.BuildActionTile (brick),

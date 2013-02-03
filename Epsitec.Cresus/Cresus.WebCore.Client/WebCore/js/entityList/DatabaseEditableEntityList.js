@@ -104,7 +104,34 @@ function() {
       this.deleteEntities(entityItems);
     },
 
+
     deleteEntities: function(entityItems) {
+      if (this.creationViewId === null) {
+        this.deleteEntitiesWithoutView(entityItems);
+      }
+      else {
+        if (entityItems.length !== 1) {
+          throw 'Invalid selection length.';
+        }
+        this.deleteEntityWithView(entityItems[0]);
+      }
+    },
+
+    deleteEntityWithView: function(entityItem) {
+      var callback = Epsitec.Callback.create(
+          this.deleteEntityWithViewCallback, this);
+
+      Epsitec.EntityAction.showDialog(
+          '9', this.creationViewId, entityItem.id, null, callback
+      );
+    },
+
+    deleteEntityWithViewCallback: function() {
+      this.reloadStore();
+    },
+
+
+    deleteEntitiesWithoutView: function(entityItems) {
       this.setLoading();
       Ext.Ajax.request({
         url: 'proxy/database/delete',
@@ -113,12 +140,12 @@ function() {
           databaseName: this.databaseName,
           entityIds: entityItems.map(function(e) { return e.id; }).join(';')
         },
-        callback: this.deleteEntitiesCallback,
+        callback: this.deleteEntitiesWithoutViewCallback,
         scope: this
       });
     },
 
-    deleteEntitiesCallback: function(options, success, response) {
+    deleteEntitiesWithoutViewCallback: function(options, success, response) {
       var json;
 
       this.setLoading(false);

@@ -65,6 +65,7 @@ function() {
         enableCreate: json.content.enableCreate,
         enableDelete: json.content.enableDelete,
         creationViewId: json.content.creationViewId,
+        deletionViewId: json.content.deletionViewId,
         entityTypeId: json.content.entityTypeId,
         multiSelect: options.multiSelect,
         onSelectionChange: options.onSelectionChange

@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
@@ -19,7 +18,7 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public class DataSetMetadata : CoreMetadata
 	{
-		public DataSetMetadata(Druid commandId, Druid tableEntityId, string tableName, bool isDefault, bool isDisplayed, bool enableCreate, bool enableDelete, int? creationViewId)
+		public DataSetMetadata(Druid commandId, Druid tableEntityId, string tableName, bool isDefault, bool isDisplayed, bool enableCreate, bool enableDelete, int? creationViewId, int? deletionViewId)
 		{
 			this.command = Command.Find (commandId);
 
@@ -36,6 +35,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.enableCreate = enableCreate;
 			this.enableDelete = enableDelete;
 			this.creationViewId = creationViewId;
+			this.deletionViewId = deletionViewId;
 
 			this.userRoles = new List<string> ();
 		}
@@ -50,7 +50,8 @@ namespace Epsitec.Cresus.Core.Metadata
 			bool.Parse (data[Strings.IsDisplayed]),
 			bool.Parse (data[Strings.EnableCreate]),
 			bool.Parse (data[Strings.EnableDelete]),
-			StringUtils.ParseNullableInt(data[Strings.CreationViewId])
+			StringUtils.ParseNullableInt (data[Strings.CreationViewId]),
+			StringUtils.ParseNullableInt (data[Strings.DeletionViewId])
 		)
 		{
 			this.DefineDisplayGroup (Druid.Parse (data[Strings.DisplayGroup]));
@@ -120,6 +121,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			get
 			{
 				return this.creationViewId;
+			}
+		}
+
+		public int?								DeletionViewId
+		{
+			get
+			{
+				return this.deletionViewId;
 			}
 		}
 
@@ -234,6 +243,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			attributes.Add (new XAttribute (Strings.EnableCreate, this.enableCreate.ToString ()));
 			attributes.Add (new XAttribute (Strings.EnableDelete, this.enableDelete.ToString ()));
 			attributes.Add (new XAttribute (Strings.CreationViewId, this.creationViewId.ToString ()));
+			attributes.Add (new XAttribute (Strings.DeletionViewId, this.deletionViewId.ToString ()));
 			attributes.Add (new XAttribute (Strings.DisplayGroup, this.displayGroupCaptionId.ToCompactString ()));
 		}
 
@@ -250,6 +260,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public static readonly string		EnableCreate = "ec";
 			public static readonly string		EnableDelete = "ed";
 			public static readonly string		CreationViewId = "cvid";
+			public static readonly string		DeletionViewId = "dvid";
 			public static readonly string		DisplayGroup = "dg";
 			public static readonly string		UserRoles = "R";
 			public static readonly string		UserRole = "r";
@@ -268,6 +279,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly bool					enableCreate;
 		private readonly bool					enableDelete;
 		private readonly int?					creationViewId;
+		private readonly int?					deletionViewId;
 
 		private Druid							displayGroupCaptionId;
 		private EntityFilter					filter;

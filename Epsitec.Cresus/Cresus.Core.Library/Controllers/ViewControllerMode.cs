@@ -61,5 +61,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		// resolution of the controllers and it might be more complex that expected to do the
 		// refactoring.
 		BrickCreation = 8,
+
+		/// <summary>
+		/// Use the brick deletino view controller.
+		/// </summary>
+		BrickDeletion = 9
 	}
 }

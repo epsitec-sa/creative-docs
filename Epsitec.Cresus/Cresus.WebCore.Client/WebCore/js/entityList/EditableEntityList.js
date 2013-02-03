@@ -9,6 +9,7 @@ function() {
     /* Properties */
 
     creationViewId: null,
+    deletionViewId: null,
 
     /* Constructor */
 

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters, bool enableCreate, bool enableDelete, int? creationViewId)
+		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters, bool enableCreate, bool enableDelete, int? creationViewId, int? deletionViewId)
 		{
 			this.dataSetMetadata = dataSetMetadata;
 			this.columns = columns.ToList ();
@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			this.enableCreate = enableCreate;
 			this.enableDelete = enableDelete;
 			this.creationViewId = creationViewId;
+			this.deletionViewId = deletionViewId;
 		}
 
 
@@ -86,6 +87,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			get
 			{
 				return this.creationViewId;
+			}
+		}
+
+		public int? DeletionViewId
+		{
+			get
+			{
+				return this.deletionViewId;
 			}
 		}
 
@@ -172,6 +181,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "enableDelete", this.EnableDelete },
 				{ "entityTypeId", caches.TypeCache.GetId (this.EntityType) },
 				{ "creationViewId", this.CreationViewId },
+				{ "deletionViewId", this.DeletionViewId },
 				{ "columns", columns },
 				{ "sorters", sorters },
 			};
@@ -194,6 +204,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly int? creationViewId;
+
+
+		private readonly int? deletionViewId;
 
 
 	}
