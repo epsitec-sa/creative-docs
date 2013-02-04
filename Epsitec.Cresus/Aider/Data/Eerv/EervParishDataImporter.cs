@@ -871,13 +871,18 @@ namespace Epsitec.Aider.Data.Eerv
 			Dictionary<AiderHouseholdEntity, List<AiderContactEntity>> aiderHouseholdToContacts
 		)
 		{
+			var mainHouseholdContacts = aiderHouseholdToContacts[mainHousehold];
 			var secondaryHouseholdContacts = aiderHouseholdToContacts[secondaryHousehold];
 			
 			foreach (var contact in secondaryHouseholdContacts)
 			{
 				contact.Household = mainHousehold;
 				contact.HouseholdRole = HouseholdRole.None;
+
+				mainHouseholdContacts.Add (contact);
 			}
+
+			aiderHouseholdToContacts.Remove (secondaryHousehold);
 
 			var comment = secondaryHousehold.Comment;
 
