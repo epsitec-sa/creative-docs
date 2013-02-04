@@ -16,7 +16,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter un contact");
+			return Resources.Text ("Ajouter une adresse alternative");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -29,11 +29,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var person = this.Entity;
 
 			form
-				.Title ("Ajouter une adresse supplémentaire")
+				.Title ("Ajouter une adresse alternative")
 				.Text (
-					TextFormatter.FormatText ("Vous êtes sur le point de créer un contact supplémentaire pour",
-					/**/					  person.DisplayName, ".\n\n",
-					/**/					  "Choisissez le type d'adresse correspondant à ce nouveau contact:"))
+					TextFormatter.FormatText ("Vous êtes sur le point de créer une adresse alternative pour",
+					/**/					  person.CallName, person.eCH_Person.PersonOfficialName, ".\n \n",
+					/**/					  "Choisissez le type d'adresse correspondant:"))
 				.Field<Enumerations.AddressType> ()
 					.Title ("Type d'adresse")
 					.InitialValue (Enumerations.AddressType.Secondary)

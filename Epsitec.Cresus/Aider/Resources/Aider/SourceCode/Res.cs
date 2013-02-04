@@ -1618,9 +1618,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AiderPerson.CallName, null);
+					System.Object.Equals (AiderPerson.AdditionalAddresses, null);
 				}
 				
+				//	designer:cap/LVAME
+				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddresses = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 470);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
 				//	designer:cap/LVGL02
@@ -1631,8 +1633,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
 				//	designer:cap/LVAIE
 				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 466);
-				//	designer:cap/LVAME
-				public static readonly global::Epsitec.Common.Support.Druid ContactsForAdditionalAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 470);
 				//	designer:cap/LVAS8
 				public static readonly global::Epsitec.Common.Support.Druid Data = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 284);
 				//	designer:cap/LVAI4

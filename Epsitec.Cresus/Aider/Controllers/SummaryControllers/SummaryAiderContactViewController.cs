@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableAction (0);
 			}
 
-			FormattedText contactSummary = contact.Person.GetCompactSummary ();
+			FormattedText contactSummary = this.GetPersonContactSummary (contact);
 
 			//	TODO: add phone/...
 
@@ -98,6 +98,42 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				default:
 					break;
 			}
+		}
+		
+		private FormattedText GetPersonContactSummary(AiderContactEntity contact)
+		{
+			var text = contact.Person.GetCompactSummary ();
+
+			var contactInfoPrivate   = text;
+			var contactInfoProf      = FormattedText.Empty;
+			var contactInfoSecondary = FormattedText.Empty;
+
+			foreach (var detail in contact.Person.Contacts.Where (x => x.Address.IsNotNull ()))
+			{
+				var address = detail.Address;
+				var phone   = address.GetPhoneSummary ();
+				var email   = address.GetWebEmailSummary ();
+
+				switch (detail.AddressType)
+				{
+					case Enumerations.AddressType.Default:
+					case Enumerations.AddressType.Other:
+						contactInfoPrivate = TextFormatter.FormatText (contactInfoPrivate, "\n", phone, "\n", email);
+						break;
+
+					case Enumerations.AddressType.Professional:
+						contactInfoProf = TextFormatter.FormatText (contactInfoProf, "\n", phone, "\n", email);
+						break;
+
+					case Enumerations.AddressType.Secondary:
+						contactInfoSecondary = TextFormatter.FormatText (contactInfoSecondary, "\n", phone, "\n", email);
+						break;
+				}
+			}
+
+			return TextFormatter.FormatText (contactInfoPrivate,
+				"\nProfessionnel:\n~", contactInfoProf,
+				"\nDomicile secondaire:\n~", contactInfoSecondary);
 		}
 	}
 }

@@ -71,13 +71,28 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (
-				this.GetPostalAddress (), "~\n",
-				TextFormatter.FormatField (() => this.Phone1), "~,~",
-				TextFormatter.FormatField (() => this.Phone2), "~,~",
+				this.GetPostalAddress (), "\n",
+				this.GetPhoneSummary (), "\n",
+				this.GetWebEmailSummary ()
+				);
+		}
+
+		public FormattedText GetPhoneSummary()
+		{
+			return TextFormatter.FormatText (
+				TextFormatter.FormatField (() => this.Phone1), "~/~",
+				TextFormatter.FormatField (() => this.Phone2), "~/~",
 				TextFormatter.FormatField (() => this.Mobile), "\n",
-				TextFormatter.FormatField (() => this.Fax), "~(fax)\n",
-				UriFormatter.ToFormattedText (this.Email), "~\n",
-				UriFormatter.ToFormattedText (this.Web, "_blank"));
+				TextFormatter.FormatField (() => this.Fax), "~(fax)"
+				);
+		}
+
+		public FormattedText GetWebEmailSummary()
+		{
+			return TextFormatter.FormatText (
+				UriFormatter.ToFormattedText (this.Email), "\n",
+				UriFormatter.ToFormattedText (this.Web, "_blank")
+				);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -129,29 +144,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<FormattedText> GetPhones()
-		{
-			if (!this.Phone1.IsNullOrWhiteSpace ())
-			{
-				yield return TextFormatter.FormatField (() => this.Phone1);
-			}
-
-			if (!this.Phone2.IsNullOrWhiteSpace ())
-			{
-				yield return TextFormatter.FormatField (() => this.Phone2);
-			}
-
-			if (!this.Mobile.IsNullOrWhiteSpace ())
-			{
-				yield return TextFormatter.FormatField (() => this.Mobile);
-			}
-
-			if (!this.Fax.IsNullOrWhiteSpace ())
-			{
-				yield return TextFormatter.FormatField (() => this.Fax);
-			}
-		}
-		
 		partial void GetStreetUserFriendly(ref string value)
 		{
 			value = SwissPostStreet.ConvertToUserFriendlyStreetName (this.Street);

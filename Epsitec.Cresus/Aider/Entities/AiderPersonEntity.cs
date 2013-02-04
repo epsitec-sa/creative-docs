@@ -275,9 +275,12 @@ namespace Epsitec.Aider.Entities
 			value = this.GetContacts ().OrderBy (x => x.DisplayAddress).AsReadOnlyCollection ();
 		}
 
-		partial void GetContactsForAdditionalAddress(ref IList<AiderContactEntity> value)
+		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
 		{
-			value = this.GetContacts ().Where (x => x.ContactType == ContactType.PersonAddress).OrderBy (x => x.DisplayAddress).AsReadOnlyCollection ();
+			value = this.GetContacts ()
+				.Where (x => x.ContactType == ContactType.PersonAddress)
+				.OrderBy (x => x.DisplayAddress)
+				.Select (x => x.Address).AsReadOnlyCollection ();
 		}
 
 		private IEnumerable<AiderHouseholdEntity> GetHouseholds()

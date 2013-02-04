@@ -80,7 +80,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (contacts.Any (x => x.ContactType == Enumerations.ContactType.PersonAddress))
 			{
-				wall.AddBrick (x => x.ContactsForAdditionalAddress)
+				wall.AddBrick (x => x.AdditionalAddresses)
+					.Title ("Adresses alternatives")
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
