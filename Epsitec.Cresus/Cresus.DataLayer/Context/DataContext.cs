@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			if (this.emptyEntities.Add (entity))
 			{
-				System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+//-				System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 
 				entity.UpdateDataGeneration ();
 				this.ResaveReferencingFields (entity);

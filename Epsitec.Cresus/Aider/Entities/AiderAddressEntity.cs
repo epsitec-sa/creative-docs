@@ -128,6 +128,7 @@ namespace Epsitec.Aider.Entities
 				a.Accumulate (this.Phone2.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Mobile.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Fax.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Email.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}
