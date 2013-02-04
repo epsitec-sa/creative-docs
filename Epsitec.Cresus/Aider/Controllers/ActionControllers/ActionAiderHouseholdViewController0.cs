@@ -10,9 +10,10 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
-
+using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -31,6 +32,24 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
+			var household = this.Entity;
+			var example = new AiderContactEntity ()
+			{
+				Household = household,
+			};
+
+			var contacts = this.BusinessContext.DataContext.GetByExample (example);
+			var contact  = contacts.FirstOrDefault ();
+
+			string lastname = "";
+
+			if ((contact != null) &&
+				(contact.Person.IsNotNull ()) &&
+				(contact.Person.eCH_Person.IsNotNull ()))
+			{
+				lastname = contact.Person.eCH_Person.PersonOfficialName;
+			}
+
 			form
 				.Title ("Créer un membre")
 				.Field<string> ()
@@ -38,7 +57,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 				.Field<string> ()
 					.Title ("Nom")
-					.InitialValue (h => h.GetDefaultLastname ())
+					.InitialValue (lastname)
 				.End ()
 				.Field<bool> ()
 					.Title ("Le nouveau membre est un chef du ménage")
@@ -46,7 +65,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 			.End ();
 		}
-		
+
 		private void Execute(string firstname, string lastname, bool isPersonHead)
 		{
 			var household = this.Entity;
@@ -56,7 +75,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			member.eCH_Person.PersonFirstNames = firstname;
 			member.eCH_Person.PersonOfficialName = lastname;
 
-			AiderContactEntity.Create(this.BusinessContext, member, household, isPersonHead);
+			AiderContactEntity.Create (this.BusinessContext, member, household, isPersonHead);
 		}
 	}
 }

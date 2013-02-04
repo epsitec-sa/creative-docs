@@ -194,68 +194,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void Add(AiderPersonEntity newMember)
-		{
-			this.GetMembers ().Add (newMember);
-
-			if (this.Head1.IsNull ())
-			{
-				this.Head1 = newMember;
-			}
-		}
-
-
-		public void Remove(AiderPersonEntity oldMember)
-		{
-			this.GetMembers ().Remove (oldMember);
-
-			if (this.Head1 == oldMember)
-			{
-				this.Head1 = null;
-			}
-			else if (this.Head2 == oldMember)
-			{
-				this.Head2 = null;
-			}
-		}
-
-
-		public IEnumerable<AiderPersonEntity> GetHeads()
-		{
-			var head1 = this.Head1;
-
-			if (head1.IsNotNull ())
-			{
-				yield return head1;
-			}
-
-			var head2 = this.Head2;
-
-			if (head2.IsNotNull ())
-			{
-				yield return head2;
-			}
-		}
-
-
-		public string GetDefaultLastname()
-		{
-			if (this.Head1.IsNotNull ())
-			{
-				return this.Head1.eCH_Person.PersonOfficialName;
-			}
-			else if (this.Head2.IsNotNull ())
-			{
-				return this.Head2.eCH_Person.PersonOfficialName;
-			}
-			else
-			{
-				return "";
-			}
-		}
-
-
-
 		// This property is only meant as an in memory cache of the members of the household. It
 		// will never be saved to the database.
 		private List<AiderContactEntity> contacts;

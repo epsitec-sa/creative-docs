@@ -8,11 +8,10 @@ namespace Epsitec.Aider.Enumerations
 	[DesignerVisible]
 	public enum AddressType
 	{
-		None		 = 0,
+		Other		 = 0,
 
 		Default      = 1,
 		Professional = 2,
-		Private      = 3,
-		Secondary    = 4
+		Secondary    = 4,
 	}
 }

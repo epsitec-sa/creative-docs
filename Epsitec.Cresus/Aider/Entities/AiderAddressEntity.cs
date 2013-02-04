@@ -185,7 +185,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (string.IsNullOrWhiteSpace (value))
 			{
-				this.HouseNumber = null;
+				this.HouseNumber           = null;
 				this.HouseNumberComplement = null;
 			}
 			else
@@ -195,23 +195,39 @@ namespace Epsitec.Aider.Entities
 				var number = tuple.Item1;
 				var compl  = tuple.Item2;
 
-				if (string.IsNullOrEmpty (number))
-				{
-					this.HouseNumber = null;
-				}
-				else
-				{
-					this.HouseNumber = InvariantConverter.ToInt (number);
-				}
+				this.HouseNumber           = AiderAddressEntity.ParseHouseNumber (number);
+				this.HouseNumberComplement = AiderAddressEntity.ParseHouseNumberComplement (compl);
+			}
+		}
 
-				if (string.IsNullOrWhiteSpace (compl))
-				{
-					this.HouseNumberComplement = null;
-				}
-				else
-				{
-					this.HouseNumberComplement = compl.Trim ();
-				}
+		private static int? ParseHouseNumber(string number)
+		{
+			if (string.IsNullOrEmpty (number))
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ToInt (number);
+			}
+		}
+
+		private static string ParseHouseNumberComplement(string value)
+		{
+			if (string.IsNullOrWhiteSpace (value))
+			{
+				return null;
+			}
+
+			value = value.Trim ();
+
+			if (value.Length == 1)
+			{
+				return value.ToUpperInvariant ();
+			}
+			else
+			{
+				return value.ToLowerInvariant ();
 			}
 		}
 	}

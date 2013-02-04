@@ -310,19 +310,11 @@ namespace Epsitec.Aider
 						}
 					}
 					//	designer:cap/LVA4B
-					public static global::Epsitec.Common.Types.Caption None
+					public static global::Epsitec.Common.Types.Caption Other
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 356));
-						}
-					}
-					//	designer:cap/LVA06
-					public static global::Epsitec.Common.Types.Caption Private
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 192));
 						}
 					}
 					//	designer:cap/LVAV5
@@ -1566,10 +1558,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
 				//	designer:cap/LVAGE
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 464);
-				//	designer:cap/LVAV4
-				public static readonly global::Epsitec.Common.Support.Druid Head1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
-				//	designer:cap/LVA05
-				public static readonly global::Epsitec.Common.Support.Druid Head2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 160);
 				//	designer:cap/LVAG8
 				public static readonly global::Epsitec.Common.Support.Druid HouseholdMrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 272);
 				//	designer:cap/LVAH9

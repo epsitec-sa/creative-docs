@@ -12,8 +12,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.HouseholdMrMrs)
-					.Field (x => x.Head1)
-					.Field (x => x.Head2)
 				.End ();
 		}
 	}

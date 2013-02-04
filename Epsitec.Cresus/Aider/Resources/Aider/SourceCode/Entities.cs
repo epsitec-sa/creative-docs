@@ -1610,50 +1610,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Head1</c> field.
-		///	designer:fld/LVAI2/LVAV4
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAV4]")]
-		public global::Epsitec.Aider.Entities.AiderPersonEntity Head1
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAV4]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Head1;
-				if (oldValue != value || !this.IsFieldDefined("[LVAV4]"))
-				{
-					this.OnHead1Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAV4]", oldValue, value);
-					this.OnHead1Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Head2</c> field.
-		///	designer:fld/LVAI2/LVA05
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA05]")]
-		public global::Epsitec.Aider.Entities.AiderPersonEntity Head2
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVA05]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Head2;
-				if (oldValue != value || !this.IsFieldDefined("[LVA05]"))
-				{
-					this.OnHead2Changing (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVA05]", oldValue, value);
-					this.OnHead2Changed (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Members</c> field.
 		///	designer:fld/LVAI2/LVG702
 		///	</summary>
@@ -1676,10 +1632,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnHead1Changing(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnHead1Changed(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnHead2Changing(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnHead2Changed(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		
 		partial void GetMembers(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		

@@ -31,12 +31,8 @@ namespace Epsitec.Aider.Rules
 			eChPerson.DataSource   = Enumerations.DataSource.Undefined;
 
 			person.eCH_Person = eChPerson;
-
-			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-
-			//	TODO#PA
 			
-			throw new System.NotImplementedException ();
+			//	TODO#PA
 		}
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
