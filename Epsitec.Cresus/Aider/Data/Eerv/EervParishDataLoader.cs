@@ -592,7 +592,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town);
+			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, newZipCode, newTown);
 		}
 
 
