@@ -753,12 +753,24 @@ namespace Epsitec.Aider.Data.Eerv
 			var newMembers = eervToAiderPersons
 				.Where (p => !currentMembers.Contains (p.Value));
 
+			var adults   = new List<eCH_PersonEntity> ();
+			var children = new List<eCH_PersonEntity> ();
+
 			foreach (var newMember in newMembers)
 			{
 				var eervPerson = newMember.Key;
 				var aiderPerson = newMember.Value;
 
 				var isHead = eervHousehold.Heads.Contains (eervPerson);
+
+				if (isHead)
+				{
+					adults.Add (aiderPerson.eCH_Person);
+				}
+				else
+				{
+					children.Add (aiderPerson.eCH_Person);
+				}
 
 				var contact = AiderContactEntity.Create
 				(
@@ -775,8 +787,9 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			
 			//	Now, we know the household contacts and we can update the display name
-			//	of the household:
+			//	of the household, but we cannot rely on the business rules to do so.
 
+			aiderHousehold.DisplayName = AiderHouseholdEntity.BuildDisplayName (adults, children, aiderHousehold.HouseholdMrMrs);
 		}
 
 

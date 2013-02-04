@@ -221,6 +221,9 @@ namespace Epsitec.Aider.Data.ECh
 				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
 			}
 
+			//	We can't rely on the business rules here, so we have to build the household
+			//	name "manually":
+
 			aiderHousehold.DisplayName = AiderHouseholdEntity.BuildDisplayName (adults, children, aiderHousehold.HouseholdMrMrs);
 
 			return eChReportedPersonEntity;
