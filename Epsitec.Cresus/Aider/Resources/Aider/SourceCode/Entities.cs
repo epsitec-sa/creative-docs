@@ -815,6 +815,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Visibility</c> field.
+		///	designer:fld/LVAF/LVAVE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAVE]")]
+		public global::Epsitec.Aider.Enumerations.PersonVisibilityStatus Visibility
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.PersonVisibilityStatus> ("[LVAVE]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue = this.Visibility;
+				if (oldValue != value || !this.IsFieldDefined("[LVAVE]"))
+				{
+					this.OnVisibilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.PersonVisibilityStatus> ("[LVAVE]", oldValue, value);
+					this.OnVisibilityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Profession</c> field.
 		///	designer:fld/LVAF/LVAP7
 		///	</summary>
@@ -837,6 +859,72 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>BirthdayDay</c> field.
+		///	designer:fld/LVAF/LVANE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVANE]")]
+		public int BirthdayDay
+		{
+			get
+			{
+				return this.GetField<int> ("[LVANE]");
+			}
+			set
+			{
+				int oldValue = this.BirthdayDay;
+				if (oldValue != value || !this.IsFieldDefined("[LVANE]"))
+				{
+					this.OnBirthdayDayChanging (oldValue, value);
+					this.SetField<int> ("[LVANE]", oldValue, value);
+					this.OnBirthdayDayChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BirthdayMonth</c> field.
+		///	designer:fld/LVAF/LVAOE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAOE]")]
+		public int BirthdayMonth
+		{
+			get
+			{
+				return this.GetField<int> ("[LVAOE]");
+			}
+			set
+			{
+				int oldValue = this.BirthdayMonth;
+				if (oldValue != value || !this.IsFieldDefined("[LVAOE]"))
+				{
+					this.OnBirthdayMonthChanging (oldValue, value);
+					this.SetField<int> ("[LVAOE]", oldValue, value);
+					this.OnBirthdayMonthChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BirthdayYear</c> field.
+		///	designer:fld/LVAF/LVAPE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAPE]")]
+		public int BirthdayYear
+		{
+			get
+			{
+				return this.GetField<int> ("[LVAPE]");
+			}
+			set
+			{
+				int oldValue = this.BirthdayYear;
+				if (oldValue != value || !this.IsFieldDefined("[LVAPE]"))
+				{
+					this.OnBirthdayYearChanging (oldValue, value);
+					this.SetField<int> ("[LVAPE]", oldValue, value);
+					this.OnBirthdayYearChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Parish</c> field.
 		///	designer:fld/LVAF/LVADB
 		///	</summary>
@@ -855,6 +943,30 @@ namespace Epsitec.Aider.Entities
 					this.OnParishChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVADB]", oldValue, value);
 					this.OnParishChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroup</c> field.
+		///	designer:fld/LVAF/LVG622
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG622]", IsVirtual=true)]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
+		{
+			get
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity value = default (global::Epsitec.Aider.Entities.AiderGroupEntity);
+				this.GetParishGroup (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
+				{
+					this.OnParishGroupChanging (oldValue, value);
+					this.SetParishGroup (value);
+					this.OnParishGroupChanged (oldValue, value);
 				}
 			}
 		}
@@ -971,30 +1083,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ParishGroup</c> field.
-		///	designer:fld/LVAF/LVG622
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVG622]", IsVirtual=true)]
-		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
-		{
-			get
-			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity value = default (global::Epsitec.Aider.Entities.AiderGroupEntity);
-				this.GetParishGroup (ref value);
-				return value;
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
-				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
-				{
-					this.OnParishGroupChanging (oldValue, value);
-					this.SetParishGroup (value);
-					this.OnParishGroupChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Households</c> field.
 		///	designer:fld/LVAF/LVALE
 		///	</summary>
@@ -1057,13 +1145,23 @@ namespace Epsitec.Aider.Entities
 		partial void OnMainAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnConfessionChanging(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
+		partial void OnVisibilityChanging(global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonVisibilityStatus newValue);
+		partial void OnVisibilityChanged(global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonVisibilityStatus newValue);
 		partial void OnProfessionChanging(string oldValue, string newValue);
 		partial void OnProfessionChanged(string oldValue, string newValue);
+		partial void OnBirthdayDayChanging(int oldValue, int newValue);
+		partial void OnBirthdayDayChanged(int oldValue, int newValue);
+		partial void OnBirthdayMonthChanging(int oldValue, int newValue);
+		partial void OnBirthdayMonthChanged(int oldValue, int newValue);
+		partial void OnBirthdayYearChanging(int oldValue, int newValue);
+		partial void OnBirthdayYearChanged(int oldValue, int newValue);
 		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		
+		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
+		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetData(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity> value);
@@ -1072,8 +1170,6 @@ namespace Epsitec.Aider.Entities
 		partial void GetHousemates(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetRelationships(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
-		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
-		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		partial void GetHouseholds(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value);
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);

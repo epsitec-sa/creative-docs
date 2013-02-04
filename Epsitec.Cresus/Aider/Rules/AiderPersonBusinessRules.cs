@@ -31,17 +31,42 @@ namespace Epsitec.Aider.Rules
 			eChPerson.DataSource   = Enumerations.DataSource.Undefined;
 
 			person.eCH_Person = eChPerson;
+			person.Visibility = PersonVisibilityStatus.Default;
 			
 			//	TODO#PA
 		}
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
 		{
+			AiderPersonBusinessRules.UpdateBirthday (person);
 			AiderPersonBusinessRules.UpdateCallName (person);
 			AiderPersonBusinessRules.UpdateDisplayName (person);
 			AiderPersonBusinessRules.UpdatePersonSex (person);
 
+			if (person.eCH_Person.IsDeceased)
+			{
+				person.Visibility = PersonVisibilityStatus.Deceased;
+			}
+
 			this.VerifyParish (person);
+		}
+
+		private static void UpdateBirthday(AiderPersonEntity person)
+		{
+			var date = person.eCH_Person.PersonDateOfBirth;
+
+			if (date.HasValue == false)
+			{
+				person.BirthdayDay   = 0;
+				person.BirthdayMonth = 0;
+				person.BirthdayYear  = 0;
+			}
+			else
+			{
+				person.BirthdayDay   = date.Value.Day;
+				person.BirthdayMonth = date.Value.Month;
+				person.BirthdayYear  = date.Value.Year;
+			}
 		}
 
 		public override void ApplyValidateRule(AiderPersonEntity person)
