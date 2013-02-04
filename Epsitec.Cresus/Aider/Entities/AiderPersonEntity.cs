@@ -275,6 +275,11 @@ namespace Epsitec.Aider.Entities
 			value = this.GetContacts ().OrderBy (x => x.DisplayAddress).AsReadOnlyCollection ();
 		}
 
+		partial void GetContactsForAdditionalAddress(ref IList<AiderContactEntity> value)
+		{
+			value = this.GetContacts ().Where (x => x.ContactType == ContactType.PersonAddress).OrderBy (x => x.DisplayAddress).AsReadOnlyCollection ();
+		}
+
 		private IEnumerable<AiderHouseholdEntity> GetHouseholds()
 		{
 			if (this.households == null)
@@ -317,7 +322,14 @@ namespace Epsitec.Aider.Entities
 		{
 			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);
 
-			return display.ToSimpleText ();
+			if (person.eCH_Person.IsDeceased)
+			{
+				return display.ToSimpleText () + " †";
+			}
+			else
+			{
+				return display.ToSimpleText ();
+			}
 		}
 		
 		internal string GetIconName(string prefix)

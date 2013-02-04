@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.Person.IsNotNull ())
 			{
-				this.DisplayName = this.Person.DisplayName;
+				this.RefreshDisplayName ();
 			}
 			else
 			{
@@ -57,7 +57,21 @@ namespace Epsitec.Aider.Entities
 				this.DisplayZipCode = "";
 			}
 		}
-		
+
+		private void RefreshDisplayName()
+		{
+			string suffix = "";
+
+			switch (this.ContactType)
+			{
+				case Enumerations.ContactType.PersonAddress:
+					suffix = " (°)";
+					break;
+			}
+
+			this.DisplayName = this.Person.DisplayName + suffix;
+		}
+
 		private void RefreshDisplayAddressAndZipCode(AiderAddressEntity address)
 		{
 			var town    = address.Town;

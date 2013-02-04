@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support.Entities;
@@ -14,6 +14,20 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class eCH_PersonEntity
 	{
+		/// <summary>
+		/// Gets a value indicating whether this person is deceased.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this person is deceased; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsDeceased
+		{
+			get
+			{
+				return this.PersonDateOfDeath.HasValue;
+			}
+		}
+
 		/// <summary>
 		/// Gets the default first name for the person, which is the 1st first name in
 		/// the list.

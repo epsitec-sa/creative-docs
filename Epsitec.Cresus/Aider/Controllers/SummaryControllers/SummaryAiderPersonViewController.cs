@@ -78,15 +78,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
 
-			wall.AddBrick (x => x.Contacts)
-				.Title (contacts.Count > 1 ? Resources.Text ("Contacts") : Resources.Text ("Contact"))
-				.Attribute (BrickMode.HideAddButton)
-				.Attribute (BrickMode.HideRemoveButton)
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-				.End ()
-				.Attribute (BrickMode.DefaultToSummarySubView);
-
+			if (contacts.Any (x => x.ContactType == Enumerations.ContactType.PersonAddress))
+			{
+				wall.AddBrick (x => x.ContactsForAdditionalAddress)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Template ()
+					.End ()
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
