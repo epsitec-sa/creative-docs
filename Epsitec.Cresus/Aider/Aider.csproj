@@ -61,6 +61,7 @@
     <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="AiderProgramTestImportMode.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController0.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController4.cs" />

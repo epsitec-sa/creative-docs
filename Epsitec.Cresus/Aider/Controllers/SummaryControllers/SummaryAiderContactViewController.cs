@@ -122,18 +122,24 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						break;
 
 					case Enumerations.AddressType.Professional:
+						if (contactInfoProf.IsNullOrEmpty ())
+						{
+							contactInfoProf = new FormattedText ("<hr/><b>Professionnel:</b>");
+						}
 						contactInfoProf = TextFormatter.FormatText (contactInfoProf, "\n", phone, "\n", email);
 						break;
 
 					case Enumerations.AddressType.Secondary:
+						if (contactInfoSecondary.IsNullOrEmpty ())
+						{
+							contactInfoSecondary = new FormattedText ("<hr/><b>Domicile secondaire:</b>");
+						}
 						contactInfoSecondary = TextFormatter.FormatText (contactInfoSecondary, "\n", phone, "\n", email);
 						break;
 				}
 			}
 
-			return TextFormatter.FormatText (contactInfoPrivate,
-				"\nProfessionnel:\n~", contactInfoProf,
-				"\nDomicile secondaire:\n~", contactInfoSecondary);
+			return TextFormatter.FormatText (contactInfoPrivate, "\n", contactInfoProf, "\n", contactInfoSecondary);
 		}
 	}
 }

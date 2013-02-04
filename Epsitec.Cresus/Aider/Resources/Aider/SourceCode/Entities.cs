@@ -1027,11 +1027,11 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVAF/LVAME
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAME]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> AdditionalAddresses
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> AdditionalAddresses
 		{
 			get
 			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity>);
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity>);
 				this.GetAdditionalAddresses (ref value);
 				return value;
 			}
@@ -1076,7 +1076,7 @@ namespace Epsitec.Aider.Entities
 		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		partial void GetHouseholds(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value);
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
-		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value);
+		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

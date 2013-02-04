@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			if (contact.Household.IsNull ())
 			{
 				wall.AddBrick ()
-					.Title (Resources.Text ("Adresse supplémentaire"))
+					.Title (Resources.Text ("Adresse alternative"))
 					.Icon ("Data.AiderAddress")
 					.Input ()
 						.Field (x => x.AddressType)

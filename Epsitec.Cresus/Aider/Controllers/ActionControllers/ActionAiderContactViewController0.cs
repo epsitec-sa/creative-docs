@@ -2,12 +2,16 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {

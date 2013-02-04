@@ -85,9 +85,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
+					.EnableAction (6)
 					.Template ()
+						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
 					.End ()
-					.Attribute (BrickMode.DefaultToSummarySubView);
+					.Attribute (BrickMode.SpecialController1)
+					;
 			}
 
 			wall.AddBrick (x => x.Comment)

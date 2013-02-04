@@ -29,7 +29,6 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName, "(~", this.ComputeAge (), "~)");
 		}
 
-
 		public override FormattedText GetSummary()
 		{
 			return this.GetCoordinatesSummary ();
@@ -42,7 +41,6 @@ namespace Epsitec.Aider.Entities
 
 			return TextFormatter.FormatText (lines.Select (x => x.AppendLineIfNotNull ()));
 		}
-
 
 		public FormattedText GetPersonalDataSummary()
 		{
@@ -275,12 +273,12 @@ namespace Epsitec.Aider.Entities
 			value = this.GetContacts ().OrderBy (x => x.DisplayAddress).AsReadOnlyCollection ();
 		}
 
-		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
+		partial void GetAdditionalAddresses(ref IList<AiderContactEntity> value)
 		{
 			value = this.GetContacts ()
 				.Where (x => x.ContactType == ContactType.PersonAddress)
 				.OrderBy (x => x.DisplayAddress)
-				.Select (x => x.Address).AsReadOnlyCollection ();
+				.AsReadOnlyCollection ();
 		}
 
 		private IEnumerable<AiderHouseholdEntity> GetHouseholds()
