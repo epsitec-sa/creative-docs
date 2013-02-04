@@ -19,6 +19,7 @@ namespace Epsitec.Aider.Data
 		public const string Region              = "R__.";
 		public const string Staff               = "PRS.";
 		public const string StaffAssociation	= "ASP.";
+		public const string NoParish            = "NOP.";
 
 		public const string GroupPrefix			= "G";
 		public const string FunctionPrefix		= "F";

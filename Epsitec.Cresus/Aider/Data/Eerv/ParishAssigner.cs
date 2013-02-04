@@ -59,6 +59,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			if (address.Town.IsNull ())
 			{
+				ParishAssigner.AssignToNoParishGroup (businessContext, parishNameToGroups, person);
 				return;
 			}
 
@@ -72,10 +73,32 @@ namespace Epsitec.Aider.Data.Eerv
 
 				Debug.WriteLine (string.Format (format, nameText, addressText));
 
+				ParishAssigner.AssignToNoParishGroup (businessContext, parishNameToGroups, person);
 				return;
 			}
 
 			ParishAssigner.AssignToParish (businessContext, person, parishGroup);
+		}
+
+
+		private static void AssignToNoParishGroup(BusinessContext businessContext, Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderPersonEntity person)
+		{
+			var parishName = "noparish";
+			AiderGroupEntity parishGroup = null;
+
+			if (!parishNameToGroups.TryGetValue (parishName, out parishGroup))
+			{
+				var example = new AiderGroupEntity ()
+				{
+					Path = AiderGroupIds.NoParish
+				};
+
+				parishGroup = businessContext.DataContext.GetByExample (example).Single ();
+
+				parishNameToGroups[parishName] = parishGroup;
+			}
+
+			parishGroup.AddParticipant (businessContext, person, null, null, null);
 		}
 
 

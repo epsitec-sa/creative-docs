@@ -118,7 +118,18 @@ namespace Epsitec.Aider.Data.Eerv
 				));
 			}
 
+			EervMainDataImporter.CreateNoParishGroup (businessContext);
+
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+		}
+
+		private static AiderGroupEntity CreateNoParishGroup(BusinessContext businessContext)
+		{
+			var name = "Personnes sans paroisse";
+			var level = 0;
+			var path = AiderGroupIds.NoParish;
+
+			return AiderGroupEntity.Create (businessContext, null, name, level, path);
 		}
 
 
