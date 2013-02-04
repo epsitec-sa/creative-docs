@@ -265,15 +265,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CombineCoordinates(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson)
 		{
-			var email = eervPerson.Coordinates.EmailAddress;
+			var email  = eervPerson.Coordinates.EmailAddress;
 			var mobile = eervPerson.Coordinates.MobilePhoneNumber;
 
-			var hasEmail = !string.IsNullOrEmpty (email);
-			var hasMobile = !string.IsNullOrEmpty (mobile);
+			var hasEmail = !string.IsNullOrWhiteSpace (email);
+			var hasMobile = !string.IsNullOrWhiteSpace (mobile);
 
 			if (hasEmail || hasMobile)
 			{
-				var contact = AiderContactEntity.Create (businessContext, aiderPerson, AddressType.Default);
+				var contact = AiderContactEntity.Create (businessContext, aiderPerson, AddressType.Other);
 				var address = contact.Address;
 
 				EervParishDataImporter.SetEmail (address, email);
