@@ -66,6 +66,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
+		public int? Width
+		{
+			get
+			{
+				return this.metadata.DefaultWidth;
+			}
+		}
+
+
 		public bool Sortable
 		{
 			get
@@ -110,6 +119,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "name", this.GetId (caches) },
 				{ "type", this.GetColumnTypeData (caches) },
 				{ "hidden", this.Hidden },
+				{ "width", this.Width },
 				{ "sortable", this.Sortable },
 				{ "filter", this.GetFilterData (caches) },
 			};

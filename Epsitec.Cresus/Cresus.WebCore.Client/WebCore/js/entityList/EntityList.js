@@ -95,11 +95,17 @@ function() {
     createDynamicColumn: function(columnDefinition) {
       var column = {
         text: columnDefinition.title,
-        flex: 1,
         dataIndex: columnDefinition.name,
         sortable: columnDefinition.sortable,
         filter: this.createFilter(columnDefinition)
       };
+
+      if (columnDefinition.width === null) {
+        column.flex = 1;
+      }
+      else {
+        column.width = columnDefinition.width;
+      }
 
       switch (columnDefinition.type.type) {
         case 'boolean':

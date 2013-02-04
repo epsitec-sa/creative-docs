@@ -98,6 +98,12 @@ namespace Epsitec.Cresus.Core.Metadata
 			set;
 		}
 
+		public int?								DefaultWidth
+		{
+			get;
+			set;
+		}
+
 
 		public static EntityColumnMetadata Resolve(Druid entityId, string columnId)
 		{
@@ -127,6 +133,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			base.Serialize (attributes);
 
 			attributes.Add (new XAttribute (Xml.DefaultSortIndex, this.DefaultSortIndex.ToString (System.Globalization.CultureInfo.InvariantCulture)));
+			attributes.Add (new XAttribute (Xml.DefaultWidth, this.DefaultWidth.ToString ()));
 		}
 
 		protected override void Serialize(List<XElement> elements)
@@ -144,6 +151,11 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			this.DefaultSortIndex = InvariantConverter.ToInt (xml.Attribute (Xml.DefaultSortIndex));
 
+			var xDefaultWitdh = xml.Attribute (Xml.DefaultWidth);
+			this.DefaultWidth = xDefaultWitdh == null
+				? (int?) null
+				: InvariantConverter.ToInt (xDefaultWitdh);
+
 			this.defaultSort    = EntityColumnSort.Restore (xml.Element (Xml.DefaultSort)) ?? this.defaultSort;
 			this.defaultFilter  = EntityColumnFilter.Restore (xml.Element (Xml.DefaultFilter)) ?? this.defaultFilter;
 			this.defaultDisplay = EntityColumnDisplay.Restore (xml.Element (Xml.DefaultDisplay)) ?? this.defaultDisplay;
@@ -158,6 +170,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public const string					DefaultSort    = "sort";
 			public const string					DefaultFilter  = "filt";
 			public const string					DefaultDisplay = "disp";
+			public const string					DefaultWidth   = "dw";
 		}
 
 		#endregion
