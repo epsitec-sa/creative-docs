@@ -44,7 +44,18 @@ namespace Epsitec.Aider
 			{
 				if (args.Contains ("-testfullimport"))
 				{
-					AiderProgram.TestFullImport ();
+					AiderProgramTestImportMode mode = AiderProgramTestImportMode.Default;
+
+					if (args.Contains ("-echonly"))
+					{
+						mode |= AiderProgramTestImportMode.EchOnly;
+					}
+					if (args.Contains ("-subset"))
+					{
+						mode |= AiderProgramTestImportMode.Subset;
+					}
+
+					AiderProgram.TestFullImport (mode);
 					return;
 				}
 

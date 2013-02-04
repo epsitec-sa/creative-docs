@@ -23,25 +23,39 @@ namespace Epsitec.Aider
 {
 	public static partial class AiderProgram
 	{
-		private static void TestFullImport()
+		private static void TestFullImport(AiderProgramTestImportMode importMode)
 		{
 			SwissPost.Initialize ();
+			
 			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
 			CoreContext.EnableEmbeddedDatabaseClient (true);
 			CoreContext.StartAsInteractive ();
+			
 			Services.Initialize ();
-			CoreData.ForceDatabaseCreationRequest = true;
+			
+			try
+			{
+				CoreData.ForceDatabaseCreationRequest = true;
+				AiderProgram.TestFullImportJob (importMode);
+			}
+			finally
+			{
+				Services.ShutDown ();
+			}
+		}
 
+		private static void TestFullImportJob(AiderProgramTestImportMode importMode)
+		{
 			using (var application = new CoreApplication ())
 			{
 				application.SetupApplication ();
-
+				
 				var coreDataManager = new CoreDataManager (application.Data);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
 				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile, int.MaxValue);
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 200 : int.MaxValue);
 				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
@@ -52,6 +66,11 @@ namespace Epsitec.Aider
 				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
+
+				if (importMode.HasFlag (AiderProgramTestImportMode.EchOnly))
+				{
+					return;
+				}
 
 				AiderProgram.Test
 				(
@@ -130,8 +149,6 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 5");
-
-				Services.ShutDown ();
 			}
 		}
 
