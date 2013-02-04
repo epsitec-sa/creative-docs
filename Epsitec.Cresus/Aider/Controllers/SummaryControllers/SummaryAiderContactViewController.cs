@@ -26,6 +26,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableAction (0);
 			}
 
+			FormattedText contactSummary = contact.Person.GetCompactSummary ();
+
+			//	TODO: add phone/...
+
 			switch (this.Entity.ContactType)
 			{
 				case Enumerations.ContactType.PersonHousehold:
@@ -33,21 +37,21 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick (x => x.Person)
 							.Icon (contact.Person.GetIconName ("Data"))
-							.Text (x => x.GetCompactSummary ())
+							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Household.IsNotNull ())
 					{
-						wall.AddBrick ()
-							.Title (Resources.Text ("Ménage associé"))
-							.Text (contact.Household.DisplayName)
-							.Icon ("Data.AiderHousehold")
-							.Attribute (BrickMode.SpecialController2);
+						//wall.AddBrick ()
+						//    .Title (Resources.Text ("Ménage associé"))
+						//    .Text (contact.Household.DisplayName)
+						//    .Icon ("Data.AiderHousehold")
+						//    .Attribute (BrickMode.SpecialController2);
 
 						if (contact.Address.IsNotNull ())
 						{
 							wall.AddBrick ()
-								.Title (Resources.Text ("Adresse du ménage"))
+								.Title (Resources.Text ("Adresse de domicile"))
 								.Text (contact.Address.GetSummary ())
 								.Icon ("Data.AiderAddress")
 								.Attribute (BrickMode.SpecialController1);
@@ -74,6 +78,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick (x => x.Person)
 							.Icon (contact.Person.GetIconName ("Data"))
+							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					if (contact.Address.IsNotNull ())
