@@ -43,14 +43,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(Enumerations.AddressType addressType)
 		{
-			var person     = this.Entity;
-			var newContact = this.BusinessContext.CreateAndRegisterEntity<AiderContactEntity> ();
-			var newAddress = this.BusinessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
-
-			newContact.Person = person;
-			newContact.Address = newAddress;
-			newContact.AddressType = addressType;
-			newContact.ContactType = Enumerations.ContactType.PersonAddress;
+			AiderContactEntity.Create (this.BusinessContext, this.Entity, addressType);
 		}
 	}
 }

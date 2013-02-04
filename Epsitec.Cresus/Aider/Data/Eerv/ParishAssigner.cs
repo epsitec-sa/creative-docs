@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Cresus.Core.Business;
@@ -25,20 +28,34 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var contact in contacts)
 			{
-				var address = contact.Address;
-				var person = contact.Person;
-
-				if (person.IsNotNull () && address.IsNotNull ())
-				{
-					ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person, address);
-				}
+				ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, contact);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
-		private static void AssignToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderPersonEntity person, AiderAddressEntity address)
+		private static void AssignToParish(BusinessContext businessContext, ParishAddressRepository parishRepository,
+			Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderContactEntity contact)
+		{
+			var address = contact.Address;
+			var person  = contact.Person;
+
+			if (person.IsNotNull () && address.IsNotNull ())
+			{
+				ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person, address);
+
+				var parish = person.ParishGroup;
+
+				if (parish.IsNotNull ())
+				{
+					contact.ParishGroupPathCache = parish.Path;
+				}
+			}
+		}
+
+		private static void AssignToParish(BusinessContext businessContext, ParishAddressRepository parishRepository,
+			Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderPersonEntity person, AiderAddressEntity address)
 		{
 			if (address.Town.IsNull ())
 			{
@@ -49,9 +66,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (parishGroup == null)
 			{
-				var nameText = person.DisplayName;
+				var nameText    = person.DisplayName;
 				var addressText = address.GetSummary ().ToSimpleText ().Replace ("\n", "; ");
-				var format = "WARNING: parish not found for {0} at address {1}";
+				var format      = "WARNING: parish not found for {0} at address {1}";
 
 				Debug.WriteLine (string.Format (format, nameText, addressText));
 

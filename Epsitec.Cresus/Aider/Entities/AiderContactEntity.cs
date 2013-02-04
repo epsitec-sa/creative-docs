@@ -91,14 +91,13 @@ namespace Epsitec.Aider.Entities
 			return AiderContactEntity.Create (businessContext, person, household, role);
 		}
 
-
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
 		{
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
 
-			contact.Person = person;
-			contact.Address = household.Address;
-			contact.Household = household;
+			contact.Person        = person;
+			contact.Address       = household.Address;
+			contact.Household     = household;
 			contact.HouseholdRole = role;
 
 			return contact;
@@ -108,8 +107,8 @@ namespace Epsitec.Aider.Entities
 		{
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonAddress);
 
-			contact.Person = person;
-			contact.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+			contact.Person      = person;
+			contact.Address     = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 			contact.AddressType = type;
 
 			return contact;
@@ -120,7 +119,7 @@ namespace Epsitec.Aider.Entities
 			var contact = AiderContactEntity.Create (businessContext, ContactType.Legal);
 
 			contact.LegalPerson = legalPerson;
-			contact.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+			contact.Address     = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 
 			return contact;
 		}

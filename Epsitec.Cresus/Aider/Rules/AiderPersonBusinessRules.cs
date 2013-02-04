@@ -42,15 +42,18 @@ namespace Epsitec.Aider.Rules
 			AiderPersonBusinessRules.UpdateCallName (person);
 			AiderPersonBusinessRules.UpdateDisplayName (person);
 			AiderPersonBusinessRules.UpdatePersonSex (person);
-
-			if (person.eCH_Person.IsDeceased)
-			{
-				person.Visibility = PersonVisibilityStatus.Deceased;
-			}
+			AiderPersonBusinessRules.UpdateVisibility (person);
 
 			this.VerifyParish (person);
 		}
 
+		private static void UpdateVisibility(AiderPersonEntity person)
+		{
+			if (person.eCH_Person.IsDeceased)
+			{
+				person.Visibility = PersonVisibilityStatus.Deceased;
+			}
+		}
 		private static void UpdateBirthday(AiderPersonEntity person)
 		{
 			var date = person.eCH_Person.PersonDateOfBirth;
