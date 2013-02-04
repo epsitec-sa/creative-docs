@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using System.Collections.Generic;
@@ -24,6 +24,22 @@ namespace Epsitec.Common.Support.Extensions
 			if (element == null)
 			{
 				throw new System.ArgumentNullException (elementName);
+			}
+		}
+
+		/// <summary>
+		/// Checks that <paramref name="element"/> is not null.
+		/// </summary>
+		/// <typeparam name="T">The type of <paramref name="element"/>.</typeparam>
+		/// <param name="element">The element to ensure that it is not null.</param>
+		/// <param name="elementName">The name of <paramref name="element"/>.</param>
+		/// <param name="message">The message.</param>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="element"/> is null.</exception>
+		public static void ThrowIfNull<T>(this T element, string elementName, string message) where T : class
+		{
+			if (element == null)
+			{
+				throw new System.ArgumentNullException (elementName, message);
 			}
 		}
 

@@ -1,5 +1,7 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -120,12 +122,17 @@ namespace Epsitec.Cresus.Core.Library
 
 		public void RegisterComponent(System.Type type, TComponent component)
 		{
+			type.ThrowIfNull ("type");
+			component.ThrowIfNull ("component", string.Format ("No component instance for type {0}", type.FullName));
+
 			this.registeredComponents.Add (component);
 			this.components[type.FullName] = component;
 		}
 
 		public void RegisterComponentAsDisposable(System.IDisposable component)
 		{
+			component.ThrowIfNull ("component", "No component instance with IDisposable interface");
+			
 			this.disposableComponents.Push (component);
 		}
 
