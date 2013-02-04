@@ -463,15 +463,8 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			var type = CoreContext.ResolveType (typeof (T));
 
-			if (type == typeof (T))
-			{
-				return null;
-			}
-			else
-			{
-				var binding = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-				return System.Activator.CreateInstance (type, binding, null, args, null) as T;
-			}
+			var binding = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+			return System.Activator.CreateInstance (type, binding, null, args, null) as T;
 		}
 
 		public static System.Type ResolveType(System.Type baseType)
