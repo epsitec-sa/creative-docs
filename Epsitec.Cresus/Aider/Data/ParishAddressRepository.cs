@@ -130,7 +130,12 @@ namespace Epsitec.Aider.Data
 
 		private static IEnumerable<ParishAddressInformation> GetParishInformations()
 		{
-			return ParishAddressRepository.GetSourceFile ().Select (x => new ParishAddressInformation (x));
+			// We skip the entries within region 0 as we know that they are invalid.
+
+			return ParishAddressRepository
+				.GetSourceFile ()
+				.Select (x => new ParishAddressInformation (x))
+				.Where (x => x.RegionCode != 0);
 		}
 
 		private static IEnumerable<string> GetSourceFile()
