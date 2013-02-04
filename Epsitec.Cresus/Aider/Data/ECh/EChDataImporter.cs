@@ -187,14 +187,18 @@ namespace Epsitec.Aider.Data.ECh
 			var aiderAddressEntity = EChDataImporter.ImportAiderAddressEntity (businessContext, eChAddress, zipCodeIdToEntityKey);
 
 			eChReportedPersonEntity.Address = eChAddressEntity;
+
 			aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
 			aiderHousehold.Address = aiderAddressEntity;
 
 			var eChAdult1 = eChReportedPerson.Adult1;
+			var adults    = new List<eCH_PersonEntity> ();
+			var children  = new List<eCH_PersonEntity> ();
 
 			if (eChAdult1 != null)
 			{
 				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1);
+				adults.Add (aiderPerson.eCH_Person);
 
 				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
 			}
@@ -204,6 +208,7 @@ namespace Epsitec.Aider.Data.ECh
 			if (eChAdult2 != null)
 			{
 				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2);
+				adults.Add (aiderPerson.eCH_Person);
 
 				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);
 			}
@@ -211,9 +216,12 @@ namespace Epsitec.Aider.Data.ECh
 			foreach (var eChChild in eChReportedPerson.Children)
 			{
 				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild);
+				children.Add (aiderPerson.eCH_Person);
 
 				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
 			}
+
+			aiderHousehold.DisplayName = AiderHouseholdEntity.BuildDisplayName (adults, children, aiderHousehold.HouseholdMrMrs);
 
 			return eChReportedPersonEntity;
 		}

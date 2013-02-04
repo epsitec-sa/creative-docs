@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (string.IsNullOrEmpty (this.HouseholdName))
 			{
-				this.DisplayName = this.BuildDisplayName ();
+				this.DisplayName = this.BuildDisplayName () ?? this.DisplayName;
 			}
 			else
 			{
@@ -65,60 +65,88 @@ namespace Epsitec.Aider.Entities
 
 		private string BuildDisplayName()
 		{
-			var headTitle = "";
+			return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
+		}
+
+		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
+		{
+			if (contacts == null)
+			{
+				return null;
+			}
+			
+			var heads    = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person.eCH_Person).ToList ();
+			var children = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person.eCH_Person).ToList ();
+
+			return AiderHouseholdEntity.BuildDisplayName (heads, children, order);
+		}
+			
+		
+		public static string BuildDisplayName(IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children, HouseholdMrMrs order)
+		{
+			var men   = heads.Where (x => x.PersonSex == PersonSex.Male);
+			var women = heads.Where (x => x.PersonSex == PersonSex.Female);
+
 			var headNames = new List<string> ();
-
-			this.GetMembers ();
-
-			var heads = this.contacts.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).ToList ();
-			var men   = heads.Where (x => x.eCH_Person.PersonSex == Enumerations.PersonSex.Male);
-			var women = heads.Where (x => x.eCH_Person.PersonSex == Enumerations.PersonSex.Female);
-
-			var order = this.HouseholdMrMrs;
 
 			switch (order)
 			{
-				case Enumerations.HouseholdMrMrs.None:
-				case Enumerations.HouseholdMrMrs.Auto:
-				case Enumerations.HouseholdMrMrs.Famille:
-				case Enumerations.HouseholdMrMrs.MonsieurEtMadame:
-					headNames.AddRange (men.Select (x => x.GetShortFullName ()));
-					headNames.AddRange (women.Select (x => x.GetShortFullName ()));
+				case HouseholdMrMrs.None:
+				case HouseholdMrMrs.Auto:
+				case HouseholdMrMrs.Famille:
+				case HouseholdMrMrs.MonsieurEtMadame:
+					headNames.AddRange (men.Select (x => x.PersonOfficialName));
+					headNames.AddRange (women.Select (x => x.PersonOfficialName));
 					break;
-				case Enumerations.HouseholdMrMrs.MadameEtMonsieur:
-					headNames.AddRange (women.Select (x => x.GetShortFullName ()));
-					headNames.AddRange (men.Select (x => x.GetShortFullName ()));
+				case HouseholdMrMrs.MadameEtMonsieur:
+					headNames.AddRange (women.Select (x => x.PersonOfficialName));
+					headNames.AddRange (men.Select (x => x.PersonOfficialName));
 					break;
 			}
 
 			if (headNames.Count == 0)
 			{
-				var contact = this.contacts.Select (x => x.Person.GetShortFullName ()).FirstOrDefault ();
+				var child = children.Select (x => x.PersonOfficialName).FirstOrDefault ();
 
-				if (contact != null)
+				if (child != null)
 				{
-					headNames.Add (contact);
+					headNames.Add (child);
 				}
 			}
 
+			var    members   = heads.Concat (children).ToList ();
+			string headTitle = null;
+			
 			switch (order)
 			{
-				case Enumerations.HouseholdMrMrs.None:
-				case Enumerations.HouseholdMrMrs.Auto:
-				case Enumerations.HouseholdMrMrs.Famille:
-					headTitle = this.members.Count == 1 ? EnumKeyValues.GetEnumKeyValue (this.members[0].MrMrs).Values.LastOrDefault ().ToSimpleText () : "Famille";
+				case HouseholdMrMrs.None:
+				case HouseholdMrMrs.Auto:
+				case HouseholdMrMrs.Famille:
+					if (members.Count == 1)
+					{
+						switch (members[0].PersonSex)
+						{
+							case PersonSex.Female:
+								headTitle = "Mme";
+								break;
+							case PersonSex.Male:
+								headTitle = "M.";
+								break;
+						}
+					}
 					break;
 
-				case Enumerations.HouseholdMrMrs.MonsieurEtMadame:
+				case HouseholdMrMrs.MonsieurEtMadame:
 					headTitle = "M. et Mme";
 					break;
 
-				case Enumerations.HouseholdMrMrs.MadameEtMonsieur:
+				case HouseholdMrMrs.MadameEtMonsieur:
 					headTitle = "Mme et M.";
 					break;
 			}
 
-			headNames.Insert (0, headTitle);
+
+			headNames.Insert (0, headTitle ?? "Famille");
 
 			return StringUtils.Join (" ", headNames.Distinct ().ToArray ());
 		}
@@ -149,18 +177,24 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		private static List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
+		{
+			var members = new List<AiderPersonEntity> ();
+
+			var heads   = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+			var others  = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+
+			members.AddRange (heads);
+			members.AddRange (others);
+
+			return members;
+		}
+
 		private IList<AiderPersonEntity> GetMembers()
 		{
 			if (this.members == null)
 			{
-				this.members  = new List<AiderPersonEntity> ();
-
-				var contacts = this.GetContacts ();
-				var heads    = contacts.Where (x => x.HouseholdRole == Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-				var others   = contacts.Where (x => x.HouseholdRole != Enumerations.HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-
-				this.members.AddRange (heads);
-				this.members.AddRange (others);
+				this.members = AiderHouseholdEntity.GetMembers (this.GetContacts ());
 			}
 
 			return this.members;
@@ -171,13 +205,13 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.contacts == null)
 			{
-				this.contacts = new List<AiderContactEntity> ();
-
 				var businessContext = BusinessContextPool.GetCurrentContext (this);
 				var dataContext = businessContext.DataContext;
 
 				if (dataContext.IsPersistent (this))
 				{
+					this.contacts = new List<AiderContactEntity> ();
+
 					var example = new AiderContactEntity ()
 					{
 						Household = this,

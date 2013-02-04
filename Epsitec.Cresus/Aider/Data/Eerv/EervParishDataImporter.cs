@@ -773,6 +773,10 @@ namespace Epsitec.Aider.Data.Eerv
 				householdContacts.Add (contact);
 				personContacts.Add (contact);
 			}
+			
+			//	Now, we know the household contacts and we can update the display name
+			//	of the household:
+
 		}
 
 
@@ -901,6 +905,8 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			businessContext.DeleteEntity (secondaryHousehold);
+
+			//	TODO#PA
 		}
 
 

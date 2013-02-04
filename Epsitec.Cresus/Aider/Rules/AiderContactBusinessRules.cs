@@ -27,6 +27,11 @@ namespace Epsitec.Aider.Rules
 			{
 				contact.Household.RefreshCache ();
 			}
+
+			if (contact.Person.IsNotNull ())
+			{
+				//	TODO#PA
+			}
 		}
 	}
 }
