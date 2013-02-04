@@ -75,7 +75,13 @@ namespace Epsitec.Aider.Override
 			{
 				return this.GetAiderGroupEntityFilter ((AiderGroupEntity) example, pattern + AiderGroupIds.SubgroupSqlWildcard);
 			}
-			
+			else if (entityType == typeof (AiderContactEntity))
+			{
+				return string.IsNullOrEmpty (pattern)
+					? null
+					: this.GetAiderContactEntityFilter ((AiderContactEntity) example, pattern + "%");
+			}
+
 			return null;
 		}
 
@@ -96,6 +102,11 @@ namespace Epsitec.Aider.Override
 		private IFilter GetAiderGroupEntityFilter(AiderGroupEntity example, string pattern)
 		{
 			return new LambdaFilter<AiderGroupEntity> (x => SqlMethods.Like (x.Path, pattern));
+		}
+
+		private IFilter GetAiderContactEntityFilter(AiderContactEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderContactEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
 
 		private string GetActiveScopePathPattern()
