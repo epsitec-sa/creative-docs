@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -17,7 +17,8 @@ namespace Epsitec.Aider.Rules
 		{
 			var businessContext = this.GetBusinessContext ();
 
-			household.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+			household.HouseholdMrMrs = Enumerations.HouseholdMrMrs.Auto;
+			household.Address        = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 		}
 
 		public override void ApplyUpdateRule(AiderHouseholdEntity household)

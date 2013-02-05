@@ -132,6 +132,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				var phone   = address.GetPhoneSummary ();
 				var email   = address.GetWebEmailSummary ();
 
+				if ((phone.IsNullOrEmpty ()) &&
+					(email.IsNullOrEmpty ()))
+				{
+					continue;
+				}
+
 				switch (detail.AddressType)
 				{
 					case Enumerations.AddressType.Default:
