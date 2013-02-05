@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
@@ -15,11 +18,8 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.TwixClip;
 
 using System;
-
 using System.Collections.Generic;
-
 using System.Diagnostics;
-
 using System.Linq;
 
 
@@ -265,19 +265,76 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CombineCoordinates(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson)
 		{
-			var email  = eervPerson.Coordinates.EmailAddress;
-			var mobile = eervPerson.Coordinates.MobilePhoneNumber;
+			var cleanEmails  = EervParishDataImporter.GetCleanEmails (eervPerson.Coordinates.EmailAddress);
+			var clearMobiles = EervParishDataImporter.GetCleanPhoneNumbers (eervPerson.Coordinates.MobilePhoneNumber);
 
-			var hasEmail = !string.IsNullOrWhiteSpace (email);
-			var hasMobile = !string.IsNullOrWhiteSpace (mobile);
+			//	Produce a stream of email/phone pairs until both source collections are empty.
+			
+			var tuples = cleanEmails.CombineToTuples (clearMobiles);
 
-			if (hasEmail || hasMobile)
+			foreach (var tuple in tuples)
 			{
-				var contact = AiderContactEntity.Create (businessContext, aiderPerson, AddressType.Other);
-				var address = contact.Address;
+				var email  = tuple.Item1;
+				var mobile = tuple.Item2;
 
-				EervParishDataImporter.SetEmail (address, email);
-				EervParishDataImporter.SetPhoneNumber (address, mobile, (a, s) => a.Mobile = s);
+				var hasEmail  = !string.IsNullOrWhiteSpace (email);
+				var hasMobile = !string.IsNullOrWhiteSpace (mobile);
+
+				if (hasEmail || hasMobile)
+				{
+					var contact = AiderContactEntity.Create (businessContext, aiderPerson, AddressType.Other);
+					var address = contact.Address;
+
+					EervParishDataImporter.SetEmail (address, email);
+					EervParishDataImporter.SetPhoneNumber (address, mobile, (a, s) => a.Mobile = s);
+				}
+			}
+		}
+
+
+		private static IEnumerable<string> GetCleanEmails(string rawEmail)
+		{
+			foreach (var email in rawEmail.Split (' ', ';', ':', '/').Select (x => x.Trim ()))
+			{
+				var fixedEmail = Epsitec.Common.IO.UriBuilder.FixScheme (email);
+
+				if (Epsitec.Common.IO.UriBuilder.IsValidMailTo (fixedEmail))
+				{
+					yield return email;
+				}
+			}
+		}
+
+		private static IEnumerable<string> GetCleanPhoneNumbers(string rawPhoneNumber)
+		{
+			if ((rawPhoneNumber.StartsWith ("+")) ||
+				(rawPhoneNumber.StartsWith ("00")))
+			{
+				yield return rawPhoneNumber;
+				yield break;
+			}
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (char c in rawPhoneNumber)
+			{
+				if ((c >= '0') &&
+					(c <= '9'))
+				{
+					buffer.Append (c);
+				}
+
+				if (buffer.Length >= 10)
+				{
+					var number = buffer.ToString ();
+					
+					if (TwixTel.IsValidPhoneNumber (number, acceptEmptyNumbers: false))
+					{
+						yield return number;
+						
+						buffer.Clear ();
+					}
+				}
 			}
 		}
 
