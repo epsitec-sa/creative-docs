@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		private static EntityColumnFilter ParseColumnComparisonFilter(BusinessContext businessContext, FieldType fieldType, Type valueType, string type, object comparator, object value)
 		{
-			var comparison = FilterIO.ParseComparison (type, comparator);
+			var comparison = FilterIO.ParseComparison (type, comparator, ref value);
 			var constant = FilterIO.ParseConstant (businessContext, fieldType, valueType, value, comparison);
 
 			var filterExpression = new ColumnFilterComparisonExpression ()
@@ -130,11 +130,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		private static ColumnFilterComparisonCode ParseComparison(string type, object comparator)
+		private static ColumnFilterComparisonCode ParseComparison(string type, object comparator, ref object value)
 		{
 			if (type == "string")
 			{
-				return ColumnFilterComparisonCode.StartsWithEscaped;
+				var text = value as string;
+
+				if ((text != null) &&
+					(text.StartsWith ("*")))
+				{
+					value = text.Substring (1);
+					return ColumnFilterComparisonCode.ContainsEscaped;
+				}
+				else
+				{
+					return ColumnFilterComparisonCode.StartsWithEscaped;
+				}
 			}
 
 			switch ((string) comparator)
@@ -192,6 +203,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 				case FieldType.Text:
 					var pattern = Constant.Escape (FormattedText.CastToString (entityValue));
+
+					pattern = pattern.Replace ('*', '%');
 
 					switch (comparison)
 					{

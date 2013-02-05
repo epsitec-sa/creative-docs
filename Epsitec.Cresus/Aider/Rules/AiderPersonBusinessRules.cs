@@ -38,6 +38,7 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
 		{
+			AiderPersonBusinessRules.UpdatePersonOfficialName (person);
 			AiderPersonBusinessRules.UpdateBirthday (person);
 			AiderPersonBusinessRules.UpdateCallName (person);
 			AiderPersonBusinessRules.UpdateDisplayName (person);
@@ -45,6 +46,66 @@ namespace Epsitec.Aider.Rules
 			AiderPersonBusinessRules.UpdateVisibility (person);
 
 			this.VerifyParish (person);
+		}
+
+		private static void UpdatePersonOfficialName(AiderPersonEntity person)
+		{
+			string name = person.eCH_Person.PersonOfficialName;
+
+			int posDash  = name.IndexOf ('-');
+			int posSpace = name.IndexOf (' ');
+
+			if (posDash < 0)
+			{
+				return;
+			}
+			if (posSpace < 0)
+			{
+				return;
+			}
+
+			//	There might be a problem with this official name, since it is mixing
+			//	spaces and dashes...
+
+			var buffer = new System.Text.StringBuilder ();
+			char last = '*';
+
+			foreach (char c in name)
+			{
+				if (c == ' ')
+				{
+					if (buffer.Length == 0)
+					{
+						continue;
+					}
+					
+					if ((last == '-') ||
+						(last == ' '))
+					{
+						continue;
+					}
+				}
+				else if (c == '-')
+				{
+					if (last == '-')
+					{
+						continue;
+					}
+					if (last == ' ')
+					{
+						buffer.Length = buffer.Length-1;
+					}
+					if (buffer.Length == 0)
+					{
+						continue;
+					}
+				}
+
+				buffer.Append (c);
+				last = c;
+			}
+
+			person.eCH_Person.PersonOfficialName = buffer.ToString ();
 		}
 
 		private static void UpdateVisibility(AiderPersonEntity person)
