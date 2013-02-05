@@ -55,7 +55,15 @@ namespace Epsitec.Aider.Entities
 		{
 			get
 			{
-				return this.eCH_Person.IsNull () || this.eCH_Person.PersonDateOfDeath == null;
+				return this.eCH_Person.IsNull () || this.eCH_Person.IsDeceased == false;
+			}
+		}
+
+		public bool IsDeceased
+		{
+			get
+			{
+				return !this.IsAlive;
 			}
 		}
 		
