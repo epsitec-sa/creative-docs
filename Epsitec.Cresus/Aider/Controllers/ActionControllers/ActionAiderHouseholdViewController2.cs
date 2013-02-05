@@ -19,11 +19,11 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (2)]
-	public sealed class ActionAiderHouseholdViewController2 : TemplateActionViewController<AiderHouseholdEntity, AiderContactEntity>
+	public sealed class ActionAiderHouseholdViewController2 : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Retirer un membre du ménage");
+			return Resources.FormattedText ("Retirer le membre sélectionné de ce ménage");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,9 +34,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var contact = this.AdditionalEntity;
 			var context = this.BusinessContext;
-			var person  = contact.Person;
+			
+			var person     = this.AdditionalEntity;
+			var houhsehold = this.Entity;
 
 			var example = new AiderContactEntity ()
 			{
@@ -45,6 +46,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			};
 
 			var results = context.DataContext.GetByExample (example);
+			var contact = results.FirstOrDefault (x => x.Household == houhsehold);
 
 			if (results.Count == 1)
 			{
@@ -53,7 +55,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
 			}
 
-			context.DeleteEntity (contact);
+			if (contact.IsNotNull ())
+			{
+				context.DeleteEntity (contact);
+			}
 		}
 
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
