@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un membre");
+			return Resources.FormattedText ("Ajouter un membre au ménage");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -39,13 +39,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			ActionAiderHouseholdViewController1.ValidatePerson (household, person);			
 			ActionAiderHouseholdViewController1.ValidateHouseholdComposition (household, person);
-			ActionAiderHouseholdViewController1.ValidatePersonAge (household, person);
+			ActionAiderHouseholdViewController1.ValidatePersonAge (household, person, isPersonHead);
 
 			AiderContactEntity.Create (this.BusinessContext, person, household, isPersonHead);
 		}
 
 
-		private static void ValidatePerson(AiderHouseholdEntity household, AiderPersonEntity person)
+		internal static void ValidatePerson(AiderHouseholdEntity household, AiderPersonEntity person)
 		{
 			if (person.IsNull ())
 			{
@@ -57,16 +57,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 		}
 
-		private static void ValidateHouseholdComposition(AiderHouseholdEntity household, AiderPersonEntity person)
+		internal static void ValidateHouseholdComposition(AiderHouseholdEntity household, AiderPersonEntity person)
 		{
 			if (household.Members.Contains (person))
 			{
 				Logic.BusinessRuleException (household, "La personne sélectionnée appartient déjà au ménage.");
 			}
 		}
-		
-		private static void ValidatePersonAge(AiderHouseholdEntity household, AiderPersonEntity person)
+
+		internal static void ValidatePersonAge(AiderHouseholdEntity household, AiderPersonEntity person, bool isPersonHead)
 		{
+			if (isPersonHead == false)
+			{
+				return;
+			}
+
 			var age = person.ComputeAge ();
 
 			if ((age.HasValue) &&
@@ -80,13 +85,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
 			form
-				.Title ("Ajouter un membre")
+				.Title ("Ajouter un membre au ménage")
+				.Text ("Sélectionnez dans la liste des contacts la personne à ajouter à ce ménage.")
 				.Field<AiderContactEntity> ()
 					.Title ("Nouveau membre")
 				.End ()
 				.Field<bool> ()
 					.Title ("Le nouveau membre est un chef du ménage")
-					.InitialValue (true)
+					.InitialValue (false)
 				.End ()
 			.End ();
 		}

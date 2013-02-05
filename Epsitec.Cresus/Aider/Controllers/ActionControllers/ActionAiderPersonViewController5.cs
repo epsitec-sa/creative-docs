@@ -5,6 +5,7 @@ using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
@@ -65,12 +66,27 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool move)
 		{
-			var person       = this.Entity;
+			var context = this.BusinessContext;
+			var person  = this.Entity;
+
+			if (move)
+			{
+				var example = new AiderContactEntity ()
+				{
+					Person = person,
+					ContactType = Enumerations.ContactType.PersonHousehold,
+				};
+
+				var results = context.DataContext.GetByExample (example);
+
+				results.ForEach (x => context.DeleteEntity (x));
+			}
+
 			var newContact   = this.BusinessContext.CreateAndRegisterEntity<AiderContactEntity> ();
 			var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
 
-			newContact.Person = person;
-			newContact.Household = newHousehold;
+			newContact.Person      = person;
+			newContact.Household   = newHousehold;
 			newContact.ContactType = Enumerations.ContactType.PersonHousehold;
 		}
 	}

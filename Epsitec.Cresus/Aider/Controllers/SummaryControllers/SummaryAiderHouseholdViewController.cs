@@ -15,7 +15,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.EnableAction (0)
-				.EnableAction (1);
+				.EnableAction (1)
+				.EnableAction (2);
 
 			wall.AddBrick (h => h.Address);
 
@@ -24,10 +25,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
+				.EnableAction (2)
 				.Template ()
-				.Icon ("Base.AiderPerson")
-				.Title ("Membres")
-				.Text (p => p.GetCompactSummary ());
+					.Icon ("Base.AiderPerson")
+					.Title ("Membres")
+					.Text (p => p.GetCompactSummary ())
+				.End ();
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
