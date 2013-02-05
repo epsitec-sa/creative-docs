@@ -229,6 +229,26 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void AddContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Add (contact);
+			this.ClearMemberCache ();			
+		}
+
+
+		public void RemoveContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Remove (contact);
+			this.ClearMemberCache ();
+		}
+
+
+		private void ClearMemberCache()
+		{
+			this.members = null;
+		}
+
+
 		// This property is only meant as an in memory cache of the members of the household. It
 		// will never be saved to the database.
 		private List<AiderContactEntity> contacts;

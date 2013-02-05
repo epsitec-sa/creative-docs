@@ -297,7 +297,7 @@ namespace Epsitec.Aider.Entities
 				.AsReadOnlyCollection ();
 		}
 
-		private IEnumerable<AiderHouseholdEntity> GetHouseholds()
+		private HashSet<AiderHouseholdEntity> GetHouseholds()
 		{
 			if (this.households == null)
 			{
@@ -310,7 +310,7 @@ namespace Epsitec.Aider.Entities
 			return this.households;
 		}
 
-		private IEnumerable<AiderContactEntity> GetContacts()
+		private HashSet<AiderContactEntity> GetContacts()
 		{
 			if (this.contacts == null)
 			{
@@ -335,7 +335,27 @@ namespace Epsitec.Aider.Entities
 			return this.contacts;
 		}
 
-		
+
+		public void AddContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Add (contact);
+			this.ClearHouseholdCache ();					
+		}
+
+
+		public void RemoveContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Remove (contact);
+			this.ClearHouseholdCache ();
+		}
+
+
+		private void ClearHouseholdCache()
+		{
+			this.households = null;
+		}
+
+
 		internal static string GetDisplayName(AiderPersonEntity person)
 		{
 			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);

@@ -104,6 +104,9 @@ namespace Epsitec.Aider.Entities
 			contact.Household     = household;
 			contact.HouseholdRole = role;
 
+			person.AddContactInternal (contact);
+			household.AddContactInternal (contact);
+
 			return contact;
 		}
 
@@ -114,6 +117,8 @@ namespace Epsitec.Aider.Entities
 			contact.Person      = person;
 			contact.Address     = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 			contact.AddressType = type;
+
+			person.AddContactInternal (contact);
 
 			return contact;
 		}
@@ -142,6 +147,18 @@ namespace Epsitec.Aider.Entities
 			if (contact.ContactType == ContactType.PersonAddress)
 			{
 				businessContext.DeleteEntity (contact.Address);
+			}
+
+			var person = contact.Person;
+			if (person.IsNotNull ())
+			{
+				person.RemoveContactInternal (contact);
+			}
+
+			var household = contact.Household;
+			if (household.IsNotNull ())
+			{
+				household.RemoveContactInternal (contact);
 			}
 
 			businessContext.DeleteEntity (contact);
