@@ -107,7 +107,7 @@ function() {
 
 
     deleteEntities: function(entityItems) {
-      if (this.creationViewId === null) {
+      if (this.deletionViewId === null) {
         this.deleteEntitiesWithoutView(entityItems);
       }
       else {
@@ -127,7 +127,7 @@ function() {
       viewMode = Epsitec.ViewMode.brickDeletion;
 
       Epsitec.EntityAction.showDialog(
-          viewMode, this.creationViewId, entityItem.id, null, callback
+          viewMode, this.deletionViewId, entityItem.id, null, callback
       );
     },
 
