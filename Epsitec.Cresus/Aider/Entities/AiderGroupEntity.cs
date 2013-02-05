@@ -317,26 +317,36 @@ namespace Epsitec.Aider.Entities
 
 		private int GetNbParticipants()
 		{
-			var businessContext = BusinessContextPool.GetCurrentContext (this);
-			var dataContext = businessContext.DataContext;
+			var dataContext = DataContextPool.GetDataContext (this);
 
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
+			if ((dataContext != null) &&
+				(dataContext.IsPersistent (this)))
+			{
+				var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
 
-			return dataContext.GetCount (request);
+				return dataContext.GetCount (request);
+			}
+
+			return 0;
 		}
 
 
 		private IEnumerable<AiderPersonEntity> GetParticipants(int count)
 		{
-			var businessContext = BusinessContextPool.GetCurrentContext (this);
-			var dataContext = businessContext.DataContext;
+			var dataContext = DataContextPool.GetDataContext (this);
 
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
-			
-			request.Skip = 0;
-			request.Take = count;
+			if ((dataContext != null) &&
+				(dataContext.IsPersistent (this)))
+			{
+				var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
 
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
+				request.Skip = 0;
+				request.Take = count;
+
+				return dataContext.GetByRequest<AiderPersonEntity> (request);
+			}
+
+			return Enumerable.Empty<AiderPersonEntity> ();
 		}
 
 

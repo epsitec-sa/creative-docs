@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Aider.Entities
@@ -205,10 +206,10 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.contacts == null)
 			{
-				var businessContext = BusinessContextPool.GetCurrentContext (this);
-				var dataContext = businessContext.DataContext;
+				var dataContext = DataContextPool.GetDataContext (this);
 
-				if (dataContext.IsPersistent (this))
+				if ((dataContext != null) &&
+					(dataContext.IsPersistent (this)))
 				{
 					this.contacts = new List<AiderContactEntity> ();
 

@@ -12,11 +12,10 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 
 using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
 
 
@@ -212,13 +211,17 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.groupList == null)
 			{
-				var dataContext = BusinessContextPool.GetCurrentContext (this).DataContext;
+				var dataContext = DataContextPool.GetDataContext (this);
 
-				var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
+				if ((dataContext != null) &&
+					(dataContext.IsPersistent (this)))
+				{
+					var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
 
-				this.groupList = dataContext
-					.GetByRequest<AiderGroupParticipantEntity> (request)
-					.AsReadOnlyCollection ();
+					this.groupList = dataContext
+						.GetByRequest<AiderGroupParticipantEntity> (request)
+						.AsReadOnlyCollection ();
+				}
 			}
 
 			value = this.groupList;
@@ -255,7 +258,12 @@ namespace Epsitec.Aider.Entities
 
 			if (value == null)
 			{
-				BusinessContextPool.GetCurrentContext (this).DeleteEntity (this.Parish.Group);
+				var dataContext = DataContextPool.GetDataContext (this);
+
+				if (dataContext != null)
+				{
+					dataContext.DeleteEntity (this.Parish.Group);
+				}
 			}
 			else
 			{
@@ -300,15 +308,16 @@ namespace Epsitec.Aider.Entities
 			{
 				this.contacts = new HashSet<AiderContactEntity> ();
 
-				var businessContext = BusinessContextPool.GetCurrentContext (this);
-				var dataContext     = businessContext.DataContext;
+				var dataContext = DataContextPool.GetDataContext (this);
 
-				if (dataContext.IsPersistent (this))
+				if ((dataContext != null) &&
+					(dataContext.IsPersistent (this)))
 				{
 					var example  = new AiderContactEntity ()
 					{
 						Person = this
 					};
+
 					var contacts = dataContext.GetByExample (example);
 
 					this.contacts.UnionWith (contacts);
