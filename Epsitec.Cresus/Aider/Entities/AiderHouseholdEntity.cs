@@ -206,13 +206,13 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.contacts == null)
 			{
+				this.contacts = new List<AiderContactEntity> ();
+
 				var dataContext = DataContextPool.GetDataContext (this);
 
 				if ((dataContext != null) &&
 					(dataContext.IsPersistent (this)))
 				{
-					this.contacts = new List<AiderContactEntity> ();
-
 					var example = new AiderContactEntity ()
 					{
 						Household = this,
