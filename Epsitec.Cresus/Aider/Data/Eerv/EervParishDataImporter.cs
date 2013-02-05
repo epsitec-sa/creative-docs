@@ -1268,12 +1268,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
 		{
-			var aiderContacts = aiderPersonKeys
+			var aiderPersons = aiderPersonKeys
 				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
-				.SelectMany (p => p.Contacts)
 				.ToList ();
 
-			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderContacts);
+			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
 		}
 
 

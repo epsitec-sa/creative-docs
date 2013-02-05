@@ -27,9 +27,21 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderContactEntity>> action)
 		{
+			AiderEnumerator.Execute (coreDataManager, AiderEnumerator.GetContactBatch, action);
+		}
+
+
+		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
+		{
+			AiderEnumerator.Execute (coreDataManager, AiderEnumerator.GetPersonBatch, action);
+		}
+
+
+		private static void Execute<T>(CoreDataManager coreDataManager, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
+		{
 			const int size = 1000;
 
-			for (int i = 0; ;i += size)
+			for (int i = 0; ; i += size)
 			{
 				int skip = i;
 
@@ -37,7 +49,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				coreDataManager.Execute (b =>
 				{
-					var batch = AiderEnumerator.GetBatch (b.DataContext, skip, size);
+					var batch = batchGetter (b.DataContext, skip, size);
 
 					if (batch.Any ())
 					{
@@ -46,7 +58,7 @@ namespace Epsitec.Aider.Data.Eerv
 					else
 					{
 						done = true;
-					}			
+					}
 				});
 
 				if (done)
@@ -57,7 +69,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IList<AiderContactEntity> GetBatch(DataContext dataContext, int skip, int take)
+		private static IList<AiderContactEntity> GetContactBatch(DataContext dataContext, int skip, int take)
 		{
 			var aiderContact = new AiderContactEntity ();
 
@@ -84,6 +96,32 @@ namespace Epsitec.Aider.Data.Eerv
 			});
 
 			return aiderContacts;
+		}
+
+
+		private static IList<AiderPersonEntity> GetPersonBatch(DataContext dataContext, int skip, int take)
+		{
+			var aiderPerson = new AiderPersonEntity ();
+
+			var request = new Request ()
+			{
+				RootEntity = aiderPerson,
+				Skip = skip,
+				Take = take,
+			};
+
+			request.AddSortClause (InternalField.CreateId (aiderPerson));
+
+			var aiderPersons = dataContext.GetByRequest<AiderPersonEntity> (request);
+
+			dataContext.LoadRelatedData (aiderPersons, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.eCH_Person),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Parish),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.Parish.Group),
+			});
+
+			return aiderPersons;
 		}
 	}
 
