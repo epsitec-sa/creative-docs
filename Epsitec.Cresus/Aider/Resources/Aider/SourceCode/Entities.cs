@@ -5165,9 +5165,33 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>SystemText</c> field.
+		///	designer:fld/LVA78/LVA1F
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA1F]")]
+		public string SystemText
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA1F]");
+			}
+			set
+			{
+				string oldValue = this.SystemText;
+				if (oldValue != value || !this.IsFieldDefined("[LVA1F]"))
+				{
+					this.OnSystemTextChanging (oldValue, value);
+					this.SetField<string> ("[LVA1F]", oldValue, value);
+					this.OnSystemTextChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnSystemTextChanging(string oldValue, string newValue);
+		partial void OnSystemTextChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

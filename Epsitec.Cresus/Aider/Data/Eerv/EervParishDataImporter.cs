@@ -362,7 +362,7 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var text = "Téléphone invalide ou non reconnu par le système : " + phoneNumber;
 
-					EervParishDataImporter.CombineComments (address, text);
+					EervParishDataImporter.CombineSystemComments (address, text);
 				}
 			}
 		}
@@ -386,6 +386,26 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			comment.Text = combinedText;
+		}
+
+		private static void CombineSystemComments(IComment entity, string text)
+		{
+			// With the null reference virtualizer, we don't need to handle explicitely the case
+			// when there is no comment defined yet.
+
+			var comment = entity.Comment;
+			var combinedText = string.Concat (comment.SystemText ?? "", "\n\n", text).Trim ();
+
+			// HACK This is a temporary hack to avoid texts with 800 or more chars with are not
+			// allowed in this field. The type of the field should be corrected to allow texts of
+			// unlimited size.
+
+			if (combinedText.Length >= 800)
+			{
+				return;
+			}
+
+			comment.SystemText = combinedText;
 		}
 
 
@@ -430,10 +450,10 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			else
 			{
-				text = "Personne crée à partir de la personne " + eervPerson.Id + " de la paroisse de " + parishName + ", sans correspondance dans le fichier ECH.";
+				text = "Personne créée à partir de la personne " + eervPerson.Id + " de la paroisse de " + parishName + ", sans correspondance dans le fichier ECH.";
 			}
 
-			EervParishDataImporter.CombineComments (aiderPerson, text);
+			EervParishDataImporter.CombineSystemComments (aiderPerson, text);
 		}
 
 
@@ -1048,7 +1068,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					var text = "Numéro de téléphone supplémentaire: " + privatePhoneNumber;
+					var text = "Tél. supplémentaire: " + privatePhoneNumber;
 
 					EervParishDataImporter.CombineComments (address, text);
 				}
@@ -1058,7 +1078,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!string.IsNullOrWhiteSpace (professionalPhoneNumber))
 			{
-				var text = "Numéro de téléphone professionel: " + professionalPhoneNumber;
+				var text = "Tél. professionel: " + professionalPhoneNumber;
 
 				EervParishDataImporter.CombineComments (address, text);
 			}
@@ -1073,7 +1093,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					var text = "Numéro de fax supplémentaire: " + faxNumber;
+					var text = "Fax supplémentaire: " + faxNumber;
 
 					EervParishDataImporter.CombineComments (address, text);
 				}
@@ -1089,7 +1109,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					var text = "Numéro de téléphone portable supplémentaire: " + mobilePhoneNumber;
+					var text = "Mobile supplémentaire: " + mobilePhoneNumber;
 
 					EervParishDataImporter.CombineComments (address, text);
 				}
@@ -1105,7 +1125,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					var text = "Addresse email supplémentaire: " + mobilePhoneNumber;
+					var text = "E-mail supplémentaire: " + mobilePhoneNumber;
 
 					EervParishDataImporter.CombineComments (address, text);
 				}
@@ -1152,7 +1172,7 @@ namespace Epsitec.Aider.Data.Eerv
 			EervParishDataImporter.ImportEervLegalPersonPerson (businessContext, aiderContact, legalPerson);
 
 			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
-			EervParishDataImporter.CombineComments (aiderLegalPerson, comment);
+			EervParishDataImporter.CombineSystemComments (aiderLegalPerson, comment);
 		}
 
 

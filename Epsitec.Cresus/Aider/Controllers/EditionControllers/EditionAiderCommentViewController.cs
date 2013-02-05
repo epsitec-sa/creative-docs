@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
@@ -15,6 +15,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Text)
+					.Field (x => x.SystemText).ReadOnly ()
 				.End ();
 		}
 	}
