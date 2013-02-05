@@ -73,6 +73,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
+					.EnableAction (7)
 					.Template ()
 					.End ()
 					.Attribute (BrickMode.DefaultToSummarySubView);

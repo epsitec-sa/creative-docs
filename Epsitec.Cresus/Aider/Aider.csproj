@@ -67,6 +67,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController4.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController5.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController2.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />

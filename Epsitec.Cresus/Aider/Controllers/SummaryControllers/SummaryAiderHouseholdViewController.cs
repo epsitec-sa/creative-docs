@@ -15,8 +15,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.EnableAction (0)
-				.EnableAction (1)
-				.EnableAction (2);
+				.EnableAction (1);
 
 			wall.AddBrick (h => h.Address);
 

@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			form
 				.Title ("Supprimer l'adresse alternative ?")
-				.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment supprimer l'adresse alternative suivante:\n \n", this.AdditionalEntity.Address.GetSummary ()))
+					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment supprimer l'adresse alternative suivante:\n \n", this.AdditionalEntity.Address.GetSummary ()))
 				.End ();
 		}
 	}

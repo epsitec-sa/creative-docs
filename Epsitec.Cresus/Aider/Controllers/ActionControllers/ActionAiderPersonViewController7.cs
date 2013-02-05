@@ -7,8 +7,6 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
-
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
@@ -18,12 +16,12 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (2)]
-	public sealed class ActionAiderHouseholdViewController2 : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
+	[ControllerSubType (7)]
+	public sealed class ActionAiderPersonViewController7 : TemplateActionViewController<AiderPersonEntity, AiderHouseholdEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Retirer le membre sélectionné de ce ménage");
+			return Resources.Text ("Retirer le ménage sélectionné");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -40,9 +38,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var context = this.BusinessContext;
-			
-			var person    = this.AdditionalEntity;
-			var household = this.Entity;
+
+			var person    = this.Entity;
+			var household = this.AdditionalEntity;
 			var contacts  = person.Contacts;
 			var contact   = contacts.FirstOrDefault (x => x.Household == household);
 
@@ -62,33 +60,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 		}
 
-		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
+		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-			var person = this.AdditionalEntity;
-			var households = person.Households;
-			int count = households.Count - 1;
-
-			FormattedText message;
-
-			if (count == 0)
-			{
-				message = TextFormatter.FormatText (
-					"Souhaitez-vous vraiment retirer", person.CallName, person.eCH_Person.PersonOfficialName, "de ce ménage ?",
-					"\n \n",
-					"La personne sera déplacée dans un nouveau ménage vide.");
-			}
-			else
-			{
-				var variable = count > 1 ? "de plusieurs ménages." : "d'un ménage.";
-				message = TextFormatter.FormatText (
-					"Souhaitez-vous vraiment retirer", person.CallName, person.eCH_Person.PersonOfficialName, "de ce ménage ?",
-					"\n \n",
-					"La personne fera encore partie", variable);
-			}
-			
 			form
-				.Title ("Retirer le membre du ménage ?")
-				.Text (message)
+				.Title ("Retirer le ménage sélectionné ?")
+					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le ménage", this.AdditionalEntity.DisplayName, "associé à cette personne ?"))
 				.End ();
 		}
 	}
