@@ -38,20 +38,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			
 			var person     = this.AdditionalEntity;
 			var houhsehold = this.Entity;
+			var contacts   = person.Contacts;
+			var contact    = contacts.FirstOrDefault (x => x.Household == houhsehold);
 
-			var example = new AiderContactEntity ()
-			{
-				Person      = person,
-				ContactType = Enumerations.ContactType.PersonHousehold,
-			};
-
-			var results = context.DataContext.GetByExample (example);
-			var contact = results.FirstOrDefault (x => x.Household == houhsehold);
-
-			if (results.Count == 1)
+			if (contacts.Count == 1)
 			{
 				var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-
 				AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
 			}
 
@@ -63,9 +55,31 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
+			var person = this.AdditionalEntity;
+			var households = person.Households;
+			int count = households.Count - 1;
+
+			FormattedText message;
+
+			if (count == 0)
+			{
+				message = TextFormatter.FormatText (
+					"Souhaitez-vous vraiment retirer", person.CallName, person.eCH_Person.PersonOfficialName, "de ce ménage ?",
+					"\n \n",
+					"La personne sera déplacée dans un nouveau ménage vide.");
+			}
+			else
+			{
+				var variable = count > 1 ? "de plusieurs ménages." : "d'un ménage.";
+				message = TextFormatter.FormatText (
+					"Souhaitez-vous vraiment retirer", person.CallName, person.eCH_Person.PersonOfficialName, "de ce ménage ?",
+					"\n \n",
+					"La personne fera encore partie", variable);
+			}
+			
 			form
 				.Title ("Retirer le membre du ménage ?")
-				.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le membre suivant de ce ménage:\n \n", this.AdditionalEntity.GetSummary ()))
+				.Text (message)
 				.End ();
 		}
 
