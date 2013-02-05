@@ -129,6 +129,28 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderPersonEntity person, string path)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Person = person,
+				Group = new AiderGroupEntity ()
+				{
+					Path = path
+				},
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = example
+			};
+
+			AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, example);
+
+			return request;
+		}
+
+
 		public static void AddCurrentCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation)
 		{
 			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);

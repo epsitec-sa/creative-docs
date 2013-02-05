@@ -47,6 +47,18 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		/// <remarks>
+		/// The same remarks as the function above apply here.
+		/// </remarks>
+		public static void AssignToParish(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var parishRepository = ParishAddressRepository.Current;
+			var parishNameToGroups = new Dictionary<string, AiderGroupEntity> ();
+
+			ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person);
+		}
+
+
 		private static void AssignToParish(BusinessContext businessContext, ParishAddressRepository parishRepository,
 			Dictionary<string, AiderGroupEntity> parishNameToGroups, AiderPersonEntity person)
 		{
@@ -166,6 +178,18 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			parishGroup.AddParticipant (businessContext, person, null, null, null);
+		}
+
+
+		public static bool IsInNoParishGroup(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, person, AiderGroupIds.NoParish);
+
+			request.Take = 1;
+
+			return dataContext.GetByRequest (request).Any ();
 		}
 
 

@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Data;
+using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -173,20 +174,27 @@ namespace Epsitec.Aider.Rules
 
 			Logic.BusinessRuleException (person, Resources.Text ("Vérifiez l'appellation: elle ne correspond pas au sexe de la personne."));
 		}
-		
+
 		private void VerifyParish(AiderPersonEntity person)
 		{
 			if (person.Parish.IsNull ())
 			{
-				return;
+				this.AssignParish (person);
 			}
+			else
+			{
+				this.CheckCurrentParish (person);
+			}
+		}
 
+		private void CheckCurrentParish(AiderPersonEntity person)
+		{
 			var businessContext = this.GetBusinessContext ();
 
 			if (person.Parish.Group.GroupDef.PathTemplate != AiderGroupIds.Parish)
 			{
 				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
-				
+
 				return;
 			}
 
@@ -227,6 +235,27 @@ namespace Epsitec.Aider.Rules
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}
+		}
+
+		private void AssignParish(AiderPersonEntity person)
+		{
+			// This will mess things up during the importation because
+			// 1) During ECH importation, obviously we can't assign persons to parishes because the
+			//    parishes don't exist yet.
+			// 2) During EERV parish importation because we don't sync the in memory cache of groups
+			//    and we should do so in order to use the groups in the BusinessRules.
+			// But for the demo of 06.02.2013, we don't need importation so at leas the functionnality
+			// will be ok for that. But do not forget to comment this function if you try to make an
+			// importation.
+			
+			var businessContext = this.GetBusinessContext ();
+
+			if (businessContext.DataContext.IsPersistent (person) && ParishAssigner.IsInNoParishGroup (businessContext, person))
+			{
+				return;
+			}
+
+			ParishAssigner.AssignToParish (businessContext, person);
 		}
 	}
 }
