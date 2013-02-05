@@ -26,7 +26,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Person)
 						.ReadOnly ()
+					// This field has been made readonly because this functionnality is not yet
+					// fully implemented and we dont' want the users to mess up this data.
 					.Field (x => x.Comment.Text)
+						.ReadOnly ()
 				.End ();
 		}
 	}

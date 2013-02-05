@@ -18,6 +18,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick (x => x.Subgroups)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
+				// These two attributes have been added because this functionnality is not yet fully
+				// implemented and we dont' want the users to mess up this data.
+				.Attribute (BrickMode.HideAddButton)
+				.Attribute (BrickMode.HideRemoveButton)
 				.Template ()
 					.Title ("Sous groupes")
 				.End ();

@@ -22,8 +22,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableAction (2)
-				.EnableAction (3)
+				// These two actions have been disabled because this functionnality is not yet fully
+				// implemented and we dont' want the users to mess up this data.
+				//.EnableAction (2)
+				//.EnableAction (3)
 				.Template ()
 					.Text (g => g.GetSummaryWithGroupName ())
 				.End ();
