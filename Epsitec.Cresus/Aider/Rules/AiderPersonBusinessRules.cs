@@ -129,6 +129,7 @@ namespace Epsitec.Aider.Rules
 			if ((eCH.IsNull ()) ||
 				(eCH.PersonSex == PersonSex.Unknown))
 			{
+				Logic.BusinessRuleException (person, Resources.Text ("Cette personne n'a pas de sexe défini."));
 				return;
 			}
 
