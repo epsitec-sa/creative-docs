@@ -82,12 +82,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				results.ForEach (x => context.DeleteEntity (x));
 			}
 
-			var newContact   = this.BusinessContext.CreateAndRegisterEntity<AiderContactEntity> ();
 			var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
 
-			newContact.Person      = person;
-			newContact.Household   = newHousehold;
-			newContact.ContactType = Enumerations.ContactType.PersonHousehold;
+			AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
 		}
 	}
 }

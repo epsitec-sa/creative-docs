@@ -982,10 +982,10 @@ namespace Epsitec.Aider.Data.Eerv
 			
 			foreach (var contact in secondaryHouseholdContacts)
 			{
-				contact.Household = mainHousehold;
-				contact.HouseholdRole = HouseholdRole.None;
+				var newContact = AiderContactEntity.Create (businessContext, contact.Person, mainHousehold, false);
+				mainHouseholdContacts.Add (newContact);
 
-				mainHouseholdContacts.Add (contact);
+				businessContext.DeleteEntity (contact);
 			}
 
 			aiderHouseholdToContacts.Remove (secondaryHousehold);
