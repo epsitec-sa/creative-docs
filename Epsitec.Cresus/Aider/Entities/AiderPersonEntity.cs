@@ -321,7 +321,7 @@ namespace Epsitec.Aider.Entities
 				if ((dataContext != null) &&
 					(dataContext.IsPersistent (this)))
 				{
-					var example  = new AiderContactEntity ()
+					var example = new AiderContactEntity ()
 					{
 						Person = this
 					};
