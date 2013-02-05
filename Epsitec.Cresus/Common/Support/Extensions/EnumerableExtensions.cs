@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -266,7 +266,6 @@ namespace Epsitec.Common.Support.Extensions
 			return sequence.ToList ().AsReadOnly ();
 		}
 
-
 		public static HashSet<T> ToSet<T>(this IEnumerable<T> sequence)
 		{
 			sequence.ThrowIfNull ("sequence");
@@ -274,10 +273,40 @@ namespace Epsitec.Common.Support.Extensions
 			return new HashSet<T> (sequence);
 		}
 
-
 		public static IEnumerable<T> ToEnumerable<T>(this T item)
 		{
 			yield return item;
+		}
+
+		public static IEnumerable<System.Tuple<T1, T2>> CombineToTuples<T1, T2>(this IEnumerable<T1> s1, IEnumerable<T2> s2)
+		{
+			var e1 = s1.GetEnumerator ();
+			var e2 = s2.GetEnumerator ();
+
+			while (true)
+			{
+				T1 v1 = default (T1);
+				T2 v2 = default (T2);
+				
+				bool ok1 = e1.MoveNext ();
+				bool ok2 = e2.MoveNext ();
+
+				if (ok1)
+				{
+					v1 = e1.Current;
+				}
+				if (ok2)
+				{
+					v2 = e2.Current;
+				}
+
+				if ((ok1 == false) && (ok2 == false))
+				{
+					break;
+				}
+
+				yield return new System.Tuple<T1, T2> (v1, v2);
+			}
 		}
 
 

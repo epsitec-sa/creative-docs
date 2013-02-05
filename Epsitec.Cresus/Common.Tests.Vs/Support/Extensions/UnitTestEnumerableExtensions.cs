@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.UnitTesting;
 
@@ -11,15 +14,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Tests.Vs.Support.Extensions
 {
-
-
 	[TestClass]
 	public sealed  class UnitTestEnumerableExtensions
 	{
-
-
 		[TestMethod]
-		public void IndexOfArgumentCheck()
+		public void TestIndexOfArgument()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -34,7 +33,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void IndexOfTest()
+		public void TestIndexOf()
 		{
 			List<int> sequence = Enumerable.Range (0, 100).Shuffle ().ToList ();
 
@@ -49,7 +48,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void AppendArgumentCheck()
+		public void TestAppendArgument()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -64,7 +63,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void AppendTest()
+		public void TestAppend()
 		{
 			Assert.IsTrue (Enumerable.Range (0, 11).SequenceEqual (Enumerable.Range (0, 10).Append (10)));
 			Assert.IsTrue (Enumerable.Range (0, 10).SequenceEqual (Enumerable.Range (0, 5).Append (5).Concat (Enumerable.Range (6, 4))));
@@ -75,7 +74,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void ShuffleArgumentCheck()
+		public void TestShuffleArgument()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -85,7 +84,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void ShuffleTest()
+		public void TestShuffle()
 		{
 			List<int> sequence = Enumerable.Range (0, 100).ToList ();
 
@@ -101,7 +100,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void ShuffleDistributionTest()
+		public void TestShuffleDistribution()
 		{
 			int sequenceLength = 100;
 			int nbSequences = 10000;
@@ -135,7 +134,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void SetEqualsArgumentCheck()
+		public void TestSetEqualsArgument()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -150,7 +149,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void SetEqualsTest()
+		public void TestSetEquals()
 		{
 			Assert.IsTrue (new List<int> ().SetEquals (new List<int> ()));
 
@@ -172,7 +171,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void SplitArgumentCheck()
+		public void TestSplitArgument()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -187,7 +186,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void SplitTest()
+		public void TestSplit()
 		{
 			var result1 = Enumerable.Range (0, 10).Split (i => i < 5);
 
@@ -212,7 +211,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void AsReadOnlyCollectionArgumentCheck()
+		public void TestAsReadOnlyCollectionArgument()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
@@ -222,7 +221,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 
 		[TestMethod]
-		public void AsReadOnlyCollectionTest()
+		public void TestAsReadOnlyCollection()
 		{
 			for (int i = 0; i < 25; i++)
 			{
@@ -235,7 +234,17 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 
+		[TestMethod]
+		public void TestCombineToTuples()
+		{
+			string[] a = new string[] { "A", "B", "C" };
+			int[]    b = new int[] { 1, 2 };
+
+			var r1 = a.CombineToTuples (b).Select (x => x.Item1 + "." + x.Item2.ToString (System.Globalization.CultureInfo.InvariantCulture)).ToArray ();
+			var r2 = b.CombineToTuples (a).Select (x => x.Item2 + "." + x.Item1.ToString (System.Globalization.CultureInfo.InvariantCulture)).ToArray ();
+
+			Assert.AreEqual ("A.1 B.2 C.0", string.Join (" ", r1));
+			Assert.AreEqual ("A.1 B.2 C.0", string.Join (" ", r2));
+		}
 	}
-
-
 }
