@@ -66,5 +66,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le membre suivant de ce ménage:\n \n", this.AdditionalEntity.GetSummary ()))
 				.End ();
 		}
+
+		public override bool RequiresAdditionalEntity()
+		{
+			return true;
+		}
 	}
 }
