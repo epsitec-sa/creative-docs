@@ -55,6 +55,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne décédée à un ménage."));
 			}
+			var sex = person.eCH_Person.PersonSex;
+
+			if ((sex != Enumerations.PersonSex.Female) &&
+				(sex != Enumerations.PersonSex.Male))
+			{
+				Logic.BusinessRuleException (household, Resources.Text ("Il n'est pas possible d'associer une personne sans sexe connu à un ménage."));
+			}
 		}
 
 		internal static void ValidateHouseholdComposition(AiderHouseholdEntity household, AiderPersonEntity person)
