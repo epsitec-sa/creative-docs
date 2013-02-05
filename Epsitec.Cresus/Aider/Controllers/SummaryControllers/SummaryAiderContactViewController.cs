@@ -92,7 +92,25 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 
 				case Enumerations.ContactType.Legal:
-					//	TODO: ...
+					if (contact.LegalPerson.IsNotNull ())
+					{
+						wall.AddBrick (x => x.LegalPerson);
+					}
+					if (contact.Person.IsNotNull ())
+					{
+						wall.AddBrick (x => x.Person)
+							.Icon (contact.Person.GetIconName ("Data"))
+							.Text (contactSummary)
+							.Attribute (BrickMode.DefaultToSummarySubView);
+					}
+					if (contact.Address.IsNotNull ())
+					{
+						wall.AddBrick ()
+							.Title (TextFormatter.FormatText (contact.AddressType))
+							.Text (contact.Address.GetSummary ())
+							.Icon ("Data.AiderAddress")
+							.Attribute (BrickMode.SpecialController1);
+					}
 					break;
 				
 				default:

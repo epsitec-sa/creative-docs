@@ -69,8 +69,11 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderPersonViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController2.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
+    <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\Helpers\AiderGroupSubGroupList.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
@@ -120,6 +123,7 @@
     <Compile Include="Entities\Helpers\VirtualEventList.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
+    <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
     <Compile Include="Rules\AiderUserBusinessRules.cs" />
     <Compile Include="Tests\TestPostMatch.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />

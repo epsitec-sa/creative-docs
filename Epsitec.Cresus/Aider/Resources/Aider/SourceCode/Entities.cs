@@ -771,28 +771,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>MainAddress</c> field.
-		///	designer:fld/LVAF/LVAM4
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAM4]")]
-		public global::Epsitec.Aider.Entities.AiderAddressEntity MainAddress
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAM4]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.MainAddress;
-				if (oldValue != value || !this.IsFieldDefined("[LVAM4]"))
-				{
-					this.OnMainAddressChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAM4]", oldValue, value);
-					this.OnMainAddressChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Confession</c> field.
 		///	designer:fld/LVAF/LVAI5
 		///	</summary>
@@ -1141,8 +1119,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnLanguageChanging(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
 		partial void OnLanguageChanged(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
-		partial void OnMainAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnMainAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnConfessionChanging(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnVisibilityChanging(global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonVisibilityStatus newValue);
@@ -1699,6 +1675,50 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DisplayAddress</c> field.
+		///	designer:fld/LVAI2/LVA5F
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5F]")]
+		public string DisplayAddress
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA5F]");
+			}
+			set
+			{
+				string oldValue = this.DisplayAddress;
+				if (oldValue != value || !this.IsFieldDefined("[LVA5F]"))
+				{
+					this.OnDisplayAddressChanging (oldValue, value);
+					this.SetField<string> ("[LVA5F]", oldValue, value);
+					this.OnDisplayAddressChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayZipCode</c> field.
+		///	designer:fld/LVAI2/LVA6F
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA6F]")]
+		public string DisplayZipCode
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA6F]");
+			}
+			set
+			{
+				string oldValue = this.DisplayZipCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVA6F]"))
+				{
+					this.OnDisplayZipCodeChanging (oldValue, value);
+					this.SetField<string> ("[LVA6F]", oldValue, value);
+					this.OnDisplayZipCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Address</c> field.
 		///	designer:fld/LVAI2/LVAT2
 		///	</summary>
@@ -1741,6 +1761,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnHouseholdNameChanged(string oldValue, string newValue);
 		partial void OnDisplayNameChanging(string oldValue, string newValue);
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
+		partial void OnDisplayAddressChanging(string oldValue, string newValue);
+		partial void OnDisplayAddressChanged(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		
@@ -4155,6 +4179,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Visibility</c> field.
+		///	designer:fld/LVAR6/LVA2F
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA2F]")]
+		public global::Epsitec.Aider.Enumerations.PersonVisibilityStatus Visibility
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.PersonVisibilityStatus> ("[LVA2F]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue = this.Visibility;
+				if (oldValue != value || !this.IsFieldDefined("[LVA2F]"))
+				{
+					this.OnVisibilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.PersonVisibilityStatus> ("[LVA2F]", oldValue, value);
+					this.OnVisibilityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Language</c> field.
 		///	designer:fld/LVAR6/LVAN7
 		///	</summary>
@@ -4176,28 +4222,6 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>Address</c> field.
-		///	designer:fld/LVAR6/LVAT6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT6]")]
-		public global::Epsitec.Aider.Entities.AiderAddressEntity Address
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAT6]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderAddressEntity oldValue = this.Address;
-				if (oldValue != value || !this.IsFieldDefined("[LVAT6]"))
-				{
-					this.OnAddressChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderAddressEntity> ("[LVAT6]", oldValue, value);
-					this.OnAddressChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.LegalPersonType oldValue, global::Epsitec.Aider.Enumerations.LegalPersonType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.LegalPersonType oldValue, global::Epsitec.Aider.Enumerations.LegalPersonType newValue);
@@ -4205,10 +4229,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnRemovalReasonChanging(global::Epsitec.Aider.Enumerations.RemovalReason oldValue, global::Epsitec.Aider.Enumerations.RemovalReason newValue);
 		partial void OnRemovalReasonChanged(global::Epsitec.Aider.Enumerations.RemovalReason oldValue, global::Epsitec.Aider.Enumerations.RemovalReason newValue);
+		partial void OnVisibilityChanging(global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonVisibilityStatus newValue);
+		partial void OnVisibilityChanged(global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonVisibilityStatus newValue);
 		partial void OnLanguageChanging(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
 		partial void OnLanguageChanged(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
-		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

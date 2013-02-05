@@ -36,6 +36,10 @@ namespace Epsitec.Aider.Entities
 			{
 				this.RefreshDisplayName ();
 			}
+			else if (this.LegalPerson.IsNotNull ())
+			{
+				this.DisplayName = this.LegalPerson.Name;
+			}
 			else
 			{
 				this.DisplayName = "—";
