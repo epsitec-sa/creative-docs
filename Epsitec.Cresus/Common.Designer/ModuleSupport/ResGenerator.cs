@@ -1,9 +1,8 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.CodeGeneration;
-using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +100,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			this.formatter.WriteCodeLine ();
 
 			this.formatter.WriteBeginMethod (CodeHelper.PublicStaticMethodAttributes, "void Initialize()");
-			this.formatter.WriteCodeLine ("System.Object.Equals (Res._manager, null);");
+			this.formatter.WriteCodeLine ("global::System.Object.Equals (Res._manager, null);");
 			this.formatter.WriteEndMethod ();
 			this.formatter.WriteCodeLine ();
 
@@ -232,7 +231,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 
 			this.formatter.WriteBeginMethod (CodeHelper.InternalStaticMethodAttributes, "void _Initialize()");
-			this.formatter.WriteCodeLine ("System.Object.Equals (" + field + ", null);");
+			this.formatter.WriteCodeLine ("global::System.Object.Equals (" + field + ", null);");
 
 			this.formatter.WriteEndMethod ();
 			this.formatter.WriteCodeLine ();
