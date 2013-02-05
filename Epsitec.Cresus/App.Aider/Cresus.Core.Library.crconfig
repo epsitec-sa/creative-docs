@@ -48,20 +48,12 @@ AiderFunctionDef = [LVA7A]
 	<disp m="Visible" />
       </col>
     </t>
-#    <t eid="@AiderPerson" n="default">
-#      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
-#	<sort o="None" />
-#	<disp m="Visible" />
-#      </col>
-#      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAL4].[LVAT2].[LVA55].[LVA95]" title="Localité" canSort="True" canFilter="True">
-#	<sort o="None" />
-#	<disp m="Visible" />
-#      </col>
-#      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVADB].[LVA84].[LVAA4]" title="Paroisse" canSort="False" canFilter="False">
-#	<sort o="None" />
-#	<disp m="Visible" />
-#      </col>
-#    </t>
+    <t eid="@AiderPerson" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+    </t>
     <t eid="@AiderGroup" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
@@ -168,10 +160,9 @@ AiderFunctionDef = [LVA7A]
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
-#    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="true" ed="true" cvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="true" ed="true" df="true" dg="@submenuMisc"><R><r>@user</r></R></d>
-#    <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
