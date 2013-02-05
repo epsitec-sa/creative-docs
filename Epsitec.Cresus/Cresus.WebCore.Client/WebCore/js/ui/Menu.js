@@ -133,24 +133,30 @@ function() {
     },
 
     createToolsGroup: function() {
-      var aboutButton, logoutButton;
+      var buttons = [];
 
-      aboutButton = this.createButton({
-        text: Epsitec.Texts.getAboutLabel(),
-        handler: this.aboutButtonHandler,
-        iconCls: 'epsitec-cresus-core-images-data-feedback-icon32'
-      });
+      // For now the about page is stupid and does not have any information
+      // worth that we display the button. So we simply do not display the
+      // button to open it.
+      // Just uncomment this code when the page is more interesting and you want
+      // to enable it again.
 
-      logoutButton = this.createButton({
+      //buttons.push(this.createButton({
+      //  text: Epsitec.Texts.getAboutLabel(),
+      //  handler: this.aboutButtonHandler,
+      //  iconCls: 'epsitec-cresus-core-images-data-feedback-icon32'
+      //}));
+
+      buttons.push(this.createButton({
         text: Epsitec.Texts.getLogoutLabel(),
         handler: this.logoutButtonHandler,
         iconCls: 'epsitec-cresus-core-images-action-logout-icon32'
-      });
+      }));
 
       return Ext.create('Ext.container.ButtonGroup', {
         title: Epsitec.Texts.getToolsTitle(),
         headerPosition: 'bottom',
-        items: [aboutButton, logoutButton]
+        items: buttons
       });
     },
 
