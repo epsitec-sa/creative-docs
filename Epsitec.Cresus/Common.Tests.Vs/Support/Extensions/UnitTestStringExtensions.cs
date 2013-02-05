@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -15,7 +15,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 	public class UnitTestStringExtensions
 	{
 		[TestMethod]
-		public void IsAlphaNumericTest()
+		public void CheckIsAlphaNumeric()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.IsAlphaNumeric (null));
 			
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void ContainsAtPositionTest()
+		public void CheckContainsAtPosition()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.ContainsAtPosition (null, "", 0));
 			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.ContainsAtPosition ("x", null, 0));
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void SplitTest()
+		public void CheckSplit()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.Split (null, ";"));
 			ExceptionAssert.Throw<System.ArgumentException> (() => StringExtensions.Split ("a", null));
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void ContainsAnyWordsTest()
+		public void CheckContainsAnyWords()
 		{
 			Assert.IsTrue ("case postale 123".ContainsAnyWords ("cp", "case postale"));
 			Assert.IsTrue ("ma case postale 123".ContainsAnyWords ("cp", "case postale"));
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void TruncateTest()
+		public void CheckTruncate()
 		{
 			string nullString = null;
 
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void TruncateAndAddEllipsisTest()
+		public void CheckTruncateAndAddEllipsis()
 		{
 			string nullString = null;
 
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void JoinTest()
+		public void CheckJoin()
 		{
 			Assert.AreEqual ("abc", new List<string> () { "a", "b", "c" }.Join (""));
 			Assert.AreEqual ("a b c", new List<string> () { "a", "b", "c"  }.Join (" "));
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void CountOccurencesTest()
+		public void CheckCountOccurences()
 		{
 			Assert.AreEqual (1, "a".CountOccurences ("a"));
 			Assert.AreEqual (0, "b".CountOccurences ("a"));
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
-		public void IsAllUpperCaseTest()
+		public void CheckIsAllUpperCase()
 		{
 			Assert.IsTrue ("".IsAllUpperCase ());
 			Assert.IsTrue ("A".IsAllUpperCase ());
@@ -160,6 +160,27 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			Assert.IsFalse ("a".IsAllUpperCase ());
 			Assert.IsFalse ("A-b".IsAllUpperCase ());
 			Assert.IsFalse ("b!A".IsAllUpperCase ());
+		}
+
+		[TestMethod]
+		public void CheckTrimSpacesAndDashes()
+		{
+			Assert.AreEqual ("abc", "abc".TrimSpacesAndDashes ());
+			Assert.AreEqual ("abc", " abc ".TrimSpacesAndDashes ());
+			Assert.AreEqual ("abc", "  abc  ".TrimSpacesAndDashes ());
+			Assert.AreEqual ("abc", "-abc-".TrimSpacesAndDashes ());
+			Assert.AreEqual ("abc", "--abc--".TrimSpacesAndDashes ());
+			Assert.AreEqual ("abc", "- - abc - -".TrimSpacesAndDashes ());
+			Assert.AreEqual ("abc", " - - abc - - ".TrimSpacesAndDashes ());
+			Assert.AreEqual ("a-b", "a-b".TrimSpacesAndDashes ());
+			Assert.AreEqual ("a-b", "a- b".TrimSpacesAndDashes ());
+			Assert.AreEqual ("a-b", "a -b".TrimSpacesAndDashes ());
+			Assert.AreEqual ("a-b", "a - b".TrimSpacesAndDashes ());
+			Assert.AreEqual ("a-b", "a---b".TrimSpacesAndDashes ());
+			Assert.AreEqual ("", "".TrimSpacesAndDashes ());
+			Assert.AreEqual ("", " ".TrimSpacesAndDashes ());
+			Assert.AreEqual ("", "-".TrimSpacesAndDashes ());
+			Assert.AreEqual ("", " - - - ".TrimSpacesAndDashes ());
 		}
 	}
 }

@@ -7,6 +7,7 @@ using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
@@ -50,62 +51,17 @@ namespace Epsitec.Aider.Rules
 
 		private static void UpdatePersonOfficialName(AiderPersonEntity person)
 		{
-			string name = person.eCH_Person.PersonOfficialName;
-
-			int posDash  = name.IndexOf ('-');
-			int posSpace = name.IndexOf (' ');
-
-			if (posDash < 0)
-			{
-				return;
-			}
-			if (posSpace < 0)
-			{
-				return;
-			}
-
 			//	There might be a problem with this official name, since it is mixing
-			//	spaces and dashes...
+			//	spaces and dashes... We have seen things such as "X- Y" or "X - Y",
+			//	so we make sure that spaces are removed around dashes.
 
-			var buffer = new System.Text.StringBuilder ();
-			char last = '*';
+			string name = person.eCH_Person.PersonOfficialName;
+			string trim = name.TrimSpacesAndDashes ();
 
-			foreach (char c in name)
+			if (name != trim)
 			{
-				if (c == ' ')
-				{
-					if (buffer.Length == 0)
-					{
-						continue;
-					}
-					
-					if ((last == '-') ||
-						(last == ' '))
-					{
-						continue;
-					}
-				}
-				else if (c == '-')
-				{
-					if (last == '-')
-					{
-						continue;
-					}
-					if (last == ' ')
-					{
-						buffer.Length = buffer.Length-1;
-					}
-					if (buffer.Length == 0)
-					{
-						continue;
-					}
-				}
-
-				buffer.Append (c);
-				last = c;
+				person.eCH_Person.PersonOfficialName = trim;
 			}
-
-			person.eCH_Person.PersonOfficialName = buffer.ToString ();
 		}
 
 		private static void UpdateVisibility(AiderPersonEntity person)

@@ -582,7 +582,6 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
-
 		public static bool IsAllUpperCase(this string text)
 		{
 			text.ThrowIfNull ("text");
@@ -596,6 +595,70 @@ namespace Epsitec.Common.Support.Extensions
 			}
 
 			return true;
+		}
+
+
+		public static string TrimSpacesAndDashes(this string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			
+			int posDash  = text.IndexOf ('-');
+			int posSpace = text.IndexOf (' ');
+
+			if ((posDash < 0) &&
+				(posSpace < 0))
+			{
+				return text;
+			}
+
+			var buffer = new System.Text.StringBuilder ();
+			char last = '*';
+
+			foreach (char c in text)
+			{
+				if (c == ' ')
+				{
+					if (buffer.Length == 0)
+					{
+						continue;
+					}
+
+					if ((last == '-') ||
+						(last == ' '))
+					{
+						continue;
+					}
+				}
+				else if (c == '-')
+				{
+					if (last == '-')
+					{
+						continue;
+					}
+					if (last == ' ')
+					{
+						buffer.Length = buffer.Length-1;
+					}
+					if (buffer.Length == 0)
+					{
+						continue;
+					}
+				}
+
+				buffer.Append (c);
+				last = c;
+			}
+
+			if ((last == ' ') ||
+				(last == '-'))
+			{
+				buffer.Length = buffer.Length-1;
+			}
+
+			return buffer.ToString ();
 		}
 		
 		
