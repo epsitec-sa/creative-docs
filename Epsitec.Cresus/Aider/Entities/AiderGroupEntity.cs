@@ -148,7 +148,7 @@ namespace Epsitec.Aider.Entities
 			var level = this.GroupLevel + 1;
 
 			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
-			request.AddSortClause (ValueField.Create (example, x => x.Path));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return dataContext.GetByRequest (request);
 		}
@@ -194,7 +194,7 @@ namespace Epsitec.Aider.Entities
 			};
 
 			var request = Request.Create (example);
-			request.AddSortClause (ValueField.Create (example, x => x.Path));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return businessContext.DataContext.GetByRequest (request);
 		}

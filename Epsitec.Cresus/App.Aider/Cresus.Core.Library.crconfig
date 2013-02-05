@@ -64,12 +64,8 @@ AiderFunctionDef = [LVA7A]
 #    </t>
     <t eid="@AiderGroup" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="1" p="@AiderGroup:[LVAPC]" title="Chemin" canSort="True" canFilter="True">
 	<sort o="Ascending" />
-	<disp m="Hidden" />
+	<disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderGroupParticipant" n="default">
