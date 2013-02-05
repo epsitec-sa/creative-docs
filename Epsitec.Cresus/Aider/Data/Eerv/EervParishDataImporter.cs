@@ -1006,7 +1006,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			businessContext.DeleteEntity (secondaryHousehold);
 
-			//	TODO#PA
+			mainHousehold.DisplayName = AiderHouseholdEntity.BuildDisplayName (mainHouseholdContacts , mainHousehold.HouseholdMrMrs);
 		}
 
 

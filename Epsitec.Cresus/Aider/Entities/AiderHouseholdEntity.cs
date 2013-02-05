@@ -69,7 +69,7 @@ namespace Epsitec.Aider.Entities
 			return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
 		}
 
-		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
+		public static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
 		{
 			if (contacts == null)
 			{
