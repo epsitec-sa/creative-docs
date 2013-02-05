@@ -37,7 +37,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.BusinessContext.DeleteEntity (this.AdditionalEntity);
+			AiderContactEntity.Delete (this.BusinessContext, this.AdditionalEntity);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)

@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			
 			foreach (var contact in household.Contacts.ToArray ())
 			{
-				this.BusinessContext.DeleteEntity (contact);
+				AiderContactEntity.Delete (this.BusinessContext, contact);
 			}
 
 			var comment = household.Comment;

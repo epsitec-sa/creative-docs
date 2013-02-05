@@ -985,7 +985,7 @@ namespace Epsitec.Aider.Data.Eerv
 				var newContact = AiderContactEntity.Create (businessContext, contact.Person, mainHousehold, false);
 				mainHouseholdContacts.Add (newContact);
 
-				businessContext.DeleteEntity (contact);
+				AiderContactEntity.Delete (businessContext, contact);
 			}
 
 			aiderHouseholdToContacts.Remove (secondaryHousehold);

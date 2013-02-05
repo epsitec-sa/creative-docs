@@ -136,5 +136,15 @@ namespace Epsitec.Aider.Entities
 
 			return contact;
 		}
+
+		public static void Delete(BusinessContext businessContext, AiderContactEntity contact)
+		{
+			if (contact.ContactType == ContactType.PersonAddress)
+			{
+				businessContext.DeleteEntity (contact.Address);
+			}
+
+			businessContext.DeleteEntity (contact);
+		}
 	}
 }

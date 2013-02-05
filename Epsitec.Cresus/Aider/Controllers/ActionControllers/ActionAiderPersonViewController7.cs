@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 			if (contact.IsNotNull ())
 			{
-				context.DeleteEntity (contact);
+				AiderContactEntity.Delete (context, contact);
 			}
 		}
 

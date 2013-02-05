@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 				var results = context.DataContext.GetByExample (example);
 
-				results.ForEach (x => context.DeleteEntity (x));
+				results.ForEach (x => AiderContactEntity.Delete (context, x));
 			}
 
 			var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
