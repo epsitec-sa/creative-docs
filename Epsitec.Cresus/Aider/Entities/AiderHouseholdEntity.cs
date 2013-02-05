@@ -69,7 +69,7 @@ namespace Epsitec.Aider.Entities
 			return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
 		}
 
-		public static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
+		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
 		{
 			if (contacts == null)
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Aider.Entities
 		}
 			
 		
-		public static string BuildDisplayName(IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children, HouseholdMrMrs order)
+		private static string BuildDisplayName(IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children, HouseholdMrMrs order)
 		{
 			var men   = heads.Where (x => x.PersonSex == PersonSex.Male);
 			var women = heads.Where (x => x.PersonSex == PersonSex.Female);

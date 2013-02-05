@@ -872,11 +872,6 @@ namespace Epsitec.Aider.Data.Eerv
 				householdContacts.Add (contact);
 				personContacts.Add (contact);
 			}
-			
-			//	Now, we know the household contacts and we can update the display name
-			//	of the household, but we cannot rely on the business rules to do so.
-
-			aiderHousehold.DisplayName = AiderHouseholdEntity.BuildDisplayName (adults, children, aiderHousehold.HouseholdMrMrs);
 		}
 
 
@@ -1005,8 +1000,6 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			businessContext.DeleteEntity (secondaryHousehold);
-
-			mainHousehold.DisplayName = AiderHouseholdEntity.BuildDisplayName (mainHouseholdContacts , mainHousehold.HouseholdMrMrs);
 		}
 
 
