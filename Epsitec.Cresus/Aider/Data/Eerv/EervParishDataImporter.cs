@@ -294,6 +294,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<string> GetCleanEmails(string rawEmail)
 		{
+			if (string.IsNullOrEmpty (rawEmail))
+			{
+				yield break;
+			}
+
 			foreach (var email in rawEmail.Split (' ', ';', ':', '/').Select (x => x.Trim ()))
 			{
 				var fixedEmail = Epsitec.Common.IO.UriBuilder.FixScheme (email);
@@ -307,6 +312,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<string> GetCleanPhoneNumbers(string rawPhoneNumber)
 		{
+			if (string.IsNullOrEmpty (rawPhoneNumber))
+			{
+				yield break;
+			}
+			
 			if ((rawPhoneNumber.StartsWith ("+")) ||
 				(rawPhoneNumber.StartsWith ("00")))
 			{
