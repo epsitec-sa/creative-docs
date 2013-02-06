@@ -223,7 +223,11 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+#if true
+			return key;
+#else
 			return (string) Microsoft.Win32.Registry.GetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
+#endif
 		}
 		
 		public static void WriteCrDocSerial(string key)
