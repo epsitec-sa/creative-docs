@@ -1502,6 +1502,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				var entity = todo.Pop ();
 
+				// We don't take into account the children of the persistent entities, as they are
+				// not used at all for the conditions.
+				if (this.dataContext.IsPersistent (entity))
+				{
+					continue;
+				}
+
 				if (EntityHelper.HasCollectionFieldDefined (this.TypeEngine, entity))
 				{
 					return true;
