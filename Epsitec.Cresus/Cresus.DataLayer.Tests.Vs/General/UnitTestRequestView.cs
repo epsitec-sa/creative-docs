@@ -331,8 +331,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				using (var requestView = dataContext.GetRequestView (request))
 				{
-					Assert.AreEqual (3, requestView.GetIndex (personKey1));
-					Assert.AreEqual (4, requestView.GetIndex (personKey2));
+					Assert.AreEqual (3, requestView.GetIndex (personKey2));
+					Assert.AreEqual (4, requestView.GetIndex (personKey1));
 				}
 			}
 		}
