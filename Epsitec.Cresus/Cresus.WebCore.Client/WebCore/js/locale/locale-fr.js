@@ -36,7 +36,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         serverErrorMessage: 'Une erreur est survenue sur le serveur distant',
         jsonErrorMessage: 'Une erreur est survenue lors du d\u00E9codage de ' +
             'la r\u00E9ponse du serveur distant.',
-        loginTitle: 'Connexion \u00E0 Cr\u00E9sus.Core',
+        loginTitle: 'Connexion \u00E0 AIDER',
         loginLabel: 'Connexion',
         usernameLabel: 'Nom d\'utilisateur',
         passwordLabel: 'Mot de passe',
@@ -46,7 +46,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         logoutLabel: 'D\u00E9connexion',
         sortTitle: 'Configuration du tri',
         scopeTitle: 'Cercles',
-        windowTitle: 'Cr\u00E9sus.Core',
+        windowTitle: 'AIDER',
         warningTitle: 'Attention',
         entityCreationWarningMessage: 'Un filtre est actif. L\'entit\u00E9 ' +
             'que vous allez cr\u00E9er ne sera pas affich\u00E9e dans la ' +

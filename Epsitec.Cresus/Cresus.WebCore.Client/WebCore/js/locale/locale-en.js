@@ -35,7 +35,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         serverErrorMessage: 'An unexpected error occured on the remote server',
         jsonErrorMessage: 'An error occured while decoding the answer from ' +
             'the remote server',
-        loginTitle: 'Cr\u00E9sus.Core Login',
+        loginTitle: 'Login to AIDER',
         loginLabel: 'Log in',
         usernameLabel: 'Username',
         passwordLabel: 'Password',
@@ -45,7 +45,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         logoutLabel: 'Logout',
         sortTitle: 'Sort selection',
         scopeTitle: 'Scopes',
-        windowTitle: 'Cr\u00E9sus.Core',
+        windowTitle: 'AIDER',
         warningTitle: 'Warning',
         entityCreationWarningMessage: 'A filter is active. The entity you ' +
             'are about to create will not appear in the entity list, if it ' +
