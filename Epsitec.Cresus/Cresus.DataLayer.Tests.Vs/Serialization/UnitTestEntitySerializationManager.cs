@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 				new EntitySerializationManager (dataContext).Deserialize (alfred, data);
 
 				Assert.AreEqual ("Albert", alfred.Firstname);
-				Assert.IsNull (alfred.Lastname);
+				Assert.AreEqual ("Dupond", alfred.Lastname);
 				Assert.AreEqual (new Date (1995, 1, 1), alfred.BirthDate);
 				Assert.AreEqual (dataContext.ResolveEntity<LanguageEntity> (new DbKey (new DbId (1000000002))), alfred.PreferredLanguage);
 				Assert.AreEqual (dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001))), alfred.Title);
