@@ -156,7 +156,7 @@ namespace Epsitec.Aider.Data.Eerv
 				return;
 			}
 
-			person.Parish = parishGroup.AddParticipant (businessContext, person, null, null, null);
+			person.Parish = AiderGroupParticipantEntity.StartParticipation (businessContext, person, parishGroup, null, null);
 		}
 
 
@@ -177,7 +177,7 @@ namespace Epsitec.Aider.Data.Eerv
 				parishNameToGroups[parishName] = parishGroup;
 			}
 
-			parishGroup.AddParticipant (businessContext, person, null, null, null);
+			AiderGroupParticipantEntity.StartParticipation (businessContext, person, parishGroup, null, null);
 		}
 
 

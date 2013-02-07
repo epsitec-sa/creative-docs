@@ -163,28 +163,6 @@ namespace Epsitec.Aider.Entities
 			return businessContext.DataContext.GetByRequest (request);
 		}
 
-		public AiderGroupParticipantEntity AddParticipant(BusinessContext businessContext, AiderPersonEntity aiderPerson, Date? startDate, Date? endDate, string comment)
-		{
-			var aiderGroupParticipant = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
-
-			aiderGroupParticipant.Group = this;
-			aiderGroupParticipant.Person = aiderPerson;
-
-			aiderGroupParticipant.StartDate = startDate;
-			aiderGroupParticipant.EndDate = endDate;
-
-			if (!string.IsNullOrWhiteSpace (comment))
-			{
-				var aiderComment = businessContext.CreateAndRegisterEntity<AiderCommentEntity> ();
-
-				aiderComment.Text = TextFormatter.FormatText (comment);
-
-				aiderGroupParticipant.Comment = aiderComment;
-			}
-
-			return aiderGroupParticipant;
-		}
-
 
 		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
 		{

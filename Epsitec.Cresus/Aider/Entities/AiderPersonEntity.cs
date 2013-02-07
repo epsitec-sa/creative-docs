@@ -217,23 +217,43 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
 		{
-			if (this.groupList == null)
+			value = this.GetParticipations ().AsReadOnlyCollection ();
+		}
+
+
+		private List<AiderGroupParticipantEntity> GetParticipations()
+		{
+			if (this.participations == null)
 			{
+				this.participations = new List<AiderGroupParticipantEntity> ();
+
 				var dataContext = DataContextPool.GetDataContext (this);
 
 				if ((dataContext != null) &&
 					(dataContext.IsPersistent (this)))
 				{
 					var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
+					var groups = dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 
-					this.groupList = dataContext
-						.GetByRequest<AiderGroupParticipantEntity> (request)
-						.AsReadOnlyCollection ();
+					this.participations.AddRange (groups);
 				}
 			}
 
-			value = this.groupList;
+			return this.participations;
 		}
+
+
+		public void AddParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			this.GetParticipations ().Add (participation);
+		}
+
+
+		public void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			this.GetParticipations ().Remove (participation);
+		}
+
 		
 		partial void GetRelationships(ref IList<AiderPersonRelationshipEntity> value)
 		{
@@ -451,7 +471,7 @@ namespace Epsitec.Aider.Entities
 
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
-		private IList<AiderGroupParticipantEntity> groupList;
+		private List<AiderGroupParticipantEntity> participations;
 		private HashSet<AiderHouseholdEntity> households;
 		private HashSet<AiderContactEntity> contacts;
 		private List<AiderPersonWarningEntity> warnings;

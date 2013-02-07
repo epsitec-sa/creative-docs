@@ -37,28 +37,65 @@ namespace Epsitec.Aider.Entities
 			yield break;
 		}
 
-		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate, FormattedText comment)
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate)
 		{
 			var participation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
 			participation.Person = person;
 			participation.Group = group;
 			participation.StartDate = startDate;
-			participation.Comment.Text = comment;
+
+			if (startDate.HasValue || startDate <= Date.Today)
+			{
+				person.AddParticipationInternal (participation);
+			}
 
 			return participation;
 		}
 
-		public void StopParticipation(Date endDate)
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate, FormattedText comment)
 		{
-			this.EndDate = endDate;
+			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, person, group, startDate);
+
+			if (comment.Length > 0)
+			{
+				participation.Comment.Text = comment;
+			}
+
+			return participation;
 		}
 
-		public void StopParticipation(Date endDate, FormattedText comment)
+		public static void StopParticipation(AiderGroupParticipantEntity participation, Date endDate)
 		{
-			this.StopParticipation (endDate);
+			participation.EndDate = endDate;
 
-			this.Comment.Text = comment;
+			if (endDate <= Date.Today)
+			{
+				participation.Person.RemoveParticipationInternal (participation);
+			}
+		}
+
+		public static void StopParticipation(AiderGroupParticipantEntity participation, Date endDate, FormattedText comment)
+		{
+			AiderGroupParticipantEntity.StopParticipation (participation, endDate);
+
+			if (comment.Length > 0 || participation.Comment.Text.Length > 0)
+			{
+				participation.Comment.Text = comment;
+			}
+		}
+
+
+		public static AiderGroupParticipantEntity ImportParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate, Date? endDate, FormattedText comment)
+		{
+			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, person, group, startDate, comment);
+
+			if (endDate.HasValue)
+			{
+				AiderGroupParticipantEntity.StopParticipation (participation, endDate.Value);
+			}
+
+			return participation;
 		}
 
 		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool sort, bool current, bool returnPersons)

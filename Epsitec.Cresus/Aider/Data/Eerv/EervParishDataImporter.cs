@@ -1287,7 +1287,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var aiderPerson in aiderPersons)
 			{
-				importationGroup.AddParticipant (businessContext, aiderPerson, null, null, null);
+				AiderGroupParticipantEntity.StartParticipation (businessContext, aiderPerson, importationGroup, null, null);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
@@ -1547,9 +1547,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 					var startDate = eervActivity.StartDate;
 					var endDate = eervActivity.EndDate;
-					var remarks = eervActivity.Remarks;
+					var remarks = TextFormatter.FormatText (eervActivity.Remarks);
 
-					aiderGroup.AddParticipant (businessContext, aiderPerson, startDate, endDate, remarks);
+					AiderGroupParticipantEntity.ImportParticipation (businessContext, aiderPerson, aiderGroup, startDate, endDate, remarks);
 				}
 				else if (eervActivity.LegalPerson != null)
 				{

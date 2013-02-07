@@ -101,7 +101,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			foreach (var entity in entitiesToRemove)
 			{
-				entity.StopParticipation (Date.Today);
+				AiderGroupParticipantEntity.StopParticipation (entity, Date.Today);
 			}
 		}
 

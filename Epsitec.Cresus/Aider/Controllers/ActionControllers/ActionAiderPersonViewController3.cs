@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderGroupEntity group, Date endDate, FormattedText comment)
 		{
-			this.AdditionalEntity.StopParticipation (endDate, comment);
+			AiderGroupParticipantEntity.StopParticipation (this.AdditionalEntity, endDate, comment);
 		}
 
 
