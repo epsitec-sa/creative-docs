@@ -31,6 +31,22 @@ namespace Epsitec.Cresus.Core.Repositories
 
 		public IEnumerable<T> GetAllEntities()
 		{
+			// This method is the incarnation of evil and should never ever be called. The problem
+			// is that it will fetch all entities of a given type in the database. Imagine what will
+			// happen when there are lots of entities of the type you request, like say 10000000.
+			// You should always filter entities by making a proper request or an example. It is
+			// wrong to filter them in memory afterwards.
+			// For the rare cases where you really know what you are doing and really want to fetch
+			// all entities of a given type in the database, you can still do it by creating an
+			// empty example. But this should be the exception and you should really not do it
+			// without carefully thinking at all the implications.
+
+			var message = "\n=================================================================="
+						+ "\n= WARNING: Repository<T>.GetAllEntities() has been called !      ="
+						+ "\n==================================================================";
+
+			System.Diagnostics.Debug.WriteLine (message);
+
 			var example = this.CreateExample ();
 			return this.GetByExample (example);
 		}
