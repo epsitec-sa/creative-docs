@@ -52,10 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UnitTestEervMainDataLoader.cs" />
-    <Compile Include="UnitTestEervParishDataImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTestEChDataImporter.cs" />
-    <Compile Include="UnitTestEervMainDataImporter.cs" />
     <Compile Include="UnitTestEervParishDataLoader.cs" />
     <Compile Include="UnitTestIsoCountryNames.cs" />
   </ItemGroup>
