@@ -38,9 +38,17 @@ namespace Epsitec.Aider.Data.ECh
 			EChDataImporter.ImportCountries (coreDataManager);
 			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
 
-			EChDataImporter.ImportPersons (coreDataManager, parishRepository, eChReportedPersons, zipCodeIdToEntityKey);
+			try
+			{
+				coreDataManager.CoreData.EnableIndexes (false);
 
-			coreDataManager.CoreData.ResetIndexes ();
+				EChDataImporter.ImportPersons (coreDataManager, parishRepository, eChReportedPersons, zipCodeIdToEntityKey);
+			}
+			finally
+			{
+				coreDataManager.CoreData.EnableIndexes (true);
+				coreDataManager.CoreData.ResetIndexes ();
+			}
 		}
 
 
