@@ -209,6 +209,22 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			}
 		}
 
+		/// <summary>
+		/// Enables or disables all index data related to the given sequence of entity type ids.
+		/// </summary>
+		public void EnableIndexes(IEnumerable<Druid> entityTypeIds, bool enable)
+		{
+			foreach (var entityTypeId in entityTypeIds)
+			{
+				var dbTable = this.EntityEngine.EntitySchemaEngine.GetEntityTable (entityTypeId);
+
+				foreach (var dbIndex in dbTable.Indexes)
+				{
+					this.DbInfrastructure.EnableIndex (dbTable, dbIndex, enable);
+				}
+			}
+		}
+
 
 		public System.DateTime GetDatabaseTime()
 		{
