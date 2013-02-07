@@ -229,9 +229,7 @@ namespace Epsitec.Aider.Rules
 
 			if (businessContext.AcquireLock ())
 			{
-				var warnings = person.Warnings;
-
-				warnings.Add (warning);
+				person.AddWarningInternal (warning);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}

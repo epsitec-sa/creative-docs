@@ -244,12 +244,38 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
 		{
-			value = new List<AiderPersonWarningEntity> ();
+			value = this.GetWarnings ().AsReadOnly ();
+		}
 
-			var warningController = AiderWarningController.Current;
-			var warnings = warningController.GetWarnings<AiderPersonWarningEntity> (this);
+		private List<AiderPersonWarningEntity> GetWarnings()
+		{
+			if (this.warnings == null)
+			{
+				this.warnings = new List<AiderPersonWarningEntity> ();
 
-			value.AddRange (warnings);
+				var dataContext = DataContextPool.GetDataContext (this);
+
+				if ((dataContext != null) &&
+					(dataContext.IsPersistent (this)))
+				{
+					var warningController = AiderWarningController.Current;
+					var warnings = warningController.GetWarnings<AiderPersonWarningEntity> (this);
+
+					this.warnings.AddRange (warnings);
+				}
+			}
+
+			return this.warnings;
+		}
+
+		public void AddWarningInternal(AiderPersonWarningEntity warning)
+		{
+			this.GetWarnings ().Add (warning);
+		}
+
+		public void RemoveWarningInternal(AiderPersonWarningEntity warning)
+		{
+			this.GetWarnings ().Remove (warning);
 		}
 
 		partial void GetParishGroup(ref AiderGroupEntity value)
@@ -428,5 +454,6 @@ namespace Epsitec.Aider.Entities
 		private IList<AiderGroupParticipantEntity> groupList;
 		private HashSet<AiderHouseholdEntity> households;
 		private HashSet<AiderContactEntity> contacts;
+		private List<AiderPersonWarningEntity> warnings;
 	}
 }
