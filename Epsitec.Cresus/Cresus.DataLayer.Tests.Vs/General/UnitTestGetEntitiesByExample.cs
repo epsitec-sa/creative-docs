@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjects()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -46,14 +46,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
 				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckGertrude (p)));
 				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckHans (p)));
-
 			}
 		}
 
 
 		[TestMethod]
 		public void GetObjectsWithCast()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -70,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithCorrectValueExample()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -87,7 +86,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithCorrectReferenceExample()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -104,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithCorrectCollectionExample1()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -122,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithCorrectCollectionExample2()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -139,7 +138,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithCorrectCollectionExample3()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -156,7 +155,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithIncorrectValueExample()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -171,7 +170,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithIncorrectReferenceExample()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -186,7 +185,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithIncorrectCollectionExample1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -201,7 +200,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithIncorrectCollectionExample2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -216,7 +215,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithEntityEquality()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -238,7 +237,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetFreshObject()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -266,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectByReferenceReference()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -315,7 +314,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithDeletedEntity()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -350,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectsWithDeletedRelation()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -392,7 +391,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnBooleanField()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -412,7 +411,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnByteArrayField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -432,7 +431,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateTimeField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -452,7 +451,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -472,7 +471,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -492,7 +491,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnEnumField()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -532,7 +531,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -552,7 +551,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnStringField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -572,13 +571,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnTimeField()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				ValueDataEntity example = new ValueDataEntity ()
 				{
-					TimeValue = new Time(12, 12, 12),
+					TimeValue = new Time (12, 12, 12),
 				};
 
 				ValueDataEntity[] valueData = dataContext.GetByExample<ValueDataEntity> (example).ToArray ();
