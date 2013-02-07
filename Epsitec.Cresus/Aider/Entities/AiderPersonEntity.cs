@@ -305,24 +305,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetParishGroup(AiderGroupEntity value)
 		{
-			if (this.Parish.Group == value)
-			{
-				return;
-			}
-
-			if (value == null)
-			{
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if (dataContext != null)
-				{
-					dataContext.DeleteEntity (this.Parish.Group);
-				}
-			}
-			else
-			{
-				this.Parish.Group = value;
-			}
+			throw new NotImplementedException ();
 		}
 
 		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
