@@ -420,6 +420,14 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public void EnableIndexes(bool enable)
+		{
+			var entityTypeIds = Infrastructure.GetManagedEntityIds ();
+
+			this.DataInfrastructure.EnableIndexes (entityTypeIds, enable);
+		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()
