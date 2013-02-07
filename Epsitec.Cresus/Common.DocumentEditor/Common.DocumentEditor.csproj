@@ -256,9 +256,6 @@
     <Compile Include="Dialogs\Infos.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Dialogs\Key.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Dialogs\PageStack.cs">
       <SubType>Code</SubType>
     </Compile>

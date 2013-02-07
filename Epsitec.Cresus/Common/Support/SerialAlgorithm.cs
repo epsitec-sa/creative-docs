@@ -205,52 +205,10 @@ namespace Epsitec.Common.Support
 		
 		public static string ReadCrDocSerial()
 		{
-			string path = SerialAlgorithm.GetAppDataPath ();
-			string key  = null;
-			
-			if (path == null)
-			{
-				throw new System.InvalidOperationException ("Cannot retrieve AppDataPath");
-			}
-			
-			path = System.IO.Path.Combine (path, "serial.info");
-			
-			if (System.IO.File.Exists (path))
-			{
-				using (System.IO.StreamReader reader = System.IO.File.OpenText (path))
-				{
-					key = reader.ReadLine ();
-				}
-			}
-
-#if true
-			return key;
-#else
+			string key = null;
 			return (string) Microsoft.Win32.Registry.GetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
-#endif
 		}
 		
-		public static void WriteCrDocSerial(string key)
-		{
-#if true
-			string path = SerialAlgorithm.GetAppDataPath ();
-			
-			if (path == null)
-			{
-				throw new System.InvalidOperationException ("Cannot retrieve AppDataPath");
-			}
-			
-			path = System.IO.Path.Combine (path, "serial.info");
-			
-			using (System.IO.StreamWriter writer = new System.IO.StreamWriter (path, false))
-			{
-				writer.WriteLine (key + "\n");
-			}
-#else
-//-			Microsoft.Win32.Registry.SetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
-#endif
-		}
-
 		public static bool CheckSerial(string key, int productFamily)
 		{
 			bool updatesAllowed;

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 
 					try
 					{
-						value = decimal.Parse (dec, System.Globalization.CultureInfo.CurrentUICulture);
+						value = decimal.Parse (dec, System.Globalization.CultureInfo.InvariantCulture);
 					}
 					catch
 					{

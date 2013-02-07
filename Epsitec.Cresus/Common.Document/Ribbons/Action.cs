@@ -12,12 +12,11 @@ namespace Epsitec.Common.Document.Ribbons
 		public Action() : base()
 		{
 			this.Title = Res.Strings.Action.ActionMain;
-			this.PreferredWidth = 8 + 22*1.5 + 4 + 22*3;
+			this.PreferredWidth = 8 + 22*1.5 + 4 + 22*2;
 
 			this.buttonSettings  = this.CreateIconButton("Settings", "Large");
 			this.buttonInfos     = this.CreateIconButton("Infos");
 			this.buttonPageStack = this.CreateIconButton("PageStack");
-			this.buttonKey       = this.CreateIconButton("KeyApplication");
 			this.buttonUpdate    = this.CreateIconButton("UpdateApplication");
 			this.buttonAbout     = this.CreateIconButton("AboutApplication");
 			
@@ -36,8 +35,6 @@ namespace Epsitec.Common.Document.Ribbons
 		public override void SetDocument(DocumentType type, InstallType install, DebugMode debug, Settings.GlobalSettings gs, Document document)
 		{
 			base.SetDocument(type, install, debug, gs, document);
-
-			this.buttonKey.Visibility = (this.installType != InstallType.Freeware);
 		}
 
 
@@ -69,8 +66,6 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(dx*1.5+4, 0);
-			this.buttonKey.SetManualBounds(rect);
-			rect.Offset(dx, 0);
 			this.buttonUpdate.SetManualBounds(rect);
 			rect.Offset(dx, 0);
 			this.buttonAbout.SetManualBounds(rect);
