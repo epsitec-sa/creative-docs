@@ -606,19 +606,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			for (int i = 0; i < valueFields.Count; i++)
 			{
 				var databaseValue = row[i];
+				var field = valueFields[i].Item1;
+				var dbColumn = valueFields[i].Item2;
 
-				if (databaseValue != DBNull.Value)
-				{
-					var field = valueFields[i].Item1;
-					
-					var dbColumn = valueFields[i].Item2;
-					var type = field.Type;
+				var cresusValue = databaseValue == DBNull.Value
+					? null
+					: this.ExtractValue (field.Type, dbColumn, databaseValue);
 
-					var cresusValue = this.ExtractValue (type, dbColumn, databaseValue);				
-					var fieldId = field.CaptionId;
-
-					entityValueData[fieldId] = cresusValue;
-				}
+				entityValueData[field.CaptionId] = cresusValue;
 			}
 
 			for (int i = 0; i < referenceFields.Count; i++)

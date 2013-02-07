@@ -375,7 +375,10 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			Druid fieldId = field.CaptionId;
 			object fieldValue = entityData.ValueData[fieldId];
 
-			entity.InternalSetValue (field.Id, fieldValue, ValueStoreSetMode.ShortCircuit);
+			if (fieldValue != null)
+			{
+				entity.InternalSetValue (field.Id, fieldValue, ValueStoreSetMode.ShortCircuit);
+			}
 		}
 
 
