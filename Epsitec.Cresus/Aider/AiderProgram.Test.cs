@@ -173,6 +173,6 @@ namespace Epsitec.Aider
 			{
 				EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
 			}
-		}			
+		}
 	}
 }
