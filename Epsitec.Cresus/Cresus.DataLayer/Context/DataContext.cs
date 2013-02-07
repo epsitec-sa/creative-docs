@@ -643,7 +643,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				entity.ThrowIf (e => this.IsPersistent (e), "entity");
 				
-				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
+//-				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
 				
 				entity.UpdateDataGeneration ();
 				this.ResaveReferencingFields (entity);
