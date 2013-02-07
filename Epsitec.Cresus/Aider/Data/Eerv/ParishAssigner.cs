@@ -181,15 +181,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static bool IsInNoParishGroup(BusinessContext businessContext, AiderPersonEntity person)
+		public static bool IsInNoParishGroup(AiderPersonEntity person)
 		{
-			var dataContext = businessContext.DataContext;
-
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, person, AiderGroupIds.NoParish);
-
-			request.Take = 1;
-
-			return dataContext.GetByRequest (request).Any ();
+			return person.Groups.Any (g => g.Group.Path == AiderGroupIds.NoParish);
 		}
 
 

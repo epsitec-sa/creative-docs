@@ -237,21 +237,12 @@ namespace Epsitec.Aider.Rules
 
 		private void AssignParish(AiderPersonEntity person)
 		{
-			// This will mess things up during the importation because
-			// 1) During ECH importation, obviously we can't assign persons to parishes because the
-			//    parishes don't exist yet.
-			// 2) During EERV parish importation because we don't sync the in memory cache of groups
-			//    and we should do so in order to use the groups in the BusinessRules.
-			// But for the demo of 06.02.2013, we don't need importation so at leas the functionnality
-			// will be ok for that. But do not forget to comment this function if you try to make an
-			// importation.
-			
-			var businessContext = this.GetBusinessContext ();
-
-			if (businessContext.DataContext.IsPersistent (person) && ParishAssigner.IsInNoParishGroup (businessContext, person))
+			if (ParishAssigner.IsInNoParishGroup (person))
 			{
 				return;
 			}
+			
+			var businessContext = this.GetBusinessContext ();
 
 			ParishAssigner.AssignToParish (businessContext, person);
 		}
