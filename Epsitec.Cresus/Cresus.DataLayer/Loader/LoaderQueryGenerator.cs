@@ -639,7 +639,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var logId = this.ExtractLong (row[rowLength - 3]);
 			var entityTypeId = this.ExtractDruid (row[rowLength - 2]);
 			var rowKey = this.ExtractKey (row[rowLength - 1]);
-			
+
 			return Tuple.Create (rowKey, entityTypeId, logId, entityValueData, entityReferenceData);
 		}
 
