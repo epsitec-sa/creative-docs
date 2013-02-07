@@ -81,7 +81,7 @@ namespace Epsitec.Aider.Entities
 
 			this.exampleSetter (example, source as TSource);
 
-			return repository.GetAllEntities ();
+			return repository.GetByExample (example);
 		}
 
 		private readonly System.Action<TWarning, TSource> exampleSetter;
