@@ -11,15 +11,15 @@ using Epsitec.Cresus.Database.Logging;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.ImportExport;
-using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
+
+using System;
 
 using System.Collections.Generic;
 
 using System.IO;
 
 using System.Linq;
-using System.Collections;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
@@ -198,14 +198,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </remarks>
 		public void ResetIndexes(IEnumerable<Druid> entityTypeIds)
 		{
-			foreach (var entityTypeId in entityTypeIds)
+			foreach (var item in this.GetAllIndexes (entityTypeIds))
 			{
-				var dbTable = this.EntityEngine.EntitySchemaEngine.GetEntityTable (entityTypeId);
-
-				foreach (var dbIndex in dbTable.Indexes)
-				{
-					this.DbInfrastructure.ResetIndex (dbTable, dbIndex);
-				}
+				this.DbInfrastructure.ResetIndex (item.Item1, item.Item2);
 			}
 		}
 
@@ -214,14 +209,29 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		public void EnableIndexes(IEnumerable<Druid> entityTypeIds, bool enable)
 		{
+			foreach (var item in this.GetAllIndexes (entityTypeIds))
+			{
+				this.DbInfrastructure.EnableIndex (item.Item1, item.Item2, enable);
+			}
+		}
+
+
+		private IEnumerable<Tuple<DbTable, DbIndex>> GetAllIndexes(IEnumerable<Druid> entityTypeIds)
+		{
+			return this
+				.GetAllTables (entityTypeIds)
+				.SelectMany (t => t.Indexes.Select (i => Tuple.Create (t, i)));
+		}
+
+
+		private IEnumerable<DbTable> GetAllTables(IEnumerable<Druid> entityTypeIds)
+		{
+			var schemaEngine = this.EntityEngine.EntitySchemaEngine;
+			var typeEngine = this.EntityEngine.EntityTypeEngine;
+			
 			foreach (var entityTypeId in entityTypeIds)
 			{
-				var dbTable = this.EntityEngine.EntitySchemaEngine.GetEntityTable (entityTypeId);
-
-				foreach (var dbIndex in dbTable.Indexes)
-				{
-					this.DbInfrastructure.EnableIndex (dbTable, dbIndex, enable);
-				}
+				yield return schemaEngine.GetEntityTable (entityTypeId);
 			}
 		}
 
