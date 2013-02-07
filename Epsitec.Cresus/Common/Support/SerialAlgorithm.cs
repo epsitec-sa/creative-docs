@@ -244,7 +244,7 @@ namespace Epsitec.Common.Support
 			
 			using (System.IO.StreamWriter writer = new System.IO.StreamWriter (path, false))
 			{
-				writer.WriteLine (key);
+				writer.WriteLine (key + "\n");
 			}
 #else
 //-			Microsoft.Win32.Registry.SetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
