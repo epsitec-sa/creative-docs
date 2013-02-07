@@ -163,6 +163,13 @@ namespace Epsitec.Cresus.Database
 		void ResetIndex(SqlIndex index);
 
 		/// <summary>
+		/// Enables or disable the given index.
+		/// </summary>
+		/// <param name="index">The index to enable or disable</param>
+		/// <param name="enable">True to enable the index, false to disable it.</param>
+		void EnableIndex(SqlIndex index, bool enable);
+
+		/// <summary>
 		/// Drops an index.
 		/// </summary>
 		/// <param name="index">The index to drop.</param>

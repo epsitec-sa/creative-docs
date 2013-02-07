@@ -530,14 +530,30 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.PrepareCommand ();
 			this.commandType = DbCommandType.Silent;
 
-			this.commandCount++;
-			this.Append ("ALTER INDEX " + index.Name + " INACTIVE;\n");
-
-			this.commandCount++;
-			this.Append ("ALTER INDEX " + index.Name + " ACTIVE;\n");
+			this.EnableIndexInternal (index, false);
+			this.EnableIndexInternal (index, true);
 
 			this.commandCount++;
 			this.Append ("SET STATISTICS INDEX " + index.Name + ";\n");
+		}
+
+		public void EnableIndex(SqlIndex index, bool enable)
+		{
+			this.PrepareCommand ();
+			this.commandType = DbCommandType.Silent;
+
+			this.EnableIndexInternal (index, enable);
+		}
+
+		private void EnableIndexInternal(SqlIndex index, bool enable)
+		{
+			this.commandCount++;
+
+			var state = enable
+				? "ACTIVE"
+				: "INACTIVE";
+
+			this.Append ("ALTER INDEX " + index.Name + " " + state + ";\n");
 		}
 
 		public void DropIndex(SqlIndex index)
