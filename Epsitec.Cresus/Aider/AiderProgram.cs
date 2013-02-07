@@ -91,7 +91,9 @@ namespace Epsitec.Aider
 				var maxCount = AiderProgram.GetMaxCount (mode);
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, maxCount);
 
-				EChDataImporter.Import (coreDataManager, eChReportedPersons);
+				var parishRepository = ParishAddressRepository.Current;
+
+				EChDataImporter.Import (coreDataManager, parishRepository, eChReportedPersons);
 			});
 		}
 

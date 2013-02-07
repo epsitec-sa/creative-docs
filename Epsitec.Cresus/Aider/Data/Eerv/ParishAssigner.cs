@@ -42,8 +42,6 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				ParishAssigner.AssignToParish (businessContext, parishRepository, parishNameToGroups, person);
 			}
-
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 

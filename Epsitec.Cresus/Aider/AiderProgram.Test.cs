@@ -54,18 +54,18 @@ namespace Epsitec.Aider
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
-				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 200 : int.MaxValue);
-				EChDataImporter.Import (coreDataManager, eChReportedPersons);
-
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
-
 				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
+
+				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
+				EChDataImporter.Import (coreDataManager, parishRepository, eChReportedPersons);
+
+				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
 
 				if (importMode.HasFlag (AiderProgramTestImportMode.EchOnly))
 				{

@@ -25,8 +25,6 @@ namespace Epsitec.Aider.Data.Eerv
 			EervMainDataImporter.ImportGlobalGroups (coreDataManager, eervData);
 			EervMainDataImporter.ImportRegionAndParishGroups (coreDataManager, parishRepository);
 
-			EervMainDataImporter.AssignPersonsToParishes (coreDataManager, parishRepository);
-
 			coreDataManager.CoreData.ResetIndexes ();
 		}
 
@@ -213,16 +211,6 @@ namespace Epsitec.Aider.Data.Eerv
 			var parishGroup = parishGroupDefinition.Instantiate (businessContext, info);
 
 			return parishGroup;
-		}
-
-
-		private static void AssignPersonsToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
-		{
-			AiderEnumerator.Execute
-			(
-				coreDataManager,
-				(b, p) => ParishAssigner.AssignToParishes (parishRepository, b, p)
-			);
 		}
 
 

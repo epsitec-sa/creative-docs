@@ -33,12 +33,12 @@ namespace Epsitec.Aider.Data.ECh
 	{
 
 
-		public static void Import(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons)
+		public static void Import(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons)
 		{
 			EChDataImporter.ImportCountries (coreDataManager);
 			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
 
-			EChDataImporter.ImportPersons (coreDataManager, eChReportedPersons, zipCodeIdToEntityKey);
+			EChDataImporter.ImportPersons (coreDataManager, parishRepository, eChReportedPersons, zipCodeIdToEntityKey);
 
 			coreDataManager.CoreData.ResetIndexes ();
 		}
@@ -103,7 +103,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportPersons(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+		private static void ImportPersons(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			int batchSize = 1000;
 			int nbBatches = 0;
@@ -117,7 +117,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				Action<BusinessContext> action = b =>
 				{
-					EChDataImporter.ImportBatch (b, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey);
+					EChDataImporter.ImportBatch (b, parishRepository, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey);
 				};
 
 				coreDataManager.Execute (action);
@@ -129,7 +129,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportBatch(BusinessContext businessContext, IEnumerable<EChReportedPerson> batch, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+		private static void ImportBatch(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EChReportedPerson> batch, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			// NOTE This dictionary will store the mapping between the eChpersonIds and the
 			// entities for the entities that have been processed but not yet saved to the
@@ -141,6 +141,8 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 			}
+
+			ParishAssigner.AssignToParishes (parishRepository, businessContext, eChPersonIdToEntity.Values);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 

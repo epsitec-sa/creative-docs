@@ -1266,6 +1266,8 @@ namespace Epsitec.Aider.Data.Eerv
 				.ToList ();
 
 			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
+
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
