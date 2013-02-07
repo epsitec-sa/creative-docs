@@ -914,6 +914,33 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
+		public void EnableIndex()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
+				DbColumn column = new DbColumn ("column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+
+				table.Columns.Add (column);
+				table.AddIndex ("idx", SqlSortOrder.Ascending, column);
+
+				infrastructure.AddTable (table);
+			}
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTable table = infrastructure.ResolveDbTable ("table");
+				DbIndex index = table.Indexes.First (i => i.Name == "idx");
+
+				infrastructure.EnableIndex (table, index, false);
+				infrastructure.EnableIndex (table, index, true);
+			}
+		}
+
+
+		[TestMethod]
 		public void RemoveIndexFromTable()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();

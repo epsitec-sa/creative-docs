@@ -903,6 +903,26 @@ namespace Epsitec.Cresus.Database
 			this.ResetIndexInternal (transaction, internalTable, index);
 		}
 
+		public void EnableIndex(DbTable table, DbIndex index, bool enable)
+		{
+			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				this.EnableIndex (transaction, table, index, enable);
+
+				transaction.Commit ();
+			}
+		}
+
+		public void EnableIndex(DbTransaction transaction, DbTable table, DbIndex index, bool enable)
+		{
+			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
+
+			this.CheckExistingIndex (internalTable, index);
+
+			this.EnableIndexInternal (transaction, internalTable, index, enable);
+		}
+
+
 		public void RemoveIndexFromTable(DbTable table, DbIndex index)
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
@@ -1156,6 +1176,14 @@ namespace Epsitec.Cresus.Database
 			this.ResetIndex (transaction, sqlIndex);
 		}
 
+		private void EnableIndexInternal(DbTransaction transaction, DbTable table, DbIndex index, bool enable)
+		{
+			SqlTable sqlTable = table.CreateSqlTable (this.converter);
+			SqlIndex sqlIndex = sqlTable.Indexes.Where (i => i.Name == index.Name).Single ();
+
+			this.EnableIndex (transaction, sqlIndex, enable);
+		}
+
 		private void RemoveIndexInternal(DbTransaction transaction, DbTable table, DbIndex index)
 		{
 			SqlTable sqlTable = table.CreateSqlTable (this.converter);
@@ -1370,6 +1398,12 @@ namespace Epsitec.Cresus.Database
 		private void ResetIndex(DbTransaction transaction, SqlIndex index)
 		{
 			transaction.SqlBuilder.ResetIndex (index);
+			this.ExecuteSilent (transaction);
+		}
+
+		private void EnableIndex(DbTransaction transaction, SqlIndex index, bool enable)
+		{
+			transaction.SqlBuilder.EnableIndex (index, enable);
 			this.ExecuteSilent (transaction);
 		}
 
