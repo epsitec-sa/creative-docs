@@ -232,6 +232,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			foreach (var entityTypeId in entityTypeIds)
 			{
 				yield return schemaEngine.GetEntityTable (entityTypeId);
+
+				foreach (var field in typeEngine.GetLocalCollectionFields (entityTypeId))
+				{
+					yield return schemaEngine.GetEntityFieldTable (entityTypeId, field.CaptionId);
+				}
 			}
 		}
 
