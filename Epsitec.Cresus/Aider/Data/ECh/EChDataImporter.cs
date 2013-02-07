@@ -179,17 +179,13 @@ namespace Epsitec.Aider.Data.ECh
 		private static eCH_ReportedPersonEntity ImportHousehold(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			var eChReportedPersonEntity = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
-			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-
 			var eChAddress = eChReportedPerson.Address;
-
 			var eChAddressEntity = EChDataImporter.ImportEchAddressEntity (businessContext, eChAddress);
-			var aiderAddressEntity = EChDataImporter.ImportAiderAddressEntity (businessContext, eChAddress, zipCodeIdToEntityKey);
-
 			eChReportedPersonEntity.Address = eChAddressEntity;
 
+			var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
 			aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
-			aiderHousehold.Address = aiderAddressEntity;
+			EChDataImporter.ImportAiderAddressEntity (businessContext, aiderHousehold.Address, eChAddress, zipCodeIdToEntityKey);
 
 			var eChAdult1 = eChReportedPerson.Adult1;
 
@@ -288,10 +284,8 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static AiderAddressEntity ImportAiderAddressEntity(BusinessContext businessContext, EChAddress eChAddress, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+		private static void ImportAiderAddressEntity(BusinessContext businessContext, AiderAddressEntity aiderAddressEntity, EChAddress eChAddress, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
-			var aiderAddressEntity = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
-
 			var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddress.HouseNumber));
 			var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddress.HouseNumber);
 
@@ -308,8 +302,6 @@ namespace Epsitec.Aider.Data.ECh
 			aiderAddressEntity.HouseNumber = houseNumber;
 			aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
 			aiderAddressEntity.Town = town;
-
-			return aiderAddressEntity;
 		}
 
 
