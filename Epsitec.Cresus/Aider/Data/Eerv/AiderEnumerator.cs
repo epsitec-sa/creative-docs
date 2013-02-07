@@ -121,6 +121,16 @@ namespace Epsitec.Aider.Data.Eerv
 				LambdaUtils.Convert ((AiderPersonEntity p) => p.Parish.Group),
 			});
 
+			var aiderContacts = aiderPersons
+				.SelectMany (p => p.Contacts)
+				.ToList ();
+
+			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
+			{
+			    LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
+			    LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
+			});
+
 			return aiderPersons;
 		}
 	}
