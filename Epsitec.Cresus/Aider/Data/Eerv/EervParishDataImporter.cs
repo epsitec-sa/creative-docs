@@ -138,6 +138,11 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
+			// We assign the new persons to the no parish groups, so that the business rules won't
+			// mess with the parish assignation. Later on we will assign these persons to their
+			// real parish.
+			ParishAssigner.AssignToNoParishGroup (businessContext, newEntities.Values);
+
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 			return newEntities.ToDictionary
