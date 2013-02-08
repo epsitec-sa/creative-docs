@@ -127,12 +127,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
 			{
-			    LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
-			    LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
 			});
 
 			return aiderPersons;
 		}
+
+
 	}
 
 
