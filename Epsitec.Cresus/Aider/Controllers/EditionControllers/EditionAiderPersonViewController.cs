@@ -51,11 +51,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Language)
 					.Field (x => x.eCH_Person.Nationality)
 					.Field (x => x.eCH_Person.Origins)
-				.End ()
-				.Input ()
-					.Field (x => x.ParishGroup)
-						.ReadOnly ()
-						.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 				.End ();
 		}
 
@@ -86,11 +81,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Language)
 					.Field (x => x.eCH_Person.Nationality).ReadOnly ()
 					.Field (x => x.eCH_Person.Origins).ReadOnly ()
-				.End ()
-				.Input ()
-					.Field (x => x.ParishGroup)
-						.ReadOnly ()
-						.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 				.End ();
 		}
 	}
