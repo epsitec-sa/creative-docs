@@ -99,43 +99,56 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreDataManager coreDataManager, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
-			Func<BusinessContext, Dictionary<EervPerson, EntityKey>> function = b =>
-			{
-				return EervParishDataImporter.ProcessMatches (b, parishName, matches);
-			};
+			coreDataManager.Execute (b => EervParishDataImporter.ProcessMatchWithValues (b, parishName, matches));
 
-			return coreDataManager.Execute (function);
+			return coreDataManager.Execute (b => EervParishDataImporter.ProcessMatchWithoutValues (b, parishName, matches));
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(BusinessContext businessContext, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static void ProcessMatchWithValues(BusinessContext businessContext, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
+			var matchWithValues = matches
+				.Where (m => m.Value != null)
+				.ToList ();
+
+			var existingEntities = new List<AiderPersonEntity> ();
+
+			foreach (var item in matchWithValues)
+			{
+				var eervPerson = item.Key;
+				var match = item.Value;
+
+				var aiderPerson = (AiderPersonEntity) businessContext.DataContext.ResolveEntity (match.Item1);
+				var matchData = match.Item2;
+
+				EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, parishName);
+
+				existingEntities.Add (aiderPerson);
+			}
+
+			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+		}
+
+
+		private static Dictionary<EervPerson, EntityKey> ProcessMatchWithoutValues(BusinessContext businessContext, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		{
+			var matchWithoutValues = matches
+				.Where (m => m.Value == null)
+				.ToList ();
+
 			var newEntities = new Dictionary<EervPerson, AiderPersonEntity> ();
 
-			var dataContext = businessContext.DataContext;
-
-			foreach (var match in matches)
+			foreach (var item in matchWithoutValues)
 			{
-				var eervPerson = match.Key;
+				var eervPerson = item.Key;
 
-				if (match.Value != null)
-				{
-					var m = match.Value;
-					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (m.Item1);
-					var matchData = m.Item2;
+				var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson (businessContext, eervPerson);
 
-					EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
-					EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, parishName);
-				}
-				else
-				{
-					var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson (businessContext, eervPerson);
+				EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, null, parishName);
 
-					EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
-					EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, null, parishName);
-
-					newEntities[eervPerson] = aiderPerson;
-				}
+				newEntities[eervPerson] = aiderPerson;
 			}
 
 			// We assign the new persons to the no parish groups, so that the business rules won't
