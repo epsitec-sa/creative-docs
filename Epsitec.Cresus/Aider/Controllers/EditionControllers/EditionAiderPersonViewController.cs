@@ -1,12 +1,10 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 
@@ -36,7 +34,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Title ("Prénoms et nom")
 						.Field (x => x.eCH_Person.PersonFirstNames)
 						.Field (x => x.eCH_Person.PersonOfficialName)
-					.End()
+					.End ()
 					.Field (x => x.CallName)
 					.Field (x => x.OriginalName)
 					.HorizontalGroup ()
