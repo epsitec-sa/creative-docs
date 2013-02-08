@@ -640,6 +640,14 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		public void Register(IEnumerable<AbstractEntity> entities)
+		{
+			foreach (var entity in entities)
+			{
+				this.Register (entity);
+			}
+		}
+
 		/// <summary>
 		/// Unregisters the specified entity from the business context.
 		/// </summary>

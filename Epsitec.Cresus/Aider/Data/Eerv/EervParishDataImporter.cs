@@ -11,7 +11,6 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -126,6 +125,10 @@ namespace Epsitec.Aider.Data.Eerv
 
 				existingEntities.Add (aiderPerson);
 			}
+
+			// We load the related data to speed up the business rule execution later on.
+			AiderEnumerator.LoadRelatedData (businessContext.DataContext, existingEntities);
+			businessContext.Register (existingEntities);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
@@ -575,7 +578,10 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderPersons = EervParishDataImporter.GetAiderPersons (aiderHouseholds);
 
 			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
+			businessContext.Register (aiderPersons);
+
 			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderHouseholds);
+			businessContext.Register (aiderHouseholds);
 
 			foreach (var eervHousehold in eervHouseholds)
 			{
@@ -1138,8 +1144,11 @@ namespace Epsitec.Aider.Data.Eerv
 				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
 				.ToList ();
 
+			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
+
 			ParishAssigner.AssignToParish (parishRepository, businessContext, aiderPersons);
 
+			businessContext.Register (aiderPersons);
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
@@ -1165,6 +1174,10 @@ namespace Epsitec.Aider.Data.Eerv
 				AiderGroupParticipantEntity.StartParticipation (businessContext, aiderPerson, importationGroup, null, null);
 			}
 
+			// We load the related data to speed up the execution of the business rules.
+			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
+
+			businessContext.Register (aiderPersons);
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
@@ -1261,6 +1274,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
+			businessContext.Register (aiderSubGroupMapping.Keys);
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 			return groupMapping.ToDictionary
@@ -1407,6 +1421,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var dataContext = businessContext.DataContext;
 
+			var aiderPersons = new HashSet<AiderPersonEntity> ();
+
 			foreach (var eervActivity in eervParishData.Activities)
 			{
 				if (eervActivity.Person != null)
@@ -1419,6 +1435,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (aiderPersonKey);
 					var aiderGroup = (AiderGroupEntity) dataContext.ResolveEntity (aiderGroupKey);
+
+					aiderPersons.Add (aiderPerson);
 
 					var startDate = eervActivity.StartDate;
 					var endDate = eervActivity.EndDate;
@@ -1439,6 +1457,10 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
+			// We load the related data to speed up the execution of the business rules.
+			AiderEnumerator.LoadRelatedData (dataContext, aiderPersons);
+
+			businessContext.Register (aiderPersons);
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
