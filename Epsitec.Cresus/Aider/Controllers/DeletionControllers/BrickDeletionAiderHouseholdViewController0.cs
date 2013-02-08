@@ -51,27 +51,8 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		private void Execute(string _1, AiderTownEntity _2, string _3, string _4)
 		{
 			var household = this.Entity;
-			
-			foreach (var contact in household.Contacts.ToArray ())
-			{
-				AiderContactEntity.Delete (this.BusinessContext, contact);
-			}
 
-			var comment = household.Comment;
-
-			if (comment.IsNotNull ())
-			{
-				this.BusinessContext.DeleteEntity (comment);
-			}
-
-			var address = household.Address;
-
-			if (address.IsNotNull ())
-			{
-				this.BusinessContext.DeleteEntity (address);
-			}
-
-			this.BusinessContext.DeleteEntity (household);
+			household.Delete (this.BusinessContext);
 		}
 	}
 }

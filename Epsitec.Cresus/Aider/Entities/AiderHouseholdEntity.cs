@@ -249,6 +249,27 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void Delete(BusinessContext businessContext)
+		{
+			foreach (var contact in this.Contacts.ToArray ())
+			{
+				AiderContactEntity.Delete (businessContext, contact);
+			}
+
+			if (this.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Comment);
+			}
+
+			if (this.Address.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Address);
+			}
+
+			businessContext.DeleteEntity (this);
+		}
+
+
 		// This property is only meant as an in memory cache of the members of the household. It
 		// will never be saved to the database.
 		private List<AiderContactEntity> contacts;
