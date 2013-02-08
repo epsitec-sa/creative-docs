@@ -258,7 +258,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var clearMobiles = EervParishDataImporter.GetCleanPhoneNumbers (eervPerson.Coordinates.MobilePhoneNumber);
 
 			//	Produce a stream of email/phone pairs until both source collections are empty.
-			
+
 			var tuples = cleanEmails.CombineToTuples (clearMobiles);
 
 			foreach (var tuple in tuples)
@@ -305,7 +305,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				yield break;
 			}
-			
+
 			if ((rawPhoneNumber.StartsWith ("+")) ||
 				(rawPhoneNumber.StartsWith ("00")))
 			{
@@ -326,11 +326,11 @@ namespace Epsitec.Aider.Data.Eerv
 				if (buffer.Length >= 10)
 				{
 					var number = buffer.ToString ();
-					
+
 					if (TwixTel.IsValidPhoneNumber (number, acceptEmptyNumbers: false))
 					{
 						yield return number;
-						
+
 						buffer.Clear ();
 					}
 				}
@@ -599,8 +599,8 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					aiderPersonToContacts[aiderPerson] = new List<AiderContactEntity> ();
 				}
-			}                
-			
+			}
+
 			return aiderPersonToContacts;
 		}
 
@@ -662,7 +662,7 @@ namespace Epsitec.Aider.Data.Eerv
 				newEntities,
 				eervHousehold
 			);
-			
+
 			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds
 			(
 				eervToAiderPersons.Values,
@@ -671,7 +671,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (aiderHouseholds.Count == 0)
 			{
-			    EervParishDataImporter.CreateHousehold
+				EervParishDataImporter.CreateHousehold
 				(
 					businessContext,
 					eervHousehold,
@@ -683,7 +683,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			else if (aiderHouseholds.Count == 1)
 			{
-			    EervParishDataImporter.ExpandHousehold
+				EervParishDataImporter.ExpandHousehold
 				(
 					businessContext,
 					eervHousehold,
@@ -805,9 +805,9 @@ namespace Epsitec.Aider.Data.Eerv
 				aiderHouseholdToContacts
 			);
 
-		    EervParishDataImporter.CombineComments (aiderHousehold, eervHousehold.Remarks);
+			EervParishDataImporter.CombineComments (aiderHousehold, eervHousehold.Remarks);
 
-		    EervParishDataImporter.CombineCoordinates
+			EervParishDataImporter.CombineCoordinates
 			(
 				aiderHousehold.Address,
 				eervHousehold.Coordinates
@@ -928,7 +928,7 @@ namespace Epsitec.Aider.Data.Eerv
 				aiderHouseholds,
 				aiderHouseholdToContacts
 			);
-			
+
 			var secondaryHouseholds = aiderHouseholds.Where (h => h != mainHousehold);
 
 			foreach (var secondaryHousehold in secondaryHouseholds)
@@ -968,7 +968,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var mainHouseholdContacts = aiderHouseholdToContacts[mainHousehold];
 			var secondaryHouseholdContacts = aiderHouseholdToContacts[secondaryHousehold];
-			
+
 			foreach (var contact in secondaryHouseholdContacts)
 			{
 				var newContact = AiderContactEntity.Create (businessContext, contact.Person, mainHousehold, false);
@@ -1006,7 +1006,7 @@ namespace Epsitec.Aider.Data.Eerv
 				return;
 			}
 
-			if (eervAddress.IsInSwitzerland())
+			if (eervAddress.IsInSwitzerland ())
 			{
 				EervParishDataImporter.CombineSwissAddress (aiderTowns, eervAddress, aiderAddress);
 			}
@@ -1158,7 +1158,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var aiderLegalPerson = businessContext.CreateAndRegisterEntity<AiderLegalPersonEntity> ();
 
 			aiderLegalPerson.Name = EervParishDataImporter.GetCorporateName (legalPerson);
-			
+
 			var aiderContact = AiderContactEntity.Create (businessContext, aiderLegalPerson);
 			var aiderAddress = aiderContact.Address;
 
@@ -1177,7 +1177,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			// NOTE It happens often that the corporate name is empty but that the firstname or the
 			// lastname is filled with the value that should have been in the corporate name field.
-			
+
 			if (!string.IsNullOrWhiteSpace (legalPerson.Name))
 			{
 				return legalPerson.Name;
@@ -1218,7 +1218,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				return;
 			}
-			
+
 			var aiderPerson = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 
 			aiderPerson.eCH_Person.PersonFirstNames = contactPerson.Firstname;
@@ -1359,7 +1359,7 @@ namespace Epsitec.Aider.Data.Eerv
 				else if (aiderIdMapping.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
 				{
 					var subgroups = aiderSubGroupMapping[aiderGroup];
-					
+
 					// TODO Don't use the count here. This might lead to lots of simplifications
 					// but I don't want to them know in order not to break something before the
 					// demo :-P
