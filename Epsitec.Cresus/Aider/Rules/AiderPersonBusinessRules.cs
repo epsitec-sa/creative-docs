@@ -5,6 +5,7 @@ using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
@@ -26,13 +27,13 @@ namespace Epsitec.Aider.Rules
 			var businessContext = this.GetBusinessContext ();
 
 			var eChPerson = businessContext.CreateAndRegisterEntity<eCH_PersonEntity> ();
-			
+
 			eChPerson.CreationDate = Date.Today;
 			eChPerson.DataSource   = Enumerations.DataSource.Undefined;
 
 			person.eCH_Person = eChPerson;
 			person.Visibility = PersonVisibilityStatus.Default;
-			
+
 			//	TODO#PA
 		}
 
@@ -123,6 +124,7 @@ namespace Epsitec.Aider.Rules
 				}
 			}
 		}
+
 		private static void ValidateMrMrs(AiderPersonEntity person)
 		{
 			var eCH = person.eCH_Person;
