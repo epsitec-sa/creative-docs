@@ -164,7 +164,7 @@ namespace Epsitec.Aider.Data.Eerv
 			EervParishDataImporter.CombineProfession (eervPerson, aiderPerson);
 			EervParishDataImporter.CombineDateOfDeath (eervPerson, aiderPerson);
 			EervParishDataImporter.CombineConfession (eervPerson, aiderPerson);
-			EervParishDataImporter.CombineRemarks (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineComments (aiderPerson, eervPerson.Remarks);
 			EervParishDataImporter.CombineCoordinates (businessContext, eervPerson, aiderPerson);
 		}
 
@@ -248,17 +248,6 @@ namespace Epsitec.Aider.Data.Eerv
 			if (confession != PersonConfession.Unknown)
 			{
 				aiderPerson.Confession = confession;
-			}
-		}
-
-
-		private static void CombineRemarks(EervPerson eervPerson, AiderPersonEntity aiderPerson)
-		{
-			var remarks = eervPerson.Remarks;
-
-			if (!string.IsNullOrEmpty (remarks))
-			{
-				EervParishDataImporter.CombineComments (aiderPerson, remarks);
 			}
 		}
 
@@ -380,6 +369,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CombineComments(IComment entity, string text)
 		{
+			if (string.IsNullOrWhiteSpace (text))
+			{
+				return;
+			}
+
 			// With the null reference virtualizer, we don't need to handle explicitely the case
 			// when there is no comment defined yet.
 
