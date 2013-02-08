@@ -84,6 +84,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var aiderContacts = dataContext.GetByRequest<AiderContactEntity> (request);
 
+			AiderEnumerator.LoadRelatedData (dataContext, aiderContacts);
+
+			return aiderContacts;
+		}
+
+
+
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderContactEntity> aiderContacts)
+		{
 			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
 			{
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
@@ -94,8 +103,6 @@ namespace Epsitec.Aider.Data.Eerv
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address.Town),
 			});
-
-			return aiderContacts;
 		}
 
 
@@ -114,6 +121,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var aiderPersons = dataContext.GetByRequest<AiderPersonEntity> (request);
 
+			AiderEnumerator.LoadRelatedData (dataContext, aiderPersons);
+
+			return aiderPersons;
+		}
+
+
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderPersonEntity> aiderPersons)
+		{
 			dataContext.LoadRelatedData (aiderPersons, new List<LambdaExpression> ()
 			{
 				LambdaUtils.Convert ((AiderPersonEntity p) => p.eCH_Person),
@@ -130,9 +145,9 @@ namespace Epsitec.Aider.Data.Eerv
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
 			});
-
-			return aiderPersons;
 		}
+
+
 
 
 	}
