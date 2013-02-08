@@ -90,22 +90,6 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-
-		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderContactEntity> aiderContacts)
-		{
-			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
-			{
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Person),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Person.eCH_Person),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Household),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address.Town),
-			});
-		}
-
-
 		private static IList<AiderPersonEntity> GetPersonBatch(DataContext dataContext, int skip, int take)
 		{
 			var aiderPerson = new AiderPersonEntity ();
@@ -127,6 +111,21 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderContactEntity> aiderContacts)
+		{
+			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Person),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Person.eCH_Person),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address.Town),
+			});
+		}
+
+
 		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderPersonEntity> aiderPersons)
 		{
 			dataContext.LoadRelatedData (aiderPersons, new List<LambdaExpression> ()
@@ -145,9 +144,37 @@ namespace Epsitec.Aider.Data.Eerv
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
 			});
+
+			var aiderGroups = aiderPersons
+				.SelectMany (p => p.Groups)
+				.ToList ();
+
+			dataContext.LoadRelatedData (aiderGroups, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderGroupParticipantEntity p) => p.Group),
+				LambdaUtils.Convert ((AiderGroupParticipantEntity p) => p.Group.GroupDef),
+			});
 		}
 
 
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderHouseholdEntity> aiderHouseholds)
+		{
+			dataContext.LoadRelatedData (aiderHouseholds, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderHouseholdEntity h) => h.Address),
+				LambdaUtils.Convert ((AiderHouseholdEntity h) => h.Address.Town),
+			});
+			
+			var aiderContacts = aiderHouseholds
+				.SelectMany (p => p.Contacts)
+				.ToList ();
+
+			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
+			});
+		}
 
 
 	}
