@@ -774,8 +774,6 @@ namespace Epsitec.Aider.Data.Eerv
 				aiderHouseholdToContacts
 			);
 
-			aiderHousehold.Address = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
-
 			EervParishDataImporter.CombineAddress
 			(
 				aiderTowns,
