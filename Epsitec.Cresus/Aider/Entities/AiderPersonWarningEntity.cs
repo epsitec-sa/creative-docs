@@ -6,13 +6,11 @@ using Epsitec.Aider.Entities.Helpers;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Repositories;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Aider.Entities
 {
@@ -45,14 +43,17 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 	}
+
 	public interface IAiderWarningExampleFactoryGetter
 	{
 		AiderWarningExampleFactory GetWarningExampleFactory();
 	}
+
 	public abstract class AiderWarningExampleFactory
 	{
 		public abstract IEnumerable<T> GetWarnings<T>(BusinessContext context, AbstractEntity source);
 	}
+
 	public sealed class AiderWarningExampleFactory<TSource, TWarning> : AiderWarningExampleFactory
 		where TSource : AbstractEntity, new ()
 		where TWarning : AbstractEntity, IAiderWarning, new ()
