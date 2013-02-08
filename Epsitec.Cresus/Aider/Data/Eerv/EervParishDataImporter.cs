@@ -1575,6 +1575,8 @@ namespace Epsitec.Aider.Data.Eerv
 					throw new NotImplementedException ();
 				}
 			}
+
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
