@@ -222,17 +222,10 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
+			var title = Resources.Text ("La paroisse ne correspond pas à l'adresse principale");
+			var type = WarningType.ParishMismatch;
 
-			warning.Title       = Resources.Text ("La paroisse ne correspond pas à l'adresse principale");
-			warning.WarningType = WarningType.ParishMismatch;
-
-			if (businessContext.AcquireLock ())
-			{
-				person.AddWarningInternal (warning);
-
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock);
-			}
+			AiderPersonWarningEntity.Create (businessContext, person, title, type);
 		}
 
 		private void AssignParish(AiderPersonEntity person)

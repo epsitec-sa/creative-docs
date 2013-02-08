@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities.Helpers;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -41,6 +42,19 @@ namespace Epsitec.Aider.Entities
 
 				return a.EntityStatus;
 			}
+		}
+
+		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, FormattedText title, WarningType warningType)
+		{
+			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
+
+			warning.Person = person;
+			warning.Title = title;
+			warning.WarningType = warningType;
+
+			person.AddWarningInternal (warning);
+
+			return warning;
 		}
 	}
 
