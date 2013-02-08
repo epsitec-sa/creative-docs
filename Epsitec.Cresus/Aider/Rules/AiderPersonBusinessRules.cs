@@ -191,28 +191,14 @@ namespace Epsitec.Aider.Rules
 		{
 			var businessContext = this.GetBusinessContext ();
 
-			if (person.Parish.Group.GroupDef.PathTemplate != AiderGroupIds.Parish)
+			if (!ParishAssigner.IsParishGroup (person.Parish.Group))
 			{
 				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
 
 				return;
 			}
 
-			var parishes = new List<AiderGroupEntity> ();
-
-			//	TODO#PA
-
-			//if (person.Household1.IsNotNull ())
-			//{
-			//    parishes.Add (ParishLocator.FindParish (businessContext, person.Household1.Address));
-			//}
-
-			//if (person.Household2.IsNotNull ())
-			//{
-			//    parishes.Add (ParishLocator.FindParish (businessContext, person.Household2.Address));
-			//}
-
-			if (parishes.Contains (person.Parish.Group))
+			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, businessContext, person))
 			{
 				return;
 			}
@@ -234,10 +220,11 @@ namespace Epsitec.Aider.Rules
 			{
 				return;
 			}
-			
+
+			var parishRepository = ParishAddressRepository.Current;
 			var businessContext = this.GetBusinessContext ();
 
-			ParishAssigner.AssignToParish (businessContext, person);
+			ParishAssigner.AssignToParish (parishRepository, businessContext, person);
 		}
 	}
 }

@@ -1257,7 +1257,7 @@ namespace Epsitec.Aider.Data.Eerv
 				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
 				.ToList ();
 
-			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
+			ParishAssigner.AssignToParish (parishRepository, businessContext, aiderPersons);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
@@ -1469,13 +1469,13 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var parishName = eervId.Name;
 
-				return AiderGroupEntity.FindParishGroup (businessContext, parishName);
+				return ParishAssigner.FindParishGroup (businessContext, parishName);
 			}
 			else
 			{
 				var regionNumber = int.Parse (StringUtils.GetDigits (eervId.Name));
 
-				return AiderGroupEntity.FindRegionGroup (businessContext, regionNumber);
+				return ParishAssigner.FindRegionGroup (businessContext, regionNumber);
 			}
 		}
 

@@ -233,7 +233,6 @@
     <Compile Include="Tools\CoreDataManager.cs" />
     <Compile Include="Entities\Helpers\IDateRangeExtensions.cs" />
     <Compile Include="Tools\IsoCountryNames.cs" />
-    <Compile Include="Tools\ParishLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Xsd\eCH-0006-2-0.xsd">

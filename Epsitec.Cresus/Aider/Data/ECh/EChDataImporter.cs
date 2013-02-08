@@ -150,7 +150,7 @@ namespace Epsitec.Aider.Data.ECh
 				EChDataImporter.ImportHousehold (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson, zipCodeIdToEntityKey);
 			}
 
-			ParishAssigner.AssignToParishes (parishRepository, businessContext, eChPersonIdToEntity.Values);
+			ParishAssigner.AssignToParish (parishRepository, businessContext, eChPersonIdToEntity.Values);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
