@@ -243,6 +243,7 @@ namespace Epsitec.Aider.Data.ECh
 			else if (eChPersonIdToEntityKey.TryGetValue (eChPerson.Id, out entityKey))
 			{
 				aiderPersonEntity = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
+				businessContext.Register (aiderPersonEntity);
 			}
 			else
 			{
