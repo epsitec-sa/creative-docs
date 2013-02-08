@@ -144,8 +144,8 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var regions = EervMainDataImporter.GetRegions (parishRepository);
 
-			var regionGroups = EervMainDataImporter.CreateRegionGroups (businessContext, regions);
-			var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, regionGroups, regions);
+			EervMainDataImporter.CreateRegionGroups (businessContext, regions);
+			EervMainDataImporter.CreateParishGroups (businessContext, regions);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
@@ -169,7 +169,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
+		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
 			var parishGroupDefinition = AiderGroupDefEntity.Find (businessContext, "Paroisses");
 			var parishAddressInfos = regions.Values.SelectMany (p => p.Values.Select (p2 => p2.First ())).ToArray ();
