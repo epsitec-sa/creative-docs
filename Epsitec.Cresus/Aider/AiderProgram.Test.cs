@@ -26,13 +26,13 @@ namespace Epsitec.Aider
 		private static void TestFullImport(AiderProgramTestImportMode importMode)
 		{
 			SwissPost.Initialize ();
-			
+
 			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
 			CoreContext.EnableEmbeddedDatabaseClient (true);
 			CoreContext.StartAsInteractive ();
-			
+
 			Services.Initialize ();
-			
+
 			try
 			{
 				CoreData.ForceDatabaseCreationRequest = true;
@@ -49,7 +49,7 @@ namespace Epsitec.Aider
 			using (var application = new CoreApplication ())
 			{
 				application.SetupApplication ();
-				
+
 				var coreDataManager = new CoreDataManager (application.Data);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
