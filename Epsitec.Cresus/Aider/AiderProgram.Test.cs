@@ -6,8 +6,6 @@ using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Tools;
 
-using Epsitec.Common.Debug;
-
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
