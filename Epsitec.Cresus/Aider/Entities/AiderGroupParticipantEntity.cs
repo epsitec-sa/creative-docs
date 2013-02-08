@@ -45,7 +45,7 @@ namespace Epsitec.Aider.Entities
 			participation.Group = group;
 			participation.StartDate = startDate;
 
-			if (startDate.HasValue || startDate <= Date.Today)
+			if (!startDate.HasValue || startDate <= Date.Today)
 			{
 				person.AddParticipationInternal (participation);
 			}
