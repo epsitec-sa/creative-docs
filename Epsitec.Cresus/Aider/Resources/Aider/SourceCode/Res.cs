@@ -1660,8 +1660,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid BirthdayYear = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 473);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
-				//	designer:cap/LVGL02
-				public static readonly global::Epsitec.Common.Support.Druid Children = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 21);
 				//	designer:cap/LVAM2
 				public static readonly global::Epsitec.Common.Support.Druid CodeId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86);
 				//	designer:cap/LVAI5
@@ -1680,22 +1678,16 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 283);
 				//	designer:cap/LVALE
 				public static readonly global::Epsitec.Common.Support.Druid Households = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 469);
-				//	designer:cap/LVGN02
-				public static readonly global::Epsitec.Common.Support.Druid Housemates = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 23);
 				//	designer:cap/LVAO7
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
 				//	designer:cap/LVAT
 				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 				//	designer:cap/LVAL2
 				public static readonly global::Epsitec.Common.Support.Druid OriginalName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85);
-				//	designer:cap/LVGM02
-				public static readonly global::Epsitec.Common.Support.Druid Parents = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 22);
 				//	designer:cap/LVADB
 				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 365);
 				//	designer:cap/LVAP7
 				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
-				//	designer:cap/LVAAB
-				public static readonly global::Epsitec.Common.Support.Druid Relationships = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 362);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
 				//	designer:cap/LVAVE

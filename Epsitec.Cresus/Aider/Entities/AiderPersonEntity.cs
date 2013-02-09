@@ -92,14 +92,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public FormattedText GetRelatedPersonsSummary(int nbToDisplay)
-		{
-			var lines = this.GetRelatedPersonsSummaryLines (nbToDisplay);
-
-			return TextFormatter.FormatText (lines.Join ("\n"));
-		}
-
-
 		public IEnumerable<FormattedText> GetCoordinatesSummaryLines()
 		{
 			// Gets the full name
@@ -112,22 +104,6 @@ namespace Epsitec.Aider.Entities
 
 			//	Gets the default mail address
 			//	TODO: ...
-		}
-
-
-		public IEnumerable<string> GetRelatedPersonsSummaryLines(int nbToDisplay)
-		{
-			var relatedPersons = this.GetRelatedPersons ().ToList ();
-
-			foreach (var relatedPerson in relatedPersons.Take (nbToDisplay))
-			{
-				yield return relatedPerson.GetFullName ();
-			}
-
-			if (relatedPersons.Count > nbToDisplay)
-			{
-				yield return "...";
-			}
 		}
 
 
@@ -187,34 +163,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<AiderPersonEntity> GetRelatedPersons()
-		{
-			// TODO Add stuff like godfather and godmother
-
-			return this.Housemates.Concat (this.Children).Concat (this.Parents);
-		}
-
-		partial void GetHousemates(ref IList<AiderPersonEntity> value)
-		{
-			value = new List<AiderPersonEntity> ();
-
-			//	TODO
-		}
-
-		partial void GetChildren(ref IList<AiderPersonEntity> value)
-		{
-			value = new List<AiderPersonEntity> ();
-
-			// TODO
-		}
-
-		partial void GetParents(ref IList<AiderPersonEntity> value)
-		{
-			value = new List<AiderPersonEntity> ();
-
-			// TODO
-		}
-
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
 		{
 			value = this.GetParticipations ().AsReadOnlyCollection ();
@@ -252,14 +200,6 @@ namespace Epsitec.Aider.Entities
 		public void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
 		{
 			this.GetParticipations ().Remove (participation);
-		}
-
-		
-		partial void GetRelationships(ref IList<AiderPersonRelationshipEntity> value)
-		{
-			value = new List<AiderPersonRelationshipEntity> ();
-
-			//	TODO
 		}
 
 		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)

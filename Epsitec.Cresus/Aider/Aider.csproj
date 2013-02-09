@@ -105,7 +105,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderUserRoleViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderUserScopeViewController.cs" />

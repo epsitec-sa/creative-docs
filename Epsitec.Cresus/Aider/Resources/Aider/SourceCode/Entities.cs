@@ -966,62 +966,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Children</c> field.
-		///	designer:fld/LVAF/LVGL02
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGL02]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> Children
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity>);
-				this.GetChildren (ref value);
-				return value;
-			}
-		}
-		///	<summary>
-		///	The <c>Parents</c> field.
-		///	designer:fld/LVAF/LVGM02
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGM02]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> Parents
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity>);
-				this.GetParents (ref value);
-				return value;
-			}
-		}
-		///	<summary>
-		///	The <c>Housemates</c> field.
-		///	designer:fld/LVAF/LVGN02
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGN02]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> Housemates
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity>);
-				this.GetHousemates (ref value);
-				return value;
-			}
-		}
-		///	<summary>
-		///	The <c>Relationships</c> field.
-		///	designer:fld/LVAF/LVAAB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAAB]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> Relationships
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity>);
-				this.GetRelationships (ref value);
-				return value;
-			}
-		}
-		///	<summary>
 		///	The <c>Warnings</c> field.
 		///	designer:fld/LVAF/LVAOB
 		///	</summary>
@@ -1112,10 +1056,6 @@ namespace Epsitec.Aider.Entities
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetData(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity> value);
-		partial void GetChildren(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
-		partial void GetParents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
-		partial void GetHousemates(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
-		partial void GetRelationships(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
 		partial void GetHouseholds(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value);
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
