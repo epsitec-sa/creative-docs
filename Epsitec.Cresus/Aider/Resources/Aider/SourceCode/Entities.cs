@@ -616,28 +616,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>CodeId</c> field.
-		///	designer:fld/LVAF/LVAM2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAM2]")]
-		public string CodeId
-		{
-			get
-			{
-				return this.GetField<string> ("[LVAM2]");
-			}
-			set
-			{
-				string oldValue = this.CodeId;
-				if (oldValue != value || !this.IsFieldDefined("[LVAM2]"))
-				{
-					this.OnCodeIdChanging (oldValue, value);
-					this.SetField<string> ("[LVAM2]", oldValue, value);
-					this.OnCodeIdChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>MrMrs</c> field.
 		///	designer:fld/LVAF/LVAT
 		///	</summary>
@@ -1024,8 +1002,6 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
-		partial void OnCodeIdChanging(string oldValue, string newValue);
-		partial void OnCodeIdChanged(string oldValue, string newValue);
 		partial void OnMrMrsChanging(global::Epsitec.Aider.Enumerations.PersonMrMrs oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs newValue);
 		partial void OnMrMrsChanged(global::Epsitec.Aider.Enumerations.PersonMrMrs oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs newValue);
 		partial void OnTitleChanging(string oldValue, string newValue);
