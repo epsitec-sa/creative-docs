@@ -18,29 +18,23 @@ using System.Collections.Generic;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 
-
 	[ControllerSubType (2)]
 	public sealed class ActionAiderPersonViewController2 : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
-
-
 		public override FormattedText GetTitle()
 		{
 			return "Ajouter à un groupe";
 		}
-
 
 		public override bool RequiresAdditionalEntity()
 		{
 			return false;
 		}
 
-
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<AiderGroupEntity, Date, FormattedText> (this.Execute);
 		}
-
 
 		private void Execute(AiderGroupEntity group, Date startDate, FormattedText comment)
 		{
@@ -52,11 +46,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, this.Entity, group, startDate, comment);
 		}
 
-
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
-				.Title (this.GetTitle())
+				.Title (this.GetTitle ())
 				.Field<AiderGroupEntity> ()
 					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
 					.Title ("Groupe")
@@ -72,6 +65,4 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			.End ();
 		}
 	}
-
-
 }

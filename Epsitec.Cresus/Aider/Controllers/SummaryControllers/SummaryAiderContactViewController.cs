@@ -42,12 +42,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					}
 					if (contact.Household.IsNotNull ())
 					{
-						//wall.AddBrick ()
-						//    .Title (Resources.Text ("Ménage associé"))
-						//    .Text (contact.Household.DisplayName)
-						//    .Icon ("Data.AiderHousehold")
-						//    .Attribute (BrickMode.SpecialController2);
-
 						if (contact.Address.IsNotNull ())
 						{
 							wall.AddBrick ()
@@ -112,12 +106,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Attribute (BrickMode.SpecialController1);
 					}
 					break;
-				
+
 				default:
 					break;
 			}
 		}
-		
+
 		private FormattedText GetPersonContactSummary(AiderContactEntity contact)
 		{
 			var text = contact.Person.GetCompactSummary ();

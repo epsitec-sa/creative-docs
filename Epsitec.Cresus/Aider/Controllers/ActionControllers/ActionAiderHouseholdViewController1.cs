@@ -31,19 +31,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<AiderContactEntity, bool> (this.Execute);
 		}
 
-
 		private void Execute(AiderContactEntity contact, bool isPersonHead)
 		{
 			var household = this.Entity;
 			var person    = contact.Person;
 
-			ActionAiderHouseholdViewController1.ValidatePerson (household, person);			
+			ActionAiderHouseholdViewController1.ValidatePerson (household, person);
 			ActionAiderHouseholdViewController1.ValidateHouseholdComposition (household, person);
 			ActionAiderHouseholdViewController1.ValidatePersonAge (household, person, isPersonHead);
 
 			AiderContactEntity.Create (this.BusinessContext, person, household, isPersonHead);
 		}
-
 
 		internal static void ValidatePerson(AiderHouseholdEntity household, AiderPersonEntity person)
 		{
@@ -88,7 +86,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 		}
 
-		
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
 			form

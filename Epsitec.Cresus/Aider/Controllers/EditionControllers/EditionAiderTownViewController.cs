@@ -4,7 +4,6 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
-
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderTownViewController : EditionViewController<AiderTownEntity>

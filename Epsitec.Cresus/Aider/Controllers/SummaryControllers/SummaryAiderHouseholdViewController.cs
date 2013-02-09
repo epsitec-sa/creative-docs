@@ -4,6 +4,7 @@
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 

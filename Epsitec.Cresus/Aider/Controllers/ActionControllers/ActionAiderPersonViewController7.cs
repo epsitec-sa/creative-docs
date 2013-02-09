@@ -34,7 +34,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return true;
 		}
 
-
 		private void Execute()
 		{
 			var context = this.BusinessContext;

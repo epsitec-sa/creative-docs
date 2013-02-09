@@ -4,15 +4,10 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
-
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
-
-
 	public sealed class EditionAiderCountryViewController : EditionViewController<AiderCountryEntity>
 	{
-
-
 		protected override void CreateBricks(BrickWall<AiderCountryEntity> wall)
 		{
 			wall.AddBrick ()
@@ -21,9 +16,5 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Name)
 				.End ();
 		}
-
-
 	}
-
-
 }

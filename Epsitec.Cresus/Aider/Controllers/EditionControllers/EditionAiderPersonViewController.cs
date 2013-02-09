@@ -7,7 +7,6 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
-
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderPersonViewController : EditionViewController<AiderPersonEntity>
@@ -23,7 +22,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				this.CreateBricksForUserAiderPerson (wall);
 			}
 		}
-
 
 		private void CreateBricksForUserAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{
@@ -53,7 +51,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.eCH_Person.Origins)
 				.End ();
 		}
-
 
 		private void CreateBricksForGovernmentAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{

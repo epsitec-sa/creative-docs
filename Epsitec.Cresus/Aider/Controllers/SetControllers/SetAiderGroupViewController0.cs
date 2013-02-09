@@ -19,34 +19,28 @@ using System.Collections.Generic;
 
 namespace Epsitec.Aider.Controllers.SetControllers
 {
-
 	[ControllerSubType (0)]
 	internal sealed class SetAiderGroupViewController0 : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderPersonEntity>
 	{
-
 		public override string GetIcon()
 		{
 			return Res.Commands.Base.ShowAiderGroupMembersDisplay.Caption.Icon;
 		}
-		
-		
+
 		public override FormattedText GetTitle()
 		{
 			return Res.Commands.Base.ShowAiderGroupMembersDisplay.Caption.DefaultLabel;
 		}
-
 
 		public override Druid GetDisplayDataSetId()
 		{
 			return Res.CommandIds.Base.ShowAiderGroupMembersDisplay;
 		}
 
-
 		public override Druid GetPickDataSetId()
 		{
 			return Res.CommandIds.Base.ShowAiderGroupMembersPick;
 		}
-
 
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
@@ -62,7 +56,6 @@ namespace Epsitec.Aider.Controllers.SetControllers
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
 			};
 		}
-
 
 		protected override void SetupPickDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
@@ -87,7 +80,6 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			};
 		}
 
-
 		protected override void AddItems(IEnumerable<AiderPersonEntity> entitiesToAdd)
 		{
 			foreach (var entity in entitiesToAdd)
@@ -96,7 +88,6 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			}
 		}
 
-
 		protected override void RemoveItems(IEnumerable<AiderGroupParticipantEntity> entitiesToRemove)
 		{
 			foreach (var entity in entitiesToRemove)
@@ -104,9 +95,5 @@ namespace Epsitec.Aider.Controllers.SetControllers
 				AiderGroupParticipantEntity.StopParticipation (entity, Date.Today);
 			}
 		}
-
-
 	}
-
-
 }

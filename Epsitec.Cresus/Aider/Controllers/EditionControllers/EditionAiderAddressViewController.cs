@@ -5,9 +5,7 @@ using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
-
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -17,7 +15,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-//-					.Field (x => x.Type)
 					.Field (x => x.Town)
 					.Field (x => x.AddressLine1)
 					.Field (x => x.StreetUserFriendly)
@@ -32,10 +29,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Email)
 					.Field (x => x.Web)
 				.End ();
-
-			// TODO Make this work. Now it crashes probably because the entity is null.
-			//wall.AddBrick ()
-			//	.Include (x => x.Comment);
 		}
 	}
 }

@@ -61,7 +61,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				return Resources.FormattedText ("à plusieurs ménages");
 			}
-			
+
 		}
 
 		private void Execute(bool move)

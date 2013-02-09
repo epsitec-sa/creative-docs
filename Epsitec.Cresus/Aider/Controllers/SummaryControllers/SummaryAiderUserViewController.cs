@@ -3,6 +3,8 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Bricks;
 
@@ -10,7 +12,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	public sealed class SummaryAiderUserViewController : SummaryViewController<AiderUserEntity>
 	{
-		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderUserEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ();
 

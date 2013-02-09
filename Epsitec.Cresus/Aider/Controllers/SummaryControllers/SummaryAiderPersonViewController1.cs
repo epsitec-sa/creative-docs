@@ -32,4 +32,3 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		}
 	}
 }
-

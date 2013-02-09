@@ -31,6 +31,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(string firstName, string lastName)
 		{
 			//	TODO: ...
+
+			throw new System.NotImplementedException ();
 		}
 
 		protected override void GetForm(ActionBrick<AiderContactEntity, SimpleBrick<AiderContactEntity>> form)

@@ -10,7 +10,6 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
-using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
 
@@ -28,15 +27,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.EnableAction (4)
 				.EnableAction (5)
-//				.EnableAction (6)
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
-				.Text (x => x.GetPersonalDataSummary ())
-//				.Title (x => TextFormatter.FormatText (x.CallName, x.eCH_Person.PersonOfficialName, "(~", x.OriginalName, "~)"))
-//				.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.Parish.Group.Name).ApplyBold(), "", "\n", TextFormatter.Command.IfElseEmpty, x.Household1.Address.GetPostalAddress ()))
-//				.Attribute (BrickMode.DefaultToSummarySubView)
-//				.Attribute (BrickMode.SpecialController1)
-			;
+				.Text (x => x.GetPersonalDataSummary ());
 
 			wall.AddBrick (x => x.Parish.Group)
 				.Icon ("Data.AiderGroup.Parish")
@@ -49,19 +42,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetGroupText ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController1);
-
-			//if (this.Entity.Warnings.Any () || true)
-			//{
-			//    wall.AddBrick (x => x.Warnings)
-			//        .Title ("Attention")
-			//        .Icon ("manifest:Epsitec.Aider.Images.Data.AiderWarning.icon")
-			//        .Template ()
-			//        .End ();
-			//}
-
-			//wall.AddBrick (x => x.Relationships)
-			//    .Attribute (BrickMode.DefaultToSummarySubView)
-			//    .Attribute (BrickMode.SpecialController2);
 
 			var households = this.Entity.Households;
 			var contacts   = this.Entity.Contacts;
@@ -90,8 +70,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Template ()
 						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
 					.End ()
-					.Attribute (BrickMode.SpecialController1)
-					;
+					.Attribute (BrickMode.SpecialController1);
 			}
 
 			wall.AddBrick (x => x.Comment)

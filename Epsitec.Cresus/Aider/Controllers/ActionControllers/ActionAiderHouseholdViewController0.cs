@@ -31,7 +31,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<string, string, Enumerations.PersonSex, Date?, bool, bool> (this.Execute);
 		}
 
-		
 		private void Execute(string firstname, string lastname, Enumerations.PersonSex sex, Date? birthdate, bool isPersonHead, bool isUserSure)
 		{
 			var household = this.Entity;
@@ -64,7 +63,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			AiderContactEntity.Create (context, person, household, isPersonHead);
 		}
 
-		
 		private static void AssignPersonValues(AiderPersonEntity person, string firstname, string lastname, Enumerations.PersonSex sex, Date? birthdate)
 		{
 			person.Confession = Enumerations.PersonConfession.Protestant;
@@ -105,7 +103,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				person.MrMrs = Enumerations.PersonMrMrs.Madame;
 			}
 		}
-		
+
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
 			var household = this.Entity;
@@ -128,7 +126,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			form
 				.Title ("Créer un nouveau membre et l'ajouter au ménage")
-				
+
 				.Field<string> ()
 					.Title ("Prénom")
 				.End ()

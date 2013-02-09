@@ -18,24 +18,18 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 {
-
-
 	public sealed class AiderGroupSpecialField<TEntity> : SpecialFieldController<TEntity, AiderGroupEntity>
-		where TEntity : AbstractEntity, new()
+		where TEntity : AbstractEntity, new ()
 	{
-
-
 		public AiderGroupSpecialField(BusinessContext businessContext, TEntity entity, Expression<Func<TEntity, AiderGroupEntity>> getter)
 			: base (businessContext, entity, getter)
 		{
 		}
 
-
 		public override string GetWebFieldName()
 		{
 			return "epsitec.aidergroupspecialfield";
 		}
-
 
 		[SpecialFieldWebMethod]
 		public object GetGroupTree(AiderGroupEntity group)
@@ -53,7 +47,6 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 
 			return this.GetGroupTree (null, subgroups, selection, 0);
 		}
-
 
 		private Dictionary<string, object> GetGroupTree(AiderGroupEntity group, IList<AiderGroupEntity> subgroups, IList<AiderGroupEntity> selection, int index)
 		{
@@ -77,8 +70,6 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 			return this.GetGroupData (group, subgroupList, hasSubgroups);
 		}
 
-
-
 		private List<object> GetGroupList(IList<AiderGroupEntity> groups, IList<AiderGroupEntity> selection, int index)
 		{
 			var subgroupList = new List<object> ();
@@ -98,7 +89,6 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 			return subgroupList;
 		}
 
-
 		[SpecialFieldWebMethod]
 		public Dictionary<string, object> GetSubGroups(AiderGroupEntity group)
 		{
@@ -106,7 +96,6 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 
 			return this.GetGroupData (null, subgroupList, null);
 		}
-
 
 		private Dictionary<string, object> GetGroupData(AiderGroupEntity group, List<object> subgroupList, bool? hasSubgroups)
 		{
@@ -124,14 +113,10 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 
 			if (hasSubgroups.HasValue)
 			{
-				result["hasSubgroups"] = hasSubgroups.Value; 
+				result["hasSubgroups"] = hasSubgroups.Value;
 			}
 
 			return result;
 		}
-
-
 	}
-
-
 }

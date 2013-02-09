@@ -1,10 +1,10 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
+
 using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers

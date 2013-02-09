@@ -10,27 +10,21 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using System.Collections.Generic;
 
-
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-
-
 	[ControllerSubType (0)]
 	public sealed class ActionAiderUserViewController0 : ActionViewController<AiderUserEntity>
 	{
-
 
 		public override FormattedText GetTitle()
 		{
 			return Res.Strings.AiderUserPasswordResetTitle;
 		}
 
-
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<string, string> (this.Execute);
 		}
-
 
 		private void Execute(string password, string confirmation)
 		{
@@ -60,7 +54,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			user.SetPassword (password);
 		}
 
-
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
 		{
 			form
@@ -68,15 +61,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Text (Res.Strings.AiderUserPasswordResetText)
 				.Field<string> ()
 					.Title (Res.Strings.AiderUserPasswordTitle)
-					.Password()
+					.Password ()
 				.End ()
 				.Field<string> ()
 					.Title (Res.Strings.AiderUserPasswordConfirmationTitle)
-					.Password()
+					.Password ()
 				.End ()
 			.End ();
 		}
 	}
-
-
 }

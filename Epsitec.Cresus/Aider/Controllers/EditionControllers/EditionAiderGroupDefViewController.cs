@@ -3,14 +3,15 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
-using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderGroupDefViewController : EditionViewController<AiderGroupDefEntity>
 	{
-		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderGroupDefEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderGroupDefEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()

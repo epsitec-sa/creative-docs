@@ -1,6 +1,7 @@
 ﻿using Epsitec.Aider.Entities;
+
 using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers

@@ -10,7 +10,6 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using Epsitec.Cresus.Core.Entities;
 
-
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
 	[ControllerSubType (0)]
@@ -58,7 +57,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException ("Le nom est obligatoire");
 			}
 
-			if (town.IsNull())
+			if (town.IsNull ())
 			{
 				throw new BusinessRuleException ("La localité est obligatoire");
 			}
@@ -69,7 +68,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			}
 
 			var household = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			
+
 			var address = household.Address;
 			address.Town = town;
 			address.StreetUserFriendly = street;

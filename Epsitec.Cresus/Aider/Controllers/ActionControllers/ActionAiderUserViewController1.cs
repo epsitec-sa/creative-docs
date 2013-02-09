@@ -12,27 +12,21 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
 using System.Collections.Generic;
 
-
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-
-
 	[ControllerSubType (1)]
 	public sealed class ActionAiderUserViewController1 : ActionViewController<AiderUserEntity>
 	{
-
 
 		public override FormattedText GetTitle()
 		{
 			return Res.Strings.AiderUserAdminSelectionTitle;
 		}
 
-
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<bool> (this.Execute);
 		}
-
 
 		private void Execute(bool shouldBeAdmin)
 		{
@@ -55,7 +49,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 		}
 
-
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
 		{
 			form
@@ -68,6 +61,4 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			.End ();
 		}
 	}
-
-
 }
