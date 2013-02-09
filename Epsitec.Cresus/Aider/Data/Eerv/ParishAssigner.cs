@@ -9,9 +9,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer.Loader;
-using Epsitec.Cresus.DataLayer.Expressions;
-
 using Epsitec.Data.Platform;
 
 using System;
@@ -31,11 +28,17 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		private ParishAssigner(ParishAddressRepository parishRepository, BusinessContext businessContext)
+		private ParishAssigner(BusinessContext businessContext)
 		{
-			this.parishRepository = parishRepository;
 			this.businessContext = businessContext;
 			this.cache = new Dictionary<string, AiderGroupEntity> ();
+		}
+
+
+		private ParishAssigner(ParishAddressRepository parishRepository, BusinessContext businessContext)
+			: this (businessContext)
+		{
+			this.parishRepository = parishRepository;
 		}
 
 
@@ -71,6 +74,12 @@ namespace Epsitec.Aider.Data.Eerv
 					contact.ParishGroupPathCache = parishGroup.Path;
 				}
 			}
+		}
+
+
+		private void AssignToParish(AiderLegalPersonEntity legalPerson, string parishName)
+		{
+			legalPerson.ParishGroup = this.FindParishGroup (parishName);
 		}
 
 
@@ -115,6 +124,13 @@ namespace Epsitec.Aider.Data.Eerv
 				return null;
 			}
 
+			return this.FindParishGroup (parishName);
+		}
+
+
+
+		private AiderGroupEntity FindParishGroup(string parishName)
+		{
 			return this.FindGroup
 			(
 				parishName,
@@ -225,11 +241,22 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void AssignToNoParishGroup(BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
 		{
-			var assigner = new ParishAssigner (null, businessContext);
+			var assigner = new ParishAssigner (businessContext);
 
 			foreach (var person in persons)
 			{
 				assigner.AssignToNoParishGroup (person);
+			}
+		}
+
+
+		public static void AssignToParish(BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons, string parishName)
+		{
+			var assigner = new ParishAssigner (businessContext);
+
+			foreach (var legalPerson in legalPersons)
+			{
+				assigner.AssignToParish (legalPerson, parishName);
 			}
 		}
 

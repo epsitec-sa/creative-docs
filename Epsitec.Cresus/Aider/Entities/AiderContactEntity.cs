@@ -149,7 +149,7 @@ namespace Epsitec.Aider.Entities
 			var contact = AiderContactEntity.Create (businessContext, ContactType.Legal);
 
 			contact.LegalPerson = legalPerson;
-			contact.Address     = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+			contact.Address = legalPerson.Address;
 
 			return contact;
 		}

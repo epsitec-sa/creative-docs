@@ -11,6 +11,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -1027,34 +1028,48 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
 		{
 			var parishName = eervParishData.Id.Name;
-			var aiderTowns = new AiderTownRepository (businessContext);
-
-			foreach (var legalPerson in eervParishData.LegalPersons)
-			{
-				EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, parishName, legalPerson);
-			}
+			
+			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, parishName);
+			ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, parishName);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
-		private static void ImportEervLegalPerson(BusinessContext businessContext, AiderTownRepository aiderTowns, string parishName, EervLegalPerson legalPerson)
+
+		private static List<AiderLegalPersonEntity> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData, string parishName)
+		{
+			var aiderTowns = new AiderTownRepository (businessContext);
+
+			return eervParishData
+				.LegalPersons
+				.Select (lp => EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, parishName, lp))
+				.ToList ();
+		}
+
+
+		private static AiderLegalPersonEntity ImportEervLegalPerson(BusinessContext businessContext, AiderTownRepository aiderTowns, string parishName, EervLegalPerson legalPerson)
 		{
 			var aiderLegalPerson = businessContext.CreateAndRegisterEntity<AiderLegalPersonEntity> ();
-
 			aiderLegalPerson.Name = EervParishDataImporter.GetCorporateName (legalPerson);
 
-			var aiderContact = AiderContactEntity.Create (businessContext, aiderLegalPerson);
-			var aiderAddress = aiderContact.Address;
-
+			var aiderAddress = aiderLegalPerson.Address;
 			EervParishDataImporter.CombineAddress (aiderTowns, aiderAddress, legalPerson.Address);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.Coordinates);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.ContactPerson.Coordinates);
 
-			EervParishDataImporter.ImportEervLegalPersonPerson (businessContext, aiderContact, legalPerson);
+			var aiderContact = AiderContactEntity.Create (businessContext, aiderLegalPerson);
+
+			var aiderPerson = EervParishDataImporter.ImportEervLegalPersonContactPerson (businessContext, legalPerson);
+			if (aiderPerson.IsNotNull ())
+			{
+				aiderContact.Person = aiderPerson;
+			}
 
 			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
 			EervParishDataImporter.CombineSystemComments (aiderLegalPerson, comment);
+
+			return aiderLegalPerson;
 		}
 
 
@@ -1082,26 +1097,26 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervLegalPersonPerson(BusinessContext businessContext, AiderContactEntity aiderContact, EervLegalPerson legalPerson)
+		private static AiderPersonEntity ImportEervLegalPersonContactPerson(BusinessContext businessContext, EervLegalPerson legalPerson)
 		{
 			// NOTE If the corporate name is empty, we used the first or last name as corporate
 			// name. Therefore, we assume that there is no contact person there.
 
 			if (string.IsNullOrWhiteSpace (legalPerson.Name))
 			{
-				return;
+				return null;
 			}
 
 			var contactPerson = legalPerson.ContactPerson;
 
 			if (string.IsNullOrWhiteSpace (contactPerson.Firstname))
 			{
-				return;
+				return null;
 			}
 
 			if (string.IsNullOrWhiteSpace (contactPerson.Lastname))
 			{
-				return;
+				return null;
 			}
 
 			var aiderPerson = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
@@ -1126,7 +1141,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			aiderContact.Person = aiderPerson;
+			return aiderPerson;
 		}
 
 
