@@ -38,11 +38,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 //				.Attribute (BrickMode.SpecialController1)
 			;
 
-			wall.AddBrick (x => x.ParishGroup)
+			wall.AddBrick (x => x.Parish.Group)
 				.Icon ("Data.AiderGroup.Parish")
 				.Title ("Paroisse")
 				.Attribute (BrickMode.DefaultToSummarySubView);
-			
+
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.People")
 				.Title (p => p.GetGroupTitle ())

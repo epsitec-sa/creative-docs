@@ -924,30 +924,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ParishGroup</c> field.
-		///	designer:fld/LVAF/LVG622
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVG622]", IsVirtual=true)]
-		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
-		{
-			get
-			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity value = default (global::Epsitec.Aider.Entities.AiderGroupEntity);
-				this.GetParishGroup (ref value);
-				return value;
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
-				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
-				{
-					this.OnParishGroupChanging (oldValue, value);
-					this.SetParishGroup (value);
-					this.OnParishGroupChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Events</c> field.
 		///	designer:fld/LVAF/LVAQ8
 		///	</summary>
@@ -1132,11 +1108,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnBirthdayYearChanged(int oldValue, int newValue);
 		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
-		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
-		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		
-		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
-		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetData(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity> value);

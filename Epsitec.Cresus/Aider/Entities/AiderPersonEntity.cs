@@ -298,16 +298,6 @@ namespace Epsitec.Aider.Entities
 			this.GetWarnings ().Remove (warning);
 		}
 
-		partial void GetParishGroup(ref AiderGroupEntity value)
-		{
-			value = this.Parish.Group; 
-		}
-
-		partial void SetParishGroup(AiderGroupEntity value)
-		{
-			throw new NotImplementedException ();
-		}
-
 		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
 		{
 			value = this.GetHouseholds ().OrderBy (x => x.DisplayName).AsReadOnlyCollection ();

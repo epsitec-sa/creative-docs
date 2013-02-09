@@ -1692,8 +1692,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Parents = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 22);
 				//	designer:cap/LVADB
 				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 365);
-				//	designer:cap/LVG622
-				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 70);
 				//	designer:cap/LVAP7
 				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
 				//	designer:cap/LVAAB
