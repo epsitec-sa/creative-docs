@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (p => p.GetGroupTitle ())
 				.Text (p => p.GetGroupText ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.SpecialController3);
+				.Attribute (BrickMode.SpecialController1);
 
 			//if (this.Entity.Warnings.Any () || true)
 			//{

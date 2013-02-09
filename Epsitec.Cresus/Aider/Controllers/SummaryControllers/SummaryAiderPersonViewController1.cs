@@ -13,8 +13,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-	[ControllerSubType (3)]
-	public sealed class SummaryAiderPersonViewController3 : SummaryViewController<AiderPersonEntity>
+	[ControllerSubType (1)]
+	public sealed class SummaryAiderPersonViewController1 : SummaryViewController<AiderPersonEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
