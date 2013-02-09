@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using System.Linq;
+using Epsitec.Aider.Tools;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -484,10 +485,11 @@ namespace Epsitec.Aider.Data.Eerv
 			var id = record[PersonHeader.PersonId];
 			var firstname1 = record[PersonHeader.Firstname1];
 			var firstname2 = record[PersonHeader.Firstname2];
-			var firstname = EervParishDataLoader.GetFirstname (firstname1, firstname2);
+			var firstnames = EervParishDataLoader.GetFirstname (firstname1, firstname2);
+			var firstname = NamePatchEngine.SanitizeCapitalization (firstnames);
 
-			var lastname = record[PersonHeader.Lastname];
-			var originalName = record[PersonHeader.OriginalName];
+			var lastname = NamePatchEngine.SanitizeCapitalization (record[PersonHeader.Lastname]);
+			var originalName = NamePatchEngine.SanitizeCapitalization (record[PersonHeader.OriginalName]);
 
 			var rawDateOfBirth = record[PersonHeader.DateOfBirth];
 			var rawDateOfDeath = record[PersonHeader.DateOfDeath];
@@ -544,7 +546,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private Tuple<EervLegalPerson, string> GetEervLegalPerson(Dictionary<PersonHeader, string> record)
 		{
 			var id = record[PersonHeader.PersonId];
-			var name = record[PersonHeader.CorporateName];
+			var name = NamePatchEngine.SanitizeCapitalization (record[PersonHeader.CorporateName]);
 
 			var address = this.GetAddress (record);
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);

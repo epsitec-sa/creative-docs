@@ -2,7 +2,6 @@
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -192,7 +191,7 @@ namespace Epsitec.Aider.Data.ECh
 		{
 			var name = EChDataLoader.GetChildStringValue (xPerson, EChXmlTags.EVd0004.OfficialName);
 
-			return EChDataLoader.SanitizeCapitalization (name);
+			return NamePatchEngine.SanitizeCapitalization (name);
 		}
 
 
@@ -200,36 +199,7 @@ namespace Epsitec.Aider.Data.ECh
 		{
 			var name = EChDataLoader.GetChildStringValue (xPerson, EChXmlTags.EVd0004.FirstNames);
 
-			return EChDataLoader.SanitizeCapitalization (name);
-		}
-
-
-		private static string SanitizeCapitalization(string name)
-		{
-			// This method is really simplistic. It will transform names which are all upper case
-			// to names in lower case with the first letter upper case. It handles names with spaces
-			// and with '-'. However, it won't handle names like "VON SIEBENTHAL" where the "V"
-			// should be lower case. And it won't convert "HERVE" to "Hervé" because it can't know
-			// about accents.
-			// But it's still better than nothing and the input data is wrong about this anyway.
-			
-			if (!name.IsAllUpperCase ())
-			{
-				return name;
-			}
-
-			var separators = new char[] { ' ', '-', };
-			var chars = name.ToCharArray ();
-
-			for (int i = 0; i < chars.Length; i++)
-			{
-				if (i > 0 && !separators.Contains (chars[i-1]))
-				{
-					chars[i] = char.ToLower (chars[i]);
-				}
-			}
-
-			return new String (chars);
+			return NamePatchEngine.SanitizeCapitalization (name);
 		}
 
 
