@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,57 +33,77 @@ namespace Epsitec.Aider.Entities
 
 		public void RefreshCache()
 		{
-			if (this.Person.IsNotNull ())
-			{
-				this.RefreshDisplayName ();
-			}
-			else if (this.LegalPerson.IsNotNull ())
-			{
-				this.DisplayName = this.LegalPerson.Name;
-			}
-			else
-			{
-				this.DisplayName = "—";
-			}
-
-			if (this.Household.IsNotNull ())
-			{
-				this.Address = this.Household.Address;
-			}
-
-			if ((this.Address.IsNotNull ()) &&
-				(this.Address.Town.IsNotNull ()))
-			{
-				this.RefreshDisplayAddressAndZipCode (this.Address);
-			}
-			else
-			{
-				this.DisplayAddress = "";
-				this.DisplayZipCode = "";
-			}
+			this.Address = this.GetAddress ();
+			this.DisplayName = this.GetDisplayName ();
+			this.DisplayZipCode = this.GetDisplayZipCode ();
+			this.DisplayAddress = this.GetDisplayAddress ();
 		}
 
-		private void RefreshDisplayName()
-		{
-			string suffix = "";
 
+		private AiderAddressEntity GetAddress()
+		{
 			switch (this.ContactType)
 			{
-				case Enumerations.ContactType.PersonAddress:
-					suffix = " (°)";
-					break;
-			}
+				case ContactType.None:
+					return null;
 
-			this.DisplayName = this.Person.DisplayName + suffix;
+				case ContactType.Legal:
+					return this.LegalPerson.Address;
+
+				case ContactType.PersonAddress:
+					return this.Address;
+
+				case ContactType.PersonHousehold:
+					return this.Household.Address;
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
-		private void RefreshDisplayAddressAndZipCode(AiderAddressEntity address)
+
+		private string GetDisplayName()
 		{
-			var town    = address.Town;
+			switch (this.ContactType)
+			{
+				case ContactType.None:
+					return "—";
+
+				case ContactType.Legal:
+					return this.LegalPerson.Name;
+
+				case ContactType.PersonAddress:
+					return this.Person.DisplayName + " (°)";
+
+				case ContactType.PersonHousehold:
+					return this.Person.DisplayName;
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private string GetDisplayZipCode()
+		{
+			var town = this.Address.Town;
+
+			if (town.IsNull ())
+			{
+				return "";
+			}
+
 			var country = town.Country;
 
-			this.DisplayAddress = address.GetDisplayAddress ().ToSimpleText ();
-			this.DisplayZipCode = country.IsoCode == "CH" ? town.ZipCode : country.IsoCode + "-" + town.ZipCode;
+			return country.IsoCode == "CH"
+				? town.ZipCode
+				: country.IsoCode + "-" + town.ZipCode;
+		}
+
+
+		private string GetDisplayAddress()
+		{
+			return Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
 
