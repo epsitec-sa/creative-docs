@@ -1664,14 +1664,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
 				//	designer:cap/LVAIE
 				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 466);
-				//	designer:cap/LVAS8
-				public static readonly global::Epsitec.Common.Support.Druid Data = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 284);
 				//	designer:cap/LVAI4
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 146);
 				//	designer:cap/LVAU1
 				public static readonly global::Epsitec.Common.Support.Druid eCH_Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
-				//	designer:cap/LVAQ8
-				public static readonly global::Epsitec.Common.Support.Druid Events = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 282);
 				//	designer:cap/LVAR8
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 283);
 				//	designer:cap/LVALE

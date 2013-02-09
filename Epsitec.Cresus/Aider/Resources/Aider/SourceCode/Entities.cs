@@ -902,20 +902,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Events</c> field.
-		///	designer:fld/LVAF/LVAQ8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAQ8]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> Events
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity>);
-				this.GetEvents (ref value);
-				return value;
-			}
-		}
-		///	<summary>
 		///	The <c>Groups</c> field.
 		///	designer:fld/LVAF/LVAR8
 		///	</summary>
@@ -926,20 +912,6 @@ namespace Epsitec.Aider.Entities
 			{
 				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity>);
 				this.GetGroups (ref value);
-				return value;
-			}
-		}
-		///	<summary>
-		///	The <c>Data</c> field.
-		///	designer:fld/LVAF/LVAS8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAS8]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity> Data
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity>);
-				this.GetData (ref value);
 				return value;
 			}
 		}
@@ -1029,9 +1001,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		
-		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
-		partial void GetData(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonDataEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
 		partial void GetHouseholds(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderHouseholdEntity> value);
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
