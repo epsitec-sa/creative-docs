@@ -224,7 +224,6 @@
     <Compile Include="Enumerations\UserRole.cs" />
     <Compile Include="Enumerations\ValidationState.cs" />
     <Compile Include="Tools\CoreDataManager.cs" />
-    <Compile Include="Entities\Helpers\IDateRangeExtensions.cs" />
     <Compile Include="Tools\IsoCountryNames.cs" />
   </ItemGroup>
   <ItemGroup>
