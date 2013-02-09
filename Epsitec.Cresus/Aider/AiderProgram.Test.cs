@@ -50,7 +50,11 @@ namespace Epsitec.Aider
 
 				var coreDataManager = new CoreDataManager (application.Data);
 
+				var guid = Guid.NewGuid ().ToString ();
+				Directory.CreateDirectory ("C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid);
+
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-1.FIREBIRD");
 
 				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
@@ -58,12 +62,14 @@ namespace Epsitec.Aider
 				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-2.FIREBIRD");
 
 				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
 				EChDataImporter.Import (coreDataManager, parishRepository, eChReportedPersons);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-3.FIREBIRD");
 
 				if (importMode.HasFlag (AiderProgramTestImportMode.EchOnly))
 				{
@@ -82,6 +88,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-4.FIREBIRD");
 
 				AiderProgram.Test
 				(
@@ -95,6 +102,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 2");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-5.FIREBIRD");
 
 				AiderProgram.Test
 				(
@@ -108,6 +116,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 3");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-6.FIREBIRD");
 
 				AiderProgram.Test
 				(
@@ -121,6 +130,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4A");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-7.FIREBIRD");
 
 				AiderProgram.Test
 				(
@@ -134,6 +144,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4B");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-8.FIREBIRD");
 
 				AiderProgram.Test
 				(
@@ -147,6 +158,7 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 5");
+				File.Copy ("C:\\ProgramData\\Epsitec\\Firebird Databases\\AIDER.FIREBIRD", "C:\\ProgramData\\Epsitec\\Firebird Databases\\" + guid + "\\AIDER-IMPORT-9.FIREBIRD");
 			}
 		}
 
