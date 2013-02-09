@@ -5,7 +5,6 @@ using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
