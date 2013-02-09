@@ -4197,14 +4197,12 @@ namespace Epsitec.Aider.Entities
 		///	The <c>ParishGroup</c> field.
 		///	designer:fld/LVAR6/LVACF
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVACF]", IsVirtual=true)]
+		[global::Epsitec.Common.Support.EntityField ("[LVACF]")]
 		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
 		{
 			get
 			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity value = default (global::Epsitec.Aider.Entities.AiderGroupEntity);
-				this.GetParishGroup (ref value);
-				return value;
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVACF]");
 			}
 			set
 			{
@@ -4212,7 +4210,7 @@ namespace Epsitec.Aider.Entities
 				if (oldValue != value || !this.IsFieldDefined("[LVACF]"))
 				{
 					this.OnParishGroupChanging (oldValue, value);
-					this.SetParishGroup (value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVACF]", oldValue, value);
 					this.OnParishGroupChanged (oldValue, value);
 				}
 			}
@@ -4261,8 +4259,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
-		partial void GetParishGroup(ref global::Epsitec.Aider.Entities.AiderGroupEntity value);
-		partial void SetParishGroup(global::Epsitec.Aider.Entities.AiderGroupEntity value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
