@@ -71,7 +71,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (count == 0)
 			{
 				message = TextFormatter.FormatText (
-					"Souhaitez-vous vraiment retirer", person.CallName, person.eCH_Person.PersonOfficialName, "de ce ménage ?",
+					"Souhaitez-vous vraiment retirer", person.GetCallName (), person.eCH_Person.PersonOfficialName, "de ce ménage ?",
 					"\n \n",
 					"La personne sera déplacée dans un nouveau ménage vide.");
 			}
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				var variable = count > 1 ? "de plusieurs ménages." : "d'un ménage.";
 				message = TextFormatter.FormatText (
-					"Souhaitez-vous vraiment retirer", person.CallName, person.eCH_Person.PersonOfficialName, "de ce ménage ?",
+					"Souhaitez-vous vraiment retirer", person.GetCallName (), person.eCH_Person.PersonOfficialName, "de ce ménage ?",
 					"\n \n",
 					"La personne fera encore partie", variable);
 			}

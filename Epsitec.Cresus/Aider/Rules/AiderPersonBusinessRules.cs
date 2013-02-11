@@ -42,7 +42,6 @@ namespace Epsitec.Aider.Rules
 
 			AiderPersonBusinessRules.UpdatePersonOfficialName (person);
 			AiderPersonBusinessRules.UpdateBirthday (person);
-			AiderPersonBusinessRules.UpdateCallName (person);
 			AiderPersonBusinessRules.UpdateDisplayName (person);
 			AiderPersonBusinessRules.UpdatePersonSex (person);
 			AiderPersonBusinessRules.UpdateVisibility (person);
@@ -94,14 +93,6 @@ namespace Epsitec.Aider.Rules
 				person.BirthdayDay   = date.Value.Day;
 				person.BirthdayMonth = date.Value.Month;
 				person.BirthdayYear  = date.Value.Year;
-			}
-		}
-
-		private static void UpdateCallName(AiderPersonEntity person)
-		{
-			if (string.IsNullOrWhiteSpace (person.CallName))
-			{
-				person.CallName = eCH_PersonEntity.GetDefaultFirstName (person.eCH_Person);
 			}
 		}
 

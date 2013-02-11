@@ -115,9 +115,19 @@ namespace Epsitec.Aider.Entities
 			);
 		}
 
+		public string GetCallName()
+		{
+			if (string.IsNullOrWhiteSpace (this.CallName))
+			{
+				return eCH_PersonEntity.GetDefaultFirstName (this.eCH_Person);
+			}
+
+			return this.CallName;
+		}
+
 		public string GetShortCallName()
 		{
-			var callname = this.CallName;
+			var callname = this.GetCallName ();
 
 			if (string.IsNullOrEmpty (callname))
 			{
@@ -315,7 +325,7 @@ namespace Epsitec.Aider.Entities
 
 		internal static string GetDisplayName(AiderPersonEntity person)
 		{
-			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);
+			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.GetCallName ());
 
 			if (person.eCH_Person.IsDeceased)
 			{

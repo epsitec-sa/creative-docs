@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Title ("Ajouter une adresse alternative")
 				.Text (
 					TextFormatter.FormatText ("Vous êtes sur le point de créer une adresse alternative pour",
-					/**/					  person.CallName, person.eCH_Person.PersonOfficialName, ".\n \n",
+					/**/					  person.GetCallName (), person.eCH_Person.PersonOfficialName, ".\n \n",
 					/**/					  "Choisissez le type d'adresse correspondant:"))
 				.Field<Enumerations.AddressType> ()
 					.Title ("Type d'adresse")

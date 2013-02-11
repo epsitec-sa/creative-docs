@@ -287,7 +287,6 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.RemovalReason = RemovalReason.None;
 
 			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
-			aiderPersonEntity.CallName = EChDataImporter.GuessCallName (eChPerson.FirstNames);
 			aiderPersonEntity.DisplayName = AiderPersonEntity.GetDisplayName (aiderPersonEntity);
 			aiderPersonEntity.Confession = PersonConfession.Protestant;
 
@@ -363,21 +362,6 @@ namespace Epsitec.Aider.Data.ECh
 			else
 			{
 				eChReportedPerson.Children.Add (eChPerson);
-			}
-		}
-
-		
-		private static string GuessCallName(string firstName)
-		{
-			int pos = firstName.IndexOf (' ');
-
-			if (pos < 0)
-			{
-				return firstName;
-			}
-			else
-			{
-				return firstName.Substring (0, pos);
 			}
 		}
 
