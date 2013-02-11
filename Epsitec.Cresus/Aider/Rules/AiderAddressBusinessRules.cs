@@ -2,12 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
 
