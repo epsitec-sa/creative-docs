@@ -171,6 +171,63 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		internal static string GetDisplayName(AiderPersonEntity person)
+		{
+			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.GetCallName ());
+
+			if (person.eCH_Person.IsDeceased)
+			{
+				return display.ToSimpleText () + " †";
+			}
+			else
+			{
+				return display.ToSimpleText ();
+			}
+		}
+
+		internal string GetIconName(string prefix)
+		{
+			string suffix;
+
+			if (this.eCH_Person.PersonSex == PersonSex.Female)
+			{
+				suffix = ".AiderPerson.Female-";
+			}
+			else
+			{
+				suffix = ".AiderPerson.Male-";
+			}
+
+			if (this.Language == Enumerations.Language.German)
+			{
+				return prefix + suffix + "German";
+			}
+			else
+			{
+				return prefix + suffix + "French";
+			}
+		}
+
+
+		public FormattedText GetGroupTitle()
+		{
+			int nbGroups = this.Groups.Count;
+
+			return TextFormatter.FormatText ("Groupes (", nbGroups, ")");
+		}
+
+		public FormattedText GetGroupText()
+		{
+			var groups = this.Groups
+				.Select (g => g.GetSummaryWithGroupName ())
+				.CreateSummarySequence (10, "...");
+
+			var text = TextFormatter.Join ("\n", groups);
+
+			return TextFormatter.FormatText (text);
+		}
+
+
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
 		{
 			value = this.GetParticipations ().AsReadOnlyCollection ();
@@ -320,63 +377,6 @@ namespace Epsitec.Aider.Entities
 		private void ClearHouseholdCache()
 		{
 			this.households = null;
-		}
-
-
-		internal static string GetDisplayName(AiderPersonEntity person)
-		{
-			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.GetCallName ());
-
-			if (person.eCH_Person.IsDeceased)
-			{
-				return display.ToSimpleText () + " †";
-			}
-			else
-			{
-				return display.ToSimpleText ();
-			}
-		}
-		
-		internal string GetIconName(string prefix)
-		{
-			string suffix;
-
-			if (this.eCH_Person.PersonSex == PersonSex.Female)
-			{
-				suffix = ".AiderPerson.Female-";
-			}
-			else
-			{
-				suffix = ".AiderPerson.Male-";
-			}
-
-			if (this.Language == Enumerations.Language.German)
-			{
-				return prefix + suffix + "German";
-			}
-			else
-			{
-				return prefix + suffix + "French";
-			}
-		}
-
-
-		public FormattedText GetGroupTitle()
-		{
-			int nbGroups = this.Groups.Count;
-
-			return TextFormatter.FormatText ("Groupes (", nbGroups, ")");
-		}
-
-		public FormattedText GetGroupText()
-		{
-			var groups = this.Groups
-				.Select (g => g.GetSummaryWithGroupName ())
-				.CreateSummarySequence (10, "...");
-
-			var text = TextFormatter.Join ("\n", groups);
-
-			return TextFormatter.FormatText (text);
 		}
 
 
