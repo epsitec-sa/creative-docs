@@ -10,10 +10,11 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Aider.Entities
@@ -32,15 +33,46 @@ namespace Epsitec.Aider.Entities
 
 		public void RefreshCache()
 		{
+			this.DisplayName = this.GetDisplayName ();
+			this.DisplayZipCode = this.GetDisplayZipCode ();
+			this.DisplayAddress = this.GetDisplayAddress ();
+			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
+		}
+
+
+		private string GetDisplayZipCode()
+		{
+			return this.Address.GetDisplayZipCode ().ToSimpleText ();
+		}
+
+
+		private string GetDisplayAddress()
+		{
+			return this.Address.GetDisplayAddress ().ToSimpleText ();
+		}
+
+
+		private string GetDisplayName()
+		{
 			if (string.IsNullOrEmpty (this.HouseholdName))
 			{
-				this.DisplayName = this.BuildDisplayName () ?? this.DisplayName;
+				return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
 			}
-			else
-			{
-				this.DisplayName = this.HouseholdName;
-			}
+			
+			return this.HouseholdName;
 		}
+
+
+		private string GetParishGroupPathCache()
+		{
+			// The logic here is very simple. Maybe we need something more complex.
+
+			return this.Members
+				.Select (m => m.GetParishGroupPathCache ())
+				.Where (p => !string.IsNullOrEmpty (p))
+				.FirstOrDefault ();
+		}
+
 
 		public FormattedText GetMembersTitle()
 		{
@@ -101,13 +133,6 @@ namespace Epsitec.Aider.Entities
 		partial void GetContacts(ref IList<AiderContactEntity> value)
 		{
 			value = this.GetContacts ().AsReadOnlyCollection ();
-		}
-
-
-		
-		private string BuildDisplayName()
-		{
-			return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
 		}
 
 		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)

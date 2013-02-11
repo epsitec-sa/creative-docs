@@ -9,7 +9,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -55,6 +54,23 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetDisplayAddress()
 		{
 			return TextFormatter.FormatText (this.Town.Name, "~,~", this.StreetRoot);
+		}
+
+		public FormattedText GetDisplayZipCode()
+		{
+			var town = this.Town;
+
+			if (town.IsNull ())
+			{
+				return "";
+			}
+
+			var country = town.Country;
+			var countryCode = country.IsoCode == "CH"
+				? null
+				: country.IsoCode;
+
+			return TextFormatter.FormatText (countryCode, town.ZipCode);
 		}
 
 		public FormattedText GetShortStreetAddress()

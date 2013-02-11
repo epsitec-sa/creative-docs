@@ -34,9 +34,12 @@ namespace Epsitec.Aider.Entities
 		public void RefreshCache()
 		{
 			this.Address = this.GetAddress ();
+
 			this.DisplayName = this.GetDisplayName ();
 			this.DisplayZipCode = this.GetDisplayZipCode ();
 			this.DisplayAddress = this.GetDisplayAddress ();
+			this.DisplayVisibility = this.GetDisplayVisibilityStatus ();
+			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
 		}
 
 
@@ -73,43 +76,91 @@ namespace Epsitec.Aider.Entities
 			switch (this.ContactType)
 			{
 				case ContactType.None:
-					return "—";
+					return this.GetNoneDisplayName ();
 
 				case ContactType.Legal:
-					return this.LegalPerson.Name;
+					return this.GetLegalDisplayName ();
 
 				case ContactType.PersonAddress:
-					return this.Person.DisplayName + " (°)";
+					return this.GetPersonAddressDisplayName ();
 
 				case ContactType.PersonHousehold:
-					return this.Person.DisplayName;
+					return this.GetPersonHouseholdDisplayName ();
 
 				default:
 					throw new NotImplementedException ();
 			}
 		}
 
+		private string GetNoneDisplayName()
+		{
+			return "—";
+		}
+
+		private string GetLegalDisplayName()
+		{
+			var name = this.LegalPerson.Name;
+
+			if (this.Person.IsNotNull ())
+			{
+				name += " (" + this.Person.GetDisplayName () + ")";
+			}
+
+			return name;
+		}
+
+		private string GetPersonAddressDisplayName()
+		{
+			return this.Person.GetDisplayName () + " (°)";
+		}
+
+		private string GetPersonHouseholdDisplayName()
+		{
+			return this.Person.GetDisplayName ();
+		}
+
 
 		private string GetDisplayZipCode()
 		{
-			var town = this.Address.Town;
-
-			if (town.IsNull ())
-			{
-				return "";
-			}
-
-			var country = town.Country;
-
-			return country.IsoCode == "CH"
-				? town.ZipCode
-				: country.IsoCode + "-" + town.ZipCode;
+			return this.Address.GetDisplayZipCode ().ToSimpleText ();
 		}
 
 
 		private string GetDisplayAddress()
 		{
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
+		}
+
+
+		private PersonVisibilityStatus GetDisplayVisibilityStatus()
+		{
+			var hidden = (this.Person.IsNotNull () && this.Person.Visibility != PersonVisibilityStatus.Default)
+				|| (this.Household.IsNotNull () && this.Household.DisplayVisibility != PersonVisibilityStatus.Default)
+				|| (this.LegalPerson.IsNotNull () && this.LegalPerson.Visibility != PersonVisibilityStatus.Default);
+
+			return hidden
+				? PersonVisibilityStatus.Hidden
+				: PersonVisibilityStatus.Default;
+		}
+
+
+		private string GetParishGroupPathCache()
+		{
+			switch (this.ContactType)
+			{
+				case ContactType.None:
+					return null;
+
+				case ContactType.Legal:
+					return this.LegalPerson.GetParishGroupPathCache ();
+
+				case ContactType.PersonAddress:
+				case ContactType.PersonHousehold:
+					return this.Person.GetParishGroupPathCache ();
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 
@@ -127,7 +178,6 @@ namespace Epsitec.Aider.Entities
 			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
 
 			contact.Person        = person;
-			contact.Address       = household.Address;
 			contact.Household     = household;
 			contact.HouseholdRole = role;
 
@@ -155,7 +205,8 @@ namespace Epsitec.Aider.Entities
 			var contact = AiderContactEntity.Create (businessContext, ContactType.Legal);
 
 			contact.LegalPerson = legalPerson;
-			contact.Address = legalPerson.Address;
+
+			legalPerson.AddContactInternal (contact);
 
 			return contact;
 		}
@@ -186,6 +237,12 @@ namespace Epsitec.Aider.Entities
 			if (household.IsNotNull ())
 			{
 				household.RemoveContactInternal (contact);
+			}
+
+			var legalPerson = contact.LegalPerson;
+			if (legalPerson.IsNotNull ())
+			{
+				legalPerson.RemoveContactInternal (contact);
 			}
 
 			businessContext.DeleteEntity (contact);

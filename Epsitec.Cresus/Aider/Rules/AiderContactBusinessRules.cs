@@ -38,17 +38,12 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyUpdateRule(AiderContactEntity contact)
 		{
-			contact.RefreshCache ();
-
-			if (contact.Household.IsNotNull ())
-			{
-				contact.Household.RefreshCache ();
-			}
-
 			if (contact.Person.IsNotNull ())
 			{
 				//	TODO#PA
 			}
+
+			contact.RefreshCache ();
 		}
 	}
 }

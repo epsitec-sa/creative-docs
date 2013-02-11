@@ -66,13 +66,6 @@ namespace Epsitec.Aider.Data.Eerv
 					noParishGroupParticipation.Group = parishGroup;
 					person.Parish = noParishGroupParticipation;
 				}
-
-				//TODO This should be moved in a business rule.
-
-				foreach (var contact in person.Contacts)
-				{
-					contact.ParishGroupPathCache = parishGroup.Path;
-				}
 			}
 		}
 

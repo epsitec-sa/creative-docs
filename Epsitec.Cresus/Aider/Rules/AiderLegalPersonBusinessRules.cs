@@ -34,6 +34,13 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyUpdateRule(AiderLegalPersonEntity legal)
 		{
+			AiderLegalPersonBusinessRules.UpdateName (legal);
+
+			legal.RefreshCache ();
+		}
+
+		private static void UpdateName(AiderLegalPersonEntity legal)
+		{
 			legal.Name = legal.Name.TrimSpacesAndDashes ();
 		}
 	}

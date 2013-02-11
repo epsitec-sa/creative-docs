@@ -49,12 +49,12 @@ namespace Epsitec.Aider.Rules
 			var context = this.GetBusinessContext ();
 
 			AiderPersonBusinessRules.UpdatePersonOfficialName (person);
-			AiderPersonBusinessRules.UpdateBirthday (person);
-			AiderPersonBusinessRules.UpdateDisplayName (person);
 			AiderPersonBusinessRules.UpdatePersonSex (person);
 			AiderPersonBusinessRules.UpdateVisibility (person);
 
 			AiderPersonBusinessRules.VerifyParish (context, person);
+
+			person.RefreshCache ();
 		}
 
 		public override void ApplyValidateRule(AiderPersonEntity person)
@@ -84,29 +84,6 @@ namespace Epsitec.Aider.Rules
 			{
 				person.Visibility = PersonVisibilityStatus.Deceased;
 			}
-		}
-		
-		private static void UpdateBirthday(AiderPersonEntity person)
-		{
-			var date = person.eCH_Person.PersonDateOfBirth;
-
-			if (date.HasValue == false)
-			{
-				person.BirthdayDay   = 0;
-				person.BirthdayMonth = 0;
-				person.BirthdayYear  = 0;
-			}
-			else
-			{
-				person.BirthdayDay   = date.Value.Day;
-				person.BirthdayMonth = date.Value.Month;
-				person.BirthdayYear  = date.Value.Year;
-			}
-		}
-
-		private static void UpdateDisplayName(AiderPersonEntity person)
-		{
-			person.DisplayName = AiderPersonEntity.GetDisplayName (person);
 		}
 
 		private static void UpdatePersonSex(AiderPersonEntity person)

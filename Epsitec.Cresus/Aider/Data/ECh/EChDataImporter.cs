@@ -287,7 +287,6 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.RemovalReason = RemovalReason.None;
 
 			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
-			aiderPersonEntity.DisplayName = AiderPersonEntity.GetDisplayName (aiderPersonEntity);
 			aiderPersonEntity.Confession = PersonConfession.Protestant;
 
 			return aiderPersonEntity;

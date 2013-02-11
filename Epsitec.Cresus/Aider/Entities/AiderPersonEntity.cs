@@ -171,18 +171,52 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		internal static string GetDisplayName(AiderPersonEntity person)
+		public void RefreshCache()
 		{
-			var display = TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.GetCallName ());
+			this.DisplayName = this.GetDisplayName ();
 
-			if (person.eCH_Person.IsDeceased)
+			this.RefreshBirthdayDate ();
+		}
+
+
+		private void RefreshBirthdayDate()
+		{
+			var date = this.eCH_Person.PersonDateOfBirth;
+
+			if (date.HasValue == false)
 			{
-				return display.ToSimpleText () + " †";
+				this.BirthdayDay   = 0;
+				this.BirthdayMonth = 0;
+				this.BirthdayYear  = 0;
 			}
 			else
 			{
-				return display.ToSimpleText ();
+				this.BirthdayDay   = date.Value.Day;
+				this.BirthdayMonth = date.Value.Month;
+				this.BirthdayYear  = date.Value.Year;
 			}
+		}
+
+
+		public string GetDisplayName()
+		{
+			var lastname = this.eCH_Person.PersonOfficialName;
+			var firstname = this.GetCallName ();
+
+			var name = TextFormatter.FormatText (lastname, ",", firstname).ToSimpleText ();
+
+			if (this.eCH_Person.IsDeceased)
+			{
+				name += " †";
+			}
+
+			return name;
+		}
+
+
+		public string GetParishGroupPathCache()
+		{
+			return this.Parish.Group.Path;
 		}
 
 		internal string GetIconName(string prefix)
