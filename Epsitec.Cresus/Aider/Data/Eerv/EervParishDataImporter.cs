@@ -564,7 +564,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var aiderTowns = new AiderTownRepository (businessContext);
 
 			// That's all the persons that are in the parish file.
-			var aiderPersons = EervParishDataImporter.GetAiderPersons
+			var fileAiderPersons = EervParishDataImporter.GetAiderPersons
 			(
 				businessContext,
 				matches,
@@ -572,11 +572,17 @@ namespace Epsitec.Aider.Data.Eerv
 			);
 
 			// That's all the households related to the persons in the parish file.
-			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (aiderPersons);
+			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (fileAiderPersons);
 
-			// That's all the member of these households, which might include persons that are not
-			// in the parish file.
-			aiderPersons = EervParishDataImporter.GetAiderPersons (aiderHouseholds);
+			// That's all the member of these households (in the database), which might include
+			// persons that are not in the parish file and might not include persons that are in the
+			// parish file.
+			var otherAiderPersons = EervParishDataImporter.GetAiderPersons (aiderHouseholds);
+
+			var aiderPersons = fileAiderPersons
+				.Concat (otherAiderPersons)
+				.Distinct ()
+				.ToList ();
 
 			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
 			businessContext.Register (aiderPersons);
