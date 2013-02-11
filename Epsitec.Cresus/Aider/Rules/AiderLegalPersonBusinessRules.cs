@@ -3,7 +3,9 @@
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
@@ -23,6 +25,11 @@ namespace Epsitec.Aider.Rules
 			legal.Visibility    = PersonVisibilityStatus.Default;
 			legal.RemovalReason = RemovalReason.None;
 			legal.Language      = Language.French;
+		}
+
+		public override void ApplyBindRule(AiderLegalPersonEntity entity)
+		{
+			this.GetBusinessContext ().Register (entity.Contacts);
 		}
 
 		public override void ApplyUpdateRule(AiderLegalPersonEntity legal)

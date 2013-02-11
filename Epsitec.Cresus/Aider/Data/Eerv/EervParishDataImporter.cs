@@ -585,10 +585,9 @@ namespace Epsitec.Aider.Data.Eerv
 				.ToList ();
 
 			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
-			businessContext.Register (aiderPersons);
-
 			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderHouseholds);
-			businessContext.Register (aiderHouseholds);
+
+			businessContext.Register (aiderPersons);
 
 			foreach (var eervHousehold in eervHouseholds)
 			{

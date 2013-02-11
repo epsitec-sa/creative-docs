@@ -36,6 +36,14 @@ namespace Epsitec.Aider.Rules
 			//	TODO#PA
 		}
 
+		public override void ApplyBindRule(AiderPersonEntity entity)
+		{
+			// Registering the contacts will also register the households, as they are registered
+			// by the contacts.
+
+			this.GetBusinessContext ().Register (entity.Contacts);
+		}
+
 		public override void ApplyUpdateRule(AiderPersonEntity person)
 		{
 			var context = this.GetBusinessContext ();

@@ -21,6 +21,14 @@ namespace Epsitec.Aider.Rules
 			household.Address        = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
 		}
 
+		public override void ApplyBindRule(AiderHouseholdEntity entity)
+		{
+			// Registering the contacts will also register the members, as they are registered
+			// by the contacts.
+
+			this.GetBusinessContext ().Register (entity.Contacts);
+		}
+
 		public override void ApplyUpdateRule(AiderHouseholdEntity household)
 		{
 			household.RefreshCache ();
