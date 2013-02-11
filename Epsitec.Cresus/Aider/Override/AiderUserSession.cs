@@ -62,24 +62,32 @@ namespace Epsitec.Aider.Override
 
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
 		{
-			var pattern = this.GetActiveScopePathPattern ();
 			var entityType = dataSetMetadata.EntityTableMetadata.EntityType;
+			var pattern = this.GetActiveScopePathPattern ();
 
-			if (entityType == typeof (AiderPersonEntity))
-			{
-				return string.IsNullOrEmpty (pattern)
-					? null
-					: this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern + "%");
-			}
-			else if (entityType == typeof (AiderGroupEntity))
+			if (entityType == typeof (AiderGroupEntity))
 			{
 				return this.GetAiderGroupEntityFilter ((AiderGroupEntity) example, pattern + AiderGroupIds.SubgroupSqlWildcard);
 			}
-			else if (entityType == typeof (AiderContactEntity))
+
+			if (!string.IsNullOrEmpty (pattern))
 			{
-				return string.IsNullOrEmpty (pattern)
-					? null
-					: this.GetAiderContactEntityFilter ((AiderContactEntity) example, pattern + "%");
+				if (entityType == typeof (AiderPersonEntity))
+				{
+					return this.GetAiderPersonEntityFilter ((AiderPersonEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderContactEntity))
+				{
+					return this.GetAiderContactEntityFilter ((AiderContactEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderLegalPersonEntity))
+				{
+					return this.GetAiderLegalPersonEntityFilter ((AiderLegalPersonEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderHouseholdEntity))
+				{
+					return this.GetAiderHouseholdEntityFilter ((AiderHouseholdEntity) example, pattern + "%");
+				}
 			}
 
 			return null;
@@ -107,6 +115,16 @@ namespace Epsitec.Aider.Override
 		private IFilter GetAiderContactEntityFilter(AiderContactEntity example, string pattern)
 		{
 			return new LambdaFilter<AiderContactEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderLegalPersonEntityFilter(AiderLegalPersonEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderLegalPersonEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderHouseholdEntityFilter(AiderHouseholdEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderHouseholdEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
 
 		private string GetActiveScopePathPattern()
