@@ -38,6 +38,8 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
 		{
+			var context = this.GetBusinessContext ();
+
 			AiderPersonBusinessRules.UpdatePersonOfficialName (person);
 			AiderPersonBusinessRules.UpdateBirthday (person);
 			AiderPersonBusinessRules.UpdateCallName (person);
@@ -45,9 +47,15 @@ namespace Epsitec.Aider.Rules
 			AiderPersonBusinessRules.UpdatePersonSex (person);
 			AiderPersonBusinessRules.UpdateVisibility (person);
 
-			this.VerifyParish (person);
+			AiderPersonBusinessRules.VerifyParish (context, person);
 		}
 
+		public override void ApplyValidateRule(AiderPersonEntity person)
+		{
+			AiderPersonBusinessRules.ValidateMrMrs (person);
+		}
+
+		
 		private static void UpdatePersonOfficialName(AiderPersonEntity person)
 		{
 			//	There might be a problem with this official name, since it is mixing
@@ -70,6 +78,7 @@ namespace Epsitec.Aider.Rules
 				person.Visibility = PersonVisibilityStatus.Deceased;
 			}
 		}
+		
 		private static void UpdateBirthday(AiderPersonEntity person)
 		{
 			var date = person.eCH_Person.PersonDateOfBirth;
@@ -86,11 +95,6 @@ namespace Epsitec.Aider.Rules
 				person.BirthdayMonth = date.Value.Month;
 				person.BirthdayYear  = date.Value.Year;
 			}
-		}
-
-		public override void ApplyValidateRule(AiderPersonEntity person)
-		{
-			AiderPersonBusinessRules.ValidateMrMrs (person);
 		}
 
 		private static void UpdateCallName(AiderPersonEntity person)
@@ -124,6 +128,7 @@ namespace Epsitec.Aider.Rules
 			}
 		}
 
+		
 		private static void ValidateMrMrs(AiderPersonEntity person)
 		{
 			var eCH = person.eCH_Person;
@@ -176,22 +181,21 @@ namespace Epsitec.Aider.Rules
 			Logic.BusinessRuleException (person, Resources.Text ("Vérifiez l'appellation: elle ne correspond pas au sexe de la personne."));
 		}
 
-		private void VerifyParish(AiderPersonEntity person)
+		
+		private static void VerifyParish(BusinessContext context, AiderPersonEntity person)
 		{
 			if (person.Parish.IsNull ())
 			{
-				this.AssignParish (person);
+				AiderPersonBusinessRules.AssignParish (context, person);
 			}
 			else
 			{
-				this.CheckCurrentParish (person);
+				AiderPersonBusinessRules.CheckCurrentParish (context, person);
 			}
 		}
 
-		private void CheckCurrentParish(AiderPersonEntity person)
+		private static void CheckCurrentParish(BusinessContext context, AiderPersonEntity person)
 		{
-			var businessContext = this.GetBusinessContext ();
-
 			if (!ParishAssigner.IsParishGroup (person.Parish.Group))
 			{
 				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
@@ -199,7 +203,7 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, businessContext, person))
+			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, context, person))
 			{
 				return;
 			}
@@ -212,10 +216,10 @@ namespace Epsitec.Aider.Rules
 			var title = Resources.Text ("La paroisse ne correspond pas à l'adresse principale");
 			var type = WarningType.ParishMismatch;
 
-			AiderPersonWarningEntity.Create (businessContext, person, title, type);
+			AiderPersonWarningEntity.Create (context, person, title, type);
 		}
 
-		private void AssignParish(AiderPersonEntity person)
+		private static void AssignParish(BusinessContext context, AiderPersonEntity person)
 		{
 			if (ParishAssigner.IsInNoParishGroup (person))
 			{
@@ -223,9 +227,8 @@ namespace Epsitec.Aider.Rules
 			}
 
 			var parishRepository = ParishAddressRepository.Current;
-			var businessContext = this.GetBusinessContext ();
 
-			ParishAssigner.AssignToParish (parishRepository, businessContext, person);
+			ParishAssigner.AssignToParish (parishRepository, context, person);
 		}
 	}
 }

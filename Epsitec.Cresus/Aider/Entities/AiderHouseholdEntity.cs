@@ -18,38 +18,16 @@ using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderHouseholdEntity
 	{
-		public IList<AiderContactEntity> Contacts
-		{
-			get
-			{
-				return this.GetContacts ().AsReadOnlyCollection ();
-			}
-		}
-
 		public override FormattedText GetCompactSummary()
 		{
-			this.RefreshCacheIfNeeded ();
-
 			return TextFormatter.FormatText (this.DisplayName, "~,", this.Address.GetStreetZipAndTownAddress ());
 		}
 
 		public override FormattedText GetSummary()
 		{
-			this.RefreshCacheIfNeeded ();
-
 			return TextFormatter.FormatText (this.DisplayName, "~\n", this.Address.GetPostalAddress ());
-		}
-
-		public void RefreshCacheIfNeeded()
-		{
-			if (string.IsNullOrEmpty (this.DisplayName))
-			{
-				this.RefreshCache ();
-			}
 		}
 
 		public void RefreshCache()
@@ -64,6 +42,69 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public FormattedText GetMembersTitle()
+		{
+			var nbMembers = this.Members.Count;
+
+			return TextFormatter.FormatText ("Membres (", nbMembers, ")");
+		}
+
+		public FormattedText GetMembersSummary()
+		{
+			var members = this.Members
+				   .Select (m => m.GetCompactSummary ())
+				   .CreateSummarySequence (10, "...");
+
+			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), members);
+		}
+
+
+		public void Delete(BusinessContext businessContext)
+		{
+			foreach (var contact in this.Contacts.ToArray ())
+			{
+				AiderContactEntity.Delete (businessContext, contact);
+			}
+
+			if (this.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Comment);
+			}
+
+			if (this.Address.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Address);
+			}
+
+			businessContext.DeleteEntity (this);
+		}
+
+
+		internal void AddContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Add (contact);
+			this.ClearMemberCache ();
+		}
+
+		internal void RemoveContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Remove (contact);
+			this.ClearMemberCache ();
+		}
+
+		
+		partial void GetMembers(ref IList<AiderPersonEntity> value)
+		{
+			value = this.GetMembers ().AsReadOnlyCollection ();
+		}
+
+		partial void GetContacts(ref IList<AiderContactEntity> value)
+		{
+			value = this.GetContacts ().AsReadOnlyCollection ();
+		}
+
+
+		
 		private string BuildDisplayName()
 		{
 			return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
@@ -82,7 +123,6 @@ namespace Epsitec.Aider.Entities
 			return AiderHouseholdEntity.BuildDisplayName (heads, children, order);
 		}
 			
-		
 		private static string BuildDisplayName(IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children, HouseholdMrMrs order)
 		{
 			var men   = heads.Where (x => x.PersonSex == PersonSex.Male);
@@ -153,60 +193,21 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-
-		public FormattedText GetMembersTitle()
-		{
-			var nbMembers = this.Members.Count;
-
-			return TextFormatter.FormatText ("Membres (", nbMembers, ")");
-		}
-
-
-		public FormattedText GetMembersSummary()
-		{
-			var members = this.Members
-				   .Select (m => m.GetCompactSummary ())
-				   .CreateSummarySequence (10, "...");
-
-			return FormattedText.Join (FormattedText.FromSimpleText("\n"), members);
-		}
-
-
-		partial void GetMembers(ref IList<AiderPersonEntity> value)
-		{
-			value = this.GetMembers ().AsReadOnlyCollection ();
-		}
-
-
-		private static List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
-		{
-			var members = new List<AiderPersonEntity> ();
-
-			var heads   = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-			var others  = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-
-			members.AddRange (heads);
-			members.AddRange (others);
-
-			return members;
-		}
-
 		private IList<AiderPersonEntity> GetMembers()
 		{
-			if (this.members == null)
+			if (this.membersCache == null)
 			{
-				this.members = AiderHouseholdEntity.GetMembers (this.GetContacts ());
+				this.membersCache = AiderHouseholdEntity.GetMembers (this.GetContacts ());
 			}
 
-			return this.members;
+			return this.membersCache;
 		}
-
 
 		private IList<AiderContactEntity> GetContacts()
 		{
-			if (this.contacts == null)
+			if (this.contactsCache == null)
 			{
-				this.contacts = new List<AiderContactEntity> ();
+				this.contactsCache = new List<AiderContactEntity> ();
 
 				var dataContext = DataContextPool.GetDataContext (this);
 
@@ -221,62 +222,37 @@ namespace Epsitec.Aider.Entities
 					var contacts = dataContext.GetByExample (example);
 					var alive    = contacts.Where (x => x.Person.IsAlive);
 
-					this.contacts.AddRange (alive);
+					this.contactsCache.AddRange (alive);
 				}
 			}
 
-			return this.contacts;
+			return this.contactsCache;
 		}
 
-
-		public void AddContactInternal(AiderContactEntity contact)
+		private static List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
 		{
-			this.GetContacts ().Add (contact);
-			this.ClearMemberCache ();			
+			var members = new List<AiderPersonEntity> ();
+
+			var heads   = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+			var others  = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+
+			members.AddRange (heads);
+			members.AddRange (others);
+
+			return members;
 		}
 
-
-		public void RemoveContactInternal(AiderContactEntity contact)
-		{
-			this.GetContacts ().Remove (contact);
-			this.ClearMemberCache ();
-		}
-
-
+		
 		private void ClearMemberCache()
 		{
-			this.members = null;
+			this.membersCache = null;
 		}
 
 
-		public void Delete(BusinessContext businessContext)
-		{
-			foreach (var contact in this.Contacts.ToArray ())
-			{
-				AiderContactEntity.Delete (businessContext, contact);
-			}
 
-			if (this.Comment.IsNotNull ())
-			{
-				businessContext.DeleteEntity (this.Comment);
-			}
-
-			if (this.Address.IsNotNull ())
-			{
-				businessContext.DeleteEntity (this.Address);
-			}
-
-			businessContext.DeleteEntity (this);
-		}
-
-
-		// This property is only meant as an in memory cache of the members of the household. It
-		// will never be saved to the database.
-		private List<AiderContactEntity> contacts;
-		private List<AiderPersonEntity> members;
-
-
+		//	These properties are only meant as an in memory cache of the members of the household.
+		//	They will never be saved to the database:
+		private List<AiderContactEntity>		contactsCache;
+		private List<AiderPersonEntity>			membersCache;
 	}
-
-
 }

@@ -1596,6 +1596,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAT2
 				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
+				//	designer:cap/LVAGF
+				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 496);
 				//	designer:cap/LVA5F
 				public static readonly global::Epsitec.Common.Support.Druid DisplayAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 485);
 				//	designer:cap/LVAGE
@@ -1623,6 +1625,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVADF
 				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 493);
+				//	designer:cap/LVAHF
+				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 497);
 				//	designer:cap/LVAFF
 				public static readonly global::Epsitec.Common.Support.Druid DisplayAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 495);
 				//	designer:cap/LVAEF
