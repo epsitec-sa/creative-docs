@@ -40,7 +40,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private AiderAddressEntity GetAddress()
+		/// <summary>
+		/// You should always use this method to get the address of the entity, unless you are sure
+		/// that the entity has not be modified before you access the address property. The only
+		/// places where you can is probably in brick wall for the controllers and when you just
+		/// have loaded the entity in memory from a fresh BusinessContext.
+		/// </summary>
+		public AiderAddressEntity GetAddress()
 		{
 			switch (this.ContactType)
 			{
@@ -103,7 +109,7 @@ namespace Epsitec.Aider.Entities
 
 		private string GetDisplayAddress()
 		{
-			return Address.GetDisplayAddress ().ToSimpleText ();
+			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
 

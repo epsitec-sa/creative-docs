@@ -175,7 +175,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			else
 			{
-				var address = contact.Address;
+				var address = contact.GetAddress ();
 
 				if (address.IsNotNull () && address.Town.IsNotNull ())
 				{

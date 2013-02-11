@@ -294,7 +294,7 @@ namespace Epsitec.Aider.Data.Eerv
 				if (hasEmail || hasMobile)
 				{
 					var contact = AiderContactEntity.Create (businessContext, aiderPerson, AddressType.Other);
-					var address = contact.Address;
+					var address = contact.GetAddress ();
 
 					EervParishDataImporter.SetEmail (address, email);
 					EervParishDataImporter.SetPhoneNumber (address, mobile, (a, s) => a.Mobile = s);

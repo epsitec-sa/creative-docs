@@ -166,9 +166,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderAddressEntity FindMainAddress(AiderPersonEntity person)
 		{
-			var addressContacts = person.Contacts
-				.Where (c => c.Address.IsNotNull () && c.Address.Town.IsNotNull ())
-				.ToList ();
+			var addressContacts = new List<AiderContactEntity>
+			(
+				from contact in person.Contacts
+				let address = contact.GetAddress ()
+				where address.IsNotNull () && address.Town.IsNotNull ()
+				select contact
+			);
 
 			var mainContact = addressContacts
 				.Where (c => c.ContactType == ContactType.PersonHousehold)
@@ -192,7 +196,7 @@ namespace Epsitec.Aider.Data.Eerv
 				return null;
 			}
 
-			return mainContact.Address;
+			return mainContact.GetAddress ();
 		}
 
 
@@ -277,8 +281,9 @@ namespace Epsitec.Aider.Data.Eerv
 			var currentGroupName = person.Parish.Group.Name;
 
 			return person.Contacts
-				.Where (c => c.Address.Town.IsNotNull ())
-				.Select (c => ParishAssigner.FindParishName (parishRepository, c.Address))
+				.Select (c => c.GetAddress ())
+				.Where (a => a.Town.IsNotNull ())
+				.Select (a => ParishAssigner.FindParishName (parishRepository, a))
 				.Where (n => !string.IsNullOrEmpty (n))
 				.Select (n => ParishAssigner.GetParishGroupName (n))
 				.Contains (currentGroupName);
