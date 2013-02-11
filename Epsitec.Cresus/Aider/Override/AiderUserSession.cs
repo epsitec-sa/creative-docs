@@ -182,7 +182,7 @@ namespace Epsitec.Aider.Override
 
 			return new UserScope (id, name);
 		}
-		
+
 		public override void SetActiveUserScope(string scopeId)
 		{
 			var entityKey = EntityKey.Parse (scopeId);
@@ -193,7 +193,7 @@ namespace Epsitec.Aider.Override
 			this.SetActiveScope (scope);
 		}
 
-		
+
 		public void SetActiveScope(AiderUserScopeEntity scope)
 		{
 			if (this.activeScope == scope)
@@ -232,8 +232,8 @@ namespace Epsitec.Aider.Override
 
 			this.OnActiveScopeChanged ();
 		}
-		
-		
+
+
 		public AiderUserScopeEntity GetActiveScope()
 		{
 			if ((this.activeScope == null) &&
@@ -249,7 +249,7 @@ namespace Epsitec.Aider.Override
 		private void OnActiveScopeChanged()
 		{
 		}
-		
+
 		private AiderUserScopeEntity ResolveActiveScope()
 		{
 			var user = this.UserManager.AuthenticatedUser;
@@ -280,7 +280,7 @@ namespace Epsitec.Aider.Override
 					scope = null;
 				}
 			}
-			
+
 			this.SetActiveScope (scope);
 
 			return scope;
