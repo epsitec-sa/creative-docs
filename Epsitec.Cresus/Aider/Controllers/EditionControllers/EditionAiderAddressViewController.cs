@@ -28,6 +28,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Fax)
 					.Field (x => x.Email)
 					.Field (x => x.Web)
+				.End ()
+				.Input ()
+					.Field (x => x.Comment.Text)
 				.End ();
 		}
 	}
