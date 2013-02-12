@@ -652,23 +652,31 @@ namespace Epsitec.Cresus.Core.Business
 		/// Unregisters the specified entity from the business context.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		public void Unregister(AbstractEntity entity)
+		/// <returns><c>true</c> if the entity was successfully unregistered.</returns>
+		public bool Unregister(AbstractEntity entity)
 		{
-			if (entity.IsNotNull ())
+			if (entity.IsNull ())
 			{
-				var record = this.entityRecords.FirstOrDefault (x => x.Entity == entity);
-
-				System.Diagnostics.Debug.Assert (record != null);
-
-				if (record.DecrementRegistration ())
-				{
-					//	The entity is no longer referenced; remove it from our records, so that
-					//	we no longer apply the business rules to it.
-
-					this.entityRecords.Remove (record);
-					this.ApplyRules (RuleType.Unbind, record.Entity);
-				}
+				return false;
 			}
+			
+			var record = this.entityRecords.FirstOrDefault (x => x.Entity == entity);
+
+			if (record == null)
+			{
+				return false;
+			}
+
+			if (record.DecrementRegistration ())
+			{
+				//	The entity is no longer referenced; remove it from our records, so that
+				//	we no longer apply the business rules to it.
+
+				this.entityRecords.Remove (record);
+				this.ApplyRules (RuleType.Unbind, record.Entity);
+			}
+
+			return true;
 		}
 
 
@@ -723,7 +731,7 @@ namespace Epsitec.Cresus.Core.Business
 			return entity;
 		}
 
-		public bool ArchiveEntity<T>(T entity)
+		private bool ArchiveEntity<T>(T entity)
 			where T : AbstractEntity, new ()
 		{
 			ILifetime lifetime = entity as ILifetime;
@@ -736,13 +744,13 @@ namespace Epsitec.Cresus.Core.Business
 			if (this.DataContext.IsPersistent (entity))
 			{
 				lifetime.IsArchive = true;
-			}
-			else
-			{
-				this.DataContext.DeleteEntity (entity);
+				return true;
 			}
 
-			return true;
+			//	Cannot archive entity, since it has not yet been persisted to the database.
+			//	The caller should rather delete the entity.
+			
+			return false;
 		}
 
 		public bool ArchiveOrDeleteEntity<T>(T entity)
@@ -760,6 +768,10 @@ namespace Epsitec.Cresus.Core.Business
 
 		public bool DeleteEntity(AbstractEntity entity)
 		{
+			this.Unregister (entity);
+
+			//	TODO: implement a business rule for deletion?
+
 			return this.DataContext.DeleteEntity (entity);
 		}
 
