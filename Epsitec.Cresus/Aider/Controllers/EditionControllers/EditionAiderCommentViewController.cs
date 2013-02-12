@@ -12,11 +12,21 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderCommentEntity> wall)
 		{
-			wall.AddBrick ()
-				.Input ()
-					.Field (x => x.Text)
-					.Field (x => x.SystemText).ReadOnly ()
-				.End ();
+			if (string.IsNullOrEmpty (this.Entity.SystemText))
+			{
+				wall.AddBrick ()
+					.Input ()
+						.Field (x => x.Text)
+					.End ();
+			}
+			else
+			{
+				wall.AddBrick ()
+					.Input ()
+						.Field (x => x.Text)
+						.Field (x => x.SystemText).ReadOnly ()
+					.End ();
+			}
 		}
 	}
 }
