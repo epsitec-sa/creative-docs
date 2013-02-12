@@ -652,8 +652,11 @@ namespace Epsitec.Cresus.Core.Business
 		/// Unregisters the specified entity from the business context.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		/// <returns><c>true</c> if the entity was successfully unregistered.</returns>
-		public bool Unregister(AbstractEntity entity)
+		/// <param name="forceRemoval">if set to <c>true</c>, forces the removal regardless of the registration count.</param>
+		/// <returns>
+		///   <c>true</c> if the entity was successfully unregistered.
+		/// </returns>
+		public bool Unregister(AbstractEntity entity, bool forceRemoval = false)
 		{
 			if (entity.IsNull ())
 			{
@@ -667,7 +670,8 @@ namespace Epsitec.Cresus.Core.Business
 				return false;
 			}
 
-			if (record.DecrementRegistration ())
+			if ((forceRemoval) ||
+				(record.DecrementRegistration ()))
 			{
 				//	The entity is no longer referenced; remove it from our records, so that
 				//	we no longer apply the business rules to it.
@@ -768,7 +772,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		public bool DeleteEntity(AbstractEntity entity)
 		{
-			this.Unregister (entity);
+			this.Unregister (entity, forceRemoval: true);
 
 			//	TODO: implement a business rule for deletion?
 
@@ -1070,14 +1074,9 @@ namespace Epsitec.Cresus.Core.Business
 				}
 			}
 
-			public bool HasMultipleRegistration
-			{
-				get
-				{
-					return this.counter > 1;
-				}
-			}
-
+			/// <summary>
+			/// Increments the registration counter.
+			/// </summary>
 			public void IncrementRegistration()
 			{
 				System.Threading.Interlocked.Increment (ref this.counter);
@@ -1089,7 +1088,11 @@ namespace Epsitec.Cresus.Core.Business
 			/// <returns><c>true</c> if this was the last registration; otherwise, <c>false</c>.</returns>
 			public bool DecrementRegistration()
 			{
-				return System.Threading.Interlocked.Decrement (ref this.counter) == 0;
+				var decrementedCounter = System.Threading.Interlocked.Decrement (ref this.counter);
+
+				System.Diagnostics.Debug.Assert (decrementedCounter >= 0);
+				
+				return decrementedCounter == 0;
 			}
 
 
