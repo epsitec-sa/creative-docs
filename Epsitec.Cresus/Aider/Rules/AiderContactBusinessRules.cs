@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
@@ -19,21 +20,31 @@ namespace Epsitec.Aider.Rules
 			var businessContext = this.GetBusinessContext ();
 
 			var household = entity.Household;
-
 			if (household.IsNotNull ())
 			{
 				businessContext.Register (household);
 			}
 
 			var person = entity.Person;
-
 			if (person.IsNotNull ())
 			{
 				businessContext.Register (person);
 			}
 
-			// We don't register legal persons, as there is no dependency from contacts to legal
-			// persons.
+			var legalPerson = entity.LegalPerson;
+			if (legalPerson.IsNotNull ())
+			{
+				businessContext.Register (legalPerson);
+			}
+
+			if (entity.ContactType == ContactType.PersonAddress)
+			{
+				// We don't register the address in other cases, as it is owned by another entity
+				// like an household or a legal person, and it will therefore be registered through
+				// it.
+
+				businessContext.Register (entity.Address);
+			}
 		}
 
 		public override void ApplyUpdateRule(AiderContactEntity contact)

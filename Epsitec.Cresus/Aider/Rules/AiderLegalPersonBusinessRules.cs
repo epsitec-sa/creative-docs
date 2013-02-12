@@ -29,7 +29,10 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyBindRule(AiderLegalPersonEntity entity)
 		{
-			this.GetBusinessContext ().Register (entity.Contacts);
+			var businessContext = this.GetBusinessContext ();
+
+			businessContext.Register (entity.Contacts);
+			businessContext.Register (entity.Address);
 		}
 
 		public override void ApplyUpdateRule(AiderLegalPersonEntity legal)

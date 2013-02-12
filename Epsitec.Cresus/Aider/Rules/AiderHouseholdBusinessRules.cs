@@ -26,7 +26,10 @@ namespace Epsitec.Aider.Rules
 			// Registering the contacts will also register the members, as they are registered
 			// by the contacts.
 
-			this.GetBusinessContext ().Register (entity.Contacts);
+			var businessContext = this.GetBusinessContext ();
+
+			businessContext.Register (entity.Contacts);
+			businessContext.Register (entity.Address);
 		}
 
 		public override void ApplyUpdateRule(AiderHouseholdEntity household)
