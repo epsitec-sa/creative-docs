@@ -43,7 +43,11 @@ AiderFunctionDef = [LVA7A]
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVA55].[LVA95]" title="Localité" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA6F]" title="NPA" dw="45" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA5F]" title="Adresse" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
