@@ -3,10 +3,13 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -18,7 +21,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableAction (0)
 				.EnableAction (1);
 
-			wall.AddBrick (h => h.Address);
+			wall.AddBrick ()
+				.Title (Resources.Text ("Adresse"))
+				.Text (this.Entity.Address.GetSummary ())
+				.Icon ("Data.AiderAddress")
+				.Attribute (BrickMode.SpecialController1);
 
 			wall.AddBrick (h => h.Members)
 				.Attribute (BrickMode.HideAddButton)
