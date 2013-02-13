@@ -1039,13 +1039,12 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
 		{
 			var parishName = eervParishData.Id.Name;
-			
+
 			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, parishName);
 			ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, parishName);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
-
 
 
 		private static List<AiderLegalPersonEntity> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData, string parishName)
