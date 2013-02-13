@@ -31,12 +31,6 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
-		{
-			AiderEnumerator.Execute (coreDataManager, AiderEnumerator.GetPersonBatch, action);
-		}
-
-
 		private static void Execute<T>(CoreDataManager coreDataManager, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
 			const int size = 1000;
@@ -87,27 +81,6 @@ namespace Epsitec.Aider.Data.Eerv
 			AiderEnumerator.LoadRelatedData (dataContext, aiderContacts);
 
 			return aiderContacts;
-		}
-
-
-		private static IList<AiderPersonEntity> GetPersonBatch(DataContext dataContext, int skip, int take)
-		{
-			var aiderPerson = new AiderPersonEntity ();
-
-			var request = new Request ()
-			{
-				RootEntity = aiderPerson,
-				Skip = skip,
-				Take = take,
-			};
-
-			request.AddSortClause (InternalField.CreateId (aiderPerson));
-
-			var aiderPersons = dataContext.GetByRequest<AiderPersonEntity> (request);
-
-			AiderEnumerator.LoadRelatedData (dataContext, aiderPersons);
-
-			return aiderPersons;
 		}
 
 
