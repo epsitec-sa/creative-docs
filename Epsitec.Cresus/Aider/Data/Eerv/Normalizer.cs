@@ -1,10 +1,10 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static Dictionary<NormalizedPerson, EntityKey> Normalize(CoreDataManager coreDataManager)
+		public static Dictionary<NormalizedPerson, EntityKey> Normalize(CoreData coreData)
 		{
 			var keyToHouseholds = new Dictionary<EntityKey, NormalizedHousehold> ();
 			var keyToPersons = new Dictionary<EntityKey, NormalizedPerson> ();
@@ -116,7 +116,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			AiderEnumerator.Execute
 			(
-				coreDataManager,
+				coreData,
 				(b, c) => Normalizer.Normalize (b, c, personToKeys, keyToHouseholds, keyToPersons)
 			);
 

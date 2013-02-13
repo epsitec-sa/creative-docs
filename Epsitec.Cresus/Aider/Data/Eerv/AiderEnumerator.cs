@@ -1,8 +1,8 @@
 ﻿using Epsitec.Aider.Entities;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -25,13 +25,13 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderContactEntity>> action)
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderContactEntity>> action)
 		{
-			AiderEnumerator.Execute (coreDataManager, AiderEnumerator.GetContactBatch, action);
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetContactBatch, action);
 		}
 
 
-		private static void Execute<T>(CoreDataManager coreDataManager, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
+		private static void Execute<T>(CoreData coreData, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
 			const int size = 1000;
 
@@ -41,19 +41,19 @@ namespace Epsitec.Aider.Data.Eerv
 
 				bool done = false;
 
-				coreDataManager.Execute (b =>
+				using (var businessContext = new BusinessContext (coreData, false))
 				{
-					var batch = batchGetter (b.DataContext, skip, size);
+					var batch = batchGetter (businessContext.DataContext, skip, size);
 
 					if (batch.Any ())
 					{
-						action (b, batch);
+						action (businessContext, batch);
 					}
 					else
 					{
 						done = true;
 					}
-				});
+				}
 
 				if (done)
 				{

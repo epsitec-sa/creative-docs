@@ -1,6 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Aider.Tools;
 using Epsitec.Aider.Data.Eerv;
 
 using Epsitec.Common.Support;
@@ -8,6 +7,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -33,28 +33,31 @@ namespace Epsitec.Aider.Data.ECh
 	{
 
 
-		public static void Import(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons)
+		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons)
 		{
-			EChDataImporter.ImportCountries (coreDataManager);
-			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
+			EChDataImporter.ImportCountries (coreData);
+			var zipCodeIdToEntityKey = EChDataImporter.ImportTowns (coreData, eChReportedPersons);
 
 			try
 			{
-				coreDataManager.CoreData.EnableIndexes (false);
+				coreData.EnableIndexes (false);
 
-				EChDataImporter.ImportPersons (coreDataManager, parishRepository, eChReportedPersons, zipCodeIdToEntityKey);
+				EChDataImporter.ImportPersons (coreData, parishRepository, eChReportedPersons, zipCodeIdToEntityKey);
 			}
 			finally
 			{
-				coreDataManager.CoreData.EnableIndexes (true);
-				coreDataManager.CoreData.ResetIndexes ();
+				coreData.EnableIndexes (true);
+				coreData.ResetIndexes ();
 			}
 		}
 
 
-		private static void ImportCountries(CoreDataManager coreDataManager)
+		private static void ImportCountries(CoreData coreData)
 		{
-			coreDataManager.Execute (b => EChDataImporter.ImportCountries (b));
+			using (var businessContext = new BusinessContext(coreData, false))
+			{
+				EChDataImporter.ImportCountries (businessContext);
+			}
 		}
 
 
@@ -74,14 +77,12 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static Dictionary<int, EntityKey> ImportTowns(CoreDataManager coreDataManager, IEnumerable<EChReportedPerson> echReportedPersons)
+		private static Dictionary<int, EntityKey> ImportTowns(CoreData coreData, IEnumerable<EChReportedPerson> echReportedPersons)
 		{
-			Func<BusinessContext, Dictionary<int, EntityKey>> function = b =>
+			using (var businessContext = new BusinessContext(coreData, false))
 			{
-				return EChDataImporter.ImportTowns (b, echReportedPersons);
-			};
-
-			return coreDataManager.Execute (function);
+				return EChDataImporter.ImportTowns (businessContext, echReportedPersons);
+			}
 		}
 
 
@@ -111,7 +112,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportPersons(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
+		private static void ImportPersons(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
 			int batchSize = 1000;
 			int nbBatches = 0;
@@ -123,12 +124,10 @@ namespace Epsitec.Aider.Data.ECh
 
 			foreach (var batch in EChDataImporter.GetBatches (eChReportedPersons, batchSize))
 			{
-				Action<BusinessContext> action = b =>
+				using (var businessContext = new BusinessContext (coreData, false))
 				{
-					EChDataImporter.ImportBatch (b, parishRepository, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey);
-				};
-
-				coreDataManager.Execute (action);
+					EChDataImporter.ImportBatch (businessContext, parishRepository, batch, eChPersonIdToEntityKey, zipCodeIdToEntityKey);
+				}
 
 				nbBatches++;
 

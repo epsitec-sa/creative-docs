@@ -10,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -31,29 +32,29 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, EervMainData eervMainData, EervParishData eervParishData)
+		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreDataManager, parishRepository, eervParishData);
+			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreData, parishRepository, eervParishData);
 
-			EervParishDataImporter.ImportEervLegalPersons (coreDataManager, eervParishData);
+			EervParishDataImporter.ImportEervLegalPersons (coreData, eervParishData);
 
-			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (coreDataManager, eervMainData, eervParishData);
+			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (coreData, eervMainData, eervParishData);
 
-			EervParishDataImporter.ImportEervActivities (coreDataManager, eervParishData, eervPersonMapping, eervGroupMapping);
+			EervParishDataImporter.ImportEervActivities (coreData, eervParishData, eervPersonMapping, eervGroupMapping);
 
-			coreDataManager.CoreData.ResetIndexes ();
+			coreData.ResetIndexes ();
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, EervParishData eervParishData)
+		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
-			var matches = EervParishDataImporter.FindMatches (coreDataManager, eervParishData);
-			var newEntities = EervParishDataImporter.ProcessMatches (coreDataManager, eervParishData.Id.Name, matches);
+			var matches = EervParishDataImporter.FindMatches (coreData, eervParishData);
+			var newEntities = EervParishDataImporter.ProcessMatches (coreData, eervParishData.Id.Name, matches);
 			var mapping = EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 
-			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
-			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, newEntities.Values);
-			EervParishDataImporter.AssignToImportationGroup (coreDataManager, eervParishData.Id, mapping.Values);
+			EervParishDataImporter.ProcessHouseholdMatches (coreData, matches, newEntities, eervParishData.Households);
+			EervParishDataImporter.AssignToParishes (coreData, parishRepository, newEntities.Values);
+			EervParishDataImporter.AssignToImportationGroup (coreData, eervParishData.Id, mapping.Values);
 
 			return mapping;
 		}
@@ -80,9 +81,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, Tuple<EntityKey, MatchData>> FindMatches(CoreDataManager coreDataManager, EervParishData eervParishData)
+		private static Dictionary<EervPerson, Tuple<EntityKey, MatchData>> FindMatches(CoreData coreData, EervParishData eervParishData)
 		{
-			var normalizedAiderPersons = Normalizer.Normalize (coreDataManager);
+			var normalizedAiderPersons = Normalizer.Normalize (coreData);
 			var normalizedEervPersons = Normalizer.Normalize (eervParishData.Households);
 
 			var matches = EervParishDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
@@ -97,11 +98,17 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreDataManager coreDataManager, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreData coreData, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
-			coreDataManager.Execute (b => EervParishDataImporter.ProcessMatchWithValues (b, parishName, matches));
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				EervParishDataImporter.ProcessMatchWithValues (businessContext, parishName, matches);
+			}
 
-			return coreDataManager.Execute (b => EervParishDataImporter.ProcessMatchWithoutValues (b, parishName, matches));
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				return EervParishDataImporter.ProcessMatchWithoutValues (businessContext, parishName, matches);
+			}
 		}
 
 
@@ -540,16 +547,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ProcessHouseholdMatches
 		(
-			CoreDataManager coreDataManager,
+			CoreData coreData,
 			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
 			Dictionary<EervPerson, EntityKey> newEntities,
 			IEnumerable<EervHousehold> eervHouseholds
 		)
 		{
-			coreDataManager.Execute (b =>
+			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.ProcessHouseholdMatches (b, matches, newEntities, eervHouseholds);
-			});
+				EervParishDataImporter.ProcessHouseholdMatches (businessContext, matches, newEntities, eervHouseholds);
+			}
 		}
 
 
@@ -1020,12 +1027,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervLegalPersons(CoreDataManager coreDataManager, EervParishData eervParishData)
+		private static void ImportEervLegalPersons(CoreData coreData, EervParishData eervParishData)
 		{
-			coreDataManager.Execute (b =>
+			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.ImportEervLegalPersons (b, eervParishData);
-			});
+				EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData);
+			}
 		}
 
 
@@ -1149,11 +1156,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToParishes(CoreData coreData, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
 		{
-			coreDataManager.Execute (b =>
-				EervParishDataImporter.AssignToParishes (b, parishRepository, aiderPersonKeys)
-			);
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				EervParishDataImporter.AssignToParishes (businessContext, parishRepository, aiderPersonKeys);
+			}
 		}
 
 
@@ -1172,11 +1180,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignToImportationGroup(CoreDataManager coreDataManager, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToImportationGroup(CoreData coreData, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
 		{
-			coreDataManager.Execute (b =>
-				EervParishDataImporter.AssignToImportationGroup (b, parishId, aiderPersonKeys)
-			);
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				EervParishDataImporter.AssignToImportationGroup (businessContext, parishId, aiderPersonKeys);
+			}
 		}
 
 
@@ -1223,12 +1232,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreDataManager coreDataManager, EervMainData eervMainData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreData coreData, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			return coreDataManager.Execute (b =>
+			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				return EervParishDataImporter.ImportEervGroups (b, eervMainData, eervParishData);
-			});
+				return EervParishDataImporter.ImportEervGroups (businessContext, eervMainData, eervParishData);
+			}
 		}
 
 
@@ -1425,12 +1434,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervActivities(CoreDataManager coreDataManager, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
+		private static void ImportEervActivities(CoreData coreData, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
 		{
-			coreDataManager.Execute (b =>
+			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.ImportEervActivities (b, eervParishData, eervPersonToKeys, eervGroupToKeys);
-			});
+				EervParishDataImporter.ImportEervActivities (businessContext, eervParishData, eervPersonToKeys, eervGroupToKeys);
+			}
 		}
 
 

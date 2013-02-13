@@ -4,7 +4,6 @@
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Debug;
 
@@ -83,7 +82,7 @@ namespace Epsitec.Aider
 
 		private static void RunEchImportation(string[] args)
 		{
-			AiderProgram.RunWithCoreDataManager (coreDataManager =>
+			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
 				var mode = AiderProgram.GetString (args, "-mode:", false);
@@ -93,7 +92,7 @@ namespace Epsitec.Aider
 
 				var parishRepository = ParishAddressRepository.Current;
 
-				EChDataImporter.Import (coreDataManager, parishRepository, eChReportedPersons);
+				EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
 			});
 		}
 
@@ -114,20 +113,20 @@ namespace Epsitec.Aider
 
 		private static void RunEervMainImportation(string[] args)
 		{
-			AiderProgram.RunWithCoreDataManager (coreDataManager =>
+			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:", true);
 				
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 
-				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
+				EervMainDataImporter.Import (coreData, eervMainData, parishRepository);
 			});
 		}
 
 		private static void RunEervParishImportation(string[] args)
 		{
-			AiderProgram.RunWithCoreDataManager (coreDataManager =>
+			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:", true);
 				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile:", true);
@@ -149,13 +148,13 @@ namespace Epsitec.Aider
 
 					foreach (var eervParishDatum in eervParishData)
 					{
-						EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
+						EervParishDataImporter.Import (coreData, parishRepository, eervMainData, eervParishDatum);
 					}
 				}
 			});
 		}
 
-		private static void RunWithCoreDataManager(Action<CoreDataManager> action)
+		private static void RunWithCoreData(Action<CoreData> action)
 		{
 			SwissPost.Initialize ();
 			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
@@ -166,9 +165,7 @@ namespace Epsitec.Aider
 			{
 				application.SetupApplication ();
 
-				var coreDataManager = new CoreDataManager (application.Data);
-
-				action (coreDataManager);
+				action (application.Data);
 
 				Services.ShutDown ();
 			}

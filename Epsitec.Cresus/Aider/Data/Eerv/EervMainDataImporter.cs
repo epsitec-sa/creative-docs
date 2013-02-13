@@ -1,9 +1,9 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
@@ -19,20 +19,23 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(CoreDataManager coreDataManager, EervMainData eervData, ParishAddressRepository parishRepository)
+		public static void Import(CoreData coreData, EervMainData eervData, ParishAddressRepository parishRepository)
 		{
-			EervMainDataImporter.ImportGroupDefinitions (coreDataManager, eervData);
+			EervMainDataImporter.ImportGroupDefinitions (coreData, eervData);
 
-			EervMainDataImporter.ImportGlobalGroups (coreDataManager, eervData);
-			EervMainDataImporter.ImportRegionAndParishGroups (coreDataManager, parishRepository);
+			EervMainDataImporter.ImportGlobalGroups (coreData, eervData);
+			EervMainDataImporter.ImportRegionAndParishGroups (coreData, parishRepository);
 
-			coreDataManager.CoreData.ResetIndexes ();
+			coreData.ResetIndexes ();
 		}
 
 
-		private static void ImportGroupDefinitions(CoreDataManager coreDataManager, EervMainData eervData)
+		private static void ImportGroupDefinitions(CoreData coreData, EervMainData eervData)
 		{
-			coreDataManager.Execute (b => EervMainDataImporter.ImportGroupDefinitions (b, eervData));
+			using (var businessContext = new BusinessContext(coreData, false))
+			{
+				EervMainDataImporter.ImportGroupDefinitions (businessContext, eervData);
+			}
 		}
 
 
@@ -85,9 +88,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportGlobalGroups(CoreDataManager coreDataManager, EervMainData eervData)
+		private static void ImportGlobalGroups(CoreData coreData, EervMainData eervData)
 		{
-			coreDataManager.Execute (b => EervMainDataImporter.ImportGlobalGroups (b, eervData));
+			using (var businessContext = new BusinessContext(coreData, false))
+			{
+				EervMainDataImporter.ImportGlobalGroups (businessContext, eervData);
+			}
 		}
 
 
@@ -132,12 +138,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportRegionAndParishGroups(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
+		private static void ImportRegionAndParishGroups(CoreData coreData, ParishAddressRepository parishRepository)
 		{
-			coreDataManager.Execute (b =>
+			using (var businessContext = new BusinessContext(coreData, false))
 			{
-				EervMainDataImporter.ImportRegionAndParishGroups (b, parishRepository);
-			});
+				EervMainDataImporter.ImportRegionAndParishGroups (businessContext, parishRepository);
+			}
 		}
 
 

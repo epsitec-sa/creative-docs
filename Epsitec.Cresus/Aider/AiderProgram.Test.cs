@@ -48,20 +48,20 @@ namespace Epsitec.Aider
 			{
 				application.SetupApplication ();
 
-				var coreDataManager = new CoreDataManager (application.Data);
+				var coreData = application.Data;
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
 				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
-				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
+				EervMainDataImporter.Import (coreData, eervMainData, parishRepository);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
 
 				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
-				EChDataImporter.Import (coreDataManager, parishRepository, eChReportedPersons);
+				EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
 
@@ -72,7 +72,7 @@ namespace Epsitec.Aider
 
 				AiderProgram.Test
 				(
-					coreDataManager: coreDataManager,
+					coreData: coreData,
 					groupDef: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx",
 					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\person.xlsx",
 					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\activity.xlsx",
@@ -85,7 +85,7 @@ namespace Epsitec.Aider
 
 				AiderProgram.Test
 				(
-					coreDataManager: coreDataManager,
+					coreData: coreData,
 					groupDef: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx",
 					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\person.xlsx",
 					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\activity.xlsx",
@@ -98,7 +98,7 @@ namespace Epsitec.Aider
 
 				AiderProgram.Test
 				(
-					coreDataManager: coreDataManager,
+					coreData: coreData,
 					groupDef: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx",
 					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\person.xlsx",
 					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\activity.xlsx",
@@ -111,7 +111,7 @@ namespace Epsitec.Aider
 
 				AiderProgram.Test
 				(
-					coreDataManager: coreDataManager,
+					coreData: coreData,
 					groupDef: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx",
 					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9040\\person1.xlsx",
 					activity: null,
@@ -124,7 +124,7 @@ namespace Epsitec.Aider
 
 				AiderProgram.Test
 				(
-					coreDataManager: coreDataManager,
+					coreData: coreData,
 					groupDef: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx",
 					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9040\\person2.xlsx",
 					activity: null,
@@ -137,7 +137,7 @@ namespace Epsitec.Aider
 
 				AiderProgram.Test
 				(
-					coreDataManager: coreDataManager,
+					coreData: coreData,
 					groupDef: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx",
 					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\person.xlsx",
 					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\activity.xlsx",
@@ -150,7 +150,7 @@ namespace Epsitec.Aider
 			}
 		}
 
-		private static void Test(CoreDataManager coreDataManager, string groupDef, string person, string activity, string group, string supergroup, string id)
+		private static void Test(CoreData coreData, string groupDef, string person, string activity, string group, string supergroup, string id)
 		{
 			var eervGroupDefinitionFile = new FileInfo (groupDef);
 			var eervPersonsFile = new FileInfo (person);
@@ -169,7 +169,7 @@ namespace Epsitec.Aider
 
 			foreach (var eervParishDatum in eervParishData)
 			{
-				EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
+				EervParishDataImporter.Import (coreData, parishRepository, eervMainData, eervParishDatum);
 			}
 		}
 	}
