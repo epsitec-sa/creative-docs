@@ -95,6 +95,9 @@ namespace Epsitec.Aider.Data.Eerv
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Household),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Household.Address.Town),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson.Address),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson.Address.Town),
 			});
 		}
 
@@ -108,14 +111,30 @@ namespace Epsitec.Aider.Data.Eerv
 				LambdaUtils.Convert ((AiderPersonEntity p) => p.Parish.Group),
 			});
 
-			var aiderContacts = aiderPersons
+			var aiderPersonContacts = aiderPersons
 				.SelectMany (p => p.Contacts)
 				.ToList ();
 
-			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
+			dataContext.LoadRelatedData (aiderPersonContacts, new List<LambdaExpression> ()
 			{
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.Household),
+				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson),
+			});
+
+			var aiderHouseholds = aiderPersons
+				.SelectMany (p => p.Households)
+				.Distinct ()
+				.ToList ();
+
+			var aiderHouseholdContacts = aiderHouseholds
+				.SelectMany (p => p.Contacts)
+				.ToList ();
+
+			dataContext.LoadRelatedData (aiderHouseholdContacts, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert((AiderContactEntity c) => c.Person),
 			});
 
 			var aiderGroups = aiderPersons
@@ -126,26 +145,6 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				LambdaUtils.Convert ((AiderGroupParticipantEntity p) => p.Group),
 				LambdaUtils.Convert ((AiderGroupParticipantEntity p) => p.Group.GroupDef),
-			});
-		}
-
-
-		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderHouseholdEntity> aiderHouseholds)
-		{
-			dataContext.LoadRelatedData (aiderHouseholds, new List<LambdaExpression> ()
-			{
-				LambdaUtils.Convert ((AiderHouseholdEntity h) => h.Address),
-				LambdaUtils.Convert ((AiderHouseholdEntity h) => h.Address.Town),
-			});
-			
-			var aiderContacts = aiderHouseholds
-				.SelectMany (p => p.Contacts)
-				.ToList ();
-
-			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
-			{
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Address),
-				LambdaUtils.Convert ((AiderContactEntity c) => c.Address.Town),
 			});
 		}
 
