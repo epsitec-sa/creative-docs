@@ -50,20 +50,20 @@ namespace Epsitec.Aider
 
 				var coreDataManager = new CoreDataManager (application.Data);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
 				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
 
 				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
 				EChDataImporter.Import (coreDataManager, parishRepository, eChReportedPersons);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
 
 				if (importMode.HasFlag (AiderProgramTestImportMode.EchOnly))
 				{
@@ -81,7 +81,7 @@ namespace Epsitec.Aider
 					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\id.xlsx"
 				);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
 
 				AiderProgram.Test
 				(
@@ -94,7 +94,7 @@ namespace Epsitec.Aider
 					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\id.xlsx"
 				);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 2");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 2");
 
 				AiderProgram.Test
 				(
@@ -107,7 +107,7 @@ namespace Epsitec.Aider
 					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\id.xlsx"
 				);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 3");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 3");
 
 				AiderProgram.Test
 				(
@@ -120,7 +120,7 @@ namespace Epsitec.Aider
 					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9040\\id.xlsx"
 				);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4A");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4A");
 
 				AiderProgram.Test
 				(
@@ -133,7 +133,7 @@ namespace Epsitec.Aider
 					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9040\\id.xlsx"
 				);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4B");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4B");
 
 				AiderProgram.Test
 				(
@@ -146,7 +146,7 @@ namespace Epsitec.Aider
 					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\id.xlsx"
 				);
 
-				System.Diagnostics.Debug.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 5");
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 5");
 			}
 		}
 
