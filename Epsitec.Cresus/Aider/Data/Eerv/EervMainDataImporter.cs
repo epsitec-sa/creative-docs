@@ -1,4 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
@@ -37,7 +38,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGroupDefinitions(BusinessContext businessContext, EervMainData eervData)
 		{
-			var functionRoot = eervData.GroupDefinitions.First (g => g.GroupClassification == Enumerations.GroupClassification.Function && g.GroupLevel == 1);
+			var functionRoot = eervData.GroupDefinitions.First (g => g.GroupClassification == GroupClassification.Function && g.GroupLevel == 1);
 			EervMainDataImporter.ImportGroupDefinition (businessContext, functionRoot);
 
 			var topLevelGroups = eervData.GroupDefinitions.Where (g => g.GroupLevel == 0);
@@ -59,7 +60,7 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
 			aiderGroupDef.NodeType = groupDefinition.GroupNodeType;
 			aiderGroupDef.Classification = groupDefinition.GroupClassification;
-			aiderGroupDef.Mutability = Enumerations.Mutability.SystemDefined;
+			aiderGroupDef.Mutability = Mutability.SystemDefined;
 
 			var children = new List<AiderGroupDefEntity> ();
 
