@@ -160,7 +160,6 @@
     <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningEntity.cs" />
     <Compile Include="Entities\Helpers\AiderWarningImplementation.cs" />
-    <Compile Include="Entities\Helpers\VirtualList.cs" />
     <Compile Include="Enumerations\AddressType.cs" />
     <Compile Include="AiderProgram.cs" />
     <Compile Include="Enumerations\ContactRole.cs" />

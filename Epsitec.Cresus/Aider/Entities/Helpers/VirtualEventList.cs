@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 
 using Epsitec.Common.Support.EntityEngine;
 
@@ -13,25 +14,29 @@ namespace Epsitec.Aider.Entities.Helpers
 {
 
 
-	public abstract class VirtualEventList<THostEntity, T> : VirtualList<THostEntity, T>
+	public abstract class VirtualEventList<THostEntity, T> : ObservableList<T>
 		where T : AbstractEntity, new ()
 	{
 
 
 		public VirtualEventList(THostEntity entity)
-		    : base (entity)
 		{
-		    this.CollectionChanged += this.HandleCollectionChanged;
+			this.entity = entity;
+			this.list.AddRange (this.GetItems ());
+			this.CollectionChanged += this.HandleCollectionChanged;
 		}
 
 
-		public override int MaxCount
+		protected THostEntity Entity
 		{
 			get
 			{
-				return int.MaxValue;
+				return this.entity;
 			}
 		}
+
+
+		protected abstract IEnumerable<T> GetItems();
 
 
 		private void HandleCollectionChanged(object sender, CollectionChangedEventArgs eventArgs)
@@ -81,10 +86,7 @@ namespace Epsitec.Aider.Entities.Helpers
 		protected abstract void HandleCollectionRemoval(T item);
 
 
-		protected override void ReplaceItems(IList<T> list)
-		{
-			// Nothing to do here, as we handle this case with the event handlers.
-		}
+		private readonly THostEntity entity;
 
 
 	}

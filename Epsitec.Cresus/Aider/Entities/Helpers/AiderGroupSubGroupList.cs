@@ -19,15 +19,15 @@ namespace Epsitec.Aider.Entities.Helpers
 
 		protected override IEnumerable<AiderGroupEntity> GetItems()
 		{
-			var businessContext = BusinessContextPool.GetCurrentContext (this.entity);
+			var businessContext = BusinessContextPool.GetCurrentContext (this.Entity);
 
-			return this.entity.FindSubgroups (businessContext);
+			return this.Entity.FindSubgroups (businessContext);
 		}
 
 
 		protected override void HandleCollectionAddition(AiderGroupEntity item)
 		{
-			this.entity.SetupSubGroup (item, this.entity.GetNextSubGroupNumber ());
+			this.Entity.SetupSubGroup (item, this.Entity.GetNextSubGroupNumber ());
 		}
 
 
