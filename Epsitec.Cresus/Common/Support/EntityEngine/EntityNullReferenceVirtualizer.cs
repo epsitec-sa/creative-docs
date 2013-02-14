@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			EntityContext realEntityContext = entity.GetEntityContext ();
 
-			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, false);
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, newEntity: false);
 		}
 
 
@@ -82,14 +82,9 @@ namespace Epsitec.Common.Support.EntityEngine
 				return true;
 			}
 
-			if (entity.GetEntityContext () is EmptyEntityContext)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			var context = entity.GetEntityContext ();
+
+			return EntityNullReferenceVirtualizer.IsEmptyEntityContext (context);
 		}
 
 		/// <summary>
@@ -197,7 +192,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			var emptyEntityContext = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
 			var entity = emptyEntityContext.CreateEmptyEntity<T> ();
 
-			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, true);
+			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, newEntity: true);
 
 			if (freeze)
 			{
@@ -261,7 +256,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// This allows the virtualizer to identify an empty entity very easily by just
 		/// checking if it belongs to this context, or not.
 		/// </summary>
-		private class EmptyEntityContext : EntityContext
+		private sealed class EmptyEntityContext : EntityContext
 		{
 			public EmptyEntityContext()
 				: base (SafeResourceResolver.Instance, EntityLoopHandlingMode.Throw, "EmptyEntities")
@@ -336,7 +331,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					var entity = value as AbstractEntity;
 
-					EntityNullReferenceVirtualizer.PatchNullReferences (entity, this.realEntityContext, false);
+					EntityNullReferenceVirtualizer.PatchNullReferences (entity, this.realEntityContext, newEntity: false);
 				}
 				else if (value is EntityCollection)
 				{
