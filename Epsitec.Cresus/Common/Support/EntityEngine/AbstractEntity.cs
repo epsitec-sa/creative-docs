@@ -1282,14 +1282,16 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					//	The value is null and the field is nullable; this operation
 					//	is valid and it will clear the field.
+					
+					object nullValue = null;
 
-					var    nullEntity = oldValue as AbstractEntity;
-					object nullValue  = null;
-
-					if ((nullEntity != null) &&
-						(EntityNullReferenceVirtualizer.IsNullEntity (nullEntity)))
+					if ((EntityNullReferenceVirtualizer.IsPatchedEntity (this)) &&
+						(field.Relation == FieldRelation.Reference))
 					{
-						nullValue = EntityNullReferenceVirtualizer.CloneNullEntity (nullEntity);
+						//	Assigning null to a field of a patched entity should produce a
+						//	virtualized null entity instead of the provided value.
+						
+						nullValue = EntityNullReferenceVirtualizer.CreateNullEntityForField (this, field);
 					}
 
 					this.InternalSetValue (id, nullValue);

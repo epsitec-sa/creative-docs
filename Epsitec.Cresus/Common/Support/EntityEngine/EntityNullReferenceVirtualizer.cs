@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,10 +34,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		public static void PatchNullReferences<T>(T entity)
 			where T : AbstractEntity
 		{
-			if (entity == null)
-			{
-				throw new System.NullReferenceException ();
-			}
+			entity.ThrowIfNull ("entity");
 
 			EntityContext realEntityContext = entity.GetEntityContext ();
 
@@ -168,52 +166,37 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		public static AbstractEntity CloneNullEntity(AbstractEntity entity)
+		/// <summary>
+		/// Creates a null entity for the specified field in the specified parent entity.
+		/// </summary>
+		/// <param name="parentEntity">The parent entity.</param>
+		/// <param name="field">The field.</param>
+		/// <returns>The null entity.</returns>
+		internal static AbstractEntity CreateNullEntityForField(AbstractEntity parentEntity, StructuredTypeField field)
 		{
-			var store = entity.GetOriginalValues () as Store;
+			parentEntity.ThrowIfNull ("entity");
+			field.ThrowIfNull ("field");
 
-			if (store == null)
+			if (field.Relation != FieldRelation.Reference)
 			{
-				throw new System.InvalidOperationException ("Cannot clone a non-null entity");
+				throw new System.InvalidOperationException ("Cannot set field to null entity for this field type");
 			}
 
-			var creatorType = typeof (NullEntityCreator<>).MakeGenericType (entity.GetType ());
+			var fieldTypeId = field.TypeId;
+			var entityType  = EntityInfo.GetType (fieldTypeId);
+			
+			var creatorType   = typeof (NullEntityCreator<>).MakeGenericType (entityType);
 			var creatorObject = System.Activator.CreateInstance (creatorType) as NullEntityCreator;
 			
-			return creatorObject.CreateEmptyEntity (store);
-		}
+			var nullEntity = creatorObject.CreateEmptyEntity (parentEntity, field);
 
-		#region NullEntityCreator Class
-
-		private abstract class NullEntityCreator
-		{
-			public abstract AbstractEntity CreateEmptyEntity(Store store);
-		}
-
-		#endregion
-
-		#region NullEntityCreator<T> Class
-
-		private class NullEntityCreator<T> : NullEntityCreator
-			where T : AbstractEntity, new ()
-		{
-			public override AbstractEntity CreateEmptyEntity(Store store)
+			if (parentEntity.IsReadOnly)
 			{
-				var emptyEntityContext = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
-				var entity = emptyEntityContext.CreateEmptyEntity<T> ();
-
-				EntityNullReferenceVirtualizer.PatchNullReferences (entity, store);
-
-				if (store.IsReadOnly)
-				{
-					entity.Freeze ();
-				}
-
-				return entity;
+				nullEntity.Freeze ();
 			}
-		}
 
-		#endregion
+			return nullEntity;
+		}
 
 		/// <summary>
 		/// Wraps the entity. If it is <c>null</c>, then create a virtualized empty entity.
@@ -269,18 +252,29 @@ namespace Epsitec.Common.Support.EntityEngine
 			entity.SetModifiedValues (newModifiedValues);
 		}
 
-		private static void PatchNullReferences<T>(T entity, Store store)
+		/// <summary>
+		/// Patches the null references of the specified (empty) entity, so that it can be used
+		/// as a virtualized null entity. The specified entity will be attached to the specified
+		/// parent entity field.
+		/// </summary>
+		/// <typeparam name="T">The type of the entity.</typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <param name="parent">The parent entity.</param>
+		/// <param name="field">The field in the parent entity.</param>
+		private static void PatchNullReferences<T>(T entity, AbstractEntity parent, StructuredTypeField field)
 			where T : AbstractEntity
 		{
-			if (EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
-			{
-				return;
-			}
+			System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (parent));
+			System.Diagnostics.Debug.Assert (EntityNullReferenceVirtualizer.IsPatchedEntity (entity) == false);
 
 			var originalValues = entity.GetOriginalValues ();
 			var modifiedValues = entity.GetModifiedValues ();
 
-			var newOriginalValues = new Store (originalValues, modifiedValues, entity, store);
+			var parentStore = parent.GetOriginalValues () as Store;
+
+			System.Diagnostics.Debug.Assert (parentStore != null);
+
+			var newOriginalValues = new Store (originalValues, modifiedValues, entity, parentStore, field.Id);
 			var newModifiedValues = new StoreForwarder (modifiedValues, newOriginalValues);
 
 			entity.SetOriginalValues (newOriginalValues);
@@ -313,6 +307,33 @@ namespace Epsitec.Common.Support.EntityEngine
 			return EntityNullReferenceVirtualizer.emptyEntityContext;
 		}
 
+
+		#region NullEntityCreator Class
+
+		private abstract class NullEntityCreator
+		{
+			public abstract AbstractEntity CreateEmptyEntity(AbstractEntity parent, StructuredTypeField field);
+		}
+
+		#endregion
+
+		#region NullEntityCreator<T> Class
+
+		private class NullEntityCreator<T> : NullEntityCreator
+			where T : AbstractEntity, new ()
+		{
+			public override AbstractEntity CreateEmptyEntity(AbstractEntity parent, StructuredTypeField field)
+			{
+				var emptyEntityContext = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
+				var entity = emptyEntityContext.CreateEmptyEntity<T> ();
+
+				EntityNullReferenceVirtualizer.PatchNullReferences (entity, parent, field);
+
+				return entity;
+			}
+		}
+
+		#endregion
 
 		#region EmptyEntityContext class
 
@@ -358,13 +379,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				this.parentStore          = parentStore;
 				this.fieldIdInParentStore = fieldIdInParentStore;
-			}
-
-			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, Store store)
-				: this (realReadStore, realWriteStore, entity, store.RealEntityContext, store.IsReadOnly)
-			{
-				this.parentStore          = store.parentStore;
-				this.fieldIdInParentStore = store.fieldIdInParentStore;
 			}
 
 
@@ -509,24 +523,28 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				if (info.Relation == FieldRelation.Reference)
 				{
-					var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
-
-					if (freeze)
-					{
-						entity.Freeze ();
-					}
-
-					System.Diagnostics.Debug.Assert (entity != null);
-
-					Store.PatchNullReferences (entity, parentStore: this, id: id);
-					this.values.Add (id, entity);
-
-					return entity;
+					return this.CreateEmptyEntityForField (id, info, freeze);
 				}
 
 				return defaultValue;
 			}
 
+			private AbstractEntity CreateEmptyEntityForField(string id, StructuredTypeField info, bool freeze)
+			{
+				var entity = EntityNullReferenceVirtualizer.CreateEmptyEntity (info.TypeId);
+
+				if (freeze)
+				{
+					entity.Freeze ();
+				}
+
+				System.Diagnostics.Debug.Assert (entity != null);
+
+				Store.PatchNullReferences (entity, parentStore: this, id: id);
+				this.values.Add (id, entity);
+
+				return entity;
+			}
 
 			private StructuredTypeField GetStructuredTypeField(string id)
 			{
