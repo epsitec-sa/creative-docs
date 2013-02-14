@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				(
 					() => new EntitySchemaEngine (dbInfrastructure, entityTypeEngine1)
 				);
-				
+
 				EntityTypeEngine entityTypeEngine2 = new EntityTypeEngine (new List<Druid> () { new Druid ("[J1A6]"), new Druid ("[J1A4]") });
 				string tableName2 = EntitySchemaBuilder.GetEntityTableName (new Druid ("[J1A6]"));
 				DbTable table2 = dbInfrastructure.ResolveDbTable (tableName2);
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				DbTable table3 = dbInfrastructure.ResolveDbTable (tableName3);
 				DbColumn column3 = table2.Columns[columnName3];
 				dbInfrastructure.RemoveColumnFromTable (table3, column3);
-								
+
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
 					() => new EntitySchemaEngine (dbInfrastructure, entityTypeEngine3)
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		[TestMethod]
 		public void GetEntityFieldColumnArgumentCheck()
 		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())	
+			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				var entityTypeEngine = new EntityTypeEngine (EntityEngineHelper.GetEntityTypeIds ());
 				var entitySchemaEngine = new EntitySchemaEngine (dbInfrastructure, entityTypeEngine);
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				}
 			}
 		}
-		
+
 
 	}
 

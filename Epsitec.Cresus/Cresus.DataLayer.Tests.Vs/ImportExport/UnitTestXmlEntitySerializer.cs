@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestAllExported()
 		{
 			XDocument xDocument;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -85,14 +85,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestWithExternalEntities()
 		{
 			XDocument xDocument;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					UriContactEntity uriContact = dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000004)));
 					UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
-					
+
 					HashSet<AbstractEntity> exportableEntities = new HashSet<AbstractEntity> ()
 					{
 						uriContact,
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestWithDiscardedEntities()
 		{
 			XDocument xDocument;
-		
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestInwardBrokenRelations()
 		{
 			XDocument xDocument;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestOutwardBrokenReference()
 		{
 			XDocument xDocument;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void TestOutwardBrokenCollection()
 		{
 			XDocument xDocument;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))

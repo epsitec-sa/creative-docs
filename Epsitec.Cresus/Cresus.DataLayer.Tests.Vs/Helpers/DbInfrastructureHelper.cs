@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		public static DbInfrastructure CreateTestDatabase()
 		{
 			DbInfrastructure infrastructure = new DbInfrastructure ();
-			
+
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
 
 			infrastructure.CreateDatabase (access);

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
 				NaturalPersonEntity example = DatabaseCreator2.GetCorrectExample3 ();
-				
+
 				Request request = new Request ()
 				{
 					RootEntity = example,

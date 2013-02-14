@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 			Druid loadedEntityId = Druid.FromLong (2);
 			DbKey rowKey = new DbKey (new DbId (3));
 			long logSequenceNumber = 4;
-			
+
 			ValueData valueData = new ValueData ();
 			ReferenceData referenceData = new ReferenceData ();
 			CollectionData collectionData = new CollectionData ();

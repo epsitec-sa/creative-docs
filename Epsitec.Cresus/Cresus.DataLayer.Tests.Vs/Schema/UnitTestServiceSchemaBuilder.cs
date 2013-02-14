@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			{
 				DbSchemaChecker.AreDbTablesEqual (expectedServiceTables[i], actualServiceTables[i]);
 			}
-		}		
+		}
 
 
 	}

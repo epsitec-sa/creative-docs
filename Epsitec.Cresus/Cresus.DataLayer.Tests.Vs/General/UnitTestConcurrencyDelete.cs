@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void DoubleDelete()
 		{
 			DbKey key = new DbKey (new DbId (1000000001));
-					
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			DbKey keycontact = new DbKey (new DbId (1000000004));
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			DbKey keyPerson = new DbKey (new DbId (1000000003));
 			DbKey keycontact = new DbKey (new DbId (1000000001));
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			DbKey keycontactA = new DbKey (new DbId (1000000001));
 			DbKey keycontactB = new DbKey (new DbId (1000000002));
 			DbKey keycontactC = new DbKey (new DbId (1000000003));
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		public void DeleteAndModify1()
 		{
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			DbKey keyTitle = new DbKey (new DbId (1000000001));
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			DbKey keyPerson = new DbKey (new DbId (1000000001));
 			DbKey keyContact = new DbKey (new DbId (1000000004));
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))

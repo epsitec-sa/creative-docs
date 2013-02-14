@@ -18,8 +18,8 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 {
-	
-	
+
+
 	[TestClass]
 	public sealed class UnitTestEntityKey
 	{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			TestHelper.Initialize ();
 		}
 
-		
+
 		[TestMethod]
 		public void EntityKeyConstructorTest1()
 		{
@@ -68,8 +68,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
-		[TestMethod ]
+
+		[TestMethod]
 		public void EqualsTest()
 		{
 			foreach (var data1 in this.GetTestData ())
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		}
 
-	   
+
 		[TestMethod]
 		public void GetHashCodeTest()
 		{
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void op_EqualityTest()
 		{
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void op_InequalityTest()
 		{
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void EntityIdTest()
 		{
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void IsEmptyTest()
 		{
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			(
 				() => EntityKey.Parse ("[J1AB1]/wrong format")
 			);
-			
+
 			ExceptionAssert.Throw<System.FormatException>
 			(
 				() => EntityKey.Parse ("[wrong format]/2")
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			{
 				int number1 = 0;
 				int number2 = 0;
-				
+
 				while (number1 == 0)
 				{
 					number1 = this.dice.Next ();
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 				{
 					number2 = this.dice.Next ();
 				}
-				
+
 				DbKey dbKey = new DbKey (new DbId (number1));
 				Druid druid = Druid.FromLong (number2);
 

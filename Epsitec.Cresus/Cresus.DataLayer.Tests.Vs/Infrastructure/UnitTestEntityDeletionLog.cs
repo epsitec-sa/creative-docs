@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-    [TestClass]
-    public class UnitTestEntityDeletionLog
-    {
+	[TestClass]
+	public class UnitTestEntityDeletionLog
+	{
 
 
 		[ClassInitialize]

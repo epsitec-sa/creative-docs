@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			);
 		}
 
-		
+
 		[TestMethod]
 		public void ContainsEntityTest()
 		{
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void DefineRowKeyTest()
 		{
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 				entityCache.Add (entity);
 				entityCache.DefineRowKey (entity, dbKey);
-				
+
 				Assert.IsTrue (entityCache.ContainsEntity (entity));
 				Assert.AreEqual (entityKey, entityCache.GetEntityKey (entity));
 			}
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			(
 				() => entityCache.DefineRowKey (null, new DbKey (new DbId (1)))
 			);
-		
+
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
 				() => entityCache.DefineRowKey (entity, new DbKey (new DbId (1)))
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			);
 		}
 
-		
+
 		[TestMethod]
 		public void GetEntitiesTest()
 		{
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			Assert.IsTrue (entities2.Except (entities1).Count () == 0);
 		}
 
-		
+
 		[TestMethod]
 		public void GetEntityTest()
 		{
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void GetEntityKeyTest()
 		{
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			);
 		}
 
-		
+
 		[TestMethod]
 		public void RemoveTest()
 		{

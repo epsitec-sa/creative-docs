@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 		// TODO Add tests for CreateSqlField(...)
 		// TODO Add tests for CheckField(...)
-		
-		
+
+
 		[TestMethod]
 		public void ConstructorTest()
 		{

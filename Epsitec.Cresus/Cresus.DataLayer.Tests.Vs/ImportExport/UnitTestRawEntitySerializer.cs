@@ -468,11 +468,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				dbInfrastructure.RemoveTable (table);
 
 				table.Columns.Add (column);
-				
+
 				dbInfrastructure.AddTable (table);
 
 				dbInfrastructure.ClearCaches ();
-				
+
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -565,7 +565,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 				dbInfrastructure.ClearCaches ();
 
 				RawEntitySerializer.Import (file, dbInfrastructure, entry, RawImportMode.DecrementIds);
-				
+
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
 					NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1)));

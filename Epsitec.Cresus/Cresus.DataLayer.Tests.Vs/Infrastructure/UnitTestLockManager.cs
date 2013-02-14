@@ -67,12 +67,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.RequestLocks (DbId.Empty, new List<string>()  { "name" })
+					() => manager.RequestLocks (DbId.Empty, new List<string> () { "name" })
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.RequestLocks (new DbId(1), null)
+					() => manager.RequestLocks (new DbId (1), null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -109,12 +109,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ReleaseLocks (DbId.Empty, new List<string>()  { "name" })
+					() => manager.ReleaseLocks (DbId.Empty, new List<string> () { "name" })
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
-					() => manager.ReleaseLocks (new DbId(1), null)
+					() => manager.ReleaseLocks (new DbId (1), null)
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				Assert.AreEqual (c1.Id, lockManager.GetLocks (new List<string> () { "lock1" }).Single ().Owner.Id);
 				Assert.AreEqual (c2.Id, lockManager.GetLocks (new List<string> () { "lock2" }).Single ().Owner.Id);
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock3" }).Count ());
-				
+
 				lockManager.ReleaseOwnedLocks (c1.Id, new List<string> () { "lock1", "lock2", "lock3" });
 
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1" }).Count ());
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock3" }).Count ());
 
 				lockManager.ReleaseOwnedLocks (c2.Id, new List<string> () { "lock1", "lock2", "lock3" });
-				
+
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock1" }).Count ());
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock2" }).Count ());
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "lock3" }).Count ());
@@ -350,7 +350,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				lockManager.RequestLocks (c1.Id, new List<string> () { "myLock2" });
 				System.DateTime t2 = System.DateTime.Now;
-				
+
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "myLock1" }).Count ());
 				Lock l2 = lockManager.GetLocks (new List<string> () { "myLock2" }).Single ();
 				Assert.AreEqual (0, lockManager.GetLocks (new List<string> () { "myLock3" }).Count ());
@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				this.CheckLock (locks2["lock2"], c1, "lock2", t1);
 
 				var locks3 = lockManager.GetLocks (new List<string> () { "lock3", }).ToDictionary (l => l.Name);
-				
+
 				Assert.AreEqual (1, locks3.Count);
 				this.CheckLock (locks3["lock3"], c2, "lock3", t2);
 
@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				Assert.AreEqual (1, locks4.Count);
 				this.CheckLock (locks4["lock4"], c3, "lock4", t3);
-				
+
 				var locks5 = lockManager.GetLocks (new List<string> () { "lock5", }).ToDictionary (l => l.Name);
 
 				Assert.AreEqual (0, locks5.Count);
@@ -466,11 +466,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				Assert.IsTrue (lockManager.RequestLocks (c2.Id, new List<string> () { "lock4", "lock5", "lock6" }).Item1);
 				Assert.IsTrue (lockManager.RequestLocks (c2.Id, new List<string> () { "lock5", "lock6" }).Item1);
 
-				Assert.IsFalse(lockManager.RequestLocks (c1.Id, new List<string> () { "lock4", "lock7" }).Item1);
-				Assert.IsFalse(lockManager.RequestLocks (c3.Id, new List<string> () { "lock1", "lock7" }).Item1);
+				Assert.IsFalse (lockManager.RequestLocks (c1.Id, new List<string> () { "lock4", "lock7" }).Item1);
+				Assert.IsFalse (lockManager.RequestLocks (c3.Id, new List<string> () { "lock1", "lock7" }).Item1);
 				Assert.IsFalse (lockManager.RequestLocks (c4.Id, new List<string> () { "lock3" }).Item1);
 				Assert.IsFalse (lockManager.RequestLocks (c4.Id, new List<string> () { "lock6" }).Item1);
-				
+
 				lockManager.ReleaseLocks (c2.Id, new List<string> () { "lock4", "lock6" });
 
 				Assert.IsTrue (lockManager.RequestLocks (c1.Id, new List<string> () { "lock4", "lock7" }).Item1);
@@ -488,7 +488,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
-					() => lockManager.ReleaseLocks(c3.Id, new List<string>() { "lock1", "lock2" })
+					() => lockManager.ReleaseLocks (c3.Id, new List<string> () { "lock1", "lock2" })
 				);
 
 				Assert.IsTrue (lockManager.RequestLocks (c4.Id, new List<string> () { "lock6" }).Item1);
@@ -501,7 +501,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				lockManager.ReleaseLocks (c1.Id, new List<string> () { "lock1", "lock4", "lock7" });
 
 				Assert.IsTrue (lockManager.RequestLocks (c1.Id, new List<string> () { "lock1", "lock4" }).Item1);
-				
+
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
 					() => lockManager.ReleaseLocks (c1.Id, new List<string> () { "lock1", "lock8" })
@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				lockManager.ReleaseLocks (c3.Id, new List<string> () { "lock1", "lock7" });
 				lockManager.ReleaseLocks (c4.Id, new List<string> () { "lock3", "lock6" });
-				
+
 				ExceptionAssert.Throw<System.InvalidOperationException>
 				(
 					() => lockManager.ReleaseLocks (c2.Id, new List<string> () { "lock5", })
@@ -641,12 +641,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					{
 						List<string> lockNames = new List<string> ();
 
-						locks.Add(lockNames);
+						locks.Add (lockNames);
 
 						do
-                        {
+						{
 							lockNames.Add (System.Guid.NewGuid ().ToString ());
-                        } while (dice.NextDouble() > 0.4);
+						} while (dice.NextDouble () > 0.4);
 
 						lockManager.RequestLocks (connectionId, lockNames);
 

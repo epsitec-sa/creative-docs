@@ -19,23 +19,23 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-    [TestClass]
-    public sealed class UnitTestLockTransaction
-    {
+	[TestClass]
+	public sealed class UnitTestLockTransaction
+	{
 
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
-        {
-            TestHelper.Initialize ();
-        }
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext testContext)
+		{
+			TestHelper.Initialize ();
+		}
 
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
+		[TestInitialize]
+		public void TestInitialize()
+		{
 			DatabaseCreator2.ResetEmptyTestDatabase ();
-        }
+		}
 
 
 		[TestMethod]
@@ -48,11 +48,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				LockManager manager = new LockManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
 
 				List<string> lockNames = new List<string> ()
-                {
-                    "myLock1",
-                    "myLock2",
-                    "myLock3",
-                };
+				{
+					"myLock1",
+					"myLock2",
+					"myLock3",
+				};
 				DbId connectionId = new DbId (1);
 
 				ExceptionAssert.Throw<System.ArgumentNullException>
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				{
 					var result1 = la.Lock ();
 					System.DateTime t = System.DateTime.Now;
-					
+
 					Assert.IsTrue (result1.Item1);
 					Assert.IsTrue (result1.Item2.IsEmpty ());
 
@@ -400,10 +400,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				{
 					var result1 = lt1.Lock ();
 					System.DateTime t1 = System.DateTime.Now;
-					
+
 					var result2 = lt2.Lock ();
 					System.DateTime t2 = System.DateTime.Now;
-					
+
 					var result3 = lt3.Lock ();
 
 					Assert.IsTrue (result1.Item1);

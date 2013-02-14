@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Serialization
 	[TestClass]
 	public sealed class UnitTestValueData
 	{
-		
+
 
 		[TestMethod]
 		public void ValueDataConstructorTest()

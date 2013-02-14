@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 
 
 		Value3,
-		
+
 
 	}
 

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CopyEntityArgumentCheck()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					NaturalPersonEntity entity1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity entity2 = dataContext2.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					NaturalPersonEntity entity3 = dataContext1.CreateEntity<NaturalPersonEntity> ();
-					
+
 					ExceptionAssert.Throw<System.ArgumentNullException>
 					(
 						() => DataContext.CopyEntity (null, entity1, dataContext2)
@@ -61,12 +61,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					(
 						() => DataContext.CopyEntity (dataContext1, (NaturalPersonEntity) null, dataContext2)
 					);
-					
+
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
 						() => DataContext.CopyEntity (dataContext1, entity2, dataContext2)
 					);
-					
+
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
 						() => DataContext.CopyEntity (dataContext1, entity3, dataContext2)
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CopyToSelfTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CopyExistingEntityTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void SimlpeCopyTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableReload: true))
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			yield return dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
 		}
 
-		
+
 	}
 
 

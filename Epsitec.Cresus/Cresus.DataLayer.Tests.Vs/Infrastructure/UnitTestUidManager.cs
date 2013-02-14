@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-    [TestClass]
-    public class UnitTestUidManager
-    {
+	[TestClass]
+	public class UnitTestUidManager
+	{
 
 
 		[ClassInitialize]
@@ -67,11 +67,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 				string name = "test";
 				List<UidSlot> slots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 9),
-                    new UidSlot (20, 29),
-                    new UidSlot (10, 19),
-                };
+				{
+					new UidSlot (0, 9),
+					new UidSlot (20, 29),
+					new UidSlot (10, 19),
+				};
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -97,10 +97,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				);
 
 				badSlots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 5),
-                    new UidSlot (5, 10),
-                };
+				{
+					new UidSlot (0, 5),
+					new UidSlot (5, 10),
+				};
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -108,10 +108,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				);
 
 				badSlots = new List<UidSlot> ()
-                {
-                    new UidSlot (3, 5),
-                    new UidSlot (1, 2),
-                };
+				{
+					new UidSlot (3, 5),
+					new UidSlot (1, 2),
+				};
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -234,9 +234,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				);
 
 				List<UidSlot> slots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 9),
-                };
+				{
+					new UidSlot (0, 9),
+				};
 
 				manager.CreateUidGenerator ("generator", slots);
 
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 						new UidSlot (0, 9),
 						new UidSlot (90, 99),
 					};
-					
+
 					manager.CreateUidGenerator ("myCounter" + i, slots);
 				}
 
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
 
 					var uidManager = m;
-					
+
 					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
 					{
 						int count;

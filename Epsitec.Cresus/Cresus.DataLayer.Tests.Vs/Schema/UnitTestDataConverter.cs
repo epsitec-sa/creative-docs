@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 			DatabaseCreator2.ResetEmptyTestDatabase ();
 		}
 
-		
+
 		[TestMethod]
 		public void DataConverterConstructorTest()
 		{
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		[TestMethod]
 		public void FromCresusToDatabaseTypeTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		[TestMethod]
 		public void FromCresusToDatabaseValueArgumentCheck()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		[TestMethod]
 		public void FromCresusToDatabaseValueTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		[TestMethod]
 		public void FromDatabaseToCresusValueArgumentCheck()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		[TestMethod]
 		public void FromDatabaseToCresusValueTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{

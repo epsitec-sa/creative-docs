@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 						(ValueDataEntity e) => e.IntegerValue == 0
 				   )
 				);
-				
+
 				ExceptionAssert.Throw<ArgumentNullException>
 				(
 				   () => LambdaConverter.Convert
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 						new Constant (1),
 						BinaryComparator.IsGreater,
 						ValueField.Create (entity, x => x.IntegerValue)
-						
+
 					)
 				);
 			}
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 					new BinaryComparison
 					(
 						new Constant (1),
-						BinaryComparator.IsGreaterOrEqual, 
+						BinaryComparator.IsGreaterOrEqual,
 						ValueField.Create (entity, x => x.IntegerValue)
 					)
 				);
@@ -1434,7 +1434,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 							BinaryComparator.IsEqual,
 							new Constant ("blupi")
 						),
-						BinaryOperator.And,			
+						BinaryOperator.And,
 						new BinaryComparison
 						(
 							ValueField.Create (contact, x => x.Uri),
@@ -1789,7 +1789,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 					x => SqlMethods.IsNotInSet (x, subRequest),
 					new SubQuerySetComparison
 					(
-						InternalField.CreateId(person),
+						InternalField.CreateId (person),
 						SetComparator.NotIn,
 						new SubQuery (subRequest)
 					)
@@ -1823,7 +1823,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 		private int member = 1;
 
-		
+
 		public void Check<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda, DataExpression result)
 			where T : AbstractEntity
 		{

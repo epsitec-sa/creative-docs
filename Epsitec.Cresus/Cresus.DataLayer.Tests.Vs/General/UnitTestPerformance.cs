@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				foreach (Druid entityTypeId in EntityEngineHelper.GetEntityTypeIds ())
 				{
 					this.RetrieveAllData (entityTypeId, i);
-				}				
+				}
 			}
 		}
 
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			this.Execute (title, action, warmupLevel, UnitTestPerformance.nbRuns);
 		}
 
-		
+
 		[TestMethod]
 		public void GetLocationsGivenCountryTest()
 		{
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					{
 						this.DeleteEntity (entityTypeId, i);
 					}
-				}			
+				}
 			}
 		}
 
@@ -503,7 +503,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				title,
 				UnitTestPerformance.logFile,
 				() =>
-				{					
+				{
 					using (DB db = DB.ConnectToTestDatabase ())
 					using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 					{
@@ -516,7 +516,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ExecuteWarmupLevel2(string title, System.Action<DataContext> action, int nbRuns)
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				TestHelper.MeasureAndWriteTime (
@@ -536,7 +536,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ExecuteWarmupLevel3(string title, System.Action<DataContext> action, int nbRun)
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -565,10 +565,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private static readonly bool createDatabase = true;
-				
+
 
 		private static readonly bool runDeleteTests = true;
-				
+
 
 		private static readonly DatabaseSize databaseSize = DatabaseSize.Small;
 
@@ -577,4 +577,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 	}
+
+
 }

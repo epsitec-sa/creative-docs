@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		public void AddTest()
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
-		
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<DataContext> dataContexts = new List<DataContext> ()
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		public void ContainsTest()
 		{
 			DataContextPool dataContextPool = new DataContextPool ();
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				List<DataContext> dataContexts1 = new List<DataContext> ()
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		[TestMethod]
 		public void GetEnumeratorTest1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 		[TestMethod]
 		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void GetEnumeratorTest2()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		[TestMethod]
 		public void FindDataContextTest1()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -305,10 +305,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void FindEntityKeyTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -357,10 +357,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			}
 		}
 
-		
+
 		[TestMethod]
 		public void RemoveTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();
@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 
 		[TestMethod]
 		public void AreEqualDatabaseInstancesTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				DataContextPool dataContextPool = new DataContextPool ();

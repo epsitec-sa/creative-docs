@@ -737,7 +737,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				var request = Request.Create (person);
 
 				request.AddCondition (dataContext, person, p => p.Gender.Name == "Male");
-				
+
 				var result = dataContext.GetByRequest (request).ToList ();
 				Assert.AreEqual (1, result.Count);
 				Assert.IsTrue (result.Any (p => DatabaseCreator2.CheckAlfred (p)));
@@ -1025,7 +1025,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				var person = new NaturalPersonEntity ();
 				var firstnames = new List<string> () { "Alfred", "Gertrude" };
-				
+
 				var request = Request.Create (person);
 				request.AddCondition (dataContext, person, p => SqlMethods.IsInSet (p.Firstname, firstnames));
 
@@ -1048,8 +1048,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				nullFirstNamePerson.Firstname = null;
 				nullFirstNamePerson.Lastname = "I have no first name";
 
-				dataContext.SaveChanges();
-				
+				dataContext.SaveChanges ();
+
 				var person = new NaturalPersonEntity ();
 				var firstnames = new List<string> () { "Alfred", null };
 
@@ -1080,7 +1080,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				};
 
 				var request = Request.Create (contact);
-				request.AddCondition(dataContext, contact, c => SqlMethods.IsInSet (c.NaturalPerson, subQuery));
+				request.AddCondition (dataContext, contact, c => SqlMethods.IsInSet (c.NaturalPerson, subQuery));
 
 				var result = dataContext.GetByRequest<AbstractContactEntity> (request).ToArray ();
 				var alfred = dataContext.GetByRequest<NaturalPersonEntity> (subQuery).Single ();

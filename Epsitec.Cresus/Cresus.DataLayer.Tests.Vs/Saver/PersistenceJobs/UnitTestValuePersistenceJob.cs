@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.PersistenceJobs
 				{ Druid.FromLong (4), "4" },
 				{ Druid.FromLong (5), "5" },
 			};
-			
+
 			return example;
 		}
 

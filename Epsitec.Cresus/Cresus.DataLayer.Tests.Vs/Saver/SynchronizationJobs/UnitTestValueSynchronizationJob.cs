@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.SynchronizationJobs
 	public sealed class UnitTestValueSynchronizationJob
 	{
 
-		
+
 		[TestMethod]
 		public void ValueSynchronizationJobConstructorTest()
 		{

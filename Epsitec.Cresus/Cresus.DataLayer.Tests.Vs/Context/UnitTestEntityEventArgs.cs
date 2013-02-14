@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Context
 			TestHelper.Initialize ();
 		}
 
-		
+
 		[TestMethod]
 		public void EntityEventArgsConstructorTest()
 		{

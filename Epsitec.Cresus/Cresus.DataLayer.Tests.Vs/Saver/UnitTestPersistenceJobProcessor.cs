@@ -108,9 +108,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new DeletePersistenceJob (entity),
-                    };
+					{
+						new DeletePersistenceJob (entity),
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -155,20 +155,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					CountryEntity entity = new CountryEntity ();
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new ValuePersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1A4]"),
-                            new Dictionary<Druid,object>()
-                            {
-                                { Druid.Parse ("[J1A3]"), "code"},
-                                { Druid.Parse ("[J1A5]"), "name"},
-                            },
-                            true,
-                            PersistenceJobType.Insert
-                        )
-                    };
+					{
+						new ValuePersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1A4]"),
+							new Dictionary<Druid,object>()
+							{
+								{ Druid.Parse ("[J1A3]"), "code"},
+								{ Druid.Parse ("[J1A5]"), "name"},
+							},
+							true,
+							PersistenceJobType.Insert
+						)
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -211,18 +211,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new ReferencePersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1AJ1]"),
-                            new Dictionary<Druid, AbstractEntity> ()
-                            { 
-                                { Druid.Parse("[J1AK1]"), target },
-                            },
-                            PersistenceJobType.Insert
-                        )
-                    };
+					{
+						new ReferencePersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1AJ1]"),
+							new Dictionary<Druid, AbstractEntity> ()
+							{
+								{ Druid.Parse("[J1AK1]"), target },
+							},
+							PersistenceJobType.Insert
+						)
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -262,22 +262,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-                    {
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
-                    };
+					{
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+					};
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new CollectionPersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1AB1]"),
-                            Druid.Parse("[J1AC1]"),
-                            targets,
-                            PersistenceJobType.Insert
-                        )
-                    };
+					{
+						new CollectionPersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AC1]"),
+							targets,
+							PersistenceJobType.Insert
+						)
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -297,10 +297,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000003)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-                    {
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
-                    };
+					{
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+					};
 
 					Assert.IsNotNull (entity);
 					Assert.IsTrue (entity.Contacts.Count == 2);
@@ -323,21 +323,21 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new ValuePersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1AJ1]"),
-                            new Dictionary<Druid,object>()
-                            {
-                                { Druid.Parse ("[J1AL1]"), "firstname"},
-                                { Druid.Parse ("[J1AM1]"), "lastname"},
-                                { Druid.Parse ("[J1AO1]"), null },
-                            },
-                            false,
-                            PersistenceJobType.Update
-                        )
-                    };
+					{
+						new ValuePersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1AJ1]"),
+							new Dictionary<Druid,object>()
+							{
+								{ Druid.Parse ("[J1AL1]"), "firstname"},
+								{ Druid.Parse ("[J1AM1]"), "lastname"},
+								{ Druid.Parse ("[J1AO1]"), null },
+							},
+							false,
+							PersistenceJobType.Update
+						)
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -379,28 +379,28 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					PersonTitleEntity target = dataContext.ResolveEntity<PersonTitleEntity> (new DbKey (new DbId (1000000001)));
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new ReferencePersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1AJ1]"),
-                            new Dictionary<Druid, AbstractEntity> ()
-                            {
-                                { Druid.Parse("[J1AK1]"), target }
-                            },
-                            PersistenceJobType.Update
-                        ),
-                        new ReferencePersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1AB1]"),
-                            new Dictionary<Druid, AbstractEntity> ()
-                            {
-                                { Druid.Parse("[J1AD1]"), null }
-                            },
-                            PersistenceJobType.Update
-                        )
-                    };
+					{
+						new ReferencePersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1AJ1]"),
+							new Dictionary<Druid, AbstractEntity> ()
+							{
+								{ Druid.Parse("[J1AK1]"), target }
+							},
+							PersistenceJobType.Update
+						),
+						new ReferencePersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1AB1]"),
+							new Dictionary<Druid, AbstractEntity> ()
+							{
+								{ Druid.Parse("[J1AD1]"), null }
+							},
+							PersistenceJobType.Update
+						)
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -441,22 +441,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-                    {
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
-                    };
+					{
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
+					};
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new CollectionPersistenceJob
-                        (
-                            entity,
-                            Druid.Parse("[J1AB1]"),
-                            Druid.Parse("[J1AC1]"),
-                            targets,
-                            PersistenceJobType.Update
-                        ),
-                    };
+					{
+						new CollectionPersistenceJob
+						(
+							entity,
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AC1]"),
+							targets,
+							PersistenceJobType.Update
+						),
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 
@@ -476,10 +476,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				{
 					NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 					List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-                    {
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
-                    };
+					{
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+						dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
+					};
 
 					Assert.IsNotNull (entity);
 					Assert.IsNotNull (entity.Contacts.Count == 2);
@@ -516,116 +516,116 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 					UriContactEntity contact3 = dataContext.CreateEntity<UriContactEntity> ();
 
 					List<AbstractPersistenceJob> jobs = new List<AbstractPersistenceJob> ()
-                    {
-                        new CollectionPersistenceJob
-                        (
-                            person4,
-                            Druid.Parse ("[J1AB1]"),
-                            Druid.Parse ("[J1AC1]"),
-                            new List<AbstractContactEntity> ()
-                            {
-                                contact2,
-                                contact3,
-                            },
-                            PersistenceJobType.Insert
-                        ),
-                        new ReferencePersistenceJob
-                        (
-                            person2,
-                            Druid.Parse("[J1AJ1]"),
-                            new Dictionary<Druid, AbstractEntity> ()
-                            {
-                                { Druid.Parse("[J1AN1]"), null }
-                            },
-                            PersistenceJobType.Update
-                        ),
-                        new ValuePersistenceJob
-                        (
-                            person4,
-                            Druid.Parse ("[J1AJ1]"),
-                            new Dictionary<Druid,object> ()
-                            {
-                                { Druid.Parse("[J1AL1]"), "fn" },
-                                { Druid.Parse("[J1AM1]"), "ln" },
-                                { Druid.Parse("[J1AO1]"), null },
-                            },
-                            false,
-                            PersistenceJobType.Insert
-                        ),
-                        new ReferencePersistenceJob
-                        (
-                            person4,
-                            Druid.Parse ("[J1AJ1]"),
-                            new Dictionary<Druid, AbstractEntity> ()
-                            {
-                                { Druid.Parse ("[J1AN1]"), gender1 }
-                            },
-                            PersistenceJobType.Insert
-                        ),
-                        new DeletePersistenceJob
-                        (
-                            person3
-                        ),
-                        new ValuePersistenceJob
-                        (
-                            contact3,
-                            Druid.Parse("[J1A42]"),
-                            new Dictionary<Druid,object> ()
-                            {
-                                { Druid.Parse("[J1A62]"), "uri" },
-                            },
-                            false,
-                            PersistenceJobType.Insert
-                        ),
-                        new CollectionPersistenceJob
-                        (
-                            person1,
-                            Druid.Parse("[J1AB1]"),
-                            Druid.Parse("[J1AC1]"),
-                            new List<AbstractContactEntity> (),
-                            PersistenceJobType.Update
-                        ),
-                        new ValuePersistenceJob
-                        (
-                            contact1,
-                            Druid.Parse("[J1A42]"),
-                            new Dictionary<Druid,object> ()
-                            {
-                                { Druid.Parse("[J1A62]"), "uri" },
-                            },
-                            false,
-                            PersistenceJobType.Update
-                        ),
-                        new ValuePersistenceJob
-                        (
-                            contact3,
-                            Druid.Parse("[J1AA1]"),
-                            new Dictionary<Druid,object> (),
-                            true,
-                            PersistenceJobType.Insert
-                        ),
-                        new ValuePersistenceJob
-                        (
-                            person4,
-                            Druid.Parse ("[J1AB1]"),
-                            new Dictionary<Druid,object> (),
-                            true,
-                            PersistenceJobType.Insert
-                        ),
-                        new ValuePersistenceJob
-                        (
-                            gender2,
-                            Druid.Parse("[J1AQ]"),
-                            new Dictionary<Druid,object> ()
-                            {
-                                { Druid.Parse("[J1A1]"), null },
-                                { Druid.Parse("[J1A3]"), "code" },
-                                { Druid.Parse("[J1AR]"), "name" },
-                            },
-                            true,
-                            PersistenceJobType.Insert
-                        ),
-                    };
+					{
+						new CollectionPersistenceJob
+						(
+							person4,
+							Druid.Parse ("[J1AB1]"),
+							Druid.Parse ("[J1AC1]"),
+							new List<AbstractContactEntity> ()
+							{
+								contact2,
+								contact3,
+							},
+							PersistenceJobType.Insert
+						),
+						new ReferencePersistenceJob
+						(
+							person2,
+							Druid.Parse("[J1AJ1]"),
+							new Dictionary<Druid, AbstractEntity> ()
+							{
+								{ Druid.Parse("[J1AN1]"), null }
+							},
+							PersistenceJobType.Update
+						),
+						new ValuePersistenceJob
+						(
+							person4,
+							Druid.Parse ("[J1AJ1]"),
+							new Dictionary<Druid,object> ()
+							{
+								{ Druid.Parse("[J1AL1]"), "fn" },
+								{ Druid.Parse("[J1AM1]"), "ln" },
+								{ Druid.Parse("[J1AO1]"), null },
+							},
+							false,
+							PersistenceJobType.Insert
+						),
+						new ReferencePersistenceJob
+						(
+							person4,
+							Druid.Parse ("[J1AJ1]"),
+							new Dictionary<Druid, AbstractEntity> ()
+							{
+								{ Druid.Parse ("[J1AN1]"), gender1 }
+							},
+							PersistenceJobType.Insert
+						),
+						new DeletePersistenceJob
+						(
+							person3
+						),
+						new ValuePersistenceJob
+						(
+							contact3,
+							Druid.Parse("[J1A42]"),
+							new Dictionary<Druid,object> ()
+							{
+								{ Druid.Parse("[J1A62]"), "uri" },
+							},
+							false,
+							PersistenceJobType.Insert
+						),
+						new CollectionPersistenceJob
+						(
+							person1,
+							Druid.Parse("[J1AB1]"),
+							Druid.Parse("[J1AC1]"),
+							new List<AbstractContactEntity> (),
+							PersistenceJobType.Update
+						),
+						new ValuePersistenceJob
+						(
+							contact1,
+							Druid.Parse("[J1A42]"),
+							new Dictionary<Druid,object> ()
+							{
+								{ Druid.Parse("[J1A62]"), "uri" },
+							},
+							false,
+							PersistenceJobType.Update
+						),
+						new ValuePersistenceJob
+						(
+							contact3,
+							Druid.Parse("[J1AA1]"),
+							new Dictionary<Druid,object> (),
+							true,
+							PersistenceJobType.Insert
+						),
+						new ValuePersistenceJob
+						(
+							person4,
+							Druid.Parse ("[J1AB1]"),
+							new Dictionary<Druid,object> (),
+							true,
+							PersistenceJobType.Insert
+						),
+						new ValuePersistenceJob
+						(
+							gender2,
+							Druid.Parse("[J1AQ]"),
+							new Dictionary<Druid,object> ()
+							{
+								{ Druid.Parse("[J1A1]"), null },
+								{ Druid.Parse("[J1A3]"), "code" },
+								{ Druid.Parse("[J1AR]"), "name" },
+							},
+							true,
+							PersistenceJobType.Insert
+						),
+					};
 
 					Dictionary<AbstractEntity, DbKey> newKeys;
 

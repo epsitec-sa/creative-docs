@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextEntities1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly:true))
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
 				NaturalPersonEntity alfred = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextEntities2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
 			{
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions3()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReadOnlyDataContextExceptions4()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			{
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ValueSynchronizationBackDoor()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				const string oldLastName = "Dupond";
 				const string newLastName = "New last name";
-				
+
 				Assert.AreEqual (oldLastName, alfred1.Lastname);
 				Assert.AreEqual (oldLastName, alfred2.Lastname);
 
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void ReferenceSynchronizationBackDoor()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void CollectionSynchronizationBackDoor()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DeleteSynchronizationBackDoor()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: true))
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DeletePropagationBackDoor()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: false))
 			{
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				const string name1 = "Dupond";
 				const string name2 = "New last name";
-				
+
 				Assert.AreEqual (name1, alfred1.Lastname);
 				Assert.AreEqual (name1, alfred2.Lastname);
 

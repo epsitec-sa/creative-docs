@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 
 		public static DB ConnectToTestDatabase()
 		{
-			var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase();
+			var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ();
 
 			var entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		public static DB ConnectToTestDatabase(EntityEngine entityEngine)
 		{
 			var dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ();
-			
+
 			var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine);
 			dataInfrastructure.OpenConnection ("id");
 

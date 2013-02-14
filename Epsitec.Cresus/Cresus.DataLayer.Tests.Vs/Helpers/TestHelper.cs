@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 	/// </summary>
 	internal static class TestHelper
 	{
-		
-		
+
+
 		/// <summary>
 		/// Initializes the global state of the assembly so that the tests can find the resources.
 		/// </summary>
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.DataLayer.Tests.Vs");
 		}
 
-		
+
 		public static void WriteStartTest(string name, string file)
 		{
 			string message = TestHelper.GetStartTestString (name);

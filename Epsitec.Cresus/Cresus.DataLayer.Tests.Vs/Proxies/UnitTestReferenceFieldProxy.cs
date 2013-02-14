@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void ReferenceFieldProxyConstructorTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void ReferenceFieldProxyConstructorArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void GetReadEntityValueTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void GetWriteEntityValueTest()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void PromoteToRealInstanceTest1()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 
 		[TestMethod]
 		public void PromoteToRealInstanceTest2()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{

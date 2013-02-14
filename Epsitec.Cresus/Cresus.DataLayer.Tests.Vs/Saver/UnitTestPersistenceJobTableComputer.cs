@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConstructorTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void GetAffectedTablesArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		public void GetAffectedTablesDeletePersistenceJob()
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -102,12 +102,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				DeletePersistenceJob job = new DeletePersistenceJob (entity);
 
 				List<DbTable> tables1 = new List<DbTable> ()
-                {
-                    db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AB1]")),
-                    db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AJ1]")),
+				{
+					db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AB1]")),
+					db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AJ1]")),
 					db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityTable (Druid.Parse ("[J1AA1]")),
-                    db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityFieldTable (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
-                };
+					db.DataInfrastructure.EntityEngine.EntitySchemaEngine.GetEntityFieldTable (Druid.Parse ("[J1AB1]"), Druid.Parse ("[J1AC1]")),
+				};
 
 				List<DbTable> tables2 = computer.GetAffectedTables (job).ToList ();
 
@@ -122,14 +122,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 		{
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 			Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
-            {
-                { Druid.Parse ("[J1AL1]"), "coucou" },
-            };
+			{
+				{ Druid.Parse ("[J1AL1]"), "coucou" },
+			};
 
 			Druid localEntityId = Druid.Parse ("[J1AJ1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
-		
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -154,13 +154,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 			Druid localEntityId = Druid.Parse ("[J1AJ1]");
 
 			Dictionary<Druid, AbstractEntity> fieldIdsWithTargets = new Dictionary<Druid, AbstractEntity> ()
-            {
-                { Druid.Parse ("[J1AK1]"), new PersonTitleEntity () },
+			{
+				{ Druid.Parse ("[J1AK1]"), new PersonTitleEntity () },
 				{ Druid.Parse ("[J1AN1]"), new PersonGenderEntity () },
-            };
+			};
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -183,16 +183,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 			NaturalPersonEntity entity = new NaturalPersonEntity ();
 
 			var targets = new List<AbstractEntity> ()
-            {
-                new AbstractContactEntity (),
-                new AbstractContactEntity (),
-            };
+			{
+				new AbstractContactEntity (),
+				new AbstractContactEntity (),
+			};
 
 			Druid localEntityId = Druid.Parse ("[J1AB1]");
 			Druid fieldId = Druid.Parse ("[J1AC1]");
 
 			PersistenceJobType jobType = PersistenceJobType.Insert;
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{

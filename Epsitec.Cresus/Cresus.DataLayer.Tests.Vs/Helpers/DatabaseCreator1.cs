@@ -13,8 +13,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 {
-	
-	
+
+
 	internal static class DatabaseCreator1
 	{
 
@@ -205,9 +205,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 				EntityInfo<UriContactEntity>.GetTypeId (),
 				EntityInfo<ValueDataEntity>.GetTypeId (),
 			};
-			
+
 			EntityEngine.Create (dbInfrastructure, entityIds);
-			
+
 			var entityEngine = EntityEngine.Connect (dbInfrastructure, entityIds);
 
 			using (var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine))

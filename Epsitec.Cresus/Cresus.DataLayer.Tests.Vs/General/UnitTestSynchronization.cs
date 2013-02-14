@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestUpdateValue()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestUpdateReference()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestUpdateCollection()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestDeleteEntityReference()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestDeleteEntityCollection()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestRemoveValue()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestRemoveReference()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestRemoveCollectionItem()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestRemoveAllCollectionItems()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestUpdateReferenceWithNewEntity()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void TestUpdateCollectionWithNewEntity()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;
@@ -519,7 +519,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DeleteEntity()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				int nbDataContexts = 10;

@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-    [TestClass]
-    public sealed class UnitTestInfoManager
-    {
+	[TestClass]
+	public sealed class UnitTestInfoManager
+	{
 
 
 		[ClassInitialize]
@@ -193,20 +193,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				var threads = infoManagers.Select (i => new System.Threading.Thread (() =>
 				{
 					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
-					
+
 					var infoManager = i;
 
 					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
 					{
 						var key1 = keys[dice.Next (0, keys.Count)];
 
-					    if (dice.NextDouble () > 0.2)
-					    {
-					        infoManager.SetInfo (key1, System.Guid.NewGuid ().ToString ());
-					    }
-					    else
-					    {
-					        infoManager.SetInfo (key1, null);
+						if (dice.NextDouble () > 0.2)
+						{
+							infoManager.SetInfo (key1, System.Guid.NewGuid ().ToString ());
+						}
+						else
+						{
+							infoManager.SetInfo (key1, null);
 						}
 
 						var key2 = keys[dice.Next (0, keys.Count)];

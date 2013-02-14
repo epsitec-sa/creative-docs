@@ -15,23 +15,23 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-    [TestClass]
-    public sealed class UnitTestUidGenerator
-    {
+	[TestClass]
+	public sealed class UnitTestUidGenerator
+	{
 
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
-        {
-            TestHelper.Initialize ();
-        }
+		[ClassInitialize]
+		public static void ClassInitialize(TestContext testContext)
+		{
+			TestHelper.Initialize ();
+		}
 
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
+		[TestInitialize]
+		public void TestInitialize()
+		{
 			DatabaseCreator2.ResetEmptyTestDatabase ();
-        }
+		}
 
 
 		[TestMethod]
@@ -42,15 +42,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
 
 				UidManager manager = new UidManager (dbInfrastructure, entityEngine.ServiceSchemaEngine);
-				
+
 				string name = "test";
 				List<UidSlot> slots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 9),
-                    new UidSlot (20, 29),
-                    new UidSlot (10, 19),
-                };
-				
+				{
+					new UidSlot (0, 9),
+					new UidSlot (20, 29),
+					new UidSlot (10, 19),
+				};
+
 				ExceptionAssert.Throw<System.ArgumentNullException>
 				(
 					() => new UidGenerator (null, name, slots)
@@ -79,10 +79,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				);
 
 				badSlots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 5),
-                    new UidSlot (5, 10),
-                };
+				{
+					new UidSlot (0, 5),
+					new UidSlot (5, 10),
+				};
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -90,10 +90,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				);
 
 				badSlots = new List<UidSlot> ()
-                {
-                    new UidSlot (3, 5),
-                    new UidSlot (1, 2),
-                };
+				{
+					new UidSlot (3, 5),
+					new UidSlot (1, 2),
+				};
 
 				ExceptionAssert.Throw<System.ArgumentException>
 				(
@@ -115,16 +115,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				string name = "myCounter";
 
 				List<UidSlot> slots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 9),
-                    new UidSlot (15, 15),
-                    new UidSlot (19, 34),
-                };
+				{
+					new UidSlot (0, 9),
+					new UidSlot (15, 15),
+					new UidSlot (19, 34),
+				};
 
 				UidGenerator generator = new UidGenerator (manager, name, slots);
 
 				Assert.AreEqual (name, generator.Name);
-				CollectionAssert.AreEqual (slots, generator.Slots);				
+				CollectionAssert.AreEqual (slots, generator.Slots);
 			}
 		}
 
@@ -140,9 +140,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				string name = "myCounter";
 
 				List<UidSlot> slots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 9),
-                };
+				{
+					new UidSlot (0, 9),
+				};
 
 				manager.CreateUidGenerator (name, slots);
 
@@ -170,11 +170,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				string name = "myCounter";
 
 				List<UidSlot> slots = new List<UidSlot> ()
-                {
-                    new UidSlot (0, 9),
-                    new UidSlot (15, 15),
-                    new UidSlot (19, 34),
-                };
+				{
+					new UidSlot (0, 9),
+					new UidSlot (15, 15),
+					new UidSlot (19, 34),
+				};
 
 				manager.CreateUidGenerator (name, slots);
 

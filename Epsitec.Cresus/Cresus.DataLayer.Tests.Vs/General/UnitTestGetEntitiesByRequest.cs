@@ -218,10 +218,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 						new ValueField (example, new Druid ("[J1AD2]")),
 						SetComparator.In,
 						new List<Constant> ()
-		                {
-		                    new Constant (0),
-		                    new Constant (42)
-		                }
+						{
+							new Constant (0),
+							new Constant (42)
+						}
 					)
 				);
 
@@ -252,10 +252,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 						new ValueField (example, new Druid ("[J1AD2]")),
 						SetComparator.NotIn,
 						new List<Constant> ()
-		                {
-		                    new Constant (0),
-		                    new Constant (42)
-		                }
+						{
+							new Constant (0),
+							new Constant (42)
+						}
 					)
 				);
 
@@ -656,7 +656,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					Request request = new Request ()
 					{
-						RootEntity = example,	
+						RootEntity = example,
 					};
 
 					string value = Constant.Escape ("test_test");

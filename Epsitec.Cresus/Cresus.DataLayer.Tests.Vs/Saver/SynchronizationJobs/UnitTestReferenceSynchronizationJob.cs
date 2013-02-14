@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver.SynchronizationJobs
 			EntityKey entityKey = new EntityKey (Druid.FromLong (1), new DbKey (new DbId (1000000001)));
 			Druid fieldId = Druid.FromLong(1);
 			EntityKey targetKey = new EntityKey (Druid.FromLong (2), new DbKey (new DbId (1000000001)));
-			
+
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
 				() => new ReferenceSynchronizationJob (dataContextId, entityKey, fieldId, targetKey).Synchronize (null)

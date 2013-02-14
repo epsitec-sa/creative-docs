@@ -278,10 +278,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			{
 				var person1 = dataContext.CreateEntity<NaturalPersonEntity> ();
 				var person2 = dataContext.CreateEntity<NaturalPersonEntity> ();
-				
+
 				dataContext.SaveChanges ();
 
-				var personKey1 = dataContext.GetNormalizedEntityKey(person1).Value;
+				var personKey1 = dataContext.GetNormalizedEntityKey (person1).Value;
 				var personKey2 = dataContext.GetNormalizedEntityKey (person2).Value;
 
 				var example = new NaturalPersonEntity ();

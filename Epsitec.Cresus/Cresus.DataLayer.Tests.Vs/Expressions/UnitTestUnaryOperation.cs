@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 		// TODO Add tests for CreateSqlCondition(...)
 		// TODO Add tests for CheckFields(...)
-		
-		
+
+
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
 		{

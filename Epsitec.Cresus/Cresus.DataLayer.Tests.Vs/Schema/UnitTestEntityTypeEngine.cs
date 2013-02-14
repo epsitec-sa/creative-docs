@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		private List<StructuredType> GetBaseTypes (StructuredType type)
 		{
 			List<StructuredType> baseTypes = new List<StructuredType> ();
-			
+
 			StructuredType baseType = type;
 
 			while (baseType != null)

@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 {
 
 
-    [TestClass]
-    public sealed class UnitTestConnectionManager
-    {
+	[TestClass]
+	public sealed class UnitTestConnectionManager
+	{
 
 
 		[ClassInitialize]

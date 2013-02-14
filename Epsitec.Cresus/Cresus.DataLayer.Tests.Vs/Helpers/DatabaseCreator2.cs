@@ -108,64 +108,64 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		public static bool CheckAlfred(NaturalPersonEntity person)
 		{
 			return person.Firstname == "Alfred"
-		        && person.Lastname == "Dupond"
-		        && person.BirthDate == new Date (1950, 12, 31)
+				&& person.Lastname == "Dupond"
+				&& person.BirthDate == new Date (1950, 12, 31)
 
-		        && person.Title == null
+				&& person.Title == null
 
-		        && person.Gender.Name == "Male"
-		        && person.Gender.Code == "M"
+				&& person.Gender.Name == "Male"
+				&& person.Gender.Code == "M"
 
-		        && person.PreferredLanguage.Name == "French"
-		        && person.PreferredLanguage.Code == "Fr"
+				&& person.PreferredLanguage.Name == "French"
+				&& person.PreferredLanguage.Code == "Fr"
 
 				&& person.Contacts.Count == 2
 
-		        && (person.Contacts[0] as UriContactEntity).Uri == "alfred@coucou.com"
-		        && (person.Contacts[0] as UriContactEntity).UriScheme.Code == "mailto:"
-		        && (person.Contacts[0] as UriContactEntity).UriScheme.Name == "email"
+				&& (person.Contacts[0] as UriContactEntity).Uri == "alfred@coucou.com"
+				&& (person.Contacts[0] as UriContactEntity).UriScheme.Code == "mailto:"
+				&& (person.Contacts[0] as UriContactEntity).UriScheme.Name == "email"
 
-		        && (person.Contacts[1] as UriContactEntity).Uri == "alfred@blabla.com"
-		        && (person.Contacts[1] as UriContactEntity).UriScheme.Code == "mailto:"
-		        && (person.Contacts[1] as UriContactEntity).UriScheme.Name == "email";
+				&& (person.Contacts[1] as UriContactEntity).Uri == "alfred@blabla.com"
+				&& (person.Contacts[1] as UriContactEntity).UriScheme.Code == "mailto:"
+				&& (person.Contacts[1] as UriContactEntity).UriScheme.Name == "email";
 		}
 
 
 		public static bool CheckGertrude(NaturalPersonEntity person)
 		{
 			return person.Firstname == "Gertrude"
-		        && person.Lastname == "De-La-Motte"
-		        && person.BirthDate == new Date (1965, 5, 3)
+				&& person.Lastname == "De-La-Motte"
+				&& person.BirthDate == new Date (1965, 5, 3)
 
-		        && person.Title.Name == "Lady"
+				&& person.Title.Name == "Lady"
 				&& person.Title.ShortName == "L"
 
-		        && person.Gender.Name == "Female"
-		        && person.Gender.Code == "F"
+				&& person.Gender.Name == "Female"
+				&& person.Gender.Code == "F"
 
-		        && person.PreferredLanguage == null
+				&& person.PreferredLanguage == null
 
 				&& person.Contacts.Count == 1
 
-		        && (person.Contacts[0] as UriContactEntity).Uri == "gertrude@coucou.com"
-		        && (person.Contacts[0] as UriContactEntity).UriScheme.Code == "mailto:"
-		        && (person.Contacts[0] as UriContactEntity).UriScheme.Name == "email";
+				&& (person.Contacts[0] as UriContactEntity).Uri == "gertrude@coucou.com"
+				&& (person.Contacts[0] as UriContactEntity).UriScheme.Code == "mailto:"
+				&& (person.Contacts[0] as UriContactEntity).UriScheme.Name == "email";
 		}
 
 
 		public static bool CheckHans(NaturalPersonEntity person)
 		{
 			return person.Firstname == "Hans"
-		        && person.Lastname == "Strüdel"
-		        && person.BirthDate == new Date (1984, 8, 9)
+				&& person.Lastname == "Strüdel"
+				&& person.BirthDate == new Date (1984, 8, 9)
 
 				&& person.Gender == null
 
-		        && person.Title.Name == "Mister"
+				&& person.Title.Name == "Mister"
 				&& person.Title.ShortName == "M"
 
-		        && person.PreferredLanguage.Name == "German"
-		        && person.PreferredLanguage.Code == "Ge"
+				&& person.PreferredLanguage.Name == "German"
+				&& person.PreferredLanguage.Code == "Ge"
 
 				&& person.Contacts.Count == 0;
 		}
@@ -333,17 +333,17 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		private static bool CheckValueData(ValueDataEntity valueData, bool booleanValue, byte[] byteArrayValue, System.DateTime dateTimeValue, Date dateValue, decimal decimalValue, SimpleEnum enumValue, int integerValue, int longIntegerValue, string stringValue, Time timeValue)
 		{
 			return valueData.BooleanValue == booleanValue
-            	&& valueData.ByteArrayValue.SequenceEqual (byteArrayValue)
-            	&& valueData.DateTimeValue == dateTimeValue
-            	&& valueData.DateValue == dateValue
-            	&& valueData.DecimalValue == decimalValue
+				&& valueData.ByteArrayValue.SequenceEqual (byteArrayValue)
+				&& valueData.DateTimeValue == dateTimeValue
+				&& valueData.DateValue == dateValue
+				&& valueData.DecimalValue == decimalValue
 				&& valueData.EnumValue == enumValue
-            	&& valueData.IntegerValue == integerValue
-            	&& valueData.LongIntegerValue == longIntegerValue
-            	&& valueData.StringValue == stringValue
-            	&& valueData.TimeValue == timeValue;
+				&& valueData.IntegerValue == integerValue
+				&& valueData.LongIntegerValue == longIntegerValue
+				&& valueData.StringValue == stringValue
+				&& valueData.TimeValue == timeValue;
 		}
-            
+
 
 	}
 

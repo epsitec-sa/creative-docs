@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
 
 					var log = l;
-					
+
 					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
 					{
 						var entry1 = log.CreateEntry (new DbId (dice.Next ()));

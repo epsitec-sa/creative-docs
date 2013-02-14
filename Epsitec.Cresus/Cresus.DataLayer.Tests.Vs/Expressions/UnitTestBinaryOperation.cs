@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 		// TODO Add tests for CreateSqlCondition(...)
 		// TODO Add tests for CheckFields(...)
-		
-		
+
+
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
 		{
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 			var rightField = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 			var right = new UnaryComparison (rightField, UnaryComparator.IsNull);
 
-			var operation = new BinaryOperation(left, op, right);
+			var operation = new BinaryOperation (left, op, right);
 
 			Assert.AreSame (left, operation.Left);
 			Assert.AreEqual (op, operation.Operator);

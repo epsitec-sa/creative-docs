@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void CompleteGraphPersistedEntities()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = db.DataInfrastructure.CreateDataContext (true))
 			{
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 			}
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ImportExportManager.Import (file, db.DataInfrastructure);
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void CompleteGraphNonNullVirtualizedEntities()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = db.DataInfrastructure.CreateDataContext (true))
 			{
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 			}
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ImportExportManager.Import (file, db.DataInfrastructure);
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void PartialGraph()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 		public void EmptyGraph()
 		{
 			FileInfo file = new FileInfo ("test.xml");
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.ImportExport
 			}
 
 			DatabaseCreator2.ResetEmptyTestDatabase ();
-			
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ImportExportManager.Import (file, db.DataInfrastructure);

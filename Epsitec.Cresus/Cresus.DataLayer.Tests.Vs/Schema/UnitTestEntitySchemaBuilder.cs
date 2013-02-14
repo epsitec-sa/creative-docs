@@ -336,7 +336,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		private void CheckMainTableValueColumn(StructuredTypeField field, DbTable table)
 		{
 			DbTable fakeTable = new DbTable (table.CaptionId);
-		
+
 			DbCollation? collation = (!(field.Type is IStringType))
 				? (DbCollation?) null
 				: !field.Options.HasFlag (FieldOptions.CollationCaseInsensitive)

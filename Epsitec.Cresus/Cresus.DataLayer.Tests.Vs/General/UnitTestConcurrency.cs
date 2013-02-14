@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			try
 			{
 				int startIndex = threadNumber * nbInsertions;
-				
+
 				using (DB db = DB.ConnectToTestDatabase ())
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			try
 			{
 				int startIndex = threadNumber * nbInsertions;
-				
+
 				using (DB db = DB.ConnectToTestDatabase ())
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		private void CheckWholeData(int nbThreads, int nbInsertions)
 		{
 			int nbTotalInsertions = nbThreads * nbInsertions;
-		
+
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ConflictingValueUpdateSetup()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			try
 			{
 				int startIndex = threadNumber * nbInsertions;
-				
+
 				using (DB db = DB.ConnectToTestDatabase ())
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ConflictingReferenceUpdateSetup()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			try
 			{
 				int startIndex = threadNumber * nbInsertions;
-			
+
 				using (DB db = DB.ConnectToTestDatabase ())
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
@@ -415,10 +415,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 			List<PersonGenderEntity> genders = new List<PersonGenderEntity> ()
-            {
-                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))),
-                dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002))),
-            };
+			{
+				dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001))),
+				dataContext.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000002))),
+			};
 
 			System.Random dice = new System.Random ();
 
@@ -463,7 +463,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void ConflictingCollectionUpdateSetup(int nbContacts)
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -484,7 +484,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			try
 			{
 				int startIndex = threadNumber * nbInsertions;
-			
+
 				using (DB db = DB.ConnectToTestDatabase ())
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		private void CheckConflictingCollectionUpdates(int nbContactsToUse)
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -577,7 +577,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			try
 			{
 				int startIndex = threadNumber * nbInsertions;
-				
+
 				using (DB db = DB.ConnectToTestDatabase ())
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 				{

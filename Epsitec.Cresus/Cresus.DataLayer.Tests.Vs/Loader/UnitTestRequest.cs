@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 
 	using EntityField = Epsitec.Cresus.DataLayer.Expressions.EntityField;
-	
-	
+
+
 	[TestClass]
 	public sealed class UnitTestRequest
 	{
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		public void RequestedEntityTest()
 		{
 			Request request = new Request ();
-			
+
 			AbstractEntity entity1 = new NaturalPersonEntity ();
 			AbstractEntity entity2 = new NaturalPersonEntity ();
 
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		public void RootEntityTest()
 		{
 			Request request = new Request ();
-			
+
 			AbstractEntity entity = new NaturalPersonEntity ();
 
 			Assert.IsNull (request.RootEntity);

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void PersistenceJobGeneratorConstructorTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -95,20 +95,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				Assert.IsTrue (jobs.Any (j =>
 				{
 					return j is ValuePersistenceJob
-                        && ((ValuePersistenceJob) j).IsRootTypeJob
-                        && ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AB1]")
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 0;
+						&& ((ValuePersistenceJob) j).IsRootTypeJob
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AB1]")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 0;
 				}));
 
 				Assert.IsTrue (jobs.Any (j =>
 				{
 					return j is ValuePersistenceJob
-                        && !((ValuePersistenceJob) j).IsRootTypeJob
-                        && ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AJ1]")
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 3
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AL1]") && k.Value == null)
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AM1]") && ((string) (k.Value)) == "new last name")
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AO1]") && k.Value == null);
+						&& !((ValuePersistenceJob) j).IsRootTypeJob
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AJ1]")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 3
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AL1]") && k.Value == null)
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AM1]") && ((string) (k.Value)) == "new last name")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AO1]") && k.Value == null);
 				}));
 			}
 		}
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest3()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -152,11 +152,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				NaturalPersonEntity entity = dataContext.CreateEntity<NaturalPersonEntity> ();
 				List<UriContactEntity> targets = new List<UriContactEntity> ()
-                    {
-                        dataContext.CreateEntity<UriContactEntity> (),
-                        dataContext.CreateEntity<UriContactEntity> (),
-                        dataContext.CreateEntity<UriContactEntity> (),
-                    };
+				{
+					dataContext.CreateEntity<UriContactEntity> (),
+					dataContext.CreateEntity<UriContactEntity> (),
+					dataContext.CreateEntity<UriContactEntity> (),
+				};
 
 				foreach (UriContactEntity target in targets)
 				{
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void InsertEntityTest4()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -194,11 +194,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				entity.PreferredLanguage = target;
 
 				List<UriContactEntity> targets = new List<UriContactEntity> ()
-                    {
-                        dataContext.CreateEntity<UriContactEntity> (),
-                        dataContext.CreateEntity<UriContactEntity> (),
-                        dataContext.CreateEntity<UriContactEntity> (),
-                    };
+				{
+					dataContext.CreateEntity<UriContactEntity> (),
+					dataContext.CreateEntity<UriContactEntity> (),
+					dataContext.CreateEntity<UriContactEntity> (),
+				};
 
 				foreach (UriContactEntity t in targets)
 				{
@@ -215,19 +215,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().Any (j =>
 				{
 					return j is ValuePersistenceJob
-                        && ((ValuePersistenceJob) j).IsRootTypeJob
-                        && ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AB1]")
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 0;
+						&& ((ValuePersistenceJob) j).IsRootTypeJob
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AB1]")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 0;
 				}));
 				Assert.IsTrue (jobs.OfType<ValuePersistenceJob> ().Any (j =>
 				{
 					return j is ValuePersistenceJob
-                        && !((ValuePersistenceJob) j).IsRootTypeJob
-                        && ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AJ1]")
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 3
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AL1]") && k.Value == null)
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AM1]") && ((string) (k.Value)) == "new last name")
-                        && ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AO1]") && k.Value == null);
+						&& !((ValuePersistenceJob) j).IsRootTypeJob
+						&& ((ValuePersistenceJob) j).LocalEntityId == Druid.Parse ("[J1AJ1]")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Count () == 3
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AL1]") && k.Value == null)
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AM1]") && ((string) (k.Value)) == "new last name")
+						&& ((ValuePersistenceJob) j).GetFieldIdsWithValues ().Any (k => k.Key == Druid.Parse ("[J1AO1]") && k.Value == null);
 				}));
 
 				Assert.IsTrue (jobs.OfType<ReferencePersistenceJob> ().Count () == 1);
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest3()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -336,11 +336,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-                    {
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
-                    };
+				{
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000002))),
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000003))),
+				};
 
 				entity.Contacts.Add (targets.Last ());
 
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void UpdateEntityTest4()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -379,9 +379,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				entity.Gender = null;
 
 				List<AbstractContactEntity> targets = new List<AbstractContactEntity> ()
-                    {
-                        dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
-                    };
+				{
+					dataContext.ResolveEntity<AbstractContactEntity> (new DbKey (new DbId (1000000001))),
+				};
 
 				entity.Contacts.RemoveAt (1);
 
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void DeleteEntityArgumentCheck()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void DeleteEntityTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{

@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void PersistenceJobConverterConstructor()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertDeleteJobArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertDeleteJobTest()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertValueJobArgumentCheck()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertValueJobTest1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -124,10 +124,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
-                    {
-                        { Druid.Parse("[J1AL1]"), "prénom" },
-                        { Druid.Parse("[J1AM1]"), "nom de famille" },
-                    };
+				{
+					{ Druid.Parse("[J1AL1]"), "prénom" },
+					{ Druid.Parse("[J1AM1]"), "nom de famille" },
+				};
 				bool isRootType = false;
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertValueJobTest2()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -150,11 +150,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				NaturalPersonEntity entity = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Dictionary<Druid, object> fieldIdsWithValues = new Dictionary<Druid, object> ()
-                    {
-                        { Druid.Parse("[J1AL1]"), "prénom" },
-                        { Druid.Parse("[J1AM1]"), "nom de famille" },
-                        { Druid.Parse("[J1AO1]"), null }
-                    };
+				{
+					{ Druid.Parse("[J1AL1]"), "prénom" },
+					{ Druid.Parse("[J1AM1]"), "nom de famille" },
+					{ Druid.Parse("[J1AO1]"), null }
+				};
 				bool isRootType = false;
 				PersistenceJobType jobType = PersistenceJobType.Update;
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertReferenceJobArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertReferenceJobTest1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertReferenceJobTest2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertCollectionJobArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertCollectionJobTest1()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -283,10 +283,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<AbstractEntity> targets = new List<AbstractEntity> ()
-                    {
-                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-                    };
+				{
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+				};
 				PersistenceJobType jobType = PersistenceJobType.Insert;
 
 				CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 
 		[TestMethod]
 		public void ConvertCollectionJobTest2()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure))
 			{
@@ -309,10 +309,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Saver
 				Druid localEntityId = Druid.Parse ("[J1AJ1]");
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<AbstractEntity> targets = new List<AbstractEntity> ()
-                    {
-                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
-                        dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
-                    };
+				{
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))),
+					dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000002))),
+				};
 				PersistenceJobType jobType = PersistenceJobType.Update;
 
 				CollectionPersistenceJob job1 = new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);

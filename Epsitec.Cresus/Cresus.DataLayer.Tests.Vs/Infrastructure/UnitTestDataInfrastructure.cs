@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void ConnectionSimpleCase1()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			
+
 			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
 				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public void ConnectionSimpleCase2()
 		{
 			DbAccess access = DbInfrastructureHelper.GetDbAccessForTestDatabase ();
-			
+
 			using (DbInfrastructure dbInfrastructure = DbInfrastructure.Connect (access))
 			{
 				EntityEngine entityEngine = EntityEngineHelper.ConnectToTestDatabase (dbInfrastructure);
@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 		[TestMethod]
 		public void GetDatabaseInfoArgumentCheck()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 		[TestMethod]
 		public void SetDatabaseInfoArgumentCheck()
-		{		
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentException>
@@ -581,7 +581,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 		[TestMethod]
 		public void GetAndSetInfo()
-		{			
+		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
 				Dictionary<string, string> info = new Dictionary<string, string> ();
@@ -705,11 +705,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					string name = "myCounter";
 
 					List<UidSlot> slots = new List<UidSlot> ()
-		            {
-		                new UidSlot (0, 9),
-		                new UidSlot (20, 29),
-		                new UidSlot (10, 19),
-		            };
+					{
+						new UidSlot (0, 9),
+						new UidSlot (20, 29),
+						new UidSlot (10, 19),
+					};
 
 					db.DataInfrastructure.CreateUidGenerator (name + i, slots);
 
@@ -760,11 +760,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					string name = "myCounter" + i;
 
 					List<UidSlot> slots = new List<UidSlot> ()
-		            {
-		                new UidSlot (20, 29),
-		                new UidSlot (0, 9),
-		                new UidSlot (10, 19),
-		            };
+					{
+						new UidSlot (20, 29),
+						new UidSlot (0, 9),
+						new UidSlot (10, 19),
+					};
 
 					db.DataInfrastructure.CreateUidGenerator (name, slots);
 				}
@@ -799,11 +799,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 					string name = "myCounter" + i;
 
 					List<UidSlot> slots = new List<UidSlot> ()
-		            {
-		                new UidSlot (20, 29),
-		                new UidSlot (0, 9),
-		                new UidSlot (10, 19),
-		            };
+					{
+						new UidSlot (20, 29),
+						new UidSlot (0, 9),
+						new UidSlot (10, 19),
+					};
 
 					db.DataInfrastructure.CreateUidGenerator (name, slots);
 				}
@@ -1074,11 +1074,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 						try
 						{
 							var lockNames = new List<string> ()
-						        {
-						            System.Guid.NewGuid().ToString (),
-						            System.Guid.NewGuid().ToString (),
-						            System.Guid.NewGuid().ToString (),
-						        };
+							{
+								System.Guid.NewGuid().ToString (),
+								System.Guid.NewGuid().ToString (),
+								System.Guid.NewGuid().ToString (),
+							};
 
 							LockTransaction lockTransaction = db.DataInfrastructure.CreateLockTransaction (lockNames);
 
