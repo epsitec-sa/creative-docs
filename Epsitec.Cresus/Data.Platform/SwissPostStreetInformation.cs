@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -40,6 +40,22 @@ namespace Epsitec.Data.Platform
 			this.StreetNamePreposition = InvariantConverter.ParseInt (line.Substring (92, 2));
 			this.StreetNameShort       = this.StreetName.Split (',').First ();
 			this.NormalizedStreetName  = SwissPostStreet.NormalizeStreetName (this.StreetName);
+
+			//	We have to clean up the mess in the MAT[CH] data. There are errors, such as "Praz, chemin de la"
+			//	where the root is "CHEMIN" and not "PRAZ", for instance. Or weirder: "Chemin, route de" where the
+			//	root is "ROUTE" and it should be "CHEMIN". E-mail sent to match@post.ch on Feb. 14 2013 in the
+			//	hope that this will be fixed in the future.
+
+			if (SwissPostStreet.HeuristicTokens.Contains (this.StreetNameRoot))
+			{
+				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1);
+
+				if (!names.Any (x => x.StartsWith (this.StreetNameRoot) || x.EndsWith (this.StreetNameRoot)))
+				{
+					this.StreetNameRoot = names.Last ();
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0} > {1}", line, this.StreetNameRoot));
+				}
+			}
 		}
 
 		public readonly int						StreetCode;

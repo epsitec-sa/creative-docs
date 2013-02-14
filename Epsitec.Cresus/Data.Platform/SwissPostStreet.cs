@@ -269,20 +269,25 @@ namespace Epsitec.Data.Platform
 			"AVENUE",
 			"BATTERIE",
 			"CHEMIN",
+			"CITE",
+			"IMMEUBLE",
 			"PARC",
+			"PASSAGE",
 			"PLACE",
+			"PONT",
 			"PROMENADE",
 			"QUAI",
 			"QUARTIER",
 			"ROUTE",
 			"RUE",
+			"RUELLE",
 			"SQUARE",
 			"ZONE",
 		};
 
 		internal static readonly HashSet<string> NormalizationNoise = new HashSet<string> ()
 		{
-			"DE", "DU", "D", "DES", "LE", "LA", "L", "LES", "EN", "AU"
+			"DE", "DU", "D", "DES", "LE", "LA", "L", "LES", "EN", "AU", "AUX"
 		};
 
 		#endregion
