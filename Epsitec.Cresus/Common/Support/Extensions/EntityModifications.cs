@@ -1,5 +1,4 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
@@ -10,8 +9,8 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.Extensions
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>EntityModifications</c> class provides Extension methods used to check if
 	/// the values of an <see cref="AbstractEntity"/> have changed.
@@ -29,7 +28,7 @@ namespace Epsitec.Common.Support.Extensions
 		public static bool HasValueChanged(this AbstractEntity entity, Druid fieldId)
 		{
 			entity.ThrowIfNull ("entity");
-			
+
 			object modifiedValue = entity.GetModifiedValue (fieldId);
 
 			bool change = false;
@@ -125,7 +124,6 @@ namespace Epsitec.Common.Support.Extensions
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose field value to get.</param>
 		/// <param name="fieldId">The id of the field to get.</param>
 		/// <returns>The modified value of the field.</returns>
-		
 		private static object GetModifiedValue(this AbstractEntity entity, Druid fieldId)
 		{
 			IValueStore modifiedValues = entity.GetModifiedValues ();
