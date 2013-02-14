@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void CreationWIthModificationDepth1()
+		public void CreationWithModificationDepth1()
 		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
