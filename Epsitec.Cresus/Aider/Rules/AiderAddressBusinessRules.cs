@@ -5,6 +5,7 @@ using Epsitec.Aider.Entities;
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Data.Platform;
 
@@ -21,6 +22,8 @@ namespace Epsitec.Aider.Rules
 	{
 		public override void ApplyUpdateRule(AiderAddressEntity address)
 		{
+			AiderAddressBusinessRules.UpdateAddressLine1 (address);
+			AiderAddressBusinessRules.UpdatePostBox (address);
 			AiderAddressBusinessRules.UpdateHouserNumber (address);
 		}
 
@@ -55,6 +58,63 @@ namespace Epsitec.Aider.Rules
 			}
 			
 			Logic.BusinessRuleException (address, Resources.Text ("L'adresse web n'est pas valide."));
+		}
+
+		private static void UpdateAddressLine1(AiderAddressEntity address)
+		{
+			if (string.IsNullOrEmpty (address.AddressLine1))
+			{
+				return;
+			}
+
+			string prefix = AiderAddressBusinessRules.GetPostBoxPrefix (address.AddressLine1);
+
+			//	If the user used the address line 1 as the post box identification, move
+			//	the value to the proper field.
+
+			if (prefix != null)
+			{
+				address.PostBox = address.AddressLine1;
+				address.AddressLine1 = "";
+			}
+		}
+
+		private static void UpdatePostBox(AiderAddressEntity address)
+		{
+			var postBox = address.PostBox;
+
+			if (string.IsNullOrEmpty (postBox))
+			{
+				return;
+			}
+
+			string prefix = AiderAddressBusinessRules.GetPostBoxPrefix (postBox);
+
+			if (prefix != null)
+			{
+				var tuple = postBox.SplitAfter (x => !char.IsDigit (x));
+				address.PostBox = string.Format ("{0} {1}", prefix, tuple.Item2);
+			}
+		}
+
+		private static string GetPostBoxPrefix(string postBox)
+		{
+			string upper  = postBox.ToUpperInvariant ();
+			string prefix = null;
+
+			if ((upper.StartsWith ("CASE")) ||
+				(upper.StartsWith ("CP")) ||
+				(upper.StartsWith ("C.")))
+			{
+				prefix = "Case postale";
+			}
+			else if ((upper.StartsWith ("POSTFACH")) ||
+					 (upper.StartsWith ("PF")))
+			{
+				prefix = "Postfach";
+			}
+			
+			return prefix;
 		}
 
 		private static void UpdateHouserNumber(AiderAddressEntity address)

@@ -47,6 +47,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
 				this.StreetUserFriendly, this.HouseNumberAndComplement, "\n",
+				this.PostBox, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
