@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractPersistenceJob job = null;
 
 			List<Druid> fieldIds = new List<Druid> (
-				from field in this.TypeEngine.GetLocalReferenceFields(localEntityId)
+				from field in this.TypeEngine.GetLocalReferenceFields (localEntityId)
 				let fieldId = field.CaptionId
 				where entity.HasReferenceChanged (fieldId)
 				   || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
@@ -423,7 +423,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			return new CollectionPersistenceJob (entity, localEntityId, fieldId, targets, jobType);
 		}
-
 
 
 	}
