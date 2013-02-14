@@ -490,7 +490,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					{
 						bool cache = isCache (i, j);
 
-						var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: cache);
+						var dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, readOnly: cache, enableReload: true);
 
 						initialization (dataContext);
 
