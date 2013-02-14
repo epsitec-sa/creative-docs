@@ -5,11 +5,12 @@ using Epsitec.Common.UnitTesting;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
@@ -484,11 +485,17 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					gertrude.PreferredLanguage = null;
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (gertrude.PreferredLanguage);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
 					dataContext.SaveChanges ();
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (gertrude.PreferredLanguage);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 				}
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
@@ -512,7 +519,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void SetToNull()
+		public void SetToNull1()
 		{
 			using (DB db = DB.ConnectToTestDatabase ())
 			{
@@ -525,24 +532,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
 					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
 
-					// NOTE Here everything seems to happen fine, but under the hood, when we set
-					// the value to null, we make a call to get the current value, so that we can
-					// trigger the event with the old value. So when we get the current value, as
-					// there are no value for the language, we create a "null" language, which is
-					// immediately overwritten by the null that we put in the modified value store.
-					// But this "null" language is still present in the original value stores. I'm
-					// not sure if this is a problem (for the correctness or for the performance),
-					// but I don't see how we could correct this behavior without modifying the code
-					// generated for the entities.
-					// Marc
-
 					gertrude.PreferredLanguage = null;
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (gertrude.PreferredLanguage);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.PreferredLanguage));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.PreferredLanguage));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.PreferredLanguage));
 
 					dataContext.SaveChanges ();
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (gertrude.PreferredLanguage);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.PreferredLanguage));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.PreferredLanguage));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.PreferredLanguage));
 				}
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
@@ -557,9 +559,122 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					LanguageEntity languageGertrude = gertrude.PreferredLanguage;
 
 					Assert.IsNotNull (languageGertrude);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (languageGertrude));
 					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (languageGertrude));
-					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void SetToNull2()
+		{
+			using (DB db = DB.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+
+					gertrude.Title = null;
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+
+					dataContext.SaveChanges ();
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void SetToNull3()
+		{
+			using (DB db = DB.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+
+					gertrude.Title = null;
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+
+					gertrude.Title.Name = "milady";
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+
+					dataContext.SaveChanges ();
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					Assert.IsNotNull (gertrude.Title);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude.Title));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude.Title));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude.Title));
+
+					Assert.AreEqual ("milady", gertrude.Title.Name);
 				}
 			}
 		}
@@ -761,11 +876,17 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					// language of Gertrude anymore.
 					// Marc
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
 					language.Code = "1337";
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
 					language.Name = "1337 5|*34|<";
 
@@ -776,11 +897,17 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Assert.AreEqual ("1337", language.Code);
 					Assert.AreEqual ("1337 5|*34|<", language.Name);
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 
 					dataContext.SaveChanges ();
 
-					Assert.IsNull (gertrude.PreferredLanguage);
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
 				}
 
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
@@ -987,6 +1114,102 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					NaturalPersonEntity person = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000004)));
 
 					Assert.IsNull (person);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void CreationReloadAndModification()
+		{
+			using (DB db = DB.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true, enableReload: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					LanguageEntity language = gertrude.PreferredLanguage;
+
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+
+					dataContext.Reload ();
+
+					// NOTE Here what happens is that we set the preferred language of Gertrude to
+					// a new "null" entity by reloading it. The value store of the "null" leet speak
+					// language still thinks that Gertrude is its parent entity. So when we assign
+					// something to a field of the leet speak language, this call goes all the way
+					// up to the value store of Gertrude in order to tell that store that the leet
+					// speak language is not "null" anymore so that it can remove it from its list
+					// of "null" entities and assign it to the real write store. Of course, this is
+					// wrong because the leet speak language is not the language of Gertrude
+					// anymore.
+					// Marc
+
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+
+					language.Code = "1337";
+					language.Name = "1337 5|*34|<";
+
+					Assert.IsNotNull (language);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (language));
+
+					Assert.IsNotNull (language);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+
+					dataContext.SaveChanges ();
+
+					Assert.IsNull (gertrude.PreferredLanguage);
+				}
+
+				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (db.DataInfrastructure, enableNullVirtualization: true))
+				{
+					NaturalPersonEntity gertrude = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000002)));
+
+					Assert.IsNotNull (gertrude);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (gertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (gertrude));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (gertrude));
+
+					LanguageEntity language = dataContext.GetByExample (new LanguageEntity ()
+					{
+						Code = "1337"
+					}).FirstOrDefault ();
+
+					Assert.IsNotNull (language);
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsNullEntity (language));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (language));
+					Assert.IsFalse (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (language));
+					Assert.AreEqual ("1337", language.Code);
+					Assert.AreEqual ("1337 5|*34|<", language.Name);
+
+					LanguageEntity languageGertrude = gertrude.PreferredLanguage;
+
+					Assert.IsNotNull (languageGertrude);
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntity (languageGertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsPatchedEntityStillUnchanged (languageGertrude));
+					Assert.IsTrue (EntityNullReferenceVirtualizer.IsNullEntity (languageGertrude));
+
+					Assert.IsNull (languageGertrude.Code);
+					Assert.IsNull (languageGertrude.Name);
 				}
 			}
 		}

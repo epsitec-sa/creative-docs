@@ -62,10 +62,30 @@ namespace Epsitec.Common.Support.Extensions
 			{
 				object originalValue = entity.GetOriginalValue (fieldId);
 
+				originalValue = EntityModifications.GetValueForReferenceComparison (originalValue);
+				modifiedValue = EntityModifications.GetValueForReferenceComparison (modifiedValue);
+
 				change = !System.Object.Equals (originalValue, modifiedValue);
 			}
 
 			return change;
+		}
+
+
+		/// <summary>
+		/// Gets the value that will be used for the comparison of two references.
+		/// </summary>
+		/// <param name="value">The value that must be compared to another</param>
+		/// <returns>The processed value.</returns>
+		private static object GetValueForReferenceComparison(object value)
+		{
+			// For the comparison, we consider null entities equal to null virtualized entities,
+			// so we unwrap the values if they are entities (they might be undefined values for
+			// instance).
+
+			return value is AbstractEntity
+				? EntityNullReferenceVirtualizer.UnwrapNullEntity ((AbstractEntity) value)
+				: value;
 		}
 
 
@@ -85,16 +105,20 @@ namespace Epsitec.Common.Support.Extensions
 
 			if (!UndefinedValue.IsUndefinedValue (modifiedValue))
 			{
+				var modifiedValues = EntityModifications.GetValueForCollectionComparison (modifiedValue);
+
 				object originalValue = entity.GetOriginalValue (fieldId);
 
 				if (UndefinedValue.IsUndefinedValue (originalValue))
 				{
-					change = true;
+					// The collection has changed only if it contain at least an element that is not
+					// null and not null virtualized.
+
+					change = modifiedValues.Any ();
 				}
 				else
 				{
-					IList<object> originalValues = (IList<object>) originalValue;
-					IList<object> modifiedValues = (IList<object>) modifiedValue;
+					var originalValues = EntityModifications.GetValueForCollectionComparison (originalValue);
 
 					change = !originalValues.SequenceEqual (modifiedValues);
 				}
@@ -102,7 +126,24 @@ namespace Epsitec.Common.Support.Extensions
 
 			return change;
 		}
-		
+
+
+		/// <summary>
+		/// Gets the value that will be used for the comparison of two collections.
+		/// </summary>
+		/// <param name="value">The value that must be compared to another</param>
+		/// <returns>The processed value.</returns>
+		private static IEnumerable<AbstractEntity> GetValueForCollectionComparison(object value)
+		{
+			// For the comparison, we don't consider null entities or null virtualized entities
+			// because these won't be saved to the database anyway. So we strip the collections
+			// of these before comparing them.
+
+			var collection = (IEnumerable<AbstractEntity>) value;
+
+			return collection.Where (e => !EntityNullReferenceVirtualizer.IsNullEntity (e));
+		}
+
 
 		/// <summary>
 		/// Gets the original value of the field of an <see cref="AbstractEntity"/>.

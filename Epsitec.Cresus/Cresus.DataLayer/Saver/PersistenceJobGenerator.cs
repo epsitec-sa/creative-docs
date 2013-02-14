@@ -290,6 +290,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				   || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)
 				let target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
 				where target == null
+				   || EntityNullReferenceVirtualizer.IsNullEntity (target)
 				   || this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
 				select fieldId
 			);
@@ -317,10 +318,27 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var fieldIdsWithTargets = fieldIds.ToDictionary
 			(
 				id => id,
-				id => entity.GetField<AbstractEntity> (id.ToResourceId ())
+				id => this.GetTargetForReferenceJob (entity, id)
 			);
 
 			return new ReferencePersistenceJob (entity, localEntityId, fieldIdsWithTargets, jobType);
+		}
+
+
+		/// <summary>
+		/// Gets the target that must be saved for reference jobs.
+		/// </summary>
+		/// <param name="entity">The entity whose target to get.</param>
+		/// <param name="fieldId">The id of the field whose target to get.</param>
+		/// <returns>The target of the field.</returns>
+		private AbstractEntity GetTargetForReferenceJob(AbstractEntity entity, Druid fieldId)
+		{
+			var target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ());
+
+			// If we have a null virtualized entity at this point, we must replace it by null
+			// because we must save a null value in the database.
+
+			return EntityNullReferenceVirtualizer.UnwrapNullEntity (target);
 		}
 
 
