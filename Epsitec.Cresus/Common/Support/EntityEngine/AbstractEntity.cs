@@ -1283,7 +1283,16 @@ namespace Epsitec.Common.Support.EntityEngine
 					//	The value is null and the field is nullable; this operation
 					//	is valid and it will clear the field.
 
-					this.InternalSetValue (id, null);
+					var    nullEntity = oldValue as AbstractEntity;
+					object nullValue  = null;
+
+					if ((nullEntity != null) &&
+						(EntityNullReferenceVirtualizer.IsNullEntity (nullEntity)))
+					{
+						nullValue = EntityNullReferenceVirtualizer.CloneNullEntity (nullEntity);
+					}
+
+					this.InternalSetValue (id, nullValue);
 					this.UpdateDataGeneration ();
 				}
 				else

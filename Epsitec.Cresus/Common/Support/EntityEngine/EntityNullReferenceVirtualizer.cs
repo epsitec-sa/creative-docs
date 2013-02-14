@@ -168,6 +168,53 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		public static AbstractEntity CloneNullEntity(AbstractEntity entity)
+		{
+			var store = entity.GetOriginalValues () as Store;
+
+			if (store == null)
+			{
+				throw new System.InvalidOperationException ("Cannot clone a non-null entity");
+			}
+
+			var creatorType = typeof (NullEntityCreator<>).MakeGenericType (entity.GetType ());
+			var creatorObject = System.Activator.CreateInstance (creatorType) as NullEntityCreator;
+			
+			return creatorObject.CreateEmptyEntity (store);
+		}
+
+		#region NullEntityCreator Class
+
+		private abstract class NullEntityCreator
+		{
+			public abstract AbstractEntity CreateEmptyEntity(Store store);
+		}
+
+		#endregion
+
+		#region NullEntityCreator<T> Class
+
+		private class NullEntityCreator<T> : NullEntityCreator
+			where T : AbstractEntity, new ()
+		{
+			public override AbstractEntity CreateEmptyEntity(Store store)
+			{
+				var emptyEntityContext = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
+				var entity = emptyEntityContext.CreateEmptyEntity<T> ();
+
+				EntityNullReferenceVirtualizer.PatchNullReferences (entity, store);
+
+				if (store.IsReadOnly)
+				{
+					entity.Freeze ();
+				}
+
+				return entity;
+			}
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Wraps the entity. If it is <c>null</c>, then create a virtualized empty entity.
 		/// </summary>
@@ -221,7 +268,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			entity.SetOriginalValues (newOriginalValues);
 			entity.SetModifiedValues (newModifiedValues);
 		}
-		
+
+		private static void PatchNullReferences<T>(T entity, Store store)
+			where T : AbstractEntity
+		{
+			if (EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
+			{
+				return;
+			}
+
+			var originalValues = entity.GetOriginalValues ();
+			var modifiedValues = entity.GetModifiedValues ();
+
+			var newOriginalValues = new Store (originalValues, modifiedValues, entity, store);
+			var newModifiedValues = new StoreForwarder (modifiedValues, newOriginalValues);
+
+			entity.SetOriginalValues (newOriginalValues);
+			entity.SetModifiedValues (newModifiedValues);
+		}
+
 		/// <summary>
 		/// Creates an empty entity attached to a dedicated context.
 		/// </summary>
@@ -294,7 +359,22 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.parentStore          = parentStore;
 				this.fieldIdInParentStore = fieldIdInParentStore;
 			}
-			
+
+			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, Store store)
+				: this (realReadStore, realWriteStore, entity, store.RealEntityContext, store.IsReadOnly)
+			{
+				this.parentStore          = store.parentStore;
+				this.fieldIdInParentStore = store.fieldIdInParentStore;
+			}
+
+
+			public EntityContext RealEntityContext
+			{
+				get
+				{
+					return this.realEntityContext;
+				}
+			}
 
 			public bool IsReadOnly
 			{
