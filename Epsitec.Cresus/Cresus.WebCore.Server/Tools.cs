@@ -130,9 +130,9 @@ namespace Epsitec.Cresus.WebCore.Server
 				}
 
 				var content = new Dictionary<string, object> ()
-			    {
-			        { "index", index },
-			    };
+				{
+					{ "index", index },
+				};
 
 				return CoreResponse.Success (content);
 			}
