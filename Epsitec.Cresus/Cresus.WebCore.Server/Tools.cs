@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using System.IO;
+using System.IO.Compression;
 
 using System.Linq;
 
@@ -195,6 +196,17 @@ namespace Epsitec.Cresus.WebCore.Server
 				"Logs",
 				name
 			);
+		}
+
+
+		public static void Zip(string inputFilePath, string outputFilePath)
+		{
+			using (var inputStream = File.OpenRead (inputFilePath))
+			using (var outputStream = File.Create (outputFilePath))
+			using (var compressedStream = new GZipStream (outputStream, CompressionMode.Compress))
+			{
+				inputStream.CopyTo (compressedStream);
+			}
 		}
 
 

@@ -57,6 +57,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Core\BackupManager.cs" />
     <Compile Include="Core\Caches.cs" />
     <Compile Include="Core\CoreWorkerPool.cs" />
     <Compile Include="Core\Databases\AbstractMenuItem.cs" />
