@@ -13,9 +13,20 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
-			// Some fields have been made readonly because this functionnality is not yet fully
-			// implemented and we dont' want the users to mess up this data.
-
+#if ENABLE_GROUPS
+			wall.AddBrick ()
+				.Input ()
+					.HorizontalGroup ()
+						.Title ("Dates de début et de fin")
+						.Field (x => x.StartDate)
+						.Field (x => x.EndDate)
+					.End ()
+					.Field (x => x.Path).ReadOnly ()
+					.Field (x => x.GroupLevel).ReadOnly ()
+					.Field (x => x.GroupDef)
+					.Field (x => x.Name)
+				.End ();
+#else
 			wall.AddBrick ()
 				.Input ()
 					.HorizontalGroup ()
@@ -28,6 +39,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.GroupDef).ReadOnly ()
 					.Field (x => x.Name).ReadOnly ()
 				.End ();
+#endif
 		}
 	}
 }

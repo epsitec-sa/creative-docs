@@ -162,9 +162,6 @@ AiderFunctionDef = [LVA7A]
     </t>
   </T>
   <D>
-# The create and delete button have been removed for the DataSets LVA1D, LVG322, LVG422 and LVG522
-# because the feature is not yet full implemented and we don't want users to mess with this data
-# right now.
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
@@ -177,7 +174,13 @@ AiderFunctionDef = [LVA7A]
     <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVA3D]" teid="@AiderFunctionDef" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+
+    <!-- Switch between the next two lines to enable or disable group modifications -->
+    <!-- Group modifications enabled
+    <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg=""><R><r>@user</r></R></d> -->
+    <!-- Group modifications disabled -->
     <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
+
     <d cid="[LVG522]" teid="@AiderPerson" tn="groupMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>
   </D>
   <G/>

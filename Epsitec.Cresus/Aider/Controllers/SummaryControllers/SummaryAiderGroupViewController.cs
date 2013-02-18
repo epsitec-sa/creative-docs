@@ -15,16 +15,23 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ();
 
+#if ENABLE_GROUPS
 			wall.AddBrick (x => x.Subgroups)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
-				// These two attributes have been added because this functionnality is not yet fully
-				// implemented and we dont' want the users to mess up this data.
+				.Template ()
+					.Title ("Sous groupes")
+				.End ();
+#else
+			wall.AddBrick (x => x.Subgroups)
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.Attribute (BrickMode.AutoGroup)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Template ()
 					.Title ("Sous groupes")
 				.End ();
+#endif
 
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.People")
