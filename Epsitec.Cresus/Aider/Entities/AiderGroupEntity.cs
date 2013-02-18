@@ -153,16 +153,6 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest (request);
 		}
 
-		public IEnumerable<AiderGroupParticipantEntity> FindParticipants(BusinessContext businessContext)
-		{
-			var example = new AiderGroupParticipantEntity ();
-			var request = Request.Create (example);
-
-			example.Group = this;
-
-			return businessContext.DataContext.GetByRequest (request);
-		}
-
 
 		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
 		{
