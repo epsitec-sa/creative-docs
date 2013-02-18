@@ -3207,20 +3207,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Participants</c> field.
-		///	designer:fld/LVA54/LVAJ8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAJ8]", IsVirtual=true)]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> Participants
-		{
-			get
-			{
-				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity>);
-				this.GetParticipants (ref value);
-				return value;
-			}
-		}
-		///	<summary>
 		///	The <c>Subgroups</c> field.
 		///	designer:fld/LVA54/LVA7D
 		///	</summary>
@@ -3246,7 +3232,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnPathChanging(string oldValue, string newValue);
 		partial void OnPathChanged(string oldValue, string newValue);
 		
-		partial void GetParticipants(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetSubgroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

@@ -202,11 +202,6 @@ namespace Epsitec.Aider.Entities
 			value = this.subgroupsList;
 		}
 
-		partial void GetParticipants(ref IList<AiderPersonEntity> value)
-		{
-			throw new NotImplementedException ();
-		}
-
 
 		public FormattedText GetParticipantsTitle()
 		{

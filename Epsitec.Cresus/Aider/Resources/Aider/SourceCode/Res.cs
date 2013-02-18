@@ -1500,8 +1500,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid GroupLevel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 430);
 				//	designer:cap/LVAA4
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 138);
-				//	designer:cap/LVAJ8
-				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 275);
 				//	designer:cap/LVAPC
 				public static readonly global::Epsitec.Common.Support.Druid Path = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 409);
 				//	designer:cap/LVA7D
