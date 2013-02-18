@@ -173,7 +173,6 @@ AiderFunctionDef = [LVA7A]
     <d cid="[LVAID]" teid="@AiderUserRole" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVA3D]" teid="@AiderFunctionDef" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
 
     <!-- Switch between the next two lines to enable or disable group modifications -->
     <!-- Group modifications enabled

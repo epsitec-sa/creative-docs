@@ -92,7 +92,6 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupSpecialField.cs" />
-    <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController.cs" />
@@ -101,7 +100,6 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderUserViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController0.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController1.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
