@@ -44,6 +44,10 @@ namespace Epsitec.Aider.Override
 			{
 				return this.GetAiderUserEntityFilter ((AiderUserEntity) example);
 			}
+			else if (entityType == typeof (AiderGroupDefEntity))
+			{
+				return this.GetAiderGroupDefEntityFilter ((AiderGroupDefEntity) example);
+			}
 
 			return null;
 		}
@@ -58,6 +62,14 @@ namespace Epsitec.Aider.Override
 			}
 
 			return null;
+		}
+
+		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
+		{
+			return new LambdaFilter<AiderGroupDefEntity>
+			(
+				x => SqlMethods.Like (x.PathTemplate, AiderGroupIds.SubgroupSqlWildcard)
+			);
 		}
 
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)
