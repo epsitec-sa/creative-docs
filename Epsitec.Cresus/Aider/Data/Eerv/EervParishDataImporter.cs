@@ -1404,11 +1404,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static EervGroupDefinition FindRootEervGroupDefinition(EervId eervId, IEnumerable<EervGroupDefinition> groupDefinitions)
 		{
-			var groupName = eervId.IsParish
-				? AiderGroupDefEntity.GetParishGroupDefName ()
-				: AiderGroupDefEntity.GetRegionGroupDefName ();
+			var groupClassification = eervId.IsParish
+				? GroupClassification.Parish
+				: GroupClassification.Region;
 
-			return groupDefinitions.Where (g => g.Name == groupName).Single ();
+			return groupDefinitions
+				.Where (g => g.Parent == null)
+				.Where (g => g.GroupClassification == groupClassification)
+				.Single ();
 		}
 
 
