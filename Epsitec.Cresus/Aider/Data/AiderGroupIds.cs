@@ -11,22 +11,22 @@ namespace Epsitec.Aider.Data
 {
 	public static class AiderGroupIds
 	{
-		public const string Canton              = "SCC.";
-		public const string Common              = "MIC.";
-		public const string External            = "REX.";
-		public const string Function            = "FNC.";
-		public const string Parish              = "P__.";
-		public const string Region              = "R__.";
-		public const string Staff               = "PRS.";
+		public const string Canton				= "SCC.";
+		public const string Common				= "MIC.";
+		public const string External			= "REX.";
+		public const string Function			= "FNC.";
+		public const string Parish				= "P__.";
+		public const string Region				= "R__.";
+		public const string Staff				= "PRS.";
 		public const string StaffAssociation	= "ASP.";
-		public const string NoParish            = "NOP.";
+		public const string NoParish			= "NOP.";
 
 		public const string GroupPrefix			= "G";
 		public const string FunctionPrefix		= "F";
 
-		public const string SubgroupSqlWildcard = "___.";
+		public const string SubgroupSqlWildcard	= "___.";
 
-		public const int SubgroupLength         = 4;
+		public const int SubgroupLength			= 4;
 		public const int MinSubGroupNumber		= 1;
 		public const int MaxSubGroupNumber		= 99;
 
