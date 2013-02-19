@@ -2,12 +2,10 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Eerv;
-using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
@@ -35,14 +33,25 @@ namespace Epsitec.Aider.Entities
 
 		public AiderGroupEntity Instantiate(BusinessContext businessContext, GroupPathInfo info)
 		{
-			var group = AiderGroupEntity.Create (businessContext, this, info);
+			var name = info.Name;
+			var level = info.Level;
+			var path = info.MapPath (this);
+
+			var group = AiderGroupEntity.Create (businessContext, this, name, level, path);
 
 			// TODO Add more stuff to the group, such as root, start date, etc.
 
 			foreach (var subGroupDef in this.Subgroups)
 			{
-				var subInfo  = new GroupPathInfo (subGroupDef.Name, subGroupDef.PathTemplate, group.Path + subGroupDef.PathTemplate.SubstringEnd (4), info.Level + 1);
-				var subGroup = subGroupDef.Instantiate (businessContext, subInfo);
+				var subInfo = new GroupPathInfo
+				(
+					name: subGroupDef.Name,
+					template: subGroupDef.PathTemplate,
+					output: group.Path + subGroupDef.PathTemplate.SubstringEnd (4),
+					level: info.Level + 1
+				);
+				
+				subGroupDef.Instantiate (businessContext, subInfo);
 			}
 
 			return group;

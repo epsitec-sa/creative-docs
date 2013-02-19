@@ -172,16 +172,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, GroupPathInfo info)
-		{
-			var name = info.Name;
-			var level = info.Level;
-			var path = info.MapPath (groupDefinition);
-
-			return AiderGroupEntity.Create (businessContext, groupDefinition, name, level, path);
-		}
-
-
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name, int level, string path)
 		{
 			var group = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
