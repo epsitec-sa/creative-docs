@@ -1399,10 +1399,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			
 			var sqlFieldColumn = builder.BuildEntityField (entity, fieldId);
 			var sqlFieldValue = builder.BuildConstantForField (entity, fieldId);
-
-			var sqlFunctionCode = sqlFieldValue.RawType == DbRawType.String
-			    ? SqlFunctionCode.CompareLike
-			    : SqlFunctionCode.CompareEqual;
+			var sqlFunctionCode = SqlFunctionCode.CompareEqual;
 
 			return new SqlFunction (sqlFunctionCode, sqlFieldColumn, sqlFieldValue);
 		}
