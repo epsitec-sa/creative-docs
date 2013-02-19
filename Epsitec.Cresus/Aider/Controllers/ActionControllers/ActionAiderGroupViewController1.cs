@@ -4,8 +4,10 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -38,6 +40,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var group = this.Entity;
 			var subgroup = this.AdditionalEntity;
+
+			if (subgroup.GroupDef.IsNotNull ())
+			{
+				var message = "Ce groupe ne peut pas être détruit puisqu'il correspond à une définition";
+
+				throw new BusinessRuleException (message);
+			}
 
 			group.DeleteSubgroup (this.BusinessContext, subgroup);
 		}
