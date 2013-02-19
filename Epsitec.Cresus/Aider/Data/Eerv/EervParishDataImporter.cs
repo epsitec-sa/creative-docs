@@ -1327,7 +1327,7 @@ namespace Epsitec.Aider.Data.Eerv
 					continue;
 				}
 
-				if (eervId.IsParish && definition.Classification == GroupClassification.Parish)
+				if (!eervId.IsParish && definition.Classification == GroupClassification.Parish)
 				{
 					continue;
 				}
