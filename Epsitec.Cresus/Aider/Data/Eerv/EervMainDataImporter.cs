@@ -219,10 +219,10 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var regionId = parishAddressInfo.RegionCode;
 				var parishId = parishIds[regionId] + 1;
-
-				parishes.Add (parishAddressInfo.ParishName,
-					/**/      EervMainDataImporter.CreateParishGroup (businessContext, parishGroupDefinition, parishAddressInfo, parishId));
-
+				var parishName = parishAddressInfo.ParishName;
+				var parish = EervMainDataImporter.CreateParishGroup (businessContext, parishGroupDefinition, parishAddressInfo, parishId);
+				
+				parishes.Add (parishName, parish);
 				parishIds[regionId] = parishId;
 			}
 
