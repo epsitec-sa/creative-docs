@@ -17,6 +17,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.Name)
 						.ReadOnly ()
+					.Field (x => x.Description)
+						.ReadOnly ()
 					.Field (x => x.PathTemplate)
 						.ReadOnly ()
 					.Field (x => x.NodeType)
