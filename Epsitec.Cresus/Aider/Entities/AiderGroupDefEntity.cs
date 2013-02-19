@@ -47,17 +47,5 @@ namespace Epsitec.Aider.Entities
 
 			return group;
 		}
-
-		public static AiderGroupDefEntity Find(BusinessContext businessContext, string name)
-		{
-			var example = new AiderGroupDefEntity ()
-			{
-				Name = name,
-			};
-
-			return businessContext.DataContext
-				.GetByExample<AiderGroupDefEntity> (example)
-				.FirstOrDefault ();
-		}
 	}
 }

@@ -6,6 +6,8 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -169,7 +171,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<int, AiderGroupEntity> CreateRegionGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
-			var regionGroupDefinition = AiderGroupDefEntity.Find (businessContext, "Régions"); 
+			var regionGroupDefinition = EervMainDataImporter.GetRootGroupDefinition (businessContext, GroupClassification.Region);
 
 			return regions
 				.Keys
@@ -177,9 +179,38 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		private static AiderGroupDefEntity GetRootGroupDefinition(BusinessContext businessContext, GroupClassification classification)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupDefEntity ()
+			{
+				PathTemplate = EervMainDataImporter.GetPathTemplate (classification)
+			};
+
+			return dataContext.GetByExample (example).Single ();
+		}
+
+
+		private static string GetPathTemplate(GroupClassification classification)
+		{
+			switch (classification)
+			{
+				case GroupClassification.Region:
+					return AiderGroupIds.Region;
+
+				case GroupClassification.Parish:
+					return AiderGroupIds.Parish;
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
 		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
-			var parishGroupDefinition = AiderGroupDefEntity.Find (businessContext, "Paroisses");
+			var parishGroupDefinition = EervMainDataImporter.GetRootGroupDefinition (businessContext, GroupClassification.Parish);
 			var parishAddressInfos = regions.Values.SelectMany (p => p.Values.Select (p2 => p2.First ())).ToArray ();
 			var parishIds = regions.Keys.ToDictionary (x => x, x => 0);
 			var parishes = new Dictionary<string, AiderGroupEntity> ();
