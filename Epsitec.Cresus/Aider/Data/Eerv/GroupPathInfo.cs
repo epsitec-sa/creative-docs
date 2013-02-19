@@ -3,8 +3,6 @@
 
 using Epsitec.Aider.Entities;
 
-using Epsitec.Common.Support.Extensions;
-
 using System.Collections.Generic;
 using System.Linq;
 
