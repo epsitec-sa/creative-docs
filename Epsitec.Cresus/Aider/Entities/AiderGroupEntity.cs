@@ -2,14 +2,13 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Data;
-using Epsitec.Aider.Data.Eerv;
-using Epsitec.Aider.Entities.Helpers;
 
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -105,17 +104,30 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
 		{
-			if (this.subgroupsList == null)
-			{
-				this.subgroupsList = new AiderGroupSubGroupList (this);
-				;
-			}
-
-			value = this.subgroupsList;
+			value = this.GetSubgroups ().AsReadOnly ();
 		}
 
 
-		public IEnumerable<AiderGroupEntity> FindSubgroups(BusinessContext businessContext)
+		private List<AiderGroupEntity> GetSubgroups()
+		{
+			if (this.subgroups == null)
+			{
+				this.subgroups = new List<AiderGroupEntity> ();
+
+				var dataContext = DataContextPool.GetDataContext (this);
+
+				if ((dataContext != null) &&
+					(dataContext.IsPersistent (this)))
+				{
+					this.subgroups.AddRange (this.FindSubgroups (dataContext));
+				}
+			}
+
+			return this.subgroups;
+		}
+
+
+		private IEnumerable<AiderGroupEntity> FindSubgroups(DataContext dataContext)
 		{
 			// If we are at the maximum group level, there's no point in looking for sub groups in
 			// the database. We won't find any. So we return directly an empty sequence. Note that
@@ -127,8 +139,6 @@ namespace Epsitec.Aider.Entities
 				return Enumerable.Empty<AiderGroupEntity> ();
 			}
 
-			var dataContext = businessContext.DataContext;
-
 			var example = new AiderGroupEntity ();
 			var request = Request.Create (example);
 
@@ -139,6 +149,18 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return dataContext.GetByRequest (request);
+		}
+
+
+		public void AddSubgroupInternal(AiderGroupEntity group)
+		{
+			this.GetSubgroups ().Add (group);
+		}
+
+
+		public void RemoveSubgroupInternal(AiderGroupEntity group)
+		{
+			this.GetSubgroups ().Remove (group);
 		}
 
 
@@ -172,6 +194,19 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupEntity parent, AiderGroupDefEntity groupDefinition, string name, int level, string path)
+		{
+			var group = AiderGroupEntity.Create (businessContext, groupDefinition, name, level, path);
+
+			if (parent != null)
+			{
+				parent.AddSubgroupInternal (group);
+			}
+
+			return group;
+		}
+
+
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name, int level, string path)
 		{
 			var group = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
@@ -185,46 +220,26 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public AiderGroupEntity CreateSubGroup(BusinessContext businessContext, string name, int subGroupNumber)
+		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name)
 		{
-			if (subGroupNumber > AiderGroupIds.MaxSubGroupNumber)
-			{
-				throw new Exception ("Group number too high");
-			}
+			var subgroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
+			var subgroupNumber = this.GetNextSubgroupNumber ();
 
-			var subGroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
+			subgroup.Name = name;
+			subgroup.GroupLevel = this.GroupLevel + 1;
+			subgroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subgroupNumber);
 
-			subGroup.Name = name;
+			this.AddSubgroupInternal (subgroup);
 
-			this.SetupSubGroup (subGroup, subGroupNumber);
-
-			return subGroup;
+			return subgroup;
 		}
 
 
-		public void SetupSubGroup(AiderGroupEntity subGroup, int subGroupNumber)
-		{
-			subGroup.GroupLevel = this.GroupLevel + 1;
-			subGroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subGroupNumber);
-		}
-
-
-		public AiderGroupEntity CreateSubGroup(BusinessContext businessContext, string name)
-		{
-			var nextSubGroupNumber = this.GetNextSubGroupNumber ();
-
-			return this.CreateSubGroup (businessContext, name, nextSubGroupNumber);
-		}
-
-
-		public int GetNextSubGroupNumber()
+		private int GetNextSubgroupNumber()
 		{
 			// We look for a number that is not used yet in the subgroups.
 
 			var usedNumbers = this.Subgroups
-				// We check for that in case the group we want to compute the number has already
-				// been added to the list, like in the AiderGroupSubGroupList class.
-				.Where (g => !string.IsNullOrEmpty (g.Path))
 				.Select (g => AiderGroupIds.GetGroupNumber (g.Path))
 				.ToSet ();
 
@@ -248,7 +263,47 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private AiderGroupSubGroupList subgroupsList;
+		public void DeleteSubgroup(BusinessContext businessContext, AiderGroupEntity subgroup)
+		{
+			// Recursively delete the children of the subgroup that we want to delete.
+
+			foreach (var child in subgroup.GetSubgroups ().ToList ())
+			{
+				subgroup.DeleteSubgroup (businessContext, child);
+			}
+
+			this.RemoveSubgroupInternal (subgroup);
+			
+			// This might be very costly for groups which have a lot of participations.
+
+			var participations = this.FindParticipations (businessContext);
+
+			foreach (var participation in participations)
+			{
+				businessContext.DeleteEntity (participation);
+			}
+
+			if (subgroup.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (subgroup.Comment);
+			}
+
+			businessContext.DeleteEntity (subgroup);
+		}
+
+
+		private IEnumerable<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Group = this
+			};
+
+			return businessContext.DataContext.GetByExample (example);
+		}
+
+
+		private List<AiderGroupEntity> subgroups;
 
 
 	}

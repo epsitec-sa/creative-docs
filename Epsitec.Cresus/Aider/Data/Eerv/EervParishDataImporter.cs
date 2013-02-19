@@ -1220,11 +1220,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (importationGroup == null)
 			{
-				// TODO Don't use the count here. I don't want to them know in order not to break
-				// something before the demo :-P
-
-				var count = parishGroup.Subgroups.Count + 1;
-				importationGroup = parishGroup.CreateSubGroup (businessContext, name, count);
+				importationGroup = parishGroup.CreateSubgroup (businessContext, name);
 			}
 
 			return importationGroup;
@@ -1245,18 +1241,12 @@ namespace Epsitec.Aider.Data.Eerv
 			var eervGroups = eervParishData.Groups;
 			var eervId = eervParishData.Id;
 
-			var rootAiderGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, eervId);
-			var aiderSubGroupMapping = EervParishDataImporter.BuildAiderSubGroupMapping (businessContext, rootAiderGroup);
-
-			var aiderIdMapping = EervParishDataImporter.BuildAiderIdMapping (rootAiderGroup, aiderSubGroupMapping, eervId);
+			var idToGroups = EervParishDataImporter.BuildIdToGroups (businessContext, eervId);
+			var eervToAiderGroups = new Dictionary<EervGroup, AiderGroupEntity> ();
 
 			// We sort the groups so that they appear in the right order, that is, the parent before
 			// their children.
-			var sortedEervGroups = eervGroups.OrderBy (g => g.Id);
-
-			var groupMapping = new Dictionary<EervGroup, AiderGroupEntity> ();
-
-			foreach (var eervGroup in sortedEervGroups)
+			foreach (var eervGroup in eervGroups.OrderBy (g => g.Id))
 			{
 				if (eervId.IsParish && !eervGroup.Id.StartsWith ("04"))
 				{
@@ -1269,29 +1259,19 @@ namespace Epsitec.Aider.Data.Eerv
 
 				AiderGroupEntity aiderGroup;
 
-				if (aiderIdMapping.TryGetValue (eervGroup.Id, out aiderGroup))
+				if (idToGroups.TryGetValue (eervGroup.Id, out aiderGroup))
 				{
-					groupMapping[eervGroup] = aiderGroup;
+					eervToAiderGroups[eervGroup] = aiderGroup;
 				}
-				else if (aiderIdMapping.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
+				else if (idToGroups.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
 				{
-					var subgroups = aiderSubGroupMapping[aiderGroup];
-
-					// TODO Don't use the count here. This might lead to lots of simplifications
-					// but I don't want to them know in order not to break something before the
-					// demo :-P
-
 					// HACK This is a hack for group names greater than 200 chars that will throw an
 					// exception later. This need to be corrected.
 					var name = eervGroup.Name.Substring (0, Math.Min (200, eervGroup.Name.Length));
-					var number = subgroups.Count + 1;
-					var newAiderGroup = aiderGroup.CreateSubGroup (businessContext, name, number);
+					var newAiderGroup = aiderGroup.CreateSubgroup (businessContext, name);
 
-					subgroups.Add (newAiderGroup);
-					aiderSubGroupMapping[newAiderGroup] = new List<AiderGroupEntity> ();
-
-					aiderIdMapping[eervGroup.Id] = newAiderGroup;
-					groupMapping[eervGroup] = newAiderGroup;
+					idToGroups[eervGroup.Id] = newAiderGroup;
+					eervToAiderGroups[eervGroup] = newAiderGroup;
 				}
 				else
 				{
@@ -1299,10 +1279,10 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			businessContext.Register (aiderSubGroupMapping.Keys);
+			businessContext.Register (idToGroups.Values);
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
-			return groupMapping.ToDictionary
+			return eervToAiderGroups.ToDictionary
 			(
 				g => g.Key,
 				g => businessContext.DataContext.GetNormalizedEntityKey (g.Value).Value
@@ -1310,9 +1290,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<string, AiderGroupEntity> BuildAiderIdMapping(AiderGroupEntity rootGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping, EervId eervId)
+		private static Dictionary<string, AiderGroupEntity> BuildIdToGroups(BusinessContext businessContext, EervId eervId)
 		{
 			var mapping = new Dictionary<string, AiderGroupEntity> ();
+
+			var rootGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, eervId);
 
 			var todo = new Stack<AiderGroupEntity> ();
 			todo.Push (rootGroup);
@@ -1334,11 +1316,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				mapping[definition.Number] = group;
 
-				IList<AiderGroupEntity> subgroups;
-				if (subGroupMapping.TryGetValue (group, out subgroups))
-				{
-					todo.PushRange (subgroups);
-				}
+				todo.PushRange (group.Subgroups);
 			}
 
 			return mapping;
@@ -1359,27 +1337,6 @@ namespace Epsitec.Aider.Data.Eerv
 
 				return ParishAssigner.FindRegionGroup (businessContext, regionNumber);
 			}
-		}
-
-
-		private static Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> BuildAiderSubGroupMapping(BusinessContext businessContext, AiderGroupEntity aiderGroup)
-		{
-			var mapping = new Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> ();
-
-			var todo = new Stack<AiderGroupEntity> ();
-			todo.Push (aiderGroup);
-
-			while (todo.Count > 0)
-			{
-				var currentGroup = todo.Pop ();
-				var subGroups = currentGroup.FindSubgroups (businessContext).ToList ();
-
-				mapping[currentGroup] = subGroups;
-
-				todo.PushRange (subGroups);
-			}
-
-			return mapping;
 		}
 
 

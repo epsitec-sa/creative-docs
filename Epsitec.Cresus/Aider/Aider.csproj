@@ -61,6 +61,7 @@
     <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="AiderProgramTestImportMode.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderContactViewController0.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController0.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController2.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController2.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController1.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />
@@ -79,7 +81,6 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
-    <Compile Include="Entities\Helpers\AiderGroupSubGroupList.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
     <Compile Include="Entities\AiderWarningActionEntity.cs" />
-    <Compile Include="Entities\Helpers\VirtualEventList.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />

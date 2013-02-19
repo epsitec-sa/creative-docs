@@ -33,11 +33,16 @@ namespace Epsitec.Aider.Entities
 
 		public AiderGroupEntity Instantiate(BusinessContext businessContext, GroupPathInfo info)
 		{
+			return this.Instantiate (businessContext, null, info);
+		}
+
+		public AiderGroupEntity Instantiate(BusinessContext businessContext, AiderGroupEntity parent, GroupPathInfo info)
+		{
 			var name = info.Name;
 			var level = info.Level;
 			var path = info.MapPath (this);
 
-			var group = AiderGroupEntity.Create (businessContext, this, name, level, path);
+			var group = AiderGroupEntity.Create (businessContext, parent, this, name, level, path);
 
 			// TODO Add more stuff to the group, such as root, start date, etc.
 
@@ -51,7 +56,7 @@ namespace Epsitec.Aider.Entities
 					level: info.Level + 1
 				);
 				
-				subGroupDef.Instantiate (businessContext, subInfo);
+				subGroupDef.Instantiate (businessContext, group, subInfo);
 			}
 
 			return group;
