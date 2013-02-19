@@ -122,7 +122,7 @@ namespace Epsitec.Aider.Entities
 			// this optimization avoids to make a request with a group path longer than the maximum
 			// group path which Firebird don't like at all. It considers such requests invalid.
 
-			if (this.GroupLevel >= AiderGroupEntity.maxGroupLevel)
+			if (this.GroupLevel >= AiderGroupIds.maxGroupLevel)
 			{
 				return Enumerable.Empty<AiderGroupEntity> ();
 			}
@@ -257,9 +257,6 @@ namespace Epsitec.Aider.Entities
 
 
 		private AiderGroupSubGroupList subgroupsList;
-
-
-		private static readonly int maxGroupLevel = 6;
 
 
 	}
