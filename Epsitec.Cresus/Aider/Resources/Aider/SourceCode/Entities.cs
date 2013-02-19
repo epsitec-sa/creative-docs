@@ -5141,6 +5141,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Number</c> field.
+		///	designer:fld/LVA2A/LVG622
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG622]")]
+		public string Number
+		{
+			get
+			{
+				return this.GetField<string> ("[LVG622]");
+			}
+			set
+			{
+				string oldValue = this.Number;
+				if (oldValue != value || !this.IsFieldDefined("[LVG622]"))
+				{
+					this.OnNumberChanging (oldValue, value);
+					this.SetField<string> ("[LVG622]", oldValue, value);
+					this.OnNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/LVA2A/LVAOD
 		///	</summary>
@@ -5265,6 +5287,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnNumberChanging(string oldValue, string newValue);
+		partial void OnNumberChanged(string oldValue, string newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnPathTemplateChanging(string oldValue, string newValue);

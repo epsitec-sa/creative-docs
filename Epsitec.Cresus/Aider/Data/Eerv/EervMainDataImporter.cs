@@ -60,6 +60,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
 			aiderGroupDef.Name = groupDefinition.Name;
+			aiderGroupDef.Number = groupDefinition.Id;
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
 			aiderGroupDef.NodeType = groupDefinition.GroupNodeType;
 			aiderGroupDef.Classification = groupDefinition.GroupClassification;

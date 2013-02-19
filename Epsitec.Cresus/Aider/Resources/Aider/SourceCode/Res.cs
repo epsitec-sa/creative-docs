@@ -1523,6 +1523,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 323);
 				//	designer:cap/LVA1B
 				public static readonly global::Epsitec.Common.Support.Druid NodeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 353);
+				//	designer:cap/LVG622
+				public static readonly global::Epsitec.Common.Support.Druid Number = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 70);
 				//	designer:cap/LVARC
 				public static readonly global::Epsitec.Common.Support.Druid PathTemplate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 411);
 				//	designer:cap/LVA4A
