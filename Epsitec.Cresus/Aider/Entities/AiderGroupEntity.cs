@@ -158,15 +158,17 @@ namespace Epsitec.Aider.Entities
 
 		public IEnumerable<AiderGroupEntity> GetGroupChain(BusinessContext businessContext)
 		{
-			foreach (var path in AiderGroupIds.GetGroupChainPaths (this.Path))
-			{
-				var example = new AiderGroupEntity ()
-				{
-					Path = path
-				};
+			var dataContext = businessContext.DataContext;
 
-				yield return businessContext.DataContext.GetByExample (example).Single ();
-			}
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			var groupPaths = AiderGroupIds.GetGroupChainPaths (this.Path);
+
+			request.AddCondition (dataContext, example, g => SqlMethods.IsInSet (g.Path, groupPaths));
+			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
+
+			return dataContext.GetByRequest<AiderGroupEntity> (request);
 		}
 
 
