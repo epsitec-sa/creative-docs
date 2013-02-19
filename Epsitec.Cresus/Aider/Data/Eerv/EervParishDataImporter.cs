@@ -32,13 +32,13 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, EervMainData eervMainData, EervParishData eervParishData)
+		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreData, parishRepository, eervParishData);
 
 			EervParishDataImporter.ImportEervLegalPersons (coreData, eervParishData);
 
-			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (coreData, eervMainData, eervParishData);
+			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (coreData, eervParishData);
 
 			EervParishDataImporter.ImportEervActivities (coreData, eervParishData, eervPersonMapping, eervGroupMapping);
 
@@ -1231,26 +1231,24 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreData coreData, EervMainData eervMainData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreData coreData, EervParishData eervParishData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				return EervParishDataImporter.ImportEervGroups (businessContext, eervMainData, eervParishData);
+				return EervParishDataImporter.ImportEervGroups (businessContext, eervParishData);
 			}
 		}
 
 
-		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContext businessContext, EervMainData eervMainData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContext businessContext, EervParishData eervParishData)
 		{
-			var eervGroupDefinitions = eervMainData.GroupDefinitions;
 			var eervGroups = eervParishData.Groups;
 			var eervId = eervParishData.Id;
 
 			var rootAiderGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, eervId);
 			var aiderSubGroupMapping = EervParishDataImporter.BuildAiderSubGroupMapping (businessContext, rootAiderGroup);
 
-			var rootEervGroupDefinition = EervParishDataImporter.FindRootEervGroupDefinition (eervId, eervGroupDefinitions);
-			var aiderIdMapping = EervParishDataImporter.BuildAiderIdMapping (rootAiderGroup, aiderSubGroupMapping, rootEervGroupDefinition);
+			var aiderIdMapping = EervParishDataImporter.BuildAiderIdMapping (rootAiderGroup, aiderSubGroupMapping, eervId);
 
 			// We sort the groups so that they appear in the right order, that is, the parent before
 			// their children.
@@ -1312,76 +1310,38 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<string, AiderGroupEntity> BuildAiderIdMapping(AiderGroupEntity rootAiderGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping, EervGroupDefinition rootEervGroupDefinition)
+		private static Dictionary<string, AiderGroupEntity> BuildAiderIdMapping(AiderGroupEntity rootGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping, EervId eervId)
 		{
-			var result = new Dictionary<string, AiderGroupEntity> ();
-
-			var groupChains = EervParishDataImporter.GetGroupChains (rootAiderGroup, subGroupMapping);
-
-			foreach (var groupChain in groupChains)
-			{
-				var eervGroupDefinition = EervParishDataImporter.FindEervGroupDefinition (groupChain, rootEervGroupDefinition);
-
-				if (eervGroupDefinition != null)
-				{
-					result[eervGroupDefinition.Id] = groupChain.Last ();
-				}
-			}
-
-			return result;
-		}
-
-
-		private static IEnumerable<IEnumerable<AiderGroupEntity>> GetGroupChains(AiderGroupEntity rootAiderGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping)
-		{
-			// This method looks terrible, but it's not as bad as it seems. It perform a depth first
-			// iteration of the tree of groups. That's the job the the loop and of the todo stack.
-			// While performing this iteration, we maintain the results in the chain list and return
-			// it at each iteration.
-
-			var chain = new List<AiderGroupEntity> ();
+			var mapping = new Dictionary<string, AiderGroupEntity> ();
 
 			var todo = new Stack<AiderGroupEntity> ();
-			todo.Push (rootAiderGroup);
+			todo.Push (rootGroup);
 
-			while (todo.Any ())
+			while (todo.Count > 0)
 			{
 				var group = todo.Pop ();
+				var definition = group.GroupDef;
 
-				while (chain.Count > 0 && !subGroupMapping[chain[chain.Count - 1]].Contains (group))
+				if (definition.IsNull ())
 				{
-					chain.RemoveAt (chain.Count - 1);
+					continue;
 				}
 
-				chain.Add (group);
-
-				yield return chain.AsReadOnly ();
-
-				todo.PushRange (subGroupMapping[group]);
-			}
-		}
-
-
-		private static EervGroupDefinition FindEervGroupDefinition(IEnumerable<AiderGroupEntity> aiderGroupChain, EervGroupDefinition eervGroupDefinition)
-		{
-			var result = eervGroupDefinition;
-
-			// Here we skip the first element because we know that eervGroupDefinition matches the
-			// first element in the chain.
-			foreach (var aiderGroup in aiderGroupChain.Skip (1))
-			{
-				result = result
-					.Children
-					.Where (g => g.Name == aiderGroup.Name)
-					.FirstOrDefault ();
-
-				if (result == null)
+				if (eervId.IsParish && definition.Classification == GroupClassification.Parish)
 				{
-					break;
+					continue;
+				}
+
+				mapping[definition.Number] = group;
+
+				IList<AiderGroupEntity> subgroups;
+				if (subGroupMapping.TryGetValue (group, out subgroups))
+				{
+					todo.PushRange (subgroups);
 				}
 			}
 
-			return result;
+			return mapping;
 		}
 
 
@@ -1399,19 +1359,6 @@ namespace Epsitec.Aider.Data.Eerv
 
 				return ParishAssigner.FindRegionGroup (businessContext, regionNumber);
 			}
-		}
-
-
-		private static EervGroupDefinition FindRootEervGroupDefinition(EervId eervId, IEnumerable<EervGroupDefinition> groupDefinitions)
-		{
-			var groupClassification = eervId.IsParish
-				? GroupClassification.Parish
-				: GroupClassification.Region;
-
-			return groupDefinitions
-				.Where (g => g.Parent == null)
-				.Where (g => g.GroupClassification == groupClassification)
-				.Single ();
 		}
 
 

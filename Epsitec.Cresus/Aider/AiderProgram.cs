@@ -128,15 +128,12 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:", true);
 				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile:", true);
 				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile:", false);
 				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:", false);
 				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:", false);
 				var eervIdFile = AiderProgram.GetFile (args, "-idfile:", true);
 				var loadOnly = AiderProgram.GetBool (args, "-loadOnly:", false);
-
-				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 
 				var eervParishData = new EervParishDataLoader ()
 					.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile)
@@ -148,7 +145,7 @@ namespace Epsitec.Aider
 
 					foreach (var eervParishDatum in eervParishData)
 					{
-						EervParishDataImporter.Import (coreData, parishRepository, eervMainData, eervParishDatum);
+						EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum);
 					}
 				}
 			});
