@@ -201,15 +201,12 @@
     <Compile Include="Entities\eCH_PersonEntity.cs" />
     <Compile Include="Enumerations\EventParticipantRole.cs" />
     <Compile Include="Enumerations\EventType.cs" />
-    <Compile Include="Enumerations\GroupLevel.cs" />
-    <Compile Include="Enumerations\GroupParticipantRole.cs" />
     <Compile Include="Enumerations\GroupRelationshipType.cs" />
     <Compile Include="Enumerations\GroupNodeType.cs" />
     <Compile Include="Enumerations\Language.cs" />
     <Compile Include="Enumerations\LegalPersonType.cs" />
     <Compile Include="Enumerations\PersonRelationshipType.cs" />
     <Compile Include="Enumerations\PersonConfession.cs" />
-    <Compile Include="Enumerations\PlacePersonRole.cs" />
     <Compile Include="Enumerations\TextGenerator.cs" />
     <Compile Include="Enumerations\WarningType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -220,7 +217,6 @@
     <Compile Include="Resources\Aider\SourceCode\Res.cs" />
     <Compile Include="Rules\AiderHouseholdBusinessRules.cs" />
     <Compile Include="Rules\AiderPersonBusinessRules.cs" />
-    <Compile Include="Enumerations\UserRole.cs" />
     <Compile Include="Enumerations\ValidationState.cs" />
     <Compile Include="Tools\IsoCountryNames.cs" />
     <Compile Include="Tools\NamePatchEngine.cs" />
