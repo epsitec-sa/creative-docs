@@ -120,7 +120,6 @@
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
-    <Compile Include="Entities\AiderWarningActionEntity.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
@@ -152,7 +151,6 @@
     <Compile Include="Data\ParishAddresses.cs" />
     <Compile Include="Data\ParishAddressInformation.cs" />
     <Compile Include="Data\ParishAddressRepository.cs" />
-    <Compile Include="Entities\AiderFunctionDefEntity.cs" />
     <Compile Include="Entities\AiderGroupDefEntity.cs" />
     <Compile Include="Entities\AiderGroupEntity.cs" />
     <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
@@ -195,7 +193,6 @@
     <Compile Include="Entities\AiderCountryEntity.cs" />
     <Compile Include="Entities\AiderHouseholdEntity.cs" />
     <Compile Include="Entities\AiderPersonEntity.cs" />
-    <Compile Include="Entities\AiderPersonRelationshipEntity.cs" />
     <Compile Include="Entities\AiderTownEntity.cs" />
     <Compile Include="Entities\eCH_AddressEntity.cs" />
     <Compile Include="Entities\eCH_PersonEntity.cs" />
