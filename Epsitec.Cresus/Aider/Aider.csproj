@@ -157,7 +157,7 @@
     <Compile Include="Entities\AiderGroupEntity.cs" />
     <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningEntity.cs" />
-    <Compile Include="Entities\Helpers\AiderWarningImplementation.cs" />
+    <Compile Include="Entities\AiderWarningImplementation.cs" />
     <Compile Include="Enumerations\AddressType.cs" />
     <Compile Include="AiderProgram.cs" />
     <Compile Include="Enumerations\ContactRole.cs" />
