@@ -5163,28 +5163,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Description</c> field.
-		///	designer:fld/LVA2A/LVAOD
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAOD]")]
-		public string Description
-		{
-			get
-			{
-				return this.GetField<string> ("[LVAOD]");
-			}
-			set
-			{
-				string oldValue = this.Description;
-				if (oldValue != value || !this.IsFieldDefined("[LVAOD]"))
-				{
-					this.OnDescriptionChanging (oldValue, value);
-					this.SetField<string> ("[LVAOD]", oldValue, value);
-					this.OnDescriptionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>PathTemplate</c> field.
 		///	designer:fld/LVA2A/LVARC
 		///	</summary>
@@ -5289,8 +5267,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnNumberChanging(string oldValue, string newValue);
 		partial void OnNumberChanged(string oldValue, string newValue);
-		partial void OnDescriptionChanging(string oldValue, string newValue);
-		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnPathTemplateChanging(string oldValue, string newValue);
 		partial void OnPathTemplateChanged(string oldValue, string newValue);
 		partial void OnNodeTypeChanging(global::Epsitec.Aider.Enumerations.GroupNodeType oldValue, global::Epsitec.Aider.Enumerations.GroupNodeType newValue);
