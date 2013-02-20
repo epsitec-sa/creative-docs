@@ -189,6 +189,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pdf.Test", "Common.P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Data.Platform", "Tool.Data.Platform\Tool.Data.Platform.csproj", "{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.ComptaNG", "Cresus.ComptaNG\Cresus.ComptaNG.csproj", "{94D6024B-5A4F-4091-B111-0AEFE33EC98E}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi
@@ -2222,6 +2224,36 @@ Global
 		{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}.Release|Win32.ActiveCfg = Release|x86
 		{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}.Release|x86.ActiveCfg = Release|x86
 		{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}.Release|x86.Build.0 = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug (CreativeDocs)|Any CPU.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug (CreativeDocs)|Mixed Platforms.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug (CreativeDocs)|Mixed Platforms.Build.0 = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug (CreativeDocs)|Win32.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug (CreativeDocs)|x86.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug (CreativeDocs)|x86.Build.0 = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug .NET 2.0|Win32.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug .NET 2.0|x86.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug .NET 2.0|x86.Build.0 = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug|Win32.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug|x86.ActiveCfg = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Debug|x86.Build.0 = Debug|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release (CreativeDocs)|Any CPU.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release (CreativeDocs)|Mixed Platforms.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release (CreativeDocs)|Mixed Platforms.Build.0 = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release (CreativeDocs)|Win32.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release (CreativeDocs)|x86.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release (CreativeDocs)|x86.Build.0 = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release|Any CPU.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release|Win32.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release|x86.ActiveCfg = Release|x86
+		{94D6024B-5A4F-4091-B111-0AEFE33EC98E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
