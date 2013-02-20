@@ -45,6 +45,9 @@
     <Compile Include="Data\Comptabilité.cs" />
     <Compile Include="Data\Compte.cs" />
     <Compile Include="Data\Balance.cs" />
+    <Compile Include="Data\RésuméTva.cs" />
+    <Compile Include="Data\RésuméPériodique.cs" />
+    <Compile Include="Data\Exploitation.cs" />
     <Compile Include="Data\DonnéesDuBudget.cs" />
     <Compile Include="Data\DoubleVue.cs" />
     <Compile Include="Data\ExtraitDeCompte.cs" />
