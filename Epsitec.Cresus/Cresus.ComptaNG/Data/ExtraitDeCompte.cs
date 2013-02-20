@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	public class ExtraitDeCompte : AbstractObjetComptable
 	{
 		public Date				Date;
-		public Compte			CP;
+		public Compte			CP;  // compte de la contre-partie
 		public bool				CompteAuDébit;
 		public FormattedText	Pièce;
 		public FormattedText	Libellé;
