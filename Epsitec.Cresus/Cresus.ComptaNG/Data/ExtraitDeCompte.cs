@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.ComptaNG.Data
 		public FormattedText	Pièce;
 		public FormattedText	Libellé;
 		public FormattedText	LibelléTvaComplet;
-		public decimal?			Débit;
-		public decimal?			Crédit;
+		public decimal?			MontantAuDébit;
+		public decimal?			MontantAuCrédit;
 		public decimal?			Solde;
 		public CodeTva			CodeTVA;
 		public decimal?			TauxTVA;
