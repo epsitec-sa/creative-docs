@@ -27,9 +27,11 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.StartDate, "—", TextFormatter.Command.IfEmpty, "…", this.EndDate, "—", TextFormatter.Command.IfEmpty);
 		}
 
-		public FormattedText GetSummaryWithGroupName()
+		public FormattedText GetSummaryWithHierarchicalGroupName()
 		{
-			return TextFormatter.FormatText (this.Group.Name);
+			var name = this.Group.GetHierarchicalName (this.Person);
+
+			return TextFormatter.FormatText (name);
 		}
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()

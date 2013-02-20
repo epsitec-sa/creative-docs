@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableAction (2)
 				.EnableAction (3)
 				.Template ()
-					.Text (g => g.GetSummaryWithGroupName ())
+					.Text (g => g.GetSummaryWithHierarchicalGroupName ())
 				.End ();
 #else
 			wall.AddBrick (p => p.Groups)

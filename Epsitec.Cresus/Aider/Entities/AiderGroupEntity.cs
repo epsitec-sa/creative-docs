@@ -50,6 +50,43 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public string GetHierarchicalName(AiderPersonEntity person)
+		{
+			return this
+				.GetHierarchicalParents (person.Parish.Group.Path)
+				.Append (this)
+				.Select (g => g.Name)
+				.Join (", ");
+		}
+
+
+		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
+		{
+			var currentPath = this.Path;
+			
+			var skip = 0;
+
+			if (AiderGroupIds.IsWithinParish (currentPath))
+			{
+				skip += 1;
+
+				if (AiderGroupIds.IsWithinSameParish (currentPath, parishPath))
+				{
+					skip += 1;
+				}
+			}
+			else if (AiderGroupIds.IsWithinRegion (currentPath))
+			{
+				if (AiderGroupIds.IsWithinSameRegion (currentPath, parishPath))
+				{
+					skip += 1;
+				}
+			}
+
+			return this.GetParents ().Skip (skip);
+		}
+
+
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return this.Name;

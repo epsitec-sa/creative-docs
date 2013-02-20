@@ -253,7 +253,7 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetGroupText()
 		{
 			var groups = this.Groups
-				.Select (g => g.GetSummaryWithGroupName ())
+				.Select (g => g.GetSummaryWithHierarchicalGroupName ())
 				.CreateSummarySequence (10, "...");
 
 			var text = TextFormatter.Join ("\n", groups);
@@ -285,9 +285,12 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderGroupParticipantEntity> GetParticipations(DataContext dataContext)
 		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
-			
-			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, false);
+
+			return dataContext
+				.GetByRequest<AiderGroupParticipantEntity> (request)
+				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
+				.ToList ();
 		}
 
 

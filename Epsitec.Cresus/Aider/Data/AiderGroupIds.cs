@@ -5,6 +5,8 @@ using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Core.Entities;
 
+using System;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Aider.Data
@@ -40,6 +42,55 @@ namespace Epsitec.Aider.Data
 		public static string GetParishId(int parishCode)
 		{
 			return string.Format ("P{0:00}.", parishCode);
+		}
+
+		public static bool IsWithinRegion(string path)
+		{
+			return AiderGroupIds.IsWithinGroup (path, 0, 'R');
+		}
+
+		public static bool IsWithinParish(string path)
+		{
+			return AiderGroupIds.IsWithinGroup (path, 1, 'P');
+		}
+
+		private static bool IsWithinGroup(string path, int index, char prefix)
+		{
+			if (path == null)
+			{
+				return false;
+			}
+
+			var start = index * AiderGroupIds.SubgroupLength;
+
+			if (path.Length < start + AiderGroupIds.SubgroupLength)
+			{
+				return false;
+			}
+
+			return prefix == path[start + 0]
+				&& Char.IsDigit (path[start + 1])
+				&& Char.IsDigit (path[start + 2])
+				&& '.' == path[start + 3];
+		}
+
+		public static bool IsWithinSameRegion(string path1, string path2)
+		{
+			return AiderGroupIds.IsWithinSameGroup (path1, path2, 0, 'R');
+		}
+
+		public static bool IsWithinSameParish(string path1, string path2)
+		{
+			return AiderGroupIds.IsWithinSameGroup (path1, path2, 1, 'P');
+		}
+
+		private static bool IsWithinSameGroup(string path1, string path2, int index, char prefix)
+		{
+			var length = (index + 1) * AiderGroupIds.SubgroupLength;
+
+			return AiderGroupIds.IsWithinGroup (path1, index, prefix)
+				&& AiderGroupIds.IsWithinGroup (path2, index, prefix)
+				&& path1.Substring (0, length) == path2.Substring (0, length);
 		}
 
 		public static string CreateSubGroupPath(string superGroupPath, int groupNumber)
