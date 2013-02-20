@@ -5,6 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer.Context;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,20 @@ namespace Epsitec.Cresus.Core.Entities
 		public static DataContext GetDataContext(this AbstractEntity entity)
 		{
 			return DataContextPool.GetDataContext (entity);
+		}
+
+		public static T ExecuteWithDataContext<T>(this AbstractEntity entity, Func<DataContext, T> functionWithDataContext, Func<T> defaultFunction)
+		{
+			var dataContext = DataContextPool.GetDataContext (entity);
+
+			if (dataContext != null && dataContext.IsPersistent (entity))
+			{
+				return functionWithDataContext (dataContext);
+			}
+			else
+			{
+				return defaultFunction ();
+			}
 		}
 
 		/// <summary>

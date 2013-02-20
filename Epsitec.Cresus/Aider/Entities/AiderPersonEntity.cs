@@ -268,25 +268,26 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private List<AiderGroupParticipantEntity> GetParticipations()
+		private IList<AiderGroupParticipantEntity> GetParticipations()
 		{
 			if (this.participations == null)
 			{
-				this.participations = new List<AiderGroupParticipantEntity> ();
-
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if ((dataContext != null) &&
-					(dataContext.IsPersistent (this)))
-				{
-					var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
-					var groups = dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
-
-					this.participations.AddRange (groups);
-				}
+				this.participations = this.ExecuteWithDataContext
+				(
+					d => this.GetParticipations(d),
+					() => new List<AiderGroupParticipantEntity> ()
+				);
 			}
 
 			return this.participations;
+		}
+
+
+		private IList<AiderGroupParticipantEntity> GetParticipations(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, false);
+			
+			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
 
@@ -303,28 +304,30 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
 		{
-			value = this.GetWarnings ().AsReadOnly ();
+			value = this.GetWarnings ().AsReadOnlyCollection ();
 		}
 
-		private List<AiderPersonWarningEntity> GetWarnings()
+		private IList<AiderPersonWarningEntity> GetWarnings()
 		{
 			if (this.warnings == null)
 			{
-				this.warnings = new List<AiderPersonWarningEntity> ();
-
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if ((dataContext != null) &&
-					(dataContext.IsPersistent (this)))
-				{
-					var warningController = AiderWarningController.Current;
-					var warnings = warningController.GetWarnings<AiderPersonWarningEntity> (this);
-
-					this.warnings.AddRange (warnings);
-				}
+				this.warnings = this.ExecuteWithDataContext
+				(
+					d => this.GetWarnings (d),
+					() => new List<AiderPersonWarningEntity> ()
+				);
 			}
 
 			return this.warnings;
+		}
+
+		private IList<AiderPersonWarningEntity> GetWarnings(DataContext dataContext)
+		{
+			var controller = AiderWarningController.Current;
+
+			return controller
+				.GetWarnings<AiderPersonWarningEntity> (this)
+				.ToList ();
 		}
 
 		public void AddWarningInternal(AiderPersonWarningEntity warning)
@@ -355,7 +358,7 @@ namespace Epsitec.Aider.Entities
 				.AsReadOnlyCollection ();
 		}
 
-		private HashSet<AiderHouseholdEntity> GetHouseholds()
+		private ISet<AiderHouseholdEntity> GetHouseholds()
 		{
 			if (this.households == null)
 			{
@@ -368,29 +371,29 @@ namespace Epsitec.Aider.Entities
 			return this.households;
 		}
 
-		private HashSet<AiderContactEntity> GetContacts()
+		private ISet<AiderContactEntity> GetContacts()
 		{
 			if (this.contacts == null)
 			{
-				this.contacts = new HashSet<AiderContactEntity> ();
-
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if ((dataContext != null) &&
-					(dataContext.IsPersistent (this)))
-				{
-					var example = new AiderContactEntity ()
-					{
-						Person = this
-					};
-
-					var contacts = dataContext.GetByExample (example);
-
-					this.contacts.UnionWith (contacts);
-				}
+				this.contacts = this.ExecuteWithDataContext
+				(
+					d => this.GetContacts (d).ToSet (),
+					() => new HashSet<AiderContactEntity> ()
+				);
 			}
 
 			return this.contacts;
+		}
+
+
+		private IEnumerable<AiderContactEntity> GetContacts(DataContext dataContext)
+		{
+			var example = new AiderContactEntity ()
+			{
+				Person = this
+			};
+
+			return dataContext.GetByExample (example);
 		}
 
 
@@ -426,9 +429,9 @@ namespace Epsitec.Aider.Entities
 
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
-		private List<AiderGroupParticipantEntity> participations;
-		private HashSet<AiderHouseholdEntity> households;
-		private HashSet<AiderContactEntity> contacts;
-		private List<AiderPersonWarningEntity> warnings;
+		private IList<AiderGroupParticipantEntity> participations;
+		private IList<AiderPersonWarningEntity> warnings;
+		private ISet<AiderHouseholdEntity> households;
+		private ISet<AiderContactEntity> contacts;
 	}
 }

@@ -232,26 +232,27 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.contactsCache == null)
 			{
-				this.contactsCache = new List<AiderContactEntity> ();
-
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if ((dataContext != null) &&
-					(dataContext.IsPersistent (this)))
-				{
-					var example = new AiderContactEntity ()
-					{
-						Household = this,
-					};
-
-					var contacts = dataContext.GetByExample (example);
-					var alive    = contacts.Where (x => x.Person.IsAlive);
-
-					this.contactsCache.AddRange (alive);
-				}
+				this.contactsCache = this.ExecuteWithDataContext
+				(
+					d => this.GetContacts (d),
+					() => new List<AiderContactEntity> ()
+				);
 			}
 
 			return this.contactsCache;
+		}
+
+
+		private IList<AiderContactEntity> GetContacts(DataContext dataContext)
+		{
+			var example = new AiderContactEntity ()
+			{
+				Household = this,
+			};
+
+			return dataContext.GetByExample (example)
+				.Where (x => x.Person.IsAlive)
+				.ToList ();
 		}
 
 		private static List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
@@ -277,7 +278,7 @@ namespace Epsitec.Aider.Entities
 
 		//	These properties are only meant as an in memory cache of the members of the household.
 		//	They will never be saved to the database:
-		private List<AiderContactEntity>		contactsCache;
-		private List<AiderPersonEntity>			membersCache;
+		private IList<AiderContactEntity>		contactsCache;
+		private IList<AiderPersonEntity>		membersCache;
 	}
 }

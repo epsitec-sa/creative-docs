@@ -74,26 +74,27 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.contacts == null)
 			{
-				this.contacts = new List<AiderContactEntity> ();
-
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if ((dataContext != null) &&
-					(dataContext.IsPersistent (this)))
-				{
-					var example = new AiderContactEntity ()
-					{
-						LegalPerson = this,
-					};
-
-					var contacts = dataContext.GetByExample (example);
-					var alive    = contacts.Where (x => x.Person.IsAlive);
-
-					this.contacts.AddRange (alive);
-				}
+				this.contacts = this.ExecuteWithDataContext
+				(
+					d => this.GetContacts (d),
+					() => new List<AiderContactEntity> ()
+				);
 			}
 
 			return this.contacts;
+		}
+
+		private IList<AiderContactEntity> GetContacts(DataContext dataContext)
+		{
+			var example = new AiderContactEntity ()
+			{
+				LegalPerson = this,
+			};
+
+			return dataContext
+				.GetByExample (example)
+				.Where (x => x.Person.IsAlive)
+				.ToList ();
 		}
 
 		public void AddContactInternal(AiderContactEntity contact)
@@ -106,6 +107,6 @@ namespace Epsitec.Aider.Entities
 			this.GetContacts ().Remove (contact);
 		}
 
-		private List<AiderContactEntity> contacts;
+		private IList<AiderContactEntity> contacts;
 	}
 }

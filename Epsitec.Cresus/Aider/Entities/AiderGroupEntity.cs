@@ -67,67 +67,72 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		// This stuff is not cached in the entity, therefore updates in memory won't modify the
+		// value returned by this method. If the entity is not persisted, it will always be 0.
 		private int GetNbParticipants()
 		{
-			var dataContext = DataContextPool.GetDataContext (this);
-
-			if ((dataContext != null) &&
-				(dataContext.IsPersistent (this)))
-			{
-				var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
-
-				return dataContext.GetCount (request);
-			}
-
-			return 0;
+			return this.ExecuteWithDataContext
+			(
+				d => this.GetNbParticipants (d),
+				() => 0
+			);
 		}
 
 
-		private IEnumerable<AiderPersonEntity> GetParticipants(int count)
+		private int GetNbParticipants(DataContext dataContext)
 		{
-			var dataContext = DataContextPool.GetDataContext (this);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
 
-			if ((dataContext != null) &&
-				(dataContext.IsPersistent (this)))
-			{
-				var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
+			return dataContext.GetCount (request);
+		}
 
-				request.Skip = 0;
-				request.Take = count;
 
-				return dataContext.GetByRequest<AiderPersonEntity> (request);
-			}
+		// This stuff is not cached in the entity, therefore updates in memory won't modify the
+		// value returned by this method. It the entity is not persisted, it will always be an empty
+		// list.
+		private IList<AiderPersonEntity> GetParticipants(int count)
+		{
+			return this.ExecuteWithDataContext
+			(
+				d => this.GetParticipants (d, count),
+				() => new List<AiderPersonEntity> ()
+			);
+		}
 
-			return Enumerable.Empty<AiderPersonEntity> ();
+
+		private IList<AiderPersonEntity> GetParticipants(DataContext dataContext, int count)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
 		}
 
 
 		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
 		{
-			value = this.GetSubgroups ().AsReadOnly ();
+			value = this.GetSubgroups ().AsReadOnlyCollection ();
 		}
 
 
-		private List<AiderGroupEntity> GetSubgroups()
+		private IList<AiderGroupEntity> GetSubgroups()
 		{
 			if (this.subgroups == null)
 			{
-				this.subgroups = new List<AiderGroupEntity> ();
-
-				var dataContext = DataContextPool.GetDataContext (this);
-
-				if ((dataContext != null) &&
-					(dataContext.IsPersistent (this)))
-				{
-					this.subgroups.AddRange (this.FindSubgroups (dataContext));
-				}
+				this.subgroups = this.ExecuteWithDataContext
+				(
+					d => this.FindSubgroups (d),
+					() => new List<AiderGroupEntity> ()
+				);
 			}
 
 			return this.subgroups;
 		}
 
 
-		private IEnumerable<AiderGroupEntity> FindSubgroups(DataContext dataContext)
+		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
 		{
 			// If we are at the maximum group level, there's no point in looking for sub groups in
 			// the database. We won't find any. So we return directly an empty sequence. Note that
@@ -136,7 +141,7 @@ namespace Epsitec.Aider.Entities
 
 			if (this.GroupLevel >= AiderGroupIds.maxGroupLevel)
 			{
-				return Enumerable.Empty<AiderGroupEntity> ();
+				return new List<AiderGroupEntity> ();
 			}
 
 			var example = new AiderGroupEntity ();
@@ -303,7 +308,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private List<AiderGroupEntity> subgroups;
+		private IList<AiderGroupEntity> subgroups;
 
 
 	}
