@@ -64,11 +64,11 @@ namespace Epsitec.Aider.Data
 			return path;
 		}
 
-		public static IEnumerable<string> GetGroupChainPaths(string path)
+		public static IEnumerable<string> GetParentPaths(string path)
 		{
 			var step =  AiderGroupIds.SubgroupLength;
 
-			for (int i = step; i <= path.Length; i += step)
+			for (int i = step; i <= path.Length - 1; i += step)
 			{
 				yield return path.Substring (0, i);
 			}

@@ -29,6 +29,15 @@ namespace Epsitec.Aider.Entities
 	{
 
 
+		public IList<AiderGroupEntity> Parents
+		{
+			get
+			{
+				return this.GetParents ().AsReadOnlyCollection ();
+			}
+		}
+
+
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Name);
@@ -169,6 +178,49 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		private IList<AiderGroupEntity> GetParents()
+		{
+			if (this.parents == null)
+			{
+				this.parents = this.ExecuteWithDataContext
+				(
+					d => this.FindParents (d),
+					() => new List<AiderGroupEntity> ()
+				);
+			}
+
+			return this.parents;
+		}
+
+
+		private IList<AiderGroupEntity> FindParents(DataContext dataContext)
+		{
+			var groupPaths = AiderGroupIds.GetParentPaths (this.Path).ToList ();
+
+			if (groupPaths.Count == 0)
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
+			var example = new AiderGroupEntity ();
+
+			var request = Request.Create (example);
+			request.AddCondition (dataContext, example, g => SqlMethods.IsInSet (g.Path, groupPaths));
+			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
+
+			return dataContext.GetByRequest<AiderGroupEntity> (request);
+		}
+
+
+		public void SetParentsInternal(IEnumerable<AiderGroupEntity> newParents)
+		{
+			var currentParents = this.GetParents ();
+
+			currentParents.Clear ();
+			currentParents.AddRange (newParents);
+		}
+
+
 		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
 		{
 			var example = new AiderGroupEntity ()
@@ -180,22 +232,6 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return businessContext.DataContext.GetByRequest (request);
-		}
-
-
-		public IEnumerable<AiderGroupEntity> GetGroupChain(BusinessContext businessContext)
-		{
-			var dataContext = businessContext.DataContext;
-
-			var example = new AiderGroupEntity ();
-			var request = Request.Create (example);
-
-			var groupPaths = AiderGroupIds.GetGroupChainPaths (this.Path);
-
-			request.AddCondition (dataContext, example, g => SqlMethods.IsInSet (g.Path, groupPaths));
-			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
-
-			return dataContext.GetByRequest<AiderGroupEntity> (request);
 		}
 
 
@@ -235,6 +271,7 @@ namespace Epsitec.Aider.Entities
 			subgroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subgroupNumber);
 
 			this.AddSubgroupInternal (subgroup);
+			this.SetParentsInternal (this.GetParents ().Append (this));
 
 			return subgroup;
 		}
@@ -309,6 +346,9 @@ namespace Epsitec.Aider.Entities
 
 
 		private IList<AiderGroupEntity> subgroups;
+
+
+		private IList<AiderGroupEntity> parents;
 
 
 	}

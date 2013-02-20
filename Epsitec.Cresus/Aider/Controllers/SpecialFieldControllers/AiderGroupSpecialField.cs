@@ -34,18 +34,13 @@ namespace Epsitec.Aider.Controllers.SpecialFieldControllers
 		[SpecialFieldWebMethod]
 		public object GetGroupTree(AiderGroupEntity group)
 		{
-			var selection = group.IsNull ()
+			var parents = group.IsNull ()
 				? new List<AiderGroupEntity> ()
-				: group.GetGroupChain (this.BusinessContext).ToList ();
+				: group.Parents.ToList ();
 
-			if (selection.Count > 0)
-			{
-				selection.RemoveAt (selection.Count - 1);
-			}
+			var rootGroups = AiderGroupEntity.FindRootGroups (this.BusinessContext);
 
-			var subgroups = AiderGroupEntity.FindRootGroups (this.BusinessContext);
-
-			return this.GetGroupTree (null, subgroups, selection, 0);
+			return this.GetGroupTree (null, rootGroups, parents, 0);
 		}
 
 		private Dictionary<string, object> GetGroupTree(AiderGroupEntity group, IList<AiderGroupEntity> subgroups, IList<AiderGroupEntity> selection, int index)
