@@ -13,6 +13,6 @@ namespace Epsitec.Cresus.ComptaNG.Data
 		public FormattedText			Commentaire;  // utile ?
 		public List<AbstractEcriture>	Ecritures;
 		public DateTime					DernièreDate;
-		public GénérateurPièce			GénérateurPièce;
+		public GénérateurDePièces		GénérateurDePièces;
 	}
 }

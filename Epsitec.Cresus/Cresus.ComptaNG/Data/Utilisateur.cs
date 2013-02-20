@@ -17,6 +17,6 @@ namespace Epsitec.Cresus.ComptaNG.Data
 		public string				MotDePasse;
 		public bool					Admin;
 		public string				Présentations;  // ?
-		public GénérateurPièce		GénérateurPièce;
+		public GénérateurDePièces	GénérateurDePièces;
 	}
 }

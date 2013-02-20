@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 		public List<Journal>			Journaux;
 		public List<Libellé>			Libellés;
 		public List<EcritureModèle>		EcrituresModèle;
-		public List<GénérateurPièce>	GénérateursPièce;
+		public List<GénérateurDePièces>	GénérateursDePièces;
 		public List<CodeTva>			CodesTva;
 		public List<ListeTauxTva>		ListeTauxTva;
 		public List<Monnaie>			Monnaies;

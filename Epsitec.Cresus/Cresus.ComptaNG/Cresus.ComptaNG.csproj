@@ -44,10 +44,11 @@
     <Compile Include="Data\CodeTva.cs" />
     <Compile Include="Data\Comptabilité.cs" />
     <Compile Include="Data\Compte.cs" />
+    <Compile Include="Data\ExtraitDeCompte.cs" />
     <Compile Include="Data\EcritureModèle.cs" />
     <Compile Include="Data\EcritureMultiple.cs" />
     <Compile Include="Data\EcritureSimple.cs" />
-    <Compile Include="Data\GénérateurPièce.cs" />
+    <Compile Include="Data\GénérateurDePièces.cs" />
     <Compile Include="Data\IntervalleDates.cs" />
     <Compile Include="Data\Journal.cs" />
     <Compile Include="Data\Libellé.cs" />

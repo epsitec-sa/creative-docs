@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	/// Il faudra voir si l'aspect multi utilisateur n'implique pas quelque chose de beaucoup moins
 	/// souple.
 	/// </summary>
-	public class GénérateurPièce : AbstractObjetComptable
+	public class GénérateurDePièces : AbstractObjetComptable
 	{
 		public FormattedText	Nom;
 		public FormattedText	Préfixe;

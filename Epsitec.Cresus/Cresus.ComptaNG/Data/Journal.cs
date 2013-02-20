@@ -8,9 +8,9 @@ namespace Epsitec.Cresus.ComptaNG.Data
 {
 	public class Journal : AbstractObjetComptable
 	{
-		public FormattedText	Nom;
-		public FormattedText	Description;
-		public FormattedText	Commentaire;  // utile ?
-		public GénérateurPièce	GénérateurPièce;
+		public FormattedText		Nom;
+		public FormattedText		Description;
+		public FormattedText		Commentaire;  // utile ?
+		public GénérateurDePièces	GénérateurDePièces;
 	}
 }
