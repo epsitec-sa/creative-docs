@@ -6,7 +6,10 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public class Monnaie : ObjetComptable
+	/// <summary>
+	/// ATTENTION: L'aspect multimonnaie n'a pas été réfléchi en profondeur !
+	/// </summary>
+	public class Monnaie : AbstractObjetComptable
 	{
 		public FormattedText	CodeISO;
 		public FormattedText	Description;

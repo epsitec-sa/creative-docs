@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public class Utilisateur : ObjetComptable
+	public class Utilisateur : AbstractObjetComptable
 	{
 		public FormattedText		NomCourt;
 		public FormattedText		NomComplet;

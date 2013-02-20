@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	/// Description d'un compte.
 	/// Il n'y a pas de type; un compte terminal peut forcément recevoir des écritures.
 	/// </summary>
-	public class Compte : ObjetComptable
+	public class Compte : AbstractObjetComptable
 	{
 		public FormattedText		Numéro;
 		public FormattedText		Titre;

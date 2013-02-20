@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public class PériodeComptable : ObjetComptable
+	public class PériodeComptable : AbstractObjetComptable
 	{
 		public IntervalleDates			Dates;
 		public FormattedText			Description;

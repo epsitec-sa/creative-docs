@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	///   - 01.01.2011 8.0%
 	/// Le taux par défaut est généralement le dernier.
 	/// </summary>
-	public class ListeTauxTva : ObjetComptable
+	public class ListeTauxTva : AbstractObjetComptable
 	{
 		public FormattedText	Nom;
 		public List<TauxTva>	ListeTaux;

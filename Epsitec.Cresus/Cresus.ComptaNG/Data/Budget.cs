@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public class Budget : ObjetComptable
+	public class Budget : AbstractObjetComptable
 	{
 		public PériodeComptable		PériodeComptable;
 		public decimal				Montant;

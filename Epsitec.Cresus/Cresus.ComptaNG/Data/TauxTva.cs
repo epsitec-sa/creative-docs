@@ -6,7 +6,7 @@ using System.Text;
 namespace Epsitec.Cresus.ComptaNG.Data
 {
 	/// <summary>
-	/// Taux de TVA avec sa date d'introduction. Une nouvelle instance est créé
+	/// Taux de TVA avec sa date d'introduction. Une nouvelle instance est créée
 	/// lors de l'introduction d'un nouveau taux par la confédération.
 	/// L'historique des taux normaux est le suivant:
 	///   - 01.01.1995 6.5%
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	///   - 01.01.2001 2.4%
 	///   - 01.01.2011 2.5%
 	/// </summary>
-	public class TauxTva : ObjetComptable
+	public class TauxTva : AbstractObjetComptable
 	{
 		public DateTime		DeteDébut;
 		public decimal		Taux;

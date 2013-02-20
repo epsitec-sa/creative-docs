@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public abstract class ObjetComptable
+	/// <summary>
+	/// Partie commune à toutes les données comptables.
+	/// </summary>
+	public abstract class AbstractObjetComptable
 	{
 		public System.Guid Guid;
 	}

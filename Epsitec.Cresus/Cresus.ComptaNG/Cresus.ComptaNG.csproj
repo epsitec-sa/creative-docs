@@ -54,7 +54,7 @@
     <Compile Include="Data\LigneEcriture.cs" />
     <Compile Include="Data\ListeTauxTva.cs" />
     <Compile Include="Data\Monnaie.cs" />
-    <Compile Include="Data\ObjetComptable.cs" />
+    <Compile Include="Data\AbstractObjetComptable.cs" />
     <Compile Include="Data\PériodeComptable.cs" />
     <Compile Include="Data\TauxTva.cs" />
     <Compile Include="Data\Utilisateur.cs" />

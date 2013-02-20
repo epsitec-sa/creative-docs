@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	///   - 1170 ...  Achat pièces, 7.6% de TVA (IPM)        15.20
 	///   - ...  1000 Achat pièces Total, (IPM)             215.20
 	/// </summary>
-	public class LigneEcriture : ObjetComptable
+	public class LigneEcriture : AbstractObjetComptable
 	{
 		public DateTime			DateComptable;
 		public Compte			Débit;

@@ -6,7 +6,12 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public class Comptabilité : ObjetComptable
+	/// <summary>
+	/// Cette classe représente l'ensemble d'une comptabilité, parfois appelé "mandat".
+	/// Elle contient principalement le plan comptable et les périodes, qui contiennent
+	/// elles-mêmes les écritures.
+	/// </summary>
+	public class Comptabilité : AbstractObjetComptable
 	{
 		public FormattedText			Nom;
 		public FormattedText			Commentaire;  // utile ?

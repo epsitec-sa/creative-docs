@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.ComptaNG.Data
 	///   - ListeTaux:   Réduit
 	///   - Compte:      1170
 	/// </summary>
-	public class CodeTva : ObjetComptable
+	public class CodeTva : AbstractObjetComptable
 	{
 		public string			Code;
 		public FormattedText	Description;

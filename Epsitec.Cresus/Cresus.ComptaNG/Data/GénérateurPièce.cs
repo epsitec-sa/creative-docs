@@ -6,7 +6,13 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.ComptaNG.Data
 {
-	public class GénérateurPièce : ObjetComptable
+	/// <summary>
+	/// Cette classe reprend mon implémentation assez complexe de Epsitec.Cresus.Compta.IO.PiècesGenerator,
+	/// avec numéros brûlés, congélateur, etc.
+	/// Il faudra voir si l'aspect multi utilisateur n'implique pas quelque chose de beaucoup moins
+	/// souple.
+	/// </summary>
+	public class GénérateurPièce : AbstractObjetComptable
 	{
 		public FormattedText	Nom;
 		public FormattedText	Préfixe;
