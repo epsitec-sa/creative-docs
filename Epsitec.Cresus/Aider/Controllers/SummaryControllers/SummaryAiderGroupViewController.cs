@@ -13,9 +13,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
-			wall.AddBrick ();
-
 #if ENABLE_GROUPS
+			wall.AddBrick ()
+				.EnableAction (2);
+
 			wall.AddBrick (x => x.Subgroups)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
@@ -27,6 +28,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Sous groupes")
 				.End ();
 #else
+			wall.AddBrick ();
+
 			wall.AddBrick (x => x.Subgroups)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)

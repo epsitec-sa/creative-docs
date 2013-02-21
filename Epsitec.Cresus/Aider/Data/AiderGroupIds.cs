@@ -93,6 +93,16 @@ namespace Epsitec.Aider.Data
 				&& path1.Substring (0, length) == path2.Substring (0, length);
 		}
 
+		public static bool IsWithinGroup(string path1, string path2)
+		{
+			if (string.IsNullOrEmpty (path1) || string.IsNullOrEmpty (path2))
+			{
+				return false;
+			}
+
+			return path1.Contains (path2);
+		}
+
 		public static string CreateSubGroupPath(string superGroupPath, int groupNumber)
 		{
 			return superGroupPath + string.Format ("{0}{1:00}.", AiderGroupIds.GroupPrefix, groupNumber);
@@ -124,6 +134,17 @@ namespace Epsitec.Aider.Data
 				yield return path.Substring (0, i);
 			}
 		}
+
+		public static string GetParentPath(string path)
+		{
+			if (path == null || path.Length <= AiderGroupIds.SubgroupLength)
+			{
+				return "";
+			}
+
+			return path.Substring (0, path.Length - AiderGroupIds.SubgroupLength);
+		}
+
 
 		private static string GetParishPath()
 		{

@@ -396,6 +396,153 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void Move(AiderGroupEntity newParent)
+		{
+			// We start by removing this group from its current parent.
+
+			var currentParent = this.Parent;
+
+			if (currentParent.IsNotNull ())
+			{
+				currentParent.RemoveSubgroupInternal (this);
+			}
+
+			// Here we must move the current group and all its subgroups recursively. Since the
+			// subgroups of a group are determined by their path only, we must update the path of
+			// the current group and of its subgroups. We must also update their group level. To do
+			// this, we make a single SQL request to fetch all the direct and the indirect children
+			// of the current group. Then we update all their paths and their group level
+
+			var oldPathSize = this.Path.Length;
+			var newPath = newParent.GetNextSubgroupPath ();
+
+			var deltaGroupLevel = newParent.GroupLevel + 1 - this.GroupLevel;
+
+			var allSubgroups = this.GetAllSubgroups ();
+			var allGroups = allSubgroups.Append (this);
+
+			foreach (var group in allGroups)
+			{
+				var path = newPath;
+
+				if (group.Path.Length > oldPathSize)
+				{
+					path += group.Path.Substring (oldPathSize);
+				}
+
+				group.Path = path;
+				group.GroupLevel += deltaGroupLevel;
+			}
+
+			// Finaly, we update the in memory cache of the parents of this group and of all its
+			// subgroups. Note that we sort the groups based on their path before looping on them.
+			// This ensures that when we update the cache of the parents of a group, the cache of
+			// the parents of its parent has already been updated.
+
+			var pathToGroups = allGroups.ToDictionary (g => g.Path);
+			
+			this.SetParentInternal (newParent);
+
+			foreach (var group in this.GetAllSubgroups ().OrderBy (g => g.Path))
+			{
+				var parentPath = AiderGroupIds.GetParentPath (group.Path);
+				var parent = pathToGroups[parentPath];
+
+				group.SetParentInternal (parent);
+			}
+		}
+
+
+		private IList<AiderGroupEntity> GetAllSubgroups()
+		{
+			return this.ExecuteWithDataContext
+			(
+				d => this.FindAllSubgroups (d),
+				() => this.FindAllSubgroups ()
+			);
+		}
+
+
+		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)
+		{
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+			
+			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
+
+			return dataContext.GetByRequest (request);
+		}
+
+
+		private IList<AiderGroupEntity> FindAllSubgroups()
+		{
+			var groups = new List<AiderGroupEntity> ();
+
+			this.FindAllSubgroups (groups);
+
+			return groups;
+		}
+
+
+		private void FindAllSubgroups(IList<AiderGroupEntity> groups)
+		{
+			foreach (var subgroup in this.GetSubgroups ())
+			{
+				groups.Add (subgroup);
+
+				subgroup.FindAllSubgroups (groups);
+			}
+		}
+
+
+		public int GetDepth()
+		{
+			var totalDepth = this.ExecuteWithDataContext
+			(
+				d => this.FindDepth (d),
+				() => this.FindDepth ()
+			);
+
+			return totalDepth - this.GroupLevel + 1;
+		}
+
+
+		private int FindDepth(DataContext dataContext)
+		{
+			// Here it would be cool to make a request that simply returns the maximum, but it can't
+			// be done now. This is something that the DataLayer does not implement right now.
+
+			var subgroups = this.FindAllSubgroups (dataContext);
+
+			if (subgroups.Count == 0)
+			{
+				return this.GroupLevel;
+			}
+
+			return subgroups.Max (g => g.GroupLevel);
+		}
+
+
+		private int FindDepth()
+		{
+			var subgroups = this.GetSubgroups ();
+
+			if (subgroups.Count == 0)
+			{
+				return this.GroupLevel;
+			}
+
+			return this.GetSubgroups ().Max (g => g.FindDepth ());
+		}
+
+
+		public bool IsChild(AiderGroupEntity group)
+		{
+			return AiderGroupIds.IsWithinGroup (this.Path, group.Path);
+		}
+
+
 		private IList<AiderGroupEntity> subgroups;
 
 
