@@ -283,8 +283,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CombineCoordinates(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson)
 		{
-			var cleanEmails  = EervParishDataImporter.GetCleanEmails (eervPerson.Coordinates.EmailAddress);
-			var clearMobiles = EervParishDataImporter.GetCleanPhoneNumbers (eervPerson.Coordinates.MobilePhoneNumber);
+			var cleanEmails  = EervParishDataImporter
+				.GetCleanEmails (eervPerson.Coordinates.EmailAddress)
+				.Where (e => !EervParishDataImporter.HasEmail (aiderPerson, e));
+
+			var clearMobiles = EervParishDataImporter
+				.GetCleanPhoneNumbers (eervPerson.Coordinates.MobilePhoneNumber)
+				.Where (p => !EervParishDataImporter.HasPhone (aiderPerson, p));
 
 			//	Produce a stream of email/phone pairs until both source collections are empty.
 
@@ -307,6 +312,32 @@ namespace Epsitec.Aider.Data.Eerv
 					EervParishDataImporter.SetPhoneNumber (address, mobile, (a, s) => a.Mobile = s);
 				}
 			}
+		}
+
+
+		private static bool HasEmail(AiderPersonEntity person, string email)
+		{
+			return person.AdditionalAddresses.Any (c => c.Address.Email == email);
+		}
+
+
+		private static bool HasPhone(AiderPersonEntity person, string phone)
+		{
+			var parsedPhone = TwixTel.ParsePhoneNumber (phone);
+
+			if (!TwixTel.IsValidPhoneNumber (parsedPhone, false))
+			{
+				return false;
+			}
+
+			return person.AdditionalAddresses.Any (c =>
+			{
+				var address = c.Address;
+
+				return address.Mobile == parsedPhone
+					|| address.Phone1 == parsedPhone
+					|| address.Phone2 == parsedPhone;
+			});
 		}
 
 
