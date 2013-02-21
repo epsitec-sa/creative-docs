@@ -57,6 +57,7 @@
     <Compile Include="BrickWall.cs" />
     <Compile Include="ActionFieldBrick.cs" />
     <Compile Include="ActionExecutor.cs" />
+    <Compile Include="BrickControllerSubTypeAttribute.cs" />
     <Compile Include="FunctionExecutor.cs" />
     <Compile Include="SimpleBrick.cs" />
     <Compile Include="Brick.cs" />

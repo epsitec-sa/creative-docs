@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// for the edition of large entities into several view controllers.
 	/// </summary>
 	[System.AttributeUsage (System.AttributeTargets.Class, AllowMultiple=true, Inherited=false)]
-	public class ControllerSubTypeAttribute : System.Attribute
+	public sealed class ControllerSubTypeAttribute : Epsitec.Cresus.Bricks.BrickControllerSubTypeAttribute
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ControllerSubTypeAttribute"/> class.
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Gets the id of the view controller.
 		/// </summary>
 		/// <value>The id of the view controller.</value>
-		public int Id
+		public override int Id
 		{
 			get
 			{

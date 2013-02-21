@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Controllers.ActionControllers;
 
 using Epsitec.Common.Support;
 
@@ -9,7 +10,6 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
-
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -32,8 +32,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableAction (2)	//	remove member from household
-				.EnableAction (3)	//	change head of household status
+				.EnableAction<ActionAiderHouseholdViewController2> ()	//	remove member from household
+				.EnableAction<ActionAiderHouseholdViewController3> ()	//	change head of household status
 				.Template ()
 					.Icon ("Base.AiderPerson")
 					.Title ("Membres")

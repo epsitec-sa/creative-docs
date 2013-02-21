@@ -1,6 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
@@ -100,6 +101,18 @@ namespace Epsitec.Cresus.Bricks
 		public SimpleBrick<T> EnableAction(int controllerSubTypeId)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableAction, controllerSubTypeId));
+		}
+
+		public SimpleBrick<T> EnableAction<T1>()
+		{
+			var ids = typeof (T1).GetCustomAttributes<BrickControllerSubTypeAttribute> (false).Select (x => x.Id);
+
+			if (ids.Any ())
+			{
+				return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableAction, ids.First ()));
+			}
+
+			throw new System.ArgumentException ("The type " + typeof (T1).FullName + " does not support ControllerSubTypeAttribute."); 
 		}
 
 		public SimpleBrick<TOutput> OfType<TOutput>()
