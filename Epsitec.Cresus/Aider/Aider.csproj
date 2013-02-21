@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ENABLE_GROUPS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -71,6 +71,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController2.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController1.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />

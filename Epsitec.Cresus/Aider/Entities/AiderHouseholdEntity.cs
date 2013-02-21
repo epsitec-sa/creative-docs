@@ -39,6 +39,11 @@ namespace Epsitec.Aider.Entities
 			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
 		}
 
+		public bool IsHead(AiderPersonEntity person)
+		{
+			return this.Contacts.Any (c => c.Person == person && c.HouseholdRole == HouseholdRole.Head);
+		}
+
 
 		private string GetDisplayZipCode()
 		{

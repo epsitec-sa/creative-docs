@@ -26,6 +26,20 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName, "(~", this.ComputeAge (), "~)");
 		}
 
+		public FormattedText GetCompactSummary(AiderHouseholdEntity household)
+		{
+			if (household.IsNotNull ())
+			{
+				if (household.IsHead (this))
+				{
+					var boldName = TextFormatter.FormatText (this.DisplayName).ApplyBold ();
+					return TextFormatter.FormatText (boldName, "(~", this.ComputeAge (), "~)");
+				}
+			}
+
+			return this.GetCompactSummary ();
+		}
+
 		public override FormattedText GetSummary()
 		{
 			return this.GetCoordinatesSummary ();

@@ -32,11 +32,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableAction (2)
+				.EnableAction (2)	//	remove member from household
+				.EnableAction (3)	//	change head of household status
 				.Template ()
 					.Icon ("Base.AiderPerson")
 					.Title ("Membres")
-					.Text (p => p.GetCompactSummary ())
+					.Text (p => p.GetCompactSummary (this.Entity))
 				.End ();
 
 			wall.AddBrick (x => x.Comment)
