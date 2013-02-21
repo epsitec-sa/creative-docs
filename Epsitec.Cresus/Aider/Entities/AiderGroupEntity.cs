@@ -308,7 +308,7 @@ namespace Epsitec.Aider.Entities
 			subgroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subgroupNumber);
 
 			this.AddSubgroupInternal (subgroup);
-			this.SetParentsInternal (this.GetParents ().Append (this));
+			subgroup.SetParentsInternal (this.GetParents ().Append (this));
 
 			return subgroup;
 		}
