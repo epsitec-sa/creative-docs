@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
 				.Template ()
-					.Text (g => g.GetSummaryWithGroupName ())
+					.Text (g => g.GetSummaryWithHierarchicalGroupName ())
 				.End ();
 #endif
 		}
