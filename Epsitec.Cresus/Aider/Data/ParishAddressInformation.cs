@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Data
 			}
 			else
 			{
-				this.FullParishName = string.Concat ("Paroisse ", this.ParishPrefix, " ", this.ParishRootName);
+				this.FullParishName = string.Concat ("Paroisse ", this.ParishPrefix, this.ParishPrefix.EndsWith ("'") ? "" : " ", this.ParishRootName);
 			}
 
 			if (this.RegionCode == 0)
