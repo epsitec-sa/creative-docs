@@ -29,6 +29,15 @@ namespace Epsitec.Aider.Entities
 	{
 
 
+		public AiderGroupEntity Parent
+		{
+			get
+			{
+				return this.Parents.LastOrDefault ();
+			}
+		}
+
+
 		public IList<AiderGroupEntity> Parents
 		{
 			get
@@ -249,12 +258,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void SetParentsInternal(IEnumerable<AiderGroupEntity> newParents)
+		public void SetParentInternal(AiderGroupEntity newParent)
 		{
-			var currentParents = this.GetParents ();
+			if (this.parents == null)
+			{
+				this.parents = new List<AiderGroupEntity> ();
+			}
+			else
+			{
+				this.parents.Clear ();
+			}
 
-			currentParents.Clear ();
-			currentParents.AddRange (newParents);
+			this.parents.AddRange (newParent.GetParents ().Append (newParent));
 		}
 
 
@@ -308,7 +323,7 @@ namespace Epsitec.Aider.Entities
 			subgroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subgroupNumber);
 
 			this.AddSubgroupInternal (subgroup);
-			subgroup.SetParentsInternal (this.GetParents ().Append (this));
+			subgroup.SetParentInternal (this);
 
 			return subgroup;
 		}
