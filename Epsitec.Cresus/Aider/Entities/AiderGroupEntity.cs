@@ -316,11 +316,10 @@ namespace Epsitec.Aider.Entities
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name)
 		{
 			var subgroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
-			var subgroupNumber = this.GetNextSubgroupNumber ();
 
 			subgroup.Name = name;
 			subgroup.GroupLevel = this.GroupLevel + 1;
-			subgroup.Path = AiderGroupIds.CreateSubGroupPath (this.Path, subgroupNumber);
+			subgroup.Path = this.GetNextSubgroupPath ();
 
 			this.AddSubgroupInternal (subgroup);
 			subgroup.SetParentInternal (this);
@@ -329,7 +328,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private int GetNextSubgroupNumber()
+		private string GetNextSubgroupPath()
 		{
 			// We look for a number that is not used yet in the subgroups.
 
@@ -353,7 +352,7 @@ namespace Epsitec.Aider.Entities
 				throw new Exception ("Too many subgroups.");
 			}
 
-			return number.Value;
+			return AiderGroupIds.CreateSubGroupPath (this.Path, number.Value);
 		}
 
 
