@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Tests
 			var repo = ParishAddressRepository.Current;
 			var name = repo.FindParishName (1400, "Yverdon-les-Bains", SwissPostStreet.NormalizeStreetName ("Fontenay, ch. du"), 6);
 
-			var inputFile = new System.IO.FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2012-12-07.xml");
+			var inputFile = new System.IO.FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml");
 			var persons = EChDataLoader.Load (inputFile);
 
 			var unresolved = new List<string> ();

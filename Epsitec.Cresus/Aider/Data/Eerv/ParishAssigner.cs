@@ -355,7 +355,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static string GetParishGroupName(string parishName)
 		{
-			return "Paroisse de " + parishName;
+			var infos = ParishAddressRepository.Current.GetDetails (parishName);
+
+			if (infos == null)
+			{
+				return "Paroisse inconnue (" + parishName + ")";
+			}
+			else
+			{
+				return infos.FullParishName;
+			}
 		}
 
 

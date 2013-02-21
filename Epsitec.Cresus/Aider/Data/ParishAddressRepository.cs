@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace Epsitec.Aider.Data
 		private ParishAddressRepository()
 		{
 			this.addresses = new Dictionary<string, ParishAddresses> ();
+			this.infos     = new Dictionary<string, ParishAddressInformation> ();
 
 			foreach (var info in ParishAddressRepository.GetParishInformations ())
 			{
@@ -31,6 +32,8 @@ namespace Epsitec.Aider.Data
 					key = ParishAddressRepository.GetKey (info.ZipCode, info.TownName);
 					this.addresses[key] = addr;
 				}
+
+				this.infos[info.ParishName] = info;
 			}
 		}
 
@@ -75,8 +78,35 @@ namespace Epsitec.Aider.Data
 			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, houseNumber);
 		}
 
-		
+		/// <summary>
+		/// Gets the details about the specified parish.
+		/// </summary>
+		/// <param name="parishName">Name of the parish.</param>
+		/// <returns>The detailes information about the parish.</returns>
+		public ParishAddressInformation GetDetails(string parishName)
+		{
+			ParishAddressInformation info;
+
+			this.infos.TryGetValue (parishName, out info);
+
+			return info;
+		}
+
 		private string FindParishName(string key, string normalizedStreetName, int houseNumber)
+		{
+			var info = this.FindParishAddressInformation (key, normalizedStreetName, houseNumber);
+
+			if (info == null)
+			{
+				return null;
+			}
+			else
+			{
+				return info.ParishName;
+			}
+
+		}
+		private ParishAddressInformation FindParishAddressInformation(string key, string normalizedStreetName, int houseNumber)
 		{
 			var addresses = this.FindAddresses (key);
 
@@ -89,14 +119,7 @@ namespace Epsitec.Aider.Data
 					  ?? addresses.FindDefault (normalizedStreetName)
 					  ?? addresses.FindDefault ();
 
-			if (parish == null)
-			{
-				return null;
-			}
-			else
-			{
-				return parish.ParishName;
-			}
+			return parish;
 		}
 
 
@@ -149,5 +172,6 @@ namespace Epsitec.Aider.Data
 
 		
 		private readonly Dictionary<string, ParishAddresses>	addresses;
+		private readonly Dictionary<string, ParishAddressInformation> infos;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Data
 		{
 			string[] cols = line.Split ('\t');
 
-			System.Diagnostics.Debug.Assert (cols.Length == 9);
+			System.Diagnostics.Debug.Assert (cols.Length == 11);
 
 			this.Row     = int.Parse (cols[0], System.Globalization.CultureInfo.InvariantCulture);
 			this.ZipCode = int.Parse (cols[1], System.Globalization.CultureInfo.InvariantCulture);
@@ -31,6 +31,17 @@ namespace Epsitec.Aider.Data
 			this.StreetPrefix     = cols[5];
 			this.ParishName       = cols[7];
 			this.RegionCode       = ParishAddressInformation.ParseRegionCode (cols[8]);
+			this.ParishPrefix     = cols[9];
+			this.ParishRootName   = cols[10];
+
+			if (string.IsNullOrEmpty (this.ParishPrefix))
+			{
+				this.FullParishName = string.Concat ("Paroisse ", this.ParishRootName);
+			}
+			else
+			{
+				this.FullParishName = string.Concat ("Paroisse ", this.ParishPrefix, " ", this.ParishRootName);
+			}
 
 			if (this.RegionCode == 0)
 			{
@@ -74,6 +85,12 @@ namespace Epsitec.Aider.Data
 		public readonly HashSet<int>			StreetNumberSubset;
 
 		public readonly int						RegionCode;
+
+		public readonly string					ParishPrefix;
+
+		public readonly string					ParishRootName;
+
+		public readonly string					FullParishName;
 
 
 		public bool CheckStreetNumber(int number)

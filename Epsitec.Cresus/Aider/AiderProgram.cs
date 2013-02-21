@@ -58,6 +58,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-testpostmatch"))
+				{
+					Tests.TestPostMatch.TestMatchStreet ();
+					return;
+				}
+
 				if (args.Contains ("-echimportation"))
 				{
 					AiderProgram.RunEchImportation (args);
