@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.ComptaNG.Data
+namespace Epsitec.Cresus.ComptaNG.Common.Data
 {
 	public class Utilisateur : AbstractObjetComptable
 	{

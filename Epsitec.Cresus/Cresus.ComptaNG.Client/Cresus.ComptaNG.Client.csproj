@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{94D6024B-5A4F-4091-B111-0AEFE33EC98E}</ProjectGuid>
+    <ProjectGuid>{50EE90AC-6AB4-4F6C-8365-64FA314ACDF3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.ComptaNG</RootNamespace>
-    <AssemblyName>Cresus.ComptaNG</AssemblyName>
+    <RootNamespace>Epsitec.Cresus.ComptaNG.Client</RootNamespace>
+    <AssemblyName>Cresus.ComptaNG.Client</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -38,52 +38,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data\AbstractEcriture.cs" />
-    <Compile Include="Data\Budget.cs" />
-    <Compile Include="Data\CatégorieDeCompte.cs" />
-    <Compile Include="Data\CodeTva.cs" />
-    <Compile Include="Data\Comptabilité.cs" />
-    <Compile Include="Data\Compte.cs" />
-    <Compile Include="Data\Balance.cs" />
-    <Compile Include="Data\RésuméTva.cs" />
-    <Compile Include="Data\RésuméPériodique.cs" />
-    <Compile Include="Data\Exploitation.cs" />
-    <Compile Include="Data\DonnéesDuBudget.cs" />
-    <Compile Include="Data\DoubleVue.cs" />
-    <Compile Include="Data\ExtraitDeCompte.cs" />
-    <Compile Include="Data\EcritureModèle.cs" />
-    <Compile Include="Data\EcritureMultiple.cs" />
-    <Compile Include="Data\EcritureSimple.cs" />
-    <Compile Include="Data\GénérateurDePièces.cs" />
-    <Compile Include="Data\IntervalleDates.cs" />
-    <Compile Include="Data\Journal.cs" />
-    <Compile Include="Data\Libellé.cs" />
-    <Compile Include="Data\LigneEcriture.cs" />
-    <Compile Include="Data\ListeTauxTva.cs" />
-    <Compile Include="Data\Monnaie.cs" />
-    <Compile Include="Data\AbstractObjetComptable.cs" />
-    <Compile Include="Data\PériodeComptable.cs" />
-    <Compile Include="Data\TauxTva.cs" />
-    <Compile Include="Data\Utilisateur.cs" />
-    <Compile Include="Record\AbstractField.cs" />
-    <Compile Include="Record\AbstractRecord.cs" />
-    <Compile Include="Record\FieldType.cs" />
-    <Compile Include="Record\CompteRecord.cs" />
-    <Compile Include="Record\MonetaryField.cs" />
-    <Compile Include="Record\DecimalField.cs" />
-    <Compile Include="Record\FormattedTextField.cs" />
-    <Compile Include="Record\StringField.cs" />
-    <Compile Include="Server\Interface.cs" />
-    <Compile Include="Server\View.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
