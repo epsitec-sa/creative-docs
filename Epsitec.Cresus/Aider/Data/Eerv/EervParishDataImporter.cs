@@ -725,8 +725,8 @@ namespace Epsitec.Aider.Data.Eerv
 				var match = matches[eervPerson];
 
 				var entityKey = match != null
-		            ? match.Item1
-		            : newEntities[eervPerson];
+					? match.Item1
+					: newEntities[eervPerson];
 
 				var aiderPerson = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
 
