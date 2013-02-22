@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -6,10 +6,9 @@ using Epsitec.Common.Support.Extensions;
 using FirebirdSql.Data.FirebirdClient;
 
 using System.Collections.Generic;
-
 using System.Globalization;
-
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
@@ -258,9 +257,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			string escapedComment = comment.Replace ("'", "''");
 
-			string query = "COMMENT ON " + objectType + " " + objectName + " IS '" + escapedComment + "';\n";
-
-			this.Append (query);
+			this.Append ("COMMENT ON ", objectType, " ", objectName, " IS '", escapedComment, "';\n");
 		}
 
 		public void RemoveTable(SqlTable table)
@@ -276,9 +273,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			this.commandCount++;
 
-			this.Append ("DROP TABLE ");
-			this.Append (table.Name);
-			this.Append (";\n");
+			this.Append ("DROP TABLE ", table.Name, ";\n");
 		}
 
 		public void InsertTableColumns(string tableName, SqlColumn[] columns)
@@ -301,11 +296,30 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.commandCount++;
 
-				this.Append ("ALTER TABLE ");
-				this.Append (tableName);
-				this.Append (" ADD ");			//	not " ADD COLUMN "
-				this.Append (this.GetColumn (column));
-				this.Append (";\n");
+				this.Append ("ALTER TABLE ", tableName, " ADD ", this.GetColumn (column), ";\n");	//	not " ADD COLUMN "
+
+				if (column.IsNullable == false)
+				{
+					switch (column.Type)
+					{
+						case DbRawType.Boolean:
+						case DbRawType.Int16:
+						case DbRawType.Int32:
+						case DbRawType.Int64:
+						case DbRawType.LargeDecimal:
+						case DbRawType.SmallDecimal:
+							this.commandCount++;
+							this.Append ("ALTER TABLE ", tableName, " ALTER ", column.Name, " SET DEFAULT 0;\n");
+							break;
+
+						case DbRawType.String:
+							this.commandCount++;
+							this.Append ("ALTER TABLE ", tableName, " ALTER ", column.Name, " SET DEFAULT '';\n");
+							break;
+						default:
+							break;
+					}
+				}
 
 				if (!string.IsNullOrEmpty (column.Comment))
 				{
@@ -324,10 +338,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.commandType = DbCommandType.Silent;
 
 			this.commandCount++;
-			this.Append
-			(
-				"ALTER TABLE " + tableName + " ALTER " + oldColumnName + " TO " + newColumnName + ";\n"
-			);
+			this.Append ("ALTER TABLE ", tableName, " ALTER ", oldColumnName, " TO ", newColumnName, ";\n");
 		}
 
 		public void RemoveTableColumns(string tableName, SqlColumn[] columns)
@@ -355,11 +366,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.commandCount++;
 
-				this.Append ("ALTER TABLE ");
-				this.Append (tableName);
-				this.Append (" DROP ");		// not " DROP COLUMN "
-				this.Append (column.Name);
-				this.Append (";\n");
+				this.Append ("ALTER TABLE ", tableName, " DROP ", column.Name, ";\n");		// not " DROP COLUMN "
 			}
 		}
 
@@ -378,21 +385,18 @@ namespace Epsitec.Cresus.Database.Implementation
 			string triggerName = this.GetAutoIncrementTriggerName (tableName, columnName);
 
 			this.commandCount++;
-			this.Append ("CREATE GENERATOR " + generatorName + ";\n");
+			this.Append ("CREATE GENERATOR ", generatorName, ";\n");
 
 			this.commandCount++;
-			this.Append ("SET GENERATOR " + generatorName + " TO " + initialValue + ";\n");
+			this.Append ("SET GENERATOR ", generatorName, " TO ", InvariantConverter.ConvertToString (initialValue), ";\n");
 
 			this.commandCount++;
-			this.Append
-			(
-				  "CREATE TRIGGER " + triggerName + " FOR " + tableName + " "
-				+ "ACTIVE BEFORE INSERT POSITION 0 "
-				+ "AS "
-				+ "BEGIN "
-				+ "IF (NEW." + columnName + " IS NULL) THEN NEW." + columnName + " = GEN_ID(" + generatorName + ", 1); "
-				+ "END;\n"
-			);
+			this.Append ("CREATE TRIGGER ", triggerName, " FOR ", tableName, " ",
+						 "ACTIVE BEFORE INSERT POSITION 0 ",
+						 "AS ",
+						 "BEGIN ",
+						 "IF (NEW.", columnName, " IS NULL) THEN NEW.", columnName, " = GEN_ID(", generatorName, ", 1); ",
+						 "END;\n");
 		}
 
 		public void DropAutoIncrementOnTableColumn(string tableName, string columnName)
@@ -409,10 +413,10 @@ namespace Epsitec.Cresus.Database.Implementation
 			string triggerName = this.GetAutoIncrementTriggerName (tableName, columnName);
 
 			this.commandCount++;
-			this.Append ("DROP GENERATOR " + generatorName + ";\n");
+			this.Append ("DROP GENERATOR ", generatorName, ";\n");
 
 			this.commandCount++;
-			this.Append ("DROP TRIGGER " + triggerName + ";\n");
+			this.Append ("DROP TRIGGER ", triggerName, ";\n");
 		}
 
 		private string GetAutoIncrementGeneratorName(string tableName, string columnName)
@@ -462,15 +466,12 @@ namespace Epsitec.Cresus.Database.Implementation
 			var or = (onInsert && onUpdate ? " OR " : "");
 			var update = (onUpdate ? "UPDATE" : "");
 
-			this.Append
-			(
-				  "CREATE TRIGGER " + triggerName + " FOR " + tableName + " "
-				+ "ACTIVE BEFORE " + insert + or + update + " POSITION 0 "
-				+ "AS "
-				+ "BEGIN "
-				+ "NEW." + columnName + " = CAST('NOW' AS TIMESTAMP);"
-				+ "END;\n"
-			);
+			this.Append ("CREATE TRIGGER ", triggerName, " FOR ", tableName, " ",
+						 "ACTIVE BEFORE ", insert, or, update, " POSITION 0 ",
+						 "AS ",
+						 "BEGIN ",
+						 "NEW.", columnName, " = CAST('NOW' AS TIMESTAMP);",
+						 "END;\n");
 		}
 
 		public void DropAutoTimeStampOnTableColumn(string tableName, string columnName)
@@ -485,7 +486,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			string triggerName = this.GetAutoTimeStampTriggerName (tableName, columnName);
 
 			this.commandCount++;
-			this.Append ("DROP TRIGGER " + triggerName + ";\n");
+			this.Append ("DROP TRIGGER ", triggerName, ";\n");
 		}
 
 		private string GetAutoTimeStampTriggerName(string tableName, string columnName)
@@ -520,7 +521,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 			}
 
-			this.Append (" INDEX " + index.Name + " ON " + tableName + " (");
+			this.Append (" INDEX ", index.Name, " ON ", tableName, " (");
 			this.Append (string.Join (", ", index.Columns.Select (c => c.Name)));
 			this.Append (");\n");
 		}
@@ -534,7 +535,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.EnableIndexInternal (index, true);
 
 			this.commandCount++;
-			this.Append ("SET STATISTICS INDEX " + index.Name + ";\n");
+			this.Append ("SET STATISTICS INDEX ", index.Name, ";\n");
 		}
 
 		public void EnableIndex(SqlIndex index, bool enable)
@@ -553,7 +554,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				? "ACTIVE"
 				: "INACTIVE";
 
-			this.Append ("ALTER INDEX " + index.Name + " " + state + ";\n");
+			this.Append ("ALTER INDEX ", index.Name, " ", state, ";\n");
 		}
 
 		public void DropIndex(SqlIndex index)
@@ -563,7 +564,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			this.commandCount++;
 
-			this.Append ("DROP INDEX " + index.Name + ";\n");
+			this.Append ("DROP INDEX ", index.Name, ";\n");
 		}
 
 		public void SelectData(SqlSelect sqlQuery)
@@ -858,7 +859,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.commandType = DbCommandType.ReturningData;
 			this.commandCount++;
 
-			this.Append ("SELECT (" + this.GetSqlFieldForCurrentTimeStamp().AsRawSql + ") FROM RDB$DATABASE");
+			this.Append ("SELECT (", this.GetSqlFieldForCurrentTimeStamp().AsRawSql, ") FROM RDB$DATABASE");
 		}
 
 		public SqlField GetSqlFieldForCurrentTimeStamp()
@@ -1036,6 +1037,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		private void Append(string str)
 		{
 			this.buffer.Append (str);
+		}
+
+		private void Append(params string[] str)
+		{
+			this.buffer.Append (string.Concat (str));
 		}
 
 		private void Append(char c)
@@ -1353,7 +1359,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		private void Append(SqlJoin sqlJoin)
 		{
-			this.Append (" " + this.GetSql (sqlJoin.Code) + " ");
+			this.Append (" ", this.GetSql (sqlJoin.Code), " ");
 			this.Append (sqlJoin.Table);
 
 			if (!this.AppendAlias (sqlJoin.Table))
@@ -1567,7 +1573,7 @@ namespace Epsitec.Cresus.Database.Implementation
 							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unsupported field type {0} in GROUP BY clause", field.FieldType));
 					}
 				}
-            }
+			}
 
 			isFirstField = true;
 
