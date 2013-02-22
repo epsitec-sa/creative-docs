@@ -530,6 +530,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			if (this.asyncUpdatePending)
 			{
+				this.ApplyRulesToRegisteredEntities (RuleType.Validate, entitySaveMode);
 				this.ApplyRulesToRegisteredEntities (RuleType.Update, entitySaveMode);
 				this.asyncUpdatePending = false;
 			}
