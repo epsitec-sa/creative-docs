@@ -195,12 +195,7 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
 		{
-			// If we are at the maximum group level, there's no point in looking for sub groups in
-			// the database. We won't find any. So we return directly an empty sequence. Note that
-			// this optimization avoids to make a request with a group path longer than the maximum
-			// group path which Firebird don't like at all. It considers such requests invalid.
-
-			if (this.GroupLevel >= AiderGroupIds.maxGroupLevel)
+			if (!this.CanHaveSubgroups ())
 			{
 				return new List<AiderGroupEntity> ();
 			}
@@ -481,6 +476,11 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)
 		{
+			if (!this.CanHaveSubgroups ())
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
 			var example = new AiderGroupEntity ();
 			var request = Request.Create (example);
 			
