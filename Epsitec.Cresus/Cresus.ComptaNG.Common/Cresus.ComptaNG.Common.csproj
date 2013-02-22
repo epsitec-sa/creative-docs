@@ -44,42 +44,46 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\AbstractEcriture.cs" />
-    <Compile Include="Data\AbstractObjetComptable.cs" />
-    <Compile Include="Data\Balance.cs" />
-    <Compile Include="Data\Budget.cs" />
-    <Compile Include="Data\CatégorieDeCompte.cs" />
-    <Compile Include="Data\CodeTva.cs" />
-    <Compile Include="Data\Comptabilité.cs" />
-    <Compile Include="Data\Compte.cs" />
-    <Compile Include="Data\Erreur.cs" />
-    <Compile Include="Data\DonnéesDuBudget.cs" />
-    <Compile Include="Data\DoubleVue.cs" />
-    <Compile Include="Data\EcritureModèle.cs" />
-    <Compile Include="Data\EcritureMultiple.cs" />
-    <Compile Include="Data\EcritureSimple.cs" />
-    <Compile Include="Data\Exploitation.cs" />
-    <Compile Include="Data\ExtraitDeCompte.cs" />
-    <Compile Include="Data\GénérateurDePièces.cs" />
-    <Compile Include="Data\IntervalleDates.cs" />
-    <Compile Include="Data\Journal.cs" />
-    <Compile Include="Data\Libellé.cs" />
-    <Compile Include="Data\LigneEcriture.cs" />
-    <Compile Include="Data\ListeTauxTva.cs" />
-    <Compile Include="Data\Monnaie.cs" />
-    <Compile Include="Data\PériodeComptable.cs" />
-    <Compile Include="Data\RésuméPériodique.cs" />
-    <Compile Include="Data\RésuméTva.cs" />
-    <Compile Include="Data\TauxTva.cs" />
-    <Compile Include="Data\Utilisateur.cs" />
-    <Compile Include="RecordAccessors\AbstractField.cs" />
-    <Compile Include="RecordAccessors\AbstractRecord.cs" />
-    <Compile Include="RecordAccessors\CompteRecord.cs" />
-    <Compile Include="RecordAccessors\DecimalField.cs" />
+    <Compile Include="Records\AbstractEcriture.cs" />
+    <Compile Include="Records\AbstractRecord.cs" />
+    <Compile Include="Records\Balance.cs" />
+    <Compile Include="Records\Budget.cs" />
+    <Compile Include="Records\CatégorieDeCompte.cs" />
+    <Compile Include="Records\CodeTva.cs" />
+    <Compile Include="Records\Comptabilité.cs" />
+    <Compile Include="Records\Compte.cs" />
+    <Compile Include="RequestData\ErrorField.cs" />
+    <Compile Include="RequestData\ErrorType.cs" />
+    <Compile Include="Records\DonnéesDuBudget.cs" />
+    <Compile Include="Records\DoubleVue.cs" />
+    <Compile Include="Records\EcritureModèle.cs" />
+    <Compile Include="Records\EcritureMultiple.cs" />
+    <Compile Include="Records\EcritureSimple.cs" />
+    <Compile Include="Records\Exploitation.cs" />
+    <Compile Include="Records\ExtraitDeCompte.cs" />
+    <Compile Include="Records\GénérateurDePièces.cs" />
+    <Compile Include="Records\IntervalleDates.cs" />
+    <Compile Include="Records\Journal.cs" />
+    <Compile Include="Records\Libellé.cs" />
+    <Compile Include="Records\LigneEcriture.cs" />
+    <Compile Include="Records\ListeTauxTva.cs" />
+    <Compile Include="Records\Monnaie.cs" />
+    <Compile Include="Records\PériodeComptable.cs" />
+    <Compile Include="Records\RésuméPériodique.cs" />
+    <Compile Include="Records\RésuméTva.cs" />
+    <Compile Include="Records\TauxTva.cs" />
+    <Compile Include="RequestData\TravellingRecord.cs" />
+    <Compile Include="Records\Utilisateur.cs" />
+    <Compile Include="RecordAccessors\AbstractAccessor.cs" />
+    <Compile Include="RecordAccessors\CompteAccessor.cs" />
     <Compile Include="RecordAccessors\FieldType.cs" />
-    <Compile Include="RecordAccessors\FormattedTextField.cs" />
-    <Compile Include="RecordAccessors\MonetaryField.cs" />
-    <Compile Include="RecordAccessors\StringField.cs" />
+    <Compile Include="RequestData\ViewType.cs" />
+    <Compile Include="RequestData\ViewData.cs" />
+    <Compile Include="RequestData\FilterData.cs" />
+    <Compile Include="RequestData\SearchData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
