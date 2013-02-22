@@ -168,7 +168,7 @@ namespace Epsitec.Aider.Entities
 
 		public bool CanHaveSubgroups()
 		{
-			return this.GroupLevel < AiderGroupIds.maxGroupLevel;
+			return this.GroupLevel < AiderGroupIds.MaxGroupLevel;
 		}
 
 

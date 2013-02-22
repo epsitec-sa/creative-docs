@@ -68,9 +68,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			if (newParent.GroupLevel + this.Entity.GetDepth () > AiderGroupIds.maxGroupLevel)
+			if (newParent.GroupLevel + this.Entity.GetDepth () > AiderGroupIds.MaxGroupLevel)
 			{
-				var message = "Impossible de créer plus de " + (AiderGroupIds.maxGroupLevel + 1) + " niveaux de groupes";
+				var message = "Impossible de créer plus de " + (AiderGroupIds.MaxGroupLevel + 1) + " niveaux de groupes";
 
 				throw new BusinessRuleException (message);
 			}

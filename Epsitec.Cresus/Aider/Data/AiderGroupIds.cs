@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Data
 		public const int SubgroupLength			= 4;
 		public const int MinSubGroupNumber		= 1;
 		public const int MaxSubGroupNumber		= 99;
-		public const int maxGroupLevel			= 6;
+		public const int MaxGroupLevel			= 6;
 
 
 		public static string GetRegionId(int regionCode)
