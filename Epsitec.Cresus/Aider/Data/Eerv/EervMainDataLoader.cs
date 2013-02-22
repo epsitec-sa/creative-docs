@@ -180,6 +180,7 @@ namespace Epsitec.Aider.Data.Eerv
 			"Groupe de projets 2",
 			"Groupe pilotage 1, 2, 3",
 			"Mandataires 1, 2, 3",
+			"Délégation paroisse 1, 2, 3",
 			"Archives 1, Archives 2, Archives 3…",
 		};
 
