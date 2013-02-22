@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Epsitec.Cresus.ComptaNG.Common.Data;
 using Epsitec.Cresus.ComptaNG.Common.RequestData;
 
 namespace Epsitec.Cresus.ComptaNG.Server
@@ -65,13 +64,13 @@ namespace Epsitec.Cresus.ComptaNG.Server
 		}
 
 		// Valide un enregistrement.
-		public IEnumerable<ErrorField> Validate(Guid viewChannel, ClientToServerData data)
+		public IEnumerable<ErrorField> Validate(Guid viewChannel, TravellingRecord record)
 		{
 			return null;
 		}
 
 		// Modifie un enregistrement.
-		public void SetData(Guid viewChannel, ClientToServerData data)
+		public void SetData(Guid viewChannel, TravellingRecord record)
 		{
 		}
 
