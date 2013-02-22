@@ -32,6 +32,54 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 		[TestMethod]
+		public void CheckIsInteger()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.IsInteger (null));
+
+			Assert.IsFalse (StringExtensions.IsInteger (""));
+			Assert.IsFalse (StringExtensions.IsInteger ("+"));
+			Assert.IsFalse (StringExtensions.IsInteger ("-"));
+			Assert.IsFalse (StringExtensions.IsInteger ("0+0"));
+			Assert.IsFalse (StringExtensions.IsInteger ("0-0"));
+			Assert.IsFalse (StringExtensions.IsInteger ("--1"));
+			Assert.IsFalse (StringExtensions.IsInteger ("++1"));
+			Assert.IsFalse (StringExtensions.IsInteger ("-+1"));
+			Assert.IsFalse (StringExtensions.IsInteger ("1.1"));
+			Assert.IsFalse (StringExtensions.IsInteger ("12345x"));
+			Assert.IsFalse (StringExtensions.IsInteger ("12345 "));
+
+			Assert.IsTrue (StringExtensions.IsInteger ("0"));
+			Assert.IsTrue (StringExtensions.IsInteger ("1234567890"));
+			Assert.IsTrue (StringExtensions.IsInteger ("-123456789"));
+		}
+
+		[TestMethod]
+		public void CheckIsDecimal()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.IsDecimal (null));
+
+			Assert.IsFalse (StringExtensions.IsDecimal (""));
+			Assert.IsFalse (StringExtensions.IsDecimal ("+"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("-"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("0+0"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("0-0"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("--1"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("++1"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("-+1"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("."));
+			Assert.IsFalse (StringExtensions.IsDecimal ("0.1.2"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("1.x"));
+			Assert.IsFalse (StringExtensions.IsDecimal ("1. "));
+
+			Assert.IsTrue (StringExtensions.IsDecimal ("0"));
+			Assert.IsTrue (StringExtensions.IsDecimal ("1234567890"));
+			Assert.IsTrue (StringExtensions.IsDecimal ("-123456789"));
+			Assert.IsTrue (StringExtensions.IsDecimal ("1."));
+			Assert.IsTrue (StringExtensions.IsDecimal (".1"));
+			Assert.IsTrue (StringExtensions.IsDecimal ("0.0"));
+		}
+
+		[TestMethod]
 		public void CheckContainsAtPosition()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.ContainsAtPosition (null, "", 0));

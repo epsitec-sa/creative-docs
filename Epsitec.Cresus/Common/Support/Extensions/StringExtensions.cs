@@ -302,6 +302,13 @@ namespace Epsitec.Common.Support.Extensions
 			return StringExtensions.alphaNumRegex.IsMatch (value);
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is an integer.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		///   <c>true</c> if the specified value is an integer; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsInteger(this string value)
 		{
 			if (value == null)
@@ -337,6 +344,13 @@ namespace Epsitec.Common.Support.Extensions
 			return valid;
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is a decimal.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		///   <c>true</c> if the specified value is a decimal; otherwise, <c>false</c>.
+		/// </returns>
 		public static bool IsDecimal(this string value)
 		{
 			if (value == null)
