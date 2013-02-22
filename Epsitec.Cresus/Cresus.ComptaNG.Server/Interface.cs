@@ -6,6 +6,9 @@ using Epsitec.Cresus.ComptaNG.Common.RequestData;
 
 namespace Epsitec.Cresus.ComptaNG.Server
 {
+	/// <summary>
+	/// Cette classe doit être la seule appelée par le client.
+	/// </summary>
 	public class Interface
 	{
 		// Ouvre une vue d'un type donné. Retourne un canal.
@@ -26,7 +29,7 @@ namespace Epsitec.Cresus.ComptaNG.Server
 		{
 		}
 
-		// Donne de nouveaux critèrex de recherche et de filtre.
+		// Donne de nouveaux critères de recherche et de filtre.
 		// Pour être plus efficace, il est avantageux d'appeler cette méthode lorsque
 		// les deux critères changent.
 		public void UpdateSearchAndFilter(Guid viewChannel, SearchData seach, FilterData filter)
@@ -40,7 +43,7 @@ namespace Epsitec.Cresus.ComptaNG.Server
 		}
 
 		// Retourne le contenu de plusieurs enregistrements.
-		public List<TravellingRecord> GetData(Guid viewChannel, int firstIndex, int count)
+		public List<TravellingRecord> GetRecord(Guid viewChannel, int firstIndex, int count)
 		{
 			return null;
 		}
@@ -70,12 +73,12 @@ namespace Epsitec.Cresus.ComptaNG.Server
 		}
 
 		// Modifie un enregistrement.
-		public void SetData(Guid viewChannel, TravellingRecord record)
+		public void SetRecord(Guid viewChannel, TravellingRecord record)
 		{
 		}
 
 		// Met à jour une vue, si elle a été modifiée par d'autres utilisateurs.
-		// Ceci évite de faire un CloseView suivi d'un OpenView .
+		// Ceci évite de faire un CloseView suivi d'un OpenView.
 		public void Refresh(Guid viewChannel)
 		{
 		}
