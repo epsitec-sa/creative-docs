@@ -47,6 +47,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
+			if (!newParent.CanHaveSubgroups ())
+			{
+				var message = "Ce groupe ne peut pas avoir de sous groupes.";
+
+				throw new BusinessRuleException (message);
+			}
+
 			if (newParent == this.Entity)
 			{
 				var message = "Un groupe ne peut pas être déplacé dans lui-même";

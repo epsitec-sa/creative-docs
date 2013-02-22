@@ -16,29 +16,34 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 #if ENABLE_GROUPS
 			wall.AddBrick ()
 				.EnableAction (2);
-
-			wall.AddBrick (x => x.Subgroups)
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.AutoGroup)
-				.Attribute (BrickMode.HideAddButton)
-				.Attribute (BrickMode.HideRemoveButton)
-				.EnableAction (0)
-				.EnableAction (1)
-				.Template ()
-					.Title ("Sous groupes")
-				.End ();
 #else
 			wall.AddBrick ();
-
-			wall.AddBrick (x => x.Subgroups)
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.AutoGroup)
-				.Attribute (BrickMode.HideAddButton)
-				.Attribute (BrickMode.HideRemoveButton)
-				.Template ()
-					.Title ("Sous groupes")
-				.End ();
 #endif
+
+			if (this.Entity.CanHaveSubgroups ())
+			{
+#if ENABLE_GROUPS
+				wall.AddBrick (x => x.Subgroups)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableAction (0)
+					.EnableAction (1)
+					.Template ()
+						.Title ("Sous groupes")
+					.End ();
+#else
+				wall.AddBrick (x => x.Subgroups)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Template ()
+						.Title ("Sous groupes")
+					.End ();
+#endif
+			}
 
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.People")

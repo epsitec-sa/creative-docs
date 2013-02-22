@@ -166,6 +166,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public bool CanHaveSubgroups()
+		{
+			return this.GroupLevel < AiderGroupIds.maxGroupLevel;
+		}
+
+
 		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
 		{
 			value = this.GetSubgroups ().AsReadOnlyCollection ();
@@ -315,6 +321,11 @@ namespace Epsitec.Aider.Entities
 
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name)
 		{
+			if (!this.CanHaveSubgroups ())
+			{
+				throw new InvalidOperationException ("This group cannot have subgroups");
+			}
+
 			var subgroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
 
 			subgroup.Name = name;
@@ -398,6 +409,11 @@ namespace Epsitec.Aider.Entities
 
 		public void Move(AiderGroupEntity newParent)
 		{
+			if (!newParent.CanHaveSubgroups ())
+			{
+				throw new InvalidOperationException ("This group cannot have subgroups");
+			}
+			
 			// We start by removing this group from its current parent.
 
 			var currentParent = this.Parent;
