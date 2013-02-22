@@ -119,34 +119,52 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGlobalGroups(BusinessContext businessContext, EervMainData eervData)
 		{
-			var rootAiderGroupDefs =
-				from eervGroupDef in eervData.GroupDefinitions
-				where eervGroupDef.GroupLevel == 0
-				let path = eervGroupDef.GetPathTemplate ()
-				where !path.StartsWith (AiderGroupIds.Region)
-					&& !path.StartsWith (AiderGroupIds.Parish)
-					&& !path.StartsWith (AiderGroupIds.Function)
-				let example = new AiderGroupDefEntity ()
-				{
-					PathTemplate = path
-				}
-				select businessContext.DataContext.GetByExample (example).Single ();
+			var rootEervGroupDefinitions = eervData
+				.GroupDefinitions
+				.Where (g => EervMainDataImporter.IsGlobalGroup (g));
 
-			foreach (var aiderGroupDef in rootAiderGroupDefs)
+			foreach (var eervGroupDefinition in rootEervGroupDefinitions)
 			{
-				aiderGroupDef.Instantiate (businessContext, new GroupPathInfo
-				(
-					name: aiderGroupDef.Name,
-					template: aiderGroupDef.PathTemplate,
-					output: aiderGroupDef.PathTemplate,
-					level: 0
-				));
+				EervMainDataImporter.ImportGlobalGroup (businessContext, eervGroupDefinition);
 			}
 
 			EervMainDataImporter.CreateNoParishGroup (businessContext);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
+
+
+		private static void ImportGlobalGroup(BusinessContext businessContext, EervGroupDefinition eervGroupDefinition)
+		{
+			var example = new AiderGroupDefEntity ()
+			{
+				PathTemplate = eervGroupDefinition.GetPathTemplate ()
+			};
+				
+			var aiderGroupDefinition = businessContext.DataContext.GetByExample (example).Single ();
+				
+			aiderGroupDefinition.Instantiate (businessContext, new GroupPathInfo
+			(
+				name: aiderGroupDefinition.Name,
+				template: aiderGroupDefinition.PathTemplate,
+				output: aiderGroupDefinition.PathTemplate,
+				level: 0
+			));
+		}
+
+
+		private static bool IsGlobalGroup(EervGroupDefinition groupDefinition)
+		{
+			// We don't instantiate function group definitions because their are instantiated only
+			// within special groups with special rules. We don't instantiate parish and region
+			// groups because they are template group definitions that are instantiated later on.
+
+			return EervMainDataImporter.IsTopLevelGroupDefinition (groupDefinition)
+				&& groupDefinition.GroupClassification != GroupClassification.Function
+				&& groupDefinition.GroupClassification != GroupClassification.Parish
+				&& groupDefinition.GroupClassification != GroupClassification.Region;
+		}
+
 
 		private static AiderGroupEntity CreateNoParishGroup(BusinessContext businessContext)
 		{
