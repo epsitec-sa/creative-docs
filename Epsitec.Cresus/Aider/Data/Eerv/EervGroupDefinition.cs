@@ -17,11 +17,11 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervGroupDefinition(string id, string name, Enumerations.GroupNodeType groupNodeType = Enumerations.GroupNodeType.NodeAndLeaf, int groupLevel = 0)
+		public EervGroupDefinition(string id, string name, bool isLeaf, int groupLevel)
 		{
 			this.Id = id;
 			this.Name = name;
-			this.GroupNodeType = groupNodeType;
+			this.isLeaf = isLeaf;
 			this.GroupLevel = groupLevel;
 
 			this.children = new List<EervGroupDefinition> ();
@@ -31,7 +31,29 @@ namespace Epsitec.Aider.Data.Eerv
 		public readonly string					Id;
 
 		public readonly string					Name;
+
+		public readonly int						GroupLevel;
+
 		
+
+		public bool								MembersAllowed
+		{
+			get
+			{
+				return this.isLeaf || !this.SubgroupsAllowed;
+			}
+		}
+
+
+		public bool								SubgroupsAllowed
+		{
+			get
+			{
+				return this.children.Count > 0 || this.FunctionGroup != null;
+			}
+		}
+
+
 		public EervGroupDefinition				Parent
 		{
 			get
@@ -53,18 +75,6 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				
 				this.parent = value;
-
-				if (this.parent != null)
-				{
-					if (this.parent.GroupNodeType == Enumerations.GroupNodeType.Leaf)
-					{
-						this.parent.GroupNodeType = Enumerations.GroupNodeType.NodeAndLeaf;
-					}
-				}
-				else
-				{
-					this.GroupNodeType = Enumerations.GroupNodeType.Root;
-				}
 			}
 		}
 
@@ -81,22 +91,6 @@ namespace Epsitec.Aider.Data.Eerv
 				this.function = value;
 			}
 		}
-
-		public Enumerations.GroupNodeType		GroupNodeType
-		{
-			get
-			{
-				return this.groupType;
-			}
-			set
-			{
-				this.ThrowIfReadOnly ();
-
-				this.groupType = value;
-			}
-		}
-
-		public readonly int						GroupLevel;
 		
 		public IList<EervGroupDefinition>		Children
 		{
@@ -246,9 +240,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 		public AiderGroupDefEntity				EntityCache;
+		private readonly bool					isLeaf;
 		private EervGroupDefinition				parent;
 		private EervGroupDefinition				function;
-		private Enumerations.GroupNodeType		groupType;
 		private IList<EervGroupDefinition>		children;
 
 

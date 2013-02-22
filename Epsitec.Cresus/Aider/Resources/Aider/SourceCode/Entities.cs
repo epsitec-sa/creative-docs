@@ -5073,24 +5073,46 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>NodeType</c> field.
-		///	designer:fld/LVA2A/LVA1B
+		///	The <c>SubgroupsAllowed</c> field.
+		///	designer:fld/LVA2A/LVG722
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA1B]")]
-		public global::Epsitec.Aider.Enumerations.GroupNodeType NodeType
+		[global::Epsitec.Common.Support.EntityField ("[LVG722]")]
+		public bool SubgroupsAllowed
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.GroupNodeType> ("[LVA1B]");
+				return this.GetField<bool> ("[LVG722]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Enumerations.GroupNodeType oldValue = this.NodeType;
-				if (oldValue != value || !this.IsFieldDefined("[LVA1B]"))
+				bool oldValue = this.SubgroupsAllowed;
+				if (oldValue != value || !this.IsFieldDefined("[LVG722]"))
 				{
-					this.OnNodeTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.GroupNodeType> ("[LVA1B]", oldValue, value);
-					this.OnNodeTypeChanged (oldValue, value);
+					this.OnSubgroupsAllowedChanging (oldValue, value);
+					this.SetField<bool> ("[LVG722]", oldValue, value);
+					this.OnSubgroupsAllowedChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>MembersAllowed</c> field.
+		///	designer:fld/LVA2A/LVG822
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG822]")]
+		public bool MembersAllowed
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVG822]");
+			}
+			set
+			{
+				bool oldValue = this.MembersAllowed;
+				if (oldValue != value || !this.IsFieldDefined("[LVG822]"))
+				{
+					this.OnMembersAllowedChanging (oldValue, value);
+					this.SetField<bool> ("[LVG822]", oldValue, value);
+					this.OnMembersAllowedChanged (oldValue, value);
 				}
 			}
 		}
@@ -5157,8 +5179,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnNumberChanged(string oldValue, string newValue);
 		partial void OnPathTemplateChanging(string oldValue, string newValue);
 		partial void OnPathTemplateChanged(string oldValue, string newValue);
-		partial void OnNodeTypeChanging(global::Epsitec.Aider.Enumerations.GroupNodeType oldValue, global::Epsitec.Aider.Enumerations.GroupNodeType newValue);
-		partial void OnNodeTypeChanged(global::Epsitec.Aider.Enumerations.GroupNodeType oldValue, global::Epsitec.Aider.Enumerations.GroupNodeType newValue);
+		partial void OnSubgroupsAllowedChanging(bool oldValue, bool newValue);
+		partial void OnSubgroupsAllowedChanged(bool oldValue, bool newValue);
+		partial void OnMembersAllowedChanging(bool oldValue, bool newValue);
+		partial void OnMembersAllowedChanged(bool oldValue, bool newValue);
 		partial void OnClassificationChanging(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnClassificationChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);

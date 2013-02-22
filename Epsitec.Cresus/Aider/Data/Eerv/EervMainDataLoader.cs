@@ -51,26 +51,23 @@ namespace Epsitec.Aider.Data.Eerv
 
 				var groupDefinition = EervMainDataLoader.GetEervGroupDefinition (record, level);
 
-				if (!EervMainDataLoader.IsGroupDefinitionToDiscard (groupDefinition))
+				var parent = parents.Peek ();
+
+				if (parent == null)
 				{
-					var parent = parents.Peek ();
-
-					if (parent == null)
-					{
-						groupDefinition.Parent = null;
-					}
-					else
-					{
-						parent.Children.Add (groupDefinition);
-						groupDefinition.Parent = parent;
-					}
-
-					parents.Push (groupDefinition);
-
-					EervMainDataLoader.HandleGroupDefinitionFunctions (functions, record, groupDefinition);
-
-					yield return groupDefinition;
+					groupDefinition.Parent = null;
 				}
+				else
+				{
+					parent.Children.Add (groupDefinition);
+					groupDefinition.Parent = parent;
+				}
+
+				parents.Push (groupDefinition);
+
+				EervMainDataLoader.HandleGroupDefinitionFunctions (functions, record, groupDefinition);
+
+				yield return groupDefinition;
 			}
 		}
 
@@ -88,10 +85,6 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var functionCode = id.Substring (4, 2);
 					functions[functionCode] = groupDefinition;
-				}
-				else
-				{
-					groupDefinition.GroupNodeType = Enumerations.GroupNodeType.Leaf;
 				}
 			}
 			else if ((id.StartsWith ("02")) ||	//	"Synodal"
@@ -130,20 +123,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var id = record[GroupDefinitionHeader.Id];
 			var name = record[EervMainDataLoader.names[groupLevel]];
-			var type = string.IsNullOrEmpty (record[GroupDefinitionHeader.IsLeaf]) ? Enumerations.GroupNodeType.Node : Enumerations.GroupNodeType.Leaf;
+			var isLeaf = record[GroupDefinitionHeader.IsLeaf] == "x";
 
-			return new EervGroupDefinition (id, name, type, groupLevel);
-		}
-
-
-		private static bool IsGroupDefinitionToDiscard(EervGroupDefinition groupDefinition)
-		{
-			var name = groupDefinition.Name;
-
-			return name.Contains ("n1")
-				|| name.Contains ("n2")
-				|| name.Contains ("n3")
-				|| namesToDiscard.Contains (name);
+			return new EervGroupDefinition (id, name, isLeaf, groupLevel);
 		}
 
 
@@ -167,22 +149,6 @@ namespace Epsitec.Aider.Data.Eerv
 				GroupDefinitionHeader.NameLevel5,
 			}
 		);
-
-
-		private static readonly HashSet<string> namesToDiscard = new HashSet<string> ()
-		{
-			"Projets 1",
-			"Projet 2",
-			"Mandat 1, 2, 3",
-			"Groupe pilotage 1",
-			"Groupe de projets 1",
-			"Groupe pilotage 2",
-			"Groupe de projets 2",
-			"Groupe pilotage 1, 2, 3",
-			"Mandataires 1, 2, 3",
-			"Délégation paroisse 1, 2, 3",
-			"Archives 1, Archives 2, Archives 3…",
-		};
 
 
 	}

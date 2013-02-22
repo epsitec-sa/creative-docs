@@ -24,7 +24,6 @@ namespace Epsitec.Aider.Data.Eerv
 		public static void Import(CoreData coreData, EervMainData eervData, ParishAddressRepository parishRepository)
 		{
 			EervMainDataImporter.ImportGroupDefinitions (coreData, eervData);
-
 			EervMainDataImporter.ImportGlobalGroups (coreData, eervData);
 			EervMainDataImporter.ImportRegionAndParishGroups (coreData, parishRepository);
 
@@ -80,8 +79,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 			aiderGroupDef.Name = groupDefinition.Name;
 			aiderGroupDef.Number = groupDefinition.Id;
+			aiderGroupDef.SubgroupsAllowed = groupDefinition.SubgroupsAllowed;
+			aiderGroupDef.MembersAllowed = groupDefinition.MembersAllowed;
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
-			aiderGroupDef.NodeType = groupDefinition.GroupNodeType;
 			aiderGroupDef.Classification = groupDefinition.GroupClassification;
 			aiderGroupDef.Mutability = Mutability.SystemDefined;
 
@@ -96,13 +96,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 			children.AddRange (groupDefinition
 				.Children
+				.Where (c => !EervMainDataImporter.IsGroupDefinitionToDiscard (c))
 				.Select (c => EervMainDataImporter.ImportGroupDefinition (businessContext, c)));
 
 			aiderGroupDef.Subgroups.AddRange (children);
 			groupDefinition.EntityCache = aiderGroupDef;
-
-			// TODO Add a lot more stuff here to set up properly the group definition level, type,
-			// category, etc.
 
 			return aiderGroupDef;
 		}
@@ -288,6 +286,33 @@ namespace Epsitec.Aider.Data.Eerv
 
 			return parishGroup;
 		}
+
+
+		private static bool IsGroupDefinitionToDiscard(EervGroupDefinition groupDefinition)
+		{
+			var name = groupDefinition.Name;
+
+			return name.Contains ("n1")
+				|| name.Contains ("n2")
+				|| name.Contains ("n3")
+				|| namesToDiscard.Contains (name);
+		}
+
+
+		private static readonly HashSet<string> namesToDiscard = new HashSet<string> ()
+		{
+			"Projets 1",
+			"Projet 2",
+			"Mandat 1, 2, 3",
+			"Groupe pilotage 1",
+			"Groupe de projets 1",
+			"Groupe pilotage 2",
+			"Groupe de projets 2",
+			"Groupe pilotage 1, 2, 3",
+			"Mandataires 1, 2, 3",
+			"Délégation paroisse 1, 2, 3",
+			"Archives 1, Archives 2, Archives 3…",
+		};
 
 
 	}

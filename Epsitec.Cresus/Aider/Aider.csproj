@@ -201,7 +201,6 @@
     <Compile Include="Entities\eCH_PersonEntity.cs" />
     <Compile Include="Enumerations\EventParticipantRole.cs" />
     <Compile Include="Enumerations\EventType.cs" />
-    <Compile Include="Enumerations\GroupNodeType.cs" />
     <Compile Include="Enumerations\Language.cs" />
     <Compile Include="Enumerations\LegalPersonType.cs" />
     <Compile Include="Enumerations\PersonRelationshipType.cs" />
