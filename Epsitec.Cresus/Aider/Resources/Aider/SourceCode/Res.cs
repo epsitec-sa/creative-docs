@@ -1460,6 +1460,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAC5
 				public static readonly global::Epsitec.Common.Support.Druid IsoCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 172);
+				//	designer:cap/LVARF
+				public static readonly global::Epsitec.Common.Support.Druid IsPreferred = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 507);
 				//	designer:cap/LVAD5
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 173);
 			}

@@ -3672,11 +3672,35 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>IsPreferred</c> field.
+		///	designer:fld/LVAB5/LVARF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVARF]")]
+		public bool IsPreferred
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVARF]");
+			}
+			set
+			{
+				bool oldValue = this.IsPreferred;
+				if (oldValue != value || !this.IsFieldDefined("[LVARF]"))
+				{
+					this.OnIsPreferredChanging (oldValue, value);
+					this.SetField<bool> ("[LVARF]", oldValue, value);
+					this.OnIsPreferredChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnIsoCodeChanging(string oldValue, string newValue);
 		partial void OnIsoCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnIsPreferredChanging(bool oldValue, bool newValue);
+		partial void OnIsPreferredChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Core.Data
 
 			if (allowDatabaseUpdate)
 			{
-				IDialog d = MessageDialog.CreateYesNo ("Base de donnée incompatible", DialogIcon.Warning, "La base de donnée est incompatible. Voulez vous la modifier pour la mettre à jour?");
+				IDialog d = MessageDialog.CreateYesNo ("Base de données incompatible", DialogIcon.Warning, "La base de données est incompatible. Voulez vous la modifier pour la mettre à jour?");
 
 				d.OpenDialog ();
 
