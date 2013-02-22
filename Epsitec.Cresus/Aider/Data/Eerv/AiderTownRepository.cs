@@ -3,20 +3,20 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 
-using System;
+using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
-using Epsitec.Common.Types;
-using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Data.Eerv
 {
 	/// <summary>
-	/// The AiderTownRepository class is useful to manage towns that might exist or not. You ask it
-	/// for at town and it creates it if it does not exist yet. It you ask for the same town again
-	/// it will give back the same town that it created before and not a new one.
+	/// The <c>AiderTownRepository</c> class is useful to manage towns that might exist or not.
+	/// You ask it for at town and it creates it if it does not exist yet. It you ask for the
+	/// same town again it will give back the same town that it created before and not a new one.
 	/// </summary>
 	internal sealed class AiderTownRepository
 	{
@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			this.businessContext = businessContext;
 
-			this.aiderTowns = new Dictionary<Tuple<string, string>, AiderTownEntity> ();
+			this.aiderTowns = new Dictionary<System.Tuple<string, string>, AiderTownEntity> ();
 			this.switzerland = AiderCountryEntity.Find (this.businessContext, "CH");
 		}
 
@@ -35,13 +35,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var zip in SwissPostZipRepository.Current.FindAll ())
 			{
-				this.GetTown (zip.OnrpCode);
+				this.GetTown (zip.OnrpCode, z => z.ZipType != SwissPostZipType.Internal);
 			}
 		}
 
 		public AiderTownEntity GetTown(EervAddress address)
 		{
-			var key = Tuple.Create (address.ZipCode, address.Town);
+			var key = System.Tuple.Create (address.ZipCode, address.Town);
 
 			AiderTownEntity town;
 
@@ -62,7 +62,7 @@ namespace Epsitec.Aider.Data.Eerv
 			return town;
 		}
 
-		public AiderTownEntity GetTown(int zipOnrp)
+		public AiderTownEntity GetTown(int zipOnrp, System.Predicate<SwissPostZipInformation> filter = null)
 		{
 			var zip = SwissPostZipRepository.Current.FindByOnrpCode (zipOnrp);
 
@@ -71,16 +71,23 @@ namespace Epsitec.Aider.Data.Eerv
 				return null;
 			}
 
-			var key = Tuple.Create (InvariantConverter.ToString (zip.ZipCode), zip.LongName);
+			if ((filter != null) &&
+				(filter (zip) == false))
+			{
+				return null;
+			}
+
+			var name = zip.LongName;
+			var key  = System.Tuple.Create (InvariantConverter.ToString (zip.ZipCode), name);
 
 			AiderTownEntity town;
 
 			if (!this.aiderTowns.TryGetValue (key, out town))
 			{
-				town = this.GetOrCreateSwissTown (zip.ZipCode, zip.LongName);
+				town = this.GetOrCreateSwissTown (zip.ZipCode, name);
 				this.aiderTowns[key] = town;
 			}
-		
+
 			return town;
 		}
 
@@ -96,7 +103,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var town in towns)
 			{
-				var key = Tuple.Create (town.ZipCode, town.Name);
+				var key = System.Tuple.Create (town.ZipCode, town.Name);
 
 				if (this.aiderTowns.ContainsKey (key) == false)
 				{
@@ -119,12 +126,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private readonly BusinessContext businessContext;
+		private readonly BusinessContext		businessContext;
 
+		private readonly AiderCountryEntity		switzerland;
 
-		private readonly AiderCountryEntity switzerland;
-
-
-		private readonly Dictionary<Tuple<string, string>, AiderTownEntity> aiderTowns;
+		private readonly Dictionary<System.Tuple<string, string>, AiderTownEntity> aiderTowns;
 	}
 }

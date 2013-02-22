@@ -3470,6 +3470,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>SwissZipType</c> field.
+		///	designer:fld/LVA65/LVAPF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAPF]")]
+		public global::Epsitec.Data.Platform.SwissPostZipType? SwissZipType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Data.Platform.SwissPostZipType?> ("[LVAPF]");
+			}
+			set
+			{
+				global::Epsitec.Data.Platform.SwissPostZipType? oldValue = this.SwissZipType;
+				if (oldValue != value || !this.IsFieldDefined("[LVAPF]"))
+				{
+					this.OnSwissZipTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Data.Platform.SwissPostZipType?> ("[LVAPF]", oldValue, value);
+					this.OnSwissZipTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SwissCantonCode</c> field.
 		///	designer:fld/LVA65/LVALD
 		///	</summary>
@@ -3562,6 +3584,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSwissZipCodeChanged(int? oldValue, int? newValue);
 		partial void OnSwissZipCodeIdChanging(int? oldValue, int? newValue);
 		partial void OnSwissZipCodeIdChanged(int? oldValue, int? newValue);
+		partial void OnSwissZipTypeChanging(global::Epsitec.Data.Platform.SwissPostZipType? oldValue, global::Epsitec.Data.Platform.SwissPostZipType? newValue);
+		partial void OnSwissZipTypeChanged(global::Epsitec.Data.Platform.SwissPostZipType? oldValue, global::Epsitec.Data.Platform.SwissPostZipType? newValue);
 		partial void OnSwissCantonCodeChanging(string oldValue, string newValue);
 		partial void OnSwissCantonCodeChanged(string oldValue, string newValue);
 		partial void OnZipCodeChanging(string oldValue, string newValue);

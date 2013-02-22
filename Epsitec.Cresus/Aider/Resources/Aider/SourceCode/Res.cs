@@ -198,6 +198,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PlacePersonRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 196));
 				//	designer:cap/LVAK6
 				public static readonly Epsitec.Common.Types.EnumType RemovalReason = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212));
+				//	designer:cap/LVAIF
+				public static readonly Epsitec.Common.Types.EnumType SwissPostZipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 498));
 				//	designer:cap/LVA66
 				public static readonly Epsitec.Common.Types.EnumType UserRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 198));
 				//	designer:cap/LVA86
@@ -1207,6 +1209,58 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class SwissPostZipType
+				{
+					//	designer:cap/LVANF
+					public static global::Epsitec.Common.Types.Caption Company
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 503));
+						}
+					}
+					//	designer:cap/LVALF
+					public static global::Epsitec.Common.Types.Caption DomicileOnly
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 501));
+						}
+					}
+					//	designer:cap/LVAOF
+					public static global::Epsitec.Common.Types.Caption Internal
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 504));
+						}
+					}
+					//	designer:cap/LVAKF
+					public static global::Epsitec.Common.Types.Caption Mixed
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 500));
+						}
+					}
+					//	designer:cap/LVAJF
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 499));
+						}
+					}
+					//	designer:cap/LVAMF
+					public static global::Epsitec.Common.Types.Caption POBoxOnly
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 502));
+						}
+					}
+				}
+				
 				public static class UserRole
 				{
 					//	designer:cap/LVA76
@@ -1791,6 +1845,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid SwissZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 167);
 				//	designer:cap/LVA85
 				public static readonly global::Epsitec.Common.Support.Druid SwissZipCodeId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 168);
+				//	designer:cap/LVAPF
+				public static readonly global::Epsitec.Common.Support.Druid SwissZipType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 505);
 				//	designer:cap/LVAH8
 				public static readonly global::Epsitec.Common.Support.Druid ZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 273);
 			}

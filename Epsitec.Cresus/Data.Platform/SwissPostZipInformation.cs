@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -34,6 +34,7 @@ namespace Epsitec.Data.Platform
 			this.Canton         = args[6];
 			this.LanguageCode1  = InvariantConverter.ParseInt<SwissPostLanguageCode> (args[7]);
 			this.LanguageCode2  = InvariantConverter.ParseInt<SwissPostLanguageCode> (args[8]);
+			this.InSortFile     = args[9] == "1";
 			this.DistributionBy = args[10];
 			this.ComunityCode   = InvariantConverter.ParseInt (args[11]);
 			this.ValidSince     = new Date (year: date / 10000, month: (date/100) % 100, day: date % 100);
@@ -83,8 +84,9 @@ namespace Epsitec.Data.Platform
 		public readonly string					ShortName;
 		public readonly string					LongName;
 		public readonly string					Canton;
-		public readonly SwissPostLanguageCode LanguageCode1;
-		public readonly SwissPostLanguageCode LanguageCode2;
+		public readonly SwissPostLanguageCode	LanguageCode1;
+		public readonly SwissPostLanguageCode	LanguageCode2;
+		public readonly bool					InSortFile;
 		public readonly string					DistributionBy;
 		public readonly int						ComunityCode;
 		public readonly Date					ValidSince;

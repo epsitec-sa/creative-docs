@@ -14,6 +14,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.ZipCode)
 					.Field (x => x.Name)
+					.Field (x => x.SwissCantonCode).ReadOnly ()
 					.Field (x => x.Country)
 				.End ();
 		}

@@ -125,6 +125,7 @@
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
+    <Compile Include="Rules\AiderTownBusinessRules.cs" />
     <Compile Include="Rules\AiderUserBusinessRules.cs" />
     <Compile Include="Tests\TestPostMatch.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
