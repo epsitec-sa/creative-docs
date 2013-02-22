@@ -21,7 +21,7 @@ namespace Aider.Tests.Vs
 		{
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (this.GroupDefinitionFile).ToList ();
 
-			Assert.AreEqual (655, groupDefinitions.Count);
+			Assert.AreEqual (656, groupDefinitions.Count);
 
 			var g1 = new EervGroupDefinition ("0100000000", "Paramètres transversaux", false, 0)
 			{

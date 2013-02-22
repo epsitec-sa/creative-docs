@@ -18,10 +18,10 @@ namespace Epsitec.Aider.Enumerations
 		Parish				= 30,
 		Common				= 40,
 		External			= 50,
+		NoParish			= 60,
 
 		Function			= 100,
 		Staff				= 110,
 		StaffAssociation	= 120,
-
 	}
 }

@@ -282,7 +282,7 @@
   <data name="Val.Enum.GroupClassification.None" id="AUB">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Region" id="AVB">&lt;s:data id="_0" f:Name="Region" f:Labels="{Collection {Text 'Régions'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Parish" id="A0C">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisses'}}" /&gt;</data>
-  <data name="Typ.Enum.GroupClassification" id="ATB">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupClassification" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupClassification, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAUB]'}, {Text '1 [LVAVB]'}, {Text '2 [LVA0C]'}, {Text '3 [LVA8D]'}, {Text '4 [LVA9D]'}, {Text '5 [LVAAD]'}, {Text '6 [LVABD]'}, {Text '7 [LVACD]'}, {Text '8 [LVADD]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupClassification, Aider/None" f:Labels="{Collection {Text 'Classification du groupe'}}" /&gt;</data>
+  <data name="Typ.Enum.GroupClassification" id="ATB">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupClassification" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupClassification, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAUB]'}, {Text '1 [LVAVB]'}, {Text '2 [LVA0C]'}, {Text '3 [LVA8D]'}, {Text '4 [LVA9D]'}, {Text '5 [LVAAD]'}, {Text '6 [LVABD]'}, {Text '7 [LVACD]'}, {Text '8 [LVADD]'}, {Text '9 [LVG922]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupClassification, Aider/None" f:Labels="{Collection {Text 'Classification du groupe'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.Classification" id="A1C">&lt;s:data id="_0" f:Name="Classification" f:Labels="{Collection {Text 'Classification'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.None" id="A3C">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.Generic" id="A4C">&lt;s:data id="_0" f:Name="Generic" f:Labels="{Collection {Text 'Avertissement générique'}}" /&gt;</data>
@@ -395,4 +395,5 @@
   <data name="Fld.AiderCountry.IsPreferred" id="ARF">&lt;s:data id="_0" f:Name="IsPreferred" f:Labels="{Collection {Text 'Pays favori'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.SubgroupsAllowed" id="G722">&lt;s:data id="_0" f:Name="SubgroupsAllowed" f:Labels="{Collection {Text 'Sous groupes autorisés'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.MembersAllowed" id="G822">&lt;s:data id="_0" f:Name="MembersAllowed" f:Labels="{Collection {Text 'Membres autorisés'}}" /&gt;</data>
+  <data name="Val.Enum.GroupClassification.NoParish" id="G922">&lt;s:data id="_0" f:Name="NoParish" f:Labels="{Collection {Text 'Personnes sans paroisses'}}" /&gt;</data>
 </bundle>

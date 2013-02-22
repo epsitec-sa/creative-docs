@@ -132,6 +132,8 @@ namespace Epsitec.Aider.Data.Eerv
 						return Enumerations.GroupClassification.Common;
 					case "06":
 						return Enumerations.GroupClassification.External;
+					case "07":
+						return Enumerations.GroupClassification.NoParish;
 					default:
 						break;
 				}
@@ -202,6 +204,9 @@ namespace Epsitec.Aider.Data.Eerv
 					break;
 				case Enumerations.GroupClassification.StaffAssociation:
 					buffer.Append (AiderGroupIds.StaffAssociation);
+					break;
+				case Enumerations.GroupClassification.NoParish:
+					buffer.Append (AiderGroupIds.NoParish);
 					break;
 
 				default:

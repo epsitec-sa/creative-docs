@@ -517,6 +517,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 382));
 						}
 					}
+					//	designer:cap/LVG922
+					public static global::Epsitec.Common.Types.Caption NoParish
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 73));
+						}
+					}
 					//	designer:cap/LVA0C
 					public static global::Epsitec.Common.Types.Caption Parish
 					{
