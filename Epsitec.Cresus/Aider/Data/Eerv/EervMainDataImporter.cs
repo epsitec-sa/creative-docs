@@ -43,10 +43,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGroupDefinitions(BusinessContext businessContext, EervMainData eervData)
 		{
-			var functionRoot = eervData.GroupDefinitions.First (g => g.GroupClassification == GroupClassification.Function && g.GroupLevel == 1);
-			EervMainDataImporter.ImportGroupDefinition (businessContext, functionRoot);
-
-			var topLevelGroups = eervData.GroupDefinitions.Where (g => g.GroupLevel == 0);
+			var topLevelGroups = eervData
+				.GroupDefinitions
+				.Where (g => EervMainDataImporter.IsTopLevelGroupDefinition (g));
 
 			foreach (var groupDefinition in topLevelGroups)
 			{
@@ -54,6 +53,24 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+		}
+
+
+		private static bool IsTopLevelGroupDefinition(EervGroupDefinition groupDefinition)
+		{
+			switch (groupDefinition.GroupLevel)
+			{
+				case 0:
+					return true;
+
+				case 1:
+					return groupDefinition.GroupClassification == GroupClassification.Function
+						|| groupDefinition.GroupClassification == GroupClassification.Staff
+						|| groupDefinition.GroupClassification == GroupClassification.StaffAssociation;
+
+				default:
+					return false;
+			}
 		}
 
 
