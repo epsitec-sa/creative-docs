@@ -212,13 +212,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void AddSubgroupInternal(AiderGroupEntity group)
+		private void AddSubgroupInternal(AiderGroupEntity group)
 		{
 			this.GetSubgroups ().Add (group);
 		}
 
 
-		public void RemoveSubgroupInternal(AiderGroupEntity group)
+		private void RemoveSubgroupInternal(AiderGroupEntity group)
 		{
 			this.GetSubgroups ().Remove (group);
 		}
@@ -258,7 +258,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void SetParentInternal(AiderGroupEntity newParent)
+		private void SetParentInternal(AiderGroupEntity newParent)
 		{
 			if (this.parents == null)
 			{
