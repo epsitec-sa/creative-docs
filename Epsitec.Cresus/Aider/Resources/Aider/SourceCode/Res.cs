@@ -166,8 +166,6 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType GroupNodeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 343));
 				//	designer:cap/LVAG3
 				public static readonly Epsitec.Common.Types.EnumType GroupParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 112));
-				//	designer:cap/LVAR4
-				public static readonly Epsitec.Common.Types.EnumType GroupRelationshipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 155));
 				//	designer:cap/LVA1E
 				public static readonly Epsitec.Common.Types.EnumType HouseholdRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 449));
 				//	designer:cap/LVA09
@@ -249,8 +247,6 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroupParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 103));
 			//	designer:cap/LVAF5
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroupPlace = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 175));
-			//	designer:cap/LVAN4
-			public static readonly Epsitec.Common.Types.StructuredType AiderGroupRelationship = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 151));
 			//	designer:cap/LVAI2
 			public static readonly Epsitec.Common.Types.StructuredType AiderHousehold = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 82));
 			//	designer:cap/LVAR6
@@ -621,34 +617,6 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 113));
-						}
-					}
-				}
-				
-				public static class GroupRelationshipType
-				{
-					//	designer:cap/LVAMA
-					public static global::Epsitec.Common.Types.Caption Exclusion
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 342));
-						}
-					}
-					//	designer:cap/LVALA
-					public static global::Epsitec.Common.Types.Caption Inclusion
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 341));
-						}
-					}
-					//	designer:cap/LVAS4
-					public static global::Epsitec.Common.Types.Caption None
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 156));
 						}
 					}
 				}
@@ -1626,21 +1594,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 176);
 			}
 			
-			public static class AiderGroupRelationship
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (AiderGroupRelationship.Group1, null);
-				}
-				
-				//	designer:cap/LVAO4
-				public static readonly global::Epsitec.Common.Support.Druid Group1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 152);
-				//	designer:cap/LVAP4
-				public static readonly global::Epsitec.Common.Support.Druid Group2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 153);
-				//	designer:cap/LVAT4
-				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 157);
-			}
-			
 			public static class AiderHousehold
 			{
 				internal static void _Initialize()
@@ -2417,7 +2370,6 @@ namespace Epsitec.Aider
 			Fields.AiderGroupEvent._Initialize ();
 			Fields.AiderGroupParticipant._Initialize ();
 			Fields.AiderGroupPlace._Initialize ();
-			Fields.AiderGroupRelationship._Initialize ();
 			Fields.AiderHousehold._Initialize ();
 			Fields.AiderLegalPerson._Initialize ();
 			Fields.AiderPerson._Initialize ();
