@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -75,6 +75,11 @@ namespace Epsitec.Cresus.Core.Data
 		public void MakeDependent()
 		{
 			this.isDependent = true;
+		}
+
+		public void SetRequest(Request request)
+		{
+			this.request = request;
 		}
 
 		public int GetItemCount()
@@ -173,16 +178,29 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		private Request CreateRequest()
+		{
+			if (this.request != null)
+			{
+				return this.request;
+			}
+			else
+			{
+				var example = this.GetExample ();
+				var request = new Request ()
+				{
+					RequestedEntity = example,
+					RootEntity = example,
+				};
+				
+				return request;
+			}
+		}
+
 		private AbstractRequestView CreateRequestView()
 		{
-			var example = this.GetExample ();
-
-			var request = new Request ()
-			{
-				RequestedEntity = example,
-				RootEntity = example,
-			};
-
+			var request = this.CreateRequest ();
+			var example = request.RootEntity;
 			var session = UserManager.Current.ActiveSession;
 
 			request.AddCondition (this.IsolatedDataContext, example, this.dataSetMetadata.Filter);
@@ -245,5 +263,6 @@ namespace Epsitec.Cresus.Core.Data
 		private AbstractRequestView				requestView;
 		private int?							itemCount;
 		private bool							isDependent;
+		private Request							request;
 	}
 }
