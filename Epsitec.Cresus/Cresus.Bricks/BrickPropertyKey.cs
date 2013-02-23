@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -31,7 +31,10 @@ namespace Epsitec.Cresus.Bricks
 		ReadOnly,
 		Separator,
 		HorizontalGroup,
+		
 		FromCollection,
+		FavoritesCollection,
+
 		SpecialController,
 		SpecialFieldController,
 		GlobalWarning,

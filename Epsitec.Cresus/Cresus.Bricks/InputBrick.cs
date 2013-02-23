@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -66,6 +66,11 @@ namespace Epsitec.Cresus.Bricks
 		public InputBrick<T, TParent> PickFromCollection(System.Collections.IEnumerable value)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FromCollection, value));
+		}
+
+		public InputBrick<T, TParent> WithFavorites(System.Collections.IEnumerable value)
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, value));
 		}
 
 		public InputBrick<T, TParent> Button(FormattedText title, FormattedText description, System.Action action)
