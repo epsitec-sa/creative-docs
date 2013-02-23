@@ -50,6 +50,12 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyValidateRule(AiderTownEntity town)
 		{
+			if (town.Country.IsNull ())
+			{
+				Logic.BusinessRuleException (town, Resources.Text ("Le pays doit être spécifié."));
+				return;
+			}
+
 			if (town.Country.IsoCode == "CH")
 			{
 				var zip = town.ZipCode;
