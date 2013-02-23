@@ -190,7 +190,7 @@ function() {
       else {
         return {
           selType: 'rowmodel',
-          allowDeselect: true,
+          allowDeselect: options.allowDeselect,
           mode: 'SINGLE'
         };
       }
