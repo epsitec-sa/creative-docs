@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Debug;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Debug;
 
 using Epsitec.Common.IO;
 
@@ -8,8 +11,8 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
-
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Favorites;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
@@ -96,6 +99,39 @@ namespace Epsitec.Cresus.WebCore.Server
 				
 				database.LoadRelatedData (dataContext, entities);
 				
+				var data = entities
+					.Select (e => database.GetEntityData (dataContext, caches, e))
+					.ToList ();
+
+				var content = new Dictionary<string, object> ()
+				{
+					{ "total", total },
+					{ "entities", data },
+				};
+
+				return CoreResponse.Success (content);
+			}
+		}
+
+
+		public static Response GetEntities(BusinessContext businessContext, FavoritesCollection favorites, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, string rawFavoritesId, string rawSorters, string rawFilters, int start, int limit, Druid databaseId)
+		{
+			var database = databaseManager.GetDatabase (databaseId);
+
+			Tools.SetupSortersAndFilters (businessContext, caches, userManager, database, rawSorters, rawFilters);
+
+			using (var dataSetAccessor = dataSetAccessorGetter (database))
+			{
+				dataSetAccessor.MakeDependent ();
+				dataSetAccessor.SetRequest (favorites.GetRequest ());
+
+				var dataContext = dataSetAccessor.IsolatedDataContext;
+
+				var total = dataSetAccessor.GetItemCount ();
+				var entities = dataSetAccessor.GetItems (start, limit);
+
+				database.LoadRelatedData (dataContext, entities);
+
 				var data = entities
 					.Select (e => database.GetEntityData (dataContext, caches, e))
 					.ToList ();
