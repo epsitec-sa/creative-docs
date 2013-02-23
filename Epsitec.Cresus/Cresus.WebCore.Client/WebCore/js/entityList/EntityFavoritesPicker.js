@@ -18,13 +18,20 @@ function () {
 
     constructor: function (options) {
       var newOptions,
-          list1, list2;
+          list1, list2, callback;
 
-      list1 = options.list;
+      callback = Epsitec.Callback.create(this.handleEntityListSelectionChange, this);
+
+      list1 = {};
       list2 = {};
+
+      Ext.apply(list1, options.list);
       Ext.apply(list2, list1);
 
       delete list2.favoritesId;
+
+      list1.onSelectionChange = callback;
+      list2.onSelectionChange = callback;
 
       this.entityListPanel1 = this.createEntityListPanel(list1);
       this.entityListPanel2 = this.createEntityListPanel(list2);
@@ -61,6 +68,8 @@ function () {
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
+      this.disableOkButton();
+
       return this;
     },
 
@@ -68,6 +77,15 @@ function () {
 
     handleTabChange: function (tabPanel, newCard, oldCard, eOpts) {
       this.activeEntityListPanel = newCard.entityListPanel;
+      this.handleEntityListSelectionChange(this.getSelectedItems());
+    },
+
+    handleEntityListSelectionChange: function (entityItems) {
+      if (entityItems.length == 0) {
+        this.disableOkButton();
+      } else {
+        this.enableOkButton();
+      }
     },
 
     createEntityListPanel: function (options) {

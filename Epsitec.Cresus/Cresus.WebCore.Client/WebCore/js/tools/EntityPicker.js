@@ -1,7 +1,7 @@
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts'
 ],
-function() {
+function () {
   Ext.define('Epsitec.cresus.webcore.tools.EntityPicker', {
     extend: 'Ext.window.Window',
 
@@ -17,13 +17,18 @@ function() {
     /* Properties */
 
     callback: null,
+    okButton: null,
 
     /* Constructor */
 
-    constructor: function(options) {
-      var newOptions = {
+    constructor: function (options) {
+      var newOptions;
+
+      this.okButton = this.createOkButton();
+
+      newOptions = {
         buttons: [
-          this.createOkButton(),
+          this.okButton,
           this.createCancelButton()
         ]
       };
@@ -35,7 +40,7 @@ function() {
 
     /* Additional methods */
 
-    createCancelButton: function() {
+    createCancelButton: function () {
       return Ext.create('Ext.Button', {
         text: Epsitec.Texts.getCancelLabel(),
         handler: this.onCancelClick,
@@ -43,7 +48,7 @@ function() {
       });
     },
 
-    createOkButton: function() {
+    createOkButton: function () {
       return Ext.create('Ext.Button', {
         text: Epsitec.Texts.getOkLabel(),
         handler: this.onSaveClick,
@@ -51,16 +56,24 @@ function() {
       });
     },
 
-    onSaveClick: function() {
+    disableOkButton: function () {
+      this.okButton.disable();
+    },
+
+    enableOkButton: function () {
+      this.okButton.enable();
+    },
+
+    onSaveClick: function () {
       this.callback.execute([this.getSelectedItems()]);
       this.close();
     },
 
-    getSelectedItems: function() {
+    getSelectedItems: function () {
       // This function is to be overriden in derived classes.
     },
 
-    onCancelClick: function() {
+    onCancelClick: function () {
       this.close();
     }
   });
