@@ -12,6 +12,7 @@ function () {
     entityListPanel1: null,
     entityListPanel2: null,
     tabPanel: null,
+    activeEntityListPanel: null,
 
     /* Constructor */
 
@@ -35,16 +36,24 @@ function () {
         layoutOnTabChange: true,
         items: [{
           xtype: 'panel',
-          title: 'Favoris',
           layout: 'fit',
-          items: [this.entityListPanel1]
+          title: 'Favoris',
+          items: [this.entityListPanel1],
+          entityListPanel: this.entityListPanel1
         }, {
           xtype: 'panel',
           layout: 'fit',
           title: 'Liste compl\u00E8te',
-          items: [this.entityListPanel2]
-        }]
+          items: [this.entityListPanel2],
+          entityListPanel: this.entityListPanel2
+        }],
+        listeners: {
+          tabchange: this.handleTabChange,
+          scope: this
+        }
       });
+
+      this.activeEntityListPanel = this.entityListPanel1;
 
       newOptions = {
         items: [this.tabPanel]
@@ -57,6 +66,10 @@ function () {
 
     /* Additional methods */
 
+    handleTabChange: function (tabPanel, newCard, oldCard, eOpts) {
+      this.activeEntityListPanel = newCard.entityListPanel;
+    },
+
     createEntityListPanel: function (options) {
       return Ext.create('Epsitec.EntityListPanel', {
         container: {},
@@ -65,7 +78,7 @@ function () {
     },
 
     getSelectedItems: function () {
-      return this.entityListPanel1.getEntityList().getSelectedItems();
+      return this.activeEntityListPanel.getEntityList().getSelectedItems();
     },
 
     statics: {
