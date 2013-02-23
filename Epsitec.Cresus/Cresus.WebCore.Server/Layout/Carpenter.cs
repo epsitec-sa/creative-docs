@@ -677,6 +677,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = this.BuildField<EntityReferenceField> (entity, propertyAccessor, brickProperties, includeTitle, null);
 
 			field.DatabaseName = this.GetDatabaseName (propertyAccessor.Type);
+			field.DefineFavorites (Carpenter.GetFavoritesCollection (brickProperties));
 
 			return field;
 		}
@@ -1120,6 +1121,35 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			return brickProperties.PeekAfter (key, -1);
 		}
+
+		private static System.Collections.IEnumerable GetInputCollection(BrickPropertyCollection brickProperties)
+		{
+			var property = brickProperties.PeekAfter (BrickPropertyKey.FromCollection, -1);
+
+			if (property.HasValue)
+			{
+				return property.Value.CollectionValue;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private static System.Collections.IEnumerable GetFavoritesCollection(BrickPropertyCollection brickProperties)
+		{
+			var property = brickProperties.PeekAfter (BrickPropertyKey.FavoritesCollection, -1);
+
+			if (property.HasValue)
+			{
+				return property.Value.CollectionValue;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 
 		private string GetEntityId(AbstractEntity entity)
