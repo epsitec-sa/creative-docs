@@ -2,7 +2,7 @@ Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
   'Epsitec.cresus.webcore.tools.EntityPicker'
 ],
-function() {
+function () {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityListPicker', {
     extend: 'Epsitec.cresus.webcore.tools.EntityPicker',
     alternateClassName: ['Epsitec.EntityListPicker'],
@@ -13,10 +13,20 @@ function() {
 
     /* Constructor */
 
-    constructor: function(options) {
-      var newOptions;
+    constructor: function (options) {
+      var newOptions, list, callback;
 
-      this.entityListPanel = this.createEntityListPanel(options.list);
+      callback = Epsitec.Callback.create(this.handleEntityListSelectionChange, this);
+
+      //  I've no clue why I need to assign the callback manually to both lists; I've
+      //  observed that if I insert the callback before calling Ext.apply above, the
+      //  property 'onselectionChange' will be copied as 'null'. [PA: 2013-02-24]
+
+      list = {};
+      Ext.apply(list, options.list);
+      list.onSelectionChange = callback;
+
+      this.entityListPanel = this.createEntityListPanel(list);
 
       newOptions = {
         items: [this.entityListPanel]
@@ -24,24 +34,34 @@ function() {
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
+      this.disableOkButton();
+
       return this;
     },
 
     /* Additional methods */
 
-    createEntityListPanel: function(options) {
+    createEntityListPanel: function (options) {
       return Ext.create('Epsitec.EntityListPanel', {
-        container: { },
+        container: {},
         list: options
       });
     },
 
-    getSelectedItems: function() {
+    handleEntityListSelectionChange: function (entityItems) {
+      if (entityItems.length == 0) {
+        this.disableOkButton();
+      } else {
+        this.enableOkButton();
+      }
+    },
+
+    getSelectedItems: function () {
       return this.entityListPanel.getEntityList().getSelectedItems();
     },
 
     statics: {
-      showDatabase: function(databaseName, multiSelect, callback) {
+      showDatabase: function (databaseName, multiSelect, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.DatabaseEntityList',
           databaseName: databaseName,
@@ -50,7 +70,7 @@ function() {
         });
       },
 
-      showSet: function(viewId, entityId, databaseDefinition, callback) {
+      showSet: function (viewId, entityId, databaseDefinition, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.SetEntityList',
           viewId: viewId,
@@ -62,7 +82,7 @@ function() {
         });
       },
 
-      show: function(callback, listOptions) {
+      show: function (callback, listOptions) {
         var entityListPicker = Ext.create('Epsitec.EntityListPicker', {
           list: listOptions,
           callback: callback
