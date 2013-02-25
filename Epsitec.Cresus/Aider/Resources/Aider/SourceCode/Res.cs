@@ -1762,6 +1762,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid SwissCantonCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 437);
 				//	designer:cap/LVA75
 				public static readonly global::Epsitec.Common.Support.Druid SwissZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 167);
+				//	designer:cap/LVASF
+				public static readonly global::Epsitec.Common.Support.Druid SwissZipCodeAddOn = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 508);
 				//	designer:cap/LVA85
 				public static readonly global::Epsitec.Common.Support.Druid SwissZipCodeId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 168);
 				//	designer:cap/LVAPF

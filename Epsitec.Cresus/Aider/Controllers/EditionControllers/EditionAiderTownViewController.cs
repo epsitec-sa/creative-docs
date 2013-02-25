@@ -21,8 +21,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.ZipCode)
+					.Field (x => x.SwissZipCodeAddOn).ReadOnly ()
 					.Field (x => x.Name)
 					.Field (x => x.SwissCantonCode).ReadOnly ()
+					.Field (x => x.SwissZipCodeId).ReadOnly ()
+					.Field (x => x.SwissZipType).ReadOnly ()
 					.Field (x => x.Country).WithFavorites (favorites)
 				.End ();
 		}

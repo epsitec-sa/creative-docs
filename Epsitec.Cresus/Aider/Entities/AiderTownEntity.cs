@@ -125,5 +125,25 @@ namespace Epsitec.Aider.Entities
 				.GetByExample<AiderTownEntity> (example)
 				.FirstOrDefault ();
 		}
+
+		partial void GetSwissZipCodeAddOn(ref string value)
+		{
+			var onrp = this.SwissZipCodeId.GetValueOrDefault ();
+			var info = SwissPostZipRepository.Current.FindByOnrpCode (onrp);
+
+			if (info == null)
+			{
+				value = null;
+			}
+			else
+			{
+				value = string.Format ("{0:00}", info.ZipComplement);
+			}
+		}
+
+		partial void SetSwissZipCodeAddOn(string value)
+		{
+			throw new System.NotImplementedException ();
+		}
 	}
 }

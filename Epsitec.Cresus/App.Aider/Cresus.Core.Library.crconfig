@@ -83,6 +83,10 @@ AiderFunctionDef = [LVA7A]
 	<sort o="Ascending" />
 	<disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVALD]" title="Canton" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVAH8]" title="Code postal" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />

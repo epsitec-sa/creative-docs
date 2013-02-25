@@ -3354,6 +3354,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>SwissZipCodeAddOn</c> field.
+		///	designer:fld/LVA65/LVASF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVASF]", IsVirtual=true)]
+		public string SwissZipCodeAddOn
+		{
+			get
+			{
+				string value = default (string);
+				this.GetSwissZipCodeAddOn (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.SwissZipCodeAddOn;
+				if (oldValue != value || !this.IsFieldDefined("[LVASF]"))
+				{
+					this.OnSwissZipCodeAddOnChanging (oldValue, value);
+					this.SetSwissZipCodeAddOn (value);
+					this.OnSwissZipCodeAddOnChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ZipCode</c> field.
 		///	designer:fld/LVA65/LVAH8
 		///	</summary>
@@ -3428,6 +3452,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSwissZipTypeChanged(global::Epsitec.Data.Platform.SwissPostZipType? oldValue, global::Epsitec.Data.Platform.SwissPostZipType? newValue);
 		partial void OnSwissCantonCodeChanging(string oldValue, string newValue);
 		partial void OnSwissCantonCodeChanged(string oldValue, string newValue);
+		partial void OnSwissZipCodeAddOnChanging(string oldValue, string newValue);
+		partial void OnSwissZipCodeAddOnChanged(string oldValue, string newValue);
 		partial void OnZipCodeChanging(string oldValue, string newValue);
 		partial void OnZipCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
@@ -3435,6 +3461,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnCountryChanging(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
 		
+		partial void GetSwissZipCodeAddOn(ref string value);
+		partial void SetSwissZipCodeAddOn(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
