@@ -14,8 +14,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderGroupEntity> wall)
 		{
 #if ENABLE_GROUPS
-			wall.AddBrick ()
-				.EnableAction (2);
+			if (this.Entity.CanBeEdited ())
+			{
+				wall.AddBrick ()
+					.EnableAction (2);
+			}
+			else
+			{
+				wall.AddBrick ();
+			}
 #else
 			wall.AddBrick ();
 #endif
