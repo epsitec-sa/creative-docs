@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.ComptaNG.Common.RecordAccessor
 	/// Cette classe fait l'interface entre les données brutes ToClientData et ToServerData,
 	/// pour y accéder d'une façon agréable.
 	/// Elle permet d'accéder aux données à travers les classes AbstractRecord, ce
-	/// qui n'est pas forcément utile ni nécessaire (pas implémenté, à discuter).
+	/// qui n'est pas forcément utile ni nécessaire (implémenté partiellement, à discuter).
 	/// </summary>
 	public abstract class AbstractAccessor
 	{
