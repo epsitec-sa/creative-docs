@@ -87,6 +87,15 @@ namespace Epsitec.Cresus.ComptaNG.Common.RecordAccessor
 		}
 
 
+		public virtual void TravellingToRecord()
+		{
+		}
+
+		public virtual void RecordToTravelling()
+		{
+		}
+
+
 		private readonly TravellingRecord travellingRecord;
 	}
 }

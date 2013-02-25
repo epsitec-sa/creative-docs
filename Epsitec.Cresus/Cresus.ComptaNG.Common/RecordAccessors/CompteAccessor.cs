@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Epsitec.Cresus.ComptaNG.Common.RequestData;
 using Epsitec.Common.Types;
+using Epsitec.Cresus.ComptaNG.Common.Records;
 
 namespace Epsitec.Cresus.ComptaNG.Common.RecordAccessor
 {
@@ -37,5 +38,38 @@ namespace Epsitec.Cresus.ComptaNG.Common.RecordAccessor
 			}
 		}
 
+
+		public Compte Compte
+		{
+			get
+			{
+				if (this.compte == null)
+				{
+					this.compte = new Compte ();
+					this.TravellingToRecord ();
+				}
+
+				return this.compte;
+			}
+		}
+
+		public override void TravellingToRecord()
+		{
+			this.compte.Numéro      = this.GetFormattedTextField (FieldType.Numéro);
+			this.compte.Titre       = this.GetFormattedTextField (FieldType.Titre);
+			this.compte.Commentaire = this.GetFormattedTextField (FieldType.Commentaire);
+			// etc.
+		}
+
+		public override void RecordToTravelling()
+		{
+			this.SetFormattedTextField (FieldType.Numéro,      this.compte.Numéro);
+			this.SetFormattedTextField (FieldType.Titre,       this.compte.Titre);
+			this.SetFormattedTextField (FieldType.Commentaire, this.compte.Commentaire);
+			// etc.
+		}
+
+
+		private Compte compte;
 	}
 }
