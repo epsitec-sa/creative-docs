@@ -21,7 +21,7 @@ namespace Aider.Tests.Vs
 		{
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (this.GroupDefinitionFile).ToList ();
 
-			Assert.AreEqual (656, groupDefinitions.Count);
+			Assert.AreEqual (657, groupDefinitions.Count);
 
 			var g1 = new EervGroupDefinition ("0100000000", "Paramètres transversaux", false, 0)
 			{
@@ -51,7 +51,7 @@ namespace Aider.Tests.Vs
 			{
 				Parent = new EervGroupDefinition ("0604010200", null, false, 0),
 			};
-			this.CheckForEquality (g5, groupDefinitions[590]);
+			this.CheckForEquality (g5, groupDefinitions[591]);
 		}
 
 

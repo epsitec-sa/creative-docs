@@ -1225,7 +1225,7 @@ namespace Epsitec.Aider.Data.Eerv
 				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
 				.ToList ();
 
-			var importationGroup = EervParishDataImporter.FindOrCreateImportationGroup (businessContext, parishId);
+			var importationGroup = EervParishDataImporter.FindImportationGroup (businessContext, parishId);
 
 			foreach (var aiderPerson in aiderPersons)
 			{
@@ -1240,21 +1240,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity FindOrCreateImportationGroup(BusinessContext businessContext, EervId parishId)
+		private static AiderGroupEntity FindImportationGroup(BusinessContext businessContext, EervId parishId)
 		{
 			var parishGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, parishId);
-			var name = "Personnes importées";
 
-			var importationGroup = parishGroup
-				.Subgroups
-				.FirstOrDefault (g => g.Name == name);
-
-			if (importationGroup == null)
-			{
-				importationGroup = parishGroup.CreateSubgroup (businessContext, name);
-			}
-
-			return importationGroup;
+			return parishGroup.Subgroups.Single (g => g.Name == "Personnes importées");
 		}
 
 
