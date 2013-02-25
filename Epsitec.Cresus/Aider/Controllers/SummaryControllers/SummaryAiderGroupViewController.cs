@@ -52,7 +52,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.Attribute (BrickMode.SpecialController0)
-					.EnableAction (3);
+					.EnableAction (3)
+					.EnableAction (4);
 			}
 
 			wall.AddBrick (x => x.Comment)
