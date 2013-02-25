@@ -86,7 +86,7 @@ namespace Epsitec.Aider.Tests
 
 				if (personCount % 1000 == 0)
 				{
-					System.Diagnostics.Debug.WriteLine ("{0} personnes analysées", personCount);
+					System.Diagnostics.Debug.WriteLine ("{0} familles analysées", personCount);
 				}
 			}
 			
