@@ -43,6 +43,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Aucun groupe sélectionné");
 			}
 
+			if (!group.CanHaveMembers ())
+			{
+				throw new BusinessRuleException ("Ce groupe ne peut pas avoir de membres");
+			}
+
 			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, this.Entity, group, startDate, comment);
 		}
 

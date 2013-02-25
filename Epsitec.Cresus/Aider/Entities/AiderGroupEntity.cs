@@ -175,6 +175,14 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public bool CanHaveMembers()
+		{
+			var definition = this.GroupDef;
+
+			return definition.IsNull () || definition.MembersAllowed;
+		}
+
+
 		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
 		{
 			value = this.GetSubgroups ().AsReadOnlyCollection ();

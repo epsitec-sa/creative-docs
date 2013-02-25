@@ -5,13 +5,15 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 
+using System;
+
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.Entities
 {
@@ -41,6 +43,11 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate)
 		{
+			if (!group.CanHaveMembers ())
+			{
+				throw new InvalidOperationException ("This group cannot have members.");
+			}
+
 			var participation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
 			participation.Person = person;

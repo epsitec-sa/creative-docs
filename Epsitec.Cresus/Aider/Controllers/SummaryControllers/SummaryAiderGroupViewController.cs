@@ -45,12 +45,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 #endif
 			}
 
-			wall.AddBrick ()
-				.Icon ("Data.AiderGroup.People")
-				.Title (p => p.GetParticipantsTitle ())
-				.Text (p => p.GetParticipantsSummary ())
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.Attribute (BrickMode.SpecialController0);
+			if (this.Entity.CanHaveMembers ())
+			{
+				wall.AddBrick ()
+					.Icon ("Data.AiderGroup.People")
+					.Title (p => p.GetParticipantsTitle ())
+					.Text (p => p.GetParticipantsSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.Attribute (BrickMode.SpecialController0);
+			}
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
