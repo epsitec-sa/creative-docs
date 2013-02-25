@@ -1,10 +1,10 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Entities;
+
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
-
-using Epsitec.Aider.Entities;
 
 using System.Collections.Generic;
 
