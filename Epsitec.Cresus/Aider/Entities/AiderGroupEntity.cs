@@ -586,6 +586,19 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void ImportMembers(BusinessContext businessContext, AiderGroupEntity source, Date? startDate, FormattedText comment)
+		{
+			var participations = source.FindParticipations (businessContext);
+
+			foreach (var participation in participations)
+			{
+				var person = participation.Person;
+
+				AiderGroupParticipantEntity.StartParticipation (businessContext, person, this, startDate, comment);
+			}
+		}
+
+
 		private IList<AiderGroupEntity> subgroups;
 
 
