@@ -41,9 +41,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var group = this.Entity;
 			var subgroup = this.AdditionalEntity;
 
-			if (subgroup.GroupDef.IsNotNull ())
+			if (!subgroup.CanBeEdited ())
 			{
-				var message = "Ce groupe ne peut pas être détruit puisqu'il correspond à une définition";
+				var message = "Ce groupe ne peut pas être détruit.";
 
 				throw new BusinessRuleException (message);
 			}

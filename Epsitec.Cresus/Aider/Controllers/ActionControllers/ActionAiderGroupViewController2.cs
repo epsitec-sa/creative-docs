@@ -33,9 +33,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var group = this.Entity;
 
-			if (group.GroupDef.IsNotNull ())
+			if (!group.CanBeEdited ())
 			{
-				var message = "Ce groupe ne peut pas être déplacé puisqu'il correspond à une définition.";
+				var message = "Ce groupe ne peut pas être déplacé.";
 
 				throw new BusinessRuleException (message);
 			}

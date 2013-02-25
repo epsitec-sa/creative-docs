@@ -185,6 +185,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public bool CanBeEdited()
+		{
+			return this.GroupDef.IsNull ();
+		}
+
+
 		public bool CanHaveMembers()
 		{
 			var definition = this.GroupDef;
