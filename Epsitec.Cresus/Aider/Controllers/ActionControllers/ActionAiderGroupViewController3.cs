@@ -1,5 +1,4 @@
 ﻿using Epsitec.Aider.Controllers.SpecialFieldControllers;
-using Epsitec.Aider.Data;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
