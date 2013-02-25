@@ -23,13 +23,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (this.Entity.CanHaveSubgroups ())
 			{
 #if ENABLE_GROUPS
-				wall.AddBrick (x => x.Subgroups)
+				var bricks = wall.AddBrick (x => x.Subgroups)
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.Attribute (BrickMode.AutoGroup)
 					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.EnableAction (0)
-					.EnableAction (1)
+					.Attribute (BrickMode.HideRemoveButton);
+
+				if (this.Entity.CanSubgroupsBeEdited ())
+				{
+					bricks = bricks
+						.EnableAction (0)
+						.EnableAction (1);
+				}
+
+				bricks = bricks	
 					.Template ()
 						.Title ("Sous groupes")
 					.End ();

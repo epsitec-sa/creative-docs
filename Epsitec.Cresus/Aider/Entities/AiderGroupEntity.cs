@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Data;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 
@@ -172,6 +173,15 @@ namespace Epsitec.Aider.Entities
 
 			return this.GroupLevel < AiderGroupIds.MaxGroupLevel
 				&& (definition.IsNull () || definition.SubgroupsAllowed);
+		}
+
+
+		public bool CanSubgroupsBeEdited()
+		{
+			var definition = this.GroupDef;
+
+			return this.CanHaveSubgroups ()
+				&& (definition.IsNull () || definition.Mutability == Mutability.Customizable);
 		}
 
 
