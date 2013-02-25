@@ -42,9 +42,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGroupDefinitions(BusinessContext businessContext, EervMainData eervData)
 		{
-			var topLevelGroups = eervData
-				.GroupDefinitions
-				.Where (g => EervMainDataImporter.IsTopLevelGroupDefinition (g));
+			var topLevelGroups = EervMainDataImporter.GetTopLevelGroupDefinitions (eervData);
 
 			foreach (var groupDefinition in topLevelGroups)
 			{
@@ -52,6 +50,15 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+		}
+
+
+		private static IEnumerable<EervGroupDefinition> GetTopLevelGroupDefinitions(EervMainData eervData)
+		{
+			return eervData
+				.GroupDefinitions
+				.Where (g => EervMainDataImporter.IsTopLevelGroupDefinition (g))
+				.Where (g => !EervMainDataImporter.SkipGroupDefinition (g));
 		}
 
 
@@ -70,6 +77,15 @@ namespace Epsitec.Aider.Data.Eerv
 				default:
 					return false;
 			}
+		}
+
+
+		private static bool SkipGroupDefinition(EervGroupDefinition groupDefinition)
+		{
+			// Pierre asked me not to import the Staff groups, after a discussion with Jean-Michel
+			// Sordet from the EERV. So we skip these group definitions here.
+
+			return groupDefinition.GroupClassification == GroupClassification.Staff;
 		}
 
 
@@ -129,11 +145,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGlobalGroups(BusinessContext businessContext, EervMainData eervData)
 		{
-			var rootEervGroupDefinitions = eervData
-				.GroupDefinitions
+			var globalEervGroupDefinitions = EervMainDataImporter
+				.GetTopLevelGroupDefinitions (eervData)
 				.Where (g => EervMainDataImporter.IsGlobalGroup (g));
 
-			foreach (var eervGroupDefinition in rootEervGroupDefinitions)
+			foreach (var eervGroupDefinition in globalEervGroupDefinitions)
 			{
 				EervMainDataImporter.ImportGlobalGroup (businessContext, eervGroupDefinition);
 			}
@@ -167,8 +183,7 @@ namespace Epsitec.Aider.Data.Eerv
 			// within special groups with special rules. We don't instantiate parish and region
 			// groups because they are template group definitions that are instantiated later on.
 
-			return EervMainDataImporter.IsTopLevelGroupDefinition (groupDefinition)
-				&& groupDefinition.GroupClassification != GroupClassification.Function
+			return groupDefinition.GroupClassification != GroupClassification.Function
 				&& groupDefinition.GroupClassification != GroupClassification.Parish
 				&& groupDefinition.GroupClassification != GroupClassification.Region;
 		}
