@@ -37,18 +37,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 
 		private void AddBrickWithoutDefinition(BrickWall<AiderGroupEntity> wall)
 		{
-#if ENABLE_GROUPS
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Name)
 				.End ();
-#else
-			wall.AddBrick ()
-				.Input ()
-					.Field (x => x.Name)
-						.ReadOnly ()
-				.End ();
-#endif
 		}
 
 	}

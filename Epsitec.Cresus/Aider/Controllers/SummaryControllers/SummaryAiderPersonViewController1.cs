@@ -18,7 +18,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
-#if ENABLE_GROUPS
 			wall.AddBrick (p => p.Groups)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
@@ -28,15 +27,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Template ()
 					.Text (g => g.GetSummaryWithHierarchicalGroupName ())
 				.End ();
-#else
-			wall.AddBrick (p => p.Groups)
-				.Attribute (BrickMode.HideAddButton)
-				.Attribute (BrickMode.HideRemoveButton)
-				.Attribute (BrickMode.AutoGroup)
-				.Template ()
-					.Text (g => g.GetSummaryWithHierarchicalGroupName ())
-				.End ();
-#endif
 		}
 	}
 }

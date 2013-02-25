@@ -13,8 +13,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderGroupParticipantEntity> wall)
 		{
-
-#if ENABLE_GROUPS
 			wall.AddBrick ()
 				.Input ()
 					.HorizontalGroup ()
@@ -30,24 +28,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Comment.Text)
 				.End ();
-#else
-			wall.AddBrick ()
-				.Input ()
-					.HorizontalGroup ()
-						.Title ("Date d'entrée et de sortie")
-						.Field (x => x.StartDate)
-							.ReadOnly ()
-						.Field (x => x.EndDate)
-							.ReadOnly ()
-					.End ()
-					.Field (x => x.Group)
-						.ReadOnly ()
-					.Field (x => x.Person)
-						.ReadOnly ()
-					.Field (x => x.Comment.Text)
-						.ReadOnly ()
-				.End ();
-#endif
 		}
 	}
 }
