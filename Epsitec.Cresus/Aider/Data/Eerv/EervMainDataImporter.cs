@@ -83,7 +83,7 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderGroupDef.MembersAllowed = groupDefinition.MembersAllowed;
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
 			aiderGroupDef.Classification = groupDefinition.GroupClassification;
-			aiderGroupDef.Mutability = Mutability.SystemDefined;
+			aiderGroupDef.Mutability = EervMainDataImporter.GetMutability (groupDefinition);
 
 			var children = new List<AiderGroupDefEntity> ();
 
@@ -103,6 +103,18 @@ namespace Epsitec.Aider.Data.Eerv
 			groupDefinition.EntityCache = aiderGroupDef;
 
 			return aiderGroupDef;
+		}
+
+
+		private static Mutability GetMutability(EervGroupDefinition groupDefinition)
+		{
+			var customizable = groupDefinition
+				.Children
+				.Any (gd => EervMainDataImporter.IsGroupDefinitionToDiscard (gd));
+
+			return customizable
+				? Mutability.Customizable
+				: Mutability.SystemDefined;
 		}
 
 
