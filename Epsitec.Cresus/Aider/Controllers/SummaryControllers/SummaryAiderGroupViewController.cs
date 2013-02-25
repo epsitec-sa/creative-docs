@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.EnableAction (1);
 				}
 
-				bricks = bricks	
+				bricks = bricks
 					.Template ()
 						.Title ("Sous groupes")
 					.End ();
