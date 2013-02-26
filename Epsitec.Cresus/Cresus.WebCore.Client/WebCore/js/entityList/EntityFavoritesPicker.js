@@ -116,18 +116,6 @@ function() {
         });
       },
 
-      showSet: function(viewId, entityId, databaseDefinition, callback) {
-        this.show(callback, {
-          entityListTypeName: 'Epsitec.SetEntityList',
-          viewId: viewId,
-          entityId: entityId,
-          columnDefinitions: databaseDefinition.columns,
-          sorterDefinitions: databaseDefinition.sorters,
-          multiSelect: true,
-          onSelectionChange: null
-        });
-      },
-
       show: function(callback, listOptions) {
         var entityListPicker = Ext.create('Epsitec.EntityFavoritesPicker', {
           list: listOptions,
