@@ -200,6 +200,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType UserRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 198));
 				//	designer:cap/LVA86
 				public static readonly Epsitec.Common.Types.EnumType ValidationState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 200));
+				//	designer:cap/LVA6G
+				public static readonly Epsitec.Common.Types.EnumType WarningTarget = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 518));
 				//	designer:cap/LVA2C
 				public static readonly Epsitec.Common.Types.EnumType WarningType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 386));
 			}
@@ -227,14 +229,12 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderCountry = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 171));
 			//	designer:cap/LVA28
 			public static readonly Epsitec.Common.Types.StructuredType AiderData = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 258));
-			//	designer:cap/LVAS7
-			public static readonly Epsitec.Common.Types.StructuredType AiderDataManager = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 252));
+			//	designer:cap/LVATF
+			public static readonly Epsitec.Common.Types.StructuredType AiderDataManagers = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 509));
 			//	designer:cap/LVA93
 			public static readonly Epsitec.Common.Types.StructuredType AiderEvent = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 105));
 			//	designer:cap/LVAA3
 			public static readonly Epsitec.Common.Types.StructuredType AiderEventParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 106));
-			//	designer:cap/LVA7A
-			public static readonly Epsitec.Common.Types.StructuredType AiderFunctionDef = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 327));
 			//	designer:cap/LVA54
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 133));
 			//	designer:cap/LVA2A
@@ -281,8 +281,6 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType IComment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 265));
 			//	designer:cap/LVAM3
 			public static readonly Epsitec.Common.Types.StructuredType IDateRange = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 118));
-			//	designer:cap/LVAQ7
-			public static readonly Epsitec.Common.Types.StructuredType IManagedItem = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 250));
 			//	designer:cap/LVA18
 			public static readonly Epsitec.Common.Types.StructuredType SoftwareMutationLogEntry = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 257));
 			//	designer:cap/LVAV7
@@ -1253,6 +1251,42 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class WarningTarget
+				{
+					//	designer:cap/LVA7G
+					public static global::Epsitec.Common.Types.Caption Generic
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 519));
+						}
+					}
+					//	designer:cap/LVAAG
+					public static global::Epsitec.Common.Types.Caption Group
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 522));
+						}
+					}
+					//	designer:cap/LVA9G
+					public static global::Epsitec.Common.Types.Caption LegalPerson
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 521));
+						}
+					}
+					//	designer:cap/LVA8G
+					public static global::Epsitec.Common.Types.Caption Person
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 520));
+						}
+					}
+				}
+				
 				public static class WarningType
 				{
 					//	designer:cap/LVA4C
@@ -1409,15 +1443,21 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid MimeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 279);
 			}
 			
-			public static class AiderDataManager
+			public static class AiderDataManagers
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderDataManager.User, null);
+					global::System.Object.Equals (AiderDataManagers.DisplayName, null);
 				}
 				
-				//	designer:cap/LVASC
-				public static readonly global::Epsitec.Common.Support.Druid User = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 412);
+				//	designer:cap/LVA4G
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 516);
+				//	designer:cap/LVA2G
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 514);
+				//	designer:cap/LVA3G
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 515);
+				//	designer:cap/LVAUF
+				public static readonly global::Epsitec.Common.Support.Druid Users = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 510);
 			}
 			
 			public static class AiderEvent
@@ -1432,7 +1472,9 @@ namespace Epsitec.Aider
 				//	designer:cap/LVAR3
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 123);
 				//	designer:cap/LVABA
-				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 331);
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 331);
+				//	designer:cap/LVA1G
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 513);
 				//	designer:cap/LVA14
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 129);
 				//	designer:cap/LVA04
@@ -1452,21 +1494,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 108);
 				//	designer:cap/LVAD3
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 109);
-			}
-			
-			public static class AiderFunctionDef
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (AiderFunctionDef.Id, null);
-				}
-				
-				//	designer:cap/LVA6D
-				public static readonly global::Epsitec.Common.Support.Druid Id = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 422);
-				//	designer:cap/LVA8A
-				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 328);
-				//	designer:cap/LVAFA
-				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 335);
 			}
 			
 			public static class AiderGroup
@@ -1499,8 +1526,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVA1C
 				public static readonly global::Epsitec.Common.Support.Druid Classification = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
-				//	designer:cap/LVGA22
-				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 74);
+				//	designer:cap/LVABG
+				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 523);
 				//	designer:cap/LVG822
 				public static readonly global::Epsitec.Common.Support.Druid MembersAllowed = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 72);
 				//	designer:cap/LVA2B
@@ -1717,17 +1744,19 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 132);
 				//	designer:cap/LVA34
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 131);
+				//	designer:cap/LVA0G
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 512);
+				//	designer:cap/LVAVF
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 511);
 			}
 			
 			public static class AiderPlacePerson
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderPlacePerson.Function, null);
+					global::System.Object.Equals (AiderPlacePerson.Person, null);
 				}
 				
-				//	designer:cap/LVAEA
-				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 334);
 				//	designer:cap/LVAS5
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 188);
 				//	designer:cap/LVAR5
@@ -1954,6 +1983,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid HideUntilDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 394);
 				//	designer:cap/LVAKB
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 372);
+				//	designer:cap/LVA5G
+				public static readonly global::Epsitec.Common.Support.Druid WarningTarget = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 517);
 				//	designer:cap/LVA7C
 				public static readonly global::Epsitec.Common.Support.Druid WarningType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 391);
 			}
@@ -1980,19 +2011,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid EndDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 120);
 				//	designer:cap/LVAN3
 				public static readonly global::Epsitec.Common.Support.Druid StartDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 119);
-			}
-			
-			public static class IManagedItem
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (IManagedItem.DataManager, null);
-				}
-				
-				//	designer:cap/LVAT7
-				public static readonly global::Epsitec.Common.Support.Druid DataManager = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 253);
-				//	designer:cap/LVAU7
-				public static readonly global::Epsitec.Common.Support.Druid ValidationState = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 254);
 			}
 			
 			public static class Origin
@@ -2310,10 +2328,9 @@ namespace Epsitec.Aider
 			Fields.AiderContact._Initialize ();
 			Fields.AiderCountry._Initialize ();
 			Fields.AiderData._Initialize ();
-			Fields.AiderDataManager._Initialize ();
+			Fields.AiderDataManagers._Initialize ();
 			Fields.AiderEvent._Initialize ();
 			Fields.AiderEventParticipant._Initialize ();
-			Fields.AiderFunctionDef._Initialize ();
 			Fields.AiderGroup._Initialize ();
 			Fields.AiderGroupDef._Initialize ();
 			Fields.AiderGroupEvent._Initialize ();
@@ -2339,7 +2356,6 @@ namespace Epsitec.Aider
 			Fields.IAiderWarning._Initialize ();
 			Fields.IComment._Initialize ();
 			Fields.IDateRange._Initialize ();
-			Fields.IManagedItem._Initialize ();
 			Fields.Origin._Initialize ();
 			Fields.SoftwareMutationLogEntry._Initialize ();
 			Fields.SoftwareSession._Initialize ();

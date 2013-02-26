@@ -89,6 +89,7 @@
     <Compile Include="Enumerations\ContactType.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
+    <Compile Include="Enumerations\WarningTarget.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
     <Compile Include="Override\AiderUserManager.cs" />
     <Compile Include="Override\AiderUserSession.cs" />
@@ -290,6 +291,8 @@
     <EmbeddedResource Include="Images\Data.AiderContact.icon" />
     <EmbeddedResource Include="Images\Data.AiderPersons.icon" />
     <EmbeddedResource Include="Images\Data.AiderLegalPerson.icon" />
+    <EmbeddedResource Include="Images\Base.AiderDataManagers.icon" />
+    <EmbeddedResource Include="Images\Data.AiderDataManagers.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

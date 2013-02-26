@@ -20,7 +20,6 @@ AiderUser = [LVAHC]
 AiderUserRole = [LVAKC]
 AiderUserScope = [LVACC]
 AiderGroupDef = [LVA2A]
-AiderFunctionDef = [LVA7A]
 
 <meta>
   <T>
@@ -131,16 +130,6 @@ AiderFunctionDef = [LVA7A]
     <t eid="@AiderGroupDef" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupDef:[LVA3A]" title="Nom" canSort="True" canFilter="True">
 	<sort o="Ascending" />
-	<disp m="Visible" />
-      </col>
-    </t>
-    <t eid="@AiderFunctionDef" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderFunctionDef:[LVA8A]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderFunctionDef:[LVAFA]" title="Type" canSort="True" canFilter="True">
-	<sort o="None" />
 	<disp m="Visible" />
       </col>
     </t>

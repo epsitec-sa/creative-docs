@@ -21,7 +21,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAF5]", typeof (Epsitec.Aider.Entities.AiderGroupPlaceEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAQ5]", typeof (Epsitec.Aider.Entities.AiderPlacePersonEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAR6]", typeof (Epsitec.Aider.Entities.AiderLegalPersonEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVAS7]", typeof (Epsitec.Aider.Entities.AiderDataManagerEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAV7]", typeof (Epsitec.Aider.Entities.SoftwareSessionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA18]", typeof (Epsitec.Aider.Entities.SoftwareMutationLogEntryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA28]", typeof (Epsitec.Aider.Entities.AiderDataEntity))]
@@ -29,12 +28,12 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA78]", typeof (Epsitec.Aider.Entities.AiderCommentEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAL8]", typeof (Epsitec.Aider.Entities.AiderPersonDataEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA2A]", typeof (Epsitec.Aider.Entities.AiderGroupDefEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7A]", typeof (Epsitec.Aider.Entities.AiderFunctionDefEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVALB]", typeof (Epsitec.Aider.Entities.AiderPersonWarningEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVACC]", typeof (Epsitec.Aider.Entities.AiderUserScopeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAHC]", typeof (Epsitec.Aider.Entities.AiderUserEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAKC]", typeof (Epsitec.Aider.Entities.AiderUserRoleEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVARD]", typeof (Epsitec.Aider.Entities.AiderContactEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVATF]", typeof (Epsitec.Aider.Entities.AiderDataManagersEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -537,7 +536,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderPerson</c> entity.
 	///	designer:cap/LVAF
 	///	</summary>
-	public partial class AiderPersonEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderPersonEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -554,40 +553,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVAF/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVAF/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -1409,7 +1374,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderHousehold</c> entity.
 	///	designer:cap/LVAI2
 	///	</summary>
-	public partial class AiderHouseholdEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderHouseholdEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -1426,40 +1391,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVAI2/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVAI2/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -2439,7 +2370,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderEvent</c> entity.
 	///	designer:cap/LVA93
 	///	</summary>
-	public partial class AiderEventEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderEventEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -2456,40 +2387,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVA93/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVA93/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -2560,11 +2457,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Group</c> field.
+		///	The <c>ParishGroup</c> field.
 		///	designer:fld/LVA93/LVABA
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVABA]")]
-		public global::Epsitec.Aider.Entities.AiderGroupEntity Group
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
 		{
 			get
 			{
@@ -2572,12 +2469,34 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Group;
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
 				if (oldValue != value || !this.IsFieldDefined("[LVABA]"))
 				{
-					this.OnGroupChanging (oldValue, value);
+					this.OnParishGroupChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVABA]", oldValue, value);
-					this.OnGroupChanged (oldValue, value);
+					this.OnParishGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVA93/LVA1G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA1G]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA1G]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVA1G]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVA1G]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
 				}
 			}
 		}
@@ -2610,8 +2529,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.EventType oldValue, global::Epsitec.Aider.Enumerations.EventType newValue);
 		partial void OnPlaceChanging(global::Epsitec.Aider.Entities.AiderPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderPlaceEntity newValue);
 		partial void OnPlaceChanged(global::Epsitec.Aider.Entities.AiderPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderPlaceEntity newValue);
-		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
-		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		
@@ -2843,7 +2764,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderPlace</c> entity.
 	///	designer:cap/LVAV3
 	///	</summary>
-	public partial class AiderPlaceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderPlaceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -2860,40 +2781,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVAV3/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVAV3/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -2963,6 +2850,50 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroup</c> field.
+		///	designer:fld/LVAV3/LVA0G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA0G]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA0G]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVA0G]"))
+				{
+					this.OnParishGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA0G]", oldValue, value);
+					this.OnParishGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVAV3/LVAVF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAVF]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAVF]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVAVF]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVAVF]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -2970,6 +2901,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -3002,7 +2937,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderGroup</c> entity.
 	///	designer:cap/LVA54
 	///	</summary>
-	public partial class AiderGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IDateRange, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderGroupEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IDateRange, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -3039,26 +2974,6 @@ namespace Epsitec.Aider.Entities
 				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetStartDate (this, value);
 			}
 		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVA54/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		#endregion
-		#region IDateRange Members
 		///	<summary>
 		///	The <c>EndDate</c> field.
 		///	designer:fld/LVA54/LVAO3
@@ -3073,24 +2988,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVA54/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -3774,28 +3671,6 @@ namespace Epsitec.Aider.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>Function</c> field.
-		///	designer:fld/LVAQ5/LVAEA
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAEA]")]
-		public global::Epsitec.Aider.Entities.AiderFunctionDefEntity Function
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderFunctionDefEntity> ("[LVAEA]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderFunctionDefEntity oldValue = this.Function;
-				if (oldValue != value || !this.IsFieldDefined("[LVAEA]"))
-				{
-					this.OnFunctionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderFunctionDefEntity> ("[LVAEA]", oldValue, value);
-					this.OnFunctionChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Person</c> field.
 		///	designer:fld/LVAQ5/LVAS5
 		///	</summary>
@@ -3840,8 +3715,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		
-		partial void OnFunctionChanging(global::Epsitec.Aider.Entities.AiderFunctionDefEntity oldValue, global::Epsitec.Aider.Entities.AiderFunctionDefEntity newValue);
-		partial void OnFunctionChanged(global::Epsitec.Aider.Entities.AiderFunctionDefEntity oldValue, global::Epsitec.Aider.Entities.AiderFunctionDefEntity newValue);
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPlaceChanging(global::Epsitec.Aider.Entities.AiderPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderPlaceEntity newValue);
@@ -3878,7 +3751,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderLegalPerson</c> entity.
 	///	designer:cap/LVAR6
 	///	</summary>
-	public partial class AiderLegalPersonEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderLegalPersonEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -3895,40 +3768,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVAR6/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVAR6/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -4203,137 +4042,6 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderLegalPersonEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Aider.IManagedItem Interface
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>IManagedItem</c> entity.
-	///	designer:cap/LVAQ7
-	///	</summary>
-	public interface IManagedItem
-	{
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVAQ7/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get;
-			set;
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVAQ7/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get;
-			set;
-		}
-	}
-	public static partial class IManagedItemInterfaceImplementation
-	{
-		public static global::Epsitec.Aider.Entities.AiderDataManagerEntity GetDataManager(global::Epsitec.Aider.Entities.IManagedItem obj)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			return entity.GetField<global::Epsitec.Aider.Entities.AiderDataManagerEntity> ("[LVAT7]");
-		}
-		public static void SetDataManager(global::Epsitec.Aider.Entities.IManagedItem obj, global::Epsitec.Aider.Entities.AiderDataManagerEntity value)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			global::Epsitec.Aider.Entities.AiderDataManagerEntity oldValue = obj.DataManager;
-			if (oldValue != value || !entity.IsFieldDefined("[LVAT7]"))
-			{
-				IManagedItemInterfaceImplementation.OnDataManagerChanging (obj, oldValue, value);
-				entity.SetField<global::Epsitec.Aider.Entities.AiderDataManagerEntity> ("[LVAT7]", oldValue, value);
-				IManagedItemInterfaceImplementation.OnDataManagerChanged (obj, oldValue, value);
-			}
-		}
-		static partial void OnDataManagerChanged(global::Epsitec.Aider.Entities.IManagedItem obj, global::Epsitec.Aider.Entities.AiderDataManagerEntity oldValue, global::Epsitec.Aider.Entities.AiderDataManagerEntity newValue);
-		static partial void OnDataManagerChanging(global::Epsitec.Aider.Entities.IManagedItem obj, global::Epsitec.Aider.Entities.AiderDataManagerEntity oldValue, global::Epsitec.Aider.Entities.AiderDataManagerEntity newValue);
-		public static global::Epsitec.Aider.Enumerations.ValidationState GetValidationState(global::Epsitec.Aider.Entities.IManagedItem obj)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			return entity.GetField<global::Epsitec.Aider.Enumerations.ValidationState> ("[LVAU7]");
-		}
-		public static void SetValidationState(global::Epsitec.Aider.Entities.IManagedItem obj, global::Epsitec.Aider.Enumerations.ValidationState value)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			global::Epsitec.Aider.Enumerations.ValidationState oldValue = obj.ValidationState;
-			if (oldValue != value || !entity.IsFieldDefined("[LVAU7]"))
-			{
-				IManagedItemInterfaceImplementation.OnValidationStateChanging (obj, oldValue, value);
-				entity.SetField<global::Epsitec.Aider.Enumerations.ValidationState> ("[LVAU7]", oldValue, value);
-				IManagedItemInterfaceImplementation.OnValidationStateChanged (obj, oldValue, value);
-			}
-		}
-		static partial void OnValidationStateChanged(global::Epsitec.Aider.Entities.IManagedItem obj, global::Epsitec.Aider.Enumerations.ValidationState oldValue, global::Epsitec.Aider.Enumerations.ValidationState newValue);
-		static partial void OnValidationStateChanging(global::Epsitec.Aider.Entities.IManagedItem obj, global::Epsitec.Aider.Enumerations.ValidationState oldValue, global::Epsitec.Aider.Enumerations.ValidationState newValue);
-	}
-}
-#endregion
-
-#region Epsitec.Aider.AiderDataManager Entity
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>AiderDataManager</c> entity.
-	///	designer:cap/LVAS7
-	///	</summary>
-	public partial class AiderDataManagerEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
-	{
-		///	<summary>
-		///	The <c>User</c> field.
-		///	designer:fld/LVAS7/LVASC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVASC]")]
-		public global::Epsitec.Aider.Entities.AiderUserEntity User
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVASC]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.User;
-				if (oldValue != value || !this.IsFieldDefined("[LVASC]"))
-				{
-					this.OnUserChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVASC]", oldValue, value);
-					this.OnUserChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnUserChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		partial void OnUserChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Aider.Entities.AiderDataManagerEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Aider.Entities.AiderDataManagerEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 252);	// [LVAS7]
-		public static readonly string EntityStructuredTypeKey = "[LVAS7]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderDataManagerEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
@@ -4979,7 +4687,7 @@ namespace Epsitec.Aider.Entities
 	///	The <c>AiderGroupDef</c> entity.
 	///	designer:cap/LVA2A
 	///	</summary>
-	public partial class AiderGroupDefEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
+	public partial class AiderGroupDefEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IComment
 	{
 		#region IComment Members
 		///	<summary>
@@ -4996,40 +4704,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVA2A/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVA2A/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
 			}
 		}
 		#endregion
@@ -5201,22 +4875,22 @@ namespace Epsitec.Aider.Entities
 		}
 		///	<summary>
 		///	The <c>Function</c> field.
-		///	designer:fld/LVA2A/LVGA22
+		///	designer:fld/LVA2A/LVABG
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGA22]")]
+		[global::Epsitec.Common.Support.EntityField ("[LVABG]")]
 		public global::Epsitec.Aider.Entities.AiderGroupDefEntity Function
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVGA22]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVABG]");
 			}
 			set
 			{
 				global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue = this.Function;
-				if (oldValue != value || !this.IsFieldDefined("[LVGA22]"))
+				if (oldValue != value || !this.IsFieldDefined("[LVABG]"))
 				{
 					this.OnFunctionChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVGA22]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVABG]", oldValue, value);
 					this.OnFunctionChanged (oldValue, value);
 				}
 			}
@@ -5253,165 +4927,6 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderGroupDefEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
-			{
-			}
-		}
-		#endregion
-	}
-}
-#endregion
-
-#region Epsitec.Aider.AiderFunctionDef Entity
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>AiderFunctionDef</c> entity.
-	///	designer:cap/LVA7A
-	///	</summary>
-	public partial class AiderFunctionDefEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IManagedItem, global::Epsitec.Aider.Entities.IComment
-	{
-		#region IComment Members
-		///	<summary>
-		///	The <c>Comment</c> field.
-		///	designer:fld/LVA7A/LVAA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAA8]")]
-		public global::Epsitec.Aider.Entities.AiderCommentEntity Comment
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.GetComment (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.ICommentInterfaceImplementation.SetComment (this, value);
-			}
-		}
-		#endregion
-		#region IManagedItem Members
-		///	<summary>
-		///	The <c>DataManager</c> field.
-		///	designer:fld/LVA7A/LVAT7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT7]")]
-		public global::Epsitec.Aider.Entities.AiderDataManagerEntity DataManager
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetDataManager (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetDataManager (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVA7A/LVAU7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU7]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.GetValidationState (this);
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.IManagedItemInterfaceImplementation.SetValidationState (this, value);
-			}
-		}
-		#endregion
-		///	<summary>
-		///	The <c>Id</c> field.
-		///	designer:fld/LVA7A/LVA6D
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA6D]")]
-		public string Id
-		{
-			get
-			{
-				return this.GetField<string> ("[LVA6D]");
-			}
-			set
-			{
-				string oldValue = this.Id;
-				if (oldValue != value || !this.IsFieldDefined("[LVA6D]"))
-				{
-					this.OnIdChanging (oldValue, value);
-					this.SetField<string> ("[LVA6D]", oldValue, value);
-					this.OnIdChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Type</c> field.
-		///	designer:fld/LVA7A/LVAFA
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAFA]")]
-		public global::Epsitec.Aider.Enumerations.FunctionType Type
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.FunctionType> ("[LVAFA]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.FunctionType oldValue = this.Type;
-				if (oldValue != value || !this.IsFieldDefined("[LVAFA]"))
-				{
-					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.FunctionType> ("[LVAFA]", oldValue, value);
-					this.OnTypeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/LVA7A/LVA8A
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA8A]")]
-		public string Name
-		{
-			get
-			{
-				return this.GetField<string> ("[LVA8A]");
-			}
-			set
-			{
-				string oldValue = this.Name;
-				if (oldValue != value || !this.IsFieldDefined("[LVA8A]"))
-				{
-					this.OnNameChanging (oldValue, value);
-					this.SetField<string> ("[LVA8A]", oldValue, value);
-					this.OnNameChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnIdChanging(string oldValue, string newValue);
-		partial void OnIdChanged(string oldValue, string newValue);
-		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.FunctionType oldValue, global::Epsitec.Aider.Enumerations.FunctionType newValue);
-		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.FunctionType oldValue, global::Epsitec.Aider.Enumerations.FunctionType newValue);
-		partial void OnNameChanging(string oldValue, string newValue);
-		partial void OnNameChanged(string oldValue, string newValue);
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Aider.Entities.AiderFunctionDefEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Aider.Entities.AiderFunctionDefEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 327);	// [LVA7A]
-		public static readonly string EntityStructuredTypeKey = "[LVA7A]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderFunctionDefEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
 			{
@@ -5467,6 +4982,16 @@ namespace Epsitec.Aider.Entities
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA7C]")]
 		global::Epsitec.Aider.Enumerations.WarningType WarningType
+		{
+			get;
+			set;
+		}
+		///	<summary>
+		///	The <c>WarningTarget</c> field.
+		///	designer:fld/LVAEB/LVA5G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5G]")]
+		global::Epsitec.Aider.Enumerations.WarningTarget WarningTarget
 		{
 			get;
 			set;
@@ -5546,6 +5071,24 @@ namespace Epsitec.Aider.Entities
 		}
 		static partial void OnWarningTypeChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType oldValue, global::Epsitec.Aider.Enumerations.WarningType newValue);
 		static partial void OnWarningTypeChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType oldValue, global::Epsitec.Aider.Enumerations.WarningType newValue);
+		public static global::Epsitec.Aider.Enumerations.WarningTarget GetWarningTarget(global::Epsitec.Aider.Entities.IAiderWarning obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Aider.Enumerations.WarningTarget> ("[LVA5G]");
+		}
+		public static void SetWarningTarget(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningTarget value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Aider.Enumerations.WarningTarget oldValue = obj.WarningTarget;
+			if (oldValue != value || !entity.IsFieldDefined("[LVA5G]"))
+			{
+				IAiderWarningInterfaceImplementation.OnWarningTargetChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Aider.Enumerations.WarningTarget> ("[LVA5G]", oldValue, value);
+				IAiderWarningInterfaceImplementation.OnWarningTargetChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWarningTargetChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningTarget oldValue, global::Epsitec.Aider.Enumerations.WarningTarget newValue);
+		static partial void OnWarningTargetChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningTarget oldValue, global::Epsitec.Aider.Enumerations.WarningTarget newValue);
 	}
 }
 #endregion
@@ -5656,6 +5199,22 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetWarningType (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>WarningTarget</c> field.
+		///	designer:fld/LVALB/LVA5G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5G]")]
+		public global::Epsitec.Aider.Enumerations.WarningTarget WarningTarget
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetWarningTarget (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetWarningTarget (this, value);
 			}
 		}
 		#endregion
@@ -6379,6 +5938,125 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderContactEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderDataManagers Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderDataManagers</c> entity.
+	///	designer:cap/LVATF
+	///	</summary>
+	public partial class AiderDataManagersEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>DisplayName</c> field.
+		///	designer:fld/LVATF/LVA4G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA4G]")]
+		public string DisplayName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA4G]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName;
+				if (oldValue != value || !this.IsFieldDefined("[LVA4G]"))
+				{
+					this.OnDisplayNameChanging (oldValue, value);
+					this.SetField<string> ("[LVA4G]", oldValue, value);
+					this.OnDisplayNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Users</c> field.
+		///	designer:fld/LVATF/LVAUF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAUF]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderUserEntity> Users
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVAUF]");
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroup</c> field.
+		///	designer:fld/LVATF/LVA2G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA2G]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA2G]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVA2G]"))
+				{
+					this.OnParishGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVA2G]", oldValue, value);
+					this.OnParishGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVATF/LVA3G
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3G]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA3G]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVA3G]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVA3G]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDisplayNameChanging(string oldValue, string newValue);
+		partial void OnDisplayNameChanged(string oldValue, string newValue);
+		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderDataManagersEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderDataManagersEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 509);	// [LVATF]
+		public static readonly string EntityStructuredTypeKey = "[LVATF]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderDataManagersEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
