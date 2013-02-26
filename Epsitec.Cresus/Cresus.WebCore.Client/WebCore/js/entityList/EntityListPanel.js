@@ -5,7 +5,7 @@ Ext.require([
   'Epsitec.cresus.webcore.entityList.SetEditableEntityList',
   'Epsitec.cresus.webcore.tools.Tools'
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityListPanel', {
     extend: 'Ext.panel.Panel',
     alternateClassName: ['Epsitec.EntityListPanel'],
@@ -20,7 +20,7 @@ function () {
 
     /* Constructor */
 
-    constructor: function (options) {
+    constructor: function(options) {
       this.callParent([options.container]);
       this.setupEntityList(options.list);
       return this;
@@ -28,7 +28,7 @@ function () {
 
     /* Additional methods */
 
-    setupEntityList: function (options) {
+    setupEntityList: function(options) {
       if (Ext.isDefined(options.databaseName)) {
         this.setupDatabaseEntityList(options);
       }
@@ -37,18 +37,18 @@ function () {
       }
     },
 
-    setupDatabaseEntityList: function (options) {
+    setupDatabaseEntityList: function(options) {
       this.setLoading(true);
       Ext.Ajax.request({
         url: 'proxy/database/definition/' + options.databaseName,
-        callback: function (requestOptions, success, response) {
+        callback: function(requestOptions, success, response) {
           this.setupDatabaseEntityListCallback(options, success, response);
         },
         scope: this
       });
     },
 
-    setupDatabaseEntityListCallback: function (options, success, response) {
+    setupDatabaseEntityListCallback: function(options, success, response) {
       var json;
 
       this.setLoading(false);
@@ -73,16 +73,16 @@ function () {
       });
     },
 
-    setupSetEntityList: function (options) {
+    setupSetEntityList: function(options) {
       this.createEntityList(options.entityListTypeName, options);
     },
 
-    createEntityList: function (typeName, options) {
+    createEntityList: function(typeName, options) {
       this.entityList = Ext.create(typeName, options);
       this.add(this.entityList);
     },
 
-    getEntityList: function () {
+    getEntityList: function() {
       return this.entityList;
     }
   });

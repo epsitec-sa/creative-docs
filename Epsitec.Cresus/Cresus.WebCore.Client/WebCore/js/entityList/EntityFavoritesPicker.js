@@ -2,7 +2,7 @@ Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
   'Epsitec.cresus.webcore.tools.EntityPicker'
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityFavoritesPicker', {
     extend: 'Epsitec.cresus.webcore.tools.EntityPicker',
     alternateClassName: ['Epsitec.EntityFavoritesPicker'],
@@ -16,15 +16,17 @@ function () {
 
     /* Constructor */
 
-    constructor: function (options) {
+    constructor: function(options) {
       var newOptions,
           list1, list2, callback;
 
-      callback = Epsitec.Callback.create(this.handleEntityListSelectionChange, this);
+      callback = Epsitec.Callback.create(
+          this.handleEntityListSelectionChange, this);
 
-      //  I've no clue why I need to assign the callback manually to both lists; I've
-      //  observed that if I insert the callback before calling Ext.apply above, the
-      //  property 'onselectionChange' will be copied as 'null'. [PA: 2013-02-24]
+      // I've no clue why I need to assign the callback manually to both lists;
+      // I've observed that if I insert the callback before calling Ext.apply
+      // above, the property 'onselectionChange' will be copied as 'null'.
+      // [PA: 2013-02-24]
 
       list1 = {};
       list2 = {};
@@ -79,12 +81,12 @@ function () {
 
     /* Additional methods */
 
-    handleTabChange: function (tabPanel, newCard, oldCard, eOpts) {
+    handleTabChange: function(tabPanel, newCard, oldCard, eOpts) {
       this.activeEntityListPanel = newCard.entityListPanel;
       this.handleEntityListSelectionChange(this.getSelectedItems());
     },
 
-    handleEntityListSelectionChange: function (entityItems) {
+    handleEntityListSelectionChange: function(entityItems) {
       if (entityItems.length == 0) {
         this.disableOkButton();
       } else {
@@ -92,19 +94,19 @@ function () {
       }
     },
 
-    createEntityListPanel: function (options) {
+    createEntityListPanel: function(options) {
       return Ext.create('Epsitec.EntityListPanel', {
         container: {},
         list: options
       });
     },
 
-    getSelectedItems: function () {
+    getSelectedItems: function() {
       return this.activeEntityListPanel.getEntityList().getSelectedItems();
     },
 
     statics: {
-      showDatabase: function (databaseName, favoritesId, multiSelect, callback) {
+      showDatabase: function(databaseName, favoritesId, multiSelect, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.DatabaseEntityList',
           databaseName: databaseName,
@@ -114,7 +116,7 @@ function () {
         });
       },
 
-      showSet: function (viewId, entityId, databaseDefinition, callback) {
+      showSet: function(viewId, entityId, databaseDefinition, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.SetEntityList',
           viewId: viewId,
@@ -126,7 +128,7 @@ function () {
         });
       },
 
-      show: function (callback, listOptions) {
+      show: function(callback, listOptions) {
         var entityListPicker = Ext.create('Epsitec.EntityFavoritesPicker', {
           list: listOptions,
           callback: callback

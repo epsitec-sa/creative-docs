@@ -1,14 +1,14 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityList'
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.entityList.DatabaseEntityList', {
     extend: 'Epsitec.cresus.webcore.entityList.EntityList',
     alternateClassName: ['Epsitec.DatabaseEntityList'],
 
     /* Constructor */
 
-    constructor: function (options) {
+    constructor: function(options) {
       var newOptions;
       if (options.favoritesId) {
         newOptions = {
