@@ -3,8 +3,6 @@
 
 using Epsitec.Aider.Enumerations;
 
-using Epsitec.Common.Support.Extensions;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -38,7 +36,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var records = EervDataReader.ReadGroupDefinitions (inputFile);
 
 			var parents = new Stack<EervGroupDefinition> ();
-			var functions = new Dictionary<string, EervGroupDefinition> ();
+			var functions = new Dictionary<int, EervGroupDefinition> ();
 
 			parents.Push (null);
 
@@ -74,12 +72,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void HandleGroupDefinitionFunctions(Dictionary<string, EervGroupDefinition> functions, Dictionary<GroupDefinitionHeader, string> record, EervGroupDefinition groupDefinition)
+		private static void HandleGroupDefinitionFunctions(Dictionary<int, EervGroupDefinition> functions, Dictionary<GroupDefinitionHeader, string> record, EervGroupDefinition groupDefinition)
 		{
 			if (EervMainDataLoader.IsFunctionDefinition (groupDefinition))
 			{
-				var functionCode = groupDefinition.Id.Substring (4, 2);
-				functions[functionCode] = groupDefinition;
+				var functionId = int.Parse (groupDefinition.Id.Substring (4, 2));
+				functions[functionId] = groupDefinition;
 			}
 			else
 			{
@@ -87,8 +85,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (functionCode != null)
 				{
-					functionCode = ("00" + functionCode).SubstringEnd (2);
-					groupDefinition.FunctionGroup = functions[functionCode];
+					var functionId = int.Parse (functionCode);
+					groupDefinition.FunctionGroup = functions[functionId];
 				}
 			}
 		}
