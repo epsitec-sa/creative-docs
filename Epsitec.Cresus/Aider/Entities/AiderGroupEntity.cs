@@ -315,14 +315,14 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupEntity parent, AiderGroupDefEntity groupDefinition, string name, int level, string path)
+		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupEntity parent, AiderGroupDefEntity groupDefinition, string name, string pathPart)
 		{
+			var level = parent.GroupLevel + 1;
+			var path = parent.Path + pathPart;
+
 			var group = AiderGroupEntity.Create (businessContext, groupDefinition, name, level, path);
 
-			if (parent != null)
-			{
-				parent.AddSubgroupInternal (group);
-			}
+			parent.AddSubgroupInternal (group);
 
 			return group;
 		}

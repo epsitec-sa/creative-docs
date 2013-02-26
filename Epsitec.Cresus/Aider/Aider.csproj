@@ -120,7 +120,6 @@
     <Compile Include="Data\Eerv\EervId.cs" />
     <Compile Include="Data\Eerv\AiderEnumerator.cs" />
     <Compile Include="Data\Eerv\ParishAssigner.cs" />
-    <Compile Include="Data\Eerv\GroupPathInfo.cs" />
     <Compile Include="Data\Eerv\TownChecker.cs" />
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />

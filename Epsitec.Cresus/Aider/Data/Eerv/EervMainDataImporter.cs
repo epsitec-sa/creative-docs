@@ -168,14 +168,8 @@ namespace Epsitec.Aider.Data.Eerv
 			};
 				
 			var aiderGroupDefinition = businessContext.DataContext.GetByExample (example).Single ();
-				
-			aiderGroupDefinition.Instantiate (businessContext, new GroupPathInfo
-			(
-				name: aiderGroupDefinition.Name,
-				template: aiderGroupDefinition.PathTemplate,
-				output: aiderGroupDefinition.PathTemplate,
-				level: 0
-			));
+
+			aiderGroupDefinition.Instantiate (businessContext);
 		}
 
 
@@ -284,24 +278,18 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity CreateRegionGroup(BusinessContext businessContext, AiderGroupDefEntity regionGroupDefinition, int regionCode)
 		{
-			var name     = ParishAssigner.GetRegionGroupName (regionCode);
-			var template = regionGroupDefinition.PathTemplate.SubstringStart (AiderGroupIds.SubgroupLength);
-			var path     = AiderGroupIds.GetRegionId (regionCode);
-			var info     = new GroupPathInfo (name, template, path);
+			var name = ParishAssigner.GetRegionGroupName (regionCode);
+			var code = regionCode;
 
-			return regionGroupDefinition.Instantiate (businessContext, info);
+			return regionGroupDefinition.InstantiateRegion (businessContext, name, code);
 		}
 
 		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, AiderGroupEntity regionGroup, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish, int parishId)
 		{
-			var name     = ParishAssigner.GetParishGroupName (parish.ParishName);
-			var path     = AiderGroupIds.GetRegionId (parish.RegionCode) + AiderGroupIds.GetParishId (parishId);
-			var template = parishGroupDefinition.PathTemplate.SubstringStart (AiderGroupIds.SubgroupLength);
-			var info     = new GroupPathInfo (name, template, path, 1);
+			var name = ParishAssigner.GetParishGroupName (parish.ParishName);
+			var code = parishId;
 
-			var parishGroup = parishGroupDefinition.Instantiate (businessContext, regionGroup, info);
-
-			return parishGroup;
+			return parishGroupDefinition.InstantiateParish (businessContext, regionGroup, name, code);
 		}
 
 

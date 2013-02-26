@@ -1,9 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Data;
 
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -32,42 +31,57 @@ namespace Epsitec.Aider.Entities
 			yield return TextFormatter.FormatText (this.Name);
 		}
 
-		public AiderGroupEntity Instantiate(BusinessContext businessContext, GroupPathInfo info)
+		public AiderGroupEntity Instantiate(BusinessContext businessContext)
 		{
-			return this.Instantiate (businessContext, null, info);
+			var group = AiderGroupEntity.Create (businessContext, this, this.Name, 0, this.PathTemplate);
+
+			this.InstantiateSubgroups (businessContext, group);
+
+			return group;
 		}
 
-		public AiderGroupEntity Instantiate(BusinessContext businessContext, AiderGroupEntity parent, GroupPathInfo info)
+		public AiderGroupEntity InstantiateRegion(BusinessContext businessContext, string name, int code)
 		{
-			var name = info.Name;
-			var level = info.Level;
-			var path = info.MapPath (this);
+			var path = AiderGroupIds.GetRegionId (code);
+			var group = AiderGroupEntity.Create (businessContext, this, name, 0, path);
 
-			var group = AiderGroupEntity.Create (businessContext, parent, this, name, level, path);
+			this.InstantiateSubgroups (businessContext, group);
 
-			foreach (var subGroupDef in this.Subgroups)
+			return group;
+		}
+
+		public AiderGroupEntity InstantiateParish(BusinessContext businessContext, AiderGroupEntity region, string name, int code)
+		{
+			var pathPart = AiderGroupIds.GetParishId (code);
+			var group = AiderGroupEntity.Create (businessContext, region, this, name, pathPart);
+
+			this.InstantiateSubgroups (businessContext, group);
+
+			return group;
+		}
+
+		private void InstantiateSubgroups(BusinessContext businessContext, AiderGroupEntity group)
+		{
+			foreach (var childDefinition in this.Subgroups)
 			{
-				var subInfo = new GroupPathInfo
-				(
-					name: subGroupDef.Name,
-					template: subGroupDef.PathTemplate,
-					output: group.Path + subGroupDef.PathTemplate.SubstringEnd (4),
-					level: info.Level + 1
-				);
-				
-				subGroupDef.Instantiate (businessContext, group, subInfo);
+				this.InstantiateSubgroup (businessContext, group, childDefinition);
 			}
 
 			if (this.Function.IsNotNull ())
 			{
-				foreach (var functionGroupDef in this.Function.Subgroups)
+				foreach (var childDefinition in this.Function.Subgroups)
 				{
-					var functionGroup = group.CreateSubgroup (businessContext, functionGroupDef.Name);
-					functionGroup.GroupDef = functionGroupDef;
+					this.InstantiateSubgroup (businessContext, group, childDefinition);
 				}
 			}
+		}
 
-			return group;
+		private void InstantiateSubgroup(BusinessContext businessContext, AiderGroupEntity group, AiderGroupDefEntity childDefinition)
+		{
+			var childGroup = group.CreateSubgroup (businessContext, childDefinition.Name);
+			childGroup.GroupDef = childDefinition;
+
+			childDefinition.InstantiateSubgroups (businessContext, childGroup);
 		}
 	}
 }
