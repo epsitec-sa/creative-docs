@@ -15,8 +15,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			if (this.Entity.CanBeEdited ())
 			{
-				wall.AddBrick ()
+				var bricks = wall.AddBrick ()
 					.EnableAction (2);
+
+				if (this.Entity.Subgroups.Count == 0)
+				{
+					bricks = bricks
+						.EnableAction (5);
+				}
 			}
 			else
 			{

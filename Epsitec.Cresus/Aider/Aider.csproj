@@ -65,6 +65,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController2.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController4.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController5.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />

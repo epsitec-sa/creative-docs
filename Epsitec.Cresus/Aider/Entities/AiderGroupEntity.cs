@@ -599,6 +599,39 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void Merge(BusinessContext businessContext, AiderGroupEntity other)
+		{
+			if (!other.CanHaveMembers())
+			{
+				throw new InvalidOperationException ("This group cannot have members.");
+			}
+
+			if (!this.CanBeEdited ())
+			{
+				throw new InvalidOperationException ("This groups cannot be merged.");
+			}
+
+			if (this.GetSubgroups ().Count > 0)
+			{
+				throw new InvalidOperationException ("This groups cannot be merged because it has subgroups.");
+			}
+
+			var participations = this.FindParticipations (businessContext);
+
+			foreach (var participation in participations)
+			{
+				participation.Group = other;
+			}
+
+			if (this.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Comment);
+			}
+
+			businessContext.DeleteEntity (this);
+		}
+
+
 		private IList<AiderGroupEntity> subgroups;
 
 
