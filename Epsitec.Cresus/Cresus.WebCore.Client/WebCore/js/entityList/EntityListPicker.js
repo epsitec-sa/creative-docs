@@ -51,7 +51,7 @@ function() {
     },
 
     handleEntityListSelectionChange: function(entityItems) {
-      if (entityItems.length == 0) {
+      if (entityItems.length === 0) {
         this.disableOkButton();
       } else {
         this.enableOkButton();
