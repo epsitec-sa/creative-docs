@@ -87,12 +87,7 @@ namespace Epsitec.Aider.Data.Eerv
 					functions[functionCode] = groupDefinition;
 				}
 			}
-			else if ((id.StartsWith ("02")) ||	//	"Synodal"
-				/**/ (id.StartsWith ("03")) ||	//	"Régional"
-				/**/ (id.StartsWith ("04")) ||	//	"Paroissial"
-				/**/ (id.StartsWith ("05")) ||	//	"Missions communes"
-				/**/ (id.StartsWith ("06")))	//	"Relations extérieures"
-			{
+			else {
 				var functionCode = record[GroupDefinitionHeader.Function];
 
 				if (functionCode != null)
