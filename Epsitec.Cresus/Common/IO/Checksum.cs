@@ -1,7 +1,8 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.IO
 {
@@ -35,9 +36,9 @@ namespace Epsitec.Common.IO
 		public static int ComputeAdler32(byte[] data, int length = 0)
 		{
 			if (length == 0)
-            {
+			{
 				length = data.Length;
-            }
+			}
 			else
 			{
 				length = System.Math.Min (length, data.Length);
@@ -68,6 +69,17 @@ namespace Epsitec.Common.IO
 			}
 
 			byte[] hash = Checksum.sharedMd5.ComputeHash (data);
+			return Ascii85.Encode (hash, outputMarks: false);
+		}
+
+		public static string ComputeMd5Hash(System.IO.Stream stream)
+		{
+			if (Checksum.sharedMd5 == null)
+			{
+				Checksum.sharedMd5 = new MD5CryptoServiceProvider ();
+			}
+
+			byte[] hash = Checksum.sharedMd5.ComputeHash (stream);
 			return Ascii85.Encode (hash, outputMarks: false);
 		}
 		
@@ -154,15 +166,29 @@ namespace Epsitec.Common.IO
 					}
 				}
 			}
-			
+
 			public void UpdateValue(int value)
 			{
 				this.buffer[0] = (byte) (value >> 24);
 				this.buffer[1] = (byte) (value >> 16);
 				this.buffer[2] = (byte) (value >>  8);
 				this.buffer[3] = (byte) (value >>  0);
-				
+
 				this.Update (this.buffer, 0, 4);
+			}
+
+			public void UpdateValue(long value)
+			{
+				this.buffer[0] = (byte) (value >> 56);
+				this.buffer[1] = (byte) (value >> 48);
+				this.buffer[2] = (byte) (value >> 40);
+				this.buffer[3] = (byte) (value >> 32);
+				this.buffer[4] = (byte) (value >> 24);
+				this.buffer[5] = (byte) (value >> 16);
+				this.buffer[6] = (byte) (value >>  8);
+				this.buffer[7] = (byte) (value >>  0);
+
+				this.Update (this.buffer, 0, 8);
 			}
 			
 			public void UpdateValue(short value)
@@ -221,6 +247,7 @@ namespace Epsitec.Common.IO
 		}
 
 		#endregion
+
 
 		[System.ThreadStatic]
 		private static IChecksum sharedCrc32;
