@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Document.PDF
@@ -9,13 +9,15 @@ namespace Epsitec.Common.Document.PDF
 		{
 			this.message = message;
 		}
-		public string Message
+		
+		public override string					Message
 		{
 			get
 			{
 				return this.message;
 			}
 		}
-		private readonly string message;
+		
+		private readonly string					message;
 	}
 }
