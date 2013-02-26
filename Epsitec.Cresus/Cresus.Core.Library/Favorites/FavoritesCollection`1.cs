@@ -17,6 +17,13 @@ namespace Epsitec.Cresus.Core.Favorites
 		{
 		}
 
+
+		public override string GetEntityName()
+		{
+			return typeof (T).FullName;
+		}
+
+
 		public override AbstractEntity GetExample()
 		{
 			return new T ();

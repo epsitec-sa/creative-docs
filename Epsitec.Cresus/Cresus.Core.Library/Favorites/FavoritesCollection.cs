@@ -13,11 +13,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Favorites
 {
+	/// <summary>
+	/// The <c>FavoritesCollection</c> is an abstract class used to represend collection of
+	/// entities, identified by their database keys.
+	/// </summary>
 	public abstract class FavoritesCollection
 	{
 		public FavoritesCollection(IEnumerable<AbstractEntity> collection, Druid databaseId)
 		{
-			this.ids = new List<long> ();
+			var buffer = new List<long> ();
 			this.databaseId = databaseId;
 
 			if (collection.Any ())
@@ -25,7 +29,25 @@ namespace Epsitec.Cresus.Core.Favorites
 				var entity = collection.First ();
 				var context = DataContextPool.GetDataContext (entity);
 
-				this.ids.AddRange (collection.Select (e => context.GetNormalizedEntityKey (e).Value.RowKey.Id.Value));
+				buffer.AddRange (collection.Select (e => context.GetNormalizedEntityKey (e).Value.RowKey.Id.Value));
+			}
+
+			this.ids = buffer.ToArray ();
+
+			//	Compute a strong hash based on the entity name and on the array of ids. This
+			//	will be unique (risk of collision very, very low = zero for our purposes).
+			
+			var source = Epsitec.Common.IO.BitConverter.ToBytes (this.ids).Concat (System.Text.Encoding.UTF8.GetBytes (this.GetEntityName ()));
+			var stream = new Epsitec.Common.IO.ByteStream (this.ids.Length*8, source);
+
+			this.strongHash = Epsitec.Common.IO.Checksum.ComputeMd5Hash (stream);
+		}
+
+		public string StrongHash
+		{
+			get
+			{
+				return this.strongHash;
 			}
 		}
 
@@ -33,7 +55,7 @@ namespace Epsitec.Cresus.Core.Favorites
 		{
 			get
 			{
-				return this.ids.Count;
+				return this.ids.Length;
 			}
 		}
 
@@ -45,6 +67,8 @@ namespace Epsitec.Cresus.Core.Favorites
 			}
 		}
 
+		public abstract string GetEntityName();
+		
 		public abstract AbstractEntity GetExample();
 
 		public abstract Druid GetTypeId();
@@ -68,7 +92,9 @@ namespace Epsitec.Cresus.Core.Favorites
 			return dataContext.GetByRequest (this.GetRequest ());
 		}
 
-		private readonly List<long>				ids;
+		
+		private readonly long[]					ids;
+		private readonly string					strongHash;
 		private readonly Druid					databaseId;
 	}
 }

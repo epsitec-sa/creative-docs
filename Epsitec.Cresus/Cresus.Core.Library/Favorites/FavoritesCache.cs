@@ -9,11 +9,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Favorites
 {
+	/// <summary>
+	/// The <c>FavoritesCache</c> class manages persistent collection of items, which are
+	/// long-lived and identified by a unique ID.
+	/// </summary>
 	public sealed class FavoritesCache
 	{
 		private FavoritesCache()
 		{
 			this.cache = new Dictionary<System.Guid, FavoritesCollection> ();
+			this.hashMap = new Dictionary<string, Record> ();
 		}
 
 
@@ -25,9 +30,32 @@ namespace Epsitec.Cresus.Core.Favorites
 			}
 		}
 
+		
 		public string Push(FavoritesCollection collection)
 		{
 			var guid = System.Guid.NewGuid ();
+			var hash = collection.StrongHash;
+
+			lock (this.hashMap)
+			{
+				Record record;
+
+				//	If a collection with the same strong hash could be found in the cache, don't
+				//	store the new collection, but rather share the already existing one.
+				
+				if (this.hashMap.TryGetValue (hash, out record))
+				{
+					return record.Guid.ToString ();
+				}
+
+				record = new Record ()
+				{
+					Collection = collection,
+					Guid = guid,
+				};
+
+				this.hashMap[hash] = record;
+			}
 
 			lock (this.cache)
 			{
@@ -63,8 +91,19 @@ namespace Epsitec.Cresus.Core.Favorites
 		}
 
 
+		#region Record structure
+
+		private struct Record
+		{
+			public FavoritesCollection			Collection;
+			public System.Guid					Guid;
+		}
+
+		#endregion
+
 		private static readonly FavoritesCache	current = new FavoritesCache ();
 
-		private readonly Dictionary<System.Guid, FavoritesCollection> cache;
+		private readonly Dictionary<System.Guid, FavoritesCollection>	cache;
+		private readonly Dictionary<string, Record>	hashMap;
 	}
 }
