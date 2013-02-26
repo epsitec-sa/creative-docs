@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace Epsitec.Aider.Data.Eerv
 		public static EervMainData LoadEervData(FileInfo groupDefinitionFile)
 		{
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile)
-				.Where (g => g.GroupClassification != Enumerations.GroupClassification.None)
+				.Where (g => g.GroupClassification != GroupClassification.None)
 				.ToList ();
 
 			EervMainDataLoader.FreezeData (groupDefinitions);
@@ -74,20 +76,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void HandleGroupDefinitionFunctions(Dictionary<string, EervGroupDefinition> functions, Dictionary<GroupDefinitionHeader, string> record, EervGroupDefinition groupDefinition)
 		{
-			string id = groupDefinition.Id;
-
-			if (id.StartsWith ("0101"))
+			if (EervMainDataLoader.IsFunctionDefinition (groupDefinition))
 			{
-				//	1.1.x describe not real groups, but transversal functions, which can be applied
-				//	to any standard non-leaf group:
-
-				if (id.EndsWith ("0000"))
-				{
-					var functionCode = id.Substring (4, 2);
-					functions[functionCode] = groupDefinition;
-				}
+				var functionCode = groupDefinition.Id.Substring (4, 2);
+				functions[functionCode] = groupDefinition;
 			}
-			else {
+			else
+			{
 				var functionCode = record[GroupDefinitionHeader.Function];
 
 				if (functionCode != null)
@@ -97,6 +92,14 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 		}
+
+
+		private static bool IsFunctionDefinition(EervGroupDefinition groupDefinition)
+		{
+			return groupDefinition.GroupClassification == GroupClassification.Function
+				&& groupDefinition.GroupLevel == 2;
+		}
+
 
 		private static int GetEervGroupDefinitionLevel(Dictionary<GroupDefinitionHeader, string> record)
 		{
