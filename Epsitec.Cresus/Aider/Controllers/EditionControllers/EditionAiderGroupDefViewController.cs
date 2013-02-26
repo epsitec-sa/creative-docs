@@ -29,6 +29,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Mutability)
 						.ReadOnly ()
+					.Field (x => x.Function)
+						.ReadOnly ()
 				.End ();
 		}
 	}

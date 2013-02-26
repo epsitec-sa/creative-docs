@@ -43,10 +43,11 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void ImportGroupDefinitions(BusinessContext businessContext, EervMainData eervData)
 		{
 			var topLevelGroups = EervMainDataImporter.GetTopLevelGroupDefinitions (eervData);
+			var mapping = new Dictionary<EervGroupDefinition, AiderGroupDefEntity> ();
 
 			foreach (var groupDefinition in topLevelGroups)
 			{
-				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition);
+				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition, mapping);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
@@ -89,9 +90,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition)
+		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition, Dictionary<EervGroupDefinition, AiderGroupDefEntity> mapping)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
+
+			mapping[groupDefinition] = aiderGroupDef;
 
 			aiderGroupDef.Name = groupDefinition.Name;
 			aiderGroupDef.Number = groupDefinition.Id;
@@ -101,22 +104,21 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderGroupDef.Classification = groupDefinition.GroupClassification;
 			aiderGroupDef.Mutability = EervMainDataImporter.GetMutability (groupDefinition);
 
-			var children = new List<AiderGroupDefEntity> ();
-
 			if (groupDefinition.FunctionGroup != null)
 			{
-				var funcGroup = groupDefinition.FunctionGroup;
-				var funcGroupEntity = funcGroup.EntityCache;
-				children.Add (funcGroupEntity);
+				aiderGroupDef.Function = mapping[groupDefinition.FunctionGroup];
 			}
 
-			children.AddRange (groupDefinition
+			var children = groupDefinition
 				.Children
-				.Where (c => !EervMainDataImporter.IsGroupDefinitionToDiscard (c))
-				.Select (c => EervMainDataImporter.ImportGroupDefinition (businessContext, c)));
+				.Where (c => !EervMainDataImporter.IsGroupDefinitionToDiscard (c));
 
-			aiderGroupDef.Subgroups.AddRange (children);
-			groupDefinition.EntityCache = aiderGroupDef;
+			foreach (var child in children)
+			{
+				var importedChild = EervMainDataImporter.ImportGroupDefinition (businessContext, child, mapping);
+
+				aiderGroupDef.Subgroups.Add (importedChild);
+			}
 
 			return aiderGroupDef;
 		}

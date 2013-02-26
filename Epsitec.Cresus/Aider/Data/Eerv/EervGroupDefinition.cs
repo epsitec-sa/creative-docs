@@ -244,7 +244,6 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public AiderGroupDefEntity				EntityCache;
 		private readonly bool					isLeaf;
 		private EervGroupDefinition				parent;
 		private EervGroupDefinition				function;

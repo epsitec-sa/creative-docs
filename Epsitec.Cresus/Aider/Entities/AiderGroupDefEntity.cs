@@ -7,6 +7,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 
@@ -44,8 +45,6 @@ namespace Epsitec.Aider.Entities
 
 			var group = AiderGroupEntity.Create (businessContext, parent, this, name, level, path);
 
-			// TODO Add more stuff to the group, such as root, start date, etc.
-
 			foreach (var subGroupDef in this.Subgroups)
 			{
 				var subInfo = new GroupPathInfo
@@ -57,6 +56,15 @@ namespace Epsitec.Aider.Entities
 				);
 				
 				subGroupDef.Instantiate (businessContext, group, subInfo);
+			}
+
+			if (this.Function.IsNotNull ())
+			{
+				foreach (var functionGroupDef in this.Function.Subgroups)
+				{
+					var functionGroup = group.CreateSubgroup (businessContext, functionGroupDef.Name);
+					functionGroup.GroupDef = functionGroupDef;
+				}
 			}
 
 			return group;

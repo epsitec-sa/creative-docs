@@ -5199,6 +5199,28 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVA4A]");
 			}
 		}
+		///	<summary>
+		///	The <c>Function</c> field.
+		///	designer:fld/LVA2A/LVGA22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGA22]")]
+		public global::Epsitec.Aider.Entities.AiderGroupDefEntity Function
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVGA22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue = this.Function;
+				if (oldValue != value || !this.IsFieldDefined("[LVGA22]"))
+				{
+					this.OnFunctionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupDefEntity> ("[LVGA22]", oldValue, value);
+					this.OnFunctionChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -5214,6 +5236,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnClassificationChanged(global::Epsitec.Aider.Enumerations.GroupClassification oldValue, global::Epsitec.Aider.Enumerations.GroupClassification newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnFunctionChanging(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
+		partial void OnFunctionChanged(global::Epsitec.Aider.Entities.AiderGroupDefEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupDefEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
