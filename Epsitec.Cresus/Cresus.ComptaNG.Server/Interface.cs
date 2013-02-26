@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.ComptaNG.Server
 			return System.Guid.Empty;
 		}
 
+
 		// Donne un nouveau critère de recherche.
 		public void UpdateSearch(Guid viewChannel, SearchData seach)
 		{
@@ -35,6 +36,7 @@ namespace Epsitec.Cresus.ComptaNG.Server
 		public void UpdateSearchAndFilter(Guid viewChannel, SearchData seach, FilterData filter)
 		{
 		}
+
 
 		// Retourne le nombre d'enregistrements contenus dans une vue.
 		public int GetCount(Guid viewChannel)
@@ -54,6 +56,7 @@ namespace Epsitec.Cresus.ComptaNG.Server
 			return -1;
 		}
 
+
 		// Retourne la prochaine donnée selon le critère de recherche, vers le haut ou vers le bas.
 		public Guid Search(Guid viewChannel, Guid dataGuid, bool ascendent)
 		{
@@ -66,6 +69,7 @@ namespace Epsitec.Cresus.ComptaNG.Server
 			return null;
 		}
 
+
 		// Valide un enregistrement.
 		public IEnumerable<ErrorField> Validate(Guid viewChannel, TravellingRecord record)
 		{
@@ -77,11 +81,25 @@ namespace Epsitec.Cresus.ComptaNG.Server
 		{
 		}
 
+
 		// Met à jour une vue, si elle a été modifiée par d'autres utilisateurs.
 		// Ceci évite de faire un CloseView suivi d'un OpenView.
 		public void Refresh(Guid viewChannel)
 		{
 		}
+
+
+		// L'idée est d'obtenir la liste incrémentale de toutes les modifications effectuées
+		// depuis le dernier OpenView ou AcknowledgeIncrementalModifications.
+		public List<TravellingRecord> GetIncrementalModifications(Guid viewChannel, int firstIndex, int count)
+		{
+			return null;
+		}
+
+		public void AcknowledgeIncrementalModifications(Guid viewChannel)
+		{
+		}
+
 
 		// Ferme la vue.
 		public void CloseView(Guid viewChannel)

@@ -77,10 +77,16 @@
     <Compile Include="RecordAccessors\AbstractAccessor.cs" />
     <Compile Include="RecordAccessors\CompteAccessor.cs" />
     <Compile Include="RecordAccessors\FieldType.cs" />
+    <Compile Include="RequestData\TravellingRecordStatus.cs" />
     <Compile Include="RequestData\ViewType.cs" />
     <Compile Include="RequestData\ViewData.cs" />
     <Compile Include="RequestData\FilterData.cs" />
     <Compile Include="RequestData\SearchData.cs" />
+    <Compile Include="TextAccessor\FieldFormat.cs" />
+    <Compile Include="TextAccessor\RecordFormat.cs" />
+    <Compile Include="TextAccessor\TextAccessor.cs" />
+    <Compile Include="TextAccessor\TextFormat.cs" />
+    <Compile Include="TextAccessor\Typo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

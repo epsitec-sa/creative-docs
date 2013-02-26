@@ -31,19 +31,25 @@ namespace Epsitec.Cresus.ComptaNG.Common.RecordAccessor
 		}
 
 
-		public FormattedText GetNiceField(FieldType field)
+		//	Retourne le contenu textuel d'un champ, en tenant compte ou pas du 'FieldFormat'.
+		public FormattedText GetFormattedText(FieldType fieldType, bool useFieldFormat = false)
 		{
-			if (this.travellingRecord.FormattedTexts.ContainsKey (field))
+			FormattedText text = this.GetFormattedTextField (fieldType);
+
+			if (useFieldFormat)
 			{
-				return this.travellingRecord.FormattedTexts[field];
+				var fieldFormat = this.travellingRecord.FieldFormats.Where (x => x.FieldType == fieldType).FirstOrDefault ();
+
+				if (fieldFormat != null)
+				{
+					text = fieldFormat.GetFormattedText (text);
+				}
 			}
-			else
-			{
-				return FormattedText.Null;
-			}
+
+			return text;
 		}
 
-
+	
 		public FormattedText GetFormattedTextField(FieldType field)
 		{
 			return (FormattedText) this.GetField (field);
