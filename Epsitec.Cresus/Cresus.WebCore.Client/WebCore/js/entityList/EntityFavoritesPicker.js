@@ -1,6 +1,7 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
-  'Epsitec.cresus.webcore.tools.EntityPicker'
+  'Epsitec.cresus.webcore.tools.EntityPicker',
+  'Epsitec.cresus.webcore.tools.Texts'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityFavoritesPicker', {
@@ -50,13 +51,13 @@ function() {
         items: [{
           xtype: 'panel',
           layout: 'fit',
-          title: 'Favoris',
+          title: Epsitec.Texts.getPickerFavouriteItems(),
           items: [this.entityListPanel1],
           entityListPanel: this.entityListPanel1
         }, {
           xtype: 'panel',
           layout: 'fit',
-          title: 'Liste compl\u00E8te',
+          title: Epsitec.Texts.getPickerAllItems(),
           items: [this.entityListPanel2],
           entityListPanel: this.entityListPanel2
         }],

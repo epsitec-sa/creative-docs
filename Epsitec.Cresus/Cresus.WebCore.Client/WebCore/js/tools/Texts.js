@@ -164,6 +164,14 @@ function() {
 
       getEntitySelectionErrorMessage: function() {
         return this.texts.entitySelectionErrorMessage;
+      },
+
+      getPickerFavouriteItems: function() {
+        return this.texts.pickerFavouriteItems;
+      },
+
+      getPickerAllItems: function() {
+        return this.texts.pickerAllItems;
       }
     }
   });

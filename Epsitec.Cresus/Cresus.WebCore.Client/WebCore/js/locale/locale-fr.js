@@ -54,7 +54,9 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'Voulez-vous quand m\u00EAme la cr\u00E9er?',
         entitySelectionErrorMessage: 'L\'entit\u00E9 que vous avez cr\u00E9e ' +
             'ne peut pas \u00EAtre affich\u00E9e dans la liste, probablement ' +
-            '\u00E0 cause d\'un filtre.'
+            '\u00E0 cause d\'un filtre.',
+        pickerFavouriteItems: 'Favoris',
+        pickerAllItems: 'Liste compl\u00E8te'
       };
     }
   }

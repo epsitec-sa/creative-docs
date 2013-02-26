@@ -51,7 +51,9 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'are about to create will not appear in the entity list, if it ' +
             'does not satisfy the filter condition. Do you want to create it?',
         entitySelectionErrorMessage: 'The entity that you have created ' +
-            'cannot be displayed in the list, probably because of a filter.'
+            'cannot be displayed in the list, probably because of a filter.',
+        pickerFavouriteItems: 'Favourites',
+        pickerAllItems: 'Complete list'
       };
     }
   }
