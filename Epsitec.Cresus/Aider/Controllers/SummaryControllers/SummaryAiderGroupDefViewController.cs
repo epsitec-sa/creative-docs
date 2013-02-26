@@ -22,6 +22,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Template ()
+					.Title ("Sous groupes")
 				.End ();
 
 			wall.AddBrick (x => x.Comment)
