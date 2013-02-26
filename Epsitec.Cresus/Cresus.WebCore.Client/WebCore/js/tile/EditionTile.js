@@ -15,6 +15,7 @@ function() {
 
     /* Config */
 
+    width: 300,
     defaults: {
       anchor: '100%'
     },

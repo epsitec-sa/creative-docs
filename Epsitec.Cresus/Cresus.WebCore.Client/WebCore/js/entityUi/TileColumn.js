@@ -14,9 +14,12 @@ function() {
     /* Config */
 
     border: false,
-    width: 350,
     style: {
       borderTop: '1px solid #99BCE8'
+    },
+    layout: {
+      type: 'vbox',
+      align: 'stretchmax'
     },
 
     /* Properties */

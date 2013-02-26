@@ -9,6 +9,8 @@ function() {
     /* Config */
 
     minHeight: 50,
+    minWidth: 200,
+    maxWidth: 400,
     border: false,
     style: {
       borderRight: '1px solid #99BCE8',
