@@ -30,7 +30,6 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAL8]", typeof (Epsitec.Aider.Entities.AiderPersonDataEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA2A]", typeof (Epsitec.Aider.Entities.AiderGroupDefEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7A]", typeof (Epsitec.Aider.Entities.AiderFunctionDefEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[LVAFB]", typeof (Epsitec.Aider.Entities.AiderWarningActionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVALB]", typeof (Epsitec.Aider.Entities.AiderPersonWarningEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVACC]", typeof (Epsitec.Aider.Entities.AiderUserScopeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAHC]", typeof (Epsitec.Aider.Entities.AiderUserEntity))]
@@ -5439,15 +5438,6 @@ namespace Epsitec.Aider.Entities
 			set;
 		}
 		///	<summary>
-		///	The <c>Actions</c> field.
-		///	designer:fld/LVAEB/LVAJB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAJB]")]
-		global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderWarningActionEntity> Actions
-		{
-			get;
-		}
-		///	<summary>
 		///	The <c>WarningType</c> field.
 		///	designer:fld/LVAEB/LVA7C
 		///	</summary>
@@ -5514,11 +5504,6 @@ namespace Epsitec.Aider.Entities
 		}
 		static partial void OnDescriptionChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		static partial void OnDescriptionChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		public static global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderWarningActionEntity> GetActions(global::Epsitec.Aider.Entities.IAiderWarning obj)
-		{
-			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
-			return entity.GetFieldCollection<global::Epsitec.Aider.Entities.AiderWarningActionEntity> ("[LVAJB]");
-		}
 		public static global::Epsitec.Aider.Enumerations.WarningType GetWarningType(global::Epsitec.Aider.Entities.IAiderWarning obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
@@ -5537,113 +5522,6 @@ namespace Epsitec.Aider.Entities
 		}
 		static partial void OnWarningTypeChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType oldValue, global::Epsitec.Aider.Enumerations.WarningType newValue);
 		static partial void OnWarningTypeChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType oldValue, global::Epsitec.Aider.Enumerations.WarningType newValue);
-	}
-}
-#endregion
-
-#region Epsitec.Aider.AiderWarningAction Entity
-namespace Epsitec.Aider.Entities
-{
-	///	<summary>
-	///	The <c>AiderWarningAction</c> entity.
-	///	designer:cap/LVAFB
-	///	</summary>
-	public partial class AiderWarningActionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
-	{
-		///	<summary>
-		///	The <c>IconUri</c> field.
-		///	designer:fld/LVAFB/LVAHB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAHB]")]
-		public string IconUri
-		{
-			get
-			{
-				return this.GetField<string> ("[LVAHB]");
-			}
-			set
-			{
-				string oldValue = this.IconUri;
-				if (oldValue != value || !this.IsFieldDefined("[LVAHB]"))
-				{
-					this.OnIconUriChanging (oldValue, value);
-					this.SetField<string> ("[LVAHB]", oldValue, value);
-					this.OnIconUriChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Title</c> field.
-		///	designer:fld/LVAFB/LVAGB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAGB]")]
-		public global::Epsitec.Common.Types.FormattedText Title
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[LVAGB]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Title;
-				if (oldValue != value || !this.IsFieldDefined("[LVAGB]"))
-				{
-					this.OnTitleChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[LVAGB]", oldValue, value);
-					this.OnTitleChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SerializedData</c> field.
-		///	designer:fld/LVAFB/LVAIB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAIB]")]
-		public global::System.Byte[] SerializedData
-		{
-			get
-			{
-				return this.GetField<global::System.Byte[]> ("[LVAIB]");
-			}
-			set
-			{
-				global::System.Byte[] oldValue = this.SerializedData;
-				if (oldValue != value || !this.IsFieldDefined("[LVAIB]"))
-				{
-					this.OnSerializedDataChanging (oldValue, value);
-					this.SetField<global::System.Byte[]> ("[LVAIB]", oldValue, value);
-					this.OnSerializedDataChanged (oldValue, value);
-				}
-			}
-		}
-		
-		partial void OnIconUriChanging(string oldValue, string newValue);
-		partial void OnIconUriChanged(string oldValue, string newValue);
-		partial void OnTitleChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnTitleChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnSerializedDataChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
-		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
-		
-		
-		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
-		{
-			return global::Epsitec.Aider.Entities.AiderWarningActionEntity.EntityStructuredTypeId;
-		}
-		public override string GetEntityStructuredTypeKey()
-		{
-			return global::Epsitec.Aider.Entities.AiderWarningActionEntity.EntityStructuredTypeKey;
-		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 367);	// [LVAFB]
-		public static readonly string EntityStructuredTypeKey = "[LVAFB]";
-		
-		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderWarningActionEntity>
-		{
-			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
-			{
-			}
-		}
-		#endregion
 	}
 }
 #endregion
@@ -5738,18 +5616,6 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetDescription (this, value);
-			}
-		}
-		///	<summary>
-		///	The <c>Actions</c> field.
-		///	designer:fld/LVALB/LVAJB
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAJB]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderWarningActionEntity> Actions
-		{
-			get
-			{
-				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetActions (this);
 			}
 		}
 		///	<summary>

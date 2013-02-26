@@ -269,8 +269,6 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderUserRole = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 404));
 			//	designer:cap/LVACC
 			public static readonly Epsitec.Common.Types.StructuredType AiderUserScope = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 396));
-			//	designer:cap/LVAFB
-			public static readonly Epsitec.Common.Types.StructuredType AiderWarningAction = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 367));
 			//	designer:cap/LVA22
 			public static readonly Epsitec.Common.Types.StructuredType eCH_Address = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
 			//	designer:cap/LVA
@@ -1817,21 +1815,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 399);
 			}
 			
-			public static class AiderWarningAction
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (AiderWarningAction.IconUri, null);
-				}
-				
-				//	designer:cap/LVAHB
-				public static readonly global::Epsitec.Common.Support.Druid IconUri = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 369);
-				//	designer:cap/LVAIB
-				public static readonly global::Epsitec.Common.Support.Druid SerializedData = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 370);
-				//	designer:cap/LVAGB
-				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 368);
-			}
-			
 			public static class eCH_Address
 			{
 				internal static void _Initialize()
@@ -1960,11 +1943,9 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (IAiderWarning.Actions, null);
+					global::System.Object.Equals (IAiderWarning.Description, null);
 				}
 				
-				//	designer:cap/LVAJB
-				public static readonly global::Epsitec.Common.Support.Druid Actions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 371);
 				//	designer:cap/LVANB
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 375);
 				//	designer:cap/LVAAC
@@ -2349,7 +2330,6 @@ namespace Epsitec.Aider
 			Fields.AiderUser._Initialize ();
 			Fields.AiderUserRole._Initialize ();
 			Fields.AiderUserScope._Initialize ();
-			Fields.AiderWarningAction._Initialize ();
 			Fields.eCH_Address._Initialize ();
 			Fields.eCH_Person._Initialize ();
 			Fields.eCH_ReportedPerson._Initialize ();

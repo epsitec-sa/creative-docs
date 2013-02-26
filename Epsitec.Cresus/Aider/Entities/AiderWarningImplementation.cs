@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -44,7 +44,6 @@ namespace Epsitec.Aider.Entities
 			a.Accumulate (warning.Title.GetEntityStatus ().TreatAsOptional ());
 			a.Accumulate (warning.WarningType == Enumerations.WarningType.None ? EntityStatus.Empty | EntityStatus.Valid : EntityStatus.Valid);
 			a.Accumulate (warning.Description.GetEntityStatus ().TreatAsOptional ());
-			a.Accumulate (warning.Actions.Any () ? EntityStatus.Empty | EntityStatus.Valid : EntityStatus.Valid);
 		}
 	}
 }
