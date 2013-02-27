@@ -276,13 +276,6 @@ function() {
         field.checked = field.value;
         delete field.value;
 
-        // This is the way of setting the label to the side of the checkbox and
-        // to align the checkbox on the right side of the form. It's kind of
-        // ugly but extjs doesn't allow us to do better here, such has having an
-        // expandable label.
-        field.labelAlign = 'left';
-        field.labelWidth = 320;
-
         return field;
       },
 
