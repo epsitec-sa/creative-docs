@@ -4,6 +4,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
@@ -31,6 +32,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(AiderGroupEntity group, Date endDate, FormattedText comment)
 		{
+			if (endDate < this.AdditionalEntity.StartDate)
+			{
+				var message = "La date de sortie doit être postérieure à la date d'entrée";
+
+				throw new BusinessRuleException (message);
+			}
+
 			AiderGroupParticipantEntity.StopParticipation (this.AdditionalEntity, endDate, comment);
 		}
 
