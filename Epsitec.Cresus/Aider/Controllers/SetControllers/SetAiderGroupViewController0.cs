@@ -9,8 +9,7 @@ using Epsitec.Cresus.Core.Controllers.SetControllers;
 
 using Epsitec.Cresus.Core.Data;
 
-using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.Core.Entities;
 
 using System;
 
@@ -20,7 +19,7 @@ using System.Collections.Generic;
 namespace Epsitec.Aider.Controllers.SetControllers
 {
 	[ControllerSubType (0)]
-	internal sealed class SetAiderGroupViewController0 : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderPersonEntity>
+	internal sealed class SetAiderGroupViewController0 : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderContactEntity>
 	{
 		public override string GetIcon()
 		{
@@ -59,32 +58,21 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		protected override void SetupPickDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
-			// Here we a a condition that ensures that we will only display the persons that are not
-			// yet in the current group.
-
-			dataSetAccessor.Customizer = (dataContext, request, example) =>
-			{
-				var participantExample = new AiderGroupParticipantEntity ();
-				var personExample = new AiderPersonEntity ();
-
-				participantExample.Person = personExample;
-
-				var subRequest = new Request ()
-				{
-					RequestedEntity = personExample,
-					RootEntity = participantExample,
-				};
-
-				subRequest.AddCondition (dataContext, participantExample, x => x.Group == entity);
-				request.AddCondition (dataContext, (AiderPersonEntity) example, p => SqlMethods.IsNotInSet (p, subRequest));
-			};
+			// Here it would be nice not to display the contacts that are already in the group but
+			// we can't do it for now because of the limitations in the DataLayer requests. We would
+			// require requests with multiple roots and we don't have them yet.
 		}
 
-		protected override void AddItems(IEnumerable<AiderPersonEntity> entitiesToAdd)
+		protected override void AddItems(IEnumerable<AiderContactEntity> entitiesToAdd)
 		{
 			foreach (var entity in entitiesToAdd)
 			{
-				AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, entity, this.Entity, Date.Today, "");
+				var member = entity.Person;
+
+				if (member.IsNotNull ())
+				{
+					AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, member, this.Entity, Date.Today, "");
+				}
 			}
 		}
 
