@@ -594,7 +594,10 @@ namespace Epsitec.Aider.Entities
 			{
 				var person = participation.Person;
 
-				AiderGroupParticipantEntity.StartParticipation (businessContext, person, this, startDate, comment);
+				if (!person.IsMemberOf (this))
+				{
+					AiderGroupParticipantEntity.StartParticipation (businessContext, person, this, startDate, comment);
+				}
 			}
 		}
 
@@ -620,7 +623,14 @@ namespace Epsitec.Aider.Entities
 
 			foreach (var participation in participations)
 			{
-				participation.Group = other;
+				if (participation.Person.IsMemberOf (other))
+				{
+					participation.Delete (businessContext);
+				}
+				else
+				{
+					participation.Group = other;
+				}
 			}
 
 			if (this.Comment.IsNotNull ())

@@ -319,6 +319,11 @@ namespace Epsitec.Aider.Entities
 			this.GetParticipations ().Remove (participation);
 		}
 
+		public bool IsMemberOf(AiderGroupEntity group)
+		{
+			return this.GetParticipations ().Any (g => g.Group == group);
+		}
+
 		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
 		{
 			value = this.GetWarnings ().AsReadOnlyCollection ();

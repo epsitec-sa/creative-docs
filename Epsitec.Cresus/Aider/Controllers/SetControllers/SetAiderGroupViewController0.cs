@@ -69,7 +69,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			{
 				var member = entity.Person;
 
-				if (member.IsNotNull ())
+				if (member.IsNotNull () && !member.IsMemberOf (this.Entity))
 				{
 					AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, member, this.Entity, Date.Today, "");
 				}

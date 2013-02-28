@@ -14,6 +14,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -46,6 +48,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (!group.CanHaveMembers ())
 			{
 				throw new BusinessRuleException ("Ce groupe ne peut pas avoir de membres");
+			}
+
+			if (this.Entity.IsMemberOf (group))
+			{
+				throw new BusinessRuleException ("Cette personne est déjà membre de ce groupe");
 			}
 
 			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, this.Entity, group, startDate, comment);

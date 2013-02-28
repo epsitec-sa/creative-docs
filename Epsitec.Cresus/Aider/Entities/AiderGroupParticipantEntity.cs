@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
@@ -194,6 +195,16 @@ namespace Epsitec.Aider.Entities
 			AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, example);
 
 			return request;
+		}
+
+
+		public void Delete(BusinessContext businessContext)
+		{
+			if (this.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Comment);
+			}
+			businessContext.DeleteEntity (this);
 		}
 
 
