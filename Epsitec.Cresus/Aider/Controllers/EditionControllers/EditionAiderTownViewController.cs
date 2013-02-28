@@ -17,8 +17,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderTownEntity> wall)
 		{
-			var favorites = this.GetCountryFavorites ();
-
 			if (this.Entity.Mutability == Mutability.SystemDefined)
 			{
 				wall.AddBrick ()
@@ -43,6 +41,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			}
 			else
 			{
+				var favorites = AiderCountryEntity.GetCountryFavorites (this.BusinessContext);
+
 				wall.AddBrick ()
 					.Input ()
 						.Field (x => x.Mutability)
