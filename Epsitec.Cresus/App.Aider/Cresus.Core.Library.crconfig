@@ -161,8 +161,8 @@ AiderGroupDef = [LVA2A]
     <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVAID]" teid="@AiderUserRole" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" ec="true" ed="true" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVAID]" teid="@AiderUserRole" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
+    <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG522]" teid="@AiderPerson" tn="groupMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>

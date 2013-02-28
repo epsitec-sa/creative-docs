@@ -1831,6 +1831,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVANC
 				public static readonly global::Epsitec.Common.Support.Druid DefaultScopes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 407);
+				//	designer:cap/LVGC22
+				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 76);
 				//	designer:cap/LVAMC
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 406);
 			}

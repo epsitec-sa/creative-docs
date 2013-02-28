@@ -1,6 +1,7 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
-using Epsitec.Aider.Entities;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -60,6 +61,7 @@ namespace Epsitec.Aider.Override
 
 			scope.Name = name;
 			scope.GroupPath = path;
+			scope.Mutability = Mutability.SystemDefined;
 
 			return scope;
 		}
@@ -109,6 +111,7 @@ namespace Epsitec.Aider.Override
 
 			role.Name = name;
 			role.DefaultScopes.AddRange (scopes);
+			role.Mutability = Mutability.SystemDefined;
 
 			return role;
 		}

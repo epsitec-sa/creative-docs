@@ -5621,9 +5621,33 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderUserScopeEntity> ("[LVANC]");
 			}
 		}
+		///	<summary>
+		///	The <c>Mutability</c> field.
+		///	designer:fld/LVAKC/LVGC22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGC22]")]
+		public global::Epsitec.Aider.Enumerations.Mutability Mutability
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGC22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.Mutability oldValue = this.Mutability;
+				if (oldValue != value || !this.IsFieldDefined("[LVGC22]"))
+				{
+					this.OnMutabilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGC22]", oldValue, value);
+					this.OnMutabilityChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

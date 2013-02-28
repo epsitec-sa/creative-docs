@@ -16,8 +16,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Mutability)
+						.ReadOnly ()
 					.Field (x => x.Name)
+						.ReadOnly ()
 					.Field (x => x.GroupPath)
+						.ReadOnly ()
 				.End ();
 		}
 	}
