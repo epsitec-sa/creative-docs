@@ -53,7 +53,13 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			try
 			{
-				foreach (var entity in entities)
+				// We filter the dummy entities that might be in the list and we check for null
+				// because DataContext.Contains() doesn't like them.
+				var validEntities = entities
+					.Where (e => e != null)
+					.Where (e => businessContext.DataContext.Contains (e));
+
+				foreach (var entity in validEntities)
 				{
 					businessContext.Register (entity);
 
