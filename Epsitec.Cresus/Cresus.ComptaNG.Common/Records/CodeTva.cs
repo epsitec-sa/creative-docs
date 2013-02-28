@@ -23,5 +23,6 @@ namespace Epsitec.Cresus.ComptaNG.Common.Records
 		public decimal			Déduction;  // utile ?
 		public int				Chiffre;  // utile ?
 		public bool				Désactivé;  // utile ?
+		public Pays				Pays;
 	}
 }

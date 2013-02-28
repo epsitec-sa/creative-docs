@@ -52,6 +52,7 @@
     <Compile Include="Records\CodeTva.cs" />
     <Compile Include="Records\Comptabilité.cs" />
     <Compile Include="Records\Compte.cs" />
+    <Compile Include="Records\Pays.cs" />
     <Compile Include="RequestData\ErrorField.cs" />
     <Compile Include="RequestData\ErrorType.cs" />
     <Compile Include="Records\DonnéesDuBudget.cs" />

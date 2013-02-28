@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.ComptaNG.Common.Records
 	/// </summary>
 	public class Monnaie : AbstractRecord
 	{
-		public FormattedText	CodeISO;
+		public string			CodeIso;
 		public FormattedText	Description;
 		public FormattedText	Commentaire;  // utile ?
+		public Pays				Pays;
 		public int				Décimales;
 		public decimal			Arrondi;
 		public decimal			Cours;
