@@ -2852,7 +2852,7 @@ namespace Epsitec.Common.Widgets
 
 			double a = System.Math.Max (TextLayout.GetBlockAscender  (fb), TextLayout.GetBlockAscender  (lb));
 			double d = System.Math.Max (TextLayout.GetBlockDescender (fb), TextLayout.GetBlockDescender (lb));
-			return a - d;
+			return (fb.Pos.Y+a) - (lb.Pos.Y+d);
 		}
 
 		private static double GetBlockAscender(JustifBlock block)
