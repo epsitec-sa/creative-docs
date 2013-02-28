@@ -3339,6 +3339,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Mutability</c> field.
+		///	designer:fld/LVA65/LVGB22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGB22]")]
+		public global::Epsitec.Aider.Enumerations.Mutability Mutability
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGB22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.Mutability oldValue = this.Mutability;
+				if (oldValue != value || !this.IsFieldDefined("[LVGB22]"))
+				{
+					this.OnMutabilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGB22]", oldValue, value);
+					this.OnMutabilityChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnSwissZipCodeChanging(int? oldValue, int? newValue);
 		partial void OnSwissZipCodeChanged(int? oldValue, int? newValue);
@@ -3356,6 +3378,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnCountryChanging(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
+		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		
 		partial void GetSwissZipCodeAddOn(ref string value);
 		partial void SetSwissZipCodeAddOn(string value);
@@ -3458,6 +3482,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Mutability</c> field.
+		///	designer:fld/LVAB5/LVGA22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGA22]")]
+		public global::Epsitec.Aider.Enumerations.Mutability Mutability
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGA22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.Mutability oldValue = this.Mutability;
+				if (oldValue != value || !this.IsFieldDefined("[LVGA22]"))
+				{
+					this.OnMutabilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGA22]", oldValue, value);
+					this.OnMutabilityChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnIsoCodeChanging(string oldValue, string newValue);
 		partial void OnIsoCodeChanged(string oldValue, string newValue);
@@ -3465,6 +3511,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnIsPreferredChanging(bool oldValue, bool newValue);
 		partial void OnIsPreferredChanged(bool oldValue, bool newValue);
+		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

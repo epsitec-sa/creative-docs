@@ -1,11 +1,12 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
@@ -36,17 +37,13 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderCountryEntity FindOrCreate(BusinessContext businessContext, string isoCode, string name)
+		public static AiderCountryEntity Create(BusinessContext businessContext, string isoCode, string name, Mutability mutability)
 		{
-			var country = AiderCountryEntity.Find (businessContext, isoCode);
+			var country = businessContext.CreateAndRegisterEntity<AiderCountryEntity> ();
 
-			if (country == null)
-			{
-				country = businessContext.CreateAndRegisterEntity<AiderCountryEntity> ();
-
-				country.IsoCode = isoCode;
-				country.Name = name;
-			}
+			country.IsoCode = isoCode;
+			country.Name = name;
+			country.Mutability = mutability;
 
 			return country;
 		}

@@ -1424,6 +1424,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid IsoCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 172);
 				//	designer:cap/LVARF
 				public static readonly global::Epsitec.Common.Support.Druid IsPreferred = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 507);
+				//	designer:cap/LVGA22
+				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 74);
 				//	designer:cap/LVAD5
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 173);
 			}
@@ -1785,6 +1787,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAA5
 				public static readonly global::Epsitec.Common.Support.Druid Country = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 170);
+				//	designer:cap/LVGB22
+				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 75);
 				//	designer:cap/LVA95
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 169);
 				//	designer:cap/LVALD

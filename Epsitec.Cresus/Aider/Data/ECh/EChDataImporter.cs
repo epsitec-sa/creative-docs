@@ -69,8 +69,9 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				var isoCode = country.IsoAlpha2;
 				var name = country.Name;
+				var mutability = Mutability.SystemDefined;
 
-				AiderCountryEntity.FindOrCreate (businessContext, isoCode, name);
+				AiderCountryEntity.Create (businessContext, isoCode, name, mutability);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);

@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
 
@@ -13,12 +14,31 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderCountryEntity> wall)
 		{
-			wall.AddBrick ()
-				.Input ()
-					.Field (x => x.IsoCode)
-					.Field (x => x.Name)
-					.Field (x => x.IsPreferred)
-				.End ();
+			if (this.Entity.Mutability == Mutability.SystemDefined)
+			{
+				wall.AddBrick ()
+					.Input ()
+						.Field (x => x.Mutability)
+							.ReadOnly ()
+						.Field (x => x.IsoCode)
+							.ReadOnly ()
+						.Field (x => x.Name)
+							.ReadOnly ()
+						.Field (x => x.IsPreferred)
+							.ReadOnly ()
+					.End ();
+			}
+			else
+			{
+				wall.AddBrick ()
+					.Input ()
+						.Field (x => x.Mutability)
+							.ReadOnly ()
+						.Field (x => x.IsoCode)
+						.Field (x => x.Name)
+						.Field (x => x.IsPreferred)
+					.End ();
+			}
 		}
 	}
 }

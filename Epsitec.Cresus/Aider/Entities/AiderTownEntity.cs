@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
@@ -9,8 +11,9 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using System.Linq;
 using Epsitec.Data.Platform;
+
+using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
@@ -50,8 +53,8 @@ namespace Epsitec.Aider.Entities
 				return a.EntityStatus;
 			}
 		}
-		
-		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, AiderCountryEntity country, int zipCode, string name)
+
+		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, AiderCountryEntity country, int zipCode, string name, Mutability mutability)
 		{
 			var aiderTown = AiderTownEntity.Find (businessContext, country, zipCode, name);
 
@@ -79,6 +82,7 @@ namespace Epsitec.Aider.Entities
 				aiderTown.SwissCantonCode = canton;
 				aiderTown.Name            = name;
 				aiderTown.Country         = country;
+				aiderTown.Mutability      = mutability;
 			}
 
 			return aiderTown;
@@ -98,7 +102,7 @@ namespace Epsitec.Aider.Entities
 				.FirstOrDefault ();
 		}
 
-		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, string zipCode, string name)
+		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, string zipCode, string name, Mutability mutability)
 		{
 			var aiderTown = AiderTownEntity.Find (businessContext, zipCode, name);
 
@@ -108,6 +112,7 @@ namespace Epsitec.Aider.Entities
 
 				aiderTown.ZipCode = zipCode;
 				aiderTown.Name = name;
+				aiderTown.Mutability = mutability;
 			}
 
 			return aiderTown;
