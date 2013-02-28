@@ -4,6 +4,7 @@
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -58,6 +59,14 @@ namespace Epsitec.Aider.Entities
 			return businessContext.DataContext
 				.GetByExample<AiderCountryEntity> (example)
 				.FirstOrDefault ();
+		}
+
+		public static bool IsValidIsoCode(string isoCode)
+		{
+			return isoCode != null
+				&& isoCode.Length == 2
+				&& isoCode.IsAllUpperCase ()
+				&& isoCode.IsAlpha ();
 		}
 	}
 }

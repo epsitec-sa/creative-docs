@@ -303,6 +303,23 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		/// <summary>
+		/// Checks that <paramref name="value"/> is an alpha <see cref="System.String"/>,
+		/// i.e. that it is empty or that it contains only lower case letters and upper case letters.
+		/// </summary>
+		/// <param name="value">The <see cref="System.String"/> to check.</param>
+		/// <returns><c>true</c> if <paramref name="value"/> is alpha <c>false</c> if it isn't.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
+		public static bool IsAlpha(this string value)
+		{
+			if (value == null)
+			{
+				throw new System.ArgumentNullException ("value");
+			}
+
+			return StringExtensions.alphaRegex.IsMatch (value);
+		}
+
+		/// <summary>
 		/// Determines whether the specified value is an integer.
 		/// </summary>
 		/// <param name="value">The value.</param>
@@ -678,12 +695,14 @@ namespace Epsitec.Common.Support.Extensions
 		
 		static StringExtensions()
 		{
+			StringExtensions.alphaRegex = new Regex ("^[a-zA-Z]*$", RegexOptions.Compiled);
 			StringExtensions.alphaNumRegex = new Regex ("^[a-zA-Z0-9]*$", RegexOptions.Compiled);
 			StringExtensions.spaceSeparators = new char[] { ' ', '\t', '\n', '\r', '\u00A0' };
 		}
 
 
 		private static readonly Regex alphaNumRegex;
+		private static readonly Regex alphaRegex;
 		private static readonly char[] spaceSeparators;
 	}
 }
