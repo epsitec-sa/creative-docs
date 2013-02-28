@@ -54,16 +54,5 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.End ();
 			}
 		}
-
-		private List<AiderCountryEntity> GetCountryFavorites()
-		{
-			var repository = this.BusinessContext.Data.GetRepository<AiderCountryEntity> ();
-			var example    = new AiderCountryEntity
-			{
-				IsPreferred = true,
-			};
-
-			return repository.GetByExample (example).ToList ();
-		}
 	}
 }

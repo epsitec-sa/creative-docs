@@ -11,6 +11,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Aider.Entities
@@ -67,6 +68,17 @@ namespace Epsitec.Aider.Entities
 				&& isoCode.Length == 2
 				&& isoCode.IsAllUpperCase ()
 				&& isoCode.IsAlpha ();
+		}
+
+		public static List<AiderCountryEntity> GetCountryFavorites(BusinessContext businessContext)
+		{
+			var repository = businessContext.Data.GetRepository<AiderCountryEntity> ();
+			var example    = new AiderCountryEntity
+			{
+				IsPreferred = true,
+			};
+
+			return repository.GetByExample (example).ToList ();
 		}
 	}
 }
