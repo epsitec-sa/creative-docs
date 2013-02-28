@@ -22,6 +22,7 @@ using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
 
+using System.Collections;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -906,6 +907,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = this.BuildField<EntityReferenceField> (entity, brick, fieldType, id, true);
 
 			field.DatabaseName = this.GetDatabaseName (actionFieldType);
+			field.DefineFavorites (Carpenter.GetFavoritesCollection (brick));
 
 			return field;
 		}
@@ -1122,9 +1124,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return brickProperties.PeekAfter (key, -1);
 		}
 
-		private static System.Collections.IEnumerable GetInputCollection(BrickPropertyCollection brickProperties)
+
+		private static IEnumerable GetFavoritesCollection(BrickPropertyCollection brickProperties)
 		{
-			var property = brickProperties.PeekAfter (BrickPropertyKey.FromCollection, -1);
+			var property = Carpenter.GetBrickProperty (brickProperties, BrickPropertyKey.FavoritesCollection);
 
 			if (property.HasValue)
 			{
@@ -1136,9 +1139,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 		}
 
-		private static System.Collections.IEnumerable GetFavoritesCollection(BrickPropertyCollection brickProperties)
+
+		private static IEnumerable GetFavoritesCollection(Brick brick)
 		{
-			var property = brickProperties.PeekAfter (BrickPropertyKey.FavoritesCollection, -1);
+			var property = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.FavoritesCollection);
 
 			if (property.HasValue)
 			{
@@ -1149,7 +1153,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				return null;
 			}
 		}
-
 
 
 		private string GetEntityId(AbstractEntity entity)
