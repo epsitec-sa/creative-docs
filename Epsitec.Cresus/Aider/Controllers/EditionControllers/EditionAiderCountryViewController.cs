@@ -25,7 +25,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Field (x => x.Name)
 							.ReadOnly ()
 						.Field (x => x.IsPreferred)
-							.ReadOnly ()
 					.End ();
 			}
 			else
