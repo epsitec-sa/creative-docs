@@ -95,9 +95,9 @@ namespace Epsitec.Aider.Data.Eerv
 		private void FillCache()
 		{
 			var example = new AiderTownEntity ()
-						{
-							Country = this.switzerland
-						};
+			{
+				Country = this.switzerland
+			};
 
 			var towns = this.businessContext.DataContext.GetByExample<AiderTownEntity> (example);
 
