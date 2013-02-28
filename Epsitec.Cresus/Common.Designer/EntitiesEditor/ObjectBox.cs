@@ -2828,10 +2828,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						//	Affiche le type du champ.
 						rect = this.GetFieldTypeBounds(i);
 						rect.Left += 1;
-						if (rect.Width > 10)
+						if (rect.Width > 20)
 						{
-							this.fields[i].TextLayoutType.LayoutSize = rect.Size;
+							double rw = rect.Width;
+							double rh = rect.Height;
+
+							if (this.fields[i].IsAscending || this.fields[i].IsDescending)
+							{
+								rw -= 10;  // laisse la place pour la flèche à droite
+							}
+
+							this.fields[i].TextLayoutType.LayoutSize = new Size(rw, rh);
 							this.fields[i].TextLayoutType.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, typeColor, GlyphPaintStyle.Normal);
+
+							ObjectBox.DrawFieldType (graphics, rect, this.fields[i]);
 						}
 
 						//	Affiche l'expression du champ.
@@ -3374,6 +3384,33 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ObjectBox.DrawParameters (graphics, center, frameColor, isExtended, isDimmed, lifetime, flags);
 		}
 
+		private static void DrawFieldType(Graphics graphics, Rectangle rect, Field field)
+		{
+			if (!field.IsAscending && !field.IsDescending)
+			{
+				return;
+			}
+
+			var pt = new Point (rect.Right-6.5, rect.Top   -4.0);
+			var pb = new Point (rect.Right-6.5, rect.Bottom+4.0);
+
+			graphics.AddLine (pb, pt);
+
+			if (field.IsAscending)
+			{
+				graphics.AddLine (pt, new Point (pt.X-3, pt.Y-3));
+				graphics.AddLine (pt, new Point (pt.X+3, pt.Y-3));
+			}
+
+			if (field.IsDescending)
+			{
+				graphics.AddLine (pb, new Point (pb.X-3, pb.Y+3));
+				graphics.AddLine (pb, new Point (pb.X+3, pb.Y+3));
+			}
+
+			graphics.RenderSolid (Color.FromBrightness (0));
+		}
+
 		private static void DrawParameters(Graphics graphics, Point center, Color frameColor, bool isExtended, bool isDimmed, DataLifetimeExpectancy lifetime, StructuredTypeFlags flags)
 		{
 			//	Dessine les paramètres (espérance de vie de l'entité et fanions).
@@ -3381,7 +3418,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (isExtended && lifetime != Types.DataLifetimeExpectancy.Unknown)
 			{
-				double radius = 5.5;
+				const double radius = 5.5;
 				double angle = 0;
 
 				graphics.AddFilledCircle (center, radius);

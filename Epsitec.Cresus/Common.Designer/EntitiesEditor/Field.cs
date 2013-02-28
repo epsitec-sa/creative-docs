@@ -1009,6 +1009,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				text = "<i>" + text + "</i>";
 			}
 
+#if false
+			//	A cause d'un bug dans TextLayout, il n'est pas possible de procéder ainsi.
 			if (this.isAscending && this.isDescending)
 			{
 				text = Misc.Image ("EntityIndexBoth") + text;
@@ -1021,6 +1023,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				text = Misc.Image ("EntityIndexDescending") + text;
 			}
+#endif
 
 			this.textLayoutType.Text = text;
 		}
