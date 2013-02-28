@@ -78,6 +78,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController2.cs" />

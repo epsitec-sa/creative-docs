@@ -108,15 +108,25 @@ namespace Epsitec.Aider.Entities
 
 			if (aiderTown == null)
 			{
-				aiderTown = businessContext.CreateAndRegisterEntity<AiderTownEntity> ();
-
-				aiderTown.ZipCode = zipCode;
-				aiderTown.Name = name;
-				aiderTown.Mutability = mutability;
+				aiderTown = AiderTownEntity.Create (businessContext, null, zipCode, name, mutability);
 			}
 
 			return aiderTown;
 		}
+
+
+		public static AiderTownEntity Create(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name, Mutability mutability)
+		{
+			var aiderTown = businessContext.CreateAndRegisterEntity<AiderTownEntity> ();
+
+			aiderTown.Country = country;
+			aiderTown.ZipCode = zipCode;
+			aiderTown.Name = name;
+			aiderTown.Mutability = mutability;
+
+			return aiderTown;
+		}
+
 
 		public static AiderTownEntity Find(BusinessContext businessContext, string zipCode, string name)
 		{
