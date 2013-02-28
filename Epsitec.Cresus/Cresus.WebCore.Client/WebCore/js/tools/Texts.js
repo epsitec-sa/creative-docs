@@ -71,7 +71,7 @@ function() {
 
       getEmptyItemText: function() {
 
-        return this.texts.emptyItemText;
+        return '<i>' + this.texts.emptyItemText + '</i>';
       },
 
       getNullItemText: function() {
@@ -79,7 +79,7 @@ function() {
       },
 
       getEmptyListText: function() {
-        return this.texts.emptyListText;
+        return '<i>' + this.texts.emptyListText + '</i>';
       },
 
       getLoadingText: function() {
