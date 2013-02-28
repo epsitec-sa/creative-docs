@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Enumerations;
@@ -39,13 +39,14 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderCountryEntity Create(BusinessContext businessContext, string isoCode, string name, Mutability mutability)
+		public static AiderCountryEntity Create(BusinessContext businessContext, string isoCode, string name, Mutability mutability, bool isPreferred)
 		{
 			var country = businessContext.CreateAndRegisterEntity<AiderCountryEntity> ();
 
 			country.IsoCode = isoCode;
 			country.Name = name;
 			country.Mutability = mutability;
+			country.IsPreferred = isPreferred;
 
 			return country;
 		}

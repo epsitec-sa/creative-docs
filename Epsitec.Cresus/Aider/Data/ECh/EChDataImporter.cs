@@ -64,6 +64,7 @@ namespace Epsitec.Aider.Data.ECh
 		private static void ImportCountries(BusinessContext businessContext)
 		{
 			var countries = Iso3166.GetCountries ("FR");
+			var preferred = new HashSet<string> () { "CH", "DE", "FR", "IT", "ES", "PT", "AT" };
 
 			foreach (var country in countries)
 			{
@@ -71,7 +72,7 @@ namespace Epsitec.Aider.Data.ECh
 				var name = country.Name;
 				var mutability = Mutability.SystemDefined;
 
-				AiderCountryEntity.Create (businessContext, isoCode, name, mutability);
+				AiderCountryEntity.Create (businessContext, isoCode, name, mutability, preferred.Contains (isoCode));
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);

@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException ("Un pays avec le même code ISO existe déjà.");
 			}
 
-			return AiderCountryEntity.Create (this.BusinessContext, isoCode, name, Mutability.Customizable);
+			return AiderCountryEntity.Create (this.BusinessContext, isoCode, name, Mutability.Customizable, false);
 		}
 	}
 }
