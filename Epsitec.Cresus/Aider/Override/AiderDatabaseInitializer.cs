@@ -153,10 +153,12 @@ namespace Epsitec.Aider.Override
 			this.CreateAiderTestUser ("l.dewarrat", false);		// Laurence Dewarrat
 			this.CreateAiderTestUser ("d.fankhauser", false);	// Damaris Fankhauser
 			this.CreateAiderTestUser ("m.genoux", false);		// Michel Genoux
+			this.CreateAiderTestUser ("m.gonce", false);		// Maurice Gonce
 			this.CreateAiderTestUser ("c.jackson", false);		// Cheryl Jackson
 			this.CreateAiderTestUser ("p.jarne", false);		// Pierrette Jarne
 			this.CreateAiderTestUser ("g.jaton", true);			// Gérard Jaton
 			this.CreateAiderTestUser ("y.knecht", false);		// Yvonne Knecht
+			this.CreateAiderTestUser ("v.mennet", false);		// Vanina Mennet
 			this.CreateAiderTestUser ("l.pestalozzi", false);	// Lorenzo Pestalozzi
 			this.CreateAiderTestUser ("d.rochat", false);		// Dorothée Rochat (is not in imported persons. Her address is: Avenue du Prieuré 2b, 1009 Pully)
 			this.CreateAiderTestUser ("p.rouge", false);		// Pascal Rouge
