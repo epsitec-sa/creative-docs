@@ -1357,6 +1357,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PostBox = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 185);
 				//	designer:cap/LVA25
 				public static readonly global::Epsitec.Common.Support.Druid Street = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 162);
+				//	designer:cap/LVACG
+				public static readonly global::Epsitec.Common.Support.Druid StreetHouseNumberAndComplement = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 524);
 				//	designer:cap/LVAJD
 				public static readonly global::Epsitec.Common.Support.Druid StreetUserFriendly = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 435);
 				//	designer:cap/LVA55

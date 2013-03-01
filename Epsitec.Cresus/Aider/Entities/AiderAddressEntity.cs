@@ -97,8 +97,8 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetPhoneSummary()
 		{
 			return TextFormatter.FormatText (
-				TextFormatter.FormatField (() => this.Phone1), "~/~",
-				TextFormatter.FormatField (() => this.Phone2), "~/~",
+				TextFormatter.FormatField (() => this.Phone1), "\n",
+				TextFormatter.FormatField (() => this.Phone2), "\n",
 				TextFormatter.FormatField (() => this.Mobile), "\n",
 				TextFormatter.FormatField (() => this.Fax), "~(fax)"
 				);
@@ -210,6 +210,45 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		partial void GetStreetHouseNumberAndComplement(ref string value)
+		{
+			var street = this.StreetUserFriendly;
+			var number = this.HouseNumberAndComplement;
+
+			if (string.IsNullOrEmpty (street))
+			{
+				value = number;
+			}
+			else
+			{
+				value = string.Concat (street, " ", number).Trim ();
+			}
+		}
+
+		partial void SetStreetHouseNumberAndComplement(string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				this.StreetUserFriendly       = "";
+				this.HouseNumberAndComplement = "";
+			}
+			else
+			{
+				int pos = value.IndexOfAny (AiderAddressEntity.digits);
+
+				if (pos < 0)
+				{
+					this.StreetUserFriendly       = value.Trim ();
+					this.HouseNumberAndComplement = "";
+				}
+				else
+				{
+					this.StreetUserFriendly       = value.Substring (0, pos).Trim ();
+					this.HouseNumberAndComplement = value.Substring (pos).Trim ();
+				}
+			}
+		}
+
 		private static int? ParseHouseNumber(string number)
 		{
 			if (string.IsNullOrEmpty (number))
@@ -240,5 +279,8 @@ namespace Epsitec.Aider.Entities
 				return value.ToLowerInvariant ();
 			}
 		}
+
+
+		private static char[] digits = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
 }

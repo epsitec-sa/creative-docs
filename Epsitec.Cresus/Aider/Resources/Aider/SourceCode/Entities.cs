@@ -1760,6 +1760,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>StreetHouseNumberAndComplement</c> field.
+		///	designer:fld/LVAJ2/LVACG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVACG]", IsVirtual=true)]
+		public string StreetHouseNumberAndComplement
+		{
+			get
+			{
+				string value = default (string);
+				this.GetStreetHouseNumberAndComplement (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.StreetHouseNumberAndComplement;
+				if (oldValue != value || !this.IsFieldDefined("[LVACG]"))
+				{
+					this.OnStreetHouseNumberAndComplementChanging (oldValue, value);
+					this.SetStreetHouseNumberAndComplement (value);
+					this.OnStreetHouseNumberAndComplementChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>HouseNumber</c> field.
 		///	designer:fld/LVAJ2/LVA35
 		///	</summary>
@@ -1990,6 +2014,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnStreetChanged(string oldValue, string newValue);
 		partial void OnStreetUserFriendlyChanging(string oldValue, string newValue);
 		partial void OnStreetUserFriendlyChanged(string oldValue, string newValue);
+		partial void OnStreetHouseNumberAndComplementChanging(string oldValue, string newValue);
+		partial void OnStreetHouseNumberAndComplementChanged(string oldValue, string newValue);
 		partial void OnHouseNumberChanging(int? oldValue, int? newValue);
 		partial void OnHouseNumberChanged(int? oldValue, int? newValue);
 		partial void OnHouseNumberComplementChanging(string oldValue, string newValue);
@@ -2013,6 +2039,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void GetStreetUserFriendly(ref string value);
 		partial void SetStreetUserFriendly(string value);
+		partial void GetStreetHouseNumberAndComplement(ref string value);
+		partial void SetStreetHouseNumberAndComplement(string value);
 		partial void GetHouseNumberAndComplement(ref string value);
 		partial void SetHouseNumberAndComplement(string value);
 		

@@ -35,8 +35,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableAction<ActionAiderHouseholdViewController2> ()	//	remove member from household
 				.EnableAction<ActionAiderHouseholdViewController3> ()	//	change head of household status
 				.Template ()
-					.Icon ("Base.AiderPerson")
-					.Title ("Membres")
+					.Icon ("Data.AiderPersons")
+					.Title ("Membres du ménage")
 					.Text (p => p.GetCompactSummary (this.Entity))
 				.End ();
 

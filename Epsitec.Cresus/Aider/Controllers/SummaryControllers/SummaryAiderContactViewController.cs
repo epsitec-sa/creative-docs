@@ -18,6 +18,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
 			var contact = this.Entity;
+			var household = this.Entity.Household;
 
 			if ((contact.Person.IsNull ()) &&
 				(contact.LegalPerson.IsNull ()))
@@ -40,7 +41,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
-					if (contact.Household.IsNotNull ())
+					if (household.IsNotNull ())
 					{
 						if (contact.Address.IsNotNull ())
 						{
@@ -51,7 +52,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Attribute (BrickMode.SpecialController1);
 						}
 
-						if (contact.Household.Members.Count > 1)
+						if (household.Members.Count > 1)
 						{
 							wall.AddBrick (x => x.Household.Members)
 								.Title (Resources.Text ("Membres du ménage"))
@@ -60,7 +61,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Attribute (BrickMode.HideRemoveButton)
 								.Attribute (BrickMode.AutoGroup)
 								.Template ()
-									.Text (x => x.GetCompactSummary ())
+									.Text (x => x.GetCompactSummary (household))
 								.End ()
 								.Attribute (BrickMode.DefaultToSummarySubView);
 						}
