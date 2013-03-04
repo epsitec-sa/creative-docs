@@ -3960,7 +3960,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 						else if (name == Xml.ColumnsSeparatorRelative1)
 						{
-							this.columnsSeparatorRelative1 = double.Parse(element);
+							this.columnsSeparatorRelative1 = double.Parse(element); //  TODO: fix culture
 						}
 						else if (name == Xml.Color)
 						{
