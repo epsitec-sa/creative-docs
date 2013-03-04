@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Override
 
 			this.roleCounty = this.CreateAiderRole
 			(
-				name: "Accès cantonnal",
+				name: "Accès cantonal",
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeCounty,
 					this.scopeRegion,
