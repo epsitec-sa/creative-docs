@@ -1811,11 +1811,9 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderUser.CustomScopes, null);
+					global::System.Object.Equals (AiderUser.Person, null);
 				}
 				
-				//	designer:cap/LVAJC
-				public static readonly global::Epsitec.Common.Support.Druid CustomScopes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 403);
 				//	designer:cap/LVAIC
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 402);
 				//	designer:cap/LVAGD

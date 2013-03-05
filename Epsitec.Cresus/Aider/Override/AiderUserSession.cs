@@ -163,11 +163,7 @@ namespace Epsitec.Aider.Override
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			var defaultScopes = user.Role.DefaultScopes;
-			var customScopes = user.CustomScopes;
-
-			return defaultScopes
-				.Concat (customScopes)
+			return user.Role.DefaultScopes
 				.Distinct ()
 				.Select (s => this.GetUserScope (s))
 				.ToList ();
@@ -280,11 +276,6 @@ namespace Epsitec.Aider.Override
 				if (role.IsNotNull ())
 				{
 					scope = role.DefaultScopes.FirstOrDefault ();
-				}
-
-				if (scope.IsNull ())
-				{
-					scope = user.CustomScopes.FirstOrDefault ();
 				}
 
 				if (scope.IsNull ())

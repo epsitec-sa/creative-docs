@@ -5523,18 +5523,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>CustomScopes</c> field.
-		///	designer:fld/LVAHC/LVAJC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAJC]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderUserScopeEntity> CustomScopes
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderUserScopeEntity> ("[LVAJC]");
-			}
-		}
-		///	<summary>
 		///	The <c>PreferredScope</c> field.
 		///	designer:fld/LVAHC/LVAGD
 		///	</summary>
