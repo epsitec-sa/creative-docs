@@ -64,6 +64,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-analyseparishfile"))
+				{
+					AiderProgram.AnalyzeParishFile (args);
+					return;
+				}
+
 				if (args.Contains ("-echimportation"))
 				{
 					AiderProgram.RunEchImportation (args);
@@ -155,6 +161,14 @@ namespace Epsitec.Aider
 					}
 				}
 			});
+		}
+
+		private static void AnalyzeParishFile(string[] args)
+		{
+			var input = AiderProgram.GetFile (args, "-input:", true);
+			var output = AiderProgram.GetFile (args, "-output:", true);
+
+			Tests.ParishFileAnalizer.Analyze (input, output);
 		}
 
 		private static void RunWithCoreData(Action<CoreData> action)
