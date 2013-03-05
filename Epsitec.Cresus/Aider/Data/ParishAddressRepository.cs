@@ -14,12 +14,12 @@ namespace Epsitec.Aider.Data
 	/// </summary>
 	public sealed class ParishAddressRepository
 	{
-		private ParishAddressRepository()
+		public ParishAddressRepository(IEnumerable<string> lines)
 		{
 			this.addresses = new Dictionary<string, ParishAddresses> ();
 			this.infos     = new Dictionary<string, ParishAddressInformation> ();
 
-			foreach (var info in ParishAddressRepository.GetParishInformations ())
+			foreach (var info in ParishAddressRepository.GetParishInformations (lines))
 			{
 				var key  = ParishAddressRepository.GetKey (info.ZipCode, info.TownNameOfficial);
 				var addr = this.AddParishAddress (key, info);
@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Data
 		/// <summary>
 		/// The <see cref="ParishAddressRepository"/> singleton.
 		/// </summary>
-		public static readonly ParishAddressRepository Current = new ParishAddressRepository ();
+		public static readonly ParishAddressRepository Current = ParishAddressRepository.GetDefault ();
 
 
 		/// <summary>
@@ -151,23 +151,29 @@ namespace Epsitec.Aider.Data
 			return string.Format ("{0:0000} {1}", zipCode, townName);
 		}
 
-		private static IEnumerable<ParishAddressInformation> GetParishInformations()
+		private static IEnumerable<ParishAddressInformation> GetParishInformations(IEnumerable<string> lines)
 		{
 			// We skip the entries within region 0 as we know that they are invalid.
 
-			return ParishAddressRepository
-				.GetSourceFile ()
+			return lines
 				.Select (x => new ParishAddressInformation (x))
 				.Where (x => x.RegionCode != 0);
 		}
 
-		private static IEnumerable<string> GetSourceFile()
+		private static IEnumerable<string> GetLines()
 		{
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
 			var resource = "Epsitec.Aider.DataFiles.ParishAddresses.zip";
 			var source   = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
 
 			return Epsitec.Common.IO.StringLineExtractor.GetLines (source);
+		}
+
+		private static ParishAddressRepository GetDefault()
+		{
+			var lines = ParishAddressRepository.GetLines ();
+
+			return new ParishAddressRepository (lines);
 		}
 
 		
