@@ -56,9 +56,9 @@ namespace Epsitec.Aider.Rules
 		{
 			AiderUserBusinessRules.CheckLoginNameIsNotEmpty (user);
 			this.CheckLoginNameIsUnique (user);
+			AiderUserBusinessRules.CheckDisplayNameIsNotEmpty (user);
 			AiderUserBusinessRules.CheckParishIsParishGroup (user);
 
-			AiderUserBusinessRules.UpdateDisplayName (user);
 			AiderUserBusinessRules.UpdateParishGroupPathCache (user);
 		}
 
@@ -97,6 +97,17 @@ namespace Epsitec.Aider.Rules
 		}
 
 
+		private static void CheckDisplayNameIsNotEmpty(AiderUserEntity user)
+		{
+			if (user.DisplayName.IsNullOrEmpty ())
+			{
+				var message = "Le nom pour l'affichage de l'utilisateur ne peut pas être vide.";
+
+				Logic.BusinessRuleException (user, message);
+			}
+		}
+
+
 		private static void CheckParishIsParishGroup(AiderUserEntity user)
 		{
 			if (user.Parish.IsNull () || user.Parish.IsParish ())
@@ -107,12 +118,6 @@ namespace Epsitec.Aider.Rules
 			var message = "La paroisse n'est pas un groupe de paroisse";
 
 			Logic.BusinessRuleException (user, message);
-		}
-
-
-		private static void UpdateDisplayName(AiderUserEntity user)
-		{
-			user.DisplayName = user.LoginName;
 		}
 
 

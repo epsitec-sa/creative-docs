@@ -2,6 +2,7 @@
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -142,34 +143,34 @@ namespace Epsitec.Aider.Override
 		{
 			// Don't forget to assign them to the persons once the db is initialized.
 
-			this.CreateAiderTestUser ("p.arnaud", false);		// Pierre Arnaud
-			this.CreateAiderTestUser ("m.bettex", false);		// Marc Bettex
-			this.CreateAiderTestUser ("b.bolay", false);		// Bernard Bolay
-			this.CreateAiderTestUser ("e.bornand", false);		// Eric Bornand
-			this.CreateAiderTestUser ("j.brand", true);			// Jacques Brand
-			this.CreateAiderTestUser ("g.butticaz", false);		// Geneviève Butticaz
-			this.CreateAiderTestUser ("b.corbaz", false);		// Benjamin Corbaz
-			this.CreateAiderTestUser ("c.cuendet", false);		// Claude Cuendet
-			this.CreateAiderTestUser ("l.dewarrat", false);		// Laurence Dewarrat
-			this.CreateAiderTestUser ("d.fankhauser", false);	// Damaris Fankhauser
-			this.CreateAiderTestUser ("m.genoux", false);		// Michel Genoux
-			this.CreateAiderTestUser ("m.gonce", false);		// Maurice Gonce
-			this.CreateAiderTestUser ("c.jackson", false);		// Cheryl Jackson
-			this.CreateAiderTestUser ("p.jarne", false);		// Pierrette Jarne
-			this.CreateAiderTestUser ("g.jaton", true);			// Gérard Jaton
-			this.CreateAiderTestUser ("y.knecht", false);		// Yvonne Knecht
-			this.CreateAiderTestUser ("v.mennet", false);		// Vanina Mennet
-			this.CreateAiderTestUser ("l.pestalozzi", false);	// Lorenzo Pestalozzi
-			this.CreateAiderTestUser ("d.rochat", false);		// Dorothée Rochat (is not in imported persons. Her address is: Avenue du Prieuré 2b, 1009 Pully)
-			this.CreateAiderTestUser ("p.rouge", false);		// Pascal Rouge
-			this.CreateAiderTestUser ("j.sordet", true);		// Jean-Michel Sordet
-			this.CreateAiderTestUser ("j.sotornik", false);		// Jeanette Sotornik
-			this.CreateAiderTestUser ("j.spothelfer", false);	// Jean-Marc Spothelfer
-			this.CreateAiderTestUser ("s.wohlhauser", false);	// Sylvie Wohlhauser
+			this.CreateAiderTestUser ("p.arnaud", "Pierre Arnaud", false);
+			this.CreateAiderTestUser ("m.bettex", "Marc Bettex", false);
+			this.CreateAiderTestUser ("b.bolay", "Bernard Bolay", false);
+			this.CreateAiderTestUser ("e.bornand", "Eric Bornand", false);
+			this.CreateAiderTestUser ("j.brand", "Jacques Brand", true);
+			this.CreateAiderTestUser ("g.butticaz", "Geneviève Butticaz", false);
+			this.CreateAiderTestUser ("b.corbaz", "Benjamin Corbaz", false);
+			this.CreateAiderTestUser ("c.cuendet", "Claude Cuendet", false);
+			this.CreateAiderTestUser ("l.dewarrat", "Laurence Dewarrat", false);
+			this.CreateAiderTestUser ("d.fankhauser", "Damaris Fankhauser", false);
+			this.CreateAiderTestUser ("m.genoux", "Michel Genoux", false);
+			this.CreateAiderTestUser ("m.gonce", "Maurice Gonce", false);
+			this.CreateAiderTestUser ("c.jackson", "Cheryl Jackson", false);
+			this.CreateAiderTestUser ("p.jarne", "Pierrette Jarne", false);
+			this.CreateAiderTestUser ("g.jaton", "Gérard Jaton", true);
+			this.CreateAiderTestUser ("y.knecht", "Yvonne Knecht", false);
+			this.CreateAiderTestUser ("v.mennet", "Vanina Mennet", false);
+			this.CreateAiderTestUser ("l.pestalozzi", "Lorenzo Pestalozzi", false);
+			this.CreateAiderTestUser ("d.rochat", "Dorothée Rochat", false);
+			this.CreateAiderTestUser ("p.rouge", "Pascal Rouge", false);
+			this.CreateAiderTestUser ("j.sordet", "Jean-Michel Sordet", true);
+			this.CreateAiderTestUser ("j.sotornik", "Jeanette Sotornik", false);
+			this.CreateAiderTestUser ("j.spothelfer", "Jean-Marc Spothelfer", false);
+			this.CreateAiderTestUser ("s.wohlhauser", "Sylvie Wohlhauser", false);
 		}
 
 
-		private void CreateAiderTestUser(string login, bool admin)
+		private void CreateAiderTestUser(string login, string name, bool admin)
 		{
 			var groups = admin
 				? new SoftwareUserGroupEntity[] { this.GroupStandard, this.GroupAdministrator }
@@ -177,7 +178,7 @@ namespace Epsitec.Aider.Override
 
 			var user = (AiderUserEntity) this.CreateUser
 			(
-				displayName: login,
+				displayName: FormattedText.FromSimpleText (name),
 				userLogin: login,
 				userPassword: "monsupermotdepasse",
 				authentificationMethod: UserAuthenticationMethod.Password,

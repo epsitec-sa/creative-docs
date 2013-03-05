@@ -39,6 +39,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Parish)
 						.WithSpecialField<AiderGroupSpecialField<AiderUserEntity>> ()
 					.Field (x => x.LoginName)
+					.Field (x => x.DisplayName)
 					.Field (x => x.Role)
 					.Field (x => x.Disabled)
 				.End ();
@@ -53,6 +54,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Parish)
 						.ReadOnly ()
 					.Field (x => x.LoginName)
+						.ReadOnly ()
+					.Field (x => x.DisplayName)
 						.ReadOnly ()
 					.Field (x => x.Role)
 						.ReadOnly ()
