@@ -327,12 +327,6 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static bool IsParishGroup(AiderGroupEntity group)
-		{
-			return group.GroupDef.PathTemplate == AiderGroupIds.Parish;
-		}
-
-
 		private static string FindParishName(ParishAddressRepository repository, AiderAddressEntity address)
 		{
 			var zipCode = address.Town.SwissZipCode.GetValueOrDefault ();

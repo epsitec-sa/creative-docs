@@ -172,7 +172,7 @@ namespace Epsitec.Aider.Rules
 
 		private static void CheckCurrentParish(BusinessContext context, AiderPersonEntity person)
 		{
-			if (!ParishAssigner.IsParishGroup (person.Parish.Group))
+			if (!person.Parish.Group.IsParish ())
 			{
 				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
 

@@ -152,7 +152,10 @@ namespace Epsitec.Aider.Override
 
 			if (pattern != null)
 			{
-				pattern = AiderGroupIds.ReplacePlaceholders (pattern);
+				var user = this.UserManager.AuthenticatedUser;
+				var parishPath = user.ParishGroupPathCache;
+
+				pattern = AiderGroupIds.ReplacePlaceholders (pattern, parishPath);
 			}
 
 			return pattern;

@@ -5479,28 +5479,6 @@ namespace Epsitec.Aider.Entities
 	public partial class AiderUserEntity : global::Epsitec.Cresus.Core.Entities.SoftwareUserEntity
 	{
 		///	<summary>
-		///	The <c>Person</c> field.
-		///	designer:fld/LVAHC/LVAIC
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAIC]")]
-		public global::Epsitec.Aider.Entities.AiderPersonEntity Person
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAIC]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Person;
-				if (oldValue != value || !this.IsFieldDefined("[LVAIC]"))
-				{
-					this.OnPersonChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAIC]", oldValue, value);
-					this.OnPersonChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Role</c> field.
 		///	designer:fld/LVAHC/LVALC
 		///	</summary>
@@ -5544,13 +5522,59 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Parish</c> field.
+		///	designer:fld/LVAHC/LVGD22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGD22]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity Parish
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVGD22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Parish;
+				if (oldValue != value || !this.IsFieldDefined("[LVGD22]"))
+				{
+					this.OnParishChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVGD22]", oldValue, value);
+					this.OnParishChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVAHC/LVGE22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGE22]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGE22]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVGE22]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVGE22]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
-		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnPreferredScopeChanging(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
 		partial void OnPreferredScopeChanged(global::Epsitec.Aider.Entities.AiderUserScopeEntity oldValue, global::Epsitec.Aider.Entities.AiderUserScopeEntity newValue);
+		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

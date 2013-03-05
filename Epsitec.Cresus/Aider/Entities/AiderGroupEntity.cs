@@ -642,6 +642,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public bool IsParish()
+		{
+			return this.GroupDef.IsNotNull ()
+				&& this.GroupDef.PathTemplate == AiderGroupIds.Parish;
+		}
+
+
 		private IList<AiderGroupEntity> subgroups;
 
 

@@ -56,7 +56,10 @@ namespace Epsitec.Aider.Rules
 		{
 			AiderUserBusinessRules.CheckLoginNameIsNotEmpty (user);
 			this.CheckLoginNameIsUnique (user);
+			AiderUserBusinessRules.CheckParishIsParishGroup (user);
+
 			AiderUserBusinessRules.UpdateDisplayName (user);
+			AiderUserBusinessRules.UpdateParishGroupPathCache (user);
 		}
 
 
@@ -92,15 +95,36 @@ namespace Epsitec.Aider.Rules
 				Logic.BusinessRuleException (user, message);
 			}
 		}
-			
+
+
+		private static void CheckParishIsParishGroup(AiderUserEntity user)
+		{
+			if (user.Parish.IsNull () || user.Parish.IsParish ())
+			{
+				return;
+			}
+
+			var message = "La paroisse n'est pas un groupe de paroisse";
+
+			Logic.BusinessRuleException (user, message);
+		}
+
 
 		private static void UpdateDisplayName(AiderUserEntity user)
 		{
-			user.DisplayName = user.Person.IsNotNull ()
-				? user.Person.DisplayName
-				: user.LoginName;
+			user.DisplayName = user.LoginName;
 		}
-			
+
+
+		private static void UpdateParishGroupPathCache(AiderUserEntity user)
+		{
+			var path = user.Parish.Path;
+
+			user.ParishGroupPathCache = string.IsNullOrEmpty (path)
+				? null
+				: path;
+		}
+
 
 	}
 

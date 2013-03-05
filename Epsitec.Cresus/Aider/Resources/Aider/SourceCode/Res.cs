@@ -1811,11 +1811,13 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderUser.Person, null);
+					global::System.Object.Equals (AiderUser.Parish, null);
 				}
 				
-				//	designer:cap/LVAIC
-				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 402);
+				//	designer:cap/LVGD22
+				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 77);
+				//	designer:cap/LVGE22
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 78);
 				//	designer:cap/LVAGD
 				public static readonly global::Epsitec.Common.Support.Druid PreferredScope = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 432);
 				//	designer:cap/LVALC

@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Override;
 
@@ -33,11 +34,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.EnableAction (0)
 				.EnableAction (1)
-				.EnableAction (2)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.Person)
-						.ReadOnly ()
+					.Field (x => x.Parish)
+						.WithSpecialField<AiderGroupSpecialField<AiderUserEntity>> ()
 					.Field (x => x.LoginName)
 					.Field (x => x.Role)
 					.Field (x => x.Disabled)
@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.EnableAction (0)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.Person)
+					.Field (x => x.Parish)
 						.ReadOnly ()
 					.Field (x => x.LoginName)
 						.ReadOnly ()

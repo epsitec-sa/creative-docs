@@ -115,10 +115,8 @@ namespace Epsitec.Aider.Data
 			return int.Parse (part);
 		}
 
-		public static string ReplacePlaceholders(string path)
+		public static string ReplacePlaceholders(string path, string parishPath)
 		{
-			var parishPath = AiderGroupIds.GetParishPath ();
-
 			path = AiderGroupIds.ReplacePlaceholder (path, "<R>.", parishPath, 0);
 			path = AiderGroupIds.ReplacePlaceholder (path, "<P>.", parishPath, 1);
 
@@ -143,16 +141,6 @@ namespace Epsitec.Aider.Data
 			}
 
 			return path.Substring (0, path.Length - AiderGroupIds.SubgroupLength);
-		}
-
-
-		private static string GetParishPath()
-		{
-			return AiderUserManager.Current.AuthenticatedUser
-				.GetValueOrDefault (x => x.Person)
-				.GetValueOrDefault (x => x.Parish)
-				.GetValueOrDefault (x => x.Group)
-				.GetValueOrDefault (x => x.Path);
 		}
 
 		private static string ReplacePlaceholder(string path, string placeholder, string parishPath, int positionInParishPath)
