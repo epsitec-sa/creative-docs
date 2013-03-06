@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				var user = this.FindUser (loginName);
 
-				if (user != null)
+				if (user != null && user.IsActive)
 				{
 					isValid = this.CheckUserAuthentication (user, password);
 				}
