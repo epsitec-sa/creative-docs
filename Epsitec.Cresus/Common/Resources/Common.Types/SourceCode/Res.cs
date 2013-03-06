@@ -872,7 +872,6 @@ namespace Epsitec.Common.Types
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Types");
-			Types._Initialize ();
 			Types.Default._Initialize ();
 			Strings._Initialize ();
 		}
