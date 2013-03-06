@@ -16,7 +16,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ChartOptions.ShowSeriesCaptions, null);
+					global::System.Object.Equals (ChartOptions.ShowSeriesCaptions, null);
 				}
 				
 				//	designer:cap/BVAT
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (File.ExportImage, null);
+					global::System.Object.Equals (File.ExportImage, null);
 				}
 				
 				//	designer:cap/BVA5
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (General.DownloadUpdate, null);
+					global::System.Object.Equals (General.DownloadUpdate, null);
 				}
 				
 				//	designer:cap/BVAN
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (GraphType.UseBarChartHorizontal, null);
+					global::System.Object.Equals (GraphType.UseBarChartHorizontal, null);
 				}
 				
 				//	designer:cap/BVA2
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class Application
@@ -538,7 +538,7 @@ namespace Epsitec.Cresus
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

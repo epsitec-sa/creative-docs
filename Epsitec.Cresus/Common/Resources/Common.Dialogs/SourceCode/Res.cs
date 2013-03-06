@@ -16,14 +16,14 @@ namespace Epsitec.Common.Dialogs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Dialog.File.Delete, null);
+					global::System.Object.Equals (Dialog.File.Delete, null);
 				}
 				
 				public static class File
 				{
 					internal static void _Initialize()
 					{
-						System.Object.Equals (Dialog.File.Delete, null);
+						global::System.Object.Equals (Dialog.File.Delete, null);
 					}
 					
 					//	designer:cap/6005
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						internal static void _Initialize()
 						{
-							System.Object.Equals (Dialog.File.Favorites.Add, null);
+							global::System.Object.Equals (Dialog.File.Favorites.Add, null);
 						}
 						
 						//	designer:cap/6008
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					internal static void _Initialize()
 					{
-						System.Object.Equals (Dialog.Generic.Apply, null);
+						global::System.Object.Equals (Dialog.Generic.Apply, null);
 					}
 					
 					//	designer:cap/6014
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (HintList.ClearSearch, null);
+					global::System.Object.Equals (HintList.ClearSearch, null);
 				}
 				
 				//	designer:cap/6017
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (ISearchable, null);
+				global::System.Object.Equals (ISearchable, null);
 			}
 			
 			//	designer:cap/6015
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ISearchable.SearchValue, null);
+					global::System.Object.Equals (ISearchable.SearchValue, null);
 				}
 				
 				//	designer:cap/6016
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class Dialog
@@ -1066,7 +1066,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

@@ -614,12 +614,21 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			string[] wellKnownPrefixes = new string[] { "CollectionType.", "StructuredType." };
 
+			// We need to generate an initializer at this point only if there are fields at the
+			// root level of the Types class and not within one of its inner class. That's what we
+			// get here, the list of fields that are at the root level. They are the fields whose
+			// name does not contain a dot after the "typ." prefix and the fields which have a well
+			// known prefix that will be stripped off later on.
+
 			var fieldToInitialize = (
-					from p in wellKnownPrefixes
 					from f in fields
 					let subst = f.Substring (4)
-					where subst.StartsWith (p)
-					select subst.Substring (p.Length)
+					let dotIndex = subst.IndexOf ('.')
+					where dotIndex == -1
+					   || wellKnownPrefixes.Contains (subst.Substring (0, dotIndex + 1))
+					select dotIndex == -1
+					     ? subst
+					     : subst.Substring (dotIndex + 1)
 				 )
 				 .FirstOrDefault ();
 

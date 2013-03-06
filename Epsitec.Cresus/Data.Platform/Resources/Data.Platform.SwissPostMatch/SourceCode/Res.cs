@@ -14,7 +14,7 @@ namespace Epsitec.Data.Platform
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (MatchStreet, null);
+				global::System.Object.Equals (MatchStreet, null);
 			}
 			
 			//	designer:cap/MVA
@@ -27,7 +27,7 @@ namespace Epsitec.Data.Platform
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (MatchStreet.AddressPostcode, null);
+					global::System.Object.Equals (MatchStreet.AddressPostcode, null);
 				}
 				
 				//	designer:cap/MVA2
@@ -63,7 +63,7 @@ namespace Epsitec.Data.Platform
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -122,7 +122,7 @@ namespace Epsitec.Data.Platform
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

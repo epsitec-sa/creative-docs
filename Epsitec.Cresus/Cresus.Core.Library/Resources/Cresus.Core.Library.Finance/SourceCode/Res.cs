@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Core.Library.Finance
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (AccountingOperation, null);
+				global::System.Object.Equals (AccountingOperation, null);
 			}
 			
 			public static class Decimal
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Decimal.ExchangeRate, null);
+					global::System.Object.Equals (Decimal.ExchangeRate, null);
 				}
 				
 				//	designer:cap/CVAL4
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Enum.BillingMode, null);
+					global::System.Object.Equals (Enum.BillingMode, null);
 				}
 				
 				//	designer:cap/CVAU2
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (String.BookAccount, null);
+					global::System.Object.Equals (String.BookAccount, null);
 				}
 				
 				//	designer:cap/CVAK
@@ -697,7 +697,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AccountingOperation.ReducedVatCode, null);
+					global::System.Object.Equals (AccountingOperation.ReducedVatCode, null);
 				}
 				
 				//	designer:cap/CVAP5
@@ -712,7 +712,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Currency.CurrencyCode, null);
+					global::System.Object.Equals (Currency.CurrencyCode, null);
 				}
 				
 				//	designer:cap/CVA91
@@ -731,7 +731,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ExchangeRateSource.Originator, null);
+					global::System.Object.Equals (ExchangeRateSource.Originator, null);
 				}
 				
 				//	designer:cap/CVAE1
@@ -744,7 +744,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (FinanceSettings.IsrDefs, null);
+					global::System.Object.Equals (FinanceSettings.IsrDefs, null);
 				}
 				
 				//	designer:cap/CVAU3
@@ -761,7 +761,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IRoundingMode.AddBeforeModulo, null);
+					global::System.Object.Equals (IRoundingMode.AddBeforeModulo, null);
 				}
 				
 				//	designer:cap/CVAO3
@@ -774,7 +774,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IsrDefinition.BankAccount, null);
+					global::System.Object.Equals (IsrDefinition.BankAccount, null);
 				}
 				
 				//	designer:cap/CVAI
@@ -799,7 +799,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PaymentCategory.BookAccount, null);
+					global::System.Object.Equals (PaymentCategory.BookAccount, null);
 				}
 				
 				//	designer:cap/CVA01
@@ -814,7 +814,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PaymentDetail.Amount, null);
+					global::System.Object.Equals (PaymentDetail.Amount, null);
 				}
 				
 				//	designer:cap/CVAP4
@@ -837,7 +837,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PaymentReminderDefinition.AdministrativeTaxCode, null);
+					global::System.Object.Equals (PaymentReminderDefinition.AdministrativeTaxCode, null);
 				}
 				
 				//	designer:cap/CVA42
@@ -850,7 +850,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PaymentTransaction.InstalmentName, null);
+					global::System.Object.Equals (PaymentTransaction.InstalmentName, null);
 				}
 				
 				//	designer:cap/CVAS
@@ -871,7 +871,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PriceCalculator.Informations, null);
+					global::System.Object.Equals (PriceCalculator.Informations, null);
 				}
 				
 				//	designer:cap/CVAH4
@@ -884,7 +884,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PriceDiscount.DiscountPolicy, null);
+					global::System.Object.Equals (PriceDiscount.DiscountPolicy, null);
 				}
 				
 				//	designer:cap/CVA65
@@ -903,7 +903,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PriceGroup.BillingMode, null);
+					global::System.Object.Equals (PriceGroup.BillingMode, null);
 				}
 				
 				//	designer:cap/CVA75
@@ -922,7 +922,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PriceRoundingMode.RoundingPolicy, null);
+					global::System.Object.Equals (PriceRoundingMode.RoundingPolicy, null);
 				}
 				
 				//	designer:cap/CVA34
@@ -933,7 +933,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (TaxSettings.TaxMode, null);
+					global::System.Object.Equals (TaxSettings.TaxMode, null);
 				}
 				
 				//	designer:cap/CVAR3
@@ -948,7 +948,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (VatDefinition.Rate, null);
+					global::System.Object.Equals (VatDefinition.Rate, null);
 				}
 				
 				//	designer:cap/CVAS4
@@ -964,7 +964,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -1041,7 +1041,7 @@ namespace Epsitec.Cresus.Core.Library.Finance
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

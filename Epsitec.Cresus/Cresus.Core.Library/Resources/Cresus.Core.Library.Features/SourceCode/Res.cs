@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (ProductCustomization, null);
+				global::System.Object.Equals (ProductCustomization, null);
 			}
 			
 			//	designer:cap/JVA3
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ProductCustomization.Settings, null);
+					global::System.Object.Equals (ProductCustomization.Settings, null);
 				}
 				
 				//	designer:cap/JVA4
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ProductFeature.DisabledSettings, null);
+					global::System.Object.Equals (ProductFeature.DisabledSettings, null);
 				}
 				
 				//	designer:cap/JVA2
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ProductSettings.LicensedFeatures, null);
+					global::System.Object.Equals (ProductSettings.LicensedFeatures, null);
 				}
 				
 				//	designer:cap/JVA6
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Library.Features
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

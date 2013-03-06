@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Lines.Combine, null);
+					global::System.Object.Equals (Lines.Combine, null);
 				}
 				
 				//	designer:cap/GVKH
@@ -156,14 +156,14 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (AbstractArticleParameterDefinition, null);
+				global::System.Object.Equals (AbstractArticleParameterDefinition, null);
 			}
 			
 			public static class Decimal
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Decimal.ArticleQuantity, null);
+					global::System.Object.Equals (Decimal.ArticleQuantity, null);
 				}
 				
 				//	designer:cap/GVA47
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Enum.ArticleDocumentItemAttributes, null);
+					global::System.Object.Equals (Enum.ArticleDocumentItemAttributes, null);
 				}
 				
 				//	designer:cap/GVA67
@@ -576,7 +576,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AbstractDocumentItem.Attributes, null);
+					global::System.Object.Equals (AbstractDocumentItem.Attributes, null);
 				}
 				
 				//	designer:cap/GVA27
@@ -589,7 +589,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Affair.ActiveAffairOwner, null);
+					global::System.Object.Equals (Affair.ActiveAffairOwner, null);
 				}
 				
 				//	designer:cap/GVAM8
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleAccountingDefinition.AccountingOperation, null);
+					global::System.Object.Equals (ArticleAccountingDefinition.AccountingOperation, null);
 				}
 				
 				//	designer:cap/GVAK8
@@ -641,7 +641,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleCategory.Accounting, null);
+					global::System.Object.Equals (ArticleCategory.Accounting, null);
 				}
 				
 				//	designer:cap/GVA23
@@ -664,7 +664,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleDefinition.ArticleAvailabilities, null);
+					global::System.Object.Equals (ArticleDefinition.ArticleAvailabilities, null);
 				}
 				
 				//	designer:cap/GVAM3
@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleDocumentItem.ArticleAccountingDefinition, null);
+					global::System.Object.Equals (ArticleDocumentItem.ArticleAccountingDefinition, null);
 				}
 				
 				//	designer:cap/GVA02
@@ -742,7 +742,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleGroup.Type, null);
+					global::System.Object.Equals (ArticleGroup.Type, null);
 				}
 				
 				//	designer:cap/GVA89
@@ -753,7 +753,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticlePrice.BillingUnit, null);
+					global::System.Object.Equals (ArticlePrice.BillingUnit, null);
 				}
 				
 				//	designer:cap/GVAB8
@@ -778,7 +778,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleQuantity.ColumnName, null);
+					global::System.Object.Equals (ArticleQuantity.ColumnName, null);
 				}
 				
 				//	designer:cap/GVAU1
@@ -797,7 +797,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleQuantityColumn.QuantityType, null);
+					global::System.Object.Equals (ArticleQuantityColumn.QuantityType, null);
 				}
 				
 				//	designer:cap/GVAM6
@@ -810,7 +810,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleSupply.RestockingDelay, null);
+					global::System.Object.Equals (ArticleSupply.RestockingDelay, null);
 				}
 				
 				//	designer:cap/GVAU3
@@ -831,7 +831,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ArticleTraceabilityDetail.BatchId, null);
+					global::System.Object.Equals (ArticleTraceabilityDetail.BatchId, null);
 				}
 				
 				//	designer:cap/GVAN1
@@ -844,7 +844,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (BusinessDocument.BaseDocumentCode, null);
+					global::System.Object.Equals (BusinessDocument.BaseDocumentCode, null);
 				}
 				
 				//	designer:cap/GVAK6
@@ -883,7 +883,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (BusinessSettings.Company, null);
+					global::System.Object.Equals (BusinessSettings.Company, null);
 				}
 				
 				//	designer:cap/GVAP
@@ -904,7 +904,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Customer.Affairs, null);
+					global::System.Object.Equals (Customer.Affairs, null);
 				}
 				
 				//	designer:cap/GVA26
@@ -925,7 +925,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (CustomerCategory.DefaultPaymentCategory, null);
+					global::System.Object.Equals (CustomerCategory.DefaultPaymentCategory, null);
 				}
 				
 				//	designer:cap/GVAR8
@@ -940,7 +940,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (EndTotalDocumentItem.FixedPriceAfterTax, null);
+					global::System.Object.Equals (EndTotalDocumentItem.FixedPriceAfterTax, null);
 				}
 				
 				//	designer:cap/GVAE4
@@ -961,7 +961,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (EnumValueArticleParameterDefinition.Cardinality, null);
+					global::System.Object.Equals (EnumValueArticleParameterDefinition.Cardinality, null);
 				}
 				
 				//	designer:cap/GVA95
@@ -980,7 +980,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (FinanceSettings.DefaultCurrencyCode, null);
+					global::System.Object.Equals (FinanceSettings.DefaultCurrencyCode, null);
 				}
 				
 				//	designer:cap/GVAO7
@@ -1003,7 +1003,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (FreeTextValueArticleParameterDefinition.LongText, null);
+					global::System.Object.Equals (FreeTextValueArticleParameterDefinition.LongText, null);
 				}
 				
 				//	designer:cap/GVAR5
@@ -1016,7 +1016,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IArticleDefinitionParameters.ArticleDefinition, null);
+					global::System.Object.Equals (IArticleDefinitionParameters.ArticleDefinition, null);
 				}
 				
 				//	designer:cap/GVAI1
@@ -1029,7 +1029,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IBusinessLink.BusinessCodeVector, null);
+					global::System.Object.Equals (IBusinessLink.BusinessCodeVector, null);
 				}
 				
 				//	designer:cap/GVA5
@@ -1040,7 +1040,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (NumericValueArticleParameterDefinition.DefaultValue, null);
+					global::System.Object.Equals (NumericValueArticleParameterDefinition.DefaultValue, null);
 				}
 				
 				//	designer:cap/GVAH5
@@ -1059,7 +1059,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (OptionValue.Quantity, null);
+					global::System.Object.Equals (OptionValue.Quantity, null);
 				}
 				
 				//	designer:cap/GVAN5
@@ -1070,7 +1070,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (OptionValueArticleParameterDefinition.Cardinality, null);
+					global::System.Object.Equals (OptionValueArticleParameterDefinition.Cardinality, null);
 				}
 				
 				//	designer:cap/GVAL5
@@ -1083,7 +1083,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PaymentReminderDefinition.AdministrativeTaxArticle, null);
+					global::System.Object.Equals (PaymentReminderDefinition.AdministrativeTaxArticle, null);
 				}
 				
 				//	designer:cap/GVAF6
@@ -1096,7 +1096,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (People.PeopleGroups, null);
+					global::System.Object.Equals (People.PeopleGroups, null);
 				}
 				
 				//	designer:cap/GVA99
@@ -1109,7 +1109,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PriceGroup.PriceBillingMode, null);
+					global::System.Object.Equals (PriceGroup.PriceBillingMode, null);
 				}
 				
 				//	designer:cap/GVAF8
@@ -1120,7 +1120,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Relation.Contacts, null);
+					global::System.Object.Equals (Relation.Contacts, null);
 				}
 				
 				//	designer:cap/GVAC9
@@ -1143,7 +1143,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (SubTotalDocumentItem.Discount, null);
+					global::System.Object.Equals (SubTotalDocumentItem.Discount, null);
 				}
 				
 				//	designer:cap/GVAM4
@@ -1170,7 +1170,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (TaxDocumentItem.ResultingTax, null);
+					global::System.Object.Equals (TaxDocumentItem.ResultingTax, null);
 				}
 				
 				//	designer:cap/GVA05
@@ -1189,7 +1189,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (TextDocumentItem.Text, null);
+					global::System.Object.Equals (TextDocumentItem.Text, null);
 				}
 				
 				//	designer:cap/GVAT5
@@ -1203,7 +1203,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -1296,7 +1296,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Base.ShowAbstractArticleParameterDefinition, null);
+					global::System.Object.Equals (Base.ShowAbstractArticleParameterDefinition, null);
 				}
 				
 				//	designer:cap/L0KU1
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Clipboard.Copy, null);
+					global::System.Object.Equals (Clipboard.Copy, null);
 				}
 				
 				//	designer:cap/L0K5
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Edition.Preview, null);
+					global::System.Object.Equals (Edition.Preview, null);
 				}
 				
 				//	designer:cap/L0A3C
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (File.ExportAccountingEntries, null);
+					global::System.Object.Equals (File.ExportAccountingEntries, null);
 				}
 				
 				//	designer:cap/L0KA2
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Global.ShowDebug, null);
+					global::System.Object.Equals (Global.ShowDebug, null);
 				}
 				
 				//	designer:cap/L0KO
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Core
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Test.Crash, null);
+					global::System.Object.Equals (Test.Crash, null);
 				}
 				
 				//	designer:cap/L0A
@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Core
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class Error
@@ -610,7 +610,7 @@ namespace Epsitec.Cresus.Core
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

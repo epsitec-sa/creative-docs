@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Database
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Num.CollectionRank, null);
+					global::System.Object.Equals (Num.CollectionRank, null);
 				}
 				
 				//	designer:cap/K01
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Database
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Other.DateTime, null);
+					global::System.Object.Equals (Other.DateTime, null);
 				}
 				
 				//	designer:cap/K00D
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Database
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Str.InfoXml, null);
+					global::System.Object.Equals (Str.InfoXml, null);
 				}
 				
 				//	designer:cap/K009
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Database
 				{
 					internal static void _Initialize()
 					{
-						System.Object.Equals (Str.Dict.Key, null);
+						global::System.Object.Equals (Str.Dict.Key, null);
 					}
 					
 					//	designer:cap/K00A
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Database
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			//	designer:str/K
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Tests.Vs
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (CollectionData, null);
+				global::System.Object.Equals (CollectionData, null);
 			}
 			
 			//	designer:cap/I1A5
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (CollectionData.Collection, null);
+					global::System.Object.Equals (CollectionData.Collection, null);
 				}
 				
 				//	designer:cap/I1A6
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ReferenceData.Reference, null);
+					global::System.Object.Equals (ReferenceData.Reference, null);
 				}
 				
 				//	designer:cap/I1A4
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ValueData.NullableValue, null);
+					global::System.Object.Equals (ValueData.NullableValue, null);
 				}
 				
 				//	designer:cap/I1A2
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Tests.Vs
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Tests.Vs
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

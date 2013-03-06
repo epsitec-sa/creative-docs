@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			//	designer:str/A1G302
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

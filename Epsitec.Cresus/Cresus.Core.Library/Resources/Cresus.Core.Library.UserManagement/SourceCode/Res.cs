@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (DataSetUISettings, null);
+				global::System.Object.Equals (UserAuthenticationMethod, null);
 			}
 			
 			//	designer:cap/AVAM
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (DataSetUISettings.DataSetCommandId, null);
+					global::System.Object.Equals (DataSetUISettings.DataSetCommandId, null);
 				}
 				
 				//	designer:cap/AVG102
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (EntityUISettings.EntityId, null);
+					global::System.Object.Equals (EntityUISettings.EntityId, null);
 				}
 				
 				//	designer:cap/AVAS
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (SoftwareUISettings.DataSetUISettings, null);
+					global::System.Object.Equals (SoftwareUISettings.DataSetUISettings, null);
 				}
 				
 				//	designer:cap/AVG302
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (SoftwareUser.AuthenticationMethod, null);
+					global::System.Object.Equals (SoftwareUser.AuthenticationMethod, null);
 				}
 				
 				//	designer:cap/AVAB
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (SoftwareUserGroup.Disabled, null);
+					global::System.Object.Equals (SoftwareUserGroup.Disabled, null);
 				}
 				
 				//	designer:cap/AVA3
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Core.Library.UserManagement
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

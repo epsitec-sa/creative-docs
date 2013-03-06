@@ -12,6 +12,11 @@ namespace Epsitec.Common.Types
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+				global::System.Object.Equals (BindingMode, null);
+			}
+			
 			//	designer:cap/100G
 			public static readonly Epsitec.Common.Types.EnumType BindingMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
 			//	designer:cap/1011
@@ -872,6 +877,7 @@ namespace Epsitec.Common.Types
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Types");
+			Types._Initialize ();
 			Types.Default._Initialize ();
 			Strings._Initialize ();
 		}

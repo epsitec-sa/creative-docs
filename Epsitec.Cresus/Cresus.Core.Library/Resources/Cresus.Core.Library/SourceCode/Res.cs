@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Edition.DiscardRecord, null);
+					global::System.Object.Equals (Edition.DiscardRecord, null);
 				}
 				
 				//	designer:cap/EVA8
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Focus.CloseView, null);
+					global::System.Object.Equals (Focus.CloseView, null);
 				}
 				
 				//	designer:cap/EVA21
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (History.NavigateBackward, null);
+					global::System.Object.Equals (History.NavigateBackward, null);
 				}
 				
 				//	designer:cap/EVA5
@@ -160,6 +160,11 @@ namespace Epsitec.Cresus.Core.Library
 		
 		public static class Types
 		{
+			internal static void _Initialize()
+			{
+				global::System.Object.Equals (EnumValueCardinality, null);
+			}
+			
 			//	designer:cap/EVA
 			public static readonly Epsitec.Common.Types.EnumType EnumValueCardinality = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/EVAN
@@ -346,7 +351,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -401,12 +406,13 @@ namespace Epsitec.Cresus.Core.Library
 			Commands.Edition._Initialize ();
 			Commands.Focus._Initialize ();
 			Commands.History._Initialize ();
+			Types._Initialize ();
 			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

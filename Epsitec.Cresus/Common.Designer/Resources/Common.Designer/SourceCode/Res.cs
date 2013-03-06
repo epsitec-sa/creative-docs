@@ -1270,7 +1270,7 @@ namespace Epsitec.Common.Designer
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (FieldDescription.BackColorType, null);
+					global::System.Object.Equals (FieldDescription.BackColorType, null);
 				}
 				
 				//	designer:cap/3028
@@ -1301,7 +1301,7 @@ namespace Epsitec.Common.Designer
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ObjectModifier.AnchoredHorizontalAttachment, null);
+					global::System.Object.Equals (ObjectModifier.AnchoredHorizontalAttachment, null);
 				}
 				
 				//	designer:cap/3006B
@@ -1326,7 +1326,7 @@ namespace Epsitec.Common.Designer
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Widgets.ButtonClass, null);
+					global::System.Object.Equals (Widgets.ButtonClass, null);
 				}
 				
 				//	designer:cap/3006C
@@ -2037,7 +2037,7 @@ namespace Epsitec.Common.Designer
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class Action
@@ -12743,7 +12743,7 @@ namespace Epsitec.Common.Designer
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

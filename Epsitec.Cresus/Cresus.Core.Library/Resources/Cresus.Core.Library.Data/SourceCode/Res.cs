@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Base.ShowGeneric, null);
+					global::System.Object.Equals (Base.ShowGeneric, null);
 				}
 				
 				//	designer:cap/8VA71
@@ -38,21 +38,21 @@ namespace Epsitec.Cresus.Core.Library.Data
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (Comment, null);
+				global::System.Object.Equals (Comment, null);
 			}
 			
 			public static class Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Data.Enum.AttributeState, null);
+					global::System.Object.Equals (Data.Enum.AttributeState, null);
 				}
 				
 				public static class Enum
 				{
 					internal static void _Initialize()
 					{
-						System.Object.Equals (Data.Enum.AttributeState, null);
+						global::System.Object.Equals (Data.Enum.AttributeState, null);
 					}
 					
 					//	designer:cap/8VAO1
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 				{
 					internal static void _Initialize()
 					{
-						System.Object.Equals (Data.Numeric.Variant, null);
+						global::System.Object.Equals (Data.Numeric.Variant, null);
 					}
 					
 					//	designer:cap/8VAH1
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 				{
 					internal static void _Initialize()
 					{
-						System.Object.Equals (Data.String.CommandId, null);
+						global::System.Object.Equals (Data.String.CommandId, null);
 					}
 					
 					//	designer:cap/8VAG1
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Comment.Text, null);
+					global::System.Object.Equals (Comment.Text, null);
 				}
 				
 				//	designer:cap/8VAR
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (EntityAttribute.AttributeCategory, null);
+					global::System.Object.Equals (EntityAttribute.AttributeCategory, null);
 				}
 				
 				//	designer:cap/8VA22
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (EntityAttributeCategory.AttributeType, null);
+					global::System.Object.Equals (EntityAttributeCategory.AttributeType, null);
 				}
 				
 				//	designer:cap/8VAA2
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (GeneratorDefinition.Entity, null);
+					global::System.Object.Equals (GeneratorDefinition.Entity, null);
 				}
 				
 				//	designer:cap/8VAA1
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IComments.Comments, null);
+					global::System.Object.Equals (IComments.Comments, null);
 				}
 				
 				//	designer:cap/8VAT
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IDataHash.StrongHash, null);
+					global::System.Object.Equals (IDataHash.StrongHash, null);
 				}
 				
 				//	designer:cap/8VAD
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IDateMetadata.CreationDate, null);
+					global::System.Object.Equals (IDateMetadata.CreationDate, null);
 				}
 				
 				//	designer:cap/8VAH
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IDateRange.BeginDate, null);
+					global::System.Object.Equals (IDateRange.BeginDate, null);
 				}
 				
 				//	designer:cap/8VAO
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IDateTimeRange.BeginDate, null);
+					global::System.Object.Equals (IDateTimeRange.BeginDate, null);
 				}
 				
 				//	designer:cap/8VAK
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IEntityAttribute.AttributeState, null);
+					global::System.Object.Equals (IEntityAttribute.AttributeState, null);
 				}
 				
 				//	designer:cap/8VAT1
@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IFileMetadata.FileMimeType, null);
+					global::System.Object.Equals (IFileMetadata.FileMimeType, null);
 				}
 				
 				//	designer:cap/8VAG
@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IFreezable.IsFrozen, null);
+					global::System.Object.Equals (IFreezable.IsFrozen, null);
 				}
 				
 				//	designer:cap/8VAC2
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IItemCode.Code, null);
+					global::System.Object.Equals (IItemCode.Code, null);
 				}
 				
 				//	designer:cap/8VA5
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IItemCodeUniversalReference.RefCode, null);
+					global::System.Object.Equals (IItemCodeUniversalReference.RefCode, null);
 				}
 				
 				//	designer:cap/8VAJ1
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IItemRank.Rank, null);
+					global::System.Object.Equals (IItemRank.Rank, null);
 				}
 				
 				//	designer:cap/8VA1
@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ILifetime.IsArchive, null);
+					global::System.Object.Equals (ILifetime.IsArchive, null);
 				}
 				
 				//	designer:cap/8VA3
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (INameDescription.Description, null);
+					global::System.Object.Equals (INameDescription.Description, null);
 				}
 				
 				//	designer:cap/8VA8
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IPreferred.IsPreferred, null);
+					global::System.Object.Equals (IPreferred.IsPreferred, null);
 				}
 				
 				//	designer:cap/8VAE2
@@ -464,7 +464,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IReferenceNumber.IdA, null);
+					global::System.Object.Equals (IReferenceNumber.IdA, null);
 				}
 				
 				//	designer:cap/8VA11
@@ -479,7 +479,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Language.IsoLanguageCode, null);
+					global::System.Object.Equals (Language.IsoLanguageCode, null);
 				}
 				
 				//	designer:cap/8VAV
@@ -490,7 +490,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (XmlBlob.Data, null);
+					global::System.Object.Equals (XmlBlob.Data, null);
 				}
 				
 				//	designer:cap/8VA51
@@ -504,7 +504,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class Error
@@ -671,7 +671,7 @@ namespace Epsitec.Cresus.Core.Library.Data
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

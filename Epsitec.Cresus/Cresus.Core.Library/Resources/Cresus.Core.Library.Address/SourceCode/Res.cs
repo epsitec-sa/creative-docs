@@ -60,14 +60,14 @@ namespace Epsitec.Cresus.Core.Library.Address
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (AbstractContact, null);
+				global::System.Object.Equals (AbstractContact, null);
 			}
 			
 			public static class Enum
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Enum.ContactGroupType, null);
+					global::System.Object.Equals (Enum.ContactGroupType, null);
 				}
 				
 				//	designer:cap/FVAU1
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (String.PhoneNumber, null);
+					global::System.Object.Equals (String.PhoneNumber, null);
 				}
 				
 				//	designer:cap/FVAQ2
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AbstractContact.ContactGroups, null);
+					global::System.Object.Equals (AbstractContact.ContactGroups, null);
 				}
 				
 				//	designer:cap/FVA7
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AbstractPerson.Contacts, null);
+					global::System.Object.Equals (AbstractPerson.Contacts, null);
 				}
 				
 				//	designer:cap/FVA2
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Address.Location, null);
+					global::System.Object.Equals (Address.Location, null);
 				}
 				
 				//	designer:cap/FVAG1
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ContactGroup.ContactGroupType, null);
+					global::System.Object.Equals (ContactGroup.ContactGroupType, null);
 				}
 				
 				//	designer:cap/FVA42
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ContactPerson.Groups, null);
+					global::System.Object.Equals (ContactPerson.Groups, null);
 				}
 				
 				//	designer:cap/FVAL2
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Country.CountryCode, null);
+					global::System.Object.Equals (Country.CountryCode, null);
 				}
 				
 				//	designer:cap/FVA51
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IAddressComplement.Complement, null);
+					global::System.Object.Equals (IAddressComplement.Complement, null);
 				}
 				
 				//	designer:cap/FVAU
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (LegalPerson.Complement, null);
+					global::System.Object.Equals (LegalPerson.Complement, null);
 				}
 				
 				//	designer:cap/FVAQ
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (LegalPersonType.ShortName, null);
+					global::System.Object.Equals (LegalPersonType.ShortName, null);
 				}
 				
 				//	designer:cap/FVAM
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Location.Country, null);
+					global::System.Object.Equals (Location.Country, null);
 				}
 				
 				//	designer:cap/FVA91
@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (MailContact.Complement, null);
+					global::System.Object.Equals (MailContact.Complement, null);
 				}
 				
 				//	designer:cap/FVAB2
@@ -381,7 +381,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (NaturalPerson.DateOfBirth, null);
+					global::System.Object.Equals (NaturalPerson.DateOfBirth, null);
 				}
 				
 				//	designer:cap/FVAJ
@@ -402,7 +402,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (People.NaturalPerson, null);
+					global::System.Object.Equals (People.NaturalPerson, null);
 				}
 				
 				//	designer:cap/FVA82
@@ -415,7 +415,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PersonTitle.CompatibleGenders, null);
+					global::System.Object.Equals (PersonTitle.CompatibleGenders, null);
 				}
 				
 				//	designer:cap/FVAE
@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PostBox.Number, null);
+					global::System.Object.Equals (PostBox.Number, null);
 				}
 				
 				//	designer:cap/FVAI1
@@ -441,7 +441,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (StateProvinceCounty.Country, null);
+					global::System.Object.Equals (StateProvinceCounty.Country, null);
 				}
 				
 				//	designer:cap/FVAD1
@@ -456,7 +456,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Street.StreetName, null);
+					global::System.Object.Equals (Street.StreetName, null);
 				}
 				
 				//	designer:cap/FVAH1
@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (TelecomContact.Extension, null);
+					global::System.Object.Equals (TelecomContact.Extension, null);
 				}
 				
 				//	designer:cap/FVAO1
@@ -482,7 +482,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (UriContact.Uri, null);
+					global::System.Object.Equals (UriContact.Uri, null);
 				}
 				
 				//	designer:cap/FVAT1
@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (UriType.Protocol, null);
+					global::System.Object.Equals (UriType.Protocol, null);
 				}
 				
 				//	designer:cap/FVAR1
@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -589,7 +589,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

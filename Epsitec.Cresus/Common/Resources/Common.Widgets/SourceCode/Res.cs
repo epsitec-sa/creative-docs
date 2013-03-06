@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ColorPalette.Load, null);
+					global::System.Object.Equals (ColorPalette.Load, null);
 				}
 				
 				//	designer:cap/001
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Widgets
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class AbstractTextField
@@ -1734,7 +1734,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

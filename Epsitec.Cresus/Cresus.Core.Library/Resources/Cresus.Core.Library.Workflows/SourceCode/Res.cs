@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (IWorkflowHost, null);
+				global::System.Object.Equals (WorkflowNodeAttributes, null);
 			}
 			
 			//	designer:cap/DVAJ1
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IWorkflowHost.Workflow, null);
+					global::System.Object.Equals (IWorkflowHost.Workflow, null);
 				}
 				
 				//	designer:cap/DVA31
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Workflow.Threads, null);
+					global::System.Object.Equals (Workflow.Threads, null);
 				}
 				
 				//	designer:cap/DVAO
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (WorkflowCall.Continuation, null);
+					global::System.Object.Equals (WorkflowCall.Continuation, null);
 				}
 				
 				//	designer:cap/DVAF
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (WorkflowDefinition.SerializedDesign, null);
+					global::System.Object.Equals (WorkflowDefinition.SerializedDesign, null);
 				}
 				
 				//	designer:cap/DVAN
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (WorkflowEdge.Continuation, null);
+					global::System.Object.Equals (WorkflowEdge.Continuation, null);
 				}
 				
 				//	designer:cap/DVAC
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (WorkflowNode.Attributes, null);
+					global::System.Object.Equals (WorkflowNode.Attributes, null);
 				}
 				
 				//	designer:cap/DVAN1
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (WorkflowStep.Date, null);
+					global::System.Object.Equals (WorkflowStep.Date, null);
 				}
 				
 				//	designer:cap/DVAR
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (WorkflowThread.CallGraph, null);
+					global::System.Object.Equals (WorkflowThread.CallGraph, null);
 				}
 				
 				//	designer:cap/DVAJ
@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (AbstractDocument, null);
+				global::System.Object.Equals (DocumentFlowDirection, null);
 			}
 			
 			//	designer:cap/HVAF
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AbstractDocument.VariantId, null);
+					global::System.Object.Equals (AbstractDocument.VariantId, null);
 				}
 				
 				//	designer:cap/HVA42
@@ -464,7 +464,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (DocumentCategory.DocumentFlowDirection, null);
+					global::System.Object.Equals (DocumentCategory.DocumentFlowDirection, null);
 				}
 				
 				//	designer:cap/HVAJ1
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (DocumentCategoryMapping.DocumentCategories, null);
+					global::System.Object.Equals (DocumentCategoryMapping.DocumentCategories, null);
 				}
 				
 				//	designer:cap/HVAO1
@@ -498,7 +498,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (DocumentMetadata.BusinessDocument, null);
+					global::System.Object.Equals (DocumentMetadata.BusinessDocument, null);
 				}
 				
 				//	designer:cap/HVAL1
@@ -517,7 +517,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (DocumentOptions.SerializedData, null);
+					global::System.Object.Equals (DocumentOptions.SerializedData, null);
 				}
 				
 				//	designer:cap/HVAA
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (DocumentPrintingUnits.SerializedData, null);
+					global::System.Object.Equals (DocumentPrintingUnits.SerializedData, null);
 				}
 				
 				//	designer:cap/HVAB
@@ -539,7 +539,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (SerializedDocumentBlob.Data, null);
+					global::System.Object.Equals (SerializedDocumentBlob.Data, null);
 				}
 				
 				//	designer:cap/HVAD
@@ -553,7 +553,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			public static class BusinessDocument
@@ -862,7 +862,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

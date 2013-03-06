@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (UnitOfMeasure, null);
+				global::System.Object.Equals (UnitOfMeasureCategory, null);
 			}
 			
 			//	designer:cap/IVA5
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (UnitOfMeasure.Category, null);
+					global::System.Object.Equals (UnitOfMeasure.Category, null);
 				}
 				
 				//	designer:cap/IVA4
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (UnitOfMeasureGroup.Category, null);
+					global::System.Object.Equals (UnitOfMeasureGroup.Category, null);
 				}
 				
 				//	designer:cap/IVAG
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Core.Library.Measures
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

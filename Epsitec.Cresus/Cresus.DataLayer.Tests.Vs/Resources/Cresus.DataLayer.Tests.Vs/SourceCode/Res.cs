@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (AbstractContact, null);
+				global::System.Object.Equals (SimpleEnum, null);
 			}
 			
 			//	designer:cap/J1AH2
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AbstractContact.Comments, null);
+					global::System.Object.Equals (AbstractContact.Comments, null);
 				}
 				
 				//	designer:cap/J1AQ1
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (AbstractPerson.Contacts, null);
+					global::System.Object.Equals (AbstractPerson.Contacts, null);
 				}
 				
 				//	designer:cap/J1AC1
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Address.Location, null);
+					global::System.Object.Equals (Address.Location, null);
 				}
 				
 				//	designer:cap/J1AM
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Comment.Text, null);
+					global::System.Object.Equals (Comment.Text, null);
 				}
 				
 				//	designer:cap/J1A51
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ContactRole.Name, null);
+					global::System.Object.Equals (ContactRole.Name, null);
 				}
 				
 				//	designer:cap/J1A01
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Country.Name, null);
+					global::System.Object.Equals (Country.Name, null);
 				}
 				
 				//	designer:cap/J1A5
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IItemCode.Code, null);
+					global::System.Object.Equals (IItemCode.Code, null);
 				}
 				
 				//	designer:cap/J1A3
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (IItemRank.Rank, null);
+					global::System.Object.Equals (IItemRank.Rank, null);
 				}
 				
 				//	designer:cap/J1A1
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Language.Name, null);
+					global::System.Object.Equals (Language.Name, null);
 				}
 				
 				//	designer:cap/J1AU
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (LegalPerson.Complement, null);
+					global::System.Object.Equals (LegalPerson.Complement, null);
 				}
 				
 				//	designer:cap/J1AI1
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (LegalPersonType.Name, null);
+					global::System.Object.Equals (LegalPersonType.Name, null);
 				}
 				
 				//	designer:cap/J1A31
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Location.Country, null);
+					global::System.Object.Equals (Location.Country, null);
 				}
 				
 				//	designer:cap/J1AC
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (MailContact.Address, null);
+					global::System.Object.Equals (MailContact.Address, null);
 				}
 				
 				//	designer:cap/J1AV1
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (NaturalPerson.BirthDate, null);
+					global::System.Object.Equals (NaturalPerson.BirthDate, null);
 				}
 				
 				//	designer:cap/J1AO1
@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PersonGender.Name, null);
+					global::System.Object.Equals (PersonGender.Name, null);
 				}
 				
 				//	designer:cap/J1AR
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PersonTitle.ComptatibleGenders, null);
+					global::System.Object.Equals (PersonTitle.ComptatibleGenders, null);
 				}
 				
 				//	designer:cap/J1AS
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (PostBox.Number, null);
+					global::System.Object.Equals (PostBox.Number, null);
 				}
 				
 				//	designer:cap/J1AF
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Region.Country, null);
+					global::System.Object.Equals (Region.Country, null);
 				}
 				
 				//	designer:cap/J1A8
@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Street.Complement, null);
+					global::System.Object.Equals (Street.Complement, null);
 				}
 				
 				//	designer:cap/J1AH
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (TelecomContact.Extension, null);
+					global::System.Object.Equals (TelecomContact.Extension, null);
 				}
 				
 				//	designer:cap/J1A32
@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (TelecomType.Name, null);
+					global::System.Object.Equals (TelecomType.Name, null);
 				}
 				
 				//	designer:cap/J1A71
@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (UriContact.Uri, null);
+					global::System.Object.Equals (UriContact.Uri, null);
 				}
 				
 				//	designer:cap/J1A62
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (UriScheme.Name, null);
+					global::System.Object.Equals (UriScheme.Name, null);
 				}
 				
 				//	designer:cap/J1A91
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (ValueData.BooleanValue, null);
+					global::System.Object.Equals (ValueData.BooleanValue, null);
 				}
 				
 				//	designer:cap/J1A82
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			
@@ -528,7 +528,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager
