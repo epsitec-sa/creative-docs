@@ -92,6 +92,6 @@
   <data id="AP">&lt;s:data id="_0" f:Labels="{Collection {Text 'Collation a=A'}}" /&gt;</data>
   <data id="G002">&lt;s:data id="_0" f:Labels="{Collection {Text 'Delayed loading'}}" /&gt;</data>
   <data id="G102">&lt;s:data id="_0" f:Labels="{Collection {Text 'Boolean type yes/no'}}" /&gt;</data>
-  <data id="G302">&lt;s:data id="_0" f:Labels="{Collection {Text 'Yes'}}" /&gt;</data>
-  <data id="G202">&lt;s:data id="_0" f:Labels="{Collection {Text 'No'}}" /&gt;</data>
+  <data id="G302">&lt;s:data id="_0" f:Labels="{Collection {Text 'No'}}" /&gt;</data>
+  <data id="G202">&lt;s:data id="_0" f:Labels="{Collection {Text 'Yes'}}" /&gt;</data>
 </bundle>
