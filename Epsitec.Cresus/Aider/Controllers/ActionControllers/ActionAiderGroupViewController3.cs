@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return "Ajouter les membres d'un groupe";
+			return "Importer les membres d'un groupe";
 		}
 
 		public override ActionExecutor GetExecutor()
