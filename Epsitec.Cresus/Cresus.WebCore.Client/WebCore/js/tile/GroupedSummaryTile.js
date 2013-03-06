@@ -47,10 +47,18 @@ function() {
         );
         items[items.length - 1].isLast = true;
       }
-      else {
-        newOptions.html = Epsitec.Texts.getEmptySummaryText();
-        newOptions.bodyPadding = 5;
+      else
+      {
+        // We want to display only the title bar, without an empty blue line. We
+        // also need to remove the bottom border, otherwise there would be two
+        // bottom borders because the toolbar also has one.
+        newOptions.minHeight = null;
+        newOptions.style = {
+          borderRight: '1px solid #99BCE8',
+          borderLeft: '1px solid #99BCE8'
+        };
       }
+
       this.callParent([newOptions]);
       return this;
     },
