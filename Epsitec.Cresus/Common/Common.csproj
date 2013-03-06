@@ -1131,6 +1131,7 @@
     <Compile Include="Types\ValueStoreSetMode.cs" />
     <Compile Include="Types\VoidType.cs" />
     <Compile Include="Types\Weak.cs" />
+    <Compile Include="Types\YesOrNo.cs" />
     <Compile Include="UI\AbstractItemViewFactory.cs" />
     <Compile Include="UI\AbstractPlaceholder.cs" />
     <Compile Include="UI\CollectionPlaceholder.cs" />

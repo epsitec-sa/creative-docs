@@ -38,11 +38,13 @@ namespace Epsitec.Common.Types
 			public static readonly Epsitec.Common.Types.EnumType TimeResolution = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 43));
 			//	designer:cap/100V1
 			public static readonly Epsitec.Common.Types.EnumType TypeCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 63));
+			//	designer:cap/10G102
+			public static readonly Epsitec.Common.Types.EnumType YesOrNo = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
 			public static class Default
 			{
 				internal static void _Initialize()
 				{
-					System.Object.Equals (Default.Boolean, null);
+					global::System.Object.Equals (Default.Boolean, null);
 				}
 				
 				//	designer:cap/1003
@@ -736,6 +738,26 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
+			public static class YesOrNo
+			{
+				//	designer:cap/10G302
+				public static global::Epsitec.Common.Types.Caption No
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3));
+					}
+				}
+				//	designer:cap/10G202
+				public static global::Epsitec.Common.Types.Caption Yes
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 2));
+					}
+				}
+			}
+			
 		}
 		
 		//	Code mapping for 'String' resources
@@ -744,7 +766,7 @@ namespace Epsitec.Common.Types
 		{
 			internal static void _Initialize()
 			{
-				System.Object.Equals (_stringsBundle, null);
+				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
 			//	designer:str/10A
@@ -850,13 +872,14 @@ namespace Epsitec.Common.Types
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Common.Types");
+			Types._Initialize ();
 			Types.Default._Initialize ();
 			Strings._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
-			System.Object.Equals (Res._manager, null);
+			global::System.Object.Equals (Res._manager, null);
 		}
 		
 		public static global::Epsitec.Common.Support.ResourceManager Manager

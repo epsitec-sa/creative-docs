@@ -108,4 +108,7 @@
   <data name="Val.FieldOptions.CollationCaseInsensitive" id="AP">&lt;s:data id="_0" f:Name="CollationCaseInsensitive" f:Labels="{Collection {Text 'Collation a=A'}}" /&gt;</data>
   <data name="Val.FieldOptions.CollationAccentInsensitive" id="AQ">&lt;s:data id="_0" f:Name="CollationAccentInsensitive" f:Labels="{Collection {Text 'Collation a=à'}}" /&gt;</data>
   <data name="Val.FieldOptions.DisablePrefetch" id="G002">&lt;s:data id="_0" f:Name="DisablePrefetch" f:Labels="{Collection {Text 'Chargement différé'}}" /&gt;</data>
+  <data name="Val.YesOrNo.Yes" id="G202">&lt;s:data id="_0" f:Name="Yes" f:Labels="{Collection {Text 'Non'}}" /&gt;</data>
+  <data name="Val.YesOrNo.No" id="G302">&lt;s:data id="_0" f:Name="No" f:Labels="{Collection {Text 'Oui'}}" /&gt;</data>
+  <data name="Typ.YesOrNo" id="G102">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="YesOrNo" f:_1.SystemType="E:Epsitec.Common.Types.YesOrNo, Common" f:_2.EnumValues="{Collection {Text '0 [10G202]'}, {Text '1 [10G302]'}}" f:_1.DefaultValue="Epsitec.Common.Types.YesOrNo, Common/Yes" f:Labels="{Collection {Text 'Type booléen oui/non'}}" /&gt;</data>
 </bundle>
