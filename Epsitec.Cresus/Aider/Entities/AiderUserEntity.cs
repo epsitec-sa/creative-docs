@@ -18,7 +18,15 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.DisplayName, "\n", this.LoginName, "\n", "Rôle: ", this.Role.Name);
+			return TextFormatter.FormatText
+			(
+				this.DisplayName, "(", this.LoginName, ")", "\n",
+				TextFormatter.FormatText ("E-mail: ").ApplyBold (), this.Email, "\n",
+				TextFormatter.FormatText ("Paroisse: ").ApplyBold (), this.Parish.Name, "\n",
+				TextFormatter.FormatText ("Rôle: ").ApplyBold (), this.Role.Name, "\n",
+				TextFormatter.FormatText ("Administrateur: ").ApplyBold (), this.HasPowerLevel (UserPowerLevel.Administrator).ToYesOrNo (), "\n",
+				TextFormatter.FormatText ("Actif: ").ApplyBold (), this.IsActive.ToYesOrNo (), "\n"
+			);
 		}
 
 		public override FormattedText GetCompactSummary()
