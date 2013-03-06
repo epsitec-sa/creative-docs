@@ -50,7 +50,13 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText
+			(
+				TextFormatter.FormatText (this.Name).ApplyBold (), "\n",
+				"Membres autorisés: ", this.CanHaveMembers ().ToYesOrNo (), "\n",
+				"Sous-groupes autorisés: ", this.CanHaveSubgroups ().ToYesOrNo (), "\n",
+				"Sous-groupes modifiables: ", this.CanSubgroupsBeEdited ().ToYesOrNo (), "\n"
+			);
 		}
 
 

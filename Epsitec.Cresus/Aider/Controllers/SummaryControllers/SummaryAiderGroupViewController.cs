@@ -47,6 +47,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				bricks = bricks
 					.Template ()
 						.Title ("Sous groupes")
+						.Text (x => x.GetCompactSummary ())
 					.End ();
 			}
 
