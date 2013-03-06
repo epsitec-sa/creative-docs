@@ -7,9 +7,8 @@ using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Controllers.EditionControllers;
-
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -40,6 +39,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.WithSpecialField<AiderGroupSpecialField<AiderUserEntity>> ()
 					.Field (x => x.LoginName)
 					.Field (x => x.DisplayName)
+					.Field (x => x.Email)
 					.Field (x => x.Role)
 					.Field (x => x.Disabled)
 				.End ();
@@ -57,6 +57,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.DisplayName)
 						.ReadOnly ()
+					.Field (x => x.Email)
 					.Field (x => x.Role)
 						.ReadOnly ()
 					.Field (x => x.Disabled)

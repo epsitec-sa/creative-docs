@@ -5566,6 +5566,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Email</c> field.
+		///	designer:fld/LVAHC/LVGF22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGF22]")]
+		public string Email
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGF22]");
+			}
+			set
+			{
+				string oldValue = this.Email;
+				if (oldValue != value || !this.IsFieldDefined("[LVGF22]"))
+				{
+					this.OnEmailChanging (oldValue, value);
+					this.SetField<string> ("[LVGF22]", oldValue, value);
+					this.OnEmailChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
@@ -5575,6 +5597,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnEmailChanging(string oldValue, string newValue);
+		partial void OnEmailChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

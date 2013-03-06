@@ -3,16 +3,12 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.Core.Entities;
-
-using System;
-
-using System.Collections.Generic;
-
-using System.Linq;
 
 
 namespace Epsitec.Aider.Rules
@@ -58,6 +54,7 @@ namespace Epsitec.Aider.Rules
 			this.CheckLoginNameIsUnique (user);
 			AiderUserBusinessRules.CheckDisplayNameIsNotEmpty (user);
 			AiderUserBusinessRules.CheckParishIsParishGroup (user);
+			AiderUserBusinessRules.CheckEmail (user);
 
 			AiderUserBusinessRules.UpdateParishGroupPathCache (user);
 		}
@@ -118,6 +115,27 @@ namespace Epsitec.Aider.Rules
 			var message = "La paroisse n'est pas un groupe de paroisse";
 
 			Logic.BusinessRuleException (user, message);
+		}
+
+
+		private static void CheckEmail(AiderUserEntity user)
+		{
+			var email = user.Email;
+
+			if (string.IsNullOrEmpty (email))
+			{
+				return;
+			}
+
+			var fixedEmail = Epsitec.Common.IO.UriBuilder.FixScheme (email);
+			var isValidEmail = Epsitec.Common.IO.UriBuilder.IsValidMailTo (fixedEmail);
+
+			if (!isValidEmail)
+			{
+				var message = Resources.Text ("L'adresse e-mail n'est pas valide.");
+
+				Logic.BusinessRuleException (user, message);
+			}
 		}
 
 

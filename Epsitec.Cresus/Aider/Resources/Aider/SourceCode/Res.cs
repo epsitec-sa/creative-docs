@@ -1811,9 +1811,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderUser.Parish, null);
+					global::System.Object.Equals (AiderUser.Email, null);
 				}
 				
+				//	designer:cap/LVGF22
+				public static readonly global::Epsitec.Common.Support.Druid Email = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 79);
 				//	designer:cap/LVGD22
 				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 77);
 				//	designer:cap/LVGE22
