@@ -79,14 +79,6 @@ namespace Epsitec.Cresus.Database
 				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
-			//	designer:str/K
-			public static global::Epsitec.Common.Types.FormattedText New
-			{
-				get
-				{
-					return global::Epsitec.Cresus.Database.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (0));
-				}
-			}
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -130,14 +122,6 @@ namespace Epsitec.Cresus.Database
 		
 		public static class StringIds
 		{
-			//	designer:str/K
-			public static global::Epsitec.Common.Support.Druid New
-			{
-				get
-				{
-					return global::Epsitec.Common.Support.Druid.FromFieldId (0);
-				}
-			}
 		}
 		
 		static Res()
