@@ -2,14 +2,11 @@
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
-
-using System.Collections.Generic;
 
 
 namespace Epsitec.Aider.Override
@@ -33,7 +30,6 @@ namespace Epsitec.Aider.Override
 			this.CreateAiderScopes ();
 			this.CreateAiderRoles ();
 			this.CreateAdministrator ();
-			this.CreateAiderTestUsers ();
 		}
 
 
@@ -75,7 +71,7 @@ namespace Epsitec.Aider.Override
 		{
 			this.roleAdministrator = this.CreateAiderRole
 			(
-				name: "Administrateur",
+				name: AiderUserRoleEntity.AdminRole,
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeCounty
 				}
@@ -83,7 +79,7 @@ namespace Epsitec.Aider.Override
 
 			this.roleCounty = this.CreateAiderRole
 			(
-				name: "Accès cantonal",
+				name: AiderUserRoleEntity.CountyRole,
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeCounty,
 					this.scopeRegion,
@@ -93,7 +89,7 @@ namespace Epsitec.Aider.Override
 
 			this.roleRegion = this.CreateAiderRole
 			(
-				name: "Accès régional",
+				name: AiderUserRoleEntity.RegionRole,
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeRegion,
 					this.scopeParish
@@ -101,7 +97,7 @@ namespace Epsitec.Aider.Override
 			);
 			this.roleParish = this.CreateAiderRole
 			(
-				name: "Accès paroissial",
+				name: AiderUserRoleEntity.ParishRole,
 				scopes: new AiderUserScopeEntity[] { 
 					this.scopeParish
 				}
@@ -136,56 +132,6 @@ namespace Epsitec.Aider.Override
 			);
 
 			admininstrator.Role = this.roleAdministrator;
-		}
-
-
-		private void CreateAiderTestUsers()
-		{
-			// Don't forget to assign them to the persons once the db is initialized.
-
-			this.CreateAiderTestUser ("p.arnaud", "Pierre Arnaud", false);
-			this.CreateAiderTestUser ("m.bettex", "Marc Bettex", false);
-			this.CreateAiderTestUser ("b.bolay", "Bernard Bolay", false);
-			this.CreateAiderTestUser ("e.bornand", "Eric Bornand", false);
-			this.CreateAiderTestUser ("j.brand", "Jacques Brand", true);
-			this.CreateAiderTestUser ("g.butticaz", "Geneviève Butticaz", false);
-			this.CreateAiderTestUser ("b.corbaz", "Benjamin Corbaz", false);
-			this.CreateAiderTestUser ("c.cuendet", "Claude Cuendet", false);
-			this.CreateAiderTestUser ("l.dewarrat", "Laurence Dewarrat", false);
-			this.CreateAiderTestUser ("d.fankhauser", "Damaris Fankhauser", false);
-			this.CreateAiderTestUser ("m.genoux", "Michel Genoux", false);
-			this.CreateAiderTestUser ("m.gonce", "Maurice Gonce", false);
-			this.CreateAiderTestUser ("c.jackson", "Cheryl Jackson", false);
-			this.CreateAiderTestUser ("p.jarne", "Pierrette Jarne", false);
-			this.CreateAiderTestUser ("g.jaton", "Gérard Jaton", true);
-			this.CreateAiderTestUser ("y.knecht", "Yvonne Knecht", false);
-			this.CreateAiderTestUser ("v.mennet", "Vanina Mennet", false);
-			this.CreateAiderTestUser ("l.pestalozzi", "Lorenzo Pestalozzi", false);
-			this.CreateAiderTestUser ("d.rochat", "Dorothée Rochat", false);
-			this.CreateAiderTestUser ("p.rouge", "Pascal Rouge", false);
-			this.CreateAiderTestUser ("j.sordet", "Jean-Michel Sordet", true);
-			this.CreateAiderTestUser ("j.sotornik", "Jeanette Sotornik", false);
-			this.CreateAiderTestUser ("j.spothelfer", "Jean-Marc Spothelfer", false);
-			this.CreateAiderTestUser ("s.wohlhauser", "Sylvie Wohlhauser", false);
-		}
-
-
-		private void CreateAiderTestUser(string login, string name, bool admin)
-		{
-			var groups = admin
-				? new SoftwareUserGroupEntity[] { this.GroupStandard, this.GroupAdministrator }
-				: new SoftwareUserGroupEntity[] { this.GroupStandard };
-
-			var user = (AiderUserEntity) this.CreateUser
-			(
-				displayName: FormattedText.FromSimpleText (name),
-				userLogin: login,
-				userPassword: "monsupermotdepasse",
-				authentificationMethod: UserAuthenticationMethod.Password,
-				groups: groups
-			);
-
-			user.Role = this.roleCounty;
 		}
 
 

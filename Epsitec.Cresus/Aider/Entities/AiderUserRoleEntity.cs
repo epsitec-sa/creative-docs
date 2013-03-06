@@ -3,7 +3,8 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
+using Epsitec.Cresus.Core.Business;
+
 using System.Linq;
 
 namespace Epsitec.Aider.Entities
@@ -19,5 +20,22 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (this.Name);
 		}
+
+		public static AiderUserRoleEntity GetRole(BusinessContext businessContext, string name)
+		{
+			var example = new AiderUserRoleEntity ()
+			{
+				Name = name
+			};
+
+			var result = businessContext.DataContext.GetByExample (example);
+			
+			return result.Single ();
+		}
+
+		public static readonly string AdminRole =  "Administrateur";
+		public static readonly string CountyRole = "Accès cantonal";
+		public static readonly string RegionRole = "Accès régional";
+		public static readonly string ParishRole = "Accès paroissial";
 	}
 }
