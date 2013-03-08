@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			// We need to keep a reference on the event handler to remove it from the timer.
 			ElapsedEventHandler handler = null;
-			
+
 			handler = (o, e) =>
 			{
 				// Remove this handler from the time, so it is invoked only once. We need to do this
