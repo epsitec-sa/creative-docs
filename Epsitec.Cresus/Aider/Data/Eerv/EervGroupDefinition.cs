@@ -1,8 +1,6 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Aider.Entities;
-
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
@@ -27,14 +25,14 @@ namespace Epsitec.Aider.Data.Eerv
 			this.children = new List<EervGroupDefinition> ();
 		}
 
-		
+
 		public readonly string					Id;
 
 		public readonly string					Name;
 
 		public readonly int						GroupLevel;
 
-		
+
 
 		public bool								MembersAllowed
 		{
@@ -73,7 +71,7 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					value = null;
 				}
-				
+
 				this.parent = value;
 			}
 		}
@@ -91,7 +89,7 @@ namespace Epsitec.Aider.Data.Eerv
 				this.function = value;
 			}
 		}
-		
+
 		public IList<EervGroupDefinition>		Children
 		{
 			get
@@ -121,7 +119,7 @@ namespace Epsitec.Aider.Data.Eerv
 								break;
 						}
 						break;
-					
+
 					case "02":
 						return Enumerations.GroupClassification.Canton;
 					case "03":
@@ -137,7 +135,7 @@ namespace Epsitec.Aider.Data.Eerv
 					default:
 						break;
 				}
-				
+
 				return Enumerations.GroupClassification.None;
 			}
 		}
@@ -160,7 +158,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			var groupClassification = this.GroupClassification;
-			
+
 			if (((this.GroupLevel > 0) && (!this.Id.StartsWith ("01"))) ||
 				((this.GroupLevel > 1)))
 			{
@@ -175,7 +173,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				buffer.Append (this.Id.Substring (this.GroupLevel*2, 2));
 				buffer.Append (".");
-				
+
 				return;
 			}
 
@@ -213,8 +211,8 @@ namespace Epsitec.Aider.Data.Eerv
 					break;
 			}
 		}
-		
-		
+
+
 		protected override void HandleFreeze()
 		{
 			base.HandleFreeze ();
