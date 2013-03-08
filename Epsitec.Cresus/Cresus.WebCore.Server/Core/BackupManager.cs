@@ -100,6 +100,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				// because we use the same timer for the initial delay than for the backup schedule.
 				this.timer.Elapsed -= handler;
 
+				// We must backup because now because the initial delay has passed and the Start()
+				// method will wait for an interval of time before making its first backup. So if
+				// we don't to it now, the first backup will be skipped.
+				this.Backup ();
+
 				this.Start (interval);
 			};
 
