@@ -1532,6 +1532,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Classification = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
 				//	designer:cap/LVABG
 				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 523);
+				//	designer:cap/LVGG22
+				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 80);
 				//	designer:cap/LVG822
 				public static readonly global::Epsitec.Common.Support.Druid MembersAllowed = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 72);
 				//	designer:cap/LVA2B

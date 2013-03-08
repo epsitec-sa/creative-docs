@@ -66,10 +66,7 @@ namespace Epsitec.Aider.Override
 
 		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
 		{
-			return new LambdaFilter<AiderGroupDefEntity>
-			(
-				x => SqlMethods.Like (x.PathTemplate, AiderGroupIds.SubgroupSqlWildcard)
-			);
+			return new LambdaFilter<AiderGroupDefEntity> (x => x.Level == 0);
 		}
 
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)

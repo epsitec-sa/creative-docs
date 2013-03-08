@@ -4828,6 +4828,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Level</c> field.
+		///	designer:fld/LVA2A/LVGG22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGG22]")]
+		public int Level
+		{
+			get
+			{
+				return this.GetField<int> ("[LVGG22]");
+			}
+			set
+			{
+				int oldValue = this.Level;
+				if (oldValue != value || !this.IsFieldDefined("[LVGG22]"))
+				{
+					this.OnLevelChanging (oldValue, value);
+					this.SetField<int> ("[LVGG22]", oldValue, value);
+					this.OnLevelChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PathTemplate</c> field.
 		///	designer:fld/LVA2A/LVARC
 		///	</summary>
@@ -4976,6 +4998,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnNumberChanging(string oldValue, string newValue);
 		partial void OnNumberChanged(string oldValue, string newValue);
+		partial void OnLevelChanging(int oldValue, int newValue);
+		partial void OnLevelChanged(int oldValue, int newValue);
 		partial void OnPathTemplateChanging(string oldValue, string newValue);
 		partial void OnPathTemplateChanged(string oldValue, string newValue);
 		partial void OnSubgroupsAllowedChanging(bool oldValue, bool newValue);

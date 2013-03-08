@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var groupDefinition in topLevelGroups)
 			{
-				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition, mapping);
+				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition, mapping, 0);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition, Dictionary<EervGroupDefinition, AiderGroupDefEntity> mapping)
+		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition, Dictionary<EervGroupDefinition, AiderGroupDefEntity> mapping, int level)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
@@ -98,6 +98,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 			aiderGroupDef.Name = groupDefinition.Name;
 			aiderGroupDef.Number = groupDefinition.Id;
+			// We don't use the eerv group level because the 01* groups don't have the good one.
+			aiderGroupDef.Level = level;
 			aiderGroupDef.SubgroupsAllowed = groupDefinition.SubgroupsAllowed;
 			aiderGroupDef.MembersAllowed = groupDefinition.MembersAllowed;
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
@@ -115,7 +117,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var child in children)
 			{
-				var importedChild = EervMainDataImporter.ImportGroupDefinition (businessContext, child, mapping);
+				var importedChild = EervMainDataImporter.ImportGroupDefinition (businessContext, child, mapping, level + 1);
 
 				aiderGroupDef.Subgroups.Add (importedChild);
 			}
@@ -162,12 +164,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGlobalGroup(BusinessContext businessContext, EervGroupDefinition eervGroupDefinition)
 		{
-			var example = new AiderGroupDefEntity ()
-			{
-				PathTemplate = eervGroupDefinition.GetPathTemplate ()
-			};
-				
-			var aiderGroupDefinition = businessContext.DataContext.GetByExample (example).Single ();
+			var aiderGroupDefinition = EervMainDataImporter.GetRootGroupDefinition (businessContext, eervGroupDefinition.GroupClassification);
 
 			aiderGroupDefinition.Instantiate (businessContext);
 		}
@@ -229,26 +226,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var example = new AiderGroupDefEntity ()
 			{
-				PathTemplate = EervMainDataImporter.GetPathTemplate (classification)
+				Level = 0,
+				Classification = classification
 			};
 
 			return dataContext.GetByExample (example).Single ();
-		}
-
-
-		private static string GetPathTemplate(GroupClassification classification)
-		{
-			switch (classification)
-			{
-				case GroupClassification.Region:
-					return AiderGroupIds.Region;
-
-				case GroupClassification.Parish:
-					return AiderGroupIds.Parish;
-
-				default:
-					throw new NotImplementedException ();
-			}
 		}
 
 

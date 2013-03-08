@@ -19,6 +19,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Number)
 						.ReadOnly ()
+					.Field (x => x.Level)
+						.ReadOnly ()
 					.Field (x => x.SubgroupsAllowed)
 						.ReadOnly ()
 					.Field (x => x.MembersAllowed)
