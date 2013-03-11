@@ -131,6 +131,10 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void MoveParishGroupDefinition(List<EervGroupDefinition> groupDefinitions)
 		{
+			// We move the parish group definition within the region group definition because this
+			// group definition is really a child of the region group definition, even if this is
+			// not the case in the excel file.
+
 			var regionGroupDefinition = groupDefinitions
 				.Where (g => g.GroupLevel == 0)
 				.Where (g => g.GroupClassification == GroupClassification.Region)
