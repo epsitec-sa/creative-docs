@@ -391,7 +391,7 @@ namespace Epsitec.Aider.Entities
 				throw new Exception ("Too many subgroups.");
 			}
 
-			return AiderGroupIds.CreateSubGroupPath (this.Path, number.Value);
+			return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
 		}
 
 
@@ -651,7 +651,7 @@ namespace Epsitec.Aider.Entities
 		public bool IsParish()
 		{
 			return this.GroupDef.IsNotNull ()
-				&& this.GroupDef.Level == 0
+				&& this.GroupDef.Level == 1
 				&& this.GroupDef.Classification == GroupClassification.Parish;
 		}
 

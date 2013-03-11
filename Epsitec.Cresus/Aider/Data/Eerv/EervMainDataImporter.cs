@@ -145,7 +145,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGlobalGroup(BusinessContext businessContext, EervGroupDefinition eervGroupDefinition)
 		{
-			var aiderGroupDefinition = EervMainDataImporter.GetRootGroupDefinition (businessContext, eervGroupDefinition.GroupClassification);
+			var aiderGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, eervGroupDefinition.GroupClassification, 0);
 
 			aiderGroupDefinition.Instantiate (businessContext);
 		}
@@ -154,11 +154,10 @@ namespace Epsitec.Aider.Data.Eerv
 		private static bool IsGlobalGroup(EervGroupDefinition groupDefinition)
 		{
 			// We don't instantiate function group definitions because their are instantiated only
-			// within special groups with special rules. We don't instantiate parish and region
-			// groups because they are template group definitions that are instantiated later on.
+			// within special groups with special rules. We don't instantiate region groups because
+			// they are template group definitions that are instantiated later on.
 
 			return groupDefinition.GroupClassification != GroupClassification.Function
-				&& groupDefinition.GroupClassification != GroupClassification.Parish
 				&& groupDefinition.GroupClassification != GroupClassification.Region;
 		}
 
@@ -193,7 +192,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<int, AiderGroupEntity> CreateRegionGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
-			var regionGroupDefinition = EervMainDataImporter.GetRootGroupDefinition (businessContext, GroupClassification.Region);
+			var regionGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Region, 0);
 
 			return regions
 				.Keys
@@ -201,13 +200,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupDefEntity GetRootGroupDefinition(BusinessContext businessContext, GroupClassification classification)
+		private static AiderGroupDefEntity GetGroupDefinition(BusinessContext businessContext, GroupClassification classification, int level)
 		{
 			var dataContext = businessContext.DataContext;
 
 			var example = new AiderGroupDefEntity ()
 			{
-				Level = 0,
+				Level = level,
 				Classification = classification
 			};
 
@@ -217,7 +216,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions, Dictionary<int, AiderGroupEntity> regionGroups)
 		{
-			var parishGroupDefinition = EervMainDataImporter.GetRootGroupDefinition (businessContext, GroupClassification.Parish);
+			var parishGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Parish, 1);
 			var parishAddressInfos = regions.Values.SelectMany (p => p.Values.Select (p2 => p2.First ())).ToArray ();
 			var parishIds = regions.Keys.ToDictionary (x => x, x => 0);
 			var parishes = new Dictionary<string, AiderGroupEntity> ();

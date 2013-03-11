@@ -139,80 +139,35 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 		}
 
+
 		public bool IsFunctionDefinition()
 		{
 			return this.GroupClassification == GroupClassification.Function
 				&& this.GroupLevel == 1;
 		}
 
+
 		public string GetPathTemplate()
 		{
-			var buffer = new System.Text.StringBuilder ();
-
-			this.BuildPathTemplate (buffer);
-
-			return buffer.ToString ();
-
-		}
-
-		private void BuildPathTemplate(System.Text.StringBuilder buffer)
-		{
-			if (this.parent != null)
+			if (this.Parent == null)
 			{
-				this.parent.BuildPathTemplate (buffer);
+				return AiderGroupIds.CreateTopLevelPathTemplate (this.GroupClassification);
 			}
 
-			var groupClassification = this.GroupClassification;
+			var parentPathTemplate = this.Parent.GetPathTemplate ();
+			var number = parent.Children.IndexOf (this);
 
-			if (this.GroupLevel > 0)
+			if (this.GroupClassification == GroupClassification.Parish && this.GroupLevel == 1)
 			{
-				if (groupClassification == Enumerations.GroupClassification.Function)
-				{
-					buffer.Append (AiderGroupIds.FunctionPrefix);
-				}
-				else
-				{
-					buffer.Append (AiderGroupIds.GroupPrefix);
-				}
-
-				buffer.Append (this.Id.Substring (this.GroupLevel*2, 2));
-				buffer.Append (".");
-
-				return;
+				return AiderGroupIds.CreateParishSubgroupPath (parentPathTemplate);
 			}
-
-			switch (groupClassification)
+			else if (this.Parent.IsFunctionDefinition ())
 			{
-				case Enumerations.GroupClassification.Canton:
-					buffer.Append (AiderGroupIds.Canton);
-					break;
-				case Enumerations.GroupClassification.Common:
-					buffer.Append (AiderGroupIds.Common);
-					break;
-				case Enumerations.GroupClassification.External:
-					buffer.Append (AiderGroupIds.External);
-					break;
-				case Enumerations.GroupClassification.Function:
-					buffer.Append (AiderGroupIds.Function);
-					break;
-				case Enumerations.GroupClassification.Parish:
-					buffer.Append (AiderGroupIds.Parish);
-					break;
-				case Enumerations.GroupClassification.Region:
-					buffer.Append (AiderGroupIds.Region);
-					break;
-				case Enumerations.GroupClassification.Staff:
-					buffer.Append (AiderGroupIds.Staff);
-					break;
-				case Enumerations.GroupClassification.StaffAssociation:
-					buffer.Append (AiderGroupIds.StaffAssociation);
-					break;
-				case Enumerations.GroupClassification.NoParish:
-					buffer.Append (AiderGroupIds.NoParish);
-					break;
-
-				default:
-					break;
+				return AiderGroupIds.CreateFunctionSubgroupPath (parentPathTemplate, number);
+			}
+			else
+			{
+				return AiderGroupIds.CreateDefinitionSubgroupPath (parentPathTemplate, number);
 			}
 		}
 

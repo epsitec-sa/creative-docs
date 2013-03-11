@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Enumerations;
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -21,6 +23,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile).ToList ();
 
+			EervMainDataLoader.MoveParishGroupDefinition (groupDefinitions);
 			EervMainDataLoader.FreezeData (groupDefinitions);
 
 			return new EervMainData (groupDefinitions);
@@ -123,6 +126,35 @@ namespace Epsitec.Aider.Data.Eerv
 			var isLeaf = record[GroupDefinitionHeader.IsLeaf] == "x";
 
 			return new EervGroupDefinition (id, name, isLeaf);
+		}
+
+
+		private static void MoveParishGroupDefinition(List<EervGroupDefinition> groupDefinitions)
+		{
+			var regionGroupDefinition = groupDefinitions
+				.Where (g => g.GroupLevel == 0)
+				.Where (g => g.GroupClassification == GroupClassification.Region)
+				.Single ();
+
+			var parishGroupDefinition = groupDefinitions
+				.Where (g => g.GroupLevel == 0)
+				.Where (g => g.GroupClassification == GroupClassification.Parish)
+				.Single ();
+
+			regionGroupDefinition.Children.Add (parishGroupDefinition);
+			parishGroupDefinition.Parent = regionGroupDefinition;
+
+			EervMainDataLoader.ChangeGroupLevel (parishGroupDefinition, 1);
+		}
+
+		private static void ChangeGroupLevel(EervGroupDefinition groupDefinition, int delta)
+		{
+			groupDefinition.GroupLevel += delta;
+
+			foreach (var child in groupDefinition.Children)
+			{
+				EervMainDataLoader.ChangeGroupLevel (child, delta);
+			}
 		}
 
 

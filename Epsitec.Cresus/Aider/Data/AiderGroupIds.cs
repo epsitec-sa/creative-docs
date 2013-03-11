@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
+
 using System;
 
 using System.Collections.Generic;
@@ -9,25 +11,26 @@ namespace Epsitec.Aider.Data
 {
 	public static class AiderGroupIds
 	{
-		public const string Canton				= "SCC.";
-		public const string Common				= "MIC.";
-		public const string External			= "REX.";
-		public const string Function			= "FNC.";
-		public const string Parish				= "P__.";
-		public const string Region				= "R__.";
-		public const string Staff				= "PRS.";
-		public const string StaffAssociation	= "ASP.";
-		public const string NoParish			= "NOP.";
+		private const string Canton					= "SCC.";
+		private const string Common					= "MIC.";
+		private const string External				= "REX.";
+		private const string Function				= "FNC.";
+		private const string Parish					= "P__.";
+		private const string Region					= "R__.";
+		private const string Staff					= "PRS.";
+		private const string StaffAssociation		= "ASP.";
+		private const string NoParish				= "NOP.";
 
-		public const string GroupPrefix			= "G";
-		public const string FunctionPrefix		= "F";
+		private const string GroupPrefixCustom		= "C";
+		private const string GroupPrefixDefinition	= "D";
+		private const string GroupPrefixFunction	= "F";
 
-		public const string SubgroupSqlWildcard	= "___.";
+		public const string SubgroupSqlWildcard	=	"___.";
 
-		public const int SubgroupLength			= 4;
-		public const int MinSubGroupNumber		= 1;
-		public const int MaxSubGroupNumber		= 99;
-		public const int MaxGroupLevel			= 6;
+		public const int SubgroupLength				= 4;
+		public const int MinSubGroupNumber			= 1;
+		public const int MaxSubGroupNumber			= 99;
+		public const int MaxGroupLevel				= 6;
 
 
 		public static string GetRegionId(int regionCode)
@@ -99,9 +102,77 @@ namespace Epsitec.Aider.Data
 			return path1.Contains (path2);
 		}
 
-		public static string CreateSubGroupPath(string superGroupPath, int groupNumber)
+		public static string CreateTopLevelPathTemplate(GroupClassification classification)
 		{
-			return superGroupPath + string.Format ("{0}{1:00}.", AiderGroupIds.GroupPrefix, groupNumber);
+			switch (classification)
+			{
+				case GroupClassification.Canton:
+					return AiderGroupIds.Canton;
+
+				case GroupClassification.Common:
+					return AiderGroupIds.Common;
+
+				case GroupClassification.External:
+					return AiderGroupIds.External;
+
+				case GroupClassification.Function:
+					return AiderGroupIds.Function;
+
+				case GroupClassification.NoParish:
+					return AiderGroupIds.NoParish;
+
+				case GroupClassification.Region:
+					return AiderGroupIds.Region;
+
+				case GroupClassification.Staff:
+					return AiderGroupIds.Staff;
+
+				case GroupClassification.StaffAssociation:
+					return AiderGroupIds.StaffAssociation;
+
+				case GroupClassification.Parish:
+				case GroupClassification.None:
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+		public static string CreateCustomSubgroupPath(string parentPath, int groupNumber)
+		{
+			var prefix = AiderGroupIds.GroupPrefixCustom;
+
+			return AiderGroupIds.CreateSubgroupPath (parentPath, prefix, groupNumber);
+		}
+
+		public static string CreateDefinitionSubgroupPath(string parentPath, int groupNumber)
+		{
+			var prefix = AiderGroupIds.GroupPrefixDefinition;
+
+			return AiderGroupIds.CreateSubgroupPath (parentPath, prefix, groupNumber);
+		}
+
+		public static string CreateFunctionSubgroupPath(string parentPath, int groupNumber)
+		{
+			var prefix = AiderGroupIds.GroupPrefixFunction;
+
+			return AiderGroupIds.CreateSubgroupPath (parentPath, prefix, groupNumber);
+		}
+
+		private static string CreateSubgroupPath(string parentPath, string prefix, int groupNumber)
+		{
+			var childPath = string.Format ("{0}{1:00}.", prefix, groupNumber);
+
+			return AiderGroupIds.CreateSubgroupPath (parentPath, childPath);
+		}
+
+		public static string CreateParishSubgroupPath(string parentPath)
+		{
+			return AiderGroupIds.CreateSubgroupPath (parentPath, AiderGroupIds.Parish);
+		}
+
+		private static string CreateSubgroupPath(string parentPath, string childPath)
+		{
+			return parentPath + childPath;
 		}
 
 		public static int GetGroupNumber(string path)
