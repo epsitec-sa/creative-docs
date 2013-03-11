@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
 
@@ -82,6 +83,16 @@ namespace Epsitec.Aider.Entities
 			childGroup.GroupDef = childDefinition;
 
 			childDefinition.InstantiateSubgroups (businessContext, childGroup);
+		}
+
+		public bool IsParish()
+		{
+			return this.Level == 1 && this.Classification == GroupClassification.Parish;
+		}
+
+		public bool IsNoParish()
+		{
+			return this.Level == 0 && this.Classification == GroupClassification.NoParish;
 		}
 	}
 }
