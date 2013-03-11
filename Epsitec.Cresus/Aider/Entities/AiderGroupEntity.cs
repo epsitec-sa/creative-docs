@@ -651,7 +651,16 @@ namespace Epsitec.Aider.Entities
 		public bool IsParish()
 		{
 			return this.GroupDef.IsNotNull ()
-				&& this.GroupDef.PathTemplate == AiderGroupIds.Parish;
+				&& this.GroupDef.Level == 0
+				&& this.GroupDef.Classification == GroupClassification.Parish;
+		}
+
+
+		public bool IsNoParish()
+		{
+			return this.GroupDef.IsNotNull ()
+				&& this.GroupDef.Level == 0
+				&& this.GroupDef.Classification == GroupClassification.NoParish;
 		}
 
 

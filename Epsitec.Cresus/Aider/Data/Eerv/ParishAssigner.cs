@@ -265,7 +265,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static AiderGroupParticipantEntity GetNoParishGroupParticipation(AiderPersonEntity person)
 		{
-			return person.Groups.FirstOrDefault (g => g.Group.Path == AiderGroupIds.NoParish);
+			return person.Groups.FirstOrDefault (g => g.Group.IsNoParish ());
 		}
 
 
@@ -320,7 +320,11 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var example = new AiderGroupEntity ()
 			{
-				Path = AiderGroupIds.NoParish
+				GroupDef = new AiderGroupDefEntity ()
+				{
+					Level = 0,
+					Classification = GroupClassification.NoParish
+				}
 			};
 
 			return businessContext.DataContext.GetByExample (example).Single ();
