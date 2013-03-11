@@ -117,6 +117,16 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
+		{
+			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+			
+			household.Address = AiderAddressEntity.Create (context, templateAddress);
+
+			return household;
+		}
+
+
 		internal void AddContactInternal(AiderContactEntity contact)
 		{
 			this.GetContacts ().Add (contact);
@@ -140,6 +150,7 @@ namespace Epsitec.Aider.Entities
 			value = this.GetContacts ().AsReadOnlyCollection ();
 		}
 
+		
 		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
 		{
 			if (contacts == null)
@@ -247,7 +258,6 @@ namespace Epsitec.Aider.Entities
 			return this.contactsCache;
 		}
 
-
 		private IList<AiderContactEntity> GetContacts(DataContext dataContext)
 		{
 			var example = new AiderContactEntity ()
@@ -273,7 +283,6 @@ namespace Epsitec.Aider.Entities
 			return members;
 		}
 
-		
 		private void ClearMemberCache()
 		{
 			this.membersCache = null;

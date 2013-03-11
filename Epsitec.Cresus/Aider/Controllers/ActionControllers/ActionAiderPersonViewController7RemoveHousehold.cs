@@ -64,7 +64,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 				newHousehold.Address = newAddress;
 
-				AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
+				AiderContactEntity.Create (context, person, newHousehold, isHead: true);
 			}
 
 			if (household.Members.Count == 1)

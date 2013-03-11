@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -162,6 +163,31 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static AiderAddressEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
+		{
+			var address = context.CreateAndRegisterEntity<AiderAddressEntity> ();
+
+			if (templateAddress.IsNotNull ())
+			{
+				address.AddressLine1          = templateAddress.AddressLine1;
+				address.Street                = templateAddress.Street;
+				address.HouseNumber           = templateAddress.HouseNumber;
+				address.HouseNumberComplement = templateAddress.HouseNumberComplement;
+				address.PostBox               = templateAddress.PostBox;
+				address.Town                  = templateAddress.Town;
+
+				address.Web    = templateAddress.Web;
+				address.Email  = templateAddress.Email;
+				address.Phone1 = templateAddress.Phone1;
+				address.Phone2 = templateAddress.Phone2;
+				address.Mobile = templateAddress.Mobile;
+				address.Fax    = templateAddress.Fax;
+			}
+
+			return address;
+		}
+
+
 		partial void GetStreetUserFriendly(ref string value)
 		{
 			value = SwissPostStreet.ConvertToUserFriendlyStreetName (this.Street);
@@ -249,6 +275,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
 		private static int? ParseHouseNumber(string number)
 		{
 			if (string.IsNullOrEmpty (number))

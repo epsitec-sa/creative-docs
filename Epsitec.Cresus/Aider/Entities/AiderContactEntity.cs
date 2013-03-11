@@ -71,6 +71,82 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, bool isHead)
+		{
+			var role = isHead
+				? HouseholdRole.Head
+				: HouseholdRole.None;
+
+			return AiderContactEntity.Create (businessContext, person, household, role);
+		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
+		{
+			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
+
+			contact.Person        = person;
+			contact.Household     = household;
+			contact.HouseholdRole = role;
+
+			person.AddContactInternal (contact);
+			household.AddContactInternal (contact);
+
+			return contact;
+		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AddressType type)
+		{
+			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonAddress);
+
+			contact.Person      = person;
+			contact.Address     = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
+			contact.AddressType = type;
+
+			person.AddContactInternal (contact);
+
+			return contact;
+		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
+		{
+			var contact = AiderContactEntity.Create (businessContext, ContactType.Legal);
+
+			contact.LegalPerson = legalPerson;
+
+			legalPerson.AddContactInternal (contact);
+
+			return contact;
+		}
+
+		public static void Delete(BusinessContext businessContext, AiderContactEntity contact)
+		{
+			if (contact.ContactType == ContactType.PersonAddress)
+			{
+				businessContext.DeleteEntity (contact.Address);
+			}
+
+			var person = contact.Person;
+			if (person.IsNotNull ())
+			{
+				person.RemoveContactInternal (contact);
+			}
+
+			var household = contact.Household;
+			if (household.IsNotNull ())
+			{
+				household.RemoveContactInternal (contact);
+			}
+
+			var legalPerson = contact.LegalPerson;
+			if (legalPerson.IsNotNull ())
+			{
+				legalPerson.RemoveContactInternal (contact);
+			}
+
+			businessContext.DeleteEntity (contact);
+		}
+
+
 		private string GetDisplayName()
 		{
 			switch (this.ContactType)
@@ -125,12 +201,10 @@ namespace Epsitec.Aider.Entities
 			return this.Address.GetDisplayZipCode ().ToSimpleText ();
 		}
 
-
 		private string GetDisplayAddress()
 		{
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
-
 
 		private PersonVisibilityStatus GetDisplayVisibilityStatus()
 		{
@@ -142,7 +216,6 @@ namespace Epsitec.Aider.Entities
 				? PersonVisibilityStatus.Hidden
 				: PersonVisibilityStatus.Default;
 		}
-
 
 		private string GetParishGroupPathCache()
 		{
@@ -164,53 +237,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, bool isHead)
-		{
-			var role = isHead
-				? HouseholdRole.Head
-				: HouseholdRole.None;
-
-			return AiderContactEntity.Create (businessContext, person, household, role);
-		}
-
-		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
-		{
-			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonHousehold);
-
-			contact.Person        = person;
-			contact.Household     = household;
-			contact.HouseholdRole = role;
-
-			person.AddContactInternal (contact);
-			household.AddContactInternal (contact);
-
-			return contact;
-		}
-
-		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AddressType type)
-		{
-			var contact = AiderContactEntity.Create (businessContext, ContactType.PersonAddress);
-
-			contact.Person      = person;
-			contact.Address     = businessContext.CreateAndRegisterEntity<AiderAddressEntity> ();
-			contact.AddressType = type;
-
-			person.AddContactInternal (contact);
-
-			return contact;
-		}
-
-		public static AiderContactEntity Create(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
-		{
-			var contact = AiderContactEntity.Create (businessContext, ContactType.Legal);
-
-			contact.LegalPerson = legalPerson;
-
-			legalPerson.AddContactInternal (contact);
-
-			return contact;
-		}
-
 		private static AiderContactEntity Create(BusinessContext businessContext, ContactType type)
 		{
 			var contact = businessContext.CreateAndRegisterEntity<AiderContactEntity> ();
@@ -218,34 +244,6 @@ namespace Epsitec.Aider.Entities
 			contact.ContactType = type;
 
 			return contact;
-		}
-
-		public static void Delete(BusinessContext businessContext, AiderContactEntity contact)
-		{
-			if (contact.ContactType == ContactType.PersonAddress)
-			{
-				businessContext.DeleteEntity (contact.Address);
-			}
-
-			var person = contact.Person;
-			if (person.IsNotNull ())
-			{
-				person.RemoveContactInternal (contact);
-			}
-
-			var household = contact.Household;
-			if (household.IsNotNull ())
-			{
-				household.RemoveContactInternal (contact);
-			}
-
-			var legalPerson = contact.LegalPerson;
-			if (legalPerson.IsNotNull ())
-			{
-				legalPerson.RemoveContactInternal (contact);
-			}
-
-			businessContext.DeleteEntity (contact);
 		}
 	}
 }
