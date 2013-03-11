@@ -18,7 +18,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (2)]
-	public sealed class ActionAiderHouseholdViewController2 : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
+	public sealed class ActionAiderHouseholdViewController2RemoveMemberFromHousehold : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{

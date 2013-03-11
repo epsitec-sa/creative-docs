@@ -19,7 +19,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (1)]
-	public sealed class ActionAiderHouseholdViewController1 : ActionViewController<AiderHouseholdEntity>
+	public sealed class ActionAiderHouseholdViewController1AddHouseholdMember : ActionViewController<AiderHouseholdEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -36,9 +36,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var household = this.Entity;
 			var person    = contact.Person;
 
-			ActionAiderHouseholdViewController1.ValidatePerson (household, person);
-			ActionAiderHouseholdViewController1.ValidateHouseholdComposition (household, person);
-			ActionAiderHouseholdViewController1.ValidatePersonAge (household, person, isPersonHead);
+			ActionAiderHouseholdViewController1AddHouseholdMember.ValidatePerson (household, person);
+			ActionAiderHouseholdViewController1AddHouseholdMember.ValidateHouseholdComposition (household, person);
+			ActionAiderHouseholdViewController1AddHouseholdMember.ValidatePersonAge (household, person, isPersonHead);
 
 			AiderContactEntity.Create (this.BusinessContext, person, household, isPersonHead);
 		}

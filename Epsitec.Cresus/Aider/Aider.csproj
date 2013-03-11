@@ -71,10 +71,10 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController4.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController5.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController2.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController2RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController1.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
@@ -96,8 +96,8 @@
     <Compile Include="Override\AiderUserSession.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController0.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderUserViewController1.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController1.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController0.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController1AddHouseholdMember.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController0NewHouseholdMember.cs" />
     <Compile Include="Controllers\AiderWarningController.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupSpecialField.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
