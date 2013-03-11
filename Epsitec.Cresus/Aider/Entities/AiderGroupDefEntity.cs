@@ -63,26 +63,28 @@ namespace Epsitec.Aider.Entities
 
 		private void InstantiateSubgroups(BusinessContext businessContext, AiderGroupEntity group)
 		{
-			foreach (var childDefinition in this.Subgroups)
-			{
-				this.InstantiateSubgroup (businessContext, group, childDefinition);
-			}
+			// We discard the parish subgroup because it is a special template subgroup that we want
+			// to instantiate manually later on.
+			var subgroups = this.Subgroups
+				.Where (g => !g.IsParish ())
+				.ToList ();
+
+			AiderGroupDefEntity.InstantiateSubgroups (businessContext, group, subgroups);
 
 			if (this.Function.IsNotNull ())
 			{
-				foreach (var childDefinition in this.Function.Subgroups)
-				{
-					this.InstantiateSubgroup (businessContext, group, childDefinition);
-				}
+				AiderGroupDefEntity.InstantiateSubgroups (businessContext, group, this.Function.Subgroups);
 			}
 		}
 
-		private void InstantiateSubgroup(BusinessContext businessContext, AiderGroupEntity group, AiderGroupDefEntity childDefinition)
+		private static void InstantiateSubgroups(BusinessContext businessContext, AiderGroupEntity group, IEnumerable<AiderGroupDefEntity> childDefinitions)
 		{
-			var childGroup = group.CreateSubgroup (businessContext, childDefinition.Name);
-			childGroup.GroupDef = childDefinition;
+			foreach (var childDefinition in childDefinitions)
+			{
+				var childGroup = group.CreateSubgroup (businessContext, childDefinition);
 
-			childDefinition.InstantiateSubgroups (businessContext, childGroup);
+				childDefinition.InstantiateSubgroups (businessContext, childGroup);
+			}
 		}
 
 		public bool IsParish()

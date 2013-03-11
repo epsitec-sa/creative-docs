@@ -177,9 +177,15 @@ namespace Epsitec.Aider.Data
 
 		public static int GetGroupNumber(string path)
 		{
-			var part = path.Substring (path.Length - 3, 2);
+			var part = AiderGroupIds.GetGroupPathPart (path);
+			var number = part.Substring (1, 2);
 
-			return int.Parse (part);
+			return int.Parse (number);
+		}
+
+		public static string GetGroupPathPart(string path)
+		{
+			return path.Substring (path.Length - AiderGroupIds.SubgroupLength);
 		}
 
 		public static IEnumerable<string> GetParentPaths(string path)

@@ -354,11 +354,34 @@ namespace Epsitec.Aider.Entities
 				throw new InvalidOperationException ("This group cannot have subgroups");
 			}
 
+			var path = this.GetNextSubgroupPath ();
+
+			return this.CreateSubgroup (businessContext, name, path);
+		}
+
+
+		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, AiderGroupDefEntity definition)
+		{
+			var name = definition.Name;
+			var pathPrefix = this.Path;
+			var pathSuffix = AiderGroupIds.GetGroupPathPart(definition.PathTemplate);
+			var path = pathPrefix + pathSuffix;
+			
+			var subgroup = this.CreateSubgroup (businessContext, name, path);
+
+			subgroup.GroupDef = definition;
+
+			return subgroup;
+		}
+
+
+		private AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name, string path)
+		{
 			var subgroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
 
 			subgroup.Name = name;
+			subgroup.Path = path;
 			subgroup.GroupLevel = this.GroupLevel + 1;
-			subgroup.Path = this.GetNextSubgroupPath ();
 
 			this.AddSubgroupInternal (subgroup);
 			subgroup.SetParentInternal (this);
