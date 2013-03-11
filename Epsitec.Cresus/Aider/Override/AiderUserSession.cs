@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Override
 
 		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
 		{
-			return new LambdaFilter<AiderGroupDefEntity> (x => x.Level == 0);
+			return new LambdaFilter<AiderGroupDefEntity> (x => x.Level == AiderGroupIds.TopLevel);
 		}
 
 		public override IFilter GetScopeFilter(DataSetMetadata dataSetMetadata, AbstractEntity example)

@@ -89,12 +89,14 @@ namespace Epsitec.Aider.Entities
 
 		public bool IsParish()
 		{
-			return this.Level == 1 && this.Classification == GroupClassification.Parish;
+			return this.Level == AiderGroupIds.ParishLevel
+				&& this.Classification == GroupClassification.Parish;
 		}
 
 		public bool IsNoParish()
 		{
-			return this.Level == 0 && this.Classification == GroupClassification.NoParish;
+			return this.Level == AiderGroupIds.NoParishLevel
+				&& this.Classification == GroupClassification.NoParish;
 		}
 	}
 }

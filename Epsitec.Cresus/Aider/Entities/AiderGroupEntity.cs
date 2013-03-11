@@ -311,7 +311,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var example = new AiderGroupEntity ()
 			{
-				GroupLevel = 0,
+				GroupLevel = AiderGroupIds.TopLevel,
 			};
 
 			var request = Request.Create (example);
@@ -400,7 +400,7 @@ namespace Epsitec.Aider.Entities
 
 			int? number = null;
 
-			for (int i = AiderGroupIds.MinSubGroupNumber; i < AiderGroupIds.MaxSubGroupNumber + 1; i++)
+			for (int i = 0; i < AiderGroupIds.MaxGroupNumber; i++)
 			{
 				if (!usedNumbers.Contains (i))
 				{

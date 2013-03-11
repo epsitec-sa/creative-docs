@@ -145,7 +145,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGlobalGroup(BusinessContext businessContext, EervGroupDefinition eervGroupDefinition)
 		{
-			var aiderGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, eervGroupDefinition.GroupClassification, 0);
+			var aiderGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, eervGroupDefinition.GroupClassification, AiderGroupIds.TopLevel);
 
 			aiderGroupDefinition.Instantiate (businessContext);
 		}
@@ -192,7 +192,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<int, AiderGroupEntity> CreateRegionGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
-			var regionGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Region, 0);
+			var regionGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Region, AiderGroupIds.RegionLevel);
 
 			return regions
 				.Keys
@@ -216,7 +216,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions, Dictionary<int, AiderGroupEntity> regionGroups)
 		{
-			var parishGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Parish, 1);
+			var parishGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Parish, AiderGroupIds.ParishLevel);
 			var parishAddressInfos = regions.Values.SelectMany (p => p.Values.Select (p2 => p2.First ())).ToArray ();
 			var parishIds = regions.Keys.ToDictionary (x => x, x => 0);
 			var parishes = new Dictionary<string, AiderGroupEntity> ();

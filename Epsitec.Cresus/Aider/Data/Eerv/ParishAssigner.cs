@@ -322,7 +322,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				GroupDef = new AiderGroupDefEntity ()
 				{
-					Level = 0,
+					Level = AiderGroupIds.NoParishLevel,
 					Classification = GroupClassification.NoParish
 				}
 			};

@@ -320,6 +320,31 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		/// <summary>
+		/// Checks that <paramref name="value"/> is a numeric <see cref="System.String"/>,
+		/// i.e. that it is empty or that it contains only digits.
+		/// </summary>
+		/// <param name="value">The <see cref="System.String"/> to check.</param>
+		/// <returns><c>true</c> if <paramref name="value"/> is numeric <c>false</c> if it isn't.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
+		public static bool IsNumeric(this string value)
+		{
+			if (value == null)
+			{
+				throw new System.ArgumentNullException ("value");
+			}
+
+			for (int i = 0; i < value.Length; i++)
+			{
+				if (!char.IsDigit (value[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		/// Determines whether the specified value is an integer.
 		/// </summary>
 		/// <param name="value">The value.</param>

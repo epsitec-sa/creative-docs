@@ -3,6 +3,8 @@
 
 using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support.Extensions;
+
 using System;
 
 using System.Collections.Generic;
@@ -21,71 +23,92 @@ namespace Epsitec.Aider.Data
 		private const string StaffAssociation		= "ASP.";
 		private const string NoParish				= "NOP.";
 
+		private const string GroupFormat			= "{0}{1:00}.";
+		private const string PlaceholderFormat		= "<{0}>.";
+
+		private const string ParishPrefix			= "P";
+		private const string RegionPrefix			= "R";
+		private const string Suffix					= ".";
+
+		private const int PartLength				= 4;
+		private const int PrefixStart				= 0;
+		private const int PrefixLength				= 1;
+		private const int MiddleStart				= 1;
+		private const int MiddleLength				= 2;
+		private const int SuffixStart				= 3;
+		private const int SuffixLength				= 1;
+		
 		private const string GroupPrefixCustom		= "C";
 		private const string GroupPrefixDefinition	= "D";
 		private const string GroupPrefixFunction	= "F";
 
 		public const string SubgroupSqlWildcard	=	"___.";
 
-		public const int SubgroupLength				= 4;
-		public const int MinSubGroupNumber			= 1;
-		public const int MaxSubGroupNumber			= 99;
+		public const int MaxGroupNumber				= 100;
 		public const int MaxGroupLevel				= 6;
+
+		public const int ParishLevel				= 1;
+		public const int RegionLevel				= 0;
+		public const int NoParishLevel				= 0;
+		public const int TopLevel					= 0;
 
 
 		public static string GetRegionId(int regionCode)
 		{
-			return string.Format ("R{0:00}.", regionCode);
+			return AiderGroupIds.CreateSubgroupPath ("", AiderGroupIds.RegionPrefix, regionCode);
 		}
 
 		public static string GetParishId(int parishCode)
 		{
-			return string.Format ("P{0:00}.", parishCode);
+			return AiderGroupIds.CreateSubgroupPath ("", AiderGroupIds.ParishPrefix, parishCode);
 		}
 
 		public static bool IsWithinRegion(string path)
 		{
-			return AiderGroupIds.IsWithinGroup (path, 0, 'R');
+			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.RegionLevel, AiderGroupIds.RegionPrefix);
 		}
 
 		public static bool IsWithinParish(string path)
 		{
-			return AiderGroupIds.IsWithinGroup (path, 1, 'P');
+			return AiderGroupIds.IsWithinGroup (path, AiderGroupIds.ParishLevel, AiderGroupIds.ParishPrefix);
 		}
 
-		private static bool IsWithinGroup(string path, int index, char prefix)
+		private static bool IsWithinGroup(string path, int index, string prefix)
 		{
 			if (path == null)
 			{
 				return false;
 			}
 
-			var start = index * AiderGroupIds.SubgroupLength;
+			var start = index * AiderGroupIds.PartLength;
 
-			if (path.Length < start + AiderGroupIds.SubgroupLength)
+			if (path.Length < start + AiderGroupIds.PartLength)
 			{
 				return false;
 			}
 
-			return prefix == path[start + 0]
-				&& Char.IsDigit (path[start + 1])
-				&& Char.IsDigit (path[start + 2])
-				&& '.' == path[start + 3];
+			var p = path.Substring (start + AiderGroupIds.PrefixStart, AiderGroupIds.PrefixLength);
+			var m = path.Substring (start + AiderGroupIds.MiddleStart, AiderGroupIds.MiddleLength);
+			var s = path.Substring (start + AiderGroupIds.SuffixStart, AiderGroupIds.SuffixLength);
+
+			return p == prefix
+				&& m.IsNumeric ()
+				&& s == AiderGroupIds.Suffix;
 		}
 
 		public static bool IsWithinSameRegion(string path1, string path2)
 		{
-			return AiderGroupIds.IsWithinSameGroup (path1, path2, 0, 'R');
+			return AiderGroupIds.IsWithinSameGroup (path1, path2, AiderGroupIds.RegionLevel, AiderGroupIds.RegionPrefix);
 		}
 
 		public static bool IsWithinSameParish(string path1, string path2)
 		{
-			return AiderGroupIds.IsWithinSameGroup (path1, path2, 1, 'P');
+			return AiderGroupIds.IsWithinSameGroup (path1, path2, AiderGroupIds.ParishLevel, AiderGroupIds.ParishPrefix);
 		}
 
-		private static bool IsWithinSameGroup(string path1, string path2, int index, char prefix)
+		private static bool IsWithinSameGroup(string path1, string path2, int index, string prefix)
 		{
-			var length = (index + 1) * AiderGroupIds.SubgroupLength;
+			var length = (index + 1) * AiderGroupIds.PartLength;
 
 			return AiderGroupIds.IsWithinGroup (path1, index, prefix)
 				&& AiderGroupIds.IsWithinGroup (path2, index, prefix)
@@ -160,7 +183,7 @@ namespace Epsitec.Aider.Data
 
 		private static string CreateSubgroupPath(string parentPath, string prefix, int groupNumber)
 		{
-			var childPath = string.Format ("{0}{1:00}.", prefix, groupNumber);
+			var childPath = string.Format (AiderGroupIds.GroupFormat, prefix, groupNumber);
 
 			return AiderGroupIds.CreateSubgroupPath (parentPath, childPath);
 		}
@@ -178,19 +201,19 @@ namespace Epsitec.Aider.Data
 		public static int GetGroupNumber(string path)
 		{
 			var part = AiderGroupIds.GetGroupPathPart (path);
-			var number = part.Substring (1, 2);
+			var number = part.Substring (AiderGroupIds.MiddleStart, AiderGroupIds.MiddleLength);
 
 			return int.Parse (number);
 		}
 
 		public static string GetGroupPathPart(string path)
 		{
-			return path.Substring (path.Length - AiderGroupIds.SubgroupLength);
+			return path.Substring (path.Length - AiderGroupIds.PartLength);
 		}
 
 		public static IEnumerable<string> GetParentPaths(string path)
 		{
-			var step =  AiderGroupIds.SubgroupLength;
+			var step =  AiderGroupIds.PartLength;
 
 			for (int i = step; i <= path.Length - 1; i += step)
 			{
@@ -200,28 +223,30 @@ namespace Epsitec.Aider.Data
 
 		public static string GetParentPath(string path)
 		{
-			if (path == null || path.Length <= AiderGroupIds.SubgroupLength)
+			if (path == null || path.Length <= AiderGroupIds.PartLength)
 			{
 				return "";
 			}
 
-			return path.Substring (0, path.Length - AiderGroupIds.SubgroupLength);
+			return path.Substring (0, path.Length - AiderGroupIds.PartLength);
 		}
 
 		public static string ReplacePlaceholders(string path, string parishPath)
 		{
-			path = AiderGroupIds.ReplacePlaceholder (path, "<R>.", parishPath, 0);
-			path = AiderGroupIds.ReplacePlaceholder (path, "<P>.", parishPath, 1);
+			path = AiderGroupIds.ReplacePlaceholder (path, AiderGroupIds.RegionPrefix, parishPath, AiderGroupIds.RegionLevel);
+			path = AiderGroupIds.ReplacePlaceholder (path, AiderGroupIds.ParishPrefix, parishPath, AiderGroupIds.ParishLevel);
 
 			return path;
 		}
 
-		private static string ReplacePlaceholder(string path, string placeholder, string parishPath, int positionInParishPath)
+		private static string ReplacePlaceholder(string path, string prefix, string parishPath, int positionInParishPath)
 		{
 			if (parishPath != null)
 			{
-				var startIndex = positionInParishPath * AiderGroupIds.SubgroupLength;
-				var length = AiderGroupIds.SubgroupLength;
+				var placeholder = string.Format (AiderGroupIds.PlaceholderFormat, prefix);
+
+				var startIndex = positionInParishPath * AiderGroupIds.PartLength;
+				var length = AiderGroupIds.PartLength;
 				var replacement = parishPath.Substring (startIndex, length);
 
 				path = path.Replace (placeholder, replacement);
