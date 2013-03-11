@@ -13,38 +13,38 @@ namespace Epsitec.Aider.Data
 {
 	public static class AiderGroupIds
 	{
-		private const string Canton					= "SCC.";
-		private const string Common					= "MIC.";
-		private const string External				= "EXT.";
-		private const string Function				= "FNC.";
-		private const string Parish					= "P__.";
-		private const string Region					= "R__.";
-		private const string Staff					= "PRS.";
-		private const string StaffAssociation		= "ASP.";
-		private const string NoParish				= "NOP.";
+		private const string Canton					= "SYCC.";
+		private const string Common					= "MICO.";
+		private const string External				= "EXTE.";
+		private const string Function				= "FNCT.";
+		private const string Parish					= "P___.";
+		private const string Region					= "R___.";
+		private const string Staff					= "PRSO.";
+		private const string StaffAssociation		= "ASPE.";
+		private const string NoParish				= "NOPA.";
 
-		private const string GroupFormat			= "{0}{1:00}.";
+		private const string GroupFormat			= "{0}{1:000}.";
 		private const string PlaceholderFormat		= "<{0}>.";
 
 		private const string ParishPrefix			= "P";
 		private const string RegionPrefix			= "R";
 		private const string Suffix					= ".";
 
-		private const int PartLength				= 4;
+		private const int PartLength				= 5;
 		private const int PrefixStart				= 0;
 		private const int PrefixLength				= 1;
 		private const int MiddleStart				= 1;
-		private const int MiddleLength				= 2;
-		private const int SuffixStart				= 3;
+		private const int MiddleLength				= 3;
+		private const int SuffixStart				= 4;
 		private const int SuffixLength				= 1;
 		
 		private const string GroupPrefixCustom		= "C";
 		private const string GroupPrefixDefinition	= "D";
 		private const string GroupPrefixFunction	= "F";
 
-		public const string SubgroupSqlWildcard	=	"___.";
+		public const string SubgroupSqlWildcard	=	"____.";
 
-		public const int MaxGroupNumber				= 100;
+		public const int MaxGroupNumber				= 1000;
 		public const int MaxGroupLevel				= 6;
 
 		public const int ParishLevel				= 1;
