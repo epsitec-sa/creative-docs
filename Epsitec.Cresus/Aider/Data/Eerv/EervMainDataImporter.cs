@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var groupDefinition in topLevelGroups)
 			{
-				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition, mapping, 0);
+				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition, mapping);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
@@ -58,26 +58,8 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			return eervData
 				.GroupDefinitions
-				.Where (g => EervMainDataImporter.IsTopLevelGroupDefinition (g))
+				.Where (g => g.GroupLevel == 0)
 				.Where (g => !EervMainDataImporter.SkipGroupDefinition (g));
-		}
-
-
-		private static bool IsTopLevelGroupDefinition(EervGroupDefinition groupDefinition)
-		{
-			switch (groupDefinition.GroupLevel)
-			{
-				case 0:
-					return true;
-
-				case 1:
-					return groupDefinition.GroupClassification == GroupClassification.Function
-						|| groupDefinition.GroupClassification == GroupClassification.Staff
-						|| groupDefinition.GroupClassification == GroupClassification.StaffAssociation;
-
-				default:
-					return false;
-			}
 		}
 
 
@@ -90,7 +72,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition, Dictionary<EervGroupDefinition, AiderGroupDefEntity> mapping, int level)
+		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition, Dictionary<EervGroupDefinition, AiderGroupDefEntity> mapping)
 		{
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
@@ -98,8 +80,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			aiderGroupDef.Name = groupDefinition.Name;
 			aiderGroupDef.Number = groupDefinition.Id;
-			// We don't use the eerv group level because the 01* groups don't have the good one.
-			aiderGroupDef.Level = level;
+			aiderGroupDef.Level = groupDefinition.GroupLevel;
 			aiderGroupDef.SubgroupsAllowed = groupDefinition.SubgroupsAllowed;
 			aiderGroupDef.MembersAllowed = groupDefinition.MembersAllowed;
 			aiderGroupDef.PathTemplate = groupDefinition.GetPathTemplate ();
@@ -117,7 +98,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var child in children)
 			{
-				var importedChild = EervMainDataImporter.ImportGroupDefinition (businessContext, child, mapping, level + 1);
+				var importedChild = EervMainDataImporter.ImportGroupDefinition (businessContext, child, mapping);
 
 				aiderGroupDef.Subgroups.Add (importedChild);
 			}

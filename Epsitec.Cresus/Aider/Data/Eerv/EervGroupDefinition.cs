@@ -19,12 +19,11 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervGroupDefinition(string id, string name, bool isLeaf, int groupLevel)
+		public EervGroupDefinition(string id, string name, bool isLeaf)
 		{
 			this.Id = id;
 			this.Name = name;
 			this.isLeaf = isLeaf;
-			this.GroupLevel = groupLevel;
 
 			this.children = new List<EervGroupDefinition> ();
 		}
@@ -33,9 +32,6 @@ namespace Epsitec.Aider.Data.Eerv
 		public readonly string					Id;
 
 		public readonly string					Name;
-
-		public readonly int						GroupLevel;
-
 
 
 		public bool								MembersAllowed
@@ -52,6 +48,21 @@ namespace Epsitec.Aider.Data.Eerv
 			get
 			{
 				return this.children.Count > 0 || this.FunctionGroup != null;
+			}
+		}
+
+
+		public int GroupLevel
+		{
+			get
+			{
+				return this.groupLevel;
+			}
+			set
+			{
+				this.ThrowIfReadOnly ();
+
+				this.groupLevel = value;
 			}
 		}
 
@@ -131,7 +142,7 @@ namespace Epsitec.Aider.Data.Eerv
 		public bool IsFunctionDefinition()
 		{
 			return this.GroupClassification == GroupClassification.Function
-				&& this.GroupLevel == 2;
+				&& this.GroupLevel == 1;
 		}
 
 		public string GetPathTemplate()
@@ -153,8 +164,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var groupClassification = this.GroupClassification;
 
-			if (((this.GroupLevel > 0) && (!this.Id.StartsWith ("01"))) ||
-				((this.GroupLevel > 1)))
+			if (this.GroupLevel > 0)
 			{
 				if (groupClassification == Enumerations.GroupClassification.Function)
 				{
@@ -237,6 +247,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 		private readonly bool					isLeaf;
+		private int								groupLevel;
 		private EervGroupDefinition				parent;
 		private EervGroupDefinition				function;
 		private IList<EervGroupDefinition>		children;

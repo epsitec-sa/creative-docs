@@ -66,6 +66,11 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				parent.Children.Add (groupDefinition);
 				groupDefinition.Parent = parent;
+				groupDefinition.GroupLevel = parent.GroupLevel + 1;
+			}
+			else
+			{
+				groupDefinition.GroupLevel = 0;
 			}
 
 			if (groupDefinition.IsFunctionDefinition ())
@@ -117,7 +122,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var name = record[EervMainDataLoader.names[groupLevel]];
 			var isLeaf = record[GroupDefinitionHeader.IsLeaf] == "x";
 
-			return new EervGroupDefinition (id, name, isLeaf, groupLevel);
+			return new EervGroupDefinition (id, name, isLeaf);
 		}
 
 
