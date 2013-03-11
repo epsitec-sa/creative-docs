@@ -907,7 +907,7 @@ namespace Epsitec.Aider.Data.Eerv
 					AiderContactEntity.Create (businessContext, contact.Person, mainHousehold, false);
 				}
 
-				secondaryHousehold.Delete (businessContext);
+				AiderHouseholdEntity.Delete (businessContext, secondaryHousehold);
 			}
 
 			return mainHousehold;

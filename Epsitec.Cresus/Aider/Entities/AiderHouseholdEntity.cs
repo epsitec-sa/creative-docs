@@ -96,24 +96,24 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void Delete(BusinessContext businessContext)
+		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
-			foreach (var contact in this.Contacts.ToArray ())
+			foreach (var contact in household.Contacts.ToArray ())
 			{
 				AiderContactEntity.Delete (businessContext, contact);
 			}
 
-			if (this.Comment.IsNotNull ())
+			if (household.Comment.IsNotNull ())
 			{
-				businessContext.DeleteEntity (this.Comment);
+				businessContext.DeleteEntity (household.Comment);
 			}
 
-			if (this.Address.IsNotNull ())
+			if (household.Address.IsNotNull ())
 			{
-				businessContext.DeleteEntity (this.Address);
+				businessContext.DeleteEntity (household.Address);
 			}
 
-			businessContext.DeleteEntity (this);
+			businessContext.DeleteEntity (household);
 		}
 
 

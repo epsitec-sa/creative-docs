@@ -36,41 +36,24 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			var context = this.BusinessContext;
-
+			var context   = this.BusinessContext;
 			var person    = this.Entity;
 			var household = this.AdditionalEntity;
-			var contacts  = person.Contacts;
-			var contact   = contacts.FirstOrDefault (x => x.Household == household);
+			
+			var contacts = person.Contacts;
+			var contact  = contacts.FirstOrDefault (x => x.Household == household);
 
 			if (contacts.Count == 1)
 			{
-				var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-				var newAddress   = context.CreateAndRegisterEntity<AiderAddressEntity> ();
-
-				newAddress.AddressLine1          = household.Address.AddressLine1;
-				newAddress.Street                = household.Address.Street;
-				newAddress.HouseNumber           = household.Address.HouseNumber;
-				newAddress.HouseNumberComplement = household.Address.HouseNumberComplement;
-				newAddress.PostBox               = household.Address.PostBox;
-				newAddress.Town                  = household.Address.Town;
-				
-				newAddress.Web    = household.Address.Web;
-				newAddress.Email  = household.Address.Email;
-				newAddress.Phone1 = household.Address.Phone1;
-				newAddress.Phone2 = household.Address.Phone2;
-				newAddress.Mobile = household.Address.Mobile;
-				newAddress.Fax    = household.Address.Fax;
-
-				newHousehold.Address = newAddress;
-
+				var newHousehold = AiderHouseholdEntity.Create (context, household.Address);
 				AiderContactEntity.Create (context, person, newHousehold, isHead: true);
 			}
 
 			if (household.Members.Count == 1)
 			{
-				context.DeleteEntity (household);
+				AiderHouseholdEntity.Delete (context, household);
 			}
+			
 			if (contact.IsNotNull ())
 			{
 				AiderContactEntity.Delete (context, contact);

@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			var household = this.Entity;
 
-			household.Delete (this.BusinessContext);
+			AiderHouseholdEntity.Delete (this.BusinessContext, household);
 		}
 	}
 }
