@@ -13,7 +13,7 @@ namespace Epsitec.Aider.Data
 	{
 		private const string Canton					= "SCC.";
 		private const string Common					= "MIC.";
-		private const string External				= "REX.";
+		private const string External				= "EXT.";
 		private const string Function				= "FNC.";
 		private const string Parish					= "P__.";
 		private const string Region					= "R__.";
