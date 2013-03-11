@@ -1,8 +1,6 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Aider.Enumerations;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -21,9 +19,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static EervMainData LoadEervData(FileInfo groupDefinitionFile)
 		{
-			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile)
-				.Where (g => g.GroupClassification != GroupClassification.None)
-				.ToList ();
+			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile).ToList ();
 
 			EervMainDataLoader.FreezeData (groupDefinitions);
 
@@ -50,31 +46,29 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 
 				var groupDefinition = EervMainDataLoader.GetEervGroupDefinition (record, level);
-
-				var parent = parents.Peek ();
-
-				if (parent == null)
+				
+				if (!EervMainDataLoader.DiscardGroupDefinition (groupDefinition))
 				{
-					groupDefinition.Parent = null;
-				}
-				else
-				{
-					parent.Children.Add (groupDefinition);
-					groupDefinition.Parent = parent;
+					EervMainDataLoader.Process (parents, functions, record, groupDefinition);
+					yield return groupDefinition;
 				}
 
 				parents.Push (groupDefinition);
-
-				EervMainDataLoader.HandleGroupDefinitionFunctions (functions, record, groupDefinition);
-
-				yield return groupDefinition;
 			}
 		}
 
 
-		private static void HandleGroupDefinitionFunctions(Dictionary<int, EervGroupDefinition> functions, Dictionary<GroupDefinitionHeader, string> record, EervGroupDefinition groupDefinition)
+		private static void Process(Stack<EervGroupDefinition> parents, Dictionary<int, EervGroupDefinition> functions, Dictionary<GroupDefinitionHeader, string> record, EervGroupDefinition groupDefinition)
 		{
-			if (EervMainDataLoader.IsFunctionDefinition (groupDefinition))
+			var parent = parents.Peek ();
+
+			if (parent != null && !EervMainDataLoader.DiscardGroupDefinition (parent))
+			{
+				parent.Children.Add (groupDefinition);
+				groupDefinition.Parent = parent;
+			}
+
+			if (groupDefinition.IsFunctionDefinition ())
 			{
 				var functionId = int.Parse (groupDefinition.Id.Substring (4, 2));
 				functions[functionId] = groupDefinition;
@@ -92,10 +86,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static bool IsFunctionDefinition(EervGroupDefinition groupDefinition)
+		private static bool DiscardGroupDefinition(EervGroupDefinition groupDefinition)
 		{
-			return groupDefinition.GroupClassification == GroupClassification.Function
-				&& groupDefinition.GroupLevel == 2;
+			// This is not a real group definition, so we discard it and it is as it did not exist
+			// at all in the file.
+
+			return groupDefinition.Id == "0100000000";
 		}
 
 

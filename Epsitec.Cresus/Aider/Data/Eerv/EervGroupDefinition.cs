@@ -1,8 +1,12 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
+using System;
 
 using System.Collections.Generic;
 
@@ -62,16 +66,6 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				this.ThrowIfReadOnly ();
 
-				if (((this.GroupLevel > 0) && (!this.Id.StartsWith ("01"))) ||
-					((this.GroupLevel > 1)))
-				{
-					//	Not a root node
-				}
-				else
-				{
-					value = null;
-				}
-
 				this.parent = value;
 			}
 		}
@@ -98,46 +92,46 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 		}
 
-		public Enumerations.GroupClassification GroupClassification
+		public GroupClassification GroupClassification
 		{
 			get
 			{
-				string prefix = this.Id.SubstringStart (2);
-
-				switch (prefix)
+				switch (this.Id.SubstringStart (2))
 				{
 					case "01":
 						switch (this.Id.Substring (2, 2))
 						{
 							case "01":
-								return Enumerations.GroupClassification.Function;
+								return GroupClassification.Function;
 							case "02":
-								return Enumerations.GroupClassification.Staff;
+								return GroupClassification.Staff;
 							case "03":
-								return Enumerations.GroupClassification.StaffAssociation;
+								return GroupClassification.StaffAssociation;
 							default:
-								break;
+								throw new NotImplementedException ();
 						}
-						break;
-
 					case "02":
-						return Enumerations.GroupClassification.Canton;
+						return GroupClassification.Canton;
 					case "03":
-						return Enumerations.GroupClassification.Region;
+						return GroupClassification.Region;
 					case "04":
-						return Enumerations.GroupClassification.Parish;
+						return GroupClassification.Parish;
 					case "05":
-						return Enumerations.GroupClassification.Common;
+						return GroupClassification.Common;
 					case "06":
-						return Enumerations.GroupClassification.External;
+						return GroupClassification.External;
 					case "07":
-						return Enumerations.GroupClassification.NoParish;
+						return GroupClassification.NoParish;
 					default:
-						break;
+						throw new NotImplementedException ();
 				}
-
-				return Enumerations.GroupClassification.None;
 			}
+		}
+
+		public bool IsFunctionDefinition()
+		{
+			return this.GroupClassification == GroupClassification.Function
+				&& this.GroupLevel == 2;
 		}
 
 		public string GetPathTemplate()
