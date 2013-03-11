@@ -23,33 +23,33 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (657, groupDefinitions.Count);
 
-			var g1 = new EervGroupDefinition ("0100000000", "Paramètres transversaux", false, 0)
+			var g1 = new EervGroupDefinition ("0100000000", "Paramètres transversaux", false)
 			{
 				Parent = null,
 			};
 			this.CheckForEquality (g1, groupDefinitions[0]);
 
-			var g2 = new EervGroupDefinition ("0102000000", "Personnel EERV", false, 1)
+			var g2 = new EervGroupDefinition ("0102000000", "Personnel EERV", false)
 			{
-				Parent = new EervGroupDefinition ("0100000000", null, false, 0),
+				Parent = new EervGroupDefinition ("0100000000", null, false),
 			};
 			this.CheckForEquality (g2, groupDefinitions[89]);
 
-			var g3 = new EervGroupDefinition ("0301010000", "Assemblée régionale", false, 2)
+			var g3 = new EervGroupDefinition ("0301010000", "Assemblée régionale", false)
 			{
-				Parent = new EervGroupDefinition ("0301000000", null, false, 0),
+				Parent = new EervGroupDefinition ("0301000000", null, false),
 			};
 			this.CheckForEquality (g3, groupDefinitions[281]);
 
-			var g4 = new EervGroupDefinition ("0303030100", "Catéchumènes 2007-10-12", false, 3)
+			var g4 = new EervGroupDefinition ("0303030100", "Catéchumènes 2007-10-12", false)
 			{
-				Parent = new EervGroupDefinition ("0303030000", null, false, 0),
+				Parent = new EervGroupDefinition ("0303030000", null, false),
 			};
 			this.CheckForEquality (g4, groupDefinitions[315]);
 
-			var g5 = new EervGroupDefinition ("0604010203", "Délégués CER", false, 4)
+			var g5 = new EervGroupDefinition ("0604010203", "Délégués CER", false)
 			{
-				Parent = new EervGroupDefinition ("0604010200", null, false, 0),
+				Parent = new EervGroupDefinition ("0604010200", null, false),
 			};
 			this.CheckForEquality (g5, groupDefinitions[591]);
 		}
@@ -59,7 +59,6 @@ namespace Aider.Tests.Vs
 		{
 			Assert.AreEqual (expected.Id, actual.Id);
 			Assert.AreEqual (expected.Name, actual.Name);
-			Assert.AreEqual (expected.GroupLevel, actual.GroupLevel);
 
 			if (expected.Parent == null)
 			{
