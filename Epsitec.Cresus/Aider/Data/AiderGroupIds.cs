@@ -111,14 +111,6 @@ namespace Epsitec.Aider.Data
 			return int.Parse (part);
 		}
 
-		public static string ReplacePlaceholders(string path, string parishPath)
-		{
-			path = AiderGroupIds.ReplacePlaceholder (path, "<R>.", parishPath, 0);
-			path = AiderGroupIds.ReplacePlaceholder (path, "<P>.", parishPath, 1);
-
-			return path;
-		}
-
 		public static IEnumerable<string> GetParentPaths(string path)
 		{
 			var step =  AiderGroupIds.SubgroupLength;
@@ -137,6 +129,14 @@ namespace Epsitec.Aider.Data
 			}
 
 			return path.Substring (0, path.Length - AiderGroupIds.SubgroupLength);
+		}
+
+		public static string ReplacePlaceholders(string path, string parishPath)
+		{
+			path = AiderGroupIds.ReplacePlaceholder (path, "<R>.", parishPath, 0);
+			path = AiderGroupIds.ReplacePlaceholder (path, "<P>.", parishPath, 1);
+
+			return path;
 		}
 
 		private static string ReplacePlaceholder(string path, string placeholder, string parishPath, int positionInParishPath)
