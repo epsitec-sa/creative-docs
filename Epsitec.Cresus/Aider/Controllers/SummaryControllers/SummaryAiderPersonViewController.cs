@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
@@ -25,8 +26,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableAction (4)
-				.EnableAction (5)
+				.EnableAction<ActionAiderPersonViewController4AddAlternateAddress> ()
+				.EnableAction<ActionAiderPersonViewController5AddHousehold> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
@@ -53,7 +54,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
-					.EnableAction (7)
+					.EnableAction<ActionAiderPersonViewController7RemoveHousehold> ()
 					.Template ()
 					.End ()
 					.Attribute (BrickMode.DefaultToSummarySubView);
@@ -66,7 +67,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
-					.EnableAction (6)
+					.EnableAction<ActionAiderPersonViewController6RemoveAlternateAddress> ()
 					.Template ()
 						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
 					.End ()

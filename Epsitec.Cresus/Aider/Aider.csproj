@@ -66,13 +66,13 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController4.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController5.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController6RemoveAlternateAddress.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController3.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController2.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController4.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController5.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController4AddAlternateAddress.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController5AddHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController2RemoveMemberFromHousehold.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7RemoveHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController1.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />

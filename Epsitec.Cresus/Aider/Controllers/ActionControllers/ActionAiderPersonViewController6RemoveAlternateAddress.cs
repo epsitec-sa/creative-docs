@@ -16,7 +16,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (6)]
-	public sealed class ActionAiderPersonViewController6 : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
+	public sealed class ActionAiderPersonViewController6RemoveAlternateAddress : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{

@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (4)]
-	public sealed class ActionAiderPersonViewController4 : ActionViewController<AiderPersonEntity>
+	public sealed class ActionAiderPersonViewController4AddAlternateAddress : ActionViewController<AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{

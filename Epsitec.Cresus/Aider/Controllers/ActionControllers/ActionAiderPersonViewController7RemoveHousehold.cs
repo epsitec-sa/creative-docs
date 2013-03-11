@@ -17,7 +17,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (7)]
-	public sealed class ActionAiderPersonViewController7 : TemplateActionViewController<AiderPersonEntity, AiderHouseholdEntity>
+	public sealed class ActionAiderPersonViewController7RemoveHousehold : TemplateActionViewController<AiderPersonEntity, AiderHouseholdEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -45,7 +45,25 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (contacts.Count == 1)
 			{
-				var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+				var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+				var newAddress   = context.CreateAndRegisterEntity<AiderAddressEntity> ();
+
+				newAddress.AddressLine1          = household.Address.AddressLine1;
+				newAddress.Street                = household.Address.Street;
+				newAddress.HouseNumber           = household.Address.HouseNumber;
+				newAddress.HouseNumberComplement = household.Address.HouseNumberComplement;
+				newAddress.PostBox               = household.Address.PostBox;
+				newAddress.Town                  = household.Address.Town;
+				
+				newAddress.Web    = household.Address.Web;
+				newAddress.Email  = household.Address.Email;
+				newAddress.Phone1 = household.Address.Phone1;
+				newAddress.Phone2 = household.Address.Phone2;
+				newAddress.Mobile = household.Address.Mobile;
+				newAddress.Fax    = household.Address.Fax;
+
+				newHousehold.Address = newAddress;
+
 				AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
 			}
 
