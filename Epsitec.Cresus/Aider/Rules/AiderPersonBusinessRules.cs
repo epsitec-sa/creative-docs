@@ -179,7 +179,7 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, context, person))
+			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person))
 			{
 				return;
 			}

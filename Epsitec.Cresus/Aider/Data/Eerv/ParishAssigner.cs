@@ -269,7 +269,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static bool IsInValidParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderPersonEntity person)
+		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderPersonEntity person)
 		{
 			var currentGroupName = person.Parish.Group.Name;
 
