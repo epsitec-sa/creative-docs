@@ -1,11 +1,14 @@
-//	Copyright © 2004-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Globalization;
-using System.Collections.Generic;
-
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
+using System.Collections.Concurrent;
+using System.Globalization;
+using System.Linq;
 
 [assembly: DependencyClass (typeof (ResourceManager))]
 
@@ -19,7 +22,7 @@ namespace Epsitec.Common.Support
 	/// accessed through its full resource id ("provider/module:bundle#field")
 	/// or by specifying a DRUID.
 	/// </summary>
-	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>, IStructuredTypeResolver, ICaptionResolver
+	public sealed partial class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>, IStructuredTypeResolver, ICaptionResolver
 	{
 		public ResourceManager()
 			: this (null, Support.Globals.Directories.ExecutableRoot, null)
@@ -66,19 +69,21 @@ namespace Epsitec.Common.Support
 		public ResourceManager(ResourceManagerPool pool, string executablePath, string modulePath)
 		{
 			this.pool = pool ?? ResourceManagerPool.Default ?? new ResourceManagerPool ();
-			this.bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
-			this.captionCache = new Dictionary<string, Weak<Caption>> ();
-			this.defaultModulePath = modulePath;
+			
+			this.bundleRelatedCache = new ConcurrentDictionary<string, BundleRelatedCache> ();
+			this.captionCache       = new ConcurrentDictionary<string, Weak<Caption>> ();
+			this.defaultModulePath  = modulePath;
 
-			this.serialId = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
-			this.providers = new Dictionary<string, ProviderRecord> ();
-			this.culture = CultureInfo.CurrentUICulture;
+			this.serialId  = System.Threading.Interlocked.Increment (ref ResourceManager.nextSerialId);
+			this.providers = new ConcurrentDictionary<string, ProviderRecord> ();
+			this.culture   = CultureInfo.CurrentUICulture;
+			
 			this.defaultPath = string.IsNullOrEmpty (executablePath) ? null : executablePath;
 
 			foreach (Allocator<IResourceProvider, ResourceManager> allocator in Resources.Factory.Allocators)
 			{
 				ProviderRecord record = new ProviderRecord (this, allocator);
-				this.providers.Add (record.Prefix, record);
+				this.providers.TryAdd (record.Prefix, record);
 			}
 			
 			this.pool.Register (this);
@@ -1121,7 +1126,9 @@ namespace Epsitec.Common.Support
 					if (cache)
 					{
 						this.captionCache[key] = new Weak<Caption> (caption);
-						this.GetBundleRelatedCache (bundleName, level, culture).AddCaption (caption);
+						var bundleRelatedCache = this.GetBundleRelatedCache (bundleName, level, culture);
+						
+						bundleRelatedCache.AddCaption (caption);
 					}
 				}
 			}
@@ -1442,7 +1449,7 @@ namespace Epsitec.Common.Support
 
 		public void TrimCache()
 		{
-			foreach (BundleRelatedCache proxy in this.bundleRelatedCache.Values)
+			foreach (BundleRelatedCache proxy in this.bundleRelatedCache.Values.ToArray ())
 			{
 				proxy.TrimCache ();
 			}
@@ -1539,7 +1546,7 @@ namespace Epsitec.Common.Support
 		{
 			int count = 0;
 
-			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values)
+			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values.ToArray ())
 			{
 				count += cache.CountLiveBindings ();
 			}
@@ -1551,7 +1558,7 @@ namespace Epsitec.Common.Support
 		{
 			int count = 0;
 
-			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values)
+			foreach (BundleRelatedCache cache in this.bundleRelatedCache.Values.ToArray ())
 			{
 				count += cache.CountLiveCaptions ();
 			}
@@ -1564,10 +1571,8 @@ namespace Epsitec.Common.Support
 			//	Met à jour tous les proxies en les synchronisant avec la culture
 			//	active.
 
-			Dictionary<string, BundleRelatedCache> update = new Dictionary<string, BundleRelatedCache> ();
-			BundleRelatedCache[] cacheArray = new BundleRelatedCache[this.bundleRelatedCache.Count];
-
-			this.bundleRelatedCache.Values.CopyTo (cacheArray, 0);
+			var update     = new ConcurrentDictionary<string, BundleRelatedCache> ();
+			var cacheArray = this.bundleRelatedCache.Values.ToArray ();
 
 			foreach (BundleRelatedCache cache in cacheArray)
 			{
@@ -1712,160 +1717,6 @@ namespace Epsitec.Common.Support
 			}
 
 			return null;
-		}
-
-		#endregion
-
-		#region Private BundleRelatedCache Class
-
-		private class BundleRelatedCache : Types.IResourceBoundSource
-		{
-			public BundleRelatedCache(ResourceBundle bundle)
-			{
-				this.bundle = bundle;
-			}
-
-			public ResourceBundle				Bundle
-			{
-				get
-				{
-					return this.bundle;
-				}
-			}
-			
-			public void SwitchToBundle(ResourceBundle bundle, ResourceManager manager)
-			{
-				if (this.bundle != bundle)
-				{
-					this.bundle = bundle;
-					this.SyncBindings (manager);
-					this.SyncCaptions (manager);
-				}
-			}
-
-			public void AddBinding(Types.Binding binding)
-			{
-				this.bindings.Add (new Weak<Types.Binding> (binding));
-			}
-
-			public void AddCaption(Types.Caption caption)
-			{
-				this.captions.Add (new Weak<Types.Caption> (caption));
-			}
-
-			public void TrimCache()
-			{
-				this.TrimBindingCache ();
-				this.TrimCaptionCache ();
-			}
-
-			internal int CountLiveBindings()
-			{
-				return this.TrimCaptionCache ();
-			}
-
-			internal int CountLiveCaptions()
-			{
-				return this.TrimCaptionCache ();
-			}
-
-			private void SyncBindings(ResourceManager manager)
-			{
-				this.bindings.RemoveAll
-				(
-					delegate (Weak<Types.Binding> item)
-					{
-						Types.Binding binding = item.Target;
-
-						if (binding == null)
-						{
-							return true;
-						}
-						else
-						{
-							binding.UpdateTargets (Types.BindingUpdateMode.Reset);
-							return false;
-						}
-					}
-				);
-			}
-
-			private void SyncCaptions(ResourceManager manager)
-			{
-				Weak<Types.Caption>[] captions = this.captions.ToArray ();
-
-				ResourceLevel level = this.bundle.ResourceLevel;
-				CultureInfo culture = this.bundle.Culture;
-
-				for (int i = 0; i < captions.Length; i++)
-				{
-					Types.Caption caption = captions[i].Target;
-
-					if (caption == null)
-					{
-						this.captions.Remove (captions[i]);
-					}
-					else
-					{
-						Types.Caption update = manager.GetCaption (caption.Id, level, culture, cache: false);
-
-						if (update != null)
-						{
-							DependencyObject.CopyDefinedProperties (update, caption);
-						}
-					}
-				}
-			}
-
-			private int TrimBindingCache()
-			{
-				List<Weak<Types.Binding>> clean = new List<Weak<Types.Binding>> ();
-
-				foreach (Weak<Types.Binding> binding in this.bindings)
-				{
-					if (binding.IsAlive)
-					{
-						clean.Add (binding);
-					}
-				}
-
-				this.bindings = clean;
-				
-				return this.bindings.Count;
-			}
-
-			private int TrimCaptionCache()
-			{
-				List<Weak<Types.Caption>> clean = new List<Weak<Types.Caption>> ();
-
-				foreach (Weak<Types.Caption> caption in this.captions)
-				{
-					if (caption.IsAlive)
-					{
-						clean.Add (caption);
-					}
-				}
-
-				this.captions = clean;
-				
-				return this.captions.Count;
-			}
-
-			#region IResourceBoundSource Members
-
-			object IResourceBoundSource.GetValue(string id)
-			{
-				System.Diagnostics.Debug.Assert (this.bundle != null);
-				System.Diagnostics.Debug.Assert (this.bundle.Contains (id));
-				
-				return this.bundle[id].Data;
-			}
-
-			#endregion
-
-			ResourceBundle						bundle;
-			List<Weak<Types.Binding>>			bindings = new List<Weak<Types.Binding>> ();
-			List<Weak<Types.Caption>>			captions = new List<Weak<Types.Caption>> ();
 		}
 
 		#endregion
@@ -2104,9 +1955,10 @@ namespace Epsitec.Common.Support
 		
 		private ResourceManagerPool				pool;
 		private SetBundleCallback				setBundleCallback;
+
+		readonly ConcurrentDictionary<string, ProviderRecord> providers;
+		readonly ConcurrentDictionary<string, Weak<Caption>>  captionCache;
 		
-		Dictionary<string, ProviderRecord>		providers;
-		Dictionary<string, BundleRelatedCache>	bundleRelatedCache;
-		Dictionary<string, Weak<Caption>>		captionCache;
+		ConcurrentDictionary<string, BundleRelatedCache>	  bundleRelatedCache;
 	}
 }
