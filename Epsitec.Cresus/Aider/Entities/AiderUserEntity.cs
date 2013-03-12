@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -54,6 +56,51 @@ namespace Epsitec.Aider.Entities
 			var dataContext = businessContext.DataContext;
 
 			return dataContext.GetByExample (example).FirstOrDefault ();
+		}
+
+		public void SetPassword(string password, string confirmation)
+		{
+			if (password == null)
+			{
+				var message = Res.Strings.AiderUserPasswordEmpty.ToString ();
+
+				throw new BusinessRuleException (this, message);
+			}
+
+			if (password.Length < 8)
+			{
+				var message = Res.Strings.AiderUserPasswordTooShort.ToString ();
+
+				throw new BusinessRuleException (this, message);
+			}
+
+			if (password != confirmation)
+			{
+				var message = Res.Strings.AiderUserPasswordMismatch.ToString ();
+
+				throw new BusinessRuleException (this, message);
+			}
+
+			this.SetPassword (password);
+		}
+
+		public void SetAdmininistrator(BusinessContext businessContext, bool admin)
+		{
+			var powerLevel = UserPowerLevel.Administrator;
+
+			var isAdmin = this.HasPowerLevel (powerLevel);
+
+			if (!isAdmin && admin)
+			{
+				this.AssignGroup (businessContext, powerLevel);
+			}
+			else if (isAdmin && !admin)
+			{
+				this.UserGroups.RemoveAll
+				(
+					g => g.UserPowerLevel != UserPowerLevel.None && g.UserPowerLevel <= powerLevel
+				);
+			}
 		}
 	}
 }

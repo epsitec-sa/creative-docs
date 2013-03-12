@@ -1,7 +1,5 @@
 using Epsitec.Aider.Entities;
 
-using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
@@ -30,23 +28,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool shouldBeAdmin)
 		{
-			var user = this.Entity;
-
-			var powerLevel = UserPowerLevel.Administrator;
-
-			var isAdmin = user.HasPowerLevel (powerLevel);
-
-			if (!isAdmin && shouldBeAdmin)
-			{
-				user.AssignGroup (this.BusinessContext, powerLevel);
-			}
-			else if (isAdmin && !shouldBeAdmin)
-			{
-				user.UserGroups.RemoveAll
-				(
-					g => g.UserPowerLevel != UserPowerLevel.None && g.UserPowerLevel <= powerLevel
-				);
-			}
+			this.Entity.SetAdmininistrator (this.BusinessContext, shouldBeAdmin);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)

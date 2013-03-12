@@ -4,7 +4,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 
@@ -28,30 +27,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(string password, string confirmation)
 		{
-			var user = this.Entity;
-
-			if (password == null)
-			{
-				var message = Res.Strings.AiderUserPasswordEmpty.ToString ();
-
-				throw new BusinessRuleException (user, message);
-			}
-
-			if (password.Length < 8)
-			{
-				var message = Res.Strings.AiderUserPasswordTooShort.ToString ();
-
-				throw new BusinessRuleException (user, message);
-			}
-
-			if (password != confirmation)
-			{
-				var message = Res.Strings.AiderUserPasswordMismatch.ToString ();
-
-				throw new BusinessRuleException (user, message);
-			}
-
-			user.SetPassword (password);
+			this.Entity.SetPassword (password, confirmation);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
