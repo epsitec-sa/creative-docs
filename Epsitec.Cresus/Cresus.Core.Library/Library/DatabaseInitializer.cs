@@ -102,8 +102,8 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			this.roleMain = this.CreateRole
 			(
-                code: "?", 
-                name: "Principal"
+				code: "?", 
+				name: "Principal"
 			);
 		}
 
@@ -271,6 +271,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 		private SoftwareUserRoleEntity roleMain;
+
 		private SoftwareUserGroupEntity groupSystem;
 		private SoftwareUserGroupEntity groupDeveloper;
 		private SoftwareUserGroupEntity groupAdministrator;
