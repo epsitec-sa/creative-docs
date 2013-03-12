@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 
@@ -22,6 +23,7 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplySetupRule(AiderUserEntity user)
 		{
+			this.SetupMutability (user);
 			this.SetupAuthenticationMethod (user);
 			this.SetupUserGroups (user);
 			this.SetupCustomUISettings (user);
@@ -31,6 +33,12 @@ namespace Epsitec.Aider.Rules
 		private void SetupAuthenticationMethod(AiderUserEntity user)
 		{
 			user.AuthenticationMethod = UserAuthenticationMethod.Password;
+		}
+
+
+		private void SetupMutability(AiderUserEntity user)
+		{
+			user.Mutability = Mutability.Customizable;
 		}
 
 

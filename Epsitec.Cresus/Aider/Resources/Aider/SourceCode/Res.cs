@@ -1818,6 +1818,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVGF22
 				public static readonly global::Epsitec.Common.Support.Druid Email = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 79);
+				//	designer:cap/LVGH22
+				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 81);
 				//	designer:cap/LVGD22
 				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 77);
 				//	designer:cap/LVGE22

@@ -30,6 +30,7 @@ namespace Epsitec.Aider.Override
 			this.CreateAiderScopes ();
 			this.CreateAiderRoles ();
 			this.CreateAdministrator ();
+			this.UpdateRoot ();
 		}
 
 
@@ -141,6 +142,15 @@ namespace Epsitec.Aider.Override
 			);
 
 			admininstrator.Role = this.roleAdministrator;
+			admininstrator.Mutability = Mutability.SystemDefined;
+		}
+
+
+		private void UpdateRoot()
+		{
+			var root = (AiderUserEntity) this.RootUser;
+
+			root.Mutability = Mutability.SystemDefined;
 		}
 
 

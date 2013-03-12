@@ -5612,6 +5612,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Mutability</c> field.
+		///	designer:fld/LVAHC/LVGH22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGH22]")]
+		public global::Epsitec.Aider.Enumerations.Mutability Mutability
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGH22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.Mutability oldValue = this.Mutability;
+				if (oldValue != value || !this.IsFieldDefined("[LVGH22]"))
+				{
+					this.OnMutabilityChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.Mutability> ("[LVGH22]", oldValue, value);
+					this.OnMutabilityChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
@@ -5623,6 +5645,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnEmailChanging(string oldValue, string newValue);
 		partial void OnEmailChanged(string oldValue, string newValue);
+		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

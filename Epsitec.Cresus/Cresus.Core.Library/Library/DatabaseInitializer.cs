@@ -98,6 +98,14 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		protected SoftwareUserEntity RootUser
+		{
+			get
+			{
+				return this.rootUser;
+			}
+		}
+
 		private void CreateBasicRoles()
 		{
 			this.roleMain = this.CreateRole
@@ -183,7 +191,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		private void CreateBasicUsers()
 		{
-			this.CreateUser
+			this.rootUser = this.CreateUser
 			(
 				displayName: "Root",
 				userLogin: "root",
@@ -278,6 +286,8 @@ namespace Epsitec.Cresus.Core.Library
 		private SoftwareUserGroupEntity groupPowerUser;
 		private SoftwareUserGroupEntity groupStandard;
 		private SoftwareUserGroupEntity groupRestricted;
+
+		private SoftwareUserEntity rootUser;
 
 		private readonly BusinessContext businessContext;
 	}
