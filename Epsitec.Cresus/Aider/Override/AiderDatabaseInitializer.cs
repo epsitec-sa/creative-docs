@@ -77,6 +77,14 @@ namespace Epsitec.Aider.Override
 				}
 			);
 
+			this.roleAle = this.CreateAiderRole
+			(
+				name: AiderUserRoleEntity.AleRole,
+				scopes: new AiderUserScopeEntity[] { 
+					this.scopeCounty
+				}
+			);
+
 			this.roleCounty = this.CreateAiderRole
 			(
 				name: AiderUserRoleEntity.CountyRole,
@@ -95,6 +103,7 @@ namespace Epsitec.Aider.Override
 					this.scopeParish
 				}
 			);
+
 			this.roleParish = this.CreateAiderRole
 			(
 				name: AiderUserRoleEntity.ParishRole,
@@ -139,6 +148,7 @@ namespace Epsitec.Aider.Override
 		private AiderUserScopeEntity scopeRegion;
 		private AiderUserScopeEntity scopeParish;
 		private AiderUserRoleEntity roleAdministrator;
+		private AiderUserRoleEntity roleAle;
 		private AiderUserRoleEntity roleCounty;
 		private AiderUserRoleEntity roleRegion;
 		private AiderUserRoleEntity roleParish;

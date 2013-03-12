@@ -183,42 +183,78 @@ namespace Epsitec.Aider
 
 		private static void CreateUsers(BusinessContext businessContext)
 		{
-			var users = new List<Tuple<string, string, bool, string>> ()
+			var users = new List<Tuple<string, string, bool, string, string>> ()
 			{
-				Tuple.Create ("p.arnaud", "Pierre Arnaud", false, "Yverdon-Fontenay – Les Cygnes"),
-				Tuple.Create ("m.bettex", "Marc Bettex", false, "Yverdon-Fontenay – Les Cygnes"),
-				Tuple.Create ("b.bolay", "Bernard Bolay", false, "Saint-Saphorin"),
-				Tuple.Create ("e.bornand", "Eric Bornand", false, "Saint-Saphorin"),
-				Tuple.Create ("j.brand", "Jacques Brand", true, "Pully – Paudex"),
-				Tuple.Create ("g.butticaz", "Geneviève Butticaz", false, "Chavornay"),
-				Tuple.Create ("b.corbaz", "Benjamin Corbaz", false, "Belmont – Lutry"),
-				Tuple.Create ("c.cuendet", "Claude Cuendet", false, "Le Haut-Talent"),
-				Tuple.Create ("l.dewarrat", "Laurence Dewarrat", false, "Belmont – Lutry"),
-				Tuple.Create ("d.fankhauser", "Damaris Fankhauser", false, "Plateau du Jorat"),
-				Tuple.Create ("m.genoux", "Michel Genoux", false, "Pully – Paudex"),
-				Tuple.Create ("m.gonce", "Maurice Gonce", false, "Oron – Palézieux"),
-				Tuple.Create ("c.jackson", "Cheryl Jackson", false, "Villette"),
-				Tuple.Create ("p.jarne", "Pierrette Jarne", false, "Saint-Saphorin"),
-				Tuple.Create ("g.jaton", "Gérard Jaton", true, "Savigny – Forel"),
-				Tuple.Create ("y.knecht", "Yvonne Knecht", false, "Saint-Saphorin"),
-				Tuple.Create ("v.mennet", "Vanina Mennet", false, "Savigny – Forel"),
-				Tuple.Create ("l.pestalozzi", "Lorenzo Pestalozzi", false, "Saint-Saphorin"),
-				Tuple.Create ("d.rochat", "Dorothée Rochat", false, "Pully – Paudex"),
-				Tuple.Create ("p.rouge", "Pascal Rouge", false, "Villette"),
-				Tuple.Create ("j.sordet", "Jean-Michel Sordet", true, "Lonay – Préverenges"),
-				Tuple.Create ("j.sotornik", "Jeanette Sotornik", false, "Villette"),
-				Tuple.Create ("j.spothelfer", "Jean-Marc Spothelfer", false, "Pully – Paudex"),
-				Tuple.Create ("s.wohlhauser", "Sylvie Wohlhauser", false, "Belmont – Lutry"),
+				// Users from EPSITEC
+				Tuple.Create ("p.arnaud", "Pierre Arnaud", false, AiderUserRoleEntity.CountyRole, "Yverdon-Fontenay – Les Cygnes"),
+				Tuple.Create ("m.bettex", "Marc Bettex", false, AiderUserRoleEntity.CountyRole, "Yverdon-Fontenay – Les Cygnes"),
+
+				// Users from Region 9
+				Tuple.Create ("b.bolay", "Bernard Bolay", false, AiderUserRoleEntity.CountyRole, "Saint-Saphorin"),
+				Tuple.Create ("e.bornand", "Eric Bornand", false, AiderUserRoleEntity.CountyRole, "Saint-Saphorin"),
+				Tuple.Create ("g.butticaz", "Geneviève Butticaz", false, AiderUserRoleEntity.CountyRole, "Chavornay"),
+				Tuple.Create ("b.corbaz", "Benjamin Corbaz", false, AiderUserRoleEntity.CountyRole, "Belmont – Lutry"),
+				Tuple.Create ("l.dewarrat", "Laurence Dewarrat", false, AiderUserRoleEntity.CountyRole, "Belmont – Lutry"),
+				Tuple.Create ("m.genoux", "Michel Genoux", false, AiderUserRoleEntity.CountyRole, "Pully – Paudex"),
+				Tuple.Create ("m.gonce", "Maurice Gonce", false, AiderUserRoleEntity.CountyRole, "Oron – Palézieux"),
+				Tuple.Create ("c.jackson", "Cheryl Jackson", false, AiderUserRoleEntity.CountyRole, "Villette"),
+				Tuple.Create ("p.jarne", "Pierrette Jarne", false, AiderUserRoleEntity.CountyRole, "Saint-Saphorin"),
+				Tuple.Create ("g.jaton", "Gérard Jaton", true, AiderUserRoleEntity.CountyRole, "Savigny – Forel"),
+				Tuple.Create ("y.knecht", "Yvonne Knecht", false, AiderUserRoleEntity.CountyRole, "Saint-Saphorin"),
+				Tuple.Create ("v.mennet", "Vanina Mennet", false, AiderUserRoleEntity.CountyRole, "Savigny – Forel"),
+				Tuple.Create ("l.pestalozzi", "Lorenzo Pestalozzi", false, AiderUserRoleEntity.CountyRole, "Saint-Saphorin"),
+				Tuple.Create ("d.rochat", "Dorothée Rochat", false, AiderUserRoleEntity.CountyRole, "Pully – Paudex"),
+				Tuple.Create ("p.rouge", "Pascal Rouge", false, AiderUserRoleEntity.CountyRole, "Villette"),
+				Tuple.Create ("j.sotornik", "Jeanette Sotornik", false, AiderUserRoleEntity.CountyRole, "Villette"),
+				Tuple.Create ("j.spothelfer", "Jean-Marc Spothelfer", false, AiderUserRoleEntity.CountyRole, "Pully – Paudex"),
+				Tuple.Create ("s.wohlhauser", "Sylvie Wohlhauser", false, AiderUserRoleEntity.CountyRole, "Belmont – Lutry"),
+
+				// Users from Ale 31
+				Tuple.Create("m.aubert", "Marie-Noëlle Aubert", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("s.bagaini", "Sylviane Bagaini", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("n.besson", "Nicolas Besson", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("a.bovay", "Anouk Bovay", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create ("j.brand", "Jacques Brand", true, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("c.cherpillod", "Corinne Cherpillod", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("j.christin", "John Christin", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("m.cohen", "Michèle Cohen", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create ("c.cuendet", "Claude Cuendet", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("l.depraz", "Line Dépraz", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("m.durussel", "Michel Durussel", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("g.dutoit", "Gabriel Dutoit", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("m.eggimann", "Magda Eggimann", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("o.favrod", "Olivier Favrod", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create ("d.fankhauser", "Damaris Fankhauser", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("e.gaillard", "Esther Gaillard", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("p.gilgien", "Pascale Gilgien", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("j.habermacher", "Jean-François Habermacher", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("p.haesslein", "Patrice Haesslein", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("b.jacquiard", "Bernadette Jacquiard", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("r.jurenak", "René Jurenak", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("g.labarraque", "Guy Labarraque", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("p.mariani", "Paolo Mariani", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("a.michel", "Agnès Michel", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("m.mouthon", "Marie-Gabrielle Mouthon", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("l.nibbio", "Laurence Nibbio", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("x.paillard", "Xavier Paillard", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("a.perrenoud", "André Perrenoud", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("r.piccard", "Renaud Piccard", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("r.pingoud", "Rémy Pingoud", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("m.rapin", "Marianne Rapin", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("j.savary", "Jean-Marc Savary", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create ("j.sordet", "Jean-Michel Sordet", true, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("v.volet", "Vincent Volet", false, AiderUserRoleEntity.AleRole, ""),
+				Tuple.Create("l.zumstein", "Laurent Zumstein", false, AiderUserRoleEntity.AleRole, ""),
 			};
 
 			foreach (var user in users)
 			{
-				AiderProgram.CreateUser (businessContext, user.Item1, user.Item2, user.Item3, user.Item4);
+				AiderProgram.CreateUser (businessContext, user.Item1, user.Item2, user.Item3, user.Item4, user.Item5);
 			}
 		}
 
 
-		private static void CreateUser(BusinessContext businessContext, string login, string name, bool isAdmin, string parish)
+		private static void CreateUser(BusinessContext businessContext, string login, string name, bool isAdmin, string roleName, string parish)
 		{
 			var user = businessContext.CreateAndRegisterEntity<AiderUserEntity> ();
 
@@ -232,8 +268,12 @@ namespace Epsitec.Aider
 				user.AssignGroup (businessContext, UserPowerLevel.Administrator);
 			}
 
-			user.Role = AiderUserRoleEntity.GetRole (businessContext, AiderUserRoleEntity.CountyRole);
-			user.Parish = ParishAssigner.FindParishGroup (businessContext, parish);
+			user.Role = AiderUserRoleEntity.GetRole (businessContext, roleName);
+
+			if (!string.IsNullOrEmpty (parish))
+			{
+				user.Parish = ParishAssigner.FindParishGroup (businessContext, parish);
+			}
 		}
 	}
 }

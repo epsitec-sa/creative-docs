@@ -34,6 +34,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 		public static readonly string AdminRole =  "Administrateur";
+		public static readonly string AleRole = "Accès Ale";
 		public static readonly string CountyRole = "Accès cantonal";
 		public static readonly string RegionRole = "Accès régional";
 		public static readonly string ParishRole = "Accès paroissial";
