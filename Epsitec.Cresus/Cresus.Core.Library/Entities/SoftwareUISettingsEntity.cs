@@ -1,6 +1,7 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library.Settings;
 
 using System.Collections.Generic;
@@ -49,6 +50,21 @@ namespace Epsitec.Cresus.Core.Entities
 					this.commandSetSettings = UserCommandSetSettings.Restore (xml.Element (Xml.UserCommands));
 				}
 			}
+		}
+
+		public void Delete(BusinessContext businessContext)
+		{
+			foreach (var settings in this.DataSetUISettings.ToArray ())
+			{
+				businessContext.DeleteEntity (settings);
+			}
+
+			foreach (var settings in this.EntityUISettings.ToArray ())
+			{
+				businessContext.DeleteEntity (settings);
+			}
+
+			businessContext.DeleteEntity (this);
 		}
 
 

@@ -102,5 +102,12 @@ namespace Epsitec.Aider.Entities
 				);
 			}
 		}
+
+		public void Delete(BusinessContext businessContext)
+		{
+			this.CustomUISettings.Delete (businessContext);
+
+			businessContext.DeleteEntity (this);
+		}
 	}
 }
