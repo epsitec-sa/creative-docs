@@ -404,4 +404,5 @@
   <data name="Fld.AiderUser.Email" id="GF22">&lt;s:data id="_0" f:Name="Email" f:Labels="{Collection {Text 'E-mail'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.Level" id="GG22">&lt;s:data id="_0" f:Name="Level" f:Labels="{Collection {Text 'Niveau'}}" /&gt;</data>
   <data name="Fld.AiderUser.Mutability" id="GH22">&lt;s:data id="_0" f:Name="Mutability" f:Labels="{Collection {Text 'Niveau de protection'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderGroupFunctionMembersDisplay" id="GI22">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderGroupFunctionMembersDisplay" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderPersonRelationship.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Participants'}}" /&gt;</data>
 </bundle>

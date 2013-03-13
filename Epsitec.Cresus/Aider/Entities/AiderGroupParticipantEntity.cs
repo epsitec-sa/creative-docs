@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -212,6 +214,61 @@ namespace Epsitec.Aider.Entities
 		{
 			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
 			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
+		}
+
+
+		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current, bool sort)
+		{
+			var personExample = new AiderPersonEntity ();
+			var participationExample = new AiderGroupParticipantEntity ()
+			{
+				Person = personExample
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participationExample,
+				RequestedEntity = personExample,
+			};
+
+			AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participationExample, group);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participationExample);
+			}
+
+			if (sort)
+			{
+				request.AddSortClause (ValueField.Create (participationExample.Person, p => p.DisplayName), SortOrder.Ascending);
+			}
+
+			return request;
+		}
+
+
+		public static void AddFunctionMemberCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation, AiderGroupEntity group)
+		{
+			if (participation.Group == null)
+			{
+				participation.Group = new AiderGroupEntity ();
+			}
+
+			// Here we don't use a like clause on the path because it is too slow when there are a
+			// lot of participations in the database.
+			var functions = group.GroupDef.Function.Subgroups;
+			var paths = functions
+				.Select (f => AiderGroupIds.CreateSubgroupPathFromFullPath (group.Path, f.PathTemplate))
+				.ToList ();
+
+			request.AddCondition
+			(
+				dataContext,
+				participation,
+				x => SqlMethods.IsInSet (x.Group.Path, paths)
+			);
+
+			request.Distinct = true;
 		}
 	}
 }

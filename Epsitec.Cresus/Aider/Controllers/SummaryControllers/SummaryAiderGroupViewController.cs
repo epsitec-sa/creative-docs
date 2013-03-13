@@ -6,6 +6,7 @@ using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -61,6 +62,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.SpecialController0)
 					.EnableAction (3)
 					.EnableAction (4);
+			}
+
+			if (this.Entity.GroupDef.Function.IsNotNull ())
+			{
+				wall.AddBrick ()
+					.Icon ("Data.AiderGroup.People")
+					.Title (p => p.GetFunctionParticipantTitle ())
+					.Text (p => p.GetFunctionParticipantSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.Attribute (BrickMode.SpecialController1);
 			}
 
 			wall.AddBrick (x => x.Comment)

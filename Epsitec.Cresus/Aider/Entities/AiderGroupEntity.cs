@@ -173,6 +173,65 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public FormattedText GetFunctionParticipantTitle()
+		{
+			var nbFunctionParticipants = this.GetNbFunctionParticipants ();
+
+			return TextFormatter.FormatText ("Particpants (", nbFunctionParticipants, ")");
+		}
+
+
+		private int GetNbFunctionParticipants()
+		{
+			return this.ExecuteWithDataContext
+			(
+				d => this.GetNbFunctionParticipants (d),
+				() => 0
+			);
+		}
+
+
+		private int GetNbFunctionParticipants(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, false);
+
+			return dataContext.GetCount (request);
+		}
+
+
+		public FormattedText GetFunctionParticipantSummary()
+		{
+			int count = 10;
+
+			var groups = this.GetFuntionParticipants (count + 1)
+				.Select (g => g.GetCompactSummary ())
+				.CreateSummarySequence (count, "...");
+
+			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), groups);
+		}
+
+
+		private IList<AiderPersonEntity> GetFuntionParticipants(int count)
+		{
+			return this.ExecuteWithDataContext
+			(
+				d => this.GetFunctionParticipants (d, count),
+				() => new List<AiderPersonEntity> ()
+			);
+		}
+
+
+		private IList<AiderPersonEntity> GetFunctionParticipants(DataContext dataContext, int count)
+		{
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
+		}
+
+
 		public bool CanHaveSubgroups()
 		{
 			var definition = this.GroupDef;
