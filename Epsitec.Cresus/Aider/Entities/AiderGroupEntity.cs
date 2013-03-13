@@ -121,11 +121,11 @@ namespace Epsitec.Aider.Entities
 		{
 			int count = 10;
 
-			var groups = this.GetParticipants (count + 1)
+			var participants = this.GetParticipants (count + 1)
 				.Select (g => g.GetCompactSummary ())
 				.CreateSummarySequence (count, "...");
 
-			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), groups);
+			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
 
 
