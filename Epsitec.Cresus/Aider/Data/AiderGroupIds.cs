@@ -160,6 +160,13 @@ namespace Epsitec.Aider.Data
 			}
 		}
 
+		public static string CreateSubgroupPathFromFullPath(string parentPath, string fullChildPath)
+		{
+			var childPath = AiderGroupIds.GetGroupPathPart (fullChildPath);
+
+			return AiderGroupIds.CreateSubgroupPath (parentPath, childPath);
+		}
+
 		public static string CreateCustomSubgroupPath(string parentPath, int groupNumber)
 		{
 			var prefix = AiderGroupIds.GroupPrefixCustom;
@@ -206,7 +213,7 @@ namespace Epsitec.Aider.Data
 			return int.Parse (number);
 		}
 
-		public static string GetGroupPathPart(string path)
+		private static string GetGroupPathPart(string path)
 		{
 			return path.Substring (path.Length - AiderGroupIds.PartLength);
 		}

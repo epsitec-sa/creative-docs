@@ -363,10 +363,8 @@ namespace Epsitec.Aider.Entities
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, AiderGroupDefEntity definition)
 		{
 			var name = definition.Name;
-			var pathPrefix = this.Path;
-			var pathSuffix = AiderGroupIds.GetGroupPathPart(definition.PathTemplate);
-			var path = pathPrefix + pathSuffix;
-			
+			var path = AiderGroupIds.CreateSubgroupPathFromFullPath (this.Path, definition.PathTemplate);
+
 			var subgroup = this.CreateSubgroup (businessContext, name, path);
 
 			subgroup.GroupDef = definition;
