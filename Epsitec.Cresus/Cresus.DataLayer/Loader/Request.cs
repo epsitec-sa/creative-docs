@@ -222,9 +222,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			copy.RequestedEntity = this.RequestedEntity;
 			copy.Skip            = this.Skip;
 			copy.Take            = this.Take;
+			copy.Distinct        = this.Distinct;
 			
 			copy.Conditions.AddRange (this.Conditions);
 			copy.SortClauses.AddRange (this.SortClauses);
+			copy.SignificantFields.AddRange (this.SignificantFields); 
 
 			return copy;
 		}
