@@ -148,6 +148,18 @@ namespace Epsitec.Aider
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 5");
+
+				AiderProgram.Test
+				(
+					coreData: coreData,
+					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\person.xlsx",
+					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\activity.xlsx",
+					group: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\group.xlsx",
+					supergroup: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\supergroup.xlsx",
+					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\id.xlsx"
+				);
+
+				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV ALE");
 			}
 		}
 
