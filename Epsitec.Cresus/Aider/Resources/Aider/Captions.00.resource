@@ -362,8 +362,8 @@
   <data name="Fld.AiderLegalPerson.ParishGroupPathCache" id="ABF">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
   <data name="Fld.AiderLegalPerson.ParishGroup" id="ACF">&lt;s:data id="_0" f:Name="ParishGroup" /&gt;</data>
   <data name="Fld.AiderLegalPerson.Address" id="ADF">&lt;s:data id="_0" f:Name="Address" /&gt;</data>
-  <data name="Fld.AiderLegalPerson.DisplayZipCode" id="AEF">&lt;s:data id="_0" f:Name="DisplayZipCode" /&gt;</data>
-  <data name="Fld.AiderLegalPerson.DisplayAddress" id="AFF">&lt;s:data id="_0" f:Name="DisplayAddress" /&gt;</data>
+  <data name="Fld.AiderLegalPerson.DisplayZipCode" id="AEF">&lt;s:data id="_0" f:Name="DisplayZipCode" f:Labels="{Collection {Text 'NPA'}}" /&gt;</data>
+  <data name="Fld.AiderLegalPerson.DisplayAddress" id="AFF">&lt;s:data id="_0" f:Name="DisplayAddress" f:Labels="{Collection {Text 'Adresse'}}" /&gt;</data>
   <data name="Fld.AiderHousehold.Contacts" id="AGF">&lt;s:data id="_0" f:Name="Contacts" /&gt;</data>
   <data name="Fld.AiderLegalPerson.Contacts" id="AHF">&lt;s:data id="_0" f:Name="Contacts" /&gt;</data>
   <data name="Fld.AiderGroupDef.Number" id="G622">&lt;s:data id="_0" f:Name="Number" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
@@ -408,4 +408,5 @@
   <data name="Fld.AiderContact.LegalPersonPrincipal" id="ADG">&lt;s:data id="_0" f:Name="LegalPersonPrincipal" f:Labels="{Collection {Text 'Contact principal'}}" /&gt;</data>
   <data name="Fld.AiderContact.PersonMrMrs" id="AEG">&lt;s:data id="_0" f:Name="PersonMrMrs" f:Labels="{Collection {Text 'Appellation'}}" /&gt;</data>
   <data name="Fld.AiderContact.PersonDisplayName" id="AFG">&lt;s:data id="_0" f:Name="PersonDisplayName" f:Labels="{Collection {Text 'Nom de la personne'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderLegalPerson" id="AGG">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderLegalPerson" f:Description="Montre la base des personnes morales" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderLegalPerson.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:_1.Group="DatabaseSelection" f:Labels="{Collection {Text 'P. morales'}}" /&gt;</data>
 </bundle>
