@@ -372,8 +372,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var id = record[IdHeader.Id];
 			var name = record[IdHeader.Name];
+			var kind = EervParishDataLoader.ParseEervKind (record[IdHeader.Kind]);
 
-			return new EervId (id, name);
+			return new EervId (id, name, kind);
 		}
 
 
@@ -773,6 +774,25 @@ namespace Epsitec.Aider.Data.Eerv
 
 				default:
 					return null;
+			}
+		}
+
+
+		private static EervKind ParseEervKind(string text)
+		{
+			switch (text)
+			{
+				case "C":
+					return EervKind.Canton;
+
+				case "R":
+					return EervKind.Region;
+
+				case "P":
+					return EervKind.Parish;
+
+				default:
+					throw new NotImplementedException ();
 			}
 		}
 

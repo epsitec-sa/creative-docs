@@ -248,6 +248,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			{ IdHeader.Id, "IdxPar" },
 			{ IdHeader.Name, "NomParoisse" },
+			{ IdHeader.Kind, "Type" },
 		};
 
 
@@ -339,6 +340,7 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 		Id,
 		Name,
+		Kind,
 	}
 
 

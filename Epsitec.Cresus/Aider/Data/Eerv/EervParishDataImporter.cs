@@ -54,7 +54,12 @@ namespace Epsitec.Aider.Data.Eerv
 
 			EervParishDataImporter.ProcessHouseholdMatches (coreData, matches, newEntities, eervParishData.Households);
 			EervParishDataImporter.AssignToParishes (coreData, parishRepository, newEntities.Values);
-			EervParishDataImporter.AssignToImportationGroup (coreData, eervParishData.Id, mapping.Values);
+
+			// TODO Also assign to some importation group in the other cases ?
+			if (eervParishData.Id.Kind == EervKind.Parish)
+			{
+				EervParishDataImporter.AssignToImportationGroup (coreData, eervParishData.Id, mapping.Values);
+			}
 
 			return mapping;
 		}
@@ -1072,7 +1077,11 @@ namespace Epsitec.Aider.Data.Eerv
 			var parishName = eervParishData.Id.Name;
 
 			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, parishName);
-			ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, parishName);
+
+			if (eervParishData.Id.Kind == EervKind.Parish)
+			{
+				ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, parishName);
+			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
@@ -1242,7 +1251,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity FindImportationGroup(BusinessContext businessContext, EervId parishId)
 		{
-			var parishGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, parishId);
+			var parishGroup = EervParishDataImporter
+				.FindRootAiderGroups (businessContext, parishId)
+				.Single ();
 
 			return parishGroup.Subgroups.Single (g => g.Name == "Personnes importées");
 		}
@@ -1269,14 +1280,7 @@ namespace Epsitec.Aider.Data.Eerv
 			// their children.
 			foreach (var eervGroup in eervGroups.OrderBy (g => g.Id))
 			{
-				if (eervId.IsParish && !eervGroup.Id.StartsWith ("04"))
-				{
-					throw new Exception ("Invalid group id!");
-				}
-				else if (!eervId.IsParish && !eervGroup.Id.StartsWith ("03"))
-				{
-					throw new Exception ("Invalid group id!");
-				}
+				EervParishDataImporter.CheckGroupId (eervId, eervGroup);
 
 				AiderGroupEntity aiderGroup;
 
@@ -1311,14 +1315,63 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		private static void CheckGroupId(EervId eervId, EervGroup eervGroup)
+		{
+			switch (eervId.Kind)
+			{
+				case EervKind.Canton:
+					EervParishDataImporter.CheckCantonGroupId (eervGroup);
+					break;
+
+				case EervKind.Region:
+					EervParishDataImporter.CheckRegionGroupId (eervGroup);
+					break;
+
+				case EervKind.Parish:
+					EervParishDataImporter.CheckParishGroupId (eervGroup);
+					break;
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static void CheckCantonGroupId(EervGroup eervGroup)
+		{
+			if (eervGroup.Id.StartsWith ("03") || eervGroup.Id.StartsWith ("04"))
+			{
+				throw new Exception ("Invalid group id!");
+			}
+		}
+
+
+		private static void CheckRegionGroupId(EervGroup eervGroup)
+		{
+			if (!eervGroup.Id.StartsWith ("03"))
+			{
+				throw new Exception ("Invalid group id!");
+			}
+		}
+
+
+		private static void CheckParishGroupId(EervGroup eervGroup)
+		{
+			if (!eervGroup.Id.StartsWith ("04"))
+			{
+				throw new Exception ("Invalid group id!");
+			}
+		}
+
+
 		private static Dictionary<string, AiderGroupEntity> BuildIdToGroups(BusinessContext businessContext, EervId eervId)
 		{
 			var mapping = new Dictionary<string, AiderGroupEntity> ();
 
-			var rootGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, eervId);
+			var rootGroups = EervParishDataImporter.FindRootAiderGroups (businessContext, eervId);
 
 			var todo = new Stack<AiderGroupEntity> ();
-			todo.Push (rootGroup);
+			todo.PushRange (rootGroups);
 
 			while (todo.Count > 0)
 			{
@@ -1330,7 +1383,7 @@ namespace Epsitec.Aider.Data.Eerv
 					continue;
 				}
 
-				if (!eervId.IsParish && definition.Classification == GroupClassification.Parish)
+				if (eervId.Kind != EervKind.Parish && definition.Classification == GroupClassification.Parish)
 				{
 					continue;
 				}
@@ -1344,20 +1397,45 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity FindRootAiderGroup(BusinessContext businessContext, EervId eervId)
+		private static IEnumerable<AiderGroupEntity> FindRootAiderGroups(BusinessContext businessContext, EervId eervId)
 		{
-			if (eervId.IsParish)
+			switch (eervId.Kind)
 			{
-				var parishName = eervId.Name;
+				case EervKind.Canton:
+					return FindRootCantonGroups (businessContext);
 
-				return ParishAssigner.FindParishGroup (businessContext, parishName);
-			}
-			else
-			{
-				var regionNumber = int.Parse (StringUtils.GetDigits (eervId.Name));
+				case EervKind.Region:
+					return FindRootRegionGroup (businessContext, eervId);
 
-				return ParishAssigner.FindRegionGroup (businessContext, regionNumber);
+				case EervKind.Parish:
+					return FindRootParisGroup (businessContext, eervId);
+
+				default:
+					throw new NotImplementedException ();
 			}
+		}
+
+
+		private static IEnumerable<AiderGroupEntity> FindRootCantonGroups(BusinessContext businessContext)
+		{
+			return AiderGroupEntity
+				.FindRootGroups (businessContext)
+				.Where (g => g.GroupDef.Classification != GroupClassification.Region)
+				.ToList ();
+		}
+
+
+		private static IEnumerable<AiderGroupEntity> FindRootRegionGroup(BusinessContext businessContext, EervId eervId)
+		{
+			var regionNumber = int.Parse (StringUtils.GetDigits (eervId.Name));
+
+			yield return ParishAssigner.FindRegionGroup (businessContext, regionNumber);
+		}
+
+
+		private static IEnumerable<AiderGroupEntity> FindRootParisGroup(BusinessContext businessContext, EervId eervId)
+		{
+			yield return ParishAssigner.FindParishGroup (businessContext, eervId.Name);
 		}
 
 

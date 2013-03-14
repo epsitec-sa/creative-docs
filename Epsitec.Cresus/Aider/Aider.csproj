@@ -90,6 +90,7 @@
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
+    <Compile Include="Data\Eerv\EervKind.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
