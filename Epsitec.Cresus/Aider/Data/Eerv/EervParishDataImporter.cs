@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			var matches = EervParishDataImporter.FindMatches (coreData, eervParishData);
-			var newEntities = EervParishDataImporter.ProcessMatches (coreData, eervParishData.Id.Name, matches);
+			var newEntities = EervParishDataImporter.ProcessMatches (coreData, eervParishData.Id, matches);
 			var mapping = EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 
 			EervParishDataImporter.ProcessHouseholdMatches (coreData, matches, newEntities, eervParishData.Households);
@@ -103,21 +103,21 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreData coreData, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreData coreData, EervId eervId, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.ProcessMatchWithValues (businessContext, parishName, matches);
+				EervParishDataImporter.ProcessMatchWithValues (businessContext, eervId, matches);
 			}
 
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				return EervParishDataImporter.ProcessMatchWithoutValues (businessContext, parishName, matches);
+				return EervParishDataImporter.ProcessMatchWithoutValues (businessContext, eervId, matches);
 			}
 		}
 
 
-		private static void ProcessMatchWithValues(BusinessContext businessContext, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static void ProcessMatchWithValues(BusinessContext businessContext, EervId eervId, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
 			var matchWithValues = matches
 				.Where (m => m.Value != null)
@@ -134,7 +134,7 @@ namespace Epsitec.Aider.Data.Eerv
 				var matchData = match.Item2;
 
 				EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
-				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, parishName);
+				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, eervId);
 
 				existingEntities.Add (aiderPerson);
 			}
@@ -147,7 +147,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatchWithoutValues(BusinessContext businessContext, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static Dictionary<EervPerson, EntityKey> ProcessMatchWithoutValues(BusinessContext businessContext, EervId eervId, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
 			var matchWithoutValues = matches
 				.Where (m => m.Value == null)
@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Data.Eerv
 				var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson (businessContext, eervPerson);
 
 				EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
-				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, null, parishName);
+				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, null, eervId);
 
 				newEntities[eervPerson] = aiderPerson;
 			}
@@ -504,13 +504,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AddMatchComment(EervPerson eervPerson, AiderPersonEntity aiderPerson, MatchData match, string parishName)
+		private static void AddMatchComment(EervPerson eervPerson, AiderPersonEntity aiderPerson, MatchData match, EervId eervId)
 		{
 			string text;
 
 			if (match != null)
 			{
-				text = "Correspondance avec la personne " + eervPerson.Id + " de la paroisse de " + parishName + ": ";
+				text = "Correspondance avec la personne " + eervPerson.Id + " du " + eervId.GetFileName () + ":";
 				text += "\n- Nom: " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Lastname);
 				text += "\n- Prénom: " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Firstname);
 				text += "\n- Date de naissance: " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.DateOfBirth);
@@ -519,7 +519,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			else
 			{
-				text = "Personne créée à partir de la personne " + eervPerson.Id + " de la paroisse de " + parishName + ", sans correspondance dans le fichier ECH.";
+				text = "Personne créée à partir de la personne " + eervPerson.Id + " du " + eervId.GetFileName () + ", sans correspondance dans le fichier ECH.";
 			}
 
 			EervParishDataImporter.CombineSystemComments (aiderPerson, text);
@@ -1074,31 +1074,29 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
 		{
-			var parishName = eervParishData.Id.Name;
-
-			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, parishName);
+			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, eervParishData.Id);
 
 			if (eervParishData.Id.Kind == EervKind.Parish)
 			{
-				ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, parishName);
+				ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, eervParishData.Id.Name);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
-		private static List<AiderLegalPersonEntity> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData, string parishName)
+		private static List<AiderLegalPersonEntity> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData, EervId eervId)
 		{
 			var aiderTowns = new AiderTownRepository (businessContext);
 
 			return eervParishData
 				.LegalPersons
-				.Select (lp => EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, parishName, lp))
+				.Select (lp => EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, eervId, lp))
 				.ToList ();
 		}
 
 
-		private static AiderLegalPersonEntity ImportEervLegalPerson(BusinessContext businessContext, AiderTownRepository aiderTowns, string parishName, EervLegalPerson legalPerson)
+		private static AiderLegalPersonEntity ImportEervLegalPerson(BusinessContext businessContext, AiderTownRepository aiderTowns, EervId eervId, EervLegalPerson legalPerson)
 		{
 			var aiderLegalPerson = businessContext.CreateAndRegisterEntity<AiderLegalPersonEntity> ();
 			aiderLegalPerson.Name = EervParishDataImporter.GetCorporateName (legalPerson);
@@ -1116,7 +1114,7 @@ namespace Epsitec.Aider.Data.Eerv
 				aiderContact.Person = aiderPerson;
 			}
 
-			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
+			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du " + eervId.GetFileName() + ".";
 			EervParishDataImporter.CombineSystemComments (aiderLegalPerson, comment);
 
 			return aiderLegalPerson;
@@ -1427,9 +1425,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<AiderGroupEntity> FindRootRegionGroup(BusinessContext businessContext, EervId eervId)
 		{
-			var regionNumber = int.Parse (StringUtils.GetDigits (eervId.Name));
-
-			yield return ParishAssigner.FindRegionGroup (businessContext, regionNumber);
+			yield return ParishAssigner.FindRegionGroup (businessContext, eervId.GetRegionCode ());
 		}
 
 
