@@ -35,11 +35,17 @@ namespace Epsitec.Aider.Entities
 		{
 			this.Address = this.GetAddress ();
 
-			this.DisplayName = this.GetDisplayName ();
-			this.DisplayZipCode = this.GetDisplayZipCode ();
-			this.DisplayAddress = this.GetDisplayAddress ();
-			this.DisplayVisibility = this.GetDisplayVisibilityStatus ();
+			this.DisplayName          = this.GetDisplayName ();
+			this.DisplayZipCode       = this.GetDisplayZipCode ();
+			this.DisplayAddress       = this.GetDisplayAddress ();
+			this.DisplayVisibility    = this.GetDisplayVisibilityStatus ();
 			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
+
+			if (this.Person.IsNotNull ())
+			{
+				this.PersonMrMrs       = this.Person.MrMrs;
+				this.PersonDisplayName = this.Person.DisplayName;
+			}
 		}
 
 
@@ -117,6 +123,22 @@ namespace Epsitec.Aider.Entities
 
 			return contact;
 		}
+
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderLegalPersonEntity legalPerson, PersonMrMrs personMrMrs, string personName, ContactRole personRole = ContactRole.None)
+		{
+			var contact = AiderContactEntity.Create (businessContext, legalPerson);
+
+			if (string.IsNullOrEmpty (personName) == false)
+			{
+				contact.PersonMrMrs            = personMrMrs;
+				contact.PersonDisplayName      = personName;
+				contact.LegalPersonContactRole = personRole;
+				contact.LegalPersonPrincipal   = true;
+			}
+
+			return contact;
+		}
+
 
 		public static void Delete(BusinessContext businessContext, AiderContactEntity contact)
 		{

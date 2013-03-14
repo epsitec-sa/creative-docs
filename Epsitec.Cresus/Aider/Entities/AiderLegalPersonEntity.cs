@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -106,6 +107,14 @@ namespace Epsitec.Aider.Entities
 		{
 			this.GetContacts ().Remove (contact);
 		}
+
+
+		public static void Delete(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
+		{
+			//	TODO: ...
+		}
+
+
 
 		private IList<AiderContactEntity> contacts;
 	}
