@@ -75,7 +75,10 @@ namespace Epsitec.Aider.Entities
 
 			if (!startDate.HasValue || startDate <= Date.Today)
 			{
-				what.Person.AddParticipationInternal (participation);
+				if (what.Person != null)
+				{
+					what.Person.AddParticipationInternal (participation);
+				}
 			}
 
 			return participation;
