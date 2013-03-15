@@ -149,6 +149,16 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderLegalPersonEntity> aiderLegalPersons)
+		{
+			dataContext.LoadRelatedData (aiderLegalPersons, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderLegalPersonEntity p) => p.Address),
+				LambdaUtils.Convert ((AiderLegalPersonEntity p) => p.Address.Town),
+			});
+		}
+
+
 	}
 
 

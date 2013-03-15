@@ -33,13 +33,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
-			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreData, parishRepository, eervParishData);
+			var persons = EervParishDataImporter.ImportEervPhysicalPersons (coreData, parishRepository, eervParishData);
+			var legalPersons = EervParishDataImporter.ImportEervLegalPersons (coreData, eervParishData);
+			var groups = EervParishDataImporter.ImportEervGroups (coreData, eervParishData);
 
-			EervParishDataImporter.ImportEervLegalPersons (coreData, eervParishData);
-
-			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (coreData, eervParishData);
-
-			EervParishDataImporter.ImportEervActivities (coreData, eervParishData, eervPersonMapping, eervGroupMapping);
+			EervParishDataImporter.ImportEervActivities (coreData, eervParishData, persons, legalPersons, groups);
 
 			coreData.ResetIndexes ();
 		}
@@ -1062,36 +1060,45 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervLegalPersons(CoreData coreData, EervParishData eervParishData)
+		private static Dictionary<EervLegalPerson, EntityKey> ImportEervLegalPersons(CoreData coreData, EervParishData eervParishData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData);
+				return EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData);
 			}
 		}
 
 
-		private static void ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
+		private static Dictionary<EervLegalPerson, EntityKey> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
 		{
 			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, eervParishData.Id);
 
 			if (eervParishData.Id.Kind == EervKind.Parish)
 			{
-				ParishAssigner.AssignToParish (businessContext, aiderLegalPersons, eervParishData.Id.Name);
+				ParishAssigner.AssignToParish (businessContext, aiderLegalPersons.Values, eervParishData.Id.Name);
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
+			return aiderLegalPersons.ToDictionary
+			(
+				lp => lp.Key,
+				lp => businessContext.DataContext.GetNormalizedEntityKey (lp.Value).Value
+			);
 		}
 
 
-		private static List<AiderLegalPersonEntity> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData, EervId eervId)
+		private static Dictionary<EervLegalPerson, AiderLegalPersonEntity> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData, EervId eervId)
 		{
 			var aiderTowns = new AiderTownRepository (businessContext);
 
 			return eervParishData
 				.LegalPersons
-				.Select (lp => EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, eervId, lp))
-				.ToList ();
+				.ToDictionary
+				(
+					lp => lp,
+					lp => EervParishDataImporter.ImportEervLegalPerson (businessContext, aiderTowns, eervId, lp)
+				);
 		}
 
 
@@ -1428,69 +1435,68 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervActivities(CoreData coreData, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
+		private static void ImportEervActivities(CoreData coreData, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervLegalPerson, EntityKey> eervLegalPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.ImportEervActivities (businessContext, eervParishData, eervPersonToKeys, eervGroupToKeys);
+				EervParishDataImporter.ImportEervActivities (businessContext, eervParishData, eervPersonToKeys, eervLegalPersonToKeys, eervGroupToKeys);
 			}
 		}
 
 
-		private static void ImportEervActivities(BusinessContext businessContext, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
+		private static void ImportEervActivities(BusinessContext businessContext, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervLegalPerson, EntityKey> eervLegalPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
 		{
 			// TODO Test this method to check if it really works.
 
 			var dataContext = businessContext.DataContext;
 
 			var aiderPersons = new HashSet<AiderPersonEntity> ();
+			var aiderLegalPersons = new HashSet<AiderLegalPersonEntity> ();
 
 			foreach (var eervActivity in eervParishData.Activities)
 			{
+				var aiderGroupKey = eervGroupToKeys[eervActivity.Group];
+				var aiderGroup = (AiderGroupEntity) dataContext.ResolveEntity (aiderGroupKey);
+
+				var startDate = eervActivity.StartDate;
+				var endDate = eervActivity.EndDate;
+				var remarks = TextFormatter.FormatText (eervActivity.Remarks);
+
+				var participationData = new Participation ()
+				{
+					Group = aiderGroup
+				};
+
 				if (eervActivity.Person != null)
 				{
-					var eervPerson = eervActivity.Person;
-					var eervGroup  = eervActivity.Group;
-
-					var aiderPersonKey = eervPersonToKeys[eervPerson];
-					var aiderGroupKey  = eervGroupToKeys[eervGroup];
-
+					var aiderPersonKey = eervPersonToKeys[eervActivity.Person];
 					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (aiderPersonKey);
-					var aiderGroup  = (AiderGroupEntity) dataContext.ResolveEntity (aiderGroupKey);
-
+					
 					aiderPersons.Add (aiderPerson);
-
-					var startDate = eervActivity.StartDate;
-					var endDate   = eervActivity.EndDate;
-					var remarks   = TextFormatter.FormatText (eervActivity.Remarks);
-
-					var what = new Participation
-					{
-						Group  = aiderGroup,
-						Person = aiderPerson,
-					};
-
-					AiderGroupParticipantEntity.ImportParticipation (businessContext, what, startDate, endDate, remarks);
+					participationData.Person = aiderPerson;
 				}
 				else if (eervActivity.LegalPerson != null)
 				{
-					//	For now we don't consider the activities linked to legal persons as we don't have
-					//	a way to store them in the database.
+					var aiderLegalpersonKey = eervLegalPersonToKeys[eervActivity.LegalPerson];
+					var aiderLegalperson = (AiderLegalPersonEntity) dataContext.ResolveEntity (aiderLegalpersonKey);
 
-					//	@MB: handle legal persons
-
-					Debug.WriteLine ("WARNING: activity with legal persons are not considered yet.");
+					participationData.LegalPerson = aiderLegalperson;
 				}
 				else
 				{
 					throw new NotImplementedException ();
 				}
+
+				AiderGroupParticipantEntity.ImportParticipation (businessContext, participationData, startDate, endDate, remarks);
 			}
 
 			// We load the related data to speed up the execution of the business rules.
 			AiderEnumerator.LoadRelatedData (dataContext, aiderPersons);
+			AiderEnumerator.LoadRelatedData (dataContext, aiderLegalPersons);
 
 			businessContext.Register (aiderPersons);
+			businessContext.Register (aiderLegalPersons);
+
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
