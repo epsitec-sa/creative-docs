@@ -5,7 +5,6 @@ using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -1106,18 +1105,30 @@ namespace Epsitec.Aider.Data.Eerv
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.Coordinates);
 			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.ContactPerson.Coordinates);
 
-			var aiderContact = AiderContactEntity.Create (businessContext, aiderLegalPerson);
-
-			var aiderPerson = EervParishDataImporter.ImportEervLegalPersonContactPerson (businessContext, legalPerson);
-			if (aiderPerson.IsNotNull ())
-			{
-				aiderContact.Person = aiderPerson;
-			}
+			EervParishDataImporter.ImportEervLegalPersonContact (businessContext, aiderLegalPerson, legalPerson);
 
 			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du " + eervId.GetFileName() + ".";
 			EervParishDataImporter.CombineSystemComments (aiderLegalPerson, comment);
 
 			return aiderLegalPerson;
+		}
+
+
+		private static AiderContactEntity ImportEervLegalPersonContact(BusinessContext businessContext, AiderLegalPersonEntity aiderLegalperson, EervLegalPerson eervLegalPerson)
+		{
+			var aiderContact = AiderContactEntity.Create (businessContext, aiderLegalperson);
+			var eervContact = eervLegalPerson.ContactPerson;
+
+			// NOTE If the corporate name is empty, we used the first or last name as corporate
+			// name. Therefore, we assume that there is no contact person there.
+
+			if (!string.IsNullOrWhiteSpace (eervLegalPerson.Name))
+			{
+				aiderContact.PersonFullName =  EervParishDataImporter.GetContactFullName (eervContact);
+				aiderContact.PersonMrMrs = EervParishDataImporter.GetHonorific (eervContact.Honorific);
+			}
+
+			return aiderContact;
 		}
 
 
@@ -1145,51 +1156,27 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderPersonEntity ImportEervLegalPersonContactPerson(BusinessContext businessContext, EervLegalPerson legalPerson)
+		private static string GetContactFullName(EervPerson contactPerson)
 		{
-			// NOTE If the corporate name is empty, we used the first or last name as corporate
-			// name. Therefore, we assume that there is no contact person there.
+			var emptyFirstName = string.IsNullOrWhiteSpace (contactPerson.Firstname);
+			var emptyLastName = string.IsNullOrWhiteSpace (contactPerson.Lastname);
 
-			if (string.IsNullOrWhiteSpace (legalPerson.Name))
+			if (emptyFirstName && emptyLastName)
 			{
-				return null;
+				return "";
 			}
-
-			var contactPerson = legalPerson.ContactPerson;
-
-			if (string.IsNullOrWhiteSpace (contactPerson.Firstname))
+			else if (!emptyFirstName && emptyLastName)
 			{
-				return null;
+				return contactPerson.Firstname;
 			}
-
-			if (string.IsNullOrWhiteSpace (contactPerson.Lastname))
+			else if (emptyFirstName && !emptyLastName)
 			{
-				return null;
+				return contactPerson.Lastname;
 			}
-
-			var aiderPerson = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-
-			aiderPerson.eCH_Person.PersonFirstNames = contactPerson.Firstname;
-			aiderPerson.eCH_Person.PersonOfficialName = contactPerson.Lastname;
-			aiderPerson.eCH_Person.PersonSex = contactPerson.Sex;
-
-			var honorific = contactPerson.Honorific;
-
-			if (!string.IsNullOrEmpty (honorific))
+			else
 			{
-				var title =	EervParishDataImporter.GetHonorific (honorific);
-
-				if (title != PersonMrMrs.None)
-				{
-					aiderPerson.MrMrs = title;
-				}
-				else
-				{
-					aiderPerson.Title = honorific;
-				}
+				return contactPerson.Firstname + " " + contactPerson.Lastname;
 			}
-
-			return aiderPerson;
 		}
 
 
