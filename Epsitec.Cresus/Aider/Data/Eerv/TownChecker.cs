@@ -219,16 +219,10 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 			public Town(string zipCode, string name)
-				: this (zipCode, name, name)
-			{
-			}
-
-
-			public Town(string zipCode, string name, string nameToNormalize)
 			{
 				this.zipCode = Town.GetString (zipCode);
 				this.name = Town.GetString (name);
-				this.normalizedName = Normalizer.NormalizeText (Town.GetString(nameToNormalize));
+				this.normalizedName = Normalizer.NormalizeText (this.name);
 			}
 
 
