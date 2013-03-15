@@ -4,6 +4,8 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Aider.Data.Eerv
 {
@@ -20,7 +22,6 @@ namespace Epsitec.Aider.Data.Eerv
 
 			this.activities = new List<EervActivity> ();
 			this.subGroups = new List<EervGroup> ();
-			this.superGroups = new List<EervGroup> ();
 		}
 
 
@@ -42,20 +43,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public IList<EervGroup> SuperGroups
-		{
-			get
-			{
-				return this.superGroups;
-			}
-		}
-
-
 		protected override void HandleFreeze()
 		{
 			this.activities = this.activities.AsReadOnlyCollection ();
 			this.subGroups = this.subGroups.AsReadOnlyCollection ();
-			this.superGroups = this.superGroups.AsReadOnlyCollection ();
 		}
 
 
@@ -65,7 +56,6 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private IList<EervActivity> activities;
 		private IList<EervGroup> subGroups;
-		private IList<EervGroup> superGroups;
 
 
 	}

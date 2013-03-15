@@ -101,13 +101,13 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (181, groups.Count);
 
-			var g1 = Tuple.Create (Tuple.Create (new EervGroup ("0403110100", "Office de Taizé"), new List<string> () { "0403110000" }), "2010000000");
+			var g1 = Tuple.Create (new EervGroup ("0403110100", "Office de Taizé"), "2010000000");
 			this.CheckForEquality (g1, groups[0]);
 
-			var g2 = Tuple.Create (Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), new List<string> () { "0403110000" }), "2010000000");
+			var g2 = Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), "2010000000");
 			this.CheckForEquality (g2, groups[16]);
 
-			var g3 = Tuple.Create (Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), new List<string> () { }), "2010000000");
+			var g3 = Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), "2010000000");
 			this.CheckForEquality (g3, groups[177]);
 		}
 
@@ -146,11 +146,9 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private void CheckForEquality(Tuple<Tuple<EervGroup, List<string>>, string> expected, Tuple<Tuple<EervGroup, List<string>>, string> actual)
+		private void CheckForEquality(Tuple<EervGroup, string> expected, Tuple<EervGroup, string> actual)
 		{
-			this.CheckForEquality (expected.Item1.Item1, actual.Item1.Item1);
-
-			CollectionAssert.AreEqual (expected.Item1.Item2, actual.Item1.Item2);
+			this.CheckForEquality (expected.Item1, actual.Item1);
 			Assert.AreEqual (expected.Item2, actual.Item2);
 		}
 

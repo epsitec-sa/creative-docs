@@ -67,12 +67,11 @@ namespace Epsitec.Aider.Data.Eerv
 				if (persons.Count > 0)
 				{
 					var rawPersons = persons.Select (t => t.Item1).ToList ();
-					var rawGroups = groups.Select (t => t.Item1).ToList ();
 
 					var idToHouseholds = households.ToDictionary (h => h.Id);
 					var idToPersons = rawPersons.ToDictionary (p => p.Id);
 					var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
-					var idToGroups = rawGroups.ToDictionary (g => g.Id);
+					var idToGroups = groups.ToDictionary (g => g.Id);
 
 					var filteredActivities = EervParishDataLoader
 						.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups)
@@ -84,9 +83,9 @@ namespace Epsitec.Aider.Data.Eerv
 					EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
 					EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
 
-					EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
+					EervParishDataLoader.FreezeData (rawActivities, groups, legalPersons, rawPersons, households);
 
-					yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups, rawActivities);
+					yield return new EervParishData (id, households, rawPersons, legalPersons, groups, rawActivities);
 				}
 			}
 		}
@@ -274,51 +273,37 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignSuperGroups(IEnumerable<Tuple<EervGroup, List<string>>> groups, Dictionary<string, EervGroup> idToGroups)
+		private static void AssignSuperGroups(IEnumerable<EervGroup> groups, Dictionary<string, EervGroup> idToGroups)
 		{
-			foreach (var item in groups)
+			foreach (var group in groups)
 			{
-				var group = item.Item1;
+				var superGroupId = EervGroupDefinition.GetParentId (group.Id);	
+				EervGroup superGroup;
 
-				foreach (var superGroupId in item.Item2)
+				if (idToGroups.TryGetValue (superGroupId, out superGroup))
 				{
-					EervGroup superGroup;
-
-					if (idToGroups.TryGetValue (superGroupId, out superGroup))
-					{
-						group.SuperGroups.Add (superGroup);
-						superGroup.SubGroups.Add (group);
-					}
+					superGroup.SubGroups.Add (group);
 				}
 			}
 		}
 
 
-		internal static IEnumerable<Tuple<Tuple<EervGroup, List<string>>, string>> LoadEervGroups(IEnumerable<Dictionary<GroupHeader, string>> records)
+		internal static IEnumerable<Tuple<EervGroup, string>> LoadEervGroups(IEnumerable<Dictionary<GroupHeader, string>> records)
 		{
 			return from record in records
 				   select EervParishDataLoader.GetEervGroup(record);
 		}
 
 
-		private static Tuple<Tuple<EervGroup, List<string>>, string> GetEervGroup(Dictionary<GroupHeader, string> group)
+		private static Tuple<EervGroup, string> GetEervGroup(Dictionary<GroupHeader, string> group)
 		{
 			var id = EervParishDataLoader.PadGroupId (group[GroupHeader.Id]);
 			var name = group[GroupHeader.Name] ?? "";
-
-			var superGroupIds = new List<string> ();
-			var superGroupId = EervParishDataLoader.PadGroupId (group[GroupHeader.SuperGroupId]);
-
 			var parishId = group[GroupHeader.ParishId];
-
-			if (!string.IsNullOrWhiteSpace (superGroupId))
-			{
-				superGroupIds.Add (superGroupId);
-			}
 
 			var eervGroup = new EervGroup (id, name);
 
-			return Tuple.Create (Tuple.Create (eervGroup, superGroupIds), parishId);
+			return Tuple.Create (eervGroup, parishId);
 		}
 
 

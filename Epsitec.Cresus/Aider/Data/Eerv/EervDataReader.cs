@@ -158,7 +158,6 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			{ GroupHeader.Id, "IdxG" },
 			{ GroupHeader.Name, "DesG" },
-			{ GroupHeader.SuperGroupId, "IdxSG" },
 			{ GroupHeader.ParishId, "IdxPar" },
 		};
 
@@ -167,7 +166,6 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			{ GroupHeader.Id, "IdxSG" },
 			{ GroupHeader.Name, "DesSG" },
-			{ GroupHeader.SuperGroupId, "DUMMY" },
 			{ GroupHeader.ParishId, "IdxPar" },
 		};
 
@@ -259,7 +257,6 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 		Id,
 		Name,
-		SuperGroupId,
 		ParishId,
 	}
 
