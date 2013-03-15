@@ -72,7 +72,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (emptyZipCode)
 			{
-			    return this.FindMatchWithName (town);
+				return this.FindMatchWithName (town);
 			}
 
 			if (town.zipCode.Length != 4 || !town.zipCode.IsInteger ())
