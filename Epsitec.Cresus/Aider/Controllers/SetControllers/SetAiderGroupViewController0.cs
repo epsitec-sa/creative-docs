@@ -65,13 +65,27 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		protected override void AddItems(IEnumerable<AiderContactEntity> entitiesToAdd)
 		{
-			foreach (var entity in entitiesToAdd)
-			{
-				var member = entity.Person;
+			var context = this.BusinessContext;
+			var group   = this.Entity;
 
-				if (member.IsNotNull () && !member.IsMemberOf (this.Entity))
+			foreach (var contact in entitiesToAdd)
+			{
+				var member = contact.Person;
+
+				//	@PA: handle legal persons too...
+
+				if ((member.IsNotNull ()) && 
+					(member.IsNotMemberOf (group)))
 				{
-					AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, member, this.Entity, Date.Today, "");
+					var what = new Participation
+					{
+						Group = group,
+						Person = member,
+						LegalPerson = contact.LegalPerson,
+						Contact = contact,
+					};
+
+					AiderGroupParticipantEntity.StartParticipation (context, what, Date.Today, FormattedText.Empty);
 				}
 			}
 		}

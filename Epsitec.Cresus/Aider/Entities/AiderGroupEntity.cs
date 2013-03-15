@@ -678,12 +678,29 @@ namespace Epsitec.Aider.Entities
 
 			foreach (var participation in participations)
 			{
-				var person = participation.Person;
+				var person  = participation.Person;
+				var legal   = participation.LegalPerson;
+				var contact = participation.Contact;
 
-				if (!person.IsMemberOf (this))
+				//	@PA: also handle legal persons
+
+				if ((legal.IsNull ()) &&
+					(person.IsNotNull ()) &&
+					(person.IsNotMemberOf (this)))
 				{
-					AiderGroupParticipantEntity.StartParticipation (businessContext, person, this, startDate, comment);
+					var what = new Participation
+					{
+						Group       = this,
+						Person      = person,
+						LegalPerson = legal,
+						Contact     = contact,
+					};
+
+					AiderGroupParticipantEntity.StartParticipation (businessContext, what, startDate, comment);
+					continue;
 				}
+
+
 			}
 		}
 

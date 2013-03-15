@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data;
@@ -44,32 +44,48 @@ namespace Epsitec.Aider.Entities
 			yield break;
 		}
 
-		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate)
+		
+		public void Delete(BusinessContext businessContext)
 		{
-			if (!group.CanHaveMembers ())
+			if (this.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (this.Comment);
+			}
+			
+			businessContext.DeleteEntity (this);
+		}
+
+
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what)
+		{
+			return AiderGroupParticipantEntity.StartParticipation (businessContext, what, null);
+		}
+
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what, Date? startDate)
+		{
+			if (!what.Group.CanHaveMembers ())
 			{
 				throw new InvalidOperationException ("This group cannot have members.");
 			}
 
 			var participation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
-			participation.Person = person;
-			participation.Group = group;
+			participation.Assign (what);
 			participation.StartDate = startDate;
 
 			if (!startDate.HasValue || startDate <= Date.Today)
 			{
-				person.AddParticipationInternal (participation);
+				what.Person.AddParticipationInternal (participation);
 			}
 
 			return participation;
 		}
 
-		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate, FormattedText comment)
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what, Date? startDate, FormattedText comment)
 		{
-			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, person, group, startDate);
+			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, what, startDate);
 
-			if (comment.Length > 0)
+			if (comment.IsNullOrEmpty () == false)
 			{
 				participation.Comment.Text = comment;
 			}
@@ -77,6 +93,7 @@ namespace Epsitec.Aider.Entities
 			return participation;
 		}
 
+		
 		public static void StopParticipation(AiderGroupParticipantEntity participation, Date endDate)
 		{
 			participation.EndDate = endDate;
@@ -98,9 +115,9 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderGroupParticipantEntity ImportParticipation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity group, Date? startDate, Date? endDate, FormattedText comment)
+		public static AiderGroupParticipantEntity ImportParticipation(BusinessContext businessContext, Participation what, Date? startDate, Date? endDate, FormattedText comment)
 		{
-			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, person, group, startDate, comment);
+			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, what, startDate, comment);
 
 			if (endDate.HasValue)
 			{
@@ -110,6 +127,7 @@ namespace Epsitec.Aider.Entities
 			return participation;
 		}
 
+		
 		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool sort, bool current, bool returnPersons)
 		{
 			var participation = new AiderGroupParticipantEntity ()
@@ -142,7 +160,6 @@ namespace Epsitec.Aider.Entities
 
 			return request;
 		}
-
 
 		public static Request CreateParticipantRequest(DataContext dataContext, AiderPersonEntity person, bool sort, bool current, bool returnGroups)
 		{
@@ -177,7 +194,6 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
-
 		public static Request CreateParticipantRequest(DataContext dataContext, AiderPersonEntity person, string path)
 		{
 			var example = new AiderGroupParticipantEntity ()
@@ -198,24 +214,6 @@ namespace Epsitec.Aider.Entities
 
 			return request;
 		}
-
-
-		public void Delete(BusinessContext businessContext)
-		{
-			if (this.Comment.IsNotNull ())
-			{
-				businessContext.DeleteEntity (this.Comment);
-			}
-			businessContext.DeleteEntity (this);
-		}
-
-
-		public static void AddCurrentCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation)
-		{
-			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
-			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
-		}
-
 
 		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current, bool sort)
 		{
@@ -247,6 +245,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static void AddCurrentCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation)
+		{
+			request.AddCondition (dataContext, participation, g => g.StartDate == null || g.StartDate <= Date.Today);
+			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
+		}
+
 		public static void AddFunctionMemberCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation, AiderGroupEntity group)
 		{
 			if (participation.Group == null)
@@ -269,6 +273,15 @@ namespace Epsitec.Aider.Entities
 			);
 
 			request.Distinct = true;
+		}
+		
+		
+		private void Assign(Participation what)
+		{
+			this.Group       = what.Group;
+			this.Person      = what.Person;
+			this.LegalPerson = what.LegalPerson;
+			this.Contact     = what.Contact;
 		}
 	}
 }

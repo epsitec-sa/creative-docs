@@ -56,7 +56,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (noParishGroupParticipation.IsNull ())
 				{
-					person.Parish = AiderGroupParticipantEntity.StartParticipation (businessContext, person, parishGroup, null, null);
+					var what = new Participation
+					{
+						Group  = parishGroup,
+						Person = person,
+					};
+
+					person.Parish = AiderGroupParticipantEntity.StartParticipation (businessContext, what);
 				}
 				else
 				{
@@ -102,9 +108,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private void AssignToNoParishGroup(AiderPersonEntity person)
 		{
-			var noParishGroup = this.FindNoParishGroup ();
+			var what = new Participation
+			{
+				Group  = this.FindNoParishGroup (),
+				Person = person,
+			};
 
-			AiderGroupParticipantEntity.StartParticipation (businessContext, person, noParishGroup, null, null);
+			AiderGroupParticipantEntity.StartParticipation (businessContext, what);
 		}
 
 

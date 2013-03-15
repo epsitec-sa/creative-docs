@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Controllers.SpecialFieldControllers;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
@@ -19,6 +22,7 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
+	//	@PA: faut-il déplacer ce contrôleur pour qu'il manipule des contacts?
 
 	[ControllerSubType (2)]
 	public sealed class ActionAiderPersonViewController2 : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
@@ -55,7 +59,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Cette personne est déjà membre de ce groupe");
 			}
 
-			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, this.Entity, group, startDate, comment);
+			var person = this.Entity;
+			var what   = new Participation
+			{
+				Group  = group,
+				Person = person,
+				//	@PA: contact ?
+			};
+
+			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, what, startDate, comment);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)

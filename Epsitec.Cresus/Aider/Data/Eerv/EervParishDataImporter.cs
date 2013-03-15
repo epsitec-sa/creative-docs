@@ -1236,7 +1236,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var aiderPerson in aiderPersons)
 			{
-				AiderGroupParticipantEntity.StartParticipation (businessContext, aiderPerson, importationGroup, null, null);
+				var what = new Participation
+				{
+					Group  = importationGroup,
+					Person = aiderPerson,
+				};
+
+				AiderGroupParticipantEntity.StartParticipation (businessContext, what);
 			}
 
 			// We load the related data to speed up the execution of the business rules.
@@ -1457,26 +1463,34 @@ namespace Epsitec.Aider.Data.Eerv
 				if (eervActivity.Person != null)
 				{
 					var eervPerson = eervActivity.Person;
-					var eervGroup = eervActivity.Group;
+					var eervGroup  = eervActivity.Group;
 
 					var aiderPersonKey = eervPersonToKeys[eervPerson];
-					var aiderGroupKey = eervGroupToKeys[eervGroup];
+					var aiderGroupKey  = eervGroupToKeys[eervGroup];
 
 					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (aiderPersonKey);
-					var aiderGroup = (AiderGroupEntity) dataContext.ResolveEntity (aiderGroupKey);
+					var aiderGroup  = (AiderGroupEntity) dataContext.ResolveEntity (aiderGroupKey);
 
 					aiderPersons.Add (aiderPerson);
 
 					var startDate = eervActivity.StartDate;
-					var endDate = eervActivity.EndDate;
-					var remarks = TextFormatter.FormatText (eervActivity.Remarks);
+					var endDate   = eervActivity.EndDate;
+					var remarks   = TextFormatter.FormatText (eervActivity.Remarks);
 
-					AiderGroupParticipantEntity.ImportParticipation (businessContext, aiderPerson, aiderGroup, startDate, endDate, remarks);
+					var what = new Participation
+					{
+						Group  = aiderGroup,
+						Person = aiderPerson,
+					};
+
+					AiderGroupParticipantEntity.ImportParticipation (businessContext, what, startDate, endDate, remarks);
 				}
 				else if (eervActivity.LegalPerson != null)
 				{
-					// For now we don't consider the activities linked to legal persons as we dont have
-					// a way to store them in the database.
+					//	For now we don't consider the activities linked to legal persons as we don't have
+					//	a way to store them in the database.
+
+					//	@MB: handle legal persons
 
 					Debug.WriteLine ("WARNING: activity with legal persons are not considered yet.");
 				}

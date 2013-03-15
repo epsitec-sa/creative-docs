@@ -319,6 +319,11 @@ namespace Epsitec.Aider.Entities
 			this.GetParticipations ().Remove (participation);
 		}
 
+		public bool IsNotMemberOf(AiderGroupEntity group)
+		{
+			return this.IsMemberOf (group) == false;
+		}
+
 		public bool IsMemberOf(AiderGroupEntity group)
 		{
 			return this.GetParticipations ().Any (g => g.Group == group);
