@@ -2294,28 +2294,6 @@ namespace Epsitec.Aider.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>ValidationState</c> field.
-		///	designer:fld/LVA73/LVAK8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAK8]")]
-		public global::Epsitec.Aider.Enumerations.ValidationState ValidationState
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.ValidationState> ("[LVAK8]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.ValidationState oldValue = this.ValidationState;
-				if (oldValue != value || !this.IsFieldDefined("[LVAK8]"))
-				{
-					this.OnValidationStateChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.ValidationState> ("[LVAK8]", oldValue, value);
-					this.OnValidationStateChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Group</c> field.
 		///	designer:fld/LVA73/LVA84
 		///	</summary>
@@ -2359,13 +2337,59 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>LegalPerson</c> field.
+		///	designer:fld/LVA73/LVAHG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAHG]")]
+		public global::Epsitec.Aider.Entities.AiderLegalPersonEntity LegalPerson
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderLegalPersonEntity> ("[LVAHG]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue = this.LegalPerson;
+				if (oldValue != value || !this.IsFieldDefined("[LVAHG]"))
+				{
+					this.OnLegalPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderLegalPersonEntity> ("[LVAHG]", oldValue, value);
+					this.OnLegalPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Contact</c> field.
+		///	designer:fld/LVA73/LVAIG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAIG]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity Contact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVAIG]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.Contact;
+				if (oldValue != value || !this.IsFieldDefined("[LVAIG]"))
+				{
+					this.OnContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVAIG]", oldValue, value);
+					this.OnContactChanged (oldValue, value);
+				}
+			}
+		}
 		
-		partial void OnValidationStateChanging(global::Epsitec.Aider.Enumerations.ValidationState oldValue, global::Epsitec.Aider.Enumerations.ValidationState newValue);
-		partial void OnValidationStateChanged(global::Epsitec.Aider.Enumerations.ValidationState oldValue, global::Epsitec.Aider.Enumerations.ValidationState newValue);
 		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnLegalPersonChanging(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
+		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
+		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

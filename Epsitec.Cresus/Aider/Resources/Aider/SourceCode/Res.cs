@@ -1581,15 +1581,17 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderGroupParticipant.Group, null);
+					global::System.Object.Equals (AiderGroupParticipant.Contact, null);
 				}
 				
+				//	designer:cap/LVAIG
+				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 530);
 				//	designer:cap/LVA84
 				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 136);
+				//	designer:cap/LVAHG
+				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 529);
 				//	designer:cap/LVA94
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137);
-				//	designer:cap/LVAK8
-				public static readonly global::Epsitec.Common.Support.Druid ValidationState = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 276);
 			}
 			
 			public static class AiderGroupPlace
