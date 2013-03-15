@@ -5885,11 +5885,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PersonDisplayName</c> field.
+		///	The <c>PersonFullName</c> field.
 		///	designer:fld/LVARD/LVAFG
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAFG]")]
-		public string PersonDisplayName
+		public string PersonFullName
 		{
 			get
 			{
@@ -5897,12 +5897,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				string oldValue = this.PersonDisplayName;
+				string oldValue = this.PersonFullName;
 				if (oldValue != value || !this.IsFieldDefined("[LVAFG]"))
 				{
-					this.OnPersonDisplayNameChanging (oldValue, value);
+					this.OnPersonFullNameChanging (oldValue, value);
 					this.SetField<string> ("[LVAFG]", oldValue, value);
-					this.OnPersonDisplayNameChanged (oldValue, value);
+					this.OnPersonFullNameChanged (oldValue, value);
 				}
 			}
 		}
@@ -6177,8 +6177,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonMrMrsChanging(global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs? newValue);
 		partial void OnPersonMrMrsChanged(global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs? newValue);
-		partial void OnPersonDisplayNameChanging(string oldValue, string newValue);
-		partial void OnPersonDisplayNameChanged(string oldValue, string newValue);
+		partial void OnPersonFullNameChanging(string oldValue, string newValue);
+		partial void OnPersonFullNameChanged(string oldValue, string newValue);
 		partial void OnLegalPersonChanging(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
 		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
 		partial void OnLegalPersonContactRoleChanging(global::Epsitec.Aider.Enumerations.ContactRole oldValue, global::Epsitec.Aider.Enumerations.ContactRole newValue);

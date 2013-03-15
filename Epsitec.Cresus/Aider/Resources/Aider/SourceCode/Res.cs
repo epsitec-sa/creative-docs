@@ -1424,7 +1424,7 @@ namespace Epsitec.Aider
 				//	designer:cap/LVA5E
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 453);
 				//	designer:cap/LVAFG
-				public static readonly global::Epsitec.Common.Support.Druid PersonDisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 527);
+				public static readonly global::Epsitec.Common.Support.Druid PersonFullName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 527);
 				//	designer:cap/LVAEG
 				public static readonly global::Epsitec.Common.Support.Druid PersonMrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 526);
 			}

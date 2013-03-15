@@ -43,8 +43,8 @@ namespace Epsitec.Aider.Entities
 
 			if (this.Person.IsNotNull ())
 			{
-				this.PersonMrMrs       = this.Person.MrMrs;
-				this.PersonDisplayName = this.Person.DisplayName;
+				this.PersonMrMrs    = this.Person.MrMrs;
+				this.PersonFullName = string.Concat (this.Person.CallName, " ", this.Person.eCH_Person.PersonOfficialName);
 			}
 		}
 
@@ -124,14 +124,14 @@ namespace Epsitec.Aider.Entities
 			return contact;
 		}
 
-		public static AiderContactEntity Create(BusinessContext businessContext, AiderLegalPersonEntity legalPerson, PersonMrMrs personMrMrs, string personName, ContactRole personRole = ContactRole.None)
+		public static AiderContactEntity Create(BusinessContext businessContext, AiderLegalPersonEntity legalPerson, PersonMrMrs personMrMrs, string personFullName, ContactRole personRole = ContactRole.None)
 		{
 			var contact = AiderContactEntity.Create (businessContext, legalPerson);
 
-			if (string.IsNullOrEmpty (personName) == false)
+			if (string.IsNullOrEmpty (personFullName) == false)
 			{
 				contact.PersonMrMrs            = personMrMrs;
-				contact.PersonDisplayName      = personName;
+				contact.PersonFullName         = personFullName;
 				contact.LegalPersonContactRole = personRole;
 				contact.LegalPersonPrincipal   = true;
 			}
