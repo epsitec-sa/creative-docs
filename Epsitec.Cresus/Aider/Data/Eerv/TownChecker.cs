@@ -144,7 +144,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (match == null)
 				{
-					towns.FirstOrDefault (t => t.normalizedName == town.normalizedName);
+					match = towns.FirstOrDefault (t => t.normalizedName == town.normalizedName);
 				}
 
 				if (match != null)
