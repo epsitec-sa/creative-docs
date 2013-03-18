@@ -30,16 +30,25 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static List<Town> BuildTowns()
 		{
-			var zipWithShortNames = SwissPostZipRepository.Current.FindAll ()
+			var zipWithShortNames = TownChecker.GetTowns ()
 				.Select (e => Tuple.Create (e.ZipCode, e.LongName, e.ShortName));
 
-			var zipWithLongNames = SwissPostZipRepository.Current.FindAll ()
+			var zipWithLongNames = TownChecker.GetTowns ()
 				.Select (e => Tuple.Create (e.ZipCode, e.LongName, e.LongName));
 
 			return zipWithShortNames.Concat (zipWithLongNames)
 				.Distinct ()
 				.Select (e => new Town (e.Item1.ToString (), e.Item2))
 				.ToList ();
+		}
+
+
+		private static IEnumerable<SwissPostZipInformation> GetTowns()
+		{
+			return SwissPostZipRepository
+				.Current
+				.FindAll ()
+				.Where (t => t.ZipType != SwissPostZipType.Internal);
 		}
 
 
