@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var candidates =
 				from candidate in this.towns
 				let zipCodeDistance = this.ComputeJaroDistance (town.zipCode, candidate.zipCode)
-				let nameDistance = JaroWinkler.ComputeJaroWinklerDistance (town.normalizedName, candidate.normalizedName)
+				let nameDistance = this.ComputeJaroDistance (town.normalizedName, candidate.normalizedName)
 				where this.IsAcceptableMatch (zipCodeDistance, nameDistance)
 				orderby this.GetMergedDistance (zipCodeDistance, nameDistance) descending
 				select candidate;
