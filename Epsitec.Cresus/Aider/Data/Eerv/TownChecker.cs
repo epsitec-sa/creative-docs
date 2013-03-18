@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				match = towns.First ();
 			}
-			else if (this.normalizedNameToTown.TryGetValue (town.name, out towns))
+			else if (this.normalizedNameToTown.TryGetValue (town.normalizedName, out towns))
 			{
 				match = towns.First ();
 			}
