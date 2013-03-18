@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			return zipWithShortNames.Concat (zipWithLongNames)
 				.Distinct ()
-				.Select (e => new Town (e.Item1.ToString (), e.Item2))
+				.Select (e => new Town (e.Item1.ToString (), e.Item2, e.Item3))
 				.ToList ();
 		}
 
@@ -228,10 +228,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 			public Town(string zipCode, string name)
+				: this(zipCode, name, name)
+			{
+			}
+
+
+			public Town(string zipCode, string name, string nameToNormalize)
 			{
 				this.zipCode = Town.GetString (zipCode);
 				this.name = Town.GetString (name);
-				this.normalizedName = Normalizer.NormalizeText (this.name);
+				this.normalizedName = Town.GetString (Normalizer.NormalizeText (nameToNormalize));
 			}
 
 
