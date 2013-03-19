@@ -34,7 +34,7 @@ namespace Epsitec.Common.Text
 			{
 				return JaroWinkler.MaxValue;
 			}
-			
+
 			return JaroWinkler.ComputeJaroDistanceImplementation (s1, s2);
 		}
 
@@ -150,13 +150,13 @@ namespace Epsitec.Common.Text
 
 			return (t1 + t2 + t3) / 3;
 		}
-		
-		
+
+
 		public static double ComputeJaroWinklerDistance(string s1, string s2)
 		{
 			var p = JaroWinkler.DefaultScalingFactor;
 			var l = JaroWinkler.DefaultCommonPrefixMaxLength;
-			
+
 			return JaroWinkler.ComputeJaroWinklerDistance (s1, s2, p, l);
 		}
 
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Text
 		{
 			// We swap the arguments if necessary, to ensure that the shorter string comes before
 			// the other.
-			JaroWinkler.PreProcessArguments(ref s1, ref s2);
+			JaroWinkler.PreProcessArguments (ref s1, ref s2);
 
 			// If the string are equal, we skip to the final result.
 			if (s1 == s2)
@@ -232,13 +232,13 @@ namespace Epsitec.Common.Text
 
 
 		public static readonly double MaxValue = 1;
-		
-		
+
+
 		public static readonly double DefaultScalingFactor = 0.1;
-		
-		
+
+
 		public static readonly int DefaultCommonPrefixMaxLength = 4;
-		
+
 
 
 	}
