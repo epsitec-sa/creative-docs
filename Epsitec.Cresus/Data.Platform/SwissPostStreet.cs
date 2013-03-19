@@ -7,6 +7,7 @@ using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace Epsitec.Data.Platform
 {
@@ -203,12 +204,14 @@ namespace Epsitec.Data.Platform
 		}
 	
 		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
-		{
-			foreach (var line in SwissPostStreet.GetStreetFile ())
+		{		
+			foreach (var l in SwissPostStreet.GetStreetFile ())
 			{
-				yield return new SwissPostStreetInformation (line);
+				yield return new SwissPostStreetInformation (l);
 			}
 		}
+
+		
 
 		private static IEnumerable<string> GetStreetFile()
 		{

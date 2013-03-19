@@ -13,6 +13,8 @@ namespace Epsitec.Data.Platform
 	{
 		private SwissPostStreetRepository()
 		{
+
+
 			this.streets = new List<SwissPostStreetInformation> (SwissPostStreet.GetStreets ());
 			this.streetByZip = new Dictionary<int, List<SwissPostStreetInformation>> ();
 			this.streetByUserFriendlyStreetName = new Dictionary<string, SwissPostStreetInformation> ();
@@ -60,7 +62,6 @@ namespace Epsitec.Data.Platform
 		}
 
 		public static readonly SwissPostStreetRepository Current = new SwissPostStreetRepository ();
-
 
 		public IEnumerable<SwissPostStreetInformation> FindStreets(int zipCode)
 		{
