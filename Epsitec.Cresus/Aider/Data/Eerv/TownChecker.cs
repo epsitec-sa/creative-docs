@@ -161,8 +161,8 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var candidates =
 				from candidate in this.towns
-				let zipCodeDistance = this.ComputeJaroDistance (town.zipCode, candidate.zipCode)
-				let nameDistance = this.ComputeJaroDistance (town.normalizedName, candidate.normalizedName)
+				let zipCodeDistance = JaroWinkler.ComputeJaroDistance (town.zipCode, candidate.zipCode)
+				let nameDistance = JaroWinkler.ComputeJaroWinklerDistance (town.normalizedName, candidate.normalizedName)
 				where this.IsAcceptableMatch (zipCodeDistance, nameDistance)
 				orderby this.GetMergedDistance (zipCodeDistance, nameDistance) descending
 				select candidate;
@@ -177,22 +177,6 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				return new Town ("", "").ToTuple ();
 			}
-		}
-
-
-		private double ComputeJaroDistance(string s1, string s2)
-		{
-			// There is a bug in the jaro winkler distance. It should be symmetric but my
-			// implementation is not. I tried to correct it but I could not implement it properly.
-			// And maybe it is better not to touch it too much becauses if I change it, it will
-			// change the behavior of the person matcher.
-			// So here I try to mitigate this problem by computing the distance both ways and take
-			// their average.
-
-			var d1 = JaroWinkler.ComputeJaroDistance (s1, s2);
-			var d2 = JaroWinkler.ComputeJaroDistance (s1, s2);
-
-			return (d1 + d2) / 2;
 		}
 
 
