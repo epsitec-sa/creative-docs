@@ -71,6 +71,15 @@ namespace Epsitec.Aider.Data.Eerv
 				town = new Town (town.name.Substring (0, 4), town.name.Substring (4));
 			}
 
+			// The "Saint" or "Sainte" prefix are always abbreviated to "St" or "Ste" in the swiss
+			// town names.
+			if (town.normalizedName.StartsWith ("saint"))
+			{
+				var newNormalizedName = "st" + town.normalizedName.Substring (5);
+
+				town = new Town (town.zipCode, town.name, newNormalizedName);
+			}
+
 			var emptyZipCode = string.IsNullOrEmpty (town.zipCode);
 			var emptyName = string.IsNullOrEmpty(town.name);
 
