@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 			}
 
-			return this.FindMatchWithName (town);
+			return this.FindFuzzyMatch (town);
 		}
 
 
