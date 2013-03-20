@@ -193,7 +193,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			return (zipCodeDistance == JaroWinkler.MaxValue && nameDistance > 0.80)
 				|| (nameDistance == JaroWinkler.MaxValue && zipCodeDistance > 0.65)
-				|| (zipCodeDistance > 0.9 && nameDistance > 0.9)
+				|| (zipCodeDistance > 0.8 && nameDistance > 0.9)
 				|| (zipCodeDistance == JaroWinkler.MinValue && nameDistance > 0.95);
 		}
 
