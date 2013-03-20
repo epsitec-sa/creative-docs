@@ -21,6 +21,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public TownChecker()
 		{
+			this.manualCorrections = TownChecker.BuildManualCorrection ();
 			this.towns = TownChecker.BuildTowns ();
 			this.zipCodeToTown = TownChecker.BuildDictionary (this.towns, t => t.zipCode);
 			this.nameToTown = TownChecker.BuildDictionary (this.towns, t => t.name);
@@ -49,6 +50,58 @@ namespace Epsitec.Aider.Data.Eerv
 				.Current
 				.FindAll ()
 				.Where (t => t.ZipType != SwissPostZipType.Internal);
+		}
+
+
+		private static Dictionary<Tuple<string, string>, Tuple<string, string>> BuildManualCorrection()
+		{
+			var corrections = new Dictionary<Tuple<string, string>, Tuple<string, string>> ();
+
+			// These are manual corrections that the generic algorithm can't find. There are several
+			// different kind of corrections.
+			// 1) When the correct name is more different than another, like for Yverdon for which
+			//    the correction is Yverdon-les-Bains but for which the closest match would be
+			//    Yverdon 2.
+			// 2) Old towns that are not town anymore, like for Champmartin or Verschiez
+			// 3) Language problems, like for Morat whose real name is Murten.
+			// 4) Cases where the address is is completely wrong.
+
+			TownChecker.Add (corrections, "1400", "yverdon", "1400", "Yverdon-les-Bains");
+			TownChecker.Add (corrections, "1588", "champmartin", "1588", "Cudrefin");
+			TownChecker.Add (corrections, "1867", "verschiez", "1867", "Ollon VD");
+			TownChecker.Add (corrections, "1867", "les combes", "1867", "Ollon VD");
+			TownChecker.Add (corrections, "1422", "les tuileries", "1422", "Grandson");
+			TownChecker.Add (corrections, "1588", "montet", "1588", "Cudrefin");
+			TownChecker.Add (corrections, "1258", "certoux", "1258", "Perly");
+			TownChecker.Add (corrections, "1261", "st george", "1188", "St-George");
+			TownChecker.Add (corrections, "3280", "morat", "3280", "Murten");
+			TownChecker.Add (corrections, "1569", "atavaux", "1475", "Autavaux FR");
+			TownChecker.Add (corrections, "2501", "bienne", "2501", "Biel/Bienne");
+			TownChecker.Add (corrections, "2503", "bienne", "2503", "Biel/Bienne");
+			TownChecker.Add (corrections, "2504", "bienne", "2504", "Biel/Bienne");
+			TownChecker.Add (corrections, "1053", "montheron", "1053", "Cugy VD");
+			TownChecker.Add (corrections, "1890", "epinassey", "1890", "St-Maurice");
+			TownChecker.Add (corrections, "1867", "villy ollon vd", "1867", "Ollon VD");
+			TownChecker.Add (corrections, "1200", "geneve 3", "1211", "Genève 3");
+			TownChecker.Add (corrections, "1228", "geneve", "1228", "Plan-les-Ouates");
+			TownChecker.Add (corrections, "1200", "geneve 7", "1211", "Genève 7");
+			TownChecker.Add (corrections, "3000", "berne 7", "3000", "Bern 7 Bärenplatz");
+			TownChecker.Add (corrections, "1000", "lausanne 2", "1002", "Lausanne");
+			TownChecker.Add (corrections, "1001", "lausanne 22", "1000", "Lausanne 22");
+			TownChecker.Add (corrections, "1010", "lausanne 10", "1000", "Lausanne 10");
+			TownChecker.Add (corrections, "1000", "lausanne 17", "1017", "Lausanne Charles Veillon SA");
+			TownChecker.Add (corrections, "1000", "lausanne 4", "1000", "Lausanne");
+
+			return corrections;
+		}
+
+
+		private static void Add(Dictionary<Tuple<string, string>, Tuple<string, string>> corrections, string zip1, string name1, string zip2, string name2)
+		{
+			var key = Tuple.Create (zip1, name1);
+			var value = Tuple.Create (zip2, name2);
+
+			corrections[key] = value;
 		}
 
 
@@ -103,7 +156,29 @@ namespace Epsitec.Aider.Data.Eerv
 				return this.FindMatchWithZipCode (town);
 			}
 
+			var manualCorrection = this.FindManualCorrection (town);
+
+			if (manualCorrection != null)
+			{
+				return manualCorrection;
+			}
+
 			return this.FindMatchWithZipCodeAndName (town);
+		}
+
+
+		private Tuple<string, string> FindManualCorrection(Town town)
+		{
+			var key = Tuple.Create (town.zipCode, town.normalizedName);
+
+			Tuple<string, string> correction;
+
+			if (this.manualCorrections.TryGetValue (key, out correction))
+			{
+				return correction;
+			}
+
+			return null;
 		}
 
 
@@ -202,6 +277,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			return zipCodeDistance + nameDistance;
 		}
+
+
+		private readonly Dictionary<Tuple<string, string>, Tuple<string, string>> manualCorrections;
 
 
 		private readonly List<Town> towns;
