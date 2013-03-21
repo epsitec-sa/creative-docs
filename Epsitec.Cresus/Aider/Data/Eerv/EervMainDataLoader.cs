@@ -39,6 +39,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 			parents.Push (null);
 
+			var genericTopLevelDefinitionCount = 0;
+
 			foreach (var record in records)
 			{
 				var level = EervMainDataLoader.GetEervGroupDefinitionLevel (record);
@@ -49,10 +51,20 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 
 				var groupDefinition = EervMainDataLoader.GetEervGroupDefinition (record, level);
-				
+
 				if (!EervMainDataLoader.DiscardGroupDefinition (groupDefinition))
 				{
 					EervMainDataLoader.Process (parents, functions, record, groupDefinition);
+
+					var requiresDefinitionNumber = groupDefinition.GroupLevel == 0
+						&& groupDefinition.GroupClassification == GroupClassification.None;
+
+					if (requiresDefinitionNumber)
+					{
+						groupDefinition.DefinitionNumber = genericTopLevelDefinitionCount;
+						genericTopLevelDefinitionCount++;
+					}
+
 					yield return groupDefinition;
 				}
 

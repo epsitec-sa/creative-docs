@@ -1,8 +1,6 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
-using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
@@ -68,7 +66,7 @@ namespace Epsitec.Aider.Data.Eerv
 			// Pierre asked me not to import the Staff groups, after a discussion with Jean-Michel
 			// Sordet from the EERV. So we skip these group definitions here.
 
-			return groupDefinition.GroupClassification == GroupClassification.Staff;
+			return groupDefinition.Id == "0102000000";
 		}
 
 
@@ -145,7 +143,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportGlobalGroup(BusinessContext businessContext, EervGroupDefinition eervGroupDefinition)
 		{
-			var aiderGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, eervGroupDefinition.GroupClassification, AiderGroupIds.TopLevel);
+			var aiderGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, eervGroupDefinition.Id);
 
 			aiderGroupDefinition.Instantiate (businessContext);
 		}
@@ -200,17 +198,32 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		private static AiderGroupDefEntity GetGroupDefinition(BusinessContext businessContext, string id)
+		{
+			var example = new AiderGroupDefEntity ()
+			{
+				Number = id
+			};
+
+			return EervMainDataImporter.GetGroupDefinition (businessContext, example);
+		}
+
+
 		private static AiderGroupDefEntity GetGroupDefinition(BusinessContext businessContext, GroupClassification classification, int level)
 		{
-			var dataContext = businessContext.DataContext;
-
 			var example = new AiderGroupDefEntity ()
 			{
 				Level = level,
 				Classification = classification
 			};
 
-			return dataContext.GetByExample (example).Single ();
+			return EervMainDataImporter.GetGroupDefinition (businessContext, example);
+		}
+
+
+		private static AiderGroupDefEntity GetGroupDefinition(BusinessContext businessContext, AiderGroupDefEntity example)
+		{
+			return businessContext.DataContext.GetByExample (example).Single ();
 		}
 
 

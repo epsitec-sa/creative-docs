@@ -67,6 +67,21 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public int? DefinitionNumber
+		{
+			get
+			{
+				return this.definitionNumber;
+			}
+			set
+			{
+				this.ThrowIfReadOnly ();
+
+				this.definitionNumber = value;
+			}
+		}
+
+
 		public EervGroupDefinition				Parent
 		{
 			get
@@ -107,34 +122,21 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			get
 			{
+				if (this.Id.StartsWith ("0101"))
+				{
+					return GroupClassification.Function;
+				}
+
 				switch (this.Id.SubstringStart (2))
 				{
-					case "01":
-						switch (this.Id.Substring (2, 2))
-						{
-							case "01":
-								return GroupClassification.Function;
-							case "02":
-								return GroupClassification.Staff;
-							case "03":
-								return GroupClassification.StaffAssociation;
-							default:
-								throw new NotImplementedException ();
-						}
-					case "02":
-						return GroupClassification.Canton;
 					case "03":
 						return GroupClassification.Region;
 					case "04":
 						return GroupClassification.Parish;
-					case "05":
-						return GroupClassification.Common;
-					case "06":
-						return GroupClassification.External;
 					case "07":
 						return GroupClassification.NoParish;
 					default:
-						throw new NotImplementedException ();
+						return GroupClassification.None;
 				}
 			}
 		}
@@ -151,7 +153,11 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			if (this.Parent == null)
 			{
-				return AiderGroupIds.CreateTopLevelPathTemplate (this.GroupClassification);
+				// If the path template is special, like for region or function, we use that prefix,
+				// otherwise we use the number of the definition to setup the path template, in
+				// order to ensure that it is unique.
+				return AiderGroupIds.CreateTopLevelPathTemplate (this.GroupClassification)
+					?? AiderGroupIds.CreateTopLevelPathTemplate (this.DefinitionNumber.Value);
 			}
 
 			var parentPathTemplate = this.Parent.GetPathTemplate ();
@@ -203,6 +209,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private readonly bool					isLeaf;
 		private int								groupLevel;
+		private int?							definitionNumber;
 		private EervGroupDefinition				parent;
 		private EervGroupDefinition				function;
 		private IList<EervGroupDefinition>		children;

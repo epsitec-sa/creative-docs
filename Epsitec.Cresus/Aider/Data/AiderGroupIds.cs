@@ -13,14 +13,9 @@ namespace Epsitec.Aider.Data
 {
 	public static class AiderGroupIds
 	{
-		private const string Canton					= "SYCC.";
-		private const string Common					= "MICO.";
-		private const string External				= "EXTE.";
 		private const string Function				= "FNCT.";
 		private const string Parish					= "P___.";
 		private const string Region					= "R___.";
-		private const string Staff					= "PRSO.";
-		private const string StaffAssociation		= "ASPE.";
 		private const string NoParish				= "NOPA.";
 
 		private const string GroupFormat			= "{0}{1:000}.";
@@ -129,15 +124,6 @@ namespace Epsitec.Aider.Data
 		{
 			switch (classification)
 			{
-				case GroupClassification.Canton:
-					return AiderGroupIds.Canton;
-
-				case GroupClassification.Common:
-					return AiderGroupIds.Common;
-
-				case GroupClassification.External:
-					return AiderGroupIds.External;
-
 				case GroupClassification.Function:
 					return AiderGroupIds.Function;
 
@@ -147,17 +133,18 @@ namespace Epsitec.Aider.Data
 				case GroupClassification.Region:
 					return AiderGroupIds.Region;
 
-				case GroupClassification.Staff:
-					return AiderGroupIds.Staff;
-
-				case GroupClassification.StaffAssociation:
-					return AiderGroupIds.StaffAssociation;
+				case GroupClassification.None:
+					return null;
 
 				case GroupClassification.Parish:
-				case GroupClassification.None:
 				default:
 					throw new NotImplementedException ();
 			}
+		}
+
+		public static string CreateTopLevelPathTemplate(int definitionNumber)
+		{
+			return AiderGroupIds.CreateDefinitionSubgroupPath ("", definitionNumber);
 		}
 
 		public static string CreateSubgroupPathFromFullPath(string parentPath, string fullChildPath)

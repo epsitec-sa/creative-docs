@@ -11,17 +11,12 @@ namespace Epsitec.Aider.Enumerations
 	[DesignerVisible]
 	public enum GroupClassification
 	{
+		// RECOMPUTE RESOURCES IN DESIGNER
+
 		None = 0,
-
-		Canton				= 10,
-		Region				= 20,
-		Parish				= 30,
-		Common				= 40,
-		External			= 50,
-		NoParish			= 60,
-
-		Function			= 100,
-		Staff				= 110,
-		StaffAssociation	= 120,
+		Function = 10,
+		Region = 20,
+		Parish = 30,
+		NoParish = 40,
 	}
 }
