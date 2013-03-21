@@ -11,8 +11,6 @@ namespace Epsitec.Aider.Enumerations
 	[DesignerVisible]
 	public enum GroupClassification
 	{
-		// RECOMPUTE RESOURCES IN DESIGNER
-
 		None = 0,
 		Function = 10,
 		Region = 20,

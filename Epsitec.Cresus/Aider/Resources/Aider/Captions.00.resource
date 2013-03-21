@@ -256,7 +256,7 @@
   <data name="Val.Enum.GroupClassification.None" id="AUB">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Region" id="AVB">&lt;s:data id="_0" f:Name="Region" f:Labels="{Collection {Text 'Régions'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Parish" id="A0C">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisses'}}" /&gt;</data>
-  <data name="Typ.Enum.GroupClassification" id="ATB">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupClassification" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupClassification, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAUB]'}, {Text '1 [LVAVB]'}, {Text '2 [LVA0C]'}, {Text '3 [LVA8D]'}, {Text '4 [LVA9D]'}, {Text '5 [LVAAD]'}, {Text '6 [LVABD]'}, {Text '7 [LVACD]'}, {Text '8 [LVADD]'}, {Text '9 [LVG922]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupClassification, Aider/None" f:Labels="{Collection {Text 'Classification du groupe'}}" /&gt;</data>
+  <data name="Typ.Enum.GroupClassification" id="ATB">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupClassification" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupClassification, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAUB]'}, {Text '1 [LVABD]'}, {Text '2 [LVAVB]'}, {Text '3 [LVA0C]'}, {Text '4 [LVG922]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupClassification, Aider/None" f:Labels="{Collection {Text 'Classification du groupe'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.Classification" id="A1C">&lt;s:data id="_0" f:Name="Classification" f:Labels="{Collection {Text 'Classification'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.None" id="A3C">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.Generic" id="A4C">&lt;s:data id="_0" f:Name="Generic" f:Labels="{Collection {Text 'Avertissement générique'}}" /&gt;</data>
@@ -282,12 +282,7 @@
   <data name="Cap.DatabaseSubmenu.Definitions" id="A4D">&lt;s:data id="_0" f:Name="DatabaseSubmenu.Definitions" f:Icon="manifest:Epsitec.Cresus.Core.Images.Base.BusinessSettings.icon" f:Labels="{Collection {Text 'Définitions'}}" /&gt;</data>
   <data name="Cap.DatabaseSubmenu.Misc" id="A5D">&lt;s:data id="_0" f:Name="DatabaseSubmenu.Misc" f:Icon="manifest:Epsitec.Cresus.Core.Images.Data.ArticleCategory.icon" f:Labels="{Collection {Text 'Divers'}}" /&gt;</data>
   <data name="Fld.AiderGroup.Subgroups" id="A7D">&lt;s:data id="_0" f:Name="Subgroups" f:Labels="{Collection {Text 'Sous groupes'}}" /&gt;</data>
-  <data name="Val.Enum.GroupClassification.Canton" id="A8D">&lt;s:data id="_0" f:Name="Canton" f:Labels="{Collection {Text 'Synodal/Cantonal/Central'}}" /&gt;</data>
-  <data name="Val.Enum.GroupClassification.Common" id="A9D">&lt;s:data id="_0" f:Name="Common" f:Labels="{Collection {Text 'Missions communes'}}" /&gt;</data>
-  <data name="Val.Enum.GroupClassification.External" id="AAD">&lt;s:data id="_0" f:Name="External" f:Labels="{Collection {Text 'Relations extérieures'}}" /&gt;</data>
   <data name="Val.Enum.GroupClassification.Function" id="ABD">&lt;s:data id="_0" f:Name="Function" f:Labels="{Collection {Text 'Fonctions'}}" /&gt;</data>
-  <data name="Val.Enum.GroupClassification.Staff" id="ACD">&lt;s:data id="_0" f:Name="Staff" f:Labels="{Collection {Text 'Personnel'}}" /&gt;</data>
-  <data name="Val.Enum.GroupClassification.StaffAssociation" id="ADD">&lt;s:data id="_0" f:Name="StaffAssociation" f:Labels="{Collection {Text 'Association du personnel'}}" /&gt;</data>
   <data name="Fld.AiderGroup.GroupLevel" id="AED">&lt;s:data id="_0" f:Name="GroupLevel" f:Labels="{Collection {Text 'Niveau'}}" /&gt;</data>
   <data name="Fld.AiderUserScope.Mutability" id="AFD">&lt;s:data id="_0" f:Name="Mutability" f:Labels="{Collection {Text 'Niveau de protection'}}" /&gt;</data>
   <data name="Fld.AiderUser.PreferredScope" id="AGD">&lt;s:data id="_0" f:Name="PreferredScope" f:Labels="{Collection {Text 'Cercle favori'}}" /&gt;</data>

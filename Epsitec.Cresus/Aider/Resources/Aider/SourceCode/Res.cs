@@ -441,30 +441,6 @@ namespace Epsitec.Aider
 				
 				public static class GroupClassification
 				{
-					//	designer:cap/LVA8D
-					public static global::Epsitec.Common.Types.Caption Canton
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 424));
-						}
-					}
-					//	designer:cap/LVA9D
-					public static global::Epsitec.Common.Types.Caption Common
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 425));
-						}
-					}
-					//	designer:cap/LVAAD
-					public static global::Epsitec.Common.Types.Caption External
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 426));
-						}
-					}
 					//	designer:cap/LVABD
 					public static global::Epsitec.Common.Types.Caption Function
 					{
@@ -503,22 +479,6 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 383));
-						}
-					}
-					//	designer:cap/LVACD
-					public static global::Epsitec.Common.Types.Caption Staff
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 428));
-						}
-					}
-					//	designer:cap/LVADD
-					public static global::Epsitec.Common.Types.Caption StaffAssociation
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 429));
 						}
 					}
 				}
