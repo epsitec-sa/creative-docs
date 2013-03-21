@@ -11,11 +11,11 @@ namespace Data.Platform.Tests
 		[TestMethod]
 		public void TestCSVExtract()
 		{
-			var model = MatchNewsEtl.Current;
+			var model = MatchSortEtl.Current;
 
 			
 			//get all places with streets and houses
-			var query =  from s in model.Streets
+			var query =  from s in model.PlacesStreetsAndHouses
 						 select s;
 
 			Assert.IsTrue (query.Count() > 0);
