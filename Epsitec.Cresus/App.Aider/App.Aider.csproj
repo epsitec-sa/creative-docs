@@ -63,11 +63,16 @@
     </Content>
     <None Include="app.config" />
     <None Include="build.bat" />
-    <None Include="Production\certificate.key" />
-    <None Include="Production\certificate.pem" />
-    <None Include="Production\app.config" />
-    <None Include="Production\nginx-maintenance.conf" />
-    <None Include="Production\nginx-server.conf" />
+    <None Include="ServerConfigProduction\app.config" />
+    <None Include="ServerConfigProduction\certificate.key" />
+    <None Include="ServerConfigProduction\certificate.pem" />
+    <None Include="ServerConfigProduction\nginx-maintenance.conf" />
+    <None Include="ServerConfigProduction\nginx-server.conf" />
+    <None Include="ServerConfigTest\app.config" />
+    <None Include="ServerConfigTest\certificate.key" />
+    <None Include="ServerConfigTest\certificate.pem" />
+    <None Include="ServerConfigTest\nginx-maintenance.conf" />
+    <None Include="ServerConfigTest\nginx-server.conf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aider\Aider.csproj">
