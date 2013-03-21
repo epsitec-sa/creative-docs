@@ -138,6 +138,13 @@ namespace Epsitec.Aider.Data.Eerv
 				town = new Town (town.zipCode, town.name, newNormalizedName);
 			}
 
+			var manualCorrection = this.FindManualCorrection (town);
+
+			if (manualCorrection != null)
+			{
+				town = new Town (manualCorrection.Item1, manualCorrection.Item2);
+			}
+
 			var emptyZipCode = string.IsNullOrEmpty (town.zipCode);
 			var emptyName = string.IsNullOrEmpty(town.name);
 
@@ -154,13 +161,6 @@ namespace Epsitec.Aider.Data.Eerv
 			if (emptyName)
 			{
 				return this.FindMatchWithZipCode (town);
-			}
-
-			var manualCorrection = this.FindManualCorrection (town);
-
-			if (manualCorrection != null)
-			{
-				return manualCorrection;
 			}
 
 			return this.FindMatchWithZipCodeAndName (town);
