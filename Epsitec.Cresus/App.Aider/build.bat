@@ -34,7 +34,7 @@ if %cleanup%==1 (
     echo - Delete all unversionned items in %~dp0..\
     echo - Delete all ignored items in %~dp0..\
     choice /M "Are you sure that you want to continue"
-    if %ERRORLEVEL% neq 1 exit /B
+    if ERRORLEVEL 2 exit /B
 
     @echo on
 
