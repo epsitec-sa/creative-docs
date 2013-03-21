@@ -295,6 +295,28 @@ namespace Aider.Tests.Vs
 			this.Check ("1000", "Lausanne 4", "1000", "Lausanne");
 			this.Check ("1002", "Lausanne 2", "1002", "Lausanne");
 			this.Check ("4089", "Basel", "4089", "Basel SPILOG");
+			this.Check ("1133", "Lussy", "1167", "Lussy-sur-Morges");
+			this.Check ("1132", "Lully", "1132", "Lully VD");
+			this.Check ("1137", "Yens", "1169", "Yens");
+			this.Check ("1092", "Belmont sur Lausanne", "1092", "Belmont-sur-Lausanne");
+			this.Check ("1114", "Colombier", "1114", "Colombier VD");
+			this.Check ("1987", "Mâche / VS", "1987", "Hérémence");
+			this.Check ("1328", "Mont-la-Ville", "1148", "Mont-la-Ville");
+			this.Check ("1024", "Ecublens", "1024", "Ecublens VD");
+			this.Check ("1020", "Renens", "1020", "Renens VD");
+			this.Check ("1804", "Corsier", "1804", "Corsier-sur-Vevey");
+			this.Check ("", "Lausanne", "1000", "Lausanne");
+			this.Check ("1176", "Saint-Livres", "1176", "St-Livres");
+			this.Check ("1000", "Lausanne 9", "1000", "Lausanne");
+			this.Check ("1227", "Carouge", "1227", "Carouge GE");
+			this.Check ("1072", "Forel", "1072", "Forel (Lavaux)");
+			this.Check ("1138", "Villars-sous-Yens", "1168", "Villars-sous-Yens");
+			this.Check ("1417", "Essertines s/Yverdon", "1417", "Essertines-sur-Yverdon");
+			this.Check ("1148", "L’Isle", "1148", "L'Isle");
+			this.Check ("1030", "Bussigny", "1030", "Bussigny-près-Lausanne");
+			this.Check ("3415", "Hasle-Ruegsau", "3415", "Hasle-Rüegsau");
+			this.Check ("1113", "St-Saphorin-sur -Morges", "1113", "St-Saphorin-sur-Morges");
+			this.Check ("1250", "Nyon", "1260", "Nyon");
 		}
 
 
