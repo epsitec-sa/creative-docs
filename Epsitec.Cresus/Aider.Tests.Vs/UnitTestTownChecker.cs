@@ -219,7 +219,7 @@ namespace Aider.Tests.Vs
 			this.Check ("1535", "Combremont-Le-Grand", "1535", "Combremont-le-Grand");
 			this.Check ("1867", "Saint-Triphon-Gare", "1867", "St-Triphon");
 			this.Check ("1683", "Brenles-sur-Moudon", "1683", "Brenles");
-			this.Check ("1569", "Atavaux", "1475", "Autavaux FR");
+			this.Check ("1569", "Atavaux", "1475", "Autavaux");
 			this.Check ("1373", "Bavois", "1372", "Bavois");
 			this.Check ("1187", "Saint-Oyens", "1187", "St-Oyens");
 			this.Check ("1690", "Lussy", "1690", "Lussy FR");

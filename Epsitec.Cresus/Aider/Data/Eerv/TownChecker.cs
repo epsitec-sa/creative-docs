@@ -75,7 +75,7 @@ namespace Epsitec.Aider.Data.Eerv
 			TownChecker.Add (corrections, "1258", "certoux", "1258", "Perly");
 			TownChecker.Add (corrections, "1261", "st george", "1188", "St-George");
 			TownChecker.Add (corrections, "3280", "morat", "3280", "Murten");
-			TownChecker.Add (corrections, "1569", "atavaux", "1475", "Autavaux FR");
+			TownChecker.Add (corrections, "1569", "atavaux", "1475", "Autavaux");
 			TownChecker.Add (corrections, "2501", "bienne", "2501", "Biel/Bienne");
 			TownChecker.Add (corrections, "2503", "bienne", "2503", "Biel/Bienne");
 			TownChecker.Add (corrections, "2504", "bienne", "2504", "Biel/Bienne");
