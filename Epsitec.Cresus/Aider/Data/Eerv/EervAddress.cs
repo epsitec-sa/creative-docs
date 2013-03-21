@@ -1,6 +1,3 @@
-using Epsitec.Common.Support.Extensions;
-
-
 namespace Epsitec.Aider.Data.Eerv
 {
 
@@ -9,7 +6,7 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervAddress(string firstAddressLine, string streetName, int? houseNumber, string houseNumberComplement, string zipCode, string town)
+		public EervAddress(string firstAddressLine, string streetName, int? houseNumber, string houseNumberComplement, string zipCode, string town, string countryCode)
 		{
 			this.FirstAddressLine = firstAddressLine;
 			this.StreetName = streetName;
@@ -17,12 +14,13 @@ namespace Epsitec.Aider.Data.Eerv
 			this.HouseNumberComplement = houseNumberComplement;
 			this.ZipCode = zipCode;
 			this.Town = town;
+			this.CountryCode = countryCode;
 		}
 
 
 		public bool IsInSwitzerland()
 		{
-			return this.ZipCode.Length == 4 && this.ZipCode.IsInteger ();
+			return this.CountryCode == "CH";
 		}
 
 
@@ -32,6 +30,7 @@ namespace Epsitec.Aider.Data.Eerv
 		public readonly string HouseNumberComplement;
 		public readonly string ZipCode;
 		public readonly string Town;
+		public readonly string CountryCode;
 
 
 	}

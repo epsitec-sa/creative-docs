@@ -558,29 +558,44 @@ namespace Epsitec.Aider.Data.Eerv
 			var houseNumberComplement = record[PersonHeader.HouseNumberComplement];
 			var zipCode = record[PersonHeader.ZipCode];
 			var town = record[PersonHeader.Town];
+			var countryCode = record[PersonHeader.CountryCode];
 
-			var result = this.townChecker.Validate (zipCode, town);
-			var newZipCode = result.Item1;
-			var newTown = result.Item2;
-
-			if (newZipCode != zipCode || newTown != town)
+			// We assume that the country is Switzerland if it is not set explicitely in the record.
+			if (string.IsNullOrWhiteSpace (countryCode))
 			{
-				var key = Tuple.Create (zipCode, town);
+				countryCode = "CH";
+			}
 
-				if (!this.townCorrections.Contains (key))
+			// For swiss towns, we check them against the post data to ensure that they are valid
+			// towns. If they are not, we correct them.
+			if (countryCode == "CH")
+			{
+				var result = this.townChecker.Validate (zipCode, town);
+				var newZipCode = result.Item1;
+				var newTown = result.Item2;
+
+				if (newZipCode != zipCode || newTown != town)
 				{
-					this.townCorrections.Add (key);
+					var key = Tuple.Create (zipCode, town);
 
-					var message = "town correction "
+					if (!this.townCorrections.Contains (key))
+					{
+						this.townCorrections.Add (key);
+
+						var message = "town correction "
 						+ "(" + zipCode + "," + town + ")"
 						+ " => "
 						+ "(" + newZipCode + "," + newTown + ")";
 
-					EervParishDataLoader.Warn (message);
+						EervParishDataLoader.Warn (message);
+					}
 				}
+
+				zipCode = newZipCode;
+				town = newTown;
 			}
 
-			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, newZipCode, newTown);
+			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town, countryCode);
 		}
 
 

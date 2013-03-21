@@ -111,6 +111,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		/// <summary>
+		/// This method corrects invalid zip codes and names by using a fuzzy algorithm. It works
+		/// only for swiss towns, so don't use it for towns that are in another country as it will
+		/// not work.
+		/// </summary>
 		public Tuple<string, string> Validate(string zipCode, string name)
 		{
 			var town = new Town (zipCode, name);
@@ -144,11 +149,6 @@ namespace Epsitec.Aider.Data.Eerv
 			if (emptyZipCode)
 			{
 				return this.FindMatchWithName (town);
-			}
-
-			if (town.zipCode.Length != 4 || !town.zipCode.IsInteger ())
-			{
-				return Tuple.Create (zipCode, name);
 			}
 
 			if (emptyName)

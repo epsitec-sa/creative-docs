@@ -223,6 +223,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{ PersonHeader.FaxNumber, "Fax" },
 			{ PersonHeader.ZipCode, "NPA" },
 			{ PersonHeader.Town, "Localité" },
+			{ PersonHeader.CountryCode, "Pays" },
 			{ PersonHeader.RemarksHousehold, "Remarque2" },
 
 			{ PersonHeader.ParishId, "IdxPar" },
@@ -314,6 +315,7 @@ namespace Epsitec.Aider.Data.Eerv
 		FaxNumber,
 		ZipCode,
 		Town,
+		CountryCode,
 		RemarksHousehold,
 
 		ParishId,

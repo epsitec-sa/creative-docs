@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				if (address.IsInSwitzerland ())
 				{
-					town = this.GetOrCreateSwissTown (InvariantConverter.ToInt (address.ZipCode), address.Town, Mutability.Customizable);
+					town = this.GetOrCreateSwissTown (address.ZipCode, address.Town, Mutability.Customizable);
 				}
 				else
 				{
@@ -85,7 +85,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!this.aiderTowns.TryGetValue (key, out town))
 			{
-				town = this.GetOrCreateSwissTown (zip.ZipCode, name, Mutability.SystemDefined);
+				town = this.GetOrCreateSwissTown (InvariantConverter.ToString(zip.ZipCode), name, Mutability.SystemDefined);
 				this.aiderTowns[key] = town;
 			}
 
@@ -113,7 +113,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 		}
 		
-		private AiderTownEntity GetOrCreateSwissTown(int zipCode, string name, Mutability mutability)
+		private AiderTownEntity GetOrCreateSwissTown(string zipCode, string name, Mutability mutability)
 		{
 			return AiderTownEntity.FindOrCreate (this.businessContext, this.switzerland, zipCode, name, mutability);
 		}
@@ -122,8 +122,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var name = address.Town;
 			var zipCode = address.ZipCode;
+			var country = AiderCountryEntity.Find (this.businessContext, address.CountryCode);
 
-			return AiderTownEntity.FindOrCreate (this.businessContext, zipCode, name, Mutability.Customizable);
+			return AiderTownEntity.FindOrCreate (this.businessContext, country, zipCode, name, Mutability.Customizable);
 		}
 
 

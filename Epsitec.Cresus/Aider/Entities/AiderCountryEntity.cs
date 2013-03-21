@@ -39,6 +39,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public bool IsSwitzerland()
+		{
+			return this.IsoCode == "CH";
+		}
+
 		public static AiderCountryEntity Create(BusinessContext businessContext, string isoCode, string name, Mutability mutability, bool isPreferred)
 		{
 			var country = businessContext.CreateAndRegisterEntity<AiderCountryEntity> ();

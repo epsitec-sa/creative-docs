@@ -13,6 +13,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Data.Platform;
 
+using System;
+
 using System.Linq;
 
 namespace Epsitec.Aider.Entities
@@ -54,46 +56,55 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, AiderCountryEntity country, int zipCode, string name, Mutability mutability)
+		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name, Mutability mutability)
 		{
+			return country.IsSwitzerland ()
+				? AiderTownEntity.FindOrCreateSwissTown (businessContext, country, zipCode, name, mutability)
+				: AiderTownEntity.FindOrCreateForeignTown (businessContext, country, zipCode, name, mutability);
+		}
+
+		private static AiderTownEntity FindOrCreateSwissTown(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name, Mutability mutability)
+		{
+			var swissZipCode = InvariantConverter.ParseInt (zipCode);
+
+			var zipMatch = SwissPostZipRepository.Current
+				.FindZips (swissZipCode, name)
+				.FirstOrDefault ();
+
+			if (zipMatch == null)
+			{
+				throw new ArgumentException ();
+			}
+
+			zipCode = InvariantConverter.ToString (zipMatch.ZipCode);
+			name = zipMatch.LongName;
+
 			var aiderTown = AiderTownEntity.Find (businessContext, country, zipCode, name);
 
 			if (aiderTown == null)
 			{
-				aiderTown = businessContext.CreateAndRegisterEntity<AiderTownEntity> ();
-
-				int? zipOnrp = null;
-				var zipMatch = SwissPostZipRepository.Current.FindZips (zipCode, name).FirstOrDefault ();
-				string canton = null;
-				SwissPostZipType? zipType = null;
-
-				if (zipMatch != null)
-				{
-					zipOnrp = zipMatch.OnrpCode;
-					zipType = zipMatch.ZipType;
-					name    = zipMatch.LongName;
-					canton  = zipMatch.Canton;
-				}
-
-				aiderTown.ZipCode         = InvariantConverter.ToString (zipCode);
-				aiderTown.SwissZipCode    = zipCode;
-				aiderTown.SwissZipCodeId  = zipOnrp;
-				aiderTown.SwissZipType    = zipType;
-				aiderTown.SwissCantonCode = canton;
-				aiderTown.Name            = name;
-				aiderTown.Country         = country;
-				aiderTown.Mutability      = mutability;
+				aiderTown = AiderTownEntity.Create (businessContext, country, zipCode, name, mutability);
+				aiderTown.SwissZipCode = zipMatch.ZipCode;
+				aiderTown.SwissZipCodeId = zipMatch.OnrpCode;
+				aiderTown.SwissZipType = zipMatch.ZipType;
+				aiderTown.SwissCantonCode = zipMatch.Canton;
 			}
 
 			return aiderTown;
 		}
 
-		public static AiderTownEntity Find(BusinessContext businessContext, AiderCountryEntity country, int zipCode, string name)
+		private static AiderTownEntity FindOrCreateForeignTown(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name, Mutability mutability)
+		{
+			return AiderTownEntity.Find (businessContext, country, zipCode, name)
+				?? AiderTownEntity.Create (businessContext, country, zipCode, name, mutability);
+		}
+
+		private static AiderTownEntity Find(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name)
 		{
 			var example = new AiderTownEntity ()
 			{
 				Country = country,
-				SwissZipCode = zipCode,
+				ZipCode = zipCode,
 				Name = name,
 			};
 
@@ -101,19 +112,6 @@ namespace Epsitec.Aider.Entities
 				.GetByExample<AiderTownEntity> (example)
 				.FirstOrDefault ();
 		}
-
-		public static AiderTownEntity FindOrCreate(BusinessContext businessContext, string zipCode, string name, Mutability mutability)
-		{
-			var aiderTown = AiderTownEntity.Find (businessContext, zipCode, name);
-
-			if (aiderTown == null)
-			{
-				aiderTown = AiderTownEntity.Create (businessContext, null, zipCode, name, mutability);
-			}
-
-			return aiderTown;
-		}
-
 
 		public static AiderTownEntity Create(BusinessContext businessContext, AiderCountryEntity country, string zipCode, string name, Mutability mutability)
 		{
@@ -125,20 +123,6 @@ namespace Epsitec.Aider.Entities
 			aiderTown.Mutability = mutability;
 
 			return aiderTown;
-		}
-
-
-		public static AiderTownEntity Find(BusinessContext businessContext, string zipCode, string name)
-		{
-			var example = new AiderTownEntity ()
-			{
-				ZipCode = zipCode,
-				Name = name,
-			};
-
-			return businessContext.DataContext
-				.GetByExample<AiderTownEntity> (example)
-				.FirstOrDefault ();
 		}
 
 		partial void GetSwissZipCodeAddOn(ref string value)
