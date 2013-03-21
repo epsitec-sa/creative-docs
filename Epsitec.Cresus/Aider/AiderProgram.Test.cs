@@ -55,7 +55,7 @@ namespace Epsitec.Aider
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
-				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\Groupe definition.xlsx");
+				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\groupdefinition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (coreData, eervMainData, parishRepository);

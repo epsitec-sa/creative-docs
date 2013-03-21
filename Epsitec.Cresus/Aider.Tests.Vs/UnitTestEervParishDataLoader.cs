@@ -257,10 +257,10 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private readonly FileInfo PersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx");
-		private readonly FileInfo GroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx");
-		private readonly FileInfo SuperGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx");
-		private readonly FileInfo ActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx");
+		private readonly FileInfo PersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\person.xlsx");
+		private readonly FileInfo GroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\group.xlsx");
+		private readonly FileInfo SuperGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\supergroup.xlsx");
+		private readonly FileInfo ActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\activity.xlsx");
 
 
 	}
