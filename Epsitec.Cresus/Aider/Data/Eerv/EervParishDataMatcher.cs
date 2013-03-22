@@ -92,13 +92,13 @@ namespace Epsitec.Aider.Data.Eerv
 			var done = new Dictionary<NormalizedPerson, NormalizedPerson> ();
 			var matched = new HashSet<NormalizedPerson> ();
 
-			EervParishDataMatcher.FindMatchesWithFuzzyMethod(aiderPersons, todo, done, matched);
-			EervParishDataMatcher.FindMatchesWithSplitMethod(aiderPersons, todo, done, matched);
-			EervParishDataMatcher.AssignUnmatchedPersons(todo, done);
+			EervParishDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched);
+			EervParishDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
+			EervParishDataMatcher.AssignUnmatchedPersons (todo, done);
 
 			EervParishDataMatcher.Warn (done);
 
-			return EervParishDataMatcher.GetResultsWithMatchData(done);
+			return EervParishDataMatcher.GetResultsWithMatchData (done);
 		}
 
 
@@ -121,24 +121,24 @@ namespace Epsitec.Aider.Data.Eerv
 				yield return Tuple.Create (eervPerson, tuple);
 			}
 		}
-  
+
 
 		private static MatchData GetMatchData(NormalizedPerson p, NormalizedPerson p2)
 		{
-			var firstname = JaroWinkler.ComputeJaroWinklerDistance(p.Firstname, p2.Firstname);
-			var lastname = JaroWinkler.ComputeJaroWinklerDistance(p.Lastname, p2.Lastname);
-			
+			var firstname = JaroWinkler.ComputeJaroWinklerDistance (p.Firstname, p2.Firstname);
+			var lastname = JaroWinkler.ComputeJaroWinklerDistance (p.Lastname, p2.Lastname);
+
 			var dateOfBirth = p.DateOfBirth == null
 				? (double?) null
-				: EervParishDataMatcher.GetDateSimilarity(p.DateOfBirth, p2.DateOfBirth);
+				: EervParishDataMatcher.GetDateSimilarity (p.DateOfBirth, p2.DateOfBirth);
 
 			var sex = p.Sex == PersonSex.Unknown
 				? (bool?) null
-				: EervParishDataMatcher.IsSexMatch(p.Sex, p2.Sex);
+				: EervParishDataMatcher.IsSexMatch (p.Sex, p2.Sex);
 
 			var address = EervParishDataMatcher.GetAddressSimilarity (p.GetAddresses (), p2.GetAddresses ());
 
-			return new MatchData()
+			return new MatchData ()
 			{
 				Firstname = firstname,
 				Lastname = lastname,
@@ -175,12 +175,12 @@ namespace Epsitec.Aider.Data.Eerv
 			Debug.WriteLine (sb.ToString ());
 		}
 
-  
+
 		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
 		{
-			var namesToAiderPersons = EervParishDataMatcher.GroupPersonsByNames(aiderPersons);
-  			
-			var filters = new List<Tuple<double, double, double, bool, AddressMatch>>()
+			var namesToAiderPersons = EervParishDataMatcher.GroupPersonsByNames (aiderPersons);
+
+			var filters = new List<Tuple<double, double, double, bool, AddressMatch>> ()
 			{
 				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.Full),
 				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.StreetZipCity),
@@ -245,7 +245,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesWithinMathingHouseholds(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches, HashSet<NormalizedPerson> todo)
 		{
-			var matchingHouseholds = EervParishDataMatcher.FindMatchingHouseholds(personMatches);
+			var matchingHouseholds = EervParishDataMatcher.FindMatchingHouseholds (personMatches);
 
 			return EervParishDataMatcher.FindNewMatchesInHousenoldMatches (matchingHouseholds, todo);
 		}
@@ -280,7 +280,7 @@ namespace Epsitec.Aider.Data.Eerv
 			return matchingHouseholds;
 		}
 
-  
+
 		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesInHousenoldMatches(Dictionary<NormalizedHousehold, HashSet<NormalizedHousehold>> matchingHouseholds, HashSet<NormalizedPerson> todo)
 		{
 			foreach (var match in matchingHouseholds)
@@ -288,19 +288,19 @@ namespace Epsitec.Aider.Data.Eerv
 				var eervHousehold = match.Key;
 				var eervMembers = eervHousehold
 					.Members
-					.Where(m => todo.Contains(m))
-					.ToList();
+					.Where (m => todo.Contains (m))
+					.ToList ();
 
 				var aiderHouseholds = match.Value;
 				var aiderMembers = aiderHouseholds
-					.SelectMany(h => h.Members)
-					.Distinct()
-					.ToList();
+					.SelectMany (h => h.Members)
+					.Distinct ()
+					.ToList ();
 
 				foreach (var eervMember in eervMembers)
 				{
 					var aiderCandidate = EervParishDataMatcher
-						.GetFuzzyMatches(eervMember, aiderMembers, 0.8, 0.8)
+						.GetFuzzyMatches (eervMember, aiderMembers, 0.8, 0.8)
 						.Select (c => c.Item1)
 						.FirstOrDefault ();
 
@@ -594,22 +594,22 @@ namespace Epsitec.Aider.Data.Eerv
 				   where sdb || sad
 				   select candidate;
 		}
-  
+
 		private static HashSet<NormalizedPerson> GetCandidatesBySplitNames(NormalizedPerson eervPerson, Dictionary<string, Dictionary<string, List<NormalizedPerson>>> splitNamesToAiderPersons)
 		{
-			var candidates = new HashSet<NormalizedPerson>();
+			var candidates = new HashSet<NormalizedPerson> ();
 
 			foreach (var lastname in eervPerson.Lastnames)
 			{
 				Dictionary<string, List<NormalizedPerson>> d;
 
-				if (splitNamesToAiderPersons.TryGetValue(lastname, out d))
+				if (splitNamesToAiderPersons.TryGetValue (lastname, out d))
 				{
 					foreach (var fistname in eervPerson.Firstnames)
 					{
 						List<NormalizedPerson> c;
 
-						if (d.TryGetValue(fistname, out c))
+						if (d.TryGetValue (fistname, out c))
 						{
 							candidates.UnionWith (c);
 						}
@@ -713,24 +713,18 @@ namespace Epsitec.Aider.Data.Eerv
 			switch (a)
 			{
 				case AddressMatch.Full:
-					
 					return true;
-					
 
 				case AddressMatch.StreetZipCity:
-
 					return b == AddressMatch.StreetZipCity
 						|| b == AddressMatch.ZipCity
 						|| b == AddressMatch.None;
 
 				case AddressMatch.ZipCity:
-
 					return b == AddressMatch.ZipCity
 						|| b == AddressMatch.None;
-				
-				
-				case AddressMatch.None:
 
+				case AddressMatch.None:
 					return b == AddressMatch.None;
 
 				default:

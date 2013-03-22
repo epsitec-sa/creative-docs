@@ -1114,7 +1114,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			EervParishDataImporter.ImportEervLegalPersonContact (businessContext, aiderLegalPerson, legalPerson);
 
-			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du " + eervId.GetFileName() + ".";
+			var comment = "Ce contact a été crée à partir du contact N°" + legalPerson.Id + " du " + eervId.GetFileName () + ".";
 			EervParishDataImporter.CombineSystemComments (aiderLegalPerson, comment);
 
 			return aiderLegalPerson;
@@ -1471,7 +1471,7 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var aiderPersonKey = eervPersonToKeys[eervActivity.Person];
 					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (aiderPersonKey);
-					
+
 					aiderPersons.Add (aiderPerson);
 					participationData.Person = aiderPerson;
 				}
