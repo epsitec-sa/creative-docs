@@ -70,6 +70,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-analyzeechfile"))
+				{
+					AiderProgram.AnalyzeEchFile (args);
+					return;
+				}
+
 				if (args.Contains ("-echimportation"))
 				{
 					AiderProgram.RunEchImportation (args);
@@ -169,6 +175,13 @@ namespace Epsitec.Aider
 			var output = AiderProgram.GetFile (args, "-output:", true);
 
 			Tests.ParishFileAnalyzer.Analyze (input, output);
+		}
+
+		private static void AnalyzeEchFile(string[] args)
+		{
+			var input = AiderProgram.GetFile (args, "-input:", true);
+
+			Tests.EChFileAnalyzer.Analyze (input);
 		}
 
 		private static void RunWithCoreData(Action<CoreData> action)
