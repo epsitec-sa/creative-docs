@@ -14,20 +14,21 @@ namespace Epsitec.Data.Platform
 
 		/// <summary>
 		/// Perform ETL job on Mat[CH]sort CSV file
+		/// https://match.post.ch/pdf/post-match-new-sort.pdf
 		/// </summary>
 		private MatchSortEtl()
 		{
-            this.placesNames = new Dictionary<CompositeKey<string, string>, NEW_PLZ1>();
-            this.placesNamesAltLang = new Dictionary<string, NEW_PLZ2>();
-            this.municipalities = new Dictionary<string, NEW_COM>();
-            this.streetNames = new Dictionary<CompositeKey<string,string>,NEW_STR>();
-            this.streetNamesAltLang = new Dictionary<CompositeKey<string, string>, NEW_STRA>();
-            this.houseNames = new Dictionary<CompositeKey<string, string>, NEW_GEB>();
-            this.houseNamesAltLang = new Dictionary<CompositeKey<string, string>, NEW_GEBA>();
-            this.deliveryInformations = new Dictionary<string, NEW_BOT_B>();
+            this.placesNames = new Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ1> ();
+			this.placesNamesAltLang = new Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ2> ();
+            this.municipalities = new Dictionary<string, NEW_COM> ();
+            this.streetNames = new Dictionary<MatchSortCompositeKey<string,string>,NEW_STR> ();
+            this.streetNamesAltLang = new Dictionary<MatchSortCompositeKey<string, string>, NEW_STRA> ();
+            this.houseNames = new Dictionary<MatchSortCompositeKey<string, string>, NEW_GEB> ();
+			this.houseNamesAltLang = new Dictionary<MatchSortCompositeKey<string, string>, NEW_GEBA> ();
+			this.deliveryInformations = new Dictionary<MatchSortCompositeKey<string, string>, NEW_BOT_B> ();
 
 			//Parse CSV and extract line fields
-			foreach (var lineFields in File.ReadLines (this.filePath).Select (l => l.Split (';')))
+			foreach (var lineFields in File.ReadLines (this.filePath,Encoding.GetEncoding("Windows-1252")).Select (l => l.Split (';')))
 			{
                 //Map CSV line with the "Recordart"
 				switch (lineFields[0])
@@ -37,14 +38,17 @@ namespace Epsitec.Data.Platform
 						break;
 
 					case "01":
-						var compKey = new CompositeKey<string,string>();
+						var compKey = new MatchSortCompositeKey<string,string>();
                         compKey.PK = lineFields[1];
                         compKey.FK = lineFields[2];
                         this.placesNames.Add(compKey, new NEW_PLZ1 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7], lineFields[8], lineFields[9], lineFields[10], lineFields[11], lineFields[12], lineFields[13], lineFields[14], lineFields[15]));
 						break;
 
                     case "02":
-                        this.placesNamesAltLang.Add(lineFields[1], new NEW_PLZ2 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6]));
+						compKey = new MatchSortCompositeKey<string,string>();
+                        compKey.PK = Guid.NewGuid().ToString();
+                        compKey.FK = lineFields[1];
+                        placesNamesAltLang.Add(compKey,new NEW_PLZ2 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6]));
                         break;
 
                     case "03":
@@ -52,230 +56,127 @@ namespace Epsitec.Data.Platform
                         break;
 
 					case "04":
-                        compKey = new CompositeKey<string,string>();
+                        compKey = new MatchSortCompositeKey<string,string>();
                         compKey.PK = lineFields[1];
                         compKey.FK = lineFields[2];
 						this.streetNames.Add (compKey,new NEW_STR (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7], lineFields[8], lineFields[9], lineFields[10], lineFields[11]));
 						break;
 
                     case "05":
-                        compKey = new CompositeKey<string, string>();
+                        compKey = new MatchSortCompositeKey<string, string>();
                         compKey.PK = lineFields[1];
                         compKey.FK = lineFields[2];
                         this.streetNamesAltLang.Add(compKey, new NEW_STRA (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7], lineFields[8], lineFields[9]));
                         break;
 
 					case "06":
-						compKey = new CompositeKey<string, string>();
+						compKey = new MatchSortCompositeKey<string, string>();
                         compKey.PK = lineFields[1];
                         compKey.FK = lineFields[2];
                         this.houseNames.Add(compKey, new NEW_GEB (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7]));
 						break;
 
                     case "07":
-                        compKey = new CompositeKey<string, string>();
+                        compKey = new MatchSortCompositeKey<string, string>();
                         compKey.PK = lineFields[1];
                         compKey.FK = lineFields[2];
                         this.houseNamesAltLang.Add(compKey, new NEW_GEBA(lineFields[1], lineFields[2], lineFields[3], lineFields[4]));
                         break;
 
                     case "08":
-                        this.deliveryInformations.Add(lineFields[1], new NEW_BOT_B(lineFields[1], lineFields[2], lineFields[3], lineFields[4],lineFields[5], lineFields[6], lineFields[7]));
+						compKey = new MatchSortCompositeKey<string, string>();
+                        compKey.PK = Guid.NewGuid().ToString();
+                        compKey.FK = lineFields[1];
+						this.deliveryInformations.Add (compKey,new NEW_BOT_B (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7]));
                         break;
 				}
 			}
 		}
 
 		public static readonly MatchSortEtl Current = new MatchSortEtl ();
-        
         /// <summary>
         /// Street Aggregate with alternative names
         /// </summary>
-		public IEnumerable<dynamic> Streets
+		public IEnumerable<MatchSortStreet> Streets
 		{
 			get
 			{
-                var query = from s in this.streetNames
-                            join a in this.streetNamesAltLang on s.Key.PK equals a.Key.FK
-                            select new
-                            {
-                                publishedStreetNameAbbreviated = s.Value.STR_BEZ_K,
-                                publishedStreetNameAbbreviatedAlternative = a.Value.STR_BEZ_AK,
-                                publishedStreetName = s.Value.STR_BEZ_L,
-                                publishedStreetNameAlternative = a.Value.STR_BEZ_AL,
-                                streetNameAbbreviated = s.Value.STR_BEZ_2K,
-                                streetNameAbbreviatedAlternative =  a.Value.STR_BEZ_A2K,
-                                streetName = s.Value.STR_BEZ_2L,
-                                streetNameAlternative = a.Value.STR_BEZ_A2L,
-                                streetType = s.Value.STR_LOK_TYP,
-                                streetLanguage = s.Value.STR_BEZ_SPC,
-                                isOfficialDesignation = s.Value.STR_BEZ_COFF
-                            };
 
-                return query;
+                var query = from s in this.streetNames
+                            join a in this.streetNamesAltLang on s.Key.PK equals a.Key.FK into aj
+							from a in aj.DefaultIfEmpty()
+							select new MatchSortStreet (s.Value.STR_ID, s.Value.ONRP, s.Value.STR_BEZ_K, a.Value==null ? "" :  a.Value.STR_BEZ_AK, s.Value.STR_BEZ_L, a.Value==null ? "" :  a.Value.STR_BEZ_AL, s.Value.STR_BEZ_2K, a.Value==null ? "" : a.Value.STR_BEZ_A2K, s.Value.STR_BEZ_2L, a.Value==null ? "" :  a.Value.STR_BEZ_A2L, s.Value.STR_LOK_TYP, s.Value.STR_BEZ_SPC, s.Value.STR_BEZ_COFF);
+
+				return query;
 			}
 		}
         /// <summary>
         /// Places aggregates with Zip codes, city addresses lines and alternative names
         /// </summary>
-        public IEnumerable<dynamic> Places
+		public IEnumerable<MatchSortPlace> Places
         {
             get
             {
-                var query = from p in this.placesNames
-                            join a in this.placesNamesAltLang on p.Key.PK equals a.Key
-                            join m in this.municipalities on p.Key.PK equals m.Key
-                            select new
-                            {
-                                bfsNumber = m.Value.BFSNR,
-                                officialCommunityName = m.Value.GEMEINDENAME,
-                                cantonAbbreviation = m.Value.KANTON,
-                                agglomerationNumber = m.Value.AGGLONR,
-                                zipType = p.Value.PLZ_TYP,                              
-                                zip = p.Value.PLZ,
-                                zipExtraDigit = p.Value.PLZ_ZZ,
-                                rootZip = p.Value.GPLZ,
-                                cityLine18 = p.Value.ORT_BEZ_18,
-                                cityLine27 = p.Value.ORT_BEZ_27,
-                                cityLineAlternativeType = a.Value.BEZ_TYP,
-                                cityLine18Alternative = a.Value.ORT_BEZ_18,
-                                cityLine27Alternative = a.Value.ORT_BEZ_27,
-                                officialLicensePlate = p.Value.KANTON,
-                                primaryLanguage = p.Value.SPRACHCODE,
-                                primaryLanguageAlternative = a.Value.SPRACHCODE,
-                                secondLanguage = p.Value.SPRACHCODE_ABW,
-                                briefsBy = p.Value.BRIEFZ_DURCH,
-                                validFromDate = p.Value.GILT_AB_DAT,
-                                barCodeLabel =p.Value.PLZ_BRIEFZUST,
-                                isOfficialZip = p.Value.PLZ_COFF
-
-                            };
-
-                return query;
+				var query = from p in this.placesNames
+							join pa in this.placesNamesAltLang on p.Key.PK equals pa.Key.FK into paj
+							from pa in paj.DefaultIfEmpty()
+							join m in this.municipalities on p.Key.FK equals m.Key
+							select new MatchSortPlace (p.Value.ONRP,m.Value.BFSNR, m.Value.GEMEINDENAME, m.Value.KANTON, m.Value.AGGLONR, p.Value.PLZ_TYP, p.Value.PLZ, p.Value.PLZ_ZZ, p.Value.GPLZ, p.Value.ORT_BEZ_18, p.Value.ORT_BEZ_27, p.Value.KANTON, p.Value.SPRACHCODE, p.Value.SPRACHCODE_ABW=="" ? "0" : p.Value.SPRACHCODE_ABW, p.Value.BRIEFZ_DURCH, p.Value.GILT_AB_DAT, p.Value.PLZ_BRIEFZUST, p.Value.PLZ_COFF, pa.Value==null ? "" : pa.Value.BEZ_TYP, pa.Value==null ? "" : pa.Value.ORT_BEZ_18, pa.Value==null ? "" : pa.Value.ORT_BEZ_27, pa.Value==null ? "0" : pa.Value.SPRACHCODE);
+				return query;
 
             }
         }
+
+		/// <summary>
+		/// Places aggregates with Zip codes, city addresses lines and alternative names
+		/// </summary>
+		public IEnumerable<MatchSortPlace> filteredPlaces(string zipFilter)
+		{		
+			var query = from p in this.placesNames
+						where p.Value.PLZ == zipFilter
+						join pa in this.placesNamesAltLang on p.Key.PK equals pa.Key.FK into paj
+						from pa in paj.DefaultIfEmpty ()
+						join m in this.municipalities on p.Key.FK equals m.Key
+						select new MatchSortPlace (p.Value.ONRP, m.Value.BFSNR, m.Value.GEMEINDENAME, m.Value.KANTON, m.Value.AGGLONR, p.Value.PLZ_TYP, p.Value.PLZ, p.Value.PLZ_ZZ, p.Value.GPLZ, p.Value.ORT_BEZ_18, p.Value.ORT_BEZ_27, p.Value.KANTON, p.Value.SPRACHCODE, p.Value.SPRACHCODE_ABW=="" ? "0" : p.Value.SPRACHCODE_ABW, p.Value.BRIEFZ_DURCH, p.Value.GILT_AB_DAT, p.Value.PLZ_BRIEFZUST, p.Value.PLZ_COFF, pa.Value==null ? "" : pa.Value.BEZ_TYP, pa.Value==null ? "" : pa.Value.ORT_BEZ_18, pa.Value==null ? "" : pa.Value.ORT_BEZ_27, pa.Value==null ? "0" : pa.Value.SPRACHCODE);
+			return query;	
+		}
 
         /// <summary>
         /// Houses aggregate with house numbers, alternative description and messanger delivery numbers
         /// </summary>
-        public IEnumerable<dynamic> Houses
+		public IEnumerable<MatchSortHouse> Houses
         {
             get
             {
                 var query = from h in this.houseNames
-                            join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK
-                            join d in this.deliveryInformations on h.Key.PK equals d.Key
-                            select new 
-                            {
-                                houseNumber = h.Value.HNR,
-                                houseNumberAlphaNum = h.Value.HNR_A,
-                                isOfficialHouseNumber = h.Value.HNR_COFF,
-                                additionalDescription = a.Value.GEB_BEZ_ALT,
-                                houseAlternativeType = a.Value.GEB_TYP,
-                                zipDistrictMessenger  = d.Value.BBZ_PLZ,
-                                messengerDistrictNumber = d.Value.BOTEN_BEZ,
-                                stageNumber = d.Value.ETAPPEN_NR,
-                                runningNumber = d.Value.LAUF_NR,
-                                depotNumber = d.Value.NDEPOT
-                            };
+                            join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK into aj
+							from a in aj.DefaultIfEmpty()
+                            join d in this.deliveryInformations on h.Key.PK equals d.Key.FK into dj
+						    from d in dj.DefaultIfEmpty()
+							select new MatchSortHouse (h.Value.STR_ID, h.Value.HNR, h.Value.HNR_A, h.Value.HNR_COFF, a.Value==null ? "" : a.Value.GEB_BEZ_ALT, a.Value==null ? "" : a.Value.GEB_TYP, d.Value==null ? "" : d.Value.BBZ_PLZ, d.Value==null ? "" :  d.Value.BOTEN_BEZ, d.Value==null ? "" :  d.Value.ETAPPEN_NR, d.Value==null ? "" :  d.Value.LAUF_NR, d.Value==null ? "" :  d.Value.NDEPOT);
 
-                return query;
+				return query;
             }
         }
 
-        /// <summary>
-        /// Fully aggregated data model's
-        /// </summary>
-        public IEnumerable<dynamic> PlacesStreetsAndHouses
-        {
-            get
-            {
-
-                var query = from p in this.placesNames
-                            join pa in this.placesNamesAltLang on p.Key.PK equals pa.Key
-                            join m in this.municipalities on p.Key.PK equals m.Key
-                            join s in this.streetNames on p.Key.PK equals s.Key.FK
-                            join sa in this.streetNamesAltLang on s.Key.PK equals sa.Key.FK
-                            join h in this.houseNames on s.Key.PK equals h.Key.FK
-                            join ha in this.houseNamesAltLang on h.Key.PK equals ha.Key.FK
-                            join d in this.deliveryInformations on h.Key.PK equals d.Key                         
-                            select new
-                            {
-                                bfsNumber = m.Value.BFSNR,
-                                officialCommunityName = m.Value.GEMEINDENAME,
-                                cantonAbbreviation = m.Value.KANTON,
-                                agglomerationNumber = m.Value.AGGLONR,
-                                zipType = p.Value.PLZ_TYP,
-                                zip = p.Value.PLZ,
-                                zipExtraDigit = p.Value.PLZ_ZZ,
-                                rootZip = p.Value.GPLZ,
-                                cityLine18 = p.Value.ORT_BEZ_18,
-                                cityLine27 = p.Value.ORT_BEZ_27,
-                                cityLineAlternativeType = pa.Value.BEZ_TYP,
-                                cityLine18Alternative = pa.Value.ORT_BEZ_18,
-                                cityLine27Alternative = pa.Value.ORT_BEZ_27,
-                                officialLicensePlate = p.Value.KANTON,
-                                primaryLanguage = p.Value.SPRACHCODE,
-                                primaryLanguageAlternative = pa.Value.SPRACHCODE,
-                                secondLanguage = p.Value.SPRACHCODE_ABW,
-                                briefsBy = p.Value.BRIEFZ_DURCH,
-                                validFromDate = p.Value.GILT_AB_DAT,
-                                barCodeLabel = p.Value.PLZ_BRIEFZUST,
-                                isOfficialZip = p.Value.PLZ_COFF,
-
-                                publishedStreetNameAbbreviated = s.Value.STR_BEZ_K,
-                                publishedStreetNameAbbreviatedAlternative = sa.Value.STR_BEZ_AK,
-                                publishedStreetName = s.Value.STR_BEZ_L,
-                                publishedStreetNameAlternative = sa.Value.STR_BEZ_AL,
-                                streetNameAbbreviated = s.Value.STR_BEZ_2K,
-                                streetNameAbbreviatedAlternative =  sa.Value.STR_BEZ_A2K,
-                                streetName = s.Value.STR_BEZ_2L,
-                                streetNameAlternative = sa.Value.STR_BEZ_A2L,
-                                streetType = s.Value.STR_LOK_TYP,
-                                streetLanguage = s.Value.STR_BEZ_SPC,
-                                isOfficialDesignation = s.Value.STR_BEZ_COFF,
-
-                                houseNumber = h.Value.HNR,
-                                houseNumberAlphaNum = h.Value.HNR_A,
-                                isOfficialHouseNumber = h.Value.HNR_COFF,
-                                additionalDescription = ha.Value.GEB_BEZ_ALT,
-                                houseAlternativeType = ha.Value.GEB_TYP,
-                                zipDistrictMessenger = d.Value.BBZ_PLZ,
-                                messengerDistrictNumber = d.Value.BOTEN_BEZ,
-                                stageNumber = d.Value.ETAPPEN_NR,
-                                runningNumber = d.Value.LAUF_NR,
-                                depotNumber = d.Value.NDEPOT
-
-                            };
-
-                return query;
-            }
-            
-        }
+        
 
 		private readonly string filePath = @"s:/MAT[CH]news.csv";
         private readonly NEW_HEA header;
-        private readonly Dictionary<CompositeKey<string, string>, NEW_PLZ1> placesNames;
-        private readonly Dictionary<string, NEW_PLZ2> placesNamesAltLang;
+        private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ1> placesNames;
+		private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ2> placesNamesAltLang;
         private readonly Dictionary<string, NEW_COM>  municipalities;
-        private readonly Dictionary<CompositeKey<string,string>,NEW_STR> streetNames;
-        private readonly Dictionary<CompositeKey<string, string>, NEW_STRA> streetNamesAltLang;
-        private readonly Dictionary<CompositeKey<string, string>, NEW_GEB> houseNames;
-        private readonly Dictionary<CompositeKey<string, string>, NEW_GEBA> houseNamesAltLang;
-        private readonly Dictionary<string, NEW_BOT_B> deliveryInformations;
+        private readonly Dictionary<MatchSortCompositeKey<string,string>,NEW_STR> streetNames;
+        private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_STRA> streetNamesAltLang;
+        private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_GEB> houseNames;
+        private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_GEBA> houseNamesAltLang;
+		private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_BOT_B> deliveryInformations;
 	}
 
     
 
 
     #region MAT[CH] DATA MODEL
-    struct CompositeKey<T1, T2>
-    {
-        public T1 PK;
-        public T2 FK;
-    }
-
     /// <summary>
     /// Contains the version date and a unique random code
     /// </summary>

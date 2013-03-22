@@ -13,12 +13,21 @@ namespace Data.Platform.Tests
 		{
 			var model = MatchSortEtl.Current;
 
+			var query = from p in model.Places
+						join s in model.Streets on p.placeId equals s.placeId
+						join h in model.Houses on s.streetId equals h.streetId
+						select new
+						{
+							p.canton,
+							p.cityLine18,
+							s.streetName,
+							h.houseNumber
+						};
 			
-			//get all places with streets and houses
-			var query =  from s in model.PlacesStreetsAndHouses
-						 select s;
+			Assert.IsTrue (query.Count () > 1);
+			
 
-			Assert.IsTrue (query.Count() > 0);
+			
 		}
 	}
 }
