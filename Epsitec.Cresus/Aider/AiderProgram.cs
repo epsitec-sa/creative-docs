@@ -64,7 +64,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-analyseparishfile"))
+				if (args.Contains ("-analyzeparishfile"))
 				{
 					AiderProgram.AnalyzeParishFile (args);
 					return;
