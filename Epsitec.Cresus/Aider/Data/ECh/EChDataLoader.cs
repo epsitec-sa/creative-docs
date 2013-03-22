@@ -391,9 +391,6 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static readonly string[] yearFormats = new string[] { "yyyy", "'+'yyyy", "'-'yyyy", "yyyyzzz", "'+'yyyyzzz", "'-'yyyyzzz" };
-
-
 	}
 
 
