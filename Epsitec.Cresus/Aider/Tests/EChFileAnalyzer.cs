@@ -2,6 +2,8 @@
 
 using Epsitec.Common.IO;
 
+using Epsitec.Common.Support.Extensions;
+
 using System;
 
 using System.Collections.Generic;
@@ -24,15 +26,20 @@ namespace Epsitec.Aider.Tests
 			Logger.LogToConsole ("Loading file...");
 			var echReportedPersons = EChDataLoader.Load (input);
 
-			Logger.LogToConsole ("Analyzing file...");
 			var nbHouseholds = EChFileAnalyzer.GetNbHouseholds (echReportedPersons);
-			var nbMergedHouseholds = EChFileAnalyzer.GetNbMergedHouseholds (echReportedPersons);
-			var nbPersons = EChFileAnalyzer.GetNbPersons (echReportedPersons);
-
-			Logger.LogToConsole ("Result for file: " + input.FullName);
 			Logger.LogToConsole ("Number of households: " + nbHouseholds);
-			Logger.LogToConsole ("Number of households after merge: " + nbMergedHouseholds);
+
+			var nbPersons = EChFileAnalyzer.GetNbPersons (echReportedPersons);
 			Logger.LogToConsole ("Number of persons: " + nbPersons);
+
+			foreach (var parameter in EChFileAnalyzer.GetParameters ())
+			{
+				var considerChildLastnames = parameter.Item1;
+				var maxMergeAge = parameter.Item2;
+
+				var nbMergedHouseholds = EChFileAnalyzer.GetNbMergedHouseholds (echReportedPersons, considerChildLastnames, maxMergeAge);
+				Logger.LogToConsole ("Number of households after merge (" + considerChildLastnames + ", " + maxMergeAge + "): " + nbMergedHouseholds);
+			}
 
 			Logger.LogToConsole("Press [ENTER] to exit...");
 			Console.ReadLine ();
@@ -41,15 +48,6 @@ namespace Epsitec.Aider.Tests
 		private static int GetNbHouseholds(IList<EChReportedPerson> echReportedPersons)
 		{
 			return echReportedPersons.Count;
-		}
-
-		private static int GetNbMergedHouseholds(IList<EChReportedPerson> echReportedPersons)
-		{
-			var comparer = new MergedHouseholdComparer ();
-
-			return echReportedPersons
-				.GroupBy (rp => rp, comparer)
-				.Count ();
 		}
 
 		private static int GetNbPersons(IList<EChReportedPerson> echReportedPersons)
@@ -61,24 +59,54 @@ namespace Epsitec.Aider.Tests
 				.Count ();
 		}
 
+		private static int GetNbMergedHouseholds(IList<EChReportedPerson> echReportedPersons, bool considerChildLastnames, int? maxMergeAge)
+		{
+			var comparer = new MergedHouseholdComparer (considerChildLastnames, maxMergeAge);
+
+			return echReportedPersons
+				.GroupBy (rp => rp, comparer)
+				.Count ();
+		}
+
+		private static IEnumerable<Tuple<bool, int?>> GetParameters()
+		{
+			var bools =  new List<bool> () { true, false };
+			var ints = Enumerable.Range (19, 82).Cast<int?> ().Concat (new List<int?> () { null });
+
+			foreach (var b in bools)
+			{
+				foreach (var i in ints)
+				{
+					yield return Tuple.Create (b, i);
+				}
+			}
+		}
+
 		private class MergedHouseholdComparer : IEqualityComparer<EChReportedPerson>
 		{
+			public MergedHouseholdComparer(bool considerChildLastnames, int? maxMergeAge)
+			{
+				this.considerChildLastnames = considerChildLastnames;
+				this.maxMergeAge = maxMergeAge;
+			}
+
 			#region IEqualityComparer<EChReportedPerson> Members
 
-			public bool Equals(EChReportedPerson x, EChReportedPerson y)
+			public bool Equals(EChReportedPerson rp1, EChReportedPerson rp2)
 			{
-				if (x == null && y == null)
+				if (rp1 == null && rp2 == null)
 				{
 					return true;
 				}
 
-				if (x == null || y == null)
+				if (rp1 == null || rp2 == null)
 				{
 					return false;
 				}
 
-				return MergedHouseholdComparer.HaveSameAddress (x, y)
-					&& MergedHouseholdComparer.HaveSameName (x, y);
+				return MergedHouseholdComparer.HaveSameAddress (rp1, rp2)
+					&& this.HaveSameLastname (rp1, rp2)
+					&& this.HaveCompatibleAge (rp1, rp2);
 			}
 
 			private static bool HaveSameAddress(EChReportedPerson rp1, EChReportedPerson rp2)
@@ -96,16 +124,34 @@ namespace Epsitec.Aider.Tests
 					&& a1.CountryCode == a2.CountryCode;
 			}
 
-			private static bool HaveSameName(EChReportedPerson rp1, EChReportedPerson rp2)
+			private bool HaveSameLastname(EChReportedPerson rp1, EChReportedPerson rp2)
 			{
-				var a1 = rp1.GetAdults ();
-				var a2 = rp2.GetAdults ();
+				var m1 = this.GetMembers (rp1);
+				var m2 = this.GetMembers (rp2);
 
-				var allNames = a1.Concat(a2)
+				var allNames = m1.Concat(m2)
 					.Select (a => a.OfficialName)
 					.Distinct ();
 
 				return allNames.Count () == 1;
+			}
+
+			private IEnumerable<EChPerson> GetMembers(EChReportedPerson rp)
+			{
+				return this.considerChildLastnames
+					? rp.GetMembers ()
+					: rp.GetAdults ();
+			}
+
+			private bool HaveCompatibleAge(EChReportedPerson rp1, EChReportedPerson rp2)
+			{
+				if (!this.maxMergeAge.HasValue)
+				{
+					return true;
+				}
+
+				return rp1.GetAdults ().All (a => a.DateOfBirth.ComputeAge () < this.maxMergeAge.Value)
+					|| rp2.GetAdults ().All (a => a.DateOfBirth.ComputeAge () < this.maxMergeAge.Value);
 			}
 
 			public int GetHashCode(EChReportedPerson echReportedPerson)
@@ -154,6 +200,9 @@ namespace Epsitec.Aider.Tests
 			}
 
 			#endregion
+
+			private readonly bool considerChildLastnames;
+			private readonly int? maxMergeAge;		
 		}
 	}
 }
