@@ -17,16 +17,16 @@ namespace Epsitec.Aider.Tests
 {
 
 
-	public static class ParishFileAnalizer
+	public static class ParishFileAnalyzer
 	{
 
 
 		public static void Analyze(FileInfo input, FileInfo output)
 		{
-			var repository = ParishFileAnalizer.GetRepository (input);
-			var parishes = ParishFileAnalizer.GetParishes (repository);
+			var repository = ParishFileAnalyzer.GetRepository (input);
+			var parishes = ParishFileAnalyzer.GetParishes (repository);
 
-			ParishFileAnalizer.Write (parishes, output);
+			ParishFileAnalyzer.Write (parishes, output);
 		}
 
 
@@ -40,22 +40,22 @@ namespace Epsitec.Aider.Tests
 
 		private static IEnumerable<Parish> GetParishes(ParishAddressRepository repository)
 		{
-			var parishes = ParishFileAnalizer
+			var parishes = ParishFileAnalyzer
 				.GetParishList (repository)
 				.ToDictionary (p => p.Name);
 
-			var townToAddresses = ParishFileAnalizer
+			var townToAddresses = ParishFileAnalyzer
 				.GetTownToAddresses (repository);
 
-			var townsWithSingleParish = ParishFileAnalizer.
+			var townsWithSingleParish = ParishFileAnalyzer.
 				GetTownsWithSingleParish (townToAddresses);
 
-			var townsWithSeveralParishes = ParishFileAnalizer.
+			var townsWithSeveralParishes = ParishFileAnalyzer.
 				GetTownsWithSeveralParishes (townToAddresses);
 
-			ParishFileAnalizer.AssignToParishes (parishes, townsWithSingleParish);
-			ParishFileAnalizer.AssignToParishes (repository, parishes, townsWithSeveralParishes);
-			ParishFileAnalizer.AssignUnassignedTowns (parishes, townToAddresses.Keys);
+			ParishFileAnalyzer.AssignToParishes (parishes, townsWithSingleParish);
+			ParishFileAnalyzer.AssignToParishes (repository, parishes, townsWithSeveralParishes);
+			ParishFileAnalyzer.AssignUnassignedTowns (parishes, townToAddresses.Keys);
 
 			return parishes.Values;
 		}
@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Tests
 				.FindAllAddressInformations ()
 				.Select (a => a.ParishName)
 				.Distinct ()
-				.Append (ParishFileAnalizer.NoParish)
+				.Append (ParishFileAnalyzer.NoParish)
 				.Select (n => new Parish (n));
 		}
 
@@ -88,7 +88,7 @@ namespace Epsitec.Aider.Tests
 		private static Dictionary<Town, string> GetTownsWithSingleParish(Dictionary<Town, List<ParishAddressInformation>> townToAddresses)
 		{
 			return townToAddresses
-				.Where (i => ParishFileAnalizer.HasSingleParish (i.Value))
+				.Where (i => ParishFileAnalyzer.HasSingleParish (i.Value))
 				.ToDictionary
 				(
 					i => i.Key,
@@ -100,7 +100,7 @@ namespace Epsitec.Aider.Tests
 		private static Dictionary<Town, List<ParishAddressInformation>> GetTownsWithSeveralParishes(Dictionary<Town, List<ParishAddressInformation>> townToAddresses)
 		{
 			return townToAddresses
-				.Where (i => !ParishFileAnalizer.HasSingleParish (i.Value))
+				.Where (i => !ParishFileAnalyzer.HasSingleParish (i.Value))
 				.ToDictionary
 				(
 					i => i.Key,
@@ -141,14 +141,14 @@ namespace Epsitec.Aider.Tests
 				var town = item.Key;
 				var addresses = item.Value;
 
-				ParishFileAnalizer.AssignToParishes (repository, parishes, town, addresses);
+				ParishFileAnalyzer.AssignToParishes (repository, parishes, town, addresses);
 			}
 		}
 
 
 		private static void AssignToParishes(ParishAddressRepository repository, Dictionary<string, Parish> parishes, Town town, List<ParishAddressInformation> addresses)
 		{
-			var streets = ParishFileAnalizer.FindStreets (town);
+			var streets = ParishFileAnalyzer.FindStreets (town);
 
 			foreach (var street in streets)
 			{
@@ -158,15 +158,15 @@ namespace Epsitec.Aider.Tests
 				// If the street is not explicitely referenced by a parish or if the whole street is
 				// explicitely referenced by a single parish, we know that the whole street is
  				// assigned to a single parish and we don't need to check every number.
-				if (ParishFileAnalizer.IsSimpleCase (addresses, streetName))
+				if (ParishFileAnalyzer.IsSimpleCase (addresses, streetName))
 				{
-					ParishFileAnalizer.AssignToParishes (repository, parishes, town, streetName);
+					ParishFileAnalyzer.AssignToParishes (repository, parishes, town, streetName);
 				}
 				// Otherwise, we need to check every number to know at which parish it is assigned
 				// to.
 				else
 				{
-					ParishFileAnalizer.AssignToParishes (repository, parishes, town, streetName, streetData);
+					ParishFileAnalyzer.AssignToParishes (repository, parishes, town, streetName, streetData);
 				}
 			}
 		}
@@ -184,7 +184,7 @@ namespace Epsitec.Aider.Tests
 
 		private static void AssignToParishes(ParishAddressRepository repository, Dictionary<string, Parish> parishes, Town town, string streetName)
 		{
-			var parishName = ParishFileAnalizer.FindParishName(repository, town, streetName, 1);
+			var parishName = ParishFileAnalyzer.FindParishName(repository, town, streetName, 1);
 			var parish = parishes[parishName];
 
 			var street = new Street (town, streetName, new int[0]);
@@ -221,7 +221,7 @@ namespace Epsitec.Aider.Tests
 
 				for (int i = min; i <= max; i += step)
 				{
-					ParishFileAnalizer.AssignNumberToParishes (repository, numbers, town, streetName, i);
+					ParishFileAnalyzer.AssignNumberToParishes (repository, numbers, town, streetName, i);
 				}
 			}
 
@@ -237,7 +237,7 @@ namespace Epsitec.Aider.Tests
 
 		private static void AssignNumberToParishes(ParishAddressRepository repository, Dictionary<string, HashSet<int>> numbers, Town town, string streetName, int i)
 		{
-			var parishName = ParishFileAnalizer.FindParishName (repository, town, streetName, i);
+			var parishName = ParishFileAnalyzer.FindParishName (repository, town, streetName, i);
 
 			HashSet<int> parishNumbers;
 
@@ -255,15 +255,15 @@ namespace Epsitec.Aider.Tests
 		{
 			var parishName = repository.FindParishName (town.Zip, town.Name, streetName, nb);
 
-			return parishName ?? ParishFileAnalizer.NoParish;
+			return parishName ?? ParishFileAnalyzer.NoParish;
 		}
 
 
 		private static Dictionary<string, List<SwissPostStreetInformation>> FindStreets(Town town)
 		{
-			return ParishFileAnalizer
+			return ParishFileAnalyzer
 				.FindTowns (town)
-				.SelectMany (t => ParishFileAnalizer.FindStreets (t))
+				.SelectMany (t => ParishFileAnalyzer.FindStreets (t))
 				.GroupBy (s => s.NormalizedStreetName)
 				.ToDictionary
 				(
@@ -302,7 +302,7 @@ namespace Epsitec.Aider.Tests
 				.Select (t => new Town (t.ZipCode, t.LongName))
 				.Where (t => !okTowns.Contains (t));
 
-			var noParish = parishes[ParishFileAnalizer.NoParish];
+			var noParish = parishes[ParishFileAnalyzer.NoParish];
 
 			noParish.Towns.AddRange (unassignedTowns);
 		}
@@ -312,7 +312,7 @@ namespace Epsitec.Aider.Tests
 		{
 			var lines = parishes
 				// This way we have the no parish parish first.
-				.OrderBy (p => p.Name == ParishFileAnalizer.NoParish ? " " : p.Name)
+				.OrderBy (p => p.Name == ParishFileAnalyzer.NoParish ? " " : p.Name)
 				.SelectMany (p => p.GetLines ());
 
 			File.WriteAllLines (output.FullName, lines);

@@ -168,7 +168,7 @@ namespace Epsitec.Aider
 			var input = AiderProgram.GetFile (args, "-input:", true);
 			var output = AiderProgram.GetFile (args, "-output:", true);
 
-			Tests.ParishFileAnalizer.Analyze (input, output);
+			Tests.ParishFileAnalyzer.Analyze (input, output);
 		}
 
 		private static void RunWithCoreData(Action<CoreData> action)
