@@ -21,7 +21,8 @@ namespace Data.Platform.Tests
 							p.canton,
 							p.cityLine18,
 							s.streetName,
-							h.houseNumber
+							h.houseNumber,
+
 						};
 			
 			Assert.IsTrue (query.Count () > 1);
