@@ -1706,6 +1706,12 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVGF22
 				public static readonly global::Epsitec.Common.Support.Druid Email = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 79);
+				//	designer:cap/LVGJ22
+				public static readonly global::Epsitec.Common.Support.Druid EnableGroupEditionCanton = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 83);
+				//	designer:cap/LVGL22
+				public static readonly global::Epsitec.Common.Support.Druid EnableGroupEditionParish = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 85);
+				//	designer:cap/LVGK22
+				public static readonly global::Epsitec.Common.Support.Druid EnableGroupEditionRegion = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 84);
 				//	designer:cap/LVGH22
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 81);
 				//	designer:cap/LVGD22

@@ -5673,6 +5673,72 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>EnableGroupEditionCanton</c> field.
+		///	designer:fld/LVAHC/LVGJ22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGJ22]")]
+		public bool EnableGroupEditionCanton
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVGJ22]");
+			}
+			set
+			{
+				bool oldValue = this.EnableGroupEditionCanton;
+				if (oldValue != value || !this.IsFieldDefined("[LVGJ22]"))
+				{
+					this.OnEnableGroupEditionCantonChanging (oldValue, value);
+					this.SetField<bool> ("[LVGJ22]", oldValue, value);
+					this.OnEnableGroupEditionCantonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EnableGroupEditionRegion</c> field.
+		///	designer:fld/LVAHC/LVGK22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGK22]")]
+		public bool EnableGroupEditionRegion
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVGK22]");
+			}
+			set
+			{
+				bool oldValue = this.EnableGroupEditionRegion;
+				if (oldValue != value || !this.IsFieldDefined("[LVGK22]"))
+				{
+					this.OnEnableGroupEditionRegionChanging (oldValue, value);
+					this.SetField<bool> ("[LVGK22]", oldValue, value);
+					this.OnEnableGroupEditionRegionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EnableGroupEditionParish</c> field.
+		///	designer:fld/LVAHC/LVGL22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGL22]")]
+		public bool EnableGroupEditionParish
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVGL22]");
+			}
+			set
+			{
+				bool oldValue = this.EnableGroupEditionParish;
+				if (oldValue != value || !this.IsFieldDefined("[LVGL22]"))
+				{
+					this.OnEnableGroupEditionParishChanging (oldValue, value);
+					this.SetField<bool> ("[LVGL22]", oldValue, value);
+					this.OnEnableGroupEditionParishChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
@@ -5686,6 +5752,12 @@ namespace Epsitec.Aider.Entities
 		partial void OnEmailChanged(string oldValue, string newValue);
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
+		partial void OnEnableGroupEditionCantonChanging(bool oldValue, bool newValue);
+		partial void OnEnableGroupEditionCantonChanged(bool oldValue, bool newValue);
+		partial void OnEnableGroupEditionRegionChanging(bool oldValue, bool newValue);
+		partial void OnEnableGroupEditionRegionChanged(bool oldValue, bool newValue);
+		partial void OnEnableGroupEditionParishChanging(bool oldValue, bool newValue);
+		partial void OnEnableGroupEditionParishChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

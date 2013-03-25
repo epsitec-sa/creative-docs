@@ -42,6 +42,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Email)
 					.Field (x => x.Role)
 					.Field (x => x.Disabled)
+					.Field (x => x.EnableGroupEditionCanton)
+					.Field (x => x.EnableGroupEditionRegion)
+					.Field (x => x.EnableGroupEditionParish)
 				.End ();
 		}
 
@@ -61,6 +64,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Role)
 						.ReadOnly ()
 					.Field (x => x.Disabled)
+						.ReadOnly ()
+					.Field (x => x.EnableGroupEditionCanton)
+						.ReadOnly ()
+					.Field (x => x.EnableGroupEditionRegion)
+						.ReadOnly ()
+					.Field (x => x.EnableGroupEditionParish)
 						.ReadOnly ()
 				.End ();
 		}
