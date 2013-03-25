@@ -41,7 +41,9 @@ namespace Epsitec.Data.Platform
 						var compKey = new MatchSortCompositeKey<string,string>();
                         compKey.PK = lineFields[1];
                         compKey.FK = lineFields[2];
-                        this.placesNames.Add(compKey, new NEW_PLZ1 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7], lineFields[8], lineFields[9], lineFields[10], lineFields[11], lineFields[12], lineFields[13], lineFields[14], lineFields[15]));
+
+						var newPlz1 =  new NEW_PLZ1 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7], lineFields[8], lineFields[9], lineFields[10], lineFields[11], lineFields[12], lineFields[13], lineFields[14], lineFields[15]);
+                        this.placesNames.Add(compKey,newPlz1);
 						break;
 
                     case "02":
@@ -94,6 +96,7 @@ namespace Epsitec.Data.Platform
 		}
 
 		public static readonly MatchSortEtl Current = new MatchSortEtl ();
+
         /// <summary>
         /// Street Aggregate with alternative names
         /// </summary>
@@ -162,6 +165,7 @@ namespace Epsitec.Data.Platform
         
 
 		private readonly string filePath = @"s:/MAT[CH]news.csv";
+		private readonly string localCachePath = @"s:/MAT[CH]SortCache.db";
         private readonly NEW_HEA header;
         private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ1> placesNames;
 		private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ2> placesNamesAltLang;
