@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Data;
@@ -10,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -70,7 +71,7 @@ namespace Epsitec.Aider.Entities
 		public string GetHierarchicalName(AiderPersonEntity person)
 		{
 			return this
-				.GetHierarchicalParents (person.Parish.Group.Path)
+				.GetHierarchicalParents (person.ParishGroupPathCache)
 				.Append (this)
 				.Select (g => g.Name)
 				.Join (", ");
@@ -270,6 +271,13 @@ namespace Epsitec.Aider.Entities
 			var path = this.Path;
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			var userParishPath = user.ParishGroupPathCache;
+			var userPowerLevel = user.PowerLevel;
+
+			if ((userPowerLevel != UserPowerLevel.None) &&
+				(userPowerLevel <= UserPowerLevel.Administrator))
+			{
+				return true;
+			}
 
 			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
 			{

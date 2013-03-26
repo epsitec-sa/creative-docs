@@ -107,8 +107,7 @@ namespace Epsitec.Aider.Data.Eerv
 			dataContext.LoadRelatedData (aiderPersons, new List<LambdaExpression> ()
 			{
 				LambdaUtils.Convert ((AiderPersonEntity p) => p.eCH_Person),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Parish),
-				LambdaUtils.Convert ((AiderPersonEntity p) => p.Parish.Group),
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.ParishGroup),
 			});
 
 			var aiderPersonContacts = aiderPersons

@@ -62,7 +62,9 @@ namespace Epsitec.Aider.Data.Eerv
 						Person = person,
 					};
 
-					person.Parish = AiderGroupParticipantEntity.StartParticipation (businessContext, what);
+					AiderGroupParticipantEntity.StartParticipation (businessContext, what);
+
+					person.ParishGroup = parishGroup;
 				}
 				else
 				{
@@ -70,7 +72,7 @@ namespace Epsitec.Aider.Data.Eerv
 					// an entity to create a similar one right after.
 
 					noParishGroupParticipation.Group = parishGroup;
-					person.Parish = noParishGroupParticipation;
+					person.ParishGroup = parishGroup;
 				}
 			}
 		}
@@ -281,7 +283,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderPersonEntity person)
 		{
-			var currentGroupName = person.Parish.Group.Name;
+			var currentGroupName = person.ParishGroup.Name;
 
 			return person.Contacts
 				.Select (c => c.GetAddress ())

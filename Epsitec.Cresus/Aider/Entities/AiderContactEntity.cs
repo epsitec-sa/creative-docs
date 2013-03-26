@@ -251,7 +251,7 @@ namespace Epsitec.Aider.Entities
 
 				case ContactType.PersonAddress:
 				case ContactType.PersonHousehold:
-					return this.Person.Parish.Group;
+					return this.Person.ParishGroup;
 
 				default:
 					throw new NotImplementedException ();

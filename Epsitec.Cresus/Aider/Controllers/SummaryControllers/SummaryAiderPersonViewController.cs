@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
 
-			wall.AddBrick (x => x.Parish.Group)
+			wall.AddBrick (x => x.ParishGroup)
 				.Icon ("Data.AiderGroup.Parish")
 				.Title ("Paroisse")
 				.Attribute (BrickMode.DefaultToSummarySubView);

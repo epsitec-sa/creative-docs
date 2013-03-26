@@ -68,20 +68,20 @@ namespace Epsitec.Aider.Entities
 				throw new InvalidOperationException ("This group cannot have members.");
 			}
 
-			var participation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
+			var groupParticipation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
-			participation.Assign (what);
-			participation.StartDate = startDate;
+			groupParticipation.Assign (what);
+			groupParticipation.StartDate = startDate;
 
 			if (!startDate.HasValue || startDate <= Date.Today)
 			{
 				if (what.Person != null)
 				{
-					what.Person.AddParticipationInternal (participation);
+					what.Person.AddParticipationInternal (groupParticipation);
 				}
 			}
 
-			return participation;
+			return groupParticipation;
 		}
 
 		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what, Date? startDate, FormattedText comment)

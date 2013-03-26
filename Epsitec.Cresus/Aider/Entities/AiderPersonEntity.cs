@@ -247,6 +247,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		partial void OnParishGroupChanging(AiderGroupEntity oldValue, AiderGroupEntity newValue)
+		{
+			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
+		}
+
+
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
 		{
 			value = this.GetParticipations ().AsReadOnlyCollection ();

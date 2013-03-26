@@ -14,13 +14,9 @@ using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Rules
 {
-
-
 	[BusinessRule]
 	internal class AiderUserBusinessRules : GenericBusinessRule<AiderUserEntity>
 	{
-
-
 		public override void ApplySetupRule(AiderUserEntity user)
 		{
 			this.SetupMutability (user);
@@ -29,24 +25,30 @@ namespace Epsitec.Aider.Rules
 			this.SetupCustomUISettings (user);
 		}
 
+		public override void ApplyValidateRule(AiderUserEntity user)
+		{
+			this.CheckLoginNameIsNotEmpty (user);
+			this.CheckLoginNameIsUnique (user);
+			this.CheckDisplayNameIsNotEmpty (user);
+			this.CheckParishIsParishGroup (user);
+			this.CheckEmail (user);
+		}
+
 
 		private void SetupAuthenticationMethod(AiderUserEntity user)
 		{
 			user.AuthenticationMethod = UserAuthenticationMethod.Password;
 		}
 
-
 		private void SetupMutability(AiderUserEntity user)
 		{
 			user.Mutability = Mutability.Customizable;
 		}
 
-
 		private void SetupUserGroups(AiderUserEntity user)
 		{
 			user.AssignGroup (this.GetBusinessContext (), UserPowerLevel.Standard);
 		}
-
 
 		private void SetupCustomUISettings(AiderUserEntity user)
 		{
@@ -56,19 +58,7 @@ namespace Epsitec.Aider.Rules
 		}
 
 
-		public override void ApplyValidateRule(AiderUserEntity user)
-		{
-			AiderUserBusinessRules.CheckLoginNameIsNotEmpty (user);
-			this.CheckLoginNameIsUnique (user);
-			AiderUserBusinessRules.CheckDisplayNameIsNotEmpty (user);
-			AiderUserBusinessRules.CheckParishIsParishGroup (user);
-			AiderUserBusinessRules.CheckEmail (user);
-
-			AiderUserBusinessRules.UpdateParishGroupPathCache (user);
-		}
-
-
-		private static void CheckLoginNameIsNotEmpty(AiderUserEntity user)
+		private void CheckLoginNameIsNotEmpty(AiderUserEntity user)
 		{
 			if (string.IsNullOrEmpty (user.LoginName))
 			{
@@ -77,7 +67,6 @@ namespace Epsitec.Aider.Rules
 				Logic.BusinessRuleException (user, message);
 			}
 		}
-
 
 		private void CheckLoginNameIsUnique(AiderUserEntity user)
 		{
@@ -101,8 +90,7 @@ namespace Epsitec.Aider.Rules
 			}
 		}
 
-
-		private static void CheckDisplayNameIsNotEmpty(AiderUserEntity user)
+		private void CheckDisplayNameIsNotEmpty(AiderUserEntity user)
 		{
 			if (user.DisplayName.IsNullOrEmpty ())
 			{
@@ -112,8 +100,7 @@ namespace Epsitec.Aider.Rules
 			}
 		}
 
-
-		private static void CheckParishIsParishGroup(AiderUserEntity user)
+		private void CheckParishIsParishGroup(AiderUserEntity user)
 		{
 			if (user.Parish.IsNull () || user.Parish.IsParish ())
 			{
@@ -125,8 +112,7 @@ namespace Epsitec.Aider.Rules
 			Logic.BusinessRuleException (user, message);
 		}
 
-
-		private static void CheckEmail(AiderUserEntity user)
+		private void CheckEmail(AiderUserEntity user)
 		{
 			var email = user.Email;
 
@@ -145,19 +131,5 @@ namespace Epsitec.Aider.Rules
 				Logic.BusinessRuleException (user, message);
 			}
 		}
-
-
-		private static void UpdateParishGroupPathCache(AiderUserEntity user)
-		{
-			var path = user.Parish.Path;
-
-			user.ParishGroupPathCache = string.IsNullOrEmpty (path)
-				? null
-				: path;
-		}
-
-
 	}
-
-
 }

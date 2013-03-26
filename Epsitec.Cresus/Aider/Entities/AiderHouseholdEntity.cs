@@ -68,12 +68,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private AiderGroupParticipantEntity GetParishGroup()
+		private AiderGroupEntity GetParishGroup()
 		{
 			// The logic here is very simple. Maybe we need something more complex.
 
 			return this.Members
-				.Select (m => m.Parish)
+				.Select (m => m.ParishGroup)
 				.Where (p => p.IsNotNull ())
 				.FirstOrDefault ();
 		}

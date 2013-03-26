@@ -843,24 +843,46 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Parish</c> field.
-		///	designer:fld/LVAF/LVADB
+		///	The <c>ParishGroup</c> field.
+		///	designer:fld/LVAF/LVALG
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVADB]")]
-		public global::Epsitec.Aider.Entities.AiderGroupParticipantEntity Parish
+		[global::Epsitec.Common.Support.EntityField ("[LVALG]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity ParishGroup
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVADB]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVALG]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue = this.Parish;
-				if (oldValue != value || !this.IsFieldDefined("[LVADB]"))
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.ParishGroup;
+				if (oldValue != value || !this.IsFieldDefined("[LVALG]"))
 				{
-					this.OnParishChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVADB]", oldValue, value);
-					this.OnParishChanged (oldValue, value);
+					this.OnParishGroupChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVALG]", oldValue, value);
+					this.OnParishGroupChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVAF/LVAMG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAMG]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAMG]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVAMG]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVAMG]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
 				}
 			}
 		}
@@ -961,8 +983,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnBirthdayMonthChanged(int oldValue, int newValue);
 		partial void OnBirthdayYearChanging(int oldValue, int newValue);
 		partial void OnBirthdayYearChanged(int oldValue, int newValue);
-		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
-		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
+		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);

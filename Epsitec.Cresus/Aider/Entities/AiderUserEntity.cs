@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -18,6 +18,26 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderUserEntity
 	{
+		public UserPowerLevel					PowerLevel
+		{
+			get
+			{
+				UserPowerLevel level = UserPowerLevel.None;
+
+				foreach (var x in this.UserGroups.Select (x => x.UserPowerLevel).Where (x => x != UserPowerLevel.None))
+				{
+					if ((level == UserPowerLevel.None) ||
+						(level > x))
+					{
+						level = x;
+					}
+				}
+
+				return level;
+			}
+		}
+
+		
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText
@@ -36,6 +56,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName);
 		}
 
+
 		public void AssignGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
 		{
 			var group = AiderUserEntity.GetSoftwareUserGroup (businessContext, powerLevel);
@@ -46,17 +67,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		private static SoftwareUserGroupEntity GetSoftwareUserGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
-		{
-			var example = new SoftwareUserGroupEntity ()
-			{
-				UserPowerLevel = powerLevel
-			};
-
-			var dataContext = businessContext.DataContext;
-
-			return dataContext.GetByExample (example).FirstOrDefault ();
-		}
+		
 
 		public void SetPassword(string password, string confirmation)
 		{
@@ -108,6 +119,24 @@ namespace Epsitec.Aider.Entities
 			this.CustomUISettings.Delete (businessContext);
 
 			businessContext.DeleteEntity (this);
+		}
+
+
+		partial void OnParishChanging(AiderGroupEntity oldValue, AiderGroupEntity newValue)
+		{
+			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
+		}
+		
+		private static SoftwareUserGroupEntity GetSoftwareUserGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
+		{
+			var example = new SoftwareUserGroupEntity ()
+			{
+				UserPowerLevel = powerLevel
+			};
+
+			var dataContext = businessContext.DataContext;
+
+			return dataContext.GetByExample (example).FirstOrDefault ();
 		}
 	}
 }

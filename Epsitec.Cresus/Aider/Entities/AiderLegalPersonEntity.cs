@@ -46,7 +46,6 @@ namespace Epsitec.Aider.Entities
 		{
 			this.DisplayZipCode = this.GetDisplayZipCode ();
 			this.DisplayAddress = this.GetDisplayAddress ();
-			this.ParishGroupPathCache = this.ParishGroup.Path;
 		}
 
 
@@ -77,6 +76,11 @@ namespace Epsitec.Aider.Entities
 			//	TODO: ...
 		}
 
+		
+		partial void OnParishGroupChanging(AiderGroupEntity oldValue, AiderGroupEntity newValue)
+		{
+			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
+		}
 
 		partial void GetContacts(ref IList<AiderContactEntity> value)
 		{

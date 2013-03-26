@@ -160,7 +160,7 @@ namespace Epsitec.Aider.Rules
 		
 		private static void VerifyParish(BusinessContext context, AiderPersonEntity person)
 		{
-			if (person.Parish.IsNull ())
+			if (person.ParishGroup.IsNull ())
 			{
 				AiderPersonBusinessRules.AssignParish (context, person);
 			}
@@ -172,7 +172,7 @@ namespace Epsitec.Aider.Rules
 
 		private static void CheckCurrentParish(BusinessContext context, AiderPersonEntity person)
 		{
-			if (!person.Parish.Group.IsParish ())
+			if (!person.ParishGroup.IsParish ())
 			{
 				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
 

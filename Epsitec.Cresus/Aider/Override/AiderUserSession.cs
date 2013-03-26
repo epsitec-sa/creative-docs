@@ -104,16 +104,7 @@ namespace Epsitec.Aider.Override
 
 		private IFilter GetAiderPersonEntityFilter(AiderPersonEntity example, string pattern)
 		{
-			if (example.Parish == null)
-			{
-				example.Parish = new AiderGroupParticipantEntity ();
-			}
-			if (example.Parish.Group == null)
-			{
-				example.Parish.Group = new AiderGroupEntity ();
-			}
-
-			return new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.Parish.Group.Path, pattern));
+			return new LambdaFilter<AiderPersonEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
 
 		private IFilter GetAiderGroupEntityFilter(AiderGroupEntity example, string pattern)
