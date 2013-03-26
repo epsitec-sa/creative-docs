@@ -21,36 +21,81 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderPersonEntity : IAiderWarningExampleFactoryGetter
 	{
-		public override FormattedText GetCompactSummary()
+		public bool								IsGovernmentDefined
 		{
-			return TextFormatter.FormatText (this.DisplayName, "(~", this.ComputeAge (), "~)");
+			get
+			{
+				return (this.eCH_Person.IsNotNull ())
+					&& (this.eCH_Person.DataSource == Enumerations.DataSource.Government);
+			}
 		}
+
+		public bool								IsAlive
+		{
+			get
+			{
+				return this.eCH_Person.IsNull () || this.eCH_Person.IsDeceased == false;
+			}
+		}
+
+		public bool								IsDeceased
+		{
+			get
+			{
+				return !this.IsAlive;
+			}
+		}
+		
+		public int?								Age
+		{
+			get
+			{
+				if (this.eCH_Person.IsNull ())
+				{
+					return null;
+				}
+
+				var birthdate = this.eCH_Person.PersonDateOfBirth;
+				var deathdate = this.eCH_Person.PersonDateOfDeath;
+
+				if (birthdate == null)
+				{
+					return null;
+				}
+				else if (deathdate == null)
+				{
+					return birthdate.Value.ComputeAge ();
+				}
+				else
+				{
+					return birthdate.Value.ComputeAge (deathdate.Value);
+				}
+			}
+		}
+
 
 		public FormattedText GetCompactSummary(AiderHouseholdEntity household)
 		{
-			if (household.IsNotNull ())
+			if ((household.IsNotNull ()) &&
+				(household.IsHead (this)))
 			{
-				if (household.IsHead (this))
-				{
-					var boldName = TextFormatter.FormatText (this.DisplayName).ApplyBold ();
-					return TextFormatter.FormatText (boldName, "(~", this.ComputeAge (), "~)");
-				}
+				var boldName = TextFormatter.FormatText (this.DisplayName).ApplyBold ();
+				return TextFormatter.FormatText (boldName, "(~", this.Age, "~)");
 			}
+			else
+			{
+				return this.GetCompactSummary ();
+			}
+		}
 
-			return this.GetCompactSummary ();
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.DisplayName, "(~", this.Age, "~)");
 		}
 
 		public override FormattedText GetSummary()
 		{
 			return this.GetCoordinatesSummary ();
-		}
-
-
-		public FormattedText GetCoordinatesSummary()
-		{
-			var lines = this.GetCoordinatesSummaryLines ();
-
-			return TextFormatter.FormatText (lines.Select (x => x.AppendLineIfNotNull ()));
 		}
 
 		public FormattedText GetPersonalDataSummary()
@@ -61,61 +106,6 @@ namespace Epsitec.Aider.Entities
 				this.eCH_Person.PersonDateOfBirth, "~ – ~", this.eCH_Person.PersonDateOfDeath, "\n",
 				this.Confession, "~\n",
 				this.Profession, "~\n");
-		}
-
-		public bool IsAlive
-		{
-			get
-			{
-				return this.eCH_Person.IsNull () || this.eCH_Person.IsDeceased == false;
-			}
-		}
-
-		public bool IsDeceased
-		{
-			get
-			{
-				return !this.IsAlive;
-			}
-		}
-		
-		public int? ComputeAge()
-		{
-			if (this.eCH_Person.IsNull ())
-			{
-				return null;
-			}
-
-			var birthdate = this.eCH_Person.PersonDateOfBirth;
-			var deathdate = this.eCH_Person.PersonDateOfDeath;
-
-			if (birthdate == null)
-			{
-				return null;
-			}
-			else if (deathdate == null)
-			{
-				return birthdate.Value.ComputeAge ();
-			}
-			else
-			{
-				return birthdate.Value.ComputeAge (deathdate.Value);
-			}
-		}
-
-
-		public IEnumerable<FormattedText> GetCoordinatesSummaryLines()
-		{
-			// Gets the full name
-			var fullNameText = this.GetFullName ();
-
-			if (!fullNameText.IsNullOrWhiteSpace ())
-			{
-				yield return fullNameText;
-			}
-
-			//	Gets the default mail address
-			//	TODO: ...
 		}
 
 
@@ -148,69 +138,16 @@ namespace Epsitec.Aider.Entities
 				return "";
 			}
 
-			var split = callname.Split (' ', '-');
+			var longNames  = callname.Split (' ', '-');
+			var shortNames = longNames.Select (x => AiderPersonEntity.GetNameAbbreviation (x));
 
-			return string.Concat (split.Select (x => AiderPersonEntity.GetNameAbbreviation (x)).ToArray ());
-		}
-
-		public static string GetNameAbbreviation(string name)
-		{
-			name = name.ToLowerInvariant ();
-
-			if ((name.StartsWith ("ch")) ||
-				(name.StartsWith ("ph")))
-			{
-				var c1 = name.Substring (0, 1).ToUpperInvariant ();
-				var c2 = name.Substring (1, 1);
-
-				return string.Concat (c1, c2, ".");
-			}
-			else
-			{
-				var c1 = name.Substring (0, 1).ToUpperInvariant ();
-
-				return string.Concat (c1, ".");
-			}
+			return string.Concat (shortNames);
 		}
 
 		public string GetShortFullName()
 		{
 			return StringUtils.Join (" ", this.GetShortCallName (), this.eCH_Person.PersonOfficialName);
 		}
-
-
-		public bool IsGovernmentDefined()
-		{
-			return this.eCH_Person.DataSource == Enumerations.DataSource.Government;
-		}
-
-
-		public void RefreshCache()
-		{
-			this.DisplayName = this.GetDisplayName ();
-
-			this.RefreshBirthdayDate ();
-		}
-
-
-		private void RefreshBirthdayDate()
-		{
-			var date = this.eCH_Person.PersonDateOfBirth;
-
-			if (date.HasValue == false)
-			{
-				this.BirthdayDay   = 0;
-				this.BirthdayMonth = 0;
-				this.BirthdayYear  = 0;
-			}
-			else
-			{
-				this.BirthdayDay   = date.Value.Day;
-				this.BirthdayMonth = date.Value.Month;
-				this.BirthdayYear  = date.Value.Year;
-			}
-		}
-
 
 		public string GetDisplayName()
 		{
@@ -227,13 +164,7 @@ namespace Epsitec.Aider.Entities
 			return name;
 		}
 
-
-		public string GetParishGroupPathCache()
-		{
-			return this.Parish.Group.Path;
-		}
-
-		internal string GetIconName(string prefix)
+		public string GetIconName(string prefix)
 		{
 			string suffix;
 
@@ -257,6 +188,19 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void RefreshCache()
+		{
+			this.DisplayName = this.GetDisplayName ();
+
+			this.RefreshBirthdayDate ();
+		}
+
+		public string GetParishGroupPathCache()
+		{
+			return this.Parish.Group.Path;
+		}
+
+
 		public FormattedText GetGroupTitle()
 		{
 			int nbGroups = this.Groups.Count;
@@ -275,50 +219,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (text);
 		}
 
-
-		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
-		{
-			value = this.GetParticipations ().AsReadOnlyCollection ();
-		}
-
-
-		private IList<AiderGroupParticipantEntity> GetParticipations()
-		{
-			if (this.participations == null)
-			{
-				this.participations = this.ExecuteWithDataContext
-				(
-					d => this.GetParticipations(d),
-					() => new List<AiderGroupParticipantEntity> ()
-				);
-			}
-
-			return this.participations;
-		}
-
-
-		private IList<AiderGroupParticipantEntity> GetParticipations(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, false);
-
-			return dataContext
-				.GetByRequest<AiderGroupParticipantEntity> (request)
-				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
-				.ToList ();
-		}
-
-
-		public void AddParticipationInternal(AiderGroupParticipantEntity participation)
-		{
-			this.GetParticipations ().Add (participation);
-		}
-
-
-		public void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
-		{
-			this.GetParticipations ().Remove (participation);
-		}
-
+		
 		public bool IsNotMemberOf(AiderGroupEntity group)
 		{
 			return this.IsMemberOf (group) == false;
@@ -329,44 +230,33 @@ namespace Epsitec.Aider.Entities
 			return this.GetParticipations ().Any (g => g.Group == group);
 		}
 
-		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
+
+		internal void AddParticipationInternal(AiderGroupParticipantEntity participation)
 		{
-			value = this.GetWarnings ().AsReadOnlyCollection ();
+			this.GetParticipations ().Add (participation);
 		}
 
-		private IList<AiderPersonWarningEntity> GetWarnings()
+		internal void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
 		{
-			if (this.warnings == null)
-			{
-				this.warnings = this.ExecuteWithDataContext
-				(
-					d => this.GetWarnings (d),
-					() => new List<AiderPersonWarningEntity> ()
-				);
-			}
-
-			return this.warnings;
+			this.GetParticipations ().Remove (participation);
 		}
 
-		private IList<AiderPersonWarningEntity> GetWarnings(DataContext dataContext)
-		{
-			var controller = AiderWarningController.Current;
-
-			return controller
-				.GetWarnings<AiderPersonWarningEntity> (this)
-				.ToList ();
-		}
-
-		public void AddWarningInternal(AiderPersonWarningEntity warning)
+		internal void AddWarningInternal(AiderPersonWarningEntity warning)
 		{
 			this.GetWarnings ().Add (warning);
 		}
 
-		public void RemoveWarningInternal(AiderPersonWarningEntity warning)
+		internal void RemoveWarningInternal(AiderPersonWarningEntity warning)
 		{
 			this.GetWarnings ().Remove (warning);
 		}
 
+
+		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
+		{
+			value = this.GetParticipations ().AsReadOnlyCollection ();
+		}
+		
 		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
 		{
 			value = this.GetHouseholds ().OrderBy (x => x.DisplayName).AsReadOnlyCollection ();
@@ -383,6 +273,36 @@ namespace Epsitec.Aider.Entities
 				.Where (x => x.ContactType == ContactType.PersonAddress)
 				.OrderBy (x => x.DisplayAddress)
 				.AsReadOnlyCollection ();
+		}
+
+		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
+		{
+			value = this.GetWarnings ().AsReadOnlyCollection ();
+		}
+
+
+		private IList<AiderGroupParticipantEntity> GetParticipations()
+		{
+			if (this.participations == null)
+			{
+				this.participations = this.ExecuteWithDataContext
+				(
+					d => this.GetParticipations (d),
+					() => new List<AiderGroupParticipantEntity> ()
+				);
+			}
+
+			return this.participations;
+		}
+
+		private IList<AiderGroupParticipantEntity> GetParticipations(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, false);
+
+			return dataContext
+				.GetByRequest<AiderGroupParticipantEntity> (request)
+				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
+				.ToList ();
 		}
 
 		private ISet<AiderHouseholdEntity> GetHouseholds()
@@ -412,7 +332,6 @@ namespace Epsitec.Aider.Entities
 			return this.contacts;
 		}
 
-
 		private IEnumerable<AiderContactEntity> GetContacts(DataContext dataContext)
 		{
 			var example = new AiderContactEntity ()
@@ -423,13 +342,82 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByExample (example);
 		}
 
+		private IList<AiderPersonWarningEntity> GetWarnings()
+		{
+			if (this.warnings == null)
+			{
+				this.warnings = this.ExecuteWithDataContext
+				(
+					d => this.GetWarnings (d),
+					() => new List<AiderPersonWarningEntity> ()
+				);
+			}
+
+			return this.warnings;
+		}
+
+		private IList<AiderPersonWarningEntity> GetWarnings(DataContext dataContext)
+		{
+			var controller = AiderWarningController.Current;
+
+			return controller
+				.GetWarnings<AiderPersonWarningEntity> (this)
+				.ToList ();
+		}
+
+
+		private void RefreshBirthdayDate()
+		{
+			Date? date = null;
+
+			if (this.eCH_Person.IsNotNull ())
+			{
+				date = this.eCH_Person.PersonDateOfBirth;
+			}
+
+			if (date.HasValue == false)
+			{
+				this.BirthdayDay   = 0;
+				this.BirthdayMonth = 0;
+				this.BirthdayYear  = 0;
+			}
+			else
+			{
+				this.BirthdayDay   = date.Value.Day;
+				this.BirthdayMonth = date.Value.Month;
+				this.BirthdayYear  = date.Value.Year;
+			}
+		}
+
+
+		private FormattedText GetCoordinatesSummary()
+		{
+			var lines = this.GetCoordinatesSummaryLines ();
+
+			return TextFormatter.FormatText (lines.Select (x => x.AppendLineIfNotNull ()));
+		}
+
+		private IEnumerable<FormattedText> GetCoordinatesSummaryLines()
+		{
+			// Gets the full name
+			var fullNameText = this.GetFullName ();
+
+			if (!fullNameText.IsNullOrWhiteSpace ())
+			{
+				yield return fullNameText;
+			}
+
+			//	Gets the default mail address
+			//	TODO: ...
+		}
+
+
 
 		public void AddContactInternal(AiderContactEntity contact)
 		{
 			this.GetContacts ().Add (contact);
 			this.ClearHouseholdCache ();					
 		}
-
 
 		public void RemoveContactInternal(AiderContactEntity contact)
 		{
@@ -442,6 +430,29 @@ namespace Epsitec.Aider.Entities
 		{
 			this.households = null;
 		}
+
+		
+		private static string GetNameAbbreviation(string name)
+		{
+			name = name.ToLowerInvariant ();
+
+			if ((name.StartsWith ("ch")) ||
+				(name.StartsWith ("ph")))
+			{
+				var c1 = name.Substring (0, 1).ToUpperInvariant ();
+				var c2 = name.Substring (1, 1);
+
+				return string.Concat (c1, c2, ".");
+			}
+			else
+			{
+				var c1 = name.Substring (0, 1).ToUpperInvariant ();
+
+				return string.Concat (c1, ".");
+			}
+		}
+
+
 
 
 		#region IAiderWarningExampleFactoryGetter Members
@@ -456,9 +467,9 @@ namespace Epsitec.Aider.Entities
 
 		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
 
-		private IList<AiderGroupParticipantEntity> participations;
-		private IList<AiderPersonWarningEntity> warnings;
-		private ISet<AiderHouseholdEntity> households;
-		private ISet<AiderContactEntity> contacts;
+		private IList<AiderGroupParticipantEntity>	participations;
+		private IList<AiderPersonWarningEntity>		warnings;
+		private ISet<AiderHouseholdEntity>			households;
+		private ISet<AiderContactEntity>			contacts;
 	}
 }

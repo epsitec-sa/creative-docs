@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return;
 			}
 
-			var age = person.ComputeAge ();
+			var age = person.Age;
 
 			if ((age.HasValue) &&
 				(age.Value < 18))

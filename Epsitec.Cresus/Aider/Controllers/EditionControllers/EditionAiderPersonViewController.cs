@@ -13,7 +13,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
-			if (this.Entity.IsGovernmentDefined ())
+			if (this.Entity.IsGovernmentDefined)
 			{
 				this.CreateBricksForGovernmentAiderPerson (wall);
 			}

@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			form
 				.Title ("Associer à un nouveau ménage")
-				.Text (TextFormatter.FormatText ("La personne", person.DisplayName, "(", person.ComputeAge (), ")",
+				.Text (TextFormatter.FormatText ("La personne", person.DisplayName, "(", person.Age, ")",
 					"est actuellement associée", householdSummary, "."))
 				.Field<bool> ()
 					.Title ("Déplacer la personne dans le nouveau ménage")
