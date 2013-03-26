@@ -110,7 +110,7 @@ namespace Epsitec.Aider.Data
 				&& path1.Substring (0, length) == path2.Substring (0, length);
 		}
 
-		public static bool IsWithinGroup(string path1, string path2)
+		public static bool IsSameOrWithinGroup(string path1, string path2)
 		{
 			if (string.IsNullOrEmpty (path1) || string.IsNullOrEmpty (path2))
 			{

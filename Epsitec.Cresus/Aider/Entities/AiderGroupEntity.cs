@@ -668,7 +668,7 @@ namespace Epsitec.Aider.Entities
 
 		public bool IsChild(AiderGroupEntity group)
 		{
-			return AiderGroupIds.IsWithinGroup (this.Path, group.Path);
+			return AiderGroupIds.IsSameOrWithinGroup (this.Path, group.Path);
 		}
 
 
