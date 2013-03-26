@@ -61,7 +61,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			if (newParent.IsChild (this.Entity))
+			if (newParent.IsChildOf (this.Entity))
 			{
 				var message = "Un groupe ne peut pas être déplacé dans un de ses sous groupes.";
 
