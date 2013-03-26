@@ -93,7 +93,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				var iconUri = setController.GetIcon ();
 				var entityType = this.entity.GetType ();
-				var displayDataSetId = setController.GetDisplayDataSetId ();
 				var pickDataSetId = setController.GetPickDataSetId ();
 
 				return new SetColumn ()
@@ -103,10 +102,36 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					ViewId = DataIO.ViewIdToString (viewId),
 					Icon = Carpenter.GetIconClass (iconUri, entityType),
 					Title = setController.GetTitle ().ToString (),
-					DisplayDatabase = this.databaseManager.GetDatabase (displayDataSetId),
+					DisplayDatabase = this.GetSetDisplayDatabase (setController),
 					PickDatabase = this.databaseManager.GetDatabase (pickDataSetId),
 				};
 			}
+		}
+
+
+		private Core.Databases.Database GetSetDisplayDatabase(ISetViewController setController)
+		{
+			var displayDataSetId = setController.GetDisplayDataSetId ();
+			var displayDatabase = this.databaseManager.GetDatabase (displayDataSetId);
+
+			var overrideCreate = setController.GetOverrideEnableCreate ();
+			var overrideDelete = setController.GetOverrideEnableDelete ();
+
+			if (overrideCreate.HasValue || overrideDelete.HasValue)
+			{
+				displayDatabase = new Core.Databases.Database
+				(
+					displayDatabase.DataSetMetadata,
+					displayDatabase.Columns,
+					displayDatabase.Sorters,
+					overrideCreate ?? displayDatabase.EnableCreate,
+					overrideDelete ?? displayDatabase.EnableDelete,
+					displayDatabase.CreationViewId,
+					displayDatabase.DeletionViewId
+				);
+			}
+
+			return displayDatabase;
 		}
 
 

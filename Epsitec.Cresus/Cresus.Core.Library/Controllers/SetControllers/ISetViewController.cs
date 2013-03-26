@@ -22,6 +22,10 @@ namespace Epsitec.Cresus.Core.Controllers.SetControllers
 
 		Druid GetPickDataSetId();
 
+		bool? GetOverrideEnableCreate();
+
+		bool? GetOverrideEnableDelete();
+
 		DataSetAccessor GetDisplayDataSetAccessor(DataSetGetter dataSetGetter, DataStoreMetadata dataStoreMetadata);
 
 		DataSetAccessor GetPickDataSetAccessor(DataSetGetter dataSetGetter, DataStoreMetadata dataStoreMetadata);

@@ -89,6 +89,25 @@ namespace Epsitec.Cresus.Core.Controllers.SetControllers
 		/// </summary>
 		public abstract Druid GetPickDataSetId();
 
+		/// <summary>
+		/// Gets an optional bool that indicates whether the controller can override the enabled
+		/// status for the create button. Null indicates that the value provided by the dataset
+		/// definition is not overriden. A non null value indicates that the value is overriden by
+		/// the given value.
+		/// </summary>
+		public virtual bool? GetOverrideEnableCreate()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Same as GetOverrideEnableCreate, but for the delete button.
+		/// </summary>
+		public virtual bool? GetOverrideEnableDelete()
+		{
+			return null;
+		}
+
 		public DataSetAccessor GetDisplayDataSetAccessor(DataSetGetter dataSetGetter, DataStoreMetadata dataStoreMetadata)
 		{
 			var id = this.GetDisplayDataSetId ();
