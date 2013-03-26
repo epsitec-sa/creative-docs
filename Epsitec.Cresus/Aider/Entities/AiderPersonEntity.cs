@@ -195,11 +195,6 @@ namespace Epsitec.Aider.Entities
 			this.RefreshBirthdayDate ();
 		}
 
-		public string GetParishGroupPathCache()
-		{
-			return this.Parish.Group.Path;
-		}
-
 
 		public FormattedText GetGroupTitle()
 		{

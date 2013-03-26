@@ -33,10 +33,10 @@ namespace Epsitec.Aider.Entities
 
 		public void RefreshCache()
 		{
-			this.DisplayName = this.GetDisplayName ();
-			this.DisplayZipCode = this.GetDisplayZipCode ();
-			this.DisplayAddress = this.GetDisplayAddress ();
-			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
+			this.DisplayName          = this.GetDisplayName ();
+			this.DisplayZipCode       = this.GetDisplayZipCode ();
+			this.DisplayAddress       = this.GetDisplayAddress ();
+			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
 		}
 
 		public bool IsHead(AiderPersonEntity person)
@@ -68,13 +68,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private string GetParishGroupPathCache()
+		private AiderGroupParticipantEntity GetParishGroup()
 		{
 			// The logic here is very simple. Maybe we need something more complex.
 
 			return this.Members
-				.Select (m => m.GetParishGroupPathCache ())
-				.Where (p => !string.IsNullOrEmpty (p))
+				.Select (m => m.Parish)
+				.Where (p => p.IsNotNull ())
 				.FirstOrDefault ();
 		}
 

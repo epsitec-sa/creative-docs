@@ -298,6 +298,31 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static string GetPath(AiderGroupEntity group)
+		{
+			if (group.IsNull ())
+			{
+				return null;
+			}
+			else
+			{
+				return group.Path;
+			}
+		}
+
+		public static string GetPath(AiderGroupParticipantEntity group)
+		{
+			if (group.IsNull ())
+			{
+				return null;
+			}
+			else
+			{
+				return group.Group.Path;
+			}
+		}
+
+
 		private IList<AiderGroupEntity> GetSubgroups()
 		{
 			if (this.subgroups == null)

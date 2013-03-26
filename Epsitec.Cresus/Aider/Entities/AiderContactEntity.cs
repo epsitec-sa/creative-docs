@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Entities
 			this.DisplayZipCode       = this.GetDisplayZipCode ();
 			this.DisplayAddress       = this.GetDisplayAddress ();
 			this.DisplayVisibility    = this.GetDisplayVisibilityStatus ();
-			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
+			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
 
 			if (this.Person.IsNotNull ())
 			{
@@ -239,7 +239,7 @@ namespace Epsitec.Aider.Entities
 				: PersonVisibilityStatus.Default;
 		}
 
-		private string GetParishGroupPathCache()
+		private AiderGroupEntity GetParishGroup()
 		{
 			switch (this.ContactType)
 			{
@@ -247,11 +247,11 @@ namespace Epsitec.Aider.Entities
 					return null;
 
 				case ContactType.Legal:
-					return this.LegalPerson.GetParishGroupPathCache ();
+					return this.LegalPerson.ParishGroup;
 
 				case ContactType.PersonAddress:
 				case ContactType.PersonHousehold:
-					return this.Person.GetParishGroupPathCache ();
+					return this.Person.Parish.Group;
 
 				default:
 					throw new NotImplementedException ();

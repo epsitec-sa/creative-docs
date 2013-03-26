@@ -41,11 +41,12 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
 		public void RefreshCache()
 		{
 			this.DisplayZipCode = this.GetDisplayZipCode ();
 			this.DisplayAddress = this.GetDisplayAddress ();
-			this.ParishGroupPathCache = this.GetParishGroupPathCache ();
+			this.ParishGroupPathCache = this.ParishGroup.Path;
 		}
 
 
@@ -54,17 +55,28 @@ namespace Epsitec.Aider.Entities
 			return this.Address.GetDisplayZipCode ().ToSimpleText ();
 		}
 
-
 		public string GetDisplayAddress()
 		{
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
 
-		public string GetParishGroupPathCache()
+		public void AddContactInternal(AiderContactEntity contact)
 		{
-			return this.ParishGroup.Path;
+			this.GetContacts ().Add (contact);
 		}
+
+		public void RemoveContactInternal(AiderContactEntity contact)
+		{
+			this.GetContacts ().Remove (contact);
+		}
+
+
+		public static void Delete(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
+		{
+			//	TODO: ...
+		}
+
 
 		partial void GetContacts(ref IList<AiderContactEntity> value)
 		{
@@ -98,24 +110,8 @@ namespace Epsitec.Aider.Entities
 				.ToList ();
 		}
 
-		public void AddContactInternal(AiderContactEntity contact)
-		{
-			this.GetContacts ().Add (contact);
-		}
-
-		public void RemoveContactInternal(AiderContactEntity contact)
-		{
-			this.GetContacts ().Remove (contact);
-		}
 
 
-		public static void Delete(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
-		{
-			//	TODO: ...
-		}
-
-
-
-		private IList<AiderContactEntity> contacts;
+		private IList<AiderContactEntity>		contacts;
 	}
 }
