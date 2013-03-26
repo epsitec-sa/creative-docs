@@ -746,6 +746,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public bool IsRegion()
+		{
+			return this.GroupDef.IsNotNull () && this.GroupDef.IsRegion ();
+		}
+
+
 		public bool IsParish()
 		{
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsParish ();

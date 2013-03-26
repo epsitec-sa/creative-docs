@@ -87,6 +87,12 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public bool IsRegion()
+		{
+			return this.Level == AiderGroupIds.RegionLevel
+				&& this.Classification == GroupClassification.Region;
+		}
+
 		public bool IsParish()
 		{
 			return this.Level == AiderGroupIds.ParishLevel
