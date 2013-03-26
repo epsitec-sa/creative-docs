@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		{
 			base.ConfigureApplicationContainer (container);
 
-			container.Register<IErrorHandler> (new CoreErrorHandler ());
+			container.Register<IStatusCodeHandler> (new CoreErrorHandler ());
 			container.Register<CoreServer> (this.coreServer);
 		}
 

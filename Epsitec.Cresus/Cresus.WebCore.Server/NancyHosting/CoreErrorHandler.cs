@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	/// <summary>
 	/// Handles the error that have not been caught before and return an error message to the user
 	/// </summary>
-	public class CoreErrorHandler : IErrorHandler
+	public class CoreErrorHandler : IStatusCodeHandler
 	{
 
 
