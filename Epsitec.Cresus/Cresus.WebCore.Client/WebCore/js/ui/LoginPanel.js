@@ -87,15 +87,7 @@ function() {
     },
 
     getButtons: function() {
-      var resetButton, loginButton;
-
-      resetButton = Ext.create('Ext.button.Button', {
-        text: Epsitec.Texts.getResetLabel(),
-        listeners: {
-          click: this.onResetClick,
-          scope: this
-        }
-      });
+      var loginButton;
 
       loginButton = Ext.create('Ext.button.Button', {
         text: Epsitec.Texts.getLoginLabel(),
@@ -112,10 +104,6 @@ function() {
       if (e.getKey() === e.ENTER) {
         this.onLoginClick();
       }
-    },
-
-    onResetClick: function() {
-      this.getForm().reset();
     },
 
     onLoginClick: function() {
