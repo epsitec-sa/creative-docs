@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Entities
 		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
 		{
 			var currentPath = this.Path;
-			
+
 			var skip = 0;
 
 			if (AiderGroupIds.IsWithinParish (currentPath))
@@ -485,7 +485,7 @@ namespace Epsitec.Aider.Entities
 			}
 
 			this.RemoveSubgroupInternal (subgroup);
-			
+
 			// This might be very costly for groups which have a lot of participations.
 
 			var participations = this.FindParticipations (businessContext);
@@ -521,7 +521,7 @@ namespace Epsitec.Aider.Entities
 			{
 				throw new InvalidOperationException ("This group cannot have subgroups");
 			}
-			
+
 			// We start by removing this group from its current parent.
 
 			var currentParent = this.Parent;
@@ -564,7 +564,7 @@ namespace Epsitec.Aider.Entities
 			// the parents of its parent has already been updated.
 
 			var pathToGroups = allGroups.ToDictionary (g => g.Path);
-			
+
 			this.SetParentInternal (newParent);
 
 			foreach (var group in this.GetAllSubgroups ().OrderBy (g => g.Path))
@@ -596,7 +596,7 @@ namespace Epsitec.Aider.Entities
 
 			var example = new AiderGroupEntity ();
 			var request = Request.Create (example);
-			
+
 			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
 			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
 
@@ -707,7 +707,7 @@ namespace Epsitec.Aider.Entities
 
 		public void Merge(BusinessContext businessContext, AiderGroupEntity other)
 		{
-			if (!other.CanHaveMembers())
+			if (!other.CanHaveMembers ())
 			{
 				throw new InvalidOperationException ("This group cannot have members.");
 			}
