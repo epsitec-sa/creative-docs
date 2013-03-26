@@ -7,7 +7,6 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
-using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -44,6 +43,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (!subgroup.CanBeEdited ())
 			{
 				var message = "Ce groupe ne peut pas être détruit.";
+
+				throw new BusinessRuleException (message);
+			}
+
+			if (!subgroup.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 
 				throw new BusinessRuleException (message);
 			}

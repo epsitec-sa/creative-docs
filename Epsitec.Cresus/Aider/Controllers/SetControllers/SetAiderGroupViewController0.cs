@@ -41,6 +41,21 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			return Res.CommandIds.Base.ShowAiderGroupMembersPick;
 		}
 
+		public override bool? GetOverrideEnableCreate()
+		{
+			return this.EnableButtons ();
+		}
+
+		public override bool? GetOverrideEnableDelete()
+		{
+			return this.EnableButtons ();
+		}
+
+		private bool EnableButtons()
+		{
+			return this.Entity.CanBeEditedByCurrentUser ();
+		}
+
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
 			// Here we add a condition that ensures that we will display only the

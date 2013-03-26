@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton);
 
-				if (this.Entity.CanSubgroupsBeEdited ())
+				if (this.Entity.CanSubgroupsBeEdited () && this.Entity.CanBeEditedByCurrentUser ())
 				{
 					bricks = bricks
 						.EnableAction (0)
@@ -54,14 +54,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (this.Entity.CanHaveMembers ())
 			{
-				wall.AddBrick ()
+				var bricks = wall.AddBrick ()
 					.Icon ("Data.AiderGroup.People")
 					.Title (p => p.GetParticipantsTitle ())
 					.Text (p => p.GetParticipantsSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
-					.Attribute (BrickMode.SpecialController0)
-					.EnableAction (3)
-					.EnableAction (4);
+					.Attribute (BrickMode.SpecialController0);
+
+				if (this.Entity.CanBeEditedByCurrentUser ())
+				{
+					bricks = bricks
+						.EnableAction (3)
+						.EnableAction (4);
+				}
 			}
 
 			if (this.Entity.GroupDef.Function.IsNotNull ())

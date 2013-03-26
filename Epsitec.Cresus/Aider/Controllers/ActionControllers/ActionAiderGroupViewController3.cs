@@ -36,6 +36,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
+			if (!this.Entity.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
+
+				throw new BusinessRuleException (message);
+			}
+
 			this.Entity.ImportMembers (this.BusinessContext, source, startDate, comment);
 		}
 

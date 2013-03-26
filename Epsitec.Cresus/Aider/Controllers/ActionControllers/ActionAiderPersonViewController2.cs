@@ -59,6 +59,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Cette personne est déjà membre de ce groupe");
 			}
 
+			if (!group.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
+
+				throw new BusinessRuleException (message);
+			}
+
 			var person = this.Entity;
 			var what   = new Participation
 			{

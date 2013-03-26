@@ -39,6 +39,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
+			if (!group.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
+
+				throw new BusinessRuleException (message);
+			}
+
 			AiderGroupParticipantEntity.StopParticipation (this.AdditionalEntity, endDate, comment);
 		}
 

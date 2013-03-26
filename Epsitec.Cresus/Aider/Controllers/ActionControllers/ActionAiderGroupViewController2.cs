@@ -75,6 +75,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
+			if (!this.Entity.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
+
+				throw new BusinessRuleException (message);
+			}
+
+			if (!newParent.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
+
+				throw new BusinessRuleException (message);
+			}
+
 			if (newParent == this.Entity.Parent)
 			{
 				return;

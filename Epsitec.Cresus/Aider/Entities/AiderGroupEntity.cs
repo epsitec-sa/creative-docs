@@ -3,6 +3,7 @@
 
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Override;
 
 using Epsitec.Common.Support.Extensions;
 
@@ -261,6 +262,33 @@ namespace Epsitec.Aider.Entities
 			var definition = this.GroupDef;
 
 			return definition.IsNull () || definition.MembersAllowed;
+		}
+
+
+		public bool CanBeEditedByCurrentUser()
+		{
+			var path = this.Path;
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			var userParishPath = user.ParishGroupPathCache;
+
+			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
+			{
+				return user.EnableGroupEditionParish
+					&& !string.IsNullOrEmpty (userParishPath)
+					&& AiderGroupIds.IsSameOrWithinGroup (path, userParishPath);
+			}
+			else if (this.IsRegion () || AiderGroupIds.IsWithinRegion (path))
+			{
+				var userRegionPart = AiderGroupIds.GetParentPath (userParishPath);
+
+				return user.EnableGroupEditionRegion
+					&& !string.IsNullOrEmpty (userParishPath)
+					&& AiderGroupIds.IsSameOrWithinGroup (path, userRegionPart);
+			}
+			else
+			{
+				return user.EnableGroupEditionCanton;
+			}
 		}
 
 
