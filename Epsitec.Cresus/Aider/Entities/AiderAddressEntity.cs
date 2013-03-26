@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderAddressEntity
 	{
-		public string StreetRoot
+		public string							StreetRoot
 		{
 			get
 			{
@@ -42,6 +42,7 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		
 		
 		public FormattedText GetPostalAddress()
 		{
@@ -85,16 +86,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.GetShortStreetAddress (), "~,", this.Town.ZipCode, this.Town.Name);
 		}
 
-
-		public override FormattedText GetSummary()
-		{
-			return TextFormatter.FormatText (
-				this.GetPostalAddress (), "\n",
-				this.GetPhoneSummary (), "\n",
-				this.GetWebEmailSummary ()
-				);
-		}
-
+		
 		public FormattedText GetPhoneSummary()
 		{
 			return TextFormatter.FormatText (
@@ -110,6 +102,16 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (
 				UriFormatter.ToFormattedText (this.Email), "\n",
 				UriFormatter.ToFormattedText (this.Web, "_blank")
+				);
+		}
+
+
+		public override FormattedText GetSummary()
+		{
+			return TextFormatter.FormatText (
+				this.GetPostalAddress (), "\n",
+				this.GetPhoneSummary (), "\n",
+				this.GetWebEmailSummary ()
 				);
 		}
 
@@ -152,15 +154,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
-		public IEnumerable<FormattedText> GetAddressLines()
-		{
-			yield return this.AddressLine1;
-			yield return StringUtils.Join (" ", this.StreetUserFriendly, this.HouseNumber, this.HouseNumberComplement);
-			yield return this.PostBox;
-			yield return StringUtils.Join (" ", StringUtils.Join ("-", this.Town.Country.IsoCode, this.Town.ZipCode), this.Town.Name);
-			yield return this.Town.Country.Name;
-		}
 
 
 		public static AiderAddressEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)

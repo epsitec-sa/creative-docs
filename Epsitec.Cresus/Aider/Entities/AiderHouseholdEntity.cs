@@ -45,39 +45,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private string GetDisplayZipCode()
-		{
-			return this.Address.GetDisplayZipCode ().ToSimpleText ();
-		}
-
-
-		private string GetDisplayAddress()
-		{
-			return this.Address.GetDisplayAddress ().ToSimpleText ();
-		}
-
-
-		private string GetDisplayName()
-		{
-			if (string.IsNullOrEmpty (this.HouseholdName))
-			{
-				return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
-			}
-			
-			return this.HouseholdName;
-		}
-
-
-		private AiderGroupEntity GetParishGroup()
-		{
-			// The logic here is very simple. Maybe we need something more complex.
-
-			return this.Members
-				.Select (m => m.ParishGroup)
-				.Where (p => p.IsNotNull ())
-				.FirstOrDefault ();
-		}
-
 
 		public FormattedText GetMembersTitle()
 		{
@@ -95,6 +62,15 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), members);
 		}
 
+
+		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
+		{
+			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+			
+			household.Address = AiderAddressEntity.Create (context, templateAddress);
+
+			return household;
+		}
 
 		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
@@ -114,16 +90,6 @@ namespace Epsitec.Aider.Entities
 			}
 
 			businessContext.DeleteEntity (household);
-		}
-
-
-		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
-		{
-			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			
-			household.Address = AiderAddressEntity.Create (context, templateAddress);
-
-			return household;
 		}
 
 
@@ -149,8 +115,96 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetContacts ().AsReadOnlyCollection ();
 		}
+		
+
+		private IList<AiderPersonEntity> GetMembers()
+		{
+			if (this.membersCache == null)
+			{
+				this.membersCache = this.GetMembers (this.GetContacts ());
+			}
+
+			return this.membersCache;
+		}
+
+		private IList<AiderContactEntity> GetContacts()
+		{
+			if (this.contactsCache == null)
+			{
+				this.contactsCache = this.ExecuteWithDataContext
+				(
+					d => this.GetContacts (d),
+					() => new List<AiderContactEntity> ()
+				);
+			}
+
+			return this.contactsCache;
+		}
+
+		private IList<AiderContactEntity> GetContacts(DataContext dataContext)
+		{
+			var example = new AiderContactEntity ()
+			{
+				Household = this,
+			};
+
+			return dataContext.GetByExample (example)
+				.Where (x => x.Person.IsAlive)
+				.ToList ();
+		}
+
+		private List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
+		{
+			var members = new List<AiderPersonEntity> ();
+
+			var heads   = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+			var others  = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+
+			members.AddRange (heads);
+			members.AddRange (others);
+
+			return members;
+		}
 
 		
+		private void ClearMemberCache()
+		{
+			this.membersCache = null;
+		}
+
+
+		private string GetDisplayZipCode()
+		{
+			return this.Address.GetDisplayZipCode ().ToSimpleText ();
+		}
+
+		private string GetDisplayAddress()
+		{
+			return this.Address.GetDisplayAddress ().ToSimpleText ();
+		}
+
+		private string GetDisplayName()
+		{
+			if (string.IsNullOrEmpty (this.HouseholdName))
+			{
+				return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
+			}
+			
+			return this.HouseholdName;
+		}
+
+		
+		private AiderGroupEntity GetParishGroup()
+		{
+			//	With the AIDER data model, we cannot represent households where persons
+			//	belong to different parishes. Just pick the parish of the first one.
+
+			return this.Members
+				       .Select (m => m.ParishGroup)
+				       .FirstOrDefault (p => p.IsNotNull ());
+		}
+
+
 		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
 		{
 			if (contacts == null)
@@ -232,62 +286,6 @@ namespace Epsitec.Aider.Entities
 
 			return StringUtils.Join (" ", headNames.Distinct ().ToArray ());
 		}
-
-
-		private IList<AiderPersonEntity> GetMembers()
-		{
-			if (this.membersCache == null)
-			{
-				this.membersCache = AiderHouseholdEntity.GetMembers (this.GetContacts ());
-			}
-
-			return this.membersCache;
-		}
-
-		private IList<AiderContactEntity> GetContacts()
-		{
-			if (this.contactsCache == null)
-			{
-				this.contactsCache = this.ExecuteWithDataContext
-				(
-					d => this.GetContacts (d),
-					() => new List<AiderContactEntity> ()
-				);
-			}
-
-			return this.contactsCache;
-		}
-
-		private IList<AiderContactEntity> GetContacts(DataContext dataContext)
-		{
-			var example = new AiderContactEntity ()
-			{
-				Household = this,
-			};
-
-			return dataContext.GetByExample (example)
-				.Where (x => x.Person.IsAlive)
-				.ToList ();
-		}
-
-		private static List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
-		{
-			var members = new List<AiderPersonEntity> ();
-
-			var heads   = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-			var others  = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-
-			members.AddRange (heads);
-			members.AddRange (others);
-
-			return members;
-		}
-
-		private void ClearMemberCache()
-		{
-			this.membersCache = null;
-		}
-
 
 
 		//	These properties are only meant as an in memory cache of the members of the household.

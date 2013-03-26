@@ -87,6 +87,7 @@ namespace Epsitec.Aider.Entities
 			value = this.GetContacts ().AsReadOnlyCollection ();
 		}
 
+		
 		private IList<AiderContactEntity> GetContacts()
 		{
 			if (this.contacts == null)
