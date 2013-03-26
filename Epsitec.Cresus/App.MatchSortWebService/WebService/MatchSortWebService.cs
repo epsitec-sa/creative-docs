@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using Nancy;
 using Nancy.Hosting.Self;
+using Epsitec.Data.Platform;
 
-namespace Epsitec.Data.Platform
+namespace App.MatchSortWebService
 {
 	public class MatchSortWebService
 	{

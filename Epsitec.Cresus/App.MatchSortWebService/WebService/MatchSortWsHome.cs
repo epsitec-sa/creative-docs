@@ -5,7 +5,7 @@ using System.Text;
 using Nancy;
 using Nancy.Hosting.Self;
 
-namespace Epsitec.Data.Platform
+namespace App.MatchSortWebService
 {
 	public class MatchSortWsHome : NancyModule
 	{

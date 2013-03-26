@@ -95,22 +95,26 @@ namespace Epsitec.Data.Platform
 
 		public static readonly MatchSortEtl Current = new MatchSortEtl ();
 
+        #region Aggregate Getters
+
         /// <summary>
         /// Street Aggregate with alternative names
         /// </summary>
-		public IEnumerable<MatchSortStreet> Streets
-		{
-			get
-			{
+        public IEnumerable<MatchSortStreet> Streets
+        {
+            get
+            {
 
                 var query = from s in this.streetNames
                             join a in this.streetNamesAltLang on s.Key.PK equals a.Key.FK into aj
-							from a in aj.DefaultIfEmpty()
-							select new MatchSortStreet (s.Value.STR_ID, s.Value.ONRP, s.Value.STR_BEZ_K, a.Value==null ? "" :  a.Value.STR_BEZ_AK, s.Value.STR_BEZ_L, a.Value==null ? "" :  a.Value.STR_BEZ_AL, s.Value.STR_BEZ_2K, a.Value==null ? "" : a.Value.STR_BEZ_A2K, s.Value.STR_BEZ_2L, a.Value==null ? "" :  a.Value.STR_BEZ_A2L, s.Value.STR_LOK_TYP, s.Value.STR_BEZ_SPC, s.Value.STR_BEZ_COFF);
+                            from a in aj.DefaultIfEmpty()
+                            select new MatchSortStreet(s.Value.STR_ID, s.Value.ONRP, s.Value.STR_BEZ_K, a.Value == null ? "" : a.Value.STR_BEZ_AK, s.Value.STR_BEZ_L, a.Value == null ? "" : a.Value.STR_BEZ_AL, s.Value.STR_BEZ_2K, a.Value == null ? "" : a.Value.STR_BEZ_A2K, s.Value.STR_BEZ_2L, a.Value == null ? "" : a.Value.STR_BEZ_A2L, s.Value.STR_LOK_TYP, s.Value.STR_BEZ_SPC, s.Value.STR_BEZ_COFF);
 
-				return query;
-			}
-		}
+                return query;
+            }
+        }
+
+
         /// <summary>
         /// Places aggregates with Zip codes, city addresses lines and alternative names
         /// </summary>
@@ -131,7 +135,7 @@ namespace Epsitec.Data.Platform
 		/// <summary>
 		/// Places aggregates with Zip codes, city addresses lines and alternative names
 		/// </summary>
-		public IEnumerable<MatchSortPlace> filteredPlaces(string zipFilter)
+		public IEnumerable<MatchSortPlace> placesFilteredByZip(string zipFilter)
 		{		
 			var query = from p in this.placesNames
 						where p.Value.PLZ == zipFilter
@@ -160,10 +164,103 @@ namespace Epsitec.Data.Platform
             }
         }
 
+        #endregion
+
+        #region Custom Query
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="zip">place zip code</param>
+        /// <param name="streetName">a street name like "rue du bassin"</param>
+        /// <returns></returns>
+        public IEnumerable<MatchSortHouse> HousesAtStreet(string zip, string streetName)
+        {
+            var query = from p in this.placesNames
+                        where p.Value.PLZ == zip
+                        join s in this.streetNames on p.Key.PK equals s.Key.FK
+                        where s.Value.STR_BEZ_2L.ToUpper() == streetName.ToUpper()
+                        join h in this.houseNames on s.Key.PK equals h.Key.FK
+                        join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK into aj
+                        from a in aj.DefaultIfEmpty()
+                        join d in this.deliveryInformations on h.Key.PK equals d.Key.FK into dj
+                        from d in dj.DefaultIfEmpty()
+                        select new MatchSortHouse(h.Value.STR_ID, h.Value.HNR, h.Value.HNR_A, h.Value.HNR_COFF, a.Value == null ? "" : a.Value.GEB_BEZ_ALT, a.Value == null ? "" : a.Value.GEB_TYP, d.Value == null ? "" : d.Value.BBZ_PLZ, d.Value == null ? "" : d.Value.BOTEN_BEZ, d.Value == null ? "" : d.Value.ETAPPEN_NR, d.Value == null ? "" : d.Value.LAUF_NR, d.Value == null ? "" : d.Value.NDEPOT);
+
+            return query;
+        }
+
+        /// <summary>
+        ///  Return a house from a query based on parameters
+        /// </summary>
+        /// <param name="zip">place zip code</param>
+        /// <param name="streetName">a street name like "rue du bassin"</param>
+        /// <param name="houseNumber">the house number</param>
+        /// <returns></returns>
+        public IEnumerable<MatchSortHouse> HouseAtStreet(string zip, string streetName, string houseNumber)
+        {
+            var query = from p in this.placesNames
+                        where p.Value.PLZ == zip
+                        join s in this.streetNames on p.Key.PK equals s.Key.FK
+                        where s.Value.STR_BEZ_2L.ToUpper() == streetName.ToUpper()
+                        join h in this.houseNames on s.Key.PK equals h.Key.FK
+                        where h.Value.HNR == houseNumber //Check on numeric
+                        join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK into aj
+                        from a in aj.DefaultIfEmpty()
+                        join d in this.deliveryInformations on h.Key.PK equals d.Key.FK into dj
+                        from d in dj.DefaultIfEmpty()
+                        select new MatchSortHouse(h.Value.STR_ID, h.Value.HNR, h.Value.HNR_A, h.Value.HNR_COFF, a.Value == null ? "" : a.Value.GEB_BEZ_ALT, a.Value == null ? "" : a.Value.GEB_TYP, d.Value == null ? "" : d.Value.BBZ_PLZ, d.Value == null ? "" : d.Value.BOTEN_BEZ, d.Value == null ? "" : d.Value.ETAPPEN_NR, d.Value == null ? "" : d.Value.LAUF_NR, d.Value == null ? "" : d.Value.NDEPOT);
+
+            return query;
+        }
+        #endregion
+        
+        #region Piece By Piece Query Building
+        /// <summary>
+        /// Build a query piece by piece on place's data, using parameters as filters if used
+        /// </summary>
+        /// <param name="zipFilter">zip filter applied if not null</param>
+        /// <param name="nameFilter">name filter applied if not null</param>
+        /// <returns></returns>
+        public IEnumerable<MatchSortPlace> placesFilteredBy(string zipFilter, string nameFilter)
+        {
+            var query = from p in this.placesNames select p;
+
+            if (nameFilter != null)
+            {
+                query = this.filterPlaceNameQueryByName(query, nameFilter);
+            }
+            if (zipFilter != null)
+            {
+                query = this.filterPlaceNameQueryByZip(query, zipFilter);
+            }
+
+            var result = from p in query
+                         join pa in this.placesNamesAltLang on p.Key.PK equals pa.Key.FK into paj
+                         from pa in paj.DefaultIfEmpty()
+                         join m in this.municipalities on p.Key.FK equals m.Key
+                         select new MatchSortPlace(p.Value.ONRP, m.Value.BFSNR, m.Value.GEMEINDENAME, m.Value.KANTON, m.Value.AGGLONR, p.Value.PLZ_TYP, p.Value.PLZ, p.Value.PLZ_ZZ, p.Value.GPLZ, p.Value.ORT_BEZ_18, p.Value.ORT_BEZ_27, p.Value.KANTON, p.Value.SPRACHCODE, p.Value.SPRACHCODE_ABW == "" ? "0" : p.Value.SPRACHCODE_ABW, p.Value.BRIEFZ_DURCH, p.Value.GILT_AB_DAT, p.Value.PLZ_BRIEFZUST, p.Value.PLZ_COFF, pa.Value == null ? "" : pa.Value.BEZ_TYP, pa.Value == null ? "" : pa.Value.ORT_BEZ_18, pa.Value == null ? "" : pa.Value.ORT_BEZ_27, pa.Value == null ? "0" : pa.Value.SPRACHCODE);
+            return result;
+        }
+
+
+        private IEnumerable<KeyValuePair<MatchSortCompositeKey<string, string>, NEW_PLZ1>> filterPlaceNameQueryByName(IEnumerable<KeyValuePair<MatchSortCompositeKey<string, string>, NEW_PLZ1>> placeNameQuery, string name)
+        {
+            return from p in placeNameQuery
+                   where p.Value.ORT_BEZ_27.ToUpper() == name.ToUpper()
+                   select p;
+        }
+
+        private IEnumerable<KeyValuePair<MatchSortCompositeKey<string, string>, NEW_PLZ1>> filterPlaceNameQueryByZip(IEnumerable<KeyValuePair<MatchSortCompositeKey<string, string>, NEW_PLZ1>> placeNameQuery, string zip)
+        {
+            return from p in placeNameQuery
+                   where p.Value.PLZ == zip
+                   select p;
+        }
+        #endregion
         
 
+
 		private readonly string filePath = @"s:/MAT[CH]news.csv";
-		private readonly string localCachePath = @"s:/MAT[CH]SortCache.db";
         private readonly NEW_HEA header;
         private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ1> placesNames;
 		private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ2> placesNamesAltLang;
@@ -173,6 +270,7 @@ namespace Epsitec.Data.Platform
         private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_GEB> houseNames;
         private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_GEBA> houseNamesAltLang;
 		private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_BOT_B> deliveryInformations;
+
 	}
 
     
