@@ -39,13 +39,11 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nancy, Version=0.16.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Nancy\last\Nancy.dll</HintPath>
+    <Reference Include="Nancy">
+      <HintPath>..\External\Nancy\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Hosting.Self, Version=0.16.1.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Nancy\last\Nancy.Hosting.Self.dll</HintPath>
+    <Reference Include="Nancy.Hosting.Self">
+      <HintPath>..\External\Nancy\Nancy.Hosting.Self.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.Text, Version=3.9.33.0, Culture=neutral, PublicKeyToken=aa2558b85ebe6c6b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
