@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Cresus.WebCore.Server.Core;
 
 using Nancy;
 using Nancy.Bootstrapper;
@@ -39,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			CookieBasedSessions.Enable (pipelines);
 
-			pipelines.AfterRequest += ConfigureCookies;
+			pipelines.AfterRequest += this.ConfigureCookies;
 		}
 
 
@@ -56,10 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		private readonly CoreServer coreServer;
-
-
-		
+		private readonly CoreServer				coreServer;
 	}
 
 

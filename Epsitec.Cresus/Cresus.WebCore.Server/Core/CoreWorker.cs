@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
@@ -163,19 +163,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// The WorkerThread used to instantiate, dispose and use the WorkerApp owned by this
 		/// instance.
 		/// </summary>
-		private readonly WorkerThread workerThread;
+		private readonly WorkerThread			workerThread;
 
 
 		/// <summary>
 		/// The WorkerApp owned by this instance.
 		/// </summary>
-		private readonly WorkerApp workerApp;
+		private readonly WorkerApp				workerApp;
 
 
 		/// <summary>
 		/// The SafeSectionManager used to synchronize the Execute and the Dispose method.
 		/// </summary>
-		private readonly SafeSectionManager safeSectionManager;
+		private readonly SafeSectionManager		safeSectionManager;
 
 
 	}
