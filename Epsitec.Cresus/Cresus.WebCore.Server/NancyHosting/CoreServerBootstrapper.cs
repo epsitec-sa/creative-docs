@@ -4,8 +4,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.ErrorHandling;
 using Nancy.Session;
-
-using TinyIoC;
+using Nancy.TinyIoc;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
