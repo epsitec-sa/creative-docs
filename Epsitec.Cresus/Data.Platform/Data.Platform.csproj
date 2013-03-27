@@ -39,12 +39,6 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nancy">
-      <HintPath>..\External\Nancy\Nancy.dll</HintPath>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self">
-      <HintPath>..\External\Nancy\Nancy.Hosting.Self.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.Text, Version=3.9.33.0, Culture=neutral, PublicKeyToken=aa2558b85ebe6c6b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\ServiceStack\ServiceStack.Text.dll</HintPath>
@@ -66,8 +60,6 @@
     <Compile Include="MatchSort\MatchSortHouse.cs" />
     <Compile Include="MatchSort\MatchSortPlace.cs" />
     <Compile Include="MatchSort\MatchSortStreet.cs" />
-    <Compile Include="MatchSort\WebService\MatchSortWebService.cs" />
-    <Compile Include="MatchSort\WebService\MatchSortWsGetPlace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Res.cs" />
@@ -81,7 +73,6 @@
     <Compile Include="SwissPostLanguageCode.cs" />
     <Compile Include="SwissPostZipRepository.cs" />
     <Compile Include="SwissPostZipType.cs" />
-    <Compile Include="MatchSort\WebService\MatchSortWsHome.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

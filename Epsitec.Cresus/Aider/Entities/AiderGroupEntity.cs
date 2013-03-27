@@ -22,17 +22,14 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderGroupEntity
 	{
-
-
-		public AiderGroupEntity Parent
+		public AiderGroupEntity					Parent
 		{
 			get
 			{
@@ -40,13 +37,35 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
-		public IList<AiderGroupEntity> Parents
+		public IList<AiderGroupEntity>			Parents
 		{
 			get
 			{
 				return this.GetParents ().AsReadOnlyCollection ();
 			}
+		}
+
+
+
+		public bool IsChildOf(AiderGroupEntity group)
+		{
+			return AiderGroupIds.IsSameOrWithinGroup (this.Path, group.Path)
+				&& this.GroupLevel > group.GroupLevel;
+		}
+
+		public bool IsRegion()
+		{
+			return this.GroupDef.IsNotNull () && this.GroupDef.IsRegion ();
+		}
+
+		public bool IsParish()
+		{
+			return this.GroupDef.IsNotNull () && this.GroupDef.IsParish ();
+		}
+
+		public bool IsNoParish()
+		{
+			return this.GroupDef.IsNotNull () && this.GroupDef.IsNoParish ();
 		}
 
 
@@ -61,12 +80,27 @@ namespace Epsitec.Aider.Entities
 			);
 		}
 
-
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name);
 		}
 
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
+		{
+			yield return this.Name;
+		}
+
+
+		public int GetDepth()
+		{
+			var totalDepth = this.ExecuteWithDataContext
+			(
+				d => this.FindDepth (d),
+				() => this.FindDepth ()
+			);
+
+			return totalDepth - this.GroupLevel + 1;
+		}
 
 		public string GetHierarchicalName(AiderPersonEntity person)
 		{
@@ -78,46 +112,19 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
-		{
-			var currentPath = this.Path;
-
-			var skip = 0;
-
-			if (AiderGroupIds.IsWithinParish (currentPath))
-			{
-				skip += 1;
-
-				if (AiderGroupIds.IsWithinSameParish (currentPath, parishPath))
-				{
-					skip += 1;
-				}
-			}
-			else if (AiderGroupIds.IsWithinRegion (currentPath))
-			{
-				if (AiderGroupIds.IsWithinSameRegion (currentPath, parishPath))
-				{
-					skip += 1;
-				}
-			}
-
-			return this.GetParents ().Skip (skip);
-		}
-
-
-		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
-		{
-			yield return this.Name;
-		}
-
-
 		public FormattedText GetParticipantsTitle()
 		{
-			var nbParticipants = this.GetNbParticipants ();
+			var count = this.CountParticipants ();
 
-			return TextFormatter.FormatText ("Particpants (", nbParticipants, ")");
+			if (count == 1)
+			{
+				return Resources.FormattedText ("Participant");
+			}
+			else
+			{
+				return TextFormatter.FormatText ("Particpants (", count, ")");
+			}
 		}
-
 
 		public FormattedText GetParticipantsSummary()
 		{
@@ -130,25 +137,6 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
 
-
-		// This stuff is not cached in the entity, therefore updates in memory won't modify the
-		// value returned by this method. If the entity is not persisted, it will always be 0.
-		private int GetNbParticipants()
-		{
-			return this.ExecuteWithDataContext
-			(
-				d => this.GetNbParticipants (d),
-				() => 0
-			);
-		}
-
-
-		private int GetNbParticipants(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
-
-			return dataContext.GetCount (request);
-		}
 
 
 		// This stuff is not cached in the entity, therefore updates in memory won't modify the
@@ -345,7 +333,6 @@ namespace Epsitec.Aider.Entities
 			return this.subgroups;
 		}
 
-
 		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
 		{
 			if (!this.CanHaveSubgroups ())
@@ -371,7 +358,6 @@ namespace Epsitec.Aider.Entities
 			this.GetSubgroups ().Add (group);
 		}
 
-
 		private void RemoveSubgroupInternal(AiderGroupEntity group)
 		{
 			this.GetSubgroups ().Remove (group);
@@ -391,7 +377,6 @@ namespace Epsitec.Aider.Entities
 
 			return this.parents;
 		}
-
 
 		private IList<AiderGroupEntity> FindParents(DataContext dataContext)
 		{
@@ -686,17 +671,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public int GetDepth()
-		{
-			var totalDepth = this.ExecuteWithDataContext
-			(
-				d => this.FindDepth (d),
-				() => this.FindDepth ()
-			);
-
-			return totalDepth - this.GroupLevel + 1;
-		}
-
 
 		private int FindDepth(DataContext dataContext)
 		{
@@ -713,7 +687,6 @@ namespace Epsitec.Aider.Entities
 			return subgroups.Max (g => g.GroupLevel);
 		}
 
-
 		private int FindDepth()
 		{
 			var subgroups = this.GetSubgroups ();
@@ -726,12 +699,25 @@ namespace Epsitec.Aider.Entities
 			return this.GetSubgroups ().Max (g => g.FindDepth ());
 		}
 
-
-		public bool IsChildOf(AiderGroupEntity group)
+		private int CountParticipants()
 		{
-			return AiderGroupIds.IsSameOrWithinGroup (this.Path, group.Path)
-				&& this.GroupLevel > group.GroupLevel;
+			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
+			//	value returned by this method. If the entity is not persisted, it will always be 0.
+
+			return this.ExecuteWithDataContext
+			(
+				d => this.CountParticipants (d),
+				() => 0
+			);
 		}
+
+		private int CountParticipants(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
+
+			return dataContext.GetCount (request);
+		}
+
 
 
 		public void ImportMembers(BusinessContext businessContext, AiderGroupEntity source, Date? startDate, FormattedText comment)
@@ -807,31 +793,34 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public bool IsRegion()
+		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
 		{
-			return this.GroupDef.IsNotNull () && this.GroupDef.IsRegion ();
+			var currentPath = this.Path;
+
+			var skip = 0;
+
+			if (AiderGroupIds.IsWithinParish (currentPath))
+			{
+				skip += 1;
+
+				if (AiderGroupIds.IsWithinSameParish (currentPath, parishPath))
+				{
+					skip += 1;
+				}
+			}
+			else if (AiderGroupIds.IsWithinRegion (currentPath))
+			{
+				if (AiderGroupIds.IsWithinSameRegion (currentPath, parishPath))
+				{
+					skip += 1;
+				}
+			}
+
+			return this.GetParents ().Skip (skip);
 		}
 
 
-		public bool IsParish()
-		{
-			return this.GroupDef.IsNotNull () && this.GroupDef.IsParish ();
-		}
-
-
-		public bool IsNoParish()
-		{
-			return this.GroupDef.IsNotNull () && this.GroupDef.IsNoParish ();
-		}
-
-
-		private IList<AiderGroupEntity> subgroups;
-
-
-		private IList<AiderGroupEntity> parents;
-
-
+		private IList<AiderGroupEntity>			subgroups;
+		private IList<AiderGroupEntity>			parents;
 	}
-
-
 }
