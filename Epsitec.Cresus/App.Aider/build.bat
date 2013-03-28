@@ -115,5 +115,8 @@ copy %configurationDirectory%\certificate.key bin\Build\aider\server\certificate
 @rem Copy the logo image
 copy %configurationDirectory%\logo.png bin\Build\aider\client\images\Static\logo.png
 
+@rem Copy the javascript config file
+copy %configurationDirectory%\config.js bin\Build\aider\client\config.js
+
 @rem Zip the build.
 ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\aider.zip bin\Build\aider

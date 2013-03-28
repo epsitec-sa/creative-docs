@@ -695,6 +695,7 @@
       <string>window</string>
       <string>Ext</string>
       <string>Epsitec</string>
+      <string>epsitecConfig</string>
     </PreDefined>
   </JSLintOptions>
   <BuildFileTypes>JS</BuildFileTypes>
