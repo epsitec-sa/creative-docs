@@ -112,5 +112,8 @@ mkdir bin\Build\aider\server\certificate
 copy %configurationDirectory%\certificate.pem bin\Build\aider\server\certificate\certificate.pem
 copy %configurationDirectory%\certificate.key bin\Build\aider\server\certificate\certificate.key
 
+@rem Copy the logo image
+copy %configurationDirectory%\logo.png bin\Build\aider\client\images\Static\logo.png
+
 @rem Zip the build.
 ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\aider.zip bin\Build\aider

@@ -54,7 +54,7 @@ function() {
       header = Ext.create('Ext.Component', {
         autoEl: {
           tag: 'img',
-          src: 'images/Static/Logo-test.png'
+          src: 'images/Static/logo.png'
         },
         margin: '0 0 20 0'
       });
