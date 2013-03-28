@@ -57,7 +57,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="ServerConfigProduction\config.js" />
     <Content Include="ServerConfigProduction\logo.png" />
+    <Content Include="ServerConfigTest\config.js" />
     <Content Include="ServerConfigTest\logo.png" />
     <None Include="..\Aider\Properties\Epsitec.Aider.snk">
       <Link>Properties\Epsitec.Aider.snk</Link>
