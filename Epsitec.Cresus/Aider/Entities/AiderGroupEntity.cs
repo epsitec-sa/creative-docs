@@ -155,7 +155,7 @@ namespace Epsitec.Aider.Entities
 
 		public int GetDepth()
 		{
-			var totalDepth = this.ExecuteWithDataContext (c => this.FindDepth (c), this.FindDepth);
+			var totalDepth = this.ExecuteWithDataContext (c => this.FindDepth (c), this.RetrieveDepth);
 
 			return totalDepth - this.GroupLevel + 1;
 		}
@@ -172,7 +172,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetParticipantsTitle()
 		{
-			var count = this.CountParticipants ();
+			var count = this.GetParticipantCount ();
 
 			if (count == 1)
 			{
@@ -197,7 +197,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetFunctionParticipantTitle()
 		{
-			var count = this.CountFunctionParticipants ();
+			var count = this.GetFunctionParticipantCount ();
 
 			if (count == 1)
 			{
@@ -504,41 +504,48 @@ namespace Epsitec.Aider.Entities
 			return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
 		}
 
+		
+		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
+		{
+			var currentPath = this.Path;
 
+			var skip = 0;
+
+			if (AiderGroupIds.IsWithinParish (currentPath))
+			{
+				skip += 1;
+
+				if (AiderGroupIds.IsWithinSameParish (currentPath, parishPath))
+				{
+					skip += 1;
+				}
+			}
+			else if (AiderGroupIds.IsWithinRegion (currentPath))
+			{
+				if (AiderGroupIds.IsWithinSameRegion (currentPath, parishPath))
+				{
+					skip += 1;
+				}
+			}
+
+			return this.GetParents ().Skip (skip);
+		}
+
+		
 		private IList<AiderPersonEntity> GetParticipants(int count)
 		{
 			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
 			//	value returned by this method. It the entity is not persisted, it will always be an empty
 			//	list.
 
-			return this.ExecuteWithDataContext (c => this.GetParticipants (c, count),
+			return this.ExecuteWithDataContext (c => this.FindParticipants (c, count),
 												() => new List<AiderPersonEntity> ());
-		}
-
-		private IList<AiderPersonEntity> GetParticipants(DataContext dataContext, int count)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
-
-			request.Skip = 0;
-			request.Take = count;
-
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
 		}
 
 		private IList<AiderPersonEntity> GetFuntionParticipants(int count)
 		{
-			return this.ExecuteWithDataContext (c => this.GetFunctionParticipants (c, count),
+			return this.ExecuteWithDataContext (c => this.FindFunctionParticipants (c, count),
 												() => new List<AiderPersonEntity> ());
-		}
-
-		private IList<AiderPersonEntity> GetFunctionParticipants(DataContext dataContext, int count)
-		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, true);
-
-			request.Skip = 0;
-			request.Take = count;
-
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
 		}
 
 		private IList<AiderGroupEntity> GetSubgroups()
@@ -550,6 +557,59 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return this.subgroups;
+		}
+
+		private IList<AiderGroupEntity> GetParents()
+		{
+			if (this.parents == null)
+			{
+				this.parents = this.ExecuteWithDataContext (c => this.FindParents (c),
+															() => new List<AiderGroupEntity> ());
+			}
+
+			return this.parents;
+		}
+
+		private IList<AiderGroupEntity> GetAllSubgroups()
+		{
+			return this.ExecuteWithDataContext (c => this.FindAllSubgroups (c), this.RetrieveAllSubgroupsRecursive);
+		}
+
+		private int GetParticipantCount()
+		{
+			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
+			//	value returned by this method. If the entity is not persisted, it will always be 0.
+
+			return this.ExecuteWithDataContext (c => this.FindParticipantCount (c), () => 0);
+		}
+
+		private int GetFunctionParticipantCount()
+		{
+			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
+			//	value returned by this method. If the entity is not persisted, it will always be 0.
+
+			return this.ExecuteWithDataContext (c => this.FindFunctionParticipantCount (c), () => 0);
+		}
+
+		
+		private IList<AiderPersonEntity> FindParticipants(DataContext dataContext, int count)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
+		}
+
+		private IList<AiderPersonEntity> FindFunctionParticipants(DataContext dataContext, int count)
+		{
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
 		}
 
 		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
@@ -571,17 +631,6 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest (request);
 		}
 
-		private IList<AiderGroupEntity> GetParents()
-		{
-			if (this.parents == null)
-			{
-				this.parents = this.ExecuteWithDataContext (c => this.FindParents (c),
-															() => new List<AiderGroupEntity> ());
-			}
-
-			return this.parents;
-		}
-
 		private IList<AiderGroupEntity> FindParents(DataContext dataContext)
 		{
 			var groupPaths = AiderGroupIds.GetParentPaths (this.Path).ToList ();
@@ -598,6 +647,93 @@ namespace Epsitec.Aider.Entities
 			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
 
 			return dataContext.GetByRequest<AiderGroupEntity> (request);
+		}
+
+		private IList<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Group = this
+			};
+
+			return businessContext.DataContext.GetByExample (example);
+		}
+
+		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)
+		{
+			if (!this.CanHaveSubgroups ())
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
+
+			return dataContext.GetByRequest (request);
+		}
+
+		private int FindDepth(DataContext dataContext)
+		{
+			//	Here it would be cool to make a request that simply returns the maximum, but it can't
+			//	be done now. This is something that the DataLayer does not implement right now.
+
+			var subgroups = this.FindAllSubgroups (dataContext);
+
+			if (subgroups.Count == 0)
+			{
+				return this.GroupLevel;
+			}
+
+			return subgroups.Max (g => g.GroupLevel);
+		}
+
+		private int FindParticipantCount(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
+
+			return dataContext.GetCount (request);
+		}
+
+		private int FindFunctionParticipantCount(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, false);
+
+			return dataContext.GetCount (request);
+		}
+
+		
+		private IList<AiderGroupEntity> RetrieveAllSubgroupsRecursive()
+		{
+			var groups = new List<AiderGroupEntity> ();
+
+			this.RetrieveAllSubgroupsRecursive (groups);
+
+			return groups;
+		}
+
+		private void RetrieveAllSubgroupsRecursive(IList<AiderGroupEntity> groups)
+		{
+			foreach (var subgroup in this.GetSubgroups ())
+			{
+				groups.Add (subgroup);
+
+				subgroup.RetrieveAllSubgroupsRecursive (groups);
+			}
+		}
+
+		private int RetrieveDepth()
+		{
+			var subgroups = this.GetSubgroups ();
+
+			if (subgroups.Count == 0)
+			{
+				return this.GroupLevel;
+			}
+
+			return this.GetSubgroups ().Max (g => g.RetrieveDepth ());
 		}
 
 
@@ -641,141 +777,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-
-
-		private IEnumerable<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
-		{
-			var example = new AiderGroupParticipantEntity ()
-			{
-				Group = this
-			};
-
-			return businessContext.DataContext.GetByExample (example);
-		}
-
-		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
-		{
-			var currentPath = this.Path;
-
-			var skip = 0;
-
-			if (AiderGroupIds.IsWithinParish (currentPath))
-			{
-				skip += 1;
-
-				if (AiderGroupIds.IsWithinSameParish (currentPath, parishPath))
-				{
-					skip += 1;
-				}
-			}
-			else if (AiderGroupIds.IsWithinRegion (currentPath))
-			{
-				if (AiderGroupIds.IsWithinSameRegion (currentPath, parishPath))
-				{
-					skip += 1;
-				}
-			}
-
-			return this.GetParents ().Skip (skip);
-		}
-
-
-		private IList<AiderGroupEntity> GetAllSubgroups()
-		{
-			return this.ExecuteWithDataContext (c => this.FindAllSubgroups (c), this.FindAllSubgroups);
-		}
-
-		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)
-		{
-			if (!this.CanHaveSubgroups ())
-			{
-				return new List<AiderGroupEntity> ();
-			}
-
-			var example = new AiderGroupEntity ();
-			var request = Request.Create (example);
-
-			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
-			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
-
-			return dataContext.GetByRequest (request);
-		}
-
-		private IList<AiderGroupEntity> FindAllSubgroups()
-		{
-			var groups = new List<AiderGroupEntity> ();
-
-			this.FindAllSubgroups (groups);
-
-			return groups;
-		}
-
-		private void FindAllSubgroups(IList<AiderGroupEntity> groups)
-		{
-			foreach (var subgroup in this.GetSubgroups ())
-			{
-				groups.Add (subgroup);
-
-				subgroup.FindAllSubgroups (groups);
-			}
-		}
-
-		private int FindDepth(DataContext dataContext)
-		{
-			// Here it would be cool to make a request that simply returns the maximum, but it can't
-			// be done now. This is something that the DataLayer does not implement right now.
-
-			var subgroups = this.FindAllSubgroups (dataContext);
-
-			if (subgroups.Count == 0)
-			{
-				return this.GroupLevel;
-			}
-
-			return subgroups.Max (g => g.GroupLevel);
-		}
-
-		private int FindDepth()
-		{
-			var subgroups = this.GetSubgroups ();
-
-			if (subgroups.Count == 0)
-			{
-				return this.GroupLevel;
-			}
-
-			return this.GetSubgroups ().Max (g => g.FindDepth ());
-		}
-
-		private int CountParticipants()
-		{
-			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
-			//	value returned by this method. If the entity is not persisted, it will always be 0.
-
-			return this.ExecuteWithDataContext (c => this.CountParticipants (c), () => 0);
-		}
-
-		private int CountParticipants(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
-
-			return dataContext.GetCount (request);
-		}
-
-		private int CountFunctionParticipants()
-		{
-			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
-			//	value returned by this method. If the entity is not persisted, it will always be 0.
-			
-			return this.ExecuteWithDataContext (c => this.CountFunctionParticipants (c), () => 0);
-		}
-
-		private int CountFunctionParticipants(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, false);
-
-			return dataContext.GetCount (request);
-		}
 
 
 
