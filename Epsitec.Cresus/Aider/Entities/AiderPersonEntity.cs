@@ -254,12 +254,12 @@ namespace Epsitec.Aider.Entities
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
 		}
 
-		partial void GetDefaultAddress(ref AiderAddressEntity value)
+		partial void GetAddress(ref AiderAddressEntity value)
 		{
-			value = this.GetDefaultAddress ();
+			value = this.GetAddress ();
 		}
 
-		partial void SetDefaultAddress(AiderAddressEntity value)
+		partial void SetAddress(AiderAddressEntity value)
 		{
 			throw new NotImplementedException ();
 		}
@@ -293,11 +293,11 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private AiderAddressEntity GetDefaultAddress()
+		private AiderAddressEntity GetAddress()
 		{
-			//	A person's default address is the one which was explicitely defined to be the
-			//	default (AddressType = Default), or the first household address, or any address
-			//	available for the person if everything else failed:
+			//	A person's address is the one which was explicitely defined to be the default
+			//	(AddressType = Default), or the first household address, or any fully defined
+			//	available address for the person if everything else failed:
 
 			var defaultAddress = 
 				this.AdditionalAddresses.Where (x => x.AddressType == AddressType.Default).Select (x => x.Address).FirstOrDefault () ??

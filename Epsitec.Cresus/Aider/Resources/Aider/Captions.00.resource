@@ -399,5 +399,5 @@
   <data name="Fld.AiderUser.EnableGroupEditionParish" id="GL22">&lt;s:data id="_0" f:Name="EnableGroupEditionParish" f:Labels="{Collection {Text 'Edition des groupes régionaux'}}" /&gt;</data>
   <data name="Fld.AiderPerson.ParishGroup" id="ALG">&lt;s:data id="_0" f:Name="ParishGroup" /&gt;</data>
   <data name="Fld.AiderPerson.ParishGroupPathCache" id="AMG">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
-  <data name="Fld.AiderPerson.DefaultAddress" id="ANG">&lt;s:data id="_0" f:Name="DefaultAddress" /&gt;</data>
+  <data name="Fld.AiderPerson.Address" id="ANG">&lt;s:data id="_0" f:Name="Address" /&gt;</data>
 </bundle>
