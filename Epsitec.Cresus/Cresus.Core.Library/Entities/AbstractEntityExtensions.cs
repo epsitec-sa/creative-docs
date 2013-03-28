@@ -1,11 +1,10 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,11 +31,14 @@ namespace Epsitec.Cresus.Core.Entities
 			return DataContextPool.GetDataContext (entity);
 		}
 
-		public static T ExecuteWithDataContext<T>(this AbstractEntity entity, Func<DataContext, T> functionWithDataContext, Func<T> defaultFunction)
+		public static T ExecuteWithDataContext<T>(this AbstractEntity entity,
+												  System.Func<DataContext, T> functionWithDataContext,
+												  System.Func<T> defaultFunction)
 		{
 			var dataContext = DataContextPool.GetDataContext (entity);
 
-			if (dataContext != null && dataContext.IsPersistent (entity))
+			if ((dataContext != null) &&
+				(dataContext.IsPersistent (entity)))
 			{
 				return functionWithDataContext (dataContext);
 			}
