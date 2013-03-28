@@ -17,10 +17,6 @@ function() {
     style: {
       borderTop: '1px solid #99BCE8'
     },
-    layout: {
-      type: 'vbox',
-      align: 'stretchmax'
-    },
 
     /* Properties */
 
@@ -38,18 +34,6 @@ function() {
           },
           this
       );
-
-      // This is a hack to work around a bug in extjs. If we have a single item,
-      // it will have the proper size, but if the width of its content is
-      // smaller than the minWidth, its content (toolbar and html) won't be
-      // expanded to fit the width of the column. Therefore, if we have a single
-      // or no item, we change the layout and everything is displayed properly.
-
-      if (newOptions.items.length < 2) {
-        newOptions.layout = {
-          type: 'vbox'
-        };
-      }
 
       this.callParent([newOptions]);
       return this;
