@@ -38,8 +38,8 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyBindRule(AiderPersonEntity entity)
 		{
-			// Registering the contacts will also register the households, as they are registered
-			// by the contacts.
+			//	Registering the contacts will also register the households, as they are registered
+			//	by the contacts.
 
 			this.GetBusinessContext ().Register (entity.Contacts);
 		}

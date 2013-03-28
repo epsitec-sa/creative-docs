@@ -248,11 +248,41 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		internal void ProcessPersonDeath()
+		{
+			//	TODO: process the death of the person (remove from all associated groups)
+		}
+
+		internal void ProcessPersonRevival()
+		{
+			//	TODO: process the death of the person (remove from all associated groups)
+		}
+
+
 		partial void OnParishGroupChanging(AiderGroupEntity oldValue, AiderGroupEntity newValue)
 		{
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
 		}
 
+		partial void OnVisibilityChanging(PersonVisibilityStatus oldValue, PersonVisibilityStatus newValue)
+		{
+			switch (oldValue)
+			{
+				case PersonVisibilityStatus.Deceased:
+					this.ProcessPersonRevival ();
+					break;
+			}
+			
+			switch (newValue)
+			{
+				case PersonVisibilityStatus.Deceased:
+					this.ProcessPersonDeath ();
+					break;
+			}
+		}
+		
+		
+		
 		partial void GetAddress(ref AiderAddressEntity value)
 		{
 			value = this.GetAddress ();

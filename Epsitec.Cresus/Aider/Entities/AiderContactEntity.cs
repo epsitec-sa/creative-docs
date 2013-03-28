@@ -244,9 +244,10 @@ namespace Epsitec.Aider.Entities
 
 		private PersonVisibilityStatus GetDisplayVisibilityStatus()
 		{
-			var hidden = (this.Person.IsNotNull () && this.Person.Visibility != PersonVisibilityStatus.Default)
-				|| (this.Household.IsNotNull () && this.Household.DisplayVisibility != PersonVisibilityStatus.Default)
-				|| (this.LegalPerson.IsNotNull () && this.LegalPerson.Visibility != PersonVisibilityStatus.Default);
+			var hidden =
+				(this.Person.IsNotNull () && this.Person.Visibility != PersonVisibilityStatus.Default) ||
+				(this.Household.IsNotNull () && this.Household.DisplayVisibility != PersonVisibilityStatus.Default) ||
+				(this.LegalPerson.IsNotNull () && this.LegalPerson.Visibility != PersonVisibilityStatus.Default);
 
 			return hidden
 				? PersonVisibilityStatus.Hidden
