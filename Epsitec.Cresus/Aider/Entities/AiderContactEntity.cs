@@ -15,6 +15,20 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderContactEntity
 	{
+		public bool HasFullAddress()
+		{
+			var address = this.GetAddress ();
+
+			if (address.IsNull ())
+			{
+				return false;
+			}
+
+			return address.Town.IsNotNull ()
+				&& ((string.IsNullOrEmpty (address.Street) == false) || (string.IsNullOrEmpty (address.PostBox) == false));
+		}
+		
+		
 		public override FormattedText GetSummary()
 		{
 			switch (this.ContactType)

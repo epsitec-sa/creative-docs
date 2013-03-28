@@ -1560,6 +1560,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
 				//	designer:cap/LVAIE
 				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 466);
+				//	designer:cap/LVANG
+				public static readonly global::Epsitec.Common.Support.Druid DefaultAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 535);
 				//	designer:cap/LVAI4
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 146);
 				//	designer:cap/LVAU1

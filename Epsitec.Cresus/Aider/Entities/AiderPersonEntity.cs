@@ -188,10 +188,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void RefreshCache()
+		internal void RefreshCache()
 		{
-			this.DisplayName = this.GetDisplayName ();
+			//	This is called by AiderPersonBusinessRules.ApplyUpdateRule in order to refresh
+			//	the cached data whenever the person data gets edited.
 
+			this.RefreshDisplayName ();
 			this.RefreshBirthdayDate ();
 		}
 
@@ -252,6 +254,15 @@ namespace Epsitec.Aider.Entities
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (newValue);
 		}
 
+		partial void GetDefaultAddress(ref AiderAddressEntity value)
+		{
+			value = this.GetDefaultAddress ();
+		}
+
+		partial void SetDefaultAddress(AiderAddressEntity value)
+		{
+			throw new NotImplementedException ();
+		}
 
 		partial void GetGroups(ref IList<AiderGroupParticipantEntity> value)
 		{
@@ -282,28 +293,32 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		private AiderAddressEntity GetDefaultAddress()
+		{
+			//	A person's default address is the one which was explicitely defined to be the
+			//	default (AddressType = Default), or the first household address, or any address
+			//	available for the person if everything else failed:
+
+			var defaultAddress = 
+				this.AdditionalAddresses.Where (x => x.AddressType == AddressType.Default).Select (x => x.Address).FirstOrDefault () ??
+				this.Households.Select (x => x.Address).FirstOrDefault () ??
+				this.AdditionalAddresses.Where (x => x.HasFullAddress ()).Select (x => x.Address).FirstOrDefault ();
+
+			return defaultAddress;
+		}
+
 		private IList<AiderGroupParticipantEntity> GetParticipations()
 		{
 			if (this.participations == null)
 			{
 				this.participations = this.ExecuteWithDataContext
 				(
-					d => this.GetParticipations (d),
+					d => this.FindParticipations (d),
 					() => new List<AiderGroupParticipantEntity> ()
 				);
 			}
 
 			return this.participations;
-		}
-
-		private IList<AiderGroupParticipantEntity> GetParticipations(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, false);
-
-			return dataContext
-				.GetByRequest<AiderGroupParticipantEntity> (request)
-				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
-				.ToList ();
 		}
 
 		private ISet<AiderHouseholdEntity> GetHouseholds()
@@ -325,7 +340,7 @@ namespace Epsitec.Aider.Entities
 			{
 				this.contacts = this.ExecuteWithDataContext
 				(
-					d => this.GetContacts (d).ToSet (),
+					d => this.FindContacts (d).ToSet (),
 					() => new HashSet<AiderContactEntity> ()
 				);
 			}
@@ -333,7 +348,32 @@ namespace Epsitec.Aider.Entities
 			return this.contacts;
 		}
 
-		private IEnumerable<AiderContactEntity> GetContacts(DataContext dataContext)
+		private IList<AiderPersonWarningEntity> GetWarnings()
+		{
+			if (this.warnings == null)
+			{
+				this.warnings = this.ExecuteWithDataContext
+				(
+					d => this.FindWarnings (d),
+					() => new List<AiderPersonWarningEntity> ()
+				);
+			}
+
+			return this.warnings;
+		}
+
+
+		private IList<AiderGroupParticipantEntity> FindParticipations(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, false);
+
+			return dataContext
+				.GetByRequest<AiderGroupParticipantEntity> (request)
+				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
+				.ToList ();
+		}
+		
+		private IList<AiderContactEntity> FindContacts(DataContext dataContext)
 		{
 			var example = new AiderContactEntity ()
 			{
@@ -343,21 +383,7 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByExample (example);
 		}
 
-		private IList<AiderPersonWarningEntity> GetWarnings()
-		{
-			if (this.warnings == null)
-			{
-				this.warnings = this.ExecuteWithDataContext
-				(
-					d => this.GetWarnings (d),
-					() => new List<AiderPersonWarningEntity> ()
-				);
-			}
-
-			return this.warnings;
-		}
-
-		private IList<AiderPersonWarningEntity> GetWarnings(DataContext dataContext)
+		private IList<AiderPersonWarningEntity> FindWarnings(DataContext dataContext)
 		{
 			var controller = AiderWarningController.Current;
 
@@ -367,6 +393,10 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		private void RefreshDisplayName()
+		{
+			this.DisplayName = this.GetDisplayName ();
+		}
 		private void RefreshBirthdayDate()
 		{
 			Date? date = null;
