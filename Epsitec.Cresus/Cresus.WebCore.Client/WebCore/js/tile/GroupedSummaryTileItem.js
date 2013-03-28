@@ -13,7 +13,7 @@ function() {
     bodyCls: 'tile',
     overCls: 'tile-over',
     selectedClass: 'tile-selected',
-    minHeight: '25',
+    minHeight: 25,
 
     /* Properties */
 
