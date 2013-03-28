@@ -188,16 +188,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		internal void RefreshCache()
-		{
-			//	This is called by AiderPersonBusinessRules.ApplyUpdateRule in order to refresh
-			//	the cached data whenever the person data gets edited.
-
-			this.RefreshDisplayName ();
-			this.RefreshBirthdayDate ();
-		}
-
-
 		public FormattedText GetGroupTitle()
 		{
 			int nbGroups = this.Groups.Count;
@@ -227,6 +217,15 @@ namespace Epsitec.Aider.Entities
 			return this.GetParticipations ().Any (g => g.Group == group);
 		}
 
+
+		internal void RefreshCache()
+		{
+			//	This is called by AiderPersonBusinessRules.ApplyUpdateRule in order to refresh
+			//	the cached data whenever the person data gets edited.
+
+			this.RefreshDisplayName ();
+			this.RefreshBirthdayDate ();
+		}
 
 		internal void AddParticipationInternal(AiderGroupParticipantEntity participation)
 		{
@@ -397,6 +396,7 @@ namespace Epsitec.Aider.Entities
 		{
 			this.DisplayName = this.GetDisplayName ();
 		}
+		
 		private void RefreshBirthdayDate()
 		{
 			Date? date = null;
