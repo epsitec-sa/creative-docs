@@ -176,6 +176,8 @@ function() {
     },
 
     showMainPanel: function() {
+      var items;
+
       this.loginPanel.close();
       this.loginPanel = null;
 
@@ -191,15 +193,35 @@ function() {
         margin: '1 0 0 0'
       });
 
+      if (epsitecConfig.isTest) {
+        items = [
+          this.createTestBanner('north', 'test-banner-top'),
+          this.menu,
+          this.tabManager,
+          this.createTestBanner('south', 'test-banner-bottom')
+        ];
+      }
+      else {
+        items = [
+          this.menu,
+          this.tabManager
+        ];
+      }
+
       Ext.create('Ext.container.Viewport', {
         layout: 'border',
         style: {
           background: '#FFFFFF'
         },
-        items: [
-          this.menu,
-          this.tabManager
-        ]
+        items: items
+      });
+    },
+
+    createTestBanner: function(region, cls) {
+      return Ext.create('Ext.Panel', {
+        region: region,
+        bodyCls: ['test-banner', cls],
+        html: 'Version de test'
       });
     }
   });

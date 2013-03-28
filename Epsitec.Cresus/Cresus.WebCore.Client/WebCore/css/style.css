@@ -112,3 +112,26 @@ html, body {
 .x-form-text, textarea.x-form-field {
   background-image: none;
 }
+
+.test-banner {
+  background-color: #FFDDDD;
+  text-align: center;
+  color: #CC3300;
+  padding: 5px;
+  border-style: solid;
+  border-color: #CC3300;
+}
+
+.test-banner-top {
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+}
+
+.test-banner-bottom {
+  border-top-width: 1px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-left-width: 0px;
+}
