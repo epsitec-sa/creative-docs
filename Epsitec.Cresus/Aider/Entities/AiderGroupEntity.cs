@@ -68,6 +68,68 @@ namespace Epsitec.Aider.Entities
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsNoParish ();
 		}
 
+		public bool CanHaveSubgroups()
+		{
+			var definition = this.GroupDef;
+
+			return this.GroupLevel < AiderGroupIds.MaxGroupLevel
+				&& (definition.IsNull () || definition.SubgroupsAllowed);
+		}
+
+		public bool CanSubgroupsBeEdited()
+		{
+			var definition = this.GroupDef;
+
+			return this.CanHaveSubgroups ()
+				&& (definition.IsNull () || definition.Mutability == Mutability.Customizable);
+		}
+
+		public bool CanBeEdited()
+		{
+			return this.GroupDef.IsNull ();
+		}
+
+		public bool CanHaveMembers()
+		{
+			var definition = this.GroupDef;
+
+			return definition.IsNull () || definition.MembersAllowed;
+		}
+
+		public bool CanBeEditedByCurrentUser()
+		{
+			var path = this.Path;
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			var userParishPath = user.ParishGroupPathCache;
+			var userPowerLevel = user.PowerLevel;
+
+			if ((userPowerLevel != UserPowerLevel.None) &&
+				(userPowerLevel <= UserPowerLevel.Administrator))
+			{
+				return true;
+			}
+
+			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
+			{
+				return user.EnableGroupEditionParish
+					&& !string.IsNullOrEmpty (userParishPath)
+					&& AiderGroupIds.IsSameOrWithinGroup (path, userParishPath);
+			}
+			else if (this.IsRegion () || AiderGroupIds.IsWithinRegion (path))
+			{
+				var userRegionPart = AiderGroupIds.GetParentPath (userParishPath);
+
+				return user.EnableGroupEditionRegion
+					&& !string.IsNullOrEmpty (userParishPath)
+					&& AiderGroupIds.IsSameOrWithinGroup (path, userRegionPart);
+			}
+			else
+			{
+				return user.EnableGroupEditionCanton;
+			}
+		}
+
+
 
 		public override FormattedText GetSummary()
 		{
@@ -93,11 +155,7 @@ namespace Epsitec.Aider.Entities
 
 		public int GetDepth()
 		{
-			var totalDepth = this.ExecuteWithDataContext
-			(
-				d => this.FindDepth (d),
-				() => this.FindDepth ()
-			);
+			var totalDepth = this.ExecuteWithDataContext (c => this.FindDepth (c), this.FindDepth);
 
 			return totalDepth - this.GroupLevel + 1;
 		}
@@ -137,57 +195,19 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
 
-
-
-		// This stuff is not cached in the entity, therefore updates in memory won't modify the
-		// value returned by this method. It the entity is not persisted, it will always be an empty
-		// list.
-		private IList<AiderPersonEntity> GetParticipants(int count)
-		{
-			return this.ExecuteWithDataContext
-			(
-				d => this.GetParticipants (d, count),
-				() => new List<AiderPersonEntity> ()
-			);
-		}
-
-
-		private IList<AiderPersonEntity> GetParticipants(DataContext dataContext, int count)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
-
-			request.Skip = 0;
-			request.Take = count;
-
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
-		}
-
-
 		public FormattedText GetFunctionParticipantTitle()
 		{
-			var nbFunctionParticipants = this.GetNbFunctionParticipants ();
+			var count = this.CountFunctionParticipants ();
 
-			return TextFormatter.FormatText ("Particpants (", nbFunctionParticipants, ")");
+			if (count == 1)
+			{
+				return Resources.FormattedText ("Participant");
+			}
+			else
+			{
+				return TextFormatter.FormatText ("Particpants (", count, ")");
+			}
 		}
-
-
-		private int GetNbFunctionParticipants()
-		{
-			return this.ExecuteWithDataContext
-			(
-				d => this.GetNbFunctionParticipants (d),
-				() => 0
-			);
-		}
-
-
-		private int GetNbFunctionParticipants(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, false);
-
-			return dataContext.GetCount (request);
-		}
-
 
 		public FormattedText GetFunctionParticipantSummary()
 		{
@@ -200,98 +220,6 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), groups);
 		}
 
-
-		private IList<AiderPersonEntity> GetFuntionParticipants(int count)
-		{
-			return this.ExecuteWithDataContext
-			(
-				d => this.GetFunctionParticipants (d, count),
-				() => new List<AiderPersonEntity> ()
-			);
-		}
-
-
-		private IList<AiderPersonEntity> GetFunctionParticipants(DataContext dataContext, int count)
-		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, true);
-
-			request.Skip = 0;
-			request.Take = count;
-
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
-		}
-
-
-		public bool CanHaveSubgroups()
-		{
-			var definition = this.GroupDef;
-
-			return this.GroupLevel < AiderGroupIds.MaxGroupLevel
-				&& (definition.IsNull () || definition.SubgroupsAllowed);
-		}
-
-
-		public bool CanSubgroupsBeEdited()
-		{
-			var definition = this.GroupDef;
-
-			return this.CanHaveSubgroups ()
-				&& (definition.IsNull () || definition.Mutability == Mutability.Customizable);
-		}
-
-
-		public bool CanBeEdited()
-		{
-			return this.GroupDef.IsNull ();
-		}
-
-
-		public bool CanHaveMembers()
-		{
-			var definition = this.GroupDef;
-
-			return definition.IsNull () || definition.MembersAllowed;
-		}
-
-
-		public bool CanBeEditedByCurrentUser()
-		{
-			var path = this.Path;
-			var user = AiderUserManager.Current.AuthenticatedUser;
-			var userParishPath = user.ParishGroupPathCache;
-			var userPowerLevel = user.PowerLevel;
-
-			if ((userPowerLevel != UserPowerLevel.None) &&
-				(userPowerLevel <= UserPowerLevel.Administrator))
-			{
-				return true;
-			}
-
-			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
-			{
-				return user.EnableGroupEditionParish
-					&& !string.IsNullOrEmpty (userParishPath)
-					&& AiderGroupIds.IsSameOrWithinGroup (path, userParishPath);
-			}
-			else if (this.IsRegion () || AiderGroupIds.IsWithinRegion (path))
-			{
-				var userRegionPart = AiderGroupIds.GetParentPath (userParishPath);
-
-				return user.EnableGroupEditionRegion
-					&& !string.IsNullOrEmpty (userParishPath)
-					&& AiderGroupIds.IsSameOrWithinGroup (path, userRegionPart);
-			}
-			else
-			{
-				return user.EnableGroupEditionCanton;
-			}
-		}
-
-
-		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
-		{
-			value = this.GetSubgroups ().AsReadOnlyCollection ();
-		}
 
 
 		public static string GetPath(AiderGroupEntity group)
@@ -316,99 +244,6 @@ namespace Epsitec.Aider.Entities
 			{
 				return group.Group.Path;
 			}
-		}
-
-
-		private IList<AiderGroupEntity> GetSubgroups()
-		{
-			if (this.subgroups == null)
-			{
-				this.subgroups = this.ExecuteWithDataContext
-				(
-					d => this.FindSubgroups (d),
-					() => new List<AiderGroupEntity> ()
-				);
-			}
-
-			return this.subgroups;
-		}
-
-		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
-		{
-			if (!this.CanHaveSubgroups ())
-			{
-				return new List<AiderGroupEntity> ();
-			}
-
-			var example = new AiderGroupEntity ();
-			var request = Request.Create (example);
-
-			var path  = this.Path + AiderGroupIds.SubgroupSqlWildcard;
-			var level = this.GroupLevel + 1;
-
-			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
-			request.AddSortClause (ValueField.Create (example, x => x.Name));
-
-			return dataContext.GetByRequest (request);
-		}
-
-
-		private void AddSubgroupInternal(AiderGroupEntity group)
-		{
-			this.GetSubgroups ().Add (group);
-		}
-
-		private void RemoveSubgroupInternal(AiderGroupEntity group)
-		{
-			this.GetSubgroups ().Remove (group);
-		}
-
-
-		private IList<AiderGroupEntity> GetParents()
-		{
-			if (this.parents == null)
-			{
-				this.parents = this.ExecuteWithDataContext
-				(
-					d => this.FindParents (d),
-					() => new List<AiderGroupEntity> ()
-				);
-			}
-
-			return this.parents;
-		}
-
-		private IList<AiderGroupEntity> FindParents(DataContext dataContext)
-		{
-			var groupPaths = AiderGroupIds.GetParentPaths (this.Path).ToList ();
-
-			if (groupPaths.Count == 0)
-			{
-				return new List<AiderGroupEntity> ();
-			}
-
-			var example = new AiderGroupEntity ();
-
-			var request = Request.Create (example);
-			request.AddCondition (dataContext, example, g => SqlMethods.IsInSet (g.Path, groupPaths));
-			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
-
-			return dataContext.GetByRequest<AiderGroupEntity> (request);
-		}
-
-
-		private void SetParentInternal(AiderGroupEntity newParent)
-		{
-			if (this.parents == null)
-			{
-				this.parents = new List<AiderGroupEntity> ();
-			}
-			else
-			{
-				this.parents.Clear ();
-			}
-
-			this.parents.AddRange (newParent.GetParents ().Append (newParent));
 		}
 
 
@@ -438,7 +273,6 @@ namespace Epsitec.Aider.Entities
 			return group;
 		}
 
-
 		public static AiderGroupEntity Create(BusinessContext businessContext, AiderGroupDefEntity groupDefinition, string name, int level, string path)
 		{
 			var group = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
@@ -450,7 +284,6 @@ namespace Epsitec.Aider.Entities
 
 			return group;
 		}
-
 
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name)
 		{
@@ -464,7 +297,6 @@ namespace Epsitec.Aider.Entities
 			return this.CreateSubgroup (businessContext, name, path);
 		}
 
-
 		public AiderGroupEntity CreateSubgroup(BusinessContext businessContext, AiderGroupDefEntity definition)
 		{
 			var name = definition.Name;
@@ -476,50 +308,6 @@ namespace Epsitec.Aider.Entities
 
 			return subgroup;
 		}
-
-
-		private AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name, string path)
-		{
-			var subgroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
-
-			subgroup.Name = name;
-			subgroup.Path = path;
-			subgroup.GroupLevel = this.GroupLevel + 1;
-
-			this.AddSubgroupInternal (subgroup);
-			subgroup.SetParentInternal (this);
-
-			return subgroup;
-		}
-
-
-		private string GetNextSubgroupPath()
-		{
-			// We look for a number that is not used yet in the subgroups.
-
-			var usedNumbers = this.Subgroups
-				.Select (g => AiderGroupIds.GetGroupNumber (g.Path))
-				.ToSet ();
-
-			int? number = null;
-
-			for (int i = 0; i < AiderGroupIds.MaxGroupNumber; i++)
-			{
-				if (!usedNumbers.Contains (i))
-				{
-					number = i;
-					break;
-				}
-			}
-
-			if (!number.HasValue)
-			{
-				throw new Exception ("Too many subgroups.");
-			}
-
-			return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
-		}
-
 
 		public void DeleteSubgroup(BusinessContext businessContext, AiderGroupEntity subgroup)
 		{
@@ -548,18 +336,6 @@ namespace Epsitec.Aider.Entities
 
 			businessContext.DeleteEntity (subgroup);
 		}
-
-
-		private IEnumerable<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
-		{
-			var example = new AiderGroupParticipantEntity ()
-			{
-				Group = this
-			};
-
-			return businessContext.DataContext.GetByExample (example);
-		}
-
 
 		public void Move(AiderGroupEntity newParent)
 		{
@@ -622,104 +398,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
-		private IList<AiderGroupEntity> GetAllSubgroups()
-		{
-			return this.ExecuteWithDataContext
-			(
-				d => this.FindAllSubgroups (d),
-				() => this.FindAllSubgroups ()
-			);
-		}
-
-
-		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)
-		{
-			if (!this.CanHaveSubgroups ())
-			{
-				return new List<AiderGroupEntity> ();
-			}
-
-			var example = new AiderGroupEntity ();
-			var request = Request.Create (example);
-
-			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
-			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
-
-			return dataContext.GetByRequest (request);
-		}
-
-
-		private IList<AiderGroupEntity> FindAllSubgroups()
-		{
-			var groups = new List<AiderGroupEntity> ();
-
-			this.FindAllSubgroups (groups);
-
-			return groups;
-		}
-
-
-		private void FindAllSubgroups(IList<AiderGroupEntity> groups)
-		{
-			foreach (var subgroup in this.GetSubgroups ())
-			{
-				groups.Add (subgroup);
-
-				subgroup.FindAllSubgroups (groups);
-			}
-		}
-
-
-
-		private int FindDepth(DataContext dataContext)
-		{
-			// Here it would be cool to make a request that simply returns the maximum, but it can't
-			// be done now. This is something that the DataLayer does not implement right now.
-
-			var subgroups = this.FindAllSubgroups (dataContext);
-
-			if (subgroups.Count == 0)
-			{
-				return this.GroupLevel;
-			}
-
-			return subgroups.Max (g => g.GroupLevel);
-		}
-
-		private int FindDepth()
-		{
-			var subgroups = this.GetSubgroups ();
-
-			if (subgroups.Count == 0)
-			{
-				return this.GroupLevel;
-			}
-
-			return this.GetSubgroups ().Max (g => g.FindDepth ());
-		}
-
-		private int CountParticipants()
-		{
-			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
-			//	value returned by this method. If the entity is not persisted, it will always be 0.
-
-			return this.ExecuteWithDataContext
-			(
-				d => this.CountParticipants (d),
-				() => 0
-			);
-		}
-
-		private int CountParticipants(DataContext dataContext)
-		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
-
-			return dataContext.GetCount (request);
-		}
-
-
-
 		public void ImportMembers(BusinessContext businessContext, AiderGroupEntity source, Date? startDate, FormattedText comment)
 		{
 			var participations = source.FindParticipations (businessContext);
@@ -751,7 +429,6 @@ namespace Epsitec.Aider.Entities
 
 			}
 		}
-
 
 		public void Merge(BusinessContext businessContext, AiderGroupEntity other)
 		{
@@ -793,6 +470,189 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+
+		partial void GetSubgroups(ref IList<AiderGroupEntity> value)
+		{
+			value = this.GetSubgroups ().AsReadOnlyCollection ();
+		}
+
+
+		private string GetNextSubgroupPath()
+		{
+			// We look for a number that is not used yet in the subgroups.
+
+			var usedNumbers = this.Subgroups
+				.Select (g => AiderGroupIds.GetGroupNumber (g.Path))
+				.ToSet ();
+
+			int? number = null;
+
+			for (int i = 0; i < AiderGroupIds.MaxGroupNumber; i++)
+			{
+				if (!usedNumbers.Contains (i))
+				{
+					number = i;
+					break;
+				}
+			}
+
+			if (!number.HasValue)
+			{
+				throw new Exception ("Too many subgroups.");
+			}
+
+			return AiderGroupIds.CreateCustomSubgroupPath (this.Path, number.Value);
+		}
+
+
+		private IList<AiderPersonEntity> GetParticipants(int count)
+		{
+			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
+			//	value returned by this method. It the entity is not persisted, it will always be an empty
+			//	list.
+
+			return this.ExecuteWithDataContext (c => this.GetParticipants (c, count),
+												() => new List<AiderPersonEntity> ());
+		}
+
+		private IList<AiderPersonEntity> GetParticipants(DataContext dataContext, int count)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
+		}
+
+		private IList<AiderPersonEntity> GetFuntionParticipants(int count)
+		{
+			return this.ExecuteWithDataContext (c => this.GetFunctionParticipants (c, count),
+												() => new List<AiderPersonEntity> ());
+		}
+
+		private IList<AiderPersonEntity> GetFunctionParticipants(DataContext dataContext, int count)
+		{
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, true);
+
+			request.Skip = 0;
+			request.Take = count;
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
+		}
+
+		private IList<AiderGroupEntity> GetSubgroups()
+		{
+			if (this.subgroups == null)
+			{
+				this.subgroups = this.ExecuteWithDataContext (c => this.FindSubgroups (c),
+															  () => new List<AiderGroupEntity> ());
+			}
+
+			return this.subgroups;
+		}
+
+		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
+		{
+			if (!this.CanHaveSubgroups ())
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			var path  = this.Path + AiderGroupIds.SubgroupSqlWildcard;
+			var level = this.GroupLevel + 1;
+
+			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
+		}
+
+		private IList<AiderGroupEntity> GetParents()
+		{
+			if (this.parents == null)
+			{
+				this.parents = this.ExecuteWithDataContext (c => this.FindParents (c),
+															() => new List<AiderGroupEntity> ());
+			}
+
+			return this.parents;
+		}
+
+		private IList<AiderGroupEntity> FindParents(DataContext dataContext)
+		{
+			var groupPaths = AiderGroupIds.GetParentPaths (this.Path).ToList ();
+
+			if (groupPaths.Count == 0)
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
+			var example = new AiderGroupEntity ();
+
+			var request = Request.Create (example);
+			request.AddCondition (dataContext, example, g => SqlMethods.IsInSet (g.Path, groupPaths));
+			request.AddSortClause (ValueField.Create (example, g => g.GroupLevel), SortOrder.Ascending);
+
+			return dataContext.GetByRequest<AiderGroupEntity> (request);
+		}
+
+
+		private void AddSubgroupInternal(AiderGroupEntity group)
+		{
+			this.GetSubgroups ().Add (group);
+		}
+
+		private void RemoveSubgroupInternal(AiderGroupEntity group)
+		{
+			this.GetSubgroups ().Remove (group);
+		}
+
+		private void SetParentInternal(AiderGroupEntity newParent)
+		{
+			if (this.parents == null)
+			{
+				this.parents = new List<AiderGroupEntity> ();
+			}
+			else
+			{
+				this.parents.Clear ();
+			}
+
+			this.parents.AddRange (newParent.GetParents ().Append (newParent));
+		}
+
+
+		private AiderGroupEntity CreateSubgroup(BusinessContext businessContext, string name, string path)
+		{
+			var subgroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
+
+			subgroup.Name = name;
+			subgroup.Path = path;
+			subgroup.GroupLevel = this.GroupLevel + 1;
+
+			this.AddSubgroupInternal (subgroup);
+			subgroup.SetParentInternal (this);
+
+			return subgroup;
+		}
+
+
+
+
+		private IEnumerable<AiderGroupParticipantEntity> FindParticipations(BusinessContext businessContext)
+		{
+			var example = new AiderGroupParticipantEntity ()
+			{
+				Group = this
+			};
+
+			return businessContext.DataContext.GetByExample (example);
+		}
+
 		private IEnumerable<AiderGroupEntity> GetHierarchicalParents(string parishPath)
 		{
 			var currentPath = this.Path;
@@ -818,6 +678,106 @@ namespace Epsitec.Aider.Entities
 
 			return this.GetParents ().Skip (skip);
 		}
+
+
+		private IList<AiderGroupEntity> GetAllSubgroups()
+		{
+			return this.ExecuteWithDataContext (c => this.FindAllSubgroups (c), this.FindAllSubgroups);
+		}
+
+		private IList<AiderGroupEntity> FindAllSubgroups(DataContext dataContext)
+		{
+			if (!this.CanHaveSubgroups ())
+			{
+				return new List<AiderGroupEntity> ();
+			}
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => x.GroupLevel > this.GroupLevel);
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, this.Path + "%"));
+
+			return dataContext.GetByRequest (request);
+		}
+
+		private IList<AiderGroupEntity> FindAllSubgroups()
+		{
+			var groups = new List<AiderGroupEntity> ();
+
+			this.FindAllSubgroups (groups);
+
+			return groups;
+		}
+
+		private void FindAllSubgroups(IList<AiderGroupEntity> groups)
+		{
+			foreach (var subgroup in this.GetSubgroups ())
+			{
+				groups.Add (subgroup);
+
+				subgroup.FindAllSubgroups (groups);
+			}
+		}
+
+		private int FindDepth(DataContext dataContext)
+		{
+			// Here it would be cool to make a request that simply returns the maximum, but it can't
+			// be done now. This is something that the DataLayer does not implement right now.
+
+			var subgroups = this.FindAllSubgroups (dataContext);
+
+			if (subgroups.Count == 0)
+			{
+				return this.GroupLevel;
+			}
+
+			return subgroups.Max (g => g.GroupLevel);
+		}
+
+		private int FindDepth()
+		{
+			var subgroups = this.GetSubgroups ();
+
+			if (subgroups.Count == 0)
+			{
+				return this.GroupLevel;
+			}
+
+			return this.GetSubgroups ().Max (g => g.FindDepth ());
+		}
+
+		private int CountParticipants()
+		{
+			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
+			//	value returned by this method. If the entity is not persisted, it will always be 0.
+
+			return this.ExecuteWithDataContext (c => this.CountParticipants (c), () => 0);
+		}
+
+		private int CountParticipants(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
+
+			return dataContext.GetCount (request);
+		}
+
+		private int CountFunctionParticipants()
+		{
+			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
+			//	value returned by this method. If the entity is not persisted, it will always be 0.
+			
+			return this.ExecuteWithDataContext (c => this.CountFunctionParticipants (c), () => 0);
+		}
+
+		private int CountFunctionParticipants(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, false);
+
+			return dataContext.GetCount (request);
+		}
+
+
 
 
 		private IList<AiderGroupEntity>			subgroups;
