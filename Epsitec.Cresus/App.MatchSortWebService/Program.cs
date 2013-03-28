@@ -13,7 +13,7 @@ namespace App.MatchSortWebService
         {
             Console.WriteLine("Mat[CH]Sort Web Service Provider");
             Console.WriteLine("initialize...");
-            var uri = "http://localhost:9000/";
+            var uri = "http://localhost:8080/";
             var ws = new MatchSortWebService(uri);
             Console.WriteLine("Starting WS listening on {0}",uri);
             ws.StartWebService ();
