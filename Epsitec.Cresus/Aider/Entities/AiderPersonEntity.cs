@@ -113,9 +113,9 @@ namespace Epsitec.Aider.Entities
 		{
 			return StringUtils.Join
 			(
-			" ",
-			this.eCH_Person.PersonFirstNames,
-			this.eCH_Person.PersonOfficialName
+				" ",
+				this.eCH_Person.PersonFirstNames,
+				this.eCH_Person.PersonOfficialName
 			);
 		}
 
