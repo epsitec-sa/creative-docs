@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:directories/administration/v4/configuration" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="urn:directories/administration/v4/configuration" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Directories Configuration Webservice</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn:directories/administration/v4/configuration">
+      <s:element name="SetRequestLimits">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="requestLimitsParam" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetRequestLimitsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SetRequestLimitsResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRequestLimits">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="userOperationParam" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRequestLimitsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="GetRequestLimitsResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Version">
+        <s:complexType />
+      </s:element>
+      <s:element name="VersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="VersionResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SetRequestLimitsSoapIn">
+    <wsdl:part name="parameters" element="tns:SetRequestLimits" />
+  </wsdl:message>
+  <wsdl:message name="SetRequestLimitsSoapOut">
+    <wsdl:part name="parameters" element="tns:SetRequestLimitsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRequestLimitsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRequestLimits" />
+  </wsdl:message>
+  <wsdl:message name="GetRequestLimitsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRequestLimitsResponse" />
+  </wsdl:message>
+  <wsdl:message name="VersionSoapIn">
+    <wsdl:part name="parameters" element="tns:Version" />
+  </wsdl:message>
+  <wsdl:message name="VersionSoapOut">
+    <wsdl:part name="parameters" element="tns:VersionResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ConfigurationSoap">
+    <wsdl:operation name="SetRequestLimits">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Sets request limit for a user. Only a main user has the permission to call this function.</wsdl:documentation>
+      <wsdl:input message="tns:SetRequestLimitsSoapIn" />
+      <wsdl:output message="tns:SetRequestLimitsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestLimits">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gets request limit for a user. Only a main user has the permission to call this function.</wsdl:documentation>
+      <wsdl:input message="tns:GetRequestLimitsSoapIn" />
+      <wsdl:output message="tns:GetRequestLimitsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Version">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the webservice version.</wsdl:documentation>
+      <wsdl:input message="tns:VersionSoapIn" />
+      <wsdl:output message="tns:VersionSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ConfigurationSoap" type="tns:ConfigurationSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SetRequestLimits">
+      <soap:operation soapAction="urn:directories/administration/v4/configuration/SetRequestLimits" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestLimits">
+      <soap:operation soapAction="urn:directories/administration/v4/configuration/GetRequestLimits" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Version">
+      <soap:operation soapAction="urn:directories/administration/v4/configuration/Version" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ConfigurationSoap12" type="tns:ConfigurationSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SetRequestLimits">
+      <soap12:operation soapAction="urn:directories/administration/v4/configuration/SetRequestLimits" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequestLimits">
+      <soap12:operation soapAction="urn:directories/administration/v4/configuration/GetRequestLimits" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Version">
+      <soap12:operation soapAction="urn:directories/administration/v4/configuration/Version" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Configuration">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Directories Configuration Webservice</wsdl:documentation>
+    <wsdl:port name="ConfigurationSoap" binding="tns:ConfigurationSoap">
+      <soap:address location="https://secure.directories.ch/administration/v4/configuration.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ConfigurationSoap12" binding="tns:ConfigurationSoap12">
+      <soap12:address location="https://secure.directories.ch/administration/v4/configuration.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
