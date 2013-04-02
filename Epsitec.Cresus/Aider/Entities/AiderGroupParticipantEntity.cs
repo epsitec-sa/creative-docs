@@ -47,6 +47,8 @@ namespace Epsitec.Aider.Entities
 		
 		public void Delete(BusinessContext businessContext)
 		{
+			AiderGroupParticipantEntity.StopParticipationInternal (this);
+
 			if (this.Comment.IsNotNull ())
 			{
 				businessContext.DeleteEntity (this.Comment);
