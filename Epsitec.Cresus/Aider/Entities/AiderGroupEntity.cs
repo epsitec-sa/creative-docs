@@ -343,7 +343,7 @@ namespace Epsitec.Aider.Entities
 
 			// This might be very costly for groups which have a lot of participations.
 
-			var participations = this.FindParticipations (businessContext);
+			var participations = subgroup.FindParticipations (businessContext);
 
 			foreach (var participation in participations)
 			{
