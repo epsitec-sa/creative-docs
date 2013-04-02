@@ -326,6 +326,11 @@ namespace Epsitec.Aider.Entities
 
 			foreach (var participation in participations)
 			{
+				if (participation.Comment.IsNotNull ())
+				{
+					businessContext.DeleteEntity (participation.Comment);
+				}
+
 				businessContext.DeleteEntity (participation);
 			}
 
