@@ -76,10 +76,7 @@ namespace Epsitec.Aider.Entities
 
 			if (!startDate.HasValue || startDate <= Date.Today)
 			{
-				if (participationData.Person != null)
-				{
-					participationData.Person.AddParticipationInternal (participation);
-				}
+				AiderGroupParticipantEntity.StartParticipationInternal (participation);
 			}
 
 			return participation;
@@ -104,7 +101,7 @@ namespace Epsitec.Aider.Entities
 
 			if (endDate <= Date.Today)
 			{
-				participation.Person.RemoveParticipationInternal (participation);
+				AiderGroupParticipantEntity.StopParticipationInternal (participation);
 			}
 		}
 
@@ -177,6 +174,28 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderLegalPersonEntity legalPerson, bool current)
+		{
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				LegalPerson = new AiderLegalPersonEntity ()
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+			};
+
+			request.AddCondition (dataContext, participation, g => g.LegalPerson == legalPerson);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+			}
+
+			return request;
+		}
+
 		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current)
 		{
 			var participationExample = new AiderGroupParticipantEntity ();
@@ -225,6 +244,38 @@ namespace Epsitec.Aider.Entities
 				participation,
 				x => SqlMethods.IsInSet (x.Group.Path, paths)
 			);
+		}
+
+		private static void StartParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			var person = participation.Person;
+			var legalPerson = participation.LegalPerson;
+			
+			if (person.IsNotNull ())
+			{
+				person.AddParticipationInternal (participation);
+			}
+
+			if (legalPerson.IsNotNull ())
+			{
+				legalPerson.AddParticipationInternal (participation);
+			}
+		}
+
+		private static void StopParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			var person = participation.Person;
+			var legalPerson = participation.LegalPerson;
+
+			if (person.IsNotNull ())
+			{
+				person.RemoveParticipationInternal (participation);
+			}
+
+			if (legalPerson.IsNotNull ())
+			{
+				legalPerson.RemoveParticipationInternal (participation);
+			}
 		}
 		
 		

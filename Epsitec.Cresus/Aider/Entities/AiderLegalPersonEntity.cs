@@ -59,6 +59,39 @@ namespace Epsitec.Aider.Entities
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
+		private IList<AiderGroupParticipantEntity> GetParticipations()
+		{
+			if (this.participations == null)
+			{
+				this.participations = this.ExecuteWithDataContext
+				(
+					d => this.FindParticipations (d),
+					() => new List<AiderGroupParticipantEntity> ()
+				);
+			}
+
+			return this.participations;
+		}
+
+
+		internal void AddParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			this.GetParticipations ().Add (participation);
+		}
+
+		internal void RemoveParticipationInternal(AiderGroupParticipantEntity participation)
+		{
+			this.GetParticipations ().Remove (participation);
+		}
+
+
+		private IList<AiderGroupParticipantEntity> FindParticipations(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
+
+			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
+		}
+
 
 		public void AddContactInternal(AiderContactEntity contact)
 		{
@@ -116,7 +149,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-
-		private IList<AiderContactEntity>		contacts;
+		private IList<AiderGroupParticipantEntity>	participations;
+		private IList<AiderContactEntity>			contacts;
 	}
 }
