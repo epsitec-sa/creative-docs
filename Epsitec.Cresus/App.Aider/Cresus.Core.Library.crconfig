@@ -157,6 +157,10 @@ AiderGroupDef = [LVA2A]
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAHG].[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
     </t>
     <t eid="@AiderContact" n="groupMembers">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Nom" canSort="True" canFilter="True">
