@@ -41,6 +41,17 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+
+		public bool IsMemberOf(AiderGroupEntity group)
+		{
+			return this.GetMemberships (group).Any ();
+		}
+
+		public IEnumerable<AiderGroupParticipantEntity> GetMemberships(AiderGroupEntity group)
+		{
+			return this.GetParticipations ().Where (g => g.Group == group);
+		}
+
 		
 		public void RefreshCache()
 		{

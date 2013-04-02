@@ -1,4 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 
@@ -14,6 +15,8 @@ using Epsitec.Cresus.Core.Entities;
 using System;
 
 using System.Collections.Generic;
+
+using System.Linq;
 
 
 namespace Epsitec.Aider.Controllers.SetControllers
@@ -81,27 +84,13 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		protected override void AddItems(IEnumerable<AiderContactEntity> entitiesToAdd)
 		{
 			var context = this.BusinessContext;
-			var group   = this.Entity;
+			var group = this.Entity;
 
-			foreach (var contact in entitiesToAdd)
-			{
-				var member = contact.Person;
+			var participations = entitiesToAdd
+				.Select(e => new ParticipationData (e))
+				.ToList();
 
-				//	@PA: handle legal persons too...
-
-				if ((member.IsNotNull ()) && 
-					(member.IsNotMemberOf (group)))
-				{
-					var participationData = new ParticipationData
-					{
-						Person = member,
-						LegalPerson = contact.LegalPerson,
-						Contact = contact,
-					};
-
-					AiderGroupParticipantEntity.StartParticipation (context, group, participationData, Date.Today, FormattedText.Empty);
-				}
-			}
+			group.AddParticipations (this.BusinessContext, participations, Date.Today, FormattedText.Empty);
 		}
 
 		protected override void RemoveItems(IEnumerable<AiderGroupParticipantEntity> entitiesToRemove)

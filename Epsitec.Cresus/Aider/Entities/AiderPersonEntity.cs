@@ -206,15 +206,14 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (text);
 		}
 
-		
-		public bool IsNotMemberOf(AiderGroupEntity group)
-		{
-			return this.IsMemberOf (group) == false;
-		}
-
 		public bool IsMemberOf(AiderGroupEntity group)
 		{
-			return this.GetParticipations ().Any (g => g.Group == group);
+			return this.GetMemberships (group).Any ();
+		}
+
+		public IEnumerable<AiderGroupParticipantEntity> GetMemberships(AiderGroupEntity group)
+		{
+			return this.GetParticipations ().Where (g => g.Group == group);
 		}
 
 

@@ -5,6 +5,7 @@ using Epsitec.Aider.Data;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Override;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -22,7 +23,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Common.Support;
 
 
 namespace Epsitec.Aider.Entities
@@ -421,32 +421,22 @@ namespace Epsitec.Aider.Entities
 
 		public void ImportMembers(BusinessContext businessContext, AiderGroupEntity source, Date? startDate, FormattedText comment)
 		{
-			var participations = source.FindParticipations (businessContext);
+			var participations = source
+				.FindParticipations (businessContext)
+				.Select (p => new ParticipationData (p))
+				.ToList ();
 
+			this.AddParticipations (businessContext, participations, startDate, comment);
+		}
+
+		public void AddParticipations(BusinessContext businessContext, IEnumerable<ParticipationData> participations, Date? startDate, FormattedText comment)
+		{
 			foreach (var participation in participations)
 			{
-				var person  = participation.Person;
-				var legal   = participation.LegalPerson;
-				var contact = participation.Contact;
-
-				//	@PA: also handle legal persons
-
-				if ((legal.IsNull ()) &&
-					(person.IsNotNull ()) &&
-					(person.IsNotMemberOf (this)))
+				if (!this.HasMember (participation))
 				{
-					var participationData = new ParticipationData
-					{
-						Person      = person,
-						LegalPerson = legal,
-						Contact     = contact,
-					};
-
-					AiderGroupParticipantEntity.StartParticipation (businessContext, this, participationData, startDate, comment);
-					continue;
+					AiderGroupParticipantEntity.StartParticipation (businessContext, this, participation, startDate, comment);
 				}
-
-
 			}
 		}
 
@@ -471,7 +461,7 @@ namespace Epsitec.Aider.Entities
 
 			foreach (var participation in participations)
 			{
-				if (participation.Person.IsMemberOf (other))
+				if (other.HasMember (new ParticipationData (participation)))
 				{
 					participation.Delete (businessContext);
 				}
@@ -487,6 +477,36 @@ namespace Epsitec.Aider.Entities
 			}
 
 			businessContext.DeleteEntity (this);
+		}
+
+		public bool HasMember(ParticipationData participation)
+		{
+			var person = participation.Person;
+			var legalPerson = participation.LegalPerson;
+
+			if (person.IsNull () && legalPerson.IsNull ())
+			{
+				throw new NotSupportedException ();
+			}
+			else if (person.IsNull () && legalPerson.IsNotNull ())
+			{
+				return legalPerson.IsMemberOf (this);
+			}
+			else if (person.IsNotNull () && legalPerson.IsNull ())
+			{
+				return person.IsMemberOf (this);
+			}
+			else
+			{
+				// Here we consider that the participation is in the group if both are in the group
+				// and if the same AiderGroupParticipation contains both the person and the legal
+				// person
+
+				var pp = person.GetMemberships (this).ToList ();
+				var pl = legalPerson.GetMemberships (this).ToList ();
+
+				return pp.Intersect (pl).Any ();
+			}
 		}
 
 
