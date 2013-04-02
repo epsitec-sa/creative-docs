@@ -92,15 +92,14 @@ namespace Epsitec.Aider.Controllers.SetControllers
 				if ((member.IsNotNull ()) && 
 					(member.IsNotMemberOf (group)))
 				{
-					var what = new Participation
+					var participationData = new ParticipationData
 					{
-						Group = group,
 						Person = member,
 						LegalPerson = contact.LegalPerson,
 						Contact = contact,
 					};
 
-					AiderGroupParticipantEntity.StartParticipation (context, what, Date.Today, FormattedText.Empty);
+					AiderGroupParticipantEntity.StartParticipation (context, group, participationData, Date.Today, FormattedText.Empty);
 				}
 			}
 		}

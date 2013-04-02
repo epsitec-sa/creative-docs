@@ -66,15 +66,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			var person = this.Entity;
-			var what   = new Participation
+			var participationData = new ParticipationData
 			{
-				Group  = group,
-				Person = person,
+				Person = this.Entity,
 				//	@PA: contact ?
 			};
 
-			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, what, startDate, comment);
+			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, group, participationData, startDate, comment);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)

@@ -56,37 +56,38 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what)
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderGroupEntity group, ParticipationData participationData)
 		{
-			return AiderGroupParticipantEntity.StartParticipation (businessContext, what, null);
+			return AiderGroupParticipantEntity.StartParticipation (businessContext, group, participationData, null);
 		}
 
-		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what, Date? startDate)
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderGroupEntity group, ParticipationData participationData, Date? startDate)
 		{
-			if (!what.Group.CanHaveMembers ())
+			if (!group.CanHaveMembers ())
 			{
 				throw new InvalidOperationException ("This group cannot have members.");
 			}
 
 			var groupParticipation = businessContext.CreateAndRegisterEntity<AiderGroupParticipantEntity> ();
 
-			groupParticipation.Assign (what);
+			groupParticipation.Assign (participationData);
+			groupParticipation.Group = group;
 			groupParticipation.StartDate = startDate;
 
 			if (!startDate.HasValue || startDate <= Date.Today)
 			{
-				if (what.Person != null)
+				if (participationData.Person != null)
 				{
-					what.Person.AddParticipationInternal (groupParticipation);
+					participationData.Person.AddParticipationInternal (groupParticipation);
 				}
 			}
 
 			return groupParticipation;
 		}
 
-		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, Participation what, Date? startDate, FormattedText comment)
+		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderGroupEntity group, ParticipationData participationData, Date? startDate, FormattedText comment)
 		{
-			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, what, startDate);
+			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, group, participationData, startDate);
 
 			if (comment.IsNullOrEmpty () == false)
 			{
@@ -118,9 +119,9 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderGroupParticipantEntity ImportParticipation(BusinessContext businessContext, Participation what, Date? startDate, Date? endDate, FormattedText comment)
+		public static AiderGroupParticipantEntity ImportParticipation(BusinessContext businessContext, AiderGroupEntity group, ParticipationData participationData, Date? startDate, Date? endDate, FormattedText comment)
 		{
-			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, what, startDate, comment);
+			var participation = AiderGroupParticipantEntity.StartParticipation (businessContext, group, participationData, startDate, comment);
 
 			if (endDate.HasValue)
 			{
@@ -227,12 +228,11 @@ namespace Epsitec.Aider.Entities
 		}
 		
 		
-		private void Assign(Participation what)
+		private void Assign(ParticipationData participationData)
 		{
-			this.Group       = what.Group;
-			this.Person      = what.Person;
-			this.LegalPerson = what.LegalPerson;
-			this.Contact     = what.Contact;
+			this.Person = participationData.Person;
+			this.LegalPerson = participationData.LegalPerson;
+			this.Contact = participationData.Contact;
 		}
 	}
 }

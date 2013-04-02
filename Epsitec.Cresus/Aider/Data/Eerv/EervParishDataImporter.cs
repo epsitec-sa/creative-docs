@@ -1230,13 +1230,12 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var aiderPerson in aiderPersons)
 			{
-				var what = new Participation
+				var participationData = new ParticipationData
 				{
-					Group  = importationGroup,
 					Person = aiderPerson,
 				};
 
-				AiderGroupParticipantEntity.StartParticipation (businessContext, what);
+				AiderGroupParticipantEntity.StartParticipation (businessContext, importationGroup, participationData);
 			}
 
 			// We load the related data to speed up the execution of the business rules.
@@ -1460,10 +1459,7 @@ namespace Epsitec.Aider.Data.Eerv
 				var endDate = eervActivity.EndDate;
 				var remarks = TextFormatter.FormatText (eervActivity.Remarks);
 
-				var participationData = new Participation ()
-				{
-					Group = aiderGroup
-				};
+				var participationData = new ParticipationData ();
 
 				if (eervActivity.Person != null)
 				{
@@ -1485,7 +1481,7 @@ namespace Epsitec.Aider.Data.Eerv
 					throw new NotImplementedException ();
 				}
 
-				AiderGroupParticipantEntity.ImportParticipation (businessContext, participationData, startDate, endDate, remarks);
+				AiderGroupParticipantEntity.ImportParticipation (businessContext, aiderGroup, participationData, startDate, endDate, remarks);
 			}
 
 			// We load the related data to speed up the execution of the business rules.

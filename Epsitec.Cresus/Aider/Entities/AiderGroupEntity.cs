@@ -435,15 +435,14 @@ namespace Epsitec.Aider.Entities
 					(person.IsNotNull ()) &&
 					(person.IsNotMemberOf (this)))
 				{
-					var what = new Participation
+					var participationData = new ParticipationData
 					{
-						Group       = this,
 						Person      = person,
 						LegalPerson = legal,
 						Contact     = contact,
 					};
 
-					AiderGroupParticipantEntity.StartParticipation (businessContext, what, startDate, comment);
+					AiderGroupParticipantEntity.StartParticipation (businessContext, this, participationData, startDate, comment);
 					continue;
 				}
 
