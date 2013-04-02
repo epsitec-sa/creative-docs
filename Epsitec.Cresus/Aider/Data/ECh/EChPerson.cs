@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Data.ECh
 
 		public bool CheckData(string on, string fn, Date dob, PersonSex s, PersonNationalityStatus ns, string ncc, PersonMaritalStatus ms, ReadOnlyCollection<EChPlace> op)
 		{
-			bool result = this.OfficialName == on && this.FirstNames == fn && this.DateOfBirth == dob && this.Sex == s && this.NationalityStatus == ns && this.NationalCountryCode == ncc && this.MaritalStatus == ms && this.OriginPlaces == op;
+			bool result = this.OfficialName == on && this.FirstNames == fn && this.DateOfBirth == dob && this.Sex == s && this.NationalityStatus == ns && this.NationalCountryCode == ncc && this.MaritalStatus == ms && this.OriginPlaces.SetEquals(op);
 			return result;
 		}
 
