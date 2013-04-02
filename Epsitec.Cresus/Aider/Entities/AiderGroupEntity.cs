@@ -189,7 +189,7 @@ namespace Epsitec.Aider.Entities
 			int count = 10;
 
 			var participants = this.GetParticipants (count + 1)
-				.Select (g => g.GetCompactSummary ())
+				.Select (p => AiderGroupEntity.GetParticipantSummary (p))
 				.CreateSummarySequence (count, "...");
 
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
@@ -213,11 +213,32 @@ namespace Epsitec.Aider.Entities
 		{
 			int count = 10;
 
-			var groups = this.GetFuntionParticipants (count + 1)
-				.Select (g => g.GetCompactSummary ())
+			var participants = this.GetFuntionParticipants (count + 1)
+				.Select (p => AiderGroupEntity.GetParticipantSummary(p))
 				.CreateSummarySequence (count, "...");
 
-			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), groups);
+			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
+		}
+
+		private static FormattedText GetParticipantSummary(AiderGroupParticipantEntity participant)
+		{
+			FormattedText text;
+
+			if (participant.LegalPerson.IsNull())
+			{
+				text = participant.Person.DisplayName;
+			}
+			else
+			{
+				text = participant.LegalPerson.Name;
+
+				if (participant.Person.IsNotNull ())
+				{
+					text += " (" + participant.Person.DisplayName + ")";
+				}
+			}
+
+			return text;
 		}
 
 
@@ -536,21 +557,21 @@ namespace Epsitec.Aider.Entities
 			return this.GetParents ().Skip (skip);
 		}
 
-		
-		private IList<AiderPersonEntity> GetParticipants(int count)
+
+		private IList<AiderGroupParticipantEntity> GetParticipants(int count)
 		{
 			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
 			//	value returned by this method. It the entity is not persisted, it will always be an empty
 			//	list.
 
 			return this.ExecuteWithDataContext (c => this.FindParticipants (c, count),
-												() => new List<AiderPersonEntity> ());
+												() => new List<AiderGroupParticipantEntity> ());
 		}
 
-		private IList<AiderPersonEntity> GetFuntionParticipants(int count)
+		private IList<AiderGroupParticipantEntity> GetFuntionParticipants(int count)
 		{
 			return this.ExecuteWithDataContext (c => this.FindFunctionParticipants (c, count),
-												() => new List<AiderPersonEntity> ());
+												() => new List<AiderGroupParticipantEntity> ());
 		}
 
 		private IList<AiderGroupEntity> GetSubgroups()
@@ -596,25 +617,25 @@ namespace Epsitec.Aider.Entities
 			return this.ExecuteWithDataContext (c => this.FindFunctionParticipantCount (c), () => 0);
 		}
 
-		
-		private IList<AiderPersonEntity> FindParticipants(DataContext dataContext, int count)
+
+		private IList<AiderGroupParticipantEntity> FindParticipants(DataContext dataContext, int count)
 		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true, true, true);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
 
 			request.Skip = 0;
 			request.Take = count;
 
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
+			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
-		private IList<AiderPersonEntity> FindFunctionParticipants(DataContext dataContext, int count)
+		private IList<AiderGroupParticipantEntity> FindFunctionParticipants(DataContext dataContext, int count)
 		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, true);
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true);
 
 			request.Skip = 0;
 			request.Take = count;
 
-			return dataContext.GetByRequest<AiderPersonEntity> (request);
+			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
 		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)
@@ -697,14 +718,14 @@ namespace Epsitec.Aider.Entities
 
 		private int FindParticipantCount(DataContext dataContext)
 		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, true);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
 
 			return dataContext.GetCount (request);
 		}
 
 		private int FindFunctionParticipantCount(DataContext dataContext)
 		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true, false);
+			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true);
 
 			return dataContext.GetCount (request);
 		}

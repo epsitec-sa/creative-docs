@@ -131,11 +131,10 @@ namespace Epsitec.Aider.Entities
 		}
 
 		
-		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool sort, bool current, bool returnPersons)
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderGroupEntity group, bool current)
 		{
 			var participation = new AiderGroupParticipantEntity ()
 			{
-				Person = new AiderPersonEntity (),
 				Group = new AiderGroupEntity (),
 			};
 
@@ -144,21 +143,11 @@ namespace Epsitec.Aider.Entities
 				RootEntity = participation,
 			};
 
-			if (returnPersons)
-			{
-				request.RequestedEntity = participation.Person;
-			}
-
 			request.AddCondition (dataContext, participation, g => g.Group == group);
 
 			if (current)
 			{
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
-			}
-
-			if (sort)
-			{
-				request.AddSortClause (ValueField.Create (participation.Person, p => p.DisplayName), SortOrder.Ascending);
 			}
 
 			return request;
@@ -197,18 +186,13 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
-		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current, bool sort)
+		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current)
 		{
-			var personExample = new AiderPersonEntity ();
-			var participationExample = new AiderGroupParticipantEntity ()
-			{
-				Person = personExample
-			};
+			var participationExample = new AiderGroupParticipantEntity ();
 
 			var request = new Request ()
 			{
-				RootEntity = participationExample,
-				RequestedEntity = personExample,
+				RootEntity = participationExample
 			};
 
 			AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participationExample, group);
@@ -216,11 +200,6 @@ namespace Epsitec.Aider.Entities
 			if (current)
 			{
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participationExample);
-			}
-
-			if (sort)
-			{
-				request.AddSortClause (ValueField.Create (participationExample.Person, p => p.DisplayName), SortOrder.Ascending);
 			}
 
 			return request;
@@ -235,6 +214,8 @@ namespace Epsitec.Aider.Entities
 
 		public static void AddFunctionMemberCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation, AiderGroupEntity group)
 		{
+			// TODO Here we should find a way to avoid duplicates.
+
 			if (participation.Group == null)
 			{
 				participation.Group = new AiderGroupEntity ();
@@ -253,8 +234,6 @@ namespace Epsitec.Aider.Entities
 				participation,
 				x => SqlMethods.IsInSet (x.Group.Path, paths)
 			);
-
-			request.Distinct = true;
 		}
 		
 		

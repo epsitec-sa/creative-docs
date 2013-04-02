@@ -17,7 +17,7 @@ using System.Collections.Generic;
 namespace Epsitec.Aider.Controllers.SetControllers
 {
 	[ControllerSubType (1)]
-	internal sealed class SetAiderGroupViewController1 : SetViewController<AiderGroupEntity, AiderPersonEntity, AiderPersonEntity>
+	internal sealed class SetAiderGroupViewController1 : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderGroupParticipantEntity>
 	{
 		public override string GetIcon()
 		{
@@ -43,23 +43,12 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
-			// Here we do something quite nasty, as we change the requested entity and the root
-			// entity from the request. For now it works, so let's hope it will still work in the
-			// future.
-
 			dataSetAccessor.Customizer = (dataContext, request, example) =>
 			{
-				var person = (AiderPersonEntity) example;
-				var participation = new AiderGroupParticipantEntity ()
-				{
-					Person = person,
-				};
+				var participation = (AiderGroupParticipantEntity) example;
 
 				AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participation, entity);
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
-
-				request.RootEntity = participation;
-				request.RequestedEntity = person;
 			};
 		}
 
@@ -68,12 +57,12 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			throw new NotImplementedException ();
 		}
 
-		protected override void AddItems(IEnumerable<AiderPersonEntity> entitiesToAdd)
+		protected override void AddItems(IEnumerable<AiderGroupParticipantEntity> entitiesToAdd)
 		{
 			throw new NotImplementedException ();
 		}
 
-		protected override void RemoveItems(IEnumerable<AiderPersonEntity> entitiesToRemove)
+		protected override void RemoveItems(IEnumerable<AiderGroupParticipantEntity> entitiesToRemove)
 		{
 			throw new NotImplementedException ();
 		}

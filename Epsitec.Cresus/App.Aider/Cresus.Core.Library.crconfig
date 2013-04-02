@@ -149,11 +149,7 @@ AiderGroupDef = [LVA2A]
       </col>
     </t>
     <t eid="@AiderGroupParticipant" n="groupMembers">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA3]" title="Prenom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAI4]" title="Nom" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
@@ -176,8 +172,12 @@ AiderGroupDef = [LVA2A]
 	<disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderPerson" n="groupFunctionMembers">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
+    <t eid="@AiderGroupParticipant" n="groupFunctionMembers">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAI4]" title="Nom" canSort="True" canFilter="True">
+	<sort o="None" />
+	<disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAHG].[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
 	<sort o="None" />
 	<disp m="Visible" />
       </col>
@@ -196,7 +196,7 @@ AiderGroupDef = [LVA2A]
     <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG522]" teid="@AiderContact" tn="groupMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>
-    <d cid="[LVGI22]" teid="@AiderPerson" tn="groupFunctionMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>
+    <d cid="[LVGI22]" teid="@AiderGroupParticipant" tn="groupFunctionMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="false" ed="false" df="true" dg=""><R><r>@user</r></R></d>
   </D>
