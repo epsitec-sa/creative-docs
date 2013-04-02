@@ -26,6 +26,7 @@ namespace Epsitec.Data.Platform
             this.houseNames = new Dictionary<MatchSortCompositeKey<string, string>, NEW_GEB> ();
 			this.houseNamesAltLang = new Dictionary<MatchSortCompositeKey<string, string>, NEW_GEBA> ();
 			this.deliveryInformations = new Dictionary<MatchSortCompositeKey<string, string>, NEW_BOT_B> ();
+			this.placeNamesAltLang2 = new Dictionary<string, List<NEW_PLZ2>> ();
 
 			//Parse CSV and extract line fields
 			foreach (var lineFields in File.ReadLines (this.filePath,Encoding.GetEncoding("Windows-1252")).Select (l => l.Split (';')))
@@ -44,12 +45,21 @@ namespace Epsitec.Data.Platform
                         this.placesNames.Add(compKey,new NEW_PLZ1 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6], lineFields[7], lineFields[8], lineFields[9], lineFields[10], lineFields[11], lineFields[12], lineFields[13], lineFields[14], lineFields[15]));
 						break;
 
-                    case "02":
-						compKey = new MatchSortCompositeKey<string,string>();
-                        compKey.PK = Guid.NewGuid().ToString();
-                        compKey.FK = lineFields[1];
-                        placesNamesAltLang.Add(compKey,new NEW_PLZ2 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6]));
-                        break;
+					case "02":
+						compKey = new MatchSortCompositeKey<string, string> ();
+						compKey.PK = Guid.NewGuid ().ToString ();
+						compKey.FK = lineFields[1];
+						this.placesNamesAltLang.Add(compKey,new NEW_PLZ2 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6]));                       
+						
+						List<NEW_PLZ2> list;
+						if (!this.placeNamesAltLang2.TryGetValue (compKey.FK, out list))
+						{
+							list = new List<NEW_PLZ2> ();
+							this.placeNamesAltLang2[compKey.FK] = list;
+						}
+						list.Add (new NEW_PLZ2 (lineFields[1], lineFields[2], lineFields[3], lineFields[4], lineFields[5], lineFields[6]));
+
+						break;
 
                     case "03":
                         this.municipalities.Add(lineFields[1], new NEW_COM (lineFields[1], lineFields[2], lineFields[3], lineFields[4]));
@@ -127,6 +137,7 @@ namespace Epsitec.Data.Platform
 							from pa in paj.DefaultIfEmpty()
 							join m in this.municipalities on p.Key.FK equals m.Key
 							select new MatchSortPlace (p.Value.ONRP,m.Value.BFSNR, m.Value.GEMEINDENAME, m.Value.KANTON, m.Value.AGGLONR, p.Value.PLZ_TYP, p.Value.PLZ, p.Value.PLZ_ZZ, p.Value.GPLZ, p.Value.ORT_BEZ_18, p.Value.ORT_BEZ_27, p.Value.KANTON, p.Value.SPRACHCODE, p.Value.SPRACHCODE_ABW=="" ? "0" : p.Value.SPRACHCODE_ABW, p.Value.BRIEFZ_DURCH, p.Value.GILT_AB_DAT, p.Value.PLZ_BRIEFZUST, p.Value.PLZ_COFF, pa.Value==null ? "" : pa.Value.BEZ_TYP, pa.Value==null ? "" : pa.Value.ORT_BEZ_18, pa.Value==null ? "" : pa.Value.ORT_BEZ_27, pa.Value==null ? "0" : pa.Value.SPRACHCODE);
+			
 				return query;
 
             }
@@ -153,7 +164,7 @@ namespace Epsitec.Data.Platform
         {
             get
             {
-                var query = from h in this.houseNames
+				var query = from h in this.houseNames
                             join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK into aj
 							from a in aj.DefaultIfEmpty()
                             join d in this.deliveryInformations on h.Key.PK equals d.Key.FK into dj
@@ -270,6 +281,7 @@ namespace Epsitec.Data.Platform
         private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_GEB> houseNames;
         private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_GEBA> houseNamesAltLang;
 		private readonly Dictionary<MatchSortCompositeKey<string, string>, NEW_BOT_B> deliveryInformations;
+		private readonly Dictionary<string, List<NEW_PLZ2>> placeNamesAltLang2;
 
 	}
 

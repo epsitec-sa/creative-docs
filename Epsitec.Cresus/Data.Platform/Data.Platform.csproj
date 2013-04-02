@@ -53,13 +53,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="EChDataComparer\EChAddress.cs" />
-    <Compile Include="EChDataComparer\EchDataComparer.cs" />
-    <Compile Include="EChDataComparer\EChDataLoader.cs" />
-    <Compile Include="EChDataComparer\EChPerson.cs" />
-    <Compile Include="EChDataComparer\EChPlace.cs" />
-    <Compile Include="EChDataComparer\EChReportedPerson.cs" />
-    <Compile Include="EChDataComparer\EChXmlTags.cs" />
     <Compile Include="MatchSort\MatchSortCompositeKey.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
