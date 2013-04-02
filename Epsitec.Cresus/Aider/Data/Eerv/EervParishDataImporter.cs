@@ -1446,8 +1446,6 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ImportEervActivities(BusinessContext businessContext, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervLegalPerson, EntityKey> eervLegalPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
 		{
-			// TODO Test this method to check if it really works.
-
 			var dataContext = businessContext.DataContext;
 
 			var aiderPersons = new HashSet<AiderPersonEntity> ();
