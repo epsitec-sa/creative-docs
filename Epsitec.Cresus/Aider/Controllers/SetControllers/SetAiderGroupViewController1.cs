@@ -1,5 +1,4 @@
-﻿using Epsitec.Aider.Data;
-using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
 
@@ -9,8 +8,6 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SetControllers;
 
 using Epsitec.Cresus.Core.Data;
-
-using Epsitec.Cresus.DataLayer.Expressions;
 
 using System;
 
