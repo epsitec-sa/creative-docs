@@ -90,13 +90,8 @@
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
-    <Compile Include="Data\EChDataComparer\EChAddress.cs" />
-    <Compile Include="Data\EChDataComparer\EchDataComparer.cs" />
-    <Compile Include="Data\EChDataComparer\EChDataLoader.cs" />
-    <Compile Include="Data\EChDataComparer\EChPerson.cs" />
-    <Compile Include="Data\EChDataComparer\EChPlace.cs" />
-    <Compile Include="Data\EChDataComparer\EChReportedPerson.cs" />
-    <Compile Include="Data\EChDataComparer\EChXmlTags.cs" />
+    <Compile Include="Data\ECh\EChDataComparerLoader.cs" />
+    <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
