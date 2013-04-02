@@ -153,7 +153,7 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
-		public static Request CreateParticipantRequest(DataContext dataContext, AiderPersonEntity person, bool sort, bool current, bool returnGroups)
+		public static Request CreateParticipantRequest(DataContext dataContext, AiderPersonEntity person, bool current)
 		{
 			var participation = new AiderGroupParticipantEntity ()
 			{
@@ -166,21 +166,11 @@ namespace Epsitec.Aider.Entities
 				RootEntity = participation,
 			};
 
-			if (returnGroups)
-			{
-				request.RequestedEntity = participation.Group;
-			}
-
 			request.AddCondition (dataContext, participation, g => g.Person == person);
 
 			if (current)
 			{
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
-			}
-
-			if (sort)
-			{
-				request.AddSortClause (ValueField.Create (participation.Group, g => g.Name), SortOrder.Ascending);
 			}
 
 			return request;

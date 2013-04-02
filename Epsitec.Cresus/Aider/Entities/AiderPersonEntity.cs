@@ -394,7 +394,7 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderGroupParticipantEntity> FindParticipations(DataContext dataContext)
 		{
-			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, false, true, false);
+			var request = AiderGroupParticipantEntity.CreateParticipantRequest (dataContext, this, true);
 
 			return dataContext
 				.GetByRequest<AiderGroupParticipantEntity> (request)
