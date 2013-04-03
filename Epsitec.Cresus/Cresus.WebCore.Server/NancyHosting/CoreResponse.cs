@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		public static Response Failure(Dictionary<string, object> content)
 		{
-			return CoreResponse.CreateResponse (false, content);
+			return CoreResponse.CreateJsonResponse (false, content);
 		}
 
 
@@ -64,11 +64,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		public static Response Success(Dictionary<string, object> content)
 		{
-			return CoreResponse.CreateResponse (true, content);
+			return CoreResponse.CreateJsonResponse (true, content);
 		}
 
 
-		private static Response CreateResponse(bool success, object content)
+		private static Response CreateJsonResponse(bool success, object content)
 		{
 			var jsonData = new Dictionary<string, object> ()
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				{ "content", content },
 			};
 
-			return CoreResponse.CreateResponse (jsonData, HttpStatusCode.OK);
+			return CoreResponse.CreateJsonResponse (jsonData, HttpStatusCode.OK);
 		}
 
 
@@ -108,11 +108,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				jsonData["errors"] = errors;
 			}
 
-			return CoreResponse.CreateResponse (jsonData, HttpStatusCode.OK);
+			return CoreResponse.CreateJsonResponse (jsonData, HttpStatusCode.OK);
 		}
 
 
-		private static Response CreateResponse(Dictionary<string, object> jsonData, HttpStatusCode code)
+		private static Response CreateJsonResponse(Dictionary<string, object> jsonData, HttpStatusCode code)
 		{
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
