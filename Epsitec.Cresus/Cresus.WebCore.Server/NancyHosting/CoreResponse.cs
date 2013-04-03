@@ -125,12 +125,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		public static Response CreateStreamResponse(Stream stream, string filename)
 		{
+			// This tells the browser that it should automatically propose the user to download the
+			// file instead of trying to open it within the browser.
 			var contentType = "application/force-download";
 
 			return new StreamResponse (() => stream, contentType)
 			{
 				Headers =
 				{
+					// This tells the browser the file name that it should use to save the file.
 					{ "Content-Disposition", "attachment; filename=\"" + filename + "\"" }
 				}
 			};
