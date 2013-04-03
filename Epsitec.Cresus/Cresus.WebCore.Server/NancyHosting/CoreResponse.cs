@@ -3,6 +3,8 @@ using Nancy.Responses;
 
 using System.Collections.Generic;
 
+using System.IO;
+
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
@@ -117,6 +119,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
 				StatusCode = HttpStatusCode.OK,
+			};
+		}
+
+
+		public static Response CreateStreamResponse(Stream stream, string filename)
+		{
+			var contentType = "application/force-download";
+
+			return new StreamResponse (() => stream, contentType)
+			{
+				Headers =
+				{
+					{ "Content-Disposition", "attachment; filename=\"" + filename + "\"" }
+				}
 			};
 		}
 
