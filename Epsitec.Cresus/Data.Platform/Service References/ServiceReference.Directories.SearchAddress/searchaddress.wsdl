@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:directories/search/v4/searchaddress" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="urn:directories/search/v4/searchaddress" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Directories SearchAddress Webservice</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn:directories/search/v4/searchaddress">
+      <s:element name="SearchAddress">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="addressParam" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchAddressResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SearchAddressResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchLocation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="locationParam" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchLocationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SearchLocationResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchService">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="serviceListParam" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchServiceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="SearchServiceResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Version">
+        <s:complexType />
+      </s:element>
+      <s:element name="VersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="VersionResult" nillable="true" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SearchAddressSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchAddress" />
+  </wsdl:message>
+  <wsdl:message name="SearchAddressSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchAddressResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchLocationSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchLocation" />
+  </wsdl:message>
+  <wsdl:message name="SearchLocationSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchServiceSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchService" />
+  </wsdl:message>
+  <wsdl:message name="SearchServiceSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchServiceResponse" />
+  </wsdl:message>
+  <wsdl:message name="VersionSoapIn">
+    <wsdl:part name="parameters" element="tns:Version" />
+  </wsdl:message>
+  <wsdl:message name="VersionSoapOut">
+    <wsdl:part name="parameters" element="tns:VersionResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SearchAddressSoap">
+    <wsdl:operation name="SearchAddress">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns address entries.</wsdl:documentation>
+      <wsdl:input message="tns:SearchAddressSoapIn" />
+      <wsdl:output message="tns:SearchAddressSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchLocation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns location entries.</wsdl:documentation>
+      <wsdl:input message="tns:SearchLocationSoapIn" />
+      <wsdl:output message="tns:SearchLocationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchService">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all addresses which are entered in serviceList-parameter. This version allows max. 10 entries in the list.</wsdl:documentation>
+      <wsdl:input message="tns:SearchServiceSoapIn" />
+      <wsdl:output message="tns:SearchServiceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Version">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the webservice version.</wsdl:documentation>
+      <wsdl:input message="tns:VersionSoapIn" />
+      <wsdl:output message="tns:VersionSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SearchAddressSoap" type="tns:SearchAddressSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SearchAddress">
+      <soap:operation soapAction="urn:directories/search/v4/searchaddress/SearchAddress" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchLocation">
+      <soap:operation soapAction="urn:directories/search/v4/searchaddress/SearchLocation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchService">
+      <soap:operation soapAction="urn:directories/search/v4/searchaddress/SearchService" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Version">
+      <soap:operation soapAction="urn:directories/search/v4/searchaddress/Version" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SearchAddressSoap12" type="tns:SearchAddressSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SearchAddress">
+      <soap12:operation soapAction="urn:directories/search/v4/searchaddress/SearchAddress" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchLocation">
+      <soap12:operation soapAction="urn:directories/search/v4/searchaddress/SearchLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchService">
+      <soap12:operation soapAction="urn:directories/search/v4/searchaddress/SearchService" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Version">
+      <soap12:operation soapAction="urn:directories/search/v4/searchaddress/Version" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SearchAddress">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Directories SearchAddress Webservice</wsdl:documentation>
+    <wsdl:port name="SearchAddressSoap" binding="tns:SearchAddressSoap">
+      <soap:address location="http://service.directories.ch/search/v4/searchaddress.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SearchAddressSoap12" binding="tns:SearchAddressSoap12">
+      <soap12:address location="http://service.directories.ch/search/v4/searchaddress.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
