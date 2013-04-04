@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
-  <contractRef ref="http://service.directories.ch/version/v1/version.asmx?wsdl" docRef="http://service.directories.ch/version/v1/version.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
-  <soap address="http://service.directories.ch/version/v1/version.asmx" xmlns:q1="urn:directories/version/v1/version" binding="q1:VersionSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
-  <soap address="http://service.directories.ch/version/v1/version.asmx" xmlns:q2="urn:directories/version/v1/version" binding="q2:VersionSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
-</discovery>

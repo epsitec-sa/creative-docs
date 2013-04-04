@@ -13,10 +13,6 @@ namespace Epsitec.Data.Platform.Directories
 		{
 			get
 			{
-				if (this.startAtIndex==null)
-				{
-					this.startAtIndex = 0;
-				}
 				return this.startAtIndex;
 			}
 			set
@@ -29,10 +25,6 @@ namespace Epsitec.Data.Platform.Directories
 		{
 			get
 			{
-				if (this.finishAtIndex==null)
-				{
-					this.finishAtIndex = 1;
-				}
 				return this.finishAtIndex;
 			}
 

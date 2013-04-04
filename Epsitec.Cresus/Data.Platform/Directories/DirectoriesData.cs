@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Epsitec.Data.Platform.Directories.Admin.Security;
-using Epsitec.Data.Platform.Directories.Search.SearchAddress;
+using Epsitec.Data.Platform.ServiceReference.Directories.Security;
+using Epsitec.Data.Platform.ServiceReference.Directories.SearchAddress;
 
 namespace Epsitec.Data.Platform.Directories
 {

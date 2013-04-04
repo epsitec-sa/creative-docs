@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ff989d11-598c-4428-88b9-e898a654e810" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="8ce0dd42-1afe-4017-8ace-536a07a76e84" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -21,8 +21,8 @@
     <MetadataSource Address="https://secure.directories.ch/administration/v4/security.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="security.wsdl" MetadataType="Wsdl" ID="13dce2ba-f423-49e9-bf55-e52315b3ca43" SourceId="1" SourceUrl="https://secure.directories.ch/administration/v4/security.asmx?wsdl" />
-    <MetadataFile FileName="security.disco" MetadataType="Disco" ID="9f09073c-ab84-4988-b6ec-7dfda25ad5da" SourceId="1" SourceUrl="https://secure.directories.ch/administration/v4/security.asmx?disco" />
+    <MetadataFile FileName="security.wsdl" MetadataType="Wsdl" ID="b4b15054-4c02-49f4-b17d-42017e10b513" SourceId="1" SourceUrl="https://secure.directories.ch/administration/v4/security.asmx?wsdl" />
+    <MetadataFile FileName="security.disco" MetadataType="Disco" ID="7328f678-b72d-40b8-8c46-bf70a56bdc4e" SourceId="1" SourceUrl="https://secure.directories.ch/administration/v4/security.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="7f8a99d6-13bd-4c5e-8cb7-7bf075815135" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="ce8abcd6-4f51-4cde-a170-9f0581fe7824" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <EnableDataBinding>true</EnableDataBinding>
@@ -21,8 +21,8 @@
     <MetadataSource Address="http://service.directories.ch/search/v4/searchaddress.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="searchaddress.wsdl" MetadataType="Wsdl" ID="fcc51485-3313-403b-a798-162fa1069211" SourceId="1" SourceUrl="http://service.directories.ch/search/v4/searchaddress.asmx?wsdl" />
-    <MetadataFile FileName="searchaddress.disco" MetadataType="Disco" ID="ebc3c3f6-3a93-41bc-9403-bc27698dee1f" SourceId="1" SourceUrl="http://service.directories.ch/search/v4/searchaddress.asmx?disco" />
+    <MetadataFile FileName="searchaddress.wsdl" MetadataType="Wsdl" ID="236257bc-19e4-4e5a-a0d2-f92cbe1c5f5a" SourceId="1" SourceUrl="http://service.directories.ch/search/v4/searchaddress.asmx?wsdl" />
+    <MetadataFile FileName="searchaddress.disco" MetadataType="Disco" ID="03402e1c-20ee-4d9b-9e02-0ad607099bba" SourceId="1" SourceUrl="http://service.directories.ch/search/v4/searchaddress.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
