@@ -43,13 +43,13 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
-			dataSetAccessor.Customizer = (dataContext, request, example) =>
+			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
 				var participation = (AiderGroupParticipantEntity) example;
 
 				AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participation, entity);
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
-			};
+			});
 		}
 
 		protected override void SetupPickDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)

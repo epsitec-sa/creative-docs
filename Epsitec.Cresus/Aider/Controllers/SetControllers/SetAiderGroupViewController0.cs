@@ -65,13 +65,13 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			// AiderGroupParticipantEntity whose group is the current entity and that are valid
 			// today.
 
-			dataSetAccessor.Customizer = (dataContext, request, example) =>
+			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
 				var participation = (AiderGroupParticipantEntity) example;
 
 				request.AddCondition (dataContext, participation, x => x.Group == entity);
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
-			};
+			});
 		}
 
 		protected override void SetupPickDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)

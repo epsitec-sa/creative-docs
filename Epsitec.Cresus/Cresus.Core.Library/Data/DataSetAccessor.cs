@@ -11,6 +11,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,7 @@ namespace Epsitec.Cresus.Core.Data
 			this.data            = data;
 			this.dataSetMetadata = dataSetMetadata;
 			this.businessContext = this.data.CreateIsolatedBusinessContext ("DataSetAccessor", false);
+			this.customizers     = new List<Action<DataContext, Request, AbstractEntity>> ();
 
 			this.isolatedTransaction = isolatedTransaction;
 		}
@@ -65,10 +67,12 @@ namespace Epsitec.Cresus.Core.Data
 		/// This action will be called before the creation of the RequestView object, so you can
 		/// set up the Request as you want here.
 		/// </summary>
-		public System.Action<DataContext, Request, AbstractEntity> Customizer
+		public IList<Action<DataContext, Request, AbstractEntity>> Customizers
 		{
-			get;
-			set;
+			get
+			{
+				return this.customizers;
+			}
 		}
 
 
@@ -234,9 +238,9 @@ namespace Epsitec.Cresus.Core.Data
 
 			request.SortClauses.AddRange (sortClauses);
 
-			if (this.Customizer != null)
+			foreach (var customizer in this.Customizers)
 			{
-				this.Customizer (this.IsolatedDataContext, request, example);
+				customizer (this.IsolatedDataContext, request, example);
 			}
 
 			return this.IsolatedDataContext.GetRequestView (request, !this.isDependent, this.isolatedTransaction);
@@ -259,6 +263,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly BusinessContext		businessContext;
 		private readonly IsolatedTransaction	isolatedTransaction;
 		private readonly DataSetMetadata		dataSetMetadata;
+		private readonly IList<Action<DataContext, Request, AbstractEntity>> customizers;
 		
 		private AbstractRequestView				requestView;
 		private int?							itemCount;
