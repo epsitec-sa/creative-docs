@@ -351,7 +351,6 @@
     <Compile Include="Factories\ViewControllerComponentFactory.cs" />
     <Compile Include="Favorites\FavoritesCache.cs" />
     <Compile Include="Favorites\FavoritesCollection.cs" />
-    <Compile Include="Favorites\FavoritesCollection`1.cs" />
     <Compile Include="Features\FeatureManager.cs" />
     <Compile Include="Helpers\EntityPreviewHelper.cs" />
     <Compile Include="IChartProvider.cs" />

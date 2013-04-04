@@ -111,7 +111,10 @@ namespace Epsitec.Cresus.WebCore.Server
 
 				if (favorites != null)
 				{
-					dataSetAccessor.SetRequest (favorites.GetRequest ());
+					dataSetAccessor.Customizers.Add ((d, r, e) =>
+					{
+						r.Conditions.Add (favorites.CreateCondition (e));
+					});
 				}
 
 				var dataContext = dataSetAccessor.IsolatedDataContext;

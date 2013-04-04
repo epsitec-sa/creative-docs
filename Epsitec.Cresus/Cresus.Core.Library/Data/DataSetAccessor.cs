@@ -81,11 +81,6 @@ namespace Epsitec.Cresus.Core.Data
 			this.isDependent = true;
 		}
 
-		public void SetRequest(Request request)
-		{
-			this.request = request;
-		}
-
 		public int GetItemCount()
 		{
 			if (this.itemCount == null)

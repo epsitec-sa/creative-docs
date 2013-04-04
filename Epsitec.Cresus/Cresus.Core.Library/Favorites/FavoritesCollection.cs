@@ -4,10 +4,10 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Context;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Core.Favorites
 	/// The <c>FavoritesCollection</c> is an abstract class used to represend collection of
 	/// entities, identified by their database keys.
 	/// </summary>
-	public abstract class FavoritesCollection
+	public sealed class FavoritesCollection
 	{
-		public FavoritesCollection(IEnumerable<AbstractEntity> collection, Druid databaseId)
+		public FavoritesCollection(IEnumerable<AbstractEntity> collection, Type type, Druid databaseId)
 		{
 			var buffer = new List<long> ();
 			this.databaseId = databaseId;
@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Core.Favorites
 
 			//	Compute a strong hash based on the entity name and on the array of ids. This
 			//	will be unique (risk of collision very, very low = zero for our purposes).
-			
-			var source = Epsitec.Common.IO.BitConverter.ToBytes (this.ids).Concat (System.Text.Encoding.UTF8.GetBytes (this.GetEntityName ()));
+
+			var source = Epsitec.Common.IO.BitConverter.ToBytes (this.ids).Concat (System.Text.Encoding.UTF8.GetBytes (type.FullName));
 			var stream = new Epsitec.Common.IO.ByteStream (this.ids.Length*8, source);
 
 			this.strongHash = Epsitec.Common.IO.Checksum.ComputeMd5Hash (stream);
@@ -51,14 +51,6 @@ namespace Epsitec.Cresus.Core.Favorites
 			}
 		}
 
-		public int Count
-		{
-			get
-			{
-				return this.ids.Length;
-			}
-		}
-
 		public Druid DatabaseId
 		{
 			get
@@ -67,29 +59,13 @@ namespace Epsitec.Cresus.Core.Favorites
 			}
 		}
 
-		public abstract string GetEntityName();
-		
-		public abstract AbstractEntity GetExample();
-
-		public abstract Druid GetTypeId();
-
-		public Request GetRequest()
+		public DataExpression CreateCondition (AbstractEntity example)
 		{
-			var example = this.GetExample ();
-			var request = new Request ()
-			{
-				RequestedEntity = example,
-				RootEntity = example
-			};
-
-			request.Conditions.Add (new ValueSetComparison (InternalField.CreateId (example), SetComparator.In, this.ids.Select (id => new Constant (id))));
-
-			return request;
-		}
-
-		public IEnumerable<AbstractEntity> GetByRequest(DataContext dataContext)
-		{
-			return dataContext.GetByRequest (this.GetRequest ());
+			return new ValueSetComparison
+			(
+				InternalField.CreateId (example),
+				SetComparator.In, this.ids.Select (id => new Constant (id))
+			);
 		}
 
 		

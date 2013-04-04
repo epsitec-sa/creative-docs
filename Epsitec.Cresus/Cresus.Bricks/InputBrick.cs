@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FromCollection, value));
 		}
 
-		public InputBrick<T, TParent> WithFavorites(System.Collections.IEnumerable value)
+		public InputBrick<T, TParent> WithFavorites(IEnumerable<AbstractEntity> value)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, value));
 		}

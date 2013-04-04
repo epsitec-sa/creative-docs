@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Favorites;
@@ -24,16 +25,19 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			set;
 		}
 
-		
-		public void DefineFavorites(System.Collections.IEnumerable collection)
+
+		public void DefineFavorites(IEnumerable<AbstractEntity> collection)
 		{
 			if (collection != null)
 			{
 				object firstItem;
-				
+
 				if (Collection.TryGetFirst (collection, out firstItem))
 				{
-					this.favoritesId = FavoritesCache.Current.Push (collection, firstItem.GetType (), Druid.Parse (this.DatabaseName));
+					var type = firstItem.GetType ();
+					var databaseId = Druid.Parse (this.DatabaseName);
+
+					this.favoritesId = FavoritesCache.Current.Push (collection, type, databaseId);
 				}
 			}
 		}

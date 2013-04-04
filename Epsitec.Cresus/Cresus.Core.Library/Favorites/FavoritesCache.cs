@@ -65,16 +65,11 @@ namespace Epsitec.Cresus.Core.Favorites
 			return guid.ToString ();
 		}
 
-		public string Push(System.Collections.IEnumerable collection, System.Type type, Druid databaseId)
+		public string Push(IEnumerable<AbstractEntity> collection, System.Type type, Druid databaseId)
 		{
-			var args = new object[] { collection, databaseId };
-			return this.Push (System.Activator.CreateInstance (typeof (FavoritesCollection<>).MakeGenericType (type), args) as FavoritesCollection);
-		}
+			var favorites = new FavoritesCollection (collection, type, databaseId);
 
-		public FavoritesCollection<T> Find<T>(string key)
-			where T : AbstractEntity, new ()
-		{
-			return this.Find (key) as FavoritesCollection<T>;
+			return this.Push (favorites);
 		}
 
 		public FavoritesCollection Find(string key)

@@ -1,7 +1,7 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Bricks
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (key, value));
 		}
 
-		public ActionFieldBrick<T, TField, TParent> WithFavorites(IEnumerable value)
+		public ActionFieldBrick<T, TField, TParent> WithFavorites(IEnumerable<TField> value)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, value));
 		}

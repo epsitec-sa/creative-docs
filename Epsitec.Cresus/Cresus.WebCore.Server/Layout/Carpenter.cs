@@ -1150,13 +1150,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable GetFavoritesCollection(BrickPropertyCollection brickProperties)
+		private static IEnumerable<AbstractEntity> GetFavoritesCollection(BrickPropertyCollection brickProperties)
 		{
 			var property = Carpenter.GetBrickProperty (brickProperties, BrickPropertyKey.FavoritesCollection);
 
 			if (property.HasValue)
 			{
-				return property.Value.CollectionValue;
+				return (IEnumerable<AbstractEntity>) property.Value.CollectionValue;
 			}
 			else
 			{
@@ -1165,13 +1165,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static IEnumerable GetFavoritesCollection(Brick brick)
+		private static IEnumerable<AbstractEntity> GetFavoritesCollection(Brick brick)
 		{
 			var property = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.FavoritesCollection);
 
 			if (property.HasValue)
 			{
-				return property.Value.CollectionValue;
+				return (IEnumerable<AbstractEntity>) property.Value.CollectionValue;
 			}
 			else
 			{
