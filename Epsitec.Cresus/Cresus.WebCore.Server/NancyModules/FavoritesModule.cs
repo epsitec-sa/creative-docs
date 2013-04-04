@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			int limit = Request.Query.limit;
 
 			var favorites = FavoritesCache.Current.Find (rawFavoritesId);
-			
+
 			return Tools.GetEntities
 			(
 				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,

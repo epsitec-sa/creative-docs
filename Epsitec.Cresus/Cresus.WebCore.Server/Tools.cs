@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		public static void SetupSortersAndFilters(BusinessContext businessContext, Caches caches, UserManager userManager, Core.Databases.Database database, string rawSorters, string rawFilters)
 		{
 			var dataSetMetadata = database.DataSetMetadata;
-			
+
 			var session = userManager.ActiveSession;
 			var settings = session.GetDataSetSettings (dataSetMetadata);
 
