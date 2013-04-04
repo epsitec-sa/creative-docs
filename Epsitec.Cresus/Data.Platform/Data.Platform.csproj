@@ -66,16 +66,6 @@
     <Compile Include="Directories\DirectoriesSearchAddressExecutor.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
-    <Compile Include="Directories\DirectoriesAuthentication.cs" />
-    <Compile Include="Directories\DirectoriesEntry.cs" />
-    <Compile Include="Directories\DirectoriesEntryAdd.cs" />
-    <Compile Include="Directories\DirectoriesEntryAddService.cs" />
-    <Compile Include="Directories\DirectoriesPaging.cs" />
-    <Compile Include="Directories\DirectoriesPrecisionCode.cs" />
-    <Compile Include="Directories\DirectoriesResponseChecker.cs" />
-    <Compile Include="Directories\DirectoriesSearchAddressExecutor.cs" />
-    <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
-    <Compile Include="Directories\DirectoriesWebService.cs" />
     <Compile Include="MatchSort\MatchSortCompositeKey.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
