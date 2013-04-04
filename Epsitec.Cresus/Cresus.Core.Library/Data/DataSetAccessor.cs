@@ -106,6 +106,11 @@ namespace Epsitec.Cresus.Core.Data
 			return this.GetRequestView ().GetIndex (entityKey.Value) ?? -1;
 		}
 
+		public AbstractEntity[] GetAllItems()
+		{
+			return this.GetRequestView ().GetEntities (null, null).ToArray ();
+		}
+
 		public AbstractEntity[] GetItems(int index, int count)
 		{
 			return this.ExecuteRequest (index, count, (r, i, c) => r.GetEntities (i, c));

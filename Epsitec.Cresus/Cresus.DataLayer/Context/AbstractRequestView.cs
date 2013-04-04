@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public IList<AbstractEntity> GetEntities(int index, int count)
+		public IList<AbstractEntity> GetEntities(int? index, int? count)
 		{
 			this.SetupEntitiesRequest (index, count);
 
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public abstract IList<AbstractEntity> GetEntities(Request request);
 
 
-		public IList<EntityKey> GetKeys(int index, int count)
+		public IList<EntityKey> GetKeys(int? index, int? count)
 		{
 			this.SetupEntitiesRequest (index, count);
 
