@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
+using Nancy;
 using Nancy.Json;
 
 using System;
@@ -20,7 +21,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using Nancy;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.IO
