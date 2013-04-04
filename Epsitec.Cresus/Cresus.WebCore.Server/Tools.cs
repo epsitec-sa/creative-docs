@@ -90,37 +90,16 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		public static Response GetEntities(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, int start, int limit)
 		{
-			var database = databaseManager.GetDatabase (databaseId);
+			return Tools.GetEntities (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters, rawFilters, start, limit, null);
+		}
 
-			Tools.SetupSortersAndFilters (businessContext, caches, userManager, database, rawSorters, rawFilters);
-
-			using (var dataSetAccessor = dataSetAccessorGetter (database))
-			{
-				dataSetAccessor.MakeDependent ();
-
-				var dataContext = dataSetAccessor.IsolatedDataContext;
-
-				var total = dataSetAccessor.GetItemCount ();
-				var entities = dataSetAccessor.GetItems (start, limit);
-				
-				database.LoadRelatedData (dataContext, entities);
-				
-				var data = entities
-					.Select (e => database.GetEntityData (dataContext, caches, e))
-					.ToList ();
-
-				var content = new Dictionary<string, object> ()
-				{
-					{ "total", total },
-					{ "entities", data },
-				};
-
-				return CoreResponse.Success (content);
-			}
+		public static Response GetEntities(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, FavoritesCollection favorites, string rawSorters, string rawFilters, int start, int limit)
+		{
+			return Tools.GetEntities (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, favorites.DatabaseId, rawSorters, rawFilters, start, limit, favorites);
 		}
 
 
-		public static Response GetEntities(BusinessContext businessContext, FavoritesCollection favorites, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, string rawFavoritesId, string rawSorters, string rawFilters, int start, int limit, Druid databaseId)
+		private static Response GetEntities(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, int start, int limit, FavoritesCollection favorites)
 		{
 			var database = databaseManager.GetDatabase (databaseId);
 
@@ -129,7 +108,11 @@ namespace Epsitec.Cresus.WebCore.Server
 			using (var dataSetAccessor = dataSetAccessorGetter (database))
 			{
 				dataSetAccessor.MakeDependent ();
-				dataSetAccessor.SetRequest (favorites.GetRequest ());
+
+				if (favorites != null)
+				{
+					dataSetAccessor.SetRequest (favorites.GetRequest ());
+				}
 
 				var dataContext = dataSetAccessor.IsolatedDataContext;
 
