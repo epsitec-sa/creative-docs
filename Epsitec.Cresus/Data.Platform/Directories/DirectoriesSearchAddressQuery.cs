@@ -10,52 +10,37 @@ namespace Epsitec.Data.Platform.Directories
 	{
 		public DirectoriesSearchAddressQuery(DirectoriesAuthentication Authentication,DirectoriesPaging Paging )
 		{
-			this.QueryParameters = new List<XElement> ();
+			this.QueryParameters = new List<DirectoriesQueryParameter> ();
 			this.Authentication = Authentication;
 			this.Paging = Paging;
 		}
 
 		private DirectoriesAuthentication Authentication;
 		private DirectoriesPaging Paging;
-		private List<XElement> QueryParameters;
+		private List<DirectoriesQueryParameter> QueryParameters;
 
 		public void AddFirstNameParameter(string Value,bool UsePhonetic,string DirectoriesPrecisionCode)
 		{
-			XElement FirstNameElement = new XElement ("FirstName");
-			FirstNameElement.SetAttributeValue ("Value", Value);
-			FirstNameElement.SetAttributeValue ("Phonetic", UsePhonetic == true ? "1" : "0");
-			FirstNameElement.SetAttributeValue ("PrecisionCode", DirectoriesPrecisionCode);
-
-			this.QueryParameters.Add (FirstNameElement);
+            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(2, "FirstName", Value, UsePhonetic, DirectoriesPrecisionCode);
+			this.QueryParameters.Add (Param);
 		}
 
 		public void AddLastNameParameter(string Value, bool UsePhonetic, string DirectoriesPrecisionCode)
 		{
-			XElement LastNameElement = new XElement ("LastName");
-			LastNameElement.SetAttributeValue ("Value", Value);
-			LastNameElement.SetAttributeValue ("Phonetic", UsePhonetic == true ? "1" : "0");
-			LastNameElement.SetAttributeValue ("PrecisionCode", DirectoriesPrecisionCode);
-
-			this.QueryParameters.Add (LastNameElement);
+            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(1, "LastName", Value, UsePhonetic, DirectoriesPrecisionCode);
+            this.QueryParameters.Add(Param);
 		}
 
         public void AddLocationParameter(string Value, bool UsePhonetic)
         {
-            XElement LastNameElement = new XElement("Location");
-            LastNameElement.SetAttributeValue("Value", Value);
-            LastNameElement.SetAttributeValue("Phonetic", UsePhonetic == true ? "1" : "0");
-
-            this.QueryParameters.Add(LastNameElement);
+            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(6, "Location", Value, UsePhonetic);
+            this.QueryParameters.Add(Param);
         }
 
 		public void AddPhoneParameter(string Value)
 		{
-			XElement Phone=new XElement ("Phone")
-			{
-				Value=Value
-			};
-
-			this.QueryParameters.Add (Phone);
+            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(8, "Phone", Value);
+            this.QueryParameters.Add(Param);
 		}
 
 		public XElement ForgeRequest()
@@ -73,7 +58,12 @@ namespace Epsitec.Data.Platform.Directories
 			AddressParam.Add (this.Paging.GetPagingElement ());
 
 			//Add Query Parameters
-			AddressParam.Add (this.QueryParameters);
+            var OrderedParameters = this.QueryParameters.OrderBy(q => q.Sequence).ToList();
+            foreach (DirectoriesQueryParameter qp in OrderedParameters)
+            {
+                AddressParam.Add(qp.GetParameter());
+            }
+			
 
 			AddressParam.Add (TypeCode);
 			

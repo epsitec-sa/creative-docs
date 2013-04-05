@@ -14,6 +14,8 @@ namespace Epsitec.Data.Platform.Directories
             this.LastName = EntryAdd.Attribute("LastName") != null ? EntryAdd.Attribute("LastName").Value : "";
 			this.FemaleName = EntryAdd.Attribute ("FemaleName") != null ? EntryAdd.Attribute ("FemaleName").Value : "";
             this.FirstName = EntryAdd.Attribute("FirstName") != null ? EntryAdd.Attribute("FirstName").Value : "";
+            this.Profession = EntryAdd.Attribute("Profession") != null ? EntryAdd.Attribute("Profession").Value : "";
+            this.LocaPostName = EntryAdd.Attribute("LocaPostName") != null ? EntryAdd.Attribute("LocaPostName").Value : "";
 			//TODO MAP FIELDS
 
 			this.Services = new List<DirectoriesEntryAddService> ();
