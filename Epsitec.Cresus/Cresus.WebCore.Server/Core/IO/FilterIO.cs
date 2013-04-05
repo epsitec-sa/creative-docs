@@ -37,21 +37,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var entityId = EntityInfo.GetTypeId (entityType);
 			var entityFilter = new EntityFilter (entityId);
 
-			if (filterParameter != null)
+			if (string.IsNullOrEmpty (filterParameter))
 			{
-				var deserializer = new JavaScriptSerializer ();
-				var filters = (object[]) deserializer.DeserializeObject (filterParameter);
+				return entityFilter;
+			}
 
-				foreach (var filter in filters.Cast<Dictionary<string, object>> ())
-				{
-					var column = FilterIO.ParseColumn (caches, database, filter);
+			var deserializer = new JavaScriptSerializer ();
+			var filters = (object[]) deserializer.DeserializeObject (filterParameter);
 
-					var columnId = column.MetaData.Id;
-					var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
-					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+			foreach (var filter in filters.Cast<Dictionary<string, object>> ())
+			{
+				var column = FilterIO.ParseColumn (caches, database, filter);
 
-					entityFilter.Columns.Add (columnRef);
-				}
+				var columnId = column.MetaData.Id;
+				var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
+				var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+
+				entityFilter.Columns.Add (columnRef);
 			}
 
 			return entityFilter;
