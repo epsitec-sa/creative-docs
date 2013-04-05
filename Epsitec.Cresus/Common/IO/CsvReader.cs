@@ -33,7 +33,7 @@ namespace Epsitec.Common.IO
 			if ((format.ColumnNames == null) ||
 				(format.ColumnNames.Length == 0))
 			{
-				headers = ReaderHelper.SplitRow (text, ref pos, format);
+				headers = CsvReader.SplitRow (text, ref pos, format);
 			}
 			else
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Common.IO
 
 			while (true)
 			{
-				string[] data = ReaderHelper.SplitRow (text, ref pos, format);
+				string[] data = CsvReader.SplitRow (text, ref pos, format);
 
 				if ((data == null) ||
 					(data.Length == 0))
@@ -66,6 +66,100 @@ namespace Epsitec.Common.IO
 			}
 
 			return table;
+		}
+
+		/// <summary>
+		/// Splits the text row into cells. This takes into account the field separator
+		/// character; no other preprocessing is done here.
+		/// </summary>
+		/// <param name="source">The source text.</param>
+		/// <param name="pos">The position in the source text.</param>
+		/// <param name="format">The CSV format.</param>
+		/// <returns>The array of cells or an empty array.</returns>
+		private static string[] SplitRow(string source, ref int pos, CsvFormat format)
+		{
+			List<string> items = new List<string> ();
+
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			bool quote = false;
+			bool first = true;
+
+			char fieldSep = format.FieldSeparator[0];
+
+			while (pos < source.Length)
+			{
+				char c = source[pos];
+
+				if ((c == ' ') || (c == '\n') || (c == '\r'))
+				{
+					pos++;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			char lineBreak = string.IsNullOrEmpty (format.MultilineSeparator) ? (char) 0 : format.MultilineSeparator[0];
+
+			if (pos >= source.Length)
+			{
+				return items.ToArray ();
+			}
+
+			while (pos < source.Length)
+			{
+				char c = source[pos++];
+
+				if (c == '\"')
+				{
+					quote = !quote;
+
+					if (first || !quote)
+					{
+						first = false;
+						continue;
+					}
+				}
+				else if ((c == ' ') && first)
+				{
+					continue;
+				}
+				else if (!quote)
+				{
+					//	Not inside quoted text; handle separators and line endings as
+					//	meaningful markers, not just data :
+
+					if (c == fieldSep)
+					{
+						items.Add (buffer.ToString ());
+						buffer.Length = 0;
+						first = true;
+						continue;
+					}
+					if ((c == '\r') ||
+						(c == '\n'))
+					{
+						items.Add (buffer.ToString ());
+						break;
+					}
+				}
+				else
+				{
+					//	Character to be treated as data.
+				}
+
+				if (c == lineBreak)
+				{
+					c = '\n';
+				}
+
+				buffer.Append (c);
+				first = false;
+			}
+
+			return items.ToArray ();
 		}
 	}
 }
