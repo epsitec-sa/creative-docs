@@ -28,7 +28,7 @@ namespace App.Directories
 		private void cmd_search_Click(object sender, EventArgs e)
 		{
 
-			List<DirectoriesEntry> entries = ws.SearchAddressByPhone(this.txt_value.Text);
+			var entries = ws.SearchAddressByPhone(this.txt_value.Text);
 
 			foreach (DirectoriesEntry entry in entries)
 			{
