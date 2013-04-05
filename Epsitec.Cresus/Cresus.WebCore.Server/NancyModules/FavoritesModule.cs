@@ -1,24 +1,24 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Favorites;
 
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.IO;
-using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using Nancy;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
+	using Database = Core.Databases.Database;
+
 	/// <summary>
 	/// Used to retrieve data from the favorites cache.
 	/// </summary>
@@ -37,7 +37,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;
 
-			System.Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter = db => db.GetDataSetAccessor (workerApp.DataSetGetter);
+			Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
+			{
+				return db.GetDataSetAccessor (workerApp.DataSetGetter);
+			};
 
 			string rawFavoritesId = parameters.name;
 
@@ -49,11 +52,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var favorites = FavoritesCache.Current.Find (rawFavoritesId);
 
-			return Tools.GetEntities
-			(
-				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				favorites, rawSorters, rawFilters, start, limit
-			);
+			using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, favorites, rawSorters, rawFilters))
+			{
+				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+			}
 		}
 	}
 }

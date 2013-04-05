@@ -2,6 +2,7 @@
 using Epsitec.Cresus.Core.Data;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -16,6 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
+
+
+	using Database = Core.Databases.Database;
 
 
 	/// <summary>
@@ -73,7 +77,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;
 
-			Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter = db =>
+			Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
 			{
 				return db.GetDataSetAccessor (workerApp.DataSetGetter);
 			};
@@ -86,12 +90,35 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
-			
-			return Tools.GetEntities
-			(
-				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, rawSorters, rawFilters, start, limit
-			);
+
+			using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters, rawFilters))
+			{
+				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+			}
+		}
+
+
+		internal static Response GetEntities(Caches caches, EntityExtractor extractor, int start, int limit)
+		{
+			var total = extractor.Accessor.GetItemCount ();
+			var entities = extractor.Accessor.GetItems (start, limit);
+
+			var dataContext = extractor.Accessor.IsolatedDataContext;
+			var database = extractor.Database;
+
+			database.LoadRelatedData (dataContext, entities);
+
+			var data = entities
+				.Select (e => database.GetEntityData (dataContext, caches, e))
+				.ToList ();
+
+			var content = new Dictionary<string, object> ()
+			{
+				{ "total", total },
+				{ "entities", data },
+			};
+
+			return CoreResponse.Success (content);
 		}
 
 
@@ -101,7 +128,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;
 
-			Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter = db =>
+			Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
 			{
 				return db.GetDataSetAccessor (workerApp.DataSetGetter);
 			};
@@ -109,15 +136,28 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string rawDatabaseId = parameters.name;
 			var databaseId = DataIO.ParseDruid (rawDatabaseId);
 
+			string rawEntityKey = parameters.id;
+			var entityKey = EntityIO.ParseEntityId (rawEntityKey);
+
 			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
 			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
-			string rawEntityKey = parameters.id;
 
-			return Tools.GetEntityIndex
-			(
-				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, rawSorters, rawFilters, rawEntityKey
-			);
+			using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters, rawFilters))
+			{
+				int? index = extractor.Accessor.IndexOf (entityKey);
+
+				if (index == -1)
+				{
+					index = null;
+				}
+
+				var content = new Dictionary<string, object> ()
+				{
+					{ "index", index },
+				};
+
+				return CoreResponse.Success (content);
+			}
 		}
 
 

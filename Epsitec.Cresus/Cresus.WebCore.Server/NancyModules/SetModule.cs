@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Controllers.SetControllers;
 using Epsitec.Cresus.Core.Data;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Layout;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
@@ -24,6 +25,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
+
+
+	using Database = Core.Databases.Database;
 
 
 	public class SetModule : AbstractAuthenticatedModule
@@ -65,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var dataStore = workerApp.DataStoreMetaData;
 
 				Druid databaseId;
-				Func<Core.Databases.Database, DataSetAccessor> dataSetAccessorGetter;
+				Func<Database, DataSetAccessor> dataSetAccessorGetter;
 
 				if (dataSetName == "display")
 				{
@@ -82,11 +86,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					throw new ArgumentException ("Invalid data set name.");
 				}
 
-				return Tools.GetEntities
-				(
-					businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-					databaseId, rawSorters, rawFilters, start, limit
-				);
+				using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters, rawFilters))
+				{
+					return DatabaseModule.GetEntities (caches, extractor, start, limit);
+				}
 			}
 		}
 
