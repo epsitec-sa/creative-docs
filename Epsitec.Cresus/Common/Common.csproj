@@ -362,6 +362,7 @@
     <Compile Include="FormEngine\Xml.cs" />
     <Compile Include="IO\BitConverter.cs" />
     <Compile Include="IO\ByteStream.cs" />
+    <Compile Include="IO\CsvWriter.cs" />
     <Compile Include="IO\Web.cs" />
     <Compile Include="Support\Extensions\ConcurrentDictionaryExtensions.cs" />
     <Compile Include="Support\ResourceManager.BundleRelatedCache.cs" />
