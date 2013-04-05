@@ -13,10 +13,6 @@ namespace Epsitec.Data.Platform.Directories
 		public DirectoriesWebService()
 		{
 			this.Authentication = new DirectoriesAuthentication ();
-			this.Paging = new DirectoriesPaging ();
-			this.Paging.StartAtIndex = 1;
-			this.Paging.FinishAtIndex = 1;
-
 			this.Authentication.ServiceId = "ff1fd734-e3e0-4cd4-bfb7-2cb464038d38";
 			this.Authentication.UserName = "1007651980";
 			this.Authentication.Password = "nW07?+E";
@@ -34,7 +30,6 @@ namespace Epsitec.Data.Platform.Directories
 		}
 
 		private DirectoriesAuthentication Authentication;
-		private DirectoriesPaging Paging;
 		public const string SecurityVersion="4.0.0";
 		public const string SearchVersion="4.1.1";
 		
@@ -76,31 +71,46 @@ namespace Epsitec.Data.Platform.Directories
 		}
 
 
-		public List<DirectoriesEntry> SearchAddressByPhone(string PhoneNumber)
+		public IList<DirectoriesEntry> SearchAddressByPhone(string PhoneNumber)
 		{
-			var query= new DirectoriesSearchAddressQuery (this.Authentication,this.Paging);
+            DirectoriesPaging Paging = new DirectoriesPaging();
+            Paging.StartAtIndex = 1;
+            Paging.FinishAtIndex = 1;
+
+			var query= new DirectoriesSearchAddressQuery (this.Authentication,Paging);
 			query.AddPhoneParameter (PhoneNumber);
 			return new DirectoriesSearchAddressExecutor (query).GetEntries ();
 		}
 
-		public List<DirectoriesEntry> SearchAddressByFirstName(string FirstName)
+		public IList<DirectoriesEntry> SearchAddressByFirstName(string FirstName,int from,int to)
 		{
-			var query = new DirectoriesSearchAddressQuery (this.Authentication, this.Paging);
+            DirectoriesPaging Paging = new DirectoriesPaging();
+            Paging.StartAtIndex = from;
+            Paging.FinishAtIndex = to;
+			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
 			query.AddFirstNameParameter (FirstName, false, DirectoriesPrecisionCode.FieldLevel);
 			return new DirectoriesSearchAddressExecutor (query).GetEntries ();
 		}
 
-		public List<DirectoriesEntry> SearchAddressByLastName(string LastName)
+		public IList<DirectoriesEntry> SearchAddressByLastName(string LastName,int from,int to)
 		{
-			var query = new DirectoriesSearchAddressQuery (this.Authentication, this.Paging);
+            DirectoriesPaging Paging = new DirectoriesPaging();
+            Paging.StartAtIndex = from;
+            Paging.FinishAtIndex = to;
+            
+			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
 			query.AddLastNameParameter (LastName, false, DirectoriesPrecisionCode.FieldLevel);
 			return new DirectoriesSearchAddressExecutor (query).GetEntries ();
 		}
 
-		public List<DirectoriesEntry> SearchAddressByFullName(string FirstName, string LastName)
+		public IList<DirectoriesEntry> SearchAddressByLastNameAndLocation(string LastName,string Location,int from,int to)
 		{
-			var query = new DirectoriesSearchAddressQuery (this.Authentication, this.Paging);
-			query.AddFirstNameParameter (FirstName, false, DirectoriesPrecisionCode.FieldLevel);
+            DirectoriesPaging Paging = new DirectoriesPaging();
+            Paging.StartAtIndex = from;
+            Paging.FinishAtIndex = to;
+
+			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
+            query.AddLocationParameter(Location, false);
 			query.AddLastNameParameter (LastName, false, DirectoriesPrecisionCode.FieldLevel);
 			return new DirectoriesSearchAddressExecutor (query).GetEntries ();
 		}

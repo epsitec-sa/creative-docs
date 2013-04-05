@@ -10,10 +10,10 @@ namespace Epsitec.Data.Platform.Directories
 	{
 		public DirectoriesEntryAdd(XElement EntryAdd)
 		{
-			this.SortNo = EntryAdd.Attribute ("SortNo").Value;
-			this.LastName = EntryAdd.Attribute ("LastName").Value;
+            this.SortNo = EntryAdd.Attribute("SortNo").Value;
+            this.LastName = EntryAdd.Attribute("LastName") != null ? EntryAdd.Attribute("LastName").Value : "";
 			this.FemaleName = EntryAdd.Attribute ("FemaleName") != null ? EntryAdd.Attribute ("FemaleName").Value : "";
-			this.FirstName = EntryAdd.Attribute ("FirstName").Value;
+            this.FirstName = EntryAdd.Attribute("FirstName") != null ? EntryAdd.Attribute("FirstName").Value : "";
 			//TODO MAP FIELDS
 
 			this.Services = new List<DirectoriesEntryAddService> ();

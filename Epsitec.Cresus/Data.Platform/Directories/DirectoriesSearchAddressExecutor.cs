@@ -15,17 +15,16 @@ namespace Epsitec.Data.Platform.Directories
 			this.Response = XElement.Parse (SearchClient.SearchAddress (request.ToString ()));
 			if (DirectoriesResponseChecker.RequestHasError (this.Response))
 			{
-				throw new Exception ("Query Error");
+				throw new Exception (this.Response.ToString());
 			}
 		}
 
 		private XElement Response;
 
-		public List<DirectoriesEntry> GetEntries()
+		public IList<DirectoriesEntry> GetEntries()
 		{
-			List<DirectoriesEntry> ResultSet = new List<DirectoriesEntry> ();
+			IList<DirectoriesEntry> ResultSet = new List<DirectoriesEntry> ();
 			
-			//TODO Parse XElement
 			var entries = from e in this.Response.Element ("Entries").Elements ()
 						  select e;
 

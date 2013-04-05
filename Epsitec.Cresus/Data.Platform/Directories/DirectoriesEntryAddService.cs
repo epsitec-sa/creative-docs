@@ -11,11 +11,11 @@ namespace Epsitec.Data.Platform.Directories
 		public DirectoriesEntryAddService(XElement Service)
 		{
 			this.SortNo = Service.Attribute ("SortNo").Value;
-			this.TypeGrpCode = Service.Attribute ("TypeGrpCode").Value;
-			this.Value = Service.Attribute ("Value").Value;
-			this.IsNoAdvert = Service.Attribute ("IsNoAdvert").Value;
-			this.ValidFrom = Service.Attribute ("ValidFrom").Value;
-			this.ValidTo = Service.Attribute ("ValidTo").Value;
+            this.TypeGrpCode = Service.Attribute("TypeGrpCode") != null ? Service.Attribute("TypeGrpCode").Value : "";
+            this.Value = Service.Attribute("Value") != null ? Service.Attribute("Value").Value : "";
+            this.IsNoAdvert = Service.Attribute("IsNoAdvert") != null ? Service.Attribute("IsNoAdvert").Value : "";
+            this.ValidFrom = Service.Attribute("ValidFrom") != null ? Service.Attribute("ValidFrom").Value : "";
+            this.ValidTo = Service.Attribute("ValidTo") != null ? Service.Attribute("ValidTo").Value : "";
 		}
 
 		public string SortNo;

@@ -39,6 +39,15 @@ namespace Epsitec.Data.Platform.Directories
 			this.QueryParameters.Add (LastNameElement);
 		}
 
+        public void AddLocationParameter(string Value, bool UsePhonetic)
+        {
+            XElement LastNameElement = new XElement("Location");
+            LastNameElement.SetAttributeValue("Value", Value);
+            LastNameElement.SetAttributeValue("Phonetic", UsePhonetic == true ? "1" : "0");
+
+            this.QueryParameters.Add(LastNameElement);
+        }
+
 		public void AddPhoneParameter(string Value)
 		{
 			XElement Phone=new XElement ("Phone")
