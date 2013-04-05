@@ -85,7 +85,7 @@ namespace Epsitec.Common.IO
 			bool quote = false;
 			bool first = true;
 
-			char fieldSep = format.FieldSeparator[0];
+			char fieldSep = format.FieldSeparator;
 
 			while (pos < source.Length)
 			{
@@ -101,7 +101,7 @@ namespace Epsitec.Common.IO
 				}
 			}
 
-			char lineBreak = string.IsNullOrEmpty (format.MultilineSeparator) ? (char) 0 : format.MultilineSeparator[0];
+			char lineBreak = format.LineSeparator;
 
 			if (pos >= source.Length)
 			{

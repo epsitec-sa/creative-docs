@@ -18,8 +18,8 @@ namespace Epsitec.Tool.MailingColis
 			var format = new Epsitec.Common.IO.CsvFormat ()
 			{
 				Encoding = System.Text.Encoding.Default,
-				FieldSeparator = ";",
-				MultilineSeparator = "|",
+				FieldSeparator = ';',
+				LineSeparator = '|',
 				ColumnNames = new string[] { "Firme", "Titre", "Nom", "Prénom", "Adresse", "NPA", "Localité" }
 			};
 

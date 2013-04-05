@@ -282,8 +282,8 @@ namespace Epsitec.Common.Graph
 			IO.CsvFormat format = new Epsitec.Common.IO.CsvFormat ()
 			{
 				Encoding = System.Text.Encoding.Default,
-				FieldSeparator = "\t",
-				MultilineSeparator = "\n",
+				FieldSeparator = '\t',
+				LineSeparator = '\n',
 				ColumnNames = new string[] { "Numéro", "Titre du compte", "01¦Jan.", "02¦Fév.", "03¦Mar.", "04¦Avr.", "05¦Mai", "06¦Juin", "07¦Juil.", "08¦Août", "09¦Sep.", "10¦Oct.", "11¦Nov.", "12¦Déc." }
 			};
 

@@ -12,18 +12,18 @@ namespace Epsitec.Common.IO
 	{
 		public CsvFormat()
 		{
-			this.FieldSeparator = ";";
-			this.MultilineSeparator = "\n";
+			this.FieldSeparator = ';';
+			this.LineSeparator = '\n';
 			this.Encoding = System.Text.Encoding.Default;
 		}
 
-		public string FieldSeparator
+		public char FieldSeparator
 		{
 			get;
 			set;
 		}
 
-		public string MultilineSeparator
+		public char LineSeparator
 		{
 			get;
 			set;
