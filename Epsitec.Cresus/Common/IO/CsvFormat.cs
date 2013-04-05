@@ -14,6 +14,7 @@ namespace Epsitec.Common.IO
 		{
 			this.FieldSeparator = ';';
 			this.LineSeparator = '\n';
+			this.QuoteChar = '\"';
 			this.Encoding = System.Text.Encoding.Default;
 		}
 
@@ -24,6 +25,12 @@ namespace Epsitec.Common.IO
 		}
 
 		public char LineSeparator
+		{
+			get;
+			set;
+		}
+
+		public char QuoteChar
 		{
 			get;
 			set;

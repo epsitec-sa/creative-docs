@@ -9,6 +9,16 @@ namespace Epsitec.Common.IO
 	/// The <c>CsvReader</c> class provides utility functions to load CSV data
 	/// into tables.
 	/// </summary>
+	/// <remarks>
+	/// Warning: this class strictly follows the CSV "standard" defined here
+	/// http://www.creativyst.com/Doc/Articles/CSV/CSV01.htm and does not follow exactly the options
+	/// defined in the given instance of CsvFormat. In particular:
+	/// - Trailing spaces in fields are not skipped
+	/// - Some leading whitespaces in lines are skipped but should not
+	/// - The lines are not split according to CsvFormat.LineSeparator but according to '\r' or '\n'
+	/// - Chars corresponding to CsvFormat.LineSeparator in fields are replaced with '\n'
+	/// I choose not to correct these bugs, because some code might actually depend on them.
+	/// </remarks>
 	public static class CsvReader
 	{
 		public static System.Data.DataTable ReadCsv(string path, CsvFormat format)
@@ -112,7 +122,7 @@ namespace Epsitec.Common.IO
 			{
 				char c = source[pos++];
 
-				if (c == '\"')
+				if (c == format.QuoteChar)
 				{
 					quote = !quote;
 
