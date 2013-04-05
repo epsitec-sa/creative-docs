@@ -12,7 +12,6 @@ namespace Epsitec.Data.Platform.Directories
 		{
 			XElement request = query.ForgeRequest ();
 			SearchAddressSoapClient SearchClient = new SearchAddressSoapClient ();
-            SearchClient.ChannelFactory.
 			this.Response = XElement.Parse (SearchClient.SearchAddress (request.ToString ()));
 			if (DirectoriesResponseChecker.RequestHasError (this.Response))
 			{

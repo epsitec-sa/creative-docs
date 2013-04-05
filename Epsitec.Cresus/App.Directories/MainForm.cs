@@ -65,13 +65,16 @@ namespace App.Directories
             }
             
            
-            foreach (DirectoriesEntryAdd add in result.)
+            foreach (DirectoriesEntry entries in result.Entries)
             {
-                var node = this.result_tree.Nodes.Add(add.FirstName + " " +add.LastName + ", " + add.Profession + ", " + add.LocaPostName);
-                foreach (DirectoriesEntryAddService ser in add.Services)
+                foreach (DirectoriesEntryAdd add in entries.EntryAdds)
                 {
-                    node.Nodes.Add(ser.Value);
-                }
+                    var node = this.result_tree.Nodes.Add(add.FirstName + " " + add.LastName + ", " + add.Profession + ", " + add.LocaPostName);
+                    foreach (DirectoriesEntryAddService ser in add.Services)
+                    {
+                        node.Nodes.Add(ser.Value);
+                    }
+                }    
             }
                     
             
