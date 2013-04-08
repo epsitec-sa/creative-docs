@@ -21,26 +21,26 @@ namespace Epsitec.Data.Platform.Directories
 
 		public void AddFirstNameParameter(string Value,bool UsePhonetic,string DirectoriesPrecisionCode)
 		{
-            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(2, "FirstName", Value, UsePhonetic, DirectoriesPrecisionCode);
+			DirectoriesQueryParameter Param = new DirectoriesQueryParameter(2, "FirstName", Value, UsePhonetic, DirectoriesPrecisionCode);
 			this.QueryParameters.Add (Param);
 		}
 
 		public void AddLastNameParameter(string Value, bool UsePhonetic, string DirectoriesPrecisionCode)
 		{
-            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(1, "LastName", Value, UsePhonetic, DirectoriesPrecisionCode);
-            this.QueryParameters.Add(Param);
+			DirectoriesQueryParameter Param = new DirectoriesQueryParameter(1, "LastName", Value, UsePhonetic, DirectoriesPrecisionCode);
+			this.QueryParameters.Add(Param);
 		}
 
-        public void AddLocationParameter(string Value, bool UsePhonetic)
-        {
-            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(6, "Location", Value, UsePhonetic);
-            this.QueryParameters.Add(Param);
-        }
+		public void AddLocationParameter(string Value, bool UsePhonetic)
+		{
+			DirectoriesQueryParameter Param = new DirectoriesQueryParameter(6, "Location", Value, UsePhonetic);
+			this.QueryParameters.Add(Param);
+		}
 
 		public void AddPhoneParameter(string Value)
 		{
-            DirectoriesQueryParameter Param = new DirectoriesQueryParameter(8, "Phone", Value);
-            this.QueryParameters.Add(Param);
+			DirectoriesQueryParameter Param = new DirectoriesQueryParameter(8, "Phone", Value);
+			this.QueryParameters.Add(Param);
 		}
 
 		public XElement ForgeRequest()
@@ -58,11 +58,11 @@ namespace Epsitec.Data.Platform.Directories
 			AddressParam.Add (this.Paging.GetPagingElement ());
 
 			//Add Query Parameters
-            var OrderedParameters = this.QueryParameters.OrderBy(q => q.Sequence).ToList();
-            foreach (DirectoriesQueryParameter qp in OrderedParameters)
-            {
-                AddressParam.Add(qp.GetParameter());
-            }
+			var OrderedParameters = this.QueryParameters.OrderBy(q => q.Sequence).ToList();
+			foreach (DirectoriesQueryParameter qp in OrderedParameters)
+			{
+				AddressParam.Add(qp.GetParameter());
+			}
 			
 
 			AddressParam.Add (TypeCode);

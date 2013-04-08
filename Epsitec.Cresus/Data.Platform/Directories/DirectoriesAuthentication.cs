@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Epsitec.Data.Platform.Directories.Helpers;
 using Epsitec.Data.Platform.ServiceReference.Directories.Security;
 
 namespace Epsitec.Data.Platform.Directories

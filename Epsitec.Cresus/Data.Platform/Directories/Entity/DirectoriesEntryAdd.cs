@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Epsitec.Data.Platform.Directories.Helpers;
 
-namespace Epsitec.Data.Platform.Directories
+namespace Epsitec.Data.Platform.Directories.Entity
 {
 	public class DirectoriesEntryAdd
 	{
 		public DirectoriesEntryAdd(XElement EntryAdd)
 		{
-            this.SortNo = EntryAdd.Attribute("SortNo").Value;
-            this.LastName = EntryAdd.Attribute("LastName") != null ? EntryAdd.Attribute("LastName").Value : "";
-			this.FemaleName = EntryAdd.Attribute ("FemaleName") != null ? EntryAdd.Attribute ("FemaleName").Value : "";
-            this.FirstName = EntryAdd.Attribute("FirstName") != null ? EntryAdd.Attribute("FirstName").Value : "";
-            this.Profession = EntryAdd.Attribute("Profession") != null ? EntryAdd.Attribute("Profession").Value : "";
-            this.LocaPostName = EntryAdd.Attribute("LocaPostName") != null ? EntryAdd.Attribute("LocaPostName").Value : "";
-			//TODO MAP FIELDS
+			this.SortNo = EntryAdd.Attribute("SortNo").Value;
+			this.LastName = DirectoriesValueHelper.TryGetFromXElement ("LastName", EntryAdd);
+			this.FemaleName = DirectoriesValueHelper.TryGetFromXElement ("FemaleName", EntryAdd);
+			this.FirstName = DirectoriesValueHelper.TryGetFromXElement ("FirstName", EntryAdd);
+			this.Profession = DirectoriesValueHelper.TryGetFromXElement ("Profession", EntryAdd);
+			this.StreetName = DirectoriesValueHelper.TryGetFromXElement ("StreetName", EntryAdd);
+			this.HouseNo = DirectoriesValueHelper.TryGetFromXElement ("HouseNo", EntryAdd);
+			this.Zip = DirectoriesValueHelper.TryGetFromXElement ("Zip", EntryAdd);
+			this.LocaPostId = DirectoriesValueHelper.TryGetFromXElement ("LocaPostId", EntryAdd);
+			this.LocaPostName = DirectoriesValueHelper.TryGetFromXElement ("LocaPostName", EntryAdd);
+			this.StateId = DirectoriesValueHelper.TryGetFromXElement ("StateId", EntryAdd);
+			this.StateCode = DirectoriesValueHelper.TryGetFromXElement ("StateCode", EntryAdd);
+			this.CountryCode = DirectoriesValueHelper.TryGetFromXElement ("CountryCode", EntryAdd);
+			this.ValidFrom = DirectoriesValueHelper.TryGetFromXElement ("ValidFrom", EntryAdd);
+			this.ValidTo = DirectoriesValueHelper.TryGetFromXElement ("ValidTo", EntryAdd);
 
 			this.Services = new List<DirectoriesEntryAddService> ();
 

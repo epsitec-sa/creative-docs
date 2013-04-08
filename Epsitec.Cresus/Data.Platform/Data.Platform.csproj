@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -55,16 +56,18 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Directories\DirectoriesData.cs" />
-    <Compile Include="Directories\DirectoriesEntry.cs" />
-    <Compile Include="Directories\DirectoriesEntryAdd.cs" />
-    <Compile Include="Directories\DirectoriesEntryAddService.cs" />
+    <Compile Include="Directories\DirectoriesSearchServiceQuery.cs" />
+    <Compile Include="Directories\DirectoriesServiceCode.cs" />
+    <Compile Include="Directories\Helpers\DirectoriesValueHelper.cs" />
+    <Compile Include="Directories\Entity\DirectoriesEntry.cs" />
+    <Compile Include="Directories\Entity\DirectoriesEntryAdd.cs" />
+    <Compile Include="Directories\Entity\DirectoriesEntryAddService.cs" />
     <Compile Include="Directories\DirectoriesPaging.cs" />
     <Compile Include="Directories\DirectoriesPrecisionCode.cs" />
     <Compile Include="Directories\DirectoriesQueryParameter.cs" />
-    <Compile Include="Directories\DirectoriesResponseChecker.cs" />
+    <Compile Include="Directories\Helpers\DirectoriesResponseChecker.cs" />
     <Compile Include="Directories\DirectoriesAuthentication.cs" />
-    <Compile Include="Directories\DirectoriesResultInfo.cs" />
+    <Compile Include="Directories\Entity\DirectoriesResultInfo.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressExecutor.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
@@ -158,6 +161,7 @@
     <WCFMetadataStorage Include="Service References\ServiceReference.Directories.SearchAddress\" />
     <WCFMetadataStorage Include="Service References\ServiceReference.Directories.Security\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>

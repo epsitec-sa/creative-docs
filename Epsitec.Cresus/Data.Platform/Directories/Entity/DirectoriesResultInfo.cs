@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Epsitec.Data.Platform.Directories
+namespace Epsitec.Data.Platform.Directories.Entity
 {
     public class DirectoriesResultInfo
     {

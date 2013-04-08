@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Epsitec.Data.Platform.Directories
+namespace Epsitec.Data.Platform.Directories.Helpers
 {
 	static class DirectoriesResponseChecker
 	{
@@ -20,17 +20,17 @@ namespace Epsitec.Data.Platform.Directories
 			}
 		}
 
-        public static bool NoResult(XElement Response)
-        {
-            if (Response.Element("ErrorInfo").Attribute("ErrorCode").Value == "200")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+		public static bool NoResult(XElement Response)
+		{
+			if (Response.Element("ErrorInfo").Attribute("ErrorCode").Value == "200")
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
 		public static bool SessionIsInvalid(XElement Response)
 		{

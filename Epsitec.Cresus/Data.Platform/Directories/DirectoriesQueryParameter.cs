@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Data.Platform.Directories
 {
-    class DirectoriesQueryParameter
+    internal class DirectoriesQueryParameter
     {
         public DirectoriesQueryParameter(int SequenceNumber,string ParameterName,string Value)
         {

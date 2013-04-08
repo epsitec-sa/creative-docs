@@ -71,48 +71,76 @@ namespace Epsitec.Data.Platform.Directories
 		}
 
 
-        public DirectoriesSearchAddressResult SearchAddressByPhone(string PhoneNumber)
+		public DirectoriesSearchAddressResult SearchServiceByPhones(List<string> PhoneNumberList)
 		{
-            DirectoriesPaging Paging = new DirectoriesPaging();
-            Paging.StartAtIndex = 1;
-            Paging.FinishAtIndex = 1;
+			var query = new DirectoriesSearchServiceQuery (this.Authentication, DirectoriesServiceCode.TelCode);
+			foreach (string PhoneNumber in PhoneNumberList)
+			{
+				query.AddServiceParameter (PhoneNumber);
+			}
+			return new DirectoriesSearchAddressResult (new DirectoriesSearchAddressExecutor (query));
+		}
+
+		public DirectoriesSearchAddressResult SearchService(List<string> ServiceValueList,string DirectoriesServiceCode)
+		{
+			var query = new DirectoriesSearchServiceQuery (this.Authentication, DirectoriesServiceCode);
+			foreach (string ServiceValue in ServiceValueList)
+			{
+				query.AddServiceParameter (ServiceValue);
+			}
+			return new DirectoriesSearchAddressResult (new DirectoriesSearchAddressExecutor (query));
+		}
+
+		public DirectoriesSearchAddressResult SearchAddressByPhone(string PhoneNumber)
+		{
+			DirectoriesPaging Paging=new DirectoriesPaging ()
+			{
+				StartAtIndex=1,
+				FinishAtIndex=1
+			};
 
 			var query= new DirectoriesSearchAddressQuery (this.Authentication,Paging);
 			query.AddPhoneParameter (PhoneNumber);
-            return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
+			return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
 		}
 
-        public DirectoriesSearchAddressResult SearchAddressByFirstName(string FirstName, int from, int to)
+		public DirectoriesSearchAddressResult SearchAddressByFirstName(string FirstName, int from, int to)
 		{
-            DirectoriesPaging Paging = new DirectoriesPaging();
-            Paging.StartAtIndex = from;
-            Paging.FinishAtIndex = to;
+			DirectoriesPaging Paging=new DirectoriesPaging ()
+			{
+				StartAtIndex=from,
+				FinishAtIndex=to
+			};
 			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
 			query.AddFirstNameParameter (FirstName, false, DirectoriesPrecisionCode.FieldLevel);
-            return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
+			return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
 		}
 
-        public DirectoriesSearchAddressResult SearchAddressByLastName(string LastName, int from, int to)
+		public DirectoriesSearchAddressResult SearchAddressByLastName(string LastName, int from, int to)
 		{
-            DirectoriesPaging Paging = new DirectoriesPaging();
-            Paging.StartAtIndex = from;
-            Paging.FinishAtIndex = to;
-            
+			DirectoriesPaging Paging=new DirectoriesPaging ()
+			{
+				StartAtIndex=from,
+				FinishAtIndex=to
+			};
+			
 			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
 			query.AddLastNameParameter (LastName, false, DirectoriesPrecisionCode.FieldLevel);
-            return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
+			return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
 		}
 
-        public DirectoriesSearchAddressResult SearchAddressByLastNameAndLocation(string LastName, string Location, int from, int to)
+		public DirectoriesSearchAddressResult SearchAddressByLastNameAndLocation(string LastName, string Location, int from, int to)
 		{
-            DirectoriesPaging Paging = new DirectoriesPaging();
-            Paging.StartAtIndex = from;
-            Paging.FinishAtIndex = to;
+			DirectoriesPaging Paging=new DirectoriesPaging ()
+			{
+				StartAtIndex=from,
+				FinishAtIndex=to
+			};
 
 			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
 			query.AddLastNameParameter (LastName, false, DirectoriesPrecisionCode.FieldLevel);
-            query.AddLocationParameter(Location, false);
-            return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
+			query.AddLocationParameter(Location, false);
+			return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
 		}
 
 		

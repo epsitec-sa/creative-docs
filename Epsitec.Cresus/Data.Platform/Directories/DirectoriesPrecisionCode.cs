@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Epsitec.Data.Platform.Directories
 {
-	class DirectoriesPrecisionCode
+	internal class DirectoriesPrecisionCode
 	{
 		public const string FieldLevel = "FIELD";
 		public const string FieldGroupLevel ="FIELDGROUP";
