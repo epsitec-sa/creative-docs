@@ -33,6 +33,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	using Database = Core.Databases.Database;
+
+
 	internal sealed class Carpenter
 	{
 
@@ -109,7 +112,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private Core.Databases.Database GetSetDisplayDatabase(ISetViewController setController)
+		private Database GetSetDisplayDatabase(ISetViewController setController)
 		{
 			var displayDataSetId = setController.GetDisplayDataSetId ();
 			var displayDatabase = this.databaseManager.GetDatabase (displayDataSetId);
@@ -119,7 +122,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			if (overrideCreate.HasValue || overrideDelete.HasValue)
 			{
-				displayDatabase = new Core.Databases.Database
+				displayDatabase = new Database
 				(
 					displayDatabase.DataSetMetadata,
 					displayDatabase.Columns,

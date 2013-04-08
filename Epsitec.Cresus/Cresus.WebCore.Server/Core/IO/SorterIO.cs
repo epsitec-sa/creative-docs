@@ -11,11 +11,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 {
 
 
+	using Database = Core.Databases.Database;
+
+
 	internal static class SorterIO
 	{
 
 
-		public static IEnumerable<ColumnRef<EntityColumnSort>> ParseSorters(Caches caches, Core.Databases.Database database, string sortParameter)
+		public static IEnumerable<ColumnRef<EntityColumnSort>> ParseSorters(Caches caches, Database database, string sortParameter)
 		{
 			if (string.IsNullOrEmpty (sortParameter))
 			{

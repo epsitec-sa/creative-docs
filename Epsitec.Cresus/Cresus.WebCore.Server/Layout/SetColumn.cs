@@ -7,6 +7,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	using Database = Core.Databases.Database;
+
+
 	internal sealed class SetColumn : EntityColumn
 	{
 
@@ -25,14 +28,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public Core.Databases.Database DisplayDatabase
+		public Database DisplayDatabase
 		{
 			get;
 			set;
 		}
 
 
-		public Core.Databases.Database PickDatabase
+		public Database PickDatabase
 		{
 			get;
 			set;

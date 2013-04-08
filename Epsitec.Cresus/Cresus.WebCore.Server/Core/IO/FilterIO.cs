@@ -27,11 +27,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 {
 
 
+	using Database = Core.Databases.Database;
+
+
 	internal static class FilterIO
 	{
 
 
-		public static EntityFilter ParseFilter(BusinessContext businessContext, Caches caches, Core.Databases.Database database, string filterParameter)
+		public static EntityFilter ParseFilter(BusinessContext businessContext, Caches caches, Database database, string filterParameter)
 		{
 			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
 			var entityId = EntityInfo.GetTypeId (entityType);
@@ -60,7 +63,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
-		private static Column ParseColumn(Caches caches, Core.Databases.Database database, Dictionary<string, object> filter)
+		private static Column ParseColumn(Caches caches, Database database, Dictionary<string, object> filter)
 		{
 			var fieldId = (string) filter["field"];
 			var fieldName = caches.ColumnIdCache.GetItem (fieldId);
