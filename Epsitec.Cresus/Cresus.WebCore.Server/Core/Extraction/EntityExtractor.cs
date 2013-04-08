@@ -30,9 +30,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	{
 
 
-		public EntityExtractor(Database database, DataSetAccessor accessor)
+		private EntityExtractor(Database database, DataSetMetadata metadata, DataSetAccessor accessor)
 		{
 			this.database = database;
+			this.metadata = metadata;
 			this.accessor = accessor;
 		}
 
@@ -42,6 +43,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			get
 			{
 				return this.database;
+			}
+		}
+
+
+		public DataSetMetadata Metadata
+		{
+			get
+			{
+				return this.metadata;
 			}
 		}
 
@@ -70,7 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, FavoritesCollection favorites, string rawSorters, string rawFilters)
 		{
 			var databaseId = favorites.DatabaseId;
-			
+
 			Action<DataContext, Request, AbstractEntity> customizer = (d, r, e) =>
 			{
 				r.Conditions.Add (favorites.CreateCondition (e));
@@ -87,7 +97,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, Action<DataContext, Request, AbstractEntity> customizer = null)
 		{
 			var database = databaseManager.GetDatabase (databaseId);
-			
+
+			var dataSetMetadata = database.DataSetMetadata;
 			var sorters = SorterIO.ParseSorters (caches, database, rawSorters);
 			var filter = FilterIO.ParseFilter (businessContext, caches, database, rawFilters);
 
@@ -96,14 +107,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 				userManager, dataSetAccessorGetter, database, sorters, filter, customizer
 			);
 
-			return new EntityExtractor (database, accessor);
+			return new EntityExtractor (database, dataSetMetadata, accessor);
 		}
 
 
 		private static DataSetAccessor CreateAccessor(UserManager userManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, Action<DataContext, Request, AbstractEntity> customizer)
 		{
 			var dataSetMetadata = database.DataSetMetadata;
-			
+
 			var session = userManager.ActiveSession;
 			var settings = session.GetDataSetSettings (dataSetMetadata);
 
@@ -140,6 +151,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 
 		private readonly Database database;
+
+
+		private readonly DataSetMetadata metadata;
 
 
 		private readonly DataSetAccessor accessor;
