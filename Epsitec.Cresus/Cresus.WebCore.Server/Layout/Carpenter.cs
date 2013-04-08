@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private	EntityColumn BuildEntityColumn(ViewControllerMode viewMode, int? viewId)
+		private EntityColumn BuildEntityColumn(ViewControllerMode viewMode, int? viewId)
 		{
 			switch (viewMode)
 			{
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				yield break;
 			}
-			
+
 			foreach (var brick in wall.Bricks)
 			{
 				foreach (var tile in this.BuildTiles (brick, viewMode, isFirst))
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static Brick GetOptionalTemplateBrick(Brick brick)
 		{
-		    var brickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
+			var brickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
 
 			return brickProperty.HasValue
 				? brickProperty.Value.Brick
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var tileEntity = this.ResolveTileEntity (brick);
 			var brickModes = Carpenter.GetBrickModes (brick).ToSet ();
-			
+
 			return new SummaryTile ()
 			{
 				EntityId = this.GetEntityId (tileEntity),
@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var actions = this.BuildActionItems (this.entity, brick).ToList ();
 
 			var autoGroup = Carpenter.GetAutoGroup (brickModes);
-			
+
 			return autoGroup
 				? this.BuildGroupedSummaryTile (brick, tileEntities, subViewMode, subViewId, hideAddButton, hideRemoveButton, iconClass, propertyAccessorId, actions)
 				: this.BuildCollectionSummaryTiles (brick, tileEntities, subViewMode, subViewId, hideAddButton, hideRemoveButton, iconClass, propertyAccessorId, actions);
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				var entityId = this.GetEntityId (tileEntity);
 				var text = Carpenter.GetText (tileEntity, brick, BrickPropertyKey.Text);
-				
+
 				yield return new GroupedSummaryTileItem ()
 				{
 					EntityId = entityId,
@@ -519,7 +519,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private static AbstractEntity GetIncludedEntity(AbstractEntity entity, BrickProperty property)
 		{
 			var expressionValue = (LambdaExpression) property.ExpressionValue;
-			
+
 			return (AbstractEntity) expressionValue.Compile ().DynamicInvoke (entity);
 		}
 
@@ -596,7 +596,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var specialController = this.GetSpecialController (entity, brickProperties, propertyAccessor);
 
 			return specialController != null
-				? this.BuildSpecialField(entity, brickProperties, includeTitle, propertyAccessor, specialController)
+				? this.BuildSpecialField (entity, brickProperties, includeTitle, propertyAccessor, specialController)
 				: this.BuildRegularField (entity, brickProperties, includeTitle, propertyAccessor);
 		}
 
@@ -787,7 +787,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			using (var controller = Mason.BuildController<IActionViewController> (this.businessContext, entity, null, viewMode, viewId))
 			{
 				var templateController = controller as ITemplateActionViewController;
-							
+
 				return new ActionItem ()
 				{
 					ViewId = InvariantConverter.ToString (viewId),
@@ -824,7 +824,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private AbstractField BuildActionField(AbstractEntity entity, Brick brick, string id)
 		{
 			var specialController = this.GetSpecialController (entity, brick);
-			
+
 			var actionFieldType = Carpenter.GetBrickProperty (brick, BrickPropertyKey.Type).TypeValue;
 			var fieldType = FieldTypeSelector.GetFieldType (actionFieldType);
 
@@ -1014,7 +1014,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var key = BrickPropertyKey.ReadOnly;
 			var brickProperty = Carpenter.GetBrickProperty (brickProperties, key);
-			
+
 			return brickProperty.HasValue;
 		}
 
@@ -1129,7 +1129,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			{
 				return null;
 			}
-			
+
 			return Brick.GetProperty (brick, key);
 		}
 

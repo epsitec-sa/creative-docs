@@ -69,14 +69,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		private static bool IsDateType(Type type)
 		{
 			return type == typeof (Date)
-		        || type == typeof (Date?);
+				|| type == typeof (Date?);
 		}
 
 
 		private static bool IsBooleanType(Type type)
 		{
 			return type == typeof (bool)
-		        || type == typeof (bool?);
+				|| type == typeof (bool?);
 		}
 
 
@@ -91,26 +91,26 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		private static bool IsIntegerType(Type type)
 		{
 			return type == typeof (short)
-		        || type == typeof (short?)
-		        || type == typeof (int)
-		        || type == typeof (int?)
-		        || type == typeof (long)
-		        || type == typeof (long?);
+				|| type == typeof (short?)
+				|| type == typeof (int)
+				|| type == typeof (int?)
+				|| type == typeof (long)
+				|| type == typeof (long?);
 		}
 
 
 		private static bool IsDecimalType(Type type)
 		{
 			return type == typeof (decimal)
-		        || type == typeof (decimal?);
+				|| type == typeof (decimal?);
 		}
 
 
 		private static bool IsTextType(Type type)
 		{
 			return type == typeof (string)
-		        || type == typeof (FormattedText)
-		        || type == typeof (FormattedText?);
+				|| type == typeof (FormattedText)
+				|| type == typeof (FormattedText?);
 		}
 
 

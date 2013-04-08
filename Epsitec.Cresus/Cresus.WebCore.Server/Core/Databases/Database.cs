@@ -150,8 +150,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			var data = new Dictionary<string, object> ()
 			{
-			    { "id", id },
-			    { "summary", summary },
+				{ "id", id },
+				{ "summary", summary },
 			};
 
 			foreach (var column in this.Columns.Where (c => !c.Hidden))
@@ -189,8 +189,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly DataSetMetadata dataSetMetadata;
-		
-		
+
+
 		private readonly List<Column> columns;
 
 
