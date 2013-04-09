@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers.SetControllers
 {
 	public interface ISetViewController : IDisposable
 	{
+		AbstractEntity GetEntity();
+
 		FormattedText GetTitle();
 
 		string GetIcon();
