@@ -1,9 +1,13 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Favorites;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Extraction;
@@ -34,6 +38,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
+			
+			int start = Request.Query.start;
+			int limit = Request.Query.limit;
+
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			{
+				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+			}
+		}
+
+
+		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
 			var userManager = workerApp.UserManager;
 			var databaseManager = this.CoreServer.DatabaseManager;
 
@@ -43,19 +61,23 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 
 			string rawFavoritesId = parameters.name;
+			var favorites = FavoritesCache.Current.Find (rawFavoritesId);
 
 			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
 			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
 			
-			int start = Request.Query.start;
-			int limit = Request.Query.limit;
+			var databaseId = favorites.DatabaseId;
 
-			var favorites = FavoritesCache.Current.Find (rawFavoritesId);
-
-			using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, favorites, rawSorters, rawFilters))
+			Action<DataContext, DataLayer.Loader.Request, AbstractEntity> customizer = (d, r, e) =>
 			{
-				return DatabaseModule.GetEntities (caches, extractor, start, limit);
-			}
+				r.Conditions.Add (favorites.CreateCondition (e));
+			};
+
+			return EntityExtractor.Create
+			(
+				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
+				databaseId, rawSorters, rawFilters, customizer
+			);
 		}
 	}
 }

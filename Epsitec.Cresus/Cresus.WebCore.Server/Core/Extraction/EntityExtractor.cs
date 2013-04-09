@@ -5,7 +5,6 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Favorites;
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -75,23 +74,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 
 		#endregion
-
-
-		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, FavoritesCollection favorites, string rawSorters, string rawFilters)
-		{
-			var databaseId = favorites.DatabaseId;
-
-			Action<DataContext, Request, AbstractEntity> customizer = (d, r, e) =>
-			{
-				r.Conditions.Add (favorites.CreateCondition (e));
-			};
-
-			return EntityExtractor.Create
-			(
-				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, rawSorters, rawFilters, customizer
-			);
-		}
 
 
 		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, Func<Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, Action<DataContext, Request, AbstractEntity> customizer = null)
