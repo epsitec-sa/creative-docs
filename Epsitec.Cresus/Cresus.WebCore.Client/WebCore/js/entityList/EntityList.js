@@ -462,6 +462,28 @@ function() {
         id: row.get('id'),
         summary: row.get('summary')
       };
+    },
+
+    buildUrlWithSortersAndFilters: function(base) {
+      var sorters, filters, parameters, key, value;
+
+      parameters = [];
+
+      sorters = this.store.getSorters();
+      if (sorters.length > 0) {
+        key = 'sort';
+        value = this.store.proxy.encodeSorters(sorters);
+        parameters.push([key, value]);
+      }
+
+      filters = this.filters.getFilterData();
+      if (filters.length > 0) {
+        key = 'filter';
+        value = this.filters.buildQuery(filters).filter;
+        parameters.push([key, value]);
+      }
+
+      return Epsitec.Tools.createUrl(base, parameters);
     }
   });
 });
