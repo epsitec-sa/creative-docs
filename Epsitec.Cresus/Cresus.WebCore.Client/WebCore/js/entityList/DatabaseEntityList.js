@@ -12,11 +12,13 @@ function() {
       var newOptions;
       if (options.favoritesId) {
         newOptions = {
-          getUrl: 'proxy/favorites/get/' + options.favoritesId
+          getUrl: 'proxy/favorites/get/' + options.favoritesId,
+          exportUrl: 'proxy/favorites/export/' + options.favoritesId
         };
       } else {
         newOptions = {
-          getUrl: 'proxy/database/get/' + options.databaseName
+          getUrl: 'proxy/database/get/' + options.databaseName,
+          exportUrl: 'proxy/database/export/' + options.databaseName
         };
       }
       Ext.applyIf(newOptions, options);

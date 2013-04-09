@@ -11,6 +11,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'effectu\u00E9es ici seront r\u00E9percut\u00E9es dans tous les ' +
             'enregistrements.</i>',
         sortLabel: 'Trier',
+        exportLabel: 'Export',
         refreshLabel: 'Rafra\u00EEchir',
         refreshTip: 'Rafra\u00EEchir',
         addLabel: 'Ajouter',

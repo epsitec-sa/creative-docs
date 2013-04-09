@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			Get["/definition/{name}"] = p => this.Execute (wa => this.GetDatabase (wa, p));
 			Get["/get/{name}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
 			Get["/getindex/{name}/{id}"] = p => this.Execute ((wa, b) => this.GetEntityIndex (wa, b, p));
+			Get["/export/{name}"] = p => this.Execute ((wa, b) => this.Export (wa, b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
@@ -130,6 +131,33 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				return CoreResponse.Success (content);
 			}
+		}
+
+
+		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
+
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			{
+				return DatabaseModule.Export (caches, extractor);
+			}
+		}
+
+
+		internal static Response Export(Caches caches, EntityExtractor extractor)
+		{
+			var properties = caches.PropertyAccessorCache;
+			var metaData = extractor.Metadata;
+			var accessor = extractor.Accessor;
+			var format = new CsvArrayFormat ();
+
+			EntityWriter writer = new ArrayWriter (properties, metaData, accessor, format);
+
+			var filename = writer.Filename;
+			var stream = writer.GetStream ();
+
+			return CoreResponse.CreateStreamResponse (stream, filename);
 		}
 
 

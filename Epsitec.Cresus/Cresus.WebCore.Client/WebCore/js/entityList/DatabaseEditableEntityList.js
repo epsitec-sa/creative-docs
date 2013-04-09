@@ -21,6 +21,7 @@ function() {
     constructor: function(options) {
       var newOptions = {
         getUrl: 'proxy/database/get/' + options.databaseName,
+        exportUrl: 'proxy/database/export/' + options.databaseName,
         addLabel: Epsitec.Texts.getCreateLabel(),
         removeLabel: Epsitec.Texts.getDeleteLabel()
       };

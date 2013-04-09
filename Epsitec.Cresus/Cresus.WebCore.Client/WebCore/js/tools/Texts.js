@@ -17,6 +17,10 @@ function() {
         return this.texts.sortLabel;
       },
 
+      getExportLabel: function() {
+        return this.texts.exportLabel;
+      },
+
       getRefreshLabel: function() {
         return this.texts.refreshLabel;
       },

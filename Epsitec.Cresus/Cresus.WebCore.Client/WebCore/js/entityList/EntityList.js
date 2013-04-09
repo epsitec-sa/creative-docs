@@ -26,6 +26,7 @@ function() {
     onSelectionChangeCallback: null,
     columnDefinitions: null,
     sorterDefinitions: null,
+    exportUrl: null,
 
     /* Constructor */
 
@@ -314,7 +315,21 @@ function() {
         }
       }));
 
+      buttons.push(Ext.create('Ext.Button', {
+        text: Epsitec.Texts.getExportLabel(),
+        iconCls: 'icon-export',
+        listeners: {
+          click: this.onExportHandler,
+          scope: this
+        }
+      }));
+
       return buttons;
+    },
+
+    onExportHandler: function() {
+      var url = this.buildUrlWithSortersAndFilters(this.exportUrl);
+      window.open(url);
     },
 
     onRefreshHandler: function() {

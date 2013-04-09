@@ -12,6 +12,9 @@ function() {
       var newOptions = {
         getUrl: Epsitec.SetEntityList.getUrl(
             options.viewId, options.entityId, 'get/pick'
+        ),
+        exportUrl: Epsitec.SetEntityList.getUrl(
+            options.viewId, options.entityId, 'export/pick'
         )
       };
       Ext.applyIf(newOptions, options);

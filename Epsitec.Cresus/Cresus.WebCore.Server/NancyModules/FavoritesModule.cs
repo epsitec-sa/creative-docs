@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (coreServer, "/favorites")
 		{
 			Get["/get/{name}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+			Get["/export/{name}"] = p => this.Execute ((wa, b) => this.Export (wa, b, p));
 		}
 
 
@@ -45,6 +46,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
 				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+			}
+		}
+
+
+		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
+
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			{
+				return DatabaseModule.Export (caches, extractor);
 			}
 		}
 

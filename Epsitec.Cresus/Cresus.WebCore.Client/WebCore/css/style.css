@@ -78,6 +78,10 @@ html, body {
   background-image: url('../images/Static/filter.png') !important;
 }
 
+.icon-export {
+  background-image: url('../images/Static/export.png') !important;
+}
+
 .icon-sort-ascending {
   height: 16px;
   width: 16px;

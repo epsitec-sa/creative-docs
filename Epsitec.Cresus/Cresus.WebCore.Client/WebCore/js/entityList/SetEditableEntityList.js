@@ -23,6 +23,9 @@ function() {
         getUrl: Epsitec.SetEntityList.getUrl(
             options.viewId, options.entityId, 'get/display'
         ),
+        exportUrl: Epsitec.SetEntityList.getUrl(
+            options.viewId, options.entityId, 'export/display'
+        ),
         addLabel: Epsitec.Texts.getAddLabel(),
         removeLabel: Epsitec.Texts.getRemoveLabel()
       };

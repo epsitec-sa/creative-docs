@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (coreServer, "/set")
 		{
 			Get["/{viewId}/{entityId}/get/{dataset}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+			Get["/{viewId}/{entityId}/export/{dataset}"] = p => this.Execute ((wa, b) => this.Export (wa, b, p));
 			Post["/{viewId}/{entityId}/add"] = p => this.Execute (b => this.Add (b, p));
 			Post["/{viewId}/{entityId}/remove"] = p => this.Execute (b => this.Remove (b, p));
 		}
@@ -54,6 +55,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, controller, parameters))
 			{
 				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+			}
+		}
+
+
+		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
+
+			using (ISetViewController controller = this.GetController (businessContext, parameters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, controller, parameters))
+			{
+				return DatabaseModule.Export (caches, extractor);
 			}
 		}
 
