@@ -74,24 +74,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
-			var userManager = workerApp.UserManager;
-			var databaseManager = this.CoreServer.DatabaseManager;
 
-			Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
-			{
-				return db.GetDataSetAccessor (workerApp.DataSetGetter);
-			};
-
-			string rawDatabaseId = parameters.name;
-			var databaseId = DataIO.ParseDruid (rawDatabaseId);
-
-			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
-			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
-			
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
-			using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters, rawFilters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
 				return DatabaseModule.GetEntities (caches, extractor, start, limit);
 			}
@@ -124,25 +111,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetEntityIndex(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
-			var caches = this.CoreServer.Caches;
-			var userManager = workerApp.UserManager;
-			var databaseManager = this.CoreServer.DatabaseManager;
-
-			Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
-			{
-				return db.GetDataSetAccessor (workerApp.DataSetGetter);
-			};
-
-			string rawDatabaseId = parameters.name;
-			var databaseId = DataIO.ParseDruid (rawDatabaseId);
-
 			string rawEntityKey = parameters.id;
 			var entityKey = EntityIO.ParseEntityId (rawEntityKey);
 
-			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
-			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
-
-			using (var extractor = EntityExtractor.Create (businessContext, caches, userManager, databaseManager, dataSetAccessorGetter, databaseId, rawSorters, rawFilters))
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
 				int? index = extractor.Accessor.IndexOf (entityKey);
 
@@ -158,6 +130,31 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				return CoreResponse.Success (content);
 			}
+		}
+
+
+		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
+			var userManager = workerApp.UserManager;
+			var databaseManager = this.CoreServer.DatabaseManager;
+
+			Func<Database, DataSetAccessor> dataSetAccessorGetter = db =>
+			{
+				return db.GetDataSetAccessor (workerApp.DataSetGetter);
+			};
+
+			string rawDatabaseId = parameters.name;
+			var databaseId = DataIO.ParseDruid (rawDatabaseId);
+
+			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
+			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
+
+			return EntityExtractor.Create
+			(
+				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
+				databaseId, rawSorters, rawFilters
+			);
 		}
 
 
