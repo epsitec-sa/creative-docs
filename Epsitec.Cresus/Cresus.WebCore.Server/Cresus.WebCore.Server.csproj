@@ -65,6 +65,8 @@
     <Compile Include="Core\Databases\DatabaseManager.cs" />
     <Compile Include="Core\Databases\SubMenuItem.cs" />
     <Compile Include="Core\Databases\Sorter.cs" />
+    <Compile Include="Core\Extraction\CsvArrayFormat.cs" />
+    <Compile Include="Core\Extraction\ArrayFormat.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
     <Compile Include="Core\IdCache.cs" />
@@ -100,6 +102,8 @@
     <Compile Include="NancyModules\SpecialFieldModule.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Core\Extraction\EntityExtractor.cs" />
+    <Compile Include="Core\Extraction\EntityWriter.cs" />
+    <Compile Include="Core\Extraction\ArrayWriter.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache`1.cs" />
