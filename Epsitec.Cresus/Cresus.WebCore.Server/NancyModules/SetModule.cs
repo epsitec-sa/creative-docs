@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public SetModule(CoreServer coreServer)
 			: base (coreServer, "/set")
 		{
-			Get["/{viewId}/{entityId}/get/{dataset}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntities (wa, b, p)));
+			Get["/{viewId}/{entityId}/get/{dataset}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
 			Post["/{viewId}/{entityId}/add"] = p => this.Execute (b => this.Add (b, p));
 			Post["/{viewId}/{entityId}/remove"] = p => this.Execute (b => this.Remove (b, p));
 		}

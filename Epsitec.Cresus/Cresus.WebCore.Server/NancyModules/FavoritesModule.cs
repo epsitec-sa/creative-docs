@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public FavoritesModule(CoreServer coreServer)
 			: base (coreServer, "/favorites")
 		{
-			Get["/get/{name}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntities (wa, b, p)));
+			Get["/get/{name}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
 		}
 
 

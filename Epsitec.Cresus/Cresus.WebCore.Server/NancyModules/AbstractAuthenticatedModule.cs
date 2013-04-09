@@ -47,6 +47,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		protected Response Execute(Func<WorkerApp, BusinessContext, Response> function)
+		{
+			return this.Execute (wa => wa.Execute (b => function (wa, b)));
+		}
+
+
 		private string GetUserName()
 		{
 			return LoginModule.GetUserName (this);

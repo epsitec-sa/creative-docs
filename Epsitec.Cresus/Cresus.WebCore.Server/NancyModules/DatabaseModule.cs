@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Get["/list"] = p => this.Execute (wa => this.GetDatabaseList (wa));
 			Get["/definition/{name}"] = p => this.Execute (wa => this.GetDatabase (wa, p));
-			Get["/get/{name}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntities (wa, b, p)));
-			Get["/getindex/{name}/{id}"] = p => this.Execute (wa => wa.Execute (b => this.GetEntityIndex (wa, b, p)));
+			Get["/get/{name}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+			Get["/getindex/{name}/{id}"] = p => this.Execute ((wa, b) => this.GetEntityIndex (wa, b, p));
 			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
 			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
 		}
