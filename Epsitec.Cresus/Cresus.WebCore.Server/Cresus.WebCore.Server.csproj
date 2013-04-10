@@ -70,6 +70,7 @@
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
     <Compile Include="Core\IdCache.cs" />
+    <Compile Include="Core\IO\ColumnIO.cs" />
     <Compile Include="Core\IO\FilterIO.cs" />
     <Compile Include="Core\IO\SorterIO.cs" />
     <Compile Include="Core\IO\DataIO.cs" />

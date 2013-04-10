@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			foreach (var filter in filters.Cast<Dictionary<string, object>> ())
 			{
-				var column = FilterIO.ParseColumn (caches, database, filter);
+				var column = ColumnIO.ParseColumn (caches, database, (string) filter["field"]);
 
 				var columnId = column.MetaData.Id;
 				var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
@@ -60,15 +60,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 
 			return entityFilter;
-		}
-
-
-		private static Column ParseColumn(Caches caches, Database database, Dictionary<string, object> filter)
-		{
-			var fieldId = (string) filter["field"];
-			var fieldName = caches.ColumnIdCache.GetItem (fieldId);
-
-			return database.Columns.First (c => c.Name == fieldName);
 		}
 
 
