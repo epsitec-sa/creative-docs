@@ -6,6 +6,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.ListColumn',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.ui.ExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
   'Ext.ux.grid.FiltersFeature'
 ],
@@ -328,8 +329,12 @@ function() {
     },
 
     onExportHandler: function() {
-      var url = this.buildUrlWithSortersAndFilters(this.exportUrl);
-      window.open(url);
+      var exportWindow = Ext.create('Epsitec.ExportWindow', {
+        columnDefinitions: this.columnDefinitions,
+        exportUrl: this.buildUrlWithSortersAndFilters(this.exportUrl)
+      });
+
+      exportWindow.show();
     },
 
     onRefreshHandler: function() {

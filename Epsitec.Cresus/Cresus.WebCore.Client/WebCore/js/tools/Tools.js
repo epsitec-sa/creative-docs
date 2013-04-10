@@ -90,6 +90,12 @@ function() {
         }
 
         return url;
+      },
+
+      addParameterToUrl: function(url, key, value) {
+        var separator = url.indexOf('?') >= 0 ? '&' : '?';
+
+        return url + separator + key + '=' + value;
       }
     }
   });

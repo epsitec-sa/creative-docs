@@ -138,21 +138,25 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var caches = this.CoreServer.Caches;
 
+			string rawColumns = Tools.GetOptionalParameter (this.Request.Query.columns);
+
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
-				return DatabaseModule.Export (caches, extractor);
+				return DatabaseModule.Export (caches, extractor, rawColumns);
 			}
 		}
 
 
-		internal static Response Export(Caches caches, EntityExtractor extractor)
+		internal static Response Export(Caches caches, EntityExtractor extractor, string rawColumns)
 		{
 			var properties = caches.PropertyAccessorCache;
 			var metaData = extractor.Metadata;
 			var accessor = extractor.Accessor;
 			var format = new CsvArrayFormat ();
 
-			EntityWriter writer = new ArrayWriter (properties, metaData, accessor, format);
+			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
+
+			EntityWriter writer = new ArrayWriter (properties, metaData, columns, accessor, format);
 
 			var filename = writer.Filename;
 			var stream = writer.GetStream ();

@@ -3,6 +3,7 @@
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
@@ -24,9 +25,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	{
 
 
-		public ArrayWriter(PropertyAccessorCache properties, DataSetMetadata metadata, DataSetAccessor accessor, ArrayFormat format)
+		internal ArrayWriter(PropertyAccessorCache properties, DataSetMetadata metadata, IEnumerable<Column> columns, DataSetAccessor accessor, ArrayFormat format)
 			: base (metadata, accessor)
 		{
+			this.columns = columns.ToList ();
 			this.properties = properties;
 			this.format = format;
 		}
@@ -47,10 +49,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 		public override Stream GetStream()
 		{
-			var columns = this.Metadata.EntityTableMetadata.Columns;
-
-			var headers = this.GetHeaders (columns);
-			var rows = this.GetRows (columns);
+			var headers = this.GetHeaders ();
+			var rows = this.GetRows ();
 
 			var stream = new MemoryStream ();
 
@@ -62,17 +62,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		private IList<string> GetHeaders(IEnumerable<EntityColumnMetadata> columns)
+		private IList<string> GetHeaders()
 		{
-			return columns
-				.Select (c => c.GetColumnTitle ().ToSimpleText ())
+			return this.columns
+				.Select (c => c.MetaData.GetColumnTitle ().ToSimpleText ())
 				.ToList ();
 		}
 
 
-		private IList<IList<string>> GetRows(IList<EntityColumnMetadata> columns)
+		private IList<IList<string>> GetRows()
 		{
-			var columnAccessors = this.GetColumnAccessors (columns);
+			var columnAccessors = this.GetColumnAccessors ();
 
 			return this.Accessor
 				.GetAllItems ()
@@ -81,10 +81,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		private IList<AbstractPropertyAccessor> GetColumnAccessors(IList<EntityColumnMetadata> columns)
+		private IList<AbstractPropertyAccessor> GetColumnAccessors()
 		{
-			return columns
-				.Select (c => this.properties.Get (c.Expression))
+			return this.columns
+				.Select (c => this.properties.Get (c.LambdaExpression))
 				.ToList ();
 		}
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		private IList<string> GetCells(IList<AbstractPropertyAccessor> columnAccessors, AbstractEntity entity)
 		{
 			return columnAccessors
-				.Select (ca => this.GetCell (ca, entity))
+				.Select (c => this.GetCell (c, entity))
 				.ToList ();
 		}
 
@@ -108,6 +108,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 			return (string) value;
 		}
+
+
+		private readonly IEnumerable<Column> columns;
 
 
 		private readonly PropertyAccessorCache properties;

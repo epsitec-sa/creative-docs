@@ -57,7 +57,10 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'ne peut pas \u00EAtre affich\u00E9e dans la liste, probablement ' +
             '\u00E0 cause d\'un filtre.',
         pickerFavouriteItems: 'Favoris',
-        pickerAllItems: 'Liste compl\u00E8te'
+        pickerAllItems: 'Liste compl\u00E8te',
+        exportTitle: 'Configuration de l\'Export',
+        exportExportedColumns: 'Colonnes export\u00E9es',
+        exportDiscardedColumns: 'Colonnes ignor\u00E9es'
       };
     }
   }

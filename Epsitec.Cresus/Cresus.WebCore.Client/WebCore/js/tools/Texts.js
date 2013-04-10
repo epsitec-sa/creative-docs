@@ -176,6 +176,18 @@ function() {
 
       getPickerAllItems: function() {
         return this.texts.pickerAllItems;
+      },
+
+      getExportTitle: function() {
+        return this.texts.exportTitle;
+      },
+
+      getExportExportedColumns: function() {
+        return this.texts.exportExportedColumns;
+      },
+
+      getExportDiscardedColumns: function() {
+        return this.texts.exportDiscardedColumns;
       }
     }
   });
