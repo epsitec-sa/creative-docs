@@ -21,7 +21,7 @@ namespace Epsitec.Common.Pdf.Array
 			this.rowPages     = new List<int> ();
 		}
 
-		public PdfExportException GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, CellContent> dataAccessor)
+		public void GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, CellContent> dataAccessor)
 		{
 			this.rowCount          = rowCount;
 			this.columnDefinitions = columnDefinitions;
@@ -31,34 +31,28 @@ namespace Epsitec.Common.Pdf.Array
 			this.HorizontalJustification ();
 			this.VerticalJustification ();
 
-			var ex = this.HasException ();
-			if (ex != null)
-			{
-				return ex;
-			}
+			this.ThrowIfProblem ();
 
 			var export = new Export (this.info);
-			return export.ExportToFile (path, this.pageCount, this.RenderPage);
+			export.ExportToFile (path, this.pageCount, this.RenderPage);
 		}
 
 
-		private PdfExportException HasException()
+		private void ThrowIfProblem()
 		{
 			//	Détecte tous les cas dégénérés exceptionnels.
 			if (this.rowCount == 0)
 			{
-				return new PdfExportException ("Aucun contenu");
+				throw new PdfExportException ("Aucun contenu");
 			}
 
 			for (int column = 0; column < this.columnDefinitions.Count; column++)
 			{
 				if (this.columnWidths[column] < 0)
 				{
-					return new PdfExportException ("Débordement d'une cellule");
+					throw new PdfExportException ("Débordement d'une cellule");
 				}
 			}
-
-			return null;  // ok
 		}
 
 

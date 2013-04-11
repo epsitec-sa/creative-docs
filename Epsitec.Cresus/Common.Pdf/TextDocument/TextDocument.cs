@@ -20,7 +20,7 @@ namespace Epsitec.Common.Pdf.TextDocument
 			this.linePages   = new List<int> ();
 		}
 
-		public PdfExportException GeneratePdf(string path, FormattedText text)
+		public void GeneratePdf(string path, FormattedText text)
 		{
 			this.text = text;
 
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Pdf.TextDocument
 			this.VerticalJustification ();
 
 			var export = new Export (this.info);
-			return export.ExportToFile (path, this.pageCount, this.RenderPage);
+			export.ExportToFile (path, this.pageCount, this.RenderPage);
 		}
 
 		private void RenderPage(Port port, int page)

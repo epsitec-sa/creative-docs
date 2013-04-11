@@ -37,35 +37,33 @@ namespace Common.Pdf.Test
 					break;
 				}
 
-				PdfExportException ex = null;
-
-				switch (result)
+				try
 				{
-					case 1:
-						ex = Program.Test1 ();
-						break;
-					case 2:
-						ex = Program.Test2 ();
-						break;
-					case 3:
-						ex = Program.Test3 ();
-						break;
-					case 4:
-						ex = Program.Test4 ();
-						break;
-					case 5:
-						ex = Program.Test5 ();
-						break;
-					case 6:
-						ex = Program.Test6 ();
-						break;
-				}
+					switch (result)
+					{
+						case 1:
+							Program.Test1 ();
+							break;
+						case 2:
+							Program.Test2 ();
+							break;
+						case 3:
+							Program.Test3 ();
+							break;
+						case 4:
+							Program.Test4 ();
+							break;
+						case 5:
+							Program.Test5 ();
+							break;
+						case 6:
+							Program.Test6 ();
+							break;
+					}
 
-				if (ex == null)
-				{
 					Console.WriteLine ("Export ok");
 				}
-				else
+				catch (PdfExportException ex)
 				{
 					Console.WriteLine ("message = " + ex.Message);
 				}
@@ -77,12 +75,12 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static PdfExportException Test1()
+		private static void Test1()
 		{
 			//	Génération d'un document fixe de 2 pages.
 			var info = new ExportPdfInfo ();
 			var export = new Export (info);
-			return export.ExportToFile ("test1.pdf", 2, Program.Renderer1);
+			export.ExportToFile ("test1.pdf", 2, Program.Renderer1);
 		}
 
 		private static void Renderer1(Port port, int page)
@@ -186,7 +184,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static PdfExportException Test2()
+		private static void Test2()
 		{
 			//	Génération d'étiquettes.
 			var info = new ExportPdfInfo ()
@@ -202,7 +200,7 @@ namespace Common.Pdf.Test
 			var stikers = new Stikers (info, setup);
 			Program.AddFixElements (stikers, setup);
 
-			return stikers.GeneratePdf ("test2.pdf", 100, Program.Test2DataAccessor);
+			stikers.GeneratePdf ("test2.pdf", 100, Program.Test2DataAccessor);
 		}
 
 		private static FormattedText Test2DataAccessor(int rank)
@@ -211,7 +209,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static PdfExportException Test3()
+		private static void Test3()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -239,10 +237,10 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic));
 			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
 
-			return array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayDataAccessor);
+			array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayDataAccessor);
 		}
 
-		private static PdfExportException Test4()
+		private static void Test4()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -268,7 +266,7 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("NPA",      ColumnType.Automatic, alignment: ContentAlignment.BottomRight));
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic, alignment: ContentAlignment.BottomLeft));
 
-			return array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayDataAccessor);
+			array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayDataAccessor);
 		}
 
 		private static CellContent TestArrayDataAccessor(int row, int column)
@@ -338,7 +336,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static PdfExportException Test5()
+		private static void Test5()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -373,11 +371,11 @@ namespace Common.Pdf.Test
 				}
 			}
 
-			return doc.GeneratePdf ("test5.pdf", builder.ToString ());
+			doc.GeneratePdf ("test5.pdf", builder.ToString ());
 		}
 
 
-		private static PdfExportException Test6()
+		private static void Test6()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -406,7 +404,7 @@ namespace Common.Pdf.Test
 				builder.Append ("<br/></font><br/>");
 			}
 
-			return doc.GeneratePdf ("test6.pdf", builder.ToString ());
+			doc.GeneratePdf ("test6.pdf", builder.ToString ());
 		}
 
 

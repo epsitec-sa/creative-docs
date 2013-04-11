@@ -18,7 +18,7 @@ namespace Epsitec.Common.Pdf.Stikers
 		{
 		}
 
-		public PdfExportException GeneratePdf(string path, int count, Func<int, FormattedText> dataAccessor)
+		public void GeneratePdf(string path, int count, Func<int, FormattedText> dataAccessor)
 		{
 			this.count        = count;
 			this.dataAccessor = dataAccessor;
@@ -27,13 +27,13 @@ namespace Epsitec.Common.Pdf.Stikers
 
 			if (this.stikersPerPage < 1)
 			{
-				return new PdfExportException("Etiquettes trop grandes par rapport au papier");
+				throw new PdfExportException("Etiquettes trop grandes par rapport au papier");
 			}
 
 			int pageCount = (this.count + this.stikersPerPage - 1) / this.stikersPerPage;
 
 			var export = new Export (this.info);
-			return export.ExportToFile (path, pageCount, this.RenderPage);
+			export.ExportToFile (path, pageCount, this.RenderPage);
 		}
 
 		private void RenderPage(Port port, int page)

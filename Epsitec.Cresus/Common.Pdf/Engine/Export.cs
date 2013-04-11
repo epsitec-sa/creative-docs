@@ -36,7 +36,7 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		public PdfExportException ExportToFile(string path, int pageCount, Action<Port, int> renderPage)
+		public void ExportToFile(string path, int pageCount, Action<Port, int> renderPage)
 		{
 			//	Exporte le document dans un fichier.
 			//	Le renderer reçoit le port et le numéro de la page à générer (1..n).
@@ -53,20 +53,11 @@ namespace Epsitec.Common.Pdf.Engine
 
 			if (this.pages.Count == 0)
 			{
-				return new PdfExportException ("Document vide");
+				throw new PdfExportException ("Document vide");
 			}
 
-			try
-			{
-				this.ExportPdf (path);
-				this.DisplayPdf (path);
-			}
-			catch (PdfExportException ex)
-			{
-				return ex;  // retourne l'erreur
-			}
-
-			return null;  // ok
+			this.ExportPdf (path);
+			this.DisplayPdf (path);
 		}
 
 		private void ExportPdf(string path)
