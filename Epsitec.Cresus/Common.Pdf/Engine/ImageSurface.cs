@@ -72,32 +72,6 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-#if false
-		public double MinDpi
-		{
-			get;
-			set;
-		}
-
-		public double MaxDpi
-		{
-			get;
-			set;
-		}
-
-		public int DX
-		{
-			get;
-			set;
-		}
-
-		public int DY
-		{
-			get;
-			set;
-		}
-#endif
-
 		public PdfImageStream ImageStream
 		{
 			get;
