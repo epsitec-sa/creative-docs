@@ -149,17 +149,17 @@ namespace Epsitec.Common.Pdf.Engine
 			writer.WriteObjectRef ("HeaderPages");
 			writer.WriteLine (">> endobj");
 
-			this.documentTitle = Support.Globals.Properties.GetProperty<string> ("PDF:Title") ?? System.IO.Path.GetFileName (path);
+			this.documentTitle = this.info.Title;
 
 			string defaultProducer  = Export.GetDefaultProducerInformation ();
 			string defaultCopyright = Export.GetDefaultModuleCopyright ();
 
 			//	Object info
 			string titleName    = Export.GetEscapedString (this.documentTitle);
-			string author       = Export.GetEscapedString (Support.Globals.Properties.GetProperty<string> ("PDF:Author"));
-			string creator      = Export.GetEscapedString (Support.Globals.Properties.GetProperty<string> ("PDF:Creator"));
-			string producer     = Export.GetEscapedString (Support.Globals.Properties.GetProperty<string> ("PDF:Producer") ?? string.Format ("{0}, {1}", defaultProducer, defaultCopyright));
-			string creationDate = Export.GetDateString    (Support.Globals.Properties.GetProperty<System.DateTime> ("PDF:CreationDate", System.DateTime.Now));
+			string author       = Export.GetEscapedString (this.info.Author);
+			string creator      = Export.GetEscapedString (this.info.Creator);
+			string producer     = Export.GetEscapedString (this.info.Producer);
+			string creationDate = Export.GetDateString (this.info.CreationDate);
 
 			writer.WriteObjectDef ("Info");
 			writer.WriteString (string.Concat ("<< /Title (", titleName, ") "));
@@ -291,52 +291,10 @@ namespace Epsitec.Common.Pdf.Engine
 				writer.WriteString ("<< /Type /Page /Parent ");
 				writer.WriteObjectRef ("HeaderPages");
 
-				//	Définit les boîtes en utilisant soit les valeurs déterminées par CrDoc,
-				//	soit des modes forcés par l'appelant externe (ça permet par exemple de
-				//	ne pas inclure un MediaBox ou de faire en sorte que le BleedBox ait la
-				//	taille du média d'impression).
-				switch (Support.Globals.Properties.GetProperty<string> ("PDF:MediaBoxDefinition", "MediaBox"))
-				{
-					case "MediaBox":
-						writer.WriteString (Port.StringBBox ("/MediaBox", mediaBox));
-						break;
-					case "None":
-						break;
-				}
-
-				switch (Support.Globals.Properties.GetProperty<string> ("PDF:CropBoxDefinition", "CropBox"))
-				{
-					case "CropBox":
-						writer.WriteString (Port.StringBBox ("/CropBox", mediaBox));
-						break;
-					case "None":
-						break;
-				}
-				switch (Support.Globals.Properties.GetProperty<string> ("PDF:BleedBoxDefinition", "BleedBox"))
-				{
-					case "BleedBox":
-						writer.WriteString (Port.StringBBox ("/BleedBox", bleedBox));
-						break;
-					case "MediaBox":
-						writer.WriteString (Port.StringBBox ("/MediaBox", mediaBox));
-						break;
-					case "None":
-						break;
-				}
-				switch (Support.Globals.Properties.GetProperty<string> ("PDF:TrimBoxDefinition", "TrimBox"))
-				{
-					case "BleedBox":
-						writer.WriteString (Port.StringBBox ("/BleedBox", bleedBox));
-						break;
-					case "MediaBox":
-						writer.WriteString (Port.StringBBox ("/MediaBox", mediaBox));
-						break;
-					case "TrimBox":
-						writer.WriteString (Port.StringBBox ("/TrimBox", trimBox));
-						break;
-					case "None":
-						break;
-				}
+				writer.WriteString (Port.StringBBox ("/MediaBox", mediaBox));
+				writer.WriteString (Port.StringBBox ("/CropBox", mediaBox));
+				writer.WriteString (Port.StringBBox ("/BleedBox", bleedBox));
+				writer.WriteString (Port.StringBBox ("/TrimBox", trimBox));
 
 				writer.WriteString ("/Resources ");
 				writer.WriteObjectRef (Export.GetPageResourceName (page));
@@ -605,33 +563,26 @@ namespace Epsitec.Common.Pdf.Engine
 				bottom = this.info.BleedMargin + info.BleedOddMargins.Bottom;
 			}
 
-			if (Support.Globals.Properties.IsPropertyDefined ("PDF:DisableClipToBleedBox"))
+			using (Path path = new Path ())
 			{
-				//	Pas de clipping...
-			}
-			else
-			{
-				using (Path path = new Path ())
-				{
-					const double clip=1000.0;
+				const double clip=1000.0;
 
-					path.MoveTo (  0.0 - clip,    0.0 - clip);
-					path.LineTo (width + clip,    0.0 - clip);
-					path.LineTo (width + clip, height + clip);
-					path.LineTo (  0.0 - clip, height + clip);
-					path.LineTo (  0.0 - clip,    0.0 - clip);
-					path.Close ();
+				path.MoveTo (0.0 - clip, 0.0 - clip);
+				path.LineTo (width + clip, 0.0 - clip);
+				path.LineTo (width + clip, height + clip);
+				path.LineTo (0.0 - clip, height + clip);
+				path.LineTo (0.0 - clip, 0.0 - clip);
+				path.Close ();
 
-					path.MoveTo (  0.0 - left,     0.0 - bottom);
-					path.LineTo (  0.0 - left,  height + top);
-					path.LineTo (width + right, height + top);
-					path.LineTo (width + right,    0.0 - bottom);
-					path.LineTo (  0.0 - left,     0.0 - bottom);
-					path.Close ();
+				path.MoveTo (0.0 - left, 0.0 - bottom);
+				path.LineTo (0.0 - left, height + top);
+				path.LineTo (width + right, height + top);
+				path.LineTo (width + right, 0.0 - bottom);
+				path.LineTo (0.0 - left, 0.0 - bottom);
+				path.Close ();
 
-					port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // masque blanc
-					port.PaintSurface (path);
-				}
+				port.RichColor = RichColor.FromCmyk (0.0, 0.0, 0.0, 0.0);  // masque blanc
+				port.PaintSurface (path);
 			}
 		}
 

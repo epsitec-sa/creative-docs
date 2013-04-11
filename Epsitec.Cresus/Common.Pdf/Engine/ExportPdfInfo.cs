@@ -1,5 +1,7 @@
 using Epsitec.Common.Drawing;
 
+using System;
+
 namespace Epsitec.Common.Pdf.Engine
 {
 	/// <summary>
@@ -287,6 +289,66 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
+		public string Title
+		{
+			get
+			{
+				return this.title;
+			}
+			set
+			{
+				this.title = value;
+			}
+		}
+
+		public string Author
+		{
+			get
+			{
+				return this.author;
+			}
+			set
+			{
+				this.author = value;
+			}
+		}
+
+		public string Creator
+		{
+			get
+			{
+				return this.creator;
+			}
+			set
+			{
+				this.creator = value;
+			}
+		}
+
+		public string Producer
+		{
+			get
+			{
+				return this.producer;
+			}
+			set
+			{
+				this.producer = value;
+			}
+		}
+
+		public DateTime CreationDate
+		{
+			get
+			{
+				return this.creationDate;
+			}
+			set
+			{
+				this.creationDate = value;
+			}
+		}
+
 
 		private int						pageFrom;
 		private int						pageTo;
@@ -308,5 +370,10 @@ namespace Epsitec.Common.Pdf.Engine
 		private string[]				imageNameFilters;
 		private Margins					bleedEvenMargins;
 		private Margins					bleedOddMargins;
+		private string					title;
+		private string					author;
+		private string					creator;
+		private string					producer;
+		private DateTime				creationDate;
 	}
 }
