@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
 using System.Xml;
@@ -20,23 +21,26 @@ namespace App.Directories
 			InitializeComponent ();
 		}
 
-		public DirectoriesWebService ws = new DirectoriesWebService();
+		public DirectoriesWebService ws = null;
+		public SignIn SignIn = new SignIn ();
 		
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 			//BINGS MAP
 			this.Map.CredentialsProvider = new ApplicationIdCredentialsProvider ("AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
 			this.Map.ZoomLevel = 12;
-
-
-			//OAUTH 
-
-			
+			this.SignIn.Show (this);
+		
 		}
+
 
 		private void cmd_search_Click(object sender, EventArgs e)
 		{
 
+			if (this.ws==null)
+			{
+				this.ws = new DirectoriesWebService ();
+			}
 			DirectoriesSearchAddressResult result = null;
 			if (this.opt_phone.Checked || this.opt_email.Checked || this.opt_web.Checked)
 			{
@@ -195,6 +199,39 @@ namespace App.Directories
 
 				this.Map.Children.Add (pin);
 				this.Map.Center = pin.Location;
+			}
+
+
+			
+
+			UriTemplate Template = new UriTemplate ("tokeninfo?access_token={t}");
+			Uri Prefix = new Uri ("https://www.googleapis.com/oauth2/v1/");
+			NameValueCollection Parameters = new NameValueCollection ();
+			Parameters.Add ("t", SignIn.Auth);
+
+			Uri ForgedUri = Template.BindByName (Prefix, Parameters);
+
+			HttpWebRequest Request = WebRequest.Create (ForgedUri) as HttpWebRequest;
+			Request.Method = WebRequestMethods.Http.Post;
+			Request.AuthenticationLevel = AuthenticationLevel.MutualAuthRequested;
+			Request.PreAuthenticate = true;
+			Request.Headers.Add ("Authorization","Bearer "+Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(SignIn.Auth)));
+			
+
+
+			try
+			{
+				using (HttpWebResponse Response = Request.GetResponse () as HttpWebResponse)
+				{
+					XmlReader JsonReader = JsonReaderWriterFactory.CreateJsonReader (Response.GetResponseStream (), new XmlDictionaryReaderQuotas ());
+					XElement Root = XElement.Load (JsonReader);
+				}
+
+
+			}
+			catch (WebException we)
+			{
+
 			}
 			
 		}

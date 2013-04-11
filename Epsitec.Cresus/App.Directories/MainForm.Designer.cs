@@ -160,10 +160,10 @@ namespace App.Directories
 
 		#endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Button cmd_search;
 		private System.Windows.Forms.TextBox txt_value;
-        private System.Windows.Forms.TreeView result_tree;
+		private System.Windows.Forms.TreeView result_tree;
 		private System.Windows.Forms.RadioButton opt_phone;
 		private System.Windows.Forms.RadioButton opt_email;
 		private System.Windows.Forms.RadioButton opt_web;
