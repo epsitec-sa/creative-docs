@@ -21,8 +21,6 @@ namespace App.Directories
 		}
 
 		public DirectoriesWebService ws = new DirectoriesWebService();
-		OAuth2Client oa2client = new OAuth2Client ();
-		AccessToken savedToken = null;
 		
 		private void MainForm_Load(object sender, EventArgs e)
 		{
@@ -32,12 +30,7 @@ namespace App.Directories
 
 
 			//OAUTH 
-			this.oa2client.AuthorizationEndpoint = "https://www.googleapis.com/auth/plus.login";
-			this.oa2client.TokenEndpoint = "https://accounts.google.com/o/oauth2/auth";
-			this.oa2client.ClientId = "393028213266.apps.googleusercontent.com";
-			this.oa2client.ClientSecret = "k8YeDLjupHQPDu2uQZnw0YgH";
-			this.oa2client.ObtainAccesToken ();
-			this.savedToken = oa2client.Token;
+
 			
 		}
 
