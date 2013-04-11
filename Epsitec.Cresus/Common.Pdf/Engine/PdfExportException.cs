@@ -6,18 +6,8 @@ namespace Epsitec.Common.Pdf.Engine
 	public class PdfExportException : System.Exception
 	{
 		public PdfExportException(string message)
+			: base (message)
 		{
-			this.message = message;
 		}
-
-		public string Message
-		{
-			get
-			{
-				return this.message;
-			}
-		}
-		
-		private readonly string message;
 	}
 }
