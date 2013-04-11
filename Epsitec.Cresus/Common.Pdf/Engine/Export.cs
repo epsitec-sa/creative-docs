@@ -1,10 +1,11 @@
 //	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
+
+using System;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Pdf.Engine
 {

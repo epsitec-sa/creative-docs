@@ -1,5 +1,4 @@
 using Epsitec.Common.Drawing;
-using Epsitec.Common.OpenType;
 
 namespace Epsitec.Common.Pdf.Engine
 {

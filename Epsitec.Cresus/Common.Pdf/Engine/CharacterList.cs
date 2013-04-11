@@ -1,6 +1,4 @@
 using Epsitec.Common.Widgets;
-using Epsitec.Common.OpenType;
-using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Pdf.Engine
 {
