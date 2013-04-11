@@ -104,6 +104,19 @@ namespace Epsitec.Data.Platform.Directories
 			return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
 		}
 
+		public DirectoriesSearchAddressResult SearchAddressByFullName(string FirstName, string LastName, int from, int to)
+		{
+			DirectoriesPaging Paging=new DirectoriesPaging ()
+			{
+				StartAtIndex=from,
+				FinishAtIndex=to
+			};
+			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
+			query.AddFirstNameParameter (FirstName, false, DirectoriesPrecisionCode.FieldLevel);
+			query.AddLastNameParameter (LastName, false, DirectoriesPrecisionCode.FieldLevel);
+			return new DirectoriesSearchAddressResult (new DirectoriesSearchAddressExecutor (query));
+		}
+
 		public DirectoriesSearchAddressResult SearchAddressByFirstName(string FirstName, int from, int to)
 		{
 			DirectoriesPaging Paging=new DirectoriesPaging ()
@@ -114,6 +127,20 @@ namespace Epsitec.Data.Platform.Directories
 			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
 			query.AddFirstNameParameter (FirstName, false, DirectoriesPrecisionCode.FieldLevel);
 			return new DirectoriesSearchAddressResult(new DirectoriesSearchAddressExecutor(query));
+		}
+
+		public DirectoriesSearchAddressResult SearchAddressByFirstNameAndLocation(string FirstName, string Location, int from, int to)
+		{
+			DirectoriesPaging Paging=new DirectoriesPaging ()
+			{
+				StartAtIndex=from,
+				FinishAtIndex=to
+			};
+
+			var query = new DirectoriesSearchAddressQuery (this.Authentication, Paging);
+			query.AddFirstNameParameter (FirstName, false, DirectoriesPrecisionCode.FieldLevel);
+			query.AddLocationParameter (Location, false);
+			return new DirectoriesSearchAddressResult (new DirectoriesSearchAddressExecutor (query));
 		}
 
 		public DirectoriesSearchAddressResult SearchAddressByLastName(string LastName, int from, int to)

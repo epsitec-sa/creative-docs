@@ -1,4 +1,5 @@
-﻿namespace App.Directories
+﻿using Microsoft.Maps.MapControl.WPF;
+namespace App.Directories
 {
 	partial class MainForm
 	{
@@ -37,6 +38,8 @@
 			this.opt_email = new System.Windows.Forms.RadioButton();
 			this.opt_web = new System.Windows.Forms.RadioButton();
 			this.chk_deploy_tree = new System.Windows.Forms.CheckBox();
+			this.Host = new System.Windows.Forms.Integration.ElementHost();
+			this.Map = new Microsoft.Maps.MapControl.WPF.Map();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -66,6 +69,7 @@
 			this.txt_value.Name = "txt_value";
 			this.txt_value.Size = new System.Drawing.Size(435, 39);
 			this.txt_value.TabIndex = 3;
+			this.txt_value.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txt_value_KeyUp);
 			// 
 			// result_tree
 			// 
@@ -74,6 +78,7 @@
 			this.result_tree.Name = "result_tree";
 			this.result_tree.Size = new System.Drawing.Size(584, 403);
 			this.result_tree.TabIndex = 5;
+			this.result_tree.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.result_tree_NodeMouseClick);
 			// 
 			// opt_phone
 			// 
@@ -119,11 +124,21 @@
 			this.chk_deploy_tree.UseVisualStyleBackColor = true;
 			this.chk_deploy_tree.CheckedChanged += new System.EventHandler(this.chk_deploy_tree_CheckedChanged);
 			// 
+			// Host
+			// 
+			this.Host.Location = new System.Drawing.Point(602, 94);
+			this.Host.Name = "Host";
+			this.Host.Size = new System.Drawing.Size(660, 403);
+			this.Host.TabIndex = 10;
+			this.Host.Text = "WPF Host";
+			this.Host.Child = this.Map;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(608, 541);
+			this.ClientSize = new System.Drawing.Size(1274, 541);
+			this.Controls.Add(this.Host);
 			this.Controls.Add(this.chk_deploy_tree);
 			this.Controls.Add(this.opt_web);
 			this.Controls.Add(this.opt_email);
@@ -153,6 +168,8 @@
 		private System.Windows.Forms.RadioButton opt_email;
 		private System.Windows.Forms.RadioButton opt_web;
 		private System.Windows.Forms.CheckBox chk_deploy_tree;
+		private System.Windows.Forms.Integration.ElementHost Host;
+		private Map Map;
 	}
 }
 

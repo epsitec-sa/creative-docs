@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
+using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 using Epsitec.Data.Platform.Directories;
 using Epsitec.Data.Platform.Directories.Entity;
+using Microsoft.Maps.MapControl.WPF;
 
 namespace App.Directories
 {
@@ -21,9 +22,12 @@ namespace App.Directories
 
 		public DirectoriesWebService ws = new DirectoriesWebService();
 		
+		
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			//TODO
+			this.Map.CredentialsProvider = new ApplicationIdCredentialsProvider ("AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
+			this.Map.ZoomLevel = 12;
+
 			
 		}
 
@@ -65,7 +69,7 @@ namespace App.Directories
 					case 1: result = ws.SearchAddressByFirstName(this.txt_value.Text, 1, 100);
 					break;
 
-					case 2: result = ws.SearchAddressByLastNameAndLocation(Args[0], Args[1], 1, 100);
+					case 2: result = ws.SearchAddressByFullName(Args[0], Args[1], 1, 100);
 					break;
 				}
 			}
@@ -83,17 +87,22 @@ namespace App.Directories
 			}
 			
 		   
-			foreach (DirectoriesEntry entries in result.Entries)
+
+			foreach (DirectoriesEntryAdd add in result.GetEntries())
 			{
-				foreach (DirectoriesEntryAdd add in entries.EntryAdds)
+				var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}", add.FirstName, add.LastName, add.StateCode));
+				node.Tag = add.Zip;
+				if (add.Profession!="")
 				{
-					var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}, {3}", add.FirstName, add.LastName, add.Profession, add.LocaPostName));
-					foreach (DirectoriesEntryAddService ser in add.Services)
-					{
-						node.Nodes.Add(ser.Value);
-					}
-				}    
-			}
+					node.Nodes.Add ("Profession: " + add.Profession);
+				}
+				node.Nodes.Add (String.Format ("Address: {0} {1}, {2} {3}", add.StreetName, add.HouseNo, add.Zip, add.LocaPostName));
+				foreach (DirectoriesEntryAddService ser in add.Services)
+				{
+					node.Nodes.Add(String.Format ("{0}: {1}", ser.TypeGrpCode,ser.Value));
+				}
+			}    
+			
 					
 			
 			this.result_tree.ExpandAll();
@@ -113,6 +122,78 @@ namespace App.Directories
 			{
 				this.result_tree.ExpandAll ();
 			}
+		}
+
+		private void txt_value_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				this.cmd_search_Click (this, null);
+			}
+		}
+
+		private Location GetCoordinates(string Zip)
+		{
+
+
+			UriTemplate Template = new UriTemplate ("Locations?countryRegion={c}&postalCode={z}&maxResults={n}&key={k}");
+			Uri Prefix = new Uri ("http://dev.virtualearth.net/REST/v1/");
+			NameValueCollection Parameters = new NameValueCollection ();
+			Parameters.Add ("c", "CH");
+			Parameters.Add ("z", Zip);
+			Parameters.Add ("n", "1");
+			Parameters.Add ("k", "AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
+
+			Uri ForgedUri = Template.BindByName (Prefix, Parameters);
+
+			HttpWebRequest Request = WebRequest.Create (ForgedUri) as HttpWebRequest;
+			Request.Method = WebRequestMethods.Http.Get;
+
+
+			try
+			{
+				using (HttpWebResponse Response = Request.GetResponse () as HttpWebResponse)
+				{
+					XmlReader JsonReader = JsonReaderWriterFactory.CreateJsonReader (Response.GetResponseStream (), new XmlDictionaryReaderQuotas ());
+					XElement Root = XElement.Load (JsonReader);
+
+
+					XElement [] Coordinates = Root.Elements ("resourceSets").ToArray ()[0].Element ("item").Elements ("resources").ToArray ()[0].Element ("item").Element ("point").Element ("coordinates").Elements ("item").ToArray ();
+					string MapX = Coordinates[0].Value;
+					string MapY = Coordinates[1].Value;
+
+
+					return new Location (Convert.ToDouble (MapX), Convert.ToDouble (MapY));
+				}
+
+
+			}
+			catch (WebException we)
+			{
+				return null;
+			}
+
+
+		}
+
+		private void result_tree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+
+			var node = e.Node;
+			if (node.Tag!=null)
+			{
+				var LocationByZip = this.GetCoordinates (node.Tag.ToString ());
+
+				Pushpin pin=new Pushpin ()
+				{
+					Location = LocationByZip,
+					PositionOrigin = PositionOrigin.BottomCenter,
+				};
+
+				this.Map.Children.Add (pin);
+				this.Map.Center = pin.Location;
+			}
+			
 		}
 	}
 }

@@ -10,11 +10,21 @@ namespace Epsitec.Data.Platform.Directories
 	{
 		public DirectoriesSearchAddressResult(DirectoriesSearchAddressExecutor Executor)
 		{
-				this.Entries = Executor.GetEntries();
+				this.RowEntries = Executor.GetEntries();
 				this.Info = Executor.GetResultInfo();    
 		}
 
-		public IList<DirectoriesEntry> Entries;
+		public List<DirectoriesEntryAdd> GetEntries()
+		{
+			List<DirectoriesEntryAdd> EntryAdds = new List<DirectoriesEntryAdd>();
+			foreach (DirectoriesEntry en in this.RowEntries)
+			{
+				EntryAdds.AddRange (en.EntryAdds);
+			}
+			return EntryAdds;
+		}
+
+		public IList<DirectoriesEntry> RowEntries;
 		public DirectoriesResultInfo Info;
 	}
 }
