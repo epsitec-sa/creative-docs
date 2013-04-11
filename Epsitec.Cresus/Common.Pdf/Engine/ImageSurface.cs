@@ -54,32 +54,6 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public Size BitmapSize
-		{
-			get
-			{
-				return this.bitmapSize;
-			}
-		}
-
-		public Size ImageSize
-		{
-			//	Dimensions de l'image.
-			get
-			{
-				return this.imageSize;
-			}
-		}
-
-		public Margins Crop
-		{
-			//	Marges de recadrage de l'image.
-			get
-			{
-				return this.crop;
-			}
-		}
-
 		public ImageFilter Filter
 		{
 			//	Filtre de l'image.
@@ -95,15 +69,6 @@ namespace Epsitec.Common.Pdf.Engine
 			get
 			{
 				return this.id;
-			}
-		}
-
-		public bool Exists
-		{
-			//	Retourne true si l'image a pu être chargée au moins une fois avec succès.
-			get
-			{
-				return this.BitmapSize != Size.Zero;
 			}
 		}
 
@@ -227,9 +192,6 @@ namespace Epsitec.Common.Pdf.Engine
 		private readonly long			uniqueId;
 		private readonly Image			image;
 		private readonly NativeBitmap	nativeBitmap;
-		private readonly Size			imageSize;
-		private readonly Size			bitmapSize;
-		private readonly Margins		crop;
 		private readonly ImageFilter	filter;
 		private readonly int			id;
 	}
