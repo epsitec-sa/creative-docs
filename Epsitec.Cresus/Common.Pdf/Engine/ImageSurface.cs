@@ -24,6 +24,12 @@ namespace Epsitec.Common.Pdf.Engine
 			this.nativeBitmap = NativeBitmap.Create (this.image.BitmapImage.NativeBitmap);
 		}
 
+		public ImageSurface(long uniqueId, int id, Image image, ImageFilter filter)
+			: this (uniqueId, id, image)
+		{
+			this.filter = filter;
+		}
+
 		public Image Image
 		{
 			get
