@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Engine;
-using Epsitec.Common.Pdf.Stikers;
+using Epsitec.Common.Pdf.Stickers;
 using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Pdf.TextDocument;
 using Epsitec.Common.Types;
@@ -192,15 +192,15 @@ namespace Common.Pdf.Test
 				PrintCropMarks = true,
 			};
 
-			var setup = new StikersSetup ()
+			var setup = new StickersSetup ()
 			{
 				PaintFrame = true,
 			};
 
-			var stikers = new Stikers (info, setup);
-			Program.AddFixElements (stikers, setup);
+			var stickers = new Stickers (info, setup);
+			Program.AddFixElements (stickers, setup);
 
-			stikers.GeneratePdf ("test2.pdf", 100, Program.Test2DataAccessor);
+			stickers.GeneratePdf ("test2.pdf", 100, Program.Test2DataAccessor);
 		}
 
 		private static FormattedText Test2DataAccessor(int rank)
