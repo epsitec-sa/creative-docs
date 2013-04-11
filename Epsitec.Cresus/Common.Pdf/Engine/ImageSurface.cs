@@ -2,9 +2,9 @@
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using System.Collections.Generic;
 using Epsitec.Common.Drawing.Platform;
-using System.Xml.Linq;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Pdf.Engine
 {
