@@ -1116,7 +1116,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				Tools.LogMessage (string.Format ("Brick text for entity {0} is <null>", entity.GetType ().Name));
 
 				text = "&lt;null&gt;";
-//-				throw new InvalidOperationException ("Text should have a value");
 			}
 
 			return text;
