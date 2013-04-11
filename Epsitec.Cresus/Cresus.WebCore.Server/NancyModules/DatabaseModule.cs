@@ -76,17 +76,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var caches = this.CoreServer.Caches;
 
+			string rawColumns = Request.Query.columns;
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
-				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
 		}
 
 
-		internal static Response GetEntities(Caches caches, EntityExtractor extractor, int start, int limit)
+		internal static Response GetEntities(Caches caches, EntityExtractor extractor, string rawColumns, int start, int limit)
 		{
 			var total = extractor.Accessor.GetItemCount ();
 			var entities = extractor.Accessor.GetItems (start, limit);
@@ -94,10 +95,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var dataContext = extractor.Accessor.IsolatedDataContext;
 			var database = extractor.Database;
 
-			database.LoadRelatedData (dataContext, entities);
+			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns).ToList ();
+
+			database.LoadRelatedData (columns, dataContext, entities);
 
 			var data = entities
-				.Select (e => database.GetEntityData (dataContext, caches, e))
+				.Select (e => database.GetEntityData (columns, dataContext, caches, e))
 				.ToList ();
 
 			var content = new Dictionary<string, object> ()
@@ -138,7 +141,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var caches = this.CoreServer.Caches;
 
-			string rawColumns = Tools.GetOptionalParameter (this.Request.Query.columns);
+			string rawColumns = Request.Query.columns;
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
@@ -223,13 +226,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response CreateEntity(BusinessContext businessContext)
 		{
+			var caches = this.CoreServer.Caches;
+
 			var databaseCommandId = DataIO.ParseDruid ((string) Request.Form.databaseName);
 			var database = this.CoreServer.DatabaseManager.GetDatabase (databaseCommandId);
+			var columns = database.Columns;
 
 			var dataContext = businessContext.DataContext;
 
 			var entity = database.CreateEntity (businessContext);
-			var entityData = database.GetEntityData (dataContext, this.CoreServer.Caches, entity);
+			var entityData = database.GetEntityData (columns, dataContext, caches, entity);
 
 			return CoreResponse.Success (entityData);
 		}

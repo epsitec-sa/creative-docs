@@ -39,13 +39,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
-			
+
+			string rawColumns = Request.Query.columns;
 			int start = Request.Query.start;
 			int limit = Request.Query.limit;
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
-				return DatabaseModule.GetEntities (caches, extractor, start, limit);
+				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
 		}
 
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var caches = this.CoreServer.Caches;
 
-			string rawColumns = Tools.GetOptionalParameter (this.Request.Query.columns);
+			string rawColumns = Request.Query.columns;
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{

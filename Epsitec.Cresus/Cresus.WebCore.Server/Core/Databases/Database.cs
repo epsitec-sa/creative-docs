@@ -135,15 +135,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public void LoadRelatedData(DataContext dataContext, IEnumerable<AbstractEntity> entities)
+		public void LoadRelatedData(IEnumerable<Column> columns, DataContext dataContext, IEnumerable<AbstractEntity> entities)
 		{
-			var expressions = this.Columns.Select (c => c.LambdaExpression);
+			var expressions = columns.Select (c => c.LambdaExpression);
 
 			dataContext.LoadRelatedData (entities, expressions);
 		}
 
 
-		public Dictionary<string, object> GetEntityData(DataContext dataContext, Caches caches, AbstractEntity entity)
+		public Dictionary<string, object> GetEntityData(IEnumerable<Column> columns, DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
 			var id = EntityIO.GetEntityId (dataContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "summary", summary },
 			};
 
-			foreach (var column in this.Columns.Where (c => !c.Hidden))
+			foreach (var column in columns)
 			{
 				var columnId = column.GetId (caches);
 

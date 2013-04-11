@@ -42,6 +42,8 @@ function() {
         onSelectionChangeCallback: options.onSelectionChange,
         listeners: {
           selectionchange: this.onSelectionChangeHandler,
+          columnhide: this.setupColumnParameter,
+          columnshow: this.setupColumnParameterAndRefresh,
           scope: this
         },
         features: [{
@@ -220,8 +222,37 @@ function() {
               Epsitec.Tools.processProxyError(response);
             }
           }
+        },
+        listeners: {
+          beforeLoad: this.setupColumnParameter,
+          scope: this
         }
       });
+    },
+
+    setupColumnParameterAndRefresh: function() {
+      this.setupColumnParameter();
+      this.reloadStore();
+    },
+
+    setupColumnParameter: function() {
+      var key, value;
+
+      key = 'columns';
+      value = this.createColumnParameter();
+
+      this.store.proxy.setExtraParam(key, value);
+    },
+
+    createColumnParameter: function() {
+      return this.columns
+          .filter(function(c) {
+            return c.dataIndex !== '' && c.dataIndex !== '' && !c.hidden;
+          })
+          .map(function(c) {
+            return c.dataIndex;
+          })
+          .join(';');
     },
 
     createFields: function(columnDefinitions) {
