@@ -1,4 +1,3 @@
-using System.Runtime.Serialization;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Pdf.Engine
@@ -10,7 +9,7 @@ namespace Epsitec.Common.Pdf.Engine
 	{
 		public ExportPdfInfo()
 		{
-			this.Initialize();
+			this.Initialize ();
 		}
 
 		protected void Initialize()
@@ -287,23 +286,6 @@ namespace Epsitec.Common.Pdf.Engine
 				this.imageMaxDpi = value;
 			}
 		}
-
-
-		#region ImageNameFilter
-		public string GetImageNameFilter(int rank)
-		{
-			//	Donne le nom d'un filtre pour l'image.
-			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
-			return this.imageNameFilters[rank];
-		}
-
-		public void SetImageNameFilter(int rank, string name)
-		{
-			//	Modifie le nom d'un filtre pour l'image.
-			System.Diagnostics.Debug.Assert(rank >= 0 && rank < this.imageNameFilters.Length);
-			this.imageNameFilters[rank] = name;
-		}
-		#endregion
 
 
 		private int						pageFrom;
