@@ -22,6 +22,7 @@ namespace Common.Pdf.Test
 
 			while (true)
 			{
+				Console.WriteLine ("0) tous les documents ci-dessous");
 				Console.WriteLine ("1) 2 pages basiques");
 				Console.WriteLine ("2) 6 pages contenant 100 étiquettes");
 				Console.WriteLine ("3) 4 pages contenant un tableau de 100 lignes");
@@ -38,26 +39,41 @@ namespace Common.Pdf.Test
 
 				try
 				{
+					string path = null;
+
 					switch (result)
 					{
-						case 1:
+						case 0:
 							Program.Test1 ();
-							break;
-						case 2:
 							Program.Test2 ();
-							break;
-						case 3:
 							Program.Test3 ();
-							break;
-						case 4:
 							Program.Test4 ();
-							break;
-						case 5:
 							Program.Test5 ();
-							break;
-						case 6:
 							Program.Test6 ();
 							break;
+						case 1:
+							path = Program.Test1 ();
+							break;
+						case 2:
+							path = Program.Test2 ();
+							break;
+						case 3:
+							path = Program.Test3 ();
+							break;
+						case 4:
+							path = Program.Test4 ();
+							break;
+						case 5:
+							path = Program.Test5 ();
+							break;
+						case 6:
+							path = Program.Test6 ();
+							break;
+					}
+
+					if (path != null)
+					{
+						System.Diagnostics.Process.Start (path);
 					}
 
 					Console.WriteLine ("Export ok");
@@ -74,14 +90,14 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static void Test1()
+		private static string Test1()
 		{
 			//	Génération d'un document fixe de 2 pages.
 			var info = new ExportPdfInfo ();
 			var export = new Export (info);
 			var path = "test1.pdf";
 			export.ExportToFile (path, 2, Program.Renderer1);
-			System.Diagnostics.Process.Start (path);
+			return path;
 		}
 
 		private static void Renderer1(Port port, int page)
@@ -185,7 +201,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static void Test2()
+		private static string Test2()
 		{
 			//	Génération d'étiquettes.
 			var info = new ExportPdfInfo ()
@@ -203,7 +219,7 @@ namespace Common.Pdf.Test
 
 			var path = "test2.pdf";
 			stickers.GeneratePdf (path, 100, Program.Test2DataAccessor);
-			System.Diagnostics.Process.Start (path);
+			return path;
 		}
 
 		private static FormattedText Test2DataAccessor(int rank)
@@ -212,7 +228,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static void Test3()
+		private static string Test3()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -242,10 +258,10 @@ namespace Common.Pdf.Test
 
 			var path = "test3.pdf";
 			array.GeneratePdf (path, 100, columns, Program.TestArrayDataAccessor);
-			System.Diagnostics.Process.Start (path);
+			return path;
 		}
 
-		private static void Test4()
+		private static string Test4()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -273,7 +289,7 @@ namespace Common.Pdf.Test
 
 			var path = "test4.pdf";
 			array.GeneratePdf (path, 100, columns, Program.TestArrayDataAccessor);
-			System.Diagnostics.Process.Start (path);
+			return path;
 		}
 
 		private static CellContent TestArrayDataAccessor(int row, int column)
@@ -343,7 +359,7 @@ namespace Common.Pdf.Test
 		}
 
 
-		private static void Test5()
+		private static string Test5()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -380,11 +396,11 @@ namespace Common.Pdf.Test
 
 			var path = "test5.pdf";
 			doc.GeneratePdf (path, builder.ToString ());
-			System.Diagnostics.Process.Start (path);
+			return path;
 		}
 
 
-		private static void Test6()
+		private static string Test6()
 		{
 			//	Génération d'un tableau.
 			var info = new ExportPdfInfo ()
@@ -415,7 +431,7 @@ namespace Common.Pdf.Test
 
 			var path = "test6.pdf";
 			doc.GeneratePdf (path, builder.ToString ());
-			System.Diagnostics.Process.Start (path);
+			return path;
 		}
 
 
