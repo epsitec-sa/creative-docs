@@ -79,7 +79,9 @@ namespace Common.Pdf.Test
 			//	Génération d'un document fixe de 2 pages.
 			var info = new ExportPdfInfo ();
 			var export = new Export (info);
-			export.ExportToFile ("test1.pdf", 2, Program.Renderer1);
+			var path = "test1.pdf";
+			export.ExportToFile (path, 2, Program.Renderer1);
+			System.Diagnostics.Process.Start (path);
 		}
 
 		private static void Renderer1(Port port, int page)
@@ -199,7 +201,9 @@ namespace Common.Pdf.Test
 			var stickers = new Stickers (info, setup);
 			Program.AddFixElements (stickers, setup);
 
-			stickers.GeneratePdf ("test2.pdf", 100, Program.Test2DataAccessor);
+			var path = "test2.pdf";
+			stickers.GeneratePdf (path, 100, Program.Test2DataAccessor);
+			System.Diagnostics.Process.Start (path);
 		}
 
 		private static FormattedText Test2DataAccessor(int rank)
@@ -236,7 +240,9 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic));
 			columns.Add (new ColumnDefinition ("Remarque", ColumnType.Stretch, fontSize: 20.0));
 
-			array.GeneratePdf ("test3.pdf", 100, columns, Program.TestArrayDataAccessor);
+			var path = "test3.pdf";
+			array.GeneratePdf (path, 100, columns, Program.TestArrayDataAccessor);
+			System.Diagnostics.Process.Start (path);
 		}
 
 		private static void Test4()
@@ -265,7 +271,9 @@ namespace Common.Pdf.Test
 			columns.Add (new ColumnDefinition ("NPA",      ColumnType.Automatic, alignment: ContentAlignment.BottomRight));
 			columns.Add (new ColumnDefinition ("Ville",    ColumnType.Automatic, alignment: ContentAlignment.BottomLeft));
 
-			array.GeneratePdf ("test4.pdf", 100, columns, Program.TestArrayDataAccessor);
+			var path = "test4.pdf";
+			array.GeneratePdf (path, 100, columns, Program.TestArrayDataAccessor);
+			System.Diagnostics.Process.Start (path);
 		}
 
 		private static CellContent TestArrayDataAccessor(int row, int column)
@@ -370,7 +378,9 @@ namespace Common.Pdf.Test
 				}
 			}
 
-			doc.GeneratePdf ("test5.pdf", builder.ToString ());
+			var path = "test5.pdf";
+			doc.GeneratePdf (path, builder.ToString ());
+			System.Diagnostics.Process.Start (path);
 		}
 
 
@@ -403,7 +413,9 @@ namespace Common.Pdf.Test
 				builder.Append ("<br/></font><br/>");
 			}
 
-			doc.GeneratePdf ("test6.pdf", builder.ToString ());
+			var path = "test6.pdf";
+			doc.GeneratePdf (path, builder.ToString ());
+			System.Diagnostics.Process.Start (path);
 		}
 
 

@@ -25,7 +25,6 @@ namespace Epsitec.Common.Pdf.Engine
 			this.cropMarksWidth   = 1.0;    // 0.1mm
 			this.cropMarksOffset  = 50.0;   // 5mm
 			this.textToCurve      = false;
-			this.execute          = true;
 			this.colorConversion  = ColorConversion.None;
 			this.imageCompression = ImageCompression.ZIP;
 			this.jpegQuality      = 0.7;
@@ -217,18 +216,6 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public bool Execute
-		{
-			get
-			{
-				return this.execute;
-			}
-			set
-			{
-				this.execute = value;
-			}
-		}
-
 		public ColorConversion ColorConversion
 		{
 			get
@@ -361,7 +348,6 @@ namespace Epsitec.Common.Pdf.Engine
 		private double					cropMarksOffset;
 		private double?					cropMarksOffsetX, cropMarksOffsetY;
 		private bool					textToCurve;
-		private bool					execute;
 		private ColorConversion			colorConversion;
 		private ImageCompression		imageCompression;
 		private double					jpegQuality;

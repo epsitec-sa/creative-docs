@@ -58,7 +58,6 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 
 			this.ExportPdf (path);
-			this.DisplayPdf (path);
 		}
 
 		private void ExportPdf(string path)
@@ -85,15 +84,6 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 
 			port.Dispose ();
-		}
-
-		private void DisplayPdf(string path)
-		{
-			if (this.info.Execute)
-			{
-				//	Exécute le logiciel "Abobe Acrobat Reader" ou un autre, selon les réglages de Windows.
-				System.Diagnostics.Process.Start (path);
-			}
 		}
 
 
