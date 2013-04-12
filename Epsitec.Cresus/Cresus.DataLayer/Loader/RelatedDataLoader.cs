@@ -30,10 +30,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public void LoadRelatedData(IEnumerable<AbstractEntity> entities, IEnumerable<LambdaExpression> expressions)
 		{
-			// We make the requests by small batches because we dont want to make a giant IN clause
-			// with thousands of entity ids.
-			var batchSize = 100;
-
 			var entityList = entities.ToList ();
 
 			// The chains are the representations of the properties that we want to load, like
@@ -52,26 +48,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				.OrderBy (c => c.Length)
 				.ToList ();
 
-			for (int i = 0; i < entityList.Count; i += batchSize)
-			{
-				var batch = entityList.Skip (i).Take (batchSize);
-
-				this.LoadData (batch, chains);
-			}
+			this.LoadRelatedData (entityList, chains);
 		}
 
 
-		private void LoadData(IEnumerable<AbstractEntity> entities, IEnumerable<Tuple<Type, StructuredTypeField>[]> chains)
+		private void LoadRelatedData(List<AbstractEntity> entityList, List<Tuple<Type, StructuredTypeField>[]> chains)
 		{
 			var comparer = ArrayEqualityComparer<Tuple<Type, StructuredTypeField>>.Instance;
 			var results = new Dictionary<Tuple<Type, StructuredTypeField>[], List<Constant>> (comparer);
 
-			results[new Tuple<Type, StructuredTypeField>[0]] = this.GetIds (entities).ToList ();
+			results[new Tuple<Type, StructuredTypeField>[0]] = this
+				.GetIds (entityList)
+				.Select (id => new Constant (id))
+				.ToList ();
 
 			foreach (var chain in chains)
 			{
 				var subChain = chain.Take (chain.Length - 1).ToArray ();
-				
+
 				List<Constant> subChainIds;
 
 				if (results.TryGetValue (subChain, out subChainIds) && subChainIds.Count > 0)
@@ -89,6 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				.Distinct (ArrayEqualityComparer<Tuple<Type, StructuredTypeField>>.Instance);
 		}
 
+
 		private IEnumerable<Tuple<Type, StructuredTypeField>[]> GetPropertyChains(LambdaExpression expression)
 		{
 			var chain = this.GetPropertyChain (expression);
@@ -98,6 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				yield return chain.Take (i + 1).ToArray ();
 			}
 		}
+
 
 		private List<Tuple<Type, StructuredTypeField>> GetPropertyChain(LambdaExpression expression)
 		{
@@ -127,6 +123,30 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private List<Constant> LoadData(Tuple<Type, StructuredTypeField> fieldData, List<Constant> entityIds)
 		{
+			// We make the requests by small batches because we dont want to make a giant IN clause
+			// with thousands of entity ids.
+			var batchSize = 100;
+
+			var ids = new HashSet<long> ();
+
+			for (int i = 0; i < entityIds.Count; i += batchSize)
+			{
+				var size = Math.Min (entityIds.Count - i, batchSize);
+				var batch = entityIds.GetRange (i, size);
+
+				var result = this.LoadDataBatch (fieldData, batch);
+
+				ids.UnionWith (result);
+			}
+
+			return ids
+				.Select (id => new Constant (id))
+				.ToList ();
+		}
+
+
+		private List<long> LoadDataBatch(Tuple<Type, StructuredTypeField> fieldData, List<Constant> entityIds)
+		{
 			var fieldFefiningType = fieldData.Item1;
 			var field = fieldData.Item2;
 
@@ -153,21 +173,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					entityIds
 				)
 			);
-			
+
 			var result = this.dataContext.GetByRequest (request);
 
 			return this.GetIds (result).ToList ();
 		}
 
 
-		private IEnumerable<Constant> GetIds(IEnumerable<AbstractEntity> entities)
+		private IEnumerable<long> GetIds(IEnumerable<AbstractEntity> entities)
 		{
 			return from entity in entities
 				   where entity != null
 				   let key = dataContext.GetNormalizedEntityKey (entity)
 				   where key.HasValue
-				   let value = key.Value.RowKey.Id.Value
-				   select new Constant (value);
+				   select key.Value.RowKey.Id.Value;
 		}
 
 
