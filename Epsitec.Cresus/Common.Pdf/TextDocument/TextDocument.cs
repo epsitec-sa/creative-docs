@@ -7,6 +7,7 @@ using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Epsitec.Common.Pdf.TextDocument
@@ -22,13 +23,21 @@ namespace Epsitec.Common.Pdf.TextDocument
 
 		public void GeneratePdf(string path, FormattedText text)
 		{
+			using (var stream = File.Open (path, FileMode.Create))
+			{
+				this.GeneratePdf (stream, text);
+			}
+		}
+
+		public void GeneratePdf(Stream stream, FormattedText text)
+		{
 			this.text = text;
 
 			this.ConstantJustification ();
 			this.VerticalJustification ();
 
 			var export = new Export (this.info);
-			export.ExportToFile (path, this.pageCount, this.RenderPage);
+			export.ExportToFile (stream, this.pageCount, this.RenderPage);
 		}
 
 		private void RenderPage(Port port, int page)

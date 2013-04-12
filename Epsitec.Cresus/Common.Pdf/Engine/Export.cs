@@ -6,10 +6,12 @@ using Epsitec.Common.Drawing.Platform;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Epsitec.Common.Pdf.Engine
 {
-	using CultureInfo=System.Globalization.CultureInfo;
+	using CultureInfo = System.Globalization.CultureInfo;
+	using Path = Epsitec.Common.Drawing.Path;
 
 	/// <summary>
 	/// La classe Export implémente la publication d'un document PDF.
@@ -39,10 +41,17 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void ExportToFile(string path, int pageCount, Action<Port, int> renderPage)
 		{
-			//	Exporte le document dans un fichier.
+			using (var stream = File.Open (path, FileMode.Create))
+			{
+				this.ExportToFile (stream, pageCount, renderPage);
+			}
+		}
+
+		public void ExportToFile(Stream stream, int pageCount, Action<Port, int> renderPage)
+		{
+			//	Exporte le document dans un stream.
 			//	Le renderer reçoit le port et le numéro de la page à générer (1..n).
-			//	Retourne une éventuelle erreur, ou une chaîne vide.
-			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty(path));
+			System.Diagnostics.Debug.Assert (stream != null);
 			System.Diagnostics.Debug.Assert (pageCount > 0);
 			System.Diagnostics.Debug.Assert (renderPage != null);
 
@@ -57,16 +66,16 @@ namespace Epsitec.Common.Pdf.Engine
 				throw new PdfExportException ("Document vide");
 			}
 
-			this.ExportPdf (path);
+			this.ExportPdf (stream);
 		}
 
-		private void ExportPdf(string path)
+		private void ExportPdf(Stream stream)
 		{
 			this.ExportBegin ();
 
 			var port = this.CreatePort ();
 
-			using (var writer = this.CreateWriter (path))
+			using (var writer = this.CreateWriter (stream))
 			{
 				this.PreProcess (port);
 
@@ -114,23 +123,9 @@ namespace Epsitec.Common.Pdf.Engine
 
 			return port;
 		}
-		private Writer CreateWriter(string path)
+		private Writer CreateWriter(Stream stream)
 		{
-			Writer writer;
-
-			try
-			{
-				if (System.IO.File.Exists (path))
-				{
-					System.IO.File.Delete (path);
-				}
-
-				writer = new Writer (path);
-			}
-			catch (System.Exception e)
-			{
-				throw new PdfExportException (e.Message);
-			}
+			Writer writer = new Writer (stream);
 
 			//	Objet racine du document.
 			writer.WriteObjectDef ("Root");

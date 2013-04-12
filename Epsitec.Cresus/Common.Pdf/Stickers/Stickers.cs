@@ -7,9 +7,12 @@ using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Types;
 
 using System;
+using System.IO;
 
 namespace Epsitec.Common.Pdf.Stickers
 {
+	using Path = Epsitec.Common.Drawing.Path;
+
 	public class Stickers : CommonPdf
 	{
 		public Stickers(ExportPdfInfo info, CommonSetup setup)
@@ -18,6 +21,14 @@ namespace Epsitec.Common.Pdf.Stickers
 		}
 
 		public void GeneratePdf(string path, int count, Func<int, FormattedText> dataAccessor)
+		{
+			using (var stream = File.Open (path, FileMode.Create))
+			{
+				this.GeneratePdf (stream, count, dataAccessor);
+			}
+		}
+
+		public void GeneratePdf(Stream stream, int count, Func<int, FormattedText> dataAccessor)
 		{
 			this.count        = count;
 			this.dataAccessor = dataAccessor;
@@ -32,7 +43,7 @@ namespace Epsitec.Common.Pdf.Stickers
 			int pageCount = (this.count + this.stickersPerPage - 1) / this.stickersPerPage;
 
 			var export = new Export (this.info);
-			export.ExportToFile (path, pageCount, this.RenderPage);
+			export.ExportToFile (stream, pageCount, this.RenderPage);
 		}
 
 		private void RenderPage(Port port, int page)

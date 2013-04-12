@@ -8,10 +8,13 @@ using Epsitec.Common.Types;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Epsitec.Common.Pdf.Array
 {
+	using Path = Epsitec.Common.Drawing.Path;
+
 	public class Array : CommonPdf
 	{
 		public Array(ExportPdfInfo info, CommonSetup setup)
@@ -24,6 +27,14 @@ namespace Epsitec.Common.Pdf.Array
 
 		public void GeneratePdf(string path, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, CellContent> dataAccessor)
 		{
+			using (var stream = File.Open (path, FileMode.Create))
+			{
+				this.GeneratePdf (stream, rowCount, columnDefinitions, dataAccessor);
+			}
+		}
+
+		public void GeneratePdf(Stream stream, int rowCount, List<ColumnDefinition> columnDefinitions, Func<int, int, CellContent> dataAccessor)
+		{
 			this.rowCount          = rowCount;
 			this.columnDefinitions = columnDefinitions;
 			this.dataAccessor      = dataAccessor;
@@ -35,7 +46,7 @@ namespace Epsitec.Common.Pdf.Array
 			this.ThrowIfProblem ();
 
 			var export = new Export (this.info);
-			export.ExportToFile (path, this.pageCount, this.RenderPage);
+			export.ExportToFile (stream, this.pageCount, this.RenderPage);
 		}
 
 

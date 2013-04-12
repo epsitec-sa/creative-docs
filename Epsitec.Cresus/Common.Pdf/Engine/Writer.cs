@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.IO;
 
 namespace Epsitec.Common.Pdf.Engine
 {
@@ -29,17 +30,19 @@ namespace Epsitec.Common.Pdf.Engine
 	/// </summary>
 	public sealed class Writer : System.IDisposable
 	{
-		public Writer(string filename)
+		public Writer(Stream stream)
 		{
-			//	Constructeur qui reçoit le nom du fichier.
-			//	En fait, le fichier n'est écrit qu'au moment du Flush().
+			//	Constructeur qui reçoit le stream dans lequel écrire le fichier pdf.
+			//	En fait, le stream n'est écrit qu'au moment du Flush().
 			//	Il n'est pas nécessaire de se soucier du "%PDF-1.4" en début de fichier,
 			//	ni des tables "xref..startxref..%%EOF" en fin de fichier.
-			this.filename = filename;
 			this.parts = new List<Part> ();
 			this.dictionary = new Dictionary<string, Object> ();
 			this.objectNextId = 1;  // premier identificateur d'objet
-			this.streamIO = null;  // fichier pas encore ouvert
+			this.streamIO = stream;
+			this.streamOffset = 0;
+
+			this.StreamWriteLine ("%PDF-1.4");
 		}
 
 		public void WriteObjectDef(string objectName)
@@ -118,15 +121,7 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void Flush()
 		{
-			//	Ecrit tout ce qui est possible dans le fichier sur disque. On peut appeler Flush
-			//	autant de fois qu'on veut, pour écrire les données dans le fichier au fur et à mesure,
-			//	afin d'utiliser le moins possible de mémoire.
 			//	Les objectName sont remplacés par des numéros.
-			if (this.streamIO == null)  // fichier pas encore ouvert ?
-			{
-				this.FileOpen(this.filename);
-				this.FileWriteLine("%PDF-1.4");
-			}
 
 			//	Ecrit toutes les parties fixes ou variables.
 			foreach (Part part in this.parts)
@@ -134,21 +129,21 @@ namespace Epsitec.Common.Pdf.Engine
 				switch (part.Type)
 				{
 					case "F":	// texte fixe ?
-						this.FileWriteString (part.Text);
+						this.StreamWriteString (part.Text);
 						break;
 
 					case "D":	// définition d'un objet ?
 						{
 							Object obj = this.dictionary[part.Text];
 							obj.Offset = this.streamOffset;
-							this.FileWriteString (Writer.ToString (obj.Id));
+							this.StreamWriteString (Writer.ToString (obj.Id));
 						}
 						break;
 
 					case "R":	// référence à un objet ?
 						{
 							Object obj = this.dictionary[part.Text];
-							this.FileWriteString (Writer.ToString (obj.Id));
+							this.StreamWriteString (Writer.ToString (obj.Id));
 						}
 						break;
 
@@ -164,23 +159,22 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			//	Ecrit l'objet xref final.
 			//	Les tables "xref..startxref..%%EOF" en fin de fichier sont créées.
-			System.Diagnostics.Debug.Assert(this.streamIO != null);
 			int startXref = this.streamOffset;
-			this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
-			this.FileWriteLine("0000000000 65535 f");
+			this.StreamWriteLine(string.Format(CultureInfo.InvariantCulture, "xref 0 {0}", Writer.ToString(this.dictionary.Count+1)));
+			this.StreamWriteLine("0000000000 65535 f");
 			for ( int i=0 ; i<this.dictionary.Count ; i++ )
 			{
 				Object obj = this.DictionarySearch(i+1);
 				System.Diagnostics.Debug.Assert(obj != null);
 				System.Diagnostics.Debug.Assert(obj.Defined, "PDF.Writer: Object never defined");
-				this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "{0} 00000 n", Writer.ToStringD10(obj.Offset)));
+				this.StreamWriteLine(string.Format(CultureInfo.InvariantCulture, "{0} 00000 n", Writer.ToStringD10(obj.Offset)));
 			}
-			this.FileWriteLine(string.Format (CultureInfo.InvariantCulture, "trailer << /Size {0} /Root 1 0 R /Info {1} 0 R >>", Writer.ToString(this.dictionary.Count+1), this.GetObjectId("Info")));
-			this.FileWriteLine("startxref");
-			this.FileWriteLine(string.Format(CultureInfo.InvariantCulture, "{0}", startXref));
-			this.FileWriteLine("%%EOF");
+			this.StreamWriteLine(string.Format (CultureInfo.InvariantCulture, "trailer << /Size {0} /Root 1 0 R /Info {1} 0 R >>", Writer.ToString(this.dictionary.Count+1), this.GetObjectId("Info")));
+			this.StreamWriteLine("startxref");
+			this.StreamWriteLine(string.Format(CultureInfo.InvariantCulture, "{0}", startXref));
+			this.StreamWriteLine("%%EOF");
 
-			this.FileClose();
+			this.streamIO.Flush ();
 
 			this.dictionary.Clear();
 		}
@@ -191,8 +185,6 @@ namespace Epsitec.Common.Pdf.Engine
 
 		public void Dispose()
 		{
-			this.FileClose ();
-			
 			this.parts.Clear ();
 			this.dictionary.Clear ();
 		}
@@ -203,13 +195,13 @@ namespace Epsitec.Common.Pdf.Engine
 		public void WriteHugeString(string text)
 		{
 			this.Flush ();
-			this.FileWriteString (text);
+			this.StreamWriteString (text);
 		}
 		
 		public void WriteStream(System.IO.Stream stream)
 		{
 			this.Flush ();
-			this.FileWriteStream (stream);
+			this.StreamWriteStream (stream);
 		}
 
 
@@ -223,23 +215,14 @@ namespace Epsitec.Common.Pdf.Engine
 			return null;
 		}
 
-
-
-		private void FileOpen(string filename)
-		{
-			//	Ouvre le fichier PDF.
-			this.streamIO = new System.IO.FileStream(filename, System.IO.FileMode.CreateNew);
-			this.streamOffset = 0;
-		}
-
-		private void FileWriteLine(string line)
+		private void StreamWriteLine(string line)
 		{
 			//	Ecrit une string suivie d'une fin de ligne.
 			line += "\r\n";
-			this.FileWriteString(line);
+			this.StreamWriteString(line);
 		}
 
-		private void FileWriteString(string text)
+		private void StreamWriteString(string text)
 		{
 			//	Ecrit juste une string telle quelle.
 			System.Text.Encoding e = System.Text.Encoding.Default;
@@ -248,7 +231,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.streamOffset += buffer.Length;
 		}
 
-		private void FileWriteStream(System.IO.Stream stream)
+		private void StreamWriteStream(System.IO.Stream stream)
 		{
 			byte[] buffer = new byte[64*1024];
 
@@ -263,16 +246,6 @@ namespace Epsitec.Common.Pdf.Engine
 
 				this.streamIO.Write (buffer, 0, count);
 				this.streamOffset += count;
-			}
-		}
-
-		private void FileClose()
-		{
-			//	Ferme le fichier PDF.
-			if (this.streamIO != null)
-			{
-				this.streamIO.Close ();
-				this.streamIO = null;
 			}
 		}
 
@@ -317,11 +290,10 @@ namespace Epsitec.Common.Pdf.Engine
 			public readonly string Text;
 		}
 
-		private readonly string					filename;
-		private readonly List<Part>				parts;
+		private readonly List<Part>					parts;
 		private readonly Dictionary<string, Object>	dictionary;
-		private int								objectNextId;
-		private System.IO.FileStream			streamIO;
-		private int								streamOffset;
+		private int									objectNextId;
+		private Stream								streamIO;
+		private int									streamOffset;
 	}
 }
