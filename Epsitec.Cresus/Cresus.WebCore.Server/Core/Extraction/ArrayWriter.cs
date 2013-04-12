@@ -19,7 +19,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
-
+	using Database = Core.Databases.Database;
 
 	internal class ArrayWriter : EntityWriter
 	{
@@ -73,9 +73,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		private IList<IList<string>> GetRows()
 		{
 			var columnAccessors = this.GetColumnAccessors ();
+			var items = this.Accessor.GetAllItems ();
 
-			return this.Accessor
-				.GetAllItems ()
+			Database.LoadRelatedData (this.columns, this.Accessor.IsolatedDataContext, items);
+
+			return items
 				.Select (e => this.GetCells (columnAccessors, e))
 				.ToList ();
 		}

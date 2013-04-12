@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns).ToList ();
 
-			database.LoadRelatedData (columns, dataContext, entities);
+			Database.LoadRelatedData (columns, dataContext, entities);
 
 			var data = entities
 				.Select (e => database.GetEntityData (columns, dataContext, caches, e))

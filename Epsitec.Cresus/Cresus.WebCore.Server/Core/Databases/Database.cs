@@ -135,14 +135,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public void LoadRelatedData(IEnumerable<Column> columns, DataContext dataContext, IEnumerable<AbstractEntity> entities)
-		{
-			var expressions = columns.Select (c => c.LambdaExpression);
-
-			dataContext.LoadRelatedData (entities, expressions);
-		}
-
-
 		public Dictionary<string, object> GetEntityData(IEnumerable<Column> columns, DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
 			var id = EntityIO.GetEntityId (dataContext, entity);
@@ -185,6 +177,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "columns", columns },
 				{ "sorters", sorters },
 			};
+		}
+
+
+		public static void LoadRelatedData(IEnumerable<Column> columns, DataContext dataContext, IEnumerable<AbstractEntity> entities)
+		{
+			var expressions = columns.Select (c => c.LambdaExpression);
+
+			dataContext.LoadRelatedData (entities, expressions);
 		}
 
 
