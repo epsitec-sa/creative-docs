@@ -67,6 +67,7 @@
     <Compile Include="Core\Databases\Sorter.cs" />
     <Compile Include="Core\Extraction\CsvArrayFormat.cs" />
     <Compile Include="Core\Extraction\ArrayFormat.cs" />
+    <Compile Include="Core\Extraction\PdfArrayFormat.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
     <Compile Include="Core\IdCache.cs" />
@@ -247,6 +248,10 @@
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Pdf\Common.Pdf.csproj">
+      <Project>{0C93255B-4D0C-4AF6-9244-D835427E42E0}</Project>
+      <Name>Common.Pdf</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
