@@ -28,7 +28,7 @@ namespace Epsitec.Common.Pdf.Engine
 	/// writer.WriteObjectDef("Tralala");  // définition de l'objet
 	/// writer.WriteString("<< /ProcSet [/PDF /Text] >> endobj");
 	/// </summary>
-	public sealed class Writer : System.IDisposable
+	public sealed class Writer
 	{
 		public Writer(Stream stream)
 		{
@@ -178,18 +178,6 @@ namespace Epsitec.Common.Pdf.Engine
 
 			this.dictionary.Clear();
 		}
-
-
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			this.parts.Clear ();
-			this.dictionary.Clear ();
-		}
-
-		#endregion
 
 
 		public void WriteHugeString(string text)

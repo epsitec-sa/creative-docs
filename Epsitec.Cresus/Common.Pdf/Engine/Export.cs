@@ -75,22 +75,21 @@ namespace Epsitec.Common.Pdf.Engine
 
 			var port = this.CreatePort ();
 
-			using (var writer = this.CreateWriter (stream))
-			{
-				this.PreProcess (port);
+			var writer = this.CreateWriter (stream);
 
-				this.EmitHeaderOutlines (writer);
-				this.EmitHeaderPages (writer);
-				this.EmitPageObjects (writer);
-				this.EmitPageObjectResources (writer, port);
+			this.PreProcess (port);
 
-				this.EmitComplexSurfaces (writer, port);
-				this.EmitImageSurfaces (writer, port);
-				this.EmitFonts (writer, port);
+			this.EmitHeaderOutlines (writer);
+			this.EmitHeaderPages (writer);
+			this.EmitPageObjects (writer);
+			this.EmitPageObjectResources (writer, port);
 
-				this.EmitPageContents (writer, port);
-				this.ExportEnd (writer);
-			}
+			this.EmitComplexSurfaces (writer, port);
+			this.EmitImageSurfaces (writer, port);
+			this.EmitFonts (writer, port);
+
+			this.EmitPageContents (writer, port);
+			this.ExportEnd (writer);
 
 			port.Dispose ();
 		}
