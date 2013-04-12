@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using System;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Pdf.Engine
@@ -15,7 +16,7 @@ namespace Epsitec.Common.Pdf.Engine
 	/// L'origine graphique est en bas à gauche.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
-	public class Port : IPaintPort
+	public class Port : IPaintPort, IDisposable
 	{
 		public Port()
 		{

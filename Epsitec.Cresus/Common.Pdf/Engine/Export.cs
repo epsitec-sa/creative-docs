@@ -73,25 +73,24 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			this.ExportBegin ();
 
-			var port = this.CreatePort ();
+			using (var port = this.CreatePort ())
+			{
+				var writer = this.CreateWriter (stream);
 
-			var writer = this.CreateWriter (stream);
+				this.PreProcess (port);
 
-			this.PreProcess (port);
+				this.EmitHeaderOutlines (writer);
+				this.EmitHeaderPages (writer);
+				this.EmitPageObjects (writer);
+				this.EmitPageObjectResources (writer, port);
 
-			this.EmitHeaderOutlines (writer);
-			this.EmitHeaderPages (writer);
-			this.EmitPageObjects (writer);
-			this.EmitPageObjectResources (writer, port);
+				this.EmitComplexSurfaces (writer, port);
+				this.EmitImageSurfaces (writer, port);
+				this.EmitFonts (writer, port);
 
-			this.EmitComplexSurfaces (writer, port);
-			this.EmitImageSurfaces (writer, port);
-			this.EmitFonts (writer, port);
-
-			this.EmitPageContents (writer, port);
-			this.ExportEnd (writer);
-
-			port.Dispose ();
+				this.EmitPageContents (writer, port);
+				this.ExportEnd (writer);
+			}
 		}
 
 
@@ -717,13 +716,15 @@ namespace Epsitec.Common.Pdf.Engine
 		{
 			//	Crée un ExtGState pour une transparence unie.
 			writer.WriteObjectDef (Export.GetComplexSurfaceName (id, type));
-			Port port = new Port ();
-			port.PutCommand ("<< /CA ");  // voir [*] page 192
-			port.PutValue (alpha, 3);
-			port.PutCommand ("/ca ");
-			port.PutValue (alpha, 3);
-			port.PutCommand (">> endobj");
-			writer.WriteString (port.GetPDF ());
+			using (Port port = new Port ())
+			{
+				port.PutCommand ("<< /CA ");  // voir [*] page 192
+				port.PutValue (alpha, 3);
+				port.PutCommand ("/ca ");
+				port.PutValue (alpha, 3);
+				port.PutCommand (">> endobj");
+				writer.WriteString (port.GetPDF ());
+			}
 		}
 		#endregion
 
@@ -969,21 +970,23 @@ namespace Epsitec.Common.Pdf.Engine
 				zip = null;
 			}
 
-			Port port = new Port ();
-			port.Reset ();
-			port.PutASCII85 (data);
-			Export.debugTotal += data.Length;
-			port.PutEOL ();
-
-			data = null;
-
-			if (compression == ImageCompression.ZIP)  // compression ZIP ?
+			using (Port port = new Port ())
 			{
-				return new PdfImageStream ("/Filter [/ASCII85Decode /FlateDecode] ", port.GetPDF ());  // voir [*] page 43
-			}
-			else
-			{
-				return new PdfImageStream ("/Filter /ASCII85Decode ", port.GetPDF ());  // voir [*] page 43
+				port.Reset ();
+				port.PutASCII85 (data);
+				Export.debugTotal += data.Length;
+				port.PutEOL ();
+
+				data = null;
+
+				if (compression == ImageCompression.ZIP)  // compression ZIP ?
+				{
+					return new PdfImageStream ("/Filter [/ASCII85Decode /FlateDecode] ", port.GetPDF ());  // voir [*] page 43
+				}
+				else
+				{
+					return new PdfImageStream ("/Filter /ASCII85Decode ", port.GetPDF ());  // voir [*] page 43
+				}
 			}
 		}
 
@@ -1031,14 +1034,16 @@ namespace Epsitec.Common.Pdf.Engine
 
 			System.Diagnostics.Debug.Assert (jpeg != null);
 
-			Port port = new Port ();
-			port.PutASCII85 (jpeg);
-			Export.debugTotal += jpeg.Length;
-			port.PutEOL ();
+			using (Port port = new Port ())
+			{
+				port.PutASCII85 (jpeg);
+				Export.debugTotal += jpeg.Length;
+				port.PutEOL ();
 
-			jpeg = null;
+				jpeg = null;
 
-			return new PdfImageStream ("/Filter [/ASCII85Decode /DCTDecode] ", port.GetPDF ());  // voir [*] page 43
+				return new PdfImageStream ("/Filter [/ASCII85Decode /DCTDecode] ", port.GetPDF ());  // voir [*] page 43
+			}
 		}
 
 		private ImageCompression GetCompressionMode(PdfComplexSurfaceType baseType)
@@ -1271,31 +1276,33 @@ namespace Epsitec.Common.Pdf.Engine
 			path.Append (drawingFont, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 
 
-			var port = new Port ()
+			using (var port = new Port ()
 			{
 				ColorForce      = ColorForce.Nothing,  // pas de commande de couleur !
 				DefaultDecimals = 4,
-			};
+			})
+			{
 
-			//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas à afficher les caractères.
-			//	Attention, si wx ne correspond pas à la valeur générée par CreateFontWidths, Acrobat 8 plante !
-			//	Acrobat 8 n'apprécie pas du tout si "... d1" est remplacé par "wx wy d0" !
-			Rectangle bounds = cl.Bounds;
-			port.PutValue (cl.Width);       // wx
-			port.PutValue (0);              // wy
-			port.PutValue (bounds.Left);    // iix
-			port.PutValue (bounds.Bottom);  // iiy
-			port.PutValue (bounds.Right);   // urx
-			port.PutValue (bounds.Top);     // ury
-			port.PutCommand ("d1 ");        // voir [*] page 393
+				//	Sans "wx wy llx lly urx ury d1", Acrobat 8 n'arrive pas à afficher les caractères.
+				//	Attention, si wx ne correspond pas à la valeur générée par CreateFontWidths, Acrobat 8 plante !
+				//	Acrobat 8 n'apprécie pas du tout si "... d1" est remplacé par "wx wy d0" !
+				Rectangle bounds = cl.Bounds;
+				port.PutValue (cl.Width);       // wx
+				port.PutValue (0);              // wy
+				port.PutValue (bounds.Left);    // iix
+				port.PutValue (bounds.Bottom);  // iiy
+				port.PutValue (bounds.Right);   // urx
+				port.PutValue (bounds.Top);     // ury
+				port.PutCommand ("d1 ");        // voir [*] page 393
 
-			port.PaintSurface (path);
+				port.PaintSurface (path);
 
-			var pdf = port.GetPDF ();
-			writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength (pdf.Length)));
-			writer.WriteLine ("stream");
-			writer.WriteString (pdf);
-			writer.WriteLine ("endstream endobj");
+				var pdf = port.GetPDF ();
+				writer.WriteLine (string.Format (CultureInfo.InvariantCulture, "<< {0} >>", Port.StringLength (pdf.Length)));
+				writer.WriteLine ("stream");
+				writer.WriteString (pdf);
+				writer.WriteLine ("endstream endobj");
+			}
 		}
 		#endregion
 
