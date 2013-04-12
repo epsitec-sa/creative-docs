@@ -1209,8 +1209,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Only the access to properties to single entities are considered. If you provide a lambda
 		/// like p => p.town.name where name is a string, only p => p.town will be considered. If
 		/// you provide a lambda like p => p.address.neighbors where neighbors is a collection, only
-		/// p => p.address.neighbors will be considered. In addition virtual properties are not
-		/// considered as they make no sense from the database point of view.
+		/// p => p.address will be considered. In addition virtual properties are not considered as
+		/// they make no sense from the database point of view.
 		/// </remarks>
 		public void LoadRelatedData(IEnumerable<AbstractEntity> entities, IEnumerable<LambdaExpression> expressions)
 		{
