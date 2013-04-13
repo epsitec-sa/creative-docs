@@ -11,6 +11,9 @@ using System.Xml.Linq;
 using Epsitec.Data.Platform.Directories;
 using Epsitec.Data.Platform.Directories.Entity;
 using Microsoft.Maps.MapControl.WPF;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
+
 
 namespace App.Directories
 {
@@ -28,9 +31,8 @@ namespace App.Directories
 		{
 			//BINGS MAP
 			this.Map.CredentialsProvider = new ApplicationIdCredentialsProvider ("AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
-			this.Map.ZoomLevel = 12;
-			this.SignIn.Show (this);
-		
+			this.Map.ZoomLevel = 10;
+            
 		}
 
 
@@ -98,7 +100,7 @@ namespace App.Directories
 			foreach (DirectoriesEntryAdd add in result.GetEntries())
 			{
 				var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}", add.FirstName, add.LastName, add.StateCode));
-				node.Tag = add.Zip;
+				node.Tag = add.Zip + "/" +add.FirstName + " " + add.LastName;
 				if (add.Profession!="")
 				{
 					node.Nodes.Add ("Profession: " + add.Profession);
@@ -139,6 +141,63 @@ namespace App.Directories
 			}
 		}
 
+
+        private Image GetGooglePlusImage(string FullName)
+        {
+            if (this.SignIn.AccessToken != null)
+            {
+
+                UriTemplate Template = new UriTemplate("people?access_token={t}&maxResults=1&query={q}");
+                Uri Prefix = new Uri("https://www.googleapis.com/plus/v1/");
+                NameValueCollection Parameters = new NameValueCollection();
+                Parameters.Add("t", SignIn.AccessToken);
+                Parameters.Add("q", FullName);
+                Uri ForgedUri = Template.BindByName(Prefix, Parameters);
+
+                HttpWebRequest Request = WebRequest.Create(ForgedUri) as HttpWebRequest;
+                Request.Method = WebRequestMethods.Http.Get;
+                try
+                {
+                    using (HttpWebResponse Response = Request.GetResponse() as HttpWebResponse)
+                    {
+                        XmlReader JsonReader = JsonReaderWriterFactory.CreateJsonReader(Response.GetResponseStream(), new XmlDictionaryReaderQuotas());
+                        XElement Root = XElement.Load(JsonReader);
+                        if (Root.Elements("items").ToArray()[0].Element("item") != null)
+                        {
+                            string ImageUri = Root.Elements("items").ToArray()[0].Element("item").Element("image").Element("url").Value;
+                            Image image = new Image();
+                            image.Height = 50;
+                            //Define the URI location of the image
+                            BitmapImage myBitmapImage = new BitmapImage();
+                            myBitmapImage.BeginInit();
+                            myBitmapImage.UriSource = new Uri(ImageUri);
+                            myBitmapImage.DecodePixelHeight = 50;
+                            myBitmapImage.EndInit();
+                            image.Source = myBitmapImage;
+                            image.Opacity = 0.8;
+                            image.Stretch = System.Windows.Media.Stretch.None;
+                            return image;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        
+                    }
+
+
+                }
+                catch (WebException we)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+            
+        }
 		private Location GetCoordinates(string Zip)
 		{
 
@@ -187,53 +246,57 @@ namespace App.Directories
 		{
 
 			var node = e.Node;
+
+            
 			if (node.Tag!=null)
 			{
-				var LocationByZip = this.GetCoordinates (node.Tag.ToString ());
 
-				Pushpin pin=new Pushpin ()
-				{
-					Location = LocationByZip,
-					PositionOrigin = PositionOrigin.BottomCenter,
-				};
+                var TagArgs = node.Tag.ToString().Split('/');
 
-				this.Map.Children.Add (pin);
-				this.Map.Center = pin.Location;
+                if (TagArgs[0] != "")
+                {
+                    var LocationByZip = this.GetCoordinates(TagArgs[0]);
+
+                    Pushpin pin = new Pushpin()
+                    {
+                        Location = LocationByZip,
+                        PositionOrigin = PositionOrigin.BottomCenter,
+                    };
+
+                    this.Map.Children.Add(pin);
+                    this.Map.Center = pin.Location;
+
+
+                    
+
+                    Image image = this.GetGooglePlusImage(TagArgs[1]);
+                    if (image != null)
+                    {
+                        MapLayer imageLayer = new MapLayer();
+                        //The map location to place the image at
+                        Location location = new Location(LocationByZip);
+                        //Center the image around the location specified
+                        PositionOrigin position = PositionOrigin.BottomRight;
+
+                        //Add the image to the defined map layer
+                        imageLayer.AddChild(image, location, position);
+                        //Add the image layer to the map
+                        this.Map.Children.Add(imageLayer);
+                    }
+                    
+
+                }
+
+
+				
 			}
-
-
-			
-
-			UriTemplate Template = new UriTemplate ("tokeninfo?access_token={t}");
-			Uri Prefix = new Uri ("https://www.googleapis.com/oauth2/v1/");
-			NameValueCollection Parameters = new NameValueCollection ();
-			Parameters.Add ("t", SignIn.Auth);
-
-			Uri ForgedUri = Template.BindByName (Prefix, Parameters);
-
-			HttpWebRequest Request = WebRequest.Create (ForgedUri) as HttpWebRequest;
-			Request.Method = WebRequestMethods.Http.Post;
-			Request.AuthenticationLevel = AuthenticationLevel.MutualAuthRequested;
-			Request.PreAuthenticate = true;
-			Request.Headers.Add ("Authorization","Bearer "+Convert.ToBase64String(System.Text.Encoding.Default.GetBytes(SignIn.Auth)));
-			
-
-
-			try
-			{
-				using (HttpWebResponse Response = Request.GetResponse () as HttpWebResponse)
-				{
-					XmlReader JsonReader = JsonReaderWriterFactory.CreateJsonReader (Response.GetResponseStream (), new XmlDictionaryReaderQuotas ());
-					XElement Root = XElement.Load (JsonReader);
-				}
-
-
-			}
-			catch (WebException we)
-			{
-
-			}
-			
 		}
+
+        private void img_google_signin_Click(object sender, EventArgs e)
+        {
+            this.img_google_signin.Visible = false;
+            this.SignIn.Show(this);
+            
+        }
 	}
 }
