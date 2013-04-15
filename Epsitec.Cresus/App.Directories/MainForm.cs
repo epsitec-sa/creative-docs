@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
-using System.Net.Security;
 using System.Runtime.Serialization.Json;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Epsitec.Data.Platform.Directories;
 using Epsitec.Data.Platform.Directories.Entity;
+using Epsitec.Data.Platform.Bings;
 using Microsoft.Maps.MapControl.WPF;
-using System.Windows.Media.Imaging;
-using System.Windows.Controls;
+using System.Drawing;
+using System.IO;
+
 
 
 namespace App.Directories
@@ -24,7 +26,8 @@ namespace App.Directories
 			InitializeComponent ();
 		}
 
-		public DirectoriesWebService ws = null;
+		public DirectoriesWebService dws = null;
+		public BingsWebService bws = null;
 		public SignIn SignIn = new SignIn ();
 		
 		private void MainForm_Load(object sender, EventArgs e)
@@ -32,6 +35,9 @@ namespace App.Directories
 			//BINGS MAP
 			this.Map.CredentialsProvider = new ApplicationIdCredentialsProvider ("AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
 			this.Map.ZoomLevel = 10;
+			
+			//BINGS SEARCH ON VIRTUAL EARTH
+			this.bws = new BingsWebService ("AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
             
 		}
 
@@ -39,9 +45,9 @@ namespace App.Directories
 		private void cmd_search_Click(object sender, EventArgs e)
 		{
 
-			if (this.ws==null)
+			if (this.dws==null)
 			{
-				this.ws = new DirectoriesWebService ();
+				this.dws = new DirectoriesWebService ();
 			}
 			DirectoriesSearchAddressResult result = null;
 			if (this.opt_phone.Checked || this.opt_email.Checked || this.opt_web.Checked)
@@ -54,15 +60,15 @@ namespace App.Directories
 				}
 				if (this.opt_phone.Checked)
 				{
-					result = ws.SearchService (ValueList, DirectoriesServiceCode.TelCode);
+					result = dws.SearchService (ValueList, DirectoriesServiceCode.TelCode);
 				}
 				if (this.opt_email.Checked)
 				{
-					result = ws.SearchService (ValueList, DirectoriesServiceCode.EmailCode);
+					result = dws.SearchService (ValueList, DirectoriesServiceCode.EmailCode);
 				}
 				if (this.opt_web.Checked)
 				{
-					result = ws.SearchService (ValueList, DirectoriesServiceCode.WebCode);
+					result = dws.SearchService (ValueList, DirectoriesServiceCode.WebCode);
 				}
 				
 			}
@@ -72,13 +78,13 @@ namespace App.Directories
 					
 				switch(Args.Length)
 				{
-					case 0: result = ws.SearchAddressByPhone(this.txt_value.Text);
+					case 0: result = dws.SearchAddressByPhone(this.txt_value.Text);
 					break;
 
-					case 1: result = ws.SearchAddressByFirstName(this.txt_value.Text, 1, 100);
+					case 1: result = dws.SearchAddressByFirstName(this.txt_value.Text, 1, 100);
 					break;
 
-					case 2: result = ws.SearchAddressByFullName(Args[0], Args[1], 1, 100);
+					case 2: result = dws.SearchAddressByFullName(Args[0], Args[1], 1, 100);
 					break;
 				}
 			}
@@ -100,7 +106,7 @@ namespace App.Directories
 			foreach (DirectoriesEntryAdd add in result.GetEntries())
 			{
 				var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}", add.FirstName, add.LastName, add.StateCode));
-				node.Tag = add.Zip + "/" +add.FirstName + " " + add.LastName;
+				node.Tag = String.Format ("{0}/{1} {2}", add.Zip, add.FirstName.Split(' ')[0], add.LastName);
 				if (add.Profession!="")
 				{
 					node.Nodes.Add ("Profession: " + add.Profession);
@@ -142,12 +148,13 @@ namespace App.Directories
 		}
 
 
-        private Image GetGooglePlusImage(string FullName)
+		private void GetGooglePlusImage(string FullName,ListView list)
         {
+			list.Clear ();
             if (this.SignIn.AccessToken != null)
             {
 
-                UriTemplate Template = new UriTemplate("people?access_token={t}&maxResults=1&query={q}");
+                UriTemplate Template = new UriTemplate("people?access_token={t}&maxResults=20&query={q}");
                 Uri Prefix = new Uri("https://www.googleapis.com/plus/v1/");
                 NameValueCollection Parameters = new NameValueCollection();
                 Parameters.Add("t", SignIn.AccessToken);
@@ -164,23 +171,26 @@ namespace App.Directories
                         XElement Root = XElement.Load(JsonReader);
                         if (Root.Elements("items").ToArray()[0].Element("item") != null)
                         {
-                            string ImageUri = Root.Elements("items").ToArray()[0].Element("item").Element("image").Element("url").Value;
-                            Image image = new Image();
-                            image.Height = 50;
-                            //Define the URI location of the image
-                            BitmapImage myBitmapImage = new BitmapImage();
-                            myBitmapImage.BeginInit();
-                            myBitmapImage.UriSource = new Uri(ImageUri);
-                            myBitmapImage.DecodePixelHeight = 50;
-                            myBitmapImage.EndInit();
-                            image.Source = myBitmapImage;
-                            image.Opacity = 0.8;
-                            image.Stretch = System.Windows.Media.Stretch.None;
-                            return image;
-                        }
-                        else
-                        {
-                            return null;
+                           
+							var urls = Root.XPathSelectElements ("//image/url");
+							var names = Root.XPathSelectElements ("//displayName");
+
+							ListView.ListViewItemCollection Items = new ListView.ListViewItemCollection(list);
+							
+							for (int i = 0; i < names.Count(); i++)
+							{
+								WebRequest request = WebRequest.Create (urls.ElementAt(i).Value);
+
+								WebResponse response = request.GetResponse ();
+								Stream responseStream = response.GetResponseStream ();
+
+								Bitmap bmp = new Bitmap (responseStream);
+
+								responseStream.Dispose ();
+								this.google_plus_image_list.Images.Add(names.ElementAt(i).Value,bmp);
+								Items.Add (new ListViewItem(names.ElementAt(i).Value,names.ElementAt(i).Value));
+							}
+
                         }
                         
                     }
@@ -189,58 +199,11 @@ namespace App.Directories
                 }
                 catch (WebException we)
                 {
-                    return null;
+					throw new Exception (we.Message);
                 }
-            }
-            else
-            {
-                return null;
             }
             
         }
-		private Location GetCoordinates(string Zip)
-		{
-
-
-			UriTemplate Template = new UriTemplate ("Locations?countryRegion={c}&postalCode={z}&maxResults={n}&key={k}");
-			Uri Prefix = new Uri ("http://dev.virtualearth.net/REST/v1/");
-			NameValueCollection Parameters = new NameValueCollection ();
-			Parameters.Add ("c", "CH");
-			Parameters.Add ("z", Zip);
-			Parameters.Add ("n", "1");
-			Parameters.Add ("k", "AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
-
-			Uri ForgedUri = Template.BindByName (Prefix, Parameters);
-
-			HttpWebRequest Request = WebRequest.Create (ForgedUri) as HttpWebRequest;
-			Request.Method = WebRequestMethods.Http.Get;
-
-
-			try
-			{
-				using (HttpWebResponse Response = Request.GetResponse () as HttpWebResponse)
-				{
-					XmlReader JsonReader = JsonReaderWriterFactory.CreateJsonReader (Response.GetResponseStream (), new XmlDictionaryReaderQuotas ());
-					XElement Root = XElement.Load (JsonReader);
-
-
-					XElement [] Coordinates = Root.Elements ("resourceSets").ToArray ()[0].Element ("item").Elements ("resources").ToArray ()[0].Element ("item").Element ("point").Element ("coordinates").Elements ("item").ToArray ();
-					string MapX = Coordinates[0].Value;
-					string MapY = Coordinates[1].Value;
-
-
-					return new Location (Convert.ToDouble (MapX), Convert.ToDouble (MapY));
-				}
-
-
-			}
-			catch (WebException we)
-			{
-				return null;
-			}
-
-
-		}
 
 		private void result_tree_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
@@ -250,44 +213,22 @@ namespace App.Directories
             
 			if (node.Tag!=null)
 			{
-
                 var TagArgs = node.Tag.ToString().Split('/');
 
                 if (TagArgs[0] != "")
                 {
-                    var LocationByZip = this.GetCoordinates(TagArgs[0]);
+                    var LocationByZip = bws.GetCoordinatesBySwissZip(TagArgs[0]);
 
                     Pushpin pin = new Pushpin()
                     {
-                        Location = LocationByZip,
+                        Location = new Location (LocationByZip.Item1,LocationByZip.Item2),
                         PositionOrigin = PositionOrigin.BottomCenter,
                     };
 
                     this.Map.Children.Add(pin);
                     this.Map.Center = pin.Location;
-
-
-                    
-
-                    Image image = this.GetGooglePlusImage(TagArgs[1]);
-                    if (image != null)
-                    {
-                        MapLayer imageLayer = new MapLayer();
-                        //The map location to place the image at
-                        Location location = new Location(LocationByZip);
-                        //Center the image around the location specified
-                        PositionOrigin position = PositionOrigin.BottomRight;
-
-                        //Add the image to the defined map layer
-                        imageLayer.AddChild(image, location, position);
-                        //Add the image layer to the map
-                        this.Map.Children.Add(imageLayer);
-                    }
-                    
-
+                    this.GetGooglePlusImage(TagArgs[1],this.lst_head);
                 }
-
-
 				
 			}
 		}

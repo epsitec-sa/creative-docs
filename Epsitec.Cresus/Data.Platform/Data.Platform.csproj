@@ -56,6 +56,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Bings\BingsWebService.cs" />
     <Compile Include="Directories\DirectoriesSearchServiceQuery.cs" />
     <Compile Include="Directories\DirectoriesServiceCode.cs" />
     <Compile Include="Directories\Helpers\DirectoriesValueHelper.cs" />
@@ -161,7 +162,9 @@
     <WCFMetadataStorage Include="Service References\ServiceReference.Directories.SearchAddress\" />
     <WCFMetadataStorage Include="Service References\ServiceReference.Directories.Security\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Google\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
