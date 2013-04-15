@@ -60,7 +60,11 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         pickerAllItems: 'Liste compl\u00E8te',
         exportTitle: 'Configuration de l\'Export',
         exportExportedColumns: 'Colonnes export\u00E9es',
-        exportDiscardedColumns: 'Colonnes ignor\u00E9es'
+        exportDiscardedColumns: 'Colonnes ignor\u00E9es',
+        exportImpossibleTitle: 'Export impossible',
+        exportImpossibleEmpty: 'Vous ne pouvez pas exporter une liste vide.',
+        exportImpossibleTooMany: 'Vous ne pouvez pas exporter une liste avec ' +
+            'plus de 10000 elements.'
       };
     }
   }

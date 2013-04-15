@@ -360,12 +360,30 @@ function() {
     },
 
     onExportHandler: function() {
-      var exportWindow = Ext.create('Epsitec.ExportWindow', {
-        columnDefinitions: this.columnDefinitions,
-        exportUrl: this.buildUrlWithSortersAndFilters(this.exportUrl)
-      });
+      var count, exportWindow;
 
-      exportWindow.show();
+      count = this.store.getTotalCount();
+
+      if (count === 0) {
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getExportImpossibleTitle(),
+            Epsitec.Texts.getExportImpossibleEmpty()
+        );
+      }
+      else if (count > 10000) {
+        Epsitec.ErrorHandler.showError(
+            Epsitec.Texts.getExportImpossibleTitle(),
+            Epsitec.Texts.getExportImpossibleTooMany()
+        );
+      }
+      else {
+        exportWindow = Ext.create('Epsitec.ExportWindow', {
+          columnDefinitions: this.columnDefinitions,
+          exportUrl: this.buildUrlWithSortersAndFilters(this.exportUrl)
+        });
+
+        exportWindow.show();
+      }
     },
 
     onRefreshHandler: function() {

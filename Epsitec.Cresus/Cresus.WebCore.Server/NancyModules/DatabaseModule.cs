@@ -159,6 +159,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
 
+			if (extractor.Accessor.GetItemCount () > 10000)
+			{
+				throw new InvalidOperationException ("Too much data in extractor");
+			}
+
 			EntityWriter writer = new ArrayWriter (properties, metaData, columns, accessor, format);
 
 			var filename = writer.Filename;

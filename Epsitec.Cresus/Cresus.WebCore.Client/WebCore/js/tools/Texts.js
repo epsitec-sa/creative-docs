@@ -188,6 +188,18 @@ function() {
 
       getExportDiscardedColumns: function() {
         return this.texts.exportDiscardedColumns;
+      },
+
+      getExportImpossibleTitle: function() {
+        return this.texts.exportImpossibleTitle;
+      },
+
+      getExportImpossibleEmpty: function() {
+        return this.texts.exportImpossibleEmpty;
+      },
+
+      getExportImpossibleTooMany: function() {
+        return this.texts.exportImpossibleTooMany;
       }
     }
   });

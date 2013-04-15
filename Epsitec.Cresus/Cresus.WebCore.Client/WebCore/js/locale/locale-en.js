@@ -57,7 +57,11 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         pickerAllItems: 'Complete list',
         exportTitle: 'Export configuration',
         exportExportedColumns: 'Exported columns',
-        exportDiscardedColumns: 'Discarded columns'
+        exportDiscardedColumns: 'Discarded columns',
+        exportImpossibleTitle: 'Export impossible',
+        exportImpossibleEmpty: 'You cannot export an empty list.',
+        exportImpossibleTooMany: 'You cannot export a list with more than ' +
+            '10000 elements.'
       };
     }
   }
