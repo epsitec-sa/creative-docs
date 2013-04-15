@@ -184,21 +184,14 @@ namespace Epsitec.Cresus.Core.Data
 
 		private Request CreateRequest()
 		{
-			if (this.request != null)
+			var example = this.GetExample ();
+			var request = new Request ()
 			{
-				return this.request;
-			}
-			else
-			{
-				var example = this.GetExample ();
-				var request = new Request ()
-				{
-					RequestedEntity = example,
-					RootEntity = example,
-				};
+				RequestedEntity = example,
+				RootEntity = example,
+			};
 				
-				return request;
-			}
+			return request;
 		}
 
 		private AbstractRequestView CreateRequestView()
@@ -268,6 +261,5 @@ namespace Epsitec.Cresus.Core.Data
 		private AbstractRequestView				requestView;
 		private int?							itemCount;
 		private bool							isDependent;
-		private Request							request;
 	}
 }
