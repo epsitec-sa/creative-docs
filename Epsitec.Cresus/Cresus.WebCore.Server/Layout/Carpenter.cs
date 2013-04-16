@@ -323,13 +323,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				PropertyAccessorId = propertyAccessorId,
 				HideAddButton = hideAddButton || tileEntities.Count == 0,
 				HideRemoveButton = hideRemoveButton,
-				Items = this.BuildGroupdSummaryTileItems (brick, tileEntities).ToList (),
+				Items = this.BuildGroupedSummaryTileItems (brick, tileEntities).ToList (),
 				Actions = actions,
 			};
 		}
 
 
-		private IEnumerable<GroupedSummaryTileItem> BuildGroupdSummaryTileItems(Brick brick, IEnumerable<AbstractEntity> tileEntities)
+		private IEnumerable<GroupedSummaryTileItem> BuildGroupedSummaryTileItems(Brick brick, IEnumerable<AbstractEntity> tileEntities)
 		{
 			foreach (var tileEntity in tileEntities)
 			{
