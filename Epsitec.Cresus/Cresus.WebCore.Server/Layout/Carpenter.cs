@@ -321,8 +321,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				IconClass = iconClass,
 				Title = Carpenter.GetOptionalText (brick, BrickPropertyKey.Title),
 				PropertyAccessorId = propertyAccessorId,
-				HideAddButton = hideAddButton || tileEntities.Count == 0,
-				HideRemoveButton = hideRemoveButton,
+				HideAddButton = hideAddButton,
+				HideRemoveButton = hideRemoveButton || tileEntities.Count == 0,
 				Items = this.BuildGroupedSummaryTileItems (brick, tileEntities).ToList (),
 				Actions = actions,
 			};
