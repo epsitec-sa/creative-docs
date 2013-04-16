@@ -247,7 +247,9 @@ function() {
     createColumnParameter: function() {
       return this.columns
           .filter(function(c) {
-            return c.dataIndex !== '' && c.dataIndex !== '' && !c.hidden;
+            return c.xtype !== 'rownumberer' && // remove the row numberer.
+                c.dataIndex !== 'summary' &&    // remove the summary column.
+                !c.hidden;                      // remove the hidden columns.
           })
           .map(function(c) {
             return c.dataIndex;
