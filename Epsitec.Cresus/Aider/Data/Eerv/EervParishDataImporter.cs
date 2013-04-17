@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Data.Normalization;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
@@ -88,7 +89,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var normalizedAiderPersons = Normalizer.Normalize (coreData);
 			var normalizedEervPersons = Normalizer.Normalize (eervParishData.Households);
 
-			var matches = EervParishDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
+			var matches = NormalizedDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
 
 			return matches.ToDictionary
 			(

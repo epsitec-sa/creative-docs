@@ -1,4 +1,5 @@
-﻿using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
@@ -21,7 +22,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace Epsitec.Aider.Data.Eerv
+namespace Epsitec.Aider.Data.Normalization
 {
 	
 	

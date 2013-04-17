@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Aider.Data.Normalization;
+
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Text;
 

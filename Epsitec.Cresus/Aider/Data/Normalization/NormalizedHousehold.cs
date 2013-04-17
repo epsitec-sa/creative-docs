@@ -3,7 +3,7 @@
 using System.Linq;
 
 
-namespace Epsitec.Aider.Data.Eerv
+namespace Epsitec.Aider.Data.Normalization
 {
 
 

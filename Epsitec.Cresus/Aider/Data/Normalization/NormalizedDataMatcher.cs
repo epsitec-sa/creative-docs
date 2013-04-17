@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace Epsitec.Aider.Data.Eerv
+namespace Epsitec.Aider.Data.Normalization
 {
 
 
@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Data.Eerv
 	/// more. This is probably because most of the persons are already matched by the first part of
 	/// the algorithm.
 	/// </summary>
-	internal static class EervParishDataMatcher
+	internal static class NormalizedDataMatcher
 	{
 
 
@@ -92,13 +92,13 @@ namespace Epsitec.Aider.Data.Eerv
 			var done = new Dictionary<NormalizedPerson, NormalizedPerson> ();
 			var matched = new HashSet<NormalizedPerson> ();
 
-			EervParishDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched);
-			EervParishDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
-			EervParishDataMatcher.AssignUnmatchedPersons (todo, done);
+			NormalizedDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched);
+			NormalizedDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
+			NormalizedDataMatcher.AssignUnmatchedPersons (todo, done);
 
-			EervParishDataMatcher.Warn (done);
+			NormalizedDataMatcher.Warn (done);
 
-			return EervParishDataMatcher.GetResultsWithMatchData (done);
+			return NormalizedDataMatcher.GetResultsWithMatchData (done);
 		}
 
 
@@ -113,7 +113,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (aiderPerson != null)
 				{
-					var matchData = EervParishDataMatcher.GetMatchData (eervPerson, aiderPerson);
+					var matchData = NormalizedDataMatcher.GetMatchData (eervPerson, aiderPerson);
 
 					tuple = Tuple.Create (aiderPerson, matchData);
 				}
@@ -130,13 +130,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var dateOfBirth = p.DateOfBirth == null
 				? (double?) null
-				: EervParishDataMatcher.GetDateSimilarity (p.DateOfBirth, p2.DateOfBirth);
+				: NormalizedDataMatcher.GetDateSimilarity (p.DateOfBirth, p2.DateOfBirth);
 
 			var sex = p.Sex == PersonSex.Unknown
 				? (bool?) null
-				: EervParishDataMatcher.IsSexMatch (p.Sex, p2.Sex);
+				: NormalizedDataMatcher.IsSexMatch (p.Sex, p2.Sex);
 
-			var address = EervParishDataMatcher.GetAddressSimilarity (p.GetAddresses (), p2.GetAddresses ());
+			var address = NormalizedDataMatcher.GetAddressSimilarity (p.GetAddresses (), p2.GetAddresses ());
 
 			return new MatchData ()
 			{
@@ -178,7 +178,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
 		{
-			var namesToAiderPersons = EervParishDataMatcher.GroupPersonsByNames (aiderPersons);
+			var namesToAiderPersons = NormalizedDataMatcher.GroupPersonsByNames (aiderPersons);
 
 			var filters = new List<Tuple<double, double, double, bool, AddressMatch>> ()
 			{
@@ -203,29 +203,29 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var filter in filters)
 			{
-				var matches = EervParishDataMatcher
+				var matches = NormalizedDataMatcher
 					.FindFuzzyMatches (todo, namesToAiderPersons, filter.Item1, filter.Item2, filter.Item3, filter.Item4, filter.Item5)
 					.ToList ();
 
-				EervParishDataMatcher.AssignMatches (matches, todo, done, matched);
+				NormalizedDataMatcher.AssignMatches (matches, todo, done, matched);
 
-				var newMatches = EervParishDataMatcher.FindNewMatchesWithinMathingHouseholds (matches, todo)
+				var newMatches = NormalizedDataMatcher.FindNewMatchesWithinMathingHouseholds (matches, todo)
 					.ToList ();
 
-				EervParishDataMatcher.AssignMatches (newMatches, todo, done, matched);
+				NormalizedDataMatcher.AssignMatches (newMatches, todo, done, matched);
 			}
 		}
 
 
 		private static void FindMatchesWithSplitMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
 		{
-			var splitNamesToAiderPersons = EervParishDataMatcher.GroupPersonsBySplitNames (aiderPersons);
+			var splitNamesToAiderPersons = NormalizedDataMatcher.GroupPersonsBySplitNames (aiderPersons);
 
-			var matches = EervParishDataMatcher
+			var matches = NormalizedDataMatcher
 				.FindMatchesWithSplitMethod (splitNamesToAiderPersons, todo, matched)
 				.ToList ();
 
-			EervParishDataMatcher.AssignMatches (matches, todo, done, matched);
+			NormalizedDataMatcher.AssignMatches (matches, todo, done, matched);
 		}
 
 
@@ -245,9 +245,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesWithinMathingHouseholds(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches, HashSet<NormalizedPerson> todo)
 		{
-			var matchingHouseholds = EervParishDataMatcher.FindMatchingHouseholds (personMatches);
+			var matchingHouseholds = NormalizedDataMatcher.FindMatchingHouseholds (personMatches);
 
-			return EervParishDataMatcher.FindNewMatchesInHousenoldMatches (matchingHouseholds, todo);
+			return NormalizedDataMatcher.FindNewMatchesInHousenoldMatches (matchingHouseholds, todo);
 		}
 
 
@@ -299,14 +299,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 				foreach (var eervMember in eervMembers)
 				{
-					var aiderCandidate = EervParishDataMatcher
+					var aiderCandidate = NormalizedDataMatcher
 						.GetFuzzyMatches (eervMember, aiderMembers, 0.8, 0.8)
 						.Select (c => c.Item1)
 						.FirstOrDefault ();
 
 					if (aiderCandidate != null)
 					{
-						var bestMatchForAcceptedAiderCandidate = EervParishDataMatcher
+						var bestMatchForAcceptedAiderCandidate = NormalizedDataMatcher
 							.GetFuzzyMatches (aiderCandidate, eervHousehold.Members, 0, 0)
 							.Select (m => m.Item1)
 							.FirstOrDefault ();
@@ -391,7 +391,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindFuzzyMatches(IEnumerable<NormalizedPerson> eervPersons, Dictionary<string, Dictionary<string, List<NormalizedPerson>>> namesToAiderPersons, double fln, double ffn, double fdb, bool fsx, AddressMatch fad)
 		{
 			return from eervPerson in eervPersons
-				   let matches = EervParishDataMatcher.FindFuzzyMatches (eervPerson, namesToAiderPersons, fln, ffn, fdb, fsx, fad).Take (10).ToList ()
+				   let matches = NormalizedDataMatcher.FindFuzzyMatches (eervPerson, namesToAiderPersons, fln, ffn, fdb, fsx, fad).Take (10).ToList ()
 				   where matches.Count > 0
 				   select Tuple.Create (eervPerson, matches);
 		}
@@ -403,35 +403,35 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (fln == JaroWinkler.MaxValue)
 			{
-				var tmpCandidates = EervParishDataMatcher.GetCandidateByExactLastname (eervPerson, namesToAiderPersons);
+				var tmpCandidates = NormalizedDataMatcher.GetCandidateByExactLastname (eervPerson, namesToAiderPersons);
 
 				if (ffn == JaroWinkler.MaxValue)
 				{
-					candidates = EervParishDataMatcher.GetCandidateByExactFirstname (eervPerson, tmpCandidates);
+					candidates = NormalizedDataMatcher.GetCandidateByExactFirstname (eervPerson, tmpCandidates);
 				}
 				else
 				{
-					candidates = EervParishDataMatcher.GetCandidateByFuzzyFirstname (eervPerson, tmpCandidates, ffn);
+					candidates = NormalizedDataMatcher.GetCandidateByFuzzyFirstname (eervPerson, tmpCandidates, ffn);
 				}
 			}
 			else
 			{
-				var tmpCandidates = EervParishDataMatcher.GetCandidateByFuzzyLastname (eervPerson, namesToAiderPersons, fln);
+				var tmpCandidates = NormalizedDataMatcher.GetCandidateByFuzzyLastname (eervPerson, namesToAiderPersons, fln);
 
 				if (ffn == JaroWinkler.MaxValue)
 				{
-					candidates = EervParishDataMatcher.GetCandidateByExactFirstname (eervPerson, tmpCandidates);
+					candidates = NormalizedDataMatcher.GetCandidateByExactFirstname (eervPerson, tmpCandidates);
 				}
 				else
 				{
-					candidates = EervParishDataMatcher.GetCandidateByFuzzyFirstname (eervPerson, tmpCandidates, ffn);
+					candidates = NormalizedDataMatcher.GetCandidateByFuzzyFirstname (eervPerson, tmpCandidates, ffn);
 				}
 			}
 
 			return from aiderPerson in candidates
-				   where EervParishDataMatcher.IsSexMatch (eervPerson, aiderPerson, fsx)
-				   where EervParishDataMatcher.AreDateOfBirthSimilar (eervPerson, aiderPerson, fdb)
-				   where EervParishDataMatcher.AreAddressesSimilar (eervPerson, aiderPerson, fad)
+				   where NormalizedDataMatcher.IsSexMatch (eervPerson, aiderPerson, fsx)
+				   where NormalizedDataMatcher.AreDateOfBirthSimilar (eervPerson, aiderPerson, fdb)
+				   where NormalizedDataMatcher.AreAddressesSimilar (eervPerson, aiderPerson, fad)
 				   select aiderPerson;
 		}
 
@@ -464,7 +464,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<NormalizedPerson> GetCandidateByFuzzyFirstname(NormalizedPerson eervPerson, Dictionary<string, List<NormalizedPerson>> namesToAiderPersons, double ffn)
 		{
-			var firstnames = EervParishDataMatcher.GetFuzzyMatches (eervPerson.Firstname, namesToAiderPersons.Keys, ffn);
+			var firstnames = NormalizedDataMatcher.GetFuzzyMatches (eervPerson.Firstname, namesToAiderPersons.Keys, ffn);
 
 			foreach (var firstname in firstnames)
 			{
@@ -480,7 +480,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<NormalizedPerson> GetCandidateByFuzzyLastname(NormalizedPerson eervPerson, Dictionary<string, Dictionary<string, List<NormalizedPerson>>> namesToAiderPersons, double fln)
 		{
-			var lastnames = EervParishDataMatcher.GetFuzzyMatches (eervPerson.Lastname, namesToAiderPersons.Keys, fln);
+			var lastnames = NormalizedDataMatcher.GetFuzzyMatches (eervPerson.Lastname, namesToAiderPersons.Keys, fln);
 
 			foreach (var lastname in lastnames)
 			{
@@ -531,10 +531,10 @@ namespace Epsitec.Aider.Data.Eerv
 				   where sfn >= minSfn
 				   let sln = JaroWinkler.ComputeJaroWinklerDistance (p1.Lastname, p2.Lastname)
 				   where sln >= minSln
-				   let sdb = EervParishDataMatcher.GetDateSimilarity (p1.DateOfBirth, p2.DateOfBirth)
-				   let ssx = EervParishDataMatcher.IsSexMatch (p1, p2, true)
-				   let sad = EervParishDataMatcher.GetAddressSimilarity (p1.GetAddresses (), p2.GetAddresses ())
-				   let metric = EervParishDataMatcher.GetMetric (sfn, sln, sdb, ssx, p1.DateOfBirth, p2.DateOfBirth, p1.Sex, p2.Sex)
+				   let sdb = NormalizedDataMatcher.GetDateSimilarity (p1.DateOfBirth, p2.DateOfBirth)
+				   let ssx = NormalizedDataMatcher.IsSexMatch (p1, p2, true)
+				   let sad = NormalizedDataMatcher.GetAddressSimilarity (p1.GetAddresses (), p2.GetAddresses ())
+				   let metric = NormalizedDataMatcher.GetMetric (sfn, sln, sdb, ssx, p1.DateOfBirth, p2.DateOfBirth, p1.Sex, p2.Sex)
 				   orderby metric descending
 				   select Tuple.Create (p2, Tuple.Create (sfn, sln, sdb, ssx, sad));
 		}
@@ -573,7 +573,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindMatchesWithSplitMethod(Dictionary<string, Dictionary<string, List<NormalizedPerson>>> splitNamesToAiderPersons, HashSet<NormalizedPerson> eervPersons, HashSet<NormalizedPerson> matched)
 		{
 			return from eervPerson in eervPersons
-				   let matches = EervParishDataMatcher.FindMatchesWithSplitMethod (eervPerson, splitNamesToAiderPersons, matched).ToList ()
+				   let matches = NormalizedDataMatcher.FindMatchesWithSplitMethod (eervPerson, splitNamesToAiderPersons, matched).ToList ()
 				   where matches.Count > 0
 				   select Tuple.Create (eervPerson, matches);
 		}
@@ -581,16 +581,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<NormalizedPerson> FindMatchesWithSplitMethod(NormalizedPerson eervPerson, Dictionary<string, Dictionary<string, List<NormalizedPerson>>> splitNamesToAiderPersons, HashSet<NormalizedPerson> matched)
 		{
-			var candidates = EervParishDataMatcher
+			var candidates = NormalizedDataMatcher
 				.GetCandidatesBySplitNames (eervPerson, splitNamesToAiderPersons)
 				.Where (p => !matched.Contains (p))
 				.ToList ();
 
 			return from candidate in candidates
-				   let ssx = EervParishDataMatcher.IsSexMatch (eervPerson, candidate, true)
+				   let ssx = NormalizedDataMatcher.IsSexMatch (eervPerson, candidate, true)
 				   where ssx
-				   let sdb = EervParishDataMatcher.AreDateOfBirthSimilar (eervPerson, candidate, JaroWinkler.MaxValue)
-				   let sad = EervParishDataMatcher.AreAddressesSimilar (eervPerson, candidate, AddressMatch.Full)
+				   let sdb = NormalizedDataMatcher.AreDateOfBirthSimilar (eervPerson, candidate, JaroWinkler.MaxValue)
+				   let sad = NormalizedDataMatcher.AreAddressesSimilar (eervPerson, candidate, AddressMatch.Full)
 				   where sdb || sad
 				   select candidate;
 		}
@@ -623,7 +623,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static bool IsSexMatch(NormalizedPerson eervPerson, NormalizedPerson aiderPerson, bool fsx)
 		{
-			return !fsx || EervParishDataMatcher.IsSexMatch (eervPerson.Sex, aiderPerson.Sex);
+			return !fsx || NormalizedDataMatcher.IsSexMatch (eervPerson.Sex, aiderPerson.Sex);
 		}
 
 
@@ -644,7 +644,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 			else
 			{
-				var similarity = EervParishDataMatcher.GetDateSimilarity (d1, d2);
+				var similarity = NormalizedDataMatcher.GetDateSimilarity (d1, d2);
 
 				return similarity >= fdb;
 			}
@@ -653,8 +653,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static double GetDateSimilarity(Date? d1, Date? d2)
 		{
-			var s1 = EervParishDataMatcher.GetDateForSimilarityComputation (d1);
-			var s2 = EervParishDataMatcher.GetDateForSimilarityComputation (d2);
+			var s1 = NormalizedDataMatcher.GetDateForSimilarityComputation (d1);
+			var s2 = NormalizedDataMatcher.GetDateForSimilarityComputation (d2);
 
 			return JaroWinkler.ComputeJaroDistance (s1, s2);
 		}
@@ -674,9 +674,9 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				foreach (var aiderAddress in aiderPerson.GetAddresses ())
 				{
-					var similarity = EervParishDataMatcher.GetAddressSimilarity (eervAddress, aiderAddress);
+					var similarity = NormalizedDataMatcher.GetAddressSimilarity (eervAddress, aiderAddress);
 
-					if (EervParishDataMatcher.IsAddressMatchBetterThanOrEqualTo (similarity, match))
+					if (NormalizedDataMatcher.IsAddressMatchBetterThanOrEqualTo (similarity, match))
 					{
 						return true;
 					}
@@ -695,9 +695,9 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				foreach (var address2 in addresses2)
 				{
-					var similarity = EervParishDataMatcher.GetAddressSimilarity (address1, address2);
+					var similarity = NormalizedDataMatcher.GetAddressSimilarity (address1, address2);
 
-					if (EervParishDataMatcher.IsAddressMatchBetterThanOrEqualTo (similarity, result))
+					if (NormalizedDataMatcher.IsAddressMatchBetterThanOrEqualTo (similarity, result))
 					{
 						result = similarity;
 					}
