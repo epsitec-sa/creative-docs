@@ -34,6 +34,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAKC]", typeof (Epsitec.Aider.Entities.AiderUserRoleEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVARD]", typeof (Epsitec.Aider.Entities.AiderContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVATF]", typeof (Epsitec.Aider.Entities.AiderDataManagersEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVGP22]", typeof (Epsitec.Aider.Entities.AiderSubscriptionEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -6491,6 +6492,185 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderDataManagersEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderSubscription Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderSubscription</c> entity.
+	///	designer:cap/LVGP22
+	///	</summary>
+	public partial class AiderSubscriptionEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Id</c> field.
+		///	designer:fld/LVGP22/LVG332
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG332]")]
+		public string Id
+		{
+			get
+			{
+				return this.GetField<string> ("[LVG332]");
+			}
+			set
+			{
+				string oldValue = this.Id;
+				if (oldValue != value || !this.IsFieldDefined("[LVG332]"))
+				{
+					this.OnIdChanging (oldValue, value);
+					this.SetField<string> ("[LVG332]", oldValue, value);
+					this.OnIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Count</c> field.
+		///	designer:fld/LVGP22/LVG432
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG432]")]
+		public int Count
+		{
+			get
+			{
+				return this.GetField<int> ("[LVG432]");
+			}
+			set
+			{
+				int oldValue = this.Count;
+				if (oldValue != value || !this.IsFieldDefined("[LVG432]"))
+				{
+					this.OnCountChanging (oldValue, value);
+					this.SetField<int> ("[LVG432]", oldValue, value);
+					this.OnCountChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RegionalEdition</c> field.
+		///	designer:fld/LVGP22/LVG532
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG532]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity RegionalEdition
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVG532]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.RegionalEdition;
+				if (oldValue != value || !this.IsFieldDefined("[LVG532]"))
+				{
+					this.OnRegionalEditionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVG532]", oldValue, value);
+					this.OnRegionalEditionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Household</c> field.
+		///	designer:fld/LVGP22/LVGS22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGS22]")]
+		public global::Epsitec.Aider.Entities.AiderHouseholdEntity Household
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVGS22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue = this.Household;
+				if (oldValue != value || !this.IsFieldDefined("[LVGS22]"))
+				{
+					this.OnHouseholdChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVGS22]", oldValue, value);
+					this.OnHouseholdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LegalPerson</c> field.
+		///	designer:fld/LVGP22/LVGT22
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGT22]")]
+		public global::Epsitec.Aider.Entities.AiderLegalPersonEntity LegalPerson
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderLegalPersonEntity> ("[LVGT22]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue = this.LegalPerson;
+				if (oldValue != value || !this.IsFieldDefined("[LVGT22]"))
+				{
+					this.OnLegalPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderLegalPersonEntity> ("[LVGT22]", oldValue, value);
+					this.OnLegalPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SubscriptionType</c> field.
+		///	designer:fld/LVGP22/LVG132
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG132]")]
+		public global::Epsitec.Aider.Enumerations.SubscriptionType SubscriptionType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.SubscriptionType> ("[LVG132]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.SubscriptionType oldValue = this.SubscriptionType;
+				if (oldValue != value || !this.IsFieldDefined("[LVG132]"))
+				{
+					this.OnSubscriptionTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.SubscriptionType> ("[LVG132]", oldValue, value);
+					this.OnSubscriptionTypeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnIdChanging(string oldValue, string newValue);
+		partial void OnIdChanged(string oldValue, string newValue);
+		partial void OnCountChanging(int oldValue, int newValue);
+		partial void OnCountChanged(int oldValue, int newValue);
+		partial void OnRegionalEditionChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnRegionalEditionChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnHouseholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
+		partial void OnHouseholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
+		partial void OnLegalPersonChanging(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
+		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
+		partial void OnSubscriptionTypeChanging(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
+		partial void OnSubscriptionTypeChanged(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderSubscriptionEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderSubscriptionEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 80, 89);	// [LVGP22]
+		public static readonly string EntityStructuredTypeKey = "[LVGP22]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderSubscriptionEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

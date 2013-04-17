@@ -99,6 +99,7 @@
     <Compile Include="Enumerations\ContactType.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
+    <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\WarningTarget.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
     <Compile Include="Override\AiderUserManager.cs" />

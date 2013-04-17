@@ -47,6 +47,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 0));
 				//	designer:cap/LVG502
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonRelationship = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 5));
+				//	designer:cap/LVG232
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 98));
 				//	designer:cap/LVG302
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderTown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3));
 				//	designer:cap/LVAHD
@@ -90,6 +92,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderPerson = 0x3F500050000000L;
 				//	designer:cap/LVG502
 				public const long ShowAiderPersonRelationship = 0x3F500050000005L;
+				//	designer:cap/LVG232
+				public const long ShowAiderSubscription = 0x3F500050000062L;
 				//	designer:cap/LVG302
 				public const long ShowAiderTown = 0x3F500050000003L;
 				//	designer:cap/LVAHD
@@ -200,6 +204,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PlacePersonRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 196));
 				//	designer:cap/LVAK6
 				public static readonly Epsitec.Common.Types.EnumType RemovalReason = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212));
+				//	designer:cap/LVGU22
+				public static readonly Epsitec.Common.Types.EnumType SubscriptionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 94));
 				//	designer:cap/LVAIF
 				public static readonly Epsitec.Common.Types.EnumType SwissPostZipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 498));
 				//	designer:cap/LVA66
@@ -265,6 +271,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlace = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 127));
 			//	designer:cap/LVAQ5
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlacePerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 186));
+			//	designer:cap/LVGP22
+			public static readonly Epsitec.Common.Types.StructuredType AiderSubscription = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 89));
 			//	designer:cap/LVA65
 			public static readonly Epsitec.Common.Types.StructuredType AiderTown = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 166));
 			//	designer:cap/LVAHC
@@ -1063,6 +1071,26 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class SubscriptionType
+				{
+					//	designer:cap/LVGV22
+					public static global::Epsitec.Common.Types.Caption Household
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 95));
+						}
+					}
+					//	designer:cap/LVG032
+					public static global::Epsitec.Common.Types.Caption LegalPerson
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 96));
+						}
+					}
+				}
+				
 				public static class SwissPostZipType
 				{
 					//	designer:cap/LVANF
@@ -1674,6 +1702,27 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 101);
 			}
 			
+			public static class AiderSubscription
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderSubscription.Count, null);
+				}
+				
+				//	designer:cap/LVG432
+				public static readonly global::Epsitec.Common.Support.Druid Count = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 100);
+				//	designer:cap/LVGS22
+				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 92);
+				//	designer:cap/LVG332
+				public static readonly global::Epsitec.Common.Support.Druid Id = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 99);
+				//	designer:cap/LVGT22
+				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 93);
+				//	designer:cap/LVG532
+				public static readonly global::Epsitec.Common.Support.Druid RegionalEdition = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 101);
+				//	designer:cap/LVG132
+				public static readonly global::Epsitec.Common.Support.Druid SubscriptionType = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 97);
+			}
+			
 			public static class AiderTown
 			{
 				internal static void _Initialize()
@@ -2257,6 +2306,7 @@ namespace Epsitec.Aider
 			Fields.AiderPlace._Initialize ();
 			Fields.AiderPlacePerson._Initialize ();
 			Fields.AiderRelationshipType._Initialize ();
+			Fields.AiderSubscription._Initialize ();
 			Fields.AiderTown._Initialize ();
 			Fields.AiderUser._Initialize ();
 			Fields.AiderUserRole._Initialize ();
