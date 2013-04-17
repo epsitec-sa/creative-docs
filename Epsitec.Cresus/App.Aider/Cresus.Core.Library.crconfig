@@ -21,6 +21,7 @@ AiderUser = [LVAHC]
 AiderUserRole = [LVAKC]
 AiderUserScope = [LVACC]
 AiderGroupDef = [LVA2A]
+AiderSubscription = [LVGP22]
 
 <meta>
   <T>
@@ -182,6 +183,20 @@ AiderGroupDef = [LVA2A]
         <disp m="Visible" />
       </col>
     </t>
+    <t eid="@AiderSubscription" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG332]" title="Numéro" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG432]" title="Nombre d'exemplaires" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG532].[LVAA4]" title="Edition régionale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
   </T>
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
@@ -199,6 +214,7 @@ AiderGroupDef = [LVA2A]
     <d cid="[LVGI22]" teid="@AiderGroupParticipant" tn="groupFunctionMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="false" ed="false" df="true" dg=""><R><r>@user</r></R></d>
+    <d cid="[LVG232]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
   </D>
   <G/>
 </meta>
