@@ -2,8 +2,6 @@
 
 using Epsitec.Common.IO;
 
-using Epsitec.Common.Support.Extensions;
-
 using System;
 
 using System.Collections.Generic;
