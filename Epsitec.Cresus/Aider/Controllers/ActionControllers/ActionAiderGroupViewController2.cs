@@ -1,4 +1,6 @@
-﻿using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.Data.Common;
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 
@@ -12,7 +14,6 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
-using Epsitec.Aider.Data;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {

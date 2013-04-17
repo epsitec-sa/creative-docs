@@ -9,7 +9,7 @@ using System;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Common
 {
 	public static class AiderGroupIds
 	{

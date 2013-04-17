@@ -8,7 +8,7 @@ using Epsitec.Data.Platform;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Common
 {
 	/// <summary>
 	/// The <c>ParishAddressInformation</c> class describes a parish address, as provided

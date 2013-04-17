@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Epsitec.Aider.Entities;
 
 
-namespace Epsitec.Aider.Data.Eerv
+namespace Epsitec.Aider.Data.Common
 {
 	
 	

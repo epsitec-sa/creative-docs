@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Common
 {
 	/// <summary>
 	/// The <c>ParishAddresses</c> class groups similar <see cref="ParishAddressInformation"/>

@@ -1,4 +1,6 @@
-﻿using Epsitec.Aider.Enumerations;
+﻿using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.IO;
 
@@ -14,7 +16,6 @@ using System.Collections.Generic;
 using System.IO;
 
 using System.Linq;
-using Epsitec.Aider.Tools;
 
 
 namespace Epsitec.Aider.Data.Eerv
