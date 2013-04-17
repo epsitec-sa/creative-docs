@@ -26,160 +26,160 @@ AiderGroupDef = [LVA2A]
   <T>
     <t eid="@AiderContact" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="NPA" dw="45" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderLegalPerson" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAV8]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAEF]" title="NPA" dw="45" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAFF]" title="Adresse" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderHousehold" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAGE]" title="Intitulé" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA6F]" title="NPA" dw="45" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA5F]" title="Adresse" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderPerson" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderGroup" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderGroupParticipant" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVAA4]" title="Groupe" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA3]" title="Prenom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderTown" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVA95]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVALD]" title="Canton" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVAH8]" title="Code postal" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderTown:[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderCountry" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderCountry:[LVAD5]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderCountry:[LVAC5]" title="Code ISO" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderUser" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA9]" title="Nom d'utilisateur" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderUserRole" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUserRole:[LVAMC]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderUserScope" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUserScope:[LVAFC]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderGroupDef" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupDef:[LVA3A]" title="Nom" canSort="True" canFilter="True">
-	<sort o="Ascending" />
-	<disp m="Visible" />
+        <sort o="Ascending" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderGroupParticipant" n="groupMembers">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAI4]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAHG].[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderContact" n="groupMembers">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="NPA" dw="45" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
     <t eid="@AiderGroupParticipant" n="groupFunctionMembers">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAI4]" title="Nom" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAHG].[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
-	<sort o="None" />
-	<disp m="Visible" />
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
   </T>
