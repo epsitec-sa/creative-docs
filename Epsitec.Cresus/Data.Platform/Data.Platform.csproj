@@ -162,9 +162,7 @@
     <WCFMetadataStorage Include="Service References\ServiceReference.Directories.SearchAddress\" />
     <WCFMetadataStorage Include="Service References\ServiceReference.Directories.Security\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Google\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
