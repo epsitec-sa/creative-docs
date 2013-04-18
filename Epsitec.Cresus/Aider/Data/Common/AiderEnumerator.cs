@@ -31,6 +31,12 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderHouseholdEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetHouseholdBatch, action);
+		}
+
+
 		private static void Execute<T>(CoreData coreData, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
 			const int size = 1000;
@@ -84,6 +90,27 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
+		private static IList<AiderHouseholdEntity> GetHouseholdBatch(DataContext dataContext, int skip, int take)
+		{
+			var aiderHousehold = new AiderHouseholdEntity ();
+
+			var request = new Request ()
+			{
+				RootEntity = aiderHousehold,
+				Skip = skip,
+				Take = take,
+			};
+
+			request.AddSortClause (InternalField.CreateId (aiderHousehold));
+
+			var aiderHouseholds = dataContext.GetByRequest<AiderHouseholdEntity> (request);
+
+			AiderEnumerator.LoadRelatedData (dataContext, aiderHouseholds);
+
+			return aiderHouseholds;
+		}
+
+
 		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderContactEntity> aiderContacts)
 		{
 			dataContext.LoadRelatedData (aiderContacts, new List<LambdaExpression> ()
@@ -98,6 +125,26 @@ namespace Epsitec.Aider.Data.Common
 				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson.Address),
 				LambdaUtils.Convert ((AiderContactEntity c) => c.LegalPerson.Address.Town),
+			});
+		}
+
+
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderHouseholdEntity> aiderHouseholds)
+		{
+			dataContext.LoadRelatedData (aiderHouseholds, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderHouseholdEntity h) => h.Address),
+				LambdaUtils.Convert ((AiderHouseholdEntity h) => h.Address.Town),
+			});
+
+			var aiderPersons = aiderHouseholds
+				.SelectMany (h => h.Members)
+				.Distinct ()
+				.ToList ();
+
+			dataContext.LoadRelatedData (aiderPersons, new List<LambdaExpression> ()
+			{
+				LambdaUtils.Convert ((AiderPersonEntity p) => p.eCH_Person),
 			});
 		}
 
