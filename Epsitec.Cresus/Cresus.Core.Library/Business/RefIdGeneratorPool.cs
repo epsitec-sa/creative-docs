@@ -41,10 +41,10 @@ namespace Epsitec.Cresus.Core.Business
 			return generator;
 		}
 		
-		public RefIdGenerator GetGenerator<T>(string suffix = null)
+		public RefIdGenerator GetGenerator<T>(string suffix = null, long firstId = 1000L)
 			where T : AbstractEntity, new ()
 		{
-			return this.GetGenerator (RefIdGeneratorPool.GetGeneratorName<T> (suffix), 1000L);
+			return this.GetGenerator (RefIdGeneratorPool.GetGeneratorName<T> (suffix), firstId);
 		}
 
 
