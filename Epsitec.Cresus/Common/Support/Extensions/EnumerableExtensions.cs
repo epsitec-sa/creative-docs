@@ -342,6 +342,46 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 
+		/// <summary>
+		/// Splits the given sequence into batches of the given size. So we build a sequence of
+		/// sequences of size batchsize. The last sequence returned might be smaller.
+		/// </summary>
+		/// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+		/// <param name="sequence">The sequence to split into batches</param>
+		/// <param name="batchSize">The size of the batches</param>
+		/// <returns>A sequence of sequences whose elements come from the input sequence.</returns>
+		public static IEnumerable<IEnumerable<T>> ToBatches<T>(this IEnumerable<T> sequence, int batchSize)
+		{
+			sequence.ThrowIfNull ("sequence");
+			batchSize.ThrowIf (x => x <= 0, "batchSize cannot be smaller or equal to zero");
+
+			return EnumerableExtensions.ToBatchesInternal (sequence, batchSize);
+		}
+
+
+		private static IEnumerable<IEnumerable<T>> ToBatchesInternal<T>(IEnumerable<T> sequence, int batchSize)
+		{
+			var list = new List<T> ();
+
+			foreach (var element in sequence)
+			{
+				list.Add (element);
+
+				if (list.Count == batchSize)
+				{
+					yield return list;
+
+					list = new List<T> ();
+				}
+			}
+
+			if (list.Count > 0)
+			{
+				yield return list;
+			}
+		}
+
+
 		[System.ThreadStatic]
 		private static System.Random dice;
 	}

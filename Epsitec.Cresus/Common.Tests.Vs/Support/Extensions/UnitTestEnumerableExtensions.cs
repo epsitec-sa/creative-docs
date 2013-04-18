@@ -254,6 +254,65 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 
+		[TestMethod]
+		public void TestToBatchesArguments()
+		{
+			ExceptionAssert.Throw<ArgumentNullException>
+			(
+				() => ((IEnumerable<int>) null).ToBatches (1)
+			);
+
+			ExceptionAssert.Throw<ArgumentException>
+			(
+				() => new List<int> { 0 }.ToBatches (0)
+			);
+		}
+
+
+		[TestMethod]
+		public void TestToBatches()
+		{
+			int maxLength = 100;
+
+			for (int sequenceLength = 0; sequenceLength < maxLength; sequenceLength++)
+			{
+				for (int batchSize = 1; batchSize < maxLength; batchSize++)
+				{
+					var sequence = Enumerable.Range (0, sequenceLength).ToList ();
+
+					this.CheckSequence (sequence, batchSize);
+				}
+			}
+		}
+
+
+		private void CheckSequence(IList<int> sequence, int batchSize)
+		{
+			if (sequence.Count > 0)
+			{
+				// Check the size of all batches except the last one.
+				foreach (var b in sequence.ToBatches (batchSize).Reverse ().Skip (1))
+				{
+					Assert.AreEqual (batchSize, b.Count ());
+				}
+
+				// Check the size of the last batch.
+				Assert.IsTrue (batchSize >= sequence.ToBatches (batchSize).Last ().Count ());
+
+				// Check that the elements are the good ones.
+				CollectionAssert.AreEqual
+				(
+					sequence.ToList (),
+					sequence.ToBatches (batchSize).SelectMany (b => b).ToList ()
+				);
+			}
+			else
+			{
+				Assert.IsTrue (!sequence.ToBatches (batchSize).Any ());
+			}
+		}
+
+
 	}
 
 
