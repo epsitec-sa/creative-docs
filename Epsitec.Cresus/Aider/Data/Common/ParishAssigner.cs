@@ -343,7 +343,7 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		private static string FindParishName(ParishAddressRepository repository, AiderAddressEntity address)
+		public static string FindParishName(ParishAddressRepository repository, AiderAddressEntity address)
 		{
 			var zipCode = address.Town.SwissZipCode.GetValueOrDefault ();
 			var townName = address.Town.Name;
