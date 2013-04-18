@@ -3,7 +3,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.EntityPicker',
   'Epsitec.cresus.webcore.tools.Texts'
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityFavoritesPicker', {
     extend: 'Epsitec.cresus.webcore.tools.EntityPicker',
     alternateClassName: ['Epsitec.EntityFavoritesPicker'],
@@ -17,7 +17,7 @@ function () {
 
     /* Constructor */
 
-    constructor: function (options) {
+    constructor: function(options) {
       var newOptions,
           list1, list2, callback,
           tabItems;
@@ -95,12 +95,12 @@ function () {
 
     /* Additional methods */
 
-    handleTabChange: function (tabPanel, newCard, oldCard, eOpts) {
+    handleTabChange: function(tabPanel, newCard, oldCard, eOpts) {
       this.activeEntityListPanel = newCard.entityListPanel;
       this.handleEntityListSelectionChange(this.getSelectedItems());
     },
 
-    handleEntityListSelectionChange: function (entityItems) {
+    handleEntityListSelectionChange: function(entityItems) {
       if (entityItems.length === 0) {
         this.disableOkButton();
       } else {
@@ -108,22 +108,22 @@ function () {
       }
     },
 
-    createEntityListPanel: function (options) {
+    createEntityListPanel: function(options) {
       return Ext.create('Epsitec.EntityListPanel', {
         container: {},
         list: options
       });
     },
 
-    getSelectedItems: function () {
+    getSelectedItems: function() {
       return this.activeEntityListPanel.getEntityList().getSelectedItems();
     },
 
     statics: {
-      showDatabase: function (databaseName, favId, favOnly, multiSelect, callback) {
+      showDatabase: function(dbName, favId, favOnly, multiSelect, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.DatabaseEntityList',
-          databaseName: databaseName,
+          databaseName: dbName,
           favoritesId: favId,
           favoritesOnly: favOnly,
           multiSelect: multiSelect,
@@ -131,7 +131,7 @@ function () {
         });
       },
 
-      show: function (callback, listOptions) {
+      show: function(callback, listOptions) {
         var entityListPicker = Ext.create('Epsitec.EntityFavoritesPicker', {
           list: listOptions,
           callback: callback
