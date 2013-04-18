@@ -1,5 +1,6 @@
 ﻿using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.IO;
 using Epsitec.Common.Support.Extensions;
@@ -202,8 +203,33 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private static bool DiscardHousehold(AiderHouseholdEntity household)
 		{
-			// TODO Make a subscription only if the person is in vaud county. Or whatever complex
-			// logic they want us to use.
+			// We skip the households that are not in vaud county.
+
+			// TODO Maybe we want to have a more complexe logic here, as some vaud parish span
+			// towns that are in other counties.
+
+			if (!household.Address.Town.IsInVaudCounty ())
+			{
+				return true;
+			}
+
+			// Only the household where at least one member is protestant should have a
+			// subscription.
+
+			var isProtestant = household
+				.Members
+				.Select (m => m.Confession)
+				.Contains (PersonConfession.Protestant);
+
+			if (!isProtestant)
+			{
+				return true;
+			}
+
+			// TODO Is there any other weird cases where we should discard an household?
+
+			//At this point, we know that the household should have a subscription.
+
 			return false;
 		}
 

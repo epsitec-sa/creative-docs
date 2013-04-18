@@ -43,6 +43,11 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name);
 		}
 
+		public bool IsInVaudCounty()
+		{
+			return this.SwissCantonCode == "VD";
+		}
+
 		public override EntityStatus GetEntityStatus()
 		{
 			using (var a = new EntityStatusAccumulator ())
