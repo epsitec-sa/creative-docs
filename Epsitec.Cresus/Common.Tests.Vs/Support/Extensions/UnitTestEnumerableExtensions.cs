@@ -7,6 +7,8 @@ using Epsitec.Common.UnitTesting;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -14,20 +16,24 @@ using System.Linq;
 
 namespace Epsitec.Common.Tests.Vs.Support.Extensions
 {
+
+
 	[TestClass]
 	public sealed  class UnitTestEnumerableExtensions
 	{
+
+
 		[TestMethod]
 		public void TestIndexOfArgument()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<object>) null).IndexOf (new object (), object.Equals)
 			);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => new List<object> ().IndexOf (new object (), (System.Func<object, object, bool>) null)
+				() => new List<object> ().IndexOf (new object (), (Func<object, object, bool>) null)
 			);
 		}
 
@@ -50,12 +56,12 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void TestAppendArgument()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<int>) null).Append (0)
 			);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 			  () => new List<int> ().Append (null)
 			);
@@ -76,7 +82,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void TestShuffleArgument()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<int>) null).Shuffle ()
 			);
@@ -136,12 +142,12 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void TestSetEqualsArgument()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<int>) null).SetEquals (new List<int> ())
 			);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => new List<int> ().SetEquals (null)
 			);
@@ -173,12 +179,12 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void TestSplitArgument()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<int>) null).Split (i => i == 0)
 			);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<int>) null).Split (null)
 			);
@@ -213,7 +219,7 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		[TestMethod]
 		public void TestAsReadOnlyCollectionArgument()
 		{
-			ExceptionAssert.Throw<System.ArgumentNullException>
+			ExceptionAssert.Throw<ArgumentNullException>
 			(
 				() => ((IEnumerable<int>) null).AsReadOnlyCollection ()
 			);
@@ -246,5 +252,9 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			Assert.AreEqual ("A.1 B.2 C.0", string.Join (" ", r1));
 			Assert.AreEqual ("A.1 B.2 C.0", string.Join (" ", r2));
 		}
+
+
 	}
+
+
 }
