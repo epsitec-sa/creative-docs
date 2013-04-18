@@ -220,6 +220,7 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
 
+		
 		private static FormattedText GetParticipantSummary(AiderGroupParticipantEntity participant)
 		{
 			FormattedText text;
@@ -267,9 +268,27 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
+		public static IList<AiderGroupEntity> FindRegionRootGroups(BusinessContext businessContext)
+		{
+			var dataContext = businessContext.DataContext;
+			
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			var path  = AiderGroupIds.CreateTopLevelPathTemplate (GroupClassification.Region);
+			var level = 0;
+
+			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
+		}
 
 		public static IList<AiderGroupEntity> FindRootGroups(BusinessContext businessContext)
 		{
+			var dataContext = businessContext.DataContext;
+			
 			var example = new AiderGroupEntity ()
 			{
 				GroupLevel = AiderGroupIds.TopLevel,
@@ -278,7 +297,7 @@ namespace Epsitec.Aider.Entities
 			var request = Request.Create (example);
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
-			return businessContext.DataContext.GetByRequest (request);
+			return dataContext.GetByRequest (request);
 		}
 
 

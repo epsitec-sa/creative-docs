@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Bricks;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
@@ -10,12 +13,15 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderSubscriptionEntity> wall)
 		{
+			var favorites = AiderGroupEntity.FindRegionRootGroups (this.BusinessContext);
+
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Id)
 						.ReadOnly ()
 					.Field (x => x.Count)
 					.Field (x => x.RegionalEdition)
+						.WithFavorites (favorites)
 				.End ();
 		}
 	}
