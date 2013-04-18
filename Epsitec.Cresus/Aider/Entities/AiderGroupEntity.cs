@@ -68,6 +68,16 @@ namespace Epsitec.Aider.Entities
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsNoParish ();
 		}
 
+		public int GetRegionId()
+		{
+			if (!this.IsRegion ())
+			{
+				throw new NotSupportedException ();
+			}
+
+			return int.Parse (this.Name.SubstringEnd (2));
+		}
+
 		public bool CanHaveSubgroups()
 		{
 			var definition = this.GroupDef;
