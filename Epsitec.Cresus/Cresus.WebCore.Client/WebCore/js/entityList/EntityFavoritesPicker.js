@@ -3,7 +3,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.EntityPicker',
   'Epsitec.cresus.webcore.tools.Texts'
 ],
-function() {
+function () {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityFavoritesPicker', {
     extend: 'Epsitec.cresus.webcore.tools.EntityPicker',
     alternateClassName: ['Epsitec.EntityFavoritesPicker'],
@@ -17,9 +17,10 @@ function() {
 
     /* Constructor */
 
-    constructor: function(options) {
+    constructor: function (options) {
       var newOptions,
-          list1, list2, callback;
+          list1, list2, callback,
+          tabItems;
 
       callback = Epsitec.Callback.create(
           this.handleEntityListSelectionChange, this);
@@ -43,12 +44,16 @@ function() {
       this.entityListPanel1 = this.createEntityListPanel(list1);
       this.entityListPanel2 = this.createEntityListPanel(list2);
 
-      this.tabPanel = new Ext.TabPanel({
-        xtype: 'tabpanel',
-        id: 'tabpanel',
-        activeTab: 0,
-        layoutOnTabChange: true,
-        items: [{
+      if (options.list.favoritesOnly) {
+        tabItems = [{
+          xtype: 'panel',
+          layout: 'fit',
+          title: Epsitec.Texts.getPickerFavouriteItems(),
+          items: [this.entityListPanel1],
+          entityListPanel: this.entityListPanel1
+        }];
+      } else {
+        tabItems = [{
           xtype: 'panel',
           layout: 'fit',
           title: Epsitec.Texts.getPickerFavouriteItems(),
@@ -60,7 +65,15 @@ function() {
           title: Epsitec.Texts.getPickerAllItems(),
           items: [this.entityListPanel2],
           entityListPanel: this.entityListPanel2
-        }],
+        }];
+      }
+
+      this.tabPanel = new Ext.TabPanel({
+        xtype: 'tabpanel',
+        id: 'tabpanel',
+        activeTab: 0,
+        layoutOnTabChange: true,
+        items: tabItems,
         listeners: {
           tabchange: this.handleTabChange,
           scope: this
@@ -82,12 +95,12 @@ function() {
 
     /* Additional methods */
 
-    handleTabChange: function(tabPanel, newCard, oldCard, eOpts) {
+    handleTabChange: function (tabPanel, newCard, oldCard, eOpts) {
       this.activeEntityListPanel = newCard.entityListPanel;
       this.handleEntityListSelectionChange(this.getSelectedItems());
     },
 
-    handleEntityListSelectionChange: function(entityItems) {
+    handleEntityListSelectionChange: function (entityItems) {
       if (entityItems.length === 0) {
         this.disableOkButton();
       } else {
@@ -95,29 +108,30 @@ function() {
       }
     },
 
-    createEntityListPanel: function(options) {
+    createEntityListPanel: function (options) {
       return Ext.create('Epsitec.EntityListPanel', {
         container: {},
         list: options
       });
     },
 
-    getSelectedItems: function() {
+    getSelectedItems: function () {
       return this.activeEntityListPanel.getEntityList().getSelectedItems();
     },
 
     statics: {
-      showDatabase: function(databaseName, favoritesId, multiSelect, callback) {
+      showDatabase: function (databaseName, favId, favOnly, multiSelect, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.DatabaseEntityList',
           databaseName: databaseName,
-          favoritesId: favoritesId,
+          favoritesId: favId,
+          favoritesOnly: favOnly,
           multiSelect: multiSelect,
           onSelectionChange: null
         });
       },
 
-      show: function(callback, listOptions) {
+      show: function (callback, listOptions) {
         var entityListPicker = Ext.create('Epsitec.EntityFavoritesPicker', {
           list: listOptions,
           callback: callback

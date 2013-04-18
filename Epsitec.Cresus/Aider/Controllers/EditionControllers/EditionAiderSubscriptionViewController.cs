@@ -6,6 +6,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 using Epsitec.Aider.Entities;
+using Epsitec.Cresus.Core.Bricks;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -21,7 +22,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.Count)
 					.Field (x => x.RegionalEdition)
-						.WithFavorites (favorites)
+						.WithFavorites (favorites, favoritesOnly: true)
+						
 				.End ();
 		}
 	}

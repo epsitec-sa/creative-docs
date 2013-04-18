@@ -706,7 +706,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = this.BuildField<EntityReferenceField> (entity, propertyAccessor, brickProperties, includeTitle, null);
 
 			field.DatabaseName = this.GetDatabaseName (propertyAccessor.Type);
-			field.DefineFavorites (Carpenter.GetFavoritesCollection (brickProperties));
+			field.DefineFavorites (Carpenter.GetFavoritesCollection (brickProperties), Carpenter.GetFavoritesOnly (brickProperties));
 
 			return field;
 		}
@@ -935,7 +935,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = this.BuildField<EntityReferenceField> (entity, brick, fieldType, id, true);
 
 			field.DatabaseName = this.GetDatabaseName (actionFieldType);
-			field.DefineFavorites (Carpenter.GetFavoritesCollection (brick));
+			field.DefineFavorites (Carpenter.GetFavoritesCollection (brick), Carpenter.GetFavoritesOnly (brick));
 
 			return field;
 		}
@@ -1152,13 +1152,41 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
+		private static bool GetFavoritesOnly(BrickPropertyCollection brickProperties)
+		{
+			var property = Carpenter.GetBrickProperty (brickProperties, BrickPropertyKey.FavoritesCollection);
+
+			if (property.HasValue)
+			{
+				return ((System.Tuple<IEnumerable<AbstractEntity>, bool>) property.Value.ObjectValue).Item2;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		private static bool GetFavoritesOnly(Brick brick)
+		{
+			var property = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.FavoritesCollection);
+
+			if (property.HasValue)
+			{
+				return ((System.Tuple<IEnumerable<AbstractEntity>, bool>) property.Value.ObjectValue).Item2;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		private static IEnumerable<AbstractEntity> GetFavoritesCollection(BrickPropertyCollection brickProperties)
 		{
 			var property = Carpenter.GetBrickProperty (brickProperties, BrickPropertyKey.FavoritesCollection);
 
 			if (property.HasValue)
 			{
-				return (IEnumerable<AbstractEntity>) property.Value.CollectionValue;
+				return ((System.Tuple<IEnumerable<AbstractEntity>, bool>) property.Value.ObjectValue).Item1;
 			}
 			else
 			{
@@ -1173,7 +1201,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			if (property.HasValue)
 			{
-				return (IEnumerable<AbstractEntity>) property.Value.CollectionValue;
+				return ((System.Tuple<IEnumerable<AbstractEntity>, bool>) property.Value.ObjectValue).Item1;
 			}
 			else
 			{

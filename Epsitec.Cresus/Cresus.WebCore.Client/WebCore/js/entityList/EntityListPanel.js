@@ -61,6 +61,7 @@ function() {
       this.createEntityList(options.entityListTypeName, {
         databaseName: options.databaseName,
         favoritesId: options.favoritesId,
+        favoritesOnly: options.favoritesOnly,
         columnDefinitions: json.content.columns,
         sorterDefinitions: json.content.sorters,
         enableCreate: json.content.enableCreate,

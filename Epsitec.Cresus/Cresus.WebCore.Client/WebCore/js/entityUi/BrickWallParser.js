@@ -304,6 +304,7 @@ function() {
         field.xtype = 'epsitec.entityreferencefield';
         field.databaseName = brick.databaseName;
         field.favoritesId = brick.favoritesId;
+        field.favoritesOnly = brick.favoritesOnly;
         return field;
       },
 

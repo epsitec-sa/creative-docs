@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public void DefineFavorites(IEnumerable<AbstractEntity> collection)
+		public void DefineFavorites(IEnumerable<AbstractEntity> collection, bool favoritesOnly)
 		{
 			if (collection != null)
 			{
@@ -37,7 +37,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					var type = firstItem.GetType ();
 					var databaseId = Druid.Parse (this.DatabaseName);
 
-					this.favoritesId = FavoritesCache.Current.Push (collection, type, databaseId);
+					this.favoritesId   = FavoritesCache.Current.Push (collection, type, databaseId);
+					this.favoritesOnly = favoritesOnly;
 				}
 			}
 		}
@@ -50,7 +51,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			if (this.favoritesId != null)
 			{
-				brick["favoritesId"] = this.favoritesId;
+				brick["favoritesId"]   = this.favoritesId;
+				brick["favoritesOnly"] = this.favoritesOnly;
 			}
 
 			return brick;
@@ -62,5 +64,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 		private string							favoritesId;
+		private bool							favoritesOnly;
 	}
 }
