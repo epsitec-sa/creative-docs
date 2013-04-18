@@ -12,6 +12,7 @@ namespace Aider.Tests.Vs
 
 
 	[TestClass]
+	[DeploymentItem ("Samples", "Samples")]
 	public class UnitTestEervMainDataLoader
 	{
 
@@ -72,7 +73,7 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private readonly FileInfo GroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\groupdefinition.xlsx");
+		private readonly FileInfo GroupDefinitionFile = new FileInfo (@"Samples\groupdefinition.xlsx");
 		
 
 	}

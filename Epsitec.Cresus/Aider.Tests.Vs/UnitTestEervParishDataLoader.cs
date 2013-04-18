@@ -19,6 +19,7 @@ namespace Aider.Tests.Vs
 
 
 	[TestClass]
+	[DeploymentItem ("Samples", "Samples")]
 	public class UnitTestEervParishDataLoader
 	{
 
@@ -257,10 +258,10 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private readonly FileInfo PersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\person.xlsx");
-		private readonly FileInfo GroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\group.xlsx");
-		private readonly FileInfo SuperGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\supergroup.xlsx");
-		private readonly FileInfo ActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\activity.xlsx");
+		private readonly FileInfo PersonsFile = new FileInfo (@"Samples\person.xlsx");
+		private readonly FileInfo GroupFile = new FileInfo (@"S:Samples\group.xlsx");
+		private readonly FileInfo SuperGroupFile = new FileInfo (@"Samples\supergroup.xlsx");
+		private readonly FileInfo ActivityFile = new FileInfo (@"Samples\activity.xlsx");
 
 
 	}
