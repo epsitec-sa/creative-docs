@@ -95,6 +95,9 @@
     <Compile Include="Data\ECh\EChDataComparerLoader.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
+    <Compile Include="Data\Subscription\SubscriptionHouseholdComparer.cs" />
+    <Compile Include="Data\Subscription\SubscriptionGenerator.cs" />
+    <Compile Include="Data\Subscription\SubscriptionHousehold.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
@@ -142,6 +145,7 @@
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderLegalPersonBusinessRules.cs" />
+    <Compile Include="Rules\AiderSubscriptionBusinessRules.cs" />
     <Compile Include="Rules\AiderTownBusinessRules.cs" />
     <Compile Include="Rules\AiderUserBusinessRules.cs" />
     <Compile Include="Tests\EChFileAnalyzer.cs" />

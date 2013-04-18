@@ -4,6 +4,7 @@
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Data.Subscription;
 
 using Epsitec.Common.Debug;
 
@@ -93,6 +94,12 @@ namespace Epsitec.Aider
 					AiderProgram.RunEervParishImportation (args);
 					return;
 				}
+
+				if (args.Contains ("-generatesubscriptions"))
+				{
+					AiderProgram.RunSubscriptionGeneration (args);
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -166,6 +173,16 @@ namespace Epsitec.Aider
 						EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum);
 					}
 				}
+			});
+		}
+
+		private static void RunSubscriptionGeneration(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var parishRepository = ParishAddressRepository.Current;
+
+				SubscriptionGenerator.Create (coreData, parishRepository);
 			});
 		}
 
