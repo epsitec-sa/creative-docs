@@ -91,6 +91,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Epsitec\dot.net\Epsitec.Serial\CresusSerialAlgorithm.cs">
+      <Link>CresusSerialAlgorithm.cs</Link>
+    </Compile>
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>

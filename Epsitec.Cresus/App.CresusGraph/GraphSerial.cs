@@ -11,6 +11,24 @@ namespace Epsitec.Cresus.Graph
 	/// </summary>
 	public static class GraphSerial
 	{
+		private static string GetAppDataPath()
+		{
+			string path = System.Windows.Forms.Application.CommonAppDataPath;
+
+			int pos = path.LastIndexOf ("\\");
+
+			if (pos < 0)
+			{
+				return null;
+			}
+
+			return path.Substring (0, pos);
+		}
+
+		private static int				ProductGeneration	= 1;
+		private static int				ProductGracePeriod	= 0;
+		
+		
 		public static void CheckLicense(Window owner)
 		{
 			var info = GraphSerial.LicensingInfo;
