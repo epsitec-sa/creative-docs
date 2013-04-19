@@ -41,6 +41,23 @@ namespace Epsitec.Aider.Rules
 		}
 
 
+		public override void ApplyValidateRule(AiderSubscriptionEntity entity)
+		{
+			this.CheckRegionalEdition (entity);
+		}
+
+
+		private void CheckRegionalEdition(AiderSubscriptionEntity entity)
+		{
+			if (!entity.RegionalEdition.IsRegion ())
+			{
+				var message = "L'édition régionale doit être un groupe de région";
+
+				throw new BusinessRuleException (message);
+			}
+		}
+
+
 		private static readonly string generatorSuffix = "BN_ID";
 
 
