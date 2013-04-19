@@ -15,7 +15,12 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return "Subscription summary";
+			return TextFormatter.FormatText
+			(
+				"Abonnement N°", this.Id, "\n",
+				this.Count, " exemplaire(s)", "\n",
+				"Cahier de la ", this.RegionalEdition.Name
+			);
 		}
 
 
