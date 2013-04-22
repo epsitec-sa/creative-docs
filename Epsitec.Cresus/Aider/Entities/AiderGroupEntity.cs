@@ -121,22 +121,34 @@ namespace Epsitec.Aider.Entities
 
 			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
 			{
-				return user.EnableGroupEditionParish
-					&& !string.IsNullOrEmpty (userParishPath)
-					&& AiderGroupIds.IsSameOrWithinGroup (path, userParishPath);
+				if (user.EnableGroupEditionParish)
+				{
+					if ((!string.IsNullOrEmpty (userParishPath)) &&
+						(AiderGroupIds.IsSameOrWithinGroup (path, userParishPath)))
+					{
+						return true;
+					}
+				}
 			}
 			else if (this.IsRegion () || AiderGroupIds.IsWithinRegion (path))
 			{
-				var userRegionPart = AiderGroupIds.GetParentPath (userParishPath);
+				var userRegionPath = AiderGroupIds.GetParentPath (userParishPath);
 
-				return user.EnableGroupEditionRegion
-					&& !string.IsNullOrEmpty (userParishPath)
-					&& AiderGroupIds.IsSameOrWithinGroup (path, userRegionPart);
+				if (user.EnableGroupEditionRegion)
+				{
+					if ((!string.IsNullOrEmpty (userRegionPath)) &&
+						(AiderGroupIds.IsSameOrWithinGroup (path, userRegionPath)))
+					{
+						return true;
+					}
+				}
 			}
 			else
 			{
 				return user.EnableGroupEditionCanton;
 			}
+
+			return false;
 		}
 
 
