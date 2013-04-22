@@ -395,8 +395,8 @@
   <data name="Fld.AiderLegalPerson.Groups" id="AJG">&lt;s:data id="_0" f:Name="Groups" /&gt;</data>
   <data name="Fld.AiderContact.Groups" id="AKG">&lt;s:data id="_0" f:Name="Groups" /&gt;</data>
   <data name="Fld.AiderUser.EnableGroupEditionCanton" id="GJ22">&lt;s:data id="_0" f:Name="EnableGroupEditionCanton" f:Labels="{Collection {Text 'Edition des groupes cantonaux'}}" /&gt;</data>
-  <data name="Fld.AiderUser.EnableGroupEditionRegion" id="GK22">&lt;s:data id="_0" f:Name="EnableGroupEditionRegion" f:Labels="{Collection {Text 'Edition des groupes paroissiaux'}}" /&gt;</data>
-  <data name="Fld.AiderUser.EnableGroupEditionParish" id="GL22">&lt;s:data id="_0" f:Name="EnableGroupEditionParish" f:Labels="{Collection {Text 'Edition des groupes régionaux'}}" /&gt;</data>
+  <data name="Fld.AiderUser.EnableGroupEditionRegion" id="GK22">&lt;s:data id="_0" f:Name="EnableGroupEditionRegion" f:Labels="{Collection {Text 'Edition des groupes régionaux'}}" /&gt;</data>
+  <data name="Fld.AiderUser.EnableGroupEditionParish" id="GL22">&lt;s:data id="_0" f:Name="EnableGroupEditionParish" f:Labels="{Collection {Text 'Edition des groupes paroissiaux'}}" /&gt;</data>
   <data name="Fld.AiderPerson.ParishGroup" id="ALG">&lt;s:data id="_0" f:Name="ParishGroup" /&gt;</data>
   <data name="Fld.AiderPerson.ParishGroupPathCache" id="AMG">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
   <data name="Fld.AiderPerson.Address" id="ANG">&lt;s:data id="_0" f:Name="Address" /&gt;</data>
