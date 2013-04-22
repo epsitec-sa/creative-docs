@@ -119,11 +119,22 @@ namespace Epsitec.Aider.Entities
 				return true;
 			}
 
+			//	A user can edit a group if he belongs to the matching parish or region, and he
+			//	has the rights to edit at that structural level.
+			//
+			//	A user who has the rights to edit both parent and local group levels, but who
+			//	has an empty match at the specified structural level, will also be allowed to
+			//	edit the group if edition is enabled (user with matching region at the parish
+			//	level, or with canton level edition rights).
+			//
+			//	This enables staff at the canton level to edit groups at the parish level if
+			//	property EnableGroupEditionParish is set for them.
+
 			if (this.IsParish () || AiderGroupIds.IsWithinParish (path))
 			{
 				if (user.EnableGroupEditionParish)
 				{
-					if ((!string.IsNullOrEmpty (userParishPath)) &&
+					if ((string.IsNullOrEmpty (userParishPath)) ||
 						(AiderGroupIds.IsSameOrWithinGroup (path, userParishPath)))
 					{
 						return true;
@@ -136,7 +147,7 @@ namespace Epsitec.Aider.Entities
 
 				if (user.EnableGroupEditionRegion)
 				{
-					if ((!string.IsNullOrEmpty (userRegionPath)) &&
+					if ((string.IsNullOrEmpty (userRegionPath)) ||
 						(AiderGroupIds.IsSameOrWithinGroup (path, userRegionPath)))
 					{
 						return true;
