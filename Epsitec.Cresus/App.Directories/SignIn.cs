@@ -88,7 +88,7 @@ namespace App.Directories
 					}
 					catch (WebException we)
 					{
-
+                        throw new Exception(we.Message);
 					}
 					this.Close ();
 					break;

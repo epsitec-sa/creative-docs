@@ -29,6 +29,9 @@ namespace App.Directories
 		public DirectoriesWebService dws = null;
 		public BingsWebService bws = null;
 		public SignIn SignIn = new SignIn ();
+        public int PageSize = 10;
+        public int FromPage = 1;
+        public int ToPage = 10;
 		
 		private void MainForm_Load(object sender, EventArgs e)
 		{
@@ -38,7 +41,10 @@ namespace App.Directories
 			
 			//BINGS SEARCH ON VIRTUAL EARTH
 			this.bws = new BingsWebService ("AvjzXlyB0Pj-_c0qJHxpfOTJ3vIFchlb4ggWs5zaSar7Xh63v9zHtefyrdZUGJwo");
-            
+
+            //Paginators
+            this.FromPage = 1;
+            this.ToPage = this.PageSize;
 		}
 
 
@@ -50,59 +56,71 @@ namespace App.Directories
 				this.dws = new DirectoriesWebService ();
 			}
 			DirectoriesSearchAddressResult result = null;
-			if (this.opt_phone.Checked || this.opt_email.Checked || this.opt_web.Checked)
+
+			var ValueList = new List<string> ();
+			var Values = this.txt_value.Text.Split (',');
+			foreach (string Value in Values)
 			{
-				var ValueList = new List<string> ();
-				var Values = this.txt_value.Text.Split (',');
-				foreach (string Value in Values)
-				{
-					ValueList.Add (Value);
-				}
-				if (this.opt_phone.Checked)
-				{
-					result = dws.SearchService (ValueList, DirectoriesServiceCode.TelCode);
-				}
-				if (this.opt_email.Checked)
-				{
-					result = dws.SearchService (ValueList, DirectoriesServiceCode.EmailCode);
-				}
-				if (this.opt_web.Checked)
-				{
-					result = dws.SearchService (ValueList, DirectoriesServiceCode.WebCode);
-				}
-				
+				ValueList.Add (Value);
 			}
-			else
+			if (this.opt_phone.Checked)
 			{
-				string[] Args = this.txt_value.Text.Split(' ');
+				result = dws.SearchService (ValueList, DirectoriesServiceCode.TelCode);
+			}
+			if (this.opt_email.Checked)
+			{
+				result = dws.SearchService (ValueList, DirectoriesServiceCode.EmailCode);
+			}
+			if (this.opt_web.Checked)
+			{
+				result = dws.SearchService (ValueList, DirectoriesServiceCode.WebCode);
+			}
+            if (this.opt_name.Checked)
+            {
+                string[] Args = this.txt_value.Text.Split(' ');
+
+                switch (Args.Length)
+                {
+                    case 1: result = dws.SearchAddressByLastName(this.txt_value.Text, this.FromPage, this.ToPage);
+                        break;
+
+                    case 2: result = dws.SearchAddressByFullName(Args[0], Args[1], this.FromPage, this.ToPage);
+                        break;
+                }
+            }
 					
-				switch(Args.Length)
-				{
-					case 0: result = dws.SearchAddressByPhone(this.txt_value.Text);
-					break;
-
-					case 1: result = dws.SearchAddressByFirstName(this.txt_value.Text, 1, 100);
-					break;
-
-					case 2: result = dws.SearchAddressByFullName(Args[0], Args[1], 1, 100);
-					break;
-				}
-			}
-				
 
 			//Clear Tree
 			this.result_tree.Nodes.Clear();
-			if (result.Info.MatchedEntries < 2)
-			{
-				this.result_tree.Nodes.Add (String.Format ("Query has {0} Result.", result.Info.MatchedEntries)); 
-			}
-			else
-			{
-				this.result_tree.Nodes.Add (String.Format ("Query has {0} Results.", result.Info.MatchedEntries)); 
-			}
-			
-		   
 
+            int TotalPage = (result.Info.MatchedEntries / this.PageSize) + 1;
+            int PageNumber = this.ToPage / this.PageSize;
+
+            if (PageNumber == TotalPage)
+            {
+                this.cmd_next.Visible = false;
+            }
+            else
+            {
+                this.cmd_next.Visible = true;
+            }
+            if (PageNumber == 1)
+            {
+                this.cmd_back.Visible = false;
+            }
+            else
+            {
+                this.cmd_back.Visible = true;
+            }
+
+            if (result.Info.MatchedEntries < 2)
+            {
+                this.result_tree.Nodes.Add(String.Format("Query has {0} Result.", result.Info.MatchedEntries));
+            }
+            else
+            {
+                this.result_tree.Nodes.Add(String.Format("Query has {0} Results. Page {1} of {2}", result.Info.MatchedEntries,PageNumber,TotalPage));
+            }
 			foreach (DirectoriesEntryAdd add in result.GetEntries())
 			{
 				var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}", add.FirstName, add.LastName, add.StateCode));
@@ -120,8 +138,8 @@ namespace App.Directories
 			
 					
 			
-			this.result_tree.ExpandAll();
-			this.chk_deploy_tree.CheckState = CheckState.Unchecked;
+			
+			this.chk_deploy_tree.CheckState = CheckState.Checked;
 			
 			
 			
@@ -237,6 +255,28 @@ namespace App.Directories
         {
             this.img_google_signin.Visible = false;
             this.SignIn.Show(this);
+            
+        }
+
+        private void cmd_back_Click(object sender, EventArgs e)
+        {
+            this.FromPage -= this.PageSize;
+            this.ToPage -= this.PageSize;
+            this.cmd_search_Click(this, null);
+        }
+
+        private void cmd_next_Click(object sender, EventArgs e)
+        {
+            this.FromPage += this.PageSize;
+            this.ToPage += this.PageSize;
+            this.cmd_search_Click(this, null);
+        }
+
+        private void txt_value_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.txt_value.Text = "";
+            this.FromPage = 1;
+            this.ToPage = this.PageSize;
             
         }
 	}
