@@ -5792,6 +5792,50 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>LastLoginDate</c> field.
+		///	designer:fld/LVAHC/LVAOG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAOG]")]
+		public global::System.DateTime? LastLoginDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime?> ("[LVAOG]");
+			}
+			set
+			{
+				global::System.DateTime? oldValue = this.LastLoginDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVAOG]"))
+				{
+					this.OnLastLoginDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVAOG]", oldValue, value);
+					this.OnLastLoginDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LastActivityDate</c> field.
+		///	designer:fld/LVAHC/LVAPG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAPG]")]
+		public global::System.DateTime? LastActivityDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime?> ("[LVAPG]");
+			}
+			set
+			{
+				global::System.DateTime? oldValue = this.LastActivityDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVAPG]"))
+				{
+					this.OnLastActivityDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVAPG]", oldValue, value);
+					this.OnLastActivityDateChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
@@ -5811,6 +5855,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnEnableGroupEditionRegionChanged(bool oldValue, bool newValue);
 		partial void OnEnableGroupEditionParishChanging(bool oldValue, bool newValue);
 		partial void OnEnableGroupEditionParishChanged(bool oldValue, bool newValue);
+		partial void OnLastLoginDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnLastLoginDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnLastActivityDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnLastActivityDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

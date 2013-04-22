@@ -2,6 +2,6 @@
 <ModuleInfo id="1013" name="Aider" layer="A" textMode="FormattedText" assemblies="Aider" namespace="Epsitec.Aider">
   <Versions>
     <Version id="8" build="172" date="2013-04-17T08:15:12.3118040Z" />
-    <Version id="1" build="306" date="2013-04-22T03:49:27.8340996Z" />
+    <Version id="1" build="307" date="2013-04-22T04:34:20.7511257Z" />
   </Versions>
 </ModuleInfo>
