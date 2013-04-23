@@ -343,9 +343,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int ForeignHouseNumberLengthMax = 10;
 
 
-		// TODO Check that this is the good ling ending.
-
-		private static readonly string LineEnding = "\n";
+		private static readonly string LineEnding = "\r\n";
 
 
 	}
