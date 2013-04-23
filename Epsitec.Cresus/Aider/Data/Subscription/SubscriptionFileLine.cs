@@ -198,12 +198,10 @@ namespace Epsitec.Aider.Data.Subscription
 
 		public string GetText()
 		{
-			// TODO Check that the padding is to the right and not to the left.
-
 			// TODO Check the order of firstname and lastname.
 
 			return this.SubscriptionNumber.PadRight (SubscriptionFileLine.SubscriptionNumberLength)
-				+ this.GetCopiesCount ().PadRight (SubscriptionFileLine.CopiesCountLength)
+				+ this.GetCopiesCount ().PadLeft (SubscriptionFileLine.CopiesCountLength)
 				+ this.EditionId.PadRight (SubscriptionFileLine.EditionIdLength)
 				+ this.Title.PadRight (SubscriptionFileLine.TitleLength)
 				+ this.Lastname.PadRight (SubscriptionFileLine.LastnameLength)
@@ -212,7 +210,7 @@ namespace Epsitec.Aider.Data.Subscription
 				+ this.Street.PadRight (SubscriptionFileLine.StreetLength)
 				+ this.HouseNumber.PadRight (SubscriptionFileLine.HouseNumberLength)
 				+ this.GetPostmanNumber ().PadRight (SubscriptionFileLine.PostmanNumberLength)
-				+ this.ZipCode.PadRight (SubscriptionFileLine.ZipCodeLength)
+				+ this.ZipCode.PadLeft (SubscriptionFileLine.ZipCodeLength)
 				+ this.Town.PadRight (SubscriptionFileLine.TownLength)
 				+ this.Country.PadRight (SubscriptionFileLine.CountryLength)
 				+ this.GetDistributionMode ().PadRight (SubscriptionFileLine.DistributionModeLength)
