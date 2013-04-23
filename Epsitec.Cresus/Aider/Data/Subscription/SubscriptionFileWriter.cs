@@ -144,10 +144,15 @@ namespace Epsitec.Aider.Data.Subscription
 
 				// TODO Do something more intelligent here.
 
-				var chars = houseNumber
-					.Where (c => char.IsDigit (c))
-					.Take (10)
-					.ToArray ();
+				var digits = houseNumber
+					.TakeWhile (c => char.IsDigit (c))
+					.Take (7);
+
+				var letters = houseNumber
+					.SkipWhile (c => char.IsDigit (c))
+					.Take (3);
+
+				var chars = digits.Concat (letters).ToArray ();
 
 				houseNumber = new String (chars);
 			}

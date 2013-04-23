@@ -166,12 +166,6 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 			else
 			{
-				houseNumber.ThrowIf
-				(
-					x => x.Length > SubscriptionFileLine.ForeignHouseNumberLengthMax,
-					"houseNumber too long"
-				);
-
 				postmanNumber.ThrowIf
 				(
 					x => x != SubscriptionFileLine.ForeignPostmanNumber,
@@ -321,7 +315,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int FirstnameLength = 30;
 		public static readonly int AddressComplementLength = 30;
 		public static readonly int StreetLength = 30;
-		public static readonly int HouseNumberLength = 30;
+		public static readonly int HouseNumberLength = 10;
 		public static readonly int PostmanNumberLength = 3;
 		public static readonly int ZipCodeLength = 10;
 		public static readonly int TownLength = 30;
@@ -338,9 +332,8 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int SwissPostmanNumberMin = 1;
 		public static readonly int SwissPostmanNumberMax = 999;
 		public static readonly int SwissPostmanNumberPostbox = 999;
-		public static readonly Regex SwissHouseNumberRegex = new Regex (@"^\d{0,8}[a-zA-z]{0,2}$");
+		public static readonly Regex SwissHouseNumberRegex = new Regex (@"^\d{0,7}[a-zA-z]{0,3}$");
 		public static readonly int ForeignPostmanNumber = 0;
-		public static readonly int ForeignHouseNumberLengthMax = 10;
 
 
 		private static readonly string LineEnding = "\r\n";
