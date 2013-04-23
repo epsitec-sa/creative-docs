@@ -2,6 +2,8 @@
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
@@ -38,6 +40,7 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			var lines = new List<SubscriptionFileLine> ();
 			var etl = new MatchSortEtl ();
+			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
 			AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 			{
@@ -48,7 +51,7 @@ namespace Epsitec.Aider.Data.Subscription
 						continue;
 					}
 
-					var line = SubscriptionFileWriter.GetLine (subscription, etl);
+					var line = SubscriptionFileWriter.GetLine (subscription, etl, encodingHelper);
 
 					lines.Add (line);
 				}
@@ -58,7 +61,12 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static SubscriptionFileLine GetLine(AiderSubscriptionEntity subscription, MatchSortEtl etl)
+		private static SubscriptionFileLine GetLine
+		(
+			AiderSubscriptionEntity subscription,
+			MatchSortEtl etl,
+			EncodingHelper encodingHelper
+		)
 		{
 			// TODO Do Weird stuff with post box (put 999 in postman number and put it in complement
 			// or somewhere else. Because otherwise, we're screwed if we already have a complement).
@@ -83,19 +91,22 @@ namespace Epsitec.Aider.Data.Subscription
 			var title = SubscriptionFileWriter.Process
 			(
 				subscription.GetHonorific (),
-				SubscriptionFileLine.TitleLength
+				SubscriptionFileLine.TitleLength,
+				encodingHelper
 			);
 
 			var lastname = SubscriptionFileWriter.Process
 			(
 				subscription.GetLastname (),
-				SubscriptionFileLine.LastnameLength
+				SubscriptionFileLine.LastnameLength,
+				encodingHelper
 			);
 
 			var firstname = SubscriptionFileWriter.Process
 			(
 				subscription.GetFirstname (),
-				SubscriptionFileLine.FirstnameLength
+				SubscriptionFileLine.FirstnameLength,
+				encodingHelper
 			);
 
 			var nameLength = SubscriptionFileLine.GetNameLength (title, lastname, firstname);
@@ -123,19 +134,22 @@ namespace Epsitec.Aider.Data.Subscription
 			var addressComplement = SubscriptionFileWriter.Process
 			(
 				address.AddressLine1,
-				SubscriptionFileLine.AddressComplementLength
+				SubscriptionFileLine.AddressComplementLength,
+				encodingHelper
 			);
 
 			var street = SubscriptionFileWriter.Process
 			(
 				address.StreetUserFriendly,
-				SubscriptionFileLine.StreetLength
+				SubscriptionFileLine.StreetLength,
+				encodingHelper
 			);
 
 			var houseNumber = SubscriptionFileWriter.Process
 			(
 				address.HouseNumberAndComplement.Replace (" ", ""),
-				SubscriptionFileLine.HouseNumberLength
+				SubscriptionFileLine.HouseNumberLength,
+				encodingHelper
 			);
 
 			if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
@@ -162,19 +176,22 @@ namespace Epsitec.Aider.Data.Subscription
 			var zipCode = SubscriptionFileWriter.Process
 			(
 				SubscriptionFileWriter.GetZipCode (town),
-				SubscriptionFileLine.ZipCodeLength
+				SubscriptionFileLine.ZipCodeLength,
+				encodingHelper
 			);
 
 			var townName = SubscriptionFileWriter.Process
 			(
 				town.Name,
-				SubscriptionFileLine.TownLength
+				SubscriptionFileLine.TownLength,
+				encodingHelper
 			);
 
 			var countryName = SubscriptionFileWriter.Process
 			(
 				country.Name,
-				SubscriptionFileLine.CountryLength
+				SubscriptionFileLine.CountryLength,
+				encodingHelper
 			);
 
 			var isSwitzerland = country.IsSwitzerland ();
@@ -188,18 +205,18 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static string Process(string value, int maxLength)
+		private static string Process(string value, int maxLength, EncodingHelper encodingHelper)
 		{
 			if (value == null)
 			{
 				return "";
 			}
 
-			var asciiValue = value.ToASCII ();
+			var converted = encodingHelper.ConvertToEncoding (value);
 
-			if (asciiValue.Length > maxLength)
+			if (converted.Length > maxLength)
 			{
-				var truncatedValue = asciiValue.Truncate (maxLength);
+				var truncatedValue = converted.Truncate (maxLength);
 
 				Debug.WriteLine ("Value too long: " + value + ". Truncated to: " + truncatedValue);
 
@@ -207,7 +224,7 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 			else
 			{
-				return asciiValue;
+				return converted;
 			}
 		}
 

@@ -1,5 +1,6 @@
 ﻿using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using System;
@@ -86,12 +87,15 @@ namespace Epsitec.Aider.Data.Subscription
 			bool isSwitzerland
 		)
 		{
+			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
+
 			this.CheckString
 			(
 				subscriptionNumber,
 				"subscriptionNumber",
 				SubscriptionFileLine.SubscriptionNumberLength,
-				false
+				false,
+				encodingHelper
 			);
 
 			copiesCount.ThrowIf
@@ -105,10 +109,41 @@ namespace Epsitec.Aider.Data.Subscription
 				"copiesCount too large"
 			);
 
-			this.CheckString (editionId, "editionId", SubscriptionFileLine.EditionIdLength, false);
-			this.CheckString (title, "title", SubscriptionFileLine.TitleLength, true);
-			this.CheckString (lastname, "lastname", SubscriptionFileLine.LastnameLength, true);
-			this.CheckString (firstname, "firstname", SubscriptionFileLine.FirstnameLength, true);
+			this.CheckString
+			(
+				editionId,
+				"editionId",
+				SubscriptionFileLine.EditionIdLength,
+				false,
+				encodingHelper
+			);
+
+			this.CheckString
+			(
+				title,
+				"title",
+				SubscriptionFileLine.TitleLength,
+				true,
+				encodingHelper
+			);
+
+			this.CheckString
+			(
+				lastname,
+				"lastname",
+				SubscriptionFileLine.LastnameLength,
+				true,
+				encodingHelper
+			);
+
+			this.CheckString
+			(
+				firstname,
+				"firstname",
+				SubscriptionFileLine.FirstnameLength,
+				true,
+				encodingHelper
+			);
 
 			var nameLength = SubscriptionFileLine.GetNameLength (title, firstname, lastname);
 			nameLength.ThrowIf (x => x > SubscriptionFileLine.NameLengthMax, "name too long");
@@ -118,22 +153,54 @@ namespace Epsitec.Aider.Data.Subscription
 				addressComplement,
 				"addressComplement",
 				SubscriptionFileLine.AddressComplementLength,
-				true
+				true,
+				encodingHelper
 			);
 
-			this.CheckString (street, "street", SubscriptionFileLine.StreetLength, true);
+			this.CheckString
+			(
+				street,
+				"street",
+				SubscriptionFileLine.StreetLength,
+				true,
+				encodingHelper
+			);
 			
 			this.CheckString
 			(
 				houseNumber,
 				"houseNumber",
 				SubscriptionFileLine.HouseNumberLength,
-				true
+				true,
+				encodingHelper
 			);
 
-			this.CheckString (zipCode, "zipCode", SubscriptionFileLine.ZipCodeLength, false);
-			this.CheckString (town, "town", SubscriptionFileLine.TownLength, false);
-			this.CheckString (country, "country", SubscriptionFileLine.CountryLength, false);
+			this.CheckString
+			(
+				zipCode,
+				"zipCode",
+				SubscriptionFileLine.ZipCodeLength,
+				false,
+				encodingHelper
+			);
+
+			this.CheckString
+			(
+				town,
+				"town",
+				SubscriptionFileLine.TownLength,
+				false,
+				encodingHelper
+			);
+
+			this.CheckString
+			(
+				country,
+				"country",
+				SubscriptionFileLine.CountryLength,
+				false,
+				encodingHelper
+			);
 
 			// TODO Ensure that these checks are ok.
 
@@ -175,12 +242,17 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private void CheckString(string value, string name, int length, bool allowEmpty)
+		private void CheckString
+		(
+			string value,
+			string name,
+			int length,
+			bool allowEmpty,
+			EncodingHelper encodingHelper
+		)
 		{
-			// TODO Check that we must accept all ASCII characters here.
-
 			value.ThrowIfNull (name);
-			value.ThrowIf (x => !x.IsASCII (), name + " is not ASCII");
+			value.ThrowIf (x => !encodingHelper.IsWithinEncoding (x), name + " is not valid");
 			value.ThrowIf (x => x.Length > length, name + "too long");
 
 			if (!allowEmpty)
@@ -242,10 +314,10 @@ namespace Epsitec.Aider.Data.Subscription
 
 		public static void Write(IEnumerable<SubscriptionFileLine> lines, FileInfo file)
 		{
-			// TODO Check that we use the good encoding (ASCII 7 bit)
+			var encoding = SubscriptionFileLine.GetEncoding ();
 
 			using (var stream = file.Open (FileMode.Create, FileAccess.Write))
-			using (var streamWriter = new StreamWriter (stream, Encoding.ASCII))
+			using (var streamWriter = new StreamWriter (stream, encoding))
 			{
 				foreach (var line in lines)
 				{
@@ -288,6 +360,12 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 
 			return length;
+		}
+
+
+		public static Encoding GetEncoding()
+		{
+			return Encoding.GetEncoding ("ISO-8859-1");
 		}
 
 

@@ -692,6 +692,7 @@
     <Compile Include="Support\XmlNodeClassFactory.cs" />
     <Compile Include="Support\XmlNodeClassFactory`1.cs" />
     <Compile Include="Support\XmlValidator.cs" />
+    <Compile Include="Text\EncodingHelper.cs" />
     <Compile Include="Text\Exchange\ClipboardData.cs" />
     <Compile Include="Text\Exchange\CopyPasteContext.cs" />
     <Compile Include="Text\Exchange\CresusWrapper.cs" />
