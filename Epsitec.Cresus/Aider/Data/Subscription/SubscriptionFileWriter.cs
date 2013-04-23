@@ -83,23 +83,23 @@ namespace Epsitec.Aider.Data.Subscription
 			var title = SubscriptionFileWriter.Process
 			(
 				subscription.GetHonorific (),
-				SubscriptionFileLine.titleLength
+				SubscriptionFileLine.TitleLength
 			);
 
 			var lastname = SubscriptionFileWriter.Process
 			(
 				subscription.GetLastname (),
-				SubscriptionFileLine.lastnameLength
+				SubscriptionFileLine.LastnameLength
 			);
 
 			var firstname = SubscriptionFileWriter.Process
 			(
 				subscription.GetFirstname (),
-				SubscriptionFileLine.firstnameLength
+				SubscriptionFileLine.FirstnameLength
 			);
 
 			var nameLength = SubscriptionFileLine.GetNameLength (title, lastname, firstname);
-			if (nameLength > SubscriptionFileLine.nameLengthMax)
+			if (nameLength > SubscriptionFileLine.NameLengthMax)
 			{
 				var message ="Name exceeding 43 chars:"
 					+ title + ", "
@@ -114,7 +114,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 				nameLength = SubscriptionFileLine.GetNameLength (title, lastname, firstname);
 
-				if (nameLength > SubscriptionFileLine.nameLengthMax)
+				if (nameLength > SubscriptionFileLine.NameLengthMax)
 				{
 					title = "";
 				}
@@ -123,22 +123,22 @@ namespace Epsitec.Aider.Data.Subscription
 			var addressComplement = SubscriptionFileWriter.Process
 			(
 				address.AddressLine1,
-				SubscriptionFileLine.addressComplementLength
+				SubscriptionFileLine.AddressComplementLength
 			);
 
 			var street = SubscriptionFileWriter.Process
 			(
 				address.StreetUserFriendly,
-				SubscriptionFileLine.streetLength
+				SubscriptionFileLine.StreetLength
 			);
 
 			var houseNumber = SubscriptionFileWriter.Process
 			(
 				address.HouseNumberAndComplement.Replace (" ", ""),
-				SubscriptionFileLine.houseNumberLength
+				SubscriptionFileLine.HouseNumberLength
 			);
 
-			if (!SubscriptionFileLine.swissHouseNumberRegex.IsMatch (houseNumber))
+			if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
 			{
 				Debug.WriteLine ("Invalid house number: " + houseNumber);
 
@@ -157,19 +157,19 @@ namespace Epsitec.Aider.Data.Subscription
 			var zipCode = SubscriptionFileWriter.Process
 			(
 				SubscriptionFileWriter.GetZipCode (town),
-				SubscriptionFileLine.zipCodeLength
+				SubscriptionFileLine.ZipCodeLength
 			);
 
 			var townName = SubscriptionFileWriter.Process
 			(
 				town.Name,
-				SubscriptionFileLine.townLength
+				SubscriptionFileLine.TownLength
 			);
 
 			var countryName = SubscriptionFileWriter.Process
 			(
 				country.Name,
-				SubscriptionFileLine.countryLength
+				SubscriptionFileLine.CountryLength
 			);
 
 			var isSwitzerland = country.IsSwitzerland ();
@@ -220,13 +220,13 @@ namespace Epsitec.Aider.Data.Subscription
 			// The specs requires 0 for an addresses outside Switzerland.
 			if (!address.Town.Country.IsSwitzerland ())
 			{
-				return SubscriptionFileLine.foreignPostmanNumber;
+				return SubscriptionFileLine.ForeignPostmanNumber;
 			}
 
 			// The specs requires 999 for adresses with a post box.
 			if (!String.IsNullOrEmpty (address.PostBox))
 			{
-				return SubscriptionFileLine.swissPostmanNumberPostbox;
+				return SubscriptionFileLine.SwissPostmanNumberPostbox;
 			}
 
 			// TODO Finish this code. It is probably too simple for what we want.

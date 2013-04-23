@@ -90,50 +90,50 @@ namespace Epsitec.Aider.Data.Subscription
 			(
 				subscriptionNumber,
 				"subscriptionNumber",
-				SubscriptionFileLine.subscriptionNumberLength,
+				SubscriptionFileLine.SubscriptionNumberLength,
 				false
 			);
 
 			copiesCount.ThrowIf
 			(
-				x => x < SubscriptionFileLine.copiesCountMin,
+				x => x < SubscriptionFileLine.CopiesCountMin,
 				"copiesCount too small"
 			);
 			copiesCount.ThrowIf
 			(
-				x => x > SubscriptionFileLine.copiesCountMax,
+				x => x > SubscriptionFileLine.CopiesCountMax,
 				"copiesCount too large"
 			);
 
-			this.CheckString (editionId, "editionId", SubscriptionFileLine.editionIdLength, false);
-			this.CheckString (title, "title", SubscriptionFileLine.titleLength, true);
-			this.CheckString (lastname, "lastname", SubscriptionFileLine.lastnameLength, true);
-			this.CheckString (firstname, "firstname", SubscriptionFileLine.firstnameLength, true);
+			this.CheckString (editionId, "editionId", SubscriptionFileLine.EditionIdLength, false);
+			this.CheckString (title, "title", SubscriptionFileLine.TitleLength, true);
+			this.CheckString (lastname, "lastname", SubscriptionFileLine.LastnameLength, true);
+			this.CheckString (firstname, "firstname", SubscriptionFileLine.FirstnameLength, true);
 
 			var nameLength = SubscriptionFileLine.GetNameLength (title, firstname, lastname);
-			nameLength.ThrowIf (x => x > SubscriptionFileLine.nameLengthMax, "name too long");
+			nameLength.ThrowIf (x => x > SubscriptionFileLine.NameLengthMax, "name too long");
 
 			this.CheckString
 			(
 				addressComplement,
 				"addressComplement",
-				SubscriptionFileLine.addressComplementLength,
+				SubscriptionFileLine.AddressComplementLength,
 				true
 			);
 
-			this.CheckString (street, "street", SubscriptionFileLine.streetLength, true);
+			this.CheckString (street, "street", SubscriptionFileLine.StreetLength, true);
 			
 			this.CheckString
 			(
 				houseNumber,
 				"houseNumber",
-				SubscriptionFileLine.houseNumberLength,
+				SubscriptionFileLine.HouseNumberLength,
 				true
 			);
 
-			this.CheckString (zipCode, "zipCode", SubscriptionFileLine.zipCodeLength, false);
-			this.CheckString (town, "town", SubscriptionFileLine.townLength, false);
-			this.CheckString (country, "country", SubscriptionFileLine.countryLength, false);
+			this.CheckString (zipCode, "zipCode", SubscriptionFileLine.ZipCodeLength, false);
+			this.CheckString (town, "town", SubscriptionFileLine.TownLength, false);
+			this.CheckString (country, "country", SubscriptionFileLine.CountryLength, false);
 
 			// TODO Ensure that these checks are ok.
 
@@ -141,26 +141,26 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				houseNumber.ThrowIf
 				(
-					x => !SubscriptionFileLine.swissHouseNumberRegex.IsMatch (x),
+					x => !SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (x),
 					"houseNumber invalid"
 				);
 
 				zipCode.ThrowIf (x => !x.IsNumeric (), "invalid zip code");
 				zipCode.ThrowIf
 				(
-					x => x.Length != SubscriptionFileLine.swissZipCodeLength,
+					x => x.Length != SubscriptionFileLine.SwissZipCodeLength,
 					"invalid zip code"
 				);
 
 				postmanNumber.ThrowIf
 				(
-					x => x < SubscriptionFileLine.swissPostmanNumberMin,
+					x => x < SubscriptionFileLine.SwissPostmanNumberMin,
 					"postmanNumber too small"
 				);
 
 				postmanNumber.ThrowIf
 				(
-					x => x > SubscriptionFileLine.swissPostmanNumberMax,
+					x => x > SubscriptionFileLine.SwissPostmanNumberMax,
 					"postmanNumber too large"
 				);
 			}
@@ -168,13 +168,13 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				houseNumber.ThrowIf
 				(
-					x => x.Length > SubscriptionFileLine.foreignHouseNumberLengthMax,
+					x => x.Length > SubscriptionFileLine.ForeignHouseNumberLengthMax,
 					"houseNumber too long"
 				);
 
 				postmanNumber.ThrowIf
 				(
-					x => x != SubscriptionFileLine.foreignHouseNumberLengthMax,
+					x => x != SubscriptionFileLine.ForeignHouseNumberLengthMax,
 					"postmanNumber invalid"
 				);
 			}
@@ -202,21 +202,21 @@ namespace Epsitec.Aider.Data.Subscription
 
 			// TODO Check the order of firstname and lastname.
 
-			return this.SubscriptionNumber.PadRight (SubscriptionFileLine.subscriptionNumberLength)
-				+ this.GetCopiesCount ().PadRight (SubscriptionFileLine.copiesCountLength)
-				+ this.EditionId.PadRight (SubscriptionFileLine.editionIdLength)
-				+ this.Title.PadRight (SubscriptionFileLine.titleLength)
-				+ this.Lastname.PadRight (SubscriptionFileLine.lastnameLength)
-				+ this.Firstname.PadRight (SubscriptionFileLine.firstnameLength)
-				+ this.AddressComplement.PadRight (SubscriptionFileLine.addressComplementLength)
-				+ this.Street.PadRight (SubscriptionFileLine.streetLength)
-				+ this.HouseNumber.PadRight (SubscriptionFileLine.houseNumberLength)
-				+ this.GetPostmanNumber ().PadRight (SubscriptionFileLine.postmanNumberLength)
-				+ this.ZipCode.PadRight (SubscriptionFileLine.zipCodeLength)
-				+ this.Town.PadRight (SubscriptionFileLine.townLength)
-				+ this.Country.PadRight (SubscriptionFileLine.countryLength)
-				+ this.GetDistributionMode ().PadRight (SubscriptionFileLine.distributionModeLength)
-				+ SubscriptionFileLine.lineEnding;
+			return this.SubscriptionNumber.PadRight (SubscriptionFileLine.SubscriptionNumberLength)
+				+ this.GetCopiesCount ().PadRight (SubscriptionFileLine.CopiesCountLength)
+				+ this.EditionId.PadRight (SubscriptionFileLine.EditionIdLength)
+				+ this.Title.PadRight (SubscriptionFileLine.TitleLength)
+				+ this.Lastname.PadRight (SubscriptionFileLine.LastnameLength)
+				+ this.Firstname.PadRight (SubscriptionFileLine.FirstnameLength)
+				+ this.AddressComplement.PadRight (SubscriptionFileLine.AddressComplementLength)
+				+ this.Street.PadRight (SubscriptionFileLine.StreetLength)
+				+ this.HouseNumber.PadRight (SubscriptionFileLine.HouseNumberLength)
+				+ this.GetPostmanNumber ().PadRight (SubscriptionFileLine.PostmanNumberLength)
+				+ this.ZipCode.PadRight (SubscriptionFileLine.ZipCodeLength)
+				+ this.Town.PadRight (SubscriptionFileLine.TownLength)
+				+ this.Country.PadRight (SubscriptionFileLine.CountryLength)
+				+ this.GetDistributionMode ().PadRight (SubscriptionFileLine.DistributionModeLength)
+				+ SubscriptionFileLine.LineEnding;
 		}
 
 
@@ -315,39 +315,39 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly DistributionMode DistributionMode;
 
 
-		public static readonly int subscriptionNumberLength = 10;
-		public static readonly int copiesCountLength = 5;
-		public static readonly int editionIdLength = 2;
-		public static readonly int titleLength = 20;
-		public static readonly int lastnameLength = 30;
-		public static readonly int firstnameLength = 30;
-		public static readonly int addressComplementLength = 30;
-		public static readonly int streetLength = 30;
-		public static readonly int houseNumberLength = 30;
-		public static readonly int postmanNumberLength = 3;
-		public static readonly int zipCodeLength = 10;
-		public static readonly int townLength = 30;
-		public static readonly int countryLength = 30;
-		public static readonly int distributionModeLength = 1;
+		public static readonly int SubscriptionNumberLength = 10;
+		public static readonly int CopiesCountLength = 5;
+		public static readonly int EditionIdLength = 2;
+		public static readonly int TitleLength = 20;
+		public static readonly int LastnameLength = 30;
+		public static readonly int FirstnameLength = 30;
+		public static readonly int AddressComplementLength = 30;
+		public static readonly int StreetLength = 30;
+		public static readonly int HouseNumberLength = 30;
+		public static readonly int PostmanNumberLength = 3;
+		public static readonly int ZipCodeLength = 10;
+		public static readonly int TownLength = 30;
+		public static readonly int CountryLength = 30;
+		public static readonly int DistributionModeLength = 1;
 
 
 		// TODO Check the bounds on the swiss postman number
 
-		public static readonly int copiesCountMin = 1;
-		public static readonly int copiesCountMax = 99999;
-		public static readonly int nameLengthMax = 43;
-		public static readonly int swissZipCodeLength = 6;
-		public static readonly int swissPostmanNumberMin = 1;
-		public static readonly int swissPostmanNumberMax = 999;
-		public static readonly int swissPostmanNumberPostbox = 999;
-		public static readonly Regex swissHouseNumberRegex = new Regex (@"^\d{0,8}[a-zA-z]{0,2}$");
-		public static readonly int foreignPostmanNumber = 0;
-		public static readonly int foreignHouseNumberLengthMax = 10;
+		public static readonly int CopiesCountMin = 1;
+		public static readonly int CopiesCountMax = 99999;
+		public static readonly int NameLengthMax = 43;
+		public static readonly int SwissZipCodeLength = 6;
+		public static readonly int SwissPostmanNumberMin = 1;
+		public static readonly int SwissPostmanNumberMax = 999;
+		public static readonly int SwissPostmanNumberPostbox = 999;
+		public static readonly Regex SwissHouseNumberRegex = new Regex (@"^\d{0,8}[a-zA-z]{0,2}$");
+		public static readonly int ForeignPostmanNumber = 0;
+		public static readonly int ForeignHouseNumberLengthMax = 10;
 
 
 		// TODO Check that this is the good ling ending.
 
-		private static readonly string lineEnding = "\n";
+		private static readonly string LineEnding = "\n";
 
 
 	}
