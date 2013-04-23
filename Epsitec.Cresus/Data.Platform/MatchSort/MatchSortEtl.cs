@@ -212,7 +212,7 @@ namespace Epsitec.Data.Platform
                         join s in this.streetNames on p.Key.PK equals s.Key.FK
                         where s.Value.STR_BEZ_2L.ToUpper() == streetName.ToUpper()
                         join h in this.houseNames on s.Key.PK equals h.Key.FK
-                        where h.Value.HNR_A == houseNumber //Check on alpha numeric
+                        where h.Value.HNR == houseNumber //Check on numeric
                         join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK into aj
                         from a in aj.DefaultIfEmpty()
                         join d in this.deliveryInformations on h.Key.PK equals d.Key.FK into dj
