@@ -15,7 +15,7 @@ using System.Diagnostics;
 using System.IO;
 
 using System.Linq;
-
+using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Data.Subscription
 {
@@ -36,6 +36,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private static IEnumerable<SubscriptionFileLine> GetLines(CoreData coreData)
 		{
 			var lines = new List<SubscriptionFileLine> ();
+			var etl = new MatchSortEtl ();
 
 			AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 			{
@@ -46,7 +47,7 @@ namespace Epsitec.Aider.Data.Subscription
 						continue;
 					}
 
-					var line = SubscriptionFileWriter.GetLine (subscription);
+					var line = SubscriptionFileWriter.GetLine (subscription,etl);
 
 					lines.Add (line);
 				}
@@ -56,7 +57,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static SubscriptionFileLine GetLine(AiderSubscriptionEntity subscription)
+		private static SubscriptionFileLine GetLine(AiderSubscriptionEntity subscription,MatchSortEtl etl)
 		{
 			// TODO Do Weird stuff with post box (put 999 in postman number and put it in complement
 			// or somewhere else. Because otherwise, we're screwed if we already have a complement).
@@ -150,7 +151,7 @@ namespace Epsitec.Aider.Data.Subscription
 				houseNumber = new String (chars);
 			}
 
-			var postmanNumber = SubscriptionFileWriter.GetPostmanNumber (address);
+			var postmanNumber = SubscriptionFileWriter.GetPostmanNumber (address,etl);
 
 			var zipCode = SubscriptionFileWriter.Process
 			(
@@ -213,13 +214,24 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static int? GetPostmanNumber(AiderAddressEntity address)
+		private static int? GetPostmanNumber(AiderAddressEntity address,MatchSortEtl etl)
 		{
 			// TODO Get the postman id
+			// Check Swiss Post and no Postal Case
+			// 
 
-			return address.Town.Country.IsSwitzerland ()
-				? (int?) new Random ().Next (1, 999)
-				: null;
+			if (!address.Town.Country.IsSwitzerland ())
+				return null;
+			if (!String.IsNullOrEmpty (address.PostBox))
+				return 999;
+
+			var houses = etl.HouseAtStreet (address.Town.SwissZipCode.ToString(), address.StreetUserFriendly, address.HouseNumber.ToString());
+
+			return Convert.ToInt32(houses.First().runningNumber);
+			//	? (int?) new Random ().Next (1, 999)
+			//	: null;
+
+			
 		}
 
 

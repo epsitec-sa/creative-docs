@@ -35,7 +35,7 @@ namespace App.MatchSortWebService
 		}
 
 		private NancyHost hosting;
-		public static MatchSortEtl data = MatchSortEtl.Current;
+		public static MatchSortEtl data = new MatchSortEtl();
  
 	}
 

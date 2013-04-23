@@ -16,7 +16,7 @@ namespace Epsitec.Data.Platform
 		/// Perform ETL job on Mat[CH]sort CSV file
 		/// https://match.post.ch/pdf/post-match-new-sort.pdf
 		/// </summary>
-		private MatchSortEtl()
+		public MatchSortEtl()
 		{
             this.placesNames = new Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ1> ();
 			this.placesNamesAltLang = new Dictionary<MatchSortCompositeKey<string, string>, NEW_PLZ2> ();
@@ -102,8 +102,6 @@ namespace Epsitec.Data.Platform
 				}
 			}
 		}
-
-		public static readonly MatchSortEtl Current = new MatchSortEtl ();
 
         #region Aggregate Getters
 
@@ -214,7 +212,7 @@ namespace Epsitec.Data.Platform
                         join s in this.streetNames on p.Key.PK equals s.Key.FK
                         where s.Value.STR_BEZ_2L.ToUpper() == streetName.ToUpper()
                         join h in this.houseNames on s.Key.PK equals h.Key.FK
-                        where h.Value.HNR == houseNumber //Check on numeric
+                        where h.Value.HNR_A == houseNumber //Check on alpha numeric
                         join a in this.houseNamesAltLang on h.Key.PK equals a.Key.FK into aj
                         from a in aj.DefaultIfEmpty()
                         join d in this.deliveryInformations on h.Key.PK equals d.Key.FK into dj
