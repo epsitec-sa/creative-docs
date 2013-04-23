@@ -17,11 +17,6 @@ namespace Epsitec.Aider.Data.Subscription
 {
 
 
-	// NOTE This class is based on the first specification that we received from Tamedia. I commit
-	// it know because Pierre wants it, but the specifications have changed a little. Therefore it
-	// must be somewhat adapted to match the new specifications.
-
-
 	internal sealed class SubscriptionFileLine
 	{
 
@@ -202,8 +197,6 @@ namespace Epsitec.Aider.Data.Subscription
 				encodingHelper
 			);
 
-			// TODO Ensure that these checks are ok.
-
 			if (isSwitzerland)
 			{
 				houseNumber.ThrowIf
@@ -264,8 +257,6 @@ namespace Epsitec.Aider.Data.Subscription
 
 		public string GetText()
 		{
-			// TODO Check the order of firstname and lastname.
-
 			return this.SubscriptionNumber.PadRight (SubscriptionFileLine.SubscriptionNumberLength)
 				+ this.GetCopiesCount ().PadLeft (SubscriptionFileLine.CopiesCountLength)
 				+ this.EditionId.PadRight (SubscriptionFileLine.EditionIdLength)
@@ -400,8 +391,6 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int CountryLength = 30;
 		public static readonly int DistributionModeLength = 1;
 
-
-		// TODO Check the bounds on the swiss postman number
 
 		public static readonly int CopiesCountMin = 1;
 		public static readonly int CopiesCountMax = 99999;
