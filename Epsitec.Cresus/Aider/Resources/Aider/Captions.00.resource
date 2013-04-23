@@ -380,8 +380,8 @@
   <data name="Fld.AiderTown.Mutability" id="GB22">&lt;s:data id="_0" f:Name="Mutability" f:Labels="{Collection {Text 'Mutabilité'}}" /&gt;</data>
   <data name="Fld.AiderUserRole.Mutability" id="GC22">&lt;s:data id="_0" f:Name="Mutability" f:Labels="{Collection {Text 'Niveau de protection'}}" /&gt;</data>
   <data name="Fld.AiderAddress.StreetHouseNumberAndComplement" id="ACG">&lt;s:data id="_0" f:Name="StreetHouseNumberAndComplement" f:Labels="{Collection {Text 'Rue et numéro (avec complément)'}}" /&gt;</data>
-  <data name="Fld.AiderUser.Parish" id="GD22">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
-  <data name="Fld.AiderUser.ParishGroupPathCache" id="GE22">&lt;s:data id="_0" f:Name="ParishGroupPathCache" /&gt;</data>
+  <data name="Fld.AiderUser.Parish" id="GD22">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisse ou région'}}" /&gt;</data>
+  <data name="Fld.AiderUser.ParishGroupPathCache" id="GE22">&lt;s:data id="_0" f:Name="ParishGroupPathCache" f:Labels="{Collection {Text 'Chemin du groupe paroisse/région'}}" /&gt;</data>
   <data name="Fld.AiderUser.Email" id="GF22">&lt;s:data id="_0" f:Name="Email" f:Labels="{Collection {Text 'E-mail'}}" /&gt;</data>
   <data name="Fld.AiderGroupDef.Level" id="GG22">&lt;s:data id="_0" f:Name="Level" f:Labels="{Collection {Text 'Niveau'}}" /&gt;</data>
   <data name="Fld.AiderUser.Mutability" id="GH22">&lt;s:data id="_0" f:Name="Mutability" f:Labels="{Collection {Text 'Niveau de protection'}}" /&gt;</data>
@@ -411,6 +411,6 @@
   <data name="Fld.AiderSubscription.Id" id="G332">&lt;s:data id="_0" f:Name="Id" f:Labels="{Collection {Text 'Numéro d&amp;amp;apos;abonné'}}" /&gt;</data>
   <data name="Fld.AiderSubscription.Count" id="G432">&lt;s:data id="_0" f:Name="Count" f:Labels="{Collection {Text 'Nombre d&amp;amp;apos;exemplaires'}}" /&gt;</data>
   <data name="Fld.AiderSubscription.RegionalEdition" id="G532">&lt;s:data id="_0" f:Name="RegionalEdition" f:Labels="{Collection {Text 'Edition régionale'}}" /&gt;</data>
-  <data name="Fld.AiderUser.LastLoginDate" id="AOG">&lt;s:data id="_0" f:Name="LastLoginDate" /&gt;</data>
-  <data name="Fld.AiderUser.LastActivityDate" id="APG">&lt;s:data id="_0" f:Name="LastActivityDate" /&gt;</data>
+  <data name="Fld.AiderUser.LastLoginDate" id="AOG">&lt;s:data id="_0" f:Name="LastLoginDate" f:Labels="{Collection {Text 'Date de la dernière connexion'}}" /&gt;</data>
+  <data name="Fld.AiderUser.LastActivityDate" id="APG">&lt;s:data id="_0" f:Name="LastActivityDate" f:Labels="{Collection {Text 'Date du dernier accès'}}" /&gt;</data>
 </bundle>

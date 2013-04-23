@@ -122,7 +122,7 @@ AiderSubscription = [LVGP22]
       </col>
     </t>
     <t eid="@AiderUser" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA7]" title="Nom complet" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>

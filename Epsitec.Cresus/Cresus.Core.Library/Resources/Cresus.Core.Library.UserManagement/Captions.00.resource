@@ -6,7 +6,7 @@
   <data name="Fld.SoftwareUserGroup.Disabled" id="A3">&lt;s:data id="_0" f:Name="Disabled" f:Labels="{Collection {Text 'Désactivé'}}" /&gt;</data>
   <data name="Fld.SoftwareUserGroup.Roles" id="A4">&lt;s:data id="_0" f:Name="Roles" f:Labels="{Collection {Text 'Rôles de l&amp;amp;apos;utilisateur'}}" /&gt;</data>
   <data name="Fld.SoftwareUserGroup.UserPowerLevel" id="A5">&lt;s:data id="_0" f:Name="UserPowerLevel" f:Labels="{Collection {Text 'Niveau de l&amp;amp;apos;utilisateur'}}" /&gt;</data>
-  <data name="Fld.SoftwareUser.DisplayName" id="A7">&lt;s:data id="_0" f:Name="DisplayName" f:Labels="{Collection {Text 'Nom pour l&amp;amp;apos;affichage'}}" /&gt;</data>
+  <data name="Fld.SoftwareUser.DisplayName" id="A7">&lt;s:data id="_0" f:Name="DisplayName" f:Labels="{Collection {Text 'Nom complet pour l&amp;amp;apos;affichage'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.LoginPicture" id="A8">&lt;s:data id="_0" f:Name="LoginPicture" f:Labels="{Collection {Text 'Image'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.LoginName" id="A9">&lt;s:data id="_0" f:Name="LoginName" f:Labels="{Collection {Text 'Nom d&amp;amp;apos;utilisateur'}}" /&gt;</data>
   <data name="Fld.SoftwareUser.LoginPasswordHash" id="AA">&lt;s:data id="_0" f:Name="LoginPasswordHash" /&gt;</data>
