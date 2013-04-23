@@ -5,9 +5,10 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Support.Extensions
 {
@@ -715,6 +716,78 @@ namespace Epsitec.Common.Support.Extensions
 			}
 
 			return buffer.ToString ();
+		}
+
+
+		/// <summary>
+		/// Checks if a string is null or contains only ASCII characters.
+		/// </summary>
+		/// <param name="value">The string to check.</param>
+		/// <returns>
+		/// True if the string is null or contains only ASCII characters, false otherwhise.
+		/// </returns>
+		public static bool IsASCII(this string value)
+		{
+			if (value == null)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < value.Length; i++)
+			{
+				if (!StringExtensions.IsASCII (value[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+
+		/// <summary>
+		/// Converts a string to the ASCII equivalent.
+		/// </summary>
+		/// <remarks>
+		/// This method will perform character conversions when possible and might thus be expensive
+		/// to use. For instance, it will strip accents to convert é to e. Characters that might not
+		/// be converted will be dropped.
+		/// </remarks>
+		/// <param name="value">The string to convert.</param>
+		/// <returns>The converted value</returns>
+		public static string ToASCII(this string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+
+			if (value.IsASCII ())
+			{
+				return value;
+			}
+
+			var convertedValue = StringUtils.RemoveDiacritics (value);
+
+			var builder = new StringBuilder (convertedValue.Length);
+
+			for (int i = 0; i < convertedValue.Length; i++)
+			{
+				var c = convertedValue[i];
+
+				if (StringExtensions.IsASCII (c))
+				{
+					builder.Append (c);
+				}
+			}
+
+			return builder.ToString ();
+		}
+
+
+		private static bool IsASCII(char c)
+		{
+			return ((int) c) < 128;
 		}
 		
 		

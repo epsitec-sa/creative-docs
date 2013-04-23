@@ -100,6 +100,12 @@ namespace Epsitec.Aider
 					AiderProgram.RunSubscriptionGeneration (args);
 					return;
 				}
+
+				if (args.Contains ("-exportsubscriptions"))
+				{
+					AiderProgram.RunSubscriptionExportation (args);
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -183,6 +189,16 @@ namespace Epsitec.Aider
 				var parishRepository = ParishAddressRepository.Current;
 
 				SubscriptionGenerator.Create (coreData, parishRepository);
+			});
+		}
+
+		private static void RunSubscriptionExportation(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var file = AiderProgram.GetFile (args, "-output:", true);
+
+				SubscriptionFileWriter.Write (coreData, file);
 			});
 		}
 

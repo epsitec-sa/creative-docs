@@ -1,6 +1,7 @@
 ﻿using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
@@ -34,6 +35,12 @@ namespace Epsitec.Aider.Data.Common
 		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderHouseholdEntity>> action)
 		{
 			AiderEnumerator.Execute (coreData, AiderEnumerator.GetHouseholdBatch, action);
+		}
+
+
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderSubscriptionEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetSubscriptionBatch, action);
 		}
 
 
@@ -71,17 +78,7 @@ namespace Epsitec.Aider.Data.Common
 
 		private static IList<AiderContactEntity> GetContactBatch(DataContext dataContext, int skip, int take)
 		{
-			var aiderContact = new AiderContactEntity ();
-
-			var request = new Request ()
-			{
-				RootEntity = aiderContact,
-				Skip = skip,
-				Take = take,
-			};
-
-			request.AddSortClause (InternalField.CreateId (aiderContact));
-
+			var request = AiderEnumerator.CreateBatchRequest<AiderContactEntity> (skip, take);
 			var aiderContacts = dataContext.GetByRequest<AiderContactEntity> (request);
 
 			AiderEnumerator.LoadRelatedData (dataContext, aiderContacts);
@@ -92,22 +89,41 @@ namespace Epsitec.Aider.Data.Common
 
 		private static IList<AiderHouseholdEntity> GetHouseholdBatch(DataContext dataContext, int skip, int take)
 		{
-			var aiderHousehold = new AiderHouseholdEntity ();
-
-			var request = new Request ()
-			{
-				RootEntity = aiderHousehold,
-				Skip = skip,
-				Take = take,
-			};
-
-			request.AddSortClause (InternalField.CreateId (aiderHousehold));
-
+			var request = AiderEnumerator.CreateBatchRequest<AiderHouseholdEntity> (skip, take);
 			var aiderHouseholds = dataContext.GetByRequest<AiderHouseholdEntity> (request);
 
 			AiderEnumerator.LoadRelatedData (dataContext, aiderHouseholds);
 
 			return aiderHouseholds;
+		}
+
+
+		private static IList<AiderSubscriptionEntity> GetSubscriptionBatch(DataContext dataContext, int skip, int take)
+		{
+			var request = AiderEnumerator.CreateBatchRequest<AiderSubscriptionEntity> (skip, take);
+			var aiderSubscriptions = dataContext.GetByRequest<AiderSubscriptionEntity> (request);
+
+			// TODO Add load related data ?
+
+			return aiderSubscriptions;
+		}
+
+
+		private static Request CreateBatchRequest<T>(int skip, int take)
+			where T : AbstractEntity, new()
+		{
+			var example = new T ();
+
+			var request = new Request ()
+			{
+				RootEntity = example,
+				Skip = skip,
+				Take = take,
+			};
+
+			request.AddSortClause (InternalField.CreateId (example));
+
+			return request;
 		}
 
 

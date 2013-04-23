@@ -4,6 +4,10 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Common.Types;
 
+using System;
+
+using System.Linq;
+
 
 namespace Epsitec.Aider.Entities
 {
@@ -27,6 +31,83 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetCompactSummary()
 		{
 			return this.GetSummary ();
+		}
+
+
+		public string GetEditionId()
+		{
+			var regionId = this.RegionalEdition.GetRegionId ();
+
+			return InvariantConverter.ToString (regionId);
+		}
+
+
+		public string GetHonorific()
+		{
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					// TODO Implement me with something more intelligent.
+					return this.Household.HouseholdMrMrs.ToString ();
+
+				case SubscriptionType.LegalPerson:
+					throw new NotImplementedException ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		public string GetLastname()
+		{
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					// TODO Implement me with something more intelligent.
+					return this.Household.Members.First ().eCH_Person.PersonOfficialName;
+
+				case SubscriptionType.LegalPerson:
+					// TODO Implement this.
+					throw new NotImplementedException ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		public string GetFirstname()
+		{
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					// TODO Implement this
+					return "";
+
+				case SubscriptionType.LegalPerson:
+					// TODO Implement this.
+					throw new NotImplementedException ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		public AiderAddressEntity GetAddress()
+		{
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					return this.Household.Address;
+
+				case SubscriptionType.LegalPerson:
+					return this.LegalPerson.Address;
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 
