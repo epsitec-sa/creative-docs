@@ -174,7 +174,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 				postmanNumber.ThrowIf
 				(
-					x => x != SubscriptionFileLine.ForeignHouseNumberLengthMax,
+					x => x != SubscriptionFileLine.ForeignPostmanNumber,
 					"postmanNumber invalid"
 				);
 			}
