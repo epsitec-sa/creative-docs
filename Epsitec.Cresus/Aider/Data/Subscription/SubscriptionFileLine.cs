@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string addressComplement,
 			string street,
 			string houseNumber,
-			int? postmanNumber,
+			int postmanNumber,
 			string zipCode,
 			string town,
 			string country,
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string addressComplement,
 			string street,
 			string houseNumber,
-			int? postmanNumber,
+			int postmanNumber,
 			string zipCode,
 			string town,
 			string country,
@@ -152,16 +152,15 @@ namespace Epsitec.Aider.Data.Subscription
 					"invalid zip code"
 				);
 
-				postmanNumber.ThrowIf (x => !x.HasValue, "postmanNumber missing");
 				postmanNumber.ThrowIf
 				(
-					x => x.Value < SubscriptionFileLine.swissPostmanNumberMin,
+					x => x < SubscriptionFileLine.swissPostmanNumberMin,
 					"postmanNumber too small"
 				);
 
 				postmanNumber.ThrowIf
 				(
-					x => x.Value > SubscriptionFileLine.swissPostmanNumberMax,
+					x => x > SubscriptionFileLine.swissPostmanNumberMax,
 					"postmanNumber too large"
 				);
 			}
@@ -173,7 +172,11 @@ namespace Epsitec.Aider.Data.Subscription
 					"houseNumber too long"
 				);
 
-				postmanNumber.ThrowIf (x => x.HasValue, "postmanNumber invalid");
+				postmanNumber.ThrowIf
+				(
+					x => x != SubscriptionFileLine.foreignHouseNumberLengthMax,
+					"postmanNumber invalid"
+				);
 			}
 		}
 
@@ -225,9 +228,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private string GetPostmanNumber()
 		{
-			return this.PostmanNumber.HasValue
-				? InvariantConverter.ToString (this.PostmanNumber.Value)
-				: "";
+			return InvariantConverter.ToString (this.PostmanNumber);
 		}
 
 
@@ -307,7 +308,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string AddressComplement;
 		public readonly string Street;
 		public readonly string HouseNumber;
-		public readonly int? PostmanNumber;
+		public readonly int PostmanNumber;
 		public readonly string ZipCode;
 		public readonly string Town;
 		public readonly string Country;
@@ -336,9 +337,11 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int copiesCountMax = 99999;
 		public static readonly int nameLengthMax = 43;
 		public static readonly int swissZipCodeLength = 6;
-		public static readonly int swissPostmanNumberMin = 0;
+		public static readonly int swissPostmanNumberMin = 1;
 		public static readonly int swissPostmanNumberMax = 999;
+		public static readonly int swissPostmanNumberPostbox = 999;
 		public static readonly Regex swissHouseNumberRegex = new Regex (@"^\d{0,8}[a-zA-z]{0,2}$");
+		public static readonly int foreignPostmanNumber = 0;
 		public static readonly int foreignHouseNumberLengthMax = 10;
 
 

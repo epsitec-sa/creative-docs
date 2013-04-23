@@ -215,22 +215,22 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static int? GetPostmanNumber(AiderAddressEntity address, MatchSortEtl etl)
+		private static int GetPostmanNumber(AiderAddressEntity address, MatchSortEtl etl)
 		{
-			// The specs requires null for an addresses outside Switzerland.
+			// The specs requires 0 for an addresses outside Switzerland.
 			if (!address.Town.Country.IsSwitzerland ())
 			{
-				return null;
+				return SubscriptionFileLine.foreignPostmanNumber;
 			}
 
 			// The specs requires 999 for adresses with a post box.
 			if (!String.IsNullOrEmpty (address.PostBox))
 			{
-				return 999;
+				return SubscriptionFileLine.swissPostmanNumberPostbox;
 			}
 
 			// TODO Finish this code. It is probably too simple for what we want.
-
+			return 123;
 			var zipCode = address.Town.SwissZipCode.ToString ();
 			var street = address.StreetUserFriendly;
 			var houseNumber = address.HouseNumber.ToString ();
