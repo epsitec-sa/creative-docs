@@ -36,9 +36,12 @@ namespace Epsitec.Aider.Entities
 
 		public string GetEditionId()
 		{
+			// Editions ids should be N1 to NB, which by chance is the hexadecimal representation of
+			// the region id.
+
 			var regionId = this.RegionalEdition.GetRegionId ();
 
-			return InvariantConverter.ToString (regionId);
+			return "N" + regionId.ToString ("X1");
 		}
 
 
