@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Rules
 			this.CheckLoginNameIsNotEmpty (user);
 			this.CheckLoginNameIsUnique (user);
 			this.CheckDisplayNameIsNotEmpty (user);
-			this.CheckParishIsParishGroup (user);
+			this.CheckParishIsParishOrRegionGroup (user);
 			this.CheckEmail (user);
 		}
 
@@ -100,14 +100,14 @@ namespace Epsitec.Aider.Rules
 			}
 		}
 
-		private void CheckParishIsParishGroup(AiderUserEntity user)
+		private void CheckParishIsParishOrRegionGroup(AiderUserEntity user)
 		{
-			if (user.Parish.IsNull () || user.Parish.IsParish ())
+			if (user.Parish.IsNull () || user.Parish.IsParish () || user.Parish.IsRegion ())
 			{
 				return;
 			}
 
-			var message = "La paroisse n'est pas un groupe de paroisse";
+			var message = "L'utilisateur n'est pas rattaché à un groupe de type paroisse ou région";
 
 			Logic.BusinessRuleException (user, message);
 		}
