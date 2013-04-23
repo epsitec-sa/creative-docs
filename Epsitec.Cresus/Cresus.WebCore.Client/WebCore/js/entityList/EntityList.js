@@ -349,17 +349,14 @@ function() {
         }
       }));
 
-      // For now, we disable this feature until it is finished.
-      if (false) {
-        buttons.push(Ext.create('Ext.Button', {
-          text: Epsitec.Texts.getExportLabel(),
-          iconCls: 'icon-export',
-          listeners: {
-            click: this.onExportHandler,
-            scope: this
-          }
-        }));
-      }
+      buttons.push(Ext.create('Ext.Button', {
+        text: Epsitec.Texts.getExportLabel(),
+        iconCls: 'icon-export',
+        listeners: {
+          click: this.onExportHandler,
+          scope: this
+        }
+      }));
 
       return buttons;
     },

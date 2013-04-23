@@ -214,9 +214,7 @@ AiderSubscription = [LVGP22]
     <d cid="[LVGI22]" teid="@AiderGroupParticipant" tn="groupFunctionMembers" df="false" d="false" ec="false" ed="false"  dg=""><R><r>@user</r></R></d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="false" ed="false" df="true" dg=""><R><r>@user</r></R></d>
-    <!-- We disable this feature until it is ready for the end user
     <d cid="[LVG232]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="true" ed="true" dg=""><R><r>@user</r></R></d>
-    -->
   </D>
   <G/>
 </meta>
