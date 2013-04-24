@@ -259,7 +259,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var houses = etl.HouseAtStreet (zipCode, street, houseNumber);
 
-			return Convert.ToInt32 (houses.First ().runningNumber);
+			return Convert.ToInt32 (houses.First ().stageNumber);
 		}
 
 
