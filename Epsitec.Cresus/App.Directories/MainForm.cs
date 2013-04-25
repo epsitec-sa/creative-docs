@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using Epsitec.Data.Platform;
 using Epsitec.Data.Platform.Directories;
 using Epsitec.Data.Platform.Directories.Entity;
 using Epsitec.Data.Platform.Bings;
@@ -28,6 +29,7 @@ namespace App.Directories
 
 		public DirectoriesWebService dws = null;
 		public BingsWebService bws = null;
+        public MatchSortEtl etl = null;
 		public SignIn SignIn = new SignIn ();
         public int PageSize = 10;
         public int FromPage = 1;
@@ -124,7 +126,7 @@ namespace App.Directories
 			foreach (DirectoriesEntryAdd add in result.GetEntries())
 			{
 				var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}", add.FirstName, add.LastName, add.StateCode));
-				node.Tag = String.Format ("{0}/{1} {2}", add.Zip, add.FirstName.Split(' ')[0], add.LastName);
+				node.Tag = String.Format ("{0}/{1} {2}/{3}/{4}", add.Zip, add.FirstName.Split(' ')[0], add.LastName,add.StreetName,add.HouseNo);
 				if (add.Profession!="")
 				{
 					node.Nodes.Add ("Profession: " + add.Profession);
@@ -247,6 +249,11 @@ namespace App.Directories
                     this.Map.Center = pin.Location;
                     this.GetGooglePlusImage(TagArgs[1],this.lst_head);
                 }
+
+                if (this.etl != null)
+                {
+                    node.Nodes.Add(this.etl.DeliveryMessengerNumber(TagArgs[0],"", TagArgs[2], TagArgs[3]));
+                }
 				
 			}
 		}
@@ -278,6 +285,11 @@ namespace App.Directories
             this.FromPage = 1;
             this.ToPage = this.PageSize;
             
+        }
+
+        private void cmd_enable_match_sort_Click(object sender, EventArgs e)
+        {
+            this.etl = new MatchSortEtl();
         }
 	}
 }

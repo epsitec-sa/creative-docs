@@ -47,6 +47,7 @@ namespace App.Directories
             this.opt_name = new System.Windows.Forms.RadioButton();
             this.cmd_back = new System.Windows.Forms.Button();
             this.cmd_next = new System.Windows.Forms.Button();
+            this.cmd_enable_match_sort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.img_google_signin)).BeginInit();
             this.SuspendLayout();
@@ -198,11 +199,22 @@ namespace App.Directories
             this.cmd_next.Visible = false;
             this.cmd_next.Click += new System.EventHandler(this.cmd_next_Click);
             // 
+            // cmd_enable_match_sort
+            // 
+            this.cmd_enable_match_sort.Location = new System.Drawing.Point(778, 26);
+            this.cmd_enable_match_sort.Name = "cmd_enable_match_sort";
+            this.cmd_enable_match_sort.Size = new System.Drawing.Size(124, 33);
+            this.cmd_enable_match_sort.TabIndex = 16;
+            this.cmd_enable_match_sort.Text = "Enable Mat[CH] Sort";
+            this.cmd_enable_match_sort.UseVisualStyleBackColor = true;
+            this.cmd_enable_match_sort.Click += new System.EventHandler(this.cmd_enable_match_sort_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1274, 891);
+            this.Controls.Add(this.cmd_enable_match_sort);
             this.Controls.Add(this.cmd_next);
             this.Controls.Add(this.cmd_back);
             this.Controls.Add(this.opt_name);
@@ -247,6 +259,7 @@ namespace App.Directories
         private System.Windows.Forms.RadioButton opt_name;
         private System.Windows.Forms.Button cmd_back;
         private System.Windows.Forms.Button cmd_next;
+        private System.Windows.Forms.Button cmd_enable_match_sort;
 	}
 }
 
