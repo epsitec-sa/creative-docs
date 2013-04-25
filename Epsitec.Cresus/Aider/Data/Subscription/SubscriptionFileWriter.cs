@@ -121,7 +121,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var firstname = SubscriptionFileWriter.Process
 			(
-				"",
+				subscription.Household.GetFirstname (),
 				SubscriptionFileLine.FirstnameLength,
 				encodingHelper
 			);

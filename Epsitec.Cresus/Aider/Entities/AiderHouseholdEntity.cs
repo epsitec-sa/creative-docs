@@ -87,6 +87,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public string GetFirstname()
+		{
+			var honorific = this.HouseholdMrMrs;
+
+			var contacts = this.GetContacts ();
+			var heads = AiderHouseholdEntity.GetHeads (contacts);
+			var children = AiderHouseholdEntity.GetChildren (contacts);
+
+			return AiderHouseholdEntity.GetHeadFirstname (honorific, heads, children);
+		}
+
+
 		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
 		{
 			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
@@ -242,7 +254,7 @@ namespace Epsitec.Aider.Entities
 			return AiderHouseholdEntity.BuildDisplayName (heads, children, order);
 		}
 
-		private static string BuildDisplayName(IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children, HouseholdMrMrs order)
+		private static string BuildDisplayName(IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, HouseholdMrMrs order)
 		{
 			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children);
 			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children);
@@ -251,33 +263,50 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static IList<eCH_PersonEntity> GetHeads(IEnumerable<AiderContactEntity> contacts)
+		private static IList<AiderPersonEntity> GetHeads(IEnumerable<AiderContactEntity> contacts)
 		{
 			return AiderHouseholdEntity.GetMembers (contacts, HouseholdRole.Head);
 		}
 
 
-		private static IList<eCH_PersonEntity> GetChildren(IEnumerable<AiderContactEntity> contacts)
+		private static IList<AiderPersonEntity> GetChildren(IEnumerable<AiderContactEntity> contacts)
 		{
 			return AiderHouseholdEntity.GetMembers (contacts, HouseholdRole.None);
 		}
 
 
-		private static IList<eCH_PersonEntity> GetMembers(IEnumerable<AiderContactEntity> contacts, HouseholdRole role)
+		private static IList<AiderPersonEntity> GetMembers(IEnumerable<AiderContactEntity> contacts, HouseholdRole role)
 		{
 			return contacts
 				.Where (x => x.HouseholdRole == role)
-				.Select (x => x.Person.eCH_Person)
+				.Select (x => x.Person)
 				.ToList ();
 		}
 
 
-		private static string GetHeadLastname(HouseholdMrMrs order, IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children)
+		private static string GetHeadLastname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
 		{
-			var men = heads.Where (x => x.PersonSex == PersonSex.Male);
-			var women = heads.Where (x => x.PersonSex == PersonSex.Female);
+			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
+				.Select (p => p.eCH_Person.PersonOfficialName)
+				.Distinct ();
 
-			var headNames = new HashSet<string> ();
+			return StringUtils.Join (" ", headNames);
+		}
+
+
+		private static string GetHeadFirstname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		{
+			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
+				.Select (p => p.GetCallName ());
+
+			return StringUtils.Join (" et ", headNames);
+		}
+
+
+		private static IEnumerable<AiderPersonEntity> GetHeadForNames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		{
+			var men = heads.Where (x => x.eCH_Person.PersonSex == PersonSex.Male);
+			var women = heads.Where (x => x.eCH_Person.PersonSex == PersonSex.Female);
 
 			switch (order)
 			{
@@ -285,30 +314,17 @@ namespace Epsitec.Aider.Entities
 				case HouseholdMrMrs.Auto:
 				case HouseholdMrMrs.Famille:
 				case HouseholdMrMrs.MonsieurEtMadame:
-					headNames.UnionWith (men.Select (x => x.PersonOfficialName));
-					headNames.UnionWith (women.Select (x => x.PersonOfficialName));
-					break;
+					return men.Concat (women);
+
 				case HouseholdMrMrs.MadameEtMonsieur:
-					headNames.UnionWith (women.Select (x => x.PersonOfficialName));
-					headNames.UnionWith (men.Select (x => x.PersonOfficialName));
-					break;
+					return women.Concat (men);
 			}
 
-			if (headNames.Count == 0)
-			{
-				var child = children.Select (x => x.PersonOfficialName).FirstOrDefault ();
-
-				if (child != null)
-				{
-					headNames.Add (child);
-				}
-			}
-
-			return StringUtils.Join (" ", headNames);
+			return children.Take (1);
 		}
 
 
-		private static string GetHeadTitle(HouseholdMrMrs honorific, IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children)
+		private static string GetHeadTitle(HouseholdMrMrs honorific, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
 		{
 			var members = heads
 				.Concat (children)
@@ -321,7 +337,7 @@ namespace Epsitec.Aider.Entities
 				case HouseholdMrMrs.Famille:
 					if (members.Count == 1)
 					{
-						switch (members[0].PersonSex)
+						switch (members[0].eCH_Person.PersonSex)
 						{
 							case PersonSex.Female:
 								return "Mme";
