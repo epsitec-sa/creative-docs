@@ -2,6 +2,8 @@
 
 using System;
 
+using System.Collections.Generic;
+
 using System.Globalization;
 
 using System.Linq;
@@ -19,7 +21,7 @@ namespace Epsitec.Common.Support
 
 		public static string Join(string separator, params string[] strings)
 		{
-			return string.Join (separator, strings.Where (s => !string.IsNullOrEmpty (s)));
+			return StringUtils.Join (separator, (IEnumerable<string>) strings);
 		}
 
 
@@ -27,10 +29,15 @@ namespace Epsitec.Common.Support
 		{
 			var strings = objects
 				.Where (o => o != null)
-				.Select (o => o.ToString ())
-				.Where (s => !string.IsNullOrEmpty (s));
+				.Select (o => o.ToString ());
 
-			return string.Join (separator, strings);
+			return StringUtils.Join (separator, strings);
+		}
+
+
+		public static string Join(string separator, IEnumerable<string> strings)
+		{
+			return string.Join (separator, strings.Where (s => !string.IsNullOrEmpty (s)));
 		}
 
 
