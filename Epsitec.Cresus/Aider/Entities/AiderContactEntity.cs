@@ -58,7 +58,7 @@ namespace Epsitec.Aider.Entities
 			if (this.Person.IsNotNull ())
 			{
 				this.PersonMrMrs    = this.Person.MrMrs;
-				this.PersonFullName = string.Concat (this.Person.CallName, " ", this.Person.eCH_Person.PersonOfficialName);
+				this.PersonFullName = string.Concat (this.Person.GetCallName (), " ", this.Person.eCH_Person.PersonOfficialName);
 			}
 		}
 
