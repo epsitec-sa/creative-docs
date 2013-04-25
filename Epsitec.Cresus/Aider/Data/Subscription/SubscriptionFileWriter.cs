@@ -109,26 +109,14 @@ namespace Epsitec.Aider.Data.Subscription
 				encodingHelper
 			);
 
-			var nameLength = SubscriptionFileLine.GetNameLength (title, lastname, firstname);
+			var nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
 			if (nameLength > SubscriptionFileLine.NameLengthMax)
 			{
-				var message ="Name exceeding 43 chars:"
-					+ title + ", "
-					+ lastname + ", "
-					+ firstname;
-
-				Debug.WriteLine (message);
+				Debug.WriteLine ("Name exceeding 43 chars:" + lastname + ", " + firstname);
 
 				// TODO Do something more intelligent here.
-
-				firstname = "";
-
-				nameLength = SubscriptionFileLine.GetNameLength (title, lastname, firstname);
-
-				if (nameLength > SubscriptionFileLine.NameLengthMax)
-				{
-					title = "";
-				}
+				var maxFirstnameLength = SubscriptionFileLine.NameLengthMax - lastname.Length - 1;
+				firstname = firstname.Truncate (maxFirstnameLength);
 			}
 
 			var addressComplement = SubscriptionFileWriter.Process

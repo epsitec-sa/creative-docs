@@ -140,7 +140,7 @@ namespace Epsitec.Aider.Data.Subscription
 				encodingHelper
 			);
 
-			var nameLength = SubscriptionFileLine.GetNameLength (title, firstname, lastname);
+			var nameLength = SubscriptionFileLine.GetNameLength (firstname, lastname);
 			nameLength.ThrowIf (x => x > SubscriptionFileLine.NameLengthMax, "name too long");
 
 			this.CheckString
@@ -321,33 +321,14 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		public static int GetNameLength(string title, string firstname, string lastname)
+		public static int GetNameLength(string firstname, string lastname)
 		{
-			int length = 0;
-			int notEmpty = 0;
+			int length = firstname.Length + lastname.Length;
 
-			if (!string.IsNullOrEmpty (title))
+			// Adds the count of the space between the firstname and the lastname.
+			if (firstname.Length > 0 && lastname.Length > 0)
 			{
-				length += title.Length;
-				notEmpty += 1;
-			}
-
-			if (!string.IsNullOrEmpty (firstname))
-			{
-				length += firstname.Length;
-				notEmpty += 1;
-			}
-
-			if (!string.IsNullOrEmpty (lastname))
-			{
-				length += lastname.Length;
-				notEmpty += 1;
-			}
-
-			// Adds the count of the spaces between the title, the firstname and the lastname.
-			if (notEmpty > 0)
-			{
-				length += notEmpty - 1;
+				length += 1;
 			}
 
 			return length;
@@ -394,7 +375,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 		public static readonly int CopiesCountMin = 1;
 		public static readonly int CopiesCountMax = 99999;
-		public static readonly int NameLengthMax = 43;
+		public static readonly int NameLengthMax = 47;
 		public static readonly int SwissZipCodeLength = 6;
 		public static readonly int SwissPostmanNumberMin = 1;
 		public static readonly int SwissPostmanNumberMax = 999;
