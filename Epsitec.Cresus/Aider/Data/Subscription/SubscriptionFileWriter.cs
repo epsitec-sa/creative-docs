@@ -1,5 +1,6 @@
 ﻿using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 
@@ -68,13 +69,33 @@ namespace Epsitec.Aider.Data.Subscription
 			EncodingHelper encodingHelper
 		)
 		{
-			// TODO Manage the cases with the legal persons.
+			switch (subscription.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					return SubscriptionFileWriter.GetHouseholdLine
+					(
+						subscription, etl, encodingHelper
+					);
 
-			// TODO Manage the case where we have a legal person with a contact person. We might
-			// want to put the title, firstname and lastname of the person AND the name of the
-			// company. So we might want to put the name of the company in the address complement.
-			// Except that if the address has a post box or already has a complement, we're screwed.
+				case SubscriptionType.LegalPerson:
+					return SubscriptionFileWriter.GetLegalPersonLine
+					(
+						subscription, etl, encodingHelper
+					);
 
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static SubscriptionFileLine GetHouseholdLine
+		(
+			AiderSubscriptionEntity subscription,
+			MatchSortEtl etl,
+			EncodingHelper encodingHelper
+		)
+		{
 			var address = subscription.GetAddress ();
 			var town = address.Town;
 			var country = town.Country;
@@ -82,28 +103,25 @@ namespace Epsitec.Aider.Data.Subscription
 			var subscriptionNumber = subscription.Id;
 			var copiesCount = subscription.Count;
 			var editionId = subscription.GetEditionId ();
-
-			// Maybe here we want to have two cases, one for households and one for legal persons,
-			// as the truncation logic if the name is too long, we might want to have 2 different
-			// algorithms for its truncation.
+			var postmanNumber = SubscriptionFileWriter.GetPostmanNumber (address, etl);
 
 			var title = SubscriptionFileWriter.Process
 			(
-				subscription.GetHonorific (),
+				subscription.Household.GetHonorific (),
 				SubscriptionFileLine.TitleLength,
 				encodingHelper
 			);
 
 			var lastname = SubscriptionFileWriter.Process
 			(
-				subscription.GetLastname (),
+				subscription.Household.GetLastname (),
 				SubscriptionFileLine.LastnameLength,
 				encodingHelper
 			);
 
 			var firstname = SubscriptionFileWriter.Process
 			(
-				subscription.GetFirstname (),
+				"",
 				SubscriptionFileLine.FirstnameLength,
 				encodingHelper
 			);
@@ -118,47 +136,73 @@ namespace Epsitec.Aider.Data.Subscription
 				firstname = firstname.Truncate (maxFirstnameLength);
 			}
 
-			var addressComplement = SubscriptionFileWriter.Process
-			(
-				subscription.GetAddressComplement (),
-				SubscriptionFileLine.AddressComplementLength,
-				encodingHelper
-			);
+			string addressComplement;
+			string street;
+			string houseNumber;
 
-			var street = SubscriptionFileWriter.Process
-			(
-				address.StreetUserFriendly,
-				SubscriptionFileLine.StreetLength,
-				encodingHelper
-			);
-
-			var houseNumber = SubscriptionFileWriter.Process
-			(
-				address.HouseNumberAndComplement.Replace (" ", ""),
-				SubscriptionFileLine.HouseNumberLength,
-				encodingHelper
-			);
-
-			if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
+			if (string.IsNullOrEmpty (address.PostBox))
 			{
-				Debug.WriteLine ("Invalid house number: " + houseNumber);
+				addressComplement = SubscriptionFileWriter.Process
+				(
+					address.AddressLine1,
+					SubscriptionFileLine.AddressComplementLength,
+					encodingHelper
+				);
 
-				// TODO Do something more intelligent here.
+				street = SubscriptionFileWriter.Process
+				(
+					address.StreetUserFriendly,
+					SubscriptionFileLine.StreetLength,
+					encodingHelper
+				);
 
-				var digits = houseNumber
-					.TakeWhile (c => char.IsDigit (c))
-					.Take (7);
+				houseNumber = SubscriptionFileWriter.Process
+				(
+					address.HouseNumberAndComplement.Replace (" ", ""),
+					SubscriptionFileLine.HouseNumberLength,
+					encodingHelper
+				);
 
-				var letters = houseNumber
-					.SkipWhile (c => char.IsDigit (c))
-					.Take (3);
+				if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
+				{
+					Debug.WriteLine ("Invalid house number: " + houseNumber);
 
-				var chars = digits.Concat (letters).ToArray ();
+					// TODO Do something more intelligent here.
 
-				houseNumber = new String (chars);
+					var digits = houseNumber
+						.TakeWhile (c => char.IsDigit (c))
+						.Take (7);
+
+					var letters = houseNumber
+						.SkipWhile (c => char.IsDigit (c))
+						.Take (3);
+
+					var chars = digits.Concat (letters).ToArray ();
+
+					houseNumber = new String (chars);
+				}
 			}
+			else
+			{
+				// If we have a post box, we put it in place of the street, we put the street (with
+				// house number and complement) in place of the complement and we drop the complement.
 
-			var postmanNumber = SubscriptionFileWriter.GetPostmanNumber (address, etl);
+				addressComplement = SubscriptionFileWriter.Process
+				(
+					address.StreetHouseNumberAndComplement,
+					SubscriptionFileLine.AddressComplementLength,
+					encodingHelper
+				);
+
+				street = SubscriptionFileWriter.Process
+				(
+					address.PostBox,
+					SubscriptionFileLine.StreetLength,
+					encodingHelper
+				);
+
+				houseNumber = "";
+			}
 
 			var zipCode = SubscriptionFileWriter.Process
 			(
@@ -189,6 +233,24 @@ namespace Epsitec.Aider.Data.Subscription
 				addressComplement, street, houseNumber, postmanNumber, zipCode, townName,
 				countryName, DistributionMode.Surface, isSwitzerland
 			);
+		}
+
+
+		private static SubscriptionFileLine GetLegalPersonLine
+		(
+			AiderSubscriptionEntity subscription,
+			MatchSortEtl etl,
+			EncodingHelper encodingHelper
+		)
+		{
+			// TODO Manage the cases with the legal persons.
+
+			// TODO Manage the case where we have a legal person with a contact person. We might
+			// want to put the title, firstname and lastname of the person AND the name of the
+			// company. So we might want to put the name of the company in the address complement.
+			// Except that if the address has a post box or already has a complement, we're screwed.
+
+			throw new NotImplementedException ();
 		}
 
 
