@@ -85,7 +85,7 @@ namespace Epsitec.Aider.Entities
 			var heads = AiderHouseholdEntity.GetHeads (contacts);
 			var children = AiderHouseholdEntity.GetChildren (contacts);
 
-			return AiderHouseholdEntity.GetHeadLastname (honorific, heads, children);
+			return AiderHouseholdEntity.GetHeadLastname (honorific, heads, children, true);
 		}
 
 
@@ -259,7 +259,7 @@ namespace Epsitec.Aider.Entities
 		private static string BuildDisplayName(IList<AiderPersonEntity> heads, IList<AiderPersonEntity> children, HouseholdMrMrs order)
 		{
 			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children, true);
-			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children);
+			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children, false);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
 		}
@@ -286,11 +286,44 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static string GetHeadLastname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		private static string GetHeadLastname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool removePseudoDuplicates)
 		{
 			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
 				.Select (p => p.eCH_Person.PersonOfficialName)
 				.Distinct ();
+
+			// If we are asked to, we remove the pseudo duplicates here. What I called pseudo
+			// duplicates, are names that contains another. Like when we have a family where the
+			// wife has kept its maiden name and appended the name of her husband to it. For
+			// instance the husband is called "Albert Dupond" and the wife is called "Ginette
+			// Dupond-Dupuis" or "Ginette Dupuis-Dupond".
+			// The algorithm is really simple and might produce some false positives, because it
+			// does not consider whole names, but if the name of a person is included in another, it
+			// will remove it, like in "Dupo" and "Dupond", "Dupond" will be removed. If these cases
+			// occur, this method will need to be corrected.
+
+			if (removePseudoDuplicates)
+			{
+				// Here we order them be size, so that we know that a name can only be included in
+				// names that are after it in the list.
+				var tmp = headNames
+					.OrderBy (n => n.Length)
+					.ToList ();
+
+				for (int i = 0; i < tmp.Count; i++)
+				{
+					for (int j = i + 1; j < tmp.Count; j++)
+					{
+						if (tmp[j].Contains (tmp[i]))
+						{
+							tmp.RemoveAt (j);
+							j--;
+						}
+					}
+				}
+
+				headNames = tmp;
+			}
 
 			return StringUtils.Join (" ", headNames);
 		}
