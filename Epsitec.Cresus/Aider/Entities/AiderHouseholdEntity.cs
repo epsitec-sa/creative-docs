@@ -75,6 +75,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public string GetLastname()
+		{
+			var honorific = this.HouseholdMrMrs;
+
+			var contacts = this.GetContacts ();
+			var heads = AiderHouseholdEntity.GetHeads (contacts);
+			var children = AiderHouseholdEntity.GetChildren (contacts);
+
+			return AiderHouseholdEntity.GetHeadLastname (honorific, heads, children);
+		}
+
+
 		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
 		{
 			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
@@ -229,44 +241,13 @@ namespace Epsitec.Aider.Entities
 
 			return AiderHouseholdEntity.BuildDisplayName (heads, children, order);
 		}
-			
+
 		private static string BuildDisplayName(IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children, HouseholdMrMrs order)
 		{
-			var men   = heads.Where (x => x.PersonSex == PersonSex.Male);
-			var women = heads.Where (x => x.PersonSex == PersonSex.Female);
-
-			var headNames = new List<string> ();
-
-			switch (order)
-			{
-				case HouseholdMrMrs.None:
-				case HouseholdMrMrs.Auto:
-				case HouseholdMrMrs.Famille:
-				case HouseholdMrMrs.MonsieurEtMadame:
-					headNames.AddRange (men.Select (x => x.PersonOfficialName));
-					headNames.AddRange (women.Select (x => x.PersonOfficialName));
-					break;
-				case HouseholdMrMrs.MadameEtMonsieur:
-					headNames.AddRange (women.Select (x => x.PersonOfficialName));
-					headNames.AddRange (men.Select (x => x.PersonOfficialName));
-					break;
-			}
-
-			if (headNames.Count == 0)
-			{
-				var child = children.Select (x => x.PersonOfficialName).FirstOrDefault ();
-
-				if (child != null)
-				{
-					headNames.Add (child);
-				}
-			}
-
 			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children);
+			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children);
 
-			headNames.Insert (0, headTitle);
-
-			return StringUtils.Join (" ", headNames.Distinct ().ToArray ());
+			return StringUtils.Join (" ", headTitle, headLastname);
 		}
 
 
@@ -288,6 +269,42 @@ namespace Epsitec.Aider.Entities
 				.Where (x => x.HouseholdRole == role)
 				.Select (x => x.Person.eCH_Person)
 				.ToList ();
+		}
+
+
+		private static string GetHeadLastname(HouseholdMrMrs order, IEnumerable<eCH_PersonEntity> heads, IEnumerable<eCH_PersonEntity> children)
+		{
+			var men = heads.Where (x => x.PersonSex == PersonSex.Male);
+			var women = heads.Where (x => x.PersonSex == PersonSex.Female);
+
+			var headNames = new HashSet<string> ();
+
+			switch (order)
+			{
+				case HouseholdMrMrs.None:
+				case HouseholdMrMrs.Auto:
+				case HouseholdMrMrs.Famille:
+				case HouseholdMrMrs.MonsieurEtMadame:
+					headNames.UnionWith (men.Select (x => x.PersonOfficialName));
+					headNames.UnionWith (women.Select (x => x.PersonOfficialName));
+					break;
+				case HouseholdMrMrs.MadameEtMonsieur:
+					headNames.UnionWith (women.Select (x => x.PersonOfficialName));
+					headNames.UnionWith (men.Select (x => x.PersonOfficialName));
+					break;
+			}
+
+			if (headNames.Count == 0)
+			{
+				var child = children.Select (x => x.PersonOfficialName).FirstOrDefault ();
+
+				if (child != null)
+				{
+					headNames.Add (child);
+				}
+			}
+
+			return StringUtils.Join (" ", headNames);
 		}
 
 

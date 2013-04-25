@@ -67,8 +67,7 @@ namespace Epsitec.Aider.Entities
 			switch (this.SubscriptionType)
 			{
 				case SubscriptionType.Household:
-					// TODO Implement me with something more intelligent.
-					return this.Household.Members.First ().eCH_Person.PersonOfficialName;
+					return this.Household.GetLastname ();
 
 				case SubscriptionType.LegalPerson:
 					// TODO Implement this.
