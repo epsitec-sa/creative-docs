@@ -12,6 +12,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
@@ -71,7 +73,7 @@ namespace Epsitec.Aider.Entities
 			var heads = AiderHouseholdEntity.GetHeads (contacts);
 			var children = AiderHouseholdEntity.GetChildren (contacts);
 
-			return AiderHouseholdEntity.GetHeadTitle (honorific, heads, children);
+			return AiderHouseholdEntity.GetHeadTitle (honorific, heads, children, false);
 		}
 
 
@@ -256,7 +258,7 @@ namespace Epsitec.Aider.Entities
 
 		private static string BuildDisplayName(IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, HouseholdMrMrs order)
 		{
-			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children);
+			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children, true);
 			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
@@ -324,37 +326,31 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static string GetHeadTitle(HouseholdMrMrs honorific, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		private static string GetHeadTitle(HouseholdMrMrs honorific, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool abbreviated)
 		{
 			var members = heads
 				.Concat (children)
 				.ToList ();
-			
-			switch (honorific)
+
+			if (members.Count == 1)
 			{
-				case HouseholdMrMrs.None:
-				case HouseholdMrMrs.Auto:
-				case HouseholdMrMrs.Famille:
-					if (members.Count == 1)
-					{
-						switch (members[0].eCH_Person.PersonSex)
-						{
-							case PersonSex.Female:
-								return "Mme";
-							case PersonSex.Male:
-								return "M.";
-						}
-					}
-					break;
-
-				case HouseholdMrMrs.MonsieurEtMadame:
-					return "M. et Mme";
-
-				case HouseholdMrMrs.MadameEtMonsieur:
-					return "Mme et M.";
+				return members[0].MrMrs.GetText (abbreviated);
 			}
 
-			return "Famille";
+			switch (honorific)
+			{
+				case HouseholdMrMrs.Famille:
+				case HouseholdMrMrs.MonsieurEtMadame:
+				case HouseholdMrMrs.MadameEtMonsieur:
+					return honorific.GetText (abbreviated);
+
+				case HouseholdMrMrs.None:
+				case HouseholdMrMrs.Auto:
+					return HouseholdMrMrs.Famille.GetText (abbreviated);
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 
