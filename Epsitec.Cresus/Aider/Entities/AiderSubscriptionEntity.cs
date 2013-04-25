@@ -50,8 +50,7 @@ namespace Epsitec.Aider.Entities
 			switch (this.SubscriptionType)
 			{
 				case SubscriptionType.Household:
-					// TODO Implement me with something more intelligent.
-					return this.Household.HouseholdMrMrs.ToString ();
+					return this.Household.GetHonorific ();
 
 				case SubscriptionType.LegalPerson:
 					throw new NotImplementedException ();
