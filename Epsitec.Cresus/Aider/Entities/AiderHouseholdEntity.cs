@@ -56,8 +56,8 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetMembersSummary()
 		{
 			var members = this.Members
-				   .Select (m => m.GetCompactSummary ())
-				   .CreateSummarySequence (10, "...");
+				.Select (m => m.GetCompactSummary ())
+				.CreateSummarySequence (10, "...");
 
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), members);
 		}
