@@ -256,7 +256,7 @@ namespace Epsitec.Aider.Entities
 			return AiderHouseholdEntity.BuildDisplayName (heads, children, order);
 		}
 
-		private static string BuildDisplayName(IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, HouseholdMrMrs order)
+		private static string BuildDisplayName(IList<AiderPersonEntity> heads, IList<AiderPersonEntity> children, HouseholdMrMrs order)
 		{
 			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children, true);
 			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children);
@@ -307,8 +307,15 @@ namespace Epsitec.Aider.Entities
 
 		private static IEnumerable<AiderPersonEntity> GetHeadForNames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
 		{
-			var men = heads.Where (x => x.eCH_Person.PersonSex == PersonSex.Male);
-			var women = heads.Where (x => x.eCH_Person.PersonSex == PersonSex.Female);
+			var man = heads
+				.Where (x => x.eCH_Person.PersonSex == PersonSex.Male)
+				.FirstOrDefault ();
+
+			var woman = heads
+				.Where (x => x.eCH_Person.PersonSex == PersonSex.Female)
+				.FirstOrDefault ();
+
+			var result = new List<AiderPersonEntity> ();
 
 			switch (order)
 			{
@@ -316,34 +323,72 @@ namespace Epsitec.Aider.Entities
 				case HouseholdMrMrs.Auto:
 				case HouseholdMrMrs.Famille:
 				case HouseholdMrMrs.MonsieurEtMadame:
-					return men.Concat (women);
+					if (man != null)
+					{
+						result.Add (man);
+					}
+					if (woman != null)
+					{
+						result.Add (woman);
+					}
+					break;
 
 				case HouseholdMrMrs.MadameEtMonsieur:
-					return women.Concat (men);
+					if (woman != null)
+					{
+						result.Add (woman);
+					}
+					if (man != null)
+					{
+						result.Add (man);
+					}
+					break;
+
+				default:
+					throw new NotImplementedException ();
 			}
 
-			return children.Take (1);
+			if (result.Count == 0)
+			{
+				var child = children.FirstOrDefault ();
+
+				if (child != null)
+				{
+					result.Add (child);
+				}
+			}
+
+			return result;
 		}
 
 
-		private static string GetHeadTitle(HouseholdMrMrs honorific, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool abbreviated)
+		private static string GetHeadTitle(HouseholdMrMrs honorific, IList<AiderPersonEntity> heads, IList<AiderPersonEntity> children, bool abbreviated)
 		{
-			var members = heads
-				.Concat (children)
-				.ToList ();
-
-			if (members.Count == 1)
+			// If we have a single member, we return its title instead of the title of the
+			// household.
+			if (heads.Count + children.Count == 1)
 			{
-				return members[0].MrMrs.GetText (abbreviated);
+				var member = heads.Count == 1
+					? heads[0]
+					: children[0];
+
+				return member.MrMrs.GetText (abbreviated);
 			}
 
 			switch (honorific)
 			{
-				case HouseholdMrMrs.Famille:
 				case HouseholdMrMrs.MonsieurEtMadame:
 				case HouseholdMrMrs.MadameEtMonsieur:
+					// If we have a single head and some children, we use the "Family" title.
+					if (heads.Count == 1)
+					{
+						goto case HouseholdMrMrs.Famille;
+					}
+
+					// Only if we have 2 heads, do we use the real title.
 					return honorific.GetText (abbreviated);
 
+				case HouseholdMrMrs.Famille:
 				case HouseholdMrMrs.None:
 				case HouseholdMrMrs.Auto:
 					return HouseholdMrMrs.Famille.GetText (abbreviated);
