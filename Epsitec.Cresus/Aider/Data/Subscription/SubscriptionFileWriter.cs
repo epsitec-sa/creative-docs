@@ -68,8 +68,7 @@ namespace Epsitec.Aider.Data.Subscription
 			EncodingHelper encodingHelper
 		)
 		{
-			// TODO Do Weird stuff with post box (put 999 in postman number and put it in complement
-			// or somewhere else. Because otherwise, we're screwed if we already have a complement).
+			// TODO Manage the cases with the legal persons.
 
 			// TODO Manage the case where we have a legal person with a contact person. We might
 			// want to put the title, firstname and lastname of the person AND the name of the
@@ -121,7 +120,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var addressComplement = SubscriptionFileWriter.Process
 			(
-				address.AddressLine1,
+				subscription.GetAddressComplement (),
 				SubscriptionFileLine.AddressComplementLength,
 				encodingHelper
 			);

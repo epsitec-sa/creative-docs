@@ -98,6 +98,28 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public string GetAddressComplement()
+		{
+			var address = this.GetAddress ();
+
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					// If the household has a post box, we drop the complement if there is one and
+					// we replace it by the post box.
+					return string.IsNullOrEmpty (address.PostBox)
+						? address.AddressLine1
+						: address.PostBox;
+
+				case SubscriptionType.LegalPerson:
+					return address.AddressLine1;
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
 		public AiderAddressEntity GetAddress()
 		{
 			switch (this.SubscriptionType)
