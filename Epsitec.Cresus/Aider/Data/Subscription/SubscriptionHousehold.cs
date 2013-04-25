@@ -37,6 +37,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.Town = town;
 			this.CountryCode = countryCode;
 			this.Lastnames = lastnames
+				.Distinct ()
 				.OrderBy (n => n)
 				.ToList ()
 				.AsReadOnly ();
