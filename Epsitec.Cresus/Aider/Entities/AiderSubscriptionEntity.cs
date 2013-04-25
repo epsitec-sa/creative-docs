@@ -53,6 +53,7 @@ namespace Epsitec.Aider.Entities
 					return this.Household.GetHonorific ();
 
 				case SubscriptionType.LegalPerson:
+					// TODO Implement this.
 					throw new NotImplementedException ();
 
 				default:
