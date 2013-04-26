@@ -175,6 +175,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 					var letters = houseNumber
 						.SkipWhile (c => char.IsDigit (c))
+						.TakeWhile (c => !char.IsDigit (c))
 						.Take (3);
 
 					var chars = digits.Concat (letters).ToArray ();
