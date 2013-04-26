@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets.Platform
 {
@@ -1046,6 +1047,8 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 
+		
+
 		internal void SetNativeIcon(System.IO.Stream iconStream)
 		{
 			System.Drawing.Icon nativeIcon = new System.Drawing.Icon (iconStream);
@@ -1057,24 +1060,30 @@ namespace Epsitec.Common.Widgets.Platform
 			byte[] buffer = new	 byte[iconStream.Length];
 			iconStream.Read (buffer, 0, buffer.Length);
 			string path = System.IO.Path.GetTempFileName ();
+
+			int smallDx = Bitmap.GetIconWidth (IconSize.Small);
+			int smallDy = Bitmap.GetIconHeight (IconSize.Small);
+			
+			int largeDx = Bitmap.GetIconWidth (IconSize.Normal);
+			int largeDy = Bitmap.GetIconHeight (IconSize.Normal);
 			
 			try
 			{
 				System.IO.File.WriteAllBytes (path, buffer);
-				System.Drawing.Icon nativeIcon = Epsitec.Common.Drawing.Bitmap.LoadNativeIcon (path, dx, dy);
+				var nativeIcon = Epsitec.Common.Drawing.Bitmap.LoadNativeIcon (path, dx, dy);
 
-#if false
 				//	This does not work (see http://stackoverflow.com/questions/2266479/setclasslonghwnd-gcl-hicon-hicon-cannot-replace-winforms-form-icon)
-				if ((dx == 16) && (dy == 16))
+				if ((dx == smallDx) && (dy == smallDy))
 				{
 					Win32Api.SetClassLong (this.Handle, Win32Const.GCL_HICONSM, nativeIcon.Handle.ToInt32 ());
+					Win32Api.SendMessage (this.Handle, Win32Const.WM_SETICON, (System.IntPtr) Win32Const.ICON_SMALL, nativeIcon.Handle);
 				}
-				else if ((dx == 32) && (dy == 32))
+				else if ((dx == largeDx) && (dy == largeDy))
 				{
 					Win32Api.SetClassLong (this.Handle, Win32Const.GCL_HICON, nativeIcon.Handle.ToInt32 ());
+					Win32Api.SendMessage (this.Handle, Win32Const.WM_SETICON, (System.IntPtr) Win32Const.ICON_BIG, nativeIcon.Handle);
 				}
 				else
-#endif
 				{
 					base.Icon = nativeIcon;
 				}

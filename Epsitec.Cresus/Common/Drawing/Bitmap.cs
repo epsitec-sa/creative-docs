@@ -1,13 +1,16 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing.Platform;
+using Epsitec.Common.Support.Extensions;
 
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Drawing
 {
 	using BitmapData = System.Drawing.Imaging.BitmapData;
+	using Epsitec.Common.Support.Platform.Win32;
+	using Epsitec.Common.Widgets.Platform;
 	
 	/// <summary>
 	/// La classe Bitmap encapsule une image de type bitmap.
@@ -549,6 +552,34 @@ namespace Epsitec.Common.Drawing
 			return IconLoader.LoadIcon (path, dx, dy);
 		}
 
+		public static int GetIconWidth(IconSize iconSize)
+		{
+			switch (iconSize)
+			{
+				case IconSize.Default:
+				case IconSize.Normal:
+					return Win32Api.GetSystemMetrics (Win32Const.SM_CXICON);
+				case IconSize.Small:
+					return Win32Api.GetSystemMetrics (Win32Const.SM_CXSMICON);
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", iconSize.GetQualifiedName ()));
+			}
+		}
+		
+		public static int GetIconHeight(IconSize iconSize)
+		{
+			switch (iconSize)
+			{
+				case IconSize.Default:
+				case IconSize.Normal:
+					return Win32Api.GetSystemMetrics (Win32Const.SM_CYICON);
+				case IconSize.Small:
+					return Win32Api.GetSystemMetrics (Win32Const.SM_CYSMICON);
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", iconSize.GetQualifiedName ()));
+			}
+		}
+
 		public static Image FromNativeIcon(PlatformSystemIcon systemIcon)
 		{
 			System.Drawing.Icon icon = null;
@@ -880,9 +911,9 @@ namespace Epsitec.Common.Drawing
 		public static Image FromManifestResource(string resourceName, System.Reflection.Assembly assembly)
 		{
 			if (resourceName == null)
-            {
+			{
 				return null;
-            }
+			}
 
 			Image bitmap = Bitmap.FromManifestResource (resourceName, assembly, new Point (0, 0));
 			

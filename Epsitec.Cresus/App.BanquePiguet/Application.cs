@@ -215,9 +215,13 @@ namespace Epsitec.App.BanquePiguet
 				Text = this.ShortWindowTitle,
 			};
 
+			this.Window.MakeMinimizableFixedSizeWindow ();
+			
+			//	This must be called after the window was configured, or else the default icon
+			//	defined by the CLR would replace the icon we want:
+			
 			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico", 16, 16);
 			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico", 32, 32);
-			this.Window.MakeMinimizableFixedSizeWindow ();
 		}
 
 		/// <summary>

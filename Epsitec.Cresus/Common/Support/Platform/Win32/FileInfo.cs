@@ -1,7 +1,8 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Common.Widgets.Platform;
 
 namespace Epsitec.Common.Support.Platform.Win32
 {
@@ -781,7 +782,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			public override int  GetHashCode()
 			{
- 				return this.path.GetHashCode () ^ this.mode.GetHashCode ();
+				return this.path.GetHashCode () ^ this.mode.GetHashCode ();
 			}
 
 			private FolderItem item;

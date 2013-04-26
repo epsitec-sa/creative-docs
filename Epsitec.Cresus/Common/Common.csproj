@@ -630,7 +630,6 @@
     <Compile Include="Support\Platform\Win32\ShellShortcut.cs" />
     <Compile Include="Support\Platform\Win32\StockIcons.cs" />
     <Compile Include="Support\Platform\Win32\UserAccountApi.cs" />
-    <Compile Include="Support\Platform\Win32\Win32Const.cs" />
     <Compile Include="Support\PlugIns\IPlugInAttribute.cs" />
     <Compile Include="Support\PlugIns\PlugInFactory.cs" />
     <Compile Include="Support\PrivilegeManager.cs" />

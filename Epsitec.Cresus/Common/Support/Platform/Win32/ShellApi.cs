@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 namespace Epsitec.Common.Support.Platform.Win32
 {
 	using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
+	using Epsitec.Common.Widgets.Platform;
 
 	internal static class ShellApi
 	{

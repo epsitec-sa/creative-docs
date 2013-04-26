@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Platform
@@ -9,8 +9,20 @@ namespace Epsitec.Common.Widgets.Platform
 	/// </summary>
 	internal class Win32Const
 	{
+		public const int INFOTIPSIZE			= 1024;
+		public const int MAX_PATH				= 260;
+		public const int MAX_SHORTPATH			= 14;
+
 		public const int GCL_HICON   = -14;
 		public const int GCL_HICONSM = -34;
+
+		public const int ICON_SMALL = 0;
+		public const int ICON_BIG = 1;
+
+		public const int SM_CXICON   = 11;
+		public const int SM_CYICON   = 12;
+		public const int SM_CXSMICON = 49;
+		public const int SM_CYSMICON = 50;
 
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_QUERYENDSESSION	= 0x0011;
@@ -21,6 +33,7 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WM_GETMINMAXINFO   = 0x0024;
 		public const int WM_WINDOWPOSCHANGING = 0x0046;
 		public const int WM_WINDOWPOSCHANGED = 0x0047;
+		public const int WM_SETICON			= 0x0080;
 		public const int WM_NCACTIVATE		= 0x0086;
 		public const int WM_NCLBUTTONDOWN	= 0x00A1;
 		public const int WM_NCRBUTTONDOWN	= 0x00A4;

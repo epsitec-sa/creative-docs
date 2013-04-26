@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
@@ -23,6 +23,7 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, uint msg, System.IntPtr wParam, System.IntPtr lParam);
 		[DllImport ("User32.dll")]	internal extern static bool PostThreadMessage(int threadId, uint msg, System.IntPtr wParam, System.IntPtr lParam);
 		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);
+		[DllImport ("User32.dll")]	internal extern static int GetSystemMetrics(int smIndex);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr FindWindow(string windowClass, string windowTitle);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDesktopWindow();

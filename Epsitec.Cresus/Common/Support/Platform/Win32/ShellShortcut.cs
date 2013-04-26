@@ -4,6 +4,7 @@
 namespace Epsitec.Common.Support.Platform.Win32
 {
 	using ProcessWindowStyle = System.Diagnostics.ProcessWindowStyle;
+	using Epsitec.Common.Widgets.Platform;
 	
 	internal sealed class ShellShortcut : System.IDisposable
 	{
