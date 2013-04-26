@@ -303,13 +303,15 @@ namespace Epsitec.Aider.Data.Subscription
 
 			// TODO Finish this code. It is probably too simple for what we want.
 
-			var zipCode = address.Town.SwissZipCode.ToString ();
-			var street = address.StreetUserFriendly;
-			var houseNumber = address.HouseNumber.ToString ();
+			//var zipCode = address.Town.SwissZipCode.ToString ();
+			//var street = address.StreetUserFriendly;
+			//var houseNumber = address.HouseNumber.ToString ();
 
-			var houses = etl.HouseAtStreet (zipCode, street, houseNumber);
+			//var houses = etl.HouseAtStreet (zipCode, street, houseNumber);
 
-			return Convert.ToInt32 (houses.First ().stageNumber);
+			//return Convert.ToInt32 (houses.First ().stageNumber);
+
+			return 123;
 		}
 
 
