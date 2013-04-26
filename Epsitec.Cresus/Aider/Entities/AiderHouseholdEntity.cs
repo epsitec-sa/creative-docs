@@ -314,7 +314,12 @@ namespace Epsitec.Aider.Entities
 				{
 					for (int j = i + 1; j < tmp.Count; j++)
 					{
-						if (tmp[j].Contains (tmp[i]))
+						// Here we compare with case insensitivity, so that we consider names like
+						// "von Siebenthal" and "Von Siebenthal" as pseudo duplicates.
+						var comparison = StringComparison.InvariantCultureIgnoreCase;
+						var isDuplicate= tmp[j].IndexOf (tmp[i], comparison) != -1;
+
+						if (isDuplicate)
 						{
 							tmp.RemoveAt (j);
 							j--;
