@@ -77,6 +77,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-echdownload"))
+				{
+					AiderProgram.DownloadEchData (args);
+					return;
+				}
+
 				if (args.Contains ("-echimportation"))
 				{
 					AiderProgram.RunEchImportation (args);
@@ -109,6 +115,19 @@ namespace Epsitec.Aider
 			}
 
 			AiderProgram.RunNormalMode (args);
+		}
+
+		private static void DownloadEchData(string[] args)
+		{
+			var eChDataDirPath  = AiderProgram.GetString (args, "-echdir:", true);
+			var eChDataFileName = AiderProgram.GetString (args, "-echfile:", false);
+
+			var download = EchDataDownloader.Download (eChDataDirPath, eChDataFileName);
+
+			if (AiderProgram.GetBool (args, "-echdelete:", false).GetValueOrDefault ())
+			{
+				download.DeleteDownloadedFilesButLast ();
+			}
 		}
 
 		private static void RunEchImportation(string[] args)

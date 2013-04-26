@@ -101,6 +101,7 @@
     <Compile Include="Data\Subscription\SubscriptionHouseholdComparer.cs" />
     <Compile Include="Data\Subscription\SubscriptionGenerator.cs" />
     <Compile Include="Data\Subscription\SubscriptionHousehold.cs" />
+    <Compile Include="Data\ECh\EchDataDownloader.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
