@@ -238,8 +238,8 @@ namespace Epsitec.Aider.Entities
 			//	belong to different parishes. Just pick the parish of the first one.
 
 			return this.Members
-				       .Select (m => m.ParishGroup)
-				       .FirstOrDefault (p => p.IsNotNull ());
+				.Select (m => m.ParishGroup)
+				.FirstOrDefault (p => p.IsNotNull ());
 		}
 
 
