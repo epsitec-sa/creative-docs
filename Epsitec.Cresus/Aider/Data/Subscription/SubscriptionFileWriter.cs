@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var title = SubscriptionFileWriter.Process
 			(
-				subscription.Household.GetHonorific (),
+				subscription.Household.GetHonorific (false),
 				SubscriptionFileLine.TitleLength,
 				encodingHelper
 			);

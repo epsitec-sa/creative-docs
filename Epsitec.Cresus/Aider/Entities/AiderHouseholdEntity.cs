@@ -65,7 +65,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public string GetHonorific()
+		public string GetHonorific(bool abbreviated)
 		{
 			var honorific = this.HouseholdMrMrs;
 
@@ -73,7 +73,7 @@ namespace Epsitec.Aider.Entities
 			var heads = AiderHouseholdEntity.GetHeads (contacts);
 			var children = AiderHouseholdEntity.GetChildren (contacts);
 
-			return AiderHouseholdEntity.GetHeadTitle (honorific, heads, children, false);
+			return AiderHouseholdEntity.GetHeadTitle (honorific, heads, children, abbreviated);
 		}
 
 
