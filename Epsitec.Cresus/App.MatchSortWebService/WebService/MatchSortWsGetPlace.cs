@@ -10,6 +10,7 @@ namespace App.MatchSortWebService
 {
 	public class MatchSortWsGetPlace : NancyModule
 	{
+		/*
 		public MatchSortWsGetPlace()
 		{
 			Get["/WS/MATCHSORT/PLACE/ZIP/{zip}"] = parameters =>
@@ -22,7 +23,7 @@ namespace App.MatchSortWebService
                 return this.getPlaceFilteredBy(null, parameters.name);
             };
 		}
-
+		
 		private Response getPlaceFilteredBy(string zipFilter,string nameFilter)
 		{
 			var jsonData = new List<object> ();
@@ -40,6 +41,6 @@ namespace App.MatchSortWebService
 			{
 				StatusCode = HttpStatusCode.OK,
 			};
-		}
+		}*/
 	}
 }

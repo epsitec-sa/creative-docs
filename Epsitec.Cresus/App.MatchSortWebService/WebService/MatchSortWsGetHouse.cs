@@ -10,6 +10,7 @@ namespace App.MatchSortWebService
 {
 	public class MatchSortWsGetHouse : NancyModule
 	{
+		/*
 		public MatchSortWsGetHouse()
 		{
 			Get["/WS/MATCHSORT/PLACE/{zip}/STREET/{street}"] = parameters =>
@@ -59,6 +60,6 @@ namespace App.MatchSortWebService
             {
                 StatusCode = HttpStatusCode.OK,
             };
-        }
+        }*/
 	}
 }

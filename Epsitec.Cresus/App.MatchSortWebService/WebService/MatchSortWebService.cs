@@ -5,6 +5,7 @@ using System.Text;
 using Nancy;
 using Nancy.Hosting.Self;
 using Epsitec.Data.Platform;
+using System.IO;
 
 namespace App.MatchSortWebService
 {
@@ -35,7 +36,7 @@ namespace App.MatchSortWebService
 		}
 
 		private NancyHost hosting;
-		public static MatchSortEtl data = new MatchSortEtl();
+		//public static MatchSortEtl data = new MatchSortEtl (Path.GetDirectoryName (Application.ExecutablePath), @"s:/MAT[CH]news.csv", false);
  
 	}
 
