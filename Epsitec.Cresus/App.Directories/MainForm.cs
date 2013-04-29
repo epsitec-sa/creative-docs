@@ -15,6 +15,7 @@ using Epsitec.Data.Platform.Bings;
 using Microsoft.Maps.MapControl.WPF;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 
 
 
@@ -126,7 +127,7 @@ namespace App.Directories
 			foreach (DirectoriesEntryAdd add in result.GetEntries())
 			{
 				var node = this.result_tree.Nodes.Add (String.Format ("{0} {1}, {2}", add.FirstName, add.LastName, add.StateCode));
-				node.Tag = String.Format ("{0}/{1} {2}/{3}/{4}", add.Zip, add.FirstName.Split(' ')[0], add.LastName,add.StreetName,add.HouseNo);
+				node.Tag = String.Format ("{0}/{1} {2}/{3}/{4}", add.Zip, add.FirstName.Split (' ')[0], add.LastName, add.StreetName, add.HouseNo);
 				if (add.Profession!="")
 				{
 					node.Nodes.Add ("Profession: " + add.Profession);
@@ -250,10 +251,7 @@ namespace App.Directories
                     this.GetGooglePlusImage(TagArgs[1],this.lst_head);
                 }
 
-                if (this.etl != null)
-                {
-                    node.Nodes.Add(this.etl.DeliveryMessengerNumber(TagArgs[0],"", TagArgs[2], TagArgs[3]));
-                }
+                
 				
 			}
 		}
@@ -289,7 +287,47 @@ namespace App.Directories
 
         private void cmd_enable_match_sort_Click(object sender, EventArgs e)
         {
-            this.etl = new MatchSortEtl();
+			if (this.chk_update_matchsort.Checked)
+			{
+				this.etl = new MatchSortEtl (Path.GetDirectoryName (Application.ExecutablePath), @"s:/MAT[CH]news.csv", true);
+			}
+			else
+			{
+				this.etl = new MatchSortEtl (Path.GetDirectoryName (Application.ExecutablePath), @"s:/MAT[CH]news.csv", false);
+			}
+			
+			this.cmd_enable_match_sort.Visible = false;
         }
+
+		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			if (this.etl!=null)
+			{
+				this.etl.Dispose ();
+			}
+			
+		}
+
+		private void cmd_test_match_Click(object sender, EventArgs e)
+		{
+			if (this.etl != null)
+			{
+				this.result_tree.Nodes.Clear ();
+
+				foreach (string s in this.etl.CustomQuery (this.txt_match_sql.Text))
+				{
+					this.result_tree.Nodes.Add (s);
+				}
+				
+			}
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+			if (this.etl!=null)
+			{
+				var test = this.etl.GetMessenger ("2112", "rue centrale", "2");
+			}
+		}
 	}
 }

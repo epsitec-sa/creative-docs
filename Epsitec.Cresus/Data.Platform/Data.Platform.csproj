@@ -46,6 +46,9 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\External\SQLite\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -73,10 +76,12 @@
     <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
+    <Compile Include="MatchSort\MatchSortEtl.cs" />
     <Compile Include="MatchSort\MatchSortCompositeKey.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
-    <Compile Include="MatchSort\MatchSortEtl.cs" />
+    <Compile Include="MatchSort\MatchSortEtlOldImpl.cs" />
+    <Compile Include="MatchSort\MatchSortEtlBidouille.cs" />
     <Compile Include="MatchSort\MatchSortHouse.cs" />
     <Compile Include="MatchSort\MatchSortPlace.cs" />
     <Compile Include="MatchSort\MatchSortStreet.cs" />
