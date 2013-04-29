@@ -78,7 +78,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public string GetLastname()
+		public List<string> GetFirstnames()
 		{
 			var honorific = this.HouseholdMrMrs;
 
@@ -86,11 +86,11 @@ namespace Epsitec.Aider.Entities
 			var heads = AiderHouseholdEntity.GetHeads (contacts);
 			var children = AiderHouseholdEntity.GetChildren (contacts);
 
-			return AiderHouseholdEntity.GetHeadLastname (honorific, heads, children, true);
+			return AiderHouseholdEntity.GetHeadFirstnames (honorific, heads, children);
 		}
 
 
-		public string GetFirstname(bool abbreviated)
+		public List<string> GetLastnames()
 		{
 			var honorific = this.HouseholdMrMrs;
 
@@ -98,7 +98,7 @@ namespace Epsitec.Aider.Entities
 			var heads = AiderHouseholdEntity.GetHeads (contacts);
 			var children = AiderHouseholdEntity.GetChildren (contacts);
 
-			return AiderHouseholdEntity.GetHeadFirstname (honorific, heads, children, abbreviated);
+			return AiderHouseholdEntity.GetHeadLastnames (honorific, heads, children, true);
 		}
 
 
@@ -260,7 +260,9 @@ namespace Epsitec.Aider.Entities
 		private static string BuildDisplayName(IList<AiderPersonEntity> heads, IList<AiderPersonEntity> children, HouseholdMrMrs order)
 		{
 			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children, true);
-			var headLastname = AiderHouseholdEntity.GetHeadLastname (order, heads, children, false);
+
+			var headLastnames = AiderHouseholdEntity.GetHeadLastnames (order, heads, children, false);
+			var headLastname = StringUtils.Join (" ", headLastnames);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
 		}
@@ -287,7 +289,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static string GetHeadLastname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool removePseudoDuplicates)
+		private static List<string> GetHeadLastnames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool removePseudoDuplicates)
 		{
 			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
 				.Select (p => p.eCH_Person.PersonOfficialName)
@@ -331,21 +333,15 @@ namespace Epsitec.Aider.Entities
 				headNames = tmp;
 			}
 
-			return StringUtils.Join (" ", headNames);
+			return headNames.ToList ();
 		}
 
 
-		private static string GetHeadFirstname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool abbreviated)
+		private static List<string> GetHeadFirstnames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
 		{
-			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
-				.Select (p => p.GetCallName ());
-
-			if (abbreviated)
-			{
-				headNames = headNames.Select (n => NameProcessor.GetAbbreviatedFirstname (n));
-			}
-
-			return StringUtils.Join (" et ", headNames);
+			return AiderHouseholdEntity.GetHeadForNames (order, heads, children)
+				.Select (p => p.GetCallName ())
+				.ToList ();
 		}
 
 
