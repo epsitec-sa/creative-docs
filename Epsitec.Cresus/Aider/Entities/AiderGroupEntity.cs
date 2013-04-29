@@ -162,7 +162,19 @@ namespace Epsitec.Aider.Entities
 			return false;
 		}
 
+		public bool CanBeRenamedByCurrentUser()
+		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			var userPowerLevel = user.PowerLevel;
 
+			if ((userPowerLevel != UserPowerLevel.None) &&
+				(userPowerLevel <= UserPowerLevel.Administrator))
+			{
+				return true;
+			}
+
+			return false;
+		}
 
 		public override FormattedText GetSummary()
 		{

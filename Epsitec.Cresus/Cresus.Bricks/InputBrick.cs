@@ -45,6 +45,18 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.ReadOnly));
 		}
 
+		public InputBrick<T, TParent> ReadOnly(bool makeReadOnly)
+		{
+			if (makeReadOnly)
+			{
+				return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.ReadOnly));
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public InputBrick<T, TParent> Password()
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Password));
