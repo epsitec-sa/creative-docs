@@ -772,6 +772,7 @@
     <Compile Include="Text\Layout\StretchProfile.cs" />
     <Compile Include="Text\Layout\TextToGlyphMapping.cs" />
     <Compile Include="Text\Layout\UnderlineRecord.cs" />
+    <Compile Include="Text\NameProcessor.cs" />
     <Compile Include="Text\NumberSupport.cs" />
     <Compile Include="Text\ParagraphManager.cs" />
     <Compile Include="Text\ParagraphManagerList.cs" />

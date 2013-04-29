@@ -82,6 +82,7 @@
     <Compile Include="Support\UnitTestLambdaComparer.cs" />
     <Compile Include="Support\UnitTestStringPacker.cs" />
     <Compile Include="Text\UnitTestJaroWinkler.cs" />
+    <Compile Include="Text\UnitTestNameProcessor.cs" />
     <Compile Include="Types\Collections\UnitTestCircularBuffer.cs" />
     <Compile Include="Types\UnitTestEnumType.cs" />
     <Compile Include="Types\UnitTestINameComparer.cs" />
