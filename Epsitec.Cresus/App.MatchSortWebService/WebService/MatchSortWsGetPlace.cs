@@ -27,12 +27,15 @@ namespace App.MatchSortWebService
 		{
 			var jsonData = new List<object> ();
 
-            var placeQuery = MatchSortWebService.data.placesFilteredBy(zipFilter,nameFilter);
+            //var placeQuery = MatchSortWebService.data.placesFilteredBy(zipFilter,nameFilter);
 
-            foreach (var place in placeQuery)
-            {
-                jsonData.Add(place);
-            }
+            //foreach (var place in placeQuery)
+            //{
+            //    jsonData.Add(place);
+            //}
+
+            throw new NotImplementedException();
+
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
 				StatusCode = HttpStatusCode.OK,

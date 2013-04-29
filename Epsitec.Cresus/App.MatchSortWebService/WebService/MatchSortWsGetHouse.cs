@@ -27,12 +27,15 @@ namespace App.MatchSortWebService
 		{
 			var jsonData = new List<object> ();
 
-            var houseQuery = MatchSortWebService.data.HousesAtStreet(zip, streetName);
+            //var houseQuery = MatchSortWebService.data.HousesAtStreet(zip,streetName);
 
-            foreach (var place in houseQuery)
-            {
-                jsonData.Add(place);
-            }
+            //foreach (var place in houseQuery)
+            //{
+            //    jsonData.Add (place);
+            //}
+
+            throw new NotImplementedException();
+
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
 				StatusCode = HttpStatusCode.OK,
@@ -43,12 +46,15 @@ namespace App.MatchSortWebService
         {
             var jsonData = new List<object>();
 
-            var houseQuery = MatchSortWebService.data.HouseAtStreet(zip, streetName,houseNumber);
+            //var houseQuery = MatchSortWebService.data.HouseAtStreet(zip,streetName,houseNumber);
 
-            foreach (var place in houseQuery)
-            {
-                jsonData.Add(place);
-            }
+            //foreach (var place in houseQuery)
+            //{
+            //    jsonData.Add (place);
+            //}
+
+            throw new NotImplementedException();
+
             return new JsonResponse(jsonData, new DefaultJsonSerializer())
             {
                 StatusCode = HttpStatusCode.OK,
