@@ -7,6 +7,8 @@ using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Text;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Entities;
@@ -131,17 +133,7 @@ namespace Epsitec.Aider.Entities
 
 		public string GetShortCallName()
 		{
-			var callname = this.GetCallName ();
-
-			if (string.IsNullOrEmpty (callname))
-			{
-				return "";
-			}
-
-			var longNames  = callname.Split (' ', '-');
-			var shortNames = longNames.Select (x => AiderPersonEntity.GetNameAbbreviation (x));
-
-			return string.Concat (shortNames);
+			return NameProcessor.GetAbbreviatedFirstname (this.GetCallName ());
 		}
 
 		public string GetShortFullName()
@@ -489,27 +481,6 @@ namespace Epsitec.Aider.Entities
 		private void ClearHouseholdCache()
 		{
 			this.households = null;
-		}
-
-		
-		private static string GetNameAbbreviation(string name)
-		{
-			name = name.ToLowerInvariant ();
-
-			if ((name.StartsWith ("ch")) ||
-				(name.StartsWith ("ph")))
-			{
-				var c1 = name.Substring (0, 1).ToUpperInvariant ();
-				var c2 = name.Substring (1, 1);
-
-				return string.Concat (c1, c2, ".");
-			}
-			else
-			{
-				var c1 = name.Substring (0, 1).ToUpperInvariant ();
-
-				return string.Concat (c1, ".");
-			}
 		}
 
 
