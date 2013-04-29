@@ -119,21 +119,56 @@ namespace Epsitec.Aider.Data.Subscription
 				encodingHelper
 			);
 
+			bool truncated;
+			bool abbreviatedFirstname = false;
+
 			var firstname = SubscriptionFileWriter.Process
 			(
-				subscription.Household.GetFirstname (),
+				subscription.Household.GetFirstname (false),
 				SubscriptionFileLine.FirstnameLength,
-				encodingHelper
+				encodingHelper,
+				out truncated
 			);
 
+			// If the first name has been truncated, we abbreviate it.
+			if (truncated)
+			{
+				Debug.WriteLine ("Firstname exceeding 30 chars:" + firstname);
+
+				firstname = SubscriptionFileWriter.Process
+				(
+					subscription.Household.GetFirstname (true),
+					SubscriptionFileLine.FirstnameLength,
+					encodingHelper
+				);
+
+				abbreviatedFirstname = true;
+			}
+
+			// If the name and the first name are too long together, we must shorten them.
 			var nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
 			if (nameLength > SubscriptionFileLine.NameLengthMax)
 			{
 				Debug.WriteLine ("Name exceeding 43 chars:" + lastname + ", " + firstname);
+				
+				// Abbreviate the first name if we haven't done it already.
+				if (!abbreviatedFirstname)
+				{
+					firstname = SubscriptionFileWriter.Process
+					(
+						subscription.Household.GetFirstname (true),
+						SubscriptionFileLine.FirstnameLength,
+						encodingHelper
+					);
+				}
 
-				// TODO Do something more intelligent here.
-				var maxFirstnameLength = SubscriptionFileLine.NameLengthMax - lastname.Length - 1;
-				firstname = firstname.Truncate (maxFirstnameLength);
+				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
+				if (nameLength > SubscriptionFileLine.NameLengthMax)
+				{
+					// TODO Do something more intelligent here.
+					var maxFirstnameLength = SubscriptionFileLine.NameLengthMax - lastname.Length - 1;
+					firstname = firstname.Truncate (maxFirstnameLength);
+				}
 			}
 
 			string addressComplement;
@@ -257,6 +292,22 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private static string Process(string value, int maxLength, EncodingHelper encodingHelper)
 		{
+			bool truncated;
+
+			return SubscriptionFileWriter.Process (value, maxLength, encodingHelper, out truncated);
+		}
+
+
+		private static string Process
+		(
+			string value,
+			int maxLength,
+			EncodingHelper encodingHelper,
+			out bool truncated
+		)
+		{
+			truncated = false;
+
 			if (value == null)
 			{
 				return "";
@@ -266,6 +317,8 @@ namespace Epsitec.Aider.Data.Subscription
 
 			if (converted.Length > maxLength)
 			{
+				truncated = true;
+
 				var truncatedValue = converted.Truncate (maxLength);
 
 				Debug.WriteLine ("Value too long: " + value + ". Truncated to: " + truncatedValue);

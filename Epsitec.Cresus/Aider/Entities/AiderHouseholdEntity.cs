@@ -5,6 +5,7 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -89,7 +90,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public string GetFirstname()
+		public string GetFirstname(bool abbreviated)
 		{
 			var honorific = this.HouseholdMrMrs;
 
@@ -97,7 +98,7 @@ namespace Epsitec.Aider.Entities
 			var heads = AiderHouseholdEntity.GetHeads (contacts);
 			var children = AiderHouseholdEntity.GetChildren (contacts);
 
-			return AiderHouseholdEntity.GetHeadFirstname (honorific, heads, children);
+			return AiderHouseholdEntity.GetHeadFirstname (honorific, heads, children, abbreviated);
 		}
 
 
@@ -334,10 +335,15 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static string GetHeadFirstname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		private static string GetHeadFirstname(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool abbreviated)
 		{
 			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
 				.Select (p => p.GetCallName ());
+
+			if (abbreviated)
+			{
+				headNames = headNames.Select (n => NameProcessor.GetAbbreviatedFirstname (n));
+			}
 
 			return StringUtils.Join (" et ", headNames);
 		}
