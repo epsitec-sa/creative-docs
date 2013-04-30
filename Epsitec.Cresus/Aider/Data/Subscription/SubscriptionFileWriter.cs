@@ -2,7 +2,6 @@
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Text;
@@ -41,23 +40,29 @@ namespace Epsitec.Aider.Data.Subscription
 		private static IEnumerable<SubscriptionFileLine> GetLines(CoreData coreData)
 		{
 			var lines = new List<SubscriptionFileLine> ();
-			var etl = new MatchSortEtl ("S:\\MAT[CH]news.csv");
+			
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
-			AiderEnumerator.Execute (coreData, (b, subscriptions) =>
+			using (var etl = new MatchSortEtl ("S:\\MAT[CH]news.csv"))
 			{
-				foreach (var subscription in subscriptions)
+				AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 				{
-					if (subscription.Count == 0)
+					foreach (var subscription in subscriptions)
 					{
-						continue;
+						if (subscription.Count == 0)
+						{
+							continue;
+						}
+
+						var line = SubscriptionFileWriter.GetLine
+						(
+							subscription, etl, encodingHelper
+						);
+
+						lines.Add (line);
 					}
-
-					var line = SubscriptionFileWriter.GetLine (subscription, etl, encodingHelper);
-
-					lines.Add (line);
-				}
-			});
+				});
+			}
 
 			return lines;
 		}
@@ -676,17 +681,20 @@ namespace Epsitec.Aider.Data.Subscription
 				return SubscriptionFileLine.SwissPostmanNumberPostbox;
 			}
 
-			// TODO Finish this code. It is probably too simple for what we want.
+			var zipCode = address.Town.SwissZipCode.ToString ();
+			var street = address.StreetUserFriendly;
+			var houseNumber = address.HouseNumber.ToString ();
 
-			//var zipCode = address.Town.SwissZipCode.ToString ();
-			//var street = address.StreetUserFriendly;
-			//var houseNumber = address.HouseNumber.ToString ();
+			var postmanNumber = etl.GetMessenger (zipCode, street, houseNumber);
+			
+			if (postmanNumber == null)
+			{
+				// TODO Correct this.
 
-			//var houses = etl.HouseAtStreet (zipCode, street, houseNumber);
+				return 0;
+			}
 
-			//return Convert.ToInt32 (houses.First ().stageNumber);
-
-			return 123;
+			return Convert.ToInt32 (postmanNumber);
 		}
 
 
