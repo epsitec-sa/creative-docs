@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private static IEnumerable<SubscriptionFileLine> GetLines(CoreData coreData)
 		{
 			var lines = new List<SubscriptionFileLine> ();
-			
+
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
 			using (var etl = new MatchSortEtl ("MAT[CH]sort.csv"))
@@ -697,7 +697,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var houseNumber = address.HouseNumber.ToString ();
 
 			var postmanNumber = etl.GetMessenger (zipCode, street, houseNumber);
-			
+
 			if (postmanNumber == null)
 			{
 				// TODO Correct this.
