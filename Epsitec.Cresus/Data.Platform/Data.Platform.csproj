@@ -126,6 +126,10 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <EmbeddedResource Include="DataFiles\alpha2codes.txt" />
+    <Content Include="..\External\SQLite\SQLite.Interop.dll">
+      <Link>SQLite.Interop.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Data.Platform.SwissPostMatch\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
