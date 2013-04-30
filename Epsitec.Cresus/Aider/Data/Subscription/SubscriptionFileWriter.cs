@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Data.Subscription
 			
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
-			using (var etl = new MatchSortEtl ("S:\\MAT[CH]news.csv"))
+			using (var etl = new MatchSortEtl ("MAT[CH]sort.csv"))
 			{
 				AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 				{
