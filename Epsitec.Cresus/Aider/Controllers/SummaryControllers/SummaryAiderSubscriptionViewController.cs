@@ -3,7 +3,11 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Bricks;
+
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+
+using System;
 
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -17,14 +21,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			switch (this.Entity.SubscriptionType)
 			{
 				case SubscriptionType.Household:
-					wall.AddBrick (x => x.Household);
+					wall.AddBrick (x => x.Household)
+						.Attribute (BrickMode.DefaultToSummarySubView);
 					break;
 
 				case SubscriptionType.LegalPerson:
-					wall.AddBrick (x => x.LegalPerson);
+					wall.AddBrick (x => x.LegalPerson)
+						.Attribute (BrickMode.DefaultToSummarySubView);
 					break;
-			}
 
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 	}
 }
