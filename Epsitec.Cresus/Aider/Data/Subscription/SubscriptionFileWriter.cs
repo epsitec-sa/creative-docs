@@ -702,7 +702,7 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				// TODO Correct this.
 
-				return 0;
+				return 123;
 			}
 
 			return Convert.ToInt32 (postmanNumber);
