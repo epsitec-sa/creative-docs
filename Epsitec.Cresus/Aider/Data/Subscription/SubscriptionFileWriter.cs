@@ -47,24 +47,35 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 				{
-					foreach (var subscription in subscriptions)
-					{
-						if (subscription.Count == 0)
-						{
-							continue;
-						}
+					var l = SubscriptionFileWriter.GetLines (subscriptions, etl, encodingHelper);
 
-						var line = SubscriptionFileWriter.GetLine
-						(
-							subscription, etl, encodingHelper
-						);
-
-						lines.Add (line);
-					}
+					lines.AddRange (l);
 				});
 			}
 
 			return lines;
+		}
+
+
+		private static IEnumerable<SubscriptionFileLine> GetLines
+		(
+			IEnumerable<AiderSubscriptionEntity> subscriptions,
+			MatchSortEtl etl,
+			EncodingHelper encodingHelper
+		)
+		{
+			foreach (var subscription in subscriptions)
+			{
+				if (subscription.Count == 0)
+				{
+					continue;
+				}
+
+				yield return SubscriptionFileWriter.GetLine
+				(
+					subscription, etl, encodingHelper
+				);
+			}
 		}
 
 
