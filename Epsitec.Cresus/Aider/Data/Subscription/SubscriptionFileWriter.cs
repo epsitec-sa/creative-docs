@@ -693,10 +693,12 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 
 			var zipCode = address.Town.SwissZipCode.ToString ();
+			var zipAddOn = address.Town.SwissZipCodeAddOn;
 			var street = address.StreetUserFriendly;
-			var houseNumber = address.HouseNumber.ToString ();
+			var number = address.HouseNumber.ToString ();
+			var complement = address.HouseNumberComplement;
 
-			var postmanNumber = etl.GetMessenger (zipCode, street, houseNumber);
+			var postmanNumber = etl.GetMessenger (zipCode, zipAddOn, street, number, complement);
 
 			if (postmanNumber == null)
 			{
