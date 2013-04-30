@@ -50,6 +50,14 @@ namespace Epsitec.Common.Support
 				return name;
 			}
 		}
+
+		public static string ExecutableDirectory
+		{
+			get
+			{
+				return System.Windows.Forms.Application.StartupPath;
+			}
+		}
 		
 		public object							this[string key]
 		{

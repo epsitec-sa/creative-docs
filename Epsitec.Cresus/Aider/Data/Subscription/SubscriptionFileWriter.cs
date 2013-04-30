@@ -2,6 +2,7 @@
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Text;
@@ -40,7 +41,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private static IEnumerable<SubscriptionFileLine> GetLines(CoreData coreData)
 		{
 			var lines = new List<SubscriptionFileLine> ();
-			var etl = new MatchSortEtl ();
+			var etl = new MatchSortEtl (Globals.ExecutableDirectory, "S:\\MAT[CH]news.csv", true);
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
 			AiderEnumerator.Execute (coreData, (b, subscriptions) =>
