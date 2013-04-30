@@ -84,11 +84,12 @@ namespace Epsitec.Data.Platform.MatchSort
 		//todo new_geba
 		private const string CreateTableDeliver="create table if not exists new_bot_b (hauskey number(13),a_plz number(6),bbz_plz number(6),boten_bez number(4),etappen_nr number(3),lauf_nr number(6),ndepot varchar(60)); delete from new_bot_b";
 
-		private const string IndexAll= "create index if not exists idx_zip on new_plz1(plz);create index if not exists idx_street on new_str(str_bez_2l collate nocase); create index if not exists idx_hnr on new_geb(hnr); create index if not exists idx_fhk on new_bot_b(hauskey)";
+        private const string IndexAll = "create index if not exists idx_zip on new_plz1(plz,plz_zz);create index if not exists idx_street on new_str(str_bez_2l collate nocase); create index if not exists idx_hnr on new_geb(hnr,hnr_a collate nocase); create index if not exists idx_fhk on new_bot_b(hauskey)";
 		private const string AnalyseAll= "analyze new_plz1;analyze new_str;analyze new_geb;analyze new_bot_b";
 
         private const string SelectHeader = "select vdat,zcode from new_hea";
-        private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and s.str_bez_2l = @street collate nocase and g.hnr = @house";
+        //private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and s.str_bez_2l = @street collate nocase and g.hnr = @house";
+        private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and p.plz_zz = @zip_addon and s.str_bez_2l = @street collate nocase and g.hnr = @house and g.hnr_a = @alpha collate nocase";
 		
 		private SQLiteConnection Conn;
 		private SQLiteCommand Command;
@@ -336,12 +337,24 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		}
 
-		public string GetMessenger(string zip,string street,string house)
+        /// <summary>
+        /// Get the Messenger number
+        /// Ex: GetMessenger(100006,"avenue floréal","10","a")
+        /// </summary>
+        /// <param name="zip">4 digits zip </param>
+        /// <param name="zip_addon">2 digits additionnal zip </param>
+        /// <param name="street">human readable street name (non case-sensitive)</param>
+        /// <param name="house">house number without complement</param>
+        /// <param name="house_alpha">alpha house number complement (non case-sensitive)</param>
+        /// <returns></returns>
+		public string GetMessenger(string zip,string zip_addon,string street,string house,string house_alpha)
 		{
 			this.Command.CommandText = MatchSortEtl.SelectMessenger;
 			this.Command.Parameters.AddWithValue ("@zip", zip);
+            this.Command.Parameters.AddWithValue("@zip_addon", zip_addon);
 			this.Command.Parameters.AddWithValue ("@street", street);
 			this.Command.Parameters.AddWithValue ("@house", house);
+            this.Command.Parameters.AddWithValue("@house_alpha", house);
 			using (SQLiteDataReader dr = this.Command.ExecuteReader ())
 			{
 				dr.Read ();
