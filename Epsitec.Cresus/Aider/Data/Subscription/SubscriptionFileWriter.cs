@@ -10,7 +10,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 
-using Epsitec.Data.Platform;
+using Epsitec.Data.Platform.MatchSort;
 
 using System;
 
@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private static IEnumerable<SubscriptionFileLine> GetLines(CoreData coreData)
 		{
 			var lines = new List<SubscriptionFileLine> ();
-			var etl = new MatchSortEtl (Globals.ExecutableDirectory, "S:\\MAT[CH]news.csv", true);
+			var etl = new MatchSortEtl ("S:\\MAT[CH]news.csv");
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
 			AiderEnumerator.Execute (coreData, (b, subscriptions) =>
