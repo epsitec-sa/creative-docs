@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Epsitec.Data.Platform;
+using Epsitec.Data.Platform.MatchSort;
 using Epsitec.Data.Platform.Directories;
 using Epsitec.Data.Platform.Directories.Entity;
 using Epsitec.Data.Platform.Bings;
@@ -287,15 +287,9 @@ namespace App.Directories
 
         private void cmd_enable_match_sort_Click(object sender, EventArgs e)
         {
-			if (this.chk_update_matchsort.Checked)
-			{
-				this.etl = new MatchSortEtl (Path.GetDirectoryName (Application.ExecutablePath), @"s:/MAT[CH]news.csv", true);
-			}
-			else
-			{
-				this.etl = new MatchSortEtl (Path.GetDirectoryName (Application.ExecutablePath), @"s:/MAT[CH]news.csv", false);
-			}
 			
+		    this.etl = new MatchSortEtl (@"s:/MAT[CH]news.csv");
+
 			this.cmd_enable_match_sort.Visible = false;
         }
 

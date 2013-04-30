@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Epsitec.Data.Platform
+namespace Epsitec.Data.Platform.MatchSort
 {
 	public sealed class MatchSortPlace
 	{

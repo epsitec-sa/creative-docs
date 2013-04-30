@@ -243,10 +243,6 @@ namespace App.Directories
 			this.txt_match_sql.Size = new System.Drawing.Size(1258, 33);
 			this.txt_match_sql.TabIndex = 19;
 			// 
-			// matchSortEtlBindingSource
-			// 
-			this.matchSortEtlBindingSource.DataSource = typeof(Epsitec.Data.Platform.MatchSortEtl);
-			// 
 			// button1
 			// 
 			this.button1.Location = new System.Drawing.Point(3, 752);

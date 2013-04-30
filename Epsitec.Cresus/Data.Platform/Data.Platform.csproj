@@ -77,11 +77,8 @@
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
     <Compile Include="MatchSort\MatchSortEtl.cs" />
-    <Compile Include="MatchSort\MatchSortCompositeKey.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
-    <Compile Include="MatchSort\MatchSortEtlOldImpl.cs" />
-    <Compile Include="MatchSort\MatchSortEtlBidouille.cs" />
     <Compile Include="MatchSort\MatchSortHouse.cs" />
     <Compile Include="MatchSort\MatchSortPlace.cs" />
     <Compile Include="MatchSort\MatchSortStreet.cs" />
