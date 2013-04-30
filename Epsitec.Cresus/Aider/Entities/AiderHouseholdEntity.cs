@@ -5,7 +5,6 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
