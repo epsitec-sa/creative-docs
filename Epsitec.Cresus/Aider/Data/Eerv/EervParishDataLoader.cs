@@ -300,7 +300,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var id = EervParishDataLoader.PadGroupId (group[GroupHeader.Id]);
 			var name = group[GroupHeader.Name] ?? "";
-			var parishId = group[GroupHeader.ParishId];
+			var parishId = EervParishDataLoader.GetParishId (group[GroupHeader.ParishId]);
 
 			var eervGroup = new EervGroup (id, name);
 
@@ -340,7 +340,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var personId = record[ActivityHeader.PersonId];
 			var groupId = EervParishDataLoader.PadGroupId (record[ActivityHeader.GroupId]);
 
-			var parishId = record[ActivityHeader.ParishId];
+			var parishId = EervParishDataLoader.GetParishId (record[ActivityHeader.ParishId]);
 
 			var activity = new EervActivity (startDate, endDate, remarks);
 
@@ -356,11 +356,23 @@ namespace Epsitec.Aider.Data.Eerv
 
 		internal static EervId LoadEervId(Dictionary<IdHeader, string> record)
 		{
-			var id = record[IdHeader.Id];
+			var id = EervParishDataLoader.GetParishId (record[IdHeader.Id]);
 			var name = record[IdHeader.Name];
 			var kind = EervParishDataLoader.ParseEervKind (record[IdHeader.Kind]);
 
 			return new EervId (id, name, kind);
+		}
+
+
+		private static string GetParishId(string rawId)
+		{
+			// This number is supposed to be on 11 digits. But sometimes, if the the region number
+			// which is supposed to be the first 2 digits starts with 0, the first 0 is implicit. So
+			// if this first 0 is not present, we add it ourselves.
+
+			return rawId.Length == 11
+				? rawId
+				: "0" + rawId;
 		}
 
 
@@ -396,7 +408,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var remarks = record[PersonHeader.RemarksHousehold];
 
-			var parishId = record[PersonHeader.ParishId];
+			var parishId = EervParishDataLoader.GetParishId (record[PersonHeader.ParishId]);
 
 			var household = new EervHousehold (id, address, coordinates, remarks);
 
@@ -524,7 +536,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var householdId = record[PersonHeader.HouseholdId];
 			var householdRank = StringUtils.ParseNullableInt (record[PersonHeader.HouseholdRank]);
 
-			var parishId = record[PersonHeader.ParishId];
+			var parishId = EervParishDataLoader.GetParishId (record[PersonHeader.ParishId]);
 
 			return Tuple.Create (Tuple.Create (person, Tuple.Create (householdId, householdRank)), parishId);
 		}
@@ -541,7 +553,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var legalPerson = new EervLegalPerson (id, name, address, coordinates, contactPerson);
 
-			var parishId = record[PersonHeader.ParishId];
+			var parishId = EervParishDataLoader.GetParishId (record[PersonHeader.ParishId]);
 
 			return Tuple.Create (legalPerson, parishId);
 		}
