@@ -734,10 +734,19 @@ namespace Epsitec.Aider.Data.Subscription
 			var zipCode = address.Town.SwissZipCode.ToString ();
 			var zipAddOn = address.Town.SwissZipCodeAddOn;
 			var street = address.StreetUserFriendly;
-			var number = address.HouseNumber.ToString ();
+			var number = address.HouseNumber.HasValue
+				? InvariantConverter.ToString (address.HouseNumber.Value)
+				: null;
 			var complement = address.HouseNumberComplement;
 
-			var postmanNumber = etl.GetMessenger (zipCode, zipAddOn, street, number, complement);
+			var postmanNumber = etl.GetMessenger
+			(
+				zipCode ?? "",
+				zipAddOn ?? "",
+				street ?? "",
+				number ?? "",
+				complement ?? ""
+			);
 
 			if (postmanNumber == null)
 			{
