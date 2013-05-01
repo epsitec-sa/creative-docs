@@ -33,6 +33,9 @@ namespace Epsitec.Common.Tests.Vs.Text
 				Tuple.Create ("M'Ärc", "M'Ä."),
 				Tuple.Create ("G-Rémi", "G-R."),
 				Tuple.Create ("Lou-K", "L.-K"),
+				Tuple.Create ("Marina Suzy", "M."),   // Non breaking space
+				Tuple.Create ("Marina	Suzy", "M."), // Tab
+				Tuple.Create ("Marina\nSuzy", "M.")   // New line
 			};
 
 			foreach (var sample in samples)

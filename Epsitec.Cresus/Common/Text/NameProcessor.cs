@@ -14,12 +14,22 @@ namespace Epsitec.Common.Text
 			}
 
 			// For the abbreviation, we will keep only the first part of the name, i.e. everything
-			// that comes before the first space in the name.
+			// that comes before the first whitespace in the name.
 
-			var spaceIndex = firstname.IndexOf (' ');
-			if (spaceIndex >= 0)
+			int? whitespaceIndex = null;
+
+			for (int i = 0; i < firstname.Length; i++)
 			{
-				firstname = firstname.Substring (0, spaceIndex);
+				if (char.IsWhiteSpace (firstname[i]))
+				{
+					whitespaceIndex = i;
+					break;
+				}
+			}
+
+			if (whitespaceIndex.HasValue)
+			{
+				firstname = firstname.Substring (0, whitespaceIndex.Value);
 			}
 
 			// Now we want to abbreviate each token and keep the token separators. A token is
