@@ -17,7 +17,7 @@ namespace Epsitec.Common.Tests.Vs.Text
 
 
 		[TestMethod]
-		public void NameProcessorTest()
+		public void GetAbbreviatedFirstnameTest()
 		{
 			var samples = new List<Tuple<string, string>>
 			{
@@ -38,6 +38,39 @@ namespace Epsitec.Common.Tests.Vs.Text
 			foreach (var sample in samples)
 			{
 				var actual = NameProcessor.GetAbbreviatedFirstname(sample.Item1);
+				var expected = sample.Item2;
+
+				Assert.AreEqual (expected, actual);
+			}
+		}
+
+
+		[TestMethod]
+		public void GetShortenedLastnameTest()
+		{
+			var samples = new List<Tuple<string, string>>
+			{
+				Tuple.Create ((string) null, (string) null),
+				Tuple.Create ("", ""),
+				Tuple.Create ("Dupond", "Dupond"),
+				Tuple.Create ("Dupond Durand", "Dupond"),
+				Tuple.Create ("de Busset", "de Busset"),
+				Tuple.Create ("de Busset Durand", "de Busset"),
+				Tuple.Create ("von Allmen", "von Allmen"),
+				Tuple.Create ("von Allmen Durand", "von Allmen"),
+				Tuple.Create ("de la Colline", "de la Colline"),
+				Tuple.Create ("de la Colline Dupuis", "de la Colline"),
+				Tuple.Create ("von der Mühler", "von der Mühler"),
+				Tuple.Create ("von der Mühler SparkassenLeiter", "von der Mühler"),
+				Tuple.Create ("von der Mühler SparkassenLeiter am Das Rhein über Die Wolke", "von der Mühler"),
+				Tuple.Create ("de De La Harpe", "de De La Harpe"),
+				Tuple.Create ("de De La Colline", "de De La Colline"),
+				Tuple.Create ("de De La Colline de la Montagne", "de De La Colline"),
+			};
+
+			foreach (var sample in samples)
+			{
+				var actual = NameProcessor.GetShortenedLastname (sample.Item1);
 				var expected = sample.Item2;
 
 				Assert.AreEqual (expected, actual);

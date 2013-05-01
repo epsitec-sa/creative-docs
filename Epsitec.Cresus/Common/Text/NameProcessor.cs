@@ -98,5 +98,59 @@ namespace Epsitec.Common.Text
 
 			return true;
 		}
+
+		public static string GetShortenedLastname(string lastname)
+		{
+			if (string.IsNullOrEmpty (lastname))
+			{
+				return lastname;
+			}
+
+			// We keep only the part of the name before the first space. The only exception is that
+			// we also keep the particules that are separated from the main name by a space. So we
+			// consider as particules all names that have at most 5 characters that are at the start
+			// of the name. Note that we can have more than one particule.
+			// I chose 5 as the length of the particule because I looked that on Wikipedia and they
+			// have examples of particules in severy languages. The longest ones where Dell', Dall'
+			// and Della (in Italian).
+			// This simple algorithm will of course produce false positives, because it won't
+			// shorten some names that could be. But it will probably never shorten an name that
+			// shouldn't.
+
+			// Here we store the size of the shortened version of the name.
+			var shortSize = 0;
+
+			// Here we store the size of the current token, that we use to check if it is  particule
+			// or not.
+			var tokenSize = 0;
+
+			for (int i = 0; i < lastname.Length; i++)
+			{
+				if (lastname[i] == ' ')
+				{
+					// This is a separator, so we must terminate the token.
+
+					if (tokenSize <= 5)
+					{
+						// The current token is a particule. So we reset the particule size.
+						tokenSize = 0;
+						shortSize++;
+					}
+					else
+					{
+						// The current token is not a particule, so we can return.
+						break;
+					}
+				}
+				else
+				{
+					// Regular symbol, so we increment the sizes.
+					shortSize++;
+					tokenSize++;
+				}
+			}
+
+			return lastname.Substring (0, shortSize);
+		}
 	}
 }
