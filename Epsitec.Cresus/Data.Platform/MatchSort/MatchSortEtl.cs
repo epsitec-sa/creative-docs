@@ -354,7 +354,7 @@ namespace Epsitec.Data.Platform.MatchSort
             this.Command.Parameters.AddWithValue("@zip_addon", zip_addon);
 			this.Command.Parameters.AddWithValue ("@street", street);
 			this.Command.Parameters.AddWithValue ("@house", house);
-            this.Command.Parameters.AddWithValue("@house_alpha", house);
+            this.Command.Parameters.AddWithValue("@house_alpha", house_alpha);
 			using (SQLiteDataReader dr = this.Command.ExecuteReader ())
 			{
 				dr.Read ();
