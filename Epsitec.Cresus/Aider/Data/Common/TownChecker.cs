@@ -95,6 +95,8 @@ namespace Epsitec.Aider.Data.Common
 			TownChecker.Add (corrections, "1000", "lausanne 4", "1000", "Lausanne");
 			TownChecker.Add (corrections, "1133", "lussy", "1167", "Lussy-sur-Morges");
 			TownChecker.Add (corrections, "1987", "mache vs", "1987", "Hérémence");
+			TownChecker.Add (corrections, "2532", "macolin", "2532", "Magglingen/Macolin");
+			TownChecker.Add (corrections, "1837", "chateau d oex", "1660", "Château-d'Oex");
 
 			return corrections;
 		}

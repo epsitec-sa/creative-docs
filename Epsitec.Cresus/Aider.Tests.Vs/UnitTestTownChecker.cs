@@ -317,6 +317,9 @@ namespace Aider.Tests.Vs
 			this.Check ("3415", "Hasle-Ruegsau", "3415", "Hasle-Rüegsau");
 			this.Check ("1113", "St-Saphorin-sur -Morges", "1113", "St-Saphorin-sur-Morges");
 			this.Check ("1250", "Nyon", "1260", "Nyon");
+			this.Check ("2532", "Macolin", "2532", "Magglingen/Macolin");
+			this.Check ("1837", "Château d’Oex", "1660", "Château-d'Oex");
+			this.Check ("1837", "Chateau-d'Oex", "1660", "Château-d'Oex");
 		}
 
 
