@@ -123,13 +123,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var editionId = subscription.GetEditionId ();
 			var postmanNumber = SubscriptionFileWriter.GetPostmanNumber (address, etl);
 
-			var title = SubscriptionFileWriter.Process
-			(
-				household.GetHonorific (false),
-				SubscriptionFileLine.TitleLength,
-				encodingHelper
-			);
-
+			string title;
 			string lastname;
 			string firstname;
 
@@ -137,6 +131,7 @@ namespace Epsitec.Aider.Data.Subscription
 			(
 				household,
 				encodingHelper,
+				out title,
 				out firstname,
 				out lastname
 			);
@@ -190,12 +185,20 @@ namespace Epsitec.Aider.Data.Subscription
 		(
 			AiderHouseholdEntity household,
 			EncodingHelper encodingHelper,
+			out string title,
 			out string firstname,
 			out string lastname
 		)
 		{
 			var firstnames = household.GetFirstnames ();
 			var lastnames = household.GetLastnames ();
+
+			title = SubscriptionFileWriter.Process
+			(
+				household.GetHonorific (false),
+				SubscriptionFileLine.TitleLength,
+				encodingHelper
+			);
 
 			if (firstnames.Count == 1)
 			{
@@ -221,14 +224,19 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 2)
 			{
+				string titleOverride;
+
 				SubscriptionFileWriter.GetHouseholdName
 				(
 					firstnames,
 					lastnames,
 					encodingHelper,
+					out titleOverride,
 					out firstname,
 					out lastname
 				);
+
+				title = titleOverride ?? title;
 			}
 			else
 			{
@@ -307,6 +315,7 @@ namespace Epsitec.Aider.Data.Subscription
 			List<string> rawFirstnames,
 			List<string> rawLastnames,
 			EncodingHelper encodingHelper,
+			out string titleOverride,
 			out string firstname,
 			out string lastname
 		)
@@ -315,6 +324,8 @@ namespace Epsitec.Aider.Data.Subscription
 			// the lastname of the first person in firstname and the firstname and the lastname of
 			// the second person in the lastname. Both fields are supposed to be joined by a "et",
 			// either at the end of the firstname or at the start of the lastname.
+
+			titleOverride = null;
 
 			for (int step = 0; step < 3; step++)
 			{
@@ -385,9 +396,19 @@ namespace Epsitec.Aider.Data.Subscription
 				return;
 			}
 
-			// TODO Better handle this case. Maybe we should make a fallback on a single head and
-			// change the title to Famille.
-			throw new NotSupportedException ();
+			// At this point, we tried to shorten the names, but we could not do it enough. So we
+			// fallback by overriding the title and using only a single member of the familiy.
+
+			titleOverride = HouseholdMrMrs.Famille.GetLongText ();
+
+			SubscriptionFileWriter.GetHouseholdName
+			(
+				rawFirstnames[0],
+				rawLastnames[0],
+				encodingHelper,
+				out firstname,
+				out lastname
+			);
 		}
 
 
