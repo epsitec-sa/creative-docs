@@ -593,20 +593,7 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				Debug.WriteLine ("Invalid house number: " + houseNumber);
 
-				// TODO Do something more intelligent here.
-
-				var digits = houseNumber
-					.TakeWhile (c => char.IsDigit (c))
-					.Take (7);
-
-				var letters = houseNumber
-					.SkipWhile (c => char.IsDigit (c))
-					.TakeWhile (c => !char.IsDigit (c))
-					.Take (3);
-
-				var chars = digits.Concat (letters).ToArray ();
-
-				houseNumber = new String (chars);
+				throw new NotSupportedException ("Invalid house number");
 			}
 		}
 
