@@ -21,6 +21,7 @@ using System.IO;
 
 using System.Linq;
 
+
 namespace Epsitec.Aider.Data.Subscription
 {
 
@@ -43,14 +44,30 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
+			var problems = new List<Tuple<string, string>> ();
+
 			using (var etl = new MatchSortEtl ("MAT[CH]sort.csv"))
 			{
 				AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 				{
-					var l = SubscriptionFileWriter.GetLines (subscriptions, etl, encodingHelper);
-
-					lines.AddRange (l);
+					lines.AddRange (SubscriptionFileWriter.GetLines
+					(
+						subscriptions,
+						etl,
+						encodingHelper,
+						problems
+					));
 				});
+			}
+
+			if (problems.Count > 0)
+			{
+				Debug.WriteLine ("===============================================================");
+
+				foreach (var problem in problems)
+				{
+					Debug.WriteLine (problem.Item1 + " => " + problem.Item2);
+				}
 			}
 
 			return lines;
@@ -61,7 +78,8 @@ namespace Epsitec.Aider.Data.Subscription
 		(
 			IEnumerable<AiderSubscriptionEntity> subscriptions,
 			MatchSortEtl etl,
-			EncodingHelper encodingHelper
+			EncodingHelper encodingHelper,
+			List<Tuple<string, string>> problems
 		)
 		{
 			foreach (var subscription in subscriptions)
@@ -71,10 +89,26 @@ namespace Epsitec.Aider.Data.Subscription
 					continue;
 				}
 
-				yield return SubscriptionFileWriter.GetLine
-				(
-					subscription, etl, encodingHelper
-				);
+				SubscriptionFileLine line;
+
+				try
+				{
+					line = SubscriptionFileWriter.GetLine
+					(
+						subscription, etl, encodingHelper
+					);
+				}
+				catch (Exception e)
+				{
+					line = null;
+
+					problems.Add (Tuple.Create (subscription.Id, e.Message));
+				}
+
+				if (line != null)
+				{
+					yield return line;
+				}
 			}
 		}
 
@@ -442,11 +476,6 @@ namespace Epsitec.Aider.Data.Subscription
 			// If the lastname has been truncated, we shorten it.
 			if (truncatedLastname || forceShortLastname)
 			{
-				if (truncatedLastname)
-				{
-					Debug.WriteLine ("Lastname exceeding 30 chars:" + lastname);
-				}
-
 				lastname = SubscriptionFileWriter.Process
 				(
 					shortLastnameGetter (),
@@ -471,11 +500,6 @@ namespace Epsitec.Aider.Data.Subscription
 			// If the first name has been truncated, we shorten it.
 			if (truncatedFirstname || forceShortFirstname)
 			{
-				if (truncatedFirstname)
-				{
-					Debug.WriteLine ("Firstname exceeding 30 chars:" + firstname);
-				}
-
 				firstname = SubscriptionFileWriter.Process
 				(
 					shortFirstnameGetter (),
@@ -490,13 +514,21 @@ namespace Epsitec.Aider.Data.Subscription
 			var nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
 			if (nameLength <= maxFullnameLength)
 			{
+				if (shortenedFirstname || shortenedLastname)
+				{
+					var message = "Shortened name (Level 1): "
+						+ firstnameGetter () + " " + lastnameGetter ()
+						+ " => "
+						+ firstname + " " + lastname;
+
+					Debug.WriteLine (message);
+				}
+
 				return;
 			}
 
 			// The lastname and the first name are too long when put together. We try to shorten
 			// them.
-
-			Debug.WriteLine ("Name exceeding 43 chars:" + lastname + ", " + firstname);
 
 			// Shorten the firstname if we haven't done it already.
 			if (!shortenedFirstname)
@@ -512,6 +544,13 @@ namespace Epsitec.Aider.Data.Subscription
 				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
 				if (nameLength <= maxFullnameLength)
 				{
+					var message = "Shortened name (Level 2): "
+						+ firstnameGetter () + " " + lastnameGetter ()
+						+ " => "
+						+ firstname + " " + lastname;
+
+						Debug.WriteLine (message);
+
 					return;
 				}
 			}
@@ -531,6 +570,13 @@ namespace Epsitec.Aider.Data.Subscription
 				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
 				if (nameLength <= maxFullnameLength)
 				{
+					var message = "Shortened name (Level 3): "
+						+ firstnameGetter () + " " + lastnameGetter ()
+						+ " => "
+						+ firstname + " " + lastname;
+
+						Debug.WriteLine (message);
+
 					return;
 				}
 			}
@@ -540,10 +586,19 @@ namespace Epsitec.Aider.Data.Subscription
 			// length.
 			// The truncation algorithm assumes that the max length of the first name and that the
 			// max length of the last name are both smaller than the max length of the full name.
-			Debug.WriteLine ("Name cannot be shortened enough:" + lastname + ", " + firstname);
 
 			var maxLength = maxFullnameLength - lastname.Length - 1;
 			firstname = firstname.Truncate (maxLength);
+
+			if (shortenedFirstname || shortenedLastname)
+			{
+				var message = "Shortened name (Level 4): "
+						+ firstnameGetter () + " " + lastnameGetter ()
+						+ " => "
+						+ firstname + " " + lastname;
+
+				Debug.WriteLine (message);
+			}
 		}
 
 
@@ -612,9 +667,10 @@ namespace Epsitec.Aider.Data.Subscription
 
 			if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
 			{
-				Debug.WriteLine ("Invalid house number: " + houseNumber);
+				var message = "Invalid house number: " + houseNumber;
 
-				throw new NotSupportedException ("Invalid house number");
+				Debug.WriteLine (message);
+				throw new NotSupportedException (message);
 			}
 		}
 
@@ -671,7 +727,20 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			bool truncated;
 
-			return SubscriptionFileWriter.Process (value, maxLength, encodingHelper, out truncated);
+			var result = SubscriptionFileWriter.Process
+			(
+				value,
+				maxLength,
+				encodingHelper,
+				out truncated
+			);
+
+			if (truncated)
+			{
+				Debug.WriteLine ("Value has been truncated: " + value + " => " + result);
+			}
+
+			return result;
 		}
 
 
@@ -695,17 +764,10 @@ namespace Epsitec.Aider.Data.Subscription
 			if (converted.Length > maxLength)
 			{
 				truncated = true;
-
-				var truncatedValue = converted.Truncate (maxLength);
-
-				Debug.WriteLine ("Value too long: " + value + ". Truncated to: " + truncatedValue);
-
-				return truncatedValue;
+				converted = converted.Truncate (maxLength);
 			}
-			else
-			{
-				return converted;
-			}
+			
+			return converted;
 		}
 
 
@@ -750,9 +812,13 @@ namespace Epsitec.Aider.Data.Subscription
 
 			if (postmanNumber == null)
 			{
-				// TODO Correct this.
+				var message = "Postman number not found for address: "
+					+ zipCode + ", " + zipAddOn + ", "
+					+ street + ", "
+					+ number + ", " + complement;
 
-				return 123;
+				Debug.WriteLine (message);
+				throw new NotSupportedException (message);
 			}
 
 			return Convert.ToInt32 (postmanNumber);
