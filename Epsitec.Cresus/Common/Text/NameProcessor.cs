@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text
 			// whether or not we must put a dot in the abbreviation.
 			bool singleLetterToken = true;
 
-			for(int i = 0; i < firstname.Length; i++) 
+			for (int i = 0; i < firstname.Length; i++)
 			{
 				var c = firstname[i];
 
