@@ -89,7 +89,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
         private const string SelectHeader = "select vdat,zcode from new_hea";
         //private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and s.str_bez_2l = @street collate nocase and g.hnr = @house";
-        private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and p.plz_zz = @zip_addon and s.str_bez_2l = @street collate nocase and g.hnr = @house and g.hnr_a = @alpha collate nocase";
+        private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and p.plz_zz = @zip_addon and s.str_bez_2l = @street collate nocase and g.hnr = @house and g.hnr_a = @house_alpha collate nocase";
 		
 		private SQLiteConnection Conn;
 		private SQLiteCommand Command;
