@@ -422,7 +422,7 @@ namespace Epsitec.Aider.Data.Subscription
 				lastname = SubscriptionFileWriter.Process
 				(
 					shortLastnameGetter (),
-					SubscriptionFileLine.LastnameLength,
+					maxLastnameLength,
 					encodingHelper
 				);
 
@@ -460,7 +460,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			// If the lastname and the firstname are short enough, we return.
 			var nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-			if (nameLength <= SubscriptionFileLine.NameLengthMax)
+			if (nameLength <= maxFullnameLength)
 			{
 				return;
 			}
@@ -476,13 +476,13 @@ namespace Epsitec.Aider.Data.Subscription
 				firstname = SubscriptionFileWriter.Process
 				(
 					shortFirstnameGetter (),
-					SubscriptionFileLine.FirstnameLength,
+					maxFirstnameLength,
 					encodingHelper
 				);
 
 				// If the lastname and the firstname are short enough, we return.
 				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-				if (nameLength <= SubscriptionFileLine.NameLengthMax)
+				if (nameLength <= maxFullnameLength)
 				{
 					return;
 				}
@@ -494,14 +494,14 @@ namespace Epsitec.Aider.Data.Subscription
 				lastname = SubscriptionFileWriter.Process
 				(
 					shortLastnameGetter (),
-					SubscriptionFileLine.LastnameLength,
+					maxLastnameLength,
 					encodingHelper,
 					out shortenedLastname
 				);
 
 				// If the lastname and the firstname are short enough, we return.
 				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-				if (nameLength <= SubscriptionFileLine.NameLengthMax)
+				if (nameLength <= maxFullnameLength)
 				{
 					return;
 				}
@@ -517,7 +517,7 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				Debug.WriteLine ("Name cannot be shortened enough:" + lastname + ", " + firstname);
 
-				var maxLength = SubscriptionFileLine.NameLengthMax - lastname.Length - 1;
+				var maxLength = maxFullnameLength - lastname.Length - 1;
 				firstname = firstname.Truncate (maxLength);
 			}
 		}
