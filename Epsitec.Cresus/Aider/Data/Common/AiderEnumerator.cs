@@ -1,4 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -103,7 +104,7 @@ namespace Epsitec.Aider.Data.Common
 			var request = AiderEnumerator.CreateBatchRequest<AiderSubscriptionEntity> (skip, take);
 			var aiderSubscriptions = dataContext.GetByRequest<AiderSubscriptionEntity> (request);
 
-			// TODO Add load related data ?
+			AiderEnumerator.LoadRelatedData (dataContext, aiderSubscriptions);
 
 			return aiderSubscriptions;
 		}
@@ -218,6 +219,19 @@ namespace Epsitec.Aider.Data.Common
 				LambdaUtils.Convert ((AiderLegalPersonEntity p) => p.Address),
 				LambdaUtils.Convert ((AiderLegalPersonEntity p) => p.Address.Town),
 			});
+		}
+
+
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderSubscriptionEntity> aiderSubscriptions)
+		{
+			// TODO load legal subscriptions data.
+
+			var aiderHouseholds = aiderSubscriptions
+				.Where (s => s.SubscriptionType == SubscriptionType.Household)
+				.Select (s => s.Household)
+				.ToList ();
+
+			AiderEnumerator.LoadRelatedData (dataContext, aiderHouseholds);
 		}
 
 
