@@ -512,14 +512,10 @@ namespace Epsitec.Aider.Data.Subscription
 			// length.
 			// The truncation algorithm assumes that the max length of the first name and that the
 			// max length of the last name are both smaller than the max length of the full name.
-			nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-			if (nameLength > maxFullnameLength)
-			{
-				Debug.WriteLine ("Name cannot be shortened enough:" + lastname + ", " + firstname);
+			Debug.WriteLine ("Name cannot be shortened enough:" + lastname + ", " + firstname);
 
-				var maxLength = maxFullnameLength - lastname.Length - 1;
-				firstname = firstname.Truncate (maxLength);
-			}
+			var maxLength = maxFullnameLength - lastname.Length - 1;
+			firstname = firstname.Truncate (maxLength);
 		}
 
 
