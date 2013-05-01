@@ -251,12 +251,15 @@ namespace Epsitec.Aider.Data.Subscription
 
 			SubscriptionFileWriter.GetFirstAndLastname
 			(
-				rawFirstname,
-				rawLastname,
+				() => rawFirstname,
+				() => NameProcessor.GetAbbreviatedFirstname (rawFirstname),
+				() => rawLastname,
+				() => NameProcessor.GetShortenedLastname (rawLastname),
 				encodingHelper,
 				SubscriptionFileLine.FirstnameLength,
 				SubscriptionFileLine.LastnameLength,
 				SubscriptionFileLine.NameLengthMax,
+				false,
 				false,
 				out firstname,
 				out lastname
@@ -277,68 +280,25 @@ namespace Epsitec.Aider.Data.Subscription
 			// in firstname and the lastname in lastname. Both firstnames are supposed to be joined
 			// by a "et".
 
-			var shortFirstnames = rawFirstnames
-				.Select (n => NameProcessor.GetAbbreviatedFirstname (n));
-
-			// TODO Shorten the last name in a proper way if necessary.
-			lastname = SubscriptionFileWriter.Process
+			SubscriptionFileWriter.GetFirstAndLastname
 			(
-				rawLastname,
-				SubscriptionFileLine.LastnameLength,
-				encodingHelper
-			);
-
-			bool truncatedFirstname;
-			bool abbreviatedFirstname = false;
-
-			firstname = SubscriptionFileWriter.Process
-			(
-				string.Join (" et ", rawFirstnames),
-				SubscriptionFileLine.FirstnameLength,
-				encodingHelper,
-				out truncatedFirstname
-			);
-
-			// If the first name has been truncated, we abbreviate it.
-			if (truncatedFirstname)
-			{
-				Debug.WriteLine ("Firstname exceeding 30 chars:" + firstname);
-
-				firstname = SubscriptionFileWriter.Process
-				(
-					string.Join (" et ", shortFirstnames),
-					SubscriptionFileLine.FirstnameLength,
-					encodingHelper
-				);
-
-				abbreviatedFirstname = true;
-			}
-
-			// If the name and the first name are too long together, we must shorten them.
-			var nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-			if (nameLength > SubscriptionFileLine.NameLengthMax)
-			{
-				Debug.WriteLine ("Name exceeding 43 chars:" + lastname + ", " + firstname);
-
-				// Abbreviate the first name if we haven't done it already.
-				if (!abbreviatedFirstname)
-				{
-					firstname = SubscriptionFileWriter.Process
+				() => string.Join (" et ", rawFirstnames),
+				() => string.Join
 					(
-						string.Join (" et ", shortFirstnames),
-						SubscriptionFileLine.FirstnameLength,
-						encodingHelper
-					);
-				}
-
-				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-				if (nameLength > SubscriptionFileLine.NameLengthMax)
-				{
-					// TODO Do something more intelligent here.
-					var maxFirstnameLength = SubscriptionFileLine.NameLengthMax - lastname.Length - 1;
-					firstname = firstname.Truncate (maxFirstnameLength);
-				}
-			}
+						" et ",
+						rawFirstnames.Select (n => NameProcessor.GetAbbreviatedFirstname (n))
+					),
+				() => rawLastname,
+				() => NameProcessor.GetShortenedLastname (rawLastname),
+				encodingHelper,
+				SubscriptionFileLine.FirstnameLength,
+				SubscriptionFileLine.LastnameLength,
+				SubscriptionFileLine.NameLengthMax,
+				false,
+				false,
+				out firstname,
+				out lastname
+			);
 		}
 
 
@@ -356,10 +316,11 @@ namespace Epsitec.Aider.Data.Subscription
 			// the second person in the lastname. Both fields are supposed to be joined by a "et",
 			// either at the end of the firstname or at the start of the lastname.
 
-			var forceShortNames = new bool[] { false, true };
-
-			foreach (var param in forceShortNames)
+			for (int step = 0; step < 3; step++)
 			{
+				bool forceShortFirstname = step > 0;
+				bool forceShortLastname = step > 1;
+
 				var firstnames = new string[2];
 				var lastnames = new string[2];
 
@@ -370,13 +331,16 @@ namespace Epsitec.Aider.Data.Subscription
 
 					SubscriptionFileWriter.GetFirstAndLastname
 					(
-						rawFirstnames[i],
-						rawLastnames[i],
+						() => rawFirstnames[i],
+						() => NameProcessor.GetAbbreviatedFirstname (rawFirstnames[i]),
+						() => rawLastnames[i],
+						() => NameProcessor.GetShortenedLastname (rawLastnames[i]),
 						encodingHelper,
+						SubscriptionFileLine.FirstnameLength - 5,
+						SubscriptionFileLine.FirstnameLength - 5,
 						SubscriptionFileLine.FirstnameLength,
-						SubscriptionFileLine.FirstnameLength,
-						SubscriptionFileLine.FirstnameLength,
-						false,
+						forceShortFirstname,
+						forceShortLastname,
 						out fn,
 						out ln
 					);
@@ -422,75 +386,139 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private static void GetFirstAndLastname
 		(
-			string rawFirstname,
-			string rawLastname,
+			Func<string> firstnameGetter,
+			Func<string> shortFirstnameGetter,
+			Func<string> lastnameGetter,
+			Func<string> shortLastnameGetter,
 			EncodingHelper encodingHelper,
 			int maxFirstnameLength,
 			int maxLastnameLength,
 			int maxFullnameLength,
 			bool forceShortFirstname,
+			bool forceShortLastname,
 			out string firstname,
 			out string lastname
 		)
 		{
-			// TODO Shorten the last name in a proper way if necessary.
+			bool truncatedLastname;
+			bool shortenedLastname = false;
+
 			lastname = SubscriptionFileWriter.Process
 			(
-				rawLastname,
+				lastnameGetter (),
 				maxLastnameLength,
-				encodingHelper
+				encodingHelper,
+				out truncatedLastname
 			);
 
+			// If the lastname has been truncated, we shorten it.
+			if (truncatedLastname || forceShortLastname)
+			{
+				if (truncatedLastname)
+				{
+					Debug.WriteLine ("Lastname exceeding 30 chars:" + lastname);
+				}
+
+				lastname = SubscriptionFileWriter.Process
+				(
+					shortLastnameGetter (),
+					SubscriptionFileLine.LastnameLength,
+					encodingHelper
+				);
+
+				shortenedLastname = true;
+			}
+
 			bool truncatedFirstname;
-			bool abbreviatedFirstname = false;
+			bool shortenedFirstname = false;
 
 			firstname = SubscriptionFileWriter.Process
 			(
-				rawFirstname,
+				firstnameGetter (),
 				maxFirstnameLength,
 				encodingHelper,
 				out truncatedFirstname
 			);
 
-			// If the first name has been truncated, we abbreviate it.
+			// If the first name has been truncated, we shorten it.
 			if (truncatedFirstname || forceShortFirstname)
 			{
-				Debug.WriteLine ("Firstname exceeding 30 chars:" + firstname);
+				if (truncatedFirstname)
+				{
+					Debug.WriteLine ("Firstname exceeding 30 chars:" + firstname);
+				}
 
 				firstname = SubscriptionFileWriter.Process
 				(
-					NameProcessor.GetAbbreviatedFirstname (rawFirstname),
+					shortFirstnameGetter (),
 					maxFirstnameLength,
 					encodingHelper
 				);
 
-				abbreviatedFirstname = true;
+				shortenedFirstname = true;
 			}
 
-			// If the name and the first name are too long together, we must shorten them.
+			// If the lastname and the firstname are short enough, we return.
 			var nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
+			if (nameLength <= SubscriptionFileLine.NameLengthMax)
+			{
+				return;
+			}
+
+			// The lastname and the first name are too long when put together. We try to shorten
+			// them.
+
+			Debug.WriteLine ("Name exceeding 43 chars:" + lastname + ", " + firstname);
+
+			// Shorten the firstname if we haven't done it already.
+			if (!shortenedFirstname)
+			{
+				firstname = SubscriptionFileWriter.Process
+				(
+					shortFirstnameGetter (),
+					SubscriptionFileLine.FirstnameLength,
+					encodingHelper
+				);
+
+				// If the lastname and the firstname are short enough, we return.
+				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
+				if (nameLength <= SubscriptionFileLine.NameLengthMax)
+				{
+					return;
+				}
+			}
+
+			// Shorten the lastname if we haven't done it already.
+			if (!shortenedLastname)
+			{
+				lastname = SubscriptionFileWriter.Process
+				(
+					shortLastnameGetter (),
+					SubscriptionFileLine.LastnameLength,
+					encodingHelper,
+					out shortenedLastname
+				);
+
+				// If the lastname and the firstname are short enough, we return.
+				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
+				if (nameLength <= SubscriptionFileLine.NameLengthMax)
+				{
+					return;
+				}
+			}
+
+			// We could not shorten the first name and last name enough. We shall let our fury fall
+			// upon them like Conan the Barbarian! Which means, we truncate them at their maximum
+			// length.
+			// The truncation algorithm assumes that the max length of the first name and that the
+			// max length of the last name are both smaller than the max length of the full name.
+			nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
 			if (nameLength > maxFullnameLength)
 			{
-				Debug.WriteLine ("Name exceeding 43 chars:" + lastname + ", " + firstname);
+				Debug.WriteLine ("Name cannot be shortened enough:" + lastname + ", " + firstname);
 
-				// Abbreviate the first name if we haven't done it already.
-				if (!abbreviatedFirstname)
-				{
-					firstname = SubscriptionFileWriter.Process
-					(
-						NameProcessor.GetAbbreviatedFirstname (rawFirstname),
-						maxFirstnameLength,
-						encodingHelper
-					);
-				}
-
-				nameLength = SubscriptionFileLine.GetNameLength (lastname, firstname);
-				if (nameLength > maxFullnameLength)
-				{
-					// TODO Do something more intelligent here.
-					var maxLength = maxFullnameLength - lastname.Length - 1;
-					firstname = firstname.Truncate (maxLength);
-				}
+				var maxLength = SubscriptionFileLine.NameLengthMax - lastname.Length - 1;
+				firstname = firstname.Truncate (maxLength);
 			}
 		}
 
