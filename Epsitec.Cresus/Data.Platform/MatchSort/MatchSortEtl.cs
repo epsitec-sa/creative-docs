@@ -21,6 +21,13 @@ namespace Epsitec.Data.Platform.MatchSort
 			{
 				this.Command.Dispose ();
 				this.Command = null;
+                this.InsertCommunityCommand.Dispose();
+                this.InsertHouseCommand.Dispose();
+                this.InsertMessengerCommand.Dispose();
+                this.InsertPlaceAltCommand.Dispose();
+                this.InsertPlaceCommand.Dispose();
+                this.InsertStreetCommand.Dispose();
+                this.MessengerCommand.Dispose();
 				this.Conn.Dispose ();
 				Conn=null;
 
@@ -42,6 +49,14 @@ namespace Epsitec.Data.Platform.MatchSort
                     SQLiteConnection.CreateFile("MatchSort.sqlite");
                     this.OpenDatabase();
                     this.CreateTableIfNeededAndResetDb();
+
+                    this.InsertPlaceCommand = this.BuildInsertPlace();
+                    this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt();
+                    this.InsertCommunityCommand = this.BuildInsertCommunity();
+                    this.InsertStreetCommand = this.BuildInsertStreet();
+                    this.InsertHouseCommand = this.BuildInsertHouse();
+                    this.InsertMessengerCommand = this.BuildInsertMessenger();
+
                     this.LoadFromDatabaseCsv(CsvFilePath);
                     this.IndexAndAnalyzeDatabase();
                 }
@@ -56,6 +71,14 @@ namespace Epsitec.Data.Platform.MatchSort
                     if (VersionCsv[0] != VersionDb[0] || VersionCsv[1] != VersionDb[1])
                     {
                         this.CreateTableIfNeededAndResetDb();
+
+                        this.InsertPlaceCommand = this.BuildInsertPlace();
+                        this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt();
+                        this.InsertCommunityCommand = this.BuildInsertCommunity();
+                        this.InsertStreetCommand = this.BuildInsertStreet();
+                        this.InsertHouseCommand = this.BuildInsertHouse();
+                        this.InsertMessengerCommand = this.BuildInsertMessenger();
+
                         this.LoadFromDatabaseCsv(CsvFilePath);
                         this.IndexAndAnalyzeDatabase();
                     }
@@ -74,7 +97,12 @@ namespace Epsitec.Data.Platform.MatchSort
 			
 		}
 
-		
+        private readonly SQLiteCommand InsertPlaceCommand;
+        private readonly SQLiteCommand InsertPlaceAltCommand;
+        private readonly SQLiteCommand InsertCommunityCommand;
+        private readonly SQLiteCommand InsertStreetCommand;
+        private readonly SQLiteCommand InsertHouseCommand;
+        private readonly SQLiteCommand InsertMessengerCommand;
         private readonly SQLiteCommand MessengerCommand;
 		private SQLiteConnection Conn;
 		private SQLiteCommand Command;
@@ -101,7 +129,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
             //SET Journal mode in WAL
             this.Command = new SQLiteCommand(this.Conn);
-            this.Command.CommandText = "PRAGMA journal_mode=WAL;PRAGMA cache_size = 6000;PRAGMA synchronous=OFF";
+            this.Command.CommandText = "PRAGMA journal_mode=WAL;PRAGMA cache_size = 10000;PRAGMA synchronous=OFF;PRAGMA count_changes=OFF;PRAGMA temp_store = 2";
 
             this.Command.ExecuteNonQuery();
         }
@@ -134,6 +162,138 @@ namespace Epsitec.Data.Platform.MatchSort
             this.Transaction.Commit();
         }
 
+        private SQLiteCommand BuildInsertPlace()
+        {
+            var sql = "insert into new_plz1 ("
+                    + "onrp,bfsnr,plz_typ,plz,"
+                    + "plz_zz,gplz,ort_bez_18,"
+                    + "ort_bez_27,kanton,sprachcode,"
+                    + "sprachcode_abw,briefz_durch,"
+                    + "gilt_ab_dat,plz_briefzust,plz_coff)"
+                    + " values "
+                    + "(@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15)";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@1", System.Data.DbType.String);
+            command.Parameters.Add("@2", System.Data.DbType.String);
+            command.Parameters.Add("@3", System.Data.DbType.String);
+            command.Parameters.Add("@4", System.Data.DbType.String);
+            command.Parameters.Add("@5", System.Data.DbType.String);
+            command.Parameters.Add("@6", System.Data.DbType.String);
+            command.Parameters.Add("@7", System.Data.DbType.String);
+            command.Parameters.Add("@8", System.Data.DbType.String);
+            command.Parameters.Add("@9", System.Data.DbType.String);
+            command.Parameters.Add("@10", System.Data.DbType.String);
+            command.Parameters.Add("@11", System.Data.DbType.String);
+            command.Parameters.Add("@12", System.Data.DbType.String);
+            command.Parameters.Add("@13", System.Data.DbType.String);
+            command.Parameters.Add("@14", System.Data.DbType.String);
+            command.Parameters.Add("@15", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+
+        private SQLiteCommand BuildInsertPlaceAlt()
+        {
+            var sql = "insert into new_plz2 ("
+                    + "onrp,laufnummer,bez_typ,"
+                    + "sprachcode,ort_bez_18,"
+                    + "ort_bez_27)"
+                    + " values "
+                    + "(@1,@2,@3,@4,@5,@6)";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@1", System.Data.DbType.String);
+            command.Parameters.Add("@2", System.Data.DbType.String);
+            command.Parameters.Add("@3", System.Data.DbType.String);
+            command.Parameters.Add("@4", System.Data.DbType.String);
+            command.Parameters.Add("@5", System.Data.DbType.String);
+            command.Parameters.Add("@6", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+
+        private SQLiteCommand BuildInsertCommunity()
+        {
+            var sql = "insert into new_com ("
+                    + "bfsnr,gemeindename,kanton,agglonr)"
+                    + " values (@1,@2,@3,@4)";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@1", System.Data.DbType.String);
+            command.Parameters.Add("@2", System.Data.DbType.String);
+            command.Parameters.Add("@3", System.Data.DbType.String);
+            command.Parameters.Add("@4", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+
+        private SQLiteCommand BuildInsertStreet()
+        {
+            var sql = "insert into new_str ("
+                    + "str_id,onrp,str_bez_k,str_bez_l,str_bez_2k,"
+                    + "str_bez_2l,str_lok_typ,str_bez_spc,str_bez_coff,"
+                    + "str_ganzfach,str_fach_onrp)"
+                    + " values (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11)";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@1", System.Data.DbType.String);
+            command.Parameters.Add("@2", System.Data.DbType.String);
+            command.Parameters.Add("@3", System.Data.DbType.String);
+            command.Parameters.Add("@4", System.Data.DbType.String);
+            command.Parameters.Add("@5", System.Data.DbType.String);
+            command.Parameters.Add("@6", System.Data.DbType.String);
+            command.Parameters.Add("@7", System.Data.DbType.String);
+            command.Parameters.Add("@8", System.Data.DbType.String);
+            command.Parameters.Add("@9", System.Data.DbType.String);
+            command.Parameters.Add("@10", System.Data.DbType.String);
+            command.Parameters.Add("@11", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+
+        private SQLiteCommand BuildInsertHouse()
+        {
+            var sql = "insert into new_geb ("
+                    + "hauskey,str_id,hnr,hnr_a,hnr_coff,ganzfach,fach_onrp)"
+                    + " values (@1,@2,@3,@4,@5,@6,@7)";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@1", System.Data.DbType.String);
+            command.Parameters.Add("@2", System.Data.DbType.String);
+            command.Parameters.Add("@3", System.Data.DbType.String);
+            command.Parameters.Add("@4", System.Data.DbType.String);
+            command.Parameters.Add("@5", System.Data.DbType.String);
+            command.Parameters.Add("@6", System.Data.DbType.String);
+            command.Parameters.Add("@7", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+        private SQLiteCommand BuildInsertMessenger()
+        {
+            var sql = "insert into new_bot_b ("
+                    + "hauskey,a_plz,bbz_plz,boten_bez,"
+                    + "etappen_nr,lauf_nr,ndepot)"
+                    + " values  (@1,@2,@3,@4,@5,@6,@7)";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@1", System.Data.DbType.String);
+            command.Parameters.Add("@2", System.Data.DbType.String);
+            command.Parameters.Add("@3", System.Data.DbType.String);
+            command.Parameters.Add("@4", System.Data.DbType.String);
+            command.Parameters.Add("@5", System.Data.DbType.String);
+            command.Parameters.Add("@6", System.Data.DbType.String);
+            command.Parameters.Add("@7", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+
         private void LoadFromDatabaseCsv(string CsvFilePath)
         {
             this.Transaction = this.Conn.BeginTransaction();
@@ -153,59 +313,55 @@ namespace Epsitec.Data.Platform.MatchSort
                         break;
 
                     case "01":
-                        this.Command.CommandText = "insert into new_plz1 (onrp,bfsnr,plz_typ,plz,plz_zz,gplz,ort_bez_18,ort_bez_27,kanton,sprachcode,sprachcode_abw,briefz_durch,gilt_ab_dat,plz_briefzust,plz_coff) values (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15)";
-                        this.Command.Parameters.AddWithValue("@1", lineFields[1]);
-                        this.Command.Parameters.AddWithValue("@2", lineFields[2]);
-                        this.Command.Parameters.AddWithValue("@3", lineFields[3]);
-                        this.Command.Parameters.AddWithValue("@4", lineFields[4]);
-                        this.Command.Parameters.AddWithValue("@5", lineFields[5]);
-                        this.Command.Parameters.AddWithValue("@6", lineFields[6]);
-                        this.Command.Parameters.AddWithValue("@7", lineFields[7]);
-                        this.Command.Parameters.AddWithValue("@8", lineFields[8]);
-                        this.Command.Parameters.AddWithValue("@9", lineFields[9]);
-                        this.Command.Parameters.AddWithValue("@10", lineFields[10]);
-                        this.Command.Parameters.AddWithValue("@11", lineFields[11]);
-                        this.Command.Parameters.AddWithValue("@12", lineFields[12]);
-                        this.Command.Parameters.AddWithValue("@13", lineFields[13]);
-                        this.Command.Parameters.AddWithValue("@14", lineFields[14]);
-                        this.Command.Parameters.AddWithValue("@15", lineFields[15]);
-                        this.Command.ExecuteNonQuery();
+                        this.InsertPlaceCommand.Parameters["@1"].Value = lineFields[1];
+                        this.InsertPlaceCommand.Parameters["@2"].Value = lineFields[2];
+                        this.InsertPlaceCommand.Parameters["@3"].Value = lineFields[3];
+                        this.InsertPlaceCommand.Parameters["@4"].Value = lineFields[4];
+                        this.InsertPlaceCommand.Parameters["@5"].Value = lineFields[5];
+                        this.InsertPlaceCommand.Parameters["@6"].Value = lineFields[6];
+                        this.InsertPlaceCommand.Parameters["@7"].Value = lineFields[7];
+                        this.InsertPlaceCommand.Parameters["@8"].Value = lineFields[8];
+                        this.InsertPlaceCommand.Parameters["@9"].Value = lineFields[9];
+                        this.InsertPlaceCommand.Parameters["@10"].Value = lineFields[10];
+                        this.InsertPlaceCommand.Parameters["@11"].Value = lineFields[11];
+                        this.InsertPlaceCommand.Parameters["@12"].Value = lineFields[12];
+                        this.InsertPlaceCommand.Parameters["@13"].Value = lineFields[13];
+                        this.InsertPlaceCommand.Parameters["@14"].Value = lineFields[14];
+                        this.InsertPlaceCommand.Parameters["@15"].Value = lineFields[15];
+                        this.InsertPlaceCommand.ExecuteNonQuery();
                         break;
 
                     case "02":
-                        this.Command.CommandText = "insert into new_plz2 (onrp,laufnummer,bez_typ,sprachcode,ort_bez_18,ort_bez_27) values (@1,@2,@3,@4,@5,@6)";
-                        this.Command.Parameters.AddWithValue("@1", lineFields[1]);
-                        this.Command.Parameters.AddWithValue("@2", lineFields[2]);
-                        this.Command.Parameters.AddWithValue("@3", lineFields[3]);
-                        this.Command.Parameters.AddWithValue("@4", lineFields[4]);
-                        this.Command.Parameters.AddWithValue("@5", lineFields[5]);
-                        this.Command.Parameters.AddWithValue("@6", lineFields[6]);
-                        this.Command.ExecuteNonQuery();
+                        this.InsertPlaceAltCommand.Parameters["@1"].Value = lineFields[1];
+                        this.InsertPlaceAltCommand.Parameters["@2"].Value = lineFields[2];
+                        this.InsertPlaceAltCommand.Parameters["@3"].Value = lineFields[3];
+                        this.InsertPlaceAltCommand.Parameters["@4"].Value = lineFields[4];
+                        this.InsertPlaceAltCommand.Parameters["@5"].Value = lineFields[5];
+                        this.InsertPlaceAltCommand.Parameters["@6"].Value = lineFields[6];
+                        this.InsertPlaceAltCommand.ExecuteNonQuery();
                         break;
 
                     case "03":
-                        this.Command.CommandText = "insert into new_com (bfsnr,gemeindename,kanton,agglonr) values (@1,@2,@3,@4)";
-                        this.Command.Parameters.AddWithValue("@1", lineFields[1]);
-                        this.Command.Parameters.AddWithValue("@2", lineFields[2]);
-                        this.Command.Parameters.AddWithValue("@3", lineFields[3]);
-                        this.Command.Parameters.AddWithValue("@4", lineFields[4]);
-                        this.Command.ExecuteNonQuery();
+                        this.InsertCommunityCommand.Parameters["@1"].Value = lineFields[1];
+                        this.InsertCommunityCommand.Parameters["@2"].Value = lineFields[2];
+                        this.InsertCommunityCommand.Parameters["@3"].Value = lineFields[3];
+                        this.InsertCommunityCommand.Parameters["@4"].Value = lineFields[4];
+                        this.InsertCommunityCommand.ExecuteNonQuery();
                         break;
 
-                    case "04":
-                        this.Command.CommandText = "insert into new_str (str_id,onrp,str_bez_k,str_bez_l,str_bez_2k,str_bez_2l,str_lok_typ,str_bez_spc,str_bez_coff,str_ganzfach,str_fach_onrp) values (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11)";
-                        this.Command.Parameters.AddWithValue("@1", lineFields[1]);
-                        this.Command.Parameters.AddWithValue("@2", lineFields[2]);
-                        this.Command.Parameters.AddWithValue("@3", lineFields[3]);
-                        this.Command.Parameters.AddWithValue("@4", lineFields[4]);
-                        this.Command.Parameters.AddWithValue("@5", lineFields[5]);
-                        this.Command.Parameters.AddWithValue("@6", lineFields[6]);
-                        this.Command.Parameters.AddWithValue("@7", lineFields[7]);
-                        this.Command.Parameters.AddWithValue("@8", lineFields[8]);
-                        this.Command.Parameters.AddWithValue("@9", lineFields[9]);
-                        this.Command.Parameters.AddWithValue("@10", lineFields[10]);
-                        this.Command.Parameters.AddWithValue("@11", lineFields[11]);
-                        this.Command.ExecuteNonQuery();
+                    case "04":               
+                        this.InsertStreetCommand.Parameters["@1"].Value = lineFields[1];
+                        this.InsertStreetCommand.Parameters["@2"].Value = lineFields[2];
+                        this.InsertStreetCommand.Parameters["@3"].Value = lineFields[3];
+                        this.InsertStreetCommand.Parameters["@4"].Value = lineFields[4];
+                        this.InsertStreetCommand.Parameters["@5"].Value = lineFields[5];
+                        this.InsertStreetCommand.Parameters["@6"].Value = lineFields[6];
+                        this.InsertStreetCommand.Parameters["@7"].Value = lineFields[7];
+                        this.InsertStreetCommand.Parameters["@8"].Value = lineFields[8];
+                        this.InsertStreetCommand.Parameters["@9"].Value = lineFields[9];
+                        this.InsertStreetCommand.Parameters["@10"].Value = lineFields[10];
+                        this.InsertStreetCommand.Parameters["@11"].Value = lineFields[11];
+                        this.InsertStreetCommand.ExecuteNonQuery();
                         break;
 
                     case "05":
@@ -213,16 +369,14 @@ namespace Epsitec.Data.Platform.MatchSort
                         break;
 
                     case "06":
-                        this.Command.CommandText = "insert into new_geb (hauskey,str_id,hnr,hnr_a,hnr_coff,ganzfach,fach_onrp) values (@1,@2,@3,@4,@5,@6,@7)";
-                        this.Command.Parameters.AddWithValue("@1", lineFields[1]);
-                        this.Command.Parameters.AddWithValue("@2", lineFields[2]);
-                        this.Command.Parameters.AddWithValue("@3", lineFields[3]);
-                        this.Command.Parameters.AddWithValue("@4", lineFields[4]);
-                        this.Command.Parameters.AddWithValue("@5", lineFields[5]);
-                        this.Command.Parameters.AddWithValue("@6", lineFields[6]);
-                        this.Command.Parameters.AddWithValue("@7", lineFields[7]);
-                        this.Command.ExecuteNonQuery();
-
+                        this.InsertHouseCommand.Parameters["@1"].Value = lineFields[1];
+                        this.InsertHouseCommand.Parameters["@2"].Value = lineFields[2];
+                        this.InsertHouseCommand.Parameters["@3"].Value = lineFields[3];
+                        this.InsertHouseCommand.Parameters["@4"].Value = lineFields[4];
+                        this.InsertHouseCommand.Parameters["@5"].Value = lineFields[5];
+                        this.InsertHouseCommand.Parameters["@6"].Value = lineFields[6];
+                        this.InsertHouseCommand.Parameters["@7"].Value = lineFields[7];
+                        this.InsertHouseCommand.ExecuteNonQuery();
                         break;
 
                     case "07":
@@ -230,19 +384,18 @@ namespace Epsitec.Data.Platform.MatchSort
                         break;
 
                     case "08":
-                        this.Command.CommandText = "insert into new_bot_b (hauskey,a_plz,bbz_plz,boten_bez,etappen_nr,lauf_nr,ndepot) values  (@1,@2,@3,@4,@5,@6,@7)";
-                        this.Command.Parameters.AddWithValue("@1", lineFields[1]);
-                        this.Command.Parameters.AddWithValue("@2", lineFields[2]);
-                        this.Command.Parameters.AddWithValue("@3", lineFields[3]);
-                        this.Command.Parameters.AddWithValue("@4", lineFields[4]);
-                        this.Command.Parameters.AddWithValue("@5", lineFields[5]);
-                        this.Command.Parameters.AddWithValue("@6", lineFields[6]);
-                        this.Command.Parameters.AddWithValue("@7", lineFields[7]);
-                        this.Command.ExecuteNonQuery();
+                        this.InsertMessengerCommand.Parameters["@1"].Value = lineFields[1];
+                        this.InsertMessengerCommand.Parameters["@2"].Value = lineFields[2];
+                        this.InsertMessengerCommand.Parameters["@3"].Value = lineFields[3];
+                        this.InsertMessengerCommand.Parameters["@4"].Value = lineFields[4];
+                        this.InsertMessengerCommand.Parameters["@5"].Value = lineFields[5];
+                        this.InsertMessengerCommand.Parameters["@6"].Value = lineFields[6];
+                        this.InsertMessengerCommand.Parameters["@7"].Value = lineFields[7];
+                        this.InsertMessengerCommand.ExecuteNonQuery();
                         break;
                 }
                 CommitIndex++;
-                if (CommitIndex % 15000 == 0)
+                if (CommitIndex % 200000 == 0)
                 {
                     this.Transaction.Commit();
                     this.Transaction = this.Conn.BeginTransaction();
@@ -336,6 +489,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			return result;
 
 		}
+
         private SQLiteCommand BuildMessengerCommand()
         {
             var sql = "select b.etappen_nr "

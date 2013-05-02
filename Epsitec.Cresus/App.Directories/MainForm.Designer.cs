@@ -48,13 +48,18 @@ namespace App.Directories
             this.cmd_back = new System.Windows.Forms.Button();
             this.cmd_next = new System.Windows.Forms.Button();
             this.cmd_enable_match_sort = new System.Windows.Forms.Button();
-            this.chk_update_matchsort = new System.Windows.Forms.CheckBox();
             this.cmd_test_match = new System.Windows.Forms.Button();
             this.txt_match_sql = new System.Windows.Forms.TextBox();
             this.matchSortEtlBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.lbl_time_enable_match = new System.Windows.Forms.Label();
             this.lbl_time_get_messengerprepared = new System.Windows.Forms.Label();
             this.cmd_getmessengerprepared = new System.Windows.Forms.Button();
+            this.txt_zip = new System.Windows.Forms.TextBox();
+            this.txt_zip_add = new System.Windows.Forms.TextBox();
+            this.txt_street = new System.Windows.Forms.TextBox();
+            this.txt_house = new System.Windows.Forms.TextBox();
+            this.txt_house_a = new System.Windows.Forms.TextBox();
+            this.cmd_dispose_matchsort = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.img_google_signin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.matchSortEtlBindingSource)).BeginInit();
@@ -209,7 +214,7 @@ namespace App.Directories
             // 
             // cmd_enable_match_sort
             // 
-            this.cmd_enable_match_sort.Location = new System.Drawing.Point(3, 626);
+            this.cmd_enable_match_sort.Location = new System.Drawing.Point(12, 503);
             this.cmd_enable_match_sort.Name = "cmd_enable_match_sort";
             this.cmd_enable_match_sort.Size = new System.Drawing.Size(124, 33);
             this.cmd_enable_match_sort.TabIndex = 16;
@@ -217,19 +222,9 @@ namespace App.Directories
             this.cmd_enable_match_sort.UseVisualStyleBackColor = true;
             this.cmd_enable_match_sort.Click += new System.EventHandler(this.cmd_enable_match_sort_Click);
             // 
-            // chk_update_matchsort
-            // 
-            this.chk_update_matchsort.AutoSize = true;
-            this.chk_update_matchsort.Location = new System.Drawing.Point(133, 626);
-            this.chk_update_matchsort.Name = "chk_update_matchsort";
-            this.chk_update_matchsort.Size = new System.Drawing.Size(135, 17);
-            this.chk_update_matchsort.TabIndex = 17;
-            this.chk_update_matchsort.Text = "chk_update_matchsort";
-            this.chk_update_matchsort.UseVisualStyleBackColor = true;
-            // 
             // cmd_test_match
             // 
-            this.cmd_test_match.Location = new System.Drawing.Point(3, 704);
+            this.cmd_test_match.Location = new System.Drawing.Point(471, 581);
             this.cmd_test_match.Name = "cmd_test_match";
             this.cmd_test_match.Size = new System.Drawing.Size(124, 33);
             this.cmd_test_match.TabIndex = 18;
@@ -240,15 +235,15 @@ namespace App.Directories
             // txt_match_sql
             // 
             this.txt_match_sql.Font = new System.Drawing.Font("Verdana", 15.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txt_match_sql.Location = new System.Drawing.Point(3, 665);
+            this.txt_match_sql.Location = new System.Drawing.Point(12, 542);
             this.txt_match_sql.Name = "txt_match_sql";
-            this.txt_match_sql.Size = new System.Drawing.Size(1258, 33);
+            this.txt_match_sql.Size = new System.Drawing.Size(583, 33);
             this.txt_match_sql.TabIndex = 19;
             // 
             // lbl_time_enable_match
             // 
             this.lbl_time_enable_match.AutoSize = true;
-            this.lbl_time_enable_match.Location = new System.Drawing.Point(130, 646);
+            this.lbl_time_enable_match.Location = new System.Drawing.Point(142, 503);
             this.lbl_time_enable_match.Name = "lbl_time_enable_match";
             this.lbl_time_enable_match.Size = new System.Drawing.Size(35, 13);
             this.lbl_time_enable_match.TabIndex = 22;
@@ -257,7 +252,7 @@ namespace App.Directories
             // lbl_time_get_messengerprepared
             // 
             this.lbl_time_get_messengerprepared.AutoSize = true;
-            this.lbl_time_get_messengerprepared.Location = new System.Drawing.Point(133, 762);
+            this.lbl_time_get_messengerprepared.Location = new System.Drawing.Point(139, 686);
             this.lbl_time_get_messengerprepared.Name = "lbl_time_get_messengerprepared";
             this.lbl_time_get_messengerprepared.Size = new System.Drawing.Size(35, 13);
             this.lbl_time_get_messengerprepared.TabIndex = 24;
@@ -265,7 +260,7 @@ namespace App.Directories
             // 
             // cmd_getmessengerprepared
             // 
-            this.cmd_getmessengerprepared.Location = new System.Drawing.Point(3, 743);
+            this.cmd_getmessengerprepared.Location = new System.Drawing.Point(12, 676);
             this.cmd_getmessengerprepared.Name = "cmd_getmessengerprepared";
             this.cmd_getmessengerprepared.Size = new System.Drawing.Size(124, 32);
             this.cmd_getmessengerprepared.TabIndex = 23;
@@ -273,17 +268,72 @@ namespace App.Directories
             this.cmd_getmessengerprepared.UseVisualStyleBackColor = true;
             this.cmd_getmessengerprepared.Click += new System.EventHandler(this.cmd_getmessengerprepared_Click);
             // 
+            // txt_zip
+            // 
+            this.txt_zip.Location = new System.Drawing.Point(12, 650);
+            this.txt_zip.Name = "txt_zip";
+            this.txt_zip.Size = new System.Drawing.Size(50, 20);
+            this.txt_zip.TabIndex = 25;
+            this.txt_zip.Text = "2112";
+            // 
+            // txt_zip_add
+            // 
+            this.txt_zip_add.Location = new System.Drawing.Point(68, 650);
+            this.txt_zip_add.Name = "txt_zip_add";
+            this.txt_zip_add.Size = new System.Drawing.Size(27, 20);
+            this.txt_zip_add.TabIndex = 26;
+            this.txt_zip_add.Text = "00";
+            // 
+            // txt_street
+            // 
+            this.txt_street.Location = new System.Drawing.Point(109, 650);
+            this.txt_street.Name = "txt_street";
+            this.txt_street.Size = new System.Drawing.Size(187, 20);
+            this.txt_street.TabIndex = 27;
+            this.txt_street.Text = "grand-rue";
+            // 
+            // txt_house
+            // 
+            this.txt_house.Location = new System.Drawing.Point(302, 650);
+            this.txt_house.Name = "txt_house";
+            this.txt_house.Size = new System.Drawing.Size(27, 20);
+            this.txt_house.TabIndex = 28;
+            this.txt_house.Text = "10";
+            // 
+            // txt_house_a
+            // 
+            this.txt_house_a.Location = new System.Drawing.Point(335, 650);
+            this.txt_house_a.Name = "txt_house_a";
+            this.txt_house_a.Size = new System.Drawing.Size(16, 20);
+            this.txt_house_a.TabIndex = 29;
+            // 
+            // cmd_dispose_matchsort
+            // 
+            this.cmd_dispose_matchsort.Location = new System.Drawing.Point(12, 503);
+            this.cmd_dispose_matchsort.Name = "cmd_dispose_matchsort";
+            this.cmd_dispose_matchsort.Size = new System.Drawing.Size(124, 33);
+            this.cmd_dispose_matchsort.TabIndex = 30;
+            this.cmd_dispose_matchsort.Text = "Dispose()";
+            this.cmd_dispose_matchsort.UseVisualStyleBackColor = true;
+            this.cmd_dispose_matchsort.Visible = false;
+            this.cmd_dispose_matchsort.Click += new System.EventHandler(this.cmd_dispose_matchsort_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1274, 891);
+            this.Controls.Add(this.cmd_dispose_matchsort);
+            this.Controls.Add(this.txt_house_a);
+            this.Controls.Add(this.txt_house);
+            this.Controls.Add(this.txt_street);
+            this.Controls.Add(this.txt_zip_add);
+            this.Controls.Add(this.txt_zip);
             this.Controls.Add(this.lbl_time_get_messengerprepared);
             this.Controls.Add(this.cmd_getmessengerprepared);
             this.Controls.Add(this.lbl_time_enable_match);
             this.Controls.Add(this.txt_match_sql);
             this.Controls.Add(this.cmd_test_match);
-            this.Controls.Add(this.chk_update_matchsort);
             this.Controls.Add(this.cmd_enable_match_sort);
             this.Controls.Add(this.cmd_next);
             this.Controls.Add(this.cmd_back);
@@ -331,14 +381,19 @@ namespace App.Directories
 		private System.Windows.Forms.RadioButton opt_name;
 		private System.Windows.Forms.Button cmd_back;
 		private System.Windows.Forms.Button cmd_next;
-		private System.Windows.Forms.Button cmd_enable_match_sort;
-		private System.Windows.Forms.CheckBox chk_update_matchsort;
+        private System.Windows.Forms.Button cmd_enable_match_sort;
 		private System.Windows.Forms.Button cmd_test_match;
 		private System.Windows.Forms.TextBox txt_match_sql;
         private System.Windows.Forms.BindingSource matchSortEtlBindingSource;
         private System.Windows.Forms.Label lbl_time_enable_match;
         private System.Windows.Forms.Label lbl_time_get_messengerprepared;
         private System.Windows.Forms.Button cmd_getmessengerprepared;
+        private System.Windows.Forms.TextBox txt_zip;
+        private System.Windows.Forms.TextBox txt_zip_add;
+        private System.Windows.Forms.TextBox txt_street;
+        private System.Windows.Forms.TextBox txt_house;
+        private System.Windows.Forms.TextBox txt_house_a;
+        private System.Windows.Forms.Button cmd_dispose_matchsort;
 	}
 }
 

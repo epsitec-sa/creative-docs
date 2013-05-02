@@ -290,8 +290,9 @@ namespace App.Directories
             var t = System.Diagnostics.Stopwatch.StartNew();
 		    this.etl = new MatchSortEtl (@"s:/MAT[CH]news.csv");
             t.Stop();
-            this.lbl_time_enable_match.Text =  t.Elapsed.Minutes + "min";
+            this.lbl_time_enable_match.Text =  t.Elapsed.Minutes + "min " + t.Elapsed.Seconds + "s " +t.Elapsed.Milliseconds + "ms";
 			this.cmd_enable_match_sort.Visible = false;
+            this.cmd_dispose_matchsort.Visible = true;
         }
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -322,9 +323,19 @@ namespace App.Directories
             if (this.etl != null)
             {
                 var t = System.Diagnostics.Stopwatch.StartNew();
-                var test = this.etl.GetMessenger("2112", "00", "rue centrale", "2", "");
+                var test = this.etl.GetMessenger(this.txt_zip.Text, this.txt_zip_add.Text, this.txt_street.Text, this.txt_house.Text, this.txt_house_a.Text);
                 t.Stop();
                 this.lbl_time_get_messengerprepared.Text = "Messenger="+ test + " / " + t.Elapsed.Milliseconds + "ms";
+            }
+        }
+
+        private void cmd_dispose_matchsort_Click(object sender, EventArgs e)
+        {
+            if (this.etl != null)
+            {
+                this.etl.Dispose();
+                this.cmd_dispose_matchsort.Visible = false;
+                this.cmd_enable_match_sort.Visible = true;
             }
         }
 	}
