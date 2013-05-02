@@ -44,10 +44,12 @@ namespace Epsitec.Aider.Entities
 			(
 				this.DisplayName, "(", this.LoginName, ")", "\n",
 				TextFormatter.FormatText ("E-mail: ").ApplyBold (), this.Email, "\n",
-				TextFormatter.FormatText ("Paroisse: ").ApplyBold (), this.Parish.Name, "\n",
+				TextFormatter.FormatText ("Groupe: ").ApplyBold (), this.Parish.Name, "\n",
 				TextFormatter.FormatText ("Rôle: ").ApplyBold (), this.Role.Name, "\n",
 				TextFormatter.FormatText ("Administrateur: ").ApplyBold (), this.HasPowerLevel (UserPowerLevel.Administrator).ToYesOrNo (), "\n",
-				TextFormatter.FormatText ("Actif: ").ApplyBold (), this.IsActive.ToYesOrNo (), "\n"
+				TextFormatter.FormatText ("Actif: ").ApplyBold (), this.IsActive.ToYesOrNo (), "\n",
+				TextFormatter.FormatText ("Dernier login: ").ApplyBold (), this.LastLoginDate.ToLocalTime (), "\n",
+				TextFormatter.FormatText ("Dernier accès: ").ApplyBold (), this.LastActivityDate.ToLocalTime (), "\n"
 			);
 		}
 
