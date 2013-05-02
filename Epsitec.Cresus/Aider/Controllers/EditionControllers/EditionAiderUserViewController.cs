@@ -1,6 +1,7 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Override;
@@ -31,8 +32,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private static void AddUserDataBrick(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableAction (0)
-				.EnableAction (1)
+				.EnableAction<ActionAiderUserViewController0SetPassword> ()
+				.EnableAction<ActionAiderUserViewController1SetAdministrator> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Parish)
@@ -51,26 +52,18 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableAction (0)
+				.EnableAction<ActionAiderUserViewController0SetPassword> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.Parish)
-						.ReadOnly ()
-					.Field (x => x.LoginName)
-						.ReadOnly ()
-					.Field (x => x.DisplayName)
-						.ReadOnly ()
+					.Field (x => x.Parish).ReadOnly ()
+					.Field (x => x.LoginName).ReadOnly ()
+					.Field (x => x.DisplayName).ReadOnly ()
 					.Field (x => x.Email)
-					.Field (x => x.Role)
-						.ReadOnly ()
-					.Field (x => x.Disabled)
-						.ReadOnly ()
-					.Field (x => x.EnableGroupEditionCanton)
-						.ReadOnly ()
-					.Field (x => x.EnableGroupEditionRegion)
-						.ReadOnly ()
-					.Field (x => x.EnableGroupEditionParish)
-						.ReadOnly ()
+					.Field (x => x.Role).ReadOnly ()
+					.Field (x => x.Disabled).ReadOnly ()
+					.Field (x => x.EnableGroupEditionCanton).ReadOnly ()
+					.Field (x => x.EnableGroupEditionRegion).ReadOnly ()
+					.Field (x => x.EnableGroupEditionParish).ReadOnly ()
 				.End ();
 		}
 	}
