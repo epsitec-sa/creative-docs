@@ -36,7 +36,9 @@ namespace Epsitec.Aider.Data.Eerv
 		public IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile, FileInfo idFile)
 		{
 			var idRecords = EervDataReader.ReadIds (idFile).ToList ();
-			var personRecords = EervDataReader.ReadPersons (personFile).ToList ();
+			var personRecords = EervDataReader.ReadPersons (personFile)
+				.Where (r => !EervParishDataLoader.SkipPersonRecord (r))
+				.ToList ();
 			var activityRecords = EervDataReader.ReadActivities (activityFile).ToList ();
 			var groupRecords = EervDataReader.ReadGroups (groupFile, superGroupFile).ToList ();
 
@@ -89,6 +91,17 @@ namespace Epsitec.Aider.Data.Eerv
 					yield return new EervParishData (id, households, rawPersons, legalPersons, groups, rawActivities);
 				}
 			}
+		}
+
+
+		private static bool SkipPersonRecord(Dictionary<PersonHeader, string> record)
+		{
+			// We want to skip person records which have no names at all.
+
+			return string.IsNullOrEmpty (record[PersonHeader.Firstname1])
+				&& string.IsNullOrEmpty (record[PersonHeader.Firstname2])
+				&& string.IsNullOrEmpty (record[PersonHeader.Lastname])
+				&& string.IsNullOrEmpty (record[PersonHeader.CorporateName]); 
 		}
 
 
