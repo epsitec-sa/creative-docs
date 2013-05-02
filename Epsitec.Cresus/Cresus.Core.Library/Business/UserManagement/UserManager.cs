@@ -455,11 +455,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			bool isValid = false;
 
-			if (!string.IsNullOrEmpty (loginName) && !string.IsNullOrEmpty (password))
+			if ((!string.IsNullOrEmpty (loginName)) &&
+				(!string.IsNullOrEmpty (password)))
 			{
 				var user = this.FindUser (loginName);
 
-				if (user != null && user.IsActive)
+				if ((user != null) && (user.IsActive))
 				{
 					isValid = this.CheckUserAuthentication (user, password);
 				}
@@ -486,6 +487,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
+		public virtual void NotifySusccessfulLogin(SoftwareUserEntity user)
+		{
+		}
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
 		{

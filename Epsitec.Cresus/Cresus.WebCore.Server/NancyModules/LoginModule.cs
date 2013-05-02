@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public LoginModule(CoreServer coreServer)
 			: base (coreServer, "/log")
 		{
-			Post["/in"] = p => this.Login ();
-			Post["/out"] = p => this.Logout ();
+			this.Post["/in"]  = p => this.Login ();
+			this.Post["/out"] = p => this.Logout ();
 		}
 
 
@@ -35,17 +35,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			bool loggedIn = this.CheckCredentials (username, password);
 
-			this.Session[LoginModule.LoggedInName] = loggedIn;
-
 			if (loggedIn)
 			{
-				this.Session[LoginModule.UserName] = username;
-				this.Session[LoginModule.SessionId] = System.Guid.NewGuid ().ToString ("D");
+				this.SessionLogin (username);
 
 				return CoreResponse.FormSuccess ();
 			}
 			else
 			{
+				this.SessionLogout ();
+				
 				var errors = new Dictionary<string, object> ()
 				{
 					{ "username" , Res.Strings.IncorrectUsername.ToSimpleText () },
@@ -59,9 +58,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		public Response Logout()
 		{
-			this.Session.Delete (LoginModule.UserName);
-			this.Session.Delete (LoginModule.SessionId);
-			this.Session[LoginModule.LoggedInName] = false;
+			this.SessionLogout ();
 
 			var content = new Dictionary<string, object> ()
 			{ 
@@ -72,9 +69,25 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private bool CheckCredentials(string username, string password)
+		private void SessionLogin(string userName)
 		{
-			return this.CoreServer.AuthenticationManager.CheckCredentials (username, password);
+			this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (userName);
+			
+			this.Session[LoginModule.LoggedInName] = true;
+			this.Session[LoginModule.UserName]     = userName;
+			this.Session[LoginModule.SessionId]    = LoginModule.CreateSessionId ();
+		}
+		
+		private void SessionLogout()
+		{
+			this.Session.Delete (LoginModule.UserName);
+			this.Session.Delete (LoginModule.SessionId);
+			this.Session[LoginModule.LoggedInName] = false;
+		}
+		
+		private bool CheckCredentials(string userName, string password)
+		{
+			return this.CoreServer.AuthenticationManager.CheckCredentials (userName, password);
 		}
 
 
@@ -83,6 +96,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			module.Before.AddItemToEndOfPipeline (nc => LoginModule.RequiresAuthentication (nc));
 		}
 
+
+		private static string CreateSessionId()
+		{
+			return System.Guid.NewGuid ().ToString ("D");
+		}
 
 		private static Response RequiresAuthentication(NancyContext context)
 		{

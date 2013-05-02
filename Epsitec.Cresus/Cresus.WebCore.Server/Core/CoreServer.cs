@@ -1,20 +1,17 @@
-﻿using Epsitec.Common.IO;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.IO;
 
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
-
-using System;
 
 using System.Globalization;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-
-
-	public sealed class CoreServer : IDisposable
+	public sealed class CoreServer : System.IDisposable
 	{
-
-
 		public CoreServer(int nbCoreWorkers, CultureInfo uiCulture)
 		{
 			var coreWorkerPool = new CoreWorkerPool (nbCoreWorkers, uiCulture);
@@ -28,7 +25,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public CoreWorkerPool CoreWorkerPool
+		public CoreWorkerPool					CoreWorkerPool
 		{
 			get
 			{
@@ -36,8 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 		
-		
-		public AuthenticationManager AuthenticationManager
+		public AuthenticationManager			AuthenticationManager
 		{
 			get
 			{
@@ -45,8 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		internal DatabaseManager DatabaseManager
+		internal DatabaseManager				DatabaseManager
 		{
 			get
 			{
@@ -54,8 +49,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-
-		internal Caches Caches
+		internal Caches							Caches
 		{
 			get
 			{
@@ -63,6 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
+		#region IDisposable Members
 
 		public void Dispose()
 		{
@@ -70,20 +65,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.caches.Dispose ();
 		}
 
+		#endregion
 
-		private readonly CoreWorkerPool coreWorkerPool;
-
-
-		private readonly AuthenticationManager authenticationManager;
-
-
-		private readonly DatabaseManager databaseManager;
-
-
-		private readonly Caches caches;
-
-
+		private readonly CoreWorkerPool			coreWorkerPool;
+		private readonly AuthenticationManager	authenticationManager;
+		private readonly DatabaseManager		databaseManager;
+		private readonly Caches					caches;
 	}
-
-
 }

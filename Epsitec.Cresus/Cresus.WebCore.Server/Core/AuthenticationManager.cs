@@ -1,19 +1,16 @@
-﻿using Epsitec.Cresus.Core.Business.UserManagement;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
-using System;
-
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-	
-	
 	/// <summary>
-	/// This class is used by the <see cref="LoginModule"/> to check the user's credentials.
+	/// The <c>AuthenticationManager</c> class is used by the <see cref="LoginModule"/> to
+	/// check the user's credentials.
 	/// </summary>
 	public sealed class AuthenticationManager
 	{
-
-
 		public AuthenticationManager(CoreWorkerPool coreWorkerPool)
 		{
 			this.coreWorkerPool = coreWorkerPool;
@@ -22,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		public bool CheckCredentials(string userName, string password)
 		{
-			Func<UserManager, bool> function = userManager =>
+			System.Func<UserManager, bool> function = userManager =>
 			{
 				return userManager.CheckUserAuthentication (userName, password);
 			};
@@ -30,11 +27,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.coreWorkerPool.Execute (function);
 		}
 
+		public bool NotifySuccessfulLogin(string userName)
+		{
+			System.Func<UserManager, bool> function = userManager =>
+			{
+				var user = userManager.FindUser (userName);
+				userManager.NotifySusccessfulLogin (user);
+				return true;
+			};
 
-		private readonly CoreWorkerPool coreWorkerPool;
+			return this.coreWorkerPool.Execute (function);
+		}
 
-
+		
+		private readonly CoreWorkerPool			coreWorkerPool;
 	}
-
-
 }
