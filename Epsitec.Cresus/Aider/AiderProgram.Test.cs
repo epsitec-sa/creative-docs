@@ -171,7 +171,7 @@ namespace Epsitec.Aider
 			var eervSuperGroupFile = supergroup == null ? null : new FileInfo (supergroup);
 			var eervIdFile = new FileInfo (id);
 
-			var eervParishData = new EervParishDataLoader (true)
+			var eervParishData = new EervParishDataLoader ()
 				.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile)
 				.ToList ();
 

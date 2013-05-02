@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervParishDataLoader(bool displayWarnings = false)
+		public EervParishDataLoader()
 		{
 			this.townCorrections = new HashSet<Tuple<string, string>> ();
 			this.townChecker = new TownChecker ();
