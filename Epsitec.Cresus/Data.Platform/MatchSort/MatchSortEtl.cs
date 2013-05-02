@@ -61,39 +61,38 @@ namespace Epsitec.Data.Platform.MatchSort
                     }
                 }
 
+
+                //Prepare and Build SQL Commands
+                this.MessengerCommand = this.BuildMessengerCommand();
+
 			}
-			catch (SQLiteException ex)
+			catch (Exception ex)
 			{
-				throw new Exception ("Erreur SQL dans Data.Platform Module MatchSort: "+ ex.Message.ToString());
+                this.Dispose();
+				throw new Exception (ex.Message.ToString());
 			}
 			
 		}
-		private const string CreateTableHeader="create table if not exists new_hea (vdat number(8), zcode number(6)); delete from new_hea";
-		
-		private const string CreateTablePlace1="create table if not exists new_plz1 (onrp number(5) primary key, bfsnr number(5), plz_typ number(2),plz number(4),plz_zz varchar(2), gplz number(4),ort_bez_18 varchar(18),ort_bez_27 varchar(27),kanton varchar(2),sprachcode number(1),sprachcode_abw number(1),briefz_durch number(5),gilt_ab_dat date(8),plz_briefzust number(6),plz_coff varchar(1)); delete from new_plz1";
-		
-		private const string CreateTablePlace2="create table if not exists new_plz2 (onrp number(5),laufnummer number(3),bez_typ number(1),sprachcode number(1),ort_bez_18 varchar(18),ort_bez_27 varchar(27)); delete from new_plz2";
-		
-		private const string CreateTableCommun="create table if not exists new_com (bfsnr number(5) primary key,gemeindename varchar(30),kanton varchar(2),agglonr number(5)); delete from new_com";
-		
-		private const string CreateTableStreet="create table if not exists new_str (str_id number(10) primary key,onrp number(5),str_bez_k varchar(25),str_bez_l varchar(60),str_bez_2k varchar(25),str_bez_2l varchar(60),str_lok_typ number(1),str_bez_spc number(1),str_bez_coff varchar(1),str_ganzfach varchar(1),str_fach_onrp number(5)); delete from new_str";
-		
-		//todo new_stra
-		
-		private const string CreateTableHouse1="create table if not exists new_geb (hauskey number(13) primary key,str_id number(10),hnr number(4),hnr_a varchar(6),hnr_coff varchar(1),ganzfach varchar(1),fach_onrp number(5)); delete from new_geb";
-		//todo new_geba
-		private const string CreateTableDeliver="create table if not exists new_bot_b (hauskey number(13),a_plz number(6),bbz_plz number(6),boten_bez number(4),etappen_nr number(3),lauf_nr number(6),ndepot varchar(60)); delete from new_bot_b";
 
-        private const string IndexAll = "create index if not exists idx_zip on new_plz1(plz,plz_zz);create index if not exists idx_street on new_str(str_bez_2l collate nocase); create index if not exists idx_hnr on new_geb(hnr,hnr_a collate nocase); create index if not exists idx_fhk on new_bot_b(hauskey)";
-		private const string AnalyseAll= "analyze new_plz1;analyze new_str;analyze new_geb;analyze new_bot_b";
-
-        private const string SelectHeader = "select vdat,zcode from new_hea";
-        //private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and s.str_bez_2l = @street collate nocase and g.hnr = @house";
-        private const string SelectMessenger = "select b.etappen_nr from new_plz1 as p join new_str s on s.onrp = p.onrp join new_geb as g on g.str_id = s.str_id join new_bot_b as b on b.hauskey = g.hauskey where p.plz = @zip and p.plz_zz = @zip_addon and s.str_bez_2l = @street collate nocase and g.hnr = @house and g.hnr_a = @house_alpha collate nocase";
 		
+        private readonly SQLiteCommand MessengerCommand;
 		private SQLiteConnection Conn;
 		private SQLiteCommand Command;
 		private SQLiteTransaction Transaction;
+
+        private const string CreateTableHeader = "create table if not exists new_hea (vdat number(8), zcode number(6)); delete from new_hea";
+        private const string CreateTablePlace1 = "create table if not exists new_plz1 (onrp number(5) primary key, bfsnr number(5), plz_typ number(2),plz number(4),plz_zz varchar(2), gplz number(4),ort_bez_18 varchar(18),ort_bez_27 varchar(27),kanton varchar(2),sprachcode number(1),sprachcode_abw number(1),briefz_durch number(5),gilt_ab_dat date(8),plz_briefzust number(6),plz_coff varchar(1)); delete from new_plz1";
+        private const string CreateTablePlace2 = "create table if not exists new_plz2 (onrp number(5),laufnummer number(3),bez_typ number(1),sprachcode number(1),ort_bez_18 varchar(18),ort_bez_27 varchar(27)); delete from new_plz2";
+        private const string CreateTableCommun = "create table if not exists new_com (bfsnr number(5) primary key,gemeindename varchar(30),kanton varchar(2),agglonr number(5)); delete from new_com";
+        private const string CreateTableStreet = "create table if not exists new_str (str_id number(10) primary key,onrp number(5),str_bez_k varchar(25),str_bez_l varchar(60),str_bez_2k varchar(25),str_bez_2l varchar(60),str_lok_typ number(1),str_bez_spc number(1),str_bez_coff varchar(1),str_ganzfach varchar(1),str_fach_onrp number(5)); delete from new_str";
+        //todo new_stra
+        private const string CreateTableHouse1 = "create table if not exists new_geb (hauskey number(13) primary key,str_id number(10),hnr number(4),hnr_a varchar(6),hnr_coff varchar(1),ganzfach varchar(1),fach_onrp number(5)); delete from new_geb";
+        //todo new_geba
+        private const string CreateTableDeliver = "create table if not exists new_bot_b (hauskey number(13),a_plz number(6),bbz_plz number(6),boten_bez number(4),etappen_nr number(3),lauf_nr number(6),ndepot varchar(60)); delete from new_bot_b";
+        private const string IndexAll = "create index if not exists idx_zip on new_plz1(plz,plz_zz);create index if not exists idx_street on new_str(str_bez_2l collate nocase); create index if not exists idx_hnr on new_geb(str_id,hnr,hnr_a collate nocase); create index if not exists idx_fhk on new_bot_b(hauskey)";
+        private const string AnalyseAll = "analyze new_plz1;analyze new_str;analyze new_geb;analyze new_bot_b";
+        private const string SelectHeader = "select vdat,zcode from new_hea";
+ 
 
         private void OpenDatabase()
         {
@@ -102,7 +101,8 @@ namespace Epsitec.Data.Platform.MatchSort
 
             //SET Journal mode in WAL
             this.Command = new SQLiteCommand(this.Conn);
-            this.Command.CommandText = "PRAGMA journal_mode=WAL";
+            this.Command.CommandText = "PRAGMA journal_mode=WAL;PRAGMA cache_size = 6000;PRAGMA synchronous=OFF";
+
             this.Command.ExecuteNonQuery();
         }
 
@@ -336,10 +336,32 @@ namespace Epsitec.Data.Platform.MatchSort
 			return result;
 
 		}
+        private SQLiteCommand BuildMessengerCommand()
+        {
+            var sql = "select b.etappen_nr "
+                        + "from new_plz1 as p "
+                        + "join new_str s on s.onrp = p.onrp "
+                        + "join new_geb as g on g.str_id = s.str_id "
+                        + "join new_bot_b as b on b.hauskey = g.hauskey "
+                        + "where p.plz = @zip and p.plz_zz = @zip_addon "
+                        + "and s.str_bez_2l = @street collate nocase "
+                        + "and g.hnr = @house "
+                        + "and g.hnr_a = @house_alpha collate nocase";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@zip", System.Data.DbType.String);
+            command.Parameters.Add("@zip_addon", System.Data.DbType.String);
+            command.Parameters.Add("@street", System.Data.DbType.String);
+            command.Parameters.Add("@house", System.Data.DbType.String);
+            command.Parameters.Add("@house_alpha", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
 
         /// <summary>
         /// Get the Messenger number
-        /// Ex: GetMessenger(100006,"avenue floréal","10","a")
+        /// Ex: GetMessenger("1000","06","avenue floréal","10","a")
         /// </summary>
         /// <param name="zip">4 digits zip </param>
         /// <param name="zip_addon">2 digits additionnal zip </param>
@@ -347,27 +369,19 @@ namespace Epsitec.Data.Platform.MatchSort
         /// <param name="house">house number without complement</param>
         /// <param name="house_alpha">alpha house number complement (non case-sensitive)</param>
         /// <returns></returns>
-		public string GetMessenger(string zip,string zip_addon,string street,string house,string house_alpha)
-		{
-			this.Command.CommandText = MatchSortEtl.SelectMessenger;
-			this.Command.Parameters.AddWithValue ("@zip", zip);
-            this.Command.Parameters.AddWithValue("@zip_addon", zip_addon);
-			this.Command.Parameters.AddWithValue ("@street", street);
-			this.Command.Parameters.AddWithValue ("@house", house);
-            this.Command.Parameters.AddWithValue("@house_alpha", house_alpha);
-			using (SQLiteDataReader dr = this.Command.ExecuteReader ())
-			{
-				dr.Read ();
-				if (dr.HasRows)
-				{
-					return dr.GetValue (0).ToString ();
-				}
-				else
-				{
-					return null;
-				}
-				
-			}
-		}
+        public string GetMessenger(string zip, string zip_addon, string street, string house, string house_alpha)
+        {
+            this.MessengerCommand.Parameters["@zip"].Value = zip;
+            this.MessengerCommand.Parameters["@zip_addon"].Value = zip_addon;
+            this.MessengerCommand.Parameters["@street"].Value = street;
+            this.MessengerCommand.Parameters["@house"].Value = house;
+            this.MessengerCommand.Parameters["@house_alpha"].Value = house_alpha;
+            using (var dr = this.MessengerCommand.ExecuteReader())
+            {
+                dr.Read();
+                return dr.HasRows ? dr.GetValue(0).ToString() : null;
+
+            }
+        }
 	}
 }

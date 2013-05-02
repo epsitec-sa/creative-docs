@@ -287,9 +287,10 @@ namespace App.Directories
 
         private void cmd_enable_match_sort_Click(object sender, EventArgs e)
         {
-			
+            var t = System.Diagnostics.Stopwatch.StartNew();
 		    this.etl = new MatchSortEtl (@"s:/MAT[CH]news.csv");
-
+            t.Stop();
+            this.lbl_time_enable_match.Text =  t.Elapsed.Minutes + "min";
 			this.cmd_enable_match_sort.Visible = false;
         }
 
@@ -316,12 +317,15 @@ namespace App.Directories
 			}
 		}
 
-		private void button1_Click(object sender, EventArgs e)
-		{
-			if (this.etl!=null)
-			{
-				var test = this.etl.GetMessenger ("2112","00", "rue centrale", "2","");
-			}
-		}
+        private void cmd_getmessengerprepared_Click(object sender, EventArgs e)
+        {
+            if (this.etl != null)
+            {
+                var t = System.Diagnostics.Stopwatch.StartNew();
+                var test = this.etl.GetMessenger("2112", "00", "rue centrale", "2", "");
+                t.Stop();
+                this.lbl_time_get_messengerprepared.Text = "Messenger="+ test + " / " + t.Elapsed.Milliseconds + "ms";
+            }
+        }
 	}
 }
