@@ -323,6 +323,7 @@ namespace App.Directories
             if (this.etl != null)
             {
                 var t = System.Diagnostics.Stopwatch.StartNew();
+                
                 var test = this.etl.GetMessenger(this.txt_zip.Text, this.txt_zip_add.Text, this.txt_street.Text, this.txt_house.Text, this.txt_house_a.Text);
                 t.Stop();
                 this.lbl_time_get_messengerprepared.Text = "Messenger="+ test + " / " + t.Elapsed.Milliseconds + "ms";
@@ -336,6 +337,25 @@ namespace App.Directories
                 this.etl.Dispose();
                 this.cmd_dispose_matchsort.Visible = false;
                 this.cmd_enable_match_sort.Visible = true;
+            }
+        }
+
+        private void cmd_gethouses_at_street_Click(object sender, EventArgs e)
+        {
+            if (this.etl != null)
+            {
+                var t = System.Diagnostics.Stopwatch.StartNew();
+
+                var test = this.etl.GetHousesAtStreet(this.txt_zip.Text, this.txt_zip_add.Text, this.txt_street.Text);
+                t.Stop();
+                this.lbl_time_gethousesatstreet.Text = t.Elapsed.Milliseconds + "ms";
+                
+                this.result_tree.Nodes.Clear();
+                var streetNode = this.result_tree.Nodes.Add(this.txt_street.Text + "@" + this.txt_zip.Text);
+                foreach (string s in test)
+                {
+                    streetNode.Nodes.Add(s);
+                }
             }
         }
 	}

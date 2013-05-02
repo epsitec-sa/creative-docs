@@ -18,6 +18,7 @@ namespace App.Directories
 			{
 				components.Dispose ();
 			}
+            this.Map.Dispose();
 			base.Dispose (disposing);
 		}
 
@@ -60,6 +61,8 @@ namespace App.Directories
             this.txt_house = new System.Windows.Forms.TextBox();
             this.txt_house_a = new System.Windows.Forms.TextBox();
             this.cmd_dispose_matchsort = new System.Windows.Forms.Button();
+            this.lbl_time_gethousesatstreet = new System.Windows.Forms.Label();
+            this.cmd_gethouses_at_street = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.img_google_signin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.matchSortEtlBindingSource)).BeginInit();
@@ -252,7 +255,7 @@ namespace App.Directories
             // lbl_time_get_messengerprepared
             // 
             this.lbl_time_get_messengerprepared.AutoSize = true;
-            this.lbl_time_get_messengerprepared.Location = new System.Drawing.Point(139, 686);
+            this.lbl_time_get_messengerprepared.Location = new System.Drawing.Point(160, 705);
             this.lbl_time_get_messengerprepared.Name = "lbl_time_get_messengerprepared";
             this.lbl_time_get_messengerprepared.Size = new System.Drawing.Size(35, 13);
             this.lbl_time_get_messengerprepared.TabIndex = 24;
@@ -260,7 +263,7 @@ namespace App.Directories
             // 
             // cmd_getmessengerprepared
             // 
-            this.cmd_getmessengerprepared.Location = new System.Drawing.Point(12, 676);
+            this.cmd_getmessengerprepared.Location = new System.Drawing.Point(24, 695);
             this.cmd_getmessengerprepared.Name = "cmd_getmessengerprepared";
             this.cmd_getmessengerprepared.Size = new System.Drawing.Size(124, 32);
             this.cmd_getmessengerprepared.TabIndex = 23;
@@ -318,11 +321,32 @@ namespace App.Directories
             this.cmd_dispose_matchsort.Visible = false;
             this.cmd_dispose_matchsort.Click += new System.EventHandler(this.cmd_dispose_matchsort_Click);
             // 
+            // lbl_time_gethousesatstreet
+            // 
+            this.lbl_time_gethousesatstreet.AutoSize = true;
+            this.lbl_time_gethousesatstreet.Location = new System.Drawing.Point(160, 743);
+            this.lbl_time_gethousesatstreet.Name = "lbl_time_gethousesatstreet";
+            this.lbl_time_gethousesatstreet.Size = new System.Drawing.Size(35, 13);
+            this.lbl_time_gethousesatstreet.TabIndex = 32;
+            this.lbl_time_gethousesatstreet.Text = "label1";
+            // 
+            // cmd_gethouses_at_street
+            // 
+            this.cmd_gethouses_at_street.Location = new System.Drawing.Point(24, 733);
+            this.cmd_gethouses_at_street.Name = "cmd_gethouses_at_street";
+            this.cmd_gethouses_at_street.Size = new System.Drawing.Size(124, 32);
+            this.cmd_gethouses_at_street.TabIndex = 31;
+            this.cmd_gethouses_at_street.Text = "GetHousesAtStreet()";
+            this.cmd_gethouses_at_street.UseVisualStyleBackColor = true;
+            this.cmd_gethouses_at_street.Click += new System.EventHandler(this.cmd_gethouses_at_street_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1274, 891);
+            this.Controls.Add(this.lbl_time_gethousesatstreet);
+            this.Controls.Add(this.cmd_gethouses_at_street);
             this.Controls.Add(this.cmd_dispose_matchsort);
             this.Controls.Add(this.txt_house_a);
             this.Controls.Add(this.txt_house);
@@ -394,6 +418,8 @@ namespace App.Directories
         private System.Windows.Forms.TextBox txt_house;
         private System.Windows.Forms.TextBox txt_house_a;
         private System.Windows.Forms.Button cmd_dispose_matchsort;
+        private System.Windows.Forms.Label lbl_time_gethousesatstreet;
+        private System.Windows.Forms.Button cmd_gethouses_at_street;
 	}
 }
 

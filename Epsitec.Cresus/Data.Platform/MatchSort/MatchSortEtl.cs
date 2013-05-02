@@ -17,19 +17,23 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		public void Dispose()
 		{
-			if (Conn != null)
+			if (this.Conn != null)
 			{
 				this.Command.Dispose ();
 				this.Command = null;
-                this.InsertCommunityCommand.Dispose();
-                this.InsertHouseCommand.Dispose();
-                this.InsertMessengerCommand.Dispose();
-                this.InsertPlaceAltCommand.Dispose();
-                this.InsertPlaceCommand.Dispose();
-                this.InsertStreetCommand.Dispose();
+                if (this.InsertCommunityCommand != null)
+                {
+                    this.InsertCommunityCommand.Dispose();
+                    this.InsertHouseCommand.Dispose();
+                    this.InsertMessengerCommand.Dispose();
+                    this.InsertPlaceAltCommand.Dispose();
+                    this.InsertPlaceCommand.Dispose();
+                    this.InsertStreetCommand.Dispose();
+                }
                 this.MessengerCommand.Dispose();
+                this.HousesAtStreetCommand.Dispose();
 				this.Conn.Dispose ();
-				Conn=null;
+				this.Conn=null;
 
 			}
 		}
@@ -87,6 +91,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
                 //Prepare and Build SQL Commands
                 this.MessengerCommand = this.BuildMessengerCommand();
+                this.HousesAtStreetCommand = this.BuildHousesAtStreetCommand();
 
 			}
 			catch (Exception ex)
@@ -103,7 +108,10 @@ namespace Epsitec.Data.Platform.MatchSort
         private readonly SQLiteCommand InsertStreetCommand;
         private readonly SQLiteCommand InsertHouseCommand;
         private readonly SQLiteCommand InsertMessengerCommand;
+
+
         private readonly SQLiteCommand MessengerCommand;
+        private readonly SQLiteCommand HousesAtStreetCommand;
 		private SQLiteConnection Conn;
 		private SQLiteCommand Command;
 		private SQLiteTransaction Transaction;
@@ -489,6 +497,49 @@ namespace Epsitec.Data.Platform.MatchSort
 			return result;
 
 		}
+
+        private SQLiteCommand BuildHousesAtStreetCommand()
+        {
+            var sql = "select h.hnr || h.hnr_a "
+                    + "from new_geb as h "
+                    + "join new_str as s on s.str_id = h.str_id "
+                    + "join new_plz1 as p on p.onrp = s.onrp "
+                    + "where "
+                    + "s.str_bez_2l = @street collate nocase "
+                    + "and p.plz = @zip "
+                    + "and p.plz_zz = @zip_addon";
+
+            var command = new SQLiteCommand(this.Conn);
+            command.CommandText = sql;
+            command.Parameters.Add("@street", System.Data.DbType.String);
+            command.Parameters.Add("@zip", System.Data.DbType.String);
+            command.Parameters.Add("@zip_addon", System.Data.DbType.String);
+            command.Prepare();
+            return command;
+        }
+        /// <summary>
+        /// Get a list of houses number from a street
+        /// Ex: GetHousesAtStreet("1000","06","avenue floréal")
+        /// </summary>
+        /// <param name="zip">zip code of street</param>
+        /// <param name="zip_addon">zip code addon of street</param>
+        /// <param name="street">street name</param>
+        /// <returns></returns>
+        public List<string> GetHousesAtStreet(string zip, string zip_addon,string street)
+        {
+            this.HousesAtStreetCommand.Parameters["@street"].Value = street;
+            this.HousesAtStreetCommand.Parameters["@zip"].Value = zip;
+            this.HousesAtStreetCommand.Parameters["@zip_addon"].Value = zip_addon;
+            var result = new List<string>();
+            using (var dr = this.HousesAtStreetCommand.ExecuteReader())
+            {
+                while (dr.Read ())
+				{
+                    result.Add(dr.GetValue(0).ToString());
+                }
+            }
+            return result;
+        }
 
         private SQLiteCommand BuildMessengerCommand()
         {
