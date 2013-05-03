@@ -28,12 +28,14 @@ namespace Epsitec.Cresus.Core.Metadata
 				throw new System.ArgumentException (message);
 			}
 
-			this.tableEntityId = tableEntityId;
-			this.tableName = tableName;
-			this.isDefault = isDefault;
-			this.isDisplayed = isDisplayed;
-			this.enableCreate = enableCreate;
-			this.enableDelete = enableDelete;
+			bool enableWrite = CoreContext.EnableReadOnlyMode == false;
+
+			this.tableEntityId  = tableEntityId;
+			this.tableName      = tableName;
+			this.isDefault      = isDefault;
+			this.isDisplayed    = isDisplayed;
+			this.enableCreate   = enableCreate && enableWrite;
+			this.enableDelete   = enableDelete && enableWrite;
 			this.creationViewId = creationViewId;
 			this.deletionViewId = deletionViewId;
 

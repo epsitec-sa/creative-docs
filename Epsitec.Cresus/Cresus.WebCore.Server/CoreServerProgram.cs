@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server
@@ -30,6 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			ConsoleCreator.RunWithConsole (() =>
 			{
 				this.SetupParameters ();
+				this.SetupConfiguration ();
 				this.SetupDatabaseClient ();
 				this.Initialize
 				(
@@ -48,6 +50,54 @@ namespace Epsitec.Cresus.WebCore.Server
 					backupStart: this.backupStart
 				);
 			}, 200);
+		}
+
+		private void SetupConfiguration()
+		{
+			var bannerMessage = new List<string> ();
+
+			if (CoreContext.EnableTestEnvironment)
+			{
+				bannerMessage.Add ("Environnement de test destiné à la formation");
+				Logger.LogToConsole ("Configuration: test environment");
+			}
+
+			if (CoreContext.EnableReadOnlyMode)
+			{
+				bannerMessage.Add ("Aucune modification n\\'est possible pour l\\'instant");
+				Logger.LogToConsole ("Configuration: read-only mode");
+			}
+
+			var buffer = new System.Text.StringBuilder ();
+
+			if (bannerMessage.Count == 0)
+			{
+				buffer.AppendLine ("var epsitecConfig = {");
+				buffer.AppendLine ("  splash: 'images/Static/logo.png'");
+				buffer.AppendLine ("};");
+			}
+			else
+			{
+				var message = string.Join ("<br/>", bannerMessage);
+
+				buffer.AppendLine ("var epsitecConfig = {");
+				
+				if (CoreContext.EnableTestEnvironment)
+				{
+					buffer.AppendLine ("  splash: 'images/Static/logo-test.png',");
+				}
+				else
+				{
+					buffer.AppendLine ("  splash: 'images/Static/logo.png',");
+				}
+
+				buffer.AppendLine ("  displayBannerMessage: true,");
+				buffer.AppendLine ("  bannerMessage: '" + message + "'");
+				buffer.AppendLine ("};");
+			}
+
+			System.IO.File.WriteAllText (System.IO.Path.Combine (this.clientDirectory.FullName, "config.js"),
+										 buffer.ToString (), System.Text.Encoding.UTF8);
 		}
 
 

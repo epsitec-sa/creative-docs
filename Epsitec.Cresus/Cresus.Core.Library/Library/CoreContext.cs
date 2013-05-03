@@ -43,6 +43,22 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		public static bool						EnableReadOnlyMode
+		{
+			get
+			{
+				return CoreContext.enableReadOnlyMode;
+			}
+		}
+
+		public static bool						EnableTestEnvironment
+		{
+			get
+			{
+				return CoreContext.enableTestEnvironment;
+			}
+		}
+
 		public static CoreDatabaseType			DatabaseType
 		{
 			get
@@ -181,7 +197,17 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			CoreContext.enableSnapshotService = enableSnapshotService;
 		}
-		
+
+		public static void ConfigureAsReadOnly()
+		{
+			CoreContext.enableReadOnlyMode = true;
+		}
+
+		public static void ConfigureAsTestEnvironment()
+		{
+			CoreContext.enableTestEnvironment = true;
+		}
+
 		private static void AddMetadata(CoreMetadata metadata)
 		{
 			if (metadata == null)
@@ -326,7 +352,7 @@ namespace Epsitec.Cresus.Core.Library
 					(len >= 0))
 				{
 					var methodName = line.Substring (0, pos1).Trim ();
-					var parameters = line.Substring (pos1+1, len).Split (',').Select (x => CoreContext.ParseArg (x.Trim (), stack)).ToArray ();
+					var parameters = line.Substring (pos1+1, len).Split (new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries).Select (x => CoreContext.ParseArg (x.Trim (), stack)).ToArray ();
 					var methodInfo = typeof (CoreContext).GetMethod (methodName, BindingFlags.Static | BindingFlags.Public);
 
 					if (methodInfo == null)
@@ -415,7 +441,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (System.IO.File.Exists (path))
 			{
-				return System.IO.File.ReadLines (path, System.Text.Encoding.Default);
+				return System.IO.File.ReadLines (path, System.Text.Encoding.Default).SelectMany (line => CoreContext.ProcessIncludes (line, dir));
 			}
 			else
 			{
@@ -538,6 +564,22 @@ namespace Epsitec.Cresus.Core.Library
 			throw new System.FormatException (string.Format ("The argument '{0}' could not be parsed", arg));
 		}
 
+		private static IEnumerable<string> ProcessIncludes(string line, string dir)
+		{
+			const string include = "Include ";
+
+			if (line.StartsWith (include))
+			{
+				var name = line.Substring (include.Length);
+				var path = System.IO.Path.Combine (dir, name);
+
+				return System.IO.File.ReadLines (path, System.Text.Encoding.Default).SelectMany (x => CoreContext.ProcessIncludes (x, dir));
+			}
+			else
+			{
+				return new string[] { line };
+			}
+		}
 
 
 		static CoreContext()
@@ -552,6 +594,8 @@ namespace Epsitec.Cresus.Core.Library
 		private static bool						isInteractive;
 		private static bool						isServer;
 		private static bool						enableSnapshotService;
+		private static bool						enableReadOnlyMode;
+		private static bool						enableTestEnvironment;
 		private static bool						disableUserManagerReload;
 		
 		private static CoreDatabaseType			databaseType;

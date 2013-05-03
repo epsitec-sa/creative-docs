@@ -782,6 +782,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private ActionItem BuildActionItem(AbstractEntity entity, int viewId)
 		{
+			if (Epsitec.Cresus.Core.Library.CoreContext.EnableReadOnlyMode)
+			{
+				return null;
+			}
+
 			var viewMode = ViewControllerMode.Action;
 
 			using (var controller = Mason.BuildController<IActionViewController> (this.businessContext, entity, null, viewMode, viewId))
@@ -1012,6 +1017,11 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private static bool IsReadOnly(BrickPropertyCollection brickProperties)
 		{
+			if (Epsitec.Cresus.Core.Library.CoreContext.EnableReadOnlyMode)
+			{
+				return true;
+			}
+
 			var key = BrickPropertyKey.ReadOnly;
 			var brickProperty = Carpenter.GetBrickProperty (brickProperties, key);
 

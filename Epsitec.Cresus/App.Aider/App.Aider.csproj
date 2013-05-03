@@ -85,6 +85,12 @@
     </Content>
     <None Include="app.config" />
     <None Include="build.bat" />
+    <Content Include="Aider.Environment.crconfig">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Aider.Metadata.crconfig">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="ServerConfigProduction\app.config" />
     <None Include="ServerConfigProduction\certificate.key" />
     <None Include="ServerConfigProduction\certificate.pem" />
