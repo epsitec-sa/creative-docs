@@ -14,85 +14,56 @@ namespace Epsitec.Data.Platform.MatchSort
 {
 	public sealed class MatchSortEtl : IDisposable
 	{
-
-		public void Dispose()
-		{
-			if (Conn != null)
-			{
-				MatchSortEtl.DisposeSQLiteObject (this.Command);
-				this.Command = null;
-
-				MatchSortEtl.DisposeSQLiteObject (this.InsertCommunityCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.InsertHouseCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.InsertMessengerCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.InsertPlaceAltCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.InsertPlaceCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.InsertStreetCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.HousesAtStreetCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommandRelaxed);
-				MatchSortEtl.DisposeSQLiteObject (this.Conn);
-				Conn=null;
-			}
-		}
-
-		private static void DisposeSQLiteObject(System.IDisposable obj)
-		{
-			if (obj != null)
-			{
-				obj.Dispose ();
-			}
-		}
-
 		/// <summary>
 		/// Perform ETL job on Mat[CH]sort CSV file and load content for querying in SQLite
 		/// https://match.post.ch/pdf/post-match-new-sort.pdf
 		/// </summary>
-		public MatchSortEtl(string CsvFilePath)
+		public MatchSortEtl(string csvFilePath)
 		{
 		   
 			try
 			{
 				var DatabaseDirectoryPath = Epsitec.Common.Support.Globals.ExecutableDirectory;
-				var DatabaseFilePath = DatabaseDirectoryPath + "\\MatchSort.sqlite";
-				if (!File.Exists(DatabaseFilePath))
+				var DatabaseFilePath = System.IO.Path.Combine (DatabaseDirectoryPath, "MatchSort.sqlite");
+				if (!File.Exists (DatabaseFilePath))
 				{
 					//CASE NO DATABASE
-					SQLiteConnection.CreateFile("MatchSort.sqlite");
-					this.OpenDatabase();
-					this.CreateTableIfNeededAndResetDb();
+					SQLiteConnection.CreateFile ("MatchSort.sqlite");
+					this.OpenDatabase ();
+					this.CreateTableIfNeededAndResetDb ();
 
-					this.InsertPlaceCommand = this.BuildInsertPlace();
-					this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt();
-					this.InsertCommunityCommand = this.BuildInsertCommunity();
-					this.InsertStreetCommand = this.BuildInsertStreet();
-					this.InsertHouseCommand = this.BuildInsertHouse();
-					this.InsertMessengerCommand = this.BuildInsertMessenger();
+					this.insertPlaceCommand = this.BuildInsertPlace ();
+					this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt ();
+					this.InsertCommunityCommand = this.BuildInsertCommunity ();
+					this.InsertStreetCommand = this.BuildInsertStreet ();
+					this.InsertHouseCommand = this.BuildInsertHouse ();
+					this.InsertMessengerCommand = this.BuildInsertMessenger ();
 
-					this.LoadFromDatabaseCsv(CsvFilePath);
-					this.IndexAndAnalyzeDatabase();
+					this.LoadFromDatabaseCsv (csvFilePath);
+					this.IndexAndAnalyzeDatabase ();
 				}
 				else
 				{
 					//CASE CHECK FOR UPDATE
-					this.OpenDatabase();
+					this.OpenDatabase ();
 
-					var VersionCsv = this.GetHeaderFromCsv(CsvFilePath);
-					var VersionDb = this.GetHeaderFromDatabase();
+					var VersionCsv = this.GetHeaderFromCsv (csvFilePath);
+					var VersionDb = this.GetHeaderFromDatabase ();
 
-					if (VersionCsv[0] != VersionDb[0] || VersionCsv[1] != VersionDb[1])
+					if ((VersionCsv[0] != VersionDb[0]) || 
+						(VersionCsv[1] != VersionDb[1]))
 					{
-						this.CreateTableIfNeededAndResetDb();
+						this.CreateTableIfNeededAndResetDb ();
 
-						this.InsertPlaceCommand = this.BuildInsertPlace();
-						this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt();
-						this.InsertCommunityCommand = this.BuildInsertCommunity();
-						this.InsertStreetCommand = this.BuildInsertStreet();
-						this.InsertHouseCommand = this.BuildInsertHouse();
-						this.InsertMessengerCommand = this.BuildInsertMessenger();
+						this.insertPlaceCommand = this.BuildInsertPlace ();
+						this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt ();
+						this.InsertCommunityCommand = this.BuildInsertCommunity ();
+						this.InsertStreetCommand = this.BuildInsertStreet ();
+						this.InsertHouseCommand = this.BuildInsertHouse ();
+						this.InsertMessengerCommand = this.BuildInsertMessenger ();
 
-						this.LoadFromDatabaseCsv(CsvFilePath);
-						this.IndexAndAnalyzeDatabase();
+						this.LoadFromDatabaseCsv (csvFilePath);
+						this.IndexAndAnalyzeDatabase ();
 					}
 				}
 
@@ -103,45 +74,101 @@ namespace Epsitec.Data.Platform.MatchSort
 				this.HousesAtStreetCommand = this.BuildHousesAtStreetCommand();
 
 			}
-			catch (Exception ex)
+			catch
 			{
 				this.Dispose();
-				throw new Exception ("Problem while loading the database", ex);
+				throw;
 			}
 			
 		}
 
-		private readonly SQLiteCommand InsertPlaceCommand;
-		private readonly SQLiteCommand InsertPlaceAltCommand;
-		private readonly SQLiteCommand InsertCommunityCommand;
-		private readonly SQLiteCommand InsertStreetCommand;
-		private readonly SQLiteCommand InsertHouseCommand;
-		private readonly SQLiteCommand InsertMessengerCommand;
-		private readonly SQLiteCommand HousesAtStreetCommand;
-		private readonly SQLiteCommand MessengerCommand;
-		private readonly SQLiteCommand MessengerCommandRelaxed;
-		private SQLiteConnection Conn;
-		private SQLiteCommand Command;
-		private SQLiteTransaction Transaction;
+		/// <summary>
+		/// Get the Messenger number
+		/// Ex: GetMessenger("1000","06","avenue floréal","10","a")
+		/// </summary>
+		/// <param name="zip">4 digits zip </param>
+		/// <param name="zipAddon">2 digits additionnal zip </param>
+		/// <param name="street">human readable street name (non case-sensitive)</param>
+		/// <param name="house">house number without complement</param>
+		/// <param name="houseAlpha">alpha house number complement (non case-sensitive)</param>
+		/// <returns></returns>
+		public int? GetMessenger(string zip, string zipAddon, string street, string house, string houseAlpha)
+		{
+			if (houseAlpha == null)
+			{
+				return this.GetMessengerRelaxed (zip, zipAddon, street, house);
+			}
 
-		private const string CreateTableHeader = "create table if not exists new_hea (vdat number(8), zcode number(6)); delete from new_hea";
-		private const string CreateTablePlace1 = "create table if not exists new_plz1 (onrp number(5) primary key, bfsnr number(5), plz_typ number(2),plz number(4),plz_zz varchar(2), gplz number(4),ort_bez_18 varchar(18),ort_bez_27 varchar(27),kanton varchar(2),sprachcode number(1),sprachcode_abw number(1),briefz_durch number(5),gilt_ab_dat date(8),plz_briefzust number(6),plz_coff varchar(1)); delete from new_plz1";
-		private const string CreateTablePlace2 = "create table if not exists new_plz2 (onrp number(5),laufnummer number(3),bez_typ number(1),sprachcode number(1),ort_bez_18 varchar(18),ort_bez_27 varchar(27)); delete from new_plz2";
-		private const string CreateTableCommun = "create table if not exists new_com (bfsnr number(5) primary key,gemeindename varchar(30),kanton varchar(2),agglonr number(5)); delete from new_com";
-		private const string CreateTableStreet = "create table if not exists new_str (str_id number(10) primary key,onrp number(5),str_bez_k varchar(25),str_bez_l varchar(60),str_bez_2k varchar(25),str_bez_2l varchar(60),str_lok_typ number(1),str_bez_spc number(1),str_bez_coff varchar(1),str_ganzfach varchar(1),str_fach_onrp number(5)); delete from new_str";
-		//todo new_stra
-		private const string CreateTableHouse1 = "create table if not exists new_geb (hauskey number(13) primary key,str_id number(10),hnr number(4),hnr_a varchar(6),hnr_coff varchar(1),ganzfach varchar(1),fach_onrp number(5)); delete from new_geb";
-		//todo new_geba
-		private const string CreateTableDeliver = "create table if not exists new_bot_b (hauskey number(13),a_plz number(6),bbz_plz number(6),boten_bez number(4),etappen_nr number(3),lauf_nr number(6),ndepot varchar(60)); delete from new_bot_b";
-		private const string IndexAll =
-			"create index if not exists idx_zip on new_plz1(plz,plz_zz);" +
-			"create index if not exists idx_street_k on new_str(str_bez_2k collate nocase);" +
-			"create index if not exists idx_street_l on new_str(str_bez_2l collate nocase);" +
-			"create index if not exists idx_hnr on new_geb(str_id,hnr,hnr_a collate nocase);" +
-			"create index if not exists idx_fhk on new_bot_b(hauskey)";
-		private const string AnalyseAll = "analyze new_plz1;analyze new_str;analyze new_geb;analyze new_bot_b";
-		private const string SelectHeader = "select vdat,zcode from new_hea";
- 
+			this.MessengerCommand.Parameters["@zip"].Value = zip;
+			this.MessengerCommand.Parameters["@zip_addon"].Value = zipAddon;
+			this.MessengerCommand.Parameters["@street"].Value = street;
+			this.MessengerCommand.Parameters["@house"].Value = house;
+			this.MessengerCommand.Parameters["@house_alpha"].Value = houseAlpha;
+			
+			using (var dr = this.MessengerCommand.ExecuteReader ())
+			{
+				dr.Read ();
+				return dr.HasRows ? (int) dr.GetInt64 (0) : (int?) null;
+			}
+		}
+		
+		/// <summary>
+		/// Get a list of houses number from a street
+		/// Ex: GetHousesAtStreet("1000","06","avenue floréal")
+		/// </summary>
+		/// <param name="zip">zip code of street</param>
+		/// <param name="zip_addon">zip code addon of street</param>
+		/// <param name="street">street name</param>
+		/// <returns></returns>
+		public List<string> GetHousesAtStreet(string zip, string zip_addon,string street)
+		{
+			this.HousesAtStreetCommand.Parameters["@street"].Value = street;
+			this.HousesAtStreetCommand.Parameters["@zip"].Value = zip;
+			this.HousesAtStreetCommand.Parameters["@zip_addon"].Value = zip_addon;
+			var result = new List<string>();
+			using (var dr = this.HousesAtStreetCommand.ExecuteReader())
+			{
+				while (dr.Read ())
+				{
+					result.Add(dr.GetValue(0).ToString());
+				}
+			}
+			return result;
+		}
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (this.Conn != null)
+			{
+				MatchSortEtl.DisposeSQLiteObject (this.Command);
+				this.Command = null;
+
+				MatchSortEtl.DisposeSQLiteObject (this.InsertCommunityCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.InsertHouseCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.InsertMessengerCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.InsertPlaceAltCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.insertPlaceCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.InsertStreetCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.HousesAtStreetCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommandRelaxed);
+				MatchSortEtl.DisposeSQLiteObject (this.Conn);
+				this.Conn=null;
+			}
+		}
+
+		#endregion
+
+		private static void DisposeSQLiteObject(System.IDisposable obj)
+		{
+			if (obj != null)
+			{
+				obj.Dispose ();
+			}
+		}
 
 		private void OpenDatabase()
 		{
@@ -150,7 +177,9 @@ namespace Epsitec.Data.Platform.MatchSort
 
 			//SET Journal mode in WAL
 			this.Command = new SQLiteCommand(this.Conn);
-			this.Command.CommandText = "PRAGMA journal_mode=WAL;PRAGMA cache_size = 10000;PRAGMA synchronous=OFF;PRAGMA count_changes=OFF;PRAGMA temp_store = 2";
+			this.Command.CommandText = 
+				"PRAGMA journal_mode=WAL;" +
+				"PRAGMA cache_size = 10000;PRAGMA synchronous=OFF;PRAGMA count_changes=OFF;PRAGMA temp_store = 2";
 
 			this.Command.ExecuteNonQuery();
 		}
@@ -159,25 +188,25 @@ namespace Epsitec.Data.Platform.MatchSort
 		{
 			this.Transaction = this.Conn.BeginTransaction();
 
-			this.Command.CommandText = MatchSortEtl.CreateTableHeader;
+			this.Command.CommandText = Queries.CreateTableHeader;
 			this.Command.ExecuteNonQuery();
 
-			this.Command.CommandText = MatchSortEtl.CreateTablePlace1;
+			this.Command.CommandText = Queries.CreateTablePlace1;
 			this.Command.ExecuteNonQuery();
 
-			this.Command.CommandText = MatchSortEtl.CreateTablePlace2;
+			this.Command.CommandText = Queries.CreateTablePlace2;
 			this.Command.ExecuteNonQuery();
 
-			this.Command.CommandText = MatchSortEtl.CreateTableCommun;
+			this.Command.CommandText = Queries.CreateTableCommun;
 			this.Command.ExecuteNonQuery();
 
-			this.Command.CommandText = MatchSortEtl.CreateTableStreet;
+			this.Command.CommandText = Queries.CreateTableStreet;
 			this.Command.ExecuteNonQuery();
 
-			this.Command.CommandText = MatchSortEtl.CreateTableHouse1;
+			this.Command.CommandText = Queries.CreateTableHouse1;
 			this.Command.ExecuteNonQuery();
 
-			this.Command.CommandText = MatchSortEtl.CreateTableDeliver;
+			this.Command.CommandText = Queries.CreateTableDeliver;
 			this.Command.ExecuteNonQuery();
 
 			this.Transaction.Commit();
@@ -295,6 +324,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			command.Prepare();
 			return command;
 		}
+		
 		private SQLiteCommand BuildInsertMessenger()
 		{
 			var sql = "insert into new_bot_b ("
@@ -334,22 +364,22 @@ namespace Epsitec.Data.Platform.MatchSort
 						break;
 
 					case "01":
-						this.InsertPlaceCommand.Parameters["@1"].Value = lineFields[1];
-						this.InsertPlaceCommand.Parameters["@2"].Value = lineFields[2];
-						this.InsertPlaceCommand.Parameters["@3"].Value = lineFields[3];
-						this.InsertPlaceCommand.Parameters["@4"].Value = lineFields[4];
-						this.InsertPlaceCommand.Parameters["@5"].Value = lineFields[5];
-						this.InsertPlaceCommand.Parameters["@6"].Value = lineFields[6];
-						this.InsertPlaceCommand.Parameters["@7"].Value = lineFields[7];
-						this.InsertPlaceCommand.Parameters["@8"].Value = lineFields[8];
-						this.InsertPlaceCommand.Parameters["@9"].Value = lineFields[9];
-						this.InsertPlaceCommand.Parameters["@10"].Value = lineFields[10];
-						this.InsertPlaceCommand.Parameters["@11"].Value = lineFields[11];
-						this.InsertPlaceCommand.Parameters["@12"].Value = lineFields[12];
-						this.InsertPlaceCommand.Parameters["@13"].Value = lineFields[13];
-						this.InsertPlaceCommand.Parameters["@14"].Value = lineFields[14];
-						this.InsertPlaceCommand.Parameters["@15"].Value = lineFields[15];
-						this.InsertPlaceCommand.ExecuteNonQuery();
+						this.insertPlaceCommand.Parameters["@1"].Value = lineFields[1];
+						this.insertPlaceCommand.Parameters["@2"].Value = lineFields[2];
+						this.insertPlaceCommand.Parameters["@3"].Value = lineFields[3];
+						this.insertPlaceCommand.Parameters["@4"].Value = lineFields[4];
+						this.insertPlaceCommand.Parameters["@5"].Value = lineFields[5];
+						this.insertPlaceCommand.Parameters["@6"].Value = lineFields[6];
+						this.insertPlaceCommand.Parameters["@7"].Value = lineFields[7];
+						this.insertPlaceCommand.Parameters["@8"].Value = lineFields[8];
+						this.insertPlaceCommand.Parameters["@9"].Value = lineFields[9];
+						this.insertPlaceCommand.Parameters["@10"].Value = lineFields[10];
+						this.insertPlaceCommand.Parameters["@11"].Value = lineFields[11];
+						this.insertPlaceCommand.Parameters["@12"].Value = lineFields[12];
+						this.insertPlaceCommand.Parameters["@13"].Value = lineFields[13];
+						this.insertPlaceCommand.Parameters["@14"].Value = lineFields[14];
+						this.insertPlaceCommand.Parameters["@15"].Value = lineFields[15];
+						this.insertPlaceCommand.ExecuteNonQuery();
 						break;
 
 					case "02":
@@ -429,37 +459,35 @@ namespace Epsitec.Data.Platform.MatchSort
 		private void IndexAndAnalyzeDatabase()
 		{
 			this.Transaction = this.Conn.BeginTransaction();
-			this.Command.CommandText = MatchSortEtl.IndexAll;
+			this.Command.CommandText = Queries.IndexAll;
 			this.Command.ExecuteNonQuery();
-			this.Command.CommandText = MatchSortEtl.AnalyseAll;
+			this.Command.CommandText = Queries.AnalyseAll;
 			this.Command.ExecuteNonQuery();
 			this.Transaction.Commit();
 		}
 
 		private string[] GetHeaderFromCsv(string CsvFilePath)
 		{
-			string[] result = new string[2];
+			var line = System.IO.File.ReadLines (CsvFilePath, Encoding.GetEncoding ("Windows-1252")).First ();
+			var lineFields = line.Split (';');
 
-			using(StreamReader reader = new StreamReader(CsvFilePath, Encoding.GetEncoding("Windows-1252"))) 
+			if (lineFields[0] == "00")
 			{
-				var lineFields = reader.ReadLine().Split(';');
-				if (lineFields[0] == "00")
+				return new string[]
 				{
-					result[0] = lineFields[1];
-					result[1] = lineFields[2];
-					return result;
-				}
-				else
-				{
-					return null;
-				}   
-			}          
+					lineFields[1], lineFields[2]
+				};
+			}
+			else
+			{
+				return null;
+			}   
 		}
 
 		private string [] GetHeaderFromDatabase()
 		{
 			string[] result = new string[2];
-			this.Command.CommandText = MatchSortEtl.SelectHeader;
+			this.Command.CommandText = Queries.SelectHeader;
 			using (SQLiteDataReader dr = this.Command.ExecuteReader())
 			{
 				dr.Read();
@@ -530,29 +558,6 @@ namespace Epsitec.Data.Platform.MatchSort
 			command.Prepare();
 			return command;
 		}
-		/// <summary>
-		/// Get a list of houses number from a street
-		/// Ex: GetHousesAtStreet("1000","06","avenue floréal")
-		/// </summary>
-		/// <param name="zip">zip code of street</param>
-		/// <param name="zip_addon">zip code addon of street</param>
-		/// <param name="street">street name</param>
-		/// <returns></returns>
-		public List<string> GetHousesAtStreet(string zip, string zip_addon,string street)
-		{
-			this.HousesAtStreetCommand.Parameters["@street"].Value = street;
-			this.HousesAtStreetCommand.Parameters["@zip"].Value = zip;
-			this.HousesAtStreetCommand.Parameters["@zip_addon"].Value = zip_addon;
-			var result = new List<string>();
-			using (var dr = this.HousesAtStreetCommand.ExecuteReader())
-			{
-				while (dr.Read ())
-				{
-					result.Add(dr.GetValue(0).ToString());
-				}
-			}
-			return result;
-		}
 
 		private SQLiteCommand BuildMessengerCommand()
 		{
@@ -598,36 +603,6 @@ namespace Epsitec.Data.Platform.MatchSort
 			return command;
 		}
 
-		/// <summary>
-		/// Get the Messenger number
-		/// Ex: GetMessenger("1000","06","avenue floréal","10","a")
-		/// </summary>
-		/// <param name="zip">4 digits zip </param>
-		/// <param name="zip_addon">2 digits additionnal zip </param>
-		/// <param name="street">human readable street name (non case-sensitive)</param>
-		/// <param name="house">house number without complement</param>
-		/// <param name="house_alpha">alpha house number complement (non case-sensitive)</param>
-		/// <returns></returns>
-		public int? GetMessenger(string zip, string zip_addon, string street, string house, string house_alpha)
-		{
-			if (house_alpha == null)
-			{
-				return this.GetMessengerRelaxed (zip, zip_addon, street, house);
-			}
-
-			this.MessengerCommand.Parameters["@zip"].Value = zip;
-			this.MessengerCommand.Parameters["@zip_addon"].Value = zip_addon;
-			this.MessengerCommand.Parameters["@street"].Value = street;
-			this.MessengerCommand.Parameters["@house"].Value = house;
-			this.MessengerCommand.Parameters["@house_alpha"].Value = house_alpha;
-			using (var dr = this.MessengerCommand.ExecuteReader ())
-			{
-				dr.Read ();
-				return dr.HasRows ? (int) dr.GetInt64 (0) : (int?) null;
-
-			}
-		}
-		
 		private int? GetMessengerRelaxed(string zip, string zip_addon, string street, string house)
 		{
 			this.MessengerCommandRelaxed.Parameters["@zip"].Value = zip;
@@ -641,5 +616,43 @@ namespace Epsitec.Data.Platform.MatchSort
 
 			}
 		}
+
+		#region Queries class
+
+		private static class Queries
+		{
+			public const string CreateTableHeader = "create table if not exists new_hea (vdat number(8), zcode number(6)); delete from new_hea";
+			public const string CreateTablePlace1 = "create table if not exists new_plz1 (onrp number(5) primary key, bfsnr number(5), plz_typ number(2),plz number(4),plz_zz varchar(2), gplz number(4),ort_bez_18 varchar(18),ort_bez_27 varchar(27),kanton varchar(2),sprachcode number(1),sprachcode_abw number(1),briefz_durch number(5),gilt_ab_dat date(8),plz_briefzust number(6),plz_coff varchar(1)); delete from new_plz1";
+			public const string CreateTablePlace2 = "create table if not exists new_plz2 (onrp number(5),laufnummer number(3),bez_typ number(1),sprachcode number(1),ort_bez_18 varchar(18),ort_bez_27 varchar(27)); delete from new_plz2";
+			public const string CreateTableCommun = "create table if not exists new_com (bfsnr number(5) primary key,gemeindename varchar(30),kanton varchar(2),agglonr number(5)); delete from new_com";
+			public const string CreateTableStreet = "create table if not exists new_str (str_id number(10) primary key,onrp number(5),str_bez_k varchar(25),str_bez_l varchar(60),str_bez_2k varchar(25),str_bez_2l varchar(60),str_lok_typ number(1),str_bez_spc number(1),str_bez_coff varchar(1),str_ganzfach varchar(1),str_fach_onrp number(5)); delete from new_str";
+			//todo new_stra
+			public const string CreateTableHouse1 = "create table if not exists new_geb (hauskey number(13) primary key,str_id number(10),hnr number(4),hnr_a varchar(6),hnr_coff varchar(1),ganzfach varchar(1),fach_onrp number(5)); delete from new_geb";
+			//todo new_geba
+			public const string CreateTableDeliver = "create table if not exists new_bot_b (hauskey number(13),a_plz number(6),bbz_plz number(6),boten_bez number(4),etappen_nr number(3),lauf_nr number(6),ndepot varchar(60)); delete from new_bot_b";
+			public const string IndexAll =
+			"create index if not exists idx_zip on new_plz1(plz,plz_zz);" +
+			"create index if not exists idx_street_k on new_str(str_bez_2k collate nocase);" +
+			"create index if not exists idx_street_l on new_str(str_bez_2l collate nocase);" +
+			"create index if not exists idx_hnr on new_geb(str_id,hnr,hnr_a collate nocase);" +
+			"create index if not exists idx_fhk on new_bot_b(hauskey)";
+			public const string AnalyseAll = "analyze new_plz1;analyze new_str;analyze new_geb;analyze new_bot_b";
+			public const string SelectHeader = "select vdat,zcode from new_hea";
+		}
+		
+		#endregion
+
+		private readonly SQLiteCommand			insertPlaceCommand;
+		private readonly SQLiteCommand			InsertPlaceAltCommand;
+		private readonly SQLiteCommand			InsertCommunityCommand;
+		private readonly SQLiteCommand			InsertStreetCommand;
+		private readonly SQLiteCommand			InsertHouseCommand;
+		private readonly SQLiteCommand			InsertMessengerCommand;
+		private readonly SQLiteCommand			HousesAtStreetCommand;
+		private readonly SQLiteCommand			MessengerCommand;
+		private readonly SQLiteCommand			MessengerCommandRelaxed;
+		private SQLiteConnection				Conn;
+		private SQLiteCommand					Command;
+		private SQLiteTransaction				Transaction;
 	}
 }
