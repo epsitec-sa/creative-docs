@@ -465,8 +465,8 @@ namespace Epsitec.Data.Platform.MatchSort
 				dr.Read();
 				if (dr.HasRows)
 				{
-					result[0] = dr.GetValue(0).ToString();
-					result[1] = dr.GetValue(1).ToString();
+					result[0] = dr.GetInt64(0).ToString();
+					result[1] = dr.GetInt64(1).ToString();
 					return result;
 				}
 				else
@@ -608,7 +608,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// <param name="house">house number without complement</param>
 		/// <param name="house_alpha">alpha house number complement (non case-sensitive)</param>
 		/// <returns></returns>
-		public string GetMessenger(string zip, string zip_addon, string street, string house, string house_alpha)
+		public int? GetMessenger(string zip, string zip_addon, string street, string house, string house_alpha)
 		{
 			if (house_alpha == null)
 			{
@@ -623,12 +623,12 @@ namespace Epsitec.Data.Platform.MatchSort
 			using (var dr = this.MessengerCommand.ExecuteReader ())
 			{
 				dr.Read ();
-				return dr.HasRows ? dr.GetValue (0).ToString () : null;
+				return dr.HasRows ? (int) dr.GetInt64 (0) : (int?) null;
 
 			}
 		}
 		
-		private string GetMessengerRelaxed(string zip, string zip_addon, string street, string house)
+		private int? GetMessengerRelaxed(string zip, string zip_addon, string street, string house)
 		{
 			this.MessengerCommandRelaxed.Parameters["@zip"].Value = zip;
 			this.MessengerCommandRelaxed.Parameters["@zip_addon"].Value = zip_addon;
@@ -637,7 +637,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			using (var dr = this.MessengerCommandRelaxed.ExecuteReader ())
 			{
 				dr.Read ();
-				return dr.HasRows ? dr.GetValue (0).ToString () : null;
+				return dr.HasRows ? (int) dr.GetInt64 (0) : (int?) null;
 
 			}
 		}

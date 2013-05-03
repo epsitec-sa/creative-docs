@@ -811,7 +811,7 @@ namespace Epsitec.Aider.Data.Subscription
 				complement ?? ""
 			);
 
-			if (postmanNumber == null)
+			if (!postmanNumber.HasValue)
 			{
 				var message = SubscriptionFileWriter.ErrorMessage
 					+ zipCode + ", " + zipAddOn + ", "
@@ -822,7 +822,7 @@ namespace Epsitec.Aider.Data.Subscription
 				throw new NotSupportedException (message);
 			}
 
-			return Convert.ToInt32 (postmanNumber);
+			return postmanNumber.Value;
 		}
 
 		internal const string ErrorMessage = "Postman number not found for address: ";

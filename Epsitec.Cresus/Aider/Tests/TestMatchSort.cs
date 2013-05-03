@@ -105,7 +105,7 @@ namespace Epsitec.Aider.Tests
 				return string.Format ("{0:0000} {1:00}\t{2}\t{3}\t{4}", this.ZipCode, this.ZipCodeAddOn, this.StreetName, this.StreetNumber, this.StreetNumberComplement);
 			}
 
-			public string GetMessenger(Epsitec.Data.Platform.MatchSort.MatchSortEtl etl, bool relaxedStreetNumberComplement = false)
+			public int? GetMessenger(Epsitec.Data.Platform.MatchSort.MatchSortEtl etl, bool relaxedStreetNumberComplement = false)
 			{
 				return etl.GetMessenger (this.ZipCode.ToString ("0000"), this.ZipCodeAddOn.ToString ("00"),
 										 this.StreetName, this.StreetNumber.HasValue ? this.StreetNumber.Value.ToString () : "",
