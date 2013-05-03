@@ -60,6 +60,8 @@ namespace Epsitec.Aider.Override
 
 			if (aiderUser != null)
 			{
+				AiderActivityLogger.Current.RecordAccess (aiderUser);
+
 				var now  = System.DateTime.UtcNow;
 				var last = aiderUser.LastActivityDate;
 
