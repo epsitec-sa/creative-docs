@@ -18,7 +18,8 @@ namespace Epsitec.Aider.Tests
 			var logs = Tests.TestMatchSort.ParseLog (logFile)
 				.OrderBy (info => info.ZipCode*100+info.ZipCodeAddOn)
 				.ThenBy (info => info.StreetName.ToLowerInvariant ())
-				.ThenBy (info => info.StreetNumber);
+				.ThenBy (info => info.StreetNumber)
+				.ToList ();
 
 			System.IO.File.WriteAllLines (logOut + "-all.log", logs.Select (info => info.ToString ()));
 
@@ -60,6 +61,7 @@ namespace Epsitec.Aider.Tests
 		private static IEnumerable<Info> ParseLog(System.IO.FileInfo logFile)
 		{
 			return System.IO.File.ReadLines (logFile.FullName, System.Text.Encoding.Default)
+				.Select (l => l.Substring (11))
 				.Where (x => x.StartsWith (Epsitec.Aider.Data.Subscription.SubscriptionFileWriter.ErrorMessage))
 				.Select (x => new Info (x));
 		}

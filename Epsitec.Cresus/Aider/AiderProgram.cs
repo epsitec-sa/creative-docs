@@ -224,9 +224,12 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				var file = AiderProgram.GetFile (args, "-output:", true);
+				var outputFile = AiderProgram.GetFile (args, "-output:", true);
+				var errorFile = AiderProgram.GetFile (args, "-error:", false);
 
-				SubscriptionFileWriter.Write (coreData, file);
+				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile);
+				
+				writer.Write ();
 			});
 		}
 

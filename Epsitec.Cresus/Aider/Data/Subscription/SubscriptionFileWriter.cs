@@ -2,6 +2,7 @@
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Text;
@@ -26,61 +27,69 @@ namespace Epsitec.Aider.Data.Subscription
 {
 
 
-	internal static class SubscriptionFileWriter
+	internal sealed class SubscriptionFileWriter
 	{
-		public static readonly string MatchSortCsvPath = System.IO.Path.Combine (Epsitec.Common.Support.Globals.ExecutableDirectory, "MAT[CH]sort.csv");
 
 
-		public static void Write(CoreData coreData, FileInfo file)
+		public SubscriptionFileWriter(CoreData coreData, FileInfo outputFile, FileInfo errorFile)
 		{
-			var lines = SubscriptionFileWriter.GetLines (coreData);
+			this.coreData = coreData;
+			this.outputFile = outputFile;
+			this.errorFile = errorFile;
 
-			SubscriptionFileLine.Write (lines, file);
+			this.errors = new List<Tuple<string, string>> ();
 		}
 
 
-		private static IEnumerable<SubscriptionFileLine> GetLines(CoreData coreData)
+		public void Write()
+		{
+			this.errors.Clear ();
+
+			SubscriptionFileLine.Write (this.GetLines (), this.outputFile);
+
+			this.LogErrors ();
+		}
+
+
+		private void LogErrors()
+		{
+			if (this.errors.Count > 0 && this.errorFile != null)
+			{
+				using (var stream = this.errorFile.Open (FileMode.Create, FileAccess.Write))
+				using (var streamWriter = new StreamWriter (stream))
+				{
+					foreach (var error in this.errors)
+					{
+						streamWriter.WriteLine (error.Item1 + " => " + error.Item2);
+					}
+				}
+			}
+		}
+
+
+		private IEnumerable<SubscriptionFileLine> GetLines()
 		{
 			var lines = new List<SubscriptionFileLine> ();
 
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
-			var problems = new List<Tuple<string, string>> ();
-
 			using (var etl = new MatchSortEtl (SubscriptionFileWriter.MatchSortCsvPath))
 			{
-				AiderEnumerator.Execute (coreData, (b, subscriptions) =>
+				AiderEnumerator.Execute (this.coreData, (b, subscriptions) =>
 				{
-					lines.AddRange (SubscriptionFileWriter.GetLines
-					(
-						subscriptions,
-						etl,
-						encodingHelper,
-						problems
-					));
+					lines.AddRange (this.GetLines (subscriptions, etl, encodingHelper));
 				});
-			}
-
-			if (problems.Count > 0)
-			{
-				Debug.WriteLine ("===============================================================");
-
-				foreach (var problem in problems)
-				{
-					Debug.WriteLine (problem.Item1 + " => " + problem.Item2);
-				}
 			}
 
 			return lines;
 		}
 
 
-		private static IEnumerable<SubscriptionFileLine> GetLines
+		private IEnumerable<SubscriptionFileLine> GetLines
 		(
 			IEnumerable<AiderSubscriptionEntity> subscriptions,
 			MatchSortEtl etl,
-			EncodingHelper encodingHelper,
-			List<Tuple<string, string>> problems
+			EncodingHelper encodingHelper
 		)
 		{
 			foreach (var subscription in subscriptions)
@@ -103,7 +112,7 @@ namespace Epsitec.Aider.Data.Subscription
 				{
 					line = null;
 
-					problems.Add (Tuple.Create (subscription.Id, e.Message));
+					this.errors.Add (Tuple.Create (subscription.Id, e.Message));
 				}
 
 				if (line != null)
@@ -825,7 +834,15 @@ namespace Epsitec.Aider.Data.Subscription
 			return postmanNumber.Value;
 		}
 
+
+		private readonly CoreData coreData;
+		private readonly FileInfo outputFile;
+		private readonly FileInfo errorFile;
+		private readonly List<Tuple<string, string>> errors;
+
+
 		internal const string ErrorMessage = "Postman number not found for address: ";
+		public static readonly string MatchSortCsvPath = Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
 	}
 
 
