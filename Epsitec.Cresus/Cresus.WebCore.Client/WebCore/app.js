@@ -193,12 +193,12 @@ function() {
         margin: '1 0 0 0'
       });
 
-      if (epsitecConfig.isTest) {
+      if (epsitecConfig.displayBannerMessage) {
         items = [
-          this.createTestBanner('north', 'test-banner-top'),
           this.menu,
+          this.createBanner('north', 'test-banner-top'),
           this.tabManager,
-          this.createTestBanner('south', 'test-banner-bottom')
+//        this.createBanner('south', 'test-banner-bottom')
         ];
       }
       else {
@@ -217,11 +217,11 @@ function() {
       });
     },
 
-    createTestBanner: function(region, cls) {
+    createBanner: function(region, cls) {
       return Ext.create('Ext.Panel', {
         region: region,
         bodyCls: ['test-banner', cls],
-        html: 'Version de test'
+        html: epsitecConfig.bannerMessage
       });
     }
   });
