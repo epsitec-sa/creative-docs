@@ -106,7 +106,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			catch (Exception ex)
 			{
 				this.Dispose();
-				throw new Exception (ex.Message.ToString());
+				throw new Exception ("Problem while loading the database", ex);
 			}
 			
 		}
