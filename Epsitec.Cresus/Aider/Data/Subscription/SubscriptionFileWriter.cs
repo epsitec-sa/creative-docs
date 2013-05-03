@@ -28,6 +28,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 	internal static class SubscriptionFileWriter
 	{
+		public static readonly string MatchSortCsvPath = System.IO.Path.Combine (Epsitec.Common.Support.Globals.ExecutableDirectory, "MAT[CH]sort.csv");
 
 
 		public static void Write(CoreData coreData, FileInfo file)
@@ -46,7 +47,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var problems = new List<Tuple<string, string>> ();
 
-			using (var etl = new MatchSortEtl ("MAT[CH]sort.csv"))
+			using (var etl = new MatchSortEtl (SubscriptionFileWriter.MatchSortCsvPath))
 			{
 				AiderEnumerator.Execute (coreData, (b, subscriptions) =>
 				{
@@ -812,7 +813,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			if (postmanNumber == null)
 			{
-				var message = "Postman number not found for address: "
+				var message = SubscriptionFileWriter.ErrorMessage
 					+ zipCode + ", " + zipAddOn + ", "
 					+ street + ", "
 					+ number + ", " + complement;
@@ -824,7 +825,7 @@ namespace Epsitec.Aider.Data.Subscription
 			return Convert.ToInt32 (postmanNumber);
 		}
 
-
+		internal const string ErrorMessage = "Postman number not found for address: ";
 	}
 
 

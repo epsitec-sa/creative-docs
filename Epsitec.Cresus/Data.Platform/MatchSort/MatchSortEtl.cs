@@ -53,8 +53,9 @@ namespace Epsitec.Data.Platform.MatchSort
 		   
 			try
 			{
-				var DatabaseDirectoryPath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-				if (!File.Exists(DatabaseDirectoryPath + "\\MatchSort.sqlite"))
+				var DatabaseDirectoryPath = Epsitec.Common.Support.Globals.ExecutableDirectory;
+				var DatabaseFilePath = DatabaseDirectoryPath + "\\MatchSort.sqlite";
+				if (!File.Exists(DatabaseFilePath))
 				{
 					//CASE NO DATABASE
 					SQLiteConnection.CreateFile("MatchSort.sqlite");

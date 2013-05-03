@@ -154,6 +154,7 @@
     <Compile Include="Rules\AiderUserBusinessRules.cs" />
     <Compile Include="Tests\EChFileAnalyzer.cs" />
     <Compile Include="Tests\ParishFileAnalyzer.cs" />
+    <Compile Include="Tests\TestMatchSort.cs" />
     <Compile Include="Tests\TestPostMatch.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Normalization\AddressMatch.cs" />

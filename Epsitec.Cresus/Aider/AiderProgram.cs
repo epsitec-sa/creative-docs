@@ -65,6 +65,15 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-testmatchsort"))					//	-testmatchsort -input:Q:\logs2.txt
+				{
+					//	Analyzes the log file produced by an address export based on MAT[CH]sort
+					//	for the "Bonne Nouvelle" journal.
+
+					Tests.TestMatchSort.AnalyzeLogs (AiderProgram.GetFile (args, "-input:", true));
+					return;
+				}
+
 				if (args.Contains ("-analyzeparishfile"))
 				{
 					AiderProgram.AnalyzeParishFile (args);
