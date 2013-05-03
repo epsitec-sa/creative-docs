@@ -823,21 +823,44 @@ namespace Epsitec.Aider.Data.Subscription
 				complement ?? ""
 			);
 
-			if (!postmanNumber.HasValue)
+			if (postmanNumber.HasValue)
 			{
-				var message = SubscriptionFileWriter.ErrorMessage
-					+ zipCode + ", " + zipAddOn + ", "
-					+ street + ", "
-					+ number + ", " + complement;
-
-				Debug.WriteLine (message);
-				this.postmanErrors.Add (Tuple.Create (subscriptionId, message));
-
-				// The spec requires an empty postman number for addresses that we can't find.
-				return null;
+				return postmanNumber.Value;
 			}
 
-			return postmanNumber.Value;
+			// We have not found the postman number. We try to find one by using an empty house
+			// number complement if the address has a house number complement. This is probably a
+			// wrong address.
+
+			if (!string.IsNullOrEmpty (complement))
+			{
+				postmanNumber = etl.GetMessenger
+				(
+					zipCode ?? "",
+					zipAddOn ?? "",
+					street ?? "",
+					number ?? "",
+					""
+				);
+
+				if (postmanNumber.HasValue)
+				{
+					return postmanNumber.Value;
+				}
+			}
+
+			// We still have found no postman number. In this case, the spec requires an empty
+			// postman number.
+
+			var message = SubscriptionFileWriter.ErrorMessage
+				+ zipCode + ", " + zipAddOn + ", "
+				+ street + ", "
+				+ number + ", " + complement;
+
+			Debug.WriteLine (message);
+			this.postmanErrors.Add (Tuple.Create (subscriptionId, message));
+
+			return null;
 		}
 
 
