@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string addressComplement,
 			string street,
 			string houseNumber,
-			int postmanNumber,
+			int? postmanNumber,
 			string zipCode,
 			string town,
 			string country,
@@ -75,7 +75,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string addressComplement,
 			string street,
 			string houseNumber,
-			int postmanNumber,
+			int? postmanNumber,
 			string zipCode,
 			string town,
 			string country,
@@ -212,17 +212,20 @@ namespace Epsitec.Aider.Data.Subscription
 					"invalid zip code"
 				);
 
-				postmanNumber.ThrowIf
-				(
-					x => x < SubscriptionFileLine.SwissPostmanNumberMin,
-					"postmanNumber too small"
-				);
+				if (postmanNumber.HasValue)
+				{
+					postmanNumber.ThrowIf
+					(
+						x => x < SubscriptionFileLine.SwissPostmanNumberMin,
+						"postmanNumber too small"
+					);
 
-				postmanNumber.ThrowIf
-				(
-					x => x > SubscriptionFileLine.SwissPostmanNumberMax,
-					"postmanNumber too large"
-				);
+					postmanNumber.ThrowIf
+					(
+						x => x > SubscriptionFileLine.SwissPostmanNumberMax,
+						"postmanNumber too large"
+					);
+				}
 			}
 			else
 			{
@@ -283,7 +286,9 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private string GetPostmanNumber()
 		{
-			return InvariantConverter.ToString (this.PostmanNumber);
+			return this.PostmanNumber.HasValue
+				? InvariantConverter.ToString (this.PostmanNumber)
+				: "";
 		}
 
 
@@ -350,7 +355,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string AddressComplement;
 		public readonly string Street;
 		public readonly string HouseNumber;
-		public readonly int PostmanNumber;
+		public readonly int? PostmanNumber;
 		public readonly string ZipCode;
 		public readonly string Town;
 		public readonly string Country;

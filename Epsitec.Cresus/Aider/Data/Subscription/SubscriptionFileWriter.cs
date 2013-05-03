@@ -38,6 +38,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.errorFile = errorFile;
 
 			this.errors = new List<Tuple<string, string>> ();
+			this.postmanErrors = new List<Tuple<string, string>> ();
 		}
 
 
@@ -53,12 +54,12 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private void LogErrors()
 		{
-			if (this.errors.Count > 0 && this.errorFile != null)
+			if ((this.errors.Count > 0 || this.postmanErrors.Count > 0) && this.errorFile != null)
 			{
 				using (var stream = this.errorFile.Open (FileMode.Create, FileAccess.Write))
 				using (var streamWriter = new StreamWriter (stream))
 				{
-					foreach (var error in this.errors)
+					foreach (var error in this.errors.Concat (this.postmanErrors))
 					{
 						streamWriter.WriteLine (error.Item1 + " => " + error.Item2);
 					}
@@ -103,10 +104,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 				try
 				{
-					line = SubscriptionFileWriter.GetLine
-					(
-						subscription, etl, encodingHelper
-					);
+					line = this.GetLine (subscription, etl, encodingHelper);
 				}
 				catch (Exception e)
 				{
@@ -123,7 +121,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static SubscriptionFileLine GetLine
+		private SubscriptionFileLine GetLine
 		(
 			AiderSubscriptionEntity subscription,
 			MatchSortEtl etl,
@@ -133,7 +131,7 @@ namespace Epsitec.Aider.Data.Subscription
 			switch (subscription.SubscriptionType)
 			{
 				case SubscriptionType.Household:
-					return SubscriptionFileWriter.GetHouseholdLine
+					return this.GetHouseholdLine
 					(
 						subscription, etl, encodingHelper
 					);
@@ -150,7 +148,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static SubscriptionFileLine GetHouseholdLine
+		private SubscriptionFileLine GetHouseholdLine
 		(
 			AiderSubscriptionEntity subscription,
 			MatchSortEtl etl,
@@ -165,7 +163,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var subscriptionNumber = subscription.Id;
 			var copiesCount = subscription.Count;
 			var editionId = subscription.GetEditionId ();
-			var postmanNumber = SubscriptionFileWriter.GetPostmanNumber (address, etl);
+			var postmanNumber = this.GetPostmanNumber (subscriptionNumber, address, etl);
 
 			string title;
 			string lastname;
@@ -789,7 +787,12 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static int GetPostmanNumber(AiderAddressEntity address, MatchSortEtl etl)
+		private int? GetPostmanNumber
+		(
+			string subscriptionId,
+			AiderAddressEntity address,
+			MatchSortEtl etl
+		)
 		{
 			// The specs requires 0 for an addresses outside Switzerland.
 			if (!address.Town.Country.IsSwitzerland ())
@@ -828,7 +831,10 @@ namespace Epsitec.Aider.Data.Subscription
 					+ number + ", " + complement;
 
 				Debug.WriteLine (message);
-				throw new NotSupportedException (message);
+				this.postmanErrors.Add (Tuple.Create (subscriptionId, message));
+
+				// The spec requires an empty postman number for addresses that we can't find.
+				return null;
 			}
 
 			return postmanNumber.Value;
@@ -839,6 +845,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly FileInfo outputFile;
 		private readonly FileInfo errorFile;
 		private readonly List<Tuple<string, string>> errors;
+		private readonly List<Tuple<string, string>> postmanErrors;
 
 
 		internal const string ErrorMessage = "Postman number not found for address: ";
