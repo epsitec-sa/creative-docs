@@ -1,0 +1,59 @@
+1003	Lausanne	PLACE CENTRALE	
+1003	Lausanne	PLACE EUROPE	
+1003	Lausanne	TUNNEL E SAINT FRANCOIS	
+1003	Lausanne	TUNNEL O SAINT FRANCOIS	
+1004	Lausanne	AVENUE CONFRERIE	18-22
+1005	Lausanne	AVENUE PIERRE DECKER	
+1005	Lausanne	CHEMIN BELLEVUE	20-24
+1005	Lausanne	CHEMIN LEVANT	31,30-42
+1005	Lausanne	CHEMIN VUACHERE	17
+1006	Lausanne	QUAI J. P. DELAMURAZ	
+1007	Lausanne	ALLEE BORNAN	
+1007	Lausanne	AVENUE GUSTAVE DORET	
+1007	Lausanne	AVENUE MARC DUFOUR	17,8-36
+1007	Lausanne	CABANE	
+1007	Lausanne	CHEMIN GRAVIERE	8
+1007	Lausanne	CLUB VIDY WIND SURF	
+1007	Lausanne	GUSTAVE DORET	
+1007	Lausanne	KIOSQUE	
+1007	Lausanne	PORT VIDY	
+1007	Lausanne	PROMENADE VIDY	
+1010	Lausanne	ROUTE CORNICHE	
+1012	Lausanne	AVENUE BEAUMONT	17-25
+1014	Lausanne Adm cant VD
+1015	Lausanne
+1017	Lausanne Charles Veillon SA
+1019	Lausanne Services spéciaux
+1020	Renens VD 1
+1020	Renens VD 2
+1023	Crissier 1
+1039	Cheseaux Polyval
+1110	Morges 1
+1110	Morges 2
+1110	Morges 3
+1260	Nyon 1
+1260	Nyon 2
+1400	Yverdon 2
+1400	Yverdon-les-Bains	ALLEE WINTERTHUR	
+1400	Yverdon-les-Bains	ATELIERS CFF	
+1400	Yverdon-les-Bains	AVENUE DECOUVERTES	
+1400	Yverdon-les-Bains	AVENUE SCIENCES	
+1400	Yverdon-les-Bains	AVENUE TROIS LACS	
+1400	Yverdon-les-Bains	CENTRE THERMAL	
+1400	Yverdon-les-Bains	COLLEGE PLACE ARMES	
+1400	Yverdon-les-Bains	DOMAINE MARAIS	
+1400	Yverdon-les-Bains	HUITANTE PARTIES	
+1400	Yverdon-les-Bains	KIOSQUE SPORTS	
+1400	Yverdon-les-Bains	PETITS MARAIS	
+1400	Yverdon-les-Bains	PROMENADE RENE BERTHOUD	
+1400	Yverdon-les-Bains	QUAI ATELIERS	
+1400	Yverdon-les-Bains	ROUTE SAINTE CROIX	
+1400	Yverdon-les-Bains	RUE PYTHAGORE	
+1401	Yverdon-les-Bains
+1422	Grandson 1
+1422	Grandson 2
+1800	Vevey 1
+1811	Vevey Services spéciaux
+1818	Montreux La Redoute
+1820	Montreux 1
+1820	Montreux 2
