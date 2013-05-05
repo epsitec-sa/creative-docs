@@ -874,6 +874,4 @@ namespace Epsitec.Aider.Data.Subscription
 		internal const string ErrorMessage = "Postman number not found for address: ";
 		public static readonly string MatchSortCsvPath = Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
 	}
-
-
 }

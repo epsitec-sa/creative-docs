@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Tests
 				.ThenBy (info => info.StreetNumber)
 				.ToList ();
 
-			System.IO.File.WriteAllLines (logOut + "-all.log", logs.Select (info => info.ToString ()));
+			System.IO.File.WriteAllLines (logOut + "-all.log", logs.Select (info => info.ToString ()), System.Text.Encoding.Default);
 
 			using (var etl = new Epsitec.Data.Platform.MatchSort.MatchSortEtl (Epsitec.Aider.Data.Subscription.SubscriptionFileWriter.MatchSortCsvPath))
 			{
@@ -51,8 +51,8 @@ namespace Epsitec.Aider.Tests
 					}
 				}
 
-				System.IO.File.WriteAllLines (logOut + "-failed.log", failed.Select (info => info.ToString ()));
-				System.IO.File.WriteAllLines (logOut + "-relaxed.log", relaxed.Select (info => info.ToString ()));
+				System.IO.File.WriteAllLines (logOut + "-failed.log", failed.Select (info => info.ToString ()), System.Text.Encoding.Default);
+				System.IO.File.WriteAllLines (logOut + "-relaxed.log", relaxed.Select (info => info.ToString ()), System.Text.Encoding.Default);
 
 				System.Diagnostics.Debug.WriteLine ("Log file: {0}, relaxed: {1}, failed: {2}", itemCount, relaxed.Count, failed.Count);
 			}
