@@ -28,8 +28,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public EervParishDataLoader()
 		{
-			this.townCorrections = new HashSet<Tuple<string, string>> ();
-			this.streetCorrections = new HashSet<Tuple<string, string, int, string>> ();
+			this.townCorrections = new Dictionary<Tuple<string, string>, Tuple<string, string>> ();
+			this.streetCorrections = new Dictionary<Tuple<string, string, int?, int, string>, Tuple<string, string, int?, int, string>> ();
 			this.townChecker = new TownChecker ();
 		}
 
@@ -92,6 +92,8 @@ namespace Epsitec.Aider.Data.Eerv
 					yield return new EervParishData (id, households, rawPersons, legalPersons, groups, rawActivities);
 				}
 			}
+
+			this.DisplayWarnings ();
 		}
 
 
@@ -613,18 +615,9 @@ namespace Epsitec.Aider.Data.Eerv
 			if (newZipCode != zipCode || newTown != town)
 			{
 				var key = Tuple.Create (zipCode, town);
+				var value = Tuple.Create (newZipCode, newTown);
 
-				if (!this.townCorrections.Contains (key))
-				{
-					this.townCorrections.Add (key);
-
-					var message = "town correction "
-						+ "(" + zipCode + "," + town + ")"
-						+ " => "
-						+ "(" + newZipCode + "," + newTown + ")";
-
-					EervParishDataLoader.Warn (message);
-				}
+				this.townCorrections[key] = value;
 			}
 
 			zipCode = newZipCode;
@@ -670,23 +663,50 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var key = Tuple.Create
 				(
-					saveFirstAddressLine, saveStreetName, saveZipCodeInt, saveTown
+					saveFirstAddressLine, saveStreetName, houseNumber, saveZipCodeInt, saveTown
 				);
 
-				if (!this.streetCorrections.Contains (key))
-				{
-					this.streetCorrections.Add (key);
+				var value = Tuple.Create
+				(
+					firstAddressLine, streetName, houseNumber, zipCodeInt, town
+				);
 
-					var message = "street correction "
-						+ "(" + saveFirstAddressLine + ", " + saveStreetName + ", " + saveZipCodeInt + " " + saveTown + ")"
-						+ " => "
-						+ "(" + firstAddressLine + ", " + streetName + ", " + zipCodeInt + " " + town + ")";
-
-					EervParishDataLoader.Warn (message);
-				}
+				this.streetCorrections[key] = value;
 			}
 
 			zipCode = InvariantConverter.ToString (zipCodeInt);
+		}
+
+
+		private void DisplayWarnings()
+		{
+			Console.WriteLine ("=================================================================");
+			Console.WriteLine ("Town corrections");
+			foreach (var townCorrection in this.townCorrections)
+			{
+				var key = townCorrection.Key;
+				var value = townCorrection.Value;
+
+				var message = key.Item1 + "; " + key.Item2
+						+ " => "
+						+ value.Item1 + "; " + value.Item2;
+
+				Console.WriteLine (message);
+			}
+
+			Console.WriteLine ("=================================================================");
+			Console.WriteLine ("Street corrections");
+			foreach (var streetCorrection in this.streetCorrections)
+			{
+				var key = streetCorrection.Key;
+				var value = streetCorrection.Value;
+
+				var message = StringUtils.Join ("; ", key.Item1, key.Item2, key.Item3, key.Item4, key.Item5)
+						+ " => "
+						+ StringUtils.Join ("; ", value.Item1, value.Item2, value.Item3, value.Item4, value.Item5);
+
+				Console.WriteLine (message);
+			}
 		}
 
 
@@ -902,10 +922,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private readonly HashSet<Tuple<string, string>> townCorrections;
+		private readonly Dictionary<Tuple<string, string>, Tuple<string, string>> townCorrections;
 
 
-		private readonly HashSet<Tuple<string, string, int, string>> streetCorrections;
+		private readonly Dictionary<Tuple<string, string, int?, int, string>, Tuple<string, string, int?, int, string>> streetCorrections;
 
 
 		private readonly TownChecker townChecker;
