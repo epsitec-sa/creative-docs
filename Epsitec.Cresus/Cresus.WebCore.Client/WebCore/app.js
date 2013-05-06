@@ -197,8 +197,7 @@ function() {
         items = [
           this.menu,
           this.createBanner('north', 'test-banner-top'),
-          this.tabManager,
-//        this.createBanner('south', 'test-banner-bottom')
+          this.tabManager
         ];
       }
       else {
