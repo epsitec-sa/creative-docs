@@ -596,79 +596,97 @@ namespace Epsitec.Aider.Data.Eerv
 			// We check the addresses in Switzerland.
 			if (countryCode == "CH")
 			{
-				// First of all, we correct the town and zipcode if they are not valid swiss towns.
-				var result = this.townChecker.Validate (zipCode, town);
-				var newZipCode = result.Item1;
-				var newTown = result.Item2;
+				this.FixZipCodeAndTown (ref zipCode, ref town);
+				this.FixStreetName (ref firstAddressLine, ref streetName, houseNumber, ref zipCode, ref town);
+			}
 
-				if (newZipCode != zipCode || newTown != town)
+			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town, countryCode);
+		}
+
+
+		private void FixZipCodeAndTown(ref string zipCode, ref string town)
+		{
+			var result = this.townChecker.Validate (zipCode, town);
+			var newZipCode = result.Item1;
+			var newTown = result.Item2;
+
+			if (newZipCode != zipCode || newTown != town)
+			{
+				var key = Tuple.Create (zipCode, town);
+
+				if (!this.townCorrections.Contains (key))
 				{
-					var key = Tuple.Create (zipCode, town);
+					this.townCorrections.Add (key);
 
-					if (!this.townCorrections.Contains (key))
-					{
-						this.townCorrections.Add (key);
-
-						var message = "town correction "
+					var message = "town correction "
 						+ "(" + zipCode + "," + town + ")"
 						+ " => "
 						+ "(" + newZipCode + "," + newTown + ")";
 
-						EervParishDataLoader.Warn (message);
-					}
+					EervParishDataLoader.Warn (message);
 				}
+			}
 
-				zipCode = newZipCode;
-				town = newTown;
+			zipCode = newZipCode;
+			town = newTown;
+		}
 
-				// Then we try to fix the street information, if we have a valid zip and town name.
-				if (!string.IsNullOrEmpty (town) && !string.IsNullOrWhiteSpace (zipCode))
-				{
-					var zipCodeInt = int.Parse (zipCode);
-					var zipCodeAddOn = 0;
-					var zipCodeId = 0;
 
-					var saveFirstAddressLine = firstAddressLine;
-					var saveStreetName = streetName;
-					var saveZipCodeInt = zipCodeInt;
-					var saveTown = town;
+		private void FixStreetName
+		(
+			ref string firstAddressLine,
+			ref string streetName,
+			int? houseNumber,
+			ref string zipCode,
+			ref string town
+		)
+		{
+			if (string.IsNullOrEmpty (town) ||  string.IsNullOrWhiteSpace (zipCode))
+			{
+				return;
+			}
 
-					AddressPatchEngine.Current.FixAddress
-					(
-						ref firstAddressLine, ref streetName, houseNumber, ref zipCodeInt,
-						ref zipCodeAddOn, ref zipCodeId, ref town
-					);
+			var zipCodeInt = int.Parse (zipCode);
+			var zipCodeAddOn = 0;
+			var zipCodeId = 0;
 
-					var diff = firstAddressLine != saveFirstAddressLine
+			var saveFirstAddressLine = firstAddressLine;
+			var saveStreetName = streetName;
+			var saveZipCodeInt = zipCodeInt;
+			var saveTown = town;
+
+			AddressPatchEngine.Current.FixAddress
+			(
+				ref firstAddressLine, ref streetName, houseNumber, ref zipCodeInt,
+				ref zipCodeAddOn, ref zipCodeId, ref town
+			);
+
+			var diff = firstAddressLine != saveFirstAddressLine
 						|| streetName  != saveStreetName
 						|| zipCodeInt != saveZipCodeInt
 						|| town != saveTown;
 
-					if (diff)
-					{
-						var key = Tuple.Create
-						(
-							saveFirstAddressLine, saveStreetName, saveZipCodeInt, saveTown
-						);
+			if (diff)
+			{
+				var key = Tuple.Create
+				(
+					saveFirstAddressLine, saveStreetName, saveZipCodeInt, saveTown
+				);
 
-						if (!this.streetCorrections.Contains (key))
-						{
-							this.streetCorrections.Add (key);
+				if (!this.streetCorrections.Contains (key))
+				{
+					this.streetCorrections.Add (key);
 
-							var message = "street correction "
-								+ "(" + saveFirstAddressLine + ", " + saveStreetName + ", " + saveZipCodeInt + " " + saveTown + ")"
-								+ " => "
-								+ "(" + firstAddressLine + ", " + streetName + ", " + zipCodeInt + " " + town + ")";
+					var message = "street correction "
+						+ "(" + saveFirstAddressLine + ", " + saveStreetName + ", " + saveZipCodeInt + " " + saveTown + ")"
+						+ " => "
+						+ "(" + firstAddressLine + ", " + streetName + ", " + zipCodeInt + " " + town + ")";
 
-							EervParishDataLoader.Warn (message);
-						}
-					}
-
-					zipCode = InvariantConverter.ToString (zipCodeInt);
+					EervParishDataLoader.Warn (message);
 				}
 			}
 
-			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town, countryCode);
+			zipCode = InvariantConverter.ToString (zipCodeInt);
 		}
 
 
