@@ -132,10 +132,3 @@ html, body {
   border-bottom-width: 1px;
   border-left-width: 0px;
 }
-
-.test-banner-bottom {
-  border-top-width: 1px;
-  border-right-width: 0px;
-  border-bottom-width: 0px;
-  border-left-width: 0px;
-}
