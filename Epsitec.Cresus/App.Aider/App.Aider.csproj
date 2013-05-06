@@ -73,10 +73,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="ServerConfigProduction\config.js" />
-    <Content Include="ServerConfigProduction\logo.png" />
-    <Content Include="ServerConfigTest\config.js" />
-    <Content Include="ServerConfigTest\logo.png" />
     <None Include="..\Aider\Properties\Epsitec.Aider.snk">
       <Link>Properties\Epsitec.Aider.snk</Link>
     </None>
@@ -91,11 +87,13 @@
     <Content Include="Aider.Metadata.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ServerConfigProduction\Aider.Environment.crconfig" />
     <None Include="ServerConfigProduction\app.config" />
     <None Include="ServerConfigProduction\certificate.key" />
     <None Include="ServerConfigProduction\certificate.pem" />
     <None Include="ServerConfigProduction\nginx-maintenance.conf" />
     <None Include="ServerConfigProduction\nginx-server.conf" />
+    <Content Include="ServerConfigTest\Aider.Environment.crconfig" />
     <None Include="ServerConfigTest\app.config" />
     <None Include="ServerConfigTest\certificate.key" />
     <None Include="ServerConfigTest\certificate.pem" />

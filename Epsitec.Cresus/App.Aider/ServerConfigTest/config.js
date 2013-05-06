@@ -1,3 +1,0 @@
-var epsitecConfig = {
-  isTest: true
-};
