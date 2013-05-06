@@ -938,41 +938,6 @@ namespace Epsitec.Aider.Data.Eerv
 				return;
 			}
 
-			if (eervAddress.IsInSwitzerland ())
-			{
-				EervParishDataImporter.CombineSwissAddress (aiderTowns, eervAddress, aiderAddress);
-			}
-			else
-			{
-				EervParishDataImporter.CombineForeignAddress (aiderTowns, eervAddress, aiderAddress);
-			}
-		}
-
-
-		private static void CombineSwissAddress(AiderTownRepository aiderTowns, EervAddress eervAddress, AiderAddressEntity aiderAddress)
-		{
-			var firstAddressLine = eervAddress.FirstAddressLine;
-			var street = eervAddress.StreetName;
-			var houseNumber = eervAddress.HouseNumber;
-			var houseNumberComplement = eervAddress.HouseNumberComplement;
-			var zipCode = int.Parse (eervAddress.ZipCode);
-			var zipCodeAddOn = 0;
-			var zipCodeId = 0;
-			var townName = eervAddress.Town;
-
-			AddressPatchEngine.Current.FixAddress (ref firstAddressLine, ref street, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref townName);
-
-			aiderAddress.AddressLine1 = firstAddressLine;
-			aiderAddress.Street = street;
-			aiderAddress.HouseNumber = houseNumber;
-			aiderAddress.HouseNumberComplement = houseNumberComplement;
-
-			aiderAddress.Town = aiderTowns.GetTown (eervAddress);
-		}
-
-
-		private static void CombineForeignAddress(AiderTownRepository aiderTowns, EervAddress eervAddress, AiderAddressEntity aiderAddress)
-		{
 			aiderAddress.AddressLine1 = eervAddress.FirstAddressLine;
 			aiderAddress.Street = eervAddress.StreetName;
 			aiderAddress.HouseNumber = eervAddress.HouseNumber;

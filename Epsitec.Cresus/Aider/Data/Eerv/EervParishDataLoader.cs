@@ -29,6 +29,7 @@ namespace Epsitec.Aider.Data.Eerv
 		public EervParishDataLoader()
 		{
 			this.townCorrections = new HashSet<Tuple<string, string>> ();
+			this.streetCorrections = new HashSet<Tuple<string, string, int, string>> ();
 			this.townChecker = new TownChecker ();
 		}
 
@@ -592,10 +593,10 @@ namespace Epsitec.Aider.Data.Eerv
 				countryCode = "CH";
 			}
 
-			// For swiss towns, we check them against the post data to ensure that they are valid
-			// towns. If they are not, we correct them.
+			// We check the addresses in Switzerland.
 			if (countryCode == "CH")
 			{
+				// First of all, we correct the town and zipcode if they are not valid swiss towns.
 				var result = this.townChecker.Validate (zipCode, town);
 				var newZipCode = result.Item1;
 				var newTown = result.Item2;
@@ -619,6 +620,52 @@ namespace Epsitec.Aider.Data.Eerv
 
 				zipCode = newZipCode;
 				town = newTown;
+
+				// Then we try to fix the street information, if we have a valid zip and town name.
+				if (!string.IsNullOrEmpty (town) && !string.IsNullOrWhiteSpace (zipCode))
+				{
+					var zipCodeInt = int.Parse (zipCode);
+					var zipCodeAddOn = 0;
+					var zipCodeId = 0;
+
+					var saveFirstAddressLine = firstAddressLine;
+					var saveStreetName = streetName;
+					var saveZipCodeInt = zipCodeInt;
+					var saveTown = town;
+
+					AddressPatchEngine.Current.FixAddress
+					(
+						ref firstAddressLine, ref streetName, houseNumber, ref zipCodeInt,
+						ref zipCodeAddOn, ref zipCodeId, ref town
+					);
+
+					var diff = firstAddressLine != saveFirstAddressLine
+						|| streetName  != saveStreetName
+						|| zipCodeInt != saveZipCodeInt
+						|| town != saveTown;
+
+					if (diff)
+					{
+						var key = Tuple.Create
+						(
+							saveFirstAddressLine, saveStreetName, saveZipCodeInt, saveTown
+						);
+
+						if (!this.streetCorrections.Contains (key))
+						{
+							this.streetCorrections.Add (key);
+
+							var message = "street correction "
+								+ "(" + saveFirstAddressLine + ", " + saveStreetName + ", " + saveZipCodeInt + " " + saveTown + ")"
+								+ " => "
+								+ "(" + firstAddressLine + ", " + streetName + ", " + zipCodeInt + " " + town + ")";
+
+							EervParishDataLoader.Warn (message);
+						}
+					}
+
+					zipCode = InvariantConverter.ToString (zipCodeInt);
+				}
 			}
 
 			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town, countryCode);
@@ -838,6 +885,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 		private readonly HashSet<Tuple<string, string>> townCorrections;
+
+
+		private readonly HashSet<Tuple<string, string, int, string>> streetCorrections;
 
 
 		private readonly TownChecker townChecker;
