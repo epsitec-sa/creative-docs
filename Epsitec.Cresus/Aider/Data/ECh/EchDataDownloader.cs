@@ -80,7 +80,7 @@ namespace Epsitec.Aider.Data.ECh
 					client.Proxy       = new WebProxy ();
 					client.Credentials = EchDataDownloader.GetCredentials ();
 
-					System.Diagnostics.Trace.WriteLine (string.Format ("FTP: Downloading {0}, {1} MB", fileName, size/(1024*1024)));
+					System.Console.WriteLine ("FTP: Downloading {0}, {1} MB", fileName, size/(1024*1024));
 
 					var data = client.DownloadData (EchDataDownloader.GetFtpUri (fileName));
 
@@ -91,12 +91,12 @@ namespace Epsitec.Aider.Data.ECh
 
 						this.downloadedFilePaths.Add (path);
 
-						System.Diagnostics.Trace.WriteLine (string.Format ("FTP: Download successful ({0}, {1} MB)", fileName, size/(1024*1024)));
+						System.Console.WriteLine ("FTP: Download successful ({0}, {1} MB)", fileName, size/(1024*1024));
 
 						return true;
 					}
-					
-					System.Diagnostics.Trace.WriteLine (string.Format ("FTP: Download failed ({0}, size mismatch = {1})", fileName, data.Length - size));
+
+					System.Console.WriteLine ("FTP: Download failed ({0}, size mismatch = {1})", fileName, data.Length - size);
 				}
 			}
 
@@ -161,9 +161,9 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				var tokens = line.Split (' ');
 				
-				if (tokens.Length == 13)
+				if (tokens.Length >= 13)
 				{
-					var name = tokens[12];
+					var name = tokens.Last ();
 
 					if (this.ftpDirectory.Contains (name))
 					{

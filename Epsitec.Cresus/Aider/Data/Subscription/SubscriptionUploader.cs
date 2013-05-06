@@ -7,13 +7,45 @@ using System.Net;
 
 namespace Epsitec.Aider.Data.Subscription
 {
-	public class SubscriptionUploader
+	public static class SubscriptionUploader
 	{
-		public SubscriptionUploader()
+		public static bool FtpUploadFile(System.IO.FileInfo fileInfo, System.IO.FileInfo responseFileInfo = null)
 		{
-			//	TODO: upload the file to the Tamedia server
-		}
+			var fileName   = SubscriptionUploader.GetTargetFileName ();
+			var fileSize   = fileInfo.Length;
+			var ftpRequest = FtpWebRequest.Create (SubscriptionUploader.GetFtpUri (fileName)) as FtpWebRequest;
 
+			ftpRequest.Method        = WebRequestMethods.Ftp.UploadFile;
+			ftpRequest.Proxy         = new WebProxy ();
+			ftpRequest.Credentials   = SubscriptionUploader.GetCredentials ();
+			ftpRequest.UseBinary     = true;
+			ftpRequest.UsePassive    = true;
+			ftpRequest.KeepAlive     = false;
+			ftpRequest.ContentLength = fileSize;
+			ftpRequest.Timeout       = System.Threading.Timeout.Infinite;
+
+			using (var uploadStream = ftpRequest.GetRequestStream ())
+			using (var sourceStream = System.IO.File.OpenRead (fileInfo.FullName))
+			{
+				System.Console.WriteLine ("FTP: Uploading {0} to {1}, {2} MB", fileInfo.FullName, fileName, fileSize/(1024*1024));
+				
+				sourceStream.CopyTo (uploadStream);
+			}
+
+			using (var response = ftpRequest.GetResponse () as FtpWebResponse)
+			{
+				System.Console.WriteLine ("FTP: {0}", response.StatusDescription);
+				System.Diagnostics.Trace.WriteLine (string.Format ("FTP: {0}", response.StatusDescription));
+
+				if (responseFileInfo != null)
+				{
+					System.IO.File.WriteAllText (responseFileInfo.FullName, response.StatusDescription);
+				}
+			}
+
+			return true;
+		}
+		
 		private static string GetTargetFileName()
 		{
 			var now = System.DateTime.Now;

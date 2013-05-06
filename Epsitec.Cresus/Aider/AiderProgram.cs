@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Epsitec.Common.IO;
 
 namespace Epsitec.Aider
 {
@@ -70,7 +71,7 @@ namespace Epsitec.Aider
 					//	Analyzes the log file produced by an address export based on MAT[CH]sort
 					//	for the "Bonne Nouvelle" journal.
 
-					Tests.TestMatchSort.AnalyzeLogs (AiderProgram.GetFile (args, "-input:", true));
+					ConsoleCreator.RunWithConsole (() => Tests.TestMatchSort.AnalyzeLogs (AiderProgram.GetFile (args, "-input:", true)));
 					return;
 				}
 
@@ -86,9 +87,9 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-echdownload"))
+				if (args.Contains ("-echdownload"))						//	-echdownload -echdir:S:\eerv -echdelete:true
 				{
-					AiderProgram.DownloadEchData (args);
+					ConsoleCreator.RunWithConsole (() => AiderProgram.DownloadEchData (args));
 					return;
 				}
 
@@ -116,14 +117,28 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-exportsubscriptions"))
+				if (args.Contains ("-exportsubscriptions"))				//	-exportsubscriptions -output:Q:\output.txt -error:Q:\error.log
 				{
 					AiderProgram.RunSubscriptionExportation (args);
+					return;
+				}
+
+				if (args.Contains ("-uploadsubscriptions"))				//	-uploadsubscriptions -input:Q:\output.txt -response:Q:\tamedia.log
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.UploadSubscriptionExportation (args));
 					return;
 				}
 			}
 
 			AiderProgram.RunNormalMode (args);
+		}
+
+		private static void UploadSubscriptionExportation(string[] args)
+		{
+			var outputFile = AiderProgram.GetFile (args, "-input:", true);
+			var responseFile = AiderProgram.GetFile (args, "-response:", false);
+
+			SubscriptionUploader.FtpUploadFile (outputFile, responseFile);
 		}
 
 		private static void DownloadEchData(string[] args)
