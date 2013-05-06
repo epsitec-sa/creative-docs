@@ -9,7 +9,6 @@ using Epsitec.Data.Platform;
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Aider.Data.ECh;
 
 
 namespace Epsitec.Aider.Tools
