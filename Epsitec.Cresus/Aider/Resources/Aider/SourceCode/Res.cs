@@ -1715,8 +1715,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 92);
 				//	designer:cap/LVG332
 				public static readonly global::Epsitec.Common.Support.Druid Id = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 99);
-				//	designer:cap/LVGT22
-				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 93);
 				//	designer:cap/LVG632
 				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 102);
 				//	designer:cap/LVG532

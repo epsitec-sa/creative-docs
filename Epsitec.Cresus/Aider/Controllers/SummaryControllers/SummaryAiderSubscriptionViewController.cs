@@ -28,14 +28,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 
 				case SubscriptionType.LegalPerson:
-					wall.AddBrick (x => x.LegalPerson)
+					wall.AddBrick (x => x.LegalPersonContact)
 						.Attribute (BrickMode.DefaultToSummarySubView);
-
-					if (this.Entity.LegalPersonContact.IsNotNull ())
-					{
-						wall.AddBrick (x => x.LegalPersonContact)
-							.Attribute (BrickMode.DefaultToSummarySubView);
-					}
 					break;
 
 				default:

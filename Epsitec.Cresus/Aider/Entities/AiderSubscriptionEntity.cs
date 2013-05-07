@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Entities
 					return this.Household.Address;
 
 				case SubscriptionType.LegalPerson:
-					return this.LegalPerson.Address;
+					return this.LegalPersonContact.Address;
 
 				default:
 					throw new NotImplementedException ();
@@ -84,27 +84,7 @@ namespace Epsitec.Aider.Entities
 		public static AiderSubscriptionEntity Create
 		(
 			BusinessContext businessContext,
-			AiderLegalPersonEntity legalPerson,
 			AiderContactEntity legalPersonContact,
-			AiderGroupEntity regionalEdition,
-			int count
-		)
-		{
-			var subscription = AiderSubscriptionEntity.Create
-			(
-				businessContext, legalPerson, regionalEdition, count
-			);
-
-			subscription.LegalPersonContact = legalPersonContact;
-
-			return subscription;
-		}
-
-
-		public static AiderSubscriptionEntity Create
-		(
-			BusinessContext businessContext,
-			AiderLegalPersonEntity legalPerson,
 			AiderGroupEntity regionalEdition,
 			int count
 		)
@@ -115,7 +95,7 @@ namespace Epsitec.Aider.Entities
 			);
 
 			subscription.SubscriptionType = SubscriptionType.LegalPerson;
-			subscription.LegalPerson = legalPerson;
+			subscription.LegalPersonContact = legalPersonContact;
 
 			return subscription;
 		}

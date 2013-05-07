@@ -283,12 +283,11 @@ namespace Epsitec.Aider.Data.Subscription
 
 				foreach (var legalPerson in legalPersons)
 				{
-					var legalPersonContact = legalPerson.Contacts.FirstOrDefault ();
+					var legalPersonContact = legalPerson.Contacts.First ();
 
 					SubscriptionGenerator.SubscribeLegalPerson
 					(
-						businessContext, parishRepository, regionGroups, legalPerson,
-						legalPersonContact
+						businessContext, parishRepository, regionGroups, legalPersonContact
 					);
 				}
 
@@ -302,22 +301,20 @@ namespace Epsitec.Aider.Data.Subscription
 			BusinessContext businessContext,
 			ParishAddressRepository parishRepository,
 			Dictionary<int, AiderGroupEntity> regionGroups,
-			AiderLegalPersonEntity legalPerson,
 			AiderContactEntity legalPersonContact
 		)
 		{
 			var count = 1;
 			var regionalEdition = SubscriptionGenerator.FindRegionGroup
 			(
-				parishRepository, regionGroups, legalPerson.Address
+				parishRepository, regionGroups, legalPersonContact.Address
 			);
 
 			regionalEdition = regionGroups.First ().Value;
 
-
 			AiderSubscriptionEntity.Create
 			(
-				businessContext, legalPerson, legalPersonContact, regionalEdition, count
+				businessContext, legalPersonContact, regionalEdition, count
 			);
 		}
 
