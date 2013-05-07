@@ -126,15 +126,15 @@ namespace Epsitec.Aider.Data.Subscription
 			switch (subscription.SubscriptionType)
 			{
 				case SubscriptionType.Household:
-					return this.GetHouseholdLine
+					return this.GetLine
 					(
-						subscription, etl, encodingHelper
+						subscription, etl, encodingHelper, this.GetHouseholdAddressData
 					);
 
 				case SubscriptionType.LegalPerson:
-					return SubscriptionFileWriter.GetLegalPersonLine
+					return this.GetLine
 					(
-						subscription, etl, encodingHelper
+						subscription, etl, encodingHelper, this.GetLegalPersonAddressData
 					);
 
 				default:
@@ -143,14 +143,14 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private SubscriptionFileLine GetHouseholdLine
+		private SubscriptionFileLine GetLine
 		(
 			AiderSubscriptionEntity subscription,
 			MatchSortEtl etl,
-			EncodingHelper encodingHelper
+			EncodingHelper encodingHelper,
+			AddressDataGetter addressDataGetter
 		)
 		{
-			var household = subscription.Household;
 			var address = subscription.GetAddress ();
 			var town = address.Town;
 			var country = town.Country;
@@ -163,27 +163,14 @@ namespace Epsitec.Aider.Data.Subscription
 			string title;
 			string lastname;
 			string firstname;
-
-			SubscriptionFileWriter.GetHouseholdName
-			(
-				household,
-				encodingHelper,
-				out title,
-				out firstname,
-				out lastname
-			);
-
 			string addressComplement;
 			string street;
 			string houseNumber;
 
-			SubscriptionFileWriter.GetHouseholdFirstAddressPart
+			addressDataGetter
 			(
-				address,
-				encodingHelper,
-				out addressComplement,
-				out street,
-				out houseNumber
+				subscription, encodingHelper, out title, out lastname, out firstname,
+				out addressComplement, out street, out houseNumber
 			);
 
 			var zipCode = SubscriptionFileWriter.Process
@@ -214,6 +201,41 @@ namespace Epsitec.Aider.Data.Subscription
 				subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
 				addressComplement, street, houseNumber, postmanNumber, zipCode, townName,
 				countryName, DistributionMode.Surface, isSwitzerland
+			);
+		}
+
+
+		private void GetHouseholdAddressData
+		(
+			AiderSubscriptionEntity subscription,
+			EncodingHelper encodingHelper,
+			out string title,
+			out string lastname,
+			out string firstname,
+			out string addressComplement,
+			out string street,
+			out string houseNumber
+		)
+		{
+			var household = subscription.Household;
+			var address = subscription.GetAddress ();
+
+			SubscriptionFileWriter.GetHouseholdName
+			(
+				household,
+				encodingHelper,
+				out title,
+				out firstname,
+				out lastname
+			);
+
+			SubscriptionFileWriter.GetHouseholdFirstAddressPart
+			(
+				address,
+				encodingHelper,
+				out addressComplement,
+				out street,
+				out houseNumber
 			);
 		}
 
@@ -708,11 +730,16 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static SubscriptionFileLine GetLegalPersonLine
+		private void GetLegalPersonAddressData
 		(
 			AiderSubscriptionEntity subscription,
-			MatchSortEtl etl,
-			EncodingHelper encodingHelper
+			EncodingHelper encodingHelper,
+			out string title,
+			out string lastname,
+			out string firstname,
+			out string addressComplement,
+			out string street,
+			out string houseNumber
 		)
 		{
 			// TODO Manage the cases with the legal persons.
@@ -867,6 +894,27 @@ namespace Epsitec.Aider.Data.Subscription
 
 
 		internal const string ErrorMessage = "Postman number not found for address: ";
+
+
 		public static readonly string MatchSortCsvPath = Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
+
+
+		// We need a delegate to define this, as the System.Action type cannot use arguments with
+		// the out keyword. We need an old school delegate for this kind of stuff.
+		private delegate void AddressDataGetter
+		(
+			AiderSubscriptionEntity subscription,
+			EncodingHelper encodingHelper,
+			out string title,
+			out string lastname,
+			out string firstname,
+			out string addressComplement,
+			out string street,
+			out string houseNumber
+		);
+
+
 	}
+
+
 }
