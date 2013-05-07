@@ -303,6 +303,9 @@ namespace Epsitec.Cresus.Core.Library
 			{
 				string line = current;
 
+				//	#[Feature:Xxx]...
+				//	Conditional code, executed only if feature 'Xxx' has been configured.
+
 				if (line.StartsWith ("#[Feature:"))
 				{
 					int start  = line.IndexOf (':') + 1;
@@ -321,17 +324,27 @@ namespace Epsitec.Cresus.Core.Library
 					}
 				}
 
+				//	#...
+				//	//...
+				//	Comment, skipped.
+				
 				if ((line.StartsWith ("//")) ||
 					(line.StartsWith ("#")))
 				{
 					continue;
 				}
 
+				//	...@x...
+				//	Substitutes @x by the value of x.
+
 				if (line.Contains ('@'))
 				{
 					line = CoreContext.SubstituteArguments (line, dict);
 				}
 
+				//	Xyz=123
+				//	Defines the value Xyz as being 123.
+				
 				int pos = line.IndexOf ('=');
 
 				if (pos > 0)
@@ -368,6 +381,9 @@ namespace Epsitec.Cresus.Core.Library
 				}
 
 				line = line.TrimStart (' ', '\t');
+
+				//	<xml> ... </xml>
+				//	Processes inline XML
 
 				if (line.StartsWith ("<"))
 				{
