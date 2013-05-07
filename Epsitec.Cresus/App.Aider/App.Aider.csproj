@@ -91,12 +91,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ServerConfigProduction\Aider.Environment.crconfig" />
+    <Content Include="ServerConfigProduction\Aider.Features.crconfig" />
     <None Include="ServerConfigProduction\app.config" />
     <None Include="ServerConfigProduction\certificate.key" />
     <None Include="ServerConfigProduction\certificate.pem" />
     <None Include="ServerConfigProduction\nginx-maintenance.conf" />
     <None Include="ServerConfigProduction\nginx-server.conf" />
     <Content Include="ServerConfigTest\Aider.Environment.crconfig" />
+    <Content Include="ServerConfigTest\Aider.Features.crconfig" />
     <None Include="ServerConfigTest\app.config" />
     <None Include="ServerConfigTest\certificate.key" />
     <None Include="ServerConfigTest\certificate.pem" />

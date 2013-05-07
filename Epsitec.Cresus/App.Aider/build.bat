@@ -114,6 +114,7 @@ copy %configurationDirectory%\certificate.key bin\Build\aider\server\certificate
 
 @rem copy the custom .crconfig files
 copy %configurationDirectory%\Aider.Environment.crconfig bin\Build\aider\server\Aider.Environment.crconfig
+copy %configurationDirectory%\Aider.Features.crconfig bin\Build\aider\server\Aider.Features.crconfig
 
 @rem Zip the build.
 ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\aider.zip bin\Build\aider
