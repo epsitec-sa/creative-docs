@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Data.Normalization
 			foreach (var match in reversedDone.Where (m => m.Value.Count > 1))
 			{
 				sb.AppendLine ("======================================================================");
-				sb.AppendLine ("WARNING: person has been matched by multiple persons:");
+				sb.AppendLine ("WARNING: person in database has been matched by multiple persons in file:");
 				sb.AppendLine (match.Key.ToString ());
 				sb.AppendLine ("----------------------------------------------------------------------");
 
