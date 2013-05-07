@@ -228,7 +228,7 @@ namespace Epsitec.Aider
 		private static void RunSubscriptionGeneration(string[] args)
 		{
 			var subscribeHouseholds = AiderProgram.GetBool (args, "-households:", false, false);
-			var subscribeLegalPersons = AiderProgram.GetBool (args, "-legalPersons:", false, false);
+			var subscribeLegalPersons = AiderProgram.GetBool (args, "-legalpersons:", false, false);
 
 			AiderProgram.RunWithCoreData (coreData =>
 			{
