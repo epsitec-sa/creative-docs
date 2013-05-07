@@ -128,13 +128,13 @@ namespace Epsitec.Aider.Data.Subscription
 				case SubscriptionType.Household:
 					return this.GetLine
 					(
-						subscription, etl, encodingHelper, this.GetHouseholdAddressData
+						subscription, etl, encodingHelper, this.GetHouseholdReceiverData
 					);
 
 				case SubscriptionType.LegalPerson:
 					return this.GetLine
 					(
-						subscription, etl, encodingHelper, this.GetLegalPersonAddressData
+						subscription, etl, encodingHelper, this.GetLegalPersonReceiverData
 					);
 
 				default:
@@ -148,7 +148,7 @@ namespace Epsitec.Aider.Data.Subscription
 			AiderSubscriptionEntity subscription,
 			MatchSortEtl etl,
 			EncodingHelper encodingHelper,
-			AddressDataGetter addressDataGetter
+			ReceiverDataGetter receiverDataGetter
 		)
 		{
 			var address = subscription.GetAddress ();
@@ -163,14 +163,19 @@ namespace Epsitec.Aider.Data.Subscription
 			string title;
 			string lastname;
 			string firstname;
+
+			receiverDataGetter
+			(
+				subscription, encodingHelper, out title, out lastname, out firstname
+			);
+
 			string addressComplement;
 			string street;
 			string houseNumber;
 
-			addressDataGetter
+			SubscriptionFileWriter.GetAddressData
 			(
-				subscription, encodingHelper, out title, out lastname, out firstname,
-				out addressComplement, out street, out houseNumber
+				address, encodingHelper, out addressComplement, out street, out houseNumber
 			);
 
 			var zipCode = SubscriptionFileWriter.Process
@@ -205,50 +210,17 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private void GetHouseholdAddressData
+		private void GetHouseholdReceiverData
 		(
 			AiderSubscriptionEntity subscription,
 			EncodingHelper encodingHelper,
 			out string title,
 			out string lastname,
-			out string firstname,
-			out string addressComplement,
-			out string street,
-			out string houseNumber
+			out string firstname
 		)
 		{
 			var household = subscription.Household;
-			var address = subscription.GetAddress ();
 
-			SubscriptionFileWriter.GetHouseholdName
-			(
-				household,
-				encodingHelper,
-				out title,
-				out firstname,
-				out lastname
-			);
-
-			SubscriptionFileWriter.GetHouseholdFirstAddressPart
-			(
-				address,
-				encodingHelper,
-				out addressComplement,
-				out street,
-				out houseNumber
-			);
-		}
-
-
-		private static void GetHouseholdName
-		(
-			AiderHouseholdEntity household,
-			EncodingHelper encodingHelper,
-			out string title,
-			out string firstname,
-			out string lastname
-		)
-		{
 			var firstnames = household.GetFirstnames ();
 			var lastnames = household.GetLastnames ();
 
@@ -627,7 +599,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void GetHouseholdFirstAddressPart
+		private static void GetAddressData
 		(
 			AiderAddressEntity address,
 			EncodingHelper encodingHelper,
@@ -638,7 +610,7 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			if (string.IsNullOrEmpty (address.PostBox))
 			{
-				SubscriptionFileWriter.GetHouseholdFirstAddressPartRegular
+				SubscriptionFileWriter.GetAddressDataRegular
 				(
 					address,
 					encodingHelper,
@@ -649,7 +621,7 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 			else
 			{
-				SubscriptionFileWriter.GetHouseholdFirstAddressPartPostBox
+				SubscriptionFileWriter.GetAddressDataPostBox
 				(
 					address,
 					encodingHelper,
@@ -661,7 +633,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void GetHouseholdFirstAddressPartRegular
+		private static void GetAddressDataRegular
 		(
 			AiderAddressEntity address,
 			EncodingHelper encodingHelper,
@@ -700,7 +672,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void GetHouseholdFirstAddressPartPostBox
+		private static void GetAddressDataPostBox
 		(
 			AiderAddressEntity address,
 			EncodingHelper encodingHelper,
@@ -730,16 +702,13 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private void GetLegalPersonAddressData
+		private void GetLegalPersonReceiverData
 		(
 			AiderSubscriptionEntity subscription,
 			EncodingHelper encodingHelper,
 			out string title,
 			out string lastname,
-			out string firstname,
-			out string addressComplement,
-			out string street,
-			out string houseNumber
+			out string firstname
 		)
 		{
 			// TODO Manage the cases with the legal persons.
@@ -901,16 +870,13 @@ namespace Epsitec.Aider.Data.Subscription
 
 		// We need a delegate to define this, as the System.Action type cannot use arguments with
 		// the out keyword. We need an old school delegate for this kind of stuff.
-		private delegate void AddressDataGetter
+		private delegate void ReceiverDataGetter
 		(
 			AiderSubscriptionEntity subscription,
 			EncodingHelper encodingHelper,
 			out string title,
 			out string lastname,
-			out string firstname,
-			out string addressComplement,
-			out string street,
-			out string houseNumber
+			out string firstname
 		);
 
 
