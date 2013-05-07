@@ -15,6 +15,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using Epsitec.Cresus.WebCore.Server.Owin;
 using System.Collections.Generic;
 
 
@@ -78,19 +79,12 @@ namespace Epsitec.Cresus.WebCore.Server
 			}
 			else
 			{
+				buffer.AppendLine ("  splash: 'images/Static/logo.png',");
+			}
+
+			if (bannerMessage.Count != 0)
+			{
 				var message = string.Join ("<br/>", bannerMessage);
-
-				buffer.AppendLine ("var epsitecConfig = {");
-				
-				if (CoreContext.EnableTestEnvironment)
-				{
-					buffer.AppendLine ("  splash: 'images/Static/logo-test.png',");
-				}
-				else
-				{
-					buffer.AppendLine ("  splash: 'images/Static/logo.png',");
-				}
-
 				buffer.AppendLine ("  displayBannerMessage: true,");
 				buffer.Append ("  bannerMessage: '" + message + "'");
 			}
@@ -166,6 +160,14 @@ namespace Epsitec.Cresus.WebCore.Server
 			);
 			Logger.LogToConsole ("Backup interval: " + this.backupInterval);
 
+			this.enableUserNotifications = this.SetupParameter
+			(
+				"enableUserNotifications",
+				s => bool.Parse(s),
+				CoreServerProgram.defaultEnableUserNotifications
+			);
+			Logger.LogToConsole ("Enable user notifications: " + this.enableUserNotifications);
+
 			Logger.LogToConsole ("Configuration read");
 		}
 
@@ -208,7 +210,8 @@ namespace Epsitec.Cresus.WebCore.Server
 		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers, CultureInfo uiCulture, DirectoryInfo backupDirectory, TimeSpan backupInterval, Time? backupStart)
 		{
 			Logger.LogToConsole ("Launching server...");
-
+			
+			using (var owin = this.enableUserNotifications && CoreContext.HasExperimentalFeature("Notifications") ? new OwinServer () : null)
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
@@ -244,6 +247,7 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private Time? backupStart;
 
+		private bool enableUserNotifications;
 
 		private static readonly DirectoryInfo defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
 
@@ -261,6 +265,9 @@ namespace Epsitec.Cresus.WebCore.Server
 
 
 		private static readonly Time? defaultBackupStart = null;
+
+		
+		private static readonly bool defaultEnableUserNotifications = false;
 
 
 		private static readonly CultureInfo uiCulture = new CultureInfo ("fr-CH");

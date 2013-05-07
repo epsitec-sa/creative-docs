@@ -13,7 +13,8 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.LoginPanel',
   'Epsitec.cresus.webcore.ui.Menu',
   'Epsitec.cresus.webcore.ui.TabManager',
-  'Epsitec.cresus.webcore.tools.Texts'
+  'Epsitec.cresus.webcore.tools.Texts',
+  'Epsitec.cresus.webcore.tools.ViewMode'
 ],
 function() {
   Ext.application({
@@ -214,6 +215,29 @@ function() {
         },
         items: items
       });
+    },
+
+    showEditableEntity: function (path) {
+
+        //check login
+
+        var tab;
+        //prepare callback for editing
+        var callback = Epsitec.CallbackQueue.create(
+              function () { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
+              this
+            );;
+        if (this.tabManager.getEntityTab(path) === null) {
+            this.tabManager.showEntityTab(path);
+            tab = this.tabManager.getEntityTab(path);
+        }
+        else {
+            tab = this.tabManager.getEntityTab(path);
+            this.tabManager.showTab(tab);
+            tab.removeAllColumns();
+        }
+        tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
+        
     },
 
     createBanner: function(region, cls) {

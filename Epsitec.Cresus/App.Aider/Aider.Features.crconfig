@@ -6,3 +6,4 @@
 
 ConfigureExperimentalFeature ("Export");
 ConfigureExperimentalFeature ("Subscriptions");
+ConfigureExperimentalFeature ("Notifications");

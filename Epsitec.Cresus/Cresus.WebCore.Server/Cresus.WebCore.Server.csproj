@@ -38,9 +38,29 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\External\SignalR\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Owin">
+      <HintPath>..\External\SignalR\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=0.18.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Katana\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\External\Owin\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy, Version=0.7.1.0, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Nancy\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\External\Json\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\External\Owin\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -106,6 +126,11 @@
     <Compile Include="Core\Extraction\EntityExtractor.cs" />
     <Compile Include="Core\Extraction\EntityWriter.cs" />
     <Compile Include="Core\Extraction\ArrayWriter.cs" />
+    <Compile Include="Owin\Hubs\NotificationHub.cs" />
+    <Compile Include="Owin\Hubs\TestHub.cs" />
+    <Compile Include="Owin\OwinServer.cs" />
+    <Compile Include="Owin\RawConnection.cs" />
+    <Compile Include="Owin\Startup.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache`1.cs" />
@@ -282,7 +307,6 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Nginx\logs\dummy.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
