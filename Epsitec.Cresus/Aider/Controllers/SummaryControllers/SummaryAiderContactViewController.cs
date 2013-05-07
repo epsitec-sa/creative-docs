@@ -94,6 +94,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick (x => x.LegalPerson)
 							/*.Icon ("Data.LegalPerson")*/;
+
+						wall.AddBrick (x => x.LegalPerson)
+							.Title ("Adresse de base")
+							.Text (x => x.Address.GetSummary ())
+							.Attribute (BrickMode.SpecialController1);
 					}
 					if (string.IsNullOrEmpty (contact.PersonFullName) == false)
 					{
@@ -105,6 +110,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Text (personSummary)
 							.Attribute (BrickMode.SpecialController3);
 					}
+					
 					if ((contact.Address.IsNotNull ()) &&
 						(contact.Address != contact.LegalPerson.Address))
 					{

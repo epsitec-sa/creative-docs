@@ -1,21 +1,18 @@
-﻿using Epsitec.Aider.Entities;
-
+using Epsitec.Aider.Entities;
 using Epsitec.Common.Support;
-
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	[ControllerSubType (1)]
-	public sealed class EditionAiderHouseholdViewController1 : EditionViewController<AiderHouseholdEntity>
+	public sealed class EditionAiderLegalPersonViewController1 : EditionViewController<AiderLegalPersonEntity>
 	{
-		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
+		protected override void CreateBricks(BrickWall<AiderLegalPersonEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title (Resources.Text ("Adresse du ménage"))
+				.Title (Resources.Text ("Adresse de la personne morale"))
 				.Icon ("Data.AiderAddress")
 				.Input ()
 					.Field (x => x.Address.Town)
@@ -37,3 +34,4 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		}
 	}
 }
+
