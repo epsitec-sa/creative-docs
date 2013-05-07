@@ -73,9 +73,9 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			buffer.AppendLine ("var epsitecConfig = {");
 			
-			if (bannerMessage.Count == 0)
+			if (CoreContext.EnableTestEnvironment)
 			{
-				buffer.Append ("  splash: 'images/Static/logo.png'");
+				buffer.Append ("  splash: 'images/Static/logo-test.png'");
 			}
 			else
 			{
