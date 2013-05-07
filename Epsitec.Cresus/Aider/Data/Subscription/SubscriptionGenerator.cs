@@ -26,24 +26,37 @@ namespace Epsitec.Aider.Data.Subscription
 	{
 
 
-		public static void Create(CoreData coreData, ParishAddressRepository parishRepository)
+		public static void Create
+		(
+			CoreData coreData,
+			ParishAddressRepository parishRepository,
+			bool subscribeHouseholds,
+			bool subscribeLegalPersons
+		)
 		{
-			// TODO Also add a subscription for the legal persons in the database ?
+			if (subscribeHouseholds)
+			{
+				var households = SubscriptionGenerator.GetHouseholds (coreData);
+				Logger.LogToConsole ("Households loaded");
 
-			var households = SubscriptionGenerator.GetHouseholds (coreData);
-			Logger.LogToConsole ("Households loaded");
+				var householdsToSubscribe = SubscriptionGenerator.GetHouseholdsToSubscribe
+				(
+					households
+				);
+				Logger.LogToConsole ("Household compared");
 
-			var householdsToSubscribe = SubscriptionGenerator.GetHouseholdsToSubscribe
-			(
-				households
-			);
-			Logger.LogToConsole ("Household compared");
+				SubscriptionGenerator.SubscribeHouseholds
+				(
+					coreData, parishRepository, householdsToSubscribe
+				);
+				Logger.LogToConsole ("Household subscribed");
+			}
 
-			SubscriptionGenerator.SubscribeHouseholds
-			(
-				coreData, parishRepository, householdsToSubscribe
-			);
-			Logger.LogToConsole ("Household subscribed");
+			if (subscribeLegalPersons)
+			{
+				SubscriptionGenerator.SubscribeLegalPersons (coreData, parishRepository);
+				Logger.LogToConsole ("Legal persons subscribed");
+			}
 		}
 
 
@@ -205,9 +218,6 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			// We skip the households that are not in vaud county.
 
-			// TODO Maybe we want to have a more complexe logic here, as some vaud parish span
-			// towns that are in other counties.
-
 			if (!household.Address.Town.IsInVaudCounty ())
 			{
 				return true;
@@ -225,8 +235,6 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				return true;
 			}
-
-			// TODO Is there any other weird cases where we should discard an household?
 
 			//At this point, we know that the household should have a subscription.
 
@@ -246,7 +254,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var count = 1;
 			var regionalEdition = SubscriptionGenerator.FindRegionGroup
 			(
-				parishRepository, regionGroups, household
+				parishRepository, regionGroups, household.Address
 			);
 
 			if (regionalEdition == null)
@@ -260,14 +268,60 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
+		private static void SubscribeLegalPersons
+		(
+			CoreData coreData,
+			ParishAddressRepository parishRepository
+		)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var example = new AiderLegalPersonEntity ();
+				var legalPersons = businessContext.DataContext.GetByExample (example);
+
+				var regionGroups = SubscriptionGenerator.GetRegionGroups (businessContext);
+
+				foreach (var legalPerson in legalPersons)
+				{
+					SubscriptionGenerator.SubscribeLegalPerson
+					(
+						businessContext, parishRepository, regionGroups, legalPerson
+					);
+				}
+
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
+			}
+		}
+
+
+		private static void SubscribeLegalPerson
+		(
+			BusinessContext businessContext,
+			ParishAddressRepository parishRepository,
+			Dictionary<int, AiderGroupEntity> regionGroups,
+			AiderLegalPersonEntity legalPerson
+		)
+		{
+			var count = 1;
+			var regionalEdition = SubscriptionGenerator.FindRegionGroup
+			(
+				parishRepository, regionGroups, legalPerson.Address
+			);
+
+			regionalEdition = regionGroups.First ().Value;
+
+			AiderSubscriptionEntity.Create (businessContext, legalPerson, regionalEdition, count);
+		}
+
+
 		private static AiderGroupEntity FindRegionGroup
 		(
 			ParishAddressRepository parishRepository,
 			Dictionary<int, AiderGroupEntity> regionGroups,
-			AiderHouseholdEntity household
+			AiderAddressEntity address
 		)
 		{
-			var parishName = ParishAssigner.FindParishName (parishRepository, household.Address);
+			var parishName = ParishAssigner.FindParishName (parishRepository, address);
 
 			if (parishName == null)
 			{

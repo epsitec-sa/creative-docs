@@ -227,11 +227,17 @@ namespace Epsitec.Aider
 
 		private static void RunSubscriptionGeneration(string[] args)
 		{
+			var subscribeHouseholds = AiderProgram.GetBool (args, "-households:", false, false);
+			var subscribeLegalPersons = AiderProgram.GetBool (args, "-legalPersons:", false, false);
+
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var parishRepository = ParishAddressRepository.Current;
 
-				SubscriptionGenerator.Create (coreData, parishRepository);
+				SubscriptionGenerator.Create
+				(
+					coreData, parishRepository, subscribeHouseholds,subscribeLegalPersons
+				);
 			});
 		}
 
@@ -287,6 +293,11 @@ namespace Epsitec.Aider
 			return path != null
 				? new FileInfo (path)
 				: null;
+		}
+
+		private static bool GetBool(string[] args, string key, bool mandatory, bool defaultValue)
+		{
+			return AiderProgram.GetBool (args, key, mandatory) ?? defaultValue;
 		}
 
 		private static bool? GetBool(string[] args, string key, bool mandatory)
