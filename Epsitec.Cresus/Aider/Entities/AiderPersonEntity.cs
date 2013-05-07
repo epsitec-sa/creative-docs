@@ -178,6 +178,31 @@ namespace Epsitec.Aider.Entities
 				return prefix + suffix + "French";
 			}
 		}
+		
+		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
+		{
+			string suffix;
+
+			switch (personMrMrs)
+			{
+				case PersonMrMrs.Madame:
+				case PersonMrMrs.Mademoiselle:
+					suffix = ".AiderPerson.Female-";
+					break;
+				default:
+					suffix = ".AiderPerson.Male-";
+					break;
+			}
+
+			if (language == Enumerations.Language.German)
+			{
+				return prefix + suffix + "German";
+			}
+			else
+			{
+				return prefix + suffix + "French";
+			}
+		}
 
 
 		public FormattedText GetGroupTitle()

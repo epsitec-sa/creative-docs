@@ -1,4 +1,8 @@
-﻿using System;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Enumerations
 {
@@ -7,49 +11,50 @@ namespace Epsitec.Aider.Enumerations
 		public static string GetText(this PersonMrMrs value, bool abbreviated)
 		{
 			return abbreviated
-				? value.GetShortText ()
-				: value.GetLongText ();
+				? TextGenerator.GetShortText (value)
+				: TextGenerator.GetLongText (value);
 		}
 
-		public static string GetLongText(this PersonMrMrs value)
+		public static string GetText(this PersonMrMrs? value, bool abbreviated)
+		{
+			return abbreviated
+				? TextGenerator.GetShortText (value)
+				: TextGenerator.GetLongText (value);
+		}
+
+		public static string GetLongText(this PersonMrMrs? value)
 		{
 			switch (value)
 			{
 				case PersonMrMrs.Madame:
-					return "Madame";
-
 				case PersonMrMrs.Mademoiselle:
-					return "Mademoiselle";
-
 				case PersonMrMrs.Monsieur:
-					return "Monsieur";
+					return EnumKeyValues.GetEnumKeyValue (value.Value).Values.First ().ToSimpleText ();
 
+				case null:
 				case PersonMrMrs.None:
 					return "";
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
-		public static string GetShortText(this PersonMrMrs value)
+		public static string GetShortText(this PersonMrMrs? value)
 		{
 			switch (value)
 			{
 				case PersonMrMrs.Madame:
-					return "Mme";
-
 				case PersonMrMrs.Mademoiselle:
-					return "Mlle.";
-
 				case PersonMrMrs.Monsieur:
-					return "M.";
+					return EnumKeyValues.GetEnumKeyValue (value.Value).Values.Last ().ToSimpleText ();
 
+				case null:
 				case PersonMrMrs.None:
 					return "";
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -64,21 +69,16 @@ namespace Epsitec.Aider.Enumerations
 		{
 			switch (value)
 			{
-				case HouseholdMrMrs.Famille:
-					return "Famille";
-
-				case HouseholdMrMrs.MadameEtMonsieur:
-					return "Madame et Monsieur";
-
-				case HouseholdMrMrs.MonsieurEtMadame:
-					return "Monsieur et Madame";
+				case HouseholdMrMrs.Famille:			return "Famille";
+				case HouseholdMrMrs.MadameEtMonsieur:	return "Madame et Monsieur";
+				case HouseholdMrMrs.MonsieurEtMadame:	return "Monsieur et Madame";
 
 				case HouseholdMrMrs.Auto:
 				case HouseholdMrMrs.None:
 					return "";
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -86,21 +86,16 @@ namespace Epsitec.Aider.Enumerations
 		{
 			switch (value)
 			{
-				case HouseholdMrMrs.Famille:
-					return "Fam.";
-
-				case HouseholdMrMrs.MadameEtMonsieur:
-					return "Mme. et M.";
-
-				case HouseholdMrMrs.MonsieurEtMadame:
-					return "M. et Mme.";
+				case HouseholdMrMrs.Famille:			return "Fam.";
+				case HouseholdMrMrs.MadameEtMonsieur:	return "Mme et M.";
+				case HouseholdMrMrs.MonsieurEtMadame:	return "M. et Mme";
 
 				case HouseholdMrMrs.Auto:
 				case HouseholdMrMrs.None:
 					return "";
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 	}

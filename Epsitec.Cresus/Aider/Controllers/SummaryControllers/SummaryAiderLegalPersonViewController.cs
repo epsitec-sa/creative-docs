@@ -3,11 +3,37 @@
 
 using Epsitec.Aider.Entities;
 
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+
+using Epsitec.Common.Support;
+
+using System.Linq;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	public sealed class SummaryAiderLegalPersonViewController : SummaryViewController<AiderLegalPersonEntity>
 	{
+		protected override void CreateBricks(Cresus.Bricks.BrickWall<AiderLegalPersonEntity> wall)
+		{
+			wall.AddBrick ();
+			
+			wall.AddBrick (x => x.Address)
+				.Title ("Adresse de base");
+
+			var contacts = this.Entity.Contacts;
+
+			if (contacts.Any ())
+			{
+				wall.AddBrick (x => x.Contacts)
+					.Title (contacts.Count > 1 ? Resources.Text ("Contacts") : Resources.Text ("Contact"))
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Template ()
+					.End ()
+					.Attribute (BrickMode.DefaultToSummarySubView);
+			}
+		}
 	}
 }

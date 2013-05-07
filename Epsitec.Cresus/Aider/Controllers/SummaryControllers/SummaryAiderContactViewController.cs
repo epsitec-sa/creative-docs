@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
@@ -41,6 +43,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Text (contactSummary)
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
+					
 					if (household.IsNotNull ())
 					{
 						if (contact.Address.IsNotNull ())
@@ -92,15 +95,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						wall.AddBrick (x => x.LegalPerson)
 							/*.Icon ("Data.LegalPerson")*/;
 					}
-					if (contact.Person.IsNotNull ())
+					if (string.IsNullOrEmpty (contact.PersonFullName) == false)
 					{
-						wall.AddBrick (x => x.Person)
-							.Icon (contact.Person.GetIconName ("Data"))
+						var personSummary = TextFormatter.FormatText (contact.PersonMrMrs.GetShortText (), contact.PersonFullName);
+
+						wall.AddBrick ()
+							.Icon (AiderPersonEntity.GetIconName ("Data", contact.PersonMrMrs, contact.LegalPerson.Language))
 							.Title ("Personne de contact")
-							.Text (contactSummary)
-							.Attribute (BrickMode.DefaultToSummarySubView);
+							.Text (personSummary)
+							.Attribute (BrickMode.SpecialController3);
 					}
-					if (contact.Address.IsNotNull ())
+					if ((contact.Address.IsNotNull ()) &&
+						(contact.Address != contact.LegalPerson.Address))
 					{
 						wall.AddBrick ()
 							.Title ("Adresse de contact")
