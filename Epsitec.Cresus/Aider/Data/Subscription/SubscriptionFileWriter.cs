@@ -95,11 +95,6 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			foreach (var subscription in subscriptions)
 			{
-				if (subscription.Count == 0)
-				{
-					continue;
-				}
-
 				SubscriptionFileLine line;
 
 				try
