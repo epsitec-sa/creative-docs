@@ -5,3 +5,4 @@
 #
 
 ConfigureExperimentalFeature ("Export");
+ConfigureExperimentalFeature ("Subscriptions");
