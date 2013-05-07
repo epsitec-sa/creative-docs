@@ -7,6 +7,8 @@ using Epsitec.Cresus.Core.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System;
 
 
@@ -28,6 +30,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case SubscriptionType.LegalPerson:
 					wall.AddBrick (x => x.LegalPerson)
 						.Attribute (BrickMode.DefaultToSummarySubView);
+
+					if (this.Entity.LegalPersonContact.IsNotNull ())
+					{
+						wall.AddBrick (x => x.LegalPersonContact)
+							.Attribute (BrickMode.DefaultToSummarySubView);
+					}
 					break;
 
 				default:

@@ -85,6 +85,26 @@ namespace Epsitec.Aider.Entities
 		(
 			BusinessContext businessContext,
 			AiderLegalPersonEntity legalPerson,
+			AiderContactEntity legalPersonContact,
+			AiderGroupEntity regionalEdition,
+			int count
+		)
+		{
+			var subscription = AiderSubscriptionEntity.Create
+			(
+				businessContext, legalPerson, regionalEdition, count
+			);
+
+			subscription.LegalPersonContact = legalPersonContact;
+
+			return subscription;
+		}
+
+
+		public static AiderSubscriptionEntity Create
+		(
+			BusinessContext businessContext,
+			AiderLegalPersonEntity legalPerson,
 			AiderGroupEntity regionalEdition,
 			int count
 		)

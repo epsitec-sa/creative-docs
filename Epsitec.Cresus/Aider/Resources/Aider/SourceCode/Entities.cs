@@ -6670,6 +6670,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>LegalPersonContact</c> field.
+		///	designer:fld/LVGP22/LVG632
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG632]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity LegalPersonContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVG632]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.LegalPersonContact;
+				if (oldValue != value || !this.IsFieldDefined("[LVG632]"))
+				{
+					this.OnLegalPersonContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVG632]", oldValue, value);
+					this.OnLegalPersonContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>SubscriptionType</c> field.
 		///	designer:fld/LVGP22/LVG132
 		///	</summary>
@@ -6702,6 +6724,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnHouseholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
 		partial void OnLegalPersonChanging(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
 		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
+		partial void OnLegalPersonContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnLegalPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnSubscriptionTypeChanging(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
 		partial void OnSubscriptionTypeChanged(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
 		
