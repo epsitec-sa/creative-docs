@@ -208,6 +208,22 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.enableTestEnvironment = true;
 		}
 
+		public static void ConfigureExperimentalFeature(string feature)
+		{
+			CoreContext.experimentalFeatures.Add (feature);
+		}
+
+		public static IEnumerable<string> GetExperimentalFeatures()
+		{
+			return CoreContext.experimentalFeatures.OrderBy (x => x);
+		}
+
+		public static bool HasExperimentalFeature(string feature)
+		{
+			return CoreContext.experimentalFeatures.Contains (feature);
+		}
+
+
 		private static void AddMetadata(CoreMetadata metadata)
 		{
 			if (metadata == null)
@@ -286,6 +302,24 @@ namespace Epsitec.Cresus.Core.Library
 			foreach (var current in lines)
 			{
 				string line = current;
+
+				if (line.StartsWith ("#[Feature:"))
+				{
+					int start  = line.IndexOf (':') + 1;
+					int skip   = line.IndexOf (']', start) + 1;
+					int length = skip - start - 1;
+					
+					if (length > 0)
+					{
+						var featureName = line.Substring (start, length);
+						line = line.Substring (skip);
+
+						if (CoreContext.HasExperimentalFeature (featureName) == false)
+						{
+							continue;
+						}
+					}
+				}
 
 				if ((line.StartsWith ("//")) ||
 					(line.StartsWith ("#")))
@@ -587,6 +621,7 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.metadata = new Dictionary<System.Type, CoreMetadata> ();
 			CoreContext.pendingSetupCode = new Queue<System.Action> ();
 			CoreContext.typeSubstitutions = new Dictionary<string, string> ();
+			CoreContext.experimentalFeatures = new HashSet<string> ();
 		}
 
 		
@@ -608,5 +643,6 @@ namespace Epsitec.Cresus.Core.Library
 		private static readonly Dictionary<System.Type, CoreMetadata> metadata;
 		private static readonly Queue<System.Action> pendingSetupCode;
 		private static readonly Dictionary<string, string> typeSubstitutions;
+		private static readonly HashSet<string>	experimentalFeatures;
 	}
 }

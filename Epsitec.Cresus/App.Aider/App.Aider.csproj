@@ -84,6 +84,9 @@
     <Content Include="Aider.Environment.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Aider.Features.crconfig">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Aider.Metadata.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

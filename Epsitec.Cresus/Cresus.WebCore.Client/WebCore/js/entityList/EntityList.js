@@ -349,14 +349,16 @@ function() {
         }
       }));
 
-      buttons.push(Ext.create('Ext.Button', {
-        text: Epsitec.Texts.getExportLabel(),
-        iconCls: 'icon-export',
-        listeners: {
-          click: this.onExportHandler,
-          scope: this
-        }
-      }));
+      if (epsitecConfig.featureExport) {
+        buttons.push(Ext.create('Ext.Button', {
+          text: Epsitec.Texts.getExportLabel(),
+          iconCls: 'icon-export',
+          listeners: {
+            click: this.onExportHandler,
+            scope: this
+          }
+        }));
+      }
 
       return buttons;
     },

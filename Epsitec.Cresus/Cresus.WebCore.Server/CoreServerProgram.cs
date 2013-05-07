@@ -70,11 +70,11 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			var buffer = new System.Text.StringBuilder ();
 
+			buffer.AppendLine ("var epsitecConfig = {");
+			
 			if (bannerMessage.Count == 0)
 			{
-				buffer.AppendLine ("var epsitecConfig = {");
-				buffer.AppendLine ("  splash: 'images/Static/logo.png'");
-				buffer.AppendLine ("};");
+				buffer.Append ("  splash: 'images/Static/logo.png'");
 			}
 			else
 			{
@@ -92,9 +92,19 @@ namespace Epsitec.Cresus.WebCore.Server
 				}
 
 				buffer.AppendLine ("  displayBannerMessage: true,");
-				buffer.AppendLine ("  bannerMessage: '" + message + "'");
-				buffer.AppendLine ("};");
+				buffer.Append ("  bannerMessage: '" + message + "'");
 			}
+
+			var features = CoreContext.GetExperimentalFeatures ();
+
+			foreach (var feature in features)
+			{
+				buffer.AppendLine (",");
+				buffer.Append ("  feature" + feature + ": true");
+			}
+
+			buffer.AppendLine ();
+			buffer.AppendLine ("};");
 
 			System.IO.File.WriteAllText (System.IO.Path.Combine (this.clientDirectory.FullName, "config.js"),
 										 buffer.ToString (), System.Text.Encoding.UTF8);

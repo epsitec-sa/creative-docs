@@ -7,4 +7,5 @@ DefineTypeSubstitution ("DatabaseInitializer", "AiderDatabaseInitializer");
 DefineEnableSnapshotService (false);
 
 Include Aider.Environment.crconfig
+Include Aider.Features.crconfig
 Include Aider.Metadata.crconfig
