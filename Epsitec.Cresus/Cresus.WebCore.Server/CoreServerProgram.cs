@@ -138,6 +138,10 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private void SetupConfiguration()
 		{
+			var path = Path.Combine (this.clientDirectory.FullName, "config.js");
+			var file = new FileInfo (path);
+			var generator = new ConfigurationFileGenerator (file, "epsitecConfig");
+
 			var bannerMessage = new List<string> ();
 
 			if (CoreContext.EnableTestEnvironment)
@@ -152,39 +156,28 @@ namespace Epsitec.Cresus.WebCore.Server
 				Logger.LogToConsole ("Configuration: read-only mode");
 			}
 
-			var buffer = new System.Text.StringBuilder ();
-
-			buffer.AppendLine ("var epsitecConfig = {");
-
-			if (CoreContext.EnableTestEnvironment)
+			if (bannerMessage.Count > 0)
 			{
-				buffer.Append ("  splash: 'images/Static/logo-test.png'");
-			}
-			else
-			{
-				buffer.AppendLine ("  splash: 'images/Static/logo.png',");
+				generator.Set ("displayBannerMessage", true);
+				generator.Set ("bannerMessage", string.Join ("<br/>", bannerMessage));
 			}
 
-			if (bannerMessage.Count != 0)
-			{
-				var message = string.Join ("<br/>", bannerMessage);
-				buffer.AppendLine ("  displayBannerMessage: true,");
-				buffer.Append ("  bannerMessage: '" + message + "'");
-			}
+			var splash = CoreContext.EnableTestEnvironment
+				? "logo-test.png"
+				: "logo.png";
+
+			generator.Set ("splash", "images/Static/" + splash);
 
 			var features = CoreContext.GetExperimentalFeatures ();
 
 			foreach (var feature in features)
 			{
-				buffer.AppendLine (",");
-				buffer.Append ("  feature" + feature + ": true");
+				generator.Set ("feature", true);
+				Logger.LogToConsole ("Feature " + feature + " enabled");
 			}
 
-			buffer.AppendLine ();
-			buffer.AppendLine ("};");
-
-			System.IO.File.WriteAllText (System.IO.Path.Combine (this.clientDirectory.FullName, "config.js"),
-										 buffer.ToString (), System.Text.Encoding.UTF8);
+			generator.Write ();
+			Logger.LogToConsole ("Configuration file written to " + file.FullName);
 		}
 
 
