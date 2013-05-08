@@ -711,13 +711,182 @@ namespace Epsitec.Aider.Data.Subscription
 			out string firstname
 		)
 		{
-			// TODO Manage the cases with the legal persons.
+			var contact = subscription.LegalPersonContact;
+			var legalPerson = contact.LegalPerson;
 
-			// TODO Manage the case where we have a legal person with a contact person. We might
-			// want to put the title, firstname and lastname of the person AND the name of the
-			// company. So we might want to put the name of the company in the address complement.
-			// Except that if the address has a post box or already has a complement, we're screwed.
+			var corporateName = legalPerson.Name;
+			var personTitle = contact.PersonMrMrs;
+			var personName = contact.PersonFullName;
 
+			if (string.IsNullOrEmpty (personName))
+			{
+				this.GetLegalPersonReceiverData
+				(
+					encodingHelper, corporateName, out title, out lastname, out firstname
+				);
+			}
+			else
+			{
+				this.GetLegalPersonReceiverData
+				(
+					encodingHelper, corporateName, personTitle, personName, out title, out lastname,
+					out firstname
+				);
+			}
+		}
+
+
+		private void GetLegalPersonReceiverData
+		(
+			EncodingHelper encodingHelper,
+			string corporateName,
+			out string title,
+			out string lastname,
+			out string firstname
+		)
+		{
+			title = "";
+			firstname = "";
+
+			// We try to fit the corporate name on the lastname field.
+
+			bool truncated;
+
+			lastname = SubscriptionFileWriter.Process
+			(
+				corporateName,
+				SubscriptionFileLine.LastnameLength,
+				encodingHelper,
+				out truncated
+			);
+
+			// The name did fit on the lastname field, so we exit now.
+			if (!truncated)
+			{
+				return;
+			}
+
+			// The corporate name has been truncated. We try to make if fit on the firstname and
+			// the lastname field. For that, we split the name at the last space possible before
+			// the maximum length authorized for the lastname field.
+
+			var maxSplitIndex = SubscriptionFileLine.LastnameLength - 1;
+			var splitIndex = corporateName.LastIndexOf (' ', maxSplitIndex);
+
+			int part1Count;
+			int part2Start;
+
+			if (splitIndex >= 0)
+			{
+				// Were we want to skip the space between the two parts at it wil be added back when
+				// printed on the publication.
+				part1Count = splitIndex;
+				part2Start = splitIndex + 1;
+			}
+			else
+			{
+				// Here we don't want to skip anything, as we don't split on a space but on a
+				// regular character.
+				part1Count = SubscriptionFileLine.LastnameLength;
+				part2Start = SubscriptionFileLine.LastnameLength;
+			}
+
+			truncated = GetCorporateName
+			(
+				encodingHelper, corporateName, part1Count, part2Start, out lastname, out firstname
+			);
+
+			// The corporate name did fit on the lastname and the firstname fields, so we return.
+			if (!truncated)
+			{
+				return;
+			}
+
+			// Here we are in a corner case where we could not use all the space at our disposal. It
+			// might be because there is a space early in the name and a very long part after. For
+			// instance "Paroisse Payerne-Corcelles-Ressudens (PACORE)". In such a case, we would
+			// have put "Paroisse" in the lastname and the firstname field is not long enough to
+			// accomodate the remainder of the name. If we are in such a case, we treat it specially
+			// by splitting the name without taking care of the space.
+			var nameLength = SubscriptionFileLine.GetNameLength (firstname, lastname);
+			if (nameLength < SubscriptionFileLine.NameLengthMax)
+			{
+				part1Count = SubscriptionFileLine.LastnameLength;
+				part2Start = SubscriptionFileLine.LastnameLength;
+
+				truncated = GetCorporateName
+				(
+					encodingHelper, corporateName, part1Count, part2Start, out lastname,
+					out firstname
+				);
+
+				if (!truncated)
+				{
+					return;
+				}
+			}
+
+			// The corporate name has been truncated. We display a debug message.
+			var message = "Shortened corporate name: "
+				+ corporateName
+				+ " => "
+				+ lastname + " " + firstname;
+
+			Debug.WriteLine (message);
+		}
+
+
+		private static bool GetCorporateName
+		(
+			EncodingHelper encodingHelper,
+			string corporateName,
+			int part1Count,
+			int part2Start,
+			out string lastname,
+			out string firstname
+		)
+		{
+			var part1 = corporateName.Substring (0, part1Count);
+			var part2 = corporateName.Substring (part2Start);
+
+			lastname = SubscriptionFileWriter.Process
+			(
+				part1,
+				SubscriptionFileLine.LastnameLength,
+				encodingHelper
+			);
+
+			var maxFirstnameLength = Math.Min
+			(
+				SubscriptionFileLine.FirstnameLength,
+				SubscriptionFileLine.NameLengthMax - lastname.Length - 1
+			);
+
+			bool truncated;
+
+			firstname = SubscriptionFileWriter.Process
+			(
+				part2,
+				maxFirstnameLength,
+				encodingHelper,
+				out truncated
+			);
+
+			return truncated;
+		}
+		
+
+		private void GetLegalPersonReceiverData
+		(
+			EncodingHelper encodingHelper,
+			string corporateName,
+			PersonMrMrs? personTitle,
+			string personName,
+			out string title,
+			out string lastname,
+			out string firstname
+		)
+		{
 			throw new NotImplementedException ();
 		}
 
