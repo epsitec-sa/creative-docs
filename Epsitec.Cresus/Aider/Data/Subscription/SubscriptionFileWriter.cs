@@ -546,7 +546,7 @@ namespace Epsitec.Aider.Data.Subscription
 						+ " => "
 						+ firstname + " " + lastname;
 
-						Debug.WriteLine (message);
+					Debug.WriteLine (message);
 
 					return;
 				}
@@ -572,7 +572,7 @@ namespace Epsitec.Aider.Data.Subscription
 						+ " => "
 						+ firstname + " " + lastname;
 
-						Debug.WriteLine (message);
+					Debug.WriteLine (message);
 
 					return;
 				}
@@ -590,9 +590,9 @@ namespace Epsitec.Aider.Data.Subscription
 			if (shortenedFirstname || shortenedLastname)
 			{
 				var message = "Shortened name (Level 4): "
-						+ firstnameGetter () + " " + lastnameGetter ()
-						+ " => "
-						+ firstname + " " + lastname;
+					+ firstnameGetter () + " " + lastnameGetter ()
+					+ " => "
+					+ firstname + " " + lastname;
 
 				Debug.WriteLine (message);
 			}
