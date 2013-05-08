@@ -934,7 +934,7 @@ namespace Epsitec.Aider.Data.Subscription
 				truncated = true;
 				converted = converted.Truncate (maxLength);
 			}
-			
+
 			return converted;
 		}
 
