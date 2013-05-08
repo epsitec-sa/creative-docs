@@ -21,12 +21,8 @@ using System.Threading;
 
 namespace Epsitec.Cresus.WebCore.Server
 {
-
-
 	public sealed class CoreServerProgram
 	{
-
-
 		public CoreServerProgram()
 		{
 			ConsoleCreator.RunWithConsole (() =>
@@ -53,7 +49,6 @@ namespace Epsitec.Cresus.WebCore.Server
 				);
 			}, 200);
 		}
-
 
 		private void SetupParameters()
 		{
@@ -125,7 +120,6 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Configuration read");
 		}
 
-
 		private T SetupParameter<T>(string parameter, Func<string, T> converter, T defaultValue)
 		{
 			var value = ConfigurationManager.AppSettings[parameter];
@@ -134,7 +128,6 @@ namespace Epsitec.Cresus.WebCore.Server
 				? defaultValue
 				: converter (value);
 		}
-
 
 		private void SetupConfiguration()
 		{
@@ -180,12 +173,10 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Configuration file written to " + file.FullName);
 		}
 
-
 		private void SetupDatabaseClient()
 		{
 			CoreContext.EnableEmbeddedDatabaseClient (true);
 		}
-
 
 		private void Initialize(CultureInfo uiCulture, DirectoryInfo clientDirectory)
 		{
@@ -229,58 +220,26 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		private DirectoryInfo clientDirectory;
+		private static readonly DirectoryInfo	defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
+		private static readonly Uri				defaultBaseUri = new Uri ("http://localhost:12345/");
+		private static readonly int				defaultNbCoreWorkers = 3;
+		private static readonly DirectoryInfo	defaultBackupDirectory = new DirectoryInfo (AppDomain.CurrentDomain.BaseDirectory);
+		private static readonly TimeSpan		defaultBackupInterval = TimeSpan.FromDays (1);
+		private static readonly Time?			defaultBackupStart = null;
+		private static readonly bool			defaultEnableUserNotifications = false;
+		private static readonly CultureInfo		uiCulture = new CultureInfo ("fr-CH");
+		private static readonly FileInfo		nGinxPath = new FileInfo ("Nginx\\nginx.exe");
+		private static readonly bool			nGinxAutorun = true;
+		
+		private DirectoryInfo					clientDirectory;
+		private Uri								baseUri;
 
+		private int								nbCoreWorkers;
 
-		private Uri baseUri;
+		private DirectoryInfo					backupDirectory;
+		private TimeSpan						backupInterval;
+		private Time?							backupStart;
 
-
-		private int nbCoreWorkers;
-
-
-		private DirectoryInfo backupDirectory;
-
-
-		private TimeSpan backupInterval;
-
-
-		private Time? backupStart;
-
-
-		private bool enableUserNotifications;
-
-
-		private static readonly DirectoryInfo defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
-
-
-		private static readonly Uri defaultBaseUri = new Uri ("http://localhost:12345/");
-
-
-		private static readonly int defaultNbCoreWorkers = 3;
-
-
-		private static readonly DirectoryInfo defaultBackupDirectory = new DirectoryInfo (AppDomain.CurrentDomain.BaseDirectory);
-
-
-		private static readonly TimeSpan defaultBackupInterval = TimeSpan.FromDays (1);
-
-
-		private static readonly Time? defaultBackupStart = null;
-
-
-		private static readonly bool defaultEnableUserNotifications = false;
-
-
-		private static readonly CultureInfo uiCulture = new CultureInfo ("fr-CH");
-
-
-		private static readonly FileInfo nGinxPath = new FileInfo ("Nginx\\nginx.exe");
-
-
-		private static readonly bool nGinxAutorun = true;
-
-
+		private bool							enableUserNotifications;
 	}
-
-
 }
