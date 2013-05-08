@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			foreach (var feature in features)
 			{
-				generator.Set ("feature", true);
+				generator.Set ("feature" + feature, true);
 				Logger.LogToConsole ("Feature " + feature + " enabled");
 			}
 
