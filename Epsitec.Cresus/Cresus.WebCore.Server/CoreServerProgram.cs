@@ -9,14 +9,14 @@ using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.Owin;
 
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Threading;
-using Epsitec.Cresus.WebCore.Server.Owin;
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server
