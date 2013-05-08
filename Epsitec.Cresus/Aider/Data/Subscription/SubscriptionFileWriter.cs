@@ -745,41 +745,216 @@ namespace Epsitec.Aider.Data.Subscription
 			out string firstname
 		)
 		{
+			// Here we simply try to fit the corporate name in the lastname and firstname fields.
+
 			title = "";
+
+			bool truncated = SubscriptionFileWriter.FitTextInFirstnameAndLastname
+			(
+				encodingHelper, corporateName, out lastname, out firstname
+			);
+
+			if (truncated)
+			{
+				var message = "Shortened corporate name: "
+					+ corporateName
+					+ " => "
+					+ lastname + " " + firstname;
+
+				Debug.WriteLine (message);
+			}
+		}
+
+
+		private void GetLegalPersonReceiverData
+		(
+			EncodingHelper encodingHelper,
+			string corporateName,
+			PersonMrMrs? personTitle,
+			string personName,
+			out string title,
+			out string lastname,
+			out string firstname
+		)
+		{
+			title = "";
+			lastname = "";
 			firstname = "";
 
-			// We try to fit the corporate name on the lastname field.
+			// We try to fit the name of the contact person and the corporate name each on a line,
+			// the shorter one on the shortest line (title) and the longest one on the longest line
+			// (lastname + firstname).
+
+			// The for loop is there, so that first we try with long texts and we shorten them only
+			// if necessary. We have three steps
+			// - Use the full title + the person name for the contact name
+			// - Use the abbreviated title + the person name for the contact name
+			// - Use only the person name for the contact name
+			// Only the contact name can be reduced. We do not try to reduce the corporate name.
+
+			// We exit the loop as soon as both texts fit on their line or if there is no way to
+			// better fit the texts.
+
+			for (int step = 0; step < 3; step++)
+			{
+				// If the person doesn't have a title, we skip directly to the last step.
+				if (!personTitle.HasValue || personTitle.Value == PersonMrMrs.None)
+				{
+					step = 2;
+				}
+
+				bool isLastStep = step == 2;
+
+				// Build the contact name based on the current step.
+				bool useTitle = step < 2;
+				bool useAbbreviatedTitle = step > 0;
+
+				var contactName =  useTitle
+					? personTitle.Value.GetText (useAbbreviatedTitle) + " " + personName
+					: personName;
+
+				// We decide which text goes on line 1 and which goes on line 2 based on their
+				// length. If one of the line can be shortened in a further step, we set the
+				// corresponding bool to true. Later on we migth use these bools to decide whether
+				// we should attempt a try with shorter texts or not.
+				bool contactNameOnLine1 = contactName.Length <= corporateName.Length;
+
+				string line1;
+				string line2;
+				bool line1CanBeShortened;
+				bool line2CanBeShortened;
+
+				if (contactNameOnLine1)
+				{
+					line1 = contactName;
+					line1CanBeShortened = !isLastStep;
+
+					line2 = corporateName;
+					line2CanBeShortened = false;
+				}
+				else
+				{
+					line1 = corporateName;
+					line1CanBeShortened = false;
+
+					line2 = contactName;
+					line2CanBeShortened = !isLastStep;
+				}
+
+				// Determine if the lines will be swaped on a further step. They will be only if
+				// there is a further step and currently the contact name is on the longest line and
+				// will be on the shortest one later on. We migth use this bool to decide whether
+				// we should attempt a try with shorter texts or not later on.
+				var linesWillBeSwapedOnFurtherStep = !isLastStep
+					&& !contactNameOnLine1
+					&& personName.Length <= corporateName.Length;
+
+				// We try to fit the texts on the lines.
+				bool line1Truncated;
+
+				title = SubscriptionFileWriter.Process
+				(
+					line1,
+					SubscriptionFileLine.TitleLength,
+					encodingHelper,
+					out line1Truncated
+				);
+
+				bool line2Truncated = SubscriptionFileWriter.FitTextInFirstnameAndLastname
+				(
+					encodingHelper, line2, out lastname, out firstname
+				);
+
+				// If both text fit, we are happy and we return.
+				if (!line1Truncated && !line2Truncated)
+				{
+					return;
+				}
+
+				// If the text on line 1 did not fit and can be shortened, we try again with a
+				// shorter text.
+				if (line1Truncated && line1CanBeShortened)
+				{
+					continue;
+				}
+
+				// If the text on line 2 did not fit and can be shortened, we try again with a
+				// shorter text.
+				if (line2Truncated && line2CanBeShortened)
+				{
+					continue;
+				}
+
+				// If the lines will be swaped on a further step, we try again as this will probably
+				// result in less truncation, if the first line has been truncated.
+				if (line1Truncated && linesWillBeSwapedOnFurtherStep)
+				{
+					continue;
+				}
+
+				// At this point, at least one text did not fit and cannot be shortened anymore,
+				// therefore we exit and leave the text truncated.
+				break;
+			}
+
+			// Here we might want to add a special treatment, like maybe inverse the text on the
+			// line 1 and the text on the line 2, based on what combination would result in the
+			// minimum number of truncated characters. For now we don't do it, as I don't think that
+			// such a method would give better results.
+
+			// Display a message since we truncated a text.
+			var message = "Shortened contact or corporate name: "
+				+ personName + ", " + corporateName
+				+ " => "
+				+ title + ", " + lastname + " " + firstname;
+
+			Debug.WriteLine (message);
+		}
+
+
+		private static bool FitTextInFirstnameAndLastname
+		(
+			EncodingHelper encodingHelper,
+			string text,
+			out string lastname,
+			out string firstname
+		)
+		{
+			firstname = "";
+			lastname = "";
+
+			// We try to fit the text on the lastname field.
 
 			bool truncated;
 
 			lastname = SubscriptionFileWriter.Process
 			(
-				corporateName,
+				text,
 				SubscriptionFileLine.LastnameLength,
 				encodingHelper,
 				out truncated
 			);
 
-			// The name did fit on the lastname field, so we exit now.
+			// The text did fit on the lastname field, so we return.
 			if (!truncated)
 			{
-				return;
+				return false;
 			}
 
-			// The corporate name has been truncated. We try to make if fit on the firstname and
-			// the lastname field. For that, we split the name at the last space possible before
-			// the maximum length authorized for the lastname field.
+			// The text has been truncated. We try to make if fit on the firstname and the lastname
+			// field. For that, we split the text at the last space possible before the maximum
+			// length authorized for the lastname field.
 
 			var maxSplitIndex = SubscriptionFileLine.LastnameLength - 1;
-			var splitIndex = corporateName.LastIndexOf (' ', maxSplitIndex);
+			var splitIndex = text.LastIndexOf (' ', maxSplitIndex);
 
 			int part1Count;
 			int part2Start;
 
 			if (splitIndex >= 0)
 			{
-				// Were we want to skip the space between the two parts at it wil be added back when
-				// printed on the publication.
+				// Were we want to skip the space between the two parts at it will be added back
+				// when printed on the publication.
 				part1Count = splitIndex;
 				part2Start = splitIndex + 1;
 			}
@@ -791,52 +966,47 @@ namespace Epsitec.Aider.Data.Subscription
 				part2Start = SubscriptionFileLine.LastnameLength;
 			}
 
-			truncated = GetCorporateName
+			truncated = SubscriptionFileWriter.FitTextInFirstnameAndLastname
 			(
-				encodingHelper, corporateName, part1Count, part2Start, out lastname, out firstname
+				encodingHelper, text, part1Count, part2Start, out lastname, out firstname
 			);
 
-			// The corporate name did fit on the lastname and the firstname fields, so we return.
+			// The text did fit on the lastname and the firstname fields, so we return.
 			if (!truncated)
 			{
-				return;
+				return false;
 			}
 
 			// Here we are in a corner case where we could not use all the space at our disposal. It
-			// might be because there is a space early in the name and a very long part after. For
+			// might be because there is a space early in the text and a very long part after. For
 			// instance "Paroisse Payerne-Corcelles-Ressudens (PACORE)". In such a case, we would
 			// have put "Paroisse" in the lastname and the firstname field is not long enough to
-			// accomodate the remainder of the name. If we are in such a case, we treat it specially
-			// by splitting the name without taking care of the space.
+			// accomodate the remainder of the text. If we are in such a case, we treat it specially
+			// by splitting the text without taking care of the space.
 			var nameLength = SubscriptionFileLine.GetNameLength (firstname, lastname);
 			if (nameLength < SubscriptionFileLine.NameLengthMax)
 			{
 				part1Count = SubscriptionFileLine.LastnameLength;
 				part2Start = SubscriptionFileLine.LastnameLength;
 
-				truncated = GetCorporateName
+				truncated = SubscriptionFileWriter.FitTextInFirstnameAndLastname
 				(
-					encodingHelper, corporateName, part1Count, part2Start, out lastname,
+					encodingHelper, text, part1Count, part2Start, out lastname,
 					out firstname
 				);
 
 				if (!truncated)
 				{
-					return;
+					return false;
 				}
 			}
 
-			// The corporate name has been truncated. We display a debug message.
-			var message = "Shortened corporate name: "
-				+ corporateName
-				+ " => "
-				+ lastname + " " + firstname;
-
-			Debug.WriteLine (message);
+			// The text has been truncated.
+			return true;
 		}
 
 
-		private static bool GetCorporateName
+		private static bool FitTextInFirstnameAndLastname
 		(
 			EncodingHelper encodingHelper,
 			string corporateName,
@@ -873,21 +1043,6 @@ namespace Epsitec.Aider.Data.Subscription
 			);
 
 			return truncated;
-		}
-		
-
-		private void GetLegalPersonReceiverData
-		(
-			EncodingHelper encodingHelper,
-			string corporateName,
-			PersonMrMrs? personTitle,
-			string personName,
-			out string title,
-			out string lastname,
-			out string firstname
-		)
-		{
-			throw new NotImplementedException ();
 		}
 
 
