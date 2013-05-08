@@ -54,57 +54,6 @@ namespace Epsitec.Cresus.WebCore.Server
 			}, 200);
 		}
 
-		private void SetupConfiguration()
-		{
-			var bannerMessage = new List<string> ();
-
-			if (CoreContext.EnableTestEnvironment)
-			{
-				bannerMessage.Add ("Environnement de test destiné à la formation");
-				Logger.LogToConsole ("Configuration: test environment");
-			}
-
-			if (CoreContext.EnableReadOnlyMode)
-			{
-				bannerMessage.Add ("Aucune modification n\\'est possible pour l\\'instant");
-				Logger.LogToConsole ("Configuration: read-only mode");
-			}
-
-			var buffer = new System.Text.StringBuilder ();
-
-			buffer.AppendLine ("var epsitecConfig = {");
-
-			if (CoreContext.EnableTestEnvironment)
-			{
-				buffer.Append ("  splash: 'images/Static/logo-test.png'");
-			}
-			else
-			{
-				buffer.AppendLine ("  splash: 'images/Static/logo.png',");
-			}
-
-			if (bannerMessage.Count != 0)
-			{
-				var message = string.Join ("<br/>", bannerMessage);
-				buffer.AppendLine ("  displayBannerMessage: true,");
-				buffer.Append ("  bannerMessage: '" + message + "'");
-			}
-
-			var features = CoreContext.GetExperimentalFeatures ();
-
-			foreach (var feature in features)
-			{
-				buffer.AppendLine (",");
-				buffer.Append ("  feature" + feature + ": true");
-			}
-
-			buffer.AppendLine ();
-			buffer.AppendLine ("};");
-
-			System.IO.File.WriteAllText (System.IO.Path.Combine (this.clientDirectory.FullName, "config.js"),
-										 buffer.ToString (), System.Text.Encoding.UTF8);
-		}
-
 
 		private void SetupParameters()
 		{
@@ -177,12 +126,6 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		private void SetupDatabaseClient()
-		{
-			CoreContext.EnableEmbeddedDatabaseClient (true);
-		}
-
-
 		private T SetupParameter<T>(string parameter, Func<string, T> converter, T defaultValue)
 		{
 			var value = ConfigurationManager.AppSettings[parameter];
@@ -190,6 +133,64 @@ namespace Epsitec.Cresus.WebCore.Server
 			return value == null
 				? defaultValue
 				: converter (value);
+		}
+
+
+		private void SetupConfiguration()
+		{
+			var bannerMessage = new List<string> ();
+
+			if (CoreContext.EnableTestEnvironment)
+			{
+				bannerMessage.Add ("Environnement de test destiné à la formation");
+				Logger.LogToConsole ("Configuration: test environment");
+			}
+
+			if (CoreContext.EnableReadOnlyMode)
+			{
+				bannerMessage.Add ("Aucune modification n\\'est possible pour l\\'instant");
+				Logger.LogToConsole ("Configuration: read-only mode");
+			}
+
+			var buffer = new System.Text.StringBuilder ();
+
+			buffer.AppendLine ("var epsitecConfig = {");
+
+			if (CoreContext.EnableTestEnvironment)
+			{
+				buffer.Append ("  splash: 'images/Static/logo-test.png'");
+			}
+			else
+			{
+				buffer.AppendLine ("  splash: 'images/Static/logo.png',");
+			}
+
+			if (bannerMessage.Count != 0)
+			{
+				var message = string.Join ("<br/>", bannerMessage);
+				buffer.AppendLine ("  displayBannerMessage: true,");
+				buffer.Append ("  bannerMessage: '" + message + "'");
+			}
+
+			var features = CoreContext.GetExperimentalFeatures ();
+
+			foreach (var feature in features)
+			{
+				buffer.AppendLine (",");
+				buffer.Append ("  feature" + feature + ": true");
+			}
+
+			buffer.AppendLine ();
+			buffer.AppendLine ("};");
+
+			System.IO.File.WriteAllText (System.IO.Path.Combine (this.clientDirectory.FullName, "config.js"),
+										 buffer.ToString (), System.Text.Encoding.UTF8);
+		}
+
+
+		private void SetupDatabaseClient()
+		{
+			CoreContext.EnableEmbeddedDatabaseClient (true);
 		}
 
 
