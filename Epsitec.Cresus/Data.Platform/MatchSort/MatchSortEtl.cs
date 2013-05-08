@@ -621,15 +621,15 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private static class Queries
 		{
-			public const string CreateTableHeader = "create table if not exists new_hea (vdat number(8), zcode number(6)); delete from new_hea";
-			public const string CreateTablePlace1 = "create table if not exists new_plz1 (onrp number(5) primary key, bfsnr number(5), plz_typ number(2),plz number(4),plz_zz varchar(2), gplz number(4),ort_bez_18 varchar(18),ort_bez_27 varchar(27),kanton varchar(2),sprachcode number(1),sprachcode_abw number(1),briefz_durch number(5),gilt_ab_dat date(8),plz_briefzust number(6),plz_coff varchar(1)); delete from new_plz1";
-			public const string CreateTablePlace2 = "create table if not exists new_plz2 (onrp number(5),laufnummer number(3),bez_typ number(1),sprachcode number(1),ort_bez_18 varchar(18),ort_bez_27 varchar(27)); delete from new_plz2";
-			public const string CreateTableCommun = "create table if not exists new_com (bfsnr number(5) primary key,gemeindename varchar(30),kanton varchar(2),agglonr number(5)); delete from new_com";
-			public const string CreateTableStreet = "create table if not exists new_str (str_id number(10) primary key,onrp number(5),str_bez_k varchar(25),str_bez_l varchar(60),str_bez_2k varchar(25),str_bez_2l varchar(60),str_lok_typ number(1),str_bez_spc number(1),str_bez_coff varchar(1),str_ganzfach varchar(1),str_fach_onrp number(5)); delete from new_str";
+			public const string CreateTableHeader = "create table if not exists new_hea (vdat integer, zcode integer); delete from new_hea";
+			public const string CreateTablePlace1 = "create table if not exists new_plz1 (onrp integer primary key, bfsnr integer, plz_typ integer,plz integer,plz_zz varchar(2), gplz integer,ort_bez_18 varchar(18),ort_bez_27 varchar(27),kanton varchar(2),sprachcode integer,sprachcode_abw integer,briefz_durch integer,gilt_ab_dat date(8),plz_briefzust integer,plz_coff varchar(1)); delete from new_plz1";
+			public const string CreateTablePlace2 = "create table if not exists new_plz2 (onrp integer,laufnummer integer,bez_typ integer,sprachcode integer,ort_bez_18 varchar(18),ort_bez_27 varchar(27)); delete from new_plz2";
+			public const string CreateTableCommun = "create table if not exists new_com (bfsnr integer primary key,gemeindename varchar(30),kanton varchar(2),agglonr integer); delete from new_com";
+			public const string CreateTableStreet = "create table if not exists new_str (str_id integer primary key,onrp integer,str_bez_k varchar(25),str_bez_l varchar(60),str_bez_2k varchar(25),str_bez_2l varchar(60),str_lok_typ integer,str_bez_spc integer,str_bez_coff varchar(1),str_ganzfach varchar(1),str_fach_onrp integer); delete from new_str";
 			//todo new_stra
-			public const string CreateTableHouse1 = "create table if not exists new_geb (hauskey number(13) primary key,str_id number(10),hnr number(4),hnr_a varchar(6),hnr_coff varchar(1),ganzfach varchar(1),fach_onrp number(5)); delete from new_geb";
+			public const string CreateTableHouse1 = "create table if not exists new_geb (hauskey integer primary key,str_id integer,hnr integer,hnr_a varchar(6),hnr_coff varchar(1),ganzfach varchar(1),fach_onrp integer); delete from new_geb";
 			//todo new_geba
-			public const string CreateTableDeliver = "create table if not exists new_bot_b (hauskey number(13),a_plz number(6),bbz_plz number(6),boten_bez number(4),etappen_nr number(3),lauf_nr number(6),ndepot varchar(60)); delete from new_bot_b";
+			public const string CreateTableDeliver = "create table if not exists new_bot_b (hauskey integer,a_plz integer,bbz_plz integer,boten_bez integer,etappen_nr integer,lauf_nr integer,ndepot varchar(60)); delete from new_bot_b";
 			public const string IndexAll =
 			"create index if not exists idx_zip on new_plz1(plz,plz_zz);" +
 			"create index if not exists idx_street_k on new_str(str_bez_2k collate nocase);" +
