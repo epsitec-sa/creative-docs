@@ -22,7 +22,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.WebCore.Server
 {
 
-	
+
 	public sealed class CoreServerProgram
 	{
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			var buffer = new System.Text.StringBuilder ();
 
 			buffer.AppendLine ("var epsitecConfig = {");
-			
+
 			if (CoreContext.EnableTestEnvironment)
 			{
 				buffer.Append ("  splash: 'images/Static/logo-test.png'");
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.WebCore.Server
 				CoreServerProgram.defaultClientDirectory
 			);
 			Logger.LogToConsole ("Client directory: " + this.clientDirectory.FullName);
-			
+
 			this.baseUri = this.SetupParameter
 			(
 				"baseUri",
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.WebCore.Server
 				CoreServerProgram.defaultBaseUri
 			);
 			Logger.LogToConsole ("Base uri: " + this.baseUri);
-			
+
 			this.nbCoreWorkers = this.SetupParameter
 			(
 				"nbCoreWorkers",
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			this.backupDirectory = this.SetupParameter
 			(
 				"backupDirectory",
-				s => new DirectoryInfo(s),
+				s => new DirectoryInfo (s),
 				CoreServerProgram.defaultBackupDirectory
 			);
 			Logger.LogToConsole ("Backup directory: " + this.backupDirectory);
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			this.enableUserNotifications = this.SetupParameter
 			(
 				"enableUserNotifications",
-				s => bool.Parse(s),
+				s => bool.Parse (s),
 				CoreServerProgram.defaultEnableUserNotifications
 			);
 			Logger.LogToConsole ("Enable user notifications: " + this.enableUserNotifications);
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Setting up server...");
 
 			Thread.CurrentThread.CurrentUICulture = uiCulture;
-			
+
 			TypeRosetta.InitializeResources ();
 			Logger.LogToConsole ("Type resources initialized");
 
@@ -210,8 +210,8 @@ namespace Epsitec.Cresus.WebCore.Server
 		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers, CultureInfo uiCulture, DirectoryInfo backupDirectory, TimeSpan backupInterval, Time? backupStart)
 		{
 			Logger.LogToConsole ("Launching server...");
-			
-			using (var owin = this.enableUserNotifications && CoreContext.HasExperimentalFeature("Notifications") ? new OwinServer () : null)
+
+			using (var owin = this.enableUserNotifications && CoreContext.HasExperimentalFeature ("Notifications") ? new OwinServer () : null)
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
@@ -231,11 +231,11 @@ namespace Epsitec.Cresus.WebCore.Server
 
 
 		private DirectoryInfo clientDirectory;
-		
-		
+
+
 		private Uri baseUri;
-		
-		
+
+
 		private int nbCoreWorkers;
 
 
@@ -247,7 +247,9 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private Time? backupStart;
 
+
 		private bool enableUserNotifications;
+
 
 		private static readonly DirectoryInfo defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
 
@@ -266,7 +268,7 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private static readonly Time? defaultBackupStart = null;
 
-		
+
 		private static readonly bool defaultEnableUserNotifications = false;
 
 
@@ -280,5 +282,6 @@ namespace Epsitec.Cresus.WebCore.Server
 
 
 	}
+
 
 }
