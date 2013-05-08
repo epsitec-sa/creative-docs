@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server
 				);
 				this.Run
 				(
+					enableUserNotifications: this.enableUserNotifications,
 					nGinxAutorun: CoreServerProgram.nGinxAutorun,
 					nGinxPath: CoreServerProgram.nGinxPath,
 					uiCulture: CoreServerProgram.uiCulture,
@@ -166,6 +167,10 @@ namespace Epsitec.Cresus.WebCore.Server
 				s => bool.Parse (s),
 				CoreServerProgram.defaultEnableUserNotifications
 			);
+			if (!CoreContext.HasExperimentalFeature ("Notifications"))
+			{
+				this.enableUserNotifications = false;
+			}
 			Logger.LogToConsole ("Enable user notifications: " + this.enableUserNotifications);
 
 			Logger.LogToConsole ("Configuration read");
@@ -207,11 +212,11 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers, CultureInfo uiCulture, DirectoryInfo backupDirectory, TimeSpan backupInterval, Time? backupStart)
+		private void Run(bool enableUserNotifications, bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers, CultureInfo uiCulture, DirectoryInfo backupDirectory, TimeSpan backupInterval, Time? backupStart)
 		{
 			Logger.LogToConsole ("Launching server...");
 
-			using (var owin = this.enableUserNotifications && CoreContext.HasExperimentalFeature ("Notifications") ? new OwinServer () : null)
+			using (var owinServer = enableUserNotifications ? new OwinServer () : null)
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
