@@ -110,6 +110,14 @@ namespace Epsitec.Aider
 		{
 			public static class DatabaseSubmenu
 			{
+				//	designer:cap/LVG732
+				public static global::Epsitec.Common.Types.Caption BonneNouvelle
+				{
+					get
+					{
+						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 103));
+					}
+				}
 				//	designer:cap/LVA4D
 				public static global::Epsitec.Common.Types.Caption Definitions
 				{
@@ -134,6 +142,8 @@ namespace Epsitec.Aider
 		{
 			public static class DatabaseSubmenu
 			{
+				//	designer:cap/LVG732
+				public const long BonneNouvelle = 0x3F500050000067L;
 				//	designer:cap/LVA4D
 				public const long Definitions = 0x3F50000A0001A4L;
 				//	designer:cap/LVA5D
