@@ -321,6 +321,9 @@
     <EmbeddedResource Include="Images\Base.AiderDataManagers.icon" />
     <EmbeddedResource Include="Images\Data.AiderDataManagers.icon" />
     <EmbeddedResource Include="Images\Base.AiderLegalPerson.icon" />
+    <EmbeddedResource Include="Images\Data.AiderSubscription.icon" />
+    <EmbeddedResource Include="Images\Data.AiderSubscriptionRefusal.icon" />
+    <EmbeddedResource Include="Images\Data.AiderSubscriptionMenu.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
