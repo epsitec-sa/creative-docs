@@ -3,6 +3,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 
 namespace Epsitec.Aider.Rules
@@ -43,15 +44,34 @@ namespace Epsitec.Aider.Rules
 
 		public override void ApplyValidateRule(AiderSubscriptionEntity entity)
 		{
+			this.CheckCount (entity);
 			this.CheckRegionalEdition (entity);
+		}
+
+
+		private void CheckCount(AiderSubscriptionEntity entity)
+		{
+			if (entity.Count < 1)
+			{
+				var message = "Le nombre d'exemplaires minimal est de 1.";
+
+				throw new BusinessRuleException (message);
+			}
 		}
 
 
 		private void CheckRegionalEdition(AiderSubscriptionEntity entity)
 		{
+			if (entity.RegionalEdition.IsNull ())
+			{
+				var message = "Le cahier est obligatoire.";
+
+				throw new BusinessRuleException (message);
+			}
+
 			if (!entity.RegionalEdition.IsRegion ())
 			{
-				var message = "L'édition régionale doit être un groupe de région";
+				var message = "Le cahier doit être une région.";
 
 				throw new BusinessRuleException (message);
 			}
