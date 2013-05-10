@@ -59,9 +59,13 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (key, value));
 		}
 
-		public ActionFieldBrick<T, TField, TParent> WithFavorites(IEnumerable<TField> value)
+		public ActionFieldBrick<T, TField, TParent> WithFavorites(IEnumerable<TField> value, bool favoritesOnly = false)
 		{
-			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, value));
+			// The cast here is important, otherwise the Carpenter will crash when casting this
+			// tuple.
+			var tuple = Tuple.Create ((IEnumerable<AbstractEntity>) value, favoritesOnly);
+
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, tuple));
 		}
 	}
 }
