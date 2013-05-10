@@ -352,9 +352,11 @@ namespace Epsitec.Aider.Data.Subscription
 		)
 		{
 			// Here we have to persons with different lastnames. So we want to put the firstname and
-			// the lastname of the first person in firstname and the firstname and the lastname of
-			// the second person in the lastname. Both fields are supposed to be joined by a "et",
-			// either at the end of the firstname or at the start of the lastname.
+			// the lastname of the first person in lastname and the firstname and the lastname of
+			// the second person in the firstname. Both fields are supposed to be joined by a "et",
+			// either at the end of the lastname or at the start of the firstname.
+			// We use this order because the order of the two fields on the printed address will be
+			// lastname and then firstname.
 
 			titleOverride = null;
 
@@ -398,16 +400,16 @@ namespace Epsitec.Aider.Data.Subscription
 					lastnames[i] = ln;
 				}
 
-				firstname = firstnames[0] + " " + lastnames[0];
-				lastname = firstnames[1] + " " + lastnames[1];
+				lastname = firstnames[0] + " " + lastnames[0];
+				firstname = firstnames[1] + " " + lastnames[1];
 
-				if (firstname.Length < SubscriptionFileLine.FirstnameLength - 3)
+				if (lastname.Length < SubscriptionFileLine.LastnameLength - 3)
 				{
-					firstname += " et";
+					lastname += " et";
 				}
-				else if (lastname.Length > SubscriptionFileLine.LastnameLength - 3)
+				else if (firstname.Length > SubscriptionFileLine.FirstnameLength - 3)
 				{
-					lastname = "et " + lastname;
+					firstname = "et " + firstname;
 				}
 				else
 				{
