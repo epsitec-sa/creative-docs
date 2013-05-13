@@ -202,7 +202,7 @@ AiderSubscription = [LVGP22]
     <d cid="[LVAGG]" teid="@AiderLegalPerson" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
-#[Feature:Subscriptions]    <d cid="[LVG232]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="true" cvid="0" ed="true" dg="@submenuBonneNouvelle"><R><r>@user</r></R></d>
+#[Feature:Subscriptions]    <d cid="[LVG232]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuBonneNouvelle"><R><r>@user</r></R></d>
     <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuDefs"><R><r>@user</r></R></d>

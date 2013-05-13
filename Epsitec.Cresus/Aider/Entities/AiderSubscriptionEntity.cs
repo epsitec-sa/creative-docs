@@ -117,6 +117,16 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static void Delete
+		(
+			BusinessContext businessContext,
+			AiderSubscriptionEntity subscription
+		)
+		{
+			businessContext.DeleteEntity (subscription);
+		}
+
+
 	}
 
 
