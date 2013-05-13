@@ -5,7 +5,6 @@
 #
 
 ConfigureExperimentalFeature ("Export");
-ConfigureExperimentalFeature ("Subscriptions");
 ConfigureExperimentalFeature ("Notifications");
 ConfigureExperimentalFeature ("Search");
 ConfigureExperimentalFeature ("ContextualMenu");
