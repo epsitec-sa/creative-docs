@@ -1725,6 +1725,12 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVG432
 				public static readonly global::Epsitec.Common.Support.Druid Count = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 100);
+				//	designer:cap/LVGA32
+				public static readonly global::Epsitec.Common.Support.Druid DisplayAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 106);
+				//	designer:cap/LVG932
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 105);
+				//	designer:cap/LVGB32
+				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 107);
 				//	designer:cap/LVGS22
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 92);
 				//	designer:cap/LVG332

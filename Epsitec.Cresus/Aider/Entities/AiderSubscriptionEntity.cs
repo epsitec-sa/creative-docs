@@ -38,6 +38,42 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public void RefreshCache()
+		{
+			this.DisplayName = this.GetDisplayName ();
+			this.DisplayZipCode = this.GetDisplayZipCode ();
+			this.DisplayAddress = this.GetDisplayAddress ();
+		}
+
+
+		private string GetDisplayName()
+		{
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					return this.Household.GetDisplayName ();
+
+				case SubscriptionType.LegalPerson:
+					return this.LegalPersonContact.GetDisplayName ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private string GetDisplayZipCode()
+		{
+			return this.GetAddress ().GetDisplayZipCode ().ToSimpleText ();
+		}
+
+
+		private string GetDisplayAddress()
+		{
+			return this.GetAddress ().GetDisplayAddress ().ToSimpleText ();
+		}
+
+
 		public string GetEditionId()
 		{
 			// Editions ids should be N1 to NB, which by chance is the hexadecimal representation of

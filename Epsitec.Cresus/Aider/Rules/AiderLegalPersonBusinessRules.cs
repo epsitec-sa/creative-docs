@@ -33,6 +33,13 @@ namespace Epsitec.Aider.Rules
 
 			businessContext.Register (entity.Contacts);
 			businessContext.Register (entity.Address);
+
+			var subscriptions = AiderSubscriptionEntity.FindSubscriptions (businessContext, entity);
+
+			foreach (var subscription in subscriptions)
+			{
+				businessContext.Register (subscription);
+			}
 		}
 
 		public override void ApplyUpdateRule(AiderLegalPersonEntity legal)

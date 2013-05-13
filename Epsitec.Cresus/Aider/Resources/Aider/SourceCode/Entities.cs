@@ -6691,6 +6691,72 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DisplayName</c> field.
+		///	designer:fld/LVGP22/LVG932
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG932]")]
+		public string DisplayName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVG932]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName;
+				if (oldValue != value || !this.IsFieldDefined("[LVG932]"))
+				{
+					this.OnDisplayNameChanging (oldValue, value);
+					this.SetField<string> ("[LVG932]", oldValue, value);
+					this.OnDisplayNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayAddress</c> field.
+		///	designer:fld/LVGP22/LVGA32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGA32]")]
+		public string DisplayAddress
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGA32]");
+			}
+			set
+			{
+				string oldValue = this.DisplayAddress;
+				if (oldValue != value || !this.IsFieldDefined("[LVGA32]"))
+				{
+					this.OnDisplayAddressChanging (oldValue, value);
+					this.SetField<string> ("[LVGA32]", oldValue, value);
+					this.OnDisplayAddressChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayZipCode</c> field.
+		///	designer:fld/LVGP22/LVGB32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGB32]")]
+		public string DisplayZipCode
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGB32]");
+			}
+			set
+			{
+				string oldValue = this.DisplayZipCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVGB32]"))
+				{
+					this.OnDisplayZipCodeChanging (oldValue, value);
+					this.SetField<string> ("[LVGB32]", oldValue, value);
+					this.OnDisplayZipCodeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnIdChanging(string oldValue, string newValue);
 		partial void OnIdChanged(string oldValue, string newValue);
@@ -6704,6 +6770,12 @@ namespace Epsitec.Aider.Entities
 		partial void OnLegalPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnSubscriptionTypeChanging(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
 		partial void OnSubscriptionTypeChanged(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
+		partial void OnDisplayNameChanging(string oldValue, string newValue);
+		partial void OnDisplayNameChanged(string oldValue, string newValue);
+		partial void OnDisplayAddressChanging(string oldValue, string newValue);
+		partial void OnDisplayAddressChanged(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

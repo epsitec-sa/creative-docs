@@ -49,6 +49,12 @@ namespace Epsitec.Aider.Rules
 		}
 
 
+		public override void ApplyUpdateRule(AiderSubscriptionEntity entity)
+		{
+			entity.RefreshCache ();
+		}
+
+
 		private void CheckCount(AiderSubscriptionEntity entity)
 		{
 			if (entity.Count < 1)

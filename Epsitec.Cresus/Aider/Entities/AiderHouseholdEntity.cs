@@ -221,7 +221,7 @@ namespace Epsitec.Aider.Entities
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
-		private string GetDisplayName()
+		public string GetDisplayName()
 		{
 			if (string.IsNullOrEmpty (this.HouseholdName))
 			{

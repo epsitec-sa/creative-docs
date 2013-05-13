@@ -187,13 +187,25 @@ AiderSubscription = [LVGP22]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG432]" title="Quantité" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG932]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG532].[LVAA4]" title="Cahier" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGB32]" title="NPA" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGA32]" title="Adresse" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG432]" title="Quantité" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG532].[LVAA4]" title="Cahier" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
       </col>
     </t>
   </T>

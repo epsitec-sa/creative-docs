@@ -4,6 +4,7 @@
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,13 @@ namespace Epsitec.Aider.Rules
 
 			businessContext.Register (entity.Contacts);
 			businessContext.Register (entity.Address);
+
+			var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, entity);
+
+			if (subscription.IsNotNull ())
+			{
+				businessContext.Register (subscription);
+			}
 		}
 
 		public override void ApplyUpdateRule(AiderHouseholdEntity household)

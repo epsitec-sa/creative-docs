@@ -183,7 +183,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private string GetDisplayName()
+		public string GetDisplayName()
 		{
 			switch (this.ContactType)
 			{
