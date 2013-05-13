@@ -4,7 +4,11 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.DataLayer.Loader;
+
 using System;
+
+using System.Collections.Generic;
 
 using System.Linq;
 
@@ -124,6 +128,76 @@ namespace Epsitec.Aider.Entities
 		)
 		{
 			businessContext.DeleteEntity (subscription);
+		}
+
+
+		public static AiderSubscriptionEntity FindSubscription
+		(
+			BusinessContext businessContext,
+			AiderHouseholdEntity household
+		)
+		{
+			var example = new AiderSubscriptionEntity ()
+			{
+				SubscriptionType = SubscriptionType.Household,
+				Household = household,
+			};
+
+			return AiderSubscriptionEntity.FindSubscription (businessContext, example);
+		}
+
+
+		public static AiderSubscriptionEntity FindSubscription
+		(
+			BusinessContext businessContext,
+			AiderContactEntity legalPersonContact
+		)
+		{
+			var example = new AiderSubscriptionEntity ()
+			{
+				SubscriptionType = SubscriptionType.LegalPerson,
+				LegalPersonContact = legalPersonContact,
+			};
+
+			return AiderSubscriptionEntity.FindSubscription (businessContext, example);
+		}
+
+
+		public static IList<AiderSubscriptionEntity> FindSubscriptions
+		(
+			BusinessContext businessContext,
+			AiderLegalPersonEntity legalPerson
+		)
+		{
+			var example = new AiderSubscriptionEntity ()
+			{
+				SubscriptionType = SubscriptionType.LegalPerson,
+				LegalPersonContact = new AiderContactEntity ()
+				{
+					ContactType = ContactType.Legal,
+					LegalPerson = legalPerson
+				},
+			};
+
+			return businessContext.DataContext.GetByExample (example);
+		}
+
+
+		private static AiderSubscriptionEntity FindSubscription
+		(
+			BusinessContext businessContext,
+			AiderSubscriptionEntity example
+		)
+		{
+			var request = new Request ()
+			{
+				RootEntity = example,
+			};
+
+			var dataContext = businessContext.DataContext;
+			var result = dataContext.GetByRequest<AiderSubscriptionEntity> (request);
+
+			return result.FirstOrDefault ();
 		}
 
 

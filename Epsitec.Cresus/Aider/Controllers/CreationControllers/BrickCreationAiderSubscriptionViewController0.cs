@@ -1,4 +1,6 @@
-﻿using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.Data.Common;
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
@@ -10,10 +12,7 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer.Loader;
-
 using System.Linq;
-using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -95,41 +94,24 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private void CheckSubscriptionDoesNotExist(AiderHouseholdEntity receiver)
 		{
-			var example = new AiderSubscriptionEntity ()
-			{
-				SubscriptionType = SubscriptionType.Household,
-				Household = receiver,
-			};
+			var result = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, receiver);
 
-			this.CheckSubscriptionDoesNotExist (example);
+			this.CheckSubscriptionDoesNotExist (result);
 		}
 
 		private void CheckSubscriptionDoesNotExist(AiderContactEntity receiver)
 		{
-			var example = new AiderSubscriptionEntity ()
-			{
-				SubscriptionType = SubscriptionType.LegalPerson,
-				LegalPersonContact = receiver,
-			};
+			var result = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, receiver);
 
-			this.CheckSubscriptionDoesNotExist (example);
+			this.CheckSubscriptionDoesNotExist (result);
 		}
 
-		private void CheckSubscriptionDoesNotExist(AiderSubscriptionEntity example)
+		private void CheckSubscriptionDoesNotExist(AiderSubscriptionEntity result)
 		{
-			var request = new Request ()
-			{
-				RootEntity = example,
-				Take = 1,
-			};
-
-			var dataContext = this.BusinessContext.DataContext;
-			var results = dataContext.GetByRequest<AiderSubscriptionEntity> (request);
-
-			if (results.Any ())
+			if (result != null)
 			{
 				var format = "Un abonnement existe déjà pour ce destinataire: n°{0}.";
-				var message = string.Format (format, results[0].Id);
+				var message = string.Format (format, result.Id);
 
 				throw new BusinessRuleException (message);
 			}
