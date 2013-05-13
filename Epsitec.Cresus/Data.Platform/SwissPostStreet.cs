@@ -255,13 +255,20 @@ namespace Epsitec.Data.Platform
 
 		internal static readonly Dictionary<string,string> NormalizationTuples = new Dictionary<string, string> ()
 		{
-			{"CH.", "CHEMIN"},
 			{"AV.", "AVENUE"},
+			{"BD.", "BOULEVARD"},
+			{"CH.", "CHEMIN"},
+			{"ESC.", "ESCALIERS"},
+			{"ESP.", "ESPACE"},
+			{"ESPL.", "ESPLANADE"},
+			{"FBG", "FAUBOURG"},
+			{"IMP.", "IMPASSE"},
+			{"PASS.", "PASSAGE"},
+			{"PL.", "PLACE"},
+			{"PROM.", "PROMENADE"},
 			{"RTE", "ROUTE"},
 			{"R.", "RUE"},
 			{"RLLE", "RUELLE"},
-			{"PL.", "PLACE"},
-			{"PROM.", "PROMENADE"},
 			{"QUART.", "QUARTIER"},
 			{"ST", "SAINT"},
 			{"STE", "SAINTE"},
