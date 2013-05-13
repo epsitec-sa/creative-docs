@@ -1,6 +1,7 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -63,6 +64,11 @@ namespace Epsitec.Cresus.Bricks
 		}
 
 		public BrickProperty(BrickPropertyKey key, System.Type value)
+			: this (key, value, false)
+		{
+		}
+
+		public BrickProperty(BrickPropertyKey key, Druid value)
 			: this (key, value, false)
 		{
 		}
@@ -161,6 +167,19 @@ namespace Epsitec.Cresus.Bricks
 			get
 			{
 				return this.value as System.Type;
+			}
+		}
+
+		public Druid?							DruidValue
+		{
+			get
+			{
+				if (!(this.value is Druid))
+				{
+					return null;
+				}
+
+				return (Druid) this.value;
 			}
 		}
 

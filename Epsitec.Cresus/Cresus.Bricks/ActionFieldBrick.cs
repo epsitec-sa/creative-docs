@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using System;
 using System.Collections.Generic;
@@ -66,6 +67,13 @@ namespace Epsitec.Cresus.Bricks
 			var tuple = Tuple.Create ((IEnumerable<AbstractEntity>) value, favoritesOnly);
 
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, tuple));
+		}
+
+		public ActionFieldBrick<T, TField, TParent> WithDataset(Druid dataSetCommandId)
+		{
+			var key = BrickPropertyKey.DataSetCommandId;
+
+			return Brick.AddProperty (this, new BrickProperty (key, dataSetCommandId));
 		}
 	}
 }

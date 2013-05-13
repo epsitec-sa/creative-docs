@@ -1,6 +1,7 @@
 //	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
@@ -83,6 +84,13 @@ namespace Epsitec.Cresus.Bricks
 		public InputBrick<T, TParent> WithFavorites(IEnumerable<AbstractEntity> value, bool favoritesOnly = false)
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, System.Tuple.Create (value, favoritesOnly)));
+		}
+
+		public InputBrick<T, TParent> WithDataset(Druid dataSetCommandId)
+		{
+			var key = BrickPropertyKey.DataSetCommandId;
+			
+			return Brick.AddProperty (this, new BrickProperty (key, dataSetCommandId));
 		}
 
 		public InputBrick<T, TParent> Button(FormattedText title, FormattedText description, System.Action action)

@@ -694,7 +694,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = this.BuildField<EntityCollectionField> (entity, propertyAccessor, brickProperties, includeTitle, null);
 
 			var castedAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
-			field.DatabaseName = this.GetDatabaseName (castedAccessor.CollectionType);
+			field.DatabaseName = this.GetDatabaseName (brickProperties, castedAccessor.CollectionType);
 
 			return field;
 		}
@@ -704,7 +704,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = this.BuildField<EntityReferenceField> (entity, propertyAccessor, brickProperties, includeTitle, null);
 
-			field.DatabaseName = this.GetDatabaseName (propertyAccessor.Type);
+			field.DatabaseName = this.GetDatabaseName (brickProperties, propertyAccessor.Type);
 			field.DefineFavorites (Carpenter.GetFavoritesCollection (brickProperties), Carpenter.GetFavoritesOnly (brickProperties));
 
 			return field;
@@ -928,7 +928,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var field = this.BuildField<EntityCollectionField> (entity, brick, fieldType, id, true);
 
 			var entityType = actionFieldType.GetGenericArguments ().Single ();
-			field.DatabaseName = this.GetDatabaseName (entityType);
+			field.DatabaseName = this.GetDatabaseName (brick, entityType);
 
 			return field;
 		}
@@ -938,7 +938,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var field = this.BuildField<EntityReferenceField> (entity, brick, fieldType, id, true);
 
-			field.DatabaseName = this.GetDatabaseName (actionFieldType);
+			field.DatabaseName = this.GetDatabaseName (brick, actionFieldType);
 			field.DefineFavorites (Carpenter.GetFavoritesCollection (brick), Carpenter.GetFavoritesOnly (brick));
 
 			return field;
@@ -1240,9 +1240,27 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private string GetDatabaseName(Type entityType)
+		private string GetDatabaseName(BrickPropertyCollection properties, Type entityType)
 		{
-			var commandId = this.databaseManager.GetDatabaseCommandId (entityType);
+			var property = Carpenter.GetBrickProperty (properties, BrickPropertyKey.DataSetCommandId);
+
+			return this.GetDatabaseName (property, entityType);
+		}
+
+
+		private string GetDatabaseName(Brick brick, Type entityType)
+		{
+			var property = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.DataSetCommandId);
+
+			return this.GetDatabaseName (property, entityType);
+		}
+
+
+		private string GetDatabaseName(BrickProperty? property, Type entityType)
+		{
+			var commandId = property.HasValue
+				? property.Value.DruidValue.Value
+				: this.databaseManager.GetDatabaseCommandId (entityType);
 
 			return DataIO.DruidToString (commandId);
 		}

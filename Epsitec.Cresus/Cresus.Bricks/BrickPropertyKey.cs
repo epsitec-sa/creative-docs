@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Bricks
 		
 		FromCollection,
 		FavoritesCollection,
+		DataSetCommandId,
 
 		SpecialController,
 		SpecialFieldController,
