@@ -80,6 +80,7 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderUserViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderLegalPersonViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />

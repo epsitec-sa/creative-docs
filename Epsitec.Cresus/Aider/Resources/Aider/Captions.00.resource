@@ -414,4 +414,5 @@
   <data name="Fld.AiderUser.LastActivityDate" id="APG">&lt;s:data id="_0" f:Name="LastActivityDate" f:Labels="{Collection {Text 'Date du dernier accès'}}" /&gt;</data>
   <data name="Fld.AiderSubscription.LegalPersonContact" id="G632">&lt;s:data id="_0" f:Name="LegalPersonContact" f:Labels="{Collection {Text 'Destinataire'}}" /&gt;</data>
   <data name="Cap.DatabaseSubmenu.BonneNouvelle" id="G732">&lt;s:data id="_0" f:Name="DatabaseSubmenu.BonneNouvelle" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderSubscriptionMenu.icon" f:Labels="{Collection {Text 'Bonne nouvelle'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderLegalPersonContact" id="G832">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderLegalPersonContact" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'P. morales'}}" /&gt;</data>
 </bundle>
