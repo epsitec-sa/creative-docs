@@ -413,14 +413,15 @@ function() {
       }));
 
       if (epsitecConfig.featureSearch) {
-          buttons.push(Ext.create('Ext.Button', {
-              text: Epsitec.Texts.getSearchLabel(),
-              iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
+          buttons.push({
+              xtype: 'textfield',
+              emptyText: Epsitec.Texts.getSearchLabel(),
+              name: 'searchParameter',
               listeners: {
-                  click: this.onRefreshHandler,
+                  specialkey: this.onSearchHandler,
                   scope: this
               }
-          }));
+          });
       }
 
       if (epsitecConfig.featureExport) {
@@ -435,6 +436,12 @@ function() {
       }
 
       return buttons;
+    },
+
+    onSearchHandler: function (field,e) {
+        if (e.getKey() == e.ENTER) {
+            //TODO SEARCH CALL
+        }
     },
 
     onExportHandler: function() {
