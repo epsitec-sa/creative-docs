@@ -11,6 +11,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'be propagated to every record.</i>',
         sortLabel: 'Sort',
         exportLabel: 'Export',
+        searchLabel: 'Search',
         refreshLabel: 'Refresh',
         refreshTip: 'Refresh',
         addLabel: 'Add',

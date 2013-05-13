@@ -21,6 +21,10 @@ function() {
         return this.texts.exportLabel;
       },
 
+      getSearchLabel: function () {
+          return this.texts.searchLabel;
+      },
+
       getRefreshLabel: function() {
         return this.texts.refreshLabel;
       },

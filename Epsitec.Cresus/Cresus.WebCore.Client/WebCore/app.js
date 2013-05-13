@@ -226,7 +226,7 @@ function() {
         var callback = Epsitec.CallbackQueue.create(
               function () { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
               this
-            );;
+            );
         if (this.tabManager.getEntityTab(path) === null) {
             this.tabManager.showEntityTab(path);
             tab = this.tabManager.getEntityTab(path);

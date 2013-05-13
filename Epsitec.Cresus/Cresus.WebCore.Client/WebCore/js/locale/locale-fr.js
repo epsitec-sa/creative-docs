@@ -12,6 +12,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'enregistrements.</i>',
         sortLabel: 'Trier',
         exportLabel: 'Export',
+        searchLabel: 'Rechercher',
         refreshLabel: 'Rafra\u00EEchir',
         refreshTip: 'Rafra\u00EEchir',
         addLabel: 'Ajouter',

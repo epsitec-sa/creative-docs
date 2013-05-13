@@ -8,7 +8,8 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.Tools',
   'Epsitec.cresus.webcore.ui.ExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
-  'Ext.ux.grid.FiltersFeature'
+  'Ext.ux.grid.FiltersFeature',
+  'Ext.Action'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.entityList.EntityList', {
@@ -19,46 +20,108 @@ function() {
 
     border: false,
     viewConfig: {
-      emptyText: Epsitec.Texts.getEmptyListText()
+        emptyText: Epsitec.Texts.getEmptyListText()
     },
 
     /* Properties */
-
     onSelectionChangeCallback: null,
     columnDefinitions: null,
     sorterDefinitions: null,
     exportUrl: null,
+    actionEditData: null,
+    contextMenu: null,
 
     /* Constructor */
 
-    constructor: function(options) {
-      var newOptions = {
-        dockedItems: [
-          this.createToolbar(options)
-        ],
-        columns: this.createColumns(options),
-        store: this.createStore(options),
-        selModel: this.createSelModel(options),
-        onSelectionChangeCallback: options.onSelectionChange,
-        listeners: {
-          selectionchange: this.onSelectionChangeHandler,
-          columnhide: this.setupColumnParameter,
-          columnshow: this.setupColumnParameterAndRefresh,
-          scope: this
-        },
-        features: [{
-          ftype: 'filters',
-          encode: true
-        }]
-      };
-      Ext.applyIf(newOptions, options);
+    constructor: function (options) {
+        var newOptions = null;
 
+        if (epsitecConfig.featureContextualMenu) {
+            this.createDefaultContextMenuAction();
+            this.createContextMenu([this.actionEditData]);
+            newOptions = {
+                dockedItems: [
+                  this.createToolbar(options)
+                ],
+                columns: this.createColumns(options),
+                store: this.createStore(options),
+                selModel: this.createSelModel(options),
+                onSelectionChangeCallback: options.onSelectionChange,
+                listeners: {
+                    selectionchange: this.onSelectionChangeHandler,
+                    columnhide: this.setupColumnParameter,
+                    columnshow: this.setupColumnParameterAndRefresh,
+                    scope: this,
+                    itemcontextmenu: function (view, rec, node, index, e) {
+                        e.stopEvent();
+                        this.contextMenu.showAt(e.getXY());
+                        return false;
+                    }
+                },
+                features: [{
+                    ftype: 'filters',
+                    encode: true
+                }]
+            };
+        }
+        else
+        {
+          newOptions = {
+                dockedItems: [
+                  this.createToolbar(options)
+                ],
+                columns: this.createColumns(options),
+                store: this.createStore(options),
+                selModel: this.createSelModel(options),
+                onSelectionChangeCallback: options.onSelectionChange,
+                listeners: {
+                    selectionchange: this.onSelectionChangeHandler,
+                    columnhide: this.setupColumnParameter,
+                    columnshow: this.setupColumnParameterAndRefresh,
+                    scope: this
+                },
+                features: [{
+                    ftype: 'filters',
+                    encode: true
+                }]
+            };
+        }
+      
+
+      
+      Ext.applyIf(newOptions, options);
+      
       this.callParent([newOptions]);
       return this;
     },
-
+    
     /* Additional methods */
+    createContextMenu: function (actions) {
 
+      this.contextMenu = Ext.create('Ext.menu.Menu', {
+          items: actions
+      });
+    },
+    createDefaultContextMenuAction: function () {
+      var gridPanel = this;
+
+      this.actionEditData = Ext.create('Ext.Action', {
+          icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/icon16.png',
+        text: 'Editer',
+        disabled: false,
+        handler: function(widget, event) {
+                   var rec = gridPanel.getSelectionModel().getSelection()[0];
+                   if (rec) {
+                       /*var path = {
+                           name: options.databaseName,
+                           id : rec.internalId
+                       };
+                       var app = Epsitec.Cresus.Core.getApplication();
+                       app.showEditableEntity(path);*/
+                   }
+                 }
+        });
+    },
     createColumns: function(options) {
       var basicColumns = this.createBasicColumns(options.columnDefinitions),
           dynamicColumns = this.createDynamicColumns(options.columnDefinitions);
@@ -348,6 +411,17 @@ function() {
           scope: this
         }
       }));
+
+      if (epsitecConfig.featureSearch) {
+          buttons.push(Ext.create('Ext.Button', {
+              text: Epsitec.Texts.getSearchLabel(),
+              iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
+              listeners: {
+                  click: this.onRefreshHandler,
+                  scope: this
+              }
+          }));
+      }
 
       if (epsitecConfig.featureExport) {
         buttons.push(Ext.create('Ext.Button', {
