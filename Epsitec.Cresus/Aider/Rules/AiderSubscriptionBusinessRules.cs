@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Rules
 			{
 				var message = "Le nombre d'exemplaires minimal est de 1.";
 
-				throw new BusinessRuleException (message);
+				Logic.BusinessRuleException (entity, message);
 			}
 		}
 
@@ -66,14 +66,14 @@ namespace Epsitec.Aider.Rules
 			{
 				var message = "Le cahier est obligatoire.";
 
-				throw new BusinessRuleException (message);
+				Logic.BusinessRuleException (entity, message);
 			}
 
 			if (!entity.RegionalEdition.IsRegion ())
 			{
 				var message = "Le cahier doit être une région.";
 
-				throw new BusinessRuleException (message);
+				Logic.BusinessRuleException (entity, message);
 			}
 		}
 
