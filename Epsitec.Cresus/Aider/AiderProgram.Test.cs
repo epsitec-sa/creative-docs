@@ -55,7 +55,7 @@ namespace Epsitec.Aider
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
-				var eervGroupDefinitionFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Main\\groupdefinition.xlsx");
+				var eervGroupDefinitionFile = new FileInfo ("..\\..\\Samples\\EERV Main\\groupdefinition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (coreData, eervMainData, parishRepository);
@@ -66,7 +66,7 @@ namespace Epsitec.Aider
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE USER CREATION");
 
-				var eChDataFile = new FileInfo ("S:\\Epsitec.Cresus\\App.Aider\\Samples\\eerv.xml");
+				var eChDataFile = new FileInfo ("..\\..\\Samples\\eerv.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
 				EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
 
@@ -80,11 +80,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\person.xlsx",
-					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\activity.xlsx",
-					group: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\group.xlsx",
-					supergroup: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9010\\supergroup.xlsx",
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\id.xlsx"
+					person: "..\\..\\Samples\\EERV Région 9\\9010\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 9\\9010\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 9\\9010\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 9\\9010\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
@@ -92,11 +92,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\person.xlsx",
-					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\activity.xlsx",
-					group: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\group.xlsx",
-					supergroup: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9020\\supergroup.xlsx",
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\id.xlsx"
+					person: "..\\..\\Samples\\EERV Région 9\\9020\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 9\\9020\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 9\\9020\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 9\\9020\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 2");
@@ -104,11 +104,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\person.xlsx",
-					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\activity.xlsx",
-					group: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\group.xlsx",
-					supergroup: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9030\\supergroup.xlsx",
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\id.xlsx"
+					person: "..\\..\\Samples\\EERV Région 9\\9030\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 9\\9030\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 9\\9030\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 9\\9030\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 3");
@@ -116,11 +116,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9040\\person1.xlsx",
+					person: "..\\..\\Samples\\EERV Région 9\\9040\\person1.xlsx",
 					activity: null,
 					group: null,
 					supergroup: null,
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\id.xlsx"
+					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4A");
@@ -128,11 +128,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9040\\person2.xlsx",
+					person: "..\\..\\Samples\\EERV Région 9\\9040\\person2.xlsx",
 					activity: null,
 					group: null,
 					supergroup: null,
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\id.xlsx"
+					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 4B");
@@ -140,11 +140,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\person.xlsx",
-					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\activity.xlsx",
-					group: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\group.xlsx",
-					supergroup: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\9050\\supergroup.xlsx",
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Région 9\\id.xlsx"
+					person: "..\\..\\Samples\\EERV Région 9\\9050\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 9\\9050\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 9\\9050\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 9\\9050\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 5");
@@ -152,11 +152,11 @@ namespace Epsitec.Aider
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\person.xlsx",
-					activity: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\activity.xlsx",
-					group: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\group.xlsx",
-					supergroup: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\supergroup.xlsx",
-					id: "S:\\Epsitec.Cresus\\App.Aider\\Samples\\EERV Ale 31\\id.xlsx"
+					person: "..\\..\\Samples\\EERV Ale 31\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Ale 31\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Ale 31\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Ale 31\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Ale 31\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV ALE");
