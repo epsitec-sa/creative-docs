@@ -380,9 +380,13 @@ function() {
                 case 'int':
                     field.xtype = 'numberfield';
                     field.fieldLabel = c.title;
+                    break;
+
                 case 'float':
                     field.xtype = 'numberfield';
                     field.fieldLabel = c.title;
+                    break;
+
                 case 'boolean':
                     field.xtype = 'checkboxfield';
                     field.boxLabel = c.title;
@@ -397,11 +401,13 @@ function() {
 
                 case 'list':
                     field.fieldLabel = c.title;
-                    field.type = 'string';
+                    field.xtype = 'combo';
+                    field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
                     break;
+
                 default:
                     field.fieldLabel = c.title;
-                    field.type = 'string';
+                    field.xtype = 'string';
                     break;
             }
 
