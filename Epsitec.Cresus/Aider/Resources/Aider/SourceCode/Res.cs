@@ -615,12 +615,44 @@ namespace Epsitec.Aider
 				
 				public static class LegalPersonType
 				{
+					//	designer:cap/LVARG
+					public static global::Epsitec.Common.Types.Caption Association
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 539));
+						}
+					}
 					//	designer:cap/LVA57
 					public static global::Epsitec.Common.Types.Caption Business
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 229));
+						}
+					}
+					//	designer:cap/LVAUG
+					public static global::Epsitec.Common.Types.Caption Church
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 542));
+						}
+					}
+					//	designer:cap/LVAQG
+					public static global::Epsitec.Common.Types.Caption Corporation
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 538));
+						}
+					}
+					//	designer:cap/LVASG
+					public static global::Epsitec.Common.Types.Caption Foundation
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 540));
 						}
 					}
 					//	designer:cap/LVA47
@@ -637,6 +669,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 227));
+						}
+					}
+					//	designer:cap/LVATG
+					public static global::Epsitec.Common.Types.Caption PoliticalBody
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 541));
 						}
 					}
 				}
