@@ -30,6 +30,7 @@ function() {
     exportUrl: null,
     actionEditData: null,
     contextMenu: null,
+    fullSearchWindow: null,
 
     /* Constructor */
 
@@ -418,10 +419,18 @@ function() {
               emptyText: Epsitec.Texts.getSearchLabel(),
               name: 'searchParameter',
               listeners: {
-                  specialkey: this.onSearchHandler,
+                  specialkey: this.onQuickSearchHandler,
                   scope: this
               }
           });
+          buttons.push(Ext.create('Ext.Button', {
+              text: '',
+              iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
+              listeners: {
+                  click: this.onAdvancedSearchHandler,
+                  scope: this
+              }
+          }));
       }
 
       if (epsitecConfig.featureExport) {
@@ -438,12 +447,38 @@ function() {
       return buttons;
     },
 
-    onSearchHandler: function (field,e) {
+    onQuickSearchHandler: function (field,e) {
         if (e.getKey() == e.ENTER) {
-            //TODO SEARCH CALL
+            //TODO quick search
         }
     },
 
+    onAdvancedSearchHandler: function (e) {
+        if (!this.fullSearchWindow) {
+            this.fullSearchWindow = Ext.create('Ext.Window', {
+                title: 'Full search',
+                width: e.container.getWidth(),
+                height: 200,
+                headerPosition: 'right',
+                layout: 'fit',
+                closable: true,
+                closeAction: 'hide',
+                items: {
+                    border: false
+                    //TODO build search form <- backend definition
+                }
+            }).showAt(e.container.getXY());
+        }
+        else {
+            if (this.fullSearchWindow.isVisible()) {
+                this.fullSearchWindow.hide();
+            }
+            else {
+                this.fullSearchWindow.show();
+            }
+            
+        }
+    },
     onExportHandler: function() {
       var count, exportWindow;
 
