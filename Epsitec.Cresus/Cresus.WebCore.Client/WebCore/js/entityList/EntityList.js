@@ -397,6 +397,31 @@ function() {
                     field.fieldLabel = c.title;
                     field.xtype = 'datefield';
                     field.dateFormat = 'd.m.Y';
+                    //TODO CREATE A FIELDSET WITH MULTI-DATE FIELD
+                    /*
+                    xtype:'fieldset',
+                    title: 'Phone Number',
+                    collapsible: true,
+                    defaultType: 'textfield',
+                    layout: 'anchor',
+                    defaults: {
+                        anchor: '100%'
+                    },
+                    items :[{
+                        fieldLabel: 'Home',
+                        name: 'home',
+                        value: '(888) 555-1212'
+                    },{
+                        fieldLabel: 'Business',
+                        name: 'business'
+                    },{
+                        fieldLabel: 'Mobile',
+                        name: 'mobile'
+                    },{
+                        fieldLabel: 'Fax',
+                        name: 'fax'
+                    }]
+                    */
                     break;
 
                 case 'list':
@@ -407,7 +432,7 @@ function() {
 
                 default:
                     field.fieldLabel = c.title;
-                    field.xtype = 'string';
+                    field.xtype = 'textfield';
                     break;
             }
 
