@@ -1,105 +1,96 @@
-﻿using Epsitec.Common.IO;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.IO;
 using Epsitec.Common.Support;
-
 using Epsitec.Common.Types.Collections.Concurrent;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Globalization;
-
 using System.Threading.Tasks;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-
-
-	public sealed class CoreWorkerPool : IDisposable
+	public sealed class CoreWorkerPool : System.IDisposable
 	{
-
-
-		public CoreWorkerPool(int nbCoreWorkers, CultureInfo uiCulture)
+		public CoreWorkerPool(int coreWorkerCount, CultureInfo uiCulture)
 		{
-			this.workers = new List<CoreWorker> ();
-			this.idleWorkers = new BlockingBag<CoreWorker> ();
-
-			foreach (var worker in this.StartCoreWorkers (nbCoreWorkers, uiCulture))
-			{
-				this.workers.Add (worker);
-				this.idleWorkers.Add (worker);
-			}
-
+			this.workers            = new List<CoreWorker> ();
+			this.idleWorkers        = new BlockingBag<CoreWorker> ();
 			this.safeSectionManager = new SafeSectionManager ();
+
+			var workers = CoreWorkerPool.StartCoreWorkers (coreWorkerCount, uiCulture);
+
+			this.workers.AddRange (workers);
+			this.idleWorkers.AddRange (workers);
 
 			Logger.LogToConsole ("Core worker pool started");
 		}
 
 
-		private IList<CoreWorker> StartCoreWorkers(int nbCoreWorkers, CultureInfo uiCulture)
+
+
+		public T Execute<T>(string username, string sessionId, System.Func<BusinessContext, T> function)
+		{
+			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
+		}
+
+
+		public T Execute<T>(string username, string sessionId, System.Func<WorkerApp, T> function)
+		{
+			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
+		}
+
+
+		public T Execute<T>(System.Func<UserManager, T> function)
+		{
+			return this.Execute (coreWorker => coreWorker.Execute (function));
+		}
+
+		private static IList<CoreWorker> StartCoreWorkers(int coreWorkerCount, CultureInfo uiCulture)
 		{
 			var workers = new List<CoreWorker> ();
 
-			if (nbCoreWorkers > 0)
+			if (coreWorkerCount > 0)
 			{
 				// Here we start the first core worker alone. So we are sure that any code that must be
 				// run to initialize global stuff that is not yet initialized is initialized on a single
 				// thread and so that we don't have race conditions or other threading problems.
 
-				var firstWorker = new CoreWorker (uiCulture);
-				Logger.LogToConsole ("Core worker #1 started");
+				CoreWorkerPool.CreateCoreWorker (workers, uiCulture, 0);
 
-				workers.Add (firstWorker);
-
-				if (nbCoreWorkers > 1)
+				if (coreWorkerCount > 1)
 				{
-					var exclusion = new object ();
-
-					Parallel.For (2, nbCoreWorkers + 1, i =>
-					{
-						var newWorker = new CoreWorker (uiCulture);
-
-						int nb;
-
-						lock (exclusion)
-						{
-							workers.Add (newWorker);
-							nb = workers.Count;
-						}
-
-						Logger.LogToConsole ("Core worker #" + nb + " started");
-					});
+					Parallel.For (1, coreWorkerCount, i => CoreWorkerPool.CreateCoreWorker (workers, uiCulture, i));
 				}
 			}
 
 			return workers;
 		}
 
-
-		public T Execute<T>(string username, string sessionId, Func<BusinessContext, T> function)
+		private static void CreateCoreWorker(IList<CoreWorker> workers, CultureInfo uiCulture, int index)
 		{
-			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
+			var workerName = CoreWorkerPool.GetWorkerName (index);
+			var worker     = new CoreWorker (workerName, uiCulture);
+
+			lock (workers)
+			{
+				workers.Add (worker);
+			}
+
+			Logger.LogToConsole (string.Format ("{0} started", workerName));
 		}
 
-
-		public T Execute<T>(string username, string sessionId, Func<WorkerApp, T> function)
+		private static string GetWorkerName(int index)
 		{
-			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "CoreWorker #{0:00}", index+1);
 		}
 
-
-		public T Execute<T>(Func<UserManager, T> function)
-		{
-			return this.Execute (coreWorker => coreWorker.Execute (function));
-		}
-
-
-		private T Execute<T>(Func<CoreWorker, T> function)
+		private T Execute<T>(System.Func<CoreWorker, T> function)
 		{
 			using (this.safeSectionManager.Create ())
 			{
@@ -116,6 +107,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
+		#region IDisposable Members
 
 		public void Dispose()
 		{
@@ -129,17 +121,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			this.idleWorkers.Dispose ();
 		}
 
+		#endregion
 
-		private readonly List<CoreWorker> workers;
 
-
+		private readonly List<CoreWorker>		workers;
 		private readonly BlockingBag<CoreWorker> idleWorkers;
-
-
-		private readonly SafeSectionManager safeSectionManager;
-
-
+		private readonly SafeSectionManager		safeSectionManager;
 	}
-
-
 }

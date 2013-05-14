@@ -1,3 +1,7 @@
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 namespace Epsitec.Common.Types.Collections.Concurrent
@@ -12,6 +16,14 @@ namespace Epsitec.Common.Types.Collections.Concurrent
 		public BlockingBag()
 			: base (new ConcurrentBag<T> ())
 		{
+		}
+
+		public void AddRange(IEnumerable<T> collection)
+		{
+			foreach (var item in collection)
+			{
+				this.Add (item);
+			}
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void UseAfterDispose()
 		{
-			var workerThread = new WorkerThread ();
+			var workerThread = new WorkerThread ("Test");
 
 			workerThread.Dispose ();
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void ExecuteSynchronously()
 		{
-			using (var workerThread = new WorkerThread())
+			using (var workerThread = new WorkerThread("Test"))
 			{
 				bool done = false;
 
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void ExecuteAsynchronously()
 		{
-			using (var workerThread = new WorkerThread ())
+			using (var workerThread = new WorkerThread ("Test"))
 			{
 				bool done = false;
 
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		{
 			var times = new Dictionary<int, DateTime> ();
 
-			using (var workerThread = new WorkerThread ())
+			using (var workerThread = new WorkerThread ("Test"))
 			{
 				for (int i = 0; i < 10; i++)
 				{
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Tests.Vs.Support
 		[TestMethod]
 		public void WaitForDispose()
 		{
-			using (var workerThread = new WorkerThread ())
+			using (var workerThread = new WorkerThread ("Test"))
 			{
 				bool done1 = false;
 				bool done2 = false;

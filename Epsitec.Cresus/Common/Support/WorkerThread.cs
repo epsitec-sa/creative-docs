@@ -1,25 +1,21 @@
-﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Types.Collections.Concurrent;
-
-using System;
 
 using System.Threading;
 
 
 namespace Epsitec.Common.Support
 {
-	
-	
+	using PendingActionsQueue = BlockingQueue<System.Action>;
+
 	/// <summary>
 	/// The <c>WorkerThread</c> class wraps a thread and allow its user to execute actions either
 	/// synchronously or asynchronously on it.
 	/// </summary>
-	public sealed class WorkerThread : IDisposable
+	public sealed class WorkerThread : System.IDisposable
 	{
-
-
 		// NOTE This class has been largely inspired by the class found on the following blog post :
 		// http://blogs.msdn.com/b/jaredpar/archive/2008/03/30/activeobject.aspx
 
@@ -27,11 +23,12 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// Create a new instance of <c>WorkerThread</c>.
 		/// </summary>
-		public WorkerThread()
+		public WorkerThread(string threadName = null)
 		{
-			this.queue = new BlockingQueue<Action> ();
+			this.pendingActionsQueue = new BlockingQueue<System.Action> ();
 
 			this.thread = new Thread (this.DoWork);
+			this.thread.Name = threadName ?? "anonymous worker thread";
 			this.thread.Start ();
 		}
 
@@ -41,18 +38,18 @@ namespace Epsitec.Common.Support
 		/// executed the action.
 		/// </summary>
 		/// <param name="action">The action to execute on the worker thread.</param>
-		public void ExecuteSynchronously(Action action)
+		public void ExecuteSynchronously(System.Action action)
 		{
 			using (var actionWaitHandle = new ManualResetEvent (false))
 			{
-				Exception innerException = null;
+				System.Exception innerException = null;
 
-				Action<Exception> onException = e =>
+				System.Action<System.Exception> onException = e =>
 				{
 					innerException = e;
 				};
 
-				Action onFinish = () =>
+				System.Action onFinish = () =>
 				{
 					actionWaitHandle.Set ();
 				};
@@ -63,11 +60,10 @@ namespace Epsitec.Common.Support
 
 				if (innerException != null)
 				{
-					throw new Exception ("The operation threw an exception.", innerException);
+					throw new System.Exception ("The operation threw an exception.", innerException);
 				}
 			}
 		}
-
 
 		/// <summary>
 		/// Asynchronously executes an action on the worker thread, which means that this method
@@ -76,15 +72,15 @@ namespace Epsitec.Common.Support
 		/// <param name="action">The action to execute on the worker thread.</param>
 		/// <param param name="onException">An action that will be called if an exception is thrown during the execution of the action.</param>
 		/// <param name="onFinish">An action that will be called once the action has been executed.</param>
-		public void ExecuteAsynchronously(Action action, Action<Exception> onException = null, Action onFinish = null)
+		public void ExecuteAsynchronously(System.Action action, System.Action<System.Exception> onException = null, System.Action onFinish = null)
 		{
-			Action wrappedAction = () =>
+			System.Action wrappedAction = () =>
 			{
 				try
 				{
 					action ();
 				}
-				catch (Exception e)
+				catch (System.Exception e)
 				{
 					if (onException != null)
 					{
@@ -124,9 +120,11 @@ namespace Epsitec.Common.Support
 				}
 			};
 
-			this.queue.Add (wrappedAction);
+			this.pendingActionsQueue.Add (wrappedAction);
 		}
 
+
+		#region IDisposable Members
 
 		/// <summary>
 		/// Disposes the worker thread. This method will eventually forbid any new call to the
@@ -135,7 +133,7 @@ namespace Epsitec.Common.Support
 		/// </summary>
 		public void Dispose()
 		{
-			Action action = () =>
+			System.Action action = () =>
 			{
 				this.isDisposing = true;
 			};
@@ -143,18 +141,18 @@ namespace Epsitec.Common.Support
 			try
 			{
 				this.ExecuteAsynchronously (action);
-				this.queue.CompleteAdding ();
+				this.pendingActionsQueue.CompleteAdding ();
 
 				this.thread.Join ();
-				this.queue.Dispose ();
+				this.pendingActionsQueue.Dispose ();
 			}
-			catch (ObjectDisposedException)
+			catch (System.ObjectDisposedException)
 			{
 				// Swallow the exception if we have already disposed the queue. That means that this
 				// is the second time that we are executing this method and there is no reason to
 				// execute this stuff a second time.
 			}
-			catch (InvalidOperationException)
+			catch (System.InvalidOperationException)
 			{
 				// Swallow the exception if the queue does not accept new items to be added. That
 				// means that this is the second time that we are executing this method and there is
@@ -162,24 +160,25 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		#endregion
 
 		/// <summary>
 		/// The method that is executed by the worker thread.
 		/// </summary>
 		private void DoWork()
 		{
-			Action action;
+			System.Action action;
 
 			// Executes the actions until the Dispose method has been called.
 			while (!this.isDisposing)
 			{
-				action = this.queue.Take ();
+				action = this.pendingActionsQueue.Take ();
 
 				action ();
 			}
 
 			// Once the Dispose method has been called, execute any pending actions and terminate.
-			while (this.queue.TryTake (out action))
+			while (this.pendingActionsQueue.TryTake (out action))
 			{
 				action ();
 			}
@@ -189,22 +188,8 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// The worker thread that will execute all actions given to this instance.
 		/// </summary>
-		private readonly Thread thread;
-
-
-		/// <summary>
-		/// The queue that will contain all the pending actions to be executed by the worker thread.
-		/// </summary>
-		private readonly BlockingQueue<Action> queue;
-
-
-		/// <summary>
-		/// The boolean indicating whether a call do Dispose() has been made.
-		/// </summary>
-		private bool isDisposing;
-
-
+		private readonly Thread					thread;
+		private readonly PendingActionsQueue	pendingActionsQueue;
+		private bool							isDisposing;
 	}
-
-
 }

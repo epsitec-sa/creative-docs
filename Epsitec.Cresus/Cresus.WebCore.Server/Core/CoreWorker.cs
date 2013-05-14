@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// Creates a new instance of <c>CoreWorker</c>.
 		/// </summary>
 		/// <param name="uiCulture">The culture that should be used for doing UI stuff</param>
-		public CoreWorker(CultureInfo uiCulture)
+		public CoreWorker(string threadName, CultureInfo uiCulture)
 		{
-			this.workerThread = new WorkerThread ();
+			this.workerThread = new WorkerThread (threadName);
 
 			WorkerApp workerApp = null;
 

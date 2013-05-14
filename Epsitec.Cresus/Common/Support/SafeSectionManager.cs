@@ -1,12 +1,12 @@
-﻿using System;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using System;
 using System.Threading;
 
 
 namespace Epsitec.Common.Support
 {
-
-
 	/// <summary>
 	/// The <c>SafeSectionManager</c> class provides an easy way to create safe section that will
 	/// ensure that the Dispose method will block until the end of their lifetime and that when the
@@ -15,14 +15,11 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class SafeSectionManager : IDisposable
 	{
-
-
 		// NOTE The implementation of the synchronization between the Enter, the Exit, the Close and
 		// the Wait methods can probably be improved. However, this kind of multi threaded stuff is
 		// really tricky so I preferred to have a working solution instead of a clever but maybe not
 		// working solution. Only if this code ever becomes a performance bottleneck, it would be a
 		// good idea to improve it.
-
 
 		/// <summary>
 		/// Creates a new SafeSectionManager.
@@ -31,7 +28,6 @@ namespace Epsitec.Common.Support
 		{
 			this.exclusion = new object ();
 		}
-
 		
 		/// <summary>
 		/// Creates a new safe section. If this method succeeds, it is guaranteed that any call to
@@ -50,7 +46,6 @@ namespace Epsitec.Common.Support
 
 			return safeSection;
 		}
-
 
 		/// <summary>
 		/// Tries to create a new safe section. If this method succeeds, it is guaranteed that any
@@ -101,7 +96,6 @@ namespace Epsitec.Common.Support
 			return true;
 		}
 
-
 		/// <summary>
 		/// Exit from a safe section.
 		/// </summary>
@@ -130,7 +124,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-
 		/// <summary>
 		/// Closes this object. This means that from now on, any attempt to create new safe sections
 		/// will fail.
@@ -150,7 +143,6 @@ namespace Epsitec.Common.Support
 				this.disposeAlarm = new AutoResetEvent (false);
 			}
 		}
-
 
 		/// <summary>
 		/// Waits until all safe sections have been exited.
@@ -198,29 +190,25 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// The object used to ensure mutual exclusion in critical sections of this class.
 		/// </summary>
-		private readonly object exclusion;
+		private readonly object					exclusion;
 
 
 		/// <summary>
 		/// The EventWaitHandle that is used by the Exit method to tell the Dispose method that it's
 		/// time to wake up.
 		/// </summary>
-		private AutoResetEvent disposeAlarm;
+		private AutoResetEvent					disposeAlarm;
 
 
 		/// <summary>
 		/// Indicates whether this instance is being disposed.
 		/// </summary>
-		private bool isDisposing;
+		private bool							isDisposing;
 
 
 		/// <summary>
 		/// Monitors the current number of safe sections.
 		/// </summary>
-		private int safeSectionCount;
-
-
+		private int								safeSectionCount;
 	}
-
-
 }
