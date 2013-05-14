@@ -368,6 +368,47 @@ function() {
       });
     },
 
+    createSearchFormFields: function (columnDefinitions) {
+        return columnDefinitions.map(function (c) {
+            var field = {
+                name: c.name,
+                type: c.type.type,
+                
+            };
+
+            switch (c.type.type) {
+                case 'int':
+                    field.xtype = 'numberfield';
+                    field.fieldLabel = c.title;
+                case 'float':
+                    field.xtype = 'numberfield';
+                    field.fieldLabel = c.title;
+                case 'boolean':
+                    field.xtype = 'checkboxfield';
+                    field.boxLabel = c.title;
+                    field.useNull = true;
+                    break;
+
+                case 'date':
+                    field.fieldLabel = c.title;
+                    field.xtype = 'datefield';
+                    field.dateFormat = 'd.m.Y';
+                    break;
+
+                case 'list':
+                    field.fieldLabel = c.title;
+                    field.type = 'string';
+                    break;
+                default:
+                    field.fieldLabel = c.title;
+                    field.type = 'string';
+                    break;
+            }
+
+            return field;
+        });
+    },
+
     createSorters: function(sorterDefinitions) {
       return sorterDefinitions.map(function(s) {
         return {
@@ -387,8 +428,8 @@ function() {
 
     createToolbar: function(options) {
       return Ext.create('Ext.Toolbar', {
-        dock: 'top',
-        items: this.createButtons(options)
+          dock: 'top',
+          items: this.createButtons(options)
       });
     },
 
@@ -414,6 +455,7 @@ function() {
       }));
 
       if (epsitecConfig.featureSearch) {
+          buttons.push('->');
           buttons.push({
               xtype: 'textfield',
               emptyText: Epsitec.Texts.getSearchLabel(),
@@ -455,6 +497,27 @@ function() {
 
     onAdvancedSearchHandler: function (e) {
         if (!this.fullSearchWindow) {
+            var fields = this.createSearchFormFields(this.columnDefinitions);
+            var form = Ext.widget({
+                xtype: 'form',
+                layout: 'form',
+                url: '',
+                bodyPadding: '5 5 0',
+                width: 350,
+                fieldDefaults: {
+                    msgTarget: 'side',
+                    labelWidth: 75
+                },
+                defaultType: 'textfield',
+                items: fields,
+
+                buttons: [{
+                    text: 'Search',
+                    handler: function() {
+                       
+                    }
+                }]
+            });
             this.fullSearchWindow = Ext.create('Ext.Window', {
                 title: 'Full search',
                 width: e.container.getWidth(),
@@ -463,10 +526,8 @@ function() {
                 layout: 'fit',
                 closable: true,
                 closeAction: 'hide',
-                items: {
-                    border: false
-                    //TODO build search form <- backend definition
-                }
+                items: form
+                    
             }).showAt(e.container.getXY());
         }
         else {
