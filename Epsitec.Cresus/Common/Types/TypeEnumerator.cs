@@ -265,6 +265,15 @@ namespace Epsitec.Common.Types
 		}
 
 
+		public static void DebugDumpAnalyzedAssemblies()
+		{
+			foreach (var name in TypeEnumerator.instance.assemblyNames.OrderBy (x => x))
+			{
+				System.Diagnostics.Debug.WriteLine (name);
+			}
+		}
+
+
 		private IEnumerable<System.Type> EnumerateThreadSafe(List<System.Type> collection)
 		{
 			int index = 0;
@@ -319,12 +328,16 @@ namespace Epsitec.Common.Types
 		/// <param name="assembly">The assembly.</param>
 		private void AnalyzeAssembly(Assembly assembly)
 		{
-
 #if DOTNET35
 			if (assembly.ReflectionOnly)
 #else
 			if (assembly.ReflectionOnly || assembly.IsDynamic)
 #endif
+			{
+				return;
+			}
+
+			if (TypeEnumerator.IsForeignAssembly (assembly))
 			{
 				return;
 			}
@@ -335,12 +348,12 @@ namespace Epsitec.Common.Types
 
 				if (this.assemblyNames.Add (assembly.FullName))
 				{
-					System.Diagnostics.Debug.WriteLine ("TypeEnumerator: analyzing assembly " + assembly.FullName);
+					System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: analyzing assembly {0}", assembly.FullName));
 					this.assemblies.Add (assembly);
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine ("TypeEnumerator: skipping assembly " + assembly.FullName);
+					System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: skipping assembly {0}", assembly.FullName));
 					return;
 				}
 
@@ -421,6 +434,27 @@ namespace Epsitec.Common.Types
 			finally
 			{
 				this.exclusion.ExitWriteLock ();
+			}
+		}
+
+		private static bool IsForeignAssembly(Assembly assembly)
+		{
+			var name = assembly.FullName;
+
+			if ((name.Contains (", PublicKeyToken=b77a5c561934e089")) ||
+				(name.Contains (", PublicKeyToken=b03f5f7f11d50a3a")) ||
+				(name.Contains (", PublicKeyToken=31bf3856ad364e35")) ||
+				(name.Contains (", PublicKeyToken=64014856190afd81")) ||	//	Microsoft.AspNet.SignalR
+				(name.Contains (", PublicKeyToken=5c1f2a6c07aed9bf")) ||	//	Microsoft.Owin
+				(name.Contains (", PublicKeyToken=3750abcc3150b00c")) ||	//	FirebirdSql
+				(name.Contains (", PublicKeyToken=30ad4fe6b2a6aeed")) ||	//	Newtonsoft
+				(name.Contains (", PublicKeyToken=f0ebd12fd5e55cc5")))		//	Owin
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
