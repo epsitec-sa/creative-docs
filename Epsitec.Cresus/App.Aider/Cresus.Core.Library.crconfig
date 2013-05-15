@@ -1,9 +1,18 @@
+#
+# Cresus.Core.Library
+#
+# This is the global setup file read by Cresus CORE on startup, and which is used
+# to configure the loading of the modules needed by the application.
+#
+
 DefineDatabase ("aider", "localhost");
 DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
+
 DefineTypeSubstitution ("UserManager", "AiderUserManager");
 DefineTypeSubstitution ("UserSession", "AiderUserSession");
 DefineTypeSubstitution ("SoftwareUserEntity", "AiderUserEntity");
 DefineTypeSubstitution ("DatabaseInitializer", "AiderDatabaseInitializer");
+
 DefineEnableSnapshotService (false);
 
 Include Aider.Environment.crconfig
