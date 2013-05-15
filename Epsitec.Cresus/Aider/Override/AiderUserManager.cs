@@ -47,11 +47,11 @@ namespace Epsitec.Aider.Override
 		}
 
 
-		public override void NotifySusccessfulLogin(SoftwareUserEntity user)
+		public override void NotifySusccessfulLogin(SoftwareUserEntity user, string connectionId)
 		{
 			this.UpdateUser (user.Code, u => u.LastLoginDate = System.DateTime.UtcNow);
 			
-			base.NotifySusccessfulLogin (user);
+			base.NotifySusccessfulLogin (user,connectionId);
 		}
 
 		protected override void ChangeAuthenticatedUser(SoftwareUserEntity user)

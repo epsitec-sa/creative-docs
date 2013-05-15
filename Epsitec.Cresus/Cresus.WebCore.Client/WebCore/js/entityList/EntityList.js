@@ -380,48 +380,59 @@ function() {
                 case 'int':
                     field.xtype = 'numberfield';
                     field.fieldLabel = c.title;
+                    field.value = 1;
                     break;
 
                 case 'float':
                     field.xtype = 'numberfield';
                     field.fieldLabel = c.title;
+                    field.value = 0.5;
                     break;
 
                 case 'boolean':
-                    field.xtype = 'checkboxfield';
-                    field.boxLabel = c.title;
+                    field.xtype = 'fieldset';
                     field.useNull = true;
+                    field.title =  c.title;
+                    field.defaultType = 'checkbox';
+                    field.layout = 'anchor';
+                    field.defaults = {
+                        anchor: '100%'
+                    };
+                    field.items = [{
+                        boxLabel: 'True',
+                        name: 'isTrue',
+                        
+                    },{
+                        boxLabel: 'False',
+                        name: 'isFalse',
+                    },{
+                        boxLabel: 'Null',
+                        name: 'isNull',
+                    }];
                     break;
 
-                case 'date':
-                    field.fieldLabel = c.title;
-                    field.xtype = 'datefield';
-                    field.dateFormat = 'd.m.Y';
-                    //TODO CREATE A FIELDSET WITH MULTI-DATE FIELD
-                    /*
-                    xtype:'fieldset',
-                    title: 'Phone Number',
-                    collapsible: true,
-                    defaultType: 'textfield',
-                    layout: 'anchor',
-                    defaults: {
+                case 'date':                    
+                    field.xtype = 'fieldset';
+                    field.title =  c.title;
+                    field.defaultType = 'datefield';
+                    field.layout = 'anchor';
+                    field.defaults = {
                         anchor: '100%'
-                    },
-                    items :[{
-                        fieldLabel: 'Home',
-                        name: 'home',
-                        value: '(888) 555-1212'
+                    };
+                    field.items = [{
+                        fieldLabel: 'Before',
+                        name: 'before',
+                        
                     },{
-                        fieldLabel: 'Business',
-                        name: 'business'
+                        fieldLabel: 'After',
+                        name: 'after',
+                        dateFormat: 'd.m.Y'
                     },{
-                        fieldLabel: 'Mobile',
-                        name: 'mobile'
-                    },{
-                        fieldLabel: 'Fax',
-                        name: 'fax'
-                    }]
-                    */
+                        fieldLabel: 'At',
+                        name: 'at',
+                        dateFormat: 'd.m.Y'
+                    }];
+                    
                     break;
 
                 case 'list':
@@ -500,7 +511,7 @@ function() {
               text: '',
               iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
               listeners: {
-                  click: this.onAdvancedSearchHandler,
+                  click: this.onFullSearchHandler,
                   scope: this
               }
           }));
@@ -526,7 +537,7 @@ function() {
         }
     },
 
-    onAdvancedSearchHandler: function (e) {
+    onFullSearchHandler: function (e) {
         if (!this.fullSearchWindow) {
             var fields = this.createSearchFormFields(this.columnDefinitions);
             var form = Ext.widget({
@@ -551,7 +562,7 @@ function() {
             });
             this.fullSearchWindow = Ext.create('Ext.Window', {
                 title: 'Full search',
-                width: e.container.getWidth(),
+                width: 400,
                 height: 200,
                 headerPosition: 'right',
                 layout: 'fit',

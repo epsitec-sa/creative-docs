@@ -32,12 +32,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			string username = this.Request.Form.username;
 			string password = this.Request.Form.password;
+            string connectionId = this.Request.Form.connectionId;
 
 			bool loggedIn = this.CheckCredentials (username, password);
 
 			if (loggedIn)
 			{
-				this.SessionLogin (username);
+				this.SessionLogin (username, connectionId);
 
 				return CoreResponse.FormSuccess ();
 			}
@@ -69,12 +70,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private void SessionLogin(string userName)
+		private void SessionLogin(string userName,string connectionId)
 		{
-			this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (userName);
+			this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (userName,connectionId);
 			
 			this.Session[LoginModule.LoggedInName] = true;
 			this.Session[LoginModule.UserName]     = userName;
+            this.Session[LoginModule.ConnectionId] = connectionId;
 			this.Session[LoginModule.SessionId]    = LoginModule.CreateSessionId ();
 		}
 		
@@ -82,6 +84,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			this.Session.Delete (LoginModule.UserName);
 			this.Session.Delete (LoginModule.SessionId);
+            this.Session.Delete(LoginModule.ConnectionId);
 			this.Session[LoginModule.LoggedInName] = false;
 		}
 		
@@ -141,6 +144,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 		public static readonly string SessionId = "UserSessionId";
+
+
+        public static readonly string ConnectionId = "ConnectionId";
 
 
 	}

@@ -170,7 +170,7 @@ function() {
       }
     },
 
-    showLoginPanel: function() {
+    showLoginPanel: function () {
       this.loginPanel = Ext.create('Epsitec.LoginPanel', {
         application: this
       });
