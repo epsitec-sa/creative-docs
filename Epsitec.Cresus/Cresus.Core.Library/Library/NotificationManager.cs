@@ -15,9 +15,15 @@ namespace Epsitec.Cresus.Core.Library
 		{
 		}
 
+
+		public static NotificationManager GetCurrentNotificationManager()
+		{
+			return CoreApp.FindCurrentAppSessionComponent<NotificationManager> ();
+		}
+
 		#region Factory Class
 
-		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<SettingsManager>
+		private sealed class Factory : Epsitec.Cresus.Core.Factories.DefaultCoreAppComponentFactory<NotificationManager>
 		{
 			public override bool ShouldCreate(CoreApp host)
 			{
