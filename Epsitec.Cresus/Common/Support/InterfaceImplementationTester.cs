@@ -1,5 +1,7 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,13 +25,13 @@ namespace Epsitec.Common.Support
 		{
 			if (InterfaceImplementationTester<T, TInterface>.result.HasValue == false)
 			{
-				InterfaceImplementationTester<T, TInterface>.result = typeof (T).GetInterfaces ().Contains (typeof (TInterface));
+				InterfaceImplementationTester<T, TInterface>.result = typeof (T).ContainsInterface<TInterface> ();
 			}
 
 			return InterfaceImplementationTester<T, TInterface>.result.Value;
 		}
 
 		[System.ThreadStatic]
-		private static bool? result;
+		private static bool?					result;
 	}
 }

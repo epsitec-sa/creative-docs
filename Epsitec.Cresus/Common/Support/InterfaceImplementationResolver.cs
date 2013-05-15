@@ -1,4 +1,4 @@
-//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -48,17 +48,17 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static IEnumerable<TInterface> CreateInstances(System.Type[] constructorArgumentTypes, object[] constructorArguments)
 		{
-			var types = InterfaceImplementationResolver<TInterface>.FindSystemTypes (constructorArgumentTypes);
-
-			return from type in types
-			       select System.Activator.CreateInstance (type, constructorArguments) as TInterface;
+			return InterfaceImplementationResolver<TInterface>.FindSystemTypes (constructorArgumentTypes)
+															  .Select (type => System.Activator.CreateInstance (type, constructorArguments) as TInterface);
 		}
 
 		private static IEnumerable<System.Type> FindSystemTypes(System.Type[] constructorArgumentTypes)
 		{
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						where type.IsClass
-						   && !type.IsAbstract
+			//	Note: it is about 10x faster to check if a type contains an interface than to
+			//	retrieve its constructor for a given set of arguments.
+
+			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
+						where type.IsAbstract == false
 						   && type.ContainsInterface<TInterface> ()
 						   && type.GetConstructor (constructorArgumentTypes) != null
 						select type;

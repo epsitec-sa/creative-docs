@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -37,8 +37,8 @@ namespace Epsitec.Common.Types.Converters
 		/// <returns>The type of the matching converter if it exists in the current assembly; otherwise, <c>null</c>.</returns>
 		protected static System.Type FindConverterType<T>()
 		{
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						where type.IsClass && !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter)) && type.BaseType.BaseType == typeof (GenericConverter<T>)
+			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
+						where !type.IsAbstract && type.IsSubclassOf (typeof (GenericConverter)) && type.BaseType.BaseType == typeof (GenericConverter<T>)
 						select type;
 
 			return types.FirstOrDefault ();

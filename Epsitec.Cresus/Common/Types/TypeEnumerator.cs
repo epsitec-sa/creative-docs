@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -17,11 +17,12 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public sealed class TypeEnumerator
 	{
-		public TypeEnumerator()
+		private TypeEnumerator()
 		{
 			this.exclusion = new ReaderWriterLockSlim (LockRecursionPolicy.SupportsRecursion);
 
 			this.types         = new List<System.Type> ();
+			this.classTypes    = new List<System.Type> ();
 			this.assemblies    = new List<Assembly> ();
 			this.typeNames     = new HashSet<string> ();
 			this.typeMap       = new Dictionary<string, List<System.Type>> ();
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Types
 
 			foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies ())
 			{
-				this.AnalyseAssembly (assembly);
+				this.AnalyzeAssembly (assembly);
 			}
 		}
 
@@ -47,6 +48,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		
 		/// <summary>
 		/// Gets the types which match the specified short type name (for instance <c>"System.Object"</c>).
 		/// There will be more than one type if the same type was declared in different assemblies.
@@ -127,30 +129,16 @@ namespace Epsitec.Common.Types
 		/// <returns>The collection of all currently loaded types.</returns>
 		public IEnumerable<System.Type> GetAllTypes()
 		{
-			int index = 0;
+			return this.EnumerateThreadSafe (this.types);
+		}
 
-			while (true)
-			{
-				System.Type type;
-
-				try
-				{
-					this.exclusion.EnterReadLock ();
-
-					if (index >= this.types.Count)
-					{
-						yield break;
-					}
-
-					type = this.types[index++];
-				}
-				finally
-				{
-					this.exclusion.ExitReadLock ();
-				}
-
-				yield return type;
-			}
+		/// <summary>
+		/// Gets all currently loaded class types. This method is thread safe.
+		/// </summary>
+		/// <returns>The collection of all currently loaded class types.</returns>
+		public IEnumerable<System.Type> GetAllClassTypes()
+		{
+			return this.EnumerateThreadSafe (this.classTypes);
 		}
 
 		/// <summary>
@@ -277,19 +265,59 @@ namespace Epsitec.Common.Types
 		}
 
 
+		private IEnumerable<System.Type> EnumerateThreadSafe(List<System.Type> collection)
+		{
+			int index = 0;
+
+			//	The collection might change while we iterate over it (i.e. new items may be
+			//	added at its end). By batching the locks, we greatly improved the enumeration
+			//	of all loaded types in a multi-threaded environment (100x).
+
+			while (true)
+			{
+				System.Type[] array;
+
+				try
+				{
+					this.exclusion.EnterReadLock ();
+
+					int length = collection.Count - index;
+
+					if (length < 1)
+					{
+						yield break;
+					}
+
+					array = new System.Type[length];
+					collection.CopyTo (index, array, 0, length);
+
+					index += length;
+				}
+				finally
+				{
+					this.exclusion.ExitReadLock ();
+				}
+
+				foreach (var type in array)
+				{
+					yield return type;
+				}
+			}
+		}
+
 		private void HandleCurrentDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
 			//	An additional assembly was just loaded; analyze it and update the cache
 			//	accordingly :
 
-			this.AnalyseAssembly (args.LoadedAssembly);
+			this.AnalyzeAssembly (args.LoadedAssembly);
 		}
 
 		/// <summary>
-		/// Analyses the assembly.
+		/// Analyzes the assembly.
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>
-		private void AnalyseAssembly(Assembly assembly)
+		private void AnalyzeAssembly(Assembly assembly)
 		{
 
 #if DOTNET35
@@ -325,6 +353,11 @@ namespace Epsitec.Common.Types
 					if (this.typeNames.Add (type.AssemblyQualifiedName))
 					{
 						this.types.Add (type);
+
+						if (type.IsClass)
+						{
+							this.classTypes.Add (type);
+						}
 
 						List<System.Type> list;
 
@@ -395,6 +428,7 @@ namespace Epsitec.Common.Types
 		private static readonly TypeEnumerator	instance = new TypeEnumerator ();
 
 		private readonly List<System.Type>		types;
+		private readonly List<System.Type>		classTypes;
 		private readonly List<Assembly>			assemblies;
 		private readonly HashSet<string>		assemblyNames;
 		private readonly HashSet<string>		typeNames;

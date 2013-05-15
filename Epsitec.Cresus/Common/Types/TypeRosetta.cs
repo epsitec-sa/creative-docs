@@ -1,4 +1,4 @@
-//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -31,23 +31,22 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		public static void InitializeResources()
 		{
-			var resTypes = TypeEnumerator.Instance.GetAllTypes ().Where (x => x.IsClass && x.IsAbstract && x.IsPublic && x.IsSealed && x.Name == "Res").ToList ();
-
+			var resTypes = TypeEnumerator.Instance.GetAllClassTypes ()
+				.Where (x => x.IsStaticClass () && x.IsPublic && x.Name == "Res").ToList ();
 
 			foreach (var type in resTypes)
 			{
 				var methodInfo = type.GetMethod ("Initialize");
 				
 				if ((methodInfo != null) &&
-					(methodInfo.GetParameters ().Length == 0) &&
 					(methodInfo.IsPublic) &&
 					(methodInfo.IsStatic) &&
+					(methodInfo.GetParameters ().Length == 0) &&
 					(methodInfo.ReturnType == typeof (void)))
 				{
 					methodInfo.Invoke (null, null);
 				}
 			}
-
 		}
 
 		/// <summary>
@@ -1109,12 +1108,9 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				foreach (System.Type type in systemType.GetInterfaces ())
+				if (systemType.ContainsInterface (interfaceType))
 				{
-					if (type == interfaceType)
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 

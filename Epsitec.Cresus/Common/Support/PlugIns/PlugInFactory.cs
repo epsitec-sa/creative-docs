@@ -1,9 +1,8 @@
-//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Linq;
@@ -113,7 +112,7 @@ using System.Xml.Linq;
 
 			if (PlugInFactory<TClass, TAttribute, TId>.types.TryGetValue (id, out record))
 			{
-				Support.Allocator<TClass, TParameter> allocator = record.GetAllocator<Support.Allocator<TClass, TParameter>> (type => Support.DynamicCodeFactory.CreateAllocator<TClass, TParameter> (type));
+				Allocator<TClass, TParameter> allocator = record.GetAllocator<Support.Allocator<TClass, TParameter>> (type => DynamicCodeFactory.CreateAllocator<TClass, TParameter> (type));
 				return allocator (parameter);
 			}
 			else
@@ -216,8 +215,6 @@ using System.Xml.Linq;
 
 		private static IEnumerable<TAttribute> GetRegisteredAttributes(System.Reflection.Assembly assembly)
 		{
-			System.Type TClass = typeof (TClass);
-
 			foreach (TAttribute attribute in assembly.GetCustomAttributes<TAttribute> ())
 			{
 				if (typeof (TClass).IsClass)
@@ -229,9 +226,7 @@ using System.Xml.Linq;
 				}
 				else if (typeof (TClass).IsInterface)
 				{
-					IList<System.Type> interfaces = attribute.Type.GetInterfaces ();
-
-					if (interfaces.Contains (typeof (TClass)))
+					if (attribute.Type.ContainsInterface<TClass> ())
 					{
 						yield return attribute;
 					}
