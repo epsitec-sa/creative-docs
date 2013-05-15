@@ -126,6 +126,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					displayDatabase.DataSetMetadata,
 					displayDatabase.Columns,
 					displayDatabase.Sorters,
+					displayDatabase.MenuItems,
 					overrideCreate ?? displayDatabase.EnableCreate,
 					overrideDelete ?? displayDatabase.EnableDelete,
 					displayDatabase.CreationViewId,

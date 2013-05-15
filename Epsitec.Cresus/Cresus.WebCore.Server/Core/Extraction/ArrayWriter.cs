@@ -75,7 +75,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			var columnAccessors = this.GetColumnAccessors ();
 			var items = this.Accessor.GetAllItems ();
 
-			Database.LoadRelatedData (this.columns, this.Accessor.IsolatedDataContext, items);
+			var dataContext = this.Accessor.IsolatedDataContext;
+			var expressions = this.columns.Select (c => c.LambdaExpression);
+			dataContext.LoadRelatedData (items, expressions);
 
 			return items
 				.Select (e => this.GetCells (columnAccessors, e))

@@ -25,11 +25,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	{
 
 
-		public Database(DataSetMetadata dataSetMetadata, IEnumerable<Column> columns, IEnumerable<Sorter> sorters, bool enableCreate, bool enableDelete, int? creationViewId, int? deletionViewId)
+		public Database
+		(
+			DataSetMetadata dataSetMetadata,
+			IEnumerable<Column> columns,
+			IEnumerable<Sorter> sorters,
+			IEnumerable<AbstractContextualMenuItem> menuItems,
+			bool enableCreate,
+			bool enableDelete,
+			int? creationViewId,
+			int? deletionViewId
+		)
 		{
 			this.dataSetMetadata = dataSetMetadata;
 			this.columns = columns.ToList ();
 			this.sorters = sorters.ToList ();
+			this.menuItems = menuItems.ToList ();
 			this.enableCreate = enableCreate;
 			this.enableDelete = enableDelete;
 			this.creationViewId = creationViewId;
@@ -60,6 +71,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			get
 			{
 				return this.sorters;
+			}
+		}
+
+
+		public IEnumerable<AbstractContextualMenuItem> MenuItems
+		{
+			get
+			{
+				return this.menuItems;
 			}
 		}
 
@@ -135,7 +155,28 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		public Dictionary<string, object> GetEntityData(IEnumerable<Column> columns, DataContext dataContext, Caches caches, AbstractEntity entity)
+		public Dictionary<string, object> GetEntityData
+		(
+			IEnumerable<Column> columns,
+			DataContext dataContext,
+			Caches caches,
+			AbstractEntity entity
+		)
+		{
+			var menuItems = Enumerable.Empty<SummaryNavigationContextualMenuItem> ();
+
+			return this.GetEntityData (columns, menuItems, dataContext, caches, entity);
+		}
+
+
+		public Dictionary<string, object> GetEntityData
+		(
+			IEnumerable<Column> columns,
+			IEnumerable<SummaryNavigationContextualMenuItem> menuItems,
+			DataContext dataContext,
+			Caches caches,
+			AbstractEntity entity
+		)
 		{
 			var id = EntityIO.GetEntityId (dataContext, entity);
 			var summary = entity.GetCompactSummary ().ToSimpleText ();
@@ -153,6 +194,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				data[columnId] = column.GetColumnData (dataContext, caches, entity);
 			}
 
+			// For now, the columns cannot have a value of type entity, and the menu items must all
+			// have a value of type entity. Therefore we know that they are different and that we
+			// don't compute the same value twice. If these one of these assumption where to change,
+			// we might want to check for duplicates between the columns and the menu items.
+
+			foreach (var menuItem in menuItems)
+			{
+				var columnId = menuItem.GetId (caches);
+
+				data[columnId] = menuItem.GetEntityId (dataContext, caches, entity);
+			}
+
 			return data;
 		}
 
@@ -167,6 +220,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				.Select (s => s.GetDataDictionary (caches))
 				.ToList ();
 
+			var menuItems = this.MenuItems
+				.Select (m => m.GetDataDictionary (caches))
+				.ToList ();
+
 			return new Dictionary<string, object> ()
 			{
 				{ "enableCreate", this.EnableCreate },
@@ -176,15 +233,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "deletionViewId", this.DeletionViewId },
 				{ "columns", columns },
 				{ "sorters", sorters },
+				{ "menuItems", menuItems }, 
 			};
-		}
-
-
-		public static void LoadRelatedData(IEnumerable<Column> columns, DataContext dataContext, IEnumerable<AbstractEntity> entities)
-		{
-			var expressions = columns.Select (c => c.LambdaExpression);
-
-			dataContext.LoadRelatedData (entities, expressions);
 		}
 
 
@@ -195,6 +245,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly List<Sorter> sorters;
+
+
+		private readonly List<AbstractContextualMenuItem> menuItems;
 
 
 		private readonly bool enableCreate;

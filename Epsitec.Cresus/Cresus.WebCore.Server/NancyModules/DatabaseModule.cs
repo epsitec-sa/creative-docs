@@ -2,6 +2,7 @@
 using Epsitec.Cresus.Core.Data;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
@@ -96,11 +97,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var database = extractor.Database;
 
 			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns).ToList ();
+			var menuItems = database.MenuItems
+				.OfType<SummaryNavigationContextualMenuItem> ()
+				.ToList ();
+			
+			var columnExpressions = columns.Select(c => c.LambdaExpression);
+			var menuItemsExpressions = menuItems.Select (m => m.LambdaExpression);
+			var expressions = columnExpressions.Concat (menuItemsExpressions);
 
-			Database.LoadRelatedData (columns, dataContext, entities);
+			dataContext.LoadRelatedData (entities, expressions);
 
 			var data = entities
-				.Select (e => database.GetEntityData (columns, dataContext, caches, e))
+				.Select (e => database.GetEntityData (columns, menuItems, dataContext, caches, e))
 				.ToList ();
 
 			var content = new Dictionary<string, object> ()
