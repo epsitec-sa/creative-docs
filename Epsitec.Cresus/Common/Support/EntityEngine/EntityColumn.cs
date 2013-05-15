@@ -48,7 +48,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="data">The data.</param>
 		protected EntityColumn(IDictionary<string, string> data)
-			: this (EntityFieldPath.Parse (data[Strings.Path]).CreateLambda() as LambdaExpression,
+			: this (EntityFieldPath.Parse (data[Strings.Path]).CreateLambda (),
 					new FormattedText (data[Strings.Title]),
 					Druid.Parse (data[Strings.CaptionId]),
 					bool.Parse (data[Strings.CanSort] ?? "false"),
