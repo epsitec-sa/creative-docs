@@ -51,6 +51,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonRelationship = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 5));
 				//	designer:cap/LVG232
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 98));
+				//	designer:cap/LVGJ32
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscriptionRefusal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 115));
 				//	designer:cap/LVG302
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderTown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3));
 				//	designer:cap/LVAHD
@@ -98,6 +100,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderPersonRelationship = 0x3F500050000005L;
 				//	designer:cap/LVG232
 				public const long ShowAiderSubscription = 0x3F500050000062L;
+				//	designer:cap/LVGJ32
+				public const long ShowAiderSubscriptionRefusal = 0x3F500050000073L;
 				//	designer:cap/LVG302
 				public const long ShowAiderTown = 0x3F500050000003L;
 				//	designer:cap/LVAHD
@@ -287,6 +291,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlacePerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 186));
 			//	designer:cap/LVGP22
 			public static readonly Epsitec.Common.Types.StructuredType AiderSubscription = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 89));
+			//	designer:cap/LVGC32
+			public static readonly Epsitec.Common.Types.StructuredType AiderSubscriptionRefusal = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 108));
 			//	designer:cap/LVA65
 			public static readonly Epsitec.Common.Types.StructuredType AiderTown = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 166));
 			//	designer:cap/LVAHC
@@ -1783,6 +1789,27 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid SubscriptionType = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 97);
 			}
 			
+			public static class AiderSubscriptionRefusal
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderSubscriptionRefusal.DisplayAddress, null);
+				}
+				
+				//	designer:cap/LVGH32
+				public static readonly global::Epsitec.Common.Support.Druid DisplayAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 113);
+				//	designer:cap/LVGG32
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 112);
+				//	designer:cap/LVGI32
+				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 114);
+				//	designer:cap/LVGD32
+				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 109);
+				//	designer:cap/LVGE32
+				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 110);
+				//	designer:cap/LVGF32
+				public static readonly global::Epsitec.Common.Support.Druid RefusalType = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 111);
+			}
+			
 			public static class AiderTown
 			{
 				internal static void _Initialize()
@@ -2371,6 +2398,7 @@ namespace Epsitec.Aider
 			Fields.AiderPlacePerson._Initialize ();
 			Fields.AiderRelationshipType._Initialize ();
 			Fields.AiderSubscription._Initialize ();
+			Fields.AiderSubscriptionRefusal._Initialize ();
 			Fields.AiderTown._Initialize ();
 			Fields.AiderUser._Initialize ();
 			Fields.AiderUserRole._Initialize ();

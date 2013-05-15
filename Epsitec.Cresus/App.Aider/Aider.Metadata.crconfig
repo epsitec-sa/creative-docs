@@ -21,6 +21,7 @@ AiderUserRole = [LVAKC]
 AiderUserScope = [LVACC]
 AiderGroupDef = [LVA2A]
 AiderSubscription = [LVGP22]
+AiderSubscriptionRefusal = [LVGC32]
 
 <meta>
   <T>
@@ -208,6 +209,20 @@ AiderSubscription = [LVGP22]
         <disp m="Hidden" />
       </col>
     </t>
+    <t eid="@AiderSubscriptionRefusal" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGG32]" title="Nom" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGI32]" title="NPA" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGH32]" title="Adresse" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
   </T>
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
@@ -215,6 +230,7 @@ AiderSubscription = [LVGP22]
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVA1D]" teid="@AiderGroup" tn="default" df="true" d="true" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG232]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuBonneNouvelle"><R><r>@user</r></R></d>
+    <d cid="[LVGJ32]" teid="@AiderSubscriptionRefusal" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuBonneNouvelle"><R><r>@user</r></R></d>
     <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc"><R><r>@user</r></R></d>
     <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuDefs"><R><r>@user</r></R></d>

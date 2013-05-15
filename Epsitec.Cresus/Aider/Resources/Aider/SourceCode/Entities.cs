@@ -35,6 +35,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVARD]", typeof (Epsitec.Aider.Entities.AiderContactEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVATF]", typeof (Epsitec.Aider.Entities.AiderDataManagersEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVGP22]", typeof (Epsitec.Aider.Entities.AiderSubscriptionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVGC32]", typeof (Epsitec.Aider.Entities.AiderSubscriptionRefusalEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -6791,6 +6792,185 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderSubscriptionEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderSubscriptionRefusal Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderSubscriptionRefusal</c> entity.
+	///	designer:cap/LVGC32
+	///	</summary>
+	public partial class AiderSubscriptionRefusalEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Household</c> field.
+		///	designer:fld/LVGC32/LVGD32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGD32]")]
+		public global::Epsitec.Aider.Entities.AiderHouseholdEntity Household
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVGD32]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue = this.Household;
+				if (oldValue != value || !this.IsFieldDefined("[LVGD32]"))
+				{
+					this.OnHouseholdChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderHouseholdEntity> ("[LVGD32]", oldValue, value);
+					this.OnHouseholdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LegalPersonContact</c> field.
+		///	designer:fld/LVGC32/LVGE32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGE32]")]
+		public global::Epsitec.Aider.Entities.AiderContactEntity LegalPersonContact
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVGE32]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderContactEntity oldValue = this.LegalPersonContact;
+				if (oldValue != value || !this.IsFieldDefined("[LVGE32]"))
+				{
+					this.OnLegalPersonContactChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderContactEntity> ("[LVGE32]", oldValue, value);
+					this.OnLegalPersonContactChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>RefusalType</c> field.
+		///	designer:fld/LVGC32/LVGF32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGF32]")]
+		public global::Epsitec.Aider.Enumerations.SubscriptionType RefusalType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.SubscriptionType> ("[LVGF32]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.SubscriptionType oldValue = this.RefusalType;
+				if (oldValue != value || !this.IsFieldDefined("[LVGF32]"))
+				{
+					this.OnRefusalTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.SubscriptionType> ("[LVGF32]", oldValue, value);
+					this.OnRefusalTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayName</c> field.
+		///	designer:fld/LVGC32/LVGG32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGG32]")]
+		public string DisplayName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGG32]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName;
+				if (oldValue != value || !this.IsFieldDefined("[LVGG32]"))
+				{
+					this.OnDisplayNameChanging (oldValue, value);
+					this.SetField<string> ("[LVGG32]", oldValue, value);
+					this.OnDisplayNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayAddress</c> field.
+		///	designer:fld/LVGC32/LVGH32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGH32]")]
+		public string DisplayAddress
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGH32]");
+			}
+			set
+			{
+				string oldValue = this.DisplayAddress;
+				if (oldValue != value || !this.IsFieldDefined("[LVGH32]"))
+				{
+					this.OnDisplayAddressChanging (oldValue, value);
+					this.SetField<string> ("[LVGH32]", oldValue, value);
+					this.OnDisplayAddressChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayZipCode</c> field.
+		///	designer:fld/LVGC32/LVGI32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGI32]")]
+		public string DisplayZipCode
+		{
+			get
+			{
+				return this.GetField<string> ("[LVGI32]");
+			}
+			set
+			{
+				string oldValue = this.DisplayZipCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVGI32]"))
+				{
+					this.OnDisplayZipCodeChanging (oldValue, value);
+					this.SetField<string> ("[LVGI32]", oldValue, value);
+					this.OnDisplayZipCodeChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnHouseholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
+		partial void OnHouseholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
+		partial void OnLegalPersonContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnLegalPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnRefusalTypeChanging(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
+		partial void OnRefusalTypeChanged(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
+		partial void OnDisplayNameChanging(string oldValue, string newValue);
+		partial void OnDisplayNameChanged(string oldValue, string newValue);
+		partial void OnDisplayAddressChanging(string oldValue, string newValue);
+		partial void OnDisplayAddressChanged(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
+		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderSubscriptionRefusalEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderSubscriptionRefusalEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 80, 108);	// [LVGC32]
+		public static readonly string EntityStructuredTypeKey = "[LVGC32]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderSubscriptionRefusalEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
