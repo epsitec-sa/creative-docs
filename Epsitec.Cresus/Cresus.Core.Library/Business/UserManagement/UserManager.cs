@@ -489,6 +489,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 		public virtual void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
+            var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager();
+
+            notif.NotifyAll(new Cresus.Core.Library.NotificationMessage()
+            {
+                Title = "Information AIDER",
+                Body = user.DisplayName + " viens de ce connecter"
+            });
 		}
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)

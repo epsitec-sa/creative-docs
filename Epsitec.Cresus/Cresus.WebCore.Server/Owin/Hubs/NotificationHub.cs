@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			Epsitec.Cresus.Core.Library.NotificationManager.RegisterHub (this);
 		}
 
-		public void NotifyAll(string message,string clickpath)
+		public void NotifyAll(string title,string message,string clickpath)
 		{
-			Clients.All.Toast (message,clickpath);
+			Clients.All.Toast (title,message,clickpath);
 		}
 
 		public void WarningToast(string connectionId,string title,string message, string datasetId,string entityId)
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		void INotificationHub.NotifyAll(NotificationMessage message)
 		{
-			this.NotifyAll (message.Body.ToSimpleText (), "");
+			this.NotifyAll (message.Title, message.Body.ToSimpleText (), "");
 		}
 
 		void INotificationHub.Notify(string connectionId, NotificationMessage message)

@@ -53,9 +53,9 @@ $(function () {
                     var app = Epsitec.Cresus.Core.getApplication();
                     app.showEditableEntity(path);
                 },
-                "fadeIn": 300,
                 "fadeOut": 1000,
-                "timeOut": 1000
+                "timeOut": 5000,
+                "extendedTimeOut": 1000
             };
             toastr.info(msg, title);
         }
