@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
-		public IList<string> UserRoles
+		public IList<string>					UserRoles
 		{
 			get
 			{
