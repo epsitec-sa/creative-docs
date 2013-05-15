@@ -166,8 +166,8 @@ namespace Epsitec.Cresus.Core.Library
 
 		public static void DefineMetadata(string className, string xmlSource)
 		{
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						where type.IsClass && type.Name == className && type.IsSubclassOf (typeof (CoreMetadata))
+			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
+						where type.Name == className && type.IsSubclassOf (typeof (CoreMetadata))
 						select type;
 
 			var match = types.FirstOrDefault ();
@@ -550,8 +550,8 @@ namespace Epsitec.Cresus.Core.Library
 
 			if (CoreContext.typeSubstitutions.TryGetValue (baseName, out implName))
 			{
-				var implTypes = from type in TypeEnumerator.Instance.GetAllTypes ()
-								where type.IsClass && (type.Name == implName || type.FullName == implName) && type.IsSubclassOf (baseType)
+				var implTypes = from type in TypeEnumerator.Instance.GetAllClassTypes ()
+								where (type.Name == implName || type.FullName == implName) && type.IsSubclassOf (baseType)
 								select type;
 
 				var implType = implTypes.FirstOrDefault ();

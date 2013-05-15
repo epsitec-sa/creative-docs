@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -14,15 +14,24 @@ namespace Epsitec.Cresus.Core.Library
 	{
 		protected CoreApp()
 		{
-			System.Diagnostics.Debug.Assert (CoreApp.current == null);
+			//	We maintain one CoreApp per thread. There may not be more than one app for
+			//	a given thread:
 
-			CoreApp.current = this;
+			if (CoreApp.current == null)
+			{
+				CoreApp.current = this;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("There is already a CoreApp for this thread");
+			}
 
-			this.components = new CoreComponentHostImplementation<CoreAppComponent> ();
-			this.manualComponents = new CoreComponentHostImplementation<ICoreManualComponent> ();
-			this.policy = this.CreateDefaultPolicy ();
+			this.creatorThreadName = System.Threading.Thread.CurrentThread.Name;
+			this.components        = new CoreComponentHostImplementation<CoreAppComponent> ();
+			this.manualComponents  = new CoreComponentHostImplementation<ICoreManualComponent> ();
+			this.policy            = this.CreateDefaultPolicy ();
 			
-			Factories.CoreAppComponentFactory.RegisterComponents (this);
+			Factories.CoreAppComponentFactory.RegisterComponents (host: this);
 		}
 
 
@@ -50,6 +59,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		
 		public virtual void SetupApplication()
 		{
 			Factories.CoreAppComponentFactory.SetupComponents (this.components.GetComponents ());
@@ -113,12 +123,16 @@ namespace Epsitec.Cresus.Core.Library
 		/// </summary>
 		/// <typeparam name="T">The specific type of <see cref="CoreApp"/> class to retrieve.</typeparam>
 		/// <returns>The active application or session instance.</returns>
+		/// <exception cref="System.InvalidOperationException">If no <typeparamref name="T"/> app session cannot be retrieved.</exception>
 		public static T GetCurrentAppSession<T>()
 			where T : CoreApp
 		{
 			T session = CoreApp.current as T;
 
-			System.Diagnostics.Debug.Assert (session != null);
+			if (session == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot retrieve {0} app session", typeof (T).Name));
+			}
 
 			return session;
 		}
@@ -248,6 +262,7 @@ namespace Epsitec.Cresus.Core.Library
 		[System.ThreadStatic]
 		protected static CoreApp				current;
 
+		private readonly string					creatorThreadName;
 		private readonly CoreComponentHostImplementation<CoreAppComponent> components;
 		private readonly CoreComponentHostImplementation<ICoreManualComponent> manualComponents;
 		private readonly CoreAppPolicy			policy;

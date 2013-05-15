@@ -107,10 +107,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 			var controllerTypes =
 			(
-				from type in TypeEnumerator.Instance.GetAllTypes ()
-				where entityViewControllerType.IsAssignableFrom (type)
-					&& type.IsClass
-					&& !type.IsAbstract
+				from type in TypeEnumerator.Instance.GetAllClassTypes ()
+				where type.IsAbstract == false && entityViewControllerType.IsAssignableFrom (type)
 				let baseType = type
 					.GetBaseTypes ()
 					.FirstOrDefault (bt => bt.IsGenericType && bt.Name.StartsWith (baseTypeName))

@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Debug;
@@ -14,7 +14,8 @@ namespace Epsitec.Cresus.Core.Factories
 {
 	/// <summary>
 	/// The <c>CoreComponentFactory</c> class provides methods to register and setup
-	/// components.
+	/// components. Components are identified by the fact that they implement
+	/// <c>ICoreComponent{THost, TComponent}</c>.
 	/// </summary>
 	/// <typeparam name="THost">The type of the host.</typeparam>
 	/// <typeparam name="TFactory">The type of the factory interface (used by the resolver).</typeparam>
@@ -46,6 +47,10 @@ namespace Epsitec.Cresus.Core.Factories
 				.Where (f => f.ShouldCreate (host))
 				.ToList ();
 
+			//	Create all components which have been found by reflecting on the loaded
+			//	assemblies; components which return false for ShouldCreate have already
+			//	been skipped at this point.
+			
 			using (CoreComponentFactory.registerRecursionCount.Enter ())
 			{
 				bool again = true;

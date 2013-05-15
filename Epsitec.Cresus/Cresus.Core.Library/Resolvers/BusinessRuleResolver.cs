@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -55,8 +55,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 				var candidates = new HashSet<TypeRank> (BusinessRuleResolver.GetBaseTypesAndInterfaces (entityType));
 
-				var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-							where type.IsClass && !type.IsAbstract && type.GetCustomAttributes<BusinessRuleAttribute> ().Any ()
+				var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
+							where !type.IsAbstract && type.GetCustomAttributes<BusinessRuleAttribute> ().Any ()
 							let baseType = type.BaseType
 							where baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName)
 							let genericType = baseType.GetGenericArguments ()[0]

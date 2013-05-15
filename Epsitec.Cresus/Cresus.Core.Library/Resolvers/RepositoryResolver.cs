@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			const string baseTypeName = "Repository`1";
 
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
-						where type.IsClass && !type.IsAbstract
+			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
+						where type.IsAbstract == false
 						let baseType = type.BaseType
 						where baseType != null && baseType.IsGenericType && baseType.Name.StartsWith (baseTypeName) && baseType.GetGenericArguments ()[0] == entityType
 						select type;

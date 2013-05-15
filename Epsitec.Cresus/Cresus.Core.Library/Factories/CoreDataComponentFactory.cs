@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Data;
@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.Factories
 	/// components implementing <see cref="CoreDataComponent"/>, used as components for
 	/// <see cref="CoreData"/>.
 	/// </summary>
-	public class CoreDataComponentFactory : CoreComponentFactory<CoreData, ICoreDataComponentFactory, CoreDataComponent>
+	public sealed class CoreDataComponentFactory : CoreComponentFactory<CoreData, ICoreDataComponentFactory, CoreDataComponent>
 	{
 	}
 }

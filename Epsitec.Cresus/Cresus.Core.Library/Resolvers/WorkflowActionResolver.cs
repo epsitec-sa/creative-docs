@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 
 		private static IEnumerable<System.Type> FindBusinessActionSystemTypes()
 		{
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
 						where type.IsStaticClass () && type.Name.EndsWith (WorkflowActionResolver.ClassSuffixActions)
 						select type;
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 		{
 			actionClass = actionClass + WorkflowActionResolver.ClassSuffixActions;
 
-			var types = from type in TypeEnumerator.Instance.GetAllTypes ()
+			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()
 						where type.IsStaticClass () && type.Name == actionClass
 						select type;
 

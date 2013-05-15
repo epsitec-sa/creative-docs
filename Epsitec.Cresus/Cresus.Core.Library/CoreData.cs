@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 //#define REBUILD_DATABASE			//	uncomment this line to force database creation
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core
 			this.components = new CoreComponentHostImplementation<CoreDataComponent> ();
 			this.independentEntityContext = new EntityContext (SafeResourceResolver.Instance, EntityLoopHandlingMode.Throw, "Independent Entities");
 
-			Factories.CoreDataComponentFactory.RegisterComponents (this);
+			Factories.CoreDataComponentFactory.RegisterComponents (host: this);
 		}
 
 		public DataInfrastructure				DataInfrastructure
