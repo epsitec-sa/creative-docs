@@ -7,8 +7,6 @@ using Epsitec.Cresus.Core.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
-using Epsitec.Cresus.Core.Entities;
-
 using System;
 
 
