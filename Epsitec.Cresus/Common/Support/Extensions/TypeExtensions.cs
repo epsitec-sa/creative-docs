@@ -97,7 +97,16 @@ namespace Epsitec.Common.Support.Extensions
 		/// </returns>
 		public static bool ContainsInterface<T>(this System.Type type)
 		{
-			return type.GetInterfaces ().Contains (typeof (T));
+			return typeof (T).IsAssignableFrom (type);
+
+			//	Note: IsAssignableFrom is 3x faster than the following piece of code:
+			
+//			return type.GetInterfaces ().Contains (typeof (T));
+		}
+		
+		public static bool ContainsInterface(this System.Type type, System.Type interfaceType)
+		{
+			return interfaceType.IsAssignableFrom (type);
 		}
 
 		/// <summary>
