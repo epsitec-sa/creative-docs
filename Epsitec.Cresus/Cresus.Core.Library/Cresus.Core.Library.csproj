@@ -35,10 +35,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Epsitec.CresusToolkit">
@@ -680,7 +677,6 @@
     <Content Include="Resources\Cresus.Core.Library.Documents\Strings.en.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Epsitec.Cresus.snk" />
     <None Include="Resources\Cresus.Core.Library.Documents\Captions.de.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
