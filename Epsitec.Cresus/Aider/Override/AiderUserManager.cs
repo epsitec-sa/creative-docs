@@ -61,6 +61,8 @@ namespace Epsitec.Aider.Override
 			if (aiderUser != null)
 			{
 				AiderActivityLogger.Current.RecordAccess (aiderUser);
+				
+				var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
 
 				var now  = System.DateTime.UtcNow;
 				var last = aiderUser.LastActivityDate;
@@ -78,6 +80,16 @@ namespace Epsitec.Aider.Override
 
 		private void UpdateUser(string userCode, System.Action<AiderUserEntity> update)
 		{
+#if false
+			var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
+			
+			notif.NotifyAll (new Cresus.Core.Library.NotificationMessage ()
+			{
+				Title = "Welcome back",
+				Body = "C'est un plaisir de vous revoir parmi nous..."
+			});
+#endif
+
 			using (var context = new BusinessContext (this.Host, false))
 			{
 				context.GlobalLock = GlobalLocks.UserManagement;
