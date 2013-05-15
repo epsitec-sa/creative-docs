@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.deletionViewId = deletionViewId;
 
 			this.userRoles = new List<string> ();
+			this.menuItems = new List<DataSetMenuItem> ();
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
@@ -142,6 +143,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public IList<DataSetMenuItem>			MenuItems
+		{
+			get
+			{
+				return this.menuItems;
+			}
+		}
+
 		public Druid							DisplayGroupId
 		{
 			get
@@ -216,23 +225,43 @@ namespace Epsitec.Cresus.Core.Metadata
 				from role in this.userRoles
 				select new XElement (Strings.UserRole, new XText (role)));
 
+			var menuItems = new XElement (Strings.MenuItems,
+				from menuItem in this.menuItems
+				select menuItem.Save ());
+
 			var filter = this.filter.Save (Strings.Filter);
 
-			return new XElement (xmlNodeName, attributes, roles, filter);
+			return new XElement (xmlNodeName, attributes, roles, menuItems, filter);
 		}
 
 		public static DataSetMetadata Restore(XElement xml, IEnumerable<EntityTableMetadata> tables)
 		{
-			var data     = Xml.GetAttributeBag (xml);
-			var roles    = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
-			var filter   = xml.Element (Strings.Filter);
-			var metadata = new DataSetMetadata (data);
+			var data      = Xml.GetAttributeBag (xml);
+			var roles     = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
+			var menuItems = DataSetMetadata.RestoreMenuItems (xml);
+			var filter    = xml.Element (Strings.Filter);
+			var metadata  = new DataSetMetadata (data);
 
 			metadata.userRoles.AddRange (roles);
+			metadata.menuItems.AddRange (menuItems);
 			metadata.DefineFilter (EntityFilter.Restore (filter));
 			metadata.DefineEntityTableMetadata (tables.Single (t => t.Name == metadata.TableName && t.EntityId == metadata.TableEntityId));
 
 			return metadata;
+		}
+
+		private static IEnumerable<DataSetMenuItem> RestoreMenuItems(XElement xml)
+		{
+			var wrapper = xml.Element (Strings.MenuItems);
+
+			if (wrapper == null)
+			{
+				return Enumerable.Empty<DataSetMenuItem> ();
+			}
+
+			return wrapper
+				.Elements ()
+				.Select (x => DataSetMenuItem.Restore (x));
 		}
 
 		private void Serialize(List<XAttribute> attributes)
@@ -267,6 +296,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public static readonly string		UserRoles = "R";
 			public static readonly string		UserRole = "r";
 			public static readonly string		Filter = "f";
+			public static readonly string		MenuItems = "M";
 		}
 
 		#endregion
@@ -282,6 +312,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly bool					enableDelete;
 		private readonly int?					creationViewId;
 		private readonly int?					deletionViewId;
+		private readonly List<DataSetMenuItem>	menuItems;
 
 		private Druid							displayGroupCaptionId;
 		private EntityFilter					filter;
