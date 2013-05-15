@@ -1,5 +1,7 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -31,8 +33,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			int n = 0;
 			
-			System.Type[] allTypesInAssembly = assembly.GetTypes ();
-			System.Type   iAdornerType       = typeof (IAdorner);
+			var allTypesInAssembly = assembly.GetTypes ();
 				
 			//	Cherche dans tous les types connus les classes qui implémentent l'interface
 			//	IAdorner, et crée une instance unique de chacune de ces classes.
@@ -41,13 +42,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				if (type.IsClass && type.IsPublic && !type.IsAbstract)
 				{
-					System.Type[] interfaces = type.GetInterfaces ();
-					
-					if (System.Array.IndexOf (interfaces, iAdornerType) >= 0)
+					if (type.ContainsInterface<IAdorner> ())
 					{
 						if (! Factory.adornerTable.ContainsKey (type.Name))
 						{
-							Factory.adornerTable[type.Name] = (IAdorner) System.Activator.CreateInstance (type);
+							Factory.adornerTable[type.Name] = System.Activator.CreateInstance (type) as IAdorner;
 							n++;
 						}
 					}
@@ -108,7 +107,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 		
 		
-		static IAdorner							activeAdorner;
-		static Dictionary<string, IAdorner>		adornerTable;
+		private static IAdorner						activeAdorner;
+		private static Dictionary<string, IAdorner> adornerTable;
 	}
 }

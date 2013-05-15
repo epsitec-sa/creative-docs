@@ -1,6 +1,7 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -46,23 +47,15 @@ namespace Epsitec.Common.UI
 		/// Gets the registered types for a specified assembly.
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>
-		/// <returns>The registered types.</returns>
+		/// <returns>The first registered type (as a collection).</returns>
 		public static IEnumerable<System.Type> GetRegisteredTypes(System.Reflection.Assembly assembly)
 		{
-			System.Type controllerType = typeof (IController);
-			
-			foreach (ControllerAttribute attribute in assembly.GetCustomAttributes (typeof (ControllerAttribute), false))
+			foreach (var attribute in assembly.GetCustomAttributes<ControllerAttribute> ())
 			{
-				//	Return only types which describe classes that implement the
-				//	IController interface :
-
-				foreach (System.Type interfaceType in attribute.Type.GetInterfaces ())
+				if (attribute.Type.ContainsInterface<IController> ())
 				{
-					if (interfaceType == controllerType)
-					{
-						yield return attribute.Type;
-						break;
-					}
+					yield return attribute.Type;
+					break;
 				}
 			}
 		}

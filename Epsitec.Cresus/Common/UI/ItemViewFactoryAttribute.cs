@@ -1,7 +1,8 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -13,7 +14,7 @@ namespace Epsitec.Common.UI
 	/// pattern. This attribute is applied at the assembly level.
 	/// </summary>
 	[System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple=true)]
-	public class ItemViewFactoryAttribute : System.Attribute
+	public sealed class ItemViewFactoryAttribute : System.Attribute
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ItemViewFactoryAttribute"/> class.
@@ -72,23 +73,15 @@ namespace Epsitec.Common.UI
 		/// Gets the registered types for a specified assembly.
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>
-		/// <returns>The registered types.</returns>
+		/// <returns>The first registered type (as a collection).</returns>
 		public static IEnumerable<KeyValuePair<System.Type, System.Type>> GetRegisteredTypes(System.Reflection.Assembly assembly)
 		{
-			System.Type factoryType = typeof (IItemViewFactory);
-
-			foreach (ItemViewFactoryAttribute attribute in assembly.GetCustomAttributes (typeof (ItemViewFactoryAttribute), false))
+			foreach (var attribute in assembly.GetCustomAttributes<ItemViewFactoryAttribute> ())
 			{
-				//	Return only types which describe classes that implement the
-				//	IItemViewFactory interface :
-
-				foreach (System.Type interfaceType in attribute.FactoryType.GetInterfaces ())
+				if (attribute.FactoryType.ContainsInterface<IItemViewFactory> ())
 				{
-					if (interfaceType == factoryType)
-					{
-						yield return new KeyValuePair<System.Type, System.Type> (attribute.FactoryType, attribute.ItemType);
-						break;
-					}
+					yield return new KeyValuePair<System.Type, System.Type> (attribute.FactoryType, attribute.ItemType);
+					break;
 				}
 			}
 		}

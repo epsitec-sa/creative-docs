@@ -1,3 +1,10 @@
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
+
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets.Feel
 {
 	/// <summary>
@@ -5,13 +12,8 @@ namespace Epsitec.Common.Widgets.Feel
 	/// De plus, elle liste et crée automatiquement des instances de chaque classe
 	/// implémentant IFeel dans l'assembly actuelle...
 	/// </summary>
-	public class Factory
+	public static class Factory
 	{
-		Factory()
-		{
-			//	On ne peut pas instancier Factory !
-		}
-		
 		static Factory()
 		{
 			Factory.feelTable = new System.Collections.Hashtable ();
@@ -32,8 +34,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			int n = 0;
 			
-			System.Type[] allTypesInAssembly = assembly.GetTypes ();
-			System.Type   iFeelType           = typeof (IFeel);
+			var allTypesInAssembly = assembly.GetTypes ();
 				
 			//	Cherche dans tous les types connus les classes qui implémentent l'interface
 			//	IFeel, et crée une instance unique de chacune de ces classes.
@@ -42,9 +43,7 @@ namespace Epsitec.Common.Widgets.Feel
 			{
 				if (type.IsClass && type.IsPublic)
 				{
-					System.Type[] interfaces = type.GetInterfaces ();
-					
-					if (System.Array.IndexOf (interfaces, iFeelType) >= 0)
+					if (type.ContainsInterface<IFeel> ())
 					{
 						if (! Factory.feelList.Contains (type.Name))
 						{
@@ -60,12 +59,12 @@ namespace Epsitec.Common.Widgets.Feel
 		}
 		
 		
-		public static IFeel				Active
+		public static IFeel						Active
 		{
 			get { return Factory.activeFeel; }
 		}
 		
-		public static string			ActiveName
+		public static string					ActiveName
 		{
 			get
 			{
@@ -73,7 +72,7 @@ namespace Epsitec.Common.Widgets.Feel
 			}
 		}
 		
-		public static string[]			FeelNames
+		public static string[]					FeelNames
 		{
 			get
 			{
