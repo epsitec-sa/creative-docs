@@ -448,7 +448,8 @@ namespace Epsitec.Common.Types
 				(name.Contains (", PublicKeyToken=5c1f2a6c07aed9bf")) ||	//	Microsoft.Owin
 				(name.Contains (", PublicKeyToken=3750abcc3150b00c")) ||	//	FirebirdSql
 				(name.Contains (", PublicKeyToken=30ad4fe6b2a6aeed")) ||	//	Newtonsoft
-				(name.Contains (", PublicKeyToken=f0ebd12fd5e55cc5")))		//	Owin
+				(name.Contains (", PublicKeyToken=f0ebd12fd5e55cc5")) ||	//	Owin
+				(name.Contains (", PublicKeyToken=14313db67a4e0b6a")))		//	NancyFx
 			{
 				return true;
 			}
