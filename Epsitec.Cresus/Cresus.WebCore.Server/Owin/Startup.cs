@@ -7,11 +7,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 	{
 		public void Configuration(IAppBuilder app)
 		{
-			/*app.MapConnection<RawConnection> ("/raw", new ConnectionConfiguration
-			{
-				EnableCrossDomain = true
-			});*/
-
 			var config = new HubConfiguration
 			{
 				EnableCrossDomain = true

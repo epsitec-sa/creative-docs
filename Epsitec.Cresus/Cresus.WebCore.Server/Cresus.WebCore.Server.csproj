@@ -38,6 +38,9 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.SignalR.Client">
+      <HintPath>..\External\SignalR\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\External\SignalR\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -130,9 +133,9 @@
     <Compile Include="Core\Extraction\EntityWriter.cs" />
     <Compile Include="Core\Extraction\ArrayWriter.cs" />
     <Compile Include="Owin\Hubs\NotificationHub.cs" />
+    <Compile Include="Owin\Hubs\NotificationClient.cs" />
     <Compile Include="Owin\Hubs\TestHub.cs" />
     <Compile Include="Owin\OwinServer.cs" />
-    <Compile Include="Owin\RawConnection.cs" />
     <Compile Include="Owin\Startup.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
     <Compile Include="Tools.cs" />
