@@ -490,7 +490,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
         public virtual void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
             var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager();
-            
+
+            notif.Notify(user.LoginName,new Cresus.Core.Library.NotificationMessage()
+            {
+                Title = "Information AIDER",
+                Body = "Bienvenue!"
+            });
+
             notif.NotifyAll(new Cresus.Core.Library.NotificationMessage()
             {
                 Title = "Information AIDER",

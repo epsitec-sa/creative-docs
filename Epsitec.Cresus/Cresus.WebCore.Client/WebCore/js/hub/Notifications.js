@@ -1,23 +1,27 @@
-Ext.define('Epsitec.cresus.webcore.hub.Notifications', {
+﻿Ext.define('Epsitec.cresus.webcore.hub.Notifications', {
     alternateClassName: ['Epsitec.Notifications'],
 
-    client: null,
+    hub: null,
+    form: null,
 
-    constructor: function(ToastrFunc) {
+    constructor: function (toastrFunc,formData) {
 
-        var context = this;
+      this.form = formData._fields.items;
+      var context = this;
 
-        $.getScript('signalr/hubs', function() {
-            $.connection.hub.logging = false;
+      $.getScript('signalr/hubs', function () {
+            $.connection.hub.logging = true;
             // Start the connection
-            var toastrInstance = new ToastrFunc();
+            var toastrInstance = new toastrFunc();
 
-            $.connection.hub.start(function() { toastrInstance.init(); context.initClient(); });
+            $.connection.hub.start(function () { toastrInstance.init(); context.initHub() });
 
-        });
+      });
     },
 
-    initClient: function() {
-        this.client = $.connection.notificationHub;
-    }
+    initHub: function () {
+        this.hub = $.connection.notificationHub;
+        this.hub.server.logIn(this.form[0].lastValue,this.form[1].lastValue,this.hub.connection.id);
+    },
+
 });

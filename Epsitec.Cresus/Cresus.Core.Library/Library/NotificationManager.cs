@@ -15,15 +15,16 @@ namespace Epsitec.Cresus.Core.Library
 		public NotificationManager(CoreApp app)
 			: base (app)
 		{
+            
 		}
 
 
-		public void Notify(NotificationMessage message)
+		public void Notify(string userName,NotificationMessage message)
 		{
 			if (NotificationManager.hub != null)
 			{
 				string connectionId = ""; // TODO: fetch connection ID from context?
-				NotificationManager.hub.Notify (connectionId, message);
+				NotificationManager.hub.Notify (userName, message);
 			}
 		}
 
@@ -35,7 +36,6 @@ namespace Epsitec.Cresus.Core.Library
 				NotificationManager.hub.NotifyAll (message);
 			}
 		}
-
 
 		public static NotificationManager GetCurrentNotificationManager()
 		{

@@ -178,7 +178,7 @@ function() {
       });
     },
 
-    showMainPanel: function() {
+    showMainPanel: function(form) {
       var items;
 
       this.loginPanel.close();
@@ -211,7 +211,7 @@ function() {
       }
 
      if (epsitecConfig.featureNotifications) {
-         this.notificationsClient = Ext.create('Epsitec.Notifications', NotificationsToastr);
+         this.notificationsClient = Ext.create('Epsitec.Notifications', NotificationsToastr,form);
       }
 
       Ext.create('Ext.container.Viewport', {

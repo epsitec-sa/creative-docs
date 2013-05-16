@@ -130,7 +130,7 @@ function() {
                 return;
             }
 
-            this.application.showMainPanel();
+            this.application.showMainPanel(form);
 
 
         }
