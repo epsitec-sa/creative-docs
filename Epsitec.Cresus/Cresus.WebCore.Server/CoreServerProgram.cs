@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server
 					nGinxAutorun: CoreServerProgram.nGinxAutorun,
 					nGinxPath: CoreServerProgram.nGinxPath,
 					uiCulture: CoreServerProgram.uiCulture,
-					uri: this.baseUri,
+					nancyUri: this.nancyUri,
 					nbCoreWorkers: this.nbCoreWorkers,
 					backupDirectory: this.backupDirectory,
 					backupInterval: this.backupInterval,
@@ -65,13 +65,13 @@ namespace Epsitec.Cresus.WebCore.Server
 			);
 			Logger.LogToConsole ("Client directory: " + this.clientDirectory.FullName);
 
-			this.baseUri = this.SetupParameter
+			this.nancyUri = this.SetupParameter
 			(
-				"baseUri",
+				"nancyUri",
 				s => new Uri (s),
-				CoreServerProgram.defaultBaseUri
+				CoreServerProgram.defaultNancyUri
 			);
-			Logger.LogToConsole ("Base uri: " + this.baseUri);
+			Logger.LogToConsole ("Nancy uri: " + this.nancyUri);
 
 			this.nbCoreWorkers = this.SetupParameter
 			(
@@ -197,7 +197,18 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		private void Run(bool enableUserNotifications, bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbCoreWorkers, CultureInfo uiCulture, DirectoryInfo backupDirectory, TimeSpan backupInterval, Time? backupStart)
+		private void Run
+		(
+			bool enableUserNotifications,
+			bool nGinxAutorun,
+			FileInfo nGinxPath,
+			Uri nancyUri,
+			int nbCoreWorkers,
+			CultureInfo uiCulture,
+			DirectoryInfo backupDirectory,
+			TimeSpan backupInterval,
+			Time? backupStart
+		)
 		{
 			Logger.LogToConsole ("Launching server...");
 
@@ -205,7 +216,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
-			using (var nancyServer = new NancyServer (coreServer, uri))
+			using (var nancyServer = new NancyServer (coreServer, nancyUri))
 			{
 				Logger.LogToConsole ("Server launched");
 				Logger.LogToConsole ("Press [ENTER] to shut down");
@@ -221,7 +232,7 @@ namespace Epsitec.Cresus.WebCore.Server
 
 
 		private static readonly DirectoryInfo	defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
-		private static readonly Uri				defaultBaseUri = new Uri ("http://localhost:12345/");
+		private static readonly Uri				defaultNancyUri = new Uri ("http://localhost:12345/");
 		private static readonly int				defaultNbCoreWorkers = 3;
 		private static readonly DirectoryInfo	defaultBackupDirectory = new DirectoryInfo (AppDomain.CurrentDomain.BaseDirectory);
 		private static readonly TimeSpan		defaultBackupInterval = TimeSpan.FromDays (1);
@@ -232,7 +243,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		private static readonly bool			nGinxAutorun = true;
 		
 		private DirectoryInfo					clientDirectory;
-		private Uri								baseUri;
+		private Uri								nancyUri;
 
 		private int								nbCoreWorkers;
 
