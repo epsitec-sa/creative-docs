@@ -45,6 +45,16 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static void Delete
+		(
+			BusinessContext businessContext,
+			AiderSubscriptionRefusalEntity refusal
+		)
+		{
+			businessContext.DeleteEntity (refusal);
+		}
+
+
 		public static AiderSubscriptionRefusalEntity FindRefusal
 		(
 			BusinessContext businessContext,

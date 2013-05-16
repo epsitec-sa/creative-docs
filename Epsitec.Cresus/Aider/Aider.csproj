@@ -86,6 +86,7 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
+    <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController2.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController3.cs" />
