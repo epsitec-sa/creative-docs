@@ -17,7 +17,6 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Threading;
-using Epsitec.Cresus.WebCore.Server.Owin.Hubs;
 
 
 namespace Epsitec.Cresus.WebCore.Server
