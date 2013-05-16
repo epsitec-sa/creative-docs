@@ -67,9 +67,12 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderSubscriptionRefusalEntity Create(AiderHouseholdEntity receiver)
 		{
-			this.CheckRefusalDoesNotExist (receiver);
+			var businessContext = this.BusinessContext;
 
-			return AiderSubscriptionRefusalEntity.Create (this.BusinessContext, receiver);
+			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
+			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+
+			return AiderSubscriptionRefusalEntity.Create (businessContext, receiver);
 		}
 
 		private AiderSubscriptionRefusalEntity Create(AiderContactEntity receiver)
@@ -81,33 +84,12 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException (message);
 			}
 
-			this.CheckRefusalDoesNotExist (receiver);
+			var businessContext = this.BusinessContext;
 
-			return AiderSubscriptionRefusalEntity.Create (this.BusinessContext, receiver);
-		}
+			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
+			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
 
-		private void CheckRefusalDoesNotExist(AiderHouseholdEntity receiver)
-		{
-			var result = AiderSubscriptionRefusalEntity.FindRefusal (this.BusinessContext, receiver);
-
-			this.CheckRefusalDoesNotExist (result);
-		}
-
-		private void CheckRefusalDoesNotExist(AiderContactEntity receiver)
-		{
-			var result = AiderSubscriptionRefusalEntity.FindRefusal (this.BusinessContext, receiver);
-
-			this.CheckRefusalDoesNotExist (result);
-		}
-
-		private void CheckRefusalDoesNotExist(AiderSubscriptionRefusalEntity result)
-		{
-			if (result != null)
-			{
-				var message = "Un refus existe déjà pour ce destinataire.";
-
-				throw new BusinessRuleException (message);
-			}
+			return AiderSubscriptionRefusalEntity.Create (businessContext, receiver);
 		}
 	}
 }

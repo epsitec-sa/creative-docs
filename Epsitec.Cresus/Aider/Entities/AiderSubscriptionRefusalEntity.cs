@@ -181,6 +181,41 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static void CheckRefusalDoesNotExist
+		(
+			BusinessContext businessContext,
+			AiderHouseholdEntity receiver
+		)
+		{
+			var result = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, receiver);
+
+			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (result);
+		}
+
+
+		public static void CheckRefusalDoesNotExist
+		(
+			BusinessContext businessContext,
+			AiderContactEntity receiver
+		)
+		{
+			var result = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, receiver);
+
+			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (result);
+		}
+
+
+		private static void CheckRefusalDoesNotExist(AiderSubscriptionRefusalEntity result)
+		{
+			if (result != null)
+			{
+				var message = "Un refus existe déjà pour ce destinataire.";
+
+				throw new BusinessRuleException (message);
+			}
+		}
+
+
 	}
 
 

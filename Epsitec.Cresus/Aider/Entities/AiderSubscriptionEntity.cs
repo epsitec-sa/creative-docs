@@ -237,6 +237,42 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static void CheckSubscriptionDoesNotExist
+		(
+			BusinessContext businessContext,
+			AiderHouseholdEntity receiver
+		)
+		{
+			var result = AiderSubscriptionEntity.FindSubscription (businessContext, receiver);
+
+			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (result);
+		}
+
+
+		public static void CheckSubscriptionDoesNotExist
+		(
+			BusinessContext businessContext,
+			AiderContactEntity receiver
+		)
+		{
+			var result = AiderSubscriptionEntity.FindSubscription (businessContext, receiver);
+
+			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (result);
+		}
+
+
+		private static void CheckSubscriptionDoesNotExist(AiderSubscriptionEntity result)
+		{
+			if (result != null)
+			{
+				var format = "Un abonnement existe déjà pour ce destinataire: n°{0}.";
+				var message = string.Format (format, result.Id);
+
+				throw new BusinessRuleException (message);
+			}
+		}
+
+
 	}
 
 

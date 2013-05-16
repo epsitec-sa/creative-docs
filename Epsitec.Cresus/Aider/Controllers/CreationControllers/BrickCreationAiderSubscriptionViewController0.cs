@@ -69,11 +69,14 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderSubscriptionEntity Create(AiderHouseholdEntity receiver)
 		{
-			this.CheckSubscriptionDoesNotExist (receiver);
+			var businessContext = this.BusinessContext;
+
+			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
 
 			var edition = this.GetEdition (receiver.Address);
 
-			return AiderSubscriptionEntity.Create (this.BusinessContext, receiver, edition, 1);
+			return AiderSubscriptionEntity.Create (businessContext, receiver, edition, 1);
 		}
 
 		private AiderSubscriptionEntity Create(AiderContactEntity receiver)
@@ -85,36 +88,14 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException (message);
 			}
 
-			this.CheckSubscriptionDoesNotExist (receiver);
+			var businessContext = this.BusinessContext;
+
+			AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
+			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
 
 			var edition = this.GetEdition (receiver.Address);
 
-			return AiderSubscriptionEntity.Create (this.BusinessContext, receiver, edition, 1);
-		}
-
-		private void CheckSubscriptionDoesNotExist(AiderHouseholdEntity receiver)
-		{
-			var result = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, receiver);
-
-			this.CheckSubscriptionDoesNotExist (result);
-		}
-
-		private void CheckSubscriptionDoesNotExist(AiderContactEntity receiver)
-		{
-			var result = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, receiver);
-
-			this.CheckSubscriptionDoesNotExist (result);
-		}
-
-		private void CheckSubscriptionDoesNotExist(AiderSubscriptionEntity result)
-		{
-			if (result != null)
-			{
-				var format = "Un abonnement existe déjà pour ce destinataire: n°{0}.";
-				var message = string.Format (format, result.Id);
-
-				throw new BusinessRuleException (message);
-			}
+			return AiderSubscriptionEntity.Create (businessContext, receiver, edition, 1);
 		}
 
 		private AiderGroupEntity GetEdition(AiderAddressEntity address)
