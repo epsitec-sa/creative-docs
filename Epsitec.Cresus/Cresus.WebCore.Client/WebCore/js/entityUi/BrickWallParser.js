@@ -255,7 +255,7 @@ function () {
             },
 
             parseField: function (brick) {
-                if (brick.type == 'booleanField') {
+                if (brick.type === 'booleanField') {
                     return {
                         fieldLabel: null,
                         name: brick.name,

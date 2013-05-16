@@ -3,16 +3,16 @@
 
     client: null,
 
-    constructor: function (toastrFunc) {
+    constructor: function (ToastrFunc) {
 
         var context = this;
 
         $.getScript('signalr/hubs', function () {
             $.connection.hub.logging = false;
             // Start the connection
-            var toastrInstance = new toastrFunc();
+            var toastrInstance = new ToastrFunc();
             
-            $.connection.hub.start(function () { toastrInstance.init(); context.initClient() });
+            $.connection.hub.start(function () { toastrInstance.init(); context.initClient(); });
 
         });
     },

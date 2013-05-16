@@ -5,14 +5,14 @@
 
         //Initialize
         this.init = function () {
-        }
+        };
 
         //Entry points for calling hub
 
         this.WarningToastTo = function (connectionId, title, message, datasetId, entityId) {
             this.hub.server.warningToast(connectionId, title, message, datasetId, entityId);
 
-        }
+        };
 
 
         //Handlers for our Hub callbacks
@@ -32,7 +32,7 @@
                 "timeOut": 0
             };
             toastr.warning(msg, title);
-        }
+        };
 
         this.hub.client.Toast = function (title, msg, datasetId, entityId) {
             var path = {};
@@ -47,5 +47,5 @@
                 "extendedTimeOut": 1000
             };
             toastr.info(msg, title);
-        }
+        };
 }

@@ -227,9 +227,10 @@ function() {
 
         //check login
 
-        var tab;
+        var tab, callback;
+
         //prepare callback for editing
-        var callback = Epsitec.CallbackQueue.create(
+        callback = Epsitec.CallbackQueue.create(
               function () { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
               this
             );

@@ -372,7 +372,7 @@ function() {
         return columnDefinitions.map(function (c) {
             var field = {
                 name: c.name,
-                type: c.type.type,
+                type: c.type.type
                 
             };
 
@@ -400,18 +400,18 @@ function() {
                     };
                     field.items = [{
                         boxLabel: 'True',
-                        name: 'isTrue',
+                        name: 'isTrue'
                         
                     },{
                         boxLabel: 'False',
-                        name: 'isFalse',
+                        name: 'isFalse'
                     },{
                         boxLabel: 'Null',
-                        name: 'isNull',
+                        name: 'isNull'
                     }];
                     break;
 
-                case 'date':                    
+                case 'date':
                     field.xtype = 'fieldset';
                     field.title =  c.title;
                     field.defaultType = 'datefield';
@@ -421,7 +421,7 @@ function() {
                     };
                     field.items = [{
                         fieldLabel: 'Before',
-                        name: 'before',
+                        name: 'before'
                         
                     },{
                         fieldLabel: 'After',
@@ -532,7 +532,7 @@ function() {
     },
 
     onQuickSearchHandler: function (field,e) {
-        if (e.getKey() == e.ENTER) {
+        if (e.getKey() === e.ENTER) {
             //TODO quick search
             //TEMPORY Notifications tester
             Epsitec.Cresus.Core.app.notificationsClient.client.server.notifyAll("Test AIDER", field.value,"");
@@ -541,8 +541,9 @@ function() {
 
     onFullSearchHandler: function (e) {
         if (!this.fullSearchWindow) {
-            var fields = this.createSearchFormFields(this.columnDefinitions);
-            var form = Ext.widget({
+            var fields, form;
+            fields = this.createSearchFormFields(this.columnDefinitions);
+            form = Ext.widget({
                 xtype: 'form',
                 layout: 'form',
                 url: '',
