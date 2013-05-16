@@ -154,11 +154,7 @@ function() {
     },
 
     createDynamicColumns: function(columnDefinitions) {
-      return columnDefinitions
-          .filter(function(c) {
-            return c.hidden === false;
-          })
-          .map(this.createDynamicColumn, this);
+      return columnDefinitions.map(this.createDynamicColumn, this);
     },
 
     createDynamicColumn: function(columnDefinition) {
@@ -166,6 +162,7 @@ function() {
         text: columnDefinition.title,
         dataIndex: columnDefinition.name,
         sortable: columnDefinition.sortable,
+        hidden: columnDefinition.hidden,
         filter: this.createFilter(columnDefinition)
       };
 
