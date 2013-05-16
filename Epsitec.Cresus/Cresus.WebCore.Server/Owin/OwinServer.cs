@@ -1,14 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Owin.Hosting;
+﻿using Epsitec.Common.IO;
 using Epsitec.Cresus.WebCore.Server.Owin.Hubs;
+
+using Microsoft.Owin.Hosting;
+
+using System;
+using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin
 {
-	class OwinServer : IDisposable
+	internal sealed class OwinServer : IDisposable
 	{
+		public OwinServer(Uri uri)
+		{
+			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
+			this.hubClient = NotificationClient.Instance;
+
+			Logger.LogToConsole ("Owin Server started");
+		}
 
 		public void Dispose()
 		{
@@ -18,17 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 			}
 		}
 
-		public OwinServer(Uri uri)
-		{
-
-			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
-			
-			Console.WriteLine ("Owin Server running at " + uri.AbsoluteUri);
-			
-            this.hubClient = NotificationClient.Instance;
-		}
-
-		private IDisposable owin;
-        private NotificationClient hubClient;
+		private readonly IDisposable owin;
+		private readonly NotificationClient hubClient;
 	}
 }
