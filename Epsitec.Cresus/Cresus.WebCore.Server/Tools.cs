@@ -7,19 +7,8 @@ using Epsitec.Common.IO;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Business.UserManagement;
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Favorites;
-
-using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.Databases;
-using Epsitec.Cresus.WebCore.Server.Core.IO;
-using Epsitec.Cresus.WebCore.Server.NancyHosting;
-
-using Nancy;
 
 using System;
 
