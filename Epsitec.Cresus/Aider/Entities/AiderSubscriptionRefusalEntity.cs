@@ -101,6 +101,28 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public static AiderSubscriptionRefusalEntity Create
+		(
+			BusinessContext businessContext,
+			AiderSubscriptionEntity subscription
+		)
+		{
+			switch (subscription.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					var household = subscription.Household;
+					return AiderSubscriptionRefusalEntity.Create (businessContext, household);
+
+				case SubscriptionType.LegalPerson:
+					var contact = subscription.LegalPersonContact;
+					return AiderSubscriptionRefusalEntity.Create (businessContext, contact);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
 		public static void Delete
 		(
 			BusinessContext businessContext,

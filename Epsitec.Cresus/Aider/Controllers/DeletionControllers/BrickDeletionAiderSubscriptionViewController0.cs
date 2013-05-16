@@ -14,22 +14,28 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 	{
 		protected override void GetForm(ActionBrick<AiderSubscriptionEntity, SimpleBrick<AiderSubscriptionEntity>> action)
 		{
-			// TODO Add a boolean to assess wheter we simply must delete the subscription or if we
-			// must also create an refusal for its recipient.
-
 			action
 				.Title ("Supprimer l'abonnement")
 				.Text ("Êtes vous sûr de vouloir supprimer cet abonnement ?")
+				.Field<bool> ()
+					.Title ("Créer un refus correspondant")
+					.InitialValue (false)
+				.End ()
 			.End ();
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create (this.Execute);
+			return ActionExecutor.Create<bool> (this.Execute);
 		}
 
-		private void Execute()
+		private void Execute(bool createRefusal)
 		{
+			if (createRefusal)
+			{
+				AiderSubscriptionRefusalEntity.Create (this.BusinessContext, this.Entity);
+			}
+
 			AiderSubscriptionEntity.Delete (this.BusinessContext, this.Entity);
 		}
 	}
