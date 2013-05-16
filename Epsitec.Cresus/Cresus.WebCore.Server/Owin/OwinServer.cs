@@ -18,12 +18,12 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 			}
 		}
 
-		public OwinServer()
+		public OwinServer(Uri uri)
 		{
 
-			this.owin = WebApplication.Start<Startup> ("http://localhost:9002/");
+			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
 			
-			Console.WriteLine ("Owin Server running at http://localhost:9002/");
+			Console.WriteLine ("Owin Server running at " + uri.AbsoluteUri);
 			
             this.hubClient = NotificationClient.Instance;
 		}

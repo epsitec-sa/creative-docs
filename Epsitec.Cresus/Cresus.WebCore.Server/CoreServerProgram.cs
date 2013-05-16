@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server
 					nGinxPath: CoreServerProgram.nGinxPath,
 					uiCulture: CoreServerProgram.uiCulture,
 					nancyUri: this.nancyUri,
+					owinUri : this.owinUri,
 					nbCoreWorkers: this.nbCoreWorkers,
 					backupDirectory: this.backupDirectory,
 					backupInterval: this.backupInterval,
@@ -72,6 +73,14 @@ namespace Epsitec.Cresus.WebCore.Server
 				CoreServerProgram.defaultNancyUri
 			);
 			Logger.LogToConsole ("Nancy uri: " + this.nancyUri);
+
+			this.owinUri = this.SetupParameter
+			(
+				"owinUri",
+				s => new Uri (s),
+				CoreServerProgram.defaultOwinUri
+			);
+			Logger.LogToConsole ("Owin uri: " + this.owinUri);
 
 			this.nbCoreWorkers = this.SetupParameter
 			(
@@ -203,6 +212,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			bool nGinxAutorun,
 			FileInfo nGinxPath,
 			Uri nancyUri,
+			Uri owinUri,
 			int nbCoreWorkers,
 			CultureInfo uiCulture,
 			DirectoryInfo backupDirectory,
@@ -212,7 +222,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			Logger.LogToConsole ("Launching server...");
 
-			using (var owinServer = enableUserNotifications ? new OwinServer () : null)
+			using (var owinServer = enableUserNotifications ? new OwinServer (owinUri) : null)
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
@@ -233,6 +243,7 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private static readonly DirectoryInfo	defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
 		private static readonly Uri				defaultNancyUri = new Uri ("http://localhost:12345/");
+		private static readonly Uri				defaultOwinUri= new Uri ("http://localhost:9002/");
 		private static readonly int				defaultNbCoreWorkers = 3;
 		private static readonly DirectoryInfo	defaultBackupDirectory = new DirectoryInfo (AppDomain.CurrentDomain.BaseDirectory);
 		private static readonly TimeSpan		defaultBackupInterval = TimeSpan.FromDays (1);
@@ -244,6 +255,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		
 		private DirectoryInfo					clientDirectory;
 		private Uri								nancyUri;
+		private Uri								owinUri;
 
 		private int								nbCoreWorkers;
 
