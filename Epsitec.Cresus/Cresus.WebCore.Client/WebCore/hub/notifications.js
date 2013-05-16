@@ -59,17 +59,4 @@ Ext.onReady(function () {
         }
 
     };
-
-    if (epsitecConfig.featureNotifications) {
-        $.getScript('signalr/hubs', function () {
-
-            $.connection.hub.logging = false;
-
-            signalRClient.instance = new Toastr();
-            // Start the connection
-            $.connection.hub.start(function () { signalRClient.instance.init(); });
-        });
-    }
-
-
 });
