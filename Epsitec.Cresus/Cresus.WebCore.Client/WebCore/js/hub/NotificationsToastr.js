@@ -1,18 +1,19 @@
 ﻿function NotificationsToastr() {
 
-        this.hub = $.connection.notificationHub; ;
+        this.hub = $.connection.notificationHub;
         //this.app = Epsitec.Cresus.Core.getApplication();
 
         //Initialize
         this.init = function () {
-            
         }
 
-        //Test Hub
+        //Entry points for calling hub
+
         this.WarningToastTo = function (connectionId, title, message, datasetId, entityId) {
             this.hub.server.warningToast(connectionId, title, message, datasetId, entityId);
 
         }
+
 
         //Handlers for our Hub callbacks
         this.hub.client.StickyWarningNavToast = function (title, msg, datasetId, entityId) {

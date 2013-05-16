@@ -534,6 +534,8 @@ function() {
     onQuickSearchHandler: function (field,e) {
         if (e.getKey() == e.ENTER) {
             //TODO quick search
+            //TEMPORY Notifications tester
+            Epsitec.Cresus.Core.app.notificationsClient.client.server.notifyAll("Test AIDER", field.value,"");
         }
     },
 
