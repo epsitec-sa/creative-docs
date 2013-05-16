@@ -27,12 +27,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.coreWorkerPool.Execute (function);
 		}
 
-		public bool NotifySuccessfulLogin(string userName, string connectionId)
+		public bool NotifySuccessfulLogin(string userName)
 		{
 			System.Func<UserManager, bool> function = userManager =>
 			{
 				var user = userManager.FindUser (userName);
-                userManager.NotifySusccessfulLogin(user, connectionId);
+                userManager.NotifySusccessfulLogin(user);
 				return true;
 			};
 

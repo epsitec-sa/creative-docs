@@ -1,21 +1,11 @@
-﻿///AIDER NotificationHub
+﻿function NotificationsToastr() {
 
-
-var signalRClient = {};
-
-Ext.onReady(function () {
-
-    function Toastr() {
-
-        this.hub = $.connection.notificationHub;
-        this.app = Epsitec.Cresus.Core.getApplication();
+        this.hub = $.connection.notificationHub; ;
+        //this.app = Epsitec.Cresus.Core.getApplication();
 
         //Initialize
         this.init = function () {
-            signalRClient.connectionId = this.hub.connection.id;
-
-            //add field to login panel
-            this.app.loginPanel.addConnectionIdField(signalRClient.connectionId);
+            
         }
 
         //Test Hub
@@ -34,7 +24,7 @@ Ext.onReady(function () {
                 "debug": false,
                 "positionClass": "toast-bottom-full-width",
                 "onclick": function () {
-                    this.app.showEditableEntity(path);
+                    //this.app.showEditableEntity(path);
                 },
                 "fadeIn": 300,
                 "fadeOut": 1000,
@@ -57,6 +47,4 @@ Ext.onReady(function () {
             };
             toastr.info(msg, title);
         }
-
-    };
-});
+}

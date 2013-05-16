@@ -49,7 +49,7 @@ function () {
         /* Additional methods */
 
         getItems: function () {
-            var header, usernameField, passwordField, connetionIdField;
+            var header, usernameField, passwordField;
 
             header = Ext.create('Ext.Component', {
                 autoEl: {
@@ -83,19 +83,7 @@ function () {
                 }
             });
 
-            connetionIdField = Ext.create('Ext.form.field.Text', {
-                inputType: 'hidden',
-                name: 'connectionId',
-                value: ''
-            });
-
-            return [header, usernameField, passwordField, connetionIdField];
-        },
-
-        addConnectionIdField: function (connectionIdValue) {
-
-            this.getForm().setValues({connectionId: connectionIdValue});
-
+            return [header, usernameField, passwordField];
         },
 
         getButtons: function () {
@@ -143,6 +131,8 @@ function () {
             }
 
             this.application.showMainPanel();
+
+            
         }
     });
 });

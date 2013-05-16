@@ -27,12 +27,12 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
             hubConnection.Start().Wait();
         }
 
-        public void INotificationHub.NotifyAll(NotificationMessage message)
+        void INotificationHub.NotifyAll(NotificationMessage message)
         {
             hub.Invoke("NotifyAll", message.Title, message.Body.ToSimpleText (), "").Wait();
         }
 
-        public void INotificationHub.Notify(string connectionId, NotificationMessage message)
+        void INotificationHub.Notify(string connectionId, NotificationMessage message)
         {
             //...
         }

@@ -14,7 +14,8 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.Menu',
   'Epsitec.cresus.webcore.ui.TabManager',
   'Epsitec.cresus.webcore.tools.Texts',
-  'Epsitec.cresus.webcore.tools.ViewMode'
+  'Epsitec.cresus.webcore.tools.ViewMode',
+  'Epsitec.cresus.webcore.hub.Notifications'
 ],
 function() {
   Ext.application({
@@ -26,6 +27,7 @@ function() {
     menu: null,
     loginPanel: null,
     tabManager: null,
+    notificationsClient: null,
 
     launch: function() {
       this.setupWindowTitle();
@@ -206,6 +208,10 @@ function() {
           this.menu,
           this.tabManager
         ];
+      }
+
+     if (epsitecConfig.featureNotifications) {
+         this.notificationsClient = Ext.create('Epsitec.Notifications', NotificationsToastr);
       }
 
       Ext.create('Ext.container.Viewport', {
