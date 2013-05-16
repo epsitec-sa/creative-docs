@@ -199,6 +199,24 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		private static AiderSubscriptionEntity FindSubscription
+		(
+			BusinessContext businessContext,
+			AiderSubscriptionEntity example
+		)
+		{
+			var request = new Request ()
+			{
+				RootEntity = example,
+			};
+
+			var dataContext = businessContext.DataContext;
+			var result = dataContext.GetByRequest<AiderSubscriptionEntity> (request);
+
+			return result.FirstOrDefault ();
+		}
+
+
 		public static IList<AiderSubscriptionEntity> FindSubscriptions
 		(
 			BusinessContext businessContext,
@@ -216,24 +234,6 @@ namespace Epsitec.Aider.Entities
 			};
 
 			return businessContext.DataContext.GetByExample (example);
-		}
-
-
-		private static AiderSubscriptionEntity FindSubscription
-		(
-			BusinessContext businessContext,
-			AiderSubscriptionEntity example
-		)
-		{
-			var request = new Request ()
-			{
-				RootEntity = example,
-			};
-
-			var dataContext = businessContext.DataContext;
-			var result = dataContext.GetByRequest<AiderSubscriptionEntity> (request);
-
-			return result.FirstOrDefault ();
 		}
 
 
