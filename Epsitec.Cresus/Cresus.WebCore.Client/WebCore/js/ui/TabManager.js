@@ -49,8 +49,8 @@ function() {
 
       this.showTab(entityTab);
     },
-    
-    getEntityTab: function (database) {
+
+    getEntityTab: function(database) {
         var key, entityTab;
 
         key = database.name;

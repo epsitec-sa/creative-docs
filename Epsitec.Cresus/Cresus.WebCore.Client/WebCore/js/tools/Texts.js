@@ -21,7 +21,7 @@ function() {
         return this.texts.exportLabel;
       },
 
-      getSearchLabel: function () {
+      getSearchLabel: function() {
           return this.texts.searchLabel;
       },
 

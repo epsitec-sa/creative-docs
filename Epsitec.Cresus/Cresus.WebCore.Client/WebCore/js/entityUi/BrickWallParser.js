@@ -13,12 +13,12 @@ Ext.require([
   'Epsitec.cresus.webcore.tile.SummaryTile',
   'Epsitec.cresus.webcore.tools.Texts'
 ],
-function () {
+function() {
     Ext.define('Epsitec.cresus.webcore.entityUi.BrickWallParser', {
         alternateClassName: ['Epsitec.BrickWallParser'],
 
         statics: {
-            parseColumn: function (column) {
+            parseColumn: function(column) {
                 switch (column.type) {
                     case 'entityaction':
                         return this.parseEntityActionColumn(column);
@@ -37,7 +37,7 @@ function () {
                 }
             },
 
-            parseSetColumn: function (column) {
+            parseSetColumn: function(column) {
                 var c = this.parseEntityColumn(column);
                 c.typeName = 'Epsitec.SetColumn';
                 c.title = column.title;
@@ -47,20 +47,20 @@ function () {
                 return c;
             },
 
-            parseTileColumn: function (column) {
+            parseTileColumn: function(column) {
                 var c = this.parseEntityColumn(column);
                 c.typeName = 'Epsitec.TileColumn';
                 c.items = this.parseTiles(column.tiles);
                 return c;
             },
 
-            parseEntityActionColumn: function (column) {
+            parseEntityActionColumn: function(column) {
                 var c = this.parseActionColumn(column);
                 c.additionalEntityId = column.additionalEntityId;
                 return c;
             },
 
-            parseTypeActionColumn: function (column) {
+            parseTypeActionColumn: function(column) {
                 var c = this.parseActionColumn(column);
                 delete c.entityId;
                 c.entityTypeId = column.entityTypeId;
@@ -68,13 +68,13 @@ function () {
             },
 
 
-            parseActionColumn: function (column) {
+            parseActionColumn: function(column) {
                 var c = this.parseTileColumn(column);
                 delete c.typeName;
                 return c;
             },
 
-            parseEntityColumn: function (column) {
+            parseEntityColumn: function(column) {
                 return {
                     entityId: column.entityId,
                     viewMode: column.viewMode,
@@ -82,11 +82,11 @@ function () {
                 };
             },
 
-            parseTiles: function (tiles) {
+            parseTiles: function(tiles) {
                 return tiles.map(this.parseTile, this);
             },
 
-            parseTile: function (tile) {
+            parseTile: function(tile) {
                 switch (tile.type) {
                     case 'summary':
                         return this.parseSummaryTile(tile);
@@ -111,7 +111,7 @@ function () {
                 }
             },
 
-            parseSummaryTile: function (tile) {
+            parseSummaryTile: function(tile) {
                 var t = this.parseBaseActionTile(tile);
                 t.xtype = 'epsitec.summarytile';
                 t.html = tile.text;
@@ -122,7 +122,7 @@ function () {
                 return t;
             },
 
-            parseGroupedSummaryTile: function (tile) {
+            parseGroupedSummaryTile: function(tile) {
                 return {
                     xtype: 'epsitec.groupedsummarytile',
                     title: tile.title,
@@ -137,11 +137,11 @@ function () {
                 };
             },
 
-            parseGroupedItems: function (items) {
+            parseGroupedItems: function(items) {
                 return items.map(this.parseGroupedItem, this);
             },
 
-            parseGroupedItem: function (item) {
+            parseGroupedItem: function(item) {
                 return {
                     xtype: 'epsitec.groupedsummarytileitem',
                     entityId: item.entityId,
@@ -149,7 +149,7 @@ function () {
                 };
             },
 
-            parseCollectionSummaryTile: function (tile) {
+            parseCollectionSummaryTile: function(tile) {
                 var t = this.parseSummaryTile(tile);
                 t.xtype = 'epsitec.collectionsummarytile';
                 t.hideRemoveButton = tile.hideRemoveButton;
@@ -158,33 +158,33 @@ function () {
                 return t;
             },
 
-            parseEmptySummaryTile: function (tile) {
+            parseEmptySummaryTile: function(tile) {
                 var t = this.parseCollectionSummaryTile(tile);
                 t.xtype = 'epsitec.emptysummarytile';
                 return t;
             },
 
-            parseEditionTile: function (tile) {
+            parseEditionTile: function(tile) {
                 var t = this.parseBaseActionTile(tile);
                 t.xtype = 'epsitec.editiontile';
                 t.items = this.parseBricks(tile.bricks);
                 return t;
             },
 
-            parseActionTile: function (tile) {
+            parseActionTile: function(tile) {
                 var t = this.parseBaseTile(tile);
                 t.text = tile.text;
                 t.fields = this.parseBricks(tile.fields);
                 return t;
             },
 
-            parseBaseActionTile: function (tile) {
+            parseBaseActionTile: function(tile) {
                 var t = this.parseBaseTile(tile);
                 t.actions = this.parseActions(tile.actions);
                 return t;
             },
 
-            parseBaseTile: function (tile) {
+            parseBaseTile: function(tile) {
                 return {
                     title: tile.title,
                     iconCls: tile.icon,
@@ -192,11 +192,11 @@ function () {
                 };
             },
 
-            parseActions: function (actions) {
+            parseActions: function(actions) {
                 return actions.map(this.parseAction, this);
             },
 
-            parseAction: function (action) {
+            parseAction: function(action) {
                 return {
                     title: action.title,
                     viewId: action.viewId,
@@ -204,11 +204,11 @@ function () {
                 };
             },
 
-            parseBricks: function (bricks) {
+            parseBricks: function(bricks) {
                 return bricks.map(this.parseBrick, this);
             },
 
-            parseBrick: function (brick) {
+            parseBrick: function(brick) {
                 switch (brick.type) {
                     case 'booleanField':
                         return this.parseBooleanField(brick);
@@ -254,7 +254,7 @@ function () {
                 }
             },
 
-            parseField: function (brick) {
+            parseField: function(brick) {
                 if (brick.type === 'booleanField') {
                     return {
                         fieldLabel: null,
@@ -279,10 +279,10 @@ function () {
                         allowBlank: brick.allowBlank
                     };
                 }
-                
+
             },
 
-            parseBooleanField: function (brick) {
+            parseBooleanField: function(brick) {
                 var field = this.parseField(brick);
 
                 field.xtype = 'checkboxfield';
@@ -294,27 +294,27 @@ function () {
                 return field;
             },
 
-            parseDateField: function (brick) {
+            parseDateField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'datefield';
                 field.format = 'd.m.Y';
                 return field;
             },
 
-            parseDecimalField: function (brick) {
+            parseDecimalField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'numberfield';
                 return field;
             },
 
-            parseEntityCollectionField: function (brick) {
+            parseEntityCollectionField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'epsitec.entitycollectionfield';
                 field.databaseName = brick.databaseName;
                 return field;
             },
 
-            parseEntityReferenceField: function (brick) {
+            parseEntityReferenceField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'epsitec.entityreferencefield';
                 field.databaseName = brick.databaseName;
@@ -323,7 +323,7 @@ function () {
                 return field;
             },
 
-            parseEnumerationField: function (brick) {
+            parseEnumerationField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'epsitec.enumerationfield';
                 field.enumerationName = brick.enumerationName;
@@ -331,7 +331,7 @@ function () {
                 return field;
             },
 
-            parseGlobalWarning: function (brick) {
+            parseGlobalWarning: function(brick) {
                 return {
                     xtype: 'displayfield',
                     value: Epsitec.Texts.getGlobalWarning(),
@@ -339,7 +339,7 @@ function () {
                 };
             },
 
-            parseHorizontalGroup: function (brick) {
+            parseHorizontalGroup: function(brick) {
                 var group, columnWidth;
 
                 group = {
@@ -352,7 +352,7 @@ function () {
 
                 columnWidth = 1 / group.items.length;
 
-                Ext.Array.forEach(group.items, function (b, i) {
+                Ext.Array.forEach(group.items, function(b, i) {
                     b.columnWidth = columnWidth;
                     if (i < group.items.length - 1) {
                         b.margin = '0 5 0 0';
@@ -363,14 +363,14 @@ function () {
                 return group;
             },
 
-            parseIntegerField: function (brick) {
+            parseIntegerField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'numberfield';
                 field.allowDecimals = false;
                 return field;
             },
 
-            parseSeparator: function (brick) {
+            parseSeparator: function(brick) {
                 return {
                     xtype: 'box',
                     border: true,
@@ -384,7 +384,7 @@ function () {
                 };
             },
 
-            parseSpecialField: function (brick) {
+            parseSpecialField: function(brick) {
                 var field = {
                     xtype: brick.fieldName,
                     entityId: brick.entityId,
@@ -401,13 +401,13 @@ function () {
                 return field;
             },
 
-            parseTextAreaField: function (brick) {
+            parseTextAreaField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'textareafield';
                 return field;
             },
 
-            parseTextField: function (brick) {
+            parseTextField: function(brick) {
                 var field = this.parseField(brick);
                 field.xtype = 'textfield';
 

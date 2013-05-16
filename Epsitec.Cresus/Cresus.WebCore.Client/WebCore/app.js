@@ -172,7 +172,7 @@ function() {
       }
     },
 
-    showLoginPanel: function () {
+    showLoginPanel: function() {
       this.loginPanel = Ext.create('Epsitec.LoginPanel', {
         application: this
       });
@@ -223,7 +223,7 @@ function() {
       });
     },
 
-    showEditableEntity: function (path) {
+    showEditableEntity: function(path) {
 
         //check login
 
@@ -231,7 +231,7 @@ function() {
 
         //prepare callback for editing
         callback = Epsitec.CallbackQueue.create(
-              function () { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
+              function() { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
               this
             );
         if (this.tabManager.getEntityTab(path) === null) {
@@ -244,7 +244,7 @@ function() {
             tab.removeAllColumns();
         }
         tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
-        
+
     },
 
     createBanner: function(region, cls) {

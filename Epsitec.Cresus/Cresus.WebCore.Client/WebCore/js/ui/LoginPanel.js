@@ -2,7 +2,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.ErrorHandler',
   'Epsitec.cresus.webcore.tools.Texts'
 ],
-function () {
+function() {
     Ext.define('Epsitec.cresus.webcore.ui.LoginPanel', {
         extend: 'Ext.form.Panel',
         alternateClassName: ['Epsitec.LoginPanel'],
@@ -33,7 +33,7 @@ function () {
 
         /* Constructor */
 
-        constructor: function (options) {
+        constructor: function(options) {
             var newOptions = {
                 url: 'proxy/log/in',
                 items: this.getItems(),
@@ -48,7 +48,7 @@ function () {
 
         /* Additional methods */
 
-        getItems: function () {
+        getItems: function() {
             var header, usernameField, passwordField;
 
             header = Ext.create('Ext.Component', {
@@ -66,7 +66,7 @@ function () {
                 allowBlank: false,
                 listeners: {
                     specialkey: this.onSpecialKeyPressed,
-                    afterrender: function () { usernameField.focus(); },
+                    afterrender: function() { usernameField.focus(); },
                     scope: this
                 }
             });
@@ -86,7 +86,7 @@ function () {
             return [header, usernameField, passwordField];
         },
 
-        getButtons: function () {
+        getButtons: function() {
             var loginButton;
 
             loginButton = Ext.create('Ext.button.Button', {
@@ -100,21 +100,21 @@ function () {
             return [loginButton];
         },
 
-        onSpecialKeyPressed: function (field, e) {
+        onSpecialKeyPressed: function(field, e) {
             if (e.getKey() === e.ENTER) {
                 this.onLoginClick();
             }
         },
 
-        onLoginClick: function () {
+        onLoginClick: function() {
             var form = this.getForm();
             if (form.isValid()) {
                 this.setLoading();
                 form.submit({
-                    success: function (form, action) {
+                    success: function(form, action) {
                         this.onLoginClickCallback(true, form, action);
                     },
-                    failure: function (form, action) {
+                    failure: function(form, action) {
                         this.onLoginClickCallback(false, form, action);
                     },
                     scope: this
@@ -122,7 +122,7 @@ function () {
             }
         },
 
-        onLoginClickCallback: function (success, form, action) {
+        onLoginClickCallback: function(success, form, action) {
             this.setLoading(false);
 
             if (!success) {
@@ -132,7 +132,7 @@ function () {
 
             this.application.showMainPanel();
 
-            
+
         }
     });
 });

@@ -34,7 +34,7 @@ function() {
 
     /* Constructor */
 
-    constructor: function (options) {
+    constructor: function(options) {
         var newOptions = null;
 
         if (epsitecConfig.featureContextualMenu) {
@@ -53,7 +53,7 @@ function() {
                     columnhide: this.setupColumnParameter,
                     columnshow: this.setupColumnParameterAndRefresh,
                     scope: this,
-                    itemcontextmenu: function (view, rec, node, index, e) {
+                    itemcontextmenu: function(view, rec, node, index, e) {
                         e.stopEvent();
                         this.contextMenu.showAt(e.getXY());
                         return false;
@@ -87,23 +87,23 @@ function() {
                 }]
             };
         }
-      
 
-      
       Ext.applyIf(newOptions, options);
-      
+
       this.callParent([newOptions]);
       return this;
     },
-    
+
     /* Additional methods */
-    createContextMenu: function (actions) {
+
+    createContextMenu: function(actions) {
 
       this.contextMenu = Ext.create('Ext.menu.Menu', {
           items: actions
       });
     },
-    createDefaultContextMenuAction: function () {
+
+    createDefaultContextMenuAction: function() {
       var gridPanel = this;
 
       this.actionEditData = Ext.create('Ext.Action', {
@@ -123,6 +123,7 @@ function() {
                  }
         });
     },
+
     createColumns: function(options) {
       var basicColumns = this.createBasicColumns(options.columnDefinitions),
           dynamicColumns = this.createDynamicColumns(options.columnDefinitions);
@@ -368,12 +369,12 @@ function() {
       });
     },
 
-    createSearchFormFields: function (columnDefinitions) {
-        return columnDefinitions.map(function (c) {
+    createSearchFormFields: function(columnDefinitions) {
+        return columnDefinitions.map(function(c) {
             var field = {
                 name: c.name,
                 type: c.type.type
-                
+
             };
 
             switch (c.type.type) {
@@ -392,7 +393,7 @@ function() {
                 case 'boolean':
                     field.xtype = 'fieldset';
                     field.useNull = true;
-                    field.title =  c.title;
+                    field.title = c.title;
                     field.defaultType = 'checkbox';
                     field.layout = 'anchor';
                     field.defaults = {
@@ -401,7 +402,7 @@ function() {
                     field.items = [{
                         boxLabel: 'True',
                         name: 'isTrue'
-                        
+
                     },{
                         boxLabel: 'False',
                         name: 'isFalse'
@@ -413,7 +414,7 @@ function() {
 
                 case 'date':
                     field.xtype = 'fieldset';
-                    field.title =  c.title;
+                    field.title = c.title;
                     field.defaultType = 'datefield';
                     field.layout = 'anchor';
                     field.defaults = {
@@ -422,7 +423,7 @@ function() {
                     field.items = [{
                         fieldLabel: 'Before',
                         name: 'before'
-                        
+
                     },{
                         fieldLabel: 'After',
                         name: 'after',
@@ -432,7 +433,7 @@ function() {
                         name: 'at',
                         dateFormat: 'd.m.Y'
                     }];
-                    
+
                     break;
 
                 case 'list':
@@ -531,15 +532,15 @@ function() {
       return buttons;
     },
 
-    onQuickSearchHandler: function (field,e) {
+    onQuickSearchHandler: function(field, e) {
         if (e.getKey() === e.ENTER) {
             //TODO quick search
             //TEMPORY Notifications tester
-            Epsitec.Cresus.Core.app.notificationsClient.client.server.notifyAll("Test AIDER", field.value,"");
+            Epsitec.Cresus.Core.app.notificationsClient.client.server.notifyAll('Test AIDER', field.value, '');
         }
     },
 
-    onFullSearchHandler: function (e) {
+    onFullSearchHandler: function(e) {
         if (!this.fullSearchWindow) {
             var fields, form;
             fields = this.createSearchFormFields(this.columnDefinitions);
@@ -559,7 +560,7 @@ function() {
                 buttons: [{
                     text: 'Search',
                     handler: function() {
-                       
+
                     }
                 }]
             });
@@ -572,7 +573,7 @@ function() {
                 closable: true,
                 closeAction: 'hide',
                 items: form
-                    
+
             }).showAt(e.container.getXY());
         }
         else {
@@ -582,7 +583,7 @@ function() {
             else {
                 this.fullSearchWindow.show();
             }
-            
+
         }
     },
     onExportHandler: function() {
