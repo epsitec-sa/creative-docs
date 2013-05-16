@@ -81,6 +81,7 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderUserViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
+    <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
