@@ -4,6 +4,10 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Loader;
 
+using System;
+
+using System.Collections.Generic;
+
 using System.Linq;
 
 
@@ -13,6 +17,58 @@ namespace Epsitec.Aider.Entities
 
 	public partial class AiderSubscriptionRefusalEntity
 	{
+
+
+		public void RefreshCache()
+		{
+			this.DisplayName = this.GetDisplayName ();
+			this.DisplayZipCode = this.GetDisplayZipCode ();
+			this.DisplayAddress = this.GetDisplayAddress ();
+		}
+
+
+		private string GetDisplayName()
+		{
+			switch (this.RefusalType)
+			{
+				case SubscriptionType.Household:
+					return this.Household.GetDisplayName ();
+
+				case SubscriptionType.LegalPerson:
+					return this.LegalPersonContact.GetDisplayName ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private string GetDisplayZipCode()
+		{
+			return this.GetAddress ().GetDisplayZipCode ().ToSimpleText ();
+		}
+
+
+		private string GetDisplayAddress()
+		{
+			return this.GetAddress ().GetDisplayAddress ().ToSimpleText ();
+		}
+
+
+		public AiderAddressEntity GetAddress()
+		{
+			switch (this.RefusalType)
+			{
+				case SubscriptionType.Household:
+					return this.Household.Address;
+
+				case SubscriptionType.LegalPerson:
+					return this.LegalPersonContact.Address;
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
 
 
 		public static AiderSubscriptionRefusalEntity Create
@@ -102,6 +158,26 @@ namespace Epsitec.Aider.Entities
 			var result = dataContext.GetByRequest<AiderSubscriptionRefusalEntity> (request);
 
 			return result.FirstOrDefault ();
+		}
+
+
+		public static IList<AiderSubscriptionRefusalEntity> FindRefusals
+		(
+			BusinessContext businessContext,
+			AiderLegalPersonEntity legalPerson
+		)
+		{
+			var example = new AiderSubscriptionRefusalEntity ()
+			{
+				RefusalType = SubscriptionType.LegalPerson,
+				LegalPersonContact = new AiderContactEntity ()
+				{
+					ContactType = ContactType.Legal,
+					LegalPerson = legalPerson
+				},
+			};
+
+			return businessContext.DataContext.GetByExample (example);
 		}
 
 

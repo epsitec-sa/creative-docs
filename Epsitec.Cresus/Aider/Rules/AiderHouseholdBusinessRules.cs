@@ -38,6 +38,13 @@ namespace Epsitec.Aider.Rules
 			{
 				businessContext.Register (subscription);
 			}
+
+			var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, entity);
+
+			if (refusal.IsNotNull ())
+			{
+				businessContext.Register (refusal);
+			}
 		}
 
 		public override void ApplyUpdateRule(AiderHouseholdEntity household)

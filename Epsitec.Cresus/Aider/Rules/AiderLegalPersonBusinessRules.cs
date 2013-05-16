@@ -40,6 +40,13 @@ namespace Epsitec.Aider.Rules
 			{
 				businessContext.Register (subscription);
 			}
+
+			var refusals = AiderSubscriptionRefusalEntity.FindRefusals (businessContext, entity);
+
+			foreach (var refusal in refusals)
+			{
+				businessContext.Register (refusal);
+			}
 		}
 
 		public override void ApplyUpdateRule(AiderLegalPersonEntity legal)
