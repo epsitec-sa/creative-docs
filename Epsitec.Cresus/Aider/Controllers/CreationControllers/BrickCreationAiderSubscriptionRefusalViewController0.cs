@@ -1,6 +1,4 @@
-﻿using Epsitec.Aider.Data.Common;
-
-using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
