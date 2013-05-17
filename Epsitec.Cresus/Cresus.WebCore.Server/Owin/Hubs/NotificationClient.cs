@@ -96,20 +96,16 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 							}
                             
                         }
-                        this.notificationsQueue.Remove(notif);
                     }
                 }
+				this.notificationsQueue.RemoveAll(m => m.DestinationUserName == userName);
             }
             else
             {
-				//flush pending user notification from queue
-				foreach (var notif in this.notificationsQueue)
-				{
-					if (notif.DestinationUserName == userName)
-					{
-						this.notificationsQueue.Remove (notif);
-					}
-				}
+				//remove old
+				var oldCId = this.connectionMap[userName];
+				this.RemoveUserConnectionId (userName, oldCId);
+				//replace with new
                 this.connectionMap[userName] = connectionId;
             }
         }
