@@ -320,6 +320,7 @@ namespace Aider.Tests.Vs
 			this.Check ("2532", "Macolin", "2532", "Magglingen/Macolin");
 			this.Check ("1837", "Château d’Oex", "1660", "Château-d'Oex");
 			this.Check ("1837", "Chateau-d'Oex", "1660", "Château-d'Oex");
+			this.Check ("1080", "Cullayes", "1080", "Les Cullayes");
 		}
 
 
