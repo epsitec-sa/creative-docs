@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private void SessionLogin(string userName)
 		{
 			this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (userName);
+			this.CoreServer.AuthenticationManager.NotifyChangePasswordIfNeeded (userName);
 			
 			this.Session[LoginModule.LoggedInName] = true;
 			this.Session[LoginModule.UserName]     = userName;

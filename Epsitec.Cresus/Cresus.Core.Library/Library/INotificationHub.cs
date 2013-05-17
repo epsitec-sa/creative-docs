@@ -7,6 +7,7 @@ namespace Epsitec.Cresus.Core.Library
 	{
 		void NotifyAll(NotificationMessage message);
 		void Notify(string userName, NotificationMessage message);
+		void WarnUser(string userName, NotificationMessage message);
 	}
 }
 

@@ -11,29 +11,36 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
 
 	public class NotificationHub : Hub
-    {
-        private string BackendConnectionId;
+	{
+		private string BackendConnectionId;
 
-		public void NotifyAll(string title,string message,string clickpath)
+		public void NotifyAll(string title, string message, string clickpath)
 		{
-			Clients.All.Toast (title,message,clickpath);
+			Clients.All.Toast (title, message, clickpath);
 		}
 
-        public void Notify(string connectionId,string title, string message, string clickpath)
-        {
-            Clients.Client(connectionId).Toast(title, message, clickpath);
-        }
-
-		public void WarningToast(string connectionId,string title,string message, string datasetId,string entityId)
+		public void Notify(string connectionId, string title, string message, string clickpath)
 		{
-			Clients.Client (connectionId).StickyWarningNavToast (title,message,datasetId,entityId);		
+			Clients.Client (connectionId).Toast (title, message, clickpath);
 		}
 
-        public void LogIn(string userName,string connectionId)
-        {
-            var backendClient = NotificationClient.Instance;
+		public void WarningToast(string connectionId, string title, string message, string datasetId, string entityId)
+		{
+			Clients.Client (connectionId).StickyWarningNavToast (title, message, datasetId, entityId);
+		}
 
-            Clients.Client(backendClient.getConnectionId()).SetConnectionId(userName, connectionId);    
-        }
-    }
+		public void LogIn(string userName, string connectionId)
+		{
+			var backendClient = NotificationClient.Instance;
+
+			Clients.Client (backendClient.getConnectionId ()).SetConnectionId (userName, connectionId);
+		}
+
+		public void LogOut(string userName, string connectionId)
+		{
+			var backendClient = NotificationClient.Instance;
+
+			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (userName, connectionId);
+		}
+	}
 }

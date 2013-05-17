@@ -39,6 +39,22 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return this.coreWorkerPool.Execute (function);
 		}
 
+		public bool NotifyChangePasswordIfNeeded(string userName)
+		{
+			System.Func<UserManager, bool> function = userManager =>
+			{
+				var user = userManager.FindUser (userName);
+				if (user.CheckPassword ("monsupermotdepasse"))
+				{
+					userManager.NotifyChangePassword (user);
+				}
+				
+				return true;
+			};
+
+			return this.coreWorkerPool.Execute (function);
+		}
+
 		
 		private readonly CoreWorkerPool			coreWorkerPool;
 	}

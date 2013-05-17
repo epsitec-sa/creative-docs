@@ -48,8 +48,19 @@ function() {
       this.processEntities(entityItems, 'add');
     },
 
-    handleRemove: function(entityItems) {
-      this.processEntities(entityItems, 'remove');
+    handleRemove: function (entityItems) {
+        Ext.MessageBox.confirm(
+            Epsitec.Texts.getWarningTitle(),
+            Epsitec.Texts.getEntityRemoveWarningMessage(),
+            this.handleRemoveCallback,
+            this
+        );
+    },
+
+    handleRemoveCallback: function (buttonId) {
+        if (buttonId === 'yes') {
+            this.processEntities(this.entityItems, 'remove');
+        }
     },
 
     processEntities: function(entityItems, urlSuffix) {

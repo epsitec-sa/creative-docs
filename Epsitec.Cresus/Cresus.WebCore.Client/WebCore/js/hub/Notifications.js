@@ -23,4 +23,8 @@
         this.hub.server.logIn(this.form[0].lastValue, this.hub.connection.id);
     }
 
+    logOut: function () {
+        this.hub.server.logOut(this.form[0].lastValue, this.hub.connection.id);
+    },
+
 });

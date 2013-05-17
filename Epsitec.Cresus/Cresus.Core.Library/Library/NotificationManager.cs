@@ -23,8 +23,15 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			if (NotificationManager.hub != null)
 			{
-				string connectionId = ""; // TODO: fetch connection ID from context?
 				NotificationManager.hub.Notify (userName, message);
+			}
+		}
+
+		public void WarnUser(string userName, NotificationMessage message)
+		{
+			if (NotificationManager.hub != null)
+			{
+				NotificationManager.hub.WarnUser (userName, message);
 			}
 		}
 
@@ -32,7 +39,6 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			if (NotificationManager.hub != null)
 			{
-				string connectionId = ""; // TODO: fetch connection ID from context?
 				NotificationManager.hub.NotifyAll (message);
 			}
 		}
