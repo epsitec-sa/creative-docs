@@ -135,6 +135,11 @@ namespace Epsitec.Aider.Data.Common
 				town = new Town (town.name.Substring (0, 4), town.name.Substring (4));
 			}
 
+			if (town.zipCode.ToUpperInvariant ().StartsWith ("CH"))
+			{
+				town = new Town (town.zipCode.Substring (2), town.name);
+			}
+
 			// The "Saint" or "Sainte" prefix are always abbreviated to "St" or "Ste" in the swiss
 			// town names.
 			if (town.normalizedName.StartsWith ("saint"))
