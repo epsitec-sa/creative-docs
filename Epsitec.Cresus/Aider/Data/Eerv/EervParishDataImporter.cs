@@ -219,7 +219,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!string.IsNullOrEmpty (honorific))
 			{
-				var title =	EervParishDataImporter.GetHonorific (honorific);
+				var title =	TextParser.ParsePersonMrMrs (honorific);
 
 				if (title != PersonMrMrs.None)
 				{
@@ -229,25 +229,6 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					aiderPerson.Title = honorific;
 				}
-			}
-		}
-
-
-		private static PersonMrMrs GetHonorific(string honorific)
-		{
-			switch (honorific)
-			{
-				case "Monsieur":
-					return PersonMrMrs.Monsieur;
-
-				case "Madame":
-					return PersonMrMrs.Madame;
-
-				case "Mademoiselle":
-					return PersonMrMrs.Mademoiselle;
-
-				default:
-					return PersonMrMrs.None;
 			}
 		}
 
@@ -1099,7 +1080,7 @@ namespace Epsitec.Aider.Data.Eerv
 			if (!string.IsNullOrWhiteSpace (eervLegalPerson.Name))
 			{
 				aiderContact.PersonFullName =  EervParishDataImporter.GetContactFullName (eervContact);
-				aiderContact.PersonMrMrs = EervParishDataImporter.GetHonorific (eervContact.Honorific);
+				aiderContact.PersonMrMrs = TextParser.ParsePersonMrMrs (eervContact.Honorific);
 			}
 
 			return aiderContact;
