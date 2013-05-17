@@ -126,13 +126,17 @@ namespace Epsitec.Aider.Data.Common
 		{
 			var town = new Town (zipCode, name);
 
-			var isZipInName = string.IsNullOrEmpty (town.zipCode) 
-				&& town.name.Length >= 4
+			var isZipInName = town.name.Length >= 4
 				&& town.name.Substring (0, 4).IsInteger ();
 
 			if (isZipInName)
 			{
-				town = new Town (town.name.Substring (0, 4), town.name.Substring (4));
+				var newTown = town.name.Substring (4);
+				var newZip = string.IsNullOrEmpty(town.zipCode)
+					? town.name.Substring (0, 4)
+					: town.zipCode;
+
+				town = new Town (newZip, newTown);
 			}
 
 			if (town.zipCode.ToUpperInvariant ().StartsWith ("CH"))
