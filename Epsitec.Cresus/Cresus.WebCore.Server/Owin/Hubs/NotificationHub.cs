@@ -6,13 +6,13 @@ using Microsoft.AspNet.SignalR;
 using Epsitec.Cresus.WebCore.Server.Core;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
 
 	public class NotificationHub : Hub
 	{
-		private string BackendConnectionId;
 
 		public void NotifyAll(string title, string message, string clickpath)
 		{
@@ -29,18 +29,30 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			Clients.Client (connectionId).StickyWarningNavToast (title, message, datasetId, entityId);
 		}
 
-		public void LogIn(string userName, string connectionId)
+
+		public override Task OnDisconnected()
 		{
 			var backendClient = NotificationClient.Instance;
 
-			Clients.Client (backendClient.getConnectionId ()).SetConnectionId (userName, connectionId);
+
+			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (null,Context.ConnectionId);
+
+			return base.OnDisconnected ();
 		}
 
-		public void LogOut(string userName, string connectionId)
+		public override Task OnReconnected()
 		{
 			var backendClient = NotificationClient.Instance;
 
-			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (userName, connectionId);
+			Clients.Client (backendClient.getConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Context.ConnectionId);
+			return base.OnReconnected ();
 		}
+
+		public void SetupUserConnection()
+		{
+			var backendClient = NotificationClient.Instance;
+			Clients.Client (backendClient.getConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
+		}
+
 	}
 }

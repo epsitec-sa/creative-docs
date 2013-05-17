@@ -169,7 +169,7 @@ function() {
       this.application.tabManager.showPageTab(title, url);
     },
 
-    logoutButtonHandler: function() {
+    logoutButtonHandler: function () {
       Ext.Ajax.request({
         url: 'proxy/log/out',
         method: 'POST',
@@ -180,11 +180,6 @@ function() {
 
     logoutCallback: function(options, success, response) {
       var json;
-
-      //Notification Hub LogOut()
-      if (epsitecConfig.featureNotifications) {
-        Epsitec.Cresus.Core.app.notificationsClient.logOut();
-      }
       
       json = Epsitec.Tools.processResponse(success, response);
       if (json === null) {

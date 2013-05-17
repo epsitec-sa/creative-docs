@@ -2,6 +2,7 @@
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.SignalR;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
@@ -27,12 +28,15 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
             this.notificationsQueue = new List<QueuedNotification>();
             this.hubConnection = new HubConnection("http://localhost:9002/");
             this.hub = hubConnection.CreateHubProxy("NotificationHub");
-			this.hub.On("SetConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
+			this.hub.On("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
 			this.hub.On("FlushConnectionId", (string u, string c) => this.RemoveUserConnectionId (u, c));
             this.hubConnection.Start().Wait();
-
-            
         }
+
+		public string getConnectionId()
+		{
+			return this.hubConnection.ConnectionId;
+		}
 
         void INotificationHub.NotifyAll(NotificationMessage message)
         {
@@ -43,8 +47,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
         {
             if (this.connectionMap.ContainsKey(userName))
             {
-                var connectionId = this.connectionMap[userName];
-				hub.Invoke ("Notify", connectionId, message.Title, message.Body.ToSimpleText (), "").Wait ();
+                //var connectionId = this.connectionMap[userName];
+				//hub.Invoke ("Notify", connectionId, message.Title, message.Body.ToSimpleText (), "").Wait ();
+				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
+				context.Clients.Group (userName).Toast (message.Title, message.Body.ToSimpleText (), "");
             }
             else
             {
@@ -57,8 +63,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (this.connectionMap.ContainsKey (userName))
 			{
-				var connectionId = this.connectionMap[userName];
-				hub.Invoke ("WarningToast", connectionId, message.Title, message.Body.ToSimpleText (), "","").Wait ();
+				//var connectionId = this.connectionMap[userName];
+				//hub.Invoke ("WarningToast", connectionId, message.Title, message.Body.ToSimpleText (), "","").Wait ();
+				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
+				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (), "", "");
 			}
 			else
 			{
@@ -67,70 +75,84 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-        public string getConnectionId()
-        {
-            return this.hubConnection.ConnectionId;
-        }
 
         private void SetUserConnectionId(string userName,string connectionId)
         {
-            if (!this.connectionMap.ContainsKey(userName))
-            {
-                this.connectionMap.Add(userName, connectionId);
-                //send and flush pending user notification from queue
-                foreach (var notif in this.notificationsQueue)
-                {
-                    if (notif.DestinationUserName == userName)
-                    {
-                        if (this.connectionMap.ContainsKey(userName))
-                        {
-                            var cId = this.connectionMap[userName];
-							switch (notif.NotificationType)
+			if(!(String.IsNullOrEmpty(userName) || String.IsNullOrEmpty(connectionId)))
+			{
+				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
+				if (!this.connectionMap.ContainsKey(userName))
+				{
+					this.connectionMap.Add(userName, connectionId);
+					context.Groups.Add (connectionId, userName);
+					//send and flush pending user notification from queue
+					foreach (var notif in this.notificationsQueue)
+					{
+						if (notif.DestinationUserName == userName)
+						{
+							if (this.connectionMap.ContainsKey(userName))
 							{
-								case "notify":
-									hub.Invoke ("Notify", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "").Wait ();
-									break;
-								case "warning":
-									hub.Invoke ("WarningToast", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "").Wait ();
-									break;
+								var cId = this.connectionMap[userName];
+
+								
+
+								switch (notif.NotificationType)
+								{
+									case "notify":
+										//hub.Invoke ("Notify", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "").Wait ();
+
+										context.Clients.Group (userName).Toast (notif.Message.Title, notif.Message.Body.ToSimpleText (), "");
+										break;
+									case "warning":
+										//hub.Invoke ("WarningToast", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "").Wait ();
+
+										context.Clients.Group (userName).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "");
+										break;
+								}                  
 							}
-                            
-                        }
-                    }
-                }
-				this.notificationsQueue.RemoveAll(m => m.DestinationUserName == userName);
-            }
-            else
-            {
-				//remove old
-				var oldCId = this.connectionMap[userName];
-				this.RemoveUserConnectionId (userName, oldCId);
-				//replace with new
-                this.connectionMap[userName] = connectionId;
-            }
+						}
+					}
+					this.notificationsQueue.RemoveAll(m => m.DestinationUserName == userName);
+				}
+				else
+				{
+					//remove old
+					var oldCId = this.connectionMap[userName];
+					this.RemoveUserConnectionId (userName, oldCId);
+					context.Groups.Remove (oldCId, userName);
+					//replace with new
+					this.connectionMap[userName] = connectionId;
+					context.Groups.Add (connectionId, userName);
+				}
+			} 
         }
 
 		private void RemoveUserConnectionId(string userName, string connectionId)
 		{
-			if (this.connectionMap.ContainsKey (userName))
+			var userKey = userName;
+
+			if (String.IsNullOrEmpty (userKey) && !String.IsNullOrEmpty (connectionId))
 			{
-				this.connectionMap.Remove (userName);
-				//flush pending user notification from queue
-				foreach (var notif in this.notificationsQueue)
+				foreach (var con in this.connectionMap)
 				{
-					if (notif.DestinationUserName == userName)
+					if (con.Value == connectionId)
 					{
-						this.notificationsQueue.Remove (notif);
+						userKey = con.Key;
+						break;
 					}
 				}
 			}
+			if (!String.IsNullOrEmpty (userKey))
+			{
+				this.connectionMap.Remove (userKey);
+			}
+			
 		}
         private static NotificationClient instance;
         private HubConnection hubConnection;
         private IHubProxy hub;
         private Dictionary<string, string> connectionMap;
         private List<QueuedNotification> notificationsQueue;
-        private const string secret = "jh1832h4hhf8132ASD9WWD)DN8d^DS)/8n(D&S";
 
 		private class QueuedNotification
 		{

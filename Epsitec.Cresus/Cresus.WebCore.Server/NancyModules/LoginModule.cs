@@ -38,7 +38,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			if (loggedIn)
 			{
 				this.SessionLogin (username);
-
+				this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (username);
+				this.CoreServer.AuthenticationManager.NotifyChangePasswordIfNeeded (username);
 				return CoreResponse.FormSuccess ();
 			}
 			else
@@ -71,9 +72,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private void SessionLogin(string userName)
 		{
-			this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (userName);
-			this.CoreServer.AuthenticationManager.NotifyChangePasswordIfNeeded (userName);
-			
 			this.Session[LoginModule.LoggedInName] = true;
 			this.Session[LoginModule.UserName]     = userName;
 			this.Session[LoginModule.SessionId]    = LoginModule.CreateSessionId ();

@@ -116,6 +116,16 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public bool hasDefaultPassword()
+		{
+			return this.CheckPassword("monsupermotdepasse");
+		}
+
+		public bool hasEmail()
+		{
+			return this.Email!="" ? true : false;
+		}
+
 		public void Delete(BusinessContext businessContext)
 		{
 			this.CustomUISettings.Delete (businessContext);

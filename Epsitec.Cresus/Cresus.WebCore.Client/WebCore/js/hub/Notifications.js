@@ -13,18 +13,14 @@
             $.connection.hub.logging = true;
             // Start the connection
             var toastrInstance = new ToastrFunc();
-            $.connection.hub.start(function() { toastrInstance.init(); context.initHub(); });
+            $.connection.hub.start(function () { toastrInstance.init(context.form[0].lastValue); context.initHub(); });
 
       });
     },
 
     initHub: function() {
         this.hub = $.connection.notificationHub;
-        this.hub.server.logIn(this.form[0].lastValue, this.hub.connection.id);
-    },
-
-    logOut: function () {
-        this.hub.server.logOut(this.form[0].lastValue, this.hub.connection.id);
+        this.hub.server.setupUserConnection();
     }
 
 });
