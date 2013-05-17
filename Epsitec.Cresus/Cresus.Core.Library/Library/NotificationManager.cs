@@ -19,27 +19,27 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public void Notify(string userName,NotificationMessage message)
+		public void Notify(string userName, NotificationMessage message, bool onConnect)
 		{
 			if (NotificationManager.hub != null)
 			{
-				NotificationManager.hub.Notify (userName, message);
+				NotificationManager.hub.Notify (userName, message,onConnect);
 			}
 		}
 
-		public void WarnUser(string userName, NotificationMessage message)
+		public void WarnUser(string userName, NotificationMessage message,bool onConnect)
 		{
 			if (NotificationManager.hub != null)
 			{
-				NotificationManager.hub.WarnUser (userName, message);
+				NotificationManager.hub.WarnUser (userName, message,onConnect);
 			}
 		}
 
-		public void NotifyAll(NotificationMessage message)
+		public void NotifyAll(NotificationMessage message,bool onConnect)
 		{
 			if (NotificationManager.hub != null)
 			{
-				NotificationManager.hub.NotifyAll (message);
+				NotificationManager.hub.NotifyAll (message, onConnect);
 			}
 		}
 

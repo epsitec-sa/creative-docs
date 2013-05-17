@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			var backendClient = NotificationClient.Instance;
 
 
-			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (null,Context.ConnectionId);
+			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (Context.ConnectionId);
 
 			return base.OnDisconnected ();
 		}

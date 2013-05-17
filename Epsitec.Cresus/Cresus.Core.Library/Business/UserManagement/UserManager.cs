@@ -495,13 +495,13 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
             {
                 Title = "Information AIDER",
                 Body = "Bienvenue!"
-            });
+            },true);
 
             notif.NotifyAll(new Cresus.Core.Library.NotificationMessage()
             {
                 Title = "Information AIDER",
                 Body = user.DisplayName + " viens de ce connecter."
-            });
+            },false);
 		}
 
 		public virtual void NotifyChangePassword(SoftwareUserEntity user)
@@ -512,7 +512,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			{
 				Title = "Attention AIDER",
 				Body = "Merci de changer rapidement votre mot de passe! (cliquez sur ce message pour accéder à votre profil)"
-			});
+			},true);
 		}
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
