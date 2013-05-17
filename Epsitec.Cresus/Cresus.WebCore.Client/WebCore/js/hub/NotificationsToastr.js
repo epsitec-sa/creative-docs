@@ -4,7 +4,7 @@ function NotificationsToastr() {
         //this.app = Epsitec.Cresus.Core.getApplication();
 
         //Initialize
-        this.init = function() {
+        this.init = function () {
         };
 
         //Entry points for calling hub

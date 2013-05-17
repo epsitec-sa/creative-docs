@@ -13,7 +13,6 @@
             $.connection.hub.logging = true;
             // Start the connection
             var toastrInstance = new toastrFunc();
-
             $.connection.hub.start(function () { toastrInstance.init(); context.initHub() });
 
       });
@@ -21,7 +20,7 @@
 
     initHub: function () {
         this.hub = $.connection.notificationHub;
-        this.hub.server.logIn(this.form[0].lastValue,this.form[1].lastValue,this.hub.connection.id);
+        this.hub.server.logIn(this.form[0].lastValue, this.hub.connection.id);
     },
 
 });
