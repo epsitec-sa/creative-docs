@@ -443,7 +443,7 @@ namespace Epsitec.Common.Types
 
 			if ((name.Contains (", PublicKeyToken=b77a5c561934e089")) ||
 				(name.Contains (", PublicKeyToken=b03f5f7f11d50a3a")) ||
-				(name.Contains (", PublicKeyToken=31bf3856ad364e35")) ||
+				(name.Contains (", PublicKeyToken=31bf3856ad364e35")) ||	//	DocumentFormat.OpenXml
 				(name.Contains (", PublicKeyToken=64014856190afd81")) ||	//	Microsoft.AspNet.SignalR
 				(name.Contains (", PublicKeyToken=5c1f2a6c07aed9bf")) ||	//	Microsoft.Owin
 				(name.Contains (", PublicKeyToken=3750abcc3150b00c")) ||	//	FirebirdSql
