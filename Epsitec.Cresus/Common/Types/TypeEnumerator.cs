@@ -450,7 +450,8 @@ namespace Epsitec.Common.Types
 				(name.Contains (", PublicKeyToken=30ad4fe6b2a6aeed")) ||	//	Newtonsoft
 				(name.Contains (", PublicKeyToken=f0ebd12fd5e55cc5")) ||	//	Owin
 				(name.Contains (", PublicKeyToken=14313db67a4e0b6a")) ||	//	NancyFx
-				(name.Contains (", PublicKeyToken=aa2558b85ebe6c6b")))		//	ServiceStack.Text
+				(name.Contains (", PublicKeyToken=aa2558b85ebe6c6b")) ||	//	ServiceStack.Text
+				(name.Contains (", PublicKeyToken=fd1eb21b62ae805b")))		//	ClosedXml
 			{
 				return true;
 			}
