@@ -20,7 +20,7 @@ function() {
 
     border: false,
     viewConfig: {
-        emptyText: Epsitec.Texts.getEmptyListText()
+      emptyText: Epsitec.Texts.getEmptyListText()
     },
 
     /* Properties */
@@ -35,58 +35,58 @@ function() {
     /* Constructor */
 
     constructor: function(options) {
-        var newOptions = null;
+      var newOptions = null;
 
-        if (epsitecConfig.featureContextualMenu) {
-            this.createDefaultContextMenuAction();
-            this.createContextMenu([this.actionEditData]);
-            newOptions = {
-                dockedItems: [
-                  this.createToolbar(options)
-                ],
-                columns: this.createColumns(options),
-                store: this.createStore(options),
-                selModel: this.createSelModel(options),
-                onSelectionChangeCallback: options.onSelectionChange,
-                listeners: {
-                    selectionchange: this.onSelectionChangeHandler,
-                    columnhide: this.setupColumnParameter,
-                    columnshow: this.setupColumnParameterAndRefresh,
-                    scope: this,
-                    itemcontextmenu: function(view, rec, node, index, e) {
-                        e.stopEvent();
-                        this.contextMenu.showAt(e.getXY());
-                        return false;
-                    }
-                },
-                features: [{
-                    ftype: 'filters',
-                    encode: true
-                }]
-            };
-        }
-        else
-        {
-          newOptions = {
-                dockedItems: [
-                  this.createToolbar(options)
-                ],
-                columns: this.createColumns(options),
-                store: this.createStore(options),
-                selModel: this.createSelModel(options),
-                onSelectionChangeCallback: options.onSelectionChange,
-                listeners: {
-                    selectionchange: this.onSelectionChangeHandler,
-                    columnhide: this.setupColumnParameter,
-                    columnshow: this.setupColumnParameterAndRefresh,
-                    scope: this
-                },
-                features: [{
-                    ftype: 'filters',
-                    encode: true
-                }]
-            };
-        }
+      if (epsitecConfig.featureContextualMenu) {
+        this.createDefaultContextMenuAction();
+        this.createContextMenu([this.actionEditData]);
+        newOptions = {
+          dockedItems: [
+            this.createToolbar(options)
+          ],
+          columns: this.createColumns(options),
+          store: this.createStore(options),
+          selModel: this.createSelModel(options),
+          onSelectionChangeCallback: options.onSelectionChange,
+          listeners: {
+            selectionchange: this.onSelectionChangeHandler,
+            columnhide: this.setupColumnParameter,
+            columnshow: this.setupColumnParameterAndRefresh,
+            scope: this,
+            itemcontextmenu: function(view, rec, node, index, e) {
+              e.stopEvent();
+              this.contextMenu.showAt(e.getXY());
+              return false;
+            }
+          },
+          features: [{
+            ftype: 'filters',
+            encode: true
+          }]
+        };
+      }
+      else
+      {
+        newOptions = {
+          dockedItems: [
+            this.createToolbar(options)
+          ],
+          columns: this.createColumns(options),
+          store: this.createStore(options),
+          selModel: this.createSelModel(options),
+          onSelectionChangeCallback: options.onSelectionChange,
+          listeners: {
+            selectionchange: this.onSelectionChangeHandler,
+            columnhide: this.setupColumnParameter,
+            columnshow: this.setupColumnParameterAndRefresh,
+            scope: this
+          },
+          features: [{
+            ftype: 'filters',
+            encode: true
+          }]
+        };
+      }
 
       Ext.applyIf(newOptions, options);
 
@@ -99,7 +99,7 @@ function() {
     createContextMenu: function(actions) {
 
       this.contextMenu = Ext.create('Ext.menu.Menu', {
-          items: actions
+        items: actions
       });
     },
 
@@ -107,21 +107,21 @@ function() {
       var gridPanel = this;
 
       this.actionEditData = Ext.create('Ext.Action', {
-          icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/icon16.png',
+        icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/icon16.png',
         text: 'Editer',
         disabled: false,
         handler: function(widget, event) {
-                   var rec = gridPanel.getSelectionModel().getSelection()[0];
-                   if (rec) {
-                       /*var path = {
+          var rec = gridPanel.getSelectionModel().getSelection()[0];
+          if (rec) {
+            /*var path = {
                            name: options.databaseName,
                            id : rec.internalId
                        };
                        var app = Epsitec.Cresus.Core.getApplication();
                        app.showEditableEntity(path);*/
-                   }
-                 }
-        });
+          }
+        }
+      });
     },
 
     createColumns: function(options) {
@@ -367,86 +367,86 @@ function() {
     },
 
     createSearchFormFields: function(columnDefinitions) {
-        return columnDefinitions.map(function(c) {
-            var field = {
-                name: c.name,
-                type: c.type.type
+      return columnDefinitions.map(function(c) {
+        var field = {
+          name: c.name,
+          type: c.type.type
 
+        };
+
+        switch (c.type.type) {
+          case 'int':
+            field.xtype = 'numberfield';
+            field.fieldLabel = c.title;
+            field.value = 1;
+            break;
+
+          case 'float':
+            field.xtype = 'numberfield';
+            field.fieldLabel = c.title;
+            field.value = 0.5;
+            break;
+
+          case 'boolean':
+            field.xtype = 'fieldset';
+            field.useNull = true;
+            field.title = c.title;
+            field.defaultType = 'checkbox';
+            field.layout = 'anchor';
+            field.defaults = {
+              anchor: '100%'
             };
+            field.items = [{
+              boxLabel: 'True',
+              name: 'isTrue'
 
-            switch (c.type.type) {
-                case 'int':
-                    field.xtype = 'numberfield';
-                    field.fieldLabel = c.title;
-                    field.value = 1;
-                    break;
+            },{
+              boxLabel: 'False',
+              name: 'isFalse'
+            },{
+              boxLabel: 'Null',
+              name: 'isNull'
+            }];
+            break;
 
-                case 'float':
-                    field.xtype = 'numberfield';
-                    field.fieldLabel = c.title;
-                    field.value = 0.5;
-                    break;
+          case 'date':
+            field.xtype = 'fieldset';
+            field.title = c.title;
+            field.defaultType = 'datefield';
+            field.layout = 'anchor';
+            field.defaults = {
+              anchor: '100%'
+            };
+            field.items = [{
+              fieldLabel: 'Before',
+              name: 'before'
 
-                case 'boolean':
-                    field.xtype = 'fieldset';
-                    field.useNull = true;
-                    field.title = c.title;
-                    field.defaultType = 'checkbox';
-                    field.layout = 'anchor';
-                    field.defaults = {
-                        anchor: '100%'
-                    };
-                    field.items = [{
-                        boxLabel: 'True',
-                        name: 'isTrue'
+            },{
+              fieldLabel: 'After',
+              name: 'after',
+              dateFormat: 'd.m.Y'
+            },{
+              fieldLabel: 'At',
+              name: 'at',
+              dateFormat: 'd.m.Y'
+            }];
 
-                    },{
-                        boxLabel: 'False',
-                        name: 'isFalse'
-                    },{
-                        boxLabel: 'Null',
-                        name: 'isNull'
-                    }];
-                    break;
+            break;
 
-                case 'date':
-                    field.xtype = 'fieldset';
-                    field.title = c.title;
-                    field.defaultType = 'datefield';
-                    field.layout = 'anchor';
-                    field.defaults = {
-                        anchor: '100%'
-                    };
-                    field.items = [{
-                        fieldLabel: 'Before',
-                        name: 'before'
+          case 'list':
+            field.fieldLabel = c.title;
+            field.xtype = 'combo';
+            field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
+            break;
 
-                    },{
-                        fieldLabel: 'After',
-                        name: 'after',
-                        dateFormat: 'd.m.Y'
-                    },{
-                        fieldLabel: 'At',
-                        name: 'at',
-                        dateFormat: 'd.m.Y'
-                    }];
+          default:
+            field.fieldLabel = c.title;
+            field.xtype = 'textfield';
+            break;
+        }
 
-                    break;
-
-                case 'list':
-                    field.fieldLabel = c.title;
-                    field.xtype = 'combo';
-                    field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
-                    break;
-
-                default:
-                    field.fieldLabel = c.title;
-                    field.xtype = 'textfield';
-                    break;
-            }
-
-            return field;
-        });
+        return field;
+      });
     },
 
     createSorters: function(sorterDefinitions) {
@@ -468,8 +468,8 @@ function() {
 
     createToolbar: function(options) {
       return Ext.create('Ext.Toolbar', {
-          dock: 'top',
-          items: this.createButtons(options)
+        dock: 'top',
+        items: this.createButtons(options)
       });
     },
 
@@ -495,24 +495,24 @@ function() {
       }));
 
       if (epsitecConfig.featureSearch) {
-          buttons.push('->');
-          buttons.push({
-              xtype: 'textfield',
-              emptyText: Epsitec.Texts.getSearchLabel(),
-              name: 'searchParameter',
-              listeners: {
-                  specialkey: this.onQuickSearchHandler,
-                  scope: this
-              }
-          });
-          buttons.push(Ext.create('Ext.Button', {
-              text: '',
-              iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
-              listeners: {
-                  click: this.onFullSearchHandler,
-                  scope: this
-              }
-          }));
+        buttons.push('->');
+        buttons.push({
+          xtype: 'textfield',
+          emptyText: Epsitec.Texts.getSearchLabel(),
+          name: 'searchParameter',
+          listeners: {
+            specialkey: this.onQuickSearchHandler,
+            scope: this
+          }
+        });
+        buttons.push(Ext.create('Ext.Button', {
+          text: '',
+          iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
+          listeners: {
+            click: this.onFullSearchHandler,
+            scope: this
+          }
+        }));
       }
 
       if (epsitecConfig.featureExport) {
@@ -530,58 +530,58 @@ function() {
     },
 
     onQuickSearchHandler: function(field, e) {
-        if (e.getKey() === e.ENTER) {
-            //TODO quick search
-            //TEMPORY Notifications tester
-            Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll('Test AIDER', field.value, '');
-        }
+      if (e.getKey() === e.ENTER) {
+        //TODO quick search
+        //TEMPORY Notifications tester
+        Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll('Test AIDER', field.value, '');
+      }
     },
 
     onFullSearchHandler: function(e) {
-        if (!this.fullSearchWindow) {
-            var fields, form;
-            fields = this.createSearchFormFields(this.columnDefinitions);
-            form = Ext.widget({
-                xtype: 'form',
-                layout: 'form',
-                url: '',
-                bodyPadding: '5 5 0',
-                width: 350,
-                fieldDefaults: {
-                    msgTarget: 'side',
-                    labelWidth: 75
-                },
-                defaultType: 'textfield',
-                items: fields,
+      if (!this.fullSearchWindow) {
+        var fields, form;
+        fields = this.createSearchFormFields(this.columnDefinitions);
+        form = Ext.widget({
+          xtype: 'form',
+          layout: 'form',
+          url: '',
+          bodyPadding: '5 5 0',
+          width: 350,
+          fieldDefaults: {
+            msgTarget: 'side',
+            labelWidth: 75
+          },
+          defaultType: 'textfield',
+          items: fields,
 
-                buttons: [{
-                    text: 'Search',
-                    handler: function() {
+          buttons: [{
+            text: 'Search',
+            handler: function() {
 
-                    }
-                }]
-            });
-            this.fullSearchWindow = Ext.create('Ext.Window', {
-                title: 'Full search',
-                width: 400,
-                height: 200,
-                headerPosition: 'right',
-                layout: 'fit',
-                closable: true,
-                closeAction: 'hide',
-                items: form
+            }
+          }]
+        });
+        this.fullSearchWindow = Ext.create('Ext.Window', {
+          title: 'Full search',
+          width: 400,
+          height: 200,
+          headerPosition: 'right',
+          layout: 'fit',
+          closable: true,
+          closeAction: 'hide',
+          items: form
 
-            }).showAt(e.container.getXY());
+        }).showAt(e.container.getXY());
+      }
+      else {
+        if (this.fullSearchWindow.isVisible()) {
+          this.fullSearchWindow.hide();
         }
         else {
-            if (this.fullSearchWindow.isVisible()) {
-                this.fullSearchWindow.hide();
-            }
-            else {
-                this.fullSearchWindow.show();
-            }
-
+          this.fullSearchWindow.show();
         }
+
+      }
     },
     onExportHandler: function() {
       var count, exportWindow;

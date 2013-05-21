@@ -169,7 +169,7 @@ function() {
       this.application.tabManager.showPageTab(title, url);
     },
 
-    logoutButtonHandler: function () {
+    logoutButtonHandler: function() {
       Ext.Ajax.request({
         url: 'proxy/log/out',
         method: 'POST',
@@ -180,7 +180,7 @@ function() {
 
     logoutCallback: function(options, success, response) {
       var json;
-      
+
       json = Epsitec.Tools.processResponse(success, response);
       if (json === null) {
         return;

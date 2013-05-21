@@ -210,8 +210,8 @@ function() {
         ];
       }
 
-     if (epsitecConfig.featureNotifications) {
-         this.notificationsClient = Ext.create('Epsitec.Notifications', NotificationsToastr,form);
+      if (epsitecConfig.featureNotifications) {
+        this.notificationsClient = Ext.create('Epsitec.Notifications', NotificationsToastr, form);
       }
 
       Ext.create('Ext.container.Viewport', {
@@ -225,25 +225,25 @@ function() {
 
     showEditableEntity: function(path) {
 
-        //check login
+      //check login
 
-        var tab, callback;
+      var tab, callback;
 
-        //prepare callback for editing
-        callback = Epsitec.CallbackQueue.create(
-              function() { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
-              this
-            );
-        if (this.tabManager.getEntityTab(path) === null) {
-            this.tabManager.showEntityTab(path);
-            tab = this.tabManager.getEntityTab(path);
-        }
-        else {
-            tab = this.tabManager.getEntityTab(path);
-            this.tabManager.showTab(tab);
-            tab.removeAllColumns();
-        }
-        tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
+      //prepare callback for editing
+      callback = Epsitec.CallbackQueue.create(
+          function() { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
+          this
+          );
+      if (this.tabManager.getEntityTab(path) === null) {
+        this.tabManager.showEntityTab(path);
+        tab = this.tabManager.getEntityTab(path);
+      }
+      else {
+        tab = this.tabManager.getEntityTab(path);
+        this.tabManager.showTab(tab);
+        tab.removeAllColumns();
+      }
+      tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
 
     },
 

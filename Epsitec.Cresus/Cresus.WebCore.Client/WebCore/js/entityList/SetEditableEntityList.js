@@ -48,19 +48,19 @@ function() {
       this.processEntities(entityItems, 'add');
     },
 
-    handleRemove: function (entityItems) {
-        Ext.MessageBox.confirm(
-            Epsitec.Texts.getWarningTitle(),
-            Epsitec.Texts.getEntityRemoveWarningMessage(),
-            this.handleRemoveCallback,
-            this
-        );
+    handleRemove: function(entityItems) {
+      Ext.MessageBox.confirm(
+          Epsitec.Texts.getWarningTitle(),
+          Epsitec.Texts.getEntityRemoveWarningMessage(),
+          this.handleRemoveCallback,
+          this
+      );
     },
 
-    handleRemoveCallback: function (buttonId) {
-        if (buttonId === 'yes') {
-            this.processEntities(this.entityItems, 'remove');
-        }
+    handleRemoveCallback: function(buttonId) {
+      if (buttonId === 'yes') {
+        this.processEntities(this.entityItems, 'remove');
+      }
     },
 
     processEntities: function(entityItems, urlSuffix) {
