@@ -15,7 +15,8 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.TabManager',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.ViewMode',
-  'Epsitec.cresus.webcore.hub.Notifications'
+  'Epsitec.cresus.webcore.hub.Notifications',
+  'Ext.ux.Spotlight'
 ],
 function() {
   Ext.application({
@@ -28,8 +29,13 @@ function() {
     loginPanel: null,
     tabManager: null,
     notificationsClient: null,
+    appSpot: null,
 
-    launch: function() {
+    launch: function () {
+      this.appSpot = Ext.create('Ext.ux.Spotlight', {
+            easing: 'easeOut',
+            duration: 300
+        });
       this.setupWindowTitle();
       this.fixLocalizationBug();
       this.fixFrenchLocalizationError();
@@ -223,14 +229,25 @@ function() {
       });
     },
 
-    showEditableEntity: function(path) {
+    showEditableEntity: function(path,endCallbackFunc) {
       if (path.id && path.name)
       {
           var tab, callback;
-
+          var lastTileId;
+          
+          endCallback = Epsitec.CallbackQueue.create(
+               function () {
+                   lastTileId = tab.columns[tab.columns.length -1].el.id;
+                   Epsitec.Cresus.Core.app.appSpot.show(lastTileId);
+                   endCallbackFunc();
+               },
+              this
+              );
           //prepare callback for editing
           callback = Epsitec.CallbackQueue.create(
-              function () { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
+              function () {
+                  tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, endCallback);
+              },
               this
               );
           if (this.tabManager.getEntityTab(path) === null) {
@@ -243,6 +260,7 @@ function() {
               tab.removeAllColumns();
           }
           tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
+          
       }
     },
 

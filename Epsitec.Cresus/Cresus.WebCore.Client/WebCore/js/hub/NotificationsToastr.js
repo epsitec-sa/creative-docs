@@ -1,12 +1,12 @@
 function NotificationsToastr() {
-
   this.hub = $.connection.notificationHub;
-
+  var callbackFunc = null;
 
   //Initialize
-  this.init = function(username) {
+  this.init = function(username,afterNavigationCallback) {
     this.hub.state.connectionId = this.hub.connection.id;
     this.hub.state.userName = username;
+    callbackFunc = afterNavigationCallback;
   };
 
   //Entry points for calling hub
@@ -25,7 +25,7 @@ function NotificationsToastr() {
       'debug': false,
       'positionClass': 'toast-bottom-full-width',
       'onclick': function() {
-          Epsitec.Cresus.Core.app.showEditableEntity(path);
+          Epsitec.Cresus.Core.app.showEditableEntity(path,callbackFunc);
       },
       'fadeIn': 300,
       'fadeOut': 1000,
