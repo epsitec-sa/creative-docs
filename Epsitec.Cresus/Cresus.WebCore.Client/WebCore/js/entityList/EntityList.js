@@ -42,7 +42,8 @@ function() {
         this.createContextMenu([this.actionEditData]);
         newOptions = {
           dockedItems: [
-            this.createToolbar(options)
+            this.createToolbar(options),
+            this.createSecondaryToolbar()
           ],
           columns: this.createColumns(options),
           store: this.createStore(options),
@@ -69,7 +70,8 @@ function() {
       {
         newOptions = {
           dockedItems: [
-            this.createToolbar(options)
+            this.createToolbar(options),
+            this.createSecondaryToolbar()
           ],
           columns: this.createColumns(options),
           store: this.createStore(options),
@@ -472,7 +474,13 @@ function() {
         items: this.createButtons(options)
       });
     },
-
+    
+    createSecondaryToolbar: function () {
+        return Ext.create('Ext.Toolbar', {
+            dock: 'top',
+            items: this.createSecondaryButtons()
+        });
+    },
     createButtons: function(options) {
       var buttons = Ext.Array.clone(options.toolbarButtons || []);
 
@@ -494,28 +502,8 @@ function() {
         }
       }));
 
-      if (epsitecConfig.featureSearch) {
-        buttons.push('->');
-        buttons.push({
-          xtype: 'textfield',
-          emptyText: Epsitec.Texts.getSearchLabel(),
-          name: 'searchParameter',
-          listeners: {
-            specialkey: this.onQuickSearchHandler,
-            scope: this
-          }
-        });
-        buttons.push(Ext.create('Ext.Button', {
-          text: '',
-          iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
-          listeners: {
-            click: this.onFullSearchHandler,
-            scope: this
-          }
-        }));
-      }
-
       if (epsitecConfig.featureExport) {
+        buttons.push('->');
         buttons.push(Ext.create('Ext.Button', {
           text: Epsitec.Texts.getExportLabel(),
           iconCls: 'icon-export',
@@ -527,6 +515,33 @@ function() {
       }
 
       return buttons;
+    },
+
+    createSecondaryButtons: function () {
+        var buttons = [];
+        if (epsitecConfig.featureSearch) {
+            
+            buttons.push({
+                xtype: 'textfield',
+                width: 150,
+                emptyText: Epsitec.Texts.getSearchLabel(),
+                name: 'searchParameter',
+                listeners: {
+                    specialkey: this.onQuickSearchHandler,
+                    scope: this
+                }
+            });
+            buttons.push(Ext.create('Ext.Button', {
+                text: '',
+                iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
+                listeners: {
+                    click: this.onFullSearchHandler,
+                    scope: this
+                }
+            }));
+        }
+
+        return buttons;
     },
 
     onQuickSearchHandler: function(field, e) {
