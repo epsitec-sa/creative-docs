@@ -224,27 +224,26 @@ function() {
     },
 
     showEditableEntity: function(path) {
+      if (path.id && path.name)
+      {
+          var tab, callback;
 
-      //check login
-
-      var tab, callback;
-
-      //prepare callback for editing
-      callback = Epsitec.CallbackQueue.create(
-          function() { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
-          this
-          );
-      if (this.tabManager.getEntityTab(path) === null) {
-        this.tabManager.showEntityTab(path);
-        tab = this.tabManager.getEntityTab(path);
+          //prepare callback for editing
+          callback = Epsitec.CallbackQueue.create(
+              function () { tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, null); },
+              this
+              );
+          if (this.tabManager.getEntityTab(path) === null) {
+              this.tabManager.showEntityTab(path);
+              tab = this.tabManager.getEntityTab(path);
+          }
+          else {
+              tab = this.tabManager.getEntityTab(path);
+              this.tabManager.showTab(tab);
+              tab.removeAllColumns();
+          }
+          tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
       }
-      else {
-        tab = this.tabManager.getEntityTab(path);
-        this.tabManager.showTab(tab);
-        tab.removeAllColumns();
-      }
-      tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
-
     },
 
     createBanner: function(region, cls) {

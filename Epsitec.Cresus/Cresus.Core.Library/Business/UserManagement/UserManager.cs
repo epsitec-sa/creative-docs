@@ -489,30 +489,12 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
         public virtual void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
-            var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager();
-
-            notif.Notify(user.LoginName,new Cresus.Core.Library.NotificationMessage()
-            {
-                Title = "Information AIDER",
-                Body = "Bienvenue!"
-            },true);
-
-            notif.NotifyAll(new Cresus.Core.Library.NotificationMessage()
-            {
-                Title = "Information AIDER",
-                Body = user.DisplayName + " viens de ce connecter."
-            },false);
+            
 		}
 
 		public virtual void NotifyChangePassword(SoftwareUserEntity user)
 		{
-			var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
-
-			notif.WarnUser (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
-			{
-				Title = "Attention AIDER",
-				Body = "Merci de changer rapidement votre mot de passe! (cliquez sur ce message pour accéder à votre profil)"
-			},true);
+			
 		}
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)

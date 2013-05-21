@@ -25,7 +25,7 @@ function NotificationsToastr() {
       'debug': false,
       'positionClass': 'toast-bottom-full-width',
       'onclick': function() {
-        //this.app.showEditableEntity(path);
+          Epsitec.Cresus.Core.app.showEditableEntity(path);
       },
       'fadeIn': 300,
       'fadeOut': 1000,

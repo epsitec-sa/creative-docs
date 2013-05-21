@@ -50,8 +50,40 @@ namespace Epsitec.Aider.Override
 		public override void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
 			this.UpdateUser (user.Code, u => u.LastLoginDate = System.DateTime.UtcNow);
+
+			var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
+
+			notif.Notify (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
+			{
+				Title = "Information AIDER",
+				Body = "Bienvenue!"
+
+			}, true);
+
+			notif.NotifyAll (new Cresus.Core.Library.NotificationMessage ()
+			{
+				Title = "Information AIDER",
+				Body = user.DisplayName + " viens de ce connecter."
+
+			}, false);
 			
 			base.NotifySusccessfulLogin (user);
+		}
+
+		public override void NotifyChangePassword(SoftwareUserEntity user)
+		{
+			var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
+
+			notif.WarnUser (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
+			{
+				Title = "Attention AIDER",
+				Body = "Merci de changer rapidement votre mot de passe! (cliquez sur ce message pour accéder à votre profil)",
+				Dataset = Res.CommandIds.Base.ShowAiderUser,
+				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(user).Value
+
+			}, true);
+
+			base.NotifyChangePassword (user);
 		}
 
 		protected override void ChangeAuthenticatedUser(SoftwareUserEntity user)

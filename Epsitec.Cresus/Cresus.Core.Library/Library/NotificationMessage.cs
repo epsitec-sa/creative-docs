@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -19,6 +20,18 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 		public FormattedText Body
+		{
+			get;
+			set;
+		}
+
+		public Druid Dataset
+		{
+			get;
+			set;
+		}
+
+		public EntityKey EntityKey
 		{
 			get;
 			set;

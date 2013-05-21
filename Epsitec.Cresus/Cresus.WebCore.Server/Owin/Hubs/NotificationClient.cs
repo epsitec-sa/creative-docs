@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.SignalR;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				//var connectionId = this.connectionMap[userName];
 				//hub.Invoke ("WarningToast", connectionId, message.Title, message.Body.ToSimpleText (), "","").Wait ();
 				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
-				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (), "", "");
+				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (), DataIO.DruidToString(message.Dataset), EntityIO.GetEntityId(message.EntityKey));
 			}
 		}
 
@@ -142,7 +143,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 										case "warning":
 											//hub.Invoke ("WarningToast", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "").Wait ();
 
-											context.Clients.Client (connectionId).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "");
+											context.Clients.Client (connectionId).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (), DataIO.DruidToString (notif.Message.Dataset), EntityIO.GetEntityId (notif.Message.EntityKey));
 											break;
 									}
 

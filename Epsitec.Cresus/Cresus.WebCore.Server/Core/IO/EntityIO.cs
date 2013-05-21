@@ -33,16 +33,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 				if (entityKey.HasValue)
 				{
-					entityId = entityKey.Value.ToString ();
-
-					// Here we replace the slash by the dash. That way, the entity ids won't mess up
-					// urls like url/with/entityId/inside by introducing an extra slash where it
-					// shouldn't.
-					entityId = entityId.Replace ('/', '-');
+					entityId = EntityIO.GetEntityId (entityKey.Value);
 				}
 			}
 
 			return entityId;
+		}
+
+		public static string GetEntityId(EntityKey entityKey)
+		{
+			var entityId = entityKey.ToString ();
+
+			// Here we replace the slash by the dash. That way, the entity ids won't mess up
+			// urls like url/with/entityId/inside by introducing an extra slash where it
+			// shouldn't.
+			return entityId.Replace ('/', '-');
 		}
 
 
