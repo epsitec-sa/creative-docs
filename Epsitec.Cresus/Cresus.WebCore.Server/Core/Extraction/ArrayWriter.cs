@@ -19,7 +19,7 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
-	using Database = Core.Databases.Database;
+
 
 	internal class ArrayWriter : EntityWriter
 	{
