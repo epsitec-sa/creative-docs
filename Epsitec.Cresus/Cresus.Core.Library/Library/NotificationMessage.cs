@@ -25,6 +25,24 @@ namespace Epsitec.Cresus.Core.Library
 			set;
 		}
 
+		public string HeaderErrorMessage
+		{
+			get;
+			set;
+		}
+
+		public string ErrorField
+		{
+			get;
+			set;
+		}
+
+		public string ErrorFieldMessage
+		{
+			get;
+			set;
+		}
+
 		public Druid Dataset
 		{
 			get;

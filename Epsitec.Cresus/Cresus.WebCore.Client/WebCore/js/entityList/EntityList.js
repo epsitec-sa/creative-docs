@@ -556,7 +556,7 @@ function() {
       if (e.getKey() === e.ENTER) {
         //TODO quick search
         //TEMPORY Notifications tester
-        Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll('Test AIDER', field.value, '');
+        //Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll('Test AIDER', field.value, '');
       }
     },
 

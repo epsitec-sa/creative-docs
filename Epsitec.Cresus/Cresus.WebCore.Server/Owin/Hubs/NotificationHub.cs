@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			Clients.Client (connectionId).Toast (title, message, clickpath);
 		}
 
-		public void WarningToast(string connectionId, string title, string message, string datasetId, string entityId)
+		public void WarningToast(string connectionId, string title, string header, string errorField, string errorMessage,string message, string datasetId, string entityId)
 		{
-			Clients.Client (connectionId).StickyWarningNavToast (title, message, datasetId, entityId);
+			Clients.Client (connectionId).StickyWarningNavToast (title, message, header, errorField, errorMessage, datasetId, entityId);
 		}
 
 

@@ -16,7 +16,7 @@ function () {
                 $.connection.hub.logging = true;
                 // Start the connection
                 var toastrInstance = new ToastrFunc();
-                $.connection.hub.start(function () { toastrInstance.init(context.form[0].lastValue, context.afterNotify); context.initHub(); });
+                $.connection.hub.start(function () { toastrInstance.init(context.form[0].lastValue, context); context.initHub(); });
 
             });
         },
@@ -26,9 +26,17 @@ function () {
             this.hub.server.setupUserConnection();
         },
 
-        afterNotify: function () {
+        displayErrorInTile: function (tile,headerErrorMessage,fieldName,fieldErrorMessage) {
             
+            if (headerErrorMessage)
+            {
+                tile.items.items[0].showError(headerErrorMessage);
+            }
             
+            if (fieldName && fieldErrorMessage)
+            {
+                tile.items.items[0].getForm().findField(fieldName).markInvalid(fieldErrorMessage);
+            }
         }
 
     })

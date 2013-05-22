@@ -134,10 +134,6 @@ function() {
         this.remove(this.errorField);
         this.errorField = null;
       }
-      if (Epsitec.Cresus.Core.app.appSpot !== null)
-      {
-          Epsitec.Cresus.Core.app.appSpot.hide();
-      }
     },
 
     getState: function() {

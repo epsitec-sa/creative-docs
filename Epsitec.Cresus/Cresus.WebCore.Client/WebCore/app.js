@@ -15,8 +15,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.TabManager',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.ViewMode',
-  'Epsitec.cresus.webcore.hub.Notifications',
-  'Ext.ux.Spotlight'
+  'Epsitec.cresus.webcore.hub.Notifications'
 ],
 function() {
   Ext.application({
@@ -29,13 +28,8 @@ function() {
     loginPanel: null,
     tabManager: null,
     notificationsClient: null,
-    appSpot: null,
 
     launch: function () {
-      this.appSpot = Ext.create('Ext.ux.Spotlight', {
-            easing: 'easeOut',
-            duration: 300
-        });
       this.setupWindowTitle();
       this.fixLocalizationBug();
       this.fixFrenchLocalizationError();
@@ -229,20 +223,27 @@ function() {
       });
     },
 
-    showEditableEntity: function(path,endCallbackFunc) {
+    showEditableEntity: function(path,message,errorField,endCallbackFunc) {
+
+      //check if navigation data is present
       if (path.id && path.name)
       {
           var tab, callback;
           var lastTileId;
           
+          //executed when edition tile is loaded
           endCallback = Epsitec.CallbackQueue.create(
                function () {
-                   lastTileId = tab.columns[tab.columns.length -1].el.id;
-                   Epsitec.Cresus.Core.app.appSpot.show(lastTileId);
-                   endCallbackFunc();
+
+                   
+                   lastTile = tab.columns[tab.columns.length - 1];
+                   
+                   //finaly
+                   endCallbackFunc(lastTile,errorField.header,errorField.name,errorField.message);
                },
               this
               );
+
           //prepare callback for editing
           callback = Epsitec.CallbackQueue.create(
               function () {
@@ -250,6 +251,8 @@ function() {
               },
               this
               );
+
+          
           if (this.tabManager.getEntityTab(path) === null) {
               this.tabManager.showEntityTab(path);
               tab = this.tabManager.getEntityTab(path);

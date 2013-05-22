@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core.Library
 		{
 			public override bool ShouldCreate(CoreApp host)
 			{
-				return CoreContext.HasExperimentalFeature ("Notifications");
+				return true;
 			}
 		}
 

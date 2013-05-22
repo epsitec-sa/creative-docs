@@ -25,18 +25,22 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		
         private NotificationClient()
         {
-            Epsitec.Cresus.Core.Library.NotificationManager.RegisterHub(this);
+			if (CoreContext.HasExperimentalFeature ("Notifications"))
+			{
+				Epsitec.Cresus.Core.Library.NotificationManager.RegisterHub (this);
 
-			this.hubClients = new List<HubClient> ();
-            this.notificationsQueue = new List<QueuedNotification>();
-            this.hubConnection = new HubConnection("http://localhost:9002/");
-            this.hub = hubConnection.CreateHubProxy("NotificationHub");
-			this.hub.On("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
-			this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
-            this.hubConnection.Start().Wait();
+				this.hubClients = new List<HubClient> ();
+				this.notificationsQueue = new List<QueuedNotification> ();
+				this.hubConnection = new HubConnection ("http://localhost:9002/");
+				this.hub = hubConnection.CreateHubProxy ("NotificationHub");
+				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
+				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
+				this.hubConnection.Start ().Wait ();
 
-			this.setupLock = new ReaderWriterLockWrapper ();
-			this.queueLock = new ReaderWriterLockWrapper ();
+				this.setupLock = new ReaderWriterLockWrapper ();
+				this.queueLock = new ReaderWriterLockWrapper ();
+			}
+            
         }
 
 		public string getConnectionId()
@@ -104,7 +108,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				//var connectionId = this.connectionMap[userName];
 				//hub.Invoke ("WarningToast", connectionId, message.Title, message.Body.ToSimpleText (), "","").Wait ();
 				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
-				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (), DataIO.DruidToString(message.Dataset), EntityIO.GetEntityId(message.EntityKey));
+				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (),message.HeaderErrorMessage,message.ErrorField,message.ErrorFieldMessage, DataIO.DruidToString(message.Dataset), EntityIO.GetEntityId(message.EntityKey));
 			}
 		}
 
@@ -143,7 +147,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 										case "warning":
 											//hub.Invoke ("WarningToast", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "").Wait ();
 
-											context.Clients.Client (connectionId).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (), DataIO.DruidToString (notif.Message.Dataset), EntityIO.GetEntityId (notif.Message.EntityKey));
+											context.Clients.Client (connectionId).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (),notif.Message.HeaderErrorMessage,notif.Message.ErrorField,notif.Message.ErrorFieldMessage, DataIO.DruidToString (notif.Message.Dataset), EntityIO.GetEntityId (notif.Message.EntityKey));
 											break;
 									}
 

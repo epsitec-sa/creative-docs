@@ -66,6 +66,24 @@ namespace Epsitec.Aider.Override
 				Body = user.DisplayName + " viens de ce connecter."
 
 			}, false);
+
+			if (string.IsNullOrEmpty ((user as AiderUserEntity).Email))
+			{
+				notif.WarnUser (user.LoginName, new Cresus.Core.Library.NotificationMessage ()
+				{
+					Title = "Attention AIDER",
+					Body = "Merci de saisir votre adresse e-mail dans vos réglages (cliquez sur ce message pour accéder à votre profil)",
+					Dataset = Res.CommandIds.Base.ShowAiderUser,
+					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
+					HeaderErrorMessage = "Un e-mail est requis",
+					ErrorField = "id3",
+					ErrorFieldMessage = "votre adresse e-mail"
+
+				}, true);
+			}
+			
+			
+			
 			
 			base.NotifySusccessfulLogin (user);
 		}
@@ -79,7 +97,8 @@ namespace Epsitec.Aider.Override
 				Title = "Attention AIDER",
 				Body = "Merci de changer rapidement votre mot de passe! (cliquez sur ce message pour accéder à votre profil)",
 				Dataset = Res.CommandIds.Base.ShowAiderUser,
-				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(user).Value
+				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(user).Value,
+				HeaderErrorMessage = "Réinitialisez votre mot de passe à l'aide du bouton d'action"
 
 			}, true);
 
