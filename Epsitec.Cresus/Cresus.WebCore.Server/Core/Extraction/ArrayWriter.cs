@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 
 
-	internal class ArrayWriter : EntityWriter
+	internal sealed class ArrayWriter : EntityWriter
 	{
 
 
