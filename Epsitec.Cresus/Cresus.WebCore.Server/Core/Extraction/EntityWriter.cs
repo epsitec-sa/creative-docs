@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 
 
-	public abstract class EntityWriter
+	internal abstract class EntityWriter
 	{
 
 
