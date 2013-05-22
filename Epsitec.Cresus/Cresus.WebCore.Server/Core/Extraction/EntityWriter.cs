@@ -47,7 +47,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		public abstract Stream GetStream();
+		public Stream GetStream()
+		{
+			var stream = new MemoryStream ();
+
+			this.WriteStream (stream);
+
+			stream.Position = 0;
+
+			return stream;
+		}
+
+
+		protected abstract void WriteStream(Stream stream);
 
 
 		private readonly DataSetMetadata metadata;

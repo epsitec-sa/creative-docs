@@ -47,18 +47,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		public override Stream GetStream()
+		protected override void WriteStream(Stream stream)
 		{
 			var headers = this.GetHeaders ();
 			var rows = this.GetRows ();
 
-			var stream = new MemoryStream ();
-
 			this.format.Write (stream, headers, rows);
-
-			stream.Position = 0;
-
-			return stream;
 		}
 
 
