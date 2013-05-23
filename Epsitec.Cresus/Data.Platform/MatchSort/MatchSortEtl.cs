@@ -5,9 +5,7 @@ using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Data.Platform.MatchSort
 {
@@ -17,14 +15,24 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// Perform ETL job on Mat[CH]sort CSV file and load content for querying in SQLite
 		/// https://match.post.ch/pdf/post-match-new-sort.pdf
 		/// </summary>
-		public MatchSortEtl(string csvFilePath)
+		public MatchSortEtl(string csvFilePath = null)
 		{
+			if (csvFilePath == null)
+			{
+				csvFilePath = MatchSortEtl.MatchSortCsvPath;
+			}
+
+			if (System.IO.File.Exists (csvFilePath) == false)
+			{
+				throw new System.Exception ("The MAT[CH]sort file does not exist at path " + csvFilePath);
+			}
 
 			try
 			{
-				var DatabaseDirectoryPath = Epsitec.Common.Support.Globals.ExecutableDirectory;
-				var DatabaseFilePath = System.IO.Path.Combine (DatabaseDirectoryPath, "MatchSort.sqlite");
-				if (!File.Exists (DatabaseFilePath))
+				var databaseDirectoryPath = Globals.ExecutableDirectory;
+				var databaseFilePath      = System.IO.Path.Combine (databaseDirectoryPath, "MatchSort.sqlite");
+
+				if (!System.IO.File.Exists (databaseFilePath))
 				{
 					//CASE NO DATABASE
 					SQLiteConnection.CreateFile ("MatchSort.sqlite");
@@ -71,7 +79,6 @@ namespace Epsitec.Data.Platform.MatchSort
 				this.MessengerCommand = this.BuildMessengerCommand ();
 				this.MessengerCommandRelaxed = this.BuildMessengerCommandRelaxed ();
 				this.HousesAtStreetCommand = this.BuildHousesAtStreetCommand ();
-
 			}
 			catch
 			{
@@ -124,7 +131,9 @@ namespace Epsitec.Data.Platform.MatchSort
 			this.HousesAtStreetCommand.Parameters["@street"].Value = street;
 			this.HousesAtStreetCommand.Parameters["@zip"].Value = zip;
 			this.HousesAtStreetCommand.Parameters["@zip_addon"].Value = zip_addon;
+			
 			var result = new List<string> ();
+			
 			using (var dr = this.HousesAtStreetCommand.ExecuteReader ())
 			{
 				while (dr.Read ())
@@ -132,7 +141,27 @@ namespace Epsitec.Data.Platform.MatchSort
 					result.Add (dr.GetValue (0).ToString ());
 				}
 			}
+			
 			return result;
+		}
+
+		public IEnumerable<SwissPostZipCodeFolding> GetZipCodeFoldings()
+		{
+			var sql = "select plz,gplz,plz_typ from new_plz1";
+
+			using (var command = new SQLiteCommand (this.connection))
+			{
+				command.CommandText = sql;
+				command.Prepare ();
+
+				using (var dr = command.ExecuteReader ())
+				{
+					while (dr.Read ())
+					{
+						yield return new SwissPostZipCodeFolding (dr.GetValue (0).ToString (), dr.GetValue (1).ToString (), dr.GetValue (2).ToString ());
+					}
+				}
+			}
 		}
 
 
@@ -350,7 +379,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			var CommitIndex = 0;
 
 			//Parse CSV and extract line fields -> INSERT
-			foreach (var lineFields in File.ReadLines (CsvFilePath, Encoding.GetEncoding ("Windows-1252")).Select (l => l.Replace ("' ", "'").Split (';')))
+			foreach (var lineFields in System.IO.File.ReadLines (CsvFilePath, System.Text.Encoding.GetEncoding ("Windows-1252")).Select (l => l.Replace ("' ", "'").Split (';')))
 			{
 				switch (lineFields[0])
 				{
@@ -467,7 +496,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private string[] GetHeaderFromCsv(string CsvFilePath)
 		{
-			var line = System.IO.File.ReadLines (CsvFilePath, Encoding.GetEncoding ("Windows-1252")).First ();
+			var line = System.IO.File.ReadLines (CsvFilePath, System.Text.Encoding.GetEncoding ("Windows-1252")).First ();
 			var lineFields = line.Split (';');
 
 			if (lineFields[0] == "00")
@@ -641,7 +670,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		#endregion
 
-		public static readonly string			MatchSortCsvPath = Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
+		public static readonly string			MatchSortCsvPath = System.IO.Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
 		
 		private readonly SQLiteCommand			InsertPlaceCommand;
 		private readonly SQLiteCommand			InsertPlaceAltCommand;

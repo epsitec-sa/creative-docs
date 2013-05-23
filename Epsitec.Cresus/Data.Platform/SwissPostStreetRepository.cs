@@ -93,6 +93,35 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public SwissPostStreetInformation FindStreetFromStreetNameRelaxed(int zipCode, string street)
+		{
+			var info = this.FindStreetFromStreetName (zipCode, street);
+
+			if (info != null)
+			{
+				return info;
+			}
+
+			var baseZipCode = SwissPostZipCodeFoldingRepository.Resolve (zipCode).BaseZipCode;
+
+			foreach (var item in SwissPostZipCodeFoldingRepository.FindDerived (baseZipCode))
+			{
+				var otherZipCode = item.ZipCode;
+
+				if (otherZipCode != zipCode)
+				{
+					info = this.FindStreetFromStreetName (otherZipCode, street);
+
+					if (info != null)
+					{
+						return info;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		public SwissPostStreetInformation FindStreetFromStreetName(int zipCode, string street)
 		{
 			var normalizedName = SwissPostStreet.NormalizeStreetName (street);
@@ -113,16 +142,14 @@ namespace Epsitec.Data.Platform
 			return found;
 		}
 
+		public bool IsStreetKnownRelaxed(int zipCode, string street)
+		{
+			return this.FindStreetFromStreetNameRelaxed (zipCode, street) != null;
+		}
+
 		public bool IsStreetKnown(int zipCode, string street)
 		{
-			if (this.FindStreetFromStreetName (zipCode, street) == null)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return this.FindStreetFromStreetName (zipCode, street) != null;
 		}
 
 		internal SwissPostStreetInformation FindStreetFromUserFriendlyStreetNameDictionary(int zipCode, string street)

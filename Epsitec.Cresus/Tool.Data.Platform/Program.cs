@@ -1,4 +1,8 @@
-﻿using Epsitec.Data.Platform;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Data.Platform;
+using Epsitec.Data.Platform.MatchSort;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +13,11 @@ namespace Epsitec.Tool.Data.Platform
 	{
 		static void Main(string[] args)
 		{
+			var matchSort = new MatchSortEtl ();
+			var zipCodeFoldings = matchSort.GetZipCodeFoldings ();
+
+			Program.WriteZipCodeFoldingsCache (zipCodeFoldings);
+			
 			var alpha2codes = Iso3166.MaintenanceDownloadAlpha2CodesTextFile ();
 			var allCodes    = Iso3166.GetAlpha2Codes (alpha2codes);
 
@@ -45,6 +54,15 @@ namespace Epsitec.Tool.Data.Platform
 			zip.SaveFile (System.IO.Path.Combine (Program.rootPath, "Data.Platform", "DataFiles", "CountryInfo.zip"));
 		}
 
+		private static void WriteZipCodeFoldingsCache(IEnumerable<SwissPostZipCodeFolding> foldings)
+		{
+			var text = string.Join ("\n", foldings.Select (x => x.ToString ()));
+			var zip  = new Epsitec.Common.IO.ZipFile ();
+			var data = System.Text.Encoding.Default.GetBytes (text);
+			zip.AddEntry ("codes.txt", data);
+			zip.SaveFile (System.IO.Path.Combine (Program.rootPath, "Data.Platform", "DataFiles", "ZipCodeFolding.zip"));
+		}
+		
 		private static string rootPath = @"S:\Epsitec.Cresus";
 	}
 }
