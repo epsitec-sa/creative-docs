@@ -25,6 +25,7 @@ namespace Epsitec.Aider.Rules
 			AiderAddressBusinessRules.UpdateAddressLine1 (address);
 			AiderAddressBusinessRules.UpdatePostBox (address);
 			AiderAddressBusinessRules.UpdateHouserNumber (address);
+			AiderAddressBusinessRules.UpdateWeb (address);
 		}
 
 		public override void ApplyValidateRule(AiderAddressEntity address)
@@ -49,15 +50,26 @@ namespace Epsitec.Aider.Rules
 
 		private static void ValidateWeb(AiderAddressEntity address)
 		{
-			var uri = address.Web;
+			var uri = UriBuilder.FixScheme (address.Web);
 
-			if ((string.IsNullOrWhiteSpace (uri)) ||
-				(UriBuilder.IsValidUrl (UriBuilder.FixScheme (uri))))
+			if ((uri == null) ||
+				(UriBuilder.IsValidFullyQualifiedDomainNameUrl (uri)))
 			{
 				return;
 			}
 			
 			Logic.BusinessRuleException (address, Resources.Text ("L'adresse web n'est pas valide."));
+		}
+
+		private static void UpdateWeb(AiderAddressEntity address)
+		{
+			var uri = address.Web;
+			var web = UriBuilder.FixScheme (uri);
+
+			if (web != uri)
+			{
+				address.Web = web;
+			}
 		}
 
 		private static void UpdateAddressLine1(AiderAddressEntity address)
