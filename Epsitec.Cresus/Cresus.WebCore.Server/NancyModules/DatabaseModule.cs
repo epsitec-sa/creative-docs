@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			EntityWriter writer = new ArrayWriter (properties, metaData, columns, accessor, format);
 
-			var filename = writer.Filename;
+			var filename = writer.GetFilename ();
 			var stream = writer.GetStream ();
 
 			return CoreResponse.CreateStreamResponse (stream, filename);

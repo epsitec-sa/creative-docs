@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Data;
+﻿using Epsitec.Common.Support;
+
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 
 using System;
@@ -41,9 +43,20 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		public abstract string Filename
+		public string GetFilename()
 		{
-			get;
+			var rootFileName = this.GetRootFilename ();
+			var extension = this.GetExtension ();
+
+			return string.Format ("{0}.{1}", rootFileName, extension);
+		}
+
+
+		private string GetRootFilename()
+		{
+			var entityName = this.Metadata.Command.Caption.DefaultLabel;
+			var rootName= StringUtils.RemoveDiacritics (entityName.ToLowerInvariant ());
+			return rootName;
 		}
 
 
@@ -57,6 +70,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 			return stream;
 		}
+
+
+		protected abstract string GetExtension();
 
 
 		protected abstract void WriteStream(Stream stream);

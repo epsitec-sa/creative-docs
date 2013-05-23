@@ -14,8 +14,6 @@ using System.IO;
 
 using System.Linq;
 
-using Epsitec.Common.Support;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
@@ -34,16 +32,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		public override string Filename
+		protected override string GetExtension()
 		{
-			get
-			{
-				var rawName = this.Metadata.Command.Caption.DefaultLabel;
-				var modName = StringUtils.RemoveDiacritics (rawName.ToLowerInvariant ());
-				var extension = this.format.Extension;
-
-				return string.Format ("extraction_{0}.{1}", modName, extension);
-			}
+			return this.format.Extension;
 		}
 
 
