@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.ZipCode, this.Name);
 		}
 
 		public bool IsInVaudCounty()
