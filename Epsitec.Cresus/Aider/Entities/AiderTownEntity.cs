@@ -16,6 +16,7 @@ using Epsitec.Data.Platform;
 using System;
 
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Epsitec.Aider.Entities
 {
@@ -149,5 +150,16 @@ namespace Epsitec.Aider.Entities
 		{
 			throw new System.NotImplementedException ();
 		}
+
+        public static List<AiderTownEntity> GetTownFavorites(BusinessContext businessContext)
+        {
+            var repository = businessContext.Data.GetRepository<AiderTownEntity>();
+            var example = new AiderTownEntity
+            {
+                SwissCantonCode = "VD"
+            };
+
+            return repository.GetByExample(example).ToList();
+        }
 	}
 }
