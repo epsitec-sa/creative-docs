@@ -14,11 +14,14 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
+            var favorites = AiderTownEntity.GetTownFavorites(this.BusinessContext);
+
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse du ménage"))
 				.Icon ("Data.AiderAddress")
 				.Input ()
 					.Field (x => x.Address.Town)
+                        .WithFavorites(favorites)
 					.Field (x => x.Address.AddressLine1)
 					.Field (x => x.Address.StreetHouseNumberAndComplement)
 					.Field (x => x.Address.PostBox)
