@@ -93,6 +93,15 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		/// <summary>
+		/// Finds the street information, like <see cref="FindStreetFromStreetName"/>, but also
+		/// matches on similar zip codes (e.g. 1401 would map with 1400). This is required, since
+		/// Swiss addresses of post boxes can have dedicated zip codes, and this makes street
+		/// matching impossible without relaxed zip code matching.
+		/// </summary>
+		/// <param name="zipCode">The zip code.</param>
+		/// <param name="street">The street.</param>
+		/// <returns>The <see cref="SwissPostStreetInformation"/> or <c>null</c>.</returns>
 		public SwissPostStreetInformation FindStreetFromStreetNameRelaxed(int zipCode, string street)
 		{
 			var info = this.FindStreetFromStreetName (zipCode, street);
@@ -102,7 +111,11 @@ namespace Epsitec.Data.Platform
 				return info;
 			}
 
+			//	In Lausanne, 1000..1019 all map to the base zip code 1000, for instance:
+			
 			var baseZipCode = SwissPostZipCodeFoldingRepository.Resolve (zipCode).BaseZipCode;
+
+			//	Check to see in all derived zip codes if there is a matching street name.
 
 			foreach (var item in SwissPostZipCodeFoldingRepository.FindDerived (baseZipCode))
 			{
