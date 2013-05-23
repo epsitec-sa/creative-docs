@@ -1,18 +1,17 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using System;
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace Epsitec.Data.Platform.MatchSort
 {
-	public sealed class MatchSortEtl : IDisposable
+	public sealed class MatchSortEtl : System.IDisposable
 	{
 		/// <summary>
 		/// Perform ETL job on Mat[CH]sort CSV file and load content for querying in SQLite
@@ -32,7 +31,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					this.OpenDatabase ();
 					this.CreateTableIfNeededAndResetDb ();
 
-					this.insertPlaceCommand = this.BuildInsertPlace ();
+					this.InsertPlaceCommand = this.BuildInsertPlace ();
 					this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt ();
 					this.InsertCommunityCommand = this.BuildInsertCommunity ();
 					this.InsertStreetCommand = this.BuildInsertStreet ();
@@ -55,7 +54,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					{
 						this.CreateTableIfNeededAndResetDb ();
 
-						this.insertPlaceCommand = this.BuildInsertPlace ();
+						this.InsertPlaceCommand = this.BuildInsertPlace ();
 						this.InsertPlaceAltCommand = this.BuildInsertPlaceAlt ();
 						this.InsertCommunityCommand = this.BuildInsertCommunity ();
 						this.InsertStreetCommand = this.BuildInsertStreet ();
@@ -141,22 +140,22 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		public void Dispose()
 		{
-			if (this.Conn != null)
+			if (this.connection != null)
 			{
-				MatchSortEtl.DisposeSQLiteObject (this.Command);
-				this.Command = null;
+				MatchSortEtl.DisposeSQLiteObject (this.command);
+				this.command = null;
 
 				MatchSortEtl.DisposeSQLiteObject (this.InsertCommunityCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.InsertHouseCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.InsertMessengerCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.InsertPlaceAltCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.insertPlaceCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.InsertPlaceCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.InsertStreetCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.HousesAtStreetCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommandRelaxed);
-				MatchSortEtl.DisposeSQLiteObject (this.Conn);
-				this.Conn=null;
+				MatchSortEtl.DisposeSQLiteObject (this.connection);
+				this.connection=null;
 			}
 		}
 
@@ -172,44 +171,44 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private void OpenDatabase()
 		{
-			this.Conn = new SQLiteConnection ("Data Source=MatchSort.sqlite;Version=3;");
-			this.Conn.Open ();
+			this.connection = new SQLiteConnection ("Data Source=MatchSort.sqlite;Version=3;");
+			this.connection.Open ();
 
 			//SET Journal mode in WAL
-			this.Command = new SQLiteCommand (this.Conn);
-			this.Command.CommandText = 
+			this.command = new SQLiteCommand (this.connection);
+			this.command.CommandText = 
 				"PRAGMA journal_mode=WAL;" +
 				"PRAGMA cache_size = 10000;PRAGMA synchronous=OFF;PRAGMA count_changes=OFF;PRAGMA temp_store = 2";
 
-			this.Command.ExecuteNonQuery ();
+			this.command.ExecuteNonQuery ();
 		}
 
 		private void CreateTableIfNeededAndResetDb()
 		{
-			this.Transaction = this.Conn.BeginTransaction ();
+			this.transaction = this.connection.BeginTransaction ();
 
-			this.Command.CommandText = Queries.CreateTableHeader;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTableHeader;
+			this.command.ExecuteNonQuery ();
 
-			this.Command.CommandText = Queries.CreateTablePlace1;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTablePlace1;
+			this.command.ExecuteNonQuery ();
 
-			this.Command.CommandText = Queries.CreateTablePlace2;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTablePlace2;
+			this.command.ExecuteNonQuery ();
 
-			this.Command.CommandText = Queries.CreateTableCommun;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTableCommun;
+			this.command.ExecuteNonQuery ();
 
-			this.Command.CommandText = Queries.CreateTableStreet;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTableStreet;
+			this.command.ExecuteNonQuery ();
 
-			this.Command.CommandText = Queries.CreateTableHouse1;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTableHouse1;
+			this.command.ExecuteNonQuery ();
 
-			this.Command.CommandText = Queries.CreateTableDeliver;
-			this.Command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.CreateTableDeliver;
+			this.command.ExecuteNonQuery ();
 
-			this.Transaction.Commit ();
+			this.transaction.Commit ();
 		}
 
 		private SQLiteCommand BuildInsertPlace()
@@ -223,7 +222,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ " values "
 					+ "(@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15)";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@1", System.Data.DbType.String);
 			command.Parameters.Add ("@2", System.Data.DbType.String);
@@ -253,7 +252,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ " values "
 					+ "(@1,@2,@3,@4,@5,@6)";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@1", System.Data.DbType.String);
 			command.Parameters.Add ("@2", System.Data.DbType.String);
@@ -271,7 +270,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ "bfsnr,gemeindename,kanton,agglonr)"
 					+ " values (@1,@2,@3,@4)";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@1", System.Data.DbType.String);
 			command.Parameters.Add ("@2", System.Data.DbType.String);
@@ -289,7 +288,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ "str_ganzfach,str_fach_onrp)"
 					+ " values (@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11)";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@1", System.Data.DbType.String);
 			command.Parameters.Add ("@2", System.Data.DbType.String);
@@ -312,7 +311,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ "hauskey,str_id,hnr,hnr_a,hnr_coff,ganzfach,fach_onrp)"
 					+ " values (@1,@2,@3,@4,@5,@6,@7)";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@1", System.Data.DbType.String);
 			command.Parameters.Add ("@2", System.Data.DbType.String);
@@ -332,7 +331,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ "etappen_nr,lauf_nr,ndepot)"
 					+ " values  (@1,@2,@3,@4,@5,@6,@7)";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@1", System.Data.DbType.String);
 			command.Parameters.Add ("@2", System.Data.DbType.String);
@@ -347,7 +346,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private void LoadFromDatabaseCsv(string CsvFilePath)
 		{
-			this.Transaction = this.Conn.BeginTransaction ();
+			this.transaction = this.connection.BeginTransaction ();
 			var CommitIndex = 0;
 
 			//Parse CSV and extract line fields -> INSERT
@@ -357,29 +356,29 @@ namespace Epsitec.Data.Platform.MatchSort
 				{
 					case "00":
 
-						this.Command.CommandText = "insert into new_hea (vdat,zcode) values (@1,@2)";
-						this.Command.Parameters.AddWithValue ("@1", lineFields[1]);
-						this.Command.Parameters.AddWithValue ("@2", lineFields[2]);
-						this.Command.ExecuteNonQuery ();
+						this.command.CommandText = "insert into new_hea (vdat,zcode) values (@1,@2)";
+						this.command.Parameters.AddWithValue ("@1", lineFields[1]);
+						this.command.Parameters.AddWithValue ("@2", lineFields[2]);
+						this.command.ExecuteNonQuery ();
 						break;
 
 					case "01":
-						this.insertPlaceCommand.Parameters["@1"].Value = lineFields[1];
-						this.insertPlaceCommand.Parameters["@2"].Value = lineFields[2];
-						this.insertPlaceCommand.Parameters["@3"].Value = lineFields[3];
-						this.insertPlaceCommand.Parameters["@4"].Value = lineFields[4];
-						this.insertPlaceCommand.Parameters["@5"].Value = lineFields[5];
-						this.insertPlaceCommand.Parameters["@6"].Value = lineFields[6];
-						this.insertPlaceCommand.Parameters["@7"].Value = lineFields[7];
-						this.insertPlaceCommand.Parameters["@8"].Value = lineFields[8];
-						this.insertPlaceCommand.Parameters["@9"].Value = lineFields[9];
-						this.insertPlaceCommand.Parameters["@10"].Value = lineFields[10];
-						this.insertPlaceCommand.Parameters["@11"].Value = lineFields[11];
-						this.insertPlaceCommand.Parameters["@12"].Value = lineFields[12];
-						this.insertPlaceCommand.Parameters["@13"].Value = lineFields[13];
-						this.insertPlaceCommand.Parameters["@14"].Value = lineFields[14];
-						this.insertPlaceCommand.Parameters["@15"].Value = lineFields[15];
-						this.insertPlaceCommand.ExecuteNonQuery ();
+						this.InsertPlaceCommand.Parameters["@1"].Value = lineFields[1];
+						this.InsertPlaceCommand.Parameters["@2"].Value = lineFields[2];
+						this.InsertPlaceCommand.Parameters["@3"].Value = lineFields[3];
+						this.InsertPlaceCommand.Parameters["@4"].Value = lineFields[4];
+						this.InsertPlaceCommand.Parameters["@5"].Value = lineFields[5];
+						this.InsertPlaceCommand.Parameters["@6"].Value = lineFields[6];
+						this.InsertPlaceCommand.Parameters["@7"].Value = lineFields[7];
+						this.InsertPlaceCommand.Parameters["@8"].Value = lineFields[8];
+						this.InsertPlaceCommand.Parameters["@9"].Value = lineFields[9];
+						this.InsertPlaceCommand.Parameters["@10"].Value = lineFields[10];
+						this.InsertPlaceCommand.Parameters["@11"].Value = lineFields[11];
+						this.InsertPlaceCommand.Parameters["@12"].Value = lineFields[12];
+						this.InsertPlaceCommand.Parameters["@13"].Value = lineFields[13];
+						this.InsertPlaceCommand.Parameters["@14"].Value = lineFields[14];
+						this.InsertPlaceCommand.Parameters["@15"].Value = lineFields[15];
+						this.InsertPlaceCommand.ExecuteNonQuery ();
 						break;
 
 					case "02":
@@ -448,22 +447,22 @@ namespace Epsitec.Data.Platform.MatchSort
 				CommitIndex++;
 				if (CommitIndex % 200000 == 0)
 				{
-					this.Transaction.Commit ();
-					this.Transaction = this.Conn.BeginTransaction ();
+					this.transaction.Commit ();
+					this.transaction = this.connection.BeginTransaction ();
 				}
 			}
 
-			this.Transaction.Commit ();
+			this.transaction.Commit ();
 		}
 
 		private void IndexAndAnalyzeDatabase()
 		{
-			this.Transaction = this.Conn.BeginTransaction ();
-			this.Command.CommandText = Queries.IndexAll;
-			this.Command.ExecuteNonQuery ();
-			this.Command.CommandText = Queries.AnalyseAll;
-			this.Command.ExecuteNonQuery ();
-			this.Transaction.Commit ();
+			this.transaction = this.connection.BeginTransaction ();
+			this.command.CommandText = Queries.IndexAll;
+			this.command.ExecuteNonQuery ();
+			this.command.CommandText = Queries.AnalyseAll;
+			this.command.ExecuteNonQuery ();
+			this.transaction.Commit ();
 		}
 
 		private string[] GetHeaderFromCsv(string CsvFilePath)
@@ -487,8 +486,8 @@ namespace Epsitec.Data.Platform.MatchSort
 		private string[] GetHeaderFromDatabase()
 		{
 			string[] result = new string[2];
-			this.Command.CommandText = Queries.SelectHeader;
-			using (SQLiteDataReader dr = this.Command.ExecuteReader ())
+			this.command.CommandText = Queries.SelectHeader;
+			using (SQLiteDataReader dr = this.command.ExecuteReader ())
 			{
 				dr.Read ();
 				if (dr.HasRows)
@@ -509,10 +508,10 @@ namespace Epsitec.Data.Platform.MatchSort
 		public List<string> CustomQuery(string sql)
 		{
 			List<string> result = new List<string> ();
-			this.Command.CommandText = sql;
+			this.command.CommandText = sql;
 			try
 			{
-				using (SQLiteDataReader dr = this.Command.ExecuteReader ())
+				using (SQLiteDataReader dr = this.command.ExecuteReader ())
 				{
 					var i = 0;
 					while (dr.Read ())
@@ -520,7 +519,7 @@ namespace Epsitec.Data.Platform.MatchSort
 						var row = "";
 						foreach (string k in dr.GetValues ().AllKeys)
 						{
-							row += String.Format ("{0}: {1}, ", k, dr.GetValues ().Get (k));
+							row += string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}: {1}, ", k, dr.GetValues ().Get (k));
 						}
 						result.Add (row);
 						i++;
@@ -532,7 +531,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			}
 			catch (SQLiteException ex)
 			{
-				throw new Exception ("Erreur SQL: " + ex.Message.ToString ());
+				throw new System.Exception ("Erreur SQL: " + ex.Message.ToString ());
 			}
 
 			return result;
@@ -550,7 +549,7 @@ namespace Epsitec.Data.Platform.MatchSort
 					+ "and p.plz = @zip "
 					+ "and p.plz_zz = @zip_addon";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@street", System.Data.DbType.String);
 			command.Parameters.Add ("@zip", System.Data.DbType.String);
@@ -571,7 +570,7 @@ namespace Epsitec.Data.Platform.MatchSort
 						+ "and g.hnr = @house "
 						+ "and g.hnr_a = @house_alpha collate nocase";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@zip", System.Data.DbType.String);
 			command.Parameters.Add ("@zip_addon", System.Data.DbType.String);
@@ -593,7 +592,7 @@ namespace Epsitec.Data.Platform.MatchSort
 						+ "and (s.str_bez_2l = @street collate nocase or s.str_bez_2k = @street collate nocase) "
 						+ "and g.hnr = @house ";
 
-			var command = new SQLiteCommand (this.Conn);
+			var command = new SQLiteCommand (this.connection);
 			command.CommandText = sql;
 			command.Parameters.Add ("@zip", System.Data.DbType.String);
 			command.Parameters.Add ("@zip_addon", System.Data.DbType.String);
@@ -642,7 +641,9 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		#endregion
 
-		private readonly SQLiteCommand			insertPlaceCommand;
+		public static readonly string			MatchSortCsvPath = Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
+		
+		private readonly SQLiteCommand			InsertPlaceCommand;
 		private readonly SQLiteCommand			InsertPlaceAltCommand;
 		private readonly SQLiteCommand			InsertCommunityCommand;
 		private readonly SQLiteCommand			InsertStreetCommand;
@@ -651,8 +652,9 @@ namespace Epsitec.Data.Platform.MatchSort
 		private readonly SQLiteCommand			HousesAtStreetCommand;
 		private readonly SQLiteCommand			MessengerCommand;
 		private readonly SQLiteCommand			MessengerCommandRelaxed;
-		private SQLiteConnection				Conn;
-		private SQLiteCommand					Command;
-		private SQLiteTransaction				Transaction;
+
+		private SQLiteConnection				connection;
+		private SQLiteCommand					command;
+		private SQLiteTransaction				transaction;
 	}
 }

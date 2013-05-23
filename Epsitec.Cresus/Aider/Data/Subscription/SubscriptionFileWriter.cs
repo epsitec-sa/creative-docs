@@ -74,7 +74,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
-			using (var etl = new MatchSortEtl (SubscriptionFileWriter.MatchSortCsvPath))
+			using (var etl = new MatchSortEtl (MatchSortEtl.MatchSortCsvPath))
 			{
 				AiderEnumerator.Execute (this.coreData, (b, subscriptions) =>
 				{
@@ -1189,9 +1189,6 @@ namespace Epsitec.Aider.Data.Subscription
 
 
 		internal const string ErrorMessage = "Postman number not found for address: ";
-
-
-		public static readonly string MatchSortCsvPath = Path.Combine (Globals.ExecutableDirectory, "MAT[CH]sort.csv");
 
 
 		// We need a delegate to define this, as the System.Action type cannot use arguments with

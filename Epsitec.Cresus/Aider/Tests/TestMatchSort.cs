@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Tests
 
 			System.IO.File.WriteAllLines (logOut + "-all.log", logs.Select (info => info.ToString ()), System.Text.Encoding.Default);
 
-			using (var etl = new Epsitec.Data.Platform.MatchSort.MatchSortEtl (Epsitec.Aider.Data.Subscription.SubscriptionFileWriter.MatchSortCsvPath))
+			using (var etl = new Epsitec.Data.Platform.MatchSort.MatchSortEtl (Epsitec.Data.Platform.MatchSort.MatchSortEtl.MatchSortCsvPath))
 			{
 				var failed  = new List<Tests.TestMatchSort.Info> ();
 				var relaxed = new List<Tests.TestMatchSort.Info> ();
