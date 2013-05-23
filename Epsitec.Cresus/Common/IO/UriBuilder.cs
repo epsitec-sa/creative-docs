@@ -83,6 +83,21 @@ namespace Epsitec.Common.IO
 			pattern = @"^(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_]*)?$";
 
 			UriBuilder.urlValidationRegex = new Regex (pattern, RegexOptions.Compiled);
+
+			//	Regular expression for Fully Qualified Domain Name (i.e. a name with a domain name)
+			//	and maximum length names (63 chars)
+			//	http://stackoverflow.com/questions/106179/regular-expression-to-match-hostname-or-ip-address
+
+			pattern = @"^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])\.)+([A-Za-z][A-Za-z](|[A-Za-z0-9\-]{0,60}[A-Za-z0-9]))$";
+
+			UriBuilder.hostFqdnValidationRegex = new Regex (pattern, RegexOptions.Compiled);
+			
+			//	Regular expression for IPV4 host names (such as 192.168.1.255)
+			//	http://stackoverflow.com/questions/106179/regular-expression-to-match-hostname-or-ip-address
+
+			pattern = @"^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9‌​]{2}|2[0-4][0-9]|25[0-5])$";
+
+			UriBuilder.hostIpV4ValidationRegex = new Regex (pattern, RegexOptions.Compiled);
 		}
 
 
@@ -222,14 +237,51 @@ namespace Epsitec.Common.IO
 				return false;
 			}
 			
-			if (UriBuilder.mailValidationRegex.IsMatch (fullUri))
+			if (UriBuilder.urlValidationRegex.IsMatch (fullUri))
 			{
 				return true;
 			}
 
 			return false;
 		}
-		
+
+		public static bool IsValidFullyQualifiedDomainNameUrl(string fullUri)
+		{
+			if (UriBuilder.IsValidUrl (fullUri))
+			{
+				var uri  = new UriBuilder (fullUri);
+				var host = uri.Host;
+
+				if ((UriBuilder.hostFqdnValidationRegex.IsMatch (host)) ||
+					(UriBuilder.hostIpV4ValidationRegex.IsMatch (host)))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public static string EncodePunyCode(string unicodeHostName)
+		{
+			//	Examples:
+			//	
+			//	- παράδειγμα.δοκιμή --> xn--hxajbheg2az3al.xn--jxalpdlp
+			//	- bücher.com ---------> xn--bcher-kva.com
+			//	- crésus.ch ----------> xn--crsus-csa.ch
+			//
+			//	See also http://en.wikipedia.org/wiki/Top-level_domain_name
+
+			var mapping = new System.Globalization.IdnMapping ();
+			return mapping.GetAscii (unicodeHostName);
+		}
+
+		public static string DecodePunyCode(string asciiHostName)
+		{
+			var mapping = new System.Globalization.IdnMapping ();
+			return mapping.GetUnicode (asciiHostName);
+		}
+
 		public static string GetSchemeName(string fullUri)
 		{
 			if (string.IsNullOrEmpty (fullUri))
@@ -498,5 +550,7 @@ namespace Epsitec.Common.IO
 
 		private static readonly Regex			mailValidationRegex;
 		private static readonly Regex			urlValidationRegex;
+		private static readonly Regex			hostFqdnValidationRegex;
+		private static readonly Regex			hostIpV4ValidationRegex;
 	}
 }
