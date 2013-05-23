@@ -319,9 +319,9 @@ namespace Epsitec.Common.IO
 
 		public static string FixScheme(string fullUri)
 		{
-			if (string.IsNullOrEmpty (fullUri))
+			if (string.IsNullOrWhiteSpace (fullUri))
 			{
-				return fullUri;
+				return null;
 			}
 
 			string officialSuffix = null;
