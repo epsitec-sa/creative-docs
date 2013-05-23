@@ -16,8 +16,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 		protected void Initialize()
 		{
-			this.pageFrom         = 1;
-			this.pageTo           = 1000;
+			this.pageFrom         = null;
+			this.pageTo           = null;
 			this.pageSize         = new Size (2100.0, 2970.0);  // A4 vertical
 			this.bleedMargin      = 0.0;  // débord
 			this.cropMarks        = false;
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.imageNameFilters[1] = "Bicubic";
 		}
 
-		public int PageFrom
+		public int? PageFrom
 		{
 			get
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public int PageTo
+		public int? PageTo
 		{
 			get
 			{
@@ -337,8 +337,8 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		private int						pageFrom;
-		private int						pageTo;
+		private int?					pageFrom;
+		private int?					pageTo;
 		private Size					pageSize;
 		private double					bleedMargin;
 		private bool					cropMarks;

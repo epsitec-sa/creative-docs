@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing.Platform;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Epsitec.Common.Pdf.Engine
 {
@@ -1312,14 +1313,11 @@ namespace Epsitec.Common.Pdf.Engine
 			//	Retourne la liste des pages à imprimer.
 			get
 			{
-				for (int page = 1; page <= this.pageCount; page++)
-				{
-					if (page >= this.info.PageFrom &&
-						page <= this.info.PageTo)
-					{
-						yield return page;
-					}
-				}
+				var start = this.info.PageFrom ?? 1;
+				var end = this.info.PageTo ?? this.pageCount;
+				var count = end - start + 1;
+
+				return Enumerable.Range (start, count);
 			}
 		}
 
