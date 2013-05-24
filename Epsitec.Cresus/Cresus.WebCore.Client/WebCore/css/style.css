@@ -82,6 +82,10 @@ html, body {
   background-image: url('../images/Static/export.png') !important;
 }
 
+.icon-search {
+  background-image: url('../images/Static/search.png') !important;
+}
+
 .icon-sort-ascending {
   height: 16px;
   width: 16px;

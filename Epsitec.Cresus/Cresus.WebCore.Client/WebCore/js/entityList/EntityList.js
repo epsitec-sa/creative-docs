@@ -517,7 +517,7 @@ function() {
         });
         buttons.push(Ext.create('Ext.Button', {
           text: '',
-          iconCls: 'epsitec-common-widgets-images-tablesearch-icon16',
+          iconCls: 'icon-search',
           listeners: {
             click: this.onFullSearchHandler,
             scope: this
