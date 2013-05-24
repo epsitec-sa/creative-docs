@@ -528,24 +528,25 @@ function() {
       return buttons;
     },
 
-    onQuickSearchHandler: function (field, e) {
-            var config = {
-                type: 'string',
-                dataIndex: this.columnDefinitions[0].name,
-                value: field.value,
-                active: true
-            };
-            if (e.getKey() === e.ENTER) {
-                if (this.filters.filters.items[0] == null) {
-                    this.filters.addFilter(config);
-                    this.filters.filters.items[0].fireEvent('update', this.filters.filters.items[0]);
-                }
-                else {
-                    this.filters.filters.items[0].setValue(field.value);
-                }
-
-            }
-        },
+    onQuickSearchHandler: function(field, e) {
+      var config = {
+        type: 'string',
+        dataIndex: this.columnDefinitions[0].name,
+        value: field.value,
+        active: true
+      };
+      if (e.getKey() === e.ENTER) {
+        if (this.filters.filters.items[0] === null) {
+          this.filters.addFilter(config);
+          this.filters.filters.items[0].fireEvent(
+              'update', this.filters.filters.items[0]
+          );
+        }
+        else {
+          this.filters.filters.items[0].setValue(field.value);
+        }
+      }
+    },
 
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
