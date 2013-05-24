@@ -151,31 +151,31 @@ namespace Epsitec.Aider.Entities
 			throw new System.NotImplementedException ();
 		}
 
-        public static List<AiderTownEntity> GetTownFavoritesByUserScope(BusinessContext businessContext,AiderUserEntity user)
-        {
-            var townRepository = businessContext.Data.GetRepository<AiderTownEntity>();
+		public static List<AiderTownEntity> GetTownFavoritesByUserScope(BusinessContext businessContext, AiderUserEntity user)
+		{
+			var townRepository = businessContext.Data.GetRepository<AiderTownEntity> ();
 
-            var scope = user.PreferredScope;
-            if (scope.IsNull () || string.IsNullOrEmpty(scope.GroupPath))
-            {
-                var example = new AiderTownEntity
-                {
-                    SwissCantonCode = "VD"
-                };
-                return townRepository.GetByExample(example).ToList();
-            }
-            else
-            {
-                //TODO FIND TOWN BY SCOPE
-                //ParishAddressRepository parishRepo = ParishAddressRepository.Current;
-                //var parish = parishRepo.GetDetails(user.Parish.Name);
-                //Replacement code:
-                var example = new AiderTownEntity
-                {
-                    SwissCantonCode = "VD"
-                };
-                return townRepository.GetByExample(example).ToList();
-            }
-        }
+			var scope = user.PreferredScope;
+			if (scope.IsNull () || string.IsNullOrEmpty (scope.GroupPath))
+			{
+				var example = new AiderTownEntity
+				{
+					SwissCantonCode = "VD"
+				};
+				return townRepository.GetByExample (example).ToList ();
+			}
+			else
+			{
+				//TODO FIND TOWN BY SCOPE
+				//ParishAddressRepository parishRepo = ParishAddressRepository.Current;
+				//var parish = parishRepo.GetDetails(user.Parish.Name);
+				//Replacement code:
+				var example = new AiderTownEntity
+				{
+					SwissCantonCode = "VD"
+				};
+				return townRepository.GetByExample (example).ToList ();
+			}
+		}
 	}
 }
