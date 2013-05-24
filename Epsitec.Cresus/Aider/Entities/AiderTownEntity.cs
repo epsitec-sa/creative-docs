@@ -156,7 +156,7 @@ namespace Epsitec.Aider.Entities
             var townRepository = businessContext.Data.GetRepository<AiderTownEntity>();
 
             var scope = user.PreferredScope;
-            if (string.IsNullOrEmpty(scope.GroupPath))
+            if (scope.IsNull () || string.IsNullOrEmpty(scope.GroupPath))
             {
                 var example = new AiderTownEntity
                 {
