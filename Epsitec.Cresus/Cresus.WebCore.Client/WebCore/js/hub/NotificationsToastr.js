@@ -18,18 +18,20 @@ function NotificationsToastr() {
 
   this.hub.client.StickyWarningNavToast = function(title, msg, header, field, error, datasetId, entityId) {
 
-    var notif = notificationsClient;
+    var notif, path, message, errorField;
 
-    var path = {};
+    notif = notificationsClient;
+
+    path = {};
     path.id = entityId;
     path.name = datasetId;
 
-    var message = {
+    message = {
         title: title,
         body: msg
     };
    
-    var errorField = {
+    errorField = {
         name: field,
         message: error,
         header: header
@@ -49,13 +51,15 @@ function NotificationsToastr() {
   };
 
   this.hub.client.Toast = function(title, msg, datasetId, entityId) {
-    var path = {};
+    var path, message;
+
+    path = {};
     path.id = entityId;
     path.name = datasetId;
 
-    var message = {
+    message = {
         title: title,
-        body: msg,
+        body: msg
     };
 
     toastr.options = {

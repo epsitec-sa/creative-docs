@@ -106,23 +106,23 @@ function() {
     },
 
     createDefaultContextMenuAction: function() {
-      var gridPanel = this;
+      //var gridPanel = this;
 
       this.actionEditData = Ext.create('Ext.Action', {
         icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/icon16.png',
         text: 'Editer',
-        disabled: false,
+        disabled: false/*,
         handler: function(widget, event) {
           var rec = gridPanel.getSelectionModel().getSelection()[0];
           if (rec) {
-            /*var path = {
+            var path = {
                            name: options.databaseName,
                            id : rec.internalId
                        };
                        var app = Epsitec.Cresus.Core.getApplication();
-                       app.showEditableEntity(path);*/
+                       app.showEditableEntity(path);
           }
-        }
+        }*/
       });
     },
 
@@ -553,11 +553,11 @@ function() {
     },
 
     onQuickSearchHandler: function(field, e) {
-      if (e.getKey() === e.ENTER) {
+      //if (e.getKey() === e.ENTER) {
         //TODO quick search
         //TEMPORY Notifications tester
         //Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll('Test AIDER', field.value, '');
-      }
+      //}
     },
 
     onFullSearchHandler: function(e) {

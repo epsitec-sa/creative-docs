@@ -228,8 +228,8 @@ function() {
       //check if navigation data is present
       if (path.id && path.name)
       {
-          var tab, callback;
-          var lastTileId;
+          var tab, callback, endCallback, lastTile;
+
           
           //executed when edition tile is loaded
           endCallback = Epsitec.CallbackQueue.create(
