@@ -528,15 +528,24 @@ function() {
       return buttons;
     },
 
-    onQuickSearchHandler: function(field, e) {
-      //if (e.getKey() === e.ENTER) {
-      //  //TODO quick search
-      //  //TEMPORY Notifications tester
-      //  Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll(
-      //      'Test AIDER', field.value, ''
-      //  );
-      //}
-    },
+    onQuickSearchHandler: function (field, e) {
+            var config = {
+                type: 'string',
+                dataIndex: this.columnDefinitions[0].name,
+                value: field.value,
+                active: true
+            };
+            if (e.getKey() === e.ENTER) {
+                if (this.filters.filters.items[0] == null) {
+                    this.filters.addFilter(config);
+                    this.filters.filters.items[0].fireEvent('update', this.filters.filters.items[0]);
+                }
+                else {
+                    this.filters.filters.items[0].setValue(field.value);
+                }
+
+            }
+        },
 
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
