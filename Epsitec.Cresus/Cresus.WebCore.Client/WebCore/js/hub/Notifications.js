@@ -15,7 +15,10 @@ function() {
         $.connection.hub.logging = true;
         // Start the connection
         var toastrInstance = new ToastrFunc();
-        $.connection.hub.start(function() { toastrInstance.init(context.form[0].lastValue, context); context.initHub(); });
+        $.connection.hub.start(function() {
+          toastrInstance.init(context.form[0].lastValue, context);
+          context.initHub();
+        });
       });
     },
 
@@ -24,15 +27,17 @@ function() {
       this.hub.server.setupUserConnection();
     },
 
-    displayErrorInTile: function(tile, headerErrorMessage, fieldName, fieldErrorMessage) {
-      if (headerErrorMessage)
+    displayErrorInTile: function(tile, headerMsg, fieldName, fieldMsg) {
+      var item = tile.items.items[0];
+
+      if (headerMsg)
       {
-        tile.items.items[0].showError(headerErrorMessage);
+        item.showError(headerMsg);
       }
 
-      if (fieldName && fieldErrorMessage)
+      if (fieldName && fieldMsg)
       {
-        tile.items.items[0].getForm().findField(fieldName).markInvalid(fieldErrorMessage);
+        item.getForm().findField(fieldName).markInvalid(fieldMsg);
       }
     }
   });

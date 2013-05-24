@@ -236,14 +236,19 @@ function() {
             function() {
               lastTile = tab.columns[tab.columns.length - 1];
               //finaly
-              endCallbackFunc(lastTile, errorField.header, errorField.name, errorField.message);
+              endCallbackFunc(
+                  lastTile, errorField.header, errorField.name,
+                  errorField.message
+              );
             },
             this);
 
         //prepare callback for editing
         callback = Epsitec.CallbackQueue.create(
             function() {
-              tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, endCallback);
+              tab.addEntityColumn(
+                  Epsitec.ViewMode.edition, null, path.id, null, endCallback
+              );
             },
             this);
 
@@ -256,7 +261,10 @@ function() {
           this.tabManager.showTab(tab);
           tab.removeAllColumns();
         }
-        tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
+        //summary tile
+        tab.addEntityColumn(
+            Epsitec.ViewMode.summary, null, path.id, null, callback
+        );
       }
     },
 

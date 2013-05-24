@@ -15,7 +15,8 @@ function NotificationsToastr() {
     this.hub.server.warningToast(cId, title, message, datasetId, entityId);
   };
 
-  this.hub.client.StickyWarningNavToast = function(title, msg, header, field, error, datasetId, entityId) {
+  this.hub.client.StickyWarningNavToast = function(title, msg, header, field,
+      error, datasetId, entityId) {
 
     var notif, path, message, errorField;
 
@@ -40,7 +41,9 @@ function NotificationsToastr() {
       'debug': false,
       'positionClass': 'toast-top-full-width',
       'onclick': function() {
-        Epsitec.Cresus.Core.app.showEditableEntity(path, message, errorField, notif.displayErrorInTile);
+        Epsitec.Cresus.Core.app.showEditableEntity(
+            path, message, errorField, notif.displayErrorInTile
+        );
       },
       'fadeIn': 300,
       'fadeOut': 1000,

@@ -109,7 +109,8 @@ function() {
       //var gridPanel = this;
 
       this.actionEditData = Ext.create('Ext.Action', {
-        icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/icon16.png',
+        icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/' +
+            'icon16.png',
         text: 'Editer',
         disabled: false/*,
         handler: function(widget, event) {
@@ -555,7 +556,9 @@ function() {
       //if (e.getKey() === e.ENTER) {
       //  //TODO quick search
       //  //TEMPORY Notifications tester
-      //  Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll('Test AIDER', field.value, '');
+      //  Epsitec.Cresus.Core.app.notificationsClient.hub.server.notifyAll(
+      //      'Test AIDER', field.value, ''
+      //  );
       //}
     },
 
