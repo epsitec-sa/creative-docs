@@ -39,7 +39,7 @@ function NotificationsToastr() {
 
     toastr.options = {
       'debug': false,
-      'positionClass': 'toast-top-full-width',
+      'positionClass': 'toast-bottom-full-width',
       'onclick': function() {
         Epsitec.Cresus.Core.app.showEditableEntity(
             path, message, errorField, notif.displayErrorInTile
@@ -47,7 +47,8 @@ function NotificationsToastr() {
       },
       'fadeIn': 300,
       'fadeOut': 1000,
-      'timeOut': 0
+      'timeOut': 0,
+      'extendedTimeOut': 0
     };
     toastr.warning(message.body, message.title);
   };
@@ -69,7 +70,7 @@ function NotificationsToastr() {
       'positionClass': 'toast-top-right',
       'fadeOut': 1000,
       'timeOut': 5000,
-      'extendedTimeOut': 5000
+      'extendedTimeOut': 1000
     };
     toastr.info(message.body, message.title);
   };
