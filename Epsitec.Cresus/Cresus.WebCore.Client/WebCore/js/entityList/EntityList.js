@@ -35,58 +35,34 @@ function() {
     /* Constructor */
 
     constructor: function(options) {
-      var newOptions = null;
+      var newOptions = {
+        dockedItems: [
+          this.createToolbar(options),
+          this.createSecondaryToolbar()
+        ],
+        columns: this.createColumns(options),
+        store: this.createStore(options),
+        selModel: this.createSelModel(options),
+        onSelectionChangeCallback: options.onSelectionChange,
+        listeners: {
+          selectionchange: this.onSelectionChangeHandler,
+          columnhide: this.setupColumnParameter,
+          columnshow: this.setupColumnParameterAndRefresh,
+          scope: this
+        },
+        features: [{
+          ftype: 'filters',
+          encode: true
+        }]
+      };
 
       if (epsitecConfig.featureContextualMenu) {
         this.createDefaultContextMenuAction();
         this.createContextMenu([this.actionEditData]);
-        newOptions = {
-          dockedItems: [
-            this.createToolbar(options),
-            this.createSecondaryToolbar()
-          ],
-          columns: this.createColumns(options),
-          store: this.createStore(options),
-          selModel: this.createSelModel(options),
-          onSelectionChangeCallback: options.onSelectionChange,
-          listeners: {
-            selectionchange: this.onSelectionChangeHandler,
-            columnhide: this.setupColumnParameter,
-            columnshow: this.setupColumnParameterAndRefresh,
-            scope: this,
-            itemcontextmenu: function(view, rec, node, index, e) {
-              e.stopEvent();
-              this.contextMenu.showAt(e.getXY());
-              return false;
-            }
-          },
-          features: [{
-            ftype: 'filters',
-            encode: true
-          }]
-        };
-      }
-      else
-      {
-        newOptions = {
-          dockedItems: [
-            this.createToolbar(options),
-            this.createSecondaryToolbar()
-          ],
-          columns: this.createColumns(options),
-          store: this.createStore(options),
-          selModel: this.createSelModel(options),
-          onSelectionChangeCallback: options.onSelectionChange,
-          listeners: {
-            selectionchange: this.onSelectionChangeHandler,
-            columnhide: this.setupColumnParameter,
-            columnshow: this.setupColumnParameterAndRefresh,
-            scope: this
-          },
-          features: [{
-            ftype: 'filters',
-            encode: true
-          }]
+        newOptions.listeners.itemcontextmenu = function(view, rec, node, i, e) {
+          e.stopEvent();
+          this.contextMenu.showAt(e.getXY());
+          return false;
         };
       }
 
