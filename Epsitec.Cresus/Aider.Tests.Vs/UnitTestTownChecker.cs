@@ -321,6 +321,8 @@ namespace Aider.Tests.Vs
 			this.Check ("1837", "Château d’Oex", "1660", "Château-d'Oex");
 			this.Check ("1837", "Chateau-d'Oex", "1660", "Château-d'Oex");
 			this.Check ("1080", "Cullayes", "1080", "Les Cullayes");
+			this.Check ("1042", "Malapalud", "1042", "Assens");
+			this.Check ("1445", "Peney-Vuiteboeuf", "1445", "Vuiteboeuf");
 		}
 
 
