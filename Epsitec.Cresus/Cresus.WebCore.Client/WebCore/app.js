@@ -29,7 +29,7 @@ function() {
     tabManager: null,
     notificationsClient: null,
 
-    launch: function () {
+    launch: function() {
       this.setupWindowTitle();
       this.fixLocalizationBug();
       this.fixFrenchLocalizationError();
@@ -211,7 +211,8 @@ function() {
       }
 
       if (epsitecConfig.featureNotifications) {
-        this.notificationsClient = Ext.create('Epsitec.Notifications', NotificationsToastr, form);
+        this.notificationsClient = Ext.create(
+            'Epsitec.Notifications', NotificationsToastr, form);
       }
 
       Ext.create('Ext.container.Viewport', {
@@ -223,47 +224,39 @@ function() {
       });
     },
 
-    showEditableEntity: function(path,message,errorField,endCallbackFunc) {
+    showEditableEntity: function(path, message, errorField, endCallbackFunc) {
 
       //check if navigation data is present
       if (path.id && path.name)
       {
-          var tab, callback, endCallback, lastTile;
+        var tab, callback, endCallback, lastTile;
 
-          
-          //executed when edition tile is loaded
-          endCallback = Epsitec.CallbackQueue.create(
-               function () {
+        //executed when edition tile is loaded
+        endCallback = Epsitec.CallbackQueue.create(
+            function() {
+              lastTile = tab.columns[tab.columns.length - 1];
+              //finaly
+              endCallbackFunc(lastTile, errorField.header, errorField.name, errorField.message);
+            },
+            this);
 
-                   
-                   lastTile = tab.columns[tab.columns.length - 1];
-                   
-                   //finaly
-                   endCallbackFunc(lastTile,errorField.header,errorField.name,errorField.message);
-               },
-              this
-              );
+        //prepare callback for editing
+        callback = Epsitec.CallbackQueue.create(
+            function() {
+              tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, endCallback);
+            },
+            this);
 
-          //prepare callback for editing
-          callback = Epsitec.CallbackQueue.create(
-              function () {
-                  tab.addEntityColumn(Epsitec.ViewMode.edition, null, path.id, null, endCallback);
-              },
-              this
-              );
-
-          
-          if (this.tabManager.getEntityTab(path) === null) {
-              this.tabManager.showEntityTab(path);
-              tab = this.tabManager.getEntityTab(path);
-          }
-          else {
-              tab = this.tabManager.getEntityTab(path);
-              this.tabManager.showTab(tab);
-              tab.removeAllColumns();
-          }
-          tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
-          
+        if (this.tabManager.getEntityTab(path) === null) {
+          this.tabManager.showEntityTab(path);
+          tab = this.tabManager.getEntityTab(path);
+        }
+        else {
+          tab = this.tabManager.getEntityTab(path);
+          this.tabManager.showTab(tab);
+          tab.removeAllColumns();
+        }
+        tab.addEntityColumn(Epsitec.ViewMode.summary, null, path.id, null, callback);//summary tile
       }
     },
 

@@ -3,7 +3,7 @@ function NotificationsToastr() {
   var notificationsClient = null;
 
   //Initialize
-  this.init = function(username,client) {
+  this.init = function(username, client) {
     this.hub.state.connectionId = this.hub.connection.id;
     this.hub.state.userName = username;
     notificationsClient = client;
@@ -11,9 +11,8 @@ function NotificationsToastr() {
 
   //Entry points for calling hub
 
-  this.WarningToastTo = function(connectionId, title, message, datasetId, entityId) {
-    this.hub.server.warningToast(connectionId, title, message, datasetId, entityId);
-
+  this.WarningToastTo = function(cId, title, message, datasetId, entityId) {
+    this.hub.server.warningToast(cId, title, message, datasetId, entityId);
   };
 
   this.hub.client.StickyWarningNavToast = function(title, msg, header, field, error, datasetId, entityId) {
@@ -27,21 +26,21 @@ function NotificationsToastr() {
     path.name = datasetId;
 
     message = {
-        title: title,
-        body: msg
+      title: title,
+      body: msg
     };
-   
+
     errorField = {
-        name: field,
-        message: error,
-        header: header
+      name: field,
+      message: error,
+      header: header
     };
 
     toastr.options = {
       'debug': false,
       'positionClass': 'toast-top-full-width',
       'onclick': function() {
-          Epsitec.Cresus.Core.app.showEditableEntity(path, message, errorField, notif.displayErrorInTile);
+        Epsitec.Cresus.Core.app.showEditableEntity(path, message, errorField, notif.displayErrorInTile);
       },
       'fadeIn': 300,
       'fadeOut': 1000,
@@ -58,8 +57,8 @@ function NotificationsToastr() {
     path.name = datasetId;
 
     message = {
-        title: title,
-        body: msg
+      title: title,
+      body: msg
     };
 
     toastr.options = {

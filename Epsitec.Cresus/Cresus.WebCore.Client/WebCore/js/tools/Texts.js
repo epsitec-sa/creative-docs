@@ -22,7 +22,7 @@ function() {
       },
 
       getSearchLabel: function() {
-          return this.texts.searchLabel;
+        return this.texts.searchLabel;
       },
 
       getRefreshLabel: function() {
