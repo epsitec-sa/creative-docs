@@ -153,15 +153,9 @@ namespace Epsitec.Aider.Entities
 
         public static List<AiderTownEntity> GetTownFavoritesByUserScope(BusinessContext businessContext,AiderUserEntity user)
         {
-            var scopeRepository = businessContext.Data.GetRepository<AiderUserScopeEntity>();
             var townRepository = businessContext.Data.GetRepository<AiderTownEntity>();
 
-            var scopeExample = new AiderUserScopeEntity
-            {
-                Name = user.PreferredScope.Name
-            };
-
-            var scope = scopeRepository.GetByExample(scopeExample).Single ();
+            var scope = user.PreferredScope;
             if (string.IsNullOrEmpty(scope.GroupPath))
             {
                 var example = new AiderTownEntity
