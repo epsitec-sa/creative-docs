@@ -37,6 +37,7 @@ namespace Epsitec.Designer
 //-			var loadCresusDataLayerUnitTests = typeof (Epsitec.Cresus.DataLayer.UnitTests.Context.UnitTestDataContextEventArgs);
 //-			var loadCresusWebServer = typeof (Epsitec.Cresus.WebServer.Component);
 //-			var loadProductAider = typeof (Epsitec.Product.Aider.Res);
+//-			var loadCresusCoreWerver = typeof (Epsitec.Cresus.WebCore.Server.CoreServerProgram);
 
 			var  addPaths       = new List<string> ();
 			bool noDefaultPaths = false;
