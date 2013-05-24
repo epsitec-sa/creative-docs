@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Pdf.Common;
 using Epsitec.Common.Pdf.Engine;
-using Epsitec.Common.Pdf.Stickers;
+using Epsitec.Common.Pdf.Labels;
 using Epsitec.Common.Pdf.TextDocument;
 using Epsitec.Common.Types;
 
@@ -209,16 +209,16 @@ namespace Common.Pdf.Test
 				PrintCropMarks = true,
 			};
 
-			var setup = new StickersSetup ()
+			var setup = new LabelsSetup ()
 			{
 				PaintFrame = true,
 			};
 
-			var stickers = new Stickers (info, setup);
-			Program.AddFixElements (stickers, setup);
+			var labels = new Labels (info, setup);
+			Program.AddFixElements (labels, setup);
 
 			var path = "test2.pdf";
-			stickers.GeneratePdf (path, 100, Program.Test2DataAccessor);
+			labels.GeneratePdf (path, 100, Program.Test2DataAccessor);
 			return path;
 		}
 

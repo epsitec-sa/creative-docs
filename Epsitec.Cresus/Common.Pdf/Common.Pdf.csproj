@@ -80,8 +80,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\StringBuffer.cs" />
     <Compile Include="Engine\Writer.cs" />
-    <Compile Include="Stickers\Stickers.cs" />
-    <Compile Include="Stickers\StickersSetup.cs" />
+    <Compile Include="Labels\Labels.cs" />
+    <Compile Include="Labels\LabelsSetup.cs" />
     <Compile Include="TextDocument\TextDocumentSetup.cs" />
     <Compile Include="TextDocument\TextDocument.cs" />
   </ItemGroup>

@@ -4,64 +4,64 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Pdf.Common;
 
-namespace Epsitec.Common.Pdf.Stickers
+namespace Epsitec.Common.Pdf.Labels
 {
-	public class StickersSetup : CommonSetup
+	public class LabelsSetup : CommonSetup
 	{
-		// PageMargins.Left  StickerGap.Width      PageMargins.Right
+		// PageMargins.Left    LabelGap.Width      PageMargins.Right
 		//     |<--->|            >|--|<                |<--->| v
 		//     +----------------------------------------------+--
 		//     | Page                                   .     | |  PageMargins.Top
 		//     |     +-------------+  +-------------+   .     |--
-		//     |     | Sticker     |  |             |   .     | |
+		//     |     | Label       |  |             |   .     | |
 		//     |     |  +-------+  |  |  +-------+  |   .     | |
-		//     |     |  | Text  |  |  |  |       |  |   .     | |  StickerSize.Height
+		//     |     |  | Text  |  |  |  |       |  |   .     | |  LabelSize.Height
 		//     |     |  |       |  |  |  |       |  |   .     | |
 		//     |     |  +-------+  |  |  +-------+  |   .     | |
 		//     |     |             |  |             |   .     | |
 		//     |     +-------------+  +-------------+   .     |--
-		//     |                                        .     | |  StickerGap.Height
+		//     |                                        .     | |  LabelGap.Height
 		//     |     +-------------+  +-------------+   .     |--
-		//     |     |             |  |             |   .     | |  StickerMargins.Top  
+		//     |     |             |  |             |   .     | |  LabelMargins.Top  
 		//     |     |  +-------+  |  |  +-------+  |   .     |--
 		//     |     |  |       |  |  |  |       |  |   .     |
 		//     |     |  |       |  |  |  |       |  |   .     |
 		//     |     |  +-------+  |  |  +-------+  |   .     |--
-		//     |     |             |  |             |   .     | |  StickerMargins.Bottom
+		//     |     |             |  |             |   .     | |  LabelMargins.Bottom
 		//     |     +-------------+  +-------------+   .     |--
 		//     |                                        .     | |  reste
 		//     |  . . . . . . . . . . . . . . . . . . . . . . |--
 		//     |                                        .     | |  PageMargins.Bottom
 		//     +----------------------------------------------+--
 		//           |<----------->|            >|--|<->|  reste
-		//           StickerSize.Width    StickerMargins.Right
+		//           LabelSize.Width      LabelMargins.Right
 
-		public StickersSetup()
+		public LabelsSetup()
 			: base ()
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins   = new Margins (100.0);
-			this.StickerSize    = new Size (620.0, 400.0);
-			this.StickerMargins = new Margins (50.0);
-			this.StickerGap     = new Size (10.0, 10.0);
+			this.LabelSize    = new Size (620.0, 400.0);
+			this.LabelMargins = new Margins (50.0);
+			this.LabelGap     = new Size (10.0, 10.0);
 			this.PaintFrame    = false;
 		}
 
-		public Size StickerSize
+		public Size LabelSize
 		{
 			//	Dimensions d'une étiquette.
 			set;
 			get;
 		}
 
-		public Margins StickerMargins
+		public Margins LabelMargins
 		{
 			//	Marges à l'intérieur d'une étiquette, pour le texte.
 			set;
 			get;
 		}
 
-		public Size StickerGap
+		public Size LabelGap
 		{
 			//	Espace vide entre les étiquettes.
 			set;
