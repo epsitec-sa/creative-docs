@@ -17,6 +17,7 @@ using System;
 
 using System.Linq;
 using System.Collections.Generic;
+using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Entities
 {
@@ -151,15 +152,37 @@ namespace Epsitec.Aider.Entities
 			throw new System.NotImplementedException ();
 		}
 
-        public static List<AiderTownEntity> GetTownFavorites(BusinessContext businessContext)
+        public static List<AiderTownEntity> GetTownFavoritesByUserScope(BusinessContext businessContext,AiderUserEntity user)
         {
-            var repository = businessContext.Data.GetRepository<AiderTownEntity>();
-            var example = new AiderTownEntity
+            var scopeRepository = businessContext.Data.GetRepository<AiderUserScopeEntity>();
+            var townRepository = businessContext.Data.GetRepository<AiderTownEntity>();
+
+            var scopeExample = new AiderUserScopeEntity
             {
-                SwissCantonCode = "VD"
+                Name = user.PreferredScope.Name
             };
 
-            return repository.GetByExample(example).ToList();
+            var scope = scopeRepository.GetByExample(scopeExample).Single ();
+            if (string.IsNullOrEmpty(scope.GroupPath))
+            {
+                var example = new AiderTownEntity
+                {
+                    SwissCantonCode = "VD"
+                };
+                return townRepository.GetByExample(example).ToList();
+            }
+            else
+            {
+                //TODO FIND TOWN BY SCOPE
+                //ParishAddressRepository parishRepo = ParishAddressRepository.Current;
+                //var parish = parishRepo.GetDetails(user.Parish.Name);
+                //Replacement code:
+                var example = new AiderTownEntity
+                {
+                    SwissCantonCode = "VD"
+                };
+                return townRepository.GetByExample(example).ToList();
+            }
         }
 	}
 }

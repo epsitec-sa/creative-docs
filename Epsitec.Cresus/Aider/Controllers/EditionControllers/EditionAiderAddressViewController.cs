@@ -6,6 +6,7 @@ using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -14,7 +15,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderAddressEntity> wall)
 		{
 
-            var favorites = AiderTownEntity.GetTownFavorites(this.BusinessContext);
+            var currentUser = UserManager.Current.AuthenticatedUser;
+            var favorites = AiderTownEntity.GetTownFavoritesByUserScope(this.BusinessContext, currentUser as AiderUserEntity);
 
 			wall.AddBrick ()
 				.Input ()

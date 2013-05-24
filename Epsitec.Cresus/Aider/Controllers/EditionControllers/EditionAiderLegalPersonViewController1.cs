@@ -3,6 +3,7 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -11,7 +12,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderLegalPersonEntity> wall)
 		{
-            var favorites = AiderTownEntity.GetTownFavorites(this.BusinessContext);
+            var currentUser = UserManager.Current.AuthenticatedUser;
+            var favorites = AiderTownEntity.GetTownFavoritesByUserScope(this.BusinessContext, currentUser as AiderUserEntity);
 
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse de la personne morale"))
