@@ -70,6 +70,7 @@ function() {
         deletionViewId: json.content.deletionViewId,
         entityTypeId: json.content.entityTypeId,
         multiSelect: options.multiSelect,
+        menuItems: json.content.menuItems,
         onSelectionChange: options.onSelectionChange
       });
     },

@@ -50,6 +50,7 @@ function() {
           enableCreate: options.displayDatabase.enableCreate,
           enableDelete: options.displayDatabase.enableDelete,
           pickDatabaseDefinition: options.pickDatabase,
+          menuItems: options.displayDatabase.menuItems,
           multiSelect: true,
           onSelectionChange: null
         }

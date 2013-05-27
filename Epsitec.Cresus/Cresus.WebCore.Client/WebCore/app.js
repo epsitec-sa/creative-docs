@@ -224,7 +224,75 @@ function() {
       });
     },
 
-    showEditableEntity: function(path, message, errorField, endCallbackFunc) {
+    showEntity: function (path) {
+
+        //check if navigation data is present
+        if (path.id && path.name) {
+            var tab, callback;
+
+            callback = Epsitec.CallbackQueue.create(
+                function () {
+                    tab.leftList.entityList.selectEntity(path.id);
+                },
+                this);
+;
+            if (this.tabManager.getEntityTab(path) === null) {
+                this.tabManager.showEntityTab(path);
+                tab = this.tabManager.getEntityTab(path);
+            }
+            else {
+                tab = this.tabManager.getEntityTab(path);
+                this.tabManager.showTab(tab);
+                tab.removeAllColumns();
+            }
+            //select entity
+            tab.addEntityColumn(
+                Epsitec.ViewMode.summary, null, path.id, null, callback
+            );
+            
+            
+        }
+    },
+
+    showEditableEntity: function (path) {
+
+        //check if navigation data is present
+        if (path.id && path.name) {
+            var tab, callback, endCallback, lastTile;
+
+            //executed when edition tile is loaded
+            endCallback = Epsitec.CallbackQueue.create(
+                function () {
+                    lastTile = tab.columns[tab.columns.length - 1];
+                },
+                this);
+
+            //prepare callback for editing
+            callback = Epsitec.CallbackQueue.create(
+                function () {
+                    tab.addEntityColumn(
+                        Epsitec.ViewMode.edition, null, path.id, null, endCallback
+                    );
+                },
+                this);
+
+            if (this.tabManager.getEntityTab(path) === null) {
+                this.tabManager.showEntityTab(path);
+                tab = this.tabManager.getEntityTab(path);
+            }
+            else {
+                tab = this.tabManager.getEntityTab(path);
+                this.tabManager.showTab(tab);
+                tab.removeAllColumns();
+            }
+            //summary tile
+            tab.addEntityColumn(
+                Epsitec.ViewMode.summary, null, path.id, null, callback
+            );
+        }
+    },
+
+    showEditableEntityWithError: function(path, message, errorField, endCallbackFunc) {
 
       //check if navigation data is present
       if (path.id && path.name)

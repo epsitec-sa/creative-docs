@@ -57,8 +57,9 @@ function() {
       };
 
       if (epsitecConfig.featureContextualMenu) {
-        this.createDefaultContextMenuAction();
-        this.createContextMenu([this.actionEditData]);
+        this.createDefaultContextMenuAction(options);
+        
+        
         newOptions.listeners.itemcontextmenu = function(view, rec, node, i, e) {
           e.stopEvent();
           this.contextMenu.showAt(e.getXY());
@@ -81,26 +82,46 @@ function() {
       });
     },
 
-    createDefaultContextMenuAction: function() {
-      //var gridPanel = this;
+    createDefaultContextMenuAction: function (options) {
 
-      this.actionEditData = Ext.create('Ext.Action', {
-        icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/' +
-            'icon16.png',
-        text: 'Editer',
-        disabled: false/*,
-        handler: function(widget, event) {
-          var rec = gridPanel.getSelectionModel().getSelection()[0];
-          if (rec) {
+            var menuItems = options.menuItems;
+
+            if (menuItems) {
+
+                var menuActions = [];
+                var gridPanel = this;
+                Ext.Array.each(menuItems, function (item) {
+
+                    switch (item.type) {
+                        case "summarynavigation":
+                            var action = Ext.create('Ext.Action', {
+                                icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/' +
+                                    'icon16.png',
+                                text: item.title,
+                                disabled: false,
+                                item: item,
+                                handler: gridPanel.summaryNavigationMenuHandler,
+                                scope: gridPanel
+                            });
+                            menuActions.push(action);
+                            break;
+                    }
+                });
+
+                this.createContextMenu(menuActions); 
+            }
+    },
+    
+    summaryNavigationMenuHandler: function (widget, event) {
+        var rec = this.getSelectionModel().getSelection()[0];
+        if (rec) {
             var path = {
-                           name: options.databaseName,
-                           id : rec.internalId
-                       };
-                       var app = Epsitec.Cresus.Core.getApplication();
-                       app.showEditableEntity(path);
-          }
-        }*/
-      });
+                name: widget.item.databaseName,
+                id: rec.raw[widget.item.columnName]
+            };
+            var app = Epsitec.Cresus.Core.getApplication();
+            app.showEntity(path);
+        }
     },
 
     createColumns: function(options) {
@@ -558,7 +579,8 @@ function() {
     ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
-        var fields, form;
+          var fields, form;
+
         fields = this.createSearchFormFields(this.columnDefinitions);
         form = Ext.widget({
           xtype: 'form',
@@ -575,11 +597,11 @@ function() {
 
           buttons: [{
             text: 'Search',
-            handler: function() {
-
-            }
+            handler: this.executeFullSearch,
+            scope: this
           }]
         });
+
         this.fullSearchWindow = Ext.create('Ext.Window', {
           title: 'Full search',
           width: 400,
@@ -602,6 +624,12 @@ function() {
 
       }
     },
+    
+    executeFullSearch: function () {
+        //
+    },
+    
+    ///EXPORT
     onExportHandler: function() {
       var count, exportWindow;
 
