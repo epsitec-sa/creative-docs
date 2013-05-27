@@ -484,6 +484,7 @@
     <Compile Include="Resolvers\EntityViewControllerResolver.cs" />
     <Compile Include="Resolvers\IEntityPrinterFactory.cs" />
     <Compile Include="Resolvers\RepositoryResolver.cs" />
+    <Compile Include="Resolvers\LabelTextFactoryResolver.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Res.cs" />
@@ -504,6 +505,9 @@
     <Compile Include="Resources\Cresus.Core.Library.UserManagement\SourceCode\Res.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Workflows\SourceCode\Res.cs" />
+    <Compile Include="Labels\LabelTextFactory.cs" />
+    <Compile Include="Labels\LabelTextFactoryIdAttribute.cs" />
+    <Compile Include="Labels\LabelTextFactory`1.cs" />
     <Compile Include="UIBuilder.cs" />
     <Compile Include="V11\ImportFile.cs" />
     <Compile Include="V11\V11AbstractLine.cs" />
