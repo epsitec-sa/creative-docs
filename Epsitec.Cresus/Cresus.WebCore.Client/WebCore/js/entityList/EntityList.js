@@ -60,8 +60,8 @@ function() {
 
       if (epsitecConfig.featureContextualMenu) {
         this.createDefaultContextMenuAction(options);
-        
-        
+
+
         newOptions.listeners.itemcontextmenu = function(view, rec, node, i, e) {
           e.stopEvent();
           this.contextMenu.showAt(e.getXY());
@@ -84,46 +84,50 @@ function() {
       });
     },
 
-    createDefaultContextMenuAction: function (options) {
+    createDefaultContextMenuAction: function(options) {
 
-            var menuItems = options.menuItems;
+      var menuItems, menuActions, gridPanel;
 
-            if (menuItems) {
+      menuItems = options.menuItems;
 
-                var menuActions = [];
-                var gridPanel = this;
-                Ext.Array.each(menuItems, function (item) {
+      if (menuItems) {
 
-                    switch (item.type) {
-                        case "summarynavigation":
-                            var action = Ext.create('Ext.Action', {
-                                icon: '/images/Epsitec/Cresus/Core/Images/Base/BusinessSettings/' +
-                                    'icon16.png',
-                                text: item.title,
-                                disabled: false,
-                                item: item,
-                                handler: gridPanel.summaryNavigationMenuHandler,
-                                scope: gridPanel
-                            });
-                            menuActions.push(action);
-                            break;
-                    }
-                });
+        menuActions = [];
+        gridPanel = this;
+        Ext.Array.each(menuItems, function(item) {
 
-                this.createContextMenu(menuActions); 
-            }
+          switch (item.type) {
+            case 'summarynavigation':
+              var action = Ext.create('Ext.Action', {
+                icon: '/images/Epsitec/Cresus/Core/Images/Base/' +
+                    'BusinessSettings/icon16.png',
+                text: item.title,
+                disabled: false,
+                item: item,
+                handler: gridPanel.summaryNavigationMenuHandler,
+                scope: gridPanel
+              });
+              menuActions.push(action);
+              break;
+          }
+        });
+
+        this.createContextMenu(menuActions);
+      }
     },
-    
-    summaryNavigationMenuHandler: function (widget, event) {
-        var rec = this.getSelectionModel().getSelection()[0];
-        if (rec) {
-            var path = {
-                name: widget.item.databaseName,
-                id: rec.raw[widget.item.columnName]
-            };
-            var app = Epsitec.Cresus.Core.getApplication();
-            app.showEntity(path);
-        }
+
+    summaryNavigationMenuHandler: function(widget, event) {
+      var rec, path, app;
+
+      rec = this.getSelectionModel().getSelection()[0];
+      if (rec) {
+        path = {
+          name: widget.item.databaseName,
+          id: rec.raw[widget.item.columnName]
+        };
+        app = Epsitec.Cresus.Core.getApplication();
+        app.showEntity(path);
+      }
     },
 
     createColumns: function(options) {
@@ -573,38 +577,42 @@ function() {
 
       return buttons;
     },
-    
+
     ///QUICK SEARCH
     onQuickSearchHandler: function(field, e) {
-      var config = {
+      var columnName, config;
+
+      columnName = this.columnDefinitions[0].name;
+
+      config = {
         type: 'string',
-        dataIndex: this.columnDefinitions[0].name,
+        dataIndex: columnName,
         value: field.value,
         active: true
       };
       if (e.getKey() === e.ENTER) {
-        if (this.filters.filters.items.length == 0) {
+        if (this.filters.filters.items.length === 0) {
           this.filters.addFilter(config);
-          this.filters.filters.getByKey(this.columnDefinitions[0].name).fireEvent(
-              'update', this.filters.filters.getByKey(this.columnDefinitions[0].name)
+          this.filters.filters.getByKey(columnName).fireEvent(
+              'update', this.filters.filters.getByKey(columnName)
           );
         }
         else {
-            this.filters.filters.getByKey(this.columnDefinitions[0].name).setValue(field.value);
-            if (field.value != "") {      
-                this.filters.filters.getByKey(this.columnDefinitions[0].name).setActive(true);
-            }
-            else {
-                this.filters.clearFilters();
-            }
-            
+          this.filters.filters.getByKey(columnName).setValue(field.value);
+          if (field.value !== '') {
+            this.filters.filters.getByKey(columnName).setActive(true);
+          }
+          else {
+            this.filters.clearFilters();
+          }
         }
       }
     },
+
     ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
-          var fields, form;
+        var fields, form;
 
         fields = this.createSearchFormFields(this.columnDefinitions);
         form = Ext.widget({
@@ -649,11 +657,11 @@ function() {
 
       }
     },
-    
-    executeFullSearch: function () {
-        //
+
+    executeFullSearch: function() {
+      //
     },
-    
+
     ///EXPORT
     onExportHandler: function(type) {
       var count = this.store.getTotalCount();

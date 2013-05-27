@@ -41,7 +41,7 @@ function NotificationsToastr() {
       'debug': false,
       'positionClass': 'toast-bottom-full-width',
       'onclick': function() {
-          Epsitec.Cresus.Core.app.showEditableEntityWithError(
+        Epsitec.Cresus.Core.app.showEditableEntityWithError(
             path, message, errorField, notif.displayErrorInTile
         );
       },
