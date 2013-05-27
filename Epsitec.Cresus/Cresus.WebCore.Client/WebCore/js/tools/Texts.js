@@ -21,6 +21,22 @@ function() {
         return this.texts.exportLabel;
       },
 
+      getExportCsvLabel: function() {
+        return this.texts.exportCsvLabel;
+      },
+
+      getExportLabelLabel: function() {
+        return this.texts.exportLabelLabel;
+      },
+
+      getExportLabelText: function() {
+        return this.texts.exportLabelText;
+      },
+
+      getExportLabelLayout: function() {
+        return this.texts.exportLabelLayout;
+      },
+
       getSearchLabel: function() {
         return this.texts.searchLabel;
       },

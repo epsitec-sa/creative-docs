@@ -64,6 +64,7 @@ function() {
         favoritesOnly: options.favoritesOnly,
         columnDefinitions: json.content.columns,
         sorterDefinitions: json.content.sorters,
+        labelExportDefinitions: json.content.labelItems,
         enableCreate: json.content.enableCreate,
         enableDelete: json.content.enableDelete,
         creationViewId: json.content.creationViewId,

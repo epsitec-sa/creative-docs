@@ -47,6 +47,7 @@ function() {
           entityId: options.entityId,
           columnDefinitions: options.displayDatabase.columns,
           sorterDefinitions: options.displayDatabase.sorters,
+          labelExportDefinitions: options.displayDatabase.labelItems,
           enableCreate: options.displayDatabase.enableCreate,
           enableDelete: options.displayDatabase.enableDelete,
           pickDatabaseDefinition: options.pickDatabase,

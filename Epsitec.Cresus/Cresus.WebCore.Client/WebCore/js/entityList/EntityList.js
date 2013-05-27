@@ -7,6 +7,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
   'Epsitec.cresus.webcore.ui.ArrayExportWindow',
+  'Epsitec.cresus.webcore.ui.LabelExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
   'Ext.ux.grid.FiltersFeature',
   'Ext.Action'
@@ -27,6 +28,7 @@ function() {
     onSelectionChangeCallback: null,
     columnDefinitions: null,
     sorterDefinitions: null,
+    labelExportDefinitions: null,
     exportUrl: null,
     actionEditData: null,
     contextMenu: null,
@@ -510,17 +512,40 @@ function() {
 
       if (epsitecConfig.featureExport) {
         buttons.push('->');
-        buttons.push(Ext.create('Ext.Button', {
+        buttons.push({
           text: Epsitec.Texts.getExportLabel(),
           iconCls: 'icon-export',
-          listeners: {
-            click: this.onExportHandler,
-            scope: this
-          }
-        }));
+          menu: Ext.create('Ext.menu.Menu', {
+            items: this.createExportMenuItems(options)
+          })
+        });
       }
 
       return buttons;
+    },
+
+    createExportMenuItems: function(options) {
+      var items = [];
+
+      items.push({
+        text: Epsitec.Texts.getExportCsvLabel(),
+        listeners: {
+          click: function() { this.onExportHandler('csv'); },
+          scope: this
+        }
+      });
+
+      if (!Epsitec.Tools.isArrayEmpty(options.labelExportDefinitions)) {
+        items.push({
+          text: Epsitec.Texts.getExportLabelLabel(),
+          listeners: {
+            click: function() { this.onExportHandler('label'); },
+            scope: this
+          }
+        });
+      }
+
+      return items;
     },
 
     createSecondaryButtons: function() {
@@ -630,10 +655,8 @@ function() {
     },
     
     ///EXPORT
-    onExportHandler: function() {
-      var count, exportWindow;
-
-      count = this.store.getTotalCount();
+    onExportHandler: function(type) {
+      var count = this.store.getTotalCount();
 
       if (count === 0) {
         Epsitec.ErrorHandler.showError(
@@ -648,13 +671,35 @@ function() {
         );
       }
       else {
-        exportWindow = Ext.create('Epsitec.ArrayExportWindow', {
-          columnDefinitions: this.columnDefinitions,
-          exportUrl: this.buildUrlWithSortersAndFilters(this.exportUrl)
-        });
-
-        exportWindow.show();
+        this.doExport(type);
       }
+    },
+
+    doExport: function(type) {
+      var exportUrl, exportWindow;
+
+      exportUrl = this.buildUrlWithSortersAndFilters(this.exportUrl);
+
+      switch (type) {
+        case 'csv':
+          exportWindow = Ext.create('Epsitec.ArrayExportWindow', {
+            columnDefinitions: this.columnDefinitions,
+            exportUrl: exportUrl
+          });
+          break;
+
+        case 'label':
+          exportWindow = Ext.create('Epsitec.LabelExportWindow', {
+            labelExportDefinitions: this.labelExportDefinitions,
+            exportUrl: exportUrl
+          });
+          break;
+
+        default:
+          throw 'invalid export type: ' + type;
+      }
+
+      exportWindow.show();
     },
 
     onRefreshHandler: function() {
