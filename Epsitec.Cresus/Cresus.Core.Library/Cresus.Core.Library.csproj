@@ -429,6 +429,7 @@
     <Compile Include="Metadata\IFilter.cs" />
     <Compile Include="Metadata\LambdaFilter.cs" />
     <Compile Include="Metadata\RequestExtensions.cs" />
+    <Compile Include="Metadata\LabelExport.cs" />
     <Compile Include="Orchestrators\ActiveEntityCancelEventArgs.cs" />
     <Compile Include="Orchestrators\DataViewOrchestrator.cs" />
     <Compile Include="Orchestrators\INavigationPathElementProvider.cs" />
