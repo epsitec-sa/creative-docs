@@ -539,17 +539,19 @@ function() {
       if (e.getKey() === e.ENTER) {
         if (this.filters.filters.items.length == 0) {
           this.filters.addFilter(config);
-          this.filters.filters.items[0].fireEvent(
-              'update', this.filters.filters.items[0]
+          this.filters.filters.getByKey(this.columnDefinitions[0].name).fireEvent(
+              'update', this.filters.filters.getByKey(this.columnDefinitions[0].name)
           );
         }
         else {
-            this.filters.filters.items[0].setValue(field.value);
-            if (field.value == "")
-            {
-                this.filters.removeAll();
+            this.filters.filters.getByKey(this.columnDefinitions[0].name).setValue(field.value);
+            if (field.value != "") {      
+                this.filters.filters.getByKey(this.columnDefinitions[0].name).setActive(true);
+            }
+            else {
                 this.filters.clearFilters();
             }
+            
         }
       }
     },
