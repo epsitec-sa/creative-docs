@@ -150,12 +150,13 @@ function() {
     },
 
     onOkClick: function() {
-      var key, value, url;
+      var url, columnIds;
 
-      key = 'columns';
-      value = this.getSelectedColumnIds().join(';');
+      columnIds = this.getSelectedColumnIds().join(';');
 
-      url = Epsitec.Tools.addParameterToUrl(this.exportUrl, key, value);
+      url = this.exportUrl;
+      url = Epsitec.Tools.addParameterToUrl(url, 'type', 'array');
+      url = Epsitec.Tools.addParameterToUrl(url, 'columns', columnIds);
 
       window.open(url);
       this.close();

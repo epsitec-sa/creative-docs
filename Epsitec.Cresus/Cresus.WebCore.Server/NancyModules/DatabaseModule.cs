@@ -149,35 +149,66 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var caches = this.CoreServer.Caches;
 
-			string rawColumns = Request.Query.columns;
-
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
-				return DatabaseModule.Export (caches, extractor, rawColumns);
+				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
 		}
 
 
-		internal static Response Export(Caches caches, EntityExtractor extractor, string rawColumns)
+		internal static Response Export(Caches caches, EntityExtractor extractor, dynamic query)
 		{
-			var properties = caches.PropertyAccessorCache;
-			var metaData = extractor.Metadata;
-			var accessor = extractor.Accessor;
-			var format = new CsvArrayFormat ();
-
-			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
-
 			if (extractor.Accessor.GetItemCount () > 10000)
 			{
 				throw new InvalidOperationException ("Too much data in extractor");
 			}
 
-			EntityWriter writer = new ArrayWriter (properties, metaData, columns, accessor, format);
+			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
 
 			var filename = writer.GetFilename ();
 			var stream = writer.GetStream ();
 
 			return CoreResponse.CreateStreamResponse (stream, filename);
+		}
+
+
+		private static EntityWriter GetEntityWriter
+		(
+			Caches caches,
+			EntityExtractor extractor,
+			dynamic query
+		)
+		{
+			string type = query.type;
+
+			switch (type)
+			{
+				case "array":
+					return DatabaseModule.GetArrayWriter (caches, extractor, query);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static EntityWriter GetArrayWriter
+		(
+			Caches caches,
+			EntityExtractor extractor,
+			dynamic query
+		)
+		{
+			string rawColumns = query.columns;
+			
+			var metaData = extractor.Metadata;
+			var accessor = extractor.Accessor;
+
+			var properties = caches.PropertyAccessorCache;
+			var format = new CsvArrayFormat ();
+			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
+			
+			return new ArrayWriter (properties, metaData, columns, accessor, format);
 		}
 
 

@@ -55,11 +55,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var caches = this.CoreServer.Caches;
 
-			string rawColumns = Request.Query.columns;
-
 			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
 			{
-				return DatabaseModule.Export (caches, extractor, rawColumns);
+				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
 		}
 
