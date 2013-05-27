@@ -527,7 +527,8 @@ function() {
 
       return buttons;
     },
-
+    
+    ///QUICK SEARCH
     onQuickSearchHandler: function(field, e) {
       var config = {
         type: 'string',
@@ -536,18 +537,23 @@ function() {
         active: true
       };
       if (e.getKey() === e.ENTER) {
-        if (this.filters.filters.items[0] === null) {
+        if (this.filters.filters.items.length == 0) {
           this.filters.addFilter(config);
           this.filters.filters.items[0].fireEvent(
               'update', this.filters.filters.items[0]
           );
         }
         else {
-          this.filters.filters.items[0].setValue(field.value);
+            this.filters.filters.items[0].setValue(field.value);
+            if (field.value == "")
+            {
+                this.filters.removeAll();
+                this.filters.clearFilters();
+            }
         }
       }
     },
-
+    ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
         var fields, form;

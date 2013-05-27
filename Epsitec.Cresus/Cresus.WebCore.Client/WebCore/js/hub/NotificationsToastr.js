@@ -48,7 +48,7 @@ function NotificationsToastr() {
       'fadeIn': 300,
       'fadeOut': 1000,
       'timeOut': 0,
-      'extendedTimeOut': 0
+      'extendedTimeOut': 5000
     };
     toastr.warning(message.body, message.title);
   };
@@ -67,7 +67,7 @@ function NotificationsToastr() {
 
     toastr.options = {
       'debug': false,
-      'positionClass': 'toast-top-right',
+      'positionClass': 'toast-bottom-full-width',
       'fadeOut': 1000,
       'timeOut': 5000,
       'extendedTimeOut': 1000
