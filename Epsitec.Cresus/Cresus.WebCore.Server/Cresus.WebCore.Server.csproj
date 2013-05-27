@@ -131,6 +131,7 @@
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="Core\Databases\Database.cs" />
     <Compile Include="NancyModules\FavoritesModule.cs" />
+    <Compile Include="NancyModules\PrintModule.cs" />
     <Compile Include="NancyModules\ScopeModule.cs" />
     <Compile Include="NancyModules\SetModule.cs" />
     <Compile Include="NancyModules\SpecialFieldModule.cs" />

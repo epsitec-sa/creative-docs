@@ -10,6 +10,33 @@ namespace Epsitec.Cresus.WebCore.Server
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Types
+		{
+			internal static void _Initialize()
+			{
+				global::System.Object.Equals (LabelLayout, null);
+			}
+			
+			//	designer:cap/A1G002
+			public static readonly Epsitec.Common.Types.EnumType LabelLayout = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 0));
+		}
+		
+		public static class Values
+		{
+			public static class LabelLayout
+			{
+				//	designer:cap/A1G102
+				public static global::Epsitec.Common.Types.Caption Label_3475_70_X_36
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
+					}
+				}
+			}
+			
+		}
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
@@ -132,6 +159,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.WebCore.Server");
+			Types._Initialize ();
 			Strings._Initialize ();
 		}
 		
