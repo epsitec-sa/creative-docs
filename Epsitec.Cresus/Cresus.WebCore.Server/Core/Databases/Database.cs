@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			IEnumerable<Column> columns,
 			IEnumerable<Sorter> sorters,
 			IEnumerable<AbstractContextualMenuItem> menuItems,
+			IEnumerable<LabelExportItem> labelExportItems,
 			bool enableCreate,
 			bool enableDelete,
 			int? creationViewId,
@@ -41,6 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			this.columns = columns.ToList ();
 			this.sorters = sorters.ToList ();
 			this.menuItems = menuItems.ToList ();
+			this.labelExportItems = labelExportItems.ToList ();
 			this.enableCreate = enableCreate;
 			this.enableDelete = enableDelete;
 			this.creationViewId = creationViewId;
@@ -80,6 +82,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			get
 			{
 				return this.menuItems;
+			}
+		}
+
+
+		public IEnumerable<LabelExportItem> LabelExportItems
+		{
+			get
+			{
+				return this.labelExportItems;
 			}
 		}
 
@@ -224,6 +235,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				.Select (m => m.GetDataDictionary (caches))
 				.ToList ();
 
+			var labelItems = this.LabelExportItems
+				.Select (s => s.GetDataDictionary ())
+				.ToList ();
+
 			return new Dictionary<string, object> ()
 			{
 				{ "enableCreate", this.EnableCreate },
@@ -233,7 +248,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				{ "deletionViewId", this.DeletionViewId },
 				{ "columns", columns },
 				{ "sorters", sorters },
-				{ "menuItems", menuItems }, 
+				{ "menuItems", menuItems },
+				{ "labelItems", labelItems },
 			};
 		}
 
@@ -248,6 +264,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 
 		private readonly List<AbstractContextualMenuItem> menuItems;
+
+
+		private readonly List<LabelExportItem> labelExportItems;
 
 
 		private readonly bool enableCreate;

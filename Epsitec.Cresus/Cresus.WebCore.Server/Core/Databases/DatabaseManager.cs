@@ -101,6 +101,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				.MenuItems
 				.Select (m => new SummaryNavigationContextualMenuItem (m));
 
+			var labelExportItems = dataSet
+				.LabelExports
+				.Select (s => new LabelExportItem (s.TextFactoryId, s.Text));
+
 			var enableCreate = dataSet.EnableCreate;
 			var enableDelete = dataSet.EnableDelete;
 			var creationViewId = dataSet.CreationViewId;
@@ -108,8 +112,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			
 			return new Database
 			(
-				dataSet, columns, sorters, menuItems, enableCreate, enableDelete, creationViewId,
-				deletionViewId
+				dataSet, columns, sorters, menuItems, labelExportItems, enableCreate,
+				enableDelete, creationViewId, deletionViewId
 			);
 		}
 
