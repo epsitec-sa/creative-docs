@@ -8,6 +8,10 @@ function() {
 
     statics: {
       getStore: function(name) {
+        return this.getEnumerationStore(name, 'proxy/enum/get/' + name);
+      },
+
+      getEnumerationStore: function(name, url) {
         var store = Ext.data.StoreManager.lookup(name);
 
         if (Epsitec.Tools.isUndefined(store) || store === null) {
@@ -24,7 +28,7 @@ function() {
             },
             proxy: Ext.create('Ext.data.proxy.Ajax', {
               type: 'ajax',
-              url: 'proxy/enum/get/' + name,
+              url: url,
               reader: {
                 type: 'json',
                 root: 'content.values'
