@@ -40,6 +40,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string typeId = parameters.name;
 			var type = this.CoreServer.Caches.TypeCache.GetItem ((string) typeId);
 
+			return EnumModule.GetEnumResponse (type);
+		}
+
+
+		public static Response GetEnumResponse(Type type)
+		{
 			var values = EnumModule.GetValues (type).ToList ();
 
 			var content = new Dictionary<string, object> ()
