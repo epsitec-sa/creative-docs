@@ -6,7 +6,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.ListColumn',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
-  'Epsitec.cresus.webcore.ui.ExportWindow',
+  'Epsitec.cresus.webcore.ui.ArrayExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
   'Ext.ux.grid.FiltersFeature',
   'Ext.Action'
@@ -648,7 +648,7 @@ function() {
         );
       }
       else {
-        exportWindow = Ext.create('Epsitec.ExportWindow', {
+        exportWindow = Ext.create('Epsitec.ArrayExportWindow', {
           columnDefinitions: this.columnDefinitions,
           exportUrl: this.buildUrlWithSortersAndFilters(this.exportUrl)
         });

@@ -1,12 +1,12 @@
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
-  'Epsitec.cresus.webcore.ui.ExportItem'
+  'Epsitec.cresus.webcore.ui.ArrayExportItem'
 ],
 function() {
-  Ext.define('Epsitec.cresus.webcore.ui.ExportWindow', {
+  Ext.define('Epsitec.cresus.webcore.ui.ArrayExportWindow', {
     extend: 'Ext.window.Window',
-    alternateClassName: ['Epsitec.ExportWindow'],
+    alternateClassName: ['Epsitec.ArrayExportWindow'],
 
     /* Config */
 
@@ -111,7 +111,7 @@ function() {
           });
 
       return Ext.create('Ext.data.JsonStore', {
-        model: 'Epsitec.cresus.webcore.ui.ExportItem',
+        model: 'Epsitec.cresus.webcore.ui.ArrayExportItem',
         proxy: {
           type: 'memory',
           reader: {

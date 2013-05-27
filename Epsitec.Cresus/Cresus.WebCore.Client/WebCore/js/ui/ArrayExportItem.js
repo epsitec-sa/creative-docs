@@ -1,4 +1,4 @@
-Ext.define('Epsitec.cresus.webcore.ui.ExportItem', {
+Ext.define('Epsitec.cresus.webcore.ui.ArrayExportItem', {
   extend: 'Ext.data.Model',
   fields: [
     {
