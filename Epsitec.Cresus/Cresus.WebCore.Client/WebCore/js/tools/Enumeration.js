@@ -15,6 +15,13 @@ function() {
             storeId: name,
             fields: ['id', 'text'],
             autoLoad: true,
+            isLoaded: false,
+            listeners: {
+              load: function(me, records, successful, eOpts) {
+                me.isLoaded = true;
+              },
+              scope: this
+            },
             proxy: Ext.create('Ext.data.proxy.Ajax', {
               type: 'ajax',
               url: 'proxy/enum/get/' + name,

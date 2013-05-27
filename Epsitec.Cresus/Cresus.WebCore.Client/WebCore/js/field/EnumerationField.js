@@ -22,7 +22,10 @@ function() {
 
       store = Epsitec.Enumeration.getStore(options.enumerationName);
 
-      store.on('load', function() { this.select(options.value); }, this);
+      if (!store.isLoaded)
+      {
+        store.on('load', function() { this.select(options.value); }, this);
+      }
 
       newOptions = {
         store: store
