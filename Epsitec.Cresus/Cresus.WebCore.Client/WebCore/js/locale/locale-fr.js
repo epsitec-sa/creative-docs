@@ -61,6 +61,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         entitySelectionErrorMessage: 'L\'entit\u00E9 que vous avez cr\u00E9e ' +
             'ne peut pas \u00EAtre affich\u00E9e dans la liste, probablement ' +
             '\u00E0 cause d\'un filtre.',
+        entityRemoveWarningMessage: 'Voulez-vous l\'enlever de la liste?',
         pickerFavouriteItems: 'Favoris',
         pickerAllItems: 'Liste compl\u00E8te',
         exportTitle: 'Configuration de l\'Export',

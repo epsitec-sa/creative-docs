@@ -186,6 +186,10 @@ function() {
         return this.texts.entityCreationWarningMessage;
       },
 
+      getEntityRemoveWarningMessage: function() {
+        return this.texts.entityRemoveWarningMessage;
+      },
+
       getEntitySelectionErrorMessage: function() {
         return this.texts.entitySelectionErrorMessage;
       },

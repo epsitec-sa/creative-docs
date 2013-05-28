@@ -58,6 +58,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
             'does not satisfy the filter condition. Do you want to create it?',
         entitySelectionErrorMessage: 'The entity that you have created ' +
             'cannot be displayed in the list, probably because of a filter.',
+        entityRemoveWarningMessage: 'Do you want to remove it?',
         pickerFavouriteItems: 'Favourites',
         pickerAllItems: 'Complete list',
         exportTitle: 'Export configuration',

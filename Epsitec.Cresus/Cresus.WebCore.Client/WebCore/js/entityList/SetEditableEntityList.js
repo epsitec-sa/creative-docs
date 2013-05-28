@@ -15,7 +15,7 @@ function() {
     viewId: null,
     entityId: null,
     pickDatabaseDefinition: null,
-
+    toProcess:null,
     /* Constructor */
 
     constructor: function(options) {
@@ -47,19 +47,21 @@ function() {
     handleAddCallback: function(entityItems) {
       this.processEntities(entityItems, 'add');
     },
-
-    handleRemove: function(entityItems) {
+    
+    handleRemove: function (entityItems) {
+      var list = this;
+      this.toProcess = entityItems;
       Ext.MessageBox.confirm(
           Epsitec.Texts.getWarningTitle(),
           Epsitec.Texts.getEntityRemoveWarningMessage(),
           this.handleRemoveCallback,
-          this
+          list
       );
     },
 
     handleRemoveCallback: function(buttonId) {
       if (buttonId === 'yes') {
-        this.processEntities(this.entityItems, 'remove');
+        this.processEntities(this.toProcess, 'remove');
       }
     },
 
