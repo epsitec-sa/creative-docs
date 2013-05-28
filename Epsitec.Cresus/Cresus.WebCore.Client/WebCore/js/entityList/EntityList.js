@@ -384,12 +384,14 @@ function() {
           case 'int':
             field.xtype = 'numberfield';
             field.fieldLabel = c.title;
+            field.name = c.name;
             field.value = 1;
             break;
 
           case 'float':
             field.xtype = 'numberfield';
             field.fieldLabel = c.title;
+            field.name = c.name;
             field.value = 0.5;
             break;
 
@@ -397,6 +399,7 @@ function() {
             field.xtype = 'fieldset';
             field.useNull = true;
             field.title = c.title;
+            field.name = c.name;
             field.defaultType = 'checkbox';
             field.layout = 'anchor';
             field.defaults = {
@@ -418,6 +421,7 @@ function() {
           case 'date':
             field.xtype = 'fieldset';
             field.title = c.title;
+            field.name = c.name;
             field.defaultType = 'datefield';
             field.layout = 'anchor';
             field.defaults = {
@@ -442,11 +446,13 @@ function() {
           case 'list':
             field.fieldLabel = c.title;
             field.xtype = 'combo';
+            field.name = c.name;
             field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
             break;
 
           default:
             field.fieldLabel = c.title;
+            field.name = c.name;
             field.xtype = 'textfield';
             break;
         }
@@ -559,7 +565,7 @@ function() {
           xtype: 'textfield',
           width: 150,
           emptyText: Epsitec.Texts.getSearchLabel(),
-          name: 'searchParameter',
+          name: 'quicksearch',
           listeners: {
             specialkey: this.onQuickSearchHandler,
             scope: this
@@ -627,25 +633,27 @@ function() {
           },
           defaultType: 'textfield',
           items: fields,
-
-          buttons: [{
-            text: 'Search',
-            handler: this.executeFullSearch,
-            scope: this
+          buttons : [{
+              text: 'Search',
+              handler: this.executeFullSearch,
+              scope: this
           }]
         });
 
         this.fullSearchWindow = Ext.create('Ext.Window', {
-          title: 'Full search',
-          width: 400,
-          height: 200,
-          headerPosition: 'right',
-          layout: 'fit',
-          closable: true,
-          closeAction: 'hide',
-          items: form
+            title: 'Full search',
+            width: 400,
+            height: 200,
+            headerPosition: 'right',
+            layout: 'fit',
+            closable: true,
+            closeAction: 'hide',
+            items: form
 
-        }).showAt(e.container.getXY());
+        });
+        this.fullSearchWindow.showAt(e.container.getXY());
+
+        
       }
       else {
         if (this.fullSearchWindow.isVisible()) {
@@ -657,9 +665,50 @@ function() {
 
       }
     },
+    
+    executeFullSearch: function () {
+        var form = this.fullSearchWindow.items.items[0];
+        var list = this;
 
-    executeFullSearch: function() {
-      //
+        Ext.Array.each(form.items.items, function (item) {
+            if (list.filters.filters.getByKey(item.name) == null && item.lastValue != null) {
+                var config = {
+                    type: 'string',
+                    dataIndex: item.name,
+                    value: item.lastValue,
+                    active: true
+                };
+                list.filters.addFilter(config);
+                list.filters.filters.getByKey(item.name).fireEvent(
+                    'update', list.filters.filters.getByKey(item.name)
+                );
+            }
+            else
+            {
+                if (list.filters.filters.getByKey(item.name) != null)
+                {               
+                    if (item.lastValue) {
+                        if (item.lastValue.length > 0)
+                        {
+                            list.filters.filters.getByKey(item.name).setValue(item.lastValue);
+                            list.filters.filters.getByKey(item.name).setActive(true);
+                        }
+                        else
+                        {
+                            list.filters.filters.getByKey(item.name).setActive(false);
+                        }
+                        
+                    }
+                    else
+                    {
+                        list.filters.filters.getByKey(item.name).setActive(false);
+                    }
+                }
+                
+            }
+        });
+
+        this.fullSearchWindow.hide();
     },
 
     ///EXPORT
