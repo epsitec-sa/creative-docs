@@ -647,7 +647,7 @@ function() {
           defaultType: 'textfield',
           items: fields,
           buttons : [{
-              text: 'RaZ',
+              text: 'Reinitialiser',
               handler: this.resetFullSearch,
               scope: this
           },{
@@ -658,10 +658,10 @@ function() {
         });
 
         this.fullSearchWindow = Ext.create('Ext.Window', {
-            title: 'Full search',
+            title: 'Recherche',
             width: 400,
             height: 200,
-            headerPosition: 'right',
+            header: 'false',
             layout: 'fit',
             closable: true,
             closeAction: 'hide',
