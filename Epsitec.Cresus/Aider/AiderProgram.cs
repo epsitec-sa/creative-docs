@@ -7,6 +7,7 @@ using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Data.Subscription;
 
 using Epsitec.Common.Debug;
+using Epsitec.Common.IO;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
@@ -18,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Epsitec.Common.IO;
 
 namespace Epsitec.Aider
 {
