@@ -10,6 +10,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.LabelExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
   'Ext.ux.grid.FiltersFeature',
+  'Ext.ux.DataTip',
   'Ext.Action'
 ],
 function() {
@@ -372,7 +373,8 @@ function() {
       });
     },
 
-    createSearchFormFields: function(columnDefinitions) {
+    createSearchFormFields: function (columnDefinitions) {
+      var list = this;
       return columnDefinitions.map(function(c) {
         var field = {
           name: c.name,
@@ -454,6 +456,9 @@ function() {
             field.fieldLabel = c.title;
             field.name = c.name;
             field.xtype = 'textfield';
+            field.tooltip = "Touche ENTER pour lancer"
+            field.listeners = { specialkey: list.onEnterExecuteFullSearch, scope: list };
+              
             break;
         }
 
@@ -619,7 +624,7 @@ function() {
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
         var fields, form;
-
+        Ext.QuickTips.init();
         fields = this.createSearchFormFields(this.columnDefinitions);
         form = Ext.widget({
           xtype: 'form',
@@ -631,10 +636,17 @@ function() {
             msgTarget: 'side',
             labelWidth: 75
           },
+          plugins: {
+              ptype: 'datatip'
+          },
           defaultType: 'textfield',
           items: fields,
           buttons : [{
-              text: 'Search',
+              text: 'RaZ',
+              handler: this.resetFullSearch,
+              scope: this
+          },{
+              text: 'Rechercher',
               handler: this.executeFullSearch,
               scope: this
           }]
@@ -666,51 +678,68 @@ function() {
       }
     },
     
+    onEnterExecuteFullSearch: function (field, e) {
+        if (e.getKey() === e.ENTER) {
+            this.executeFullSearch();
+        }
+    },
+
     executeFullSearch: function () {
         var form = this.fullSearchWindow.items.items[0];
         var list = this;
 
         Ext.Array.each(form.items.items, function (item) {
-            if (list.filters.filters.getByKey(item.name) == null && item.lastValue != null) {
-                var config = {
-                    type: 'string',
-                    dataIndex: item.name,
-                    value: item.lastValue,
-                    active: true
-                };
-                list.filters.addFilter(config);
-                list.filters.filters.getByKey(item.name).fireEvent(
-                    'update', list.filters.filters.getByKey(item.name)
-                );
-            }
-            else
-            {
-                if (list.filters.filters.getByKey(item.name) != null)
-                {               
-                    if (item.lastValue) {
-                        if (item.lastValue.length > 0)
-                        {
-                            list.filters.filters.getByKey(item.name).setValue(item.lastValue);
-                            list.filters.filters.getByKey(item.name).setActive(true);
-                        }
-                        else
-                        {
-                            list.filters.filters.getByKey(item.name).setActive(false);
-                        }
-                        
+        if (list.filters.filters.getByKey(item.name) == null && item.lastValue != null) {
+            var config = {
+                type: 'string',
+                dataIndex: item.name,
+                value: item.lastValue,
+                active: true
+            };
+            list.filters.addFilter(config);
+            list.filters.filters.getByKey(item.name).fireEvent(
+                'update', list.filters.filters.getByKey(item.name)
+            );
+        }
+        else
+        {
+            if (list.filters.filters.getByKey(item.name) != null)
+            {               
+                if (item.lastValue) {
+                    if (item.lastValue.length > 0)
+                    {
+                        list.filters.filters.getByKey(item.name).setValue(item.lastValue);
+                        list.filters.filters.getByKey(item.name).setActive(true);
                     }
                     else
                     {
                         list.filters.filters.getByKey(item.name).setActive(false);
                     }
+                        
                 }
-                
+                else
+                {
+                    list.filters.filters.getByKey(item.name).setActive(false);
+                }
             }
+                
+        }
         });
 
         this.fullSearchWindow.hide();
     },
+    resetFullSearch: function () {
+        var form = this.fullSearchWindow.items.items[0];
+        var list = this;
 
+        Ext.Array.each(form.items.items, function (item) {
+            item.reset();
+            if (list.filters.filters.getByKey(item.name) != null) {
+                list.filters.filters.getByKey(item.name).setValue(item.lastValue);
+                list.filters.filters.getByKey(item.name).setActive(false);
+            }
+        });
+    },
     ///EXPORT
     onExportHandler: function(type) {
       var count = this.store.getTotalCount();
