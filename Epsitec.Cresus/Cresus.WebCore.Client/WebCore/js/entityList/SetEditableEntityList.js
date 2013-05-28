@@ -15,7 +15,7 @@ function() {
     viewId: null,
     entityId: null,
     pickDatabaseDefinition: null,
-    toProcess:null,
+    toProcess: null,
     /* Constructor */
 
     constructor: function(options) {
@@ -47,8 +47,8 @@ function() {
     handleAddCallback: function(entityItems) {
       this.processEntities(entityItems, 'add');
     },
-    
-    handleRemove: function (entityItems) {
+
+    handleRemove: function(entityItems) {
       var list = this;
       this.toProcess = entityItems;
       Ext.MessageBox.confirm(

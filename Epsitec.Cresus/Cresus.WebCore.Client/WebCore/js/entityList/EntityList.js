@@ -139,14 +139,12 @@ function() {
     },
 
     createBasicColumns: function(columnDefinitions) {
-      var basicColumns = [
-        {
-          xtype: 'rownumberer',
-          width: 35,
-          sortable: false,
-          resizable: true
-        }
-      ];
+      var basicColumns = [{
+        xtype: 'rownumberer',
+        width: 35,
+        sortable: false,
+        resizable: true
+      }];
 
       if (Epsitec.Tools.isArrayEmpty(columnDefinitions)) {
         basicColumns.push({
@@ -334,16 +332,13 @@ function() {
     },
 
     createBasicFields: function() {
-      return [
-        {
-          name: 'id',
-          type: 'string'
-        },
-        {
-          name: 'summary',
-          type: 'string'
-        }
-      ];
+      return [{
+        name: 'id',
+        type: 'string'
+      }, {
+        name: 'summary',
+        type: 'string'
+      }];
     },
 
     createDynamicFields: function(columnDefinitions) {
@@ -373,13 +368,12 @@ function() {
       });
     },
 
-    createSearchFormFields: function (columnDefinitions) {
+    createSearchFormFields: function(columnDefinitions) {
       var list = this;
       return columnDefinitions.map(function(c) {
         var field = {
           name: c.name,
           type: c.type.type
-
         };
 
         switch (c.type.type) {
@@ -410,11 +404,10 @@ function() {
             field.items = [{
               boxLabel: 'True',
               name: 'isTrue'
-
-            },{
+            }, {
               boxLabel: 'False',
               name: 'isFalse'
-            },{
+            }, {
               boxLabel: 'Null',
               name: 'isNull'
             }];
@@ -432,12 +425,11 @@ function() {
             field.items = [{
               fieldLabel: 'Before',
               name: 'before'
-
-            },{
+            }, {
               fieldLabel: 'After',
               name: 'after',
               dateFormat: 'd.m.Y'
-            },{
+            }, {
               fieldLabel: 'At',
               name: 'at',
               dateFormat: 'd.m.Y'
@@ -456,9 +448,12 @@ function() {
             field.fieldLabel = c.title;
             field.name = c.name;
             field.xtype = 'textfield';
-            field.tooltip = "Touche ENTER pour lancer"
-            field.listeners = { specialkey: list.onEnterExecuteFullSearch, scope: list };
-              
+            field.tooltip = 'Touche ENTER pour lancer';
+            field.listeners = {
+              specialkey: list.onEnterExecuteFullSearch,
+              scope: list
+            };
+
             break;
         }
 
@@ -491,15 +486,13 @@ function() {
     },
 
     createSecondaryToolbar: function() {
-      if (epsitecConfig.featureSearch)
-      {
+      if (epsitecConfig.featureSearch) {
         return Ext.create('Ext.Toolbar', {
           dock: 'top',
           items: this.createSecondaryButtons()
         });
       }
-      else
-      {
+      else {
         return null;
       }
     },
@@ -603,9 +596,8 @@ function() {
       };
       if (e.getKey() === e.ENTER) {
 
-        if (this.fullSearchWindow)
-        {
-            this.fullSearchWindow.items.items[0].items.items[0].setValue(field.value);
+        if (this.fullSearchWindow) {
+          this.fullSearchWindow.items.items[0].items.items[0].setValue(field.value);
         }
         if (this.filters.filters.items.length === 0) {
           this.filters.addFilter(config);
@@ -642,37 +634,34 @@ function() {
             labelWidth: 75
           },
           plugins: {
-              ptype: 'datatip'
+            ptype: 'datatip'
           },
           defaultType: 'textfield',
           items: fields,
-          buttons : [{
-              text: 'Reinitialiser',
-              handler: this.resetFullSearch,
-              scope: this
-          },{
-              text: 'Rechercher',
-              handler: this.executeFullSearch,
-              scope: this
+          buttons: [{
+            text: 'Reinitialiser',
+            handler: this.resetFullSearch,
+            scope: this
+          }, {
+            text: 'Rechercher',
+            handler: this.executeFullSearch,
+            scope: this
           }]
         });
 
         this.fullSearchWindow = Ext.create('Ext.Window', {
-            title: 'Recherche',
-            width: 400,
-            height: 200,
-            header: 'false',
-            layout: 'fit',
-            closable: true,
-            closeAction: 'hide',
-            items: form
-
+          title: 'Recherche',
+          width: 400,
+          height: 200,
+          header: 'false',
+          layout: 'fit',
+          closable: true,
+          closeAction: 'hide',
+          items: form
         });
 
-        
         this.fullSearchWindow.showAt(e.container.getXY());
 
-        
       }
       else {
         if (this.fullSearchWindow.isVisible()) {
@@ -685,70 +674,69 @@ function() {
       }
       this.fullSearchWindow.items.items[0].items.items[0].setValue(this.dockedItems.items[2].items.items[0].lastValue);
     },
-    
-    onEnterExecuteFullSearch: function (field, e) {
-        if (e.getKey() === e.ENTER) {
-            this.executeFullSearch();
-        }
+
+    onEnterExecuteFullSearch: function(field, e) {
+      if (e.getKey() === e.ENTER) {
+        this.executeFullSearch();
+      }
     },
 
-    executeFullSearch: function () {
-        var form = this.fullSearchWindow.items.items[0];
-        var list = this;
-        list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
-        Ext.Array.each(form.items.items, function (item) {
-        if (list.filters.filters.getByKey(item.name) == null && item.lastValue != null) {
-            var config = {
-                type: 'string',
-                dataIndex: item.name,
-                value: item.lastValue,
-                active: true
-            };
-            list.filters.addFilter(config);
-            list.filters.filters.getByKey(item.name).fireEvent(
-                'update', list.filters.filters.getByKey(item.name)
-            );
-        }
-        else
-        {
-            if (list.filters.filters.getByKey(item.name) != null)
-            {               
-                if (item.lastValue) {
-                    if (item.lastValue.length > 0)
-                    {
-                        list.filters.filters.getByKey(item.name).setValue(item.lastValue);
-                        list.filters.filters.getByKey(item.name).setActive(true);
-                    }
-                    else
-                    {
-                        list.filters.filters.getByKey(item.name).setActive(false);
-                    }
-                        
-                }
-                else
-                {
-                    list.filters.filters.getByKey(item.name).setActive(false);
-                }
-            }
-                
-        }
-        });
+    executeFullSearch: function() {
+      var form, list;
 
-        this.fullSearchWindow.hide();
-    },
-    resetFullSearch: function () {
-        var form = this.fullSearchWindow.items.items[0];
-        var list = this;
-        
-        Ext.Array.each(form.items.items, function (item) {
-            item.reset();
-            if (list.filters.filters.getByKey(item.name) != null) {
+      form = this.fullSearchWindow.items.items[0];
+      list = this;
+
+      list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
+      Ext.Array.each(form.items.items, function(item) {
+        if (list.filters.filters.getByKey(item.name) === null && item.lastValue !== null) {
+          var config = {
+            type: 'string',
+            dataIndex: item.name,
+            value: item.lastValue,
+            active: true
+          };
+          list.filters.addFilter(config);
+          list.filters.filters.getByKey(item.name).fireEvent(
+              'update', list.filters.filters.getByKey(item.name)
+          );
+        }
+        else {
+          if (list.filters.filters.getByKey(item.name) !== null) {
+            if (item.lastValue) {
+              if (item.lastValue.length > 0) {
                 list.filters.filters.getByKey(item.name).setValue(item.lastValue);
+                list.filters.filters.getByKey(item.name).setActive(true);
+              }
+              else {
                 list.filters.filters.getByKey(item.name).setActive(false);
+              }
             }
-        });
-        list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
+            else {
+              list.filters.filters.getByKey(item.name).setActive(false);
+            }
+          }
+        }
+      });
+
+      this.fullSearchWindow.hide();
     },
+    resetFullSearch: function() {
+      var form, list;
+
+      form = this.fullSearchWindow.items.items[0];
+      list = this;
+
+      Ext.Array.each(form.items.items, function(item) {
+        item.reset();
+        if (list.filters.filters.getByKey(item.name) !== null) {
+          list.filters.filters.getByKey(item.name).setValue(item.lastValue);
+          list.filters.filters.getByKey(item.name).setActive(false);
+        }
+      });
+      list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
+    },
+
     ///EXPORT
     onExportHandler: function(type) {
       var count = this.store.getTotalCount();
@@ -910,8 +898,7 @@ function() {
       // So if the user has removed all the sort criteria, we must do the job by
       // ourselves.
 
-      if (sorters.length === 0)
-      {
+      if (sorters.length === 0) {
         this.store.sorters.clear();
         this.reloadStore();
       }
