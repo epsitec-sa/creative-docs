@@ -17,6 +17,7 @@ using Epsitec.Data.Platform;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -30,13 +31,12 @@ namespace Epsitec.Aider
 			AiderProgram.Run (args);
 		}
 
+		[Conditional ("RELEASE")]
 		private static void SetupExceptionCatcher()
 		{
-#if !DEBUG
 			GeneralExceptionCatcher.Setup ();
 			GeneralExceptionCatcher.AbortOnException = true;
 			GeneralExceptionCatcher.AddExceptionHandler (e => ErrorLogger.LogException (e));
-#endif
 		}
 
 		private static void Run(string[] args)
