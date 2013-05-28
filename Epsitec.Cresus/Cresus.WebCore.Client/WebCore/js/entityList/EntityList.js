@@ -602,6 +602,11 @@ function() {
         active: true
       };
       if (e.getKey() === e.ENTER) {
+
+        if (this.fullSearchWindow)
+        {
+            this.fullSearchWindow.items.items[0].items.items[0].setValue(field.value);
+        }
         if (this.filters.filters.items.length === 0) {
           this.filters.addFilter(config);
           this.filters.filters.getByKey(columnName).fireEvent(
@@ -663,6 +668,8 @@ function() {
             items: form
 
         });
+
+        
         this.fullSearchWindow.showAt(e.container.getXY());
 
         
@@ -676,6 +683,7 @@ function() {
         }
 
       }
+      this.fullSearchWindow.items.items[0].items.items[0].setValue(this.dockedItems.items[2].items.items[0].lastValue);
     },
     
     onEnterExecuteFullSearch: function (field, e) {
@@ -687,7 +695,7 @@ function() {
     executeFullSearch: function () {
         var form = this.fullSearchWindow.items.items[0];
         var list = this;
-
+        list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
         Ext.Array.each(form.items.items, function (item) {
         if (list.filters.filters.getByKey(item.name) == null && item.lastValue != null) {
             var config = {
@@ -731,7 +739,7 @@ function() {
     resetFullSearch: function () {
         var form = this.fullSearchWindow.items.items[0];
         var list = this;
-
+        
         Ext.Array.each(form.items.items, function (item) {
             item.reset();
             if (list.filters.filters.getByKey(item.name) != null) {
@@ -739,6 +747,7 @@ function() {
                 list.filters.filters.getByKey(item.name).setActive(false);
             }
         });
+        list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
     },
     ///EXPORT
     onExportHandler: function(type) {
