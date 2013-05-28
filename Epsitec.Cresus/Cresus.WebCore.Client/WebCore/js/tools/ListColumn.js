@@ -32,7 +32,9 @@ function() {
     /* Additional methods */
 
     defaultRenderer: function(value, data, record, idx1, idx2, store, view) {
-
+	  if (!this.isVisible()){
+            return '';
+      }
       // If the store is not yet loaded, we can't dispay anything, so we return
       // a dummy text and schedule a refresh for later on. Unfortunately, for
       // now, the refresh will refresh the whole table, as I have not found a
