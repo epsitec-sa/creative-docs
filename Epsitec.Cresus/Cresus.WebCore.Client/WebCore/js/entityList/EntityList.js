@@ -498,7 +498,9 @@ function() {
     },
 
     createButtons: function(options) {
-      var buttons = Ext.Array.clone(options.toolbarButtons || []);
+      var buttons, exportMenuItems;
+
+      buttons = Ext.Array.clone(options.toolbarButtons || []);
 
       buttons.push(Ext.create('Ext.Button', {
         text: Epsitec.Texts.getSortLabel(),
@@ -518,13 +520,15 @@ function() {
         }
       }));
 
-      if (epsitecConfig.featureExport) {
+      exportMenuItems = this.createExportMenuItems(options);
+      if (!Epsitec.Tools.isArrayEmpty(exportMenuItems))
+      {
         buttons.push('->');
         buttons.push({
           text: Epsitec.Texts.getExportLabel(),
           iconCls: 'icon-export',
           menu: Ext.create('Ext.menu.Menu', {
-            items: this.createExportMenuItems(options)
+            items: exportMenuItems
           })
         });
       }
@@ -535,13 +539,15 @@ function() {
     createExportMenuItems: function(options) {
       var items = [];
 
-      items.push({
-        text: Epsitec.Texts.getExportCsvLabel(),
-        listeners: {
-          click: function() { this.onExportHandler('csv'); },
-          scope: this
-        }
-      });
+      if (epsitecConfig.featureCsvExport) {
+        items.push({
+          text: Epsitec.Texts.getExportCsvLabel(),
+          listeners: {
+            click: function() { this.onExportHandler('csv'); },
+            scope: this
+          }
+        });
+      }
 
       if (!Epsitec.Tools.isArrayEmpty(options.labelExportDefinitions)) {
         items.push({
