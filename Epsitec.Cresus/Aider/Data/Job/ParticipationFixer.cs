@@ -63,17 +63,11 @@ namespace Epsitec.Aider.Data.Job
 
 			if (participation.Person.IsNotNull ())
 			{
-				var address = participation.Person.Address;
-
-				contact = participation.Person
-					.Contacts
-					.FirstOrDefault (c => c.Address == address);
+				contact = participation.Person.GetMainContact ();
 			}
 			else if (participation.LegalPerson.IsNotNull ())
 			{
-				contact = participation.LegalPerson
-					.Contacts
-					.FirstOrDefault ();
+				contact = participation.LegalPerson.GetMainContact ();
 			}
 			else
 			{

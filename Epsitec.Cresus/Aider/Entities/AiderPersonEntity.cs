@@ -233,6 +233,13 @@ namespace Epsitec.Aider.Entities
 			return this.GetParticipations ().Where (g => g.Group == group);
 		}
 
+		public AiderContactEntity GetMainContact()
+		{
+			var mainAddress = this.GetAddress ();
+
+			return this.Contacts.FirstOrDefault (c => c.Address == mainAddress);
+		}
+
 
 		internal void RefreshCache()
 		{

@@ -70,6 +70,11 @@ namespace Epsitec.Aider.Entities
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
+		public AiderContactEntity GetMainContact()
+		{
+			return this.Contacts.FirstOrDefault ();
+		}
+
 		private IList<AiderGroupParticipantEntity> GetParticipations()
 		{
 			if (this.participations == null)
