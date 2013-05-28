@@ -4,6 +4,7 @@
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Data.Job;
 using Epsitec.Aider.Data.Subscription;
 
 using Epsitec.Common.Debug;
@@ -126,6 +127,12 @@ namespace Epsitec.Aider
 				if (args.Contains ("-uploadsubscriptions"))				//	-uploadsubscriptions -input:Q:\output.txt -response:Q:\tamedia.log
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.UploadSubscriptionExportation (args));
+					return;
+				}
+
+				if (args.Contains ("-fixparticipations"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixParticipations (args));
 					return;
 				}
 			}
@@ -252,6 +259,12 @@ namespace Epsitec.Aider
 				
 				writer.Write ();
 			});
+		}
+
+
+		private static void FixParticipations(string[] args)
+		{
+			AiderProgram.RunWithCoreData (ParticipationFixer.FixParticipations);
 		}
 
 		private static void AnalyzeParishFile(string[] args)
