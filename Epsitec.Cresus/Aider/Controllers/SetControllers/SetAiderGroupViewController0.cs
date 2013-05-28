@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 				.Select(e => new ParticipationData (e))
 				.ToList();
 
-			group.AddParticipations (this.BusinessContext, participations, Date.Today, FormattedText.Empty);
+			group.AddParticipations (context, participations, Date.Today, FormattedText.Empty);
 		}
 
 		protected override void RemoveItems(IEnumerable<AiderGroupParticipantEntity> entitiesToRemove)
