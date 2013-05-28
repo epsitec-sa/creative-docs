@@ -1178,10 +1178,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var aiderPerson in aiderPersons)
 			{
-				var participationData = new ParticipationData
-				{
-					Person = aiderPerson,
-				};
+				var participationData = new ParticipationData (aiderPerson);
 
 				AiderGroupParticipantEntity.StartParticipation (businessContext, importationGroup, participationData);
 			}
@@ -1407,7 +1404,7 @@ namespace Epsitec.Aider.Data.Eerv
 				var endDate = eervActivity.EndDate;
 				var remarks = TextFormatter.FormatText (eervActivity.Remarks);
 
-				var participationData = new ParticipationData ();
+				ParticipationData participationData;
 
 				if (eervActivity.Person != null)
 				{
@@ -1415,14 +1412,14 @@ namespace Epsitec.Aider.Data.Eerv
 					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (aiderPersonKey);
 
 					aiderPersons.Add (aiderPerson);
-					participationData.Person = aiderPerson;
+					participationData = new ParticipationData (aiderPerson);
 				}
 				else if (eervActivity.LegalPerson != null)
 				{
 					var aiderLegalpersonKey = eervLegalPersonToKeys[eervActivity.LegalPerson];
 					var aiderLegalperson = (AiderLegalPersonEntity) dataContext.ResolveEntity (aiderLegalpersonKey);
 
-					participationData.LegalPerson = aiderLegalperson;
+					participationData = new ParticipationData (aiderLegalperson);
 				}
 				else
 				{

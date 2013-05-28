@@ -66,11 +66,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-			var participationData = new ParticipationData
-			{
-				Person = this.Entity,
-				//	@PA: contact ?
-			};
+			var participationData = new ParticipationData (this.Entity);
 
 			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, group, participationData, startDate, comment);
 		}

@@ -5,6 +5,17 @@ namespace Epsitec.Aider.Entities
 {
 	public struct ParticipationData
 	{
+
+		public ParticipationData(AiderPersonEntity person)
+			: this (person.GetMainContact ())
+		{
+		}
+
+		public ParticipationData(AiderLegalPersonEntity legalPerson)
+			: this (legalPerson.GetMainContact ())
+		{
+		}
+
 		public ParticipationData(AiderContactEntity contact)
 		{
 			this.Person = contact.Person;
@@ -19,8 +30,8 @@ namespace Epsitec.Aider.Entities
 			this.Contact = participation.Contact;
 		}
 
-		public AiderPersonEntity		Person;
-		public AiderLegalPersonEntity	LegalPerson;
-		public AiderContactEntity		Contact;
+		public readonly AiderPersonEntity		Person;
+		public readonly AiderLegalPersonEntity	LegalPerson;
+		public readonly AiderContactEntity		Contact;
 	}
 }
