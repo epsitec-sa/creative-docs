@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="42" name="Cresus.WebCore.Server" layer="s" textMode="FormattedText" namespace="Epsitec.Cresus.WebCore.Server">
   <Versions>
-    <Version id="8" build="6" date="2013-05-24T14:50:46.5797075Z" />
+    <Version id="8" build="7" date="2013-05-29T15:54:02.8523390Z" />
   </Versions>
 </ModuleInfo>

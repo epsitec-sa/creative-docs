@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	[DesignerVisible]
 	public enum LabelLayout
 	{
-		Label_3475_70_X_36,
+		Avery_3475,
 	}
 
 

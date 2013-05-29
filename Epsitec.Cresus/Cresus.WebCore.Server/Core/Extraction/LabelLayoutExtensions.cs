@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 			switch (layout)
 			{
-				case LabelLayout.Label_3475_70_X_36:
+				case LabelLayout.Avery_3475:
 
 					// The 0 margin width for the left and right sides is wrong. In reality, it is
 					// about 1 mm and the labels on both sides are 69mm instead of 70. We can't
@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 						LabelSize = new Size (700, 360),
 						LabelMargins = new Margins (100, 100, 50, 50),
 					};
+					break;
 
 				default:
 					throw new NotImplementedException ();
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		{
 			switch (layout)
 			{
-				case LabelLayout.Label_3475_70_X_36:
+				case LabelLayout.Avery_3475:
 					return new ExportPdfInfo ()
 					{
 						PageSize = PaperSize.A4,
