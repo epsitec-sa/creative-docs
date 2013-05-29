@@ -16,6 +16,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 		public static LabelsSetup GetLabelsSetup(this LabelLayout layout)
 		{
+			var labelSetup = new LabelsSetup ()
+			{
+				TextStyle = new TextStyle ()
+				{
+					Font = Font.GetFont ("Arial", "Regular"),
+					FontSize = 35.0,
+				}
+			};
+
 			switch (layout)
 			{
 				case LabelLayout.Label_3475_70_X_36:
@@ -26,17 +35,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					// pretending that there is no margin on the left and right and that the
 					// labels are all 70mm wide.
 
-					return new LabelsSetup ()
+					labelSetup = new LabelsSetup ()
 					{
 						PageMargins = new Margins (0, 0, 45, 45),
 						LabelGap = new Size (0, 0),
 						LabelSize = new Size (700, 360),
-						LabelMargins = new Margins (50, 50, 25, 25),
+						LabelMargins = new Margins (100, 100, 50, 50),
 					};
 
 				default:
 					throw new NotImplementedException ();
 			}
+
+			return labelSetup;
 		}
 
 
