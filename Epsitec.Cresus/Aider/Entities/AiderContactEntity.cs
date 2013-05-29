@@ -55,17 +55,11 @@ namespace Epsitec.Aider.Entities
 			switch (this.ContactType)
 			{
 				case Enumerations.ContactType.Legal:
-					return GetLegalPersonAddressRecipientText ();
+					return this.GetLegalPersonRecipientText ();
 
 				case Enumerations.ContactType.PersonAddress:
 				case Enumerations.ContactType.PersonHousehold:
-					return StringUtils.Join
-					(
-						" ",
-						this.Person.MrMrs.GetText (true),
-						this.Person.GetCallName (),
-						this.Person.eCH_Person.PersonOfficialName
-					);
+					return this.GetPersonRecipientText ();
 
 				default:
 					// Is that right or should we throw here?
@@ -74,7 +68,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private FormattedText GetLegalPersonAddressRecipientText()
+		private FormattedText GetLegalPersonRecipientText()
 		{
 			return TextFormatter.FormatText
 			(
@@ -88,6 +82,19 @@ namespace Epsitec.Aider.Entities
 				this.LegalPerson.Name
 			);
 		}
+
+
+		private string GetPersonRecipientText()
+		{
+			return StringUtils.Join
+			(
+				" ",
+				this.Person.MrMrs.GetText (true),
+				this.Person.GetCallName (),
+				this.Person.eCH_Person.PersonOfficialName
+			);
+		}
+
 
 		public override FormattedText GetCompactSummary()
 		{
