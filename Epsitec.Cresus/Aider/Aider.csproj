@@ -124,6 +124,7 @@
     <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\TextParser.cs" />
     <Compile Include="Enumerations\WarningTarget.cs" />
+    <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
     <Compile Include="Override\AiderActivityLogger.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
     <Compile Include="Override\AiderUserManager.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="Rules\AiderSubscriptionRefusalBusinessRules.cs" />
     <Compile Include="Rules\AiderTownBusinessRules.cs" />
     <Compile Include="Rules\AiderUserBusinessRules.cs" />
+    <Compile Include="Labels\AiderContactLabelTextFactory0.cs" />
     <Compile Include="Tests\EChFileAnalyzer.cs" />
     <Compile Include="Tests\ParishFileAnalyzer.cs" />
     <Compile Include="Tests\TestMatchSort.cs" />

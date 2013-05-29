@@ -39,7 +39,56 @@ namespace Epsitec.Aider.Entities
 
 			return TextFormatter.FormatText (this.DisplayName, "\n", this.DisplayZipCode, this.DisplayAddress);
 		}
-		
+
+		public FormattedText GetAddressLabelText()
+		{
+			return TextFormatter.FormatText
+			(
+				this.GetAddressRecipientText (),
+				"\n",
+				this.Address.GetPostalAddress ()
+			);
+		}
+
+		private FormattedText GetAddressRecipientText()
+		{
+			switch (this.ContactType)
+			{
+				case Enumerations.ContactType.Legal:
+					return GetLegalPersonAddressRecipientText ();
+
+				case Enumerations.ContactType.PersonAddress:
+				case Enumerations.ContactType.PersonHousehold:
+					return StringUtils.Join
+					(
+						" ",
+						this.Person.MrMrs.GetText (true),
+						this.Person.GetCallName (),
+						this.Person.eCH_Person.PersonOfficialName
+					);
+
+				default:
+					// Is that right or should we throw here?
+					return FormattedText.Empty;
+			}
+		}
+
+
+		private FormattedText GetLegalPersonAddressRecipientText()
+		{
+			return TextFormatter.FormatText
+			(
+				string.Join
+				(
+					" ",
+					this.PersonMrMrs.GetText (true),
+					this.PersonFullName
+				),
+				"\n",
+				this.LegalPerson.Name
+			);
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.DisplayName);
