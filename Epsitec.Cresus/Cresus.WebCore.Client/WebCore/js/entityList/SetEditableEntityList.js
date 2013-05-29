@@ -27,7 +27,11 @@ function() {
             options.viewId, options.entityId, 'export/display'
         ),
         addLabel: Epsitec.Texts.getAddLabel(),
-        removeLabel: Epsitec.Texts.getRemoveLabel()
+        removeLabel: Epsitec.Texts.getRemoveLabel(),
+        onSelectionChange: Epsitec.Callback.create(
+              this.onSelectionChange,
+              this
+          )
       };
       Ext.applyIf(newOptions, options);
 
@@ -35,7 +39,10 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+      /* Additional methods */
+    onSelectionChange: function () {
+        //todo add the right column
+    },
 
     handleAdd: function() {
       var callback = Epsitec.Callback.create(this.handleAddCallback, this);

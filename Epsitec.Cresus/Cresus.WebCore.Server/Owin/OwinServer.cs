@@ -6,15 +6,16 @@ using Microsoft.Owin.Hosting;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using Epsitec.Cresus.WebCore.Server.Core;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin
 {
 	internal sealed class OwinServer : IDisposable
 	{
-		public OwinServer(Uri uri)
+		public OwinServer(Uri uri, CoreServer server)
 		{
 			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
-			this.hubClient = NotificationClient.Instance;
+			this.hubClient = NotificationClient.Create(server);
 
 			OwinServer.CleanTraceListeners ();
 

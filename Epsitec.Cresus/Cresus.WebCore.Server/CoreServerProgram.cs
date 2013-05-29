@@ -222,10 +222,11 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			Logger.LogToConsole ("Launching server...");
 
-			using (var owinServer = enableUserNotifications ? new OwinServer (owinUri) : null)
+			
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
+			using (var owinServer = enableUserNotifications ? new OwinServer (owinUri,coreServer) : null)
 			using (var nancyServer = new NancyServer (coreServer, nancyUri))
 			{
 				Logger.LogToConsole ("Server launched");

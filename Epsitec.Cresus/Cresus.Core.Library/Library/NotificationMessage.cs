@@ -8,6 +8,8 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Common.Support.EntityEngine;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Library
 {
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.Core.Library
 			set;
 		}
 
-		public string ErrorField
+		public LambdaExpression ErrorField
 		{
 			get;
 			set;

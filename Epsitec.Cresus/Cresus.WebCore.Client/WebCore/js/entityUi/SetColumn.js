@@ -53,7 +53,7 @@ function() {
           pickDatabaseDefinition: options.pickDatabase,
           menuItems: options.displayDatabase.menuItems,
           multiSelect: true,
-          onSelectionChange: null
+          onSelectionChange: options.onSelectionChange
         }
       });
     }

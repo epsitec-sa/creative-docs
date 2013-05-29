@@ -141,7 +141,6 @@
     <Compile Include="Core\Extraction\ArrayWriter.cs" />
     <Compile Include="Owin\Hubs\NotificationHub.cs" />
     <Compile Include="Owin\Hubs\NotificationClient.cs" />
-    <Compile Include="Owin\Hubs\TestHub.cs" />
     <Compile Include="Owin\OwinServer.cs" />
     <Compile Include="Owin\Startup.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />

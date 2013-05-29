@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Override
 {
@@ -76,7 +78,7 @@ namespace Epsitec.Aider.Override
 					Dataset = Res.CommandIds.Base.ShowAiderUser,
 					EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 					HeaderErrorMessage = "Un e-mail est requis",
-					ErrorField = "id3",
+					ErrorField = LambdaUtils.Convert ((AiderUserEntity e) => e.Email),
 					ErrorFieldMessage = "votre adresse e-mail"
 
 				}, true);

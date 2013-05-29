@@ -5,36 +5,32 @@ using System.Collections.Generic;
 using Microsoft.AspNet.SignalR;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
+using Epsitec.Cresus.WebCore.Server.Core;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
     class NotificationClient : INotificationHub, IDisposable
     {
-        public static NotificationClient Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new NotificationClient();
-                }
-                return instance;
-            }
-        }
-
-		
-        private NotificationClient()
+      
+        private NotificationClient(CoreServer server)
         {
 			if (CoreContext.HasExperimentalFeature ("Notifications"))
 			{
 				Epsitec.Cresus.Core.Library.NotificationManager.RegisterHub (this);
+				
+				this.server = server;
 
 				this.hubClients = new List<HubClient> ();
 				this.notificationsQueue = new List<QueuedNotification> ();
+
 				this.hubConnection = new HubConnection ("http://localhost:9002/");
 				this.hub = hubConnection.CreateHubProxy ("NotificationHub");
+
+
+				//Register Hub Listener
 				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
 				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
+
 				this.hubConnection.Start ().Wait ();
 
 				this.setupLock = new ReaderWriterLockWrapper ();
@@ -43,17 +39,27 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
             
         }
 
-		public string getConnectionId()
+		public static NotificationClient Instance
 		{
-			return this.hubConnection.ConnectionId;
+			get
+			{
+				return instance;
+			}
+		}
+
+		public static NotificationClient Create(CoreServer server)
+		{
+			if (instance == null)
+            {
+                instance = new NotificationClient(server);
+            }
+			return instance;
 		}
 
         void INotificationHub.NotifyAll(NotificationMessage message,bool onConnect)
         {
 			if (onConnect)
 			{
-
-				//queue
 				using (this.queueLock.LockWrite ())
 				{
 					this.notificationsQueue.Add (new QueuedNotification ("notifyall", "*", message));
@@ -62,8 +68,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 			else
 			{
-				//var connectionId = this.connectionMap[userName];
-				//hub.Invoke ("Notify", connectionId, message.Title, message.Body.ToSimpleText (), "").Wait ();
 				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
 				context.Clients.All.Toast (message.Title, message.Body.ToSimpleText (), "");
 			}
@@ -74,8 +78,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
         {
             if (onConnect)
             {
-                
-				//queue
 				using (this.queueLock.LockWrite ())
 				{
 					this.notificationsQueue.Add (new QueuedNotification ("notify", userName, message));
@@ -84,8 +86,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
             }
             else
             {
-				//var connectionId = this.connectionMap[userName];
-				//hub.Invoke ("Notify", connectionId, message.Title, message.Body.ToSimpleText (), "").Wait ();
 				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
 				context.Clients.Group (userName).Toast (message.Title, message.Body.ToSimpleText (), "");
             }
@@ -95,7 +95,6 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (onConnect)
 			{
-				//queue
 				using (this.queueLock.LockWrite ())
 				{
 					this.notificationsQueue.Add (new QueuedNotification ("warning", userName, message));
@@ -104,14 +103,15 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 			else
 			{
-				
-				//var connectionId = this.connectionMap[userName];
-				//hub.Invoke ("WarningToast", connectionId, message.Title, message.Body.ToSimpleText (), "","").Wait ();
 				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
-				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (),message.HeaderErrorMessage,message.ErrorField,message.ErrorFieldMessage, DataIO.DruidToString(message.Dataset), EntityIO.GetEntityId(message.EntityKey));
+				context.Clients.Group (userName).StickyWarningNavToast (message.Title, message.Body.ToSimpleText (), message.HeaderErrorMessage, this.GetErrorFieldId (message), message.ErrorFieldMessage, DataIO.DruidToString (message.Dataset), EntityIO.GetEntityId (message.EntityKey));
 			}
 		}
 
+		public string getConnectionId()
+		{
+			return this.hubConnection.ConnectionId;
+		}
 
         private void SetUserConnectionId(string userName,string connectionId)
         {
@@ -126,31 +126,24 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 						this.hubClients.Add (new HubClient (connectionId, userName));
 						context.Groups.Add (connectionId, userName);
 						//send and flush pending user notification from queue
-						using (this.queueLock.LockRead ()) //fix filter and remove concerned elements
+						using (this.queueLock.LockRead ())
 						{
 							foreach (var notif in this.notificationsQueue)
 							{
 								if (notif.DestinationUserName == userName)
 								{
-
 									switch (notif.NotificationType)
 									{
 										case "notifyall":
 											context.Clients.All.Toast (notif.Message.Title, notif.Message.Body.ToSimpleText (), "");
-
 											break;
 										case "notify":
-											//hub.Invoke ("Notify", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "").Wait ();
-
 											context.Clients.Client (connectionId).Toast (notif.Message.Title, notif.Message.Body.ToSimpleText (), "");
 											break;
 										case "warning":
-											//hub.Invoke ("WarningToast", cId, notif.Message.Title, notif.Message.Body.ToSimpleText (), "", "").Wait ();
-
-											context.Clients.Client (connectionId).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (),notif.Message.HeaderErrorMessage,notif.Message.ErrorField,notif.Message.ErrorFieldMessage, DataIO.DruidToString (notif.Message.Dataset), EntityIO.GetEntityId (notif.Message.EntityKey));
+											context.Clients.Client (connectionId).StickyWarningNavToast (notif.Message.Title, notif.Message.Body.ToSimpleText (), notif.Message.HeaderErrorMessage, this.GetErrorFieldId(notif.Message), notif.Message.ErrorFieldMessage, DataIO.DruidToString (notif.Message.Dataset), EntityIO.GetEntityId (notif.Message.EntityKey));
 											break;
 									}
-
 								}
 							}
 						}
@@ -162,12 +155,11 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 					}
 					else
 					{
-						//remove old
-
+						//remove old connectionId
 						var oldCId = this.hubClients.Find (c => c.Id == connectionId).Id;
 						this.RemoveUserConnectionId (oldCId);
 						context.Groups.Remove (oldCId, userName);
-						//replace with new
+						//and replace with new
 						this.hubClients.Add (new HubClient (connectionId, userName));
 						context.Groups.Add (connectionId, userName);
 					}
@@ -188,6 +180,20 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			this.hubClients.RemoveAll (c => c.Id == connectionId);
 		}
+
+		private string GetErrorFieldId(NotificationMessage message)
+		{
+			if (message.ErrorField == null)
+			{
+				return null;
+			}
+			else
+			{
+				return this.server.Caches.PropertyAccessorCache.Get (message.ErrorField).Id;
+			}
+		}
+
+		private CoreServer server;
 
         private static NotificationClient instance;
 

@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		public override Task OnDisconnected()
 		{
 			var backendClient = NotificationClient.Instance;
-
+		   
 
 			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (Context.ConnectionId);
 
