@@ -718,6 +718,24 @@ namespace Epsitec.Common.Support.Extensions
 			return buffer.ToString ();
 		}
 
+		public static string CapitalizeFirstLetter(this string value)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return value;
+			}
+
+			if (char.IsUpper (value[0]))
+			{
+				return value;
+			}
+
+			var chars = value.ToArray ();
+
+			chars[0] = char.ToUpper (chars[0]);
+
+			return new string (chars);
+		}
 
 		static StringExtensions()
 		{
