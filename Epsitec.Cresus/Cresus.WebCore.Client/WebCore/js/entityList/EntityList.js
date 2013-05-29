@@ -539,15 +539,13 @@ function() {
     createExportMenuItems: function(options) {
       var items = [];
 
-      if (epsitecConfig.featureCsvExport) {
-        items.push({
-          text: Epsitec.Texts.getExportCsvLabel(),
-          listeners: {
-            click: function() { this.onExportHandler('csv'); },
-            scope: this
-          }
-        });
-      }
+      items.push({
+        text: Epsitec.Texts.getExportCsvLabel(),
+        listeners: {
+          click: function() { this.onExportHandler('csv'); },
+          scope: this
+        }
+      });
 
       if (!Epsitec.Tools.isArrayEmpty(options.labelExportDefinitions)) {
         items.push({
