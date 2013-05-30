@@ -27,10 +27,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		protected override string GetKey1(LambdaExpression itemIn1)
 		{
 			var part1 = itemIn1.ToString ();
-			var part2 = itemIn1.ReturnType.FullName;
-			var part3 = itemIn1.Parameters[0].Type.FullName;
+			var part2 = itemIn1.Parameters[0].Type.FullName;
 
-			return part1 + part2 + part3;
+			return part1 + part2;
 		}
 
 
