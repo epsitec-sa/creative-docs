@@ -33,10 +33,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			return part1 + part2 + part3;
 		}
 
+
 		protected override T GetItemOut1(LambdaExpression itemIn1)
 		{
 			return this.Create (itemIn1, this.GetCurrentId ());
 		}
+
 
 		protected override string GetItemIn2(LambdaExpression itemIn1, T itemOut1)
 		{
@@ -48,6 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			return itemOut1;
 		}
+
 
 	}
 
