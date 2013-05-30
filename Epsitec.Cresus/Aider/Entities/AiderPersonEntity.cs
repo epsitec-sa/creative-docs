@@ -237,7 +237,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var mainAddress = this.GetAddress ();
 
-			return this.Contacts.FirstOrDefault (c => c.Address == mainAddress);
+			return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
 		}
 
 
