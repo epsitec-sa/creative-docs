@@ -8,14 +8,12 @@ namespace Epsitec.Aider.Enumerations
 {
 	public static class TextGenerator
 	{
-		public static string GetText(this PersonMrMrs value, bool abbreviated)
+		public static string GetText(this PersonMrMrs? value, bool abbreviated)
 		{
-			return abbreviated
-				? TextGenerator.GetShortText (value)
-				: TextGenerator.GetLongText (value);
+			return TextGenerator.GetText (value ?? PersonMrMrs.None, abbreviated);
 		}
 
-		public static string GetText(this PersonMrMrs? value, bool abbreviated)
+		public static string GetText(this PersonMrMrs value, bool abbreviated)
 		{
 			return abbreviated
 				? TextGenerator.GetShortText (value)
@@ -24,14 +22,18 @@ namespace Epsitec.Aider.Enumerations
 
 		public static string GetLongText(this PersonMrMrs? value)
 		{
+			return TextGenerator.GetLongText (value ?? PersonMrMrs.None);
+		}
+
+		public static string GetLongText(this PersonMrMrs value)
+		{
 			switch (value)
 			{
 				case PersonMrMrs.Madame:
 				case PersonMrMrs.Mademoiselle:
 				case PersonMrMrs.Monsieur:
-					return EnumKeyValues.GetEnumKeyValue (value.Value).Values.First ().ToSimpleText ();
+					return EnumKeyValues.GetEnumKeyValue (value).Values.First ().ToSimpleText ();
 
-				case null:
 				case PersonMrMrs.None:
 					return "";
 
@@ -42,14 +44,18 @@ namespace Epsitec.Aider.Enumerations
 
 		public static string GetShortText(this PersonMrMrs? value)
 		{
+			return TextGenerator.GetShortText (value ?? PersonMrMrs.None);
+		}
+
+		public static string GetShortText(this PersonMrMrs value)
+		{
 			switch (value)
 			{
 				case PersonMrMrs.Madame:
 				case PersonMrMrs.Mademoiselle:
 				case PersonMrMrs.Monsieur:
-					return EnumKeyValues.GetEnumKeyValue (value.Value).Values.Last ().ToSimpleText ();
+					return EnumKeyValues.GetEnumKeyValue (value).Values.Last ().ToSimpleText ();
 
-				case null:
 				case PersonMrMrs.None:
 					return "";
 
