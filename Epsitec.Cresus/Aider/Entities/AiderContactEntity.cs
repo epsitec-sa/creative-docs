@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Entities
 			);
 		}
 
-		private FormattedText GetAddressRecipientText()
+		private string GetAddressRecipientText()
 		{
 			switch (this.ContactType)
 			{
@@ -63,22 +63,18 @@ namespace Epsitec.Aider.Entities
 
 				default:
 					// Is that right or should we throw here?
-					return FormattedText.Empty;
+					return "";
 			}
 		}
 
 
-		private FormattedText GetLegalPersonRecipientText()
+		private string GetLegalPersonRecipientText()
 		{
-			return TextFormatter.FormatText
+			return StringUtils.Join
 			(
-				string.Join
-				(
-					" ",
-					this.PersonMrMrs.GetText (true),
-					this.PersonFullName
-				),
 				"\n",
+				this.PersonMrMrs.GetLongText (),
+				this.PersonFullName,
 				this.LegalPerson.Name
 			);
 		}
@@ -88,10 +84,14 @@ namespace Epsitec.Aider.Entities
 		{
 			return StringUtils.Join
 			(
-				" ",
-				this.Person.MrMrs.GetText (true),
-				this.Person.GetCallName (),
-				this.Person.eCH_Person.PersonOfficialName
+				"\n",
+				this.Person.MrMrs.GetLongText (),
+				StringUtils.Join
+				(
+					" ",
+					this.Person.GetCallName (),
+					this.Person.eCH_Person.PersonOfficialName
+				)
 			);
 		}
 
