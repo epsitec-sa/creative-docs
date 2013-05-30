@@ -269,9 +269,9 @@ namespace Epsitec.Aider.Entities
 		{
 			var name = this.LegalPerson.Name;
 
-			if (this.Person.IsNotNull ())
+			if (!string.IsNullOrEmpty(this.PersonFullName))
 			{
-				name += " (" + this.Person.GetDisplayName () + ")";
+				name += " (" + this.PersonFullName + ")";
 			}
 
 			return name;
