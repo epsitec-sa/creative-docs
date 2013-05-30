@@ -17,7 +17,7 @@ using System.Collections.Generic;
 namespace Epsitec.Aider.Controllers.SetControllers
 {
 	[ControllerSubType (1)]
-	internal sealed class SetAiderGroupViewController1 : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderGroupParticipantEntity>
+	internal sealed class SetAiderGroupViewController1 : SetViewController<AiderGroupEntity, AiderContactEntity, AiderContactEntity>
 	{
 		public override string GetIcon()
 		{
@@ -45,10 +45,19 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
-				var participation = (AiderGroupParticipantEntity) example;
+				var contact = (AiderContactEntity) example;
+				var participation = new AiderGroupParticipantEntity ()
+				{
+					Contact = contact,
+				};
 
 				AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participation, entity);
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+
+				request.Distinct = true;
+
+				request.RootEntity = participation;
+				request.RequestedEntity = contact;
 			});
 		}
 
@@ -57,12 +66,12 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			throw new NotImplementedException ();
 		}
 
-		protected override void AddItems(IEnumerable<AiderGroupParticipantEntity> entitiesToAdd)
+		protected override void AddItems(IEnumerable<AiderContactEntity> entitiesToAdd)
 		{
 			throw new NotImplementedException ();
 		}
 
-		protected override void RemoveItems(IEnumerable<AiderGroupParticipantEntity> entitiesToRemove)
+		protected override void RemoveItems(IEnumerable<AiderContactEntity> entitiesToRemove)
 		{
 			throw new NotImplementedException ();
 		}

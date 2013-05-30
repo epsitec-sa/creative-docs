@@ -248,9 +248,9 @@ AiderSubscriptionRefusal = [LVGC32]
       <L><l t="Adresse" f="0"/></L>
     </d>
     <d cid="[LVG522]" teid="@AiderContact" tn="groupMembers" df="false" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVGI22]" teid="@AiderGroupParticipant" tn="groupFunctionMembers" df="false" d="false" ec="false" ed="false"  dg="">
+    <d cid="[LVGI22]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
       <R><r>@user</r></R>
-      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
+      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderContact:" /></M>
       <L><l t="Adresse" f="0"/></L>
     </d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>

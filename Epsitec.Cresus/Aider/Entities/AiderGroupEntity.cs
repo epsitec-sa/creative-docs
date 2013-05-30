@@ -234,8 +234,9 @@ namespace Epsitec.Aider.Entities
 			int count = 10;
 
 			var participants = this.GetParticipants (count + 1)
-				.Select (p => AiderGroupEntity.GetParticipantSummary (p))
-				.CreateSummarySequence (count, "...");
+				.Select (p => p.Contact.DisplayName)
+				.CreateSummarySequence (count, "...")
+				.Select (t => FormattedText.FromSimpleText (t));
 
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
@@ -259,34 +260,12 @@ namespace Epsitec.Aider.Entities
 			int count = 10;
 
 			var participants = this.GetFuntionParticipants (count + 1)
-				.Select (p => AiderGroupEntity.GetParticipantSummary(p))
-				.CreateSummarySequence (count, "...");
+				.Select (p => p.DisplayName)
+				.CreateSummarySequence (count, "...")
+				.Select (t => FormattedText.FromSimpleText (t));
 
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
-
-		
-		private static FormattedText GetParticipantSummary(AiderGroupParticipantEntity participant)
-		{
-			FormattedText text;
-
-			if (participant.LegalPerson.IsNull())
-			{
-				text = participant.Person.DisplayName;
-			}
-			else
-			{
-				text = participant.LegalPerson.Name;
-
-				if (participant.Person.IsNotNull ())
-				{
-					text += " (" + participant.Person.DisplayName + ")";
-				}
-			}
-
-			return text;
-		}
-
 
 
 		public static string GetPath(AiderGroupEntity group)
@@ -646,10 +625,10 @@ namespace Epsitec.Aider.Entities
 												() => new List<AiderGroupParticipantEntity> ());
 		}
 
-		private IList<AiderGroupParticipantEntity> GetFuntionParticipants(int count)
+		private IList<AiderContactEntity> GetFuntionParticipants(int count)
 		{
 			return this.ExecuteWithDataContext (c => this.FindFunctionParticipants (c, count),
-												() => new List<AiderGroupParticipantEntity> ());
+												() => new List<AiderContactEntity> ());
 		}
 
 		private IList<AiderGroupEntity> GetSubgroups()
@@ -706,14 +685,14 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
-		private IList<AiderGroupParticipantEntity> FindFunctionParticipants(DataContext dataContext, int count)
+		private IList<AiderContactEntity> FindFunctionParticipants(DataContext dataContext, int count)
 		{
 			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true);
 
 			request.Skip = 0;
 			request.Take = count;
 
-			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
+			return dataContext.GetByRequest<AiderContactEntity> (request);
 		}
 
 		private IList<AiderGroupEntity> FindSubgroups(DataContext dataContext)

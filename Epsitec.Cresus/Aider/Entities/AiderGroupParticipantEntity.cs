@@ -200,18 +200,24 @@ namespace Epsitec.Aider.Entities
 
 		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current)
 		{
-			var participationExample = new AiderGroupParticipantEntity ();
+			var contact = new AiderContactEntity ();
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				Contact = contact,
+			};
 
 			var request = new Request ()
 			{
-				RootEntity = participationExample
+				RootEntity = participation,
+				RequestedEntity = contact,
+				Distinct = true,
 			};
 
-			AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participationExample, group);
+			AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participation, group);
 
 			if (current)
 			{
-				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participationExample);
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
 			}
 
 			return request;
