@@ -1,13 +1,10 @@
 ﻿//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Collections;
 
+using System;
 using System.Linq;
-
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq.Expressions;
@@ -144,6 +141,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public Type								EntityType
+		{
+			get
+			{
+				return EntityInfo.GetType (this.entityId);
+			}
+		}
+
 		/// <summary>
 		/// Gets the fields relative to the root entity.
 		/// </summary>
@@ -206,10 +211,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public LambdaExpression CreateLambda()
 		{
-			var fields    = this.ExplodeFields ();
-			var propInfos = fields.Select (x => (PropertyInfo) x);
-			
-			return ExpressionAnalyzer.BuildLambdaExpression (propInfos);
+			var fields     = this.ExplodeFields ();
+			var propInfos  = fields.Select (x => (PropertyInfo) x);
+			var entityType = this.EntityType ?? propInfos.First ().ReflectedType;
+
+			return ExpressionAnalyzer.BuildLambdaExpression (entityType, propInfos);
 		}
 
 
