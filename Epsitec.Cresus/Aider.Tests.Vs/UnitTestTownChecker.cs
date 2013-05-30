@@ -323,6 +323,7 @@ namespace Aider.Tests.Vs
 			this.Check ("1080", "Cullayes", "1080", "Les Cullayes");
 			this.Check ("1042", "Malapalud", "1042", "Assens");
 			this.Check ("1445", "Peney-Vuiteboeuf", "1445", "Vuiteboeuf");
+			this.Check ("1454", "La Chaux", "1454", "L'Auberson");
 		}
 
 
