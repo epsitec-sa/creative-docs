@@ -693,7 +693,7 @@ function() {
 
       list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
       Ext.Array.each(form.items.items, function(item) {
-        if (list.filters.filters.getByKey(item.name) === null && item.lastValue !== null) {
+          if (typeof (list.filters.filters.getByKey(item.name)) == 'undefined' && typeof (item.lastValue) != 'undefined') {
           var config = {
             type: 'string',
             dataIndex: item.name,
@@ -706,7 +706,7 @@ function() {
           );
         }
         else {
-          if (list.filters.filters.getByKey(item.name) !== null) {
+            if (typeof (list.filters.filters.getByKey(item.name)) != 'undefined') {
             if (item.lastValue) {
               if (item.lastValue.length > 0) {
                 list.filters.filters.getByKey(item.name).setValue(item.lastValue);
