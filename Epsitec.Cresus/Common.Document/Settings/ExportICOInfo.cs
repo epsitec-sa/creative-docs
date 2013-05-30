@@ -7,6 +7,7 @@ namespace Epsitec.Common.Document.Settings
     {
         XP,
         Vista,
+		Paginated,
     }
 
 	/// <summary>
@@ -23,7 +24,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialize()
 		{
-			this.format = ICOFormat.Vista;
+			this.format = ICOFormat.Paginated;
 		}
 
         public ICOFormat Format

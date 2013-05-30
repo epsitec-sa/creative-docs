@@ -1,7 +1,9 @@
+using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 
 using System.Collections.Generic;
+using Epsitec.Common.Drawing.Platform;
 
 namespace Epsitec.Common.Document
 {
@@ -80,7 +82,14 @@ namespace Epsitec.Common.Document
             drawingContext.SetImageNameFilter(0, this.document.Printer.GetImageNameFilter(0));  // filtre A
             drawingContext.SetImageNameFilter(1, this.document.Printer.GetImageNameFilter(1));  // filtre B
 
-            return this.ExportGeometryICO(drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
+			if (this.document.Settings.ExportICOInfo.Format == Settings.ICOFormat.Paginated)
+			{
+				return this.ExportGeometryICO (drawingContext, filename);
+			}
+			else
+			{
+				return this.ExportGeometryICO (drawingContext, filename, this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage);
+			}
         }
 
         public bool Miniature(Size sizeHope, bool isModel, out string filename, out byte[] data)
@@ -1257,8 +1266,8 @@ namespace Epsitec.Common.Document
 
         protected string ExportGeometryICO(DrawingContext drawingContext, string filename, int pageNumber)
         {
-            //	Exporte la géométrie complexe de tous les objets, en utilisant
-            //	un bitmap intermédiaire.
+            //	Exporte la géométrie complexe de tous les objets d'une page donnée,
+			//	en utilisant un bitmap intermédiaire.
             Settings.ExportICOInfo info = this.document.Settings.ExportICOInfo;
             Size pageSize = this.document.GetPageSize(pageNumber);
             ImageFormat format;
@@ -1272,7 +1281,7 @@ namespace Epsitec.Common.Document
             else
             {
                 format = ImageFormat.WindowsIcon;
-				dpi = 48 *2 * 254 / pageSize.Height;  // bitmap d'une hauteur de 48*2 pixels
+				dpi = 48 * 2 * 254 / pageSize.Height;  // bitmap d'une hauteur de 48*2 pixels
             }
 
             byte[] data;
@@ -1294,11 +1303,41 @@ namespace Epsitec.Common.Document
             return "";  // ok
         }
 
+		protected string ExportGeometryICO(DrawingContext drawingContext, string filename)
+		{
+			//	Exporte la géométrie complexe de tous les objets de toutes les pages,
+			//	en utilisant un bitmap intermédiaire pour chaque page.
+			var pageNumbers = new List<int> ();
+			int count = drawingContext.TotalPages ();
+			for (int page=0; page<count; page++)
+			{
+				pageNumbers.Add (page);
+			}
+
+			byte[] data;
+			string err = this.ExportGeometry (drawingContext, pageNumbers, 254.0, 32, 1.0, true, this.ImageOnlySelected, this.ImageCrop, out data);
+			if (err != "")
+			{
+				return err;
+			}
+
+			try
+			{
+				System.IO.File.WriteAllBytes (filename, data);
+			}
+			catch (System.Exception e)
+			{
+				return e.Message;
+			}
+
+			return "";  // ok
+		}
+
         protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
 		{
-			//	Exporte la géométrie complexe de tous les objets, en utilisant
-			//	un bitmap intermédiaire. Retourne un éventuel message d'erreur ainsi
-			//	que le tableau de bytes pour le fichier.
+			//	Exporte la géométrie complexe de tous les objets d'une page donnée, en
+			//	utilisant un bitmap intermédiaire. Retourne un éventuel message d'erreur
+			//	ainsi que le tableau de bytes pour le fichier.
 			data = null;
 
 			if (format == ImageFormat.Unknown)
@@ -1326,6 +1365,124 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
+		protected string ExportGeometry(DrawingContext drawingContext, IEnumerable<int> pageNumbers, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
+		{
+			//	Exporte la géométrie complexe de tous les objets de plusieurs pages, en utilisant
+			//	un bitmap intermédiaire pour chaque page. Retourne un éventuel message d'erreur
+			//	ainsi que le tableau de bytes pour le fichier.
+			data = null;
+			var bitmaps = new List<NativeBitmap> ();
+
+			foreach (var pageNumber in pageNumbers)
+			{
+				var nb = this.GetNativeBitmap (drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected, crop);
+
+				if (nb != null)
+				{
+					bitmaps.Add (nb);
+				}
+			}
+
+			if (bitmaps.Count == 0)
+			{
+				return Res.Strings.Error.NoBitmap;
+			}
+
+			//	S'ils ne sont pas déjà présents, génère les bitmaps dans les grandes tailles
+			//	supplémentaires.
+			var supplements = new int[] { 96, 256 };
+			foreach (var supplement in supplements)
+			{
+				if (bitmaps.Where (x => x.Width == supplement && x.Height == supplement).Any () == false)
+				{
+					//	On cherche d'abord s'il existe une page ayant exactement la moitié
+					//	de la taille souhaitée.
+					int size = supplement/2;
+					int pageNumber = this.GetPage (pageNumbers, size, size);
+
+					//	Si on n'a pas trouvé, on cherche la plus grande page carrée.
+					if (pageNumber == -1)
+					{
+						pageNumber = this.GetGreatestPage (pageNumbers, out size);
+					}
+
+					if (pageNumber != -1)
+					{
+						double zdpi = dpi * supplement / size;
+						var nb = this.GetNativeBitmap (drawingContext, pageNumber, zdpi, depth, AA, paintMark, onlySelected, crop);
+
+						if (nb != null)
+						{
+							bitmaps.Add (nb);
+						}
+					}
+				}
+			}
+
+			try
+			{
+				data = NativeIcon.CreateIcon (bitmaps);
+			}
+			catch (System.Exception e)
+			{
+				return e.Message;
+			}
+
+			return "";  // ok
+		}
+
+		private NativeBitmap GetNativeBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop)
+		{
+			var bitmap = this.ExportBitmap (drawingContext, pageNumber, -1, dpi, depth, AA, paintMark, onlySelected, crop);
+
+			if (bitmap == null)
+			{
+				return null;
+			}
+			else
+			{
+				byte[] imageBytes = bitmap.GetRawBitmapBytes ();
+				var nb = NativeBitmap.CreateFromPremultipliedArgb32 (imageBytes, bitmap.Stride, bitmap.PixelWidth, bitmap.PixelHeight);
+				return nb.Rescale (nb.Width, -nb.Height);  // miroir vertical
+			}
+		}
+
+		private int GetPage(IEnumerable<int> pageNumbers, int width, int height)
+		{
+			//	Retourne le numéro de la page ayant une dimension donnée.
+			foreach (var pageNumber in pageNumbers)
+			{
+				var size = this.document.GetPageSize (pageNumber);
+
+				if (size.Width == width && size.Height == height)
+				{
+					return pageNumber;
+				}
+			}
+
+			return -1;
+		}
+
+		private int GetGreatestPage(IEnumerable<int> pageNumbers, out int size)
+		{
+			//	Retourne le numéro de la plus grande page carrée.
+			int greatestPage = -1;
+			size = 0;
+
+			foreach (var pageNumber in pageNumbers)
+			{
+				var pageSize = this.document.GetPageSize (pageNumber);
+
+				if (pageSize.Width == pageSize.Height && size < pageSize.Width)
+				{
+					size = (int) pageSize.Width;
+					greatestPage = pageNumber;
+				}
+			}
+
+			return greatestPage;
+		}
+
 		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
 			//	Retourne le bitmap contenant le dessin des objets à exporter.
@@ -1350,10 +1507,10 @@ namespace Epsitec.Common.Document
 			pageScale.Scale(zoom);
 
 			//	Il faut subtilement agrandir le rectangle, afin qu'un trait antialiasé soit contenu intégralement.
-			int left   = (int) System.Math.Floor(pageScale.Left);
-			int right  = (int) System.Math.Ceiling(pageScale.Right);
-			int bottom = (int) System.Math.Floor(pageScale.Bottom);
-			int top    = (int) System.Math.Ceiling(pageScale.Top);
+			int left   = (int) System.Math.Floor   (pageScale.Left);
+			int right  = (int) System.Math.Ceiling (pageScale.Right);
+			int bottom = (int) System.Math.Floor   (pageScale.Bottom);
+			int top    = (int) System.Math.Ceiling (pageScale.Top);
 
 			int dx = right-left;
 			int dy = top-bottom;

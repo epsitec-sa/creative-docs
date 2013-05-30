@@ -21,6 +21,6 @@ namespace Epsitec.Common.Drawing
 		WindowsIcon		= 20,
 		WindowsEmf		= 21,
 		WindowsWmf		= 22,
-		WindowsPngIcon= 23,
+		WindowsPngIcon	= 23,
 	}
 }

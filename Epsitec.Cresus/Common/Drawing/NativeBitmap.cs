@@ -533,7 +533,7 @@ namespace Epsitec.Common.Drawing.Platform
 								  this.ColorType, this.DpiX, this.DpiY, this.Width, this.Height, this.Information, this.BitsPerPixel, this.MemorySize);
 		}
 		
-		internal static NativeBitmap CreateFromPremultipliedArgb32(byte[] imageBytes, int pitch, int dx, int dy)
+		public static NativeBitmap CreateFromPremultipliedArgb32(byte[] imageBytes, int pitch, int dx, int dy)
 		{
 			WriteableBitmap bitmap = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Pbgra32, null);
 			bitmap.WritePixels (new System.Windows.Int32Rect (0, 0, dx, dy), imageBytes, pitch, 0);

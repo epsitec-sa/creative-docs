@@ -361,8 +361,9 @@ namespace Epsitec.Common.Document.Settings
 
 				case "ExportICOFormat":
 					ICOFormat icf = (ICOFormat) type;
-                    if ( icf == ICOFormat.XP    )  return Res.Strings.Dialog.Integer.ExportICOFormat.XP;
-                    if ( icf == ICOFormat.Vista )  return Res.Strings.Dialog.Integer.ExportICOFormat.Vista;
+                    if ( icf == ICOFormat.XP        )  return Res.Strings.Dialog.Integer.ExportICOFormat.XP;
+                    if ( icf == ICOFormat.Vista     )  return Res.Strings.Dialog.Integer.ExportICOFormat.Vista;
+                    if ( icf == ICOFormat.Paginated )  return "Selon les pages";  //Res.Strings.Dialog.Integer.ExportICOFormat.Paginated;
 				    break;
 
 				case "ConstrainAngle":
@@ -450,6 +451,7 @@ namespace Epsitec.Common.Document.Settings
 				case "ExportICOFormat":
 					if ( rank == 0 )  return (int) ICOFormat.XP;
 					if ( rank == 1 )  return (int) ICOFormat.Vista;
+					if ( rank == 2 )  return (int) ICOFormat.Paginated;
 					return -1;
 
 				case "ConstrainAngle":

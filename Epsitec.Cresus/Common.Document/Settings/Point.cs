@@ -26,10 +26,15 @@ namespace Epsitec.Common.Document.Settings
 				case "PageSize":
 					this.textX = Res.Strings.Dialog.Point.PageSizeX;
 					this.textY = Res.Strings.Dialog.Point.PageSizeY;
-					this.factorMinValue = 0.01;  // 10mm
-					this.factorMaxValue = 1.0;
-					if ( this.document.Type != DocumentType.Pictogram )
+					if (this.document.Type == DocumentType.Pictogram)
 					{
+						this.factorMinValue = 0.01;  // 2
+						this.factorMaxValue = 1.28;  // 256
+					}
+					else
+					{
+						this.factorMinValue = 0.01;  // 10mm
+						this.factorMaxValue = 1.0;
 						this.link = false;
 					}
 					break;

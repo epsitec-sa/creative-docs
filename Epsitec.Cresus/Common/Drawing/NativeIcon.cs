@@ -14,19 +14,24 @@ namespace Epsitec.Common.Drawing.Platform
 	/// </summary>
 	public static class NativeIcon
 	{
+		public static byte[] CreateIcon(byte[] imageBytes, int pitch, int dx, int dy)
+		{
+			return NativeIcon.CreateIcon (Platform.NativeBitmap.CreateFromPremultipliedArgb32 (imageBytes, pitch, dx, dy));
+		}
+
 		/// <summary>
 		/// Creates an icon in the default sizes (16x16, 32x32 and 48x48).
 		/// </summary>
 		/// <param name="image">The source image.</param>
 		/// <returns>The contents of the ICO file.</returns>
-		public static byte[] CreateIcon(NativeBitmap image)
+		private static byte[] CreateIcon(NativeBitmap image)
 		{
 			return NativeIcon.CreateIcon (image, 72, 48, 32, 16);
 		}
 
-		public static byte[] CreateIcon(byte[] imageBytes, int pitch, int dx, int dy)
+		public static byte[] CreatePngIcon(byte[] imageBytes, int pitch, int dx, int dy)
 		{
-			return NativeIcon.CreateIcon (Platform.NativeBitmap.CreateFromPremultipliedArgb32 (imageBytes, pitch, dx, dy));
+			return NativeIcon.CreatePngIcon (Platform.NativeBitmap.CreateFromPremultipliedArgb32 (imageBytes, pitch, dx, dy));
 		}
 
 		/// <summary>
@@ -35,14 +40,9 @@ namespace Epsitec.Common.Drawing.Platform
 		/// </summary>
 		/// <param name="image">The source image.</param>
 		/// <returns>The contents of the ICO file.</returns>
-		public static byte[] CreatePngIcon(NativeBitmap image)
+		private static byte[] CreatePngIcon(NativeBitmap image)
 		{
 			return NativeIcon.CreateIcon (image, 72, 48, 32, 16, 256);
-		}
-
-		public static byte[] CreatePngIcon(byte[] imageBytes, int pitch, int dx, int dy)
-		{
-			return NativeIcon.CreatePngIcon (Platform.NativeBitmap.CreateFromPremultipliedArgb32 (imageBytes, pitch, dx, dy));
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Drawing.Platform
 		/// <param name="image">The source image.</param>
 		/// <param name="sizes">The sizes (e.g. 48, 32 and 16).</param>
 		/// <returns>The contents of the ICO file.</returns>
-		public static byte[] CreateIcon(NativeBitmap image, params int[] sizes)
+		private static byte[] CreateIcon(NativeBitmap image, params int[] sizes)
 		{
 			NativeBitmap[] images = new NativeBitmap[sizes.Length];
 
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Drawing.Platform
 
 			multi.SelectedIndex = 0;
 
-			foreach (int bpp in new int[] { 4, 8, 32 })
+			foreach (int bpp in new int[] { 8, 32 })
 			{
 				foreach (NativeBitmap image in images)
 				{
@@ -116,14 +116,24 @@ namespace Epsitec.Common.Drawing.Platform
 								break;
 						}
 					}
-					else if (bpp == 32)
+					else
 					{
-						System.Drawing.Bitmap bitmap32bpp = SystemDrawingBitmapHelper.Generate32BppBitmap (image);
-						System.Drawing.IconLib.IconImage iconImage = icon.Add (bitmap32bpp, System.Drawing.Color.Transparent);
+						switch (bpp)
+						{
+							case 8:
+								System.Drawing.Bitmap bitmap8bpp  = SystemDrawingBitmapHelper.Generate8BppBitmapWithTransparentColor (image);
+								var i8 = icon.Add (bitmap8bpp, bitmap8bpp.Palette.Entries[255]);
+								i8.IconImageFormat = System.Drawing.IconLib.IconImageFormat.Png;
+								bitmap8bpp.Dispose ();
+								break;
 
-						iconImage.IconImageFormat = System.Drawing.IconLib.IconImageFormat.Png;
-
-						bitmap32bpp.Dispose ();
+							case 32:
+								System.Drawing.Bitmap bitmap32bpp = SystemDrawingBitmapHelper.Generate32BppBitmap (image);
+								var i32 = icon.Add (bitmap32bpp, System.Drawing.Color.Transparent);
+								i32.IconImageFormat = System.Drawing.IconLib.IconImageFormat.Png;
+								bitmap32bpp.Dispose ();
+								break;
+						}
 					}
 				}
 			}

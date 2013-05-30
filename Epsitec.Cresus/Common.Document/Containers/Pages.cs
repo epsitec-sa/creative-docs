@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeWidth.Dock = DockStyle.Left;
 			this.pageSizeWidth.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeWidth.FactorMinRange = 0.01M;
-			this.pageSizeWidth.FactorMaxRange = 1.0M;
+			this.pageSizeWidth.FactorMaxRange = (this.document.Type == DocumentType.Pictogram) ? 1.28M : 1.0M;
 			this.pageSizeWidth.FactorStep     = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.pageSizeWidth);
 			this.pageSizeWidth.TabIndex = 1;
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeHeight.Dock = DockStyle.Left;
 			this.pageSizeHeight.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeHeight.FactorMinRange = 0.01M;
-			this.pageSizeHeight.FactorMaxRange = 1.0M;
+			this.pageSizeHeight.FactorMaxRange = (this.document.Type == DocumentType.Pictogram) ? 1.28M : 1.0M;
 			this.pageSizeHeight.FactorStep     = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.pageSizeHeight);
 			this.pageSizeHeight.TabIndex = 3;
