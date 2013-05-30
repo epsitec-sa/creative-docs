@@ -81,9 +81,9 @@ namespace Epsitec.Aider.Data.Common
 
 		private AiderGroupEntity FindParishGroup(AiderPersonEntity person)
 		{
-			var mainAddress = ParishAssigner.FindMainAddress (person);
+			var mainAddress = person.Address;
 
-			if (mainAddress.IsNull ())
+			if (mainAddress.IsNull () || mainAddress.Town.IsNull ())
 			{
 				return null;
 			}
@@ -158,66 +158,6 @@ namespace Epsitec.Aider.Data.Common
 			}
 
 			return group;
-		}
-
-
-		private static AiderAddressEntity FindMainAddress(AiderPersonEntity person)
-		{
-			var addressContacts = new List<AiderContactEntity>
-			(
-				from contact in person.Contacts
-				let address = contact.GetAddress ()
-				where address.IsNotNull () && address.Town.IsNotNull ()
-				select contact
-			);
-
-			var mainContact = addressContacts
-				.Where (c => c.ContactType == ContactType.PersonHousehold)
-				.FirstOrDefault ();
-
-			if (mainContact.IsNull ())
-			{
-				var personalContacts =
-					from c in addressContacts
-					where c.ContactType == ContactType.PersonAddress
-					let score = ParishAssigner.GetScore (c.AddressType)
-					where score != null
-					orderby score
-					select c;
-
-				mainContact = personalContacts.FirstOrDefault ();
-			}
-
-			if (mainContact.IsNull ())
-			{
-				return null;
-			}
-
-			return mainContact.GetAddress ();
-		}
-
-
-		private static int? GetScore(AddressType type)
-		{
-			// A low score is makes a type come in priority to another. Null is an invalid type.
-
-			switch (type)
-			{
-				case AddressType.Default:
-					return 2;
-
-				case AddressType.Other:
-					return 1;
-
-				case AddressType.Professional:
-					return null;
-
-				case AddressType.Secondary:
-					return 0;
-
-				default:
-					throw new NotImplementedException ();
-			}
 		}
 
 
