@@ -85,13 +85,23 @@ namespace Epsitec.Common.Drawing.Platform
 
 			multi.SelectedIndex = 0;
 
+			//	On génère d'abord les images 8 bpp, puis 32 bpp. 4 bpp étant devenu désuet, il
+			//	a été supprimé de la liste, bien que le code "case 4" plus bas soit resté, en
+			//	cas de besoin futur.
+
 			foreach (int bpp in new int[] { 8, 32 })
 			{
 				foreach (NativeBitmap image in images)
 				{
-					int size = image.Width;
+					//	Une icône consiste en une collection de fichiers BMP non comprimés (4-, 8-,
+					//	16- ou 32- bpp) avec une taille qui peut aller techniquement de 1 x 1 à
+					//	255 x 255. Microsoft a rajouté bien plus tard le support pour une
+					//	représentation sous forme PNG comprimée pour le format 256 x 256,
+					//	parce que sinon, une telle icône serait juste monstrueuse (256KB en BMP).
+					//	Le format 256 x 256 est donc nécessairement du PNG, et le PNG est
+					//	nécessairement en 32 bit/pixel dans la spécification des fichiers .ICO.
 
-					if (size < 128)
+					if (image.Width <= 64)
 					{
 						switch (bpp)
 						{
@@ -120,12 +130,7 @@ namespace Epsitec.Common.Drawing.Platform
 					{
 						switch (bpp)
 						{
-							case 8:
-								System.Drawing.Bitmap bitmap8bpp  = SystemDrawingBitmapHelper.Generate8BppBitmapWithTransparentColor (image);
-								var i8 = icon.Add (bitmap8bpp, bitmap8bpp.Palette.Entries[255]);
-								i8.IconImageFormat = System.Drawing.IconLib.IconImageFormat.Png;
-								bitmap8bpp.Dispose ();
-								break;
+							//	Les icônes > 128 n'ont pas de sens en 32 bits (voir remarque ci-dessus).
 
 							case 32:
 								System.Drawing.Bitmap bitmap32bpp = SystemDrawingBitmapHelper.Generate32BppBitmap (image);

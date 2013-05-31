@@ -1419,9 +1419,12 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			//	Trie les bitmaps, du plus grand au plus petit.
+			var orderedBitmaps = bitmaps.OrderByDescending (x => x.Width);
+
 			try
 			{
-				data = NativeIcon.CreateIcon (bitmaps);
+				data = NativeIcon.CreateIcon (orderedBitmaps);
 			}
 			catch (System.Exception e)
 			{
