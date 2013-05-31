@@ -56,6 +56,12 @@ function() {
       );
     },
 
+    addEntityColumnWithCallback: function (viewMode, viewId, entityId, callback) {
+        this.columnManager.addEntityColumn(
+            viewMode, viewId, entityId, this, callback
+        );
+    },
+
     removeToRight: function() {
       this.columnManager.removeRightColumns(this);
     },

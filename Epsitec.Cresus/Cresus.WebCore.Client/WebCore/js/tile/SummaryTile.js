@@ -48,7 +48,6 @@ function() {
         this.addEntityColumn(this.entityId, false);
       }
     },
-
     /* Additional methods */
 
     createSummaryTools: function(options)  {
@@ -64,6 +63,12 @@ function() {
       }
 
       return tools;
+    },
+
+    openNextTile: function (callback) {
+        this.column.selectTile(this);
+        this.column.addEntityColumnWithCallback(
+          this.subViewMode, this.subViewId, this.entityId, callback);
     },
 
     addEntityColumn: function(entityId, refresh) {

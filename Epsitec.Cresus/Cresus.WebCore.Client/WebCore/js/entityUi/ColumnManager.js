@@ -25,6 +25,7 @@ function() {
     rightPanel: null,
     columns: null,
     database: null,
+    afterSelection: null,
 
     /* Constructor */
 
@@ -41,7 +42,6 @@ function() {
     },
 
     /* Additional methods */
-
     createLeftList: function(database) {
       return Ext.create('Epsitec.EntityListPanel', {
         list: {
@@ -69,8 +69,9 @@ function() {
       var viewMode = Epsitec.ViewMode.summary;
       this.removeAllColumns();
       if (entityItems.length === 1) {
-        this.addEntityColumn(viewMode, 'null', entityItems[0].id);
+        this.addEntityColumn(viewMode, 'null', entityItems[0].id,null,this.afterSelection);
       }
+
     },
 
     createRightPanel: function() {
