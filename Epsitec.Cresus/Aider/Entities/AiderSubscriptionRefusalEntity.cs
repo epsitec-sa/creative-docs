@@ -1,5 +1,7 @@
 ﻿using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Loader;
@@ -145,7 +147,7 @@ namespace Epsitec.Aider.Entities
 				Household = household,
 			};
 
-			return AiderSubscriptionRefusalEntity.FindRefusal (businessContext, example);
+			return AiderSubscriptionRefusalEntity.FindRefusal (businessContext, example, household);
 		}
 
 
@@ -161,22 +163,32 @@ namespace Epsitec.Aider.Entities
 				LegalPersonContact = legalPersonContact,
 			};
 
-			return AiderSubscriptionRefusalEntity.FindRefusal (businessContext, example);
+			return AiderSubscriptionRefusalEntity.FindRefusal
+			(
+				businessContext, example, legalPersonContact
+			);
 		}
 
 
 		private static AiderSubscriptionRefusalEntity FindRefusal
 		(
 			BusinessContext businessContext,
-			AiderSubscriptionRefusalEntity example
+			AiderSubscriptionRefusalEntity example,
+			AbstractEntity entity
 		)
 		{
+			var dataContext = businessContext.DataContext;
+
+			if (!dataContext.IsPersistent (entity))
+			{
+				return null;
+			}
+			
 			var request = new Request ()
 			{
 				RootEntity = example,
 			};
 
-			var dataContext = businessContext.DataContext;
 			var result = dataContext.GetByRequest<AiderSubscriptionRefusalEntity> (request);
 
 			return result.FirstOrDefault ();
@@ -189,6 +201,13 @@ namespace Epsitec.Aider.Entities
 			AiderLegalPersonEntity legalPerson
 		)
 		{
+			var dataContext = businessContext.DataContext;
+
+			if (!dataContext.IsPersistent (legalPerson))
+			{
+				return new List<AiderSubscriptionRefusalEntity> ();
+			}
+
 			var example = new AiderSubscriptionRefusalEntity ()
 			{
 				RefusalType = SubscriptionType.LegalPerson,
@@ -199,7 +218,7 @@ namespace Epsitec.Aider.Entities
 				},
 			};
 
-			return businessContext.DataContext.GetByExample (example);
+			return dataContext.GetByExample (example);
 		}
 
 
