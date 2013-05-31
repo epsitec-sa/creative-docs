@@ -232,8 +232,6 @@ namespace Epsitec.Aider.Entities
 
 		public static void AddFunctionMemberCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation, AiderGroupEntity group)
 		{
-			// TODO Here we should find a way to avoid duplicates.
-
 			if (participation.Group == null)
 			{
 				participation.Group = new AiderGroupEntity ();
