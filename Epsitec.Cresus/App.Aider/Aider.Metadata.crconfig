@@ -227,7 +227,10 @@ AiderSubscriptionRefusal = [LVGC32]
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
-      <L><l t="Adresse" f="0"/></L>
+      <L>
+        <l t="Adresse normale" f="0"/>
+        <l t="Adresse des parents" f="1"/>
+      </L>
     </d>
     <d cid="[LVAGG]" teid="@AiderLegalPerson" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg=""><R><r>@user</r></R></d>
@@ -245,19 +248,28 @@ AiderSubscriptionRefusal = [LVGC32]
     <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
-      <L><l t="Adresse" f="0"/></L>
+      <L>
+        <l t="Adresse normale" f="0"/>
+        <l t="Adresse des parents" f="1"/>
+      </L>
     </d>
     <d cid="[LVG522]" teid="@AiderContact" tn="groupMembers" df="false" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVGI22]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderContact:" /></M>
-      <L><l t="Adresse" f="0"/></L>
+      <L>
+        <l t="Adresse normale" f="0"/>
+        <l t="Adresse des parents" f="1"/>
+      </L>
     </d>
     <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="false" ed="false" df="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG832]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
-      <L><l t="Adresse" f="0"/></L>
+      <L>
+        <l t="Adresse normale" f="0"/>
+        <l t="Adresse des parents" f="1"/>
+      </L>
       <f id="@AiderContact">
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
       </f>

@@ -42,12 +42,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetAddressLabelText()
 		{
-			return TextFormatter.FormatText
-			(
-				this.GetAddressRecipientText (),
-				"\n",
-				this.Address.GetPostalAddress ()
-			);
+			return this.GetAddressLabelText (this.GetAddressRecipientText ());
 		}
 
 		private string GetAddressRecipientText()
@@ -67,7 +62,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
 		private string GetLegalPersonRecipientText()
 		{
 			return StringUtils.Join
@@ -79,17 +73,54 @@ namespace Epsitec.Aider.Entities
 			);
 		}
 
-
 		private string GetPersonRecipientText()
 		{
-			return StringUtils.Join
-			(
-				"\n",
-				this.Person.MrMrs.GetLongText (),
-				this.Person.GetFullName ()
-			);
+			return this.GetPersonRecipientText (this.Person.MrMrs.GetLongText ());
 		}
 
+		public FormattedText GetAddressOfParentsLabelText()
+		{
+			return this.GetAddressLabelText (this.GetAddressRecipientParentText ());
+		}
+
+		private string GetAddressRecipientParentText()
+		{
+			switch (this.ContactType)
+			{
+				case Enumerations.ContactType.Legal:
+					// This case would be wierd, so we return the normal text, and not the text with
+					// the parent stuff, as it would make no sense for a legal person.
+					return this.GetLegalPersonRecipientText ();
+
+				case Enumerations.ContactType.PersonAddress:
+				case Enumerations.ContactType.PersonHousehold:
+					return this.GetPersonParentRecipientText ();
+
+				default:
+					// Is that right or should we throw here?
+					return "";
+			}
+		}
+
+		private string GetPersonParentRecipientText()
+		{
+			return this.GetPersonRecipientText ("Aux parents de");
+		}
+
+		private string GetPersonRecipientText(string title)
+		{
+			return StringUtils.Join ("\n", title, this.Person.GetFullName ());
+		}
+
+		private FormattedText GetAddressLabelText(string recipient)
+		{
+			return TextFormatter.FormatText
+			(
+				recipient,
+				"\n",
+				this.Address.GetPostalAddress ()
+			);
+		}
 
 		public override FormattedText GetCompactSummary()
 		{
