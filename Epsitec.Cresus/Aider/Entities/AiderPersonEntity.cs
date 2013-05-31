@@ -110,17 +110,6 @@ namespace Epsitec.Aider.Entities
 				this.Profession, "~\n");
 		}
 
-
-		public string GetFullName()
-		{
-			return StringUtils.Join
-			(
-				" ",
-				this.eCH_Person.PersonFirstNames,
-				this.eCH_Person.PersonOfficialName
-			);
-		}
-
 		public string GetCallName()
 		{
 			if (string.IsNullOrWhiteSpace (this.CallName))
@@ -136,9 +125,20 @@ namespace Epsitec.Aider.Entities
 			return NameProcessor.GetAbbreviatedFirstname (this.GetCallName ());
 		}
 
+
+		public string GetFullName()
+		{
+			return this.GetFullName (this.GetCallName ());
+		}
+
 		public string GetShortFullName()
 		{
-			return StringUtils.Join (" ", this.GetShortCallName (), this.eCH_Person.PersonOfficialName);
+			return this.GetFullName (this.GetShortCallName ());
+		}
+
+		public string GetFullName(string firstname)
+		{
+			return StringUtils.Join (" ", firstname, this.eCH_Person.PersonOfficialName);
 		}
 
 		public string GetDisplayName()

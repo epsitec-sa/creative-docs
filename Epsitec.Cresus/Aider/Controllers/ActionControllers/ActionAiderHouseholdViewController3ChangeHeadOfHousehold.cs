@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				}
 
 				message = TextFormatter.FormatText (
-					"Souhaitez-vous rendre", person.GetCallName (), person.eCH_Person.PersonOfficialName, "chef de ce ménage ?",
+					"Souhaitez-vous rendre", person.GetFullName (), "chef de ce ménage ?",
 					"\n \n",
 					"Actuellement, ce ménage", variable);
 			}
@@ -91,7 +91,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				if (headCount < 2)
 				{
 					message = TextFormatter.FormatText (
-						"Souhaitez-vous vraiment que", person.GetCallName (), person.eCH_Person.PersonOfficialName, "ne soit plus chef de ce ménage ?",
+						"Souhaitez-vous vraiment que", person.GetFullName (), "ne soit plus chef de ce ménage ?",
 						"\n \n",
 						"Il n'y aura alors plus aucun chef de ménage.");
 				}
@@ -99,7 +99,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					var variable = headCount > 1 ? "un chef de ménage." : "plusieurs chefs de ménage.";
 					message = TextFormatter.FormatText (
-						"Souhaitez-vous que", person.GetCallName (), person.eCH_Person.PersonOfficialName, "ne soit plus chef de ce ménage ?",
+						"Souhaitez-vous que", person.GetFullName (), "ne soit plus chef de ce ménage ?",
 						"\n \n",
 						"Il y aura encore", variable);
 				}

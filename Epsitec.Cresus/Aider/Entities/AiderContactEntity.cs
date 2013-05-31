@@ -86,12 +86,7 @@ namespace Epsitec.Aider.Entities
 			(
 				"\n",
 				this.Person.MrMrs.GetLongText (),
-				StringUtils.Join
-				(
-					" ",
-					this.Person.GetCallName (),
-					this.Person.eCH_Person.PersonOfficialName
-				)
+				this.Person.GetFullName ()
 			);
 		}
 
@@ -114,7 +109,7 @@ namespace Epsitec.Aider.Entities
 			if (this.Person.IsNotNull ())
 			{
 				this.PersonMrMrs    = this.Person.MrMrs;
-				this.PersonFullName = string.Concat (this.Person.GetCallName (), " ", this.Person.eCH_Person.PersonOfficialName);
+				this.PersonFullName = this.Person.GetFullName ();
 			}
 		}
 
