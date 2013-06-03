@@ -5,7 +5,6 @@ using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.Normalization;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
 
@@ -45,52 +44,64 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
+		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons
+		(
+			CoreData coreData,
+			ParishAddressRepository parishRepository,
+			EervParishData eervParishData
+		)
 		{
 			var matches = EervParishDataImporter.FindMatches (coreData, eervParishData);
-			var newEntities = EervParishDataImporter.ProcessMatches (coreData, eervParishData.Id, matches);
-			var mapping = EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 
-			EervParishDataImporter.ProcessHouseholdMatches (coreData, matches, newEntities, eervParishData.Households);
-			EervParishDataImporter.AssignToParishes (coreData, parishRepository, newEntities.Values);
-
-			// TODO Also assign to some importation group in the other cases ?
-			if (eervParishData.Id.Kind == EervKind.Parish)
+			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				EervParishDataImporter.AssignToImportationGroup (coreData, eervParishData.Id, mapping.Values);
-			}
+				var eervToAiderPersons = EervParishDataImporter.ProcessPersonMatches
+				(
+					businessContext, eervParishData.Id, matches
+				);
 
-			return mapping;
+				EervParishDataImporter.ProcessHouseholdMatches
+				(
+					businessContext, eervToAiderPersons, eervParishData.Households
+				);
+
+				EervParishDataImporter.AssignToParishes
+				(
+					businessContext, parishRepository, matches, eervToAiderPersons
+				);
+
+				EervParishDataImporter.AssignToImportationGroup
+				(
+					businessContext, eervParishData.Id, eervToAiderPersons.Values
+				);
+
+				businessContext.SaveChanges
+				(
+					LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors
+				);
+
+				return eervToAiderPersons.ToDictionary
+				(
+					i => i.Key,
+					i => businessContext.DataContext.GetNormalizedEntityKey (i.Value).Value
+				);
+			}
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> BuildEervPersonMapping(Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matchData, Dictionary<EervPerson, EntityKey> newEntities)
-		{
-			var mapping = new Dictionary<EervPerson, EntityKey> ();
-
-			foreach (var match in matchData)
-			{
-				if (match.Value != null)
-				{
-					mapping[match.Key] = match.Value.Item1;
-				}
-			}
-
-			foreach (var newEntity in newEntities)
-			{
-				mapping[newEntity.Key] = newEntity.Value;
-			}
-
-			return mapping;
-		}
-
-
-		private static Dictionary<EervPerson, Tuple<EntityKey, MatchData>> FindMatches(CoreData coreData, EervParishData eervParishData)
+		private static Dictionary<EervPerson, Tuple<EntityKey, MatchData>> FindMatches
+		(
+			CoreData coreData,
+			EervParishData eervParishData
+		)
 		{
 			var normalizedAiderPersons = Normalizer.Normalize (coreData);
 			var normalizedEervPersons = Normalizer.Normalize (eervParishData.Households);
 
-			var matches = NormalizedDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
+			var matches = NormalizedDataMatcher.FindMatches
+			(
+				normalizedEervPersons.Keys, normalizedAiderPersons.Keys
+			);
 
 			return matches.ToDictionary
 			(
@@ -102,82 +113,105 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreData coreData, EervId eervId, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static Dictionary<EervPerson, AiderPersonEntity> ProcessPersonMatches
+		(
+			BusinessContext businessContext,
+			EervId eervId,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches
+		)
 		{
-			using (var businessContext = new BusinessContext (coreData, false))
-			{
-				EervParishDataImporter.ProcessMatchWithValues (businessContext, eervId, matches);
-			}
+			var eervToAiderPersons = new Dictionary<EervPerson, AiderPersonEntity> ();
 
-			using (var businessContext = new BusinessContext (coreData, false))
-			{
-				return EervParishDataImporter.ProcessMatchWithoutValues (businessContext, eervId, matches);
-			}
+			eervToAiderPersons.AddRange
+			(
+				EervParishDataImporter.ProcessMatchWithValues (businessContext, eervId, matches)
+			);
+
+			eervToAiderPersons.AddRange
+			(
+				EervParishDataImporter.ProcessMatchWithoutValues (businessContext, eervId, matches)
+			);
+
+			return eervToAiderPersons;
 		}
 
 
-		private static void ProcessMatchWithValues(BusinessContext businessContext, EervId eervId, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static Dictionary<EervPerson, AiderPersonEntity> ProcessMatchWithValues
+		(
+			BusinessContext businessContext,
+			EervId eervId,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches
+		)
 		{
 			var matchWithValues = matches
 				.Where (m => m.Value != null)
 				.ToList ();
 
-			var existingEntities = new List<AiderPersonEntity> ();
+			var entities = new Dictionary<EervPerson, AiderPersonEntity> ();
 
 			foreach (var item in matchWithValues)
 			{
 				var eervPerson = item.Key;
 				var match = item.Value;
 
-				var aiderPerson = (AiderPersonEntity) businessContext.DataContext.ResolveEntity (match.Item1);
+				var aiderPerson = (AiderPersonEntity) businessContext.DataContext.ResolveEntity
+				(
+					match.Item1
+				);
+
 				var matchData = match.Item2;
 
-				EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+				EervParishDataImporter.CombineAiderPersonWithEervPerson
+				(
+					businessContext, eervPerson, aiderPerson
+				);
+
 				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, eervId);
 
-				existingEntities.Add (aiderPerson);
+				entities[eervPerson] = aiderPerson;
 			}
 
 			// We load the related data to speed up the business rule execution later on.
-			AiderEnumerator.LoadRelatedData (businessContext.DataContext, existingEntities);
-			businessContext.Register (existingEntities);
+			AiderEnumerator.LoadRelatedData (businessContext.DataContext, entities.Values);
+			businessContext.Register (entities.Values);
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+			return entities;
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatchWithoutValues(BusinessContext businessContext, EervId eervId, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
+		private static Dictionary<EervPerson, AiderPersonEntity> ProcessMatchWithoutValues
+		(
+			BusinessContext businessContext,
+			EervId eervId,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches
+		)
 		{
 			var matchWithoutValues = matches
 				.Where (m => m.Value == null)
 				.ToList ();
 
-			var newEntities = new Dictionary<EervPerson, AiderPersonEntity> ();
+			var entities = new Dictionary<EervPerson, AiderPersonEntity> ();
 
 			foreach (var item in matchWithoutValues)
 			{
 				var eervPerson = item.Key;
 
-				var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson (businessContext, eervPerson);
+				var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson
+				(
+					businessContext, eervPerson
+				);
 
-				EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+				EervParishDataImporter.CombineAiderPersonWithEervPerson
+				(
+					businessContext, eervPerson, aiderPerson
+				);
+
 				EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, null, eervId);
 
-				newEntities[eervPerson] = aiderPerson;
+				entities[eervPerson] = aiderPerson;
 			}
 
-			// We assign the new persons to the no parish groups, so that the business rules won't
-			// mess with the parish assignation. Later on we will assign these persons to their
-			// real parish.
-			ParishAssigner.AssignToNoParishGroup (businessContext, newEntities.Values);
-
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
-
-			return newEntities.ToDictionary
-			(
-				kvp => kvp.Key,
-				kvp => businessContext.DataContext.GetNormalizedEntityKey (kvp.Value).Value
-			);
+			return entities;
 		}
 
 
@@ -563,36 +597,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ProcessHouseholdMatches
 		(
-			CoreData coreData,
-			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
-			Dictionary<EervPerson, EntityKey> newEntities,
-			IEnumerable<EervHousehold> eervHouseholds
-		)
-		{
-			using (var businessContext = new BusinessContext (coreData, false))
-			{
-				EervParishDataImporter.ProcessHouseholdMatches (businessContext, matches, newEntities, eervHouseholds);
-			}
-		}
-
-
-		private static void ProcessHouseholdMatches
-		(
 			BusinessContext businessContext,
-			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
-			Dictionary<EervPerson, EntityKey> newEntities,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
 			IEnumerable<EervHousehold> eervHouseholds
 		)
 		{
 			var aiderTowns = new AiderTownRepository (businessContext);
 
 			// That's all the persons that are in the parish file.
-			var fileAiderPersons = EervParishDataImporter.GetAiderPersons
-			(
-				businessContext,
-				matches,
-				newEntities
-			);
+			var fileAiderPersons = eervToAiderPersons.Values.Distinct ().ToList ();
 
 			// That's all the households related to the persons in the parish file.
 			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (fileAiderPersons);
@@ -602,48 +615,19 @@ namespace Epsitec.Aider.Data.Eerv
 			// parish file.
 			var otherAiderPersons = EervParishDataImporter.GetAiderPersons (aiderHouseholds);
 
-			var aiderPersons = fileAiderPersons
-				.Concat (otherAiderPersons)
-				.Distinct ()
-				.ToList ();
-
-			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
-
-			businessContext.Register (aiderPersons);
+			AiderEnumerator.LoadRelatedData (businessContext.DataContext, otherAiderPersons);
+			businessContext.Register (otherAiderPersons);
 
 			foreach (var eervHousehold in eervHouseholds)
 			{
 				EervParishDataImporter.ProcessHouseholdMatch
 				(
 					businessContext,
-					matches,
-					newEntities,
+					eervToAiderPersons,
 					eervHousehold,
 					aiderTowns
 				);
 			}
-
-			businessContext.SaveChanges
-			(
-				LockingPolicy.KeepLock,
-				EntitySaveMode.IgnoreValidationErrors
-			);
-		}
-
-
-		private static List<AiderPersonEntity> GetAiderPersons
-		(
-			BusinessContext businessContext,
-			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
-			Dictionary<EervPerson, EntityKey> newEntities
-		)
-		{
-			return matches.Values
-				.Where (v => v != null)
-				.Select (v => v.Item1)
-				.Concat (newEntities.Values)
-				.Select (pk => (AiderPersonEntity) businessContext.DataContext.ResolveEntity (pk))
-				.ToList ();
 		}
 
 
@@ -674,23 +658,14 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void ProcessHouseholdMatch
 		(
 			BusinessContext businessContext,
-			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
-			Dictionary<EervPerson, EntityKey> newEntities,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
 			EervHousehold eervHousehold,
 			AiderTownRepository aiderTowns
 		)
 		{
-			var eervToAiderPersons = EervParishDataImporter.GetEervToAiderPersons
-			(
-				businessContext,
-				matches,
-				newEntities,
-				eervHousehold
-			);
-
 			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds
 			(
-				eervToAiderPersons.Values
+				eervHousehold, eervToAiderPersons
 			);
 
 			if (aiderHouseholds.Count == 0)
@@ -726,30 +701,18 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, AiderPersonEntity> GetEervToAiderPersons
+		private static List<AiderHouseholdEntity> GetAiderHouseholds
 		(
-			BusinessContext businessContext,
-			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
-			Dictionary<EervPerson, EntityKey> newEntities,
-			EervHousehold eervHousehold
+			EervHousehold eervHousehold,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons
 		)
 		{
-			var eervToAiderPersons = new Dictionary<EervPerson, AiderPersonEntity> ();
+			var aiderHouseholdMembers = eervHousehold
+				.Members
+				.Select (m => eervToAiderPersons[m])
+				.Distinct ();
 
-			foreach (var eervPerson in eervHousehold.Members)
-			{
-				var match = matches[eervPerson];
-
-				var entityKey = match != null
-					? match.Item1
-					: newEntities[eervPerson];
-
-				var aiderPerson = businessContext.ResolveEntity<AiderPersonEntity> (entityKey);
-
-				eervToAiderPersons[eervPerson] = aiderPerson;
-			}
-
-			return eervToAiderPersons;
+			return EervParishDataImporter.GetAiderHouseholds (aiderHouseholdMembers);
 		}
 
 
@@ -816,17 +779,18 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var currentMembers = aiderHousehold.Members;
 
-			var newMembers = eervToAiderPersons
-				.Where (p => !currentMembers.Contains (p.Value));
+			var newMembers = eervHousehold.Members
+				.Select (p => Tuple.Create (p, eervToAiderPersons[p]))
+				.Where (p => !currentMembers.Contains (p.Item2));
 
 			foreach (var newMember in newMembers)
 			{
-				var eervPerson = newMember.Key;
-				var aiderPerson = newMember.Value;
+				var eervPerson = newMember.Item1;
+				var aiderPerson = newMember.Item2;
 
 				var isHead = eervHousehold.Heads.Contains (eervPerson);
 
-				var contact = AiderContactEntity.Create
+				AiderContactEntity.Create
 				(
 					businessContext,
 					aiderPerson,
@@ -1135,59 +1099,48 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignToParishes(CoreData coreData, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToParishes
+		(
+			BusinessContext businessContext,
+			ParishAddressRepository parishRepository,
+			Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches,
+			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons
+		)
 		{
-			using (var businessContext = new BusinessContext (coreData, false))
-			{
-				EervParishDataImporter.AssignToParishes (businessContext, parishRepository, aiderPersonKeys);
-			}
-		}
-
-
-		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
-		{
-			var aiderPersons = aiderPersonKeys
-				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
+			var newEntities = matches
+				.Where (m => m.Value == null)
+				.Select (m => eervToAiderPersons[m.Key])
 				.ToList ();
 
-			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
-
-			ParishAssigner.AssignToParish (parishRepository, businessContext, aiderPersons);
-
-			businessContext.Register (aiderPersons);
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+			ParishAssigner.AssignToParish (parishRepository, businessContext, newEntities);
 		}
 
 
-		private static void AssignToImportationGroup(CoreData coreData, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToImportationGroup
+		(
+			BusinessContext businessContext,
+			EervId parishId,
+			IEnumerable<AiderPersonEntity> aiderPersons
+		)
 		{
-			using (var businessContext = new BusinessContext (coreData, false))
+			// TODO Also assign to some importation group in the other cases ?
+			if (parishId.Kind == EervKind.Parish)
 			{
-				EervParishDataImporter.AssignToImportationGroup (businessContext, parishId, aiderPersonKeys);
+				var importationGroup = EervParishDataImporter.FindImportationGroup
+				(
+					businessContext, parishId
+				);
+
+				foreach (var aiderPerson in aiderPersons)
+				{
+					var participationData = new ParticipationData (aiderPerson);
+
+					AiderGroupParticipantEntity.StartParticipation
+					(
+						businessContext, importationGroup, participationData
+					);
+				}
 			}
-		}
-
-
-		private static void AssignToImportationGroup(BusinessContext businessContext, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
-		{
-			var aiderPersons = aiderPersonKeys
-				.Select (k => businessContext.ResolveEntity<AiderPersonEntity> (k))
-				.ToList ();
-
-			var importationGroup = EervParishDataImporter.FindImportationGroup (businessContext, parishId);
-
-			foreach (var aiderPerson in aiderPersons)
-			{
-				var participationData = new ParticipationData (aiderPerson);
-
-				AiderGroupParticipantEntity.StartParticipation (businessContext, importationGroup, participationData);
-			}
-
-			// We load the related data to speed up the execution of the business rules.
-			AiderEnumerator.LoadRelatedData (businessContext.DataContext, aiderPersons);
-
-			businessContext.Register (aiderPersons);
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 
