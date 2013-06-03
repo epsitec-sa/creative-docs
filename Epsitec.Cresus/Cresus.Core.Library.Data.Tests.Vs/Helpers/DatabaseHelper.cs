@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Library.Data.Tests.Vs.Helpers
 			string provider = "FirebirdEmbedded";
 #endif
 
-			return new DbAccess ("Firebird", "UTD_CORE", host, "sysdba", "masterkey", false);
+			return new DbAccess (provider, "UTD_CORE", host, "sysdba", "masterkey", false);
 		}
 
 
