@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				command.Transaction = dbAbstraction.BeginReadWriteTransaction ();
 				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
 
-				Assert.AreEqual (-4, result);
+				Assert.AreEqual (-6, result);
 
 				IDbTransaction transaction = command.Transaction;
 
