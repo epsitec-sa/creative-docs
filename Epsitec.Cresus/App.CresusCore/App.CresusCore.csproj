@@ -86,6 +86,10 @@
       <Project>{917EB960-42F9-48DF-A649-69A0065AA07C}</Project>
       <Name>Cresus.Core.Maintenance</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.CorePlugIn.WorkflowDesigner\Cresus.CorePlugIn.WorkflowDesigner.csproj">
+      <Project>{527d3555-0b76-4e86-9ee0-443cc97061f0}</Project>
+      <Name>Cresus.CorePlugIn.WorkflowDesigner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.WebCore.Server\Cresus.WebCore.Server.csproj">
       <Project>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</Project>
       <Name>Cresus.WebCore.Server</Name>
@@ -118,10 +122,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Cresus.CorePlugIn.WorkflowDesigner\bin\Debug\Cresus.CorePlugIn.WorkflowDesigner.dll">
-      <Link>plugins\Cresus.CorePlugIn.WorkflowDesigner.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="app.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
