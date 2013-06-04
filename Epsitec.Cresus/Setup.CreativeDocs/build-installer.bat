@@ -52,15 +52,15 @@ IF %setupversion%=="%version%" (
 
 set EXE=CrDoc-%version%-installer.exe
 set EXEPATH="%CD%\Setup.CreativeDocs\%EXE%"
-set BUILD=Debug
+set BUILD=Release
 set IEXPRESS="%CD%\External\iexpress.exe"
 set SIGNTOOL="%CD%\External\CodeSigning\signtool.exe"
 
 echo Building version %version% of Creative Docs .NET (%BUILD%)
-%DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "App.CreativeDocs"
+%DEVENV% "%CD%\Epsitec.Cresus.2010.sln" /Build "%BUILD%" /Project "App.CreativeDocs"
 
 echo Building version %version% of Creative Docs .NET installer (%BUILD%)
-%DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "Setup.CreativeDocs"
+%DEVENV% "%CD%\Epsitec.Cresus.2010.sln" /Build "%BUILD%" /Project "Setup.CreativeDocs"
 
 del "%CD%\Setup.CreativeDocs\Sleep.exe" 2>NUL
 del %EXEPATH% 2>NUL
