@@ -73,12 +73,7 @@ namespace Epsitec.Common.Support.Extensions
 
 		public static bool IsNullOrWhiteSpace(this string text)
 		{
-#if DOTNET35
-			return string.IsNullOrEmpty (text)
-						|| text.Trim ().Length == 0;
-#else
 			return string.IsNullOrWhiteSpace (text);
-#endif
 		}
 
 		public static bool StartsWith(this string text, char character)

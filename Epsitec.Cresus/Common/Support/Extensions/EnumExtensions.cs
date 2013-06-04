@@ -8,15 +8,7 @@ namespace Epsitec.Common.Support.Extensions
 {
 	public static class EnumExtensions
 	{
-#if DOTNET35
-		public static bool HasFlag(this System.Enum value, System.Enum mask)
-		{
-			var enumValue = EnumExtensions.ToUInt64 (value);
-			var enumMask  = EnumExtensions.ToUInt64 (mask);
-			
-			return (enumValue & enumMask) == enumMask;
-		}
-#endif
+
 
 		public static T SetFlag<T>(this System.Enum value, T mask)
 			where T : struct

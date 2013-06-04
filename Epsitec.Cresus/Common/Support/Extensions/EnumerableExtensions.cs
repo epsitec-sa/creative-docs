@@ -204,8 +204,7 @@ namespace Epsitec.Common.Support.Extensions
 			return set1.SetEquals (set2);
 		}
 
-#if DOTNET35
-#else
+
 		/// <summary>
 		/// Splits the given <see cref="IEnumerable{T}"/> in two sequences based on a given predicate.
 		/// </summary>
@@ -244,7 +243,6 @@ namespace Epsitec.Common.Support.Extensions
 
 			return System.Tuple.Create (groups[false], groups[true]);
 		}
-#endif
 
 
 		/// <summary>

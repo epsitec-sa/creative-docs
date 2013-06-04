@@ -328,11 +328,7 @@ namespace Epsitec.Common.Types
 		/// <param name="assembly">The assembly.</param>
 		private void AnalyzeAssembly(Assembly assembly)
 		{
-#if DOTNET35
-			if (assembly.ReflectionOnly)
-#else
 			if (assembly.ReflectionOnly || assembly.IsDynamic)
-#endif
 			{
 				return;
 			}
