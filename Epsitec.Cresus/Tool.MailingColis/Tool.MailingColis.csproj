@@ -40,9 +40,6 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Epsitec.PostBarCodes">
-      <HintPath>..\..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.PostBarCodes\bin\Debug\Epsitec.PostBarCodes.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -75,6 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.PostBarCodes\Epsitec.PostBarCodes.csproj">
+      <Project>{33651191-2712-4f69-92a8-1c3d216531b3}</Project>
+      <Name>Epsitec.PostBarCodes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
