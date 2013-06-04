@@ -6,7 +6,7 @@
   <data id="02" mod="1">Creative Pict .NET</data>
   <data id="04" mod="1">CreativeDocs</data>
   <data id="03" mod="1">Creative Text .NET</data>
-  <data id="022">© 2002-2012 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
+  <data id="022">© 2002-2013 OPaC &lt;i&gt;bright ideas&lt;/i&gt;, EPSITEC SA, P.Arnaud &amp;amp; D.Roux</data>
   <data id="032">Demo</data>
   <data id="042">Abgelaufen</data>
   <data id="012">Seriennummer</data>

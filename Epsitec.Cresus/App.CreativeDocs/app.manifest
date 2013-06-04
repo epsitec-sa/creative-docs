@@ -5,7 +5,7 @@
                 xmlns:asmv2="urn:schemas-microsoft-com:asm.v2"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-  <assemblyIdentity type="win32" processorArchitecture="x86" version="3.3.7.1222" name="Creative Docs.exe" />
+  <assemblyIdentity type="win32" processorArchitecture="x86" version="3.5.1.1323" name="Creative Docs.exe" />
   <description>Creative Docs .NET</description>
   
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
@@ -28,6 +28,8 @@
       <supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}"/>
       <!-- Windows 7 -->
       <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/>
+      <!-- Windows 8 -->
+      <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/>
     </application>
   </compatibility>
   
