@@ -52,12 +52,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 				Druid fieldId = Druid.Parse ("[J1AC1]");
 				List<EntityKey> targetKeys = person.Contacts.Select (c => dataContext.GetNormalizedEntityKey (c).Value).ToList ();
 
-				var proxy = new KeyedCollectionFieldProxy_Accessor (dataContext, person, fieldId, targetKeys);
+				var proxy = new PrivateObject (typeof (KeyedCollectionFieldProxy), dataContext, person, fieldId, targetKeys);
 
-				Assert.AreSame (dataContext, proxy.DataContext);
-				Assert.AreSame (person, proxy.Entity);
-				Assert.AreEqual (fieldId, proxy.FieldId);
-				Assert.IsTrue (targetKeys.SequenceEqual (proxy.targetKeys));
+				Assert.AreSame (dataContext, proxy.GetProperty ("DataContext"));
+				Assert.AreSame (person, proxy.GetProperty ("Entity"));
+				Assert.AreEqual (fieldId, proxy.GetProperty ("FieldId"));
 			}
 		}
 

@@ -195,12 +195,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Shadow Include="Test References\Cresus.DataLayer.accessor" />
-  </ItemGroup>
-  <ItemGroup>
-    <Shadow Include="Test References\Cresus.Database.accessor" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>

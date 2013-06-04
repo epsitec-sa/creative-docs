@@ -32,14 +32,14 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 		public void GetEntryArgumentCheck()
 		{
 			MemoryLog log = new MemoryLog (10);
-			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
+			PrivateObject logAccessor = new PrivateObject (log);
 
-			while (log.GetNbEntries() < 5)
-            {
+			while (log.GetNbEntries () < 5)
+			{
 				Query query = this.GetSampleQuery ();
 
-				logAccessor.AddEntry (query);
-            }
+				logAccessor.Invoke ("AddEntry", query);
+			}
 
 			ExceptionAssert.Throw<System.ArgumentException>
 			(
@@ -58,15 +58,15 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 		{
 			int size = 50;
 
-			List<Query> list = new List<Query>();
+			List<Query> list = new List<Query> ();
 			MemoryLog log = new MemoryLog (size);
-			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
+			PrivateObject logAccessor = new PrivateObject (log);
 
 			for (int i = 0; i < 3 * size; i++)
 			{
 				Query query = this.GetSampleQuery ();
 
-				logAccessor.AddEntry (query);
+				logAccessor.Invoke ("AddEntry", query);
 
 				if (list.Count >= size)
 				{
@@ -88,10 +88,10 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 		public void GetEntriesArgumentCheck()
 		{
 			int size = 10;
-			
+
 			List<Query> list = new List<Query> ();
 			MemoryLog log = new MemoryLog (size);
-			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
+			PrivateObject logAccessor = new PrivateObject (log);
 
 			for (int i = 0; i < 3 * size; i++)
 			{
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 					list.RemoveAt (0);
 				}
 				list.Add (query);
-				logAccessor.AddEntry (query);
+				logAccessor.Invoke ("AddEntry", query);
 
 				for (int j = 0; j < log.GetNbEntries (); j++)
 				{
@@ -122,16 +122,16 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 		public void GetEntriesTest()
 		{
 			MemoryLog log = new MemoryLog (10);
-			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
+			PrivateObject logAccessor = new PrivateObject (log);
 
 			while (log.GetNbEntries () < 5)
 			{
 				Query query = this.GetSampleQuery ();
 
-				logAccessor.AddEntry (query);
+				logAccessor.Invoke ("AddEntry", query);
 			}
 		}
-		
+
 
 		[TestMethod]
 		public void GetNextNumberTest()
@@ -139,18 +139,18 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			int size = 10;
 
 			MemoryLog log = new MemoryLog (size);
-			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject (log));
-			
+			PrivateObject logAccessor = new PrivateObject (log);
+
 			for (int i = 0; i < 50; i++)
 			{
-				Assert.AreEqual (i, logAccessor.GetNextNumber ());
+				Assert.AreEqual (i, logAccessor.Invoke("GetNextNumber"));
 			}
 
 			log.Clear ();
 
 			for (int i = 0; i < 50; i++)
 			{
-				Assert.AreEqual (i, logAccessor.GetNextNumber ());
+				Assert.AreEqual (i, logAccessor.Invoke ("GetNextNumber"));
 			}
 		}
 
@@ -161,12 +161,12 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			int size = 10;
 
 			MemoryLog log = new MemoryLog (size);
-			MemoryLog_Accessor logAccessor = new MemoryLog_Accessor (new PrivateObject(log));
+			PrivateObject logAccessor = new PrivateObject (log);
 			for (int i = 0; i < size; i++)
 			{
 				while (log.GetNbEntries () < i)
 				{
-					logAccessor.AddEntry (this.GetSampleQuery ());
+					logAccessor.Invoke("AddEntry", this.GetSampleQuery ());
 				}
 
 				Assert.AreEqual (i, log.GetNbEntries ());
