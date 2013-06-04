@@ -5,9 +5,4 @@
     <StartProgram>S:\Epsitec.Cresus\Cresus.Core\bin\Debug\Cresus.Core.exe</StartProgram>
     <StartWorkingDirectory>S:\Epsitec.Cresus\Cresus.Core\</StartWorkingDirectory>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|x86'">
-    <StartProgram>S:\Epsitec.Cresus\Cresus.Core\bin\Debug\Cresus.Core.exe</StartProgram>
-    <StartWorkingDirectory>S:\Epsitec.Cresus\Cresus.Core\</StartWorkingDirectory>
-    <StartAction>Program</StartAction>
-  </PropertyGroup>
 </Project>

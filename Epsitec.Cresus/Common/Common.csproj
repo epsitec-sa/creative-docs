@@ -38,16 +38,6 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug .NET 2.0\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;DOTNET35</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
     <Reference Include="AntiGrain.NET">
       <HintPath>..\External\agg-2.4.x\AntiGrain.NET.dll</HintPath>

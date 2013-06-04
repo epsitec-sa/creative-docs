@@ -13,7 +13,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External\</StartWorkingDirectory>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|x86'">
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External\</StartWorkingDirectory>
-  </PropertyGroup>
 </Project>

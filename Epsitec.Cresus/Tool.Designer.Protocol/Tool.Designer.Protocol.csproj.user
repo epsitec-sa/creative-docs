@@ -14,7 +14,4 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartArguments>designer foobar</StartArguments>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
-    <StartArguments>designer foobar</StartArguments>
-  </PropertyGroup>
 </Project>

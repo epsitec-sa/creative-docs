@@ -35,8 +35,4 @@
     <StartWorkingDirectory>s:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|x86'">
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartWithIE>true</StartWithIE>
-  </PropertyGroup>
 </Project>
