@@ -22,47 +22,15 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <EnableASPDebugging>false</EnableASPDebugging>
-    <EnableASPXDebugging>false</EnableASPXDebugging>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <EnableSQLServerDebugging>false</EnableSQLServerDebugging>
-    <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <RemoteDebugMachine>
-    </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
-    <StartPage>
-    </StartPage>
-    <StartProgram>
-    </StartProgram>
-    <StartURL>
-    </StartURL>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <EnableASPDebugging>false</EnableASPDebugging>
-    <EnableASPXDebugging>false</EnableASPXDebugging>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <EnableSQLServerDebugging>false</EnableSQLServerDebugging>
-    <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <RemoteDebugMachine>
-    </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
-    <StartPage>
-    </StartPage>
-    <StartProgram>
-    </StartProgram>
-    <StartURL>
-    </StartURL>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug .NET 2.0|x86'">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>

@@ -85,9 +85,9 @@ msbuild /verbosity:minimal /property:Configuration=Debug;Platform="Mixed Platfor
 if %ERRORLEVEL% neq 0 exit /B 1
 msbuild /verbosity:minimal /property:Configuration=Release;Platform="Mixed Platforms" /target:Build ..\..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.SwissPost.Webservices.sln
 if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /verbosity:minimal /property:Configuration=Debug;Platform="Mixed Platforms" /target:Build ..\Epsitec.Cresus.sln
+msbuild /verbosity:minimal /property:Configuration=Debug;Platform="x86" /target:Build ..\Epsitec.Cresus.sln
 if %ERRORLEVEL% neq 0 exit /B 1
-msbuild /verbosity:minimal /property:Configuration=Release;Platform="Mixed Platforms" /target:Build ..\Epsitec.Cresus.sln
+msbuild /verbosity:minimal /property:Configuration=Release;Platform="x86" /target:Build ..\Epsitec.Cresus.sln
 if %ERRORLEVEL% neq 0 exit /B 1
 
 @rem Copy the client, maintenance and server directories to the output folder.

@@ -21,46 +21,4 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <EnableASPDebugging>false</EnableASPDebugging>
-    <EnableASPXDebugging>false</EnableASPXDebugging>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <EnableSQLServerDebugging>false</EnableSQLServerDebugging>
-    <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <RemoteDebugMachine>
-    </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
-    <StartPage>
-    </StartPage>
-    <StartProgram>
-    </StartProgram>
-    <StartURL>
-    </StartURL>
-    <StartWorkingDirectory>
-    </StartWorkingDirectory>
-    <StartWithIE>false</StartWithIE>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <EnableASPDebugging>false</EnableASPDebugging>
-    <EnableASPXDebugging>false</EnableASPXDebugging>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <EnableSQLServerDebugging>false</EnableSQLServerDebugging>
-    <RemoteDebugEnabled>false</RemoteDebugEnabled>
-    <RemoteDebugMachine>
-    </RemoteDebugMachine>
-    <StartAction>Project</StartAction>
-    <StartArguments>
-    </StartArguments>
-    <StartPage>
-    </StartPage>
-    <StartProgram>
-    </StartProgram>
-    <StartURL>
-    </StartURL>
-    <StartWorkingDirectory>
-    </StartWorkingDirectory>
-    <StartWithIE>false</StartWithIE>
-  </PropertyGroup>
 </Project>
