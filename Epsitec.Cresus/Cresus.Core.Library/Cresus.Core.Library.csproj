@@ -38,9 +38,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Epsitec.CresusToolkit">
-      <HintPath>..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\bin\Debug\Epsitec.CresusToolkit.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -620,6 +617,10 @@
     <Compile Include="Workflows\WorkflowTransitionType.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+      <Project>{bc0605f1-c986-4b52-ae21-aae545fcb970}</Project>
+      <Name>Epsitec.CresusToolkit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
