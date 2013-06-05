@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Database.Logging
 			sb.Append ("\nQuery number: " + query.Number);
 			sb.Append ("\nQuery start time: " + query.StartTime);
 			sb.Append ("\nQuery duration: " + query.Duration);
-			sb.Append ("\nQuery source code: " + query.SourceCode);
+			sb.Append ("\nQuery source code: " + query.SourceCode.Trim ());
 			sb.Append ("\nQuery plan: " + query.QueryPlan);
 
 			if (query.StackTrace != null)
