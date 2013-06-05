@@ -73,8 +73,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Data.AiderGroup.People")
-					.Title (p => p.GetFunctionParticipantTitle ())
-					.Text (p => p.GetFunctionParticipantSummary ())
+					.Title (p => p.GetGroupAndSubGroupParticipantTitle ())
+					.Text (p => p.GetGroupAndSubGroupParticipantSummary ())
 					.Attribute (BrickMode.DefaultToSetSubView)
 					.Attribute (BrickMode.SpecialController1);
 			}

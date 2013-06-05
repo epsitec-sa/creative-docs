@@ -21,24 +21,24 @@ namespace Epsitec.Aider.Controllers.SetControllers
 	{
 		public override string GetIcon()
 		{
-			return Res.Commands.Base.ShowAiderGroupFunctionMembersDisplay.Caption.Icon;
+			return Res.Commands.Base.ShowAiderGroupAndSubGroupMembersDisplay.Caption.Icon;
 		}
 
 		public override FormattedText GetTitle()
 		{
-			return Res.Commands.Base.ShowAiderGroupFunctionMembersDisplay.Caption.DefaultLabel;
+			return Res.Commands.Base.ShowAiderGroupAndSubGroupMembersDisplay.Caption.DefaultLabel;
 		}
 
 		public override Druid GetDisplayDataSetId()
 		{
-			return Res.CommandIds.Base.ShowAiderGroupFunctionMembersDisplay;
+			return Res.CommandIds.Base.ShowAiderGroupAndSubGroupMembersDisplay;
 		}
 
 		public override Druid GetPickDataSetId()
 		{
 			// We return a dummy value as it will never be used.
 
-			return Res.CommandIds.Base.ShowAiderGroupFunctionMembersDisplay;
+			return Res.CommandIds.Base.ShowAiderGroupAndSubGroupMembersDisplay;
 		}
 
 		protected override void SetupDisplayDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
@@ -51,7 +51,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 					Contact = contact,
 				};
 
-				AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participation, entity);
+				AiderGroupParticipantEntity.AddGroupAndSubGroupMemberCondition (dataContext, request, participation, entity);
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
 
 				request.Distinct = true;

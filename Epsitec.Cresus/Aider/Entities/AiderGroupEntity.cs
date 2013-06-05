@@ -241,9 +241,9 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), participants);
 		}
 
-		public FormattedText GetFunctionParticipantTitle()
+		public FormattedText GetGroupAndSubGroupParticipantTitle()
 		{
-			var count = this.GetFunctionParticipantCount ();
+			var count = this.GetGroupAndSubGroupParticipantCount ();
 
 			if (count == 1)
 			{
@@ -255,11 +255,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public FormattedText GetFunctionParticipantSummary()
+		public FormattedText GetGroupAndSubGroupParticipantSummary()
 		{
 			int count = 10;
 
-			var participants = this.GetFuntionParticipants (count + 1)
+			var participants = this.GetGroupAndSubGroupParticipants (count + 1)
 				.Select (p => p.DisplayName)
 				.CreateSummarySequence (count, "...")
 				.Select (t => FormattedText.FromSimpleText (t));
@@ -625,9 +625,9 @@ namespace Epsitec.Aider.Entities
 												() => new List<AiderGroupParticipantEntity> ());
 		}
 
-		private IList<AiderContactEntity> GetFuntionParticipants(int count)
+		private IList<AiderContactEntity> GetGroupAndSubGroupParticipants(int count)
 		{
-			return this.ExecuteWithDataContext (c => this.FindFunctionParticipants (c, count),
+			return this.ExecuteWithDataContext (c => this.FindGroupAndSubGroupParticipants (c, count),
 												() => new List<AiderContactEntity> ());
 		}
 
@@ -666,12 +666,12 @@ namespace Epsitec.Aider.Entities
 			return this.ExecuteWithDataContext (c => this.FindParticipantCount (c), () => 0);
 		}
 
-		private int GetFunctionParticipantCount()
+		private int GetGroupAndSubGroupParticipantCount()
 		{
 			//	This stuff is not cached in the entity, therefore updates in memory won't modify the
 			//	value returned by this method. If the entity is not persisted, it will always be 0.
 
-			return this.ExecuteWithDataContext (c => this.FindFunctionParticipantCount (c), () => 0);
+			return this.ExecuteWithDataContext (c => this.FindGroupAndSubGroupParticipantCount (c), () => 0);
 		}
 
 
@@ -685,9 +685,9 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 		}
 
-		private IList<AiderContactEntity> FindFunctionParticipants(DataContext dataContext, int count)
+		private IList<AiderContactEntity> FindGroupAndSubGroupParticipants(DataContext dataContext, int count)
 		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true);
+			var request = AiderGroupParticipantEntity.CreateGroupAndSubGroupMemberRequest (dataContext, this, true);
 
 			request.Skip = 0;
 			request.Take = count;
@@ -780,9 +780,9 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetCount (request);
 		}
 
-		private int FindFunctionParticipantCount(DataContext dataContext)
+		private int FindGroupAndSubGroupParticipantCount(DataContext dataContext)
 		{
-			var request = AiderGroupParticipantEntity.CreateFunctionMemberRequest (dataContext, this, true);
+			var request = AiderGroupParticipantEntity.CreateGroupAndSubGroupMemberRequest (dataContext, this, true);
 
 			return dataContext.GetCount (request);
 		}

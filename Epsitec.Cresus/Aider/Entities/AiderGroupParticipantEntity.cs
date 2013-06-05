@@ -198,7 +198,7 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
-		public static Request CreateFunctionMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current)
+		public static Request CreateGroupAndSubGroupMemberRequest(DataContext dataContext, AiderGroupEntity group, bool current)
 		{
 			var contact = new AiderContactEntity ();
 			var participation = new AiderGroupParticipantEntity ()
@@ -213,7 +213,7 @@ namespace Epsitec.Aider.Entities
 				Distinct = true,
 			};
 
-			AiderGroupParticipantEntity.AddFunctionMemberCondition (dataContext, request, participation, group);
+			AiderGroupParticipantEntity.AddGroupAndSubGroupMemberCondition (dataContext, request, participation, group);
 
 			if (current)
 			{
@@ -230,25 +230,18 @@ namespace Epsitec.Aider.Entities
 			request.AddCondition (dataContext, participation, g => g.EndDate == null || g.EndDate > Date.Today);
 		}
 
-		public static void AddFunctionMemberCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation, AiderGroupEntity group)
+		public static void AddGroupAndSubGroupMemberCondition(DataContext dataContext, Request request, AiderGroupParticipantEntity participation, AiderGroupEntity group)
 		{
 			if (participation.Group == null)
 			{
 				participation.Group = new AiderGroupEntity ();
 			}
 
-			// Here we don't use a like clause on the path because it is too slow when there are a
-			// lot of participations in the database.
-			var functions = group.GroupDef.Function.Subgroups;
-			var paths = functions
-				.Select (f => AiderGroupIds.CreateSubgroupPathFromFullPath (group.Path, f.PathTemplate))
-				.ToList ();
-
 			request.AddCondition
 			(
 				dataContext,
 				participation,
-				x => SqlMethods.IsInSet (x.Group.Path, paths)
+				x => SqlMethods.Like (x.Group.Path, group.Path + "%")
 			);
 		}
 
