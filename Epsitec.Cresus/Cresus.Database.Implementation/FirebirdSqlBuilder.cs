@@ -1209,151 +1209,175 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			switch (sqlFunction.ArgumentCount)
 			{
-				case 2:
-					this.Append ('(');
-					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-					
-					switch (sqlFunction.Code)
-					{
-						case SqlFunctionCode.MathAdd:					this.Append (" + ");		break;
-						case SqlFunctionCode.MathSubstract:				this.Append (" - ");		break;
-						case SqlFunctionCode.MathMultiply:				this.Append (" * ");		break;
-						case SqlFunctionCode.MathDivide:				this.Append (" / ");		break;
-						case SqlFunctionCode.CompareEqual:				this.Append (" = ");		break;
-						case SqlFunctionCode.CompareNotEqual:			this.Append (" <> ");		break;
-						case SqlFunctionCode.CompareLessThan:			this.Append (" < ");		break;
-						case SqlFunctionCode.CompareLessThanOrEqual:	this.Append (" <= ");		break;
-						case SqlFunctionCode.CompareGreaterThan:		this.Append (" > ");		break;
-						case SqlFunctionCode.CompareGreaterThanOrEqual:	this.Append (" >= ");		break;
-						case SqlFunctionCode.CompareLike:				this.Append (" LIKE ");		break;
-						case SqlFunctionCode.CompareLikeEscape:			this.Append (" LIKE ");		break;
-						case SqlFunctionCode.CompareNotLike:			this.Append (" NOT LIKE ");	break;
-						case SqlFunctionCode.CompareNotLikeEscape:		this.Append (" NOT LIKE ");	break;
-						case SqlFunctionCode.SetIn:						this.Append (" IN ");		break;
-						case SqlFunctionCode.SetNotIn:					this.Append (" NOT IN ");	break;
-						case SqlFunctionCode.LogicAnd:					this.Append (" AND ");		break;
-						case SqlFunctionCode.LogicOr:					this.Append (" OR ");		break;
-						
-						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
-					}
-					
-					this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
-
-					switch (sqlFunction.Code)
-					{
-						case SqlFunctionCode.CompareLikeEscape:
-						case SqlFunctionCode.CompareNotLikeEscape:
-							if (sqlFunction.B.FieldType != SqlFieldType.Constant)
-							{
-								throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} requires a constant argument", sqlFunction.Code));
-							}
-							
-							string constantValue = sqlFunction.B.Value as string;
-							
-							if ((constantValue != null) &&
-								(constantValue.Contains (DbSqlStandard.CompareLikeEscape)))
-							{
-								//	TODO: make sure the user escaped only escapable characters here !
-								
-								this.Append (string.Concat (" ESCAPE '", DbSqlStandard.CompareLikeEscape, "'"));
-							}
-							break;
-					}
-
-					this.Append (')');
-					break;
-
 				case 0:
-					switch (sqlFunction.Code)
-					{
-						case SqlFunctionCode.CompareFalse:				this.Append ("(0 = 1)");	break;
-						case SqlFunctionCode.CompareTrue:				this.Append ("(1 = 1)");	break;
-
-						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
-					}
+					this.Append0AryExpression (sqlFunction);
 					break;
 
 				case 1:
-					switch (sqlFunction.Code)
-					{
-						case SqlFunctionCode.LogicNot:
-							this.Append ("NOT ");
-							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-							break;
-						
-						case SqlFunctionCode.CompareIsNull:
-							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-							this.Append (" IS NULL");
-							break;
-						
-						case SqlFunctionCode.CompareIsNotNull:
-							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-							this.Append (" IS NOT NULL");
-							break;
-						
-						case SqlFunctionCode.SetExists:
-							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-							this.Append (" EXISTS");
-							break;
+					this.Append1AryExpression (sqlFunction, onlyAcceptQualifiedNames);
+					break;
 
-						case SqlFunctionCode.SetNotExists:
-							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-							this.Append (" NOT EXISTS");
-							break;
-						
-						case SqlFunctionCode.Upper:
-							this.Append ("UPPER(");
-							this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-							this.Append (")");
-							break;
-						
-						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
-					}
+				case 2:
+					this.Append2AryExpression (sqlFunction, onlyAcceptQualifiedNames);
 					break;
 
 				case 3:
-					if (sqlFunction.Code == SqlFunctionCode.Substring)
-					{
-						this.Append ("SUBSTRING(");
-						this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-						this.Append (" FROM ");
-						this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
-						this.Append (" FOR ");
-						this.Append (sqlFunction.C, onlyAcceptQualifiedNames);
-						this.Append (")");
-					}
-					else
-					{
-						this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
-
-						switch (sqlFunction.Code)
-						{
-							case SqlFunctionCode.SetBetween:
-								this.Append (" BETWEEN ");
-								this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
-								this.Append (" AND ");
-								break;
-
-							case SqlFunctionCode.SetNotBetween:
-								this.Append (" NOT BETWEEN ");
-								this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
-								this.Append (" AND ");
-								break;
-							
-							default:
-								System.Diagnostics.Debug.Assert (false);
-								break;
-						}
-						
-						this.Append (sqlFunction.C, onlyAcceptQualifiedNames);
-					}
+					this.Append3AryExpression (sqlFunction, onlyAcceptQualifiedNames);
 					break;
 
 				default:
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
+			}
+		}
+
+		private void Append0AryExpression(SqlFunction sqlFunction)
+		{
+			switch (sqlFunction.Code)
+			{
+				case SqlFunctionCode.CompareFalse:
+					this.Append ("(0 = 1)");
+					break;
+				case SqlFunctionCode.CompareTrue:
+					this.Append ("(1 = 1)");
+					break;
+
+				default:
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
+			}
+		}
+
+		private void Append1AryExpression(SqlFunction sqlFunction, bool onlyAcceptQualifiedNames)
+		{
+			switch (sqlFunction.Code)
+			{
+				case SqlFunctionCode.LogicNot:
+					this.Append ("NOT ");
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					break;
+
+				case SqlFunctionCode.CompareIsNull:
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (" IS NULL");
+					break;
+
+				case SqlFunctionCode.CompareIsNotNull:
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (" IS NOT NULL");
+					break;
+
+				case SqlFunctionCode.SetExists:
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (" EXISTS");
+					break;
+
+				case SqlFunctionCode.SetNotExists:
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (" NOT EXISTS");
+					break;
+
+				case SqlFunctionCode.Upper:
+					this.Append ("UPPER(");
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (")");
+					break;
+
+				default:
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
+			}
+		}
+
+		private void Append2AryExpression(SqlFunction sqlFunction, bool onlyAcceptQualifiedNames)
+		{
+			this.Append ('(');
+			this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+
+			switch (sqlFunction.Code)
+			{
+				case SqlFunctionCode.MathAdd:					this.Append (" + ");		break;
+				case SqlFunctionCode.MathSubstract:				this.Append (" - ");		break;
+				case SqlFunctionCode.MathMultiply:				this.Append (" * ");		break;
+				case SqlFunctionCode.MathDivide:				this.Append (" / ");		break;
+				case SqlFunctionCode.CompareEqual:				this.Append (" = ");		break;
+				case SqlFunctionCode.CompareNotEqual:			this.Append (" <> ");		break;
+				case SqlFunctionCode.CompareLessThan:			this.Append (" < ");		break;
+				case SqlFunctionCode.CompareLessThanOrEqual:	this.Append (" <= ");		break;
+				case SqlFunctionCode.CompareGreaterThan:		this.Append (" > ");		break;
+				case SqlFunctionCode.CompareGreaterThanOrEqual:	this.Append (" >= ");		break;
+				case SqlFunctionCode.CompareLike:				this.Append (" LIKE ");		break;
+				case SqlFunctionCode.CompareLikeEscape:			this.Append (" LIKE ");		break;
+				case SqlFunctionCode.CompareNotLike:			this.Append (" NOT LIKE ");	break;
+				case SqlFunctionCode.CompareNotLikeEscape:		this.Append (" NOT LIKE ");	break;
+				case SqlFunctionCode.SetIn:						this.Append (" IN ");		break;
+				case SqlFunctionCode.SetNotIn:					this.Append (" NOT IN ");	break;
+				case SqlFunctionCode.LogicAnd:					this.Append (" AND ");		break;
+				case SqlFunctionCode.LogicOr:					this.Append (" OR ");		break;
+
+				default:
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
+			}
+
+			this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+
+			switch (sqlFunction.Code)
+			{
+				case SqlFunctionCode.CompareLikeEscape:
+				case SqlFunctionCode.CompareNotLikeEscape:
+					if (sqlFunction.B.FieldType != SqlFieldType.Constant)
+					{
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} requires a constant argument", sqlFunction.Code));
+					}
+
+					string constantValue = sqlFunction.B.Value as string;
+
+					if ((constantValue != null) &&
+						(constantValue.Contains (DbSqlStandard.CompareLikeEscape)))
+					{
+						//	TODO: make sure the user escaped only escapable characters here !
+
+						this.Append (string.Concat (" ESCAPE '", DbSqlStandard.CompareLikeEscape, "'"));
+					}
+					break;
+			}
+
+			this.Append (')');
+		}
+
+		private void Append3AryExpression(SqlFunction sqlFunction, bool onlyAcceptQualifiedNames)
+		{
+			if (sqlFunction.Code == SqlFunctionCode.Substring)
+			{
+				this.Append ("SUBSTRING(");
+				this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+				this.Append (" FROM ");
+				this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+				this.Append (" FOR ");
+				this.Append (sqlFunction.C, onlyAcceptQualifiedNames);
+				this.Append (")");
+			}
+			else
+			{
+				this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+
+				switch (sqlFunction.Code)
+				{
+					case SqlFunctionCode.SetBetween:
+						this.Append (" BETWEEN ");
+						this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+						this.Append (" AND ");
+						break;
+
+					case SqlFunctionCode.SetNotBetween:
+						this.Append (" NOT BETWEEN ");
+						this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+						this.Append (" AND ");
+						break;
+
+					default:
+						System.Diagnostics.Debug.Assert (false);
+						break;
+				}
+
+				this.Append (sqlFunction.C, onlyAcceptQualifiedNames);
 			}
 		}
 
