@@ -1044,7 +1044,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					};
 
 					using (DbTransaction transaction = infrastructure.BeginTransaction(DbTransactionMode.ReadWrite))
-                    {
+					{
 						transaction.SqlBuilder.InsertData (table.GetSqlName (), fieldsToInsert, fieldsToReturn);
 
 						object id = infrastructure.ExecuteScalar (transaction);
@@ -1053,7 +1053,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 						Assert.AreEqual (value + 1, id);
 
 						transaction.Commit ();
-                    }			
+					}			
 				}
 			}
 		}
@@ -1342,20 +1342,20 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToUpdate = new SqlFieldList ()
-		            {
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnName], "K00C"),
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnDisplayName], "Other.ReqData"),
-		            };
+					{
+						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnName], "K00C"),
+						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnDisplayName], "Other.ReqData"),
+					};
 
 					SqlFieldList conditions = new SqlFieldList ()
-		            {
-		                new SqlFunction
-		                (
-		                    SqlFunctionCode.CompareEqual,
-		                    SqlField.CreateName (tableName, Tags.ColumnId),
-		                    SqlField.CreateConstant ("11", DbRawType.LargeDecimal)
-		                ),
-		            };
+					{
+						new SqlFunction
+						(
+							SqlFunctionCode.CompareEqual,
+							SqlField.CreateName (tableName, Tags.ColumnId),
+							SqlField.CreateConstant ("11", DbRawType.LargeDecimal)
+						),
+					};
 
 					transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 
@@ -1493,19 +1493,19 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToUpdate = new SqlFieldList ()
-		            {
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnId], 1),
-		            };
+					{
+						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnId], 1),
+					};
 
 					SqlFieldList conditions = new SqlFieldList ()
-		            {
-		                new SqlFunction
-		                (
-		                    SqlFunctionCode.CompareEqual,
-		                    SqlField.CreateName (tableName, Tags.ColumnId),
-		                    SqlField.CreateConstant (1, DbKey.RawTypeForId)
-		                ),
-		            };
+					{
+						new SqlFunction
+						(
+							SqlFunctionCode.CompareEqual,
+							SqlField.CreateName (tableName, Tags.ColumnId),
+							SqlField.CreateConstant (1, DbKey.RawTypeForId)
+						),
+					};
 
 					transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 
@@ -1571,19 +1571,19 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					string tableName = table.GetSqlName ();
 
 					SqlFieldList fieldsToInsert = new SqlFieldList ()
-		            {
-		                infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnName], "NEW"),
+					{
+						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnName], "NEW"),
 						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnDisplayName], "NEW"),
 						infrastructure.CreateSqlFieldFromAdoValue (table.Columns[Tags.ColumnInfoXml], "XML"),
-		            };
+					};
 
 					SqlFieldList fieldsToReturn = new SqlFieldList ()
-		            {
-		                new SqlField () { Alias = table.Columns[Tags.ColumnId].Name },
-		                new SqlField () { Alias = table.Columns[Tags.ColumnName].Name },
-		                new SqlField () { Alias = table.Columns[Tags.ColumnDisplayName].Name },
-		                new SqlField () { Alias = table.Columns[Tags.ColumnInfoXml].Name },
-		            };
+					{
+						new SqlField () { Alias = table.Columns[Tags.ColumnId].Name },
+						new SqlField () { Alias = table.Columns[Tags.ColumnName].Name },
+						new SqlField () { Alias = table.Columns[Tags.ColumnDisplayName].Name },
+						new SqlField () { Alias = table.Columns[Tags.ColumnInfoXml].Name },
+					};
 
 					transaction.SqlBuilder.InsertData (tableName, fieldsToInsert, fieldsToReturn);
 

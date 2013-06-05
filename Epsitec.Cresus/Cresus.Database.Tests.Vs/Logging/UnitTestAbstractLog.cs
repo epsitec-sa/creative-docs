@@ -222,12 +222,12 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			TimeSpan duration = TimeSpan.FromSeconds (123);
 			string queryPlan = this.GetSampleQueryPlan2 ();
 			List<object> data = new List<object> ()
-		    {
-		        null,
-		        "un",
-		        2,
-		        System.TimeSpan.FromDays(3),
-		    };
+			{
+				null,
+				"un",
+				2,
+				System.TimeSpan.FromDays(3),
+			};
 
 			testLog.AddEntry (command, startTime, duration, queryPlan, data);
 

@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 				return this.converter;
 			}
 		}
-		
+
 		public DbTransaction[]					LiveTransactions
 		{
 			get
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
+
 		public DbAccess							Access
 		{
 			get
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Database
 			get;
 			private set;
 		}
-		
+
 		/// <summary>
 		/// Creates a new database using the specified database access. This
 		/// is only possible if the <c>DbInfrastructure</c> is not yet connected
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new Exceptions.GenericException (this.access, "A database already exists for this DbInfrastructure");
 			}
-			
+
 			this.access = access;
 			this.access.CreateDatabase = true;
 
@@ -176,32 +176,32 @@ namespace Epsitec.Cresus.Database
 				this.access = DbAccess.Empty;
 				return false;
 			}
-			
+
 			this.types.RegisterTypes ();
-			
+
 			//	The database is now ready to be filled. At this point, it is totally
 			//	empty of any tables.
-			
+
 			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length == 0);
 
 			List<DbTable> tableCore = BootHelper.CreateCoreTables (this).ToList ();
-			
+
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				//	Create the tables required for our own metadata management. The
 				//	created tables must be committed before they can be populated.
 
 				BootHelper.RegisterTables (this, transaction, tableCore);
-				
+
 				transaction.Commit ();
 			}
-			
+
 			//	Fill the tables with the initial metadata.
-			
+
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				this.SetupTables (transaction);
-				
+
 				transaction.Commit ();
 			}
 
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Database
 			}
 
 			bool success = this.CheckCoreTables ();
-			
+
 			if (!success)
 			{
 				throw new Exceptions.IncompatibleDatabaseException (this.access, "Incompatible core tables.");
@@ -372,8 +372,8 @@ namespace Epsitec.Cresus.Database
 						return;
 					}
 				}
-			}				
-			
+			}
+
 			abstraction.ReleaseConnection ();
 		}
 
@@ -462,7 +462,7 @@ namespace Epsitec.Cresus.Database
 				abstraction.Dispose ();
 				abstraction = null;
 			}
-			
+
 			return abstraction;
 		}
 
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Database
 		{
 			return this.BeginTransaction (mode, tablesToLock, this.abstraction);
 		}
-		
+
 		/// <summary>
 		/// Begins a transaction for the specified database abstraction.
 		/// </summary>
@@ -578,7 +578,7 @@ namespace Epsitec.Cresus.Database
 		public DbTransaction InheritOrBeginTransaction(DbTransactionMode mode)
 		{
 			DbTransaction transaction;
-			
+
 			this.DatabaseLock (this.abstraction);
 
 			try
@@ -633,10 +633,10 @@ namespace Epsitec.Cresus.Database
 			{
 				case DbElementCat.Internal:
 					throw new Exceptions.GenericException (this.access, string.Format ("Users may not create internal tables (table '{0}')", name));
-				
+
 				case DbElementCat.ManagedUserData:
-					return this.CreateTable(name, category, autoIncrementedId);
-				
+					return this.CreateTable (name, category, autoIncrementedId);
+
 				default:
 					throw new Exceptions.GenericException (this.access, string.Format ("Unsupported category {0} specified for table '{1}'", category, name));
 			}
@@ -711,7 +711,7 @@ namespace Epsitec.Cresus.Database
 				this.CheckForUnknownTable (transaction, table);
 				this.CheckForRelations (table, existingTables.Concat (newTables).ToList ());
 			}
-			
+
 			this.AddTablesInternal (transaction, newTables);
 		}
 
@@ -879,7 +879,7 @@ namespace Epsitec.Cresus.Database
 			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
 			this.CheckUnexistingIndex (internalTable, index);
-			
+
 			this.AddIndexInternal (transaction, internalTable, index);
 			this.RemoveFromCache (internalTable);
 		}
@@ -1121,7 +1121,7 @@ namespace Epsitec.Cresus.Database
 			this.AddRelationTable (transaction, table, column);
 			this.RegisterRelationTableColumn (transaction, table, column);
 		}
-		
+
 		private void AddRelationTable(DbTransaction transaction, DbTable table, DbColumn column)
 		{
 			DbTable relationTable = DbTable.CreateRelationTable (this, table, column);
@@ -1146,7 +1146,7 @@ namespace Epsitec.Cresus.Database
 			this.UnregisterRelationTableColumn (transaction, column);
 			this.RemoveFromCache (column.Table);
 		}
-		
+
 		private void RemoveRelationTable(DbTransaction transaction, DbColumn column)
 		{
 			DbTable sourceTable = column.Table;
@@ -1221,7 +1221,7 @@ namespace Epsitec.Cresus.Database
 			this.DeleteColumnDefRows (transaction, table);
 			this.DeleteTableDefRow (transaction, table);
 		}
-		
+
 		private void RegisterConcreteTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
 		{
 			DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
@@ -1242,22 +1242,22 @@ namespace Epsitec.Cresus.Database
 				// Marc
 
 				case DbColumnClass.RefId:
-				{
-					string targetTableName = column.TargetTableName;
+					{
+						string targetTableName = column.TargetTableName;
 
-					DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
+						DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
 
-					DbKey columnKey = this.InsertRelationColumnDefRow (transaction, table, column, targetTable);
-					column.DefineKey (columnKey);	
-				}
-				break;
+						DbKey columnKey = this.InsertRelationColumnDefRow (transaction, table, column, targetTable);
+						column.DefineKey (columnKey);
+					}
+					break;
 
 				default:
-				{
-					DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
-					column.DefineKey (columnKey);
-				}
-				break;
+					{
+						DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
+						column.DefineKey (columnKey);
+					}
+					break;
 			}
 		}
 
@@ -1339,13 +1339,13 @@ namespace Epsitec.Cresus.Database
 			{
 				this.DropIndex (dbTransaction, index);
 			}
-			
+
 			foreach (DbColumn dbColumn in dbTable.Columns.Where (c => c.Cardinality == DbCardinality.None))
 			{
 				this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
 				this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
 			}
-			
+
 			dbTransaction.SqlBuilder.RemoveTable (sqlTable);
 			this.ExecuteSilent (dbTransaction);
 		}
@@ -1361,7 +1361,7 @@ namespace Epsitec.Cresus.Database
 			dbTransaction.SqlBuilder.RemoveTableColumns (dbTableName, new SqlColumn[] { sqlColumn });
 			this.ExecuteSilent (dbTransaction);
 		}
-		
+
 		private void DropAutoIncrementFromColumn(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
 			if (dbColumn.IsAutoIncremented)
@@ -1373,7 +1373,7 @@ namespace Epsitec.Cresus.Database
 				this.ExecuteSilent (dbTransaction);
 			}
 		}
-		
+
 		private void DropAutoTimeStampFromColumn(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
 			bool autoTimeStampOnInsert = dbColumn.IsAutoTimeStampOnInsert;
@@ -1549,7 +1549,7 @@ namespace Epsitec.Cresus.Database
 			{
 				list.RemoveAll (t => t.Category != category);
 			}
-			
+
 			return list.ToArray ();
 		}
 
@@ -1783,7 +1783,7 @@ namespace Epsitec.Cresus.Database
 				this.tableKeyCache.Clear ();
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates an SQL field definining a constant value for a given column.
 		/// The value is automatically converted from an ADO.NET representation
@@ -1798,7 +1798,7 @@ namespace Epsitec.Cresus.Database
 			DbRawType rawType = type.RawType;
 
 			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
-			
+
 			SqlField field = SqlField.CreateConstant (value, rawType);
 			field.Alias = column.GetSqlName ();
 			return field;
@@ -1846,7 +1846,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable table = new DbTable (name);
 
-			this.DefineBasicTable (table, category,  autoIncrementedId);
+			this.DefineBasicTable (table, category, autoIncrementedId);
 
 			return table;
 		}
@@ -1924,7 +1924,7 @@ namespace Epsitec.Cresus.Database
 		private void CheckForUnknownType(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (typeDef != null);
-			
+
 			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, typeDef.Name) > 0)
 			{
 				string message = string.Format ("Type {0} already exists in database.", typeDef.Name);
@@ -1941,7 +1941,7 @@ namespace Epsitec.Cresus.Database
 		private void CheckForKnownType(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			System.Diagnostics.Debug.Assert (typeDef != null);
-			
+
 			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, typeDef.Name) == 0)
 			{
 				string message = string.Format ("Type {0} does not exist in database.", typeDef.Name);
@@ -2069,7 +2069,7 @@ namespace Epsitec.Cresus.Database
 		private void HandleLiveDbTransactionStart(DbTransaction transaction)
 		{
 			var dbAbstraction = transaction.Database;
-			
+
 			lock (this.liveTransactions)
 			{
 				foreach (DbTransaction item in this.liveTransactions)
@@ -2079,7 +2079,7 @@ namespace Epsitec.Cresus.Database
 						throw new Exceptions.GenericException (this.access, string.Format ("Nested transactions not supported."));
 					}
 				}
-				
+
 				this.liveTransactions.Add (transaction);
 			}
 		}
@@ -2122,7 +2122,7 @@ namespace Epsitec.Cresus.Database
 		{
 			var dbTransaction = (DbTransaction) transaction;
 			var dbAbstraction = dbTransaction.Database;
-			
+
 			this.DatabaseUnlock (dbAbstraction);
 		}
 
@@ -2168,9 +2168,9 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
-			
+
 			int count = builder.CommandCount;
-			
+
 			if (count < 1)
 			{
 				return 0;
@@ -2187,8 +2187,8 @@ namespace Epsitec.Cresus.Database
 				else
 				{
 					System.DateTime startTime = System.DateTime.Now;
-					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 					data = this.ExecuteSilent (count, command);
 					watch.Stop ();
 
@@ -2200,7 +2200,7 @@ namespace Epsitec.Cresus.Database
 				return data;
 			}
 		}
-		
+
 		private int ExecuteSilent(int count, System.Data.IDbCommand command)
 		{
 			int result;
@@ -2230,14 +2230,14 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
-			
+
 			int count = builder.CommandCount;
-			
+
 			if (count < 1)
 			{
 				return null;
 			}
-			
+
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
@@ -2249,8 +2249,8 @@ namespace Epsitec.Cresus.Database
 				else
 				{
 					System.DateTime startTime = System.DateTime.Now;
-					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 					data = this.ExecuteScalar (count, command);
 					watch.Stop ();
 
@@ -2292,14 +2292,14 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
-			
+
 			int count = builder.CommandCount;
-			
+
 			if (count < 1)
 			{
 				return null;
 			}
-			
+
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
@@ -2324,7 +2324,7 @@ namespace Epsitec.Cresus.Database
 				return data;
 			}
 		}
-		
+
 		private object ExecuteNonQuery(int count, System.Data.IDbCommand command)
 		{
 			object data;
@@ -2373,8 +2373,8 @@ namespace Epsitec.Cresus.Database
 				else
 				{
 					System.DateTime startTime = System.DateTime.Now;
+
 					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
-					
 					data = this.ExecuteOutputParameters (count, command);
 					watch.Stop ();
 
@@ -2386,7 +2386,7 @@ namespace Epsitec.Cresus.Database
 				return data;
 			}
 		}
-		
+
 		private IList<object> ExecuteOutputParameters(int count, System.Data.IDbCommand command)
 		{
 			IList<object> data;
@@ -2405,7 +2405,7 @@ namespace Epsitec.Cresus.Database
 		{
 			return this.ExecuteRetData (transaction, transaction.SqlBuilder);
 		}
-		
+
 		/// <summary>
 		/// Executes the command defined by the SQL command builder.
 		/// </summary>
@@ -2416,14 +2416,14 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
-			
+
 			int count = builder.CommandCount;
-			
+
 			if (count < 1)
 			{
 				return null;
 			}
-			
+
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				System.Data.DataSet data;
@@ -2435,8 +2435,8 @@ namespace Epsitec.Cresus.Database
 				else
 				{
 					System.DateTime startTime = System.DateTime.Now;
-					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 					data = this.ExecuteRetData (count, command);
 					watch.Stop ();
 
@@ -2448,7 +2448,7 @@ namespace Epsitec.Cresus.Database
 				return data;
 			}
 		}
-		
+
 		private System.Data.DataSet ExecuteRetData(int count, System.Data.IDbCommand command)
 		{
 			System.Data.DataSet data;
@@ -2483,30 +2483,30 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
-			
+
 			builder.SelectData (query);
-			
+
 			System.Data.DataSet dataSet;
 			System.Data.DataTable dataTable;
-			
+
 			dataSet = this.ExecuteRetData (transaction);
-			
+
 			if ((dataSet == null) ||
 				(dataSet.Tables.Count != 1))
 			{
 				throw new Exceptions.GenericException (this.access, string.Format ("Query failed"));
 			}
-			
+
 			dataTable = dataSet.Tables[0];
-			
+
 			if (dataTable.Rows.Count < minRows)
 			{
 				throw new Exceptions.GenericException (this.access, string.Format ("Query returned too few rows; expected {0}, found {1}", minRows, dataTable.Rows.Count));
 			}
-			
+
 			return dataTable;
 		}
-		
+
 		public System.DateTime GetDatabaseTime()
 		{
 			using (DbTransaction transaction = this.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
@@ -2549,14 +2549,14 @@ namespace Epsitec.Cresus.Database
 		public int CountMatchingRows(DbTransaction transaction, string tableName, string nameColumn, string value)
 		{
 			SqlSelect query = new SqlSelect ();
-			
+
 			query.Fields.Add ("N", new SqlAggregate (SqlAggregateFunction.Count, SqlField.CreateAll ()));
 			query.Tables.Add ("T", SqlField.CreateName (tableName));
-			
+
 			query.Conditions.Add (new SqlFunction (SqlFunctionCode.CompareEqual, SqlField.CreateName ("T", nameColumn), SqlField.CreateConstant (value, DbRawType.String)));
 
 			transaction.SqlBuilder.SelectData (query);
-			
+
 			return InvariantConverter.ToInt (this.ExecuteScalar (transaction));
 		}
 
@@ -2919,36 +2919,36 @@ namespace Epsitec.Cresus.Database
 		{
 			//	First, fill the type table so that we can reference them from
 			//	the column definition table :
-			
+
 			foreach (DbTypeDef typeDef in this.internalTypes)
 			{
 				DbKey dbKey = this.InsertTypeDefRow (transaction, typeDef);
 				typeDef.DefineKey (dbKey);
 			}
-			
+
 			//	Then, fill the table definition table and the column definition
 			//	table :
-			
+
 			foreach (DbTable table in this.internalTables)
 			{
 				table.UpdatePrimaryKeyInfo ();
 				DbKey tableDbKey = this.InsertTableDefRow (transaction, table);
 				table.DefineKey (tableDbKey);
-				
+
 				foreach (DbColumn column in table.Columns)
 				{
 					DbKey columnDbKey = this.InsertColumnDefRow (transaction, table, column);
 					column.DefineKey (columnDbKey);
 				}
 			}
-			
+
 			//	At last, fill in the relations :
 			//	
 			//	- A column definition refers to its containing table definition.
 			//	- A column definition refers to a type definition.
 			//	- A column definition refers to a target table definition if
 			//	  this is a foreign key.
-			
+
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTable,  Tags.TableTableDef);
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefType,   Tags.TableTypeDef);
 			this.UpdateColumnRelation (transaction, Tags.TableColumnDef, Tags.ColumnRefTarget, Tags.TableTableDef);
@@ -2997,7 +2997,7 @@ namespace Epsitec.Cresus.Database
 
 			this.UpdateColumnRelation (transaction, column.Key, target.Key);
 		}
-		
+
 		/// <summary>
 		/// Inserts a type definition row into the CR_TYPE_DEF table.
 		/// </summary>
@@ -3026,12 +3026,12 @@ namespace Epsitec.Cresus.Database
 
 			return new DbKey (new DbId ((long) data));
 		}
-		
+
 		private void UpdateTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			DbTable typeDefTable = this.internalTables[Tags.TableTypeDef];
 			string tableName = typeDefTable.GetSqlName ();
-			
+
 			SqlFieldList fieldsToUpdate = new SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName], typeDef.Name),
@@ -3045,14 +3045,14 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.UpdateData (tableName, fieldsToUpdate, conditions);
 			this.ExecuteNonQuery (transaction);
 		}
-		
+
 		private void DeleteTypeDefRow(DbTransaction transaction, DbTypeDef typeDef)
 		{
 			DbKey key = typeDef.Key;
 
 			this.DeleteRow (transaction, Tags.TableTypeDef, key);
 		}
-		
+
 		/// <summary>
 		/// Inserts a table definition row into the CR_TABLE_DEF table.
 		/// </summary>
@@ -3086,7 +3086,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable tableDefTable = this.internalTables[Tags.TableTableDef];
 			string tableName = tableDefTable.GetSqlName ();
-			
+
 			SqlFieldList fields = new SqlFieldList ()
 			{
 				this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName], table.Name),
@@ -3100,7 +3100,7 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.UpdateData (tableName, fields, conditions);
 			this.ExecuteNonQuery (transaction);
 		}
-		
+
 		private void DeleteTableDefRow(DbTransaction transaction, DbTable table)
 		{
 			DbKey key = table.Key;
@@ -3188,7 +3188,7 @@ namespace Epsitec.Cresus.Database
 
 			transaction.SqlBuilder.UpdateData (columnDefTable.GetSqlName (), fieldsToInsert, conditions);
 			this.ExecuteNonQuery (transaction);
-		}	
+		}
 
 		private void DeleteColumnDefRow(DbTransaction transaction, DbColumn column)
 		{
@@ -3208,7 +3208,7 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.RemoveData (Tags.TableColumnDef, conditions);
 			this.ExecuteNonQuery (transaction);
 		}
-		
+
 		private void DeleteColumnDefRows(DbTransaction transaction, DbTable table)
 		{
 			SqlFieldList conditions = new SqlFieldList ()
@@ -3241,15 +3241,15 @@ namespace Epsitec.Cresus.Database
 				if (this.abstraction != null)
 				{
 					this.abstraction.Dispose ();
-					
+
 					System.Diagnostics.Debug.Assert (this.abstraction.IsConnectionOpen == false);
-					
+
 					this.abstraction = null;
 					this.sqlEngine   = null;
 					this.converter   = null;
 				}
 			}
-			
+
 			System.Diagnostics.Debug.Assert (this.sqlEngine == null);
 			System.Diagnostics.Debug.Assert (this.converter == null);
 
@@ -3287,9 +3287,9 @@ namespace Epsitec.Cresus.Database
 		}
 
 		#endregion
-		
+
 		#region BootHelper Class
-		
+
 		private static class BootHelper
 		{
 
@@ -3402,11 +3402,11 @@ namespace Epsitec.Cresus.Database
 			}
 
 		}
-		
+
 		#endregion
-		
+
 		#region TypeHelper Class
-		
+
 		internal sealed class TypeHelper
 		{
 
@@ -3419,7 +3419,7 @@ namespace Epsitec.Cresus.Database
 			{
 				this.infrastructure = infrastructure;
 			}
-			
+
 			public DbTypeDef					KeyId
 			{
 				get
@@ -3532,17 +3532,17 @@ namespace Epsitec.Cresus.Database
 					return this.defaultString;
 				}
 			}
-			
+
 			public void RegisterTypes()
 			{
 				this.InitializeNumTypes ();
 				this.InitializeStrTypes ();
 				this.InitializeOtherTypes ();
 				this.InitializeDefaultTypes ();
-				
+
 				this.AssertAllTypesReady ();
 			}
-			
+
 			public void ResolveTypes(DbTransaction transaction)
 			{
 				this.numTypeKeyId          = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId);
@@ -3550,37 +3550,37 @@ namespace Epsitec.Cresus.Database
 				this.numTypeKeyStatus      = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus);
 				this.numTypeReqExState     = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState);
 				this.numTypeCollectionRank = this.infrastructure.ResolveDbType (transaction, Tags.TypeCollectionRank);
-				
+
 				this.strTypeName           = this.infrastructure.ResolveDbType (transaction, Tags.TypeName);
 				this.strTypeInfoXml        = this.infrastructure.ResolveDbType (transaction, Tags.TypeInfoXml);
 				this.strTypeDictKey        = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
 				this.strTypeDictValue      = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
-				
+
 				this.otherTypeDateTime     = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime);
 				this.otherTypeReqData      = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData);
 
 				this.defaultInteger		   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (IntegerType.Default).Name);
 				this.defaultLongInteger	   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (LongIntegerType.Default).Name);
 				this.defaultString		   = this.infrastructure.ResolveDbType (transaction, new DbTypeDef (StringType.Default).Name);
-				
+
 				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
 				this.infrastructure.internalTypes.Add (this.numTypeReqExState);
 				this.infrastructure.internalTypes.Add (this.numTypeCollectionRank);
-				
+
 				this.infrastructure.internalTypes.Add (this.strTypeName);
 				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
 				this.infrastructure.internalTypes.Add (this.strTypeDictKey);
 				this.infrastructure.internalTypes.Add (this.strTypeDictValue);
-				
+
 				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
 				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
 
 				this.infrastructure.internalTypes.Add (this.defaultInteger);
 				this.infrastructure.internalTypes.Add (this.defaultLongInteger);
 				this.infrastructure.internalTypes.Add (this.defaultString);
-				
+
 				this.AssertAllTypesReady ();
 			}
 
@@ -3591,7 +3591,7 @@ namespace Epsitec.Cresus.Database
 				this.numTypeKeyStatus      = new DbTypeDef (Res.Types.Num.KeyStatus);
 				this.numTypeReqExState     = new DbTypeDef (Res.Types.Num.ReqExecState);
 				this.numTypeCollectionRank = new DbTypeDef (Res.Types.Num.CollectionRank);
-			
+
 				this.infrastructure.internalTypes.Add (this.numTypeKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeNullableKeyId);
 				this.infrastructure.internalTypes.Add (this.numTypeKeyStatus);
@@ -3603,7 +3603,7 @@ namespace Epsitec.Cresus.Database
 			{
 				this.otherTypeDateTime = new DbTypeDef (Res.Types.Other.DateTime);
 				this.otherTypeReqData  = new DbTypeDef (Res.Types.Other.ReqData);
-		
+
 				this.infrastructure.internalTypes.Add (this.otherTypeDateTime);
 				this.infrastructure.internalTypes.Add (this.otherTypeReqData);
 			}
@@ -3614,7 +3614,7 @@ namespace Epsitec.Cresus.Database
 				this.strTypeInfoXml   = new DbTypeDef (Res.Types.Str.InfoXml);
 				this.strTypeDictKey   = new DbTypeDef (Res.Types.Str.Dict.Key);
 				this.strTypeDictValue = new DbTypeDef (Res.Types.Str.Dict.Value);
-			
+
 				this.infrastructure.internalTypes.Add (this.strTypeName);
 				this.infrastructure.internalTypes.Add (this.strTypeInfoXml);
 				this.infrastructure.internalTypes.Add (this.strTypeDictKey);
@@ -3641,15 +3641,15 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (this.numTypeKeyStatus != null);
 				System.Diagnostics.Debug.Assert (this.numTypeReqExState != null);
 				System.Diagnostics.Debug.Assert (this.numTypeCollectionRank != null);
-				
+
 				System.Diagnostics.Debug.Assert (this.strTypeName != null);
 				System.Diagnostics.Debug.Assert (this.strTypeInfoXml != null);
 				System.Diagnostics.Debug.Assert (this.strTypeDictKey != null);
 				System.Diagnostics.Debug.Assert (this.strTypeDictValue != null);
-				
+
 				System.Diagnostics.Debug.Assert (this.otherTypeDateTime != null);
 				System.Diagnostics.Debug.Assert (this.otherTypeReqData != null);
-				
+
 				System.Diagnostics.Debug.Assert (this.defaultInteger != null);
 				System.Diagnostics.Debug.Assert (this.defaultLongInteger != null);
 				System.Diagnostics.Debug.Assert (this.defaultString != null);
@@ -3675,15 +3675,15 @@ namespace Epsitec.Cresus.Database
 			private DbTypeDef					defaultLongInteger;
 			private DbTypeDef					defaultString;
 		}
-		
+
 		#endregion
-		
+
 		private DbAccess						access;
 		private IDbAbstraction					abstraction;
 
 		private ISqlEngine						sqlEngine;
 		private ITypeConverter					converter;
-		
+
 		private TypeHelper						types;
 
 		private readonly DbTableList			internalTables;
