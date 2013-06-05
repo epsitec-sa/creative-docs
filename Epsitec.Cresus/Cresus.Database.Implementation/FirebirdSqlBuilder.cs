@@ -1316,7 +1316,39 @@ namespace Epsitec.Cresus.Database.Implementation
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
 			}
 
-			this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+			// In the normal case, we want to use a parameter to store the second operand of the
+			// expression. But in some special cases, we don't want to. This is the case when we
+			// have a LIKE expression.
+			// When Firebird encounters a LIKE expression whose second operand is a parameter, the
+			// query planner cannot make any assumption on the value of this parameter and thus
+			// cannot optimize special cases. If we have LIKE 'abc%', the planner can transform the
+			// LIKE clause into a STARTING WITH clause, and if we have LIKE 'abc', it can transform
+			// it to a = clause. Because of this, if we have a LIKE expression, we do not use a
+			// parameter for the second operand but instead we put its value directly in the query.
+
+			var isLike = sqlFunction.Code == SqlFunctionCode.CompareLike
+				|| sqlFunction.Code == SqlFunctionCode.CompareLikeEscape
+				|| sqlFunction.Code == SqlFunctionCode.CompareNotLike
+				|| sqlFunction.Code == SqlFunctionCode.CompareNotLikeEscape;
+
+			var isConstantString = sqlFunction.B.FieldType == SqlFieldType.Constant
+				&& sqlFunction.B.RawType == DbRawType.String
+				&& sqlFunction.B.AsConstant is string;
+
+			if (isLike && isConstantString)
+			{
+				// Here, as we don't use a parameter for the query, we must escape the string to
+				// avoid SQL injections problems.
+
+				var value = (string) sqlFunction.B.AsConstant;
+				var escapedValue = value.Replace ("'", "''");
+
+				this.Append ("'" + escapedValue + "'");
+			}
+			else
+			{
+				this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+			}
 
 			switch (sqlFunction.Code)
 			{
