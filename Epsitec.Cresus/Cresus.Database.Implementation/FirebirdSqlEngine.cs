@@ -3,6 +3,8 @@
 
 using FirebirdSql.Data.FirebirdClient;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Data;
@@ -162,6 +164,24 @@ namespace Epsitec.Cresus.Database.Implementation
 				default:
 					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
 			}
+		}
+
+		public string GetQueryPlan(IDbCommand command, DbCommandType type, int commandCount)
+		{
+			var noPlan = commandCount != 1
+				|| type != DbCommandType.ReturningData
+				|| !command.CommandText.StartsWith ("SELECT", StringComparison.InvariantCultureIgnoreCase);
+
+			if (noPlan)
+			{
+				return "";
+			}
+
+			var fbCommand = (FbCommand) command;
+
+			fbCommand.Prepare ();
+
+			return fbCommand.CommandPlan;
 		}
 
 		#endregion

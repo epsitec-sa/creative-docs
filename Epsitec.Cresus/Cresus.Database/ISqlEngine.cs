@@ -49,5 +49,15 @@ namespace Epsitec.Cresus.Database
 		/// <param name="commandCount">The number of commands.</param>
 		/// <param name="dataSet">The execution result.</param>
 		void Execute(System.Data.IDbCommand command, DbCommandType type, int commandCount, out System.Data.DataSet dataSet);
+
+		/// <summary>
+		/// Gets the query plan for the given command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <param name="type">The command type.</param>
+		/// <param name="commandCount">The number of commands.</param>
+		/// <returns>The query plan of the command.</returns>
+		string GetQueryPlan(System.Data.IDbCommand command, DbCommandType type, int commandCount);
+
 	}
 }
