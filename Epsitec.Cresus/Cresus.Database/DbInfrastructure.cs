@@ -2192,7 +2192,9 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteSilent (count, command);
 					watch.Stop ();
 
-					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
+					var queryPlan = this.sqlEngine.GetQueryPlan (command, DbCommandType.Silent, count);
+
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, queryPlan, data));
 				}
 
 				return data;
@@ -2252,7 +2254,9 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteScalar (count, command);
 					watch.Stop ();
 
-					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
+					var queryPlan = this.sqlEngine.GetQueryPlan (command, DbCommandType.ReturningData, count);
+
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, queryPlan, data));
 				}
 
 				return data;
@@ -2313,7 +2317,9 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteNonQuery (count, command);
 					watch.Stop ();
 
-					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
+					var queryPlan = this.sqlEngine.GetQueryPlan (command, DbCommandType.NonQuery, count);
+
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, queryPlan, data));
 				}
 
 				return data;
@@ -2373,7 +2379,9 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteOutputParameters (count, command);
 					watch.Stop ();
 
-					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
+					var queryPlan = this.sqlEngine.GetQueryPlan (command, DbCommandType.NonQuery, count);
+
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, queryPlan, data));
 				}
 
 				return data;
@@ -2433,7 +2441,9 @@ namespace Epsitec.Cresus.Database
 					data = this.ExecuteRetData (count, command);
 					watch.Stop ();
 
-					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));
+					var queryPlan = this.sqlEngine.GetQueryPlan (command, DbCommandType.ReturningData, count);
+
+					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, queryPlan, data));
 				}
 
 				return data;

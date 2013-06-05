@@ -74,51 +74,51 @@ namespace Epsitec.Cresus.Database.Logging
 		protected abstract int GetNextNumber();
 
 
-		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration)
+		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan)
 		{
 			command.ThrowIfNull ("command");
 
 			Result result = null;
-			Query query = this.GetQuery (command, result, startTime, duration);
+			Query query = this.GetQuery (command, result, startTime, duration, queryPlan);
 
 			this.AddEntry (query);
 		}
 
 
-		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, object data)
+		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan, object data)
 		{
 			command.ThrowIfNull ("command");
 
 			Result result = this.LogResult ? AbstractLog.GetResult (data) : null;
-			Query query = this.GetQuery (command, result, startTime, duration);
+			Query query = this.GetQuery (command, result, startTime, duration, queryPlan);
 
 			this.AddEntry (query);
 		}
 
 
-		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, IList<object> data)
+		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan, IList<object> data)
 		{
 			command.ThrowIfNull ("command");
 
 			Result result = this.LogResult ? AbstractLog.GetResult (command, data) : null;
-			Query query = this.GetQuery (command, result, startTime, duration);
+			Query query = this.GetQuery (command, result, startTime, duration, queryPlan);
 
 			this.AddEntry (query);
 		}
 
 
-		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, DataSet data)
+		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan, DataSet data)
 		{
 			command.ThrowIfNull ("command");
 
 			Result result = this.LogResult ? AbstractLog.GetResult (data) : null;
-			Query query = this.GetQuery (command, result, startTime, duration);
+			Query query = this.GetQuery (command, result, startTime, duration, queryPlan);
 
 			this.AddEntry (query);
 		}
 
 
-		private Query GetQuery(IDbCommand command, Result result, DateTime startTime, TimeSpan duration)
+		private Query GetQuery(IDbCommand command, Result result, DateTime startTime, TimeSpan duration, string queryPlan)
 		{
 			int number = this.GetNextNumber ();
 			string sourceCode = AbstractLog.GetSourceCode (command);
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Database.Logging
 			string threadName = this.LogThreadName ? Thread.CurrentThread.Name : null;
 			StackTrace stackTrace = this.LogStackTrace ? new StackTrace (2, true) : null;
 			
-			return new Query (number, startTime, duration, sourceCode, parameter, result, threadName, stackTrace);
+			return new Query (number, startTime, duration, sourceCode, parameter, queryPlan, result, threadName, stackTrace);
 		}
 
 

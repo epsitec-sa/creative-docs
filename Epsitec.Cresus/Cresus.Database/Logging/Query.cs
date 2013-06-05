@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Database.Logging
 	{
 
 
-		internal Query(int number, DateTime startTime, TimeSpan duration, string sourceCode, IEnumerable<Parameter> parameters, Result result = null, string threadName = null, StackTrace stackTrace = null)
+		internal Query(int number, DateTime startTime, TimeSpan duration, string sourceCode, IEnumerable<Parameter> parameters, string queryPlan, Result result = null, string threadName = null, StackTrace stackTrace = null)
 		{
 			number.ThrowIf (n => n < 0, "number is smaller than zero");
 			sourceCode.ThrowIfNull ("sourceCode");
@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Database.Logging
 			this.Duration = duration;
 			this.SourceCode = sourceCode;
 			this.Parameters = parameters.ToList ().AsReadOnly ();
+			this.QueryPlan = queryPlan;
 			this.Result = result;
 			this.ThreadName = threadName;
 			this.StackTrace = stackTrace;
@@ -68,6 +69,13 @@ namespace Epsitec.Cresus.Database.Logging
 
 
 		public ReadOnlyCollection<Parameter> Parameters
+		{
+			get;
+			private set;
+		}
+
+
+		public string QueryPlan
 		{
 			get;
 			private set;

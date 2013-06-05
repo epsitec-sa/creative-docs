@@ -185,8 +185,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			Result result = null;
 			System.DateTime startTime = System.DateTime.Now;
 			System.TimeSpan duration = System.TimeSpan.FromTicks (0);
+			string qureyPlan = "";
 
-			return new Query (1, startTime, duration, sourceCode, parameters, result);
+			return new Query (1, startTime, duration, sourceCode, parameters, qureyPlan, result);
 		}
 
 

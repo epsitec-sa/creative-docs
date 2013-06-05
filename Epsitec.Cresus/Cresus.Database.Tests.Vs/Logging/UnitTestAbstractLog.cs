@@ -85,10 +85,11 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			IDbCommand command = this.GetSampleCommand1 ();
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
+			string queryPlan = this.GetSampleQueryPlan1 ();
 
 			for (int i = 0; i < 1000; i++)
 			{
-				testLog.AddEntry (command, startTime, duration);
+				testLog.AddEntry (command, startTime, duration, queryPlan);
 
 				Assert.AreEqual (i+1, testLog.GetEntry (i).Number);
 			}
@@ -102,22 +103,22 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero)
+				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, "")
 			);
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, new object ())
+				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, "", new object ())
 			);
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, new List<object> ())
+				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, "", new List<object> ())
 			);
 
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, new DataSet ())
+				() => testLog.AddEntry (null, DateTime.Now, TimeSpan.Zero, "", new DataSet ())
 			);
 		}
 
@@ -135,8 +136,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			IDbCommand command = this.GetSampleCommand1 ();
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
+			string queryPlan = this.GetSampleQueryPlan1 ();
 
-			testLog.AddEntry (command, startTime, duration);
+			testLog.AddEntry (command, startTime, duration, queryPlan);
 
 			Assert.AreEqual (1, testLog.GetNbEntries ());
 
@@ -145,6 +147,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			Assert.AreEqual (command.CommandText, entry.SourceCode);
 			Assert.AreEqual (startTime, entry.StartTime);
 			Assert.AreEqual (duration, entry.Duration);
+			Assert.AreEqual (queryPlan, entry.QueryPlan);
 			Assert.AreEqual (1, entry.Parameters.Count);
 			Assert.AreEqual ("name", entry.Parameters[0].Name);
 			Assert.AreEqual ("value", entry.Parameters[0].Value);
@@ -171,9 +174,10 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			IDbCommand command = this.GetSampleCommand1 ();
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
+			string queryPlan = this.GetSampleQueryPlan1 ();
 			object data = new object ();
 
-			testLog.AddEntry (command, startTime, duration, data);
+			testLog.AddEntry (command, startTime, duration, queryPlan, data);
 
 			Assert.AreEqual (1, testLog.GetNbEntries ());
 
@@ -182,6 +186,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			Assert.AreEqual (command.CommandText, entry.SourceCode);
 			Assert.AreEqual (startTime, entry.StartTime);
 			Assert.AreEqual (duration, entry.Duration);
+			Assert.AreEqual (queryPlan, entry.QueryPlan);
 			Assert.AreEqual (1, entry.Parameters.Count);
 			Assert.AreEqual ("name", entry.Parameters[0].Name);
 			Assert.AreEqual ("value", entry.Parameters[0].Value);
@@ -215,6 +220,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			IDbCommand command = this.GetSampleCommand2 ();
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
+			string queryPlan = this.GetSampleQueryPlan2 ();
 			List<object> data = new List<object> ()
 		    {
 		        null,
@@ -223,7 +229,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 		        System.TimeSpan.FromDays(3),
 		    };
 
-			testLog.AddEntry (command, startTime, duration, data);
+			testLog.AddEntry (command, startTime, duration, queryPlan, data);
 
 			Assert.AreEqual (1, testLog.GetNbEntries ());
 
@@ -232,6 +238,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			Assert.AreEqual (command.CommandText, entry.SourceCode);
 			Assert.AreEqual (startTime, entry.StartTime);
 			Assert.AreEqual (duration, entry.Duration);
+			Assert.AreEqual (queryPlan, entry.QueryPlan);
 			Assert.AreEqual (1, entry.Parameters.Count);
 			Assert.AreEqual ("name", entry.Parameters[0].Name);
 			Assert.AreEqual ("value", entry.Parameters[0].Value);
@@ -268,6 +275,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			IDbCommand command = this.GetSampleCommand1 ();
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
+			string queryPlan = this.GetSampleQueryPlan1 ();
 
 			DataTable table = new DataTable ()
 			{
@@ -287,7 +295,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			DataSet data = new DataSet ();
 			data.Tables.Add (table);
 
-			testLog.AddEntry (command, startTime, duration, data);
+			testLog.AddEntry (command, startTime, duration, queryPlan, data);
 
 			Assert.AreEqual (1, testLog.GetNbEntries ());
 
@@ -296,6 +304,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			Assert.AreEqual (command.CommandText, entry.SourceCode);
 			Assert.AreEqual (startTime, entry.StartTime);
 			Assert.AreEqual (duration, entry.Duration);
+			Assert.AreEqual (queryPlan, entry.QueryPlan);
 			Assert.AreEqual (1, entry.Parameters.Count);
 			Assert.AreEqual ("name", entry.Parameters[0].Name);
 			Assert.AreEqual ("value", entry.Parameters[0].Value);
@@ -329,6 +338,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			IDbCommand command = this.GetSampleCommand1 ();
 			DateTime startTime = DateTime.Now;
 			TimeSpan duration = TimeSpan.FromSeconds (123);
+			string queryPlan = this.GetSampleQueryPlan1 ();
 
 			DataTable table = new DataTable ()
 			{
@@ -348,7 +358,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			DataSet data = new DataSet ();
 			data.Tables.Add (table);
 
-			testLog.AddEntry (command, startTime, duration, data);
+			testLog.AddEntry (command, startTime, duration, queryPlan, data);
 
 			Assert.AreEqual (1, testLog.GetNbEntries ());
 
@@ -357,6 +367,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			Assert.AreEqual (command.CommandText, entry.SourceCode);
 			Assert.AreEqual (startTime, entry.StartTime);
 			Assert.AreEqual (duration, entry.Duration);
+			Assert.AreEqual (queryPlan, entry.QueryPlan);
 			Assert.AreEqual (1, entry.Parameters.Count);
 			Assert.AreEqual ("name", entry.Parameters[0].Name);
 			Assert.AreEqual ("value", entry.Parameters[0].Value);
@@ -381,6 +392,12 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 		}
 
 
+		private string GetSampleQueryPlan1()
+		{
+			return "my super sql query plan";
+		}
+
+
 		private IDbCommand GetSampleCommand2()
 		{
 			FbCommand command = new FbCommand ("my super sql query");
@@ -402,6 +419,12 @@ namespace Epsitec.Cresus.Database.Tests.Vs.Logging
 			}
 
 			return command;
+		}
+
+
+		private string GetSampleQueryPlan2()
+		{
+			return "my other super sql query plan";
 		}
 
 
