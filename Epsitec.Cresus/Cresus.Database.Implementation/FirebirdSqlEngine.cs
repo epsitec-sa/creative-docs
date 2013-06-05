@@ -140,13 +140,12 @@ namespace Epsitec.Cresus.Database.Implementation
 				return;
 			}
 
-			int result;
-
 			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					this.ExecuteQueryAndConvertFbExceptions (() => this.Execute (command, type, commandCount, out result));
+					int result;
+					this.Execute (command, type, commandCount, out result);
 					dataSet = null;
 					break;
 
@@ -174,16 +173,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 
 		#endregion
-
-		private void ExecuteQueryAndConvertFbExceptions(System.Action query)
-		{
-			this.ExecuteQueryAndConvertFbExceptions (() =>
-			{
-				query ();
-				return 0;
-			});
-		}
-
 
 		private T ExecuteQueryAndConvertFbExceptions<T>(System.Func<T> query)
 		{
