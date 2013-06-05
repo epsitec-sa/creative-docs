@@ -2310,10 +2310,9 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 					System.DateTime startTime = System.DateTime.Now;
 
-					watch.Start ();
+					System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew ();
 					data = this.ExecuteNonQuery (count, command);
 					watch.Stop ();
 
