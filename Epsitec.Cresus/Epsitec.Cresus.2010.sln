@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B4E1087F-2644-430B-A6D4-95B75D62398B} = {B4E1087F-2644-430B-A6D4-95B75D62398B}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8930BC66-032C-41FE-BCD5-2B6BA7214320}"
 	ProjectSection(SolutionItems) = preProject
