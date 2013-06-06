@@ -62,19 +62,19 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>
-xcopy "$(TargetDir)*.dll" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(TargetDir)*.pdb" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(TargetDir)*.xml" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.dll" "$(SolutionDir)Export" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.pdb" "$(SolutionDir)Export" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.xml" "$(SolutionDir)Export" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
 
-xcopy "$(SolutionDir)External\DotNet35\*.dll" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)External\DotNet35\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)External\DotNet35\*.dll" "$(SolutionDir)Export" /Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)External\DotNet35\*.pdb" "$(SolutionDir)Export" /Y/I /EXCLUDE:..\..\..\excludesvn.ini
 
-xcopy "$(SolutionDir)App.CresusDocuments\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common.Document\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
-xcopy "$(SolutionDir)Common\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini</PostBuildEvent>
+xcopy "$(SolutionDir)App.CresusDocuments\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common.Document\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Common\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y/I /EXCLUDE:..\..\..\excludesvn.ini</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\App.CresusDocuments\App.CresusDocuments.csproj">
