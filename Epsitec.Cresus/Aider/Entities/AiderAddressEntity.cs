@@ -191,14 +191,17 @@ namespace Epsitec.Aider.Entities
 			var town = this.Town;
 
 			if ((town.IsNull ()) ||
-				(town.SwissZipCode == null))
+				(town.SwissZipCode == null) ||
+				(town.SwissZipCodeAddOn == null))
 			{
 				this.Street = value;
 			}
 			else
 			{
-				int zipCode = town.SwissZipCode.Value;
-				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, value) ?? value;
+				int zipCode  = town.SwissZipCode.Value;
+				int zipAddOn = town.SwissZipCodeAddOn.Value;
+
+				this.Street = SwissPostStreet.ConvertFromUserFriendlyStreetName (zipCode, zipAddOn, value) ?? value;
 			}
 		}
 

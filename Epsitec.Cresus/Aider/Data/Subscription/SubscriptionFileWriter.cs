@@ -1123,10 +1123,10 @@ namespace Epsitec.Aider.Data.Subscription
 				return SubscriptionFileLine.SwissPostmanNumberPostbox;
 			}
 
-			var zipCode = address.Town.SwissZipCode.ToString ();
-			var zipAddOn = address.Town.SwissZipCodeAddOn;
-			var street = address.StreetUserFriendly;
-			var number = address.HouseNumber.HasValue
+			var zipCode  = address.Town.SwissZipCode.ToString ();
+			var zipAddOn = address.Town.SwissZipCodeAddOn.ToString ();
+			var street   = address.StreetUserFriendly;
+			var number   = address.HouseNumber.HasValue
 				? InvariantConverter.ToString (address.HouseNumber.Value)
 				: null;
 			var complement = address.HouseNumberComplement;

@@ -10,37 +10,54 @@ namespace Epsitec.Data.Platform
 {
 	public struct SwissPostZipCodeFolding : System.IEquatable<SwissPostZipCodeFolding>
 	{
-		public SwissPostZipCodeFolding(string zipCode, string baseZipCode, string zipCodeType)
+		public SwissPostZipCodeFolding(string zipCode, string zipComplement, string baseZipCode, string zipCodeType)
 		{
-			this.zipCode     = InvariantConverter.ParseInt (zipCode);
-			this.baseZipCode = InvariantConverter.ParseInt (baseZipCode);
-			this.zipCodeType = InvariantConverter.ParseInt<SwissPostZipType> (zipCodeType);
+			this.zip           = new SwissPostFullZip (InvariantConverter.ParseInt (zipCode), InvariantConverter.ParseInt (zipComplement));
+			this.baseZipCode   = InvariantConverter.ParseInt (baseZipCode);
+			this.zipCodeType   = InvariantConverter.ParseInt<SwissPostZipType> (zipCodeType);
 		}
 
-		public SwissPostZipCodeFolding(int zipCode, int baseZipCode, SwissPostZipType zipCodeType)
+		public SwissPostZipCodeFolding(int zipCode, int zipComplement, int baseZipCode, SwissPostZipType zipCodeType)
 		{
-			this.zipCode     = zipCode;
-			this.baseZipCode = baseZipCode;
-			this.zipCodeType = zipCodeType;
+			this.zip           = new SwissPostFullZip (zipCode, zipComplement);
+			this.baseZipCode   = baseZipCode;
+			this.zipCodeType   = zipCodeType;
 		}
 
-		public bool IsValid
-		{
-			get
-			{
-				return this.zipCode >= 1000 && this.zipCode <= 9999;
-			}
-		}
-
-		public int ZipCode
+		
+		public bool								IsValid
 		{
 			get
 			{
-				return this.zipCode;
+				return this.ZipCode >= 1000 && this.ZipCode <= 9999;
 			}
 		}
 
-		public int BaseZipCode
+		public int								ZipCode
+		{
+			get
+			{
+				return this.zip.ZipCode;
+			}
+		}
+
+		public int								ZipCodeAddOn
+		{
+			get
+			{
+				return this.zip.ZipCodeAddOn;
+			}
+		}
+
+		public SwissPostFullZip					ZipCodeAndAddOn
+		{
+			get
+			{
+				return this.zip;
+			}
+		}
+
+		public int								BaseZipCode
 		{
 			get
 			{
@@ -48,7 +65,7 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public SwissPostZipType ZipCodeType
+		public SwissPostZipType					ZipCodeType
 		{
 			get
 			{
@@ -60,7 +77,7 @@ namespace Epsitec.Data.Platform
 
 		public bool Equals(SwissPostZipCodeFolding other)
 		{
-			return this.zipCode == other.zipCode
+			return this.zip == other.zip
 					&& this.baseZipCode == other.baseZipCode
 					&& this.zipCodeType == other.zipCodeType;
 		}
@@ -79,22 +96,22 @@ namespace Epsitec.Data.Platform
 
 		public override int GetHashCode()
 		{
-			return this.zipCode;
+			return this.zip.GetHashCode ();
 		}
 
 		public override string ToString()
 		{
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:0000};{1:0000};{2:00}", this.zipCode, this.baseZipCode, (int) this.zipCodeType);
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:0000};{1:00};{2:0000};{3:00}", this.ZipCode, this.ZipCodeAddOn, this.baseZipCode, (int) this.zipCodeType);
 		}
 
 		public static SwissPostZipCodeFolding Parse(string value)
 		{
 			var args = value.Split (';');
 
-			return new SwissPostZipCodeFolding (args[0], args[1], args[2]);
+			return new SwissPostZipCodeFolding (args[0], args[1], args[2], args[3]);
 		}
 
-		private readonly int					zipCode;
+		private readonly SwissPostFullZip		zip;
 		private readonly int					baseZipCode;
 		private readonly SwissPostZipType		zipCodeType;
 	}

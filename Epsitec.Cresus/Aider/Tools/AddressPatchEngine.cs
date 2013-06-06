@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Tools
 				return FixStatus.Invalid;
 			}
 
-			var streets = SwissPostStreetRepository.Current.FindStreets (zipCode);
+			var streets = SwissPostStreetRepository.Current.FindStreets (zipCode, zipCodeAddOn);
 			var tokens  = SwissPostStreet.TokenizeStreetName (street).ToArray ();
 
 			int n = tokens.Length;
@@ -151,7 +151,7 @@ namespace Epsitec.Aider.Tools
 				return;
 			}
 
-			var zip = SwissPostZipRepository.Current.FindZips (info.ZipCode, info.ZipComplement).FirstOrDefault ();
+			var zip = SwissPostZipRepository.Current.FindZips (info.ZipCode, info.ZipCodeAddOn).FirstOrDefault ();
 
 			if (zip == null)
 			{
@@ -163,7 +163,7 @@ namespace Epsitec.Aider.Tools
 			town   = zip.LongName;
 
 			zipCode      = zip.ZipCode;
-			zipCodeAddOn = zip.ZipComplement;
+			zipCodeAddOn = zip.ZipCodeAddOn;
 			zipCodeId    = zip.OnrpCode;
 		}
 		

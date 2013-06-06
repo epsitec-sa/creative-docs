@@ -83,6 +83,7 @@
     <Compile Include="MatchSort\MatchSortHouse.cs" />
     <Compile Include="MatchSort\MatchSortPlace.cs" />
     <Compile Include="MatchSort\MatchSortStreet.cs" />
+    <Compile Include="SwissPostFullZip.cs" />
     <Compile Include="SwissPostZipCodeFolding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />

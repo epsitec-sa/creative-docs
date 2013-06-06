@@ -70,7 +70,7 @@ namespace Epsitec.Data.Platform
 		/// <param name="street">The user friendly street name.</param>
 		/// <returns>The Swiss Post street name or <c>null</c> if the name could not be
 		/// resolved back using the MAT[CH]street database.</returns>
-		public static string ConvertFromUserFriendlyStreetName(int zipCode, string street)
+		public static string ConvertFromUserFriendlyStreetName(int zipCode, int zipComplement, string street)
 		{
 			if (string.IsNullOrEmpty (street))
 			{
@@ -78,8 +78,8 @@ namespace Epsitec.Data.Platform
 			}
 
 			var repository = SwissPostStreetRepository.Current;
-			var matchStreet = repository.FindStreetFromUserFriendlyStreetNameDictionary (zipCode, street)
-				/**/       ?? repository.FindStreetFromStreetName (zipCode, street);
+			var matchStreet = repository.FindStreetFromUserFriendlyStreetNameDictionary (zipCode, zipComplement, street)
+				/**/       ?? repository.FindStreetFromStreetName (zipCode, zipComplement, street);
 
 			if (matchStreet != null)
 			{

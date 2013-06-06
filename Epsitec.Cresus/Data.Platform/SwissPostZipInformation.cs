@@ -28,7 +28,7 @@ namespace Epsitec.Data.Platform
 			this.OnrpCode       = InvariantConverter.ParseInt (args[0]);
 			this.ZipType        = InvariantConverter.ParseInt<SwissPostZipType> (args[1]);
 			this.ZipCode        = InvariantConverter.ParseInt (args[2]);
-			this.ZipComplement  = InvariantConverter.ParseInt (args[3]);
+			this.ZipCodeAddOn   = InvariantConverter.ParseInt (args[3]);
 			this.ShortName      = args[4];
 			this.LongName       = args[5];
 			this.Canton         = args[6];
@@ -80,7 +80,7 @@ namespace Epsitec.Data.Platform
 		public readonly int						OnrpCode;
 		public readonly SwissPostZipType		ZipType;
 		public readonly int						ZipCode;
-		public readonly int						ZipComplement;
+		public readonly int						ZipCodeAddOn;
 		public readonly string					ShortName;
 		public readonly string					LongName;
 		public readonly string					Canton;

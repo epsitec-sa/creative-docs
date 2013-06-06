@@ -86,7 +86,7 @@ namespace Epsitec.Data.Platform
 
 			if (this.nameByZip.TryGetValue (zipCode, out list))
 			{
-				return list.Where (x => x.ZipComplement == zipComplement);
+				return list.Where (x => x.ZipCodeAddOn == zipComplement);
 			}
 			else
 			{
@@ -164,11 +164,11 @@ namespace Epsitec.Data.Platform
 			{
 				return 1;
 			}
-			if (a.ZipComplement < b.ZipComplement)
+			if (a.ZipCodeAddOn < b.ZipCodeAddOn)
 			{
 				return -1;
 			}
-			if (a.ZipComplement > b.ZipComplement)
+			if (a.ZipCodeAddOn > b.ZipCodeAddOn)
 			{
 				return 1;
 			}

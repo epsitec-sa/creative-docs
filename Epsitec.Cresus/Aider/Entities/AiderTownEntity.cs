@@ -131,7 +131,7 @@ namespace Epsitec.Aider.Entities
 			return aiderTown;
 		}
 
-		partial void GetSwissZipCodeAddOn(ref string value)
+		partial void GetSwissZipCodeAddOn(ref int? value)
 		{
 			var onrp = this.SwissZipCodeId.GetValueOrDefault ();
 			var info = SwissPostZipRepository.Current.FindByOnrpCode (onrp);
@@ -142,11 +142,11 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				value = string.Format ("{0:00}", info.ZipComplement);
+				value = info.ZipCodeAddOn;
 			}
 		}
 
-		partial void SetSwissZipCodeAddOn(string value)
+		partial void SetSwissZipCodeAddOn(int? value)
 		{
 			throw new System.NotImplementedException ();
 		}

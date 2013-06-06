@@ -3360,17 +3360,17 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVA65/LVASF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVASF]", IsVirtual=true)]
-		public string SwissZipCodeAddOn
+		public int? SwissZipCodeAddOn
 		{
 			get
 			{
-				string value = default (string);
+				int? value = default (int?);
 				this.GetSwissZipCodeAddOn (ref value);
 				return value;
 			}
 			set
 			{
-				string oldValue = this.SwissZipCodeAddOn;
+				int? oldValue = this.SwissZipCodeAddOn;
 				if (oldValue != value || !this.IsFieldDefined("[LVASF]"))
 				{
 					this.OnSwissZipCodeAddOnChanging (oldValue, value);
@@ -3476,8 +3476,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSwissZipTypeChanged(global::Epsitec.Data.Platform.SwissPostZipType? oldValue, global::Epsitec.Data.Platform.SwissPostZipType? newValue);
 		partial void OnSwissCantonCodeChanging(string oldValue, string newValue);
 		partial void OnSwissCantonCodeChanged(string oldValue, string newValue);
-		partial void OnSwissZipCodeAddOnChanging(string oldValue, string newValue);
-		partial void OnSwissZipCodeAddOnChanged(string oldValue, string newValue);
+		partial void OnSwissZipCodeAddOnChanging(int? oldValue, int? newValue);
+		partial void OnSwissZipCodeAddOnChanged(int? oldValue, int? newValue);
 		partial void OnZipCodeChanging(string oldValue, string newValue);
 		partial void OnZipCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(string oldValue, string newValue);
@@ -3487,8 +3487,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnMutabilityChanging(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		partial void OnMutabilityChanged(global::Epsitec.Aider.Enumerations.Mutability oldValue, global::Epsitec.Aider.Enumerations.Mutability newValue);
 		
-		partial void GetSwissZipCodeAddOn(ref string value);
-		partial void SetSwissZipCodeAddOn(string value);
+		partial void GetSwissZipCodeAddOn(ref int? value);
+		partial void SetSwissZipCodeAddOn(int? value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

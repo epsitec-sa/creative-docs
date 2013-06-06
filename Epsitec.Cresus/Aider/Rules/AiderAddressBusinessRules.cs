@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Rules
 {
@@ -153,11 +154,13 @@ namespace Epsitec.Aider.Rules
 		private static void ValidateSwissPostAddress(AiderAddressEntity address)
 		{
 			if ((address.Town.IsNotNull ()) &&
-				(address.Town.SwissZipCode.HasValue))
+				(address.Town.SwissZipCode.HasValue) &&
+				(address.Town.SwissZipCodeAddOn.HasValue))
 			{
-				var street  = address.Street;
-				var zipCode = address.Town.SwissZipCode.Value;
-				var postBox = address.PostBox;
+				var street   = address.Street;
+				var zipCode  = address.Town.SwissZipCode.Value;
+				var zipAddOn = address.Town.SwissZipCodeAddOn.Value;
+				var postBox  = address.PostBox;
 
 				if (string.IsNullOrEmpty (street))
 				{
@@ -171,7 +174,7 @@ namespace Epsitec.Aider.Rules
 
 				var repo = SwissPostStreetRepository.Current;
 
-				if (repo.IsStreetKnown (zipCode, street) == false)
+				if (repo.IsStreetKnown (zipCode, zipAddOn, street) == false)
 				{
 					//	We were not able to match the street based on the given ZIP code. But the
 					//	ZIP code might be the one associated with the post box, or it might be a
@@ -182,11 +185,11 @@ namespace Epsitec.Aider.Rules
 					//	Martin Schwarz, rue de la Plaine 13, Case postale, 1401 Yverdon-les-Bains
 					//	Service de la population, Division Etrangers, Av. de Beaulieu 19, 1014 Lausanne
 
-					var info = SwissPostZipCodeFoldingRepository.Resolve (zipCode);
+					var info = SwissPostZipCodeFoldingRepository.Resolve (zipCode, zipAddOn);
 					
 					bool isBusinessAddress = info.ZipCodeType == SwissPostZipType.Company || (string.IsNullOrEmpty (postBox) == false);
 
-					if (isBusinessAddress && repo.IsStreetKnownRelaxed (zipCode, street))
+					if (isBusinessAddress && repo.IsStreetKnownRelaxed (zipCode, zipAddOn, street))
 					{
 						return;
 					}

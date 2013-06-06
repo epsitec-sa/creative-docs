@@ -93,7 +93,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// Ex: GetMessenger("1000","06","avenue floréal","10","a")
 		/// </summary>
 		/// <param name="zip">4 digits zip </param>
-		/// <param name="zipAddon">2 digits additionnal zip </param>
+		/// <param name="zipAddon">2 digit zip add-on</param>
 		/// <param name="street">human readable street name (non case-sensitive)</param>
 		/// <param name="house">house number without complement</param>
 		/// <param name="houseAlpha">alpha house number complement (non case-sensitive)</param>
@@ -123,7 +123,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// Ex: GetHousesAtStreet("1000","06","avenue floréal")
 		/// </summary>
 		/// <param name="zip">zip code of street</param>
-		/// <param name="zip_addon">zip code addon of street</param>
+		/// <param name="zip_addon">zip code add-on of street</param>
 		/// <param name="street">street name</param>
 		/// <returns></returns>
 		public List<string> GetHousesAtStreet(string zip, string zip_addon, string street)
@@ -147,7 +147,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		public IEnumerable<SwissPostZipCodeFolding> GetZipCodeFoldings()
 		{
-			var sql = "select plz,gplz,plz_typ from new_plz1";
+			var sql = "select plz,plz_zz,gplz,plz_typ from new_plz1";
 
 			using (var command = new SQLiteCommand (this.connection))
 			{
@@ -158,7 +158,12 @@ namespace Epsitec.Data.Platform.MatchSort
 				{
 					while (dr.Read ())
 					{
-						yield return new SwissPostZipCodeFolding (dr.GetValue (0).ToString (), dr.GetValue (1).ToString (), dr.GetValue (2).ToString ());
+						var plz     = dr.GetValue (0).ToString ();
+						var plz_zz  = dr.GetValue (1).ToString ();
+						var gplz    = dr.GetValue (2).ToString ();
+						var plz_typ = dr.GetValue (3).ToString ();
+						
+						yield return new SwissPostZipCodeFolding (plz, plz_zz, gplz, plz_typ);
 					}
 				}
 			}

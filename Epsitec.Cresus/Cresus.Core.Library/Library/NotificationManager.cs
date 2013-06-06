@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Core.Library
 		public NotificationManager(CoreApp app)
 			: base (app)
 		{
-            
+			
 		}
 
 

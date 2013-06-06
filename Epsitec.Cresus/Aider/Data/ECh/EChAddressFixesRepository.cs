@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Data.ECh
 				var streetCopy = street;
 
 				var hits = SwissPostStreetRepository.Current
-					.FindStreets (zipCode)
+					.FindStreets (zipCode, zipCodeAddOn)
 					.Where (x => x.MatchName (streetCopy));
 
 				AddressPatchEngine.FixAddress (hits, ref street, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town);

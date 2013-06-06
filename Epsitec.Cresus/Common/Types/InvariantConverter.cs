@@ -244,6 +244,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static int? ParseNullableInt(string value, int startIndex = 0)
+		{
+			if (string.IsNullOrEmpty (value))
+			{
+				return null;
+			}
+			else
+			{
+				return InvariantConverter.ParseInt (value, startIndex);
+			}
+		}
+
 		/// <summary>
 		/// Parses the integer number and stops as soon as a non digit character is encountered.
 		/// Minus sign and dash are treated as equivalents and can appear any number of times

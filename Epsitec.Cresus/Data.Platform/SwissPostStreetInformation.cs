@@ -28,7 +28,7 @@ namespace Epsitec.Data.Platform
 			this.BasicPostCode         = InvariantConverter.ParseInt (line.Substring (6, 4));
 			this.LanguageCode          = InvariantConverter.ParseInt<SwissPostLanguageCode> (line.Substring (10, 1));
 			this.ZipCode               = InvariantConverter.ParseInt (line.Substring (36, 4));
-			this.ZipComplement         = InvariantConverter.ParseInt (line.Substring (40, 2));
+			this.ZipCodeAddOn          = InvariantConverter.ParseInt (line.Substring (40, 2));
 			this.DividerCode           = InvariantConverter.ParseInt<SwissPostDividerCode> (line.Substring (42, 1));
 			this.HouseNumberFrom       = InvariantConverter.ParseInt (line.Substring (43, 4));
 			this.HouseNumberFromAlpha  = line.Substring (47, 2).TrimEnd ();
@@ -58,11 +58,19 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public SwissPostFullZip					ZipCodeAndAddOn
+		{
+			get
+			{
+				return new SwissPostFullZip (this.ZipCode, this.ZipCodeAddOn);
+			}
+		}
+
 		public readonly int						StreetCode;
 		public readonly int						BasicPostCode;
 		public readonly SwissPostLanguageCode	LanguageCode;
 		public readonly int						ZipCode;
-		public readonly int						ZipComplement;
+		public readonly int						ZipCodeAddOn;
 		public readonly SwissPostDividerCode	DividerCode;
 		public readonly int						HouseNumberFrom;
 		public readonly string					HouseNumberFromAlpha;

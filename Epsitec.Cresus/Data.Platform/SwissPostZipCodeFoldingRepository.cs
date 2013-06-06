@@ -12,25 +12,27 @@ namespace Epsitec.Data.Platform
 	{
 		static SwissPostZipCodeFoldingRepository()
 		{
-			SwissPostZipCodeFoldingRepository.foldings = new Dictionary<int, SwissPostZipCodeFolding> ();
+			SwissPostZipCodeFoldingRepository.foldings = new Dictionary<SwissPostFullZip, SwissPostZipCodeFolding> ();
 			
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
 			var path     = "Epsitec.Data.Platform.DataFiles.ZipCodeFolding.zip";
-			var lines    = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, path, System.Text.Encoding.Default).Split ('\r', '\n').Where (x => x.Length > 0);
+			var items    = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, path, System.Text.Encoding.Default)
+				.Split ('\r', '\n').Where (x => x.Length > 0)
+				.Select (x => SwissPostZipCodeFolding.Parse (x));
 
-			foreach (var item in lines.Select (x => SwissPostZipCodeFolding.Parse (x)))
+			foreach (var item in items)
 			{
 				SwissPostZipCodeFolding folding;
 
-				if (SwissPostZipCodeFoldingRepository.foldings.TryGetValue (item.ZipCode, out folding))
+				if (SwissPostZipCodeFoldingRepository.foldings.TryGetValue (item.ZipCodeAndAddOn, out folding))
 				{
 					System.Diagnostics.Debug.Assert (folding.BaseZipCode == item.BaseZipCode);
 
-					SwissPostZipCodeFoldingRepository.foldings[item.ZipCode] = new SwissPostZipCodeFolding (item.ZipCode, item.BaseZipCode, SwissPostZipType.Mixed);
+					SwissPostZipCodeFoldingRepository.foldings[item.ZipCodeAndAddOn] = new SwissPostZipCodeFolding (item.ZipCode, item.ZipCodeAddOn, item.BaseZipCode, SwissPostZipType.Mixed);
 				}
 				else
 				{
-					SwissPostZipCodeFoldingRepository.foldings[item.ZipCode] = item;
+					SwissPostZipCodeFoldingRepository.foldings[item.ZipCodeAndAddOn] = item;
 				}
 			}
 		}
@@ -40,22 +42,22 @@ namespace Epsitec.Data.Platform
 			return SwissPostZipCodeFoldingRepository.foldings.Values.Where (x => x.BaseZipCode == baseZipCode);
 		}
 
-		public static SwissPostZipCodeFolding Resolve(string zipCode)
+		public static SwissPostZipCodeFolding Resolve(string zipCode, string zipComplement)
 		{
-			return SwissPostZipCodeFoldingRepository.Resolve (InvariantConverter.ParseInt (zipCode));
+			return SwissPostZipCodeFoldingRepository.Resolve (InvariantConverter.ParseInt (zipCode), InvariantConverter.ParseInt (zipComplement));
 		}
 
-		public static SwissPostZipCodeFolding Resolve(int zipCode)
+		public static SwissPostZipCodeFolding Resolve(int zipCode, int zipComplement)
 		{
 			SwissPostZipCodeFolding folding;
 
-			SwissPostZipCodeFoldingRepository.foldings.TryGetValue (zipCode, out folding);
+			SwissPostZipCodeFoldingRepository.foldings.TryGetValue (new SwissPostFullZip (zipCode, zipComplement), out folding);
 
 			return folding;
 		}
 
 		
-		private static readonly Dictionary<int, SwissPostZipCodeFolding> foldings;
+		private static readonly Dictionary<SwissPostFullZip, SwissPostZipCodeFolding> foldings;
 	}
 }
 

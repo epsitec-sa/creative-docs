@@ -157,7 +157,7 @@ namespace Epsitec.Aider.Tests
 
 				// If the street is not explicitely referenced by a parish or if the whole street is
 				// explicitely referenced by a single parish, we know that the whole street is
- 				// assigned to a single parish and we don't need to check every number.
+				// assigned to a single parish and we don't need to check every number.
 				if (ParishFileAnalyzer.IsSimpleCase (addresses, streetName))
 				{
 					ParishFileAnalyzer.AssignToParishes (repository, parishes, town, streetName);
@@ -285,8 +285,8 @@ namespace Epsitec.Aider.Tests
 		{
 			return SwissPostStreetRepository
 				.Current
-				.FindStreets (town.ZipCode)
-				.Where (s => s.ZipComplement == town.ZipComplement);
+				.FindStreets (town.ZipCode, town.ZipCodeAddOn)
+				.Where (s => s.ZipCodeAddOn == town.ZipCodeAddOn);
 		}
 
 
