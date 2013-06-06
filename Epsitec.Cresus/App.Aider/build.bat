@@ -27,9 +27,18 @@ if %configurationDirectory%==0 (
 if %cleanup%==1 (
     @rem Ask the user if is really wants to revert everything in its svn repositories
     echo This script will:
-    echo - Revert all changes to %~dp0..\..\Epsitec
-    echo - Delete all unversionned items in %~dp0..\..\Epsitec
-    echo - Delete all ignored items in %~dp0..\..\Epsitec
+    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.ShellPE
+    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.ShellPE
+    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.ShellPE
+    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.SwissPost
+    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.SwissPost
+    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.SwissPost
+    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.TwixClip
+    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.TwixClip
+    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.TwixClip
+    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.ZipMe
+    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.ZipMe
+    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.ZipMe
     echo - Revert all changes to %~dp0..\
     echo - Delete all unversionned items in %~dp0..\
     echo - Delete all ignored items in %~dp0..\
@@ -38,16 +47,25 @@ if %cleanup%==1 (
 
     @echo on
 
-    @rem Revert all changes to the two repositories.
-    svn revert -R ..\..\Epsitec
+    @rem Revert all changes in the two repositories.
+    svn revert -R ..\..\Epsitec\dot.net\Epsitec.ShellPE
+    svn revert -R ..\..\Epsitec\dot.net\Epsitec.SwissPost
+    svn revert -R ..\..\Epsitec\dot.net\Epsitec.TwixClip
+    svn revert -R ..\..\Epsitec\dot.net\Epsitec.ZipMe
     svn revert -R ..\
 
     @rem Delete all unversionned files and folders in the two repositories.
-    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.ShellPE ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.SwissPost ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.TwixClip ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.ZipMe ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
     for /f "usebackq tokens=2*" %%i in (`svn status ..\ ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
 
     @rem Delete all ignored files and folders in the two repositories
-    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.ShellPE ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.SwissPost ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.TwixClip ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.ZipMe ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
     for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\ ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
 )
 
