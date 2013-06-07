@@ -42,6 +42,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         serverErrorMessage: 'Une erreur est survenue sur le serveur distant',
         jsonErrorMessage: 'Une erreur est survenue lors du d\u00E9codage de ' +
             'la r\u00E9ponse du serveur distant.',
+        errorBusinessTitle: 'Erreure de validation',
         loginTitle: 'Connexion \u00E0 AIDER',
         loginLabel: 'Connexion',
         usernameLabel: 'Nom d\'utilisateur',

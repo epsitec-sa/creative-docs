@@ -113,14 +113,18 @@ function() {
     },
 
     onSaveClickCallback: function(success, form, action) {
-      var json, businessError;
+      var responseData, json, businessError;
 
       this.setLoading(false);
 
-      json = Epsitec.Tools.decodeResponse(action.response);
-      if (json === null) {
+      responseData = Epsitec.Tools.tryDecodeRespone(action.response);
+      if (!responseData.success)
+      {
+        Epsitec.ErrorHandler.handleDefaultFailure();
         return;
       }
+
+      json = responseData.data;
 
       if (success) {
         this.close();
@@ -129,7 +133,7 @@ function() {
       else {
         Epsitec.ErrorHandler.handleFormError(action);
 
-        businessError = json.errors.business;
+        businessError = json.content.businesserror;
         if (!Epsitec.Tools.isUndefined(businessError))
         {
           this.showError(businessError);

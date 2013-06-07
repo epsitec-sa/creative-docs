@@ -65,17 +65,37 @@ function() {
       },
 
       decodeResponse: function(response) {
-        if (this.isUndefined(response.responseText)) {
-          return null;
-        }
-
         try {
-          return Ext.decode(response.responseText);
+          return this.decodeResponseInternal(response);
         }
         catch (e) {
           Epsitec.ErrorHandler.handleJsonError();
           return null;
         }
+      },
+
+      tryDecodeRespone: function(response) {
+        try {
+          return {
+            success: true,
+            data: this.decodeResponseInternal(response)
+          };
+        }
+        catch (e) {
+          return {
+            success: false
+          };
+        }
+      },
+
+      decodeResponseInternal: function(response) {
+        var text = response.responseText;
+
+        if (this.isUndefined(text)) {
+          return null;
+        }
+
+        return Ext.decode(text);
       },
 
       createUrl: function(base, parameters) {

@@ -134,6 +134,10 @@ function() {
         return this.texts.jsonErrorMessage;
       },
 
+      getErrorBusinessTitle: function() {
+        return this.texts.errorBusinessTitle;
+      },
+
       getLoginTitle: function() {
         return this.texts.loginTitle;
       },

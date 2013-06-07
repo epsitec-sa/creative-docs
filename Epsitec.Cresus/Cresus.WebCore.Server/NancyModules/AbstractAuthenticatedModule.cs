@@ -1,10 +1,14 @@
-﻿using Epsitec.Cresus.Core.Business;
+﻿using Epsitec.Common.Support;
+
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.WebCore.Server.Core;
+using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
 
 using System;
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -31,19 +35,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		protected Response Execute(Func<BusinessContext, Response> function)
 		{
-			var userName  = this.GetUserName ();
-			var sessionId = this.GetSessionId ();
-
-			return this.CoreServer.CoreWorkerPool.Execute (userName, sessionId, function);
+			return this.Execute ((wp, n, id) => wp.Execute (n, id, function));
 		}
 
 
 		protected Response Execute(Func<WorkerApp, Response> function)
 		{
-			var userName  = this.GetUserName ();
-			var sessionId = this.GetSessionId ();
-
-			return this.CoreServer.CoreWorkerPool.Execute (userName, sessionId, function);
+			return this.Execute ((wp, n, id) => wp.Execute (n, id, function));
 		}
 
 
@@ -53,15 +51,32 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private string GetUserName()
+		private Response Execute(Func<CoreWorkerPool, string, string, Response> function)
 		{
-			return LoginModule.GetUserName (this);
-		}
+			try
+			{
+				var userName = LoginModule.GetUserName (this);
+				var sessionId = LoginModule.GetSessionId (this);
+				var workerPool = this.CoreServer.CoreWorkerPool;
 
+				return function (workerPool, userName, sessionId);
+			}
+			catch (WorkerThreadException e)
+			{
+				var businessRuleException = e.InnerException as BusinessRuleException;
 
-		private string GetSessionId()
-		{
-			return LoginModule.GetSessionId (this);
+				if (businessRuleException != null)
+				{
+					var errors = new Dictionary<string, object> ()
+					{
+						{ "businesserror", businessRuleException.Message }
+					};
+
+					return CoreResponse.Failure (errors);
+				}
+
+				throw;
+			}
 		}
 
 

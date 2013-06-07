@@ -91,28 +91,31 @@ function() {
     },
 
     onSaveClickCallback: function(success, form, action) {
-      var json, businessError;
+      var responseData, json, businessError;
 
       this.setLoading(false);
 
-      if (!success) {
+      responseData = Epsitec.Tools.tryDecodeRespone(action.response);
+      if (!responseData.success)
+      {
+        Epsitec.ErrorHandler.handleDefaultFailure();
+        return;
+      }
+
+      json = responseData.data;
+
+      if (success) {
+        this.column.refreshToLeft(true);
+      }
+      else {
         Epsitec.ErrorHandler.handleFormError(action);
 
-        json = Epsitec.Tools.decodeResponse(action.response);
-        if (json === null) {
-          return;
-        }
-
-        businessError = json.errors.business;
+        businessError = json.content.businesserror;
         if (!Epsitec.Tools.isUndefined(businessError))
         {
           this.showError(businessError);
         }
-
-        return;
       }
-
-      this.column.refreshToLeft(true);
     },
 
     showError: function(error) {

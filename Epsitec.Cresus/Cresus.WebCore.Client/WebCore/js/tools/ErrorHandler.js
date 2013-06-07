@@ -33,7 +33,7 @@ function() {
       },
 
       handleFailure: function(failure) {
-        var title, message;
+        var title, message, businessError;
 
         if (failure === null)
         {
@@ -44,12 +44,19 @@ function() {
         title = failure.title || null;
         message = failure.message || null;
 
-        if (title === null || message === null) {
-          this.handleDefaultFailure();
+        if (title !== null && message !== null) {
+          this.showError(title, message);
           return;
         }
 
-        this.showError(title, message);
+        businessError = failure.businesserror || null;
+
+        if (businessError !== null) {
+          this.showError(Epsitec.Texts.getErrorBusinessTitle(), businessError);
+          return;
+        }
+
+        this.handleDefaultFailure();
       },
 
       handleDefaultFailure: function() {

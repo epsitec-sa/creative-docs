@@ -41,6 +41,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         serverErrorMessage: 'An unexpected error occured on the remote server',
         jsonErrorMessage: 'An error occured while decoding the answer from ' +
             'the remote server',
+        errorBusinessTitle: 'Erreure de validation',
         loginTitle: 'Login to AIDER',
         loginLabel: 'Log in',
         usernameLabel: 'Username',

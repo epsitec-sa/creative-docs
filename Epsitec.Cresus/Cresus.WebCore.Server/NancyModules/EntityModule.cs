@@ -88,19 +88,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					propertyAccessor.SetValue (entity, value);
 				}
 
-				try
-				{
-					businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
-				}
-				catch (BusinessRuleException e)
-				{
-					var errors = new Dictionary<string, object> ()
-					{
-						{ "business", e.Message } 
-					};
-
-					return CoreResponse.FormFailure (errors);
-				}
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 			}
 
 			return CoreResponse.FormSuccess ();
@@ -179,35 +167,23 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var viewMode = DataIO.ParseViewMode ((string) parameters.viewMode);
 			var viewId = DataIO.ParseViewId ((string) parameters.viewId);
-			
+
 			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
 			{
-				try
-				{
-					var actionProvider = controller as IActionExecutorProvider;
-					var functionProvider = controller as IFunctionExecutorProvider;
+				var actionProvider = controller as IActionExecutorProvider;
+				var functionProvider = controller as IFunctionExecutorProvider;
 
-					if (actionProvider != null)
-					{
-						return this.ExecuteAction (businessContext, actionProvider, entity, additionalEntity);
-					}
-					else if (functionProvider != null)
-					{
-						return this.ExecuteAction (businessContext, functionProvider, entity, additionalEntity);
-					}
-					else
-					{
-						return CoreResponse.Failure ();
-					}
+				if (actionProvider != null)
+				{
+					return this.ExecuteAction (businessContext, actionProvider, entity, additionalEntity);
 				}
-				catch (BusinessRuleException e)
+				else if (functionProvider != null)
 				{
-					var errors = new Dictionary<string, object> ()
-					{
-						{ "business", e.Message }
-					};
-
-					return CoreResponse.FormFailure (errors);
+					return this.ExecuteAction (businessContext, functionProvider, entity, additionalEntity);
+				}
+				else
+				{
+					return CoreResponse.Failure ();
 				}
 			}
 		}
