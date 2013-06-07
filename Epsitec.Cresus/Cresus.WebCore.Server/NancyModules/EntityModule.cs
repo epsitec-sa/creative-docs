@@ -124,11 +124,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string autoCreatorId = Request.Form.autoCreatorId;
 			var autoCreator = autoCreatorCache.Get (autoCreatorId);
 
-			var child = autoCreator.Execute (businessContext, entity);
+			using (Tools.Bind (businessContext, entity))
+			{
+				var child = autoCreator.Execute (businessContext, entity);
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
-			return this.CreateEntityIdResponse (businessContext, child);
+				return this.CreateEntityIdResponse (businessContext, child);
+			}
 		}
 
 
