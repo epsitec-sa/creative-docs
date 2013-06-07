@@ -707,6 +707,13 @@ namespace Epsitec.Cresus.Core.Business
 			return this.ApplyRules (RuleType.Setup, newEntity);
 		}
 
+		public AbstractEntity CreateAndRegisterEntity(Druid entityType)
+		{
+			var newEntity = this.CreateEntity (entityType);
+			this.Register (newEntity);
+			return newEntity;
+		}
+
 		public T CreateEntity<T>()
 			where T : AbstractEntity, new ()
 		{

@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAutoCreator
 
 			if (child.IsNull ())
 			{
-				child = businessContext.CreateEntity (childTypeId);
+				child = businessContext.CreateAndRegisterEntity (childTypeId);
 
 				propertyAccessor.SetValue (entity, child);
 			}
