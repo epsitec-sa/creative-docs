@@ -670,6 +670,7 @@
     <Compile Include="Support\WeakEventListener.cs" />
     <Compile Include="Support\WeakEventListeners.cs" />
     <Compile Include="Support\WorkerThread.cs" />
+    <Compile Include="Support\WorkerThreadException.cs" />
     <Compile Include="Support\Xml.cs" />
     <Compile Include="Support\XmlExtractor.cs" />
     <Compile Include="Support\XmlNodeClassAttribute.cs" />

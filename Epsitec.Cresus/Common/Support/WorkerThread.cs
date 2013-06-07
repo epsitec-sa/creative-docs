@@ -60,7 +60,7 @@ namespace Epsitec.Common.Support
 
 				if (innerException != null)
 				{
-					throw new System.Exception ("The operation threw an exception.", innerException);
+					throw new WorkerThreadException ("The operation threw an exception.", innerException);
 				}
 			}
 		}
