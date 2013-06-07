@@ -135,9 +135,40 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixParticipations (args));
 					return;
 				}
+
+				if (args.Contains ("-fixaddress"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddress (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
+		}
+
+		private static void FixAddress(string[] args)
+		{
+			var repo = SwissPostStreetRepository.Current;
+
+
+			var set = AddressFixer.GetSet ();
+			var set2 = set.OrderBy (s => s.ZipCode).ToList();
+
+			foreach (var street in repo.Streets)
+			{
+				var t = Stopwatch.StartNew ();
+				
+				var check = AddressFixer.CheckAmbigousStreet (street);
+				t.Stop ();
+				Console.WriteLine (t.Elapsed);
+
+				if (check)
+				{
+					Console.WriteLine (street.ToString ());
+				}
+			}
+			Console.WriteLine (set);
+			Console.WriteLine (set2);
 		}
 
 		private static void UploadSubscriptionExportation(string[] args)

@@ -105,6 +105,7 @@
     <Compile Include="Data\ECh\EChDataComparerLoader.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
+    <Compile Include="Data\Job\AddressFixer.cs" />
     <Compile Include="Data\Job\ParticipationFixer.cs" />
     <Compile Include="Data\Subscription\DistributionMode.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileLine.cs" />
