@@ -110,7 +110,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var key = EntityIO.GetEntityId (businessContext, newEntity);
 
-			var content = new Dictionary<string, object> () {
+			var content = new Dictionary<string, object> ()
+			{
 				{ "key", key }
 			};
 
