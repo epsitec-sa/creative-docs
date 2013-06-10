@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		private static T CreateEntityImplementation<T>(BusinessContext businessContext)
 			where T : AbstractEntity, new ()
 		{
-			var entity = businessContext.CreateEntity<T> ();
+			var entity = businessContext.CreateAndRegisterEntity<T> ();
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
 
