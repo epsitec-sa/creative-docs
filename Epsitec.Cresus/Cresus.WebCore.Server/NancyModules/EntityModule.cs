@@ -225,7 +225,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				newEntity = executor.Call (arguments);
 
-				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+				using (businessContext.Bind (newEntity))
+				{
+					businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
+				}
 			}
 
 			return this.CreateEntityIdResponse (businessContext, newEntity);
