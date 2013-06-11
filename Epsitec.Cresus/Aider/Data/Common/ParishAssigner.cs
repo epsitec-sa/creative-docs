@@ -28,17 +28,11 @@ namespace Epsitec.Aider.Data.Common
 	{
 
 
-		private ParishAssigner(BusinessContext businessContext)
-		{
-			this.businessContext = businessContext;
-			this.cache = new Dictionary<string, AiderGroupEntity> ();
-		}
-
-
 		private ParishAssigner(ParishAddressRepository parishRepository, BusinessContext businessContext)
-			: this (businessContext)
 		{
 			this.parishRepository = parishRepository;
+			this.businessContext = businessContext;
+			this.cache = new Dictionary<string, AiderGroupEntity> ();
 		}
 
 
@@ -114,7 +108,7 @@ namespace Epsitec.Aider.Data.Common
 
 		private AiderGroupEntity FindParishGroup(AiderAddressEntity address)
 		{
-			var parishName = ParishAssigner.FindParishName (parishRepository, address);
+			var parishName = ParishAssigner.FindParishName (this.parishRepository, address);
 
 			if (string.IsNullOrEmpty (parishName))
 			{
@@ -131,7 +125,7 @@ namespace Epsitec.Aider.Data.Common
 			return this.FindGroup
 			(
 				parishName,
-				() => ParishAssigner.FindParishGroup (this.businessContext, parishName)
+				() => ParishAssigner.FindParishGroup (this.businessContext, this.parishRepository, parishName)
 			);
 		}
 
@@ -180,9 +174,9 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static void AssignToNoParishGroup(BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
+		public static void AssignToNoParishGroup(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
 		{
-			var assigner = new ParishAssigner (businessContext);
+			var assigner = new ParishAssigner (parishRepository, businessContext);
 
 			foreach (var person in persons)
 			{
@@ -191,9 +185,9 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static void AssignToParish(BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons, string parishName)
+		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons, string parishName)
 		{
-			var assigner = new ParishAssigner (businessContext);
+			var assigner = new ParishAssigner (parishRepository, businessContext);
 
 			foreach (var legalPerson in legalPersons)
 			{
@@ -222,7 +216,7 @@ namespace Epsitec.Aider.Data.Common
 				.Where (a => a.Town.IsNotNull ())
 				.Select (a => ParishAssigner.FindParishName (parishRepository, a))
 				.Where (n => !string.IsNullOrEmpty (n))
-				.Select (n => ParishAssigner.GetParishGroupName (n))
+				.Select (n => ParishAssigner.GetParishGroupName (parishRepository, n))
 				.Contains (currentGroupName);
 		}
 
@@ -235,9 +229,9 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static AiderGroupEntity FindParishGroup(BusinessContext businessContext, string parishName)
+		public static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, string parishName)
 		{
-			var groupName = ParishAssigner.GetParishGroupName (parishName);
+			var groupName = ParishAssigner.GetParishGroupName (parishRepository, parishName);
 
 			return ParishAssigner.FindGroup (businessContext, groupName, GroupClassification.Parish);
 		}
@@ -295,9 +289,9 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static string GetParishGroupName(string parishName)
+		public static string GetParishGroupName(ParishAddressRepository parishRepository, string parishName)
 		{
-			var infos = ParishAddressRepository.Current.GetDetails (parishName);
+			var infos = parishRepository.GetDetails (parishName);
 
 			if (infos == null)
 			{

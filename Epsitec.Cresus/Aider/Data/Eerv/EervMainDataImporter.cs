@@ -176,7 +176,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var regions = EervMainDataImporter.GetRegions (parishRepository);
 
 			var regionGroups = EervMainDataImporter.CreateRegionGroups (businessContext, regions);
-			var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, regions, regionGroups);
+			var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, parishRepository, regions, regionGroups);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 		}
@@ -229,7 +229,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions, Dictionary<int, AiderGroupEntity> regionGroups)
+		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions, Dictionary<int, AiderGroupEntity> regionGroups)
 		{
 			var parishGroupDefinition = EervMainDataImporter.GetGroupDefinition (businessContext, GroupClassification.Parish, AiderGroupIds.ParishLevel);
 			var parishAddressInfos = regions.Values.SelectMany (p => p.Values.Select (p2 => p2.First ())).ToArray ();
@@ -243,7 +243,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				var parishId = parishIds[regionId] + 1;
 				var parishName = parishAddressInfo.ParishName;
-				var parish = EervMainDataImporter.CreateParishGroup (businessContext, regionGroup, parishGroupDefinition, parishAddressInfo, parishId);
+				var parish = EervMainDataImporter.CreateParishGroup (businessContext, parishRepository, regionGroup, parishGroupDefinition, parishAddressInfo, parishId);
 				
 				parishes.Add (parishName, parish);
 				parishIds[regionId] = parishId;
@@ -262,9 +262,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, AiderGroupEntity regionGroup, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish, int parishId)
+		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, AiderGroupEntity regionGroup, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish, int parishId)
 		{
-			var name = ParishAssigner.GetParishGroupName (parish.ParishName);
+			var name = ParishAssigner.GetParishGroupName (parishRepository, parish.ParishName);
 			var code = parishId;
 
 			return parishGroupDefinition.InstantiateParish (businessContext, regionGroup, name, code);

@@ -259,14 +259,16 @@ namespace Epsitec.Aider
 				Tuple.Create("l.zumstein", "Laurent Zumstein", false, AiderUserRoleEntity.AleRole, "", Tuple.Create (true, false, false)),
 			};
 
+			var parishRepository = ParishAddressRepository.Current;
+
 			foreach (var user in users)
 			{
-				AiderProgram.CreateUser (businessContext, user.Item1, user.Item2, user.Item3, user.Item4, user.Item5, user.Item6);
+				AiderProgram.CreateUser (businessContext, parishRepository, user.Item1, user.Item2, user.Item3, user.Item4, user.Item5, user.Item6);
 			}
 		}
 
 
-		private static void CreateUser(BusinessContext businessContext, string login, string name, bool isAdmin, string roleName, string parish, Tuple<bool, bool, bool> enableGroupEdition)
+		private static void CreateUser(BusinessContext businessContext, ParishAddressRepository parishRepository, string login, string name, bool isAdmin, string roleName, string parish, Tuple<bool, bool, bool> enableGroupEdition)
 		{
 			var user = businessContext.CreateAndRegisterEntity<AiderUserEntity> ();
 
@@ -287,7 +289,7 @@ namespace Epsitec.Aider
 
 			if (!string.IsNullOrEmpty (parish))
 			{
-				user.Parish = ParishAssigner.FindParishGroup (businessContext, parish);
+				user.Parish = ParishAssigner.FindParishGroup (businessContext, parishRepository, parish);
 			}
 		}
 	}

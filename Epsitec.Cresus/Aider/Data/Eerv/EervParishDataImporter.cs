@@ -35,8 +35,8 @@ namespace Epsitec.Aider.Data.Eerv
 		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			var persons = EervParishDataImporter.ImportEervPhysicalPersons (coreData, parishRepository, eervParishData);
-			var legalPersons = EervParishDataImporter.ImportEervLegalPersons (coreData, eervParishData);
-			var groups = EervParishDataImporter.ImportEervGroups (coreData, eervParishData);
+			var legalPersons = EervParishDataImporter.ImportEervLegalPersons (coreData, parishRepository, eervParishData);
+			var groups = EervParishDataImporter.ImportEervGroups (coreData, parishRepository, eervParishData);
 
 			EervParishDataImporter.ImportEervActivities (coreData, eervParishData, persons, legalPersons, groups);
 
@@ -72,7 +72,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				EervParishDataImporter.AssignToImportationGroup
 				(
-					businessContext, eervParishData.Id, eervToAiderPersons.Values
+					businessContext, parishRepository, eervParishData.Id, eervToAiderPersons.Values
 				);
 
 				businessContext.SaveChanges
@@ -972,23 +972,20 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervLegalPerson, EntityKey> ImportEervLegalPersons(CoreData coreData, EervParishData eervParishData)
+		private static Dictionary<EervLegalPerson, EntityKey> ImportEervLegalPersons(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				return EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData);
+				return EervParishDataImporter.ImportEervLegalPersons (businessContext, parishRepository, eervParishData);
 			}
 		}
 
 
-		private static Dictionary<EervLegalPerson, EntityKey> ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
+		private static Dictionary<EervLegalPerson, EntityKey> ImportEervLegalPersons(BusinessContext businessContext, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, eervParishData.Id);
 
-			if (eervParishData.Id.Kind == EervKind.Parish)
-			{
-				ParishAssigner.AssignToParish (businessContext, aiderLegalPersons.Values, eervParishData.Id.Name);
-			}
+			ParishAssigner.AssignToParish (parishRepository, businessContext, aiderLegalPersons.Values, eervParishData.Id.Name);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
@@ -1119,6 +1116,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static void AssignToImportationGroup
 		(
 			BusinessContext businessContext,
+			ParishAddressRepository parishRepository, 
 			EervId parishId,
 			IEnumerable<AiderPersonEntity> aiderPersons
 		)
@@ -1128,7 +1126,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var importationGroup = EervParishDataImporter.FindImportationGroup
 				(
-					businessContext, parishId
+					businessContext, parishRepository, parishId
 				);
 
 				foreach (var aiderPerson in aiderPersons)
@@ -1144,31 +1142,31 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity FindImportationGroup(BusinessContext businessContext, EervId parishId)
+		private static AiderGroupEntity FindImportationGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId parishId)
 		{
 			var parishGroup = EervParishDataImporter
-				.FindRootAiderGroups (businessContext, parishId)
+				.FindRootAiderGroups (businessContext, parishRepository, parishId)
 				.Single ();
 
 			return parishGroup.Subgroups.Single (g => g.Name == "Personnes importées");
 		}
 
 
-		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreData coreData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				return EervParishDataImporter.ImportEervGroups (businessContext, eervParishData);
+				return EervParishDataImporter.ImportEervGroups (businessContext, parishRepository, eervParishData);
 			}
 		}
 
 
-		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContext businessContext, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContext businessContext, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			var eervGroups = eervParishData.Groups;
 			var eervId = eervParishData.Id;
 
-			var idToGroups = EervParishDataImporter.BuildIdToGroups (businessContext, eervId);
+			var idToGroups = EervParishDataImporter.BuildIdToGroups (businessContext, parishRepository, eervId);
 			var eervToAiderGroups = new Dictionary<EervGroup, AiderGroupEntity> ();
 
 			// We sort the groups so that they appear in the right order, that is, the parent before
@@ -1259,11 +1257,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<string, AiderGroupEntity> BuildIdToGroups(BusinessContext businessContext, EervId eervId)
+		private static Dictionary<string, AiderGroupEntity> BuildIdToGroups(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId eervId)
 		{
 			var mapping = new Dictionary<string, AiderGroupEntity> ();
 
-			var rootGroups = EervParishDataImporter.FindRootAiderGroups (businessContext, eervId);
+			var rootGroups = EervParishDataImporter.FindRootAiderGroups (businessContext, parishRepository, eervId);
 
 			var todo = new Stack<AiderGroupEntity> ();
 			todo.PushRange (rootGroups);
@@ -1292,7 +1290,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<AiderGroupEntity> FindRootAiderGroups(BusinessContext businessContext, EervId eervId)
+		private static IEnumerable<AiderGroupEntity> FindRootAiderGroups(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId eervId)
 		{
 			switch (eervId.Kind)
 			{
@@ -1303,7 +1301,7 @@ namespace Epsitec.Aider.Data.Eerv
 					return FindRootRegionGroup (businessContext, eervId);
 
 				case EervKind.Parish:
-					return FindRootParisGroup (businessContext, eervId);
+					return FindRootParishGroup (businessContext, parishRepository, eervId);
 
 				default:
 					throw new NotImplementedException ();
@@ -1326,9 +1324,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<AiderGroupEntity> FindRootParisGroup(BusinessContext businessContext, EervId eervId)
+		private static IEnumerable<AiderGroupEntity> FindRootParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId eervId)
 		{
-			yield return ParishAssigner.FindParishGroup (businessContext, eervId.Name);
+			yield return ParishAssigner.FindParishGroup (businessContext, parishRepository, eervId.Name);
 		}
 
 
