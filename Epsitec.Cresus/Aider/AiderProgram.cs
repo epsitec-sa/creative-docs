@@ -136,39 +136,14 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-fixaddress"))
+				if (args.Contains ("-fixambiguousaddresses"))
 				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAddress (args));
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAmbiguousAddresses (args));
 					return;
 				}
 			}
 
 			AiderProgram.RunNormalMode (args);
-		}
-
-		private static void FixAddress(string[] args)
-		{
-			var repo = SwissPostStreetRepository.Current;
-
-
-			var set = AddressFixer.GetSet ();
-			var set2 = set.OrderBy (s => s.ZipCode).ToList();
-
-			foreach (var street in repo.Streets)
-			{
-				var t = Stopwatch.StartNew ();
-				
-				var check = AddressFixer.CheckAmbigousStreet (street);
-				t.Stop ();
-				Console.WriteLine (t.Elapsed);
-
-				if (check)
-				{
-					Console.WriteLine (street.ToString ());
-				}
-			}
-			Console.WriteLine (set);
-			Console.WriteLine (set2);
 		}
 
 		private static void UploadSubscriptionExportation(string[] args)
@@ -296,6 +271,16 @@ namespace Epsitec.Aider
 		private static void FixParticipations(string[] args)
 		{
 			AiderProgram.RunWithCoreData (ParticipationFixer.FixParticipations);
+		}
+
+		private static void FixAmbiguousAddresses(string[] args)
+		{
+			var streetRepository = SwissPostStreetRepository.Current;
+
+			var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
+			var echReportedPersons = EChDataLoader.Load (eChDataFile);
+
+			AiderProgram.RunWithCoreData (c => AmbiguousAddressFixer.FixAmbiguousAddresses (streetRepository, echReportedPersons, c));
 		}
 
 		private static void AnalyzeParishFile(string[] args)

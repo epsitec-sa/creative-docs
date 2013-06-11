@@ -48,6 +48,22 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public IEnumerable<eCH_ReportedPersonEntity> ReportedPersons
+		{
+			get
+			{
+				if (this.ReportedPerson1.IsNotNull ())
+				{
+					yield return this.ReportedPerson1;
+				}
+
+				if (this.ReportedPerson2.IsNotNull ())
+				{
+					yield return this.ReportedPerson2;
+				}
+			}
+		}
+
 		partial void GetNationality(ref AiderCountryEntity value)
 		{
 			if (string.IsNullOrWhiteSpace (this.NationalityCountryCode))
