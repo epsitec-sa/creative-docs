@@ -174,17 +174,6 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static void AssignToNoParishGroup(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
-		{
-			var assigner = new ParishAssigner (parishRepository, businessContext);
-
-			foreach (var person in persons)
-			{
-				assigner.AssignToNoParishGroup (person);
-			}
-		}
-
-
 		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons, string parishName)
 		{
 			var assigner = new ParishAssigner (parishRepository, businessContext);
