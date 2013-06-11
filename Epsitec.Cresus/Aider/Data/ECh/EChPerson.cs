@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml.Linq;
 
 
@@ -52,7 +53,10 @@ namespace Epsitec.Aider.Data.ECh
 
 		public bool CheckData(string on, string fn, Date dob, PersonSex s, PersonNationalityStatus ns, string ncc, PersonMaritalStatus ms, ReadOnlyCollection<EChPlace> op)
 		{
-			bool result = this.OfficialName == on && this.FirstNames == fn && this.DateOfBirth == dob && this.Sex == s && this.NationalityStatus == ns && this.NationalCountryCode == ncc && this.MaritalStatus == ms && this.OriginPlaces.SetEquals(op);
+			var originList= op.Select (p => System.Tuple.Create (p.Canton, p.Name)).ToList ();
+			var originListToCompare = this.OriginPlaces.Select(p => System.Tuple.Create (p.Canton, p.Name)).ToList ();
+
+			bool result = this.OfficialName == on && this.FirstNames == fn && this.DateOfBirth == dob && this.Sex == s && this.NationalityStatus == ns && this.NationalCountryCode == ncc && this.MaritalStatus == ms && originList.SetEquals(originListToCompare);
 			return result;
 		}
 
