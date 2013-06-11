@@ -216,15 +216,53 @@ namespace Epsitec.Aider.Data.Common
 
 		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderPersonEntity person)
 		{
-			var currentGroupName = person.ParishGroup.Name;
+			var contact = person.GetMainContact ();
+			var address = contact.IsNull ()
+				? null
+				: contact.Address;
 
-			return person.Contacts
-				.Select (c => c.GetAddress ())
-				.Where (a => a.Town.IsNotNull ())
-				.Select (a => ParishAssigner.FindParishName (parishRepository, a))
-				.Where (n => !string.IsNullOrEmpty (n))
-				.Select (n => ParishAssigner.GetParishGroupName (parishRepository, n))
-				.Contains (currentGroupName);
+			var parishGroup = person.ParishGroup;
+
+			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);
+		}
+
+
+		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderLegalPersonEntity legalPerson)
+		{
+			var address = legalPerson.Address;
+			var parishGroup = legalPerson.ParishGroup;
+
+			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);
+		}
+
+
+		private static bool IsInValidParish(ParishAddressRepository parishRepository, AiderAddressEntity address, AiderGroupEntity parishGroup)
+		{
+			var canHaveParish = address.IsNotNull ()
+				&& address.Town.IsNotNull ()
+				&& address.Town.Country.IsSwitzerland ();
+
+			if (parishGroup.IsNull ())
+			{
+				return !canHaveParish
+					|| ParishAssigner.FindParishName (parishRepository, address) == null;
+			}
+
+			if (!canHaveParish)
+			{
+				return false;
+			}
+
+			var parishName = ParishAssigner.FindParishName (parishRepository, address);
+
+			if (parishName == null)
+			{
+				return false;
+			}
+
+			var parishGroupName = ParishAssigner.GetParishGroupName (parishRepository, parishName);
+
+			return parishGroupName == parishGroup.Name;
 		}
 
 
