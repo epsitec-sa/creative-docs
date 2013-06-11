@@ -184,6 +184,42 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
+		public static void ReassignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderPersonEntity person)
+		{
+			ParishAssigner.UnassignFromParish (businessContext, person);
+
+			ParishAssigner.AssignToParish (parishRepository, businessContext, person);
+		}
+
+
+		public static void ReassignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
+		{
+			foreach (var person in persons)
+			{
+				ParishAssigner.UnassignFromParish (businessContext, person);
+			}
+
+			ParishAssigner.AssignToParish (parishRepository, businessContext, persons);
+		}
+
+
+		private static void UnassignFromParish(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var participations = ParishAssigner.GetParishGroupParticipations (person).ToList ();
+
+			var noParishParticipation = ParishAssigner.GetNoParishGroupParticipation (person);
+			if (noParishParticipation.IsNotNull ())
+			{
+				participations.Add (noParishParticipation);
+			}
+
+			foreach (var participation in participations)
+			{
+				AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);
+			}
+		}
+
+
 		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
 		{
 			var assigner = new ParishAssigner (parishRepository, businessContext);
@@ -203,6 +239,24 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
+		public static void ReassignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
+		{
+			// Legal persons are not assigned to the parish groups or to the "no parish group", so
+			// we don't have to manage this data here.
+
+			ParishAssigner.AssignToParish (parishRepository, businessContext, legalPerson);
+		}
+
+
+		public static void ReassignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons)
+		{
+			// Legal persons are not assigned to the parish groups or to the "no parish group", so
+			// we don't have to manage this data here.
+
+			ParishAssigner.AssignToParish (parishRepository, businessContext, legalPersons);
+		}
+
+
 		public static bool IsInNoParishGroup(AiderPersonEntity person)
 		{
 			return ParishAssigner.GetNoParishGroupParticipation (person) != null;
@@ -211,6 +265,11 @@ namespace Epsitec.Aider.Data.Common
 		public static AiderGroupParticipantEntity GetNoParishGroupParticipation(AiderPersonEntity person)
 		{
 			return person.Groups.FirstOrDefault (g => g.Group.IsNoParish ());
+		}
+
+		public static IEnumerable<AiderGroupParticipantEntity> GetParishGroupParticipations(AiderPersonEntity person)
+		{
+			return person.Groups.Where (g => g.Group.IsParish ());
 		}
 
 

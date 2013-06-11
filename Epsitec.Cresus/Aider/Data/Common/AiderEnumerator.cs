@@ -51,6 +51,18 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetPersonBatch, action);
+		}
+
+
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderLegalPersonEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetLegalPersonBatch, action);
+		}
+
+
 		private static void Execute<T>(CoreData coreData, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
 			const int size = 1000;
@@ -122,6 +134,22 @@ namespace Epsitec.Aider.Data.Common
 			var aiderSubscriptions = dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 
 			return aiderSubscriptions;
+		}
+
+
+		private static IList<AiderPersonEntity> GetPersonBatch(DataContext dataContext, int skip, int take)
+		{
+			var request = AiderEnumerator.CreateBatchRequest<AiderPersonEntity> (skip, take);
+
+			return dataContext.GetByRequest<AiderPersonEntity> (request);
+		}
+
+
+		private static IList<AiderLegalPersonEntity> GetLegalPersonBatch(DataContext dataContext, int skip, int take)
+		{
+			var request = AiderEnumerator.CreateBatchRequest<AiderLegalPersonEntity> (skip, take);
+
+			return dataContext.GetByRequest<AiderLegalPersonEntity> (request);
 		}
 
 

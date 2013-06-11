@@ -147,6 +147,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixAmbiguousAddresses (args));
 					return;
 				}
+
+				if (args.Contains ("-fixparishassignations"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixParishAssignation (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -298,6 +304,19 @@ namespace Epsitec.Aider
 			var echReportedPersons = EChDataLoader.Load (eChDataFile);
 
 			AiderProgram.RunWithCoreData (c => AmbiguousAddressFixer.FixAmbiguousAddresses (streetRepository, echReportedPersons, c));
+		}
+
+		private static void FixParishAssignation(string[] args)
+		{
+			var parishRepository = ParishAddressRepository.Current;
+
+			AiderProgram.RunWithCoreData
+			(
+				coreData => ParishAssignationFixer.FixParishAssignations
+				(
+					parishRepository, coreData
+				)
+			);
 		}
 
 		private static void AnalyzeParishFile(string[] args)
