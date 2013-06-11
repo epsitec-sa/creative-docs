@@ -67,9 +67,19 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		private void AssignToParish(AiderLegalPersonEntity legalPerson, string parishName)
+		private void AssignToParish(AiderLegalPersonEntity legalPerson)
 		{
-			legalPerson.ParishGroup = this.FindParishGroup (parishName);
+			var address = legalPerson.Address;
+			var parishName = ParishAssigner.FindParishName (this.parishRepository, address);
+
+			if (string.IsNullOrEmpty (parishName))
+			{
+				legalPerson.ParishGroup = null;
+			}
+			else
+			{
+				legalPerson.ParishGroup = this.FindParishGroup (parishName);
+			}
 		}
 
 
@@ -174,13 +184,21 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons, string parishName)
+		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
+		{
+			var assigner = new ParishAssigner (parishRepository, businessContext);
+
+			assigner.AssignToParish (legalPerson);
+		}
+
+
+		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, IEnumerable<AiderLegalPersonEntity> legalPersons)
 		{
 			var assigner = new ParishAssigner (parishRepository, businessContext);
 
 			foreach (var legalPerson in legalPersons)
 			{
-				assigner.AssignToParish (legalPerson, parishName);
+				assigner.AssignToParish (legalPerson);
 			}
 		}
 

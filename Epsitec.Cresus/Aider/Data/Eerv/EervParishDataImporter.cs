@@ -985,7 +985,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var aiderLegalPersons = EervParishDataImporter.ImportEervLegalPersons (businessContext, eervParishData, eervParishData.Id);
 
-			ParishAssigner.AssignToParish (parishRepository, businessContext, aiderLegalPersons.Values, eervParishData.Id.Name);
+			ParishAssigner.AssignToParish (parishRepository, businessContext, aiderLegalPersons.Values);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
