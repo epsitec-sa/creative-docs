@@ -7,13 +7,17 @@ namespace Epsitec.Aider.Entities
 	{
 
 		public ParticipationData(AiderPersonEntity person)
-			: this (person.GetMainContact ())
 		{
+			this.Person = person;
+			this.LegalPerson = null;
+			this.Contact = person.GetMainContact ();
 		}
 
 		public ParticipationData(AiderLegalPersonEntity legalPerson)
-			: this (legalPerson.GetMainContact ())
 		{
+			this.Person = null;
+			this.LegalPerson = legalPerson;
+			this.Contact = legalPerson.GetMainContact ();
 		}
 
 		public ParticipationData(AiderContactEntity contact)
