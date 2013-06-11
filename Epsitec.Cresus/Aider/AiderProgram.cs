@@ -100,7 +100,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-echupdate"))
+				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv-new.xml -oldechfile:s:\eerv-old.xm
 				{
 					AiderProgram.RunEchUpdate (args);
 					return;
