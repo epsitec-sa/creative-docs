@@ -100,6 +100,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-echupdate"))
+				{
+					AiderProgram.RunEchUpdate (args);
+					return;
+				}
+
 				if (args.Contains ("-eervmainimportation"))
 				{
 					AiderProgram.RunEervMainImportation (args);
@@ -180,6 +186,17 @@ namespace Epsitec.Aider
 				var parishRepository = ParishAddressRepository.Current;
 
 				EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
+			});
+		}
+
+		private static void RunEchUpdate(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var newEChDataFile = AiderProgram.GetFile (args, "-newechfile:", true);
+				var oldEChDataFile = AiderProgram.GetFile (args, "-oldechfile:", true);
+
+				UpdateEchData.Update (oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
 			});
 		}
 

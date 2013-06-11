@@ -15,23 +15,7 @@ namespace Epsitec.Aider.Data.ECh
 	/// </summary>
 	class EChDataComparer
 	{
-		//Filespath
-		private string EchFileA;
-		private string EchFileB;
-
-		//Entity List
-		private List<EChReportedPerson> OrigineEch;
-		private List<EChReportedPerson> VersionEch;
-
-
-		//Comparison dictionary
-		private Dictionary<string,EChReportedPerson> DicFamilyA;
-		private Dictionary<string,EChReportedPerson> DicFamilyB;
-		private Dictionary<string,EChPerson> DicPersonA;
-		private Dictionary<string,EChPerson> DicPersonB;
-
 		
-
 		/// <summary>
 		/// Initialize a new EChDataComparer with two files
 		/// </summary>
@@ -117,10 +101,10 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 		/// <summary>
-		/// Create a list of EChPerson to modify
+		/// Create a list of tuple containing new EChPerson and old EChPerson
 		/// </summary>
 		/// <returns>a list of modified EChPerson</returns>
-		public List<EChPerson> GetPersonToChange()
+		public List<System.Tuple<EChPerson,EChPerson>> GetPersonToChange()
 		{
 			var PersonToCheck =  from e in DicPersonB
 								 where DicPersonA.ContainsKey (e.Key)
@@ -129,7 +113,7 @@ namespace Epsitec.Aider.Data.ECh
 			var PersonToChange = (from c in PersonToCheck
 								  join e in DicPersonA on c.Key equals e.Key
 								  where !c.Value.CheckData (e.Value.OfficialName, e.Value.FirstNames, e.Value.DateOfBirth, e.Value.Sex, e.Value.NationalityStatus, e.Value.NationalCountryCode, e.Value.MaritalStatus,  e.Value.OriginPlaces)
-								  select c.Value).ToList ();
+								  select System.Tuple.Create(c.Value,e.Value)).ToList ();
 
 			return PersonToChange;
 		}
@@ -182,8 +166,20 @@ namespace Epsitec.Aider.Data.ECh
 			
 		}
 
+		//Filespath
+		private string EchFileA;
+		private string EchFileB;
+
+		//Entity List
+		private List<EChReportedPerson> OrigineEch;
+		private List<EChReportedPerson> VersionEch;
+
+
+		//Comparison dictionary
+		private Dictionary<string,EChReportedPerson> DicFamilyA;
+		private Dictionary<string,EChReportedPerson> DicFamilyB;
+		private Dictionary<string,EChPerson> DicPersonA;
+		private Dictionary<string,EChPerson> DicPersonB;
 
 	}
-
- 
 }

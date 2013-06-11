@@ -107,6 +107,7 @@
     <Compile Include="Data\Eerv\EervKind.cs" />
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ParticipationFixer.cs" />
+    <Compile Include="Data\Job\UpdateEchData.cs" />
     <Compile Include="Data\Subscription\DistributionMode.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileLine.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileWriter.cs" />
