@@ -263,8 +263,18 @@ namespace Epsitec.Aider.Data.ECh
 		private static AiderPersonEntity ImportPerson(BusinessContext businessContext, EChPerson eChPerson)
 		{
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
-			
-			var eChPersonEntity = aiderPersonEntity.eCH_Person;
+
+			aiderPersonEntity.eCH_Person = ConvertEChPersonToEntity (eChPerson);
+
+			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
+			aiderPersonEntity.Confession = PersonConfession.Protestant;
+
+			return aiderPersonEntity;
+		}
+
+		public static eCH_PersonEntity ConvertEChPersonToEntity(EChPerson eChPerson)
+		{
+			var eChPersonEntity = new eCH_PersonEntity();
 
 			eChPersonEntity.PersonId = eChPerson.Id;
 			eChPersonEntity.PersonOfficialName = eChPerson.OfficialName;
@@ -273,10 +283,6 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.PersonSex = eChPerson.Sex;
 			eChPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
 			eChPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
-			if (eChPerson.NationalityStatus == PersonNationalityStatus.Defined)
-			{
-				eChPersonEntity.Nationality = AiderCountryEntity.Find (businessContext, eChPerson.NationalCountryCode);
-			}
 			eChPersonEntity.Origins = eChPerson.OriginPlaces
 				.Select (p => p.Name + " (" + p.Canton + ")")
 				.Join ("\n");
@@ -287,12 +293,9 @@ namespace Epsitec.Aider.Data.ECh
 			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
 			eChPersonEntity.RemovalReason = RemovalReason.None;
 
-			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
-			aiderPersonEntity.Confession = PersonConfession.Protestant;
+			return eChPersonEntity;
 
-			return aiderPersonEntity;
 		}
-
 
 		private static void ImportAiderAddressEntity(BusinessContext businessContext, AiderAddressEntity aiderAddressEntity, EChAddress eChAddress, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
