@@ -106,7 +106,7 @@ namespace Epsitec.Aider.Tools
 
 			if (string.IsNullOrEmpty (firstAddressLine))
 			{
-				return this.Fail (logFailures, zipCode, street);
+				return this.Fail (logFailures, street, zipCode, zipCodeAddOn, town);
 			}
 
 			string newFirstAddressLine = null;
@@ -116,7 +116,7 @@ namespace Epsitec.Aider.Tools
 
 			if (status == FixStatus.Invalid)
 			{
-				return this.Fail (logFailures, zipCode, street);
+				return this.Fail (logFailures, street, zipCode, zipCodeAddOn, town);
 			}
 
 			//	Yep, the additional address line was in fact the street name. Use
@@ -129,11 +129,11 @@ namespace Epsitec.Aider.Tools
 		}
 
 
-		private FixStatus Fail(bool logFailures, int zipCode, string street)
+		private FixStatus Fail(bool logFailures, string street, int zipCode, int zipCodeAddOn, string town)
 		{
 			if (logFailures)
 			{
-				this.LogFailure (string.Format ("{0:0000} {1}", zipCode, street));
+				this.LogFailure (string.Format ("{0} {1:0000} {2} {3}", street, zipCode, zipCodeAddOn, town));
 			}
 
 			return FixStatus.Invalid;
