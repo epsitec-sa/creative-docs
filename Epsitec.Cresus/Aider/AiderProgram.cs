@@ -208,7 +208,9 @@ namespace Epsitec.Aider
 				var newEChDataFile = AiderProgram.GetFile (args, "-newechfile:", true);
 				var oldEChDataFile = AiderProgram.GetFile (args, "-oldechfile:", true);
 
-				UpdateEchData.Update (oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
+                UpdateEChData.UpdateEchPerson(oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
+                UpdateEChData.UpdateEchReportedPersons (oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
+
 			});
 		}
 

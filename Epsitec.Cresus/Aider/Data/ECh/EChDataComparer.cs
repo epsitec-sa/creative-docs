@@ -60,7 +60,7 @@ namespace Epsitec.Aider.Data.ECh
 		/// Create a list of ECh ReportedPerson to modify
 		/// </summary>
 		/// <returns>a list of modified ECh ReportedPerson</returns>
-		public List<EChReportedPerson> GetFamilyToChange()
+		public List<System.Tuple<EChReportedPerson,EChReportedPerson>> GetFamilyToChange()
 		{
 			var FamilyToCheck = from e in DicFamilyB
 								where DicFamilyA.ContainsKey (e.Key)
@@ -69,7 +69,7 @@ namespace Epsitec.Aider.Data.ECh
 			var FamilyToChange = (from c in FamilyToCheck
 								  join e in DicFamilyA on c.Key equals e.Key
 								  where !c.Value.CheckData (e.Value.Address.HouseNumber, e.Value.Address.CountryCode, e.Value.Address.AddressLine1, e.Value.Address.Street, e.Value.Address.SwissZipCode, e.Value.Address.SwissZipCodeAddOn, e.Value.Address.SwissZipCodeId, e.Value.Address.Town)
-								  select c.Value).ToList ();
+                                  select System.Tuple.Create(c.Value, e.Value)).ToList();
 
 			return FamilyToChange;
 		}

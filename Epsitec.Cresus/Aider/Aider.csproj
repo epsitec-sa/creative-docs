@@ -108,7 +108,7 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ParishAssignationFixer.cs" />
     <Compile Include="Data\Job\ParticipationFixer.cs" />
-    <Compile Include="Data\Job\UpdateEchData.cs" />
+    <Compile Include="Data\Job\UpdateEChData.cs" />
     <Compile Include="Data\Subscription\DistributionMode.cs" />
     <Compile Include="Data\Subscription\Subscription.cs" />
     <Compile Include="Data\Subscription\SubscriptionDataLoader.cs" />
