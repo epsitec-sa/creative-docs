@@ -3,9 +3,11 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-using System;
+using Epsitec.Data.Platform;
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Epsitec.Aider.Data.Common
@@ -21,6 +23,7 @@ namespace Epsitec.Aider.Data.Common
 			this.townCorrections = new Dictionary<Tuple<string, string>, Tuple<string, string>> ();
 			this.streetCorrections = new Dictionary<Tuple<string, string, int?, int, string>, Tuple<string, string, int?, int, string>> ();
 			this.townChecker = new TownChecker ();
+			this.addressPatchEngine = new AddressPatchEngine ();
 		}
 
 
@@ -66,7 +69,7 @@ namespace Epsitec.Aider.Data.Common
 			var saveZipCodeInt = zipCodeInt;
 			var saveTown = town;
 
-			AddressPatchEngine.Current.FixAddress
+			this.addressPatchEngine.FixAddress
 			(
 				ref firstAddressLine, ref streetName, houseNumber, ref zipCodeInt,
 				ref zipCodeAddOn, ref zipCodeId, ref town
@@ -125,6 +128,12 @@ namespace Epsitec.Aider.Data.Common
 
 				Console.WriteLine (message);
 			}
+			Console.WriteLine ("=================================================================");
+			Console.WriteLine ("Street correction failures");
+			foreach (var failure in this.addressPatchEngine.GetFailures ())
+			{
+				Console.WriteLine (failure);
+			}
 		}
 
 
@@ -136,6 +145,9 @@ namespace Epsitec.Aider.Data.Common
 
 
 		private readonly TownChecker townChecker;
+
+
+		private readonly AddressPatchEngine addressPatchEngine;
 
 
 	}
