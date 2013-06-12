@@ -110,12 +110,15 @@
     <Compile Include="Data\Job\ParticipationFixer.cs" />
     <Compile Include="Data\Job\UpdateEchData.cs" />
     <Compile Include="Data\Subscription\DistributionMode.cs" />
+    <Compile Include="Data\Subscription\Subscription.cs" />
+    <Compile Include="Data\Subscription\SubscriptionDataLoader.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileLine.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileWriter.cs" />
     <Compile Include="Data\Subscription\SubscriptionHouseholdComparer.cs" />
     <Compile Include="Data\Subscription\SubscriptionGenerator.cs" />
     <Compile Include="Data\Subscription\SubscriptionHousehold.cs" />
     <Compile Include="Data\ECh\EchDataDownloader.cs" />
+    <Compile Include="Data\Subscription\SubscriptionDataReader.cs" />
     <Compile Include="Data\Subscription\SubscriptionUploader.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />

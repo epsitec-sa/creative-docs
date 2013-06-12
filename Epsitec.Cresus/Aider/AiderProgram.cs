@@ -124,6 +124,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-importsubscriptions"))
+				{
+					AiderProgram.RunSubscriptionImportation (args);
+					return;
+				}
+
 				if (args.Contains ("-exportsubscriptions"))				//	-exportsubscriptions -output:Q:\output.txt -error:Q:\error.log
 				{
 					AiderProgram.RunSubscriptionExportation (args);
@@ -275,6 +281,18 @@ namespace Epsitec.Aider
 					coreData, parishRepository, subscribeHouseholds,subscribeLegalPersons
 				);
 			});
+		}
+
+		private static void RunSubscriptionImportation(string[] args)
+		{
+			var fileWeb = AiderProgram.GetFile (args, "-web:", true);
+			var fileDoctor = AiderProgram.GetFile (args, "-doctor:", true);
+			var filePro = AiderProgram.GetFile (args, "-pro:", true);
+
+			var subscriptions = SubscriptionDataLoader.LoadSubscriptions
+			(
+				fileWeb, fileDoctor, filePro
+			);
 		}
 
 		private static void RunSubscriptionExportation(string[] args)
