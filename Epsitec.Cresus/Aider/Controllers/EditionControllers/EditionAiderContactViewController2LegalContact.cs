@@ -12,18 +12,18 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	[ControllerSubType (2)]
-	internal sealed class EditionAiderContactViewController2 : EditionViewController<AiderContactEntity>
+	internal sealed class EditionAiderContactViewController2LegalContact : EditionViewController<AiderContactEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderContactEntity> wall)
 		{
 			wall.AddBrick ()
-				.Title (Resources.Text ("Détails du ménage"))
-				.Icon ("Data.AiderAddress")
+				.Title (Resources.Text ("Identité de la personne de contact"))
+				.Icon (AiderPersonEntity.GetIconName ("Data", this.Entity.PersonMrMrs, this.Entity.LegalPerson.Language))
 				.Input ()
-					.Field (x => x.HouseholdRole)
-					.Field (x => x.Household.HouseholdMrMrs)
-					.Field (x => x.Household.HouseholdName)
+					.Field (x => x.PersonMrMrs)
+					.Field (x => x.PersonFullName)
 				.End ();
 		}
 	}
 }
+

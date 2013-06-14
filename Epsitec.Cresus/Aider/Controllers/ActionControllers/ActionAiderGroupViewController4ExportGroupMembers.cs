@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Controllers.SpecialFieldControllers;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
@@ -14,12 +17,12 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (3)]
-	public sealed class ActionAiderGroupViewController3 : ActionViewController<AiderGroupEntity>
+	[ControllerSubType (4)]
+	public sealed class ActionAiderGroupViewController4ExportGroupMembers : ActionViewController<AiderGroupEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return "Importer les membres d'un groupe";
+			return "Exporter les membres vers un groupe";
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -27,23 +30,30 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<AiderGroupEntity, Date?, FormattedText> (this.Execute);
 		}
 
-		private void Execute(AiderGroupEntity source, Date? startDate, FormattedText comment)
+		private void Execute(AiderGroupEntity target, Date? startDate, FormattedText comment)
 		{
-			if (source.IsNull ())
+			if (target.IsNull ())
 			{
 				var message = "Aucun groupe séléctionné.";
 
 				throw new BusinessRuleException (message);
 			}
 
-			if (!this.Entity.CanBeEditedByCurrentUser ())
+			if (!target.CanHaveMembers ())
+			{
+				var message = "Ce groupe ne peut pas avoir de membres.";
+
+				throw new BusinessRuleException (message);
+			}
+
+			if (!target.CanBeEditedByCurrentUser ())
 			{
 				var message = "Vous n'avez pas le droit d'éditer ce groupe";
 
 				throw new BusinessRuleException (message);
 			}
 
-			this.Entity.ImportMembers (this.BusinessContext, source, startDate, comment);
+			target.ImportMembers (this.BusinessContext, this.Entity, startDate, comment);
 		}
 
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)

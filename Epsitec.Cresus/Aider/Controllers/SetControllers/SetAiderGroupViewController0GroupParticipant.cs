@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
@@ -10,19 +13,14 @@ using Epsitec.Cresus.Core.Controllers.SetControllers;
 
 using Epsitec.Cresus.Core.Data;
 
-using Epsitec.Cresus.Core.Entities;
-
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
 
 
 namespace Epsitec.Aider.Controllers.SetControllers
 {
 	[ControllerSubType (0)]
-	internal sealed class SetAiderGroupViewController0 : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderContactEntity>
+	internal sealed class SetAiderGroupViewController0GroupParticipant : SetViewController<AiderGroupEntity, AiderGroupParticipantEntity, AiderContactEntity>
 	{
 		public override string GetIcon()
 		{

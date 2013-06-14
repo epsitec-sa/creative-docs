@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	//	@PA: faut-il déplacer ce contrôleur pour qu'il manipule des contacts?
 
 	[ControllerSubType (2)]
-	public sealed class ActionAiderPersonViewController2 : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
+	public sealed class ActionAiderPersonViewController2AddToGroup : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
 		public override FormattedText GetTitle()
 		{

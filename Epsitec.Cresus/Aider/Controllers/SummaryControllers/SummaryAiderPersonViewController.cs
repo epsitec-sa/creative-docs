@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
@@ -43,7 +44,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (p => p.GetGroupTitle ())
 				.Text (p => p.GetGroupText ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.SpecialController1);
+				.WithSpecialController (typeof (SummaryAiderPersonViewController1Groups));
 
 			var households = this.Entity.Households;
 			var contacts   = this.Entity.Contacts;
@@ -72,7 +73,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Template ()
 						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
 					.End ()
-					.Attribute (BrickMode.SpecialController1);
+					.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 			}
 
 			wall.AddBrick (x => x.Comment)

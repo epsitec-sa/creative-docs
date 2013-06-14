@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Data.Common;
 
 using Epsitec.Aider.Entities;
 
@@ -18,7 +21,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (2)]
-	public sealed class ActionAiderGroupViewController2 : ActionViewController<AiderGroupEntity>
+	public sealed class ActionAiderGroupViewController2MoveGroup : ActionViewController<AiderGroupEntity>
 	{
 		public override FormattedText GetTitle()
 		{

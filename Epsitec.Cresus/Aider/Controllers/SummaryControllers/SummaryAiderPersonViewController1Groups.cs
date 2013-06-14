@@ -1,6 +1,7 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
@@ -14,7 +15,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	[ControllerSubType (1)]
-	public sealed class SummaryAiderPersonViewController1 : SummaryViewController<AiderPersonEntity>
+	public sealed class SummaryAiderPersonViewController1Groups : SummaryViewController<AiderPersonEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
@@ -22,8 +23,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableAction (2)
-				.EnableAction (3)
+				.EnableAction<ActionAiderPersonViewController2AddToGroup> ()
+				.EnableAction<ActionAiderPersonViewController3RemoveFromGroup> ()
 				.Template ()
 					.Text (g => g.GetSummaryWithHierarchicalGroupName ())
 				.End ();

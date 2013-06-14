@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Controllers.SpecialFieldControllers;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
@@ -15,7 +18,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (5)]
-	public sealed class ActionAiderGroupViewController5 : ActionViewController<AiderGroupEntity>
+	public sealed class ActionAiderGroupViewController5MergeGroup : ActionViewController<AiderGroupEntity>
 	{
 		public override FormattedText GetTitle()
 		{

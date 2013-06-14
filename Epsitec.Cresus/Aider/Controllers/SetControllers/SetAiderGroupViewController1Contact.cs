@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support;
 
@@ -9,15 +12,13 @@ using Epsitec.Cresus.Core.Controllers.SetControllers;
 
 using Epsitec.Cresus.Core.Data;
 
-using System;
-
 using System.Collections.Generic;
 
 
 namespace Epsitec.Aider.Controllers.SetControllers
 {
 	[ControllerSubType (1)]
-	internal sealed class SetAiderGroupViewController1 : SetViewController<AiderGroupEntity, AiderContactEntity, AiderContactEntity>
+	internal sealed class SetAiderGroupViewController1Contact : SetViewController<AiderGroupEntity, AiderContactEntity, AiderContactEntity>
 	{
 		public override string GetIcon()
 		{
@@ -63,17 +64,17 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		protected override void SetupPickDataSetAccessor(AiderGroupEntity entity, DataSetAccessor dataSetAccessor)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		protected override void AddItems(IEnumerable<AiderContactEntity> entitiesToAdd)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 
 		protected override void RemoveItems(IEnumerable<AiderContactEntity> entitiesToRemove)
 		{
-			throw new NotImplementedException ();
+			throw new System.NotImplementedException ();
 		}
 	}
 }

@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
 
@@ -13,7 +16,7 @@ using System.Collections.Generic;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (3)]
-	public sealed class ActionAiderPersonViewController3 : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
+	public sealed class ActionAiderPersonViewController3RemoveFromGroup : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
 		public override FormattedText GetTitle()
 		{

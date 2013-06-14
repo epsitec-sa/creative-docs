@@ -3,6 +3,7 @@
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Controllers.EditionControllers;
 
 using Epsitec.Common.Support;
 
@@ -25,7 +26,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (Resources.Text ("Adresse"))
 				.Text (this.Entity.Address.GetSummary ())
 				.Icon ("Data.AiderAddress")
-				.Attribute (BrickMode.SpecialController1);
+				.WithSpecialController (typeof (EditionAiderHouseholdViewController1Address));
 
 			wall.AddBrick (h => h.Members)
 				.Attribute (BrickMode.HideAddButton)

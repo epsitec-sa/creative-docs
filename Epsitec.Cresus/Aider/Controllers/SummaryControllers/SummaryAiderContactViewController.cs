@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -11,6 +12,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
+
 using System.Linq;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -52,7 +54,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Title (Resources.Text ("Adresse de domicile"))
 								.Text (contact.Address.GetSummary ())
 								.Icon ("Data.AiderAddress")
-								.Attribute (BrickMode.SpecialController1);
+								.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 						}
 
 						if (household.Members.Count > 1)
@@ -85,7 +87,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title (TextFormatter.FormatText (contact.AddressType))
 							.Text (contact.Address.GetSummary ())
 							.Icon ("Data.AiderAddress")
-							.Attribute (BrickMode.SpecialController1);
+							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
 					break;
 
@@ -98,7 +100,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						wall.AddBrick (x => x.LegalPerson)
 							.Title ("Adresse de base")
 							.Text (x => x.Address.GetSummary ())
-							.Attribute (BrickMode.SpecialController1);
+							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
 					if (string.IsNullOrEmpty (contact.PersonFullName) == false)
 					{
@@ -108,7 +110,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Icon (AiderPersonEntity.GetIconName ("Data", contact.PersonMrMrs, contact.LegalPerson.Language))
 							.Title ("Personne de contact")
 							.Text (personSummary)
-							.Attribute (BrickMode.SpecialController3);
+							.WithSpecialController (typeof (EditionAiderContactViewController2LegalContact));
 					}
 					
 					if ((contact.Address.IsNotNull ()) &&
@@ -118,7 +120,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title ("Adresse de contact")
 							.Text (contact.Address.GetSummary ())
 							.Icon ("Data.AiderAddress")
-							.Attribute (BrickMode.SpecialController1);
+							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
 					break;
 
