@@ -13,6 +13,8 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.Core.Business.UserManagement;
+
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
 	[ControllerSubType (0)]
@@ -20,6 +22,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 	{
 		protected override void GetForm(ActionBrick<AiderLegalPersonEntity, SimpleBrick<AiderLegalPersonEntity>> action)
 		{
+			var currentUser = UserManager.Current.AuthenticatedUser;
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+
 			action
 				.Title ("Créer une nouvelle personne morale")
 				.Field<string> ()
@@ -38,6 +43,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Localité")
+						.WithFavorites (favorites)
 				.End ()
 				.Field<string> ()
 					.Title ("Rue avec numéro de maison")
