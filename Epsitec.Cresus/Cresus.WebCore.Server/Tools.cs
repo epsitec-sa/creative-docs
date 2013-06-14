@@ -10,8 +10,6 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Business;
 
-using System;
-
 using System.Collections.Generic;
 
 using System.Diagnostics;
@@ -24,19 +22,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server
 {
-
-
 	internal static class Tools
 	{
-
-
-		public static IDisposable Bind(this BusinessContext businessContext, params AbstractEntity[] entities)
+		public static System.IDisposable Bind(this BusinessContext businessContext, params AbstractEntity[] entities)
 		{
 			return businessContext.Bind ((IEnumerable<AbstractEntity>) entities);
 		}
 
-
-		public static IDisposable Bind(this BusinessContext businessContext, IEnumerable<AbstractEntity> entities)
+		public static System.IDisposable Bind(this BusinessContext businessContext, IEnumerable<AbstractEntity> entities)
 		{
 			var entitiesToDispose = new List<AbstractEntity> ();
 
@@ -55,7 +48,7 @@ namespace Epsitec.Cresus.WebCore.Server
 					entitiesToDispose.Add (entity);
 				}
 			}
-			catch (Exception)
+			catch
 			{
 				foreach (var entity in entitiesToDispose)
 				{
@@ -65,7 +58,7 @@ namespace Epsitec.Cresus.WebCore.Server
 				throw;
 			}
 
-			Action action = () =>
+			System.Action action = () =>
 			{
 				foreach (var entity in entities)
 				{
@@ -91,7 +84,6 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole (message);
 		}
 
-
 		public static void LogError(string message)
 		{
 			Tools.LogMessage (message);
@@ -103,33 +95,18 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private static string GetErrorFilePath()
 		{
-			var d = DateTime.Now;
-			var template = "crash {0} {1:0000}-{2:00}-{3:00} {4:00}-{5:00}-{6:00}.log";
-			var name = string.Format (template, Guid.NewGuid(), d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second);
+			var now    = System.DateTime.Now;
+			var format = "crash {1:0000}-{2:00}-{3:00} {4:00}-{5:00}-{6:00} {0}.log";
+			var name   = string.Format (format, System.Guid.NewGuid (), now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 			
 			return Path.Combine
 			(
-				Environment.GetFolderPath (Environment.SpecialFolder.CommonApplicationData),
+				System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData),
 				"Epsitec",
 				"WebCore",
 				"Logs",
 				name
 			);
 		}
-
-
-		public static void Zip(string inputFilePath, string outputFilePath)
-		{
-			using (var inputStream = File.OpenRead (inputFilePath))
-			using (var outputStream = File.Create (outputFilePath))
-			using (var compressedStream = new GZipStream (outputStream, CompressionMode.Compress))
-			{
-				inputStream.CopyTo (compressedStream);
-			}
-		}
-
-
 	}
-
-
 }

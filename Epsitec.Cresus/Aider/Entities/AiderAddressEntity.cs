@@ -210,7 +210,20 @@ namespace Epsitec.Aider.Entities
 			var houseNumber = this.HouseNumber.HasValue ? InvariantConverter.ToString (this.HouseNumber.Value) : "";
 			var complement  = this.HouseNumberComplement ?? "";
 
-			value = string.Concat (houseNumber, " ", complement).Trim ();
+			switch (complement.Length)
+			{
+				case 0:
+					value = houseNumber;
+					break;
+				
+				case 1:
+					value = houseNumber+complement;
+					break;
+
+				default:
+					value = string.Concat (houseNumber, " ", complement);
+					break;
+			}
 		}
 
 		partial void SetHouseNumberAndComplement(string value)

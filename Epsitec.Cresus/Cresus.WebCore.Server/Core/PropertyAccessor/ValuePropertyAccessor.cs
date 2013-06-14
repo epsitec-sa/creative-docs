@@ -1,21 +1,18 @@
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
-
-using System;
 
 using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
-
-
 	internal sealed class ValuePropertyAccessor : AbstractPropertyAccessor
 	{
-
-
 		public ValuePropertyAccessor(LambdaExpression lambda, FieldType fieldType, string id)
 			: base (lambda, fieldType, id)
 		{
@@ -34,7 +31,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 			return value;
 		}
-		
 
 		public override void SetValue(AbstractEntity entity, object value)
 		{
@@ -46,7 +42,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			base.SetValue (entity, value);
 		}
 
-
 		public override IValidationResult CheckValue(object value)
 		{
 			if (this.fieldBinder != null)
@@ -57,6 +52,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 				{
 					return validationResult;
 				}
+
+				//	Before checking if the constraints for the high level type of the
+				//	associated property are met, convert the entered data so that it
+				//	has the same format as what it will have when setting the value.
+
+				value = this.ConvertFromUI (value);
 			}
 
 			var valid = this.CheckValueInternal (value);
@@ -77,7 +78,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 			return highLevelType.IsValidValue (value);
 		}
-
 
 		private object ConvertToUI(object value)
 		{
@@ -101,7 +101,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			}
 		}
 
-
 		private object ConvertFromUI(object value)
 		{
 			if (value is FormattedText)
@@ -123,7 +122,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 				return value;
 			}
 		}
-
 
 		private IValidationResult CheckValueFromUI(object value)
 		{
@@ -148,10 +146,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		}
 
 
-		private readonly IFieldBinder fieldBinder;
-
-
+		private readonly IFieldBinder			fieldBinder;
 	}
-
-
 }

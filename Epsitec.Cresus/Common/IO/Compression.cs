@@ -49,7 +49,29 @@ namespace Epsitec.Common.IO
 			
 			base.Close ();
 		}
+
 		
+		public static void GZipCompressFile(string inputFilePath, string outputFilePath)
+		{
+			using (var inputStream = System.IO.File.OpenRead (inputFilePath))
+			using (var outputStream = System.IO.File.Create (outputFilePath))
+			using (var compressedStream = new System.IO.Compression.GZipStream (outputStream, System.IO.Compression.CompressionMode.Compress))
+			{
+				inputStream.CopyTo (compressedStream);
+			}
+		}
+
+		public static void GZipDecompressFile(string inputFilePath, string outputFilePath)
+		{
+			using (var inputStream = System.IO.File.OpenRead (inputFilePath))
+			using (var outputStream = System.IO.File.Create (outputFilePath))
+			using (var decompressedStream = new System.IO.Compression.GZipStream (inputStream, System.IO.Compression.CompressionMode.Decompress))
+			{
+				decompressedStream.CopyTo (outputStream);
+			}
+		}
+
+
 		
 		public static System.IO.Stream CreateTransparentStream(System.IO.Stream stream)
 		{

@@ -621,6 +621,23 @@ namespace Epsitec.Cresus.Core
 			DbInfrastructure.RestoreDatabase (dbAccess, remoteFilePath);
 		}
 
+		public static string GetLocalDatabaseFilePath(string remoteFilePath, DbAccess dbAccess)
+		{
+			//	That's some kind of hacky way to get the directory where a database related file
+			//	is stored (such as a backup).
+			
+			if (dbAccess.IsLocalHost)
+			{
+				var databaseFile      = DbFactory.GetDatabaseFilePaths (dbAccess).Single ();
+				var databaseDirectory = System.IO.Path.GetDirectoryName (databaseFile);
+
+				return System.IO.Path.Combine (databaseDirectory, remoteFilePath);
+			}
+			else
+			{
+				return null;
+			}
+		}
 
 
 		public void SetupDataContext(DataContext dataContext)

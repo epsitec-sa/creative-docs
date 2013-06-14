@@ -169,59 +169,54 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		{
 			Logger.LogToConsole ("Backing up database...");
 
-			var backupFileName = this.GetBackupFileName ();
+			var backupFileName = BackupManager.GetBackupFileName ();
+			var backupFilePath = CoreData.GetLocalDatabaseFilePath (backupFileName, this.dbAccess);
 
 			var success = CoreData.BackupDatabase (backupFileName, this.dbAccess);
 
 			if (!success)
 			{
-				Logger.LogToConsole ("Back up failed");
+				Logger.LogToConsole ("Backup failed");
 				return;
 			}
 
-			// If the database is not stored on the localhost, we can't process it further and we
-			// exit the method.
-			if (!this.dbAccess.IsLocalHost)
+			//	If the database is not stored on the localhost, we can't process it further and we
+			//	exit the method.
+			if (backupFilePath == null)
 			{
 				Logger.LogToConsole ("Database backed up on server to " + backupFileName);
 				return;
 			}
 
-			// That's some kind of hacky way to get the directory where the backup has been made.
-			var databaseFile = DbFactory.GetDatabaseFilePaths (this.dbAccess).Single ();
-			var databaseDirectory = Path.GetDirectoryName (databaseFile);
+			var gzippedBackupFilePath = backupFilePath + ".gz";
+			var gzippedBackupFileName = Path.GetFileName (backupFilePath);
 
-			var backupFilePath = Path.Combine (databaseDirectory, backupFileName);
-
-			var zippedBackupFileName = backupFileName + ".zip";
-			var zippedBackupFilePath = Path.Combine (databaseDirectory, zippedBackupFileName);
-
-			Tools.Zip (backupFilePath, zippedBackupFilePath);
+			Compression.GZipCompressFile (backupFilePath, gzippedBackupFilePath);
 			File.Delete (backupFilePath);
 
 			var finalBackupDirectoryPath = this.backupDirectory.FullName;
-			var finalBackupFilePath = Path.Combine (finalBackupDirectoryPath, zippedBackupFileName);
+			var finalBackupFilePath = Path.Combine (finalBackupDirectoryPath, gzippedBackupFileName);
 
 			if (!Directory.Exists (finalBackupDirectoryPath))
 			{
 				Directory.CreateDirectory (finalBackupDirectoryPath);
 			}
 
-			File.Move (zippedBackupFilePath, finalBackupFilePath);
+			File.Move (gzippedBackupFilePath, finalBackupFilePath);
 
 			Logger.LogToConsole ("Database backed up locally to " + finalBackupFilePath);
 		}
 
 
-		private string GetBackupFileName()
+		private static string GetBackupFileName()
 		{
 			var database = CoreContext.DatabaseName;
 			
-			var time = DateTime.Now;
-			var year = time.Year;
-			var month = time.Month;
-			var day = time.Day;
-			var hour = time.Hour;
+			var time   = DateTime.Now;
+			var year   = time.Year;
+			var month  = time.Month;
+			var day    = time.Day;
+			var hour   = time.Hour;
 			var minute = time.Minute;
 			var second = time.Second;
 

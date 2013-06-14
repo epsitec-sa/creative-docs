@@ -137,7 +137,31 @@ namespace Epsitec.Cresus.Core
 		{
 			DbAccess dbAccess = CoreData.GetDatabaseAccess ();
 
-			CoreData.RestoreDatabase (path, dbAccess);
+			var backupFilePath = CoreData.GetLocalDatabaseFilePath (path, dbAccess);
+			var backupHeader   = new byte[2];
+
+			using (var file = System.IO.File.OpenRead (backupFilePath))
+			{
+				file.Read (backupHeader, 0, 2);
+			}
+
+			if ((backupHeader[0] == 0x1f) &&
+				(backupHeader[1] == 0x8b))
+			{
+				//	This seems to be a GZipped archive...
+
+				var outputFilePath = backupFilePath + ".tmp";
+
+				Epsitec.Common.IO.Compression.GZipDecompressFile (backupFilePath, outputFilePath);
+
+				CoreData.RestoreDatabase (path + ".tmp", dbAccess);
+
+				System.IO.File.Delete (outputFilePath);
+			}
+			else
+			{
+				CoreData.RestoreDatabase (path, dbAccess);
+			}
 		}
 
 		private static void ExecuteDatabaseDelete()
