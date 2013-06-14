@@ -220,7 +220,7 @@ namespace Epsitec.Aider.Data.Job
 					var aiderTown = aiderAddress.Town;
 
 					var message3 = "DB AIDER_ADDRESS:".PadRight (20) + aiderAddress.Street + ", "
-						+ aiderTown.SwissZipCode + ", " + aiderTown.SwissZipCodeAddOn + ", "
+						+ aiderTown.SwissZipCode + ", " + (SwissPostFullZip.GetZipCodeAddOn (aiderTown.SwissZipCodeAddOn) ?? "<null>") + ", "
 						+ aiderTown.SwissZipCodeId + ", " + aiderTown.Name + "\n"
 						+ "CORRECTING AIDER_ADDRESS";
 					

@@ -114,7 +114,11 @@ namespace Epsitec.Data.Platform.MatchSort
 			using (var dr = this.MessengerCommand.ExecuteReader ())
 			{
 				dr.Read ();
-				return dr.HasRows ? (int) dr.GetInt64 (0) : (int?) null;
+
+				//	dr.GetInt64(0) does generate a WARNING: Type mapping failed, returning default type Object for name "number(3)"
+				//	so we cannot use it, as it interferes too much with the logging...
+
+				return dr.HasRows ? Epsitec.Common.Types.InvariantConverter.ParseInt (dr.GetValues ()[0]) : (int?) null;
 			}
 		}
 

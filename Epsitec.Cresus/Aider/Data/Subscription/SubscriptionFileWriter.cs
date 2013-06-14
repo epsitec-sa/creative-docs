@@ -1099,7 +1099,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private static string GetZipCode(AiderTownEntity town)
 		{
 			return town.Country.IsSwitzerland ()
-				? InvariantConverter.ToString (town.SwissZipCode.Value) + town.SwissZipCodeAddOn
+				? Epsitec.Data.Platform.SwissPostFullZip.GetZipCode (town.SwissZipCode, town.SwissZipCodeAddOn)
 				: town.ZipCode;
 		}
 
@@ -1124,7 +1124,7 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 
 			var zipCode  = address.Town.SwissZipCode.ToString ();
-			var zipAddOn = address.Town.SwissZipCodeAddOn.ToString ();
+			var zipAddOn = Epsitec.Data.Platform.SwissPostFullZip.GetZipCodeAddOn (address.Town.SwissZipCodeAddOn);
 			var street   = address.StreetUserFriendly;
 			var number   = address.HouseNumber.HasValue
 				? InvariantConverter.ToString (address.HouseNumber.Value)

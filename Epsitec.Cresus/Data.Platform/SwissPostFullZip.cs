@@ -94,6 +94,35 @@ namespace Epsitec.Data.Platform
 		}
 
 		
+		public static string GetZipCode(int? zipCode, int? zipCodeAddOn = null)
+		{
+			if (zipCode == null)
+			{
+				return null;
+			}
+			else if (zipCodeAddOn == null)
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:0000}", zipCode.Value);
+			}
+			else
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:0000}{1:00}", zipCode.Value, zipCodeAddOn.Value);
+			}
+		}
+		
+		public static string GetZipCodeAddOn(int? value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+			else
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00}", value.Value);
+			}
+		}
+
+		
 		private readonly int					code;
 	}
 }
