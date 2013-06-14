@@ -1,13 +1,10 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Business;
-
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
-
 using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
@@ -17,6 +14,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 	{
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> action)
 		{
+			var currentUser = UserManager.Current.AuthenticatedUser;
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+
 			action
 				.Title ("Créer un nouveau ménage")
 				.Field<string> ()
@@ -31,6 +31,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Localité")
+					.WithFavorites (favorites)
 				.End ()
 				.Field<string> ()
 					.Title ("Rue")

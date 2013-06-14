@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Localité")
-						.WithFavorites (favorites)
+					.WithFavorites (favorites)
 				.End ()
 				.Field<string> ()
 					.Title ("Rue avec numéro de maison")
