@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Common.Types.Converters;
 
 
 namespace Epsitec.Aider.Entities
@@ -260,7 +261,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children, true);
 
-			var headLastnames = AiderHouseholdEntity.GetHeadLastnames (order, heads, children, false);
+			var headLastnames = AiderHouseholdEntity.GetHeadLastnames (order, heads, children, removePseudoDuplicates: true);
 			var headLastname = StringUtils.Join (" ", headLastnames);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
@@ -292,47 +293,67 @@ namespace Epsitec.Aider.Entities
 		{
 			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
 				.Select (p => p.eCH_Person.PersonOfficialName)
-				.Distinct ();
+				.Distinct ()
+				.ToList ();
 
-			// If we are asked to, we remove the pseudo duplicates here. What I called pseudo
-			// duplicates, are names that contains another. Like when we have a family where the
-			// wife has kept its maiden name and appended the name of her husband to it. For
-			// instance the husband is called "Albert Dupond" and the wife is called "Ginette
-			// Dupond-Dupuis" or "Ginette Dupuis-Dupond".
-			// The algorithm is really simple and might produce some false positives, because it
-			// does not consider whole names, but if the name of a person is included in another, it
-			// will remove it, like in "Dupo" and "Dupond", "Dupond" will be removed. If these cases
-			// occur, this method will need to be corrected.
+			//	If we are asked to, we remove the pseudo duplicates here. Pseudo duplicates are
+			//	names that contains another name. Like when we have a family where the wife has
+			//	kept its maiden name and appended the name of her husband to it.
+			//	For instance the husband is called "Albert Dupond" and the wife is called "Ginette
+			//	Dupond-Dupuis" or "Ginette Dupuis-Dupond".
 
 			if (removePseudoDuplicates)
 			{
-				// Here we order them be size, so that we know that a name can only be included in
-				// names that are after it in the list.
-				var tmp = headNames
+				//	Order the names by size, so that we know that a name can only be included in
+				//	names that are after it in the list.
+
+				var copy = headNames
 					.OrderBy (n => n.Length)
+					.Select (x => new { Original = x, LowerCase = TextConverter.ConvertToLowerAndStripAccents (x).Replace ('-', ' ') })
 					.ToList ();
 
-				for (int i = 0; i < tmp.Count; i++)
+				for (int i = 0; i < copy.Count; i++)
 				{
-					for (int j = i + 1; j < tmp.Count; j++)
-					{
-						// Here we compare with case insensitivity, so that we consider names like
-						// "von Siebenthal" and "Von Siebenthal" as pseudo duplicates.
-						var comparison = StringComparison.InvariantCultureIgnoreCase;
-						var isDuplicate= tmp[j].IndexOf (tmp[i], comparison) != -1;
+					var shorter = copy[i].LowerCase;
+					var length  = shorter.Length;
 
-						if (isDuplicate)
+					for (int j = i + 1; j < copy.Count; j++)
+					{
+						var longer = copy[j].LowerCase;
+
+						if (longer == shorter)
 						{
-							tmp.RemoveAt (j);
-							j--;
+							//	Exact duplicate based on lower-case accent-stripped name ("André" = "Andre",
+							//	"von Siebenthal" = "Von Siebenthal").
 						}
+						else
+						{
+							int pos = longer.IndexOf (shorter);
+
+							if (pos < 0)					//	nothing in common
+							{
+								continue;
+							}
+
+							int end = pos + shorter.Length;
+
+							if (((end < longer.Length) && (longer[end] != ' ')) ||
+								((pos > 0) && longer[pos-1] != ' '))
+							{
+								//	The longer word does not start or end with the short name, nor is it
+								//	part of the longer name...
+
+								continue;
+							}
+						}
+
+						headNames.Remove (copy[j].Original);
+						copy.RemoveAt (j);
 					}
 				}
-
-				headNames = tmp;
 			}
 
-			return headNames.ToList ();
+			return headNames;
 		}
 
 
