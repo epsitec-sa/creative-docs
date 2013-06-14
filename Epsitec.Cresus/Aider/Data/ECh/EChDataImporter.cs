@@ -263,8 +263,25 @@ namespace Epsitec.Aider.Data.ECh
 		private static AiderPersonEntity ImportPerson(BusinessContext businessContext, EChPerson eChPerson)
 		{
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+			
+			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
-			aiderPersonEntity.eCH_Person = ConvertEChPersonToEntity (eChPerson);
+			eChPersonEntity.PersonId = eChPerson.Id;
+			eChPersonEntity.PersonOfficialName = eChPerson.OfficialName;
+			eChPersonEntity.PersonFirstNames = eChPerson.FirstNames;
+			eChPersonEntity.PersonDateOfBirth = eChPerson.DateOfBirth;
+			eChPersonEntity.PersonSex = eChPerson.Sex;
+			eChPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
+			eChPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
+			eChPersonEntity.Origins = eChPerson.OriginPlaces
+				.Select (p => p.Name + " (" + p.Canton + ")")
+				.Join ("\n");
+			eChPersonEntity.AdultMaritalStatus = eChPerson.MaritalStatus;
+
+			eChPersonEntity.CreationDate = Date.Today;
+			eChPersonEntity.DataSource = Enumerations.DataSource.Government;
+			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
+			eChPersonEntity.RemovalReason = RemovalReason.None;
 
 			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
 			aiderPersonEntity.Confession = PersonConfession.Protestant;
@@ -274,7 +291,7 @@ namespace Epsitec.Aider.Data.ECh
 
 		public static eCH_PersonEntity ConvertEChPersonToEntity(EChPerson eChPerson)
 		{
-			var eChPersonEntity = new eCH_PersonEntity();
+			var eChPersonEntity = new eCH_PersonEntity(); //not sure?
 
 			eChPersonEntity.PersonId = eChPerson.Id;
 			eChPersonEntity.PersonOfficialName = eChPerson.OfficialName;
