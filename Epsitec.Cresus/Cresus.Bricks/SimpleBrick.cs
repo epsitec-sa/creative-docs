@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableAction, controllerSubTypeId));
 		}
-
+		
 		public SimpleBrick<T> EnableAction<T1>()
 		{
 			var ids = typeof (T1).GetCustomAttributes<BrickControllerSubTypeAttribute> (false).Select (x => x.Id);

@@ -71,6 +71,7 @@
     <Compile Include="Bricks\Factories\TextFieldDynamicFactory.cs" />
     <Compile Include="Bricks\FieldInfo.cs" />
     <Compile Include="Bricks\Helpers\DummyListEntity.cs" />
+    <Compile Include="Bricks\SimpleBrickExtensions.cs" />
     <Compile Include="Bricks\UIAction.cs" />
     <Compile Include="Bricks\UIGroupAction.cs" />
     <Compile Include="Bricks\UIMultiAction.cs" />
