@@ -37,7 +37,8 @@ namespace Epsitec.Aider.Data.Subscription
 			string town,
 			string country,
 			DistributionMode distributionMode,
-			bool isSwitzerland
+			bool isSwitzerland,
+			string canton
 		)
 		{
 			this.CheckArguments
@@ -61,6 +62,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.Town = town;
 			this.Country = country;
 			this.DistributionMode = distributionMode;
+			this.Canton = canton;
 		}
 
 
@@ -360,7 +362,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string Town;
 		public readonly string Country;
 		public readonly DistributionMode DistributionMode;
-
+		public readonly string Canton;
 
 		public static readonly int SubscriptionNumberLength = 10;
 		public static readonly int CopiesCountLength = 5;

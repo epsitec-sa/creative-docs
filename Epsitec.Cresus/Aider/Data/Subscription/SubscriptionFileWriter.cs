@@ -36,9 +36,12 @@ namespace Epsitec.Aider.Data.Subscription
 			this.coreData = coreData;
 			this.outputFile = outputFile;
 			this.errorFile = errorFile;
+			this.startTime = System.DateTime.UtcNow;
 
 			this.errors = new List<Tuple<string, string>> ();
 			this.postmanErrors = new List<Tuple<string, string>> ();
+			this.editionStats = new int[16];
+			this.countries = new HashSet<string> ();
 		}
 
 
@@ -49,6 +52,7 @@ namespace Epsitec.Aider.Data.Subscription
 			SubscriptionFileLine.Write (this.GetLines (), this.outputFile);
 
 			this.LogErrors ();
+			this.LogStats ();
 		}
 
 
@@ -65,6 +69,32 @@ namespace Epsitec.Aider.Data.Subscription
 					}
 				}
 			}
+		}
+
+		private void LogStats()
+		{
+			var lines = new List<string> ();
+			var time  = (int)((System.DateTime.UtcNow - this.startTime).TotalMinutes);
+			
+			lines.Add (string.Format ("Export du {0} à {1}, {2} minutes", System.DateTime.Now.ToShortDateString (), System.DateTime.Now.ToShortTimeString (), time));
+			lines.Add (string.Format ("Total: {0}", this.totalCount));
+			lines.Add (string.Format ("Vaud: {0}", this.totalVaud));
+			lines.Add (string.Format ("Suisse: {0}", this.totalSwiss));
+			lines.Add (string.Format ("Étranger: {0}", this.totalForeign));
+			lines.Add ("");
+			lines.Add ("Pays:");
+			lines.AddRange (this.countries.OrderBy (x => x));
+			lines.Add ("");
+
+			for (int i = 0; i < this.editionStats.Length; i++)
+			{
+				if (this.editionStats[i] != 0)
+				{
+					lines.Add (string.Format ("Edition {0} (N{0:X});{1}", i, this.editionStats[i]));
+				}
+			}
+
+			System.IO.File.WriteAllLines (this.outputFile.FullName + ".log", lines);
 		}
 
 
@@ -110,6 +140,32 @@ namespace Epsitec.Aider.Data.Subscription
 
 				if (line != null)
 				{
+					int id = line.EditionId[1];
+
+					if (id >= '0' && id <= '9')
+					{
+						id = id - '0';
+					}
+					else if (id >= 'A' && id <= 'F')
+					{
+						id = id - 'A' + 10;
+					}
+					else
+					{
+						throw new System.ArgumentException ();
+					}
+
+					int  count = line.CopiesCount;
+					bool swiss = line.Country == "Suisse";
+
+					this.editionStats[id] += count;
+					this.countries.Add (line.Country);
+					
+					this.totalCount   += count;
+					this.totalVaud    += (line.Canton == "VD") ? count : 0;
+					this.totalSwiss   += swiss ? count : 0;
+					this.totalForeign += swiss ? 0 : count;
+
 					yield return line;
 				}
 			}
@@ -154,6 +210,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var address = subscription.GetAddress ();
 			var town = address.Town;
 			var country = town.Country;
+			var canton = town.SwissCantonCode;
 
 			var subscriptionNumber = subscription.Id;
 			var copiesCount = subscription.Count;
@@ -205,7 +262,7 @@ namespace Epsitec.Aider.Data.Subscription
 			(
 				subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
 				addressComplement, street, houseNumber, postmanNumber, zipCode, townName,
-				countryName, DistributionMode.Surface, isSwitzerland
+				countryName, DistributionMode.Surface, isSwitzerland, canton
 			);
 		}
 
@@ -1175,6 +1232,8 @@ namespace Epsitec.Aider.Data.Subscription
 				+ number + ", " + complement;
 
 			Debug.WriteLine (message);
+			System.Console.WriteLine (message);
+
 			this.postmanErrors.Add (Tuple.Create (subscriptionId, message));
 
 			return null;
@@ -1187,6 +1246,13 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly List<Tuple<string, string>> errors;
 		private readonly List<Tuple<string, string>> postmanErrors;
 
+		private readonly int[] editionStats;
+		private readonly System.DateTime startTime;
+		private readonly HashSet<string> countries;
+		private int totalCount;
+		private int totalVaud;
+		private int totalSwiss;
+		private int totalForeign;
 
 		internal const string ErrorMessage = "Postman number not found for address: ";
 

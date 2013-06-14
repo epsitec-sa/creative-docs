@@ -75,6 +75,8 @@ namespace Epsitec.Aider.Data.Common
 
 				using (var businessContext = new BusinessContext (coreData, false))
 				{
+					System.Console.WriteLine ("Batch {0}...{1}, {2}", skip, skip+size-1, typeof (T).Name);
+
 					var batch = batchGetter (businessContext.DataContext, skip, size);
 
 					if (batch.Any ())

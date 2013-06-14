@@ -132,7 +132,7 @@ namespace Epsitec.Aider
 
 				if (args.Contains ("-exportsubscriptions"))				//	-exportsubscriptions -output:Q:\output.txt -error:Q:\error.log
 				{
-					AiderProgram.RunSubscriptionExportation (args);
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RunSubscriptionExportation (args));
 					return;
 				}
 
