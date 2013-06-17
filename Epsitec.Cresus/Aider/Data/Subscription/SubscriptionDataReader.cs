@@ -60,7 +60,7 @@ namespace Epsitec.Aider.Data.Subscription
 			new Dictionary<DoctorSubscriptionHeader, string> ()
 			{
 				{ DoctorSubscriptionHeader.CorporateName, "Société" },
-				{ DoctorSubscriptionHeader.Title, "Politesse" },
+				{ DoctorSubscriptionHeader.Title, "Civilité" },
 				{ DoctorSubscriptionHeader.Lastname, "Nom" },
 				{ DoctorSubscriptionHeader.Firstname, "Prénom" },
 				{ DoctorSubscriptionHeader.Address1, "Adresse 1" },
