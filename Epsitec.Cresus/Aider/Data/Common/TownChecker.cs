@@ -101,6 +101,7 @@ namespace Epsitec.Aider.Data.Common
 			TownChecker.Add (corrections, "1042", "malapalud", "1042", "Assens");
 			TownChecker.Add (corrections, "1445", "peney vuiteboeuf", "1445", "Vuiteboeuf");
 			TownChecker.Add (corrections, "1454", "la chaux", "1454", "L'Auberson");
+			TownChecker.Add (corrections, "1838", "rougemont", "1659", "Rougemont");
 
 			return corrections;
 		}
