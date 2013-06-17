@@ -887,7 +887,11 @@ namespace Epsitec.Aider.Data.Eerv
 			aiderAddress.Street = eervAddress.StreetName;
 			aiderAddress.HouseNumber = eervAddress.HouseNumber;
 			aiderAddress.HouseNumberComplement = eervAddress.HouseNumberComplement;
-			aiderAddress.Town = aiderTowns.GetTown (eervAddress);
+
+			var zipCode = eervAddress.ZipCode;
+			var townName = eervAddress.Town;
+			var countryCode = eervAddress.CountryCode;
+			aiderAddress.Town = aiderTowns.GetTown (zipCode, townName, countryCode);
 		}
 
 
