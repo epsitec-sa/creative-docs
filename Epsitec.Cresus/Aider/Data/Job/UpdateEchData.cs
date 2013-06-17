@@ -20,6 +20,10 @@ namespace Epsitec.Aider.Data.Job
 			{
 
                 UpdateEChData.Comparer = new EChDataComparer(oldEchFile, newEchFile);
+
+                UpdateEChData.Comparer.AnalyseChanges();
+
+                /*
                 if (UpdateEChData.UpdateEchPerson(coreData))
                 {
                     UpdateEChData.UpdateEchReportedPersons(coreData);
@@ -27,7 +31,7 @@ namespace Epsitec.Aider.Data.Job
                 else
                 {
                     Console.WriteLine("ECH DATA UPDATER : FAIL... VERIFY YOUR DATA");
-                }
+                }*/
             }
             else
             {

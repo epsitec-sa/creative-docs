@@ -118,6 +118,315 @@ namespace Epsitec.Aider.Data.ECh
 			return PersonToChange;
 		}
 
+
+        public void AnalyseChanges()
+        {
+            var familyToAdd = new Dictionary<string, EChReportedPerson>();
+            var familyToRemove = new Dictionary<string, EChReportedPerson>();
+            var personToAdd = new Dictionary<string, EChPerson>();
+            var personToRemove = new Dictionary<string, EChPerson>();
+
+            var newFamily = new List<EChReportedPerson>();
+            var newFamilyPersonOnly = new List<EChReportedPerson>();
+            var newFamilyPersonOnlyWithChildren = new List<EChReportedPerson>();
+            var newBirth = new List<EChPerson>();
+            var childMissing = new List<EChPerson>();
+            var gainMajority = new List<EChReportedPerson>();
+            var missingFamily = new List<EChReportedPerson>();
+            var missingFamilyPersonOnly = new List<EChReportedPerson>();
+            var missingFamilyPersonOnlyWithChildren = new List<EChReportedPerson>();
+            var errorFamily = new List<EChReportedPerson>();
+
+            var addCaseToResolve = new List<EChReportedPerson>();
+            var remCaseToResolve = new List<EChReportedPerson>();
+
+
+
+            foreach (var person in this.GetPersonToAdd())
+            {
+                personToAdd.Add(person.Id, person);
+            }
+
+            foreach (var person in this.GetPersonToRemove())
+            {
+                personToRemove.Add(person.Id, person);
+            }
+
+            foreach (var family in this.GetFamilyToAdd())
+            {
+                familyToAdd.Add(family.FamilyKey, family);
+            }
+
+            foreach (var family in this.GetFamilyToRemove())
+            {
+                familyToRemove.Add(family.FamilyKey, family);
+            }
+
+            foreach (var family in familyToAdd.Values)
+            {
+                //check adult composition
+                if (family.Adult2 != null)
+                {
+                    var isNewFamily = isNewFamilyArrival(family, personToAdd); //check for a completely new family
+                    if (isNewFamily)
+                    {
+                        newFamily.Add(family);
+                    }
+                    else
+                    {
+                        foreach (var child in family.Children)
+                        {
+                            if (personToAdd.ContainsKey(child.Id))
+                            {
+                                //birth!
+                                newBirth.Add(child);
+                            }
+                            if (personToRemove.ContainsKey(child.Id))
+                            {
+                                //Miss :/
+                                childMissing.Add(child);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //check mono-adult cases
+                    if (personToAdd.ContainsKey(family.Adult1.Id))
+                    {
+                        if (family.Children.Count > 0)
+                        {
+                            newFamilyPersonOnlyWithChildren.Add(family);
+                        }
+                        else
+                        {
+                            newFamilyPersonOnly.Add(family);
+                        }
+                        
+                    }
+                    else
+                    {
+                        addCaseToResolve.Add(family);
+                    }
+                }
+            }
+
+            foreach (var family in familyToRemove.Values)
+            {
+                //check adult composition
+                if (family.Adult2 != null)
+                {
+                    var isFamilyDep = isFamilyDeparture(family, personToRemove); //check for a completely removal of the family in the register
+                    if (isFamilyDep)
+                    {
+                        missingFamily.Add(family);
+                    }
+                    else
+                    {
+                        foreach (var child in family.Children)
+                        {
+                            if (familyToAdd.ContainsKey(child.Id))
+                            {
+                                //Majority? 
+                                gainMajority.Add(familyToAdd[child.Id]);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //check mono-adult cases
+                    if (personToRemove.ContainsKey(family.Adult1.Id))
+                    {
+
+                        if (family.Children.Count > 0)
+                        {
+                            missingFamilyPersonOnlyWithChildren.Add(family);
+                        }
+                        else
+                        {
+                            missingFamilyPersonOnly.Add(family);
+                        }
+                    }
+                    else
+                    {
+                        remCaseToResolve.Add(family);
+                    }
+                } 
+            }
+
+
+            //A LITTLE REPORT IN MARKDOWN ;)
+            TextWriter tw = new StreamWriter("s:\\EChUpdateAnalyse.md");
+
+            tw.WriteLine("# Rapport Analyse ECH du " + DateTime.Now);
+            tw.WriteLine("## Résumé des modifications détéctée");
+            tw.WriteLine((newFamily.Count) + " familles sont arrivées dans le registre");
+            tw.WriteLine("");
+            tw.WriteLine(newFamilyPersonOnlyWithChildren.Count + " ménages mono-parentaux sont arrivées dans le registre");
+            tw.WriteLine("");
+            tw.WriteLine(missingFamilyPersonOnlyWithChildren.Count + " ménages mono-parentaux sont sortis du registre");
+            tw.WriteLine("");
+            tw.WriteLine((missingFamily.Count) + " familles sont sorties du registre");
+            tw.WriteLine("");
+            tw.WriteLine(newFamilyPersonOnly.Count + " personnes seules sont arrivées dans le registre");
+            tw.WriteLine("");
+            tw.WriteLine(gainMajority.Count + " cas de majorité");
+            tw.WriteLine("");
+            tw.WriteLine((missingFamilyPersonOnly.Count) + " personnes seules sont sorties registre");
+            tw.WriteLine("");
+            var structAddCount = (familyToAdd.Count - (newFamily.Count + newFamilyPersonOnly.Count + newFamilyPersonOnlyWithChildren.Count));
+            tw.WriteLine( structAddCount  + " ménages a recréer suite a une modification de leurs structures");
+            tw.WriteLine("");
+            tw.WriteLine(newBirth.Count + " naissances dans ces restructurations");
+            tw.WriteLine("");
+            tw.WriteLine(childMissing.Count + " enfants sortis du registre lors de ces restructurations");
+            tw.WriteLine("");
+            var structRemoveCount = (familyToRemove.Count - (missingFamily.Count + missingFamilyPersonOnly.Count + missingFamilyPersonOnlyWithChildren.Count));
+            tw.WriteLine(structRemoveCount  + " ménages a supprimer suite a une modification de leurs structures");
+            tw.WriteLine("");
+            tw.WriteLine(addCaseToResolve.Count + " ajouts non-résolus");
+            tw.WriteLine("");
+            tw.WriteLine(remCaseToResolve.Count + " suppressions non-résolues");
+            tw.WriteLine("");
+            tw.WriteLine("## Nouvelles familles dans le registre (" + newFamily.Count + ")");
+            foreach (var family in newFamily)
+            {
+                tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) "+ family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName);
+                tw.WriteLine("");
+                foreach (var child in family.Children)
+                {
+                    tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName);
+                }
+            }
+
+            tw.WriteLine("## Nouvelles familles mono-parentales dans le registre (" + newFamilyPersonOnlyWithChildren.Count + ")");
+            foreach (var family in newFamilyPersonOnlyWithChildren)
+            {
+                tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+                tw.WriteLine("");
+                foreach (var child in family.Children)
+                {
+                    tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName);
+                }
+            }
+
+            tw.WriteLine("## Naissances (" + newBirth.Count + ")");
+            foreach (var child in newBirth)
+            {
+                tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName  + " né le " + child.DateOfBirth);
+            }
+
+            tw.WriteLine("## Enfants sortis du registre (" + childMissing.Count + ")");
+            foreach (var child in childMissing)
+            {
+                tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName);
+            }
+
+            tw.WriteLine("## Majorités (" + gainMajority.Count + ")");
+            foreach (var family in gainMajority)
+            {
+                tw.WriteLine(" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+            }
+
+            tw.WriteLine("## Nouvelles personnes seules dans le registre (" + newFamilyPersonOnly.Count + ")");
+            foreach (var family in newFamilyPersonOnly)
+            {
+                tw.WriteLine("* (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+            }
+
+            tw.WriteLine("## Départ de familles dans le registre (" + missingFamily.Count + ")");
+            foreach (var family in missingFamily)
+            {
+                tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName);
+                tw.WriteLine("");
+                foreach (var child in family.Children)
+                {
+                    tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName);
+                }
+            }
+
+            tw.WriteLine("## Départ de familles mono-parentales dans le registre (" + missingFamilyPersonOnlyWithChildren.Count + ")");
+            foreach (var family in missingFamilyPersonOnlyWithChildren)
+            {
+                tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+                tw.WriteLine("");
+                foreach (var child in family.Children)
+                {
+                    tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName);
+                }
+            }
+
+            tw.WriteLine("## Personnes seules sortantes du registre (" + missingFamilyPersonOnly.Count + ")");
+            foreach (var family in missingFamilyPersonOnly)
+            {
+                tw.WriteLine("* (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+            }
+
+
+            tw.WriteLine("# Erreurs concernant les ménages");
+            tw.WriteLine("### Famille avec personnes manquantes dans le registe (" + errorFamily.Count + ")");
+            foreach (var family in errorFamily)
+            {
+                tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
+                tw.WriteLine(" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+                tw.WriteLine("");
+                foreach (var child in family.Children)
+                {
+                    tw.WriteLine(" * (E) " + child.FirstNames + " " + child.OfficialName);
+                }
+            }
+            tw.Close();
+
+        }
+
+
+        private bool isNewFamilyArrival(EChReportedPerson family, Dictionary<string, EChPerson> personToAdd)
+        {
+            if (personToAdd.ContainsKey(family.Adult1.Id) && personToAdd.ContainsKey(family.Adult2.Id))
+            {
+                foreach (var child in family.Children)
+                {
+                    if (!personToAdd.ContainsKey(child.Id))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool isFamilyDeparture(EChReportedPerson family, Dictionary<string, EChPerson> personToRemove)
+        {
+            if (personToRemove.ContainsKey(family.Adult1.Id) && personToRemove.ContainsKey(family.Adult2.Id))
+            {
+                foreach (var child in family.Children)
+                {
+                    if (!personToRemove.ContainsKey(child.Id))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 		private void LoadFilesToCompare()
 		{
 			this.OrigineEch = EChDataComparerLoader.Load (new FileInfo (this.EchFileA), int.MaxValue).ToList ();
