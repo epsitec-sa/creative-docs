@@ -95,7 +95,7 @@ namespace Epsitec.Aider.Data.Job
                             personEntityToUpdate.PersonSex = changedEChPersonEntity.PersonSex;
                         }
                     }
-                    catch(Exception e)
+                    catch(Exception)
                     {
                         Console.WriteLine("ECH DATA UPDATER : ERROR DURING UPDATE, ABORT");
                         return false;
@@ -166,7 +166,7 @@ namespace Epsitec.Aider.Data.Job
                             reportedPersonEntityToUpdate.Address.Town = toChange.Item1.Address.Town;
                         }
                     }
-                    catch(Exception e)
+                    catch(Exception)
                     {
                         Console.WriteLine("ECH DATA UPDATER : ERROR DURING UPDATE, ABORT");
                         return false;
