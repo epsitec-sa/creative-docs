@@ -52,7 +52,8 @@ namespace Epsitec.Aider.Data.Job
                     try
                     {
                         var personEntityToUpdate = UpdateEChData.GetEchPersonEntity(businessContext, toChange.Item1);
-                        var changedEChPersonEntity = EChDataImporter.ConvertEChPersonToEntity(toChange.Item1);
+						var changedEChPersonEntity = new eCH_PersonEntity ();
+						EChDataImporter.ConvertEChPersonToEntity (toChange.Item1, changedEChPersonEntity);
 
                         if (!toChange.Item1.DateOfBirth.Equals(toChange.Item2.DateOfBirth))
                         {
