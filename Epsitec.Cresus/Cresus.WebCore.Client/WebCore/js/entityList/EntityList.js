@@ -659,6 +659,8 @@ function() {
           height: 200,
           header: 'false',
           layout: 'fit',
+          constrain: true,
+          renderTo: Ext.get(Epsitec.Cresus.Core.getApplication().tabManager.getLayout().getActiveItem().el),
           closable: true,
           closeAction: 'hide',
           items: form
