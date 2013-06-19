@@ -310,7 +310,7 @@ namespace Epsitec.Aider
 				var outputFile = AiderProgram.GetFile (args, "-output:", true);
 				var errorFile = AiderProgram.GetFile (args, "-error:", false);
 
-				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile);
+				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile, true);
 				
 				writer.Write ();
 			});

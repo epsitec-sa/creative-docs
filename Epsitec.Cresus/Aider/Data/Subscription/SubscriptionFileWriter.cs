@@ -31,11 +31,18 @@ namespace Epsitec.Aider.Data.Subscription
 	{
 
 
-		public SubscriptionFileWriter(CoreData coreData, FileInfo outputFile, FileInfo errorFile)
+		public SubscriptionFileWriter
+		(
+			CoreData coreData,
+			FileInfo outputFile,
+			FileInfo errorFile,
+			bool skipLinesWithPostmanNumberError
+		)
 		{
 			this.coreData = coreData;
 			this.outputFile = outputFile;
 			this.errorFile = errorFile;
+			this.skipLinesWithPostmanNumberError = skipLinesWithPostmanNumberError;
 			this.startTime = System.DateTime.UtcNow;
 
 			this.errors = new List<Tuple<string, string>> ();
@@ -136,6 +143,14 @@ namespace Epsitec.Aider.Data.Subscription
 					line = null;
 
 					this.errors.Add (Tuple.Create (subscription.Id, e.Message));
+				}
+
+				if (this.skipLinesWithPostmanNumberError)
+				{
+					if (line != null && !line.PostmanNumber.HasValue)
+					{
+						line = null;
+					}
 				}
 
 				if (line != null)
@@ -1243,6 +1258,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly CoreData coreData;
 		private readonly FileInfo outputFile;
 		private readonly FileInfo errorFile;
+		private readonly bool skipLinesWithPostmanNumberError;
 		private readonly List<Tuple<string, string>> errors;
 		private readonly List<Tuple<string, string>> postmanErrors;
 
