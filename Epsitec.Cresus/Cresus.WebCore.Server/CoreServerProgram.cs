@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server
 					nGinxPath: CoreServerProgram.nGinxPath,
 					uiCulture: CoreServerProgram.uiCulture,
 					nancyUri: this.nancyUri,
-					owinUri : this.owinUri,
+					owinUri: this.owinUri,
 					nbCoreWorkers: this.nbCoreWorkers,
 					backupDirectory: this.backupDirectory,
 					backupInterval: this.backupInterval,
@@ -205,7 +205,6 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Server set up");
 		}
 
-
 		private void Run
 		(
 			bool enableUserNotifications,
@@ -222,11 +221,10 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			Logger.LogToConsole ("Launching server...");
 
-			
 			using (var backupManager = new BackupManager (backupDirectory, backupInterval, backupStart))
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)
 			using (var coreServer = new CoreServer (nbCoreWorkers, uiCulture))
-			using (var owinServer = enableUserNotifications ? new OwinServer (owinUri,coreServer) : null)
+			using (var owinServer = enableUserNotifications ? new OwinServer (owinUri, coreServer) : null)
 			using (var nancyServer = new NancyServer (coreServer, nancyUri))
 			{
 				Logger.LogToConsole ("Server launched");
@@ -241,7 +239,6 @@ namespace Epsitec.Cresus.WebCore.Server
 			Console.ReadLine ();
 		}
 
-
 		private static readonly DirectoryInfo	defaultClientDirectory = new DirectoryInfo ("S:\\Epsitec.Cresus\\Cresus.WebCore.Client\\WebCore\\");
 		private static readonly Uri				defaultNancyUri = new Uri ("http://localhost:12345/");
 		private static readonly Uri				defaultOwinUri= new Uri ("http://localhost:9002/");
@@ -253,7 +250,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		private static readonly CultureInfo		uiCulture = new CultureInfo ("fr-CH");
 		private static readonly FileInfo		nGinxPath = new FileInfo ("Nginx\\nginx.exe");
 		private static readonly bool			nGinxAutorun = true;
-		
+
 		private DirectoryInfo					clientDirectory;
 		private Uri								nancyUri;
 		private Uri								owinUri;
