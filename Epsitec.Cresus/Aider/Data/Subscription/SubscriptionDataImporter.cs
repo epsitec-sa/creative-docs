@@ -96,11 +96,20 @@ namespace Epsitec.Aider.Data.Subscription
 				.Distinct ()
 				.ToList ();
 
+			var keyToSubscription = matches
+				.Where (m => m.Item2 != null)
+				.GroupBy (m => normalizedAiderPersons[m.Item2.Item1])
+				.ToDictionary
+				(
+					g => g.Key,
+					g => normalizedSubscriptionPersons[g.First ().Item1]
+				);
+
 			foreach (var personKey in personKeysInDb)
 			{
 				SubscriptionDataImporter.EnsurePersonSubscriptionExists
 				(
-					businessContext, personKey
+					businessContext, keyToSubscription[personKey], personKey
 				);
 			}
 
@@ -210,6 +219,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private static void EnsurePersonSubscriptionExists
 		(
 			BusinessContext businessContext,
+			SubscriptionData subscription,
 			EntityKey personKey
 		)
 		{
@@ -228,7 +238,8 @@ namespace Epsitec.Aider.Data.Subscription
 				var household = households.First ();
 
 				var parish = person.ParishGroup;
-				var region = SubscriptionDataImporter.GetRegion (businessContext, parish);
+				var regionId = subscription.Region;
+				var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
 
 				AiderSubscriptionEntity.Create (businessContext, household, region, 1);
 			}
@@ -263,16 +274,16 @@ namespace Epsitec.Aider.Data.Subscription
 
 				eChPerson.PersonFirstNames = subscription.GetPersonFirstname (i);
 				eChPerson.PersonOfficialName = subscription.Lastname;
-				
+
 				var title = subscription.GetPersonTitle (i);
 				person.MrMrs = TextParser.ParsePersonMrMrs (title);
 				eChPerson.PersonSex = SubscriptionData.GuessSex (title);
-				
+
 				eChPerson.DataSource = Enumerations.DataSource.Undefined;
 				eChPerson.DeclarationStatus = PersonDeclarationStatus.NotDeclared;
 				eChPerson.RemovalReason = RemovalReason.None;
 
-				AiderContactEntity.Create(businessContext, person, household, true);
+				AiderContactEntity.Create (businessContext, person, household, true);
 			}
 
 			foreach (var member in household.Members)
@@ -280,9 +291,11 @@ namespace Epsitec.Aider.Data.Subscription
 				ParishAssigner.AssignToParish (parishRepository, businessContext, member);
 			}
 
+			var parishGroup = household.Members.First ().ParishGroup;
+			var regionId = subscription.Region;
 			var region = SubscriptionDataImporter.GetRegion
 			(
-				businessContext, household.Members.First ().ParishGroup
+				businessContext, parishGroup, regionId
 			);
 
 			AiderSubscriptionEntity.Create (businessContext, household, region, 1);
@@ -306,7 +319,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 				SubscriptionDataImporter.ImportLegalPersonSubscription
 				(
-					businessContext, legalPersonContact
+					businessContext, subscription, legalPersonContact
 				);
 			}
 		}
@@ -364,23 +377,40 @@ namespace Epsitec.Aider.Data.Subscription
 		private static AiderSubscriptionEntity ImportLegalPersonSubscription
 		(
 			BusinessContext businessContext,
+			SubscriptionData subscription,
 			AiderContactEntity legalPersonContact
 		)
 		{
 			var parish = legalPersonContact.LegalPerson.ParishGroup;
-			var region = SubscriptionDataImporter.GetRegion (businessContext, parish);
+			var regionId = subscription.Region;
+			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
 
 			return AiderSubscriptionEntity.Create (businessContext, legalPersonContact, region, 1);
 		}
 
 
-		private static AiderGroupEntity GetRegion(BusinessContext businessContext, AiderGroupEntity parish)
+		private static AiderGroupEntity GetRegion
+		(
+			BusinessContext businessContext,
+			AiderGroupEntity parish,
+			int? region
+		)
 		{
+			// If the region is give, we pick that one.
+
+			if (region.HasValue)
+			{
+				return ParishAssigner.FindRegionGroup (businessContext, region.Value);
+			}
+
 			// If we don't have a parish, we pick the default region, which is the one of Lausanne.
 
-			return parish.IsNotNull ()
-				? parish.Parent
-				: ParishAssigner.FindRegionGroup (businessContext, 4);
+			if (parish.IsNull ())
+			{
+				return ParishAssigner.FindRegionGroup (businessContext, 4);
+			}
+
+			return parish.Parent;
 		}
 
 
