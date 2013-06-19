@@ -81,8 +81,8 @@ namespace Epsitec.Aider.Data.Subscription
 		private void LogStats()
 		{
 			var lines = new List<string> ();
-			var time  = (int)((System.DateTime.UtcNow - this.startTime).TotalMinutes);
-			
+			var time  = (int) ((System.DateTime.UtcNow - this.startTime).TotalMinutes);
+
 			lines.Add (string.Format ("Export du {0} à {1}, {2} minutes", System.DateTime.Now.ToShortDateString (), System.DateTime.Now.ToShortTimeString (), time));
 			lines.Add (string.Format ("Total: {0}", this.totalCount));
 			lines.Add (string.Format ("Vaud: {0}", this.totalVaud));
@@ -175,7 +175,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 					this.editionStats[id] += count;
 					this.countries.Add (line.Country);
-					
+
 					this.totalCount   += count;
 					this.totalVaud    += (line.Canton == "VD") ? count : 0;
 					this.totalSwiss   += swiss ? count : 0;

@@ -208,7 +208,7 @@ namespace Epsitec.Aider
 				var newEChDataFile = AiderProgram.GetFile (args, "-newechfile:", true);
 				var oldEChDataFile = AiderProgram.GetFile (args, "-oldechfile:", true);
 
-				UpdateEChData.StartJob(oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
+				UpdateEChData.StartJob (oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
 
 			});
 		}
@@ -219,12 +219,12 @@ namespace Epsitec.Aider
 			{
 				return int.MaxValue;
 			}
-			
+
 			if (mode == "partial")
 			{
 				return 1000;
 			}
-			
+
 			throw new Exception ("Invalid mode");
 		}
 
@@ -233,7 +233,7 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eervGroupDefinitionFile = AiderProgram.GetFile (args, "-groupdefinitionfile:", true);
-				
+
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 
@@ -279,7 +279,7 @@ namespace Epsitec.Aider
 
 				SubscriptionGenerator.Create
 				(
-					coreData, parishRepository, subscribeHouseholds,subscribeLegalPersons
+					coreData, parishRepository, subscribeHouseholds, subscribeLegalPersons
 				);
 			});
 		}
@@ -311,7 +311,7 @@ namespace Epsitec.Aider
 				var errorFile = AiderProgram.GetFile (args, "-error:", false);
 
 				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile, true);
-				
+
 				writer.Write ();
 			});
 		}
