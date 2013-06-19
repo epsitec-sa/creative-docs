@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Data.Subscription
 				{ WebSubscriptionHeader.Town, "Localité" },
 				{ WebSubscriptionHeader.CountryCode, "Pays" },
 				{ WebSubscriptionHeader.Comment, "Remarque" },
-				{ WebSubscriptionHeader.Region, "Région" },
+				{ WebSubscriptionHeader.RegionalEdition, "Région" },
 			};
 
 
@@ -100,7 +100,7 @@ namespace Epsitec.Aider.Data.Subscription
 		Town,
 		CountryCode,
 		Comment,
-		Region,
+		RegionalEdition,
 	}
 
 

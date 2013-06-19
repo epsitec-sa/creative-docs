@@ -238,7 +238,7 @@ namespace Epsitec.Aider.Data.Subscription
 				var household = households.First ();
 
 				var parish = person.ParishGroup;
-				var regionId = subscription.Region;
+				var regionId = subscription.RegionalEdition;
 				var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
 
 				AiderSubscriptionEntity.Create (businessContext, household, region, 1);
@@ -292,7 +292,7 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 
 			var parishGroup = household.Members.First ().ParishGroup;
-			var regionId = subscription.Region;
+			var regionId = subscription.RegionalEdition;
 			var region = SubscriptionDataImporter.GetRegion
 			(
 				businessContext, parishGroup, regionId
@@ -382,7 +382,7 @@ namespace Epsitec.Aider.Data.Subscription
 		)
 		{
 			var parish = legalPersonContact.LegalPerson.ParishGroup;
-			var regionId = subscription.Region;
+			var regionId = subscription.RegionalEdition;
 			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
 
 			return AiderSubscriptionEntity.Create (businessContext, legalPersonContact, region, 1);

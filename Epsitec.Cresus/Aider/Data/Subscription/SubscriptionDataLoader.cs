@@ -111,16 +111,16 @@ namespace Epsitec.Aider.Data.Subscription
 			var postBox = record[WebSubscriptionHeader.PostBox] ?? "";
 			var comment = record[WebSubscriptionHeader.Comment] ?? "";
 
-			var rawRegion = record[WebSubscriptionHeader.Region];
-			var region = rawRegion == null
+			var rawRegionalEdition = record[WebSubscriptionHeader.RegionalEdition];
+			var regionalEdition = rawRegionalEdition == null
 				? null
-				: (int?) int.Parse (rawRegion);
+				: (int?) int.Parse (rawRegionalEdition);
 
 			return new SubscriptionData
 			(
 				corporateName, title, firstname, lastname, firstAddressLine, postBox, streetName,
-				houseNumber, houseNumberComplement, zipCode, town, countryCode, comment, region,
-				null
+				houseNumber, houseNumberComplement, zipCode, town, countryCode, comment,
+				regionalEdition, null
 			);
 		}
 
@@ -410,7 +410,8 @@ namespace Epsitec.Aider.Data.Subscription
 						&& s1.ZipCode == s2.ZipCode
 						&& s1.Town == s2.Town
 						&& s1.CountryCode == s2.CountryCode
-						&& s1.Comment == s2.Comment;
+						&& s1.Comment == s2.Comment
+						&& s1.RegionalEdition == s2.RegionalEdition;
 				},
 				(s) =>
 				{
