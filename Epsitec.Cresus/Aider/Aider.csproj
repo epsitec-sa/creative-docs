@@ -109,6 +109,7 @@
     <Compile Include="Data\Job\UpdateEChData.cs" />
     <Compile Include="Data\Subscription\DistributionMode.cs" />
     <Compile Include="Data\Subscription\SubscriptionData.cs" />
+    <Compile Include="Data\Subscription\SubscriptionDataImporter.cs" />
     <Compile Include="Data\Subscription\SubscriptionDataLoader.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileLine.cs" />
     <Compile Include="Data\Subscription\SubscriptionFileWriter.cs" />

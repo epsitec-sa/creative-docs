@@ -294,6 +294,13 @@ namespace Epsitec.Aider
 			(
 				fileWeb, fileDoctor, filePro
 			);
+
+			var parishRepository = ParishAddressRepository.Current;
+
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				SubscriptionDataImporter.Import (coreData, parishRepository, subscriptions);
+			});
 		}
 
 		private static void RunSubscriptionExportation(string[] args)

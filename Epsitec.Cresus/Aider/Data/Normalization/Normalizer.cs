@@ -1,5 +1,6 @@
 ﻿using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Data.Subscription;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -106,6 +107,71 @@ namespace Epsitec.Aider.Data.Normalization
 				ZipCode = InvariantConverter.ParseInt (address.ZipCode),
 				Town = Normalizer.NormalizeText (address.Town),
 			};
+		}
+
+
+		public static Dictionary<NormalizedPerson, SubscriptionData> Normalize
+		(
+			IEnumerable<SubscriptionData> subscriptions
+		)
+		{
+			var result = new Dictionary<NormalizedPerson, SubscriptionData> ();
+
+			foreach (var subscription in subscriptions)
+			{
+				var normalizedHousehold = Normalizer.Normalize (subscription);
+
+				foreach (var member in normalizedHousehold.Members)
+				{
+					result[member] = subscription;
+				}
+			}
+
+			return result;
+		}
+
+
+		public static NormalizedHousehold Normalize
+		(
+			SubscriptionData subscription
+		)
+		{
+			var normalizedHousehold = new NormalizedHousehold ()
+			{
+				Address = new NormalizedAddress ()
+				{
+					Street = Normalizer.NormalizeStreetName (subscription.StreetName),
+					HouseNumber = subscription.HouseNumber,
+					ZipCode = InvariantConverter.ParseInt (subscription.ZipCode),
+					Town = Normalizer.NormalizeText (subscription.Town),
+				}
+			};
+
+			var nbPersons = subscription.GetNbPersons ();
+
+			for (int i = 0; i < nbPersons; i++)
+			{
+				var firstname = subscription.GetPersonFirstname (i);
+				var lastname = subscription.Lastname;
+				var title = subscription.GetPersonTitle (i);
+
+				var firstnames = Normalizer.NormalizeComposedName (firstname);
+				var lastnames = Normalizer.NormalizeComposedName (lastname);
+				var sex = SubscriptionData.GuessSex (title);
+
+				var normalizedPerson = new NormalizedPerson ()
+				{
+					Firstnames = firstnames,
+					Lastnames = lastnames,
+					DateOfBirth = null,
+					Sex = sex
+				};
+
+				normalizedHousehold.Heads.Add (normalizedPerson);
+				normalizedPerson.Households.Add (normalizedHousehold);
+			}
+
+			return normalizedHousehold;
 		}
 
 
