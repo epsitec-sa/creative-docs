@@ -171,6 +171,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 			var backupFileName = BackupManager.GetBackupFileName ();
 			var backupFilePath = CoreData.GetLocalDatabaseFilePath (backupFileName, this.dbAccess);
+			var backupDirectory = Path.GetDirectoryName (backupFilePath);
 
 			var success = CoreData.BackupDatabase (backupFileName, this.dbAccess);
 
@@ -188,8 +189,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				return;
 			}
 
-			var gzippedBackupFilePath = backupFilePath + ".gz";
-			var gzippedBackupFileName = Path.GetFileName (backupFilePath);
+			var gzippedBackupFileName = backupFileName + ".gz";
+			var gzippedBackupFilePath = Path.Combine (backupDirectory, gzippedBackupFileName);
 
 			Compression.GZipCompressFile (backupFilePath, gzippedBackupFilePath);
 			File.Delete (backupFilePath);
