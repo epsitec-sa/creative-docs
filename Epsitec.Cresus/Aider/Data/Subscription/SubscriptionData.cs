@@ -1,4 +1,9 @@
-﻿namespace Epsitec.Aider.Data.Subscription
+﻿using Epsitec.Aider.Enumerations;
+
+using System;
+
+
+namespace Epsitec.Aider.Data.Subscription
 {
 
 
@@ -21,7 +26,7 @@
 			string town,
 			string countryCode,
 			string comment,
-			bool? isCompany
+			bool? isLegalPerson
 		)
 		{
 			this.CorporateName = corporateName;
@@ -37,7 +42,92 @@
 			this.Town = town;
 			this.CountryCode = countryCode;
 			this.Comment = comment;
-			this.IsCompany = isCompany;
+			this.isLegalPerson = isLegalPerson;
+		}
+
+
+		/// <summary>
+		/// This indicates whether the subscription represents a legal person or a physical person.
+		/// </summary>
+		public bool IsLegalPerson
+		{
+			get
+			{
+				return this.isLegalPerson ?? !string.IsNullOrEmpty (this.CorporateName);
+			}
+		}
+
+
+		/// <summary>
+		/// Sometimes, for the physical persons, we have two persons in one subcription. Their
+		/// firstname and title are separated by the string " et ". They always share the same
+		/// lastname.
+		/// </summary>
+		public int GetNbPersons()
+		{
+			return this.Title.Contains (" et ") && this.Firstname.Contains (" et ")
+				? 2
+				: 1;
+		}
+
+
+		public string GetPersonFirstname(int index)
+		{
+			return SubscriptionData.GetValue (this.Firstname, index);
+		}
+
+
+		public string GetPersonTitle(int index)
+		{
+			return SubscriptionData.GetValue (this.Title, index);
+		}
+
+
+		private static string GetValue(string value, int index)
+		{
+			var splitIndex = value.IndexOf (" et ");
+
+			if (splitIndex < 0)
+			{
+				if (index != 0)
+				{
+					throw new ArgumentException ();
+				}
+
+				return value;
+			}
+			else
+			{
+				if (index == 0)
+				{
+					return value.Substring (0, splitIndex);
+				}
+				else if (index == 1)
+				{
+					return value.Substring (splitIndex + 4);
+				}
+				else
+				{
+					throw new ArgumentException ();
+				}
+			}
+		}
+
+
+		public static PersonSex GuessSex(string title)
+		{
+			switch (TextParser.ParsePersonMrMrs (title))
+			{
+				case PersonMrMrs.Madame:
+				case PersonMrMrs.Mademoiselle:
+					return PersonSex.Female;
+
+				case PersonMrMrs.Monsieur:
+					return PersonSex.Male;
+
+				default:
+					return PersonSex.Unknown;
+			}
 		}
 
 
@@ -54,7 +144,7 @@
 		public readonly string Town;
 		public readonly string CountryCode;
 		public readonly string Comment;
-		public readonly bool? IsCompany;
+		private readonly bool? isLegalPerson;
 
 
 	}

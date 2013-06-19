@@ -404,8 +404,7 @@ namespace Epsitec.Aider.Data.Subscription
 						&& s1.ZipCode == s2.ZipCode
 						&& s1.Town == s2.Town
 						&& s1.CountryCode == s2.CountryCode
-						&& s1.Comment == s2.Comment
-						&& s1.IsCompany == s2.IsCompany;
+						&& s1.Comment == s2.Comment;
 				},
 				(s) =>
 				{
