@@ -357,7 +357,9 @@ namespace Epsitec.Aider.Data.Normalization
 
 			foreach (var person in persons)
 			{
-				foreach (var lastname in person.Lastnames)
+				var lastnames = NormalizedDataMatcher.GetLastnamesForSplitMethod (person.Lastnames);
+
+				foreach (var lastname in lastnames)
 				{
 					Dictionary<string, List<NormalizedPerson>> d;
 
@@ -595,11 +597,14 @@ namespace Epsitec.Aider.Data.Normalization
 				   select candidate;
 		}
 
+
 		private static HashSet<NormalizedPerson> GetCandidatesBySplitNames(NormalizedPerson eervPerson, Dictionary<string, Dictionary<string, List<NormalizedPerson>>> splitNamesToAiderPersons)
 		{
 			var candidates = new HashSet<NormalizedPerson> ();
 
-			foreach (var lastname in eervPerson.Lastnames)
+			var lastnames = NormalizedDataMatcher.GetLastnamesForSplitMethod (eervPerson.Lastnames);
+
+			foreach (var lastname in lastnames)
 			{
 				Dictionary<string, List<NormalizedPerson>> d;
 
@@ -618,6 +623,29 @@ namespace Epsitec.Aider.Data.Normalization
 			}
 
 			return candidates;
+		}
+
+
+		private static string[] GetLastnamesForSplitMethod(string[] lastnames)
+		{
+			// Here we want to remove the particles, so as not to match on the "de", "von", etc.
+			// from the names. We assume that everything which is smaller than 4 letters is a
+			// particule, except for names that have only one part and names where all names have
+			// 3 or less letters.
+
+			if (lastnames.Length == 1)
+			{
+				return lastnames;
+			}
+
+			if (lastnames.All (n => n.Length <= 3))
+			{
+				return lastnames;
+			}
+
+			return lastnames
+				.Where (n => n.Length > 3)
+				.ToArray ();
 		}
 
 
