@@ -9,6 +9,7 @@ using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Data.Platform.MatchSort;
 
@@ -197,20 +198,54 @@ namespace Epsitec.Aider.Data.Subscription
 			switch (subscription.SubscriptionType)
 			{
 				case SubscriptionType.Household:
-					return this.GetLine
-					(
-						subscription, etl, encodingHelper, this.GetHouseholdReceiverData
-					);
+					return this.GetHouseholdLine (subscription, etl, encodingHelper);
 
 				case SubscriptionType.LegalPerson:
-					return this.GetLine
-					(
-						subscription, etl, encodingHelper, this.GetLegalPersonReceiverData
-					);
+					return this.GetLegalPersonLine (subscription, etl, encodingHelper);
 
 				default:
 					throw new NotImplementedException ();
 			}
+		}
+
+
+		private SubscriptionFileLine GetHouseholdLine
+		(
+			AiderSubscriptionEntity subscription,
+			MatchSortEtl etl,
+			EncodingHelper encodingHelper
+		)
+		{
+			if (subscription.Household.IsNull ())
+			{
+				return null;
+			}
+
+			if (subscription.Household.Members.Count == 0)
+			{
+				return null;
+			}
+
+			return this.GetLine (subscription, etl, encodingHelper, this.GetHouseholdReceiverData);
+		}
+
+
+		private SubscriptionFileLine GetLegalPersonLine
+		(
+			AiderSubscriptionEntity subscription,
+			MatchSortEtl etl,
+			EncodingHelper encodingHelper
+		)
+		{
+			if (subscription.LegalPersonContact.IsNull ())
+			{
+				return null;
+			}
+
+			return this.GetLine
+			(
+				subscription, etl, encodingHelper, this.GetLegalPersonReceiverData
+			);
 		}
 
 
