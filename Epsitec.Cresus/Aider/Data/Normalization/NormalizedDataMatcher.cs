@@ -651,7 +651,17 @@ namespace Epsitec.Aider.Data.Normalization
 
 		private static bool IsSexMatch(NormalizedPerson eervPerson, NormalizedPerson aiderPerson, bool fsx)
 		{
-			return !fsx || NormalizedDataMatcher.IsSexMatch (eervPerson.Sex, aiderPerson.Sex);
+			if (!fsx)
+			{
+				return true;
+			}
+
+			if (eervPerson.Sex == PersonSex.Unknown || aiderPerson.Sex == PersonSex.Unknown)
+			{
+				return false;
+			}
+
+			return NormalizedDataMatcher.IsSexMatch (eervPerson.Sex, aiderPerson.Sex);
 		}
 
 
@@ -663,19 +673,20 @@ namespace Epsitec.Aider.Data.Normalization
 
 		private static bool AreDateOfBirthSimilar(NormalizedPerson eervPerson, NormalizedPerson aiderPerson, double fdb)
 		{
-			var d1 = eervPerson.DateOfBirth;
-			var d2 = aiderPerson.DateOfBirth;
-
-			if (d1 == d2)
+			if (fdb == JaroWinkler.MinValue)
 			{
 				return true;
 			}
-			else
-			{
-				var similarity = NormalizedDataMatcher.GetDateSimilarity (d1, d2);
 
-				return similarity >= fdb;
+			var d1 = eervPerson.DateOfBirth;
+			var d2 = aiderPerson.DateOfBirth;
+
+			if (!d1.HasValue || !d2.HasValue)
+			{
+				return false;
 			}
+
+			return d1 == d2 || NormalizedDataMatcher.GetDateSimilarity (d1, d2) >= fdb;
 		}
 
 
