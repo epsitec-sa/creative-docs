@@ -54,6 +54,7 @@ namespace Epsitec.Aider.Data.Subscription
 				{ WebSubscriptionHeader.CountryCode, "Pays" },
 				{ WebSubscriptionHeader.Comment, "Remarque" },
 				{ WebSubscriptionHeader.RegionalEdition, "Région" },
+				{ WebSubscriptionHeader.NbCopies, "Nombre" },
 			};
 
 
@@ -101,6 +102,7 @@ namespace Epsitec.Aider.Data.Subscription
 		CountryCode,
 		Comment,
 		RegionalEdition,
+		NbCopies
 	}
 
 

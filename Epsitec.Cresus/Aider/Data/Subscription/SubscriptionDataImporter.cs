@@ -234,6 +234,8 @@ namespace Epsitec.Aider.Data.Subscription
 				.Where (s => s.IsNotNull ())
 				.ToList ();
 
+			var count = subscription.NbCopies ?? 1;
+
 			var parish = person.ParishGroup;
 			var regionId = subscription.RegionalEdition;
 			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
@@ -242,11 +244,12 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				var existingSubscription = subscriptions.First ();
 
+				existingSubscription.Count = count;
 				existingSubscription.RegionalEdition = region;
 			}
 			else
 			{
-				AiderSubscriptionEntity.Create (businessContext, household, region, 1);
+				AiderSubscriptionEntity.Create (businessContext, household, region, count);
 			}
 		}
 
@@ -296,14 +299,13 @@ namespace Epsitec.Aider.Data.Subscription
 				ParishAssigner.AssignToParish (parishRepository, businessContext, member);
 			}
 
-			var parishGroup = household.Members.First ().ParishGroup;
-			var regionId = subscription.RegionalEdition;
-			var region = SubscriptionDataImporter.GetRegion
-			(
-				businessContext, parishGroup, regionId
-			);
+			var count = subscription.NbCopies ?? 1;
 
-			AiderSubscriptionEntity.Create (businessContext, household, region, 1);
+			var parish = household.Members.First ().ParishGroup;
+			var regionId = subscription.RegionalEdition;
+			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
+
+			AiderSubscriptionEntity.Create (businessContext, household, region, count);
 		}
 
 
@@ -386,11 +388,13 @@ namespace Epsitec.Aider.Data.Subscription
 			AiderContactEntity legalPersonContact
 		)
 		{
+			var count = subscription.NbCopies ?? 1;
+
 			var parish = legalPersonContact.LegalPerson.ParishGroup;
 			var regionId = subscription.RegionalEdition;
 			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
 
-			return AiderSubscriptionEntity.Create (businessContext, legalPersonContact, region, 1);
+			return AiderSubscriptionEntity.Create (businessContext, legalPersonContact, region, count);
 		}
 
 

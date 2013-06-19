@@ -27,6 +27,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string countryCode,
 			string comment,
 			int? regionalEdition,
+			int? nbCopies,
 			bool? isLegalPerson
 		)
 		{
@@ -44,6 +45,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.CountryCode = countryCode;
 			this.Comment = comment;
 			this.RegionalEdition = regionalEdition;
+			this.NbCopies = nbCopies;
 			this.isLegalPerson = isLegalPerson;
 		}
 
@@ -147,6 +149,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string CountryCode;
 		public readonly string Comment;
 		public readonly int? RegionalEdition;
+		public readonly int? NbCopies;
 		private readonly bool? isLegalPerson;
 
 
