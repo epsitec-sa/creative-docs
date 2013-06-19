@@ -410,6 +410,18 @@ namespace Epsitec.Aider.Entities
 
 			if (result.Count == 0)
 			{
+				var noSex = heads
+					.Where (x => x.eCH_Person.PersonSex == PersonSex.Unknown)
+					.FirstOrDefault ();
+
+				if (noSex != null)
+				{
+					result.Add (noSex);
+				}
+			}
+
+			if (result.Count == 0)
+			{
 				var child = children.FirstOrDefault ();
 
 				if (child != null)
