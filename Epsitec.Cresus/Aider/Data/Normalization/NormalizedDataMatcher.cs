@@ -86,13 +86,13 @@ namespace Epsitec.Aider.Data.Normalization
 	{
 
 
-		public static IEnumerable<Tuple<NormalizedPerson, Tuple<NormalizedPerson, MatchData>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons)
+		public static IEnumerable<Tuple<NormalizedPerson, Tuple<NormalizedPerson, MatchData>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons, bool considerDateOfBirth = true)
 		{
 			var todo = new HashSet<NormalizedPerson> (eervPersons);
 			var done = new Dictionary<NormalizedPerson, NormalizedPerson> ();
 			var matched = new HashSet<NormalizedPerson> ();
 
-			NormalizedDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched);
+			NormalizedDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched, considerDateOfBirth);
 			NormalizedDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
 			NormalizedDataMatcher.AssignUnmatchedPersons (todo, done);
 
@@ -176,7 +176,7 @@ namespace Epsitec.Aider.Data.Normalization
 		}
 
 
-		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
+		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched, bool considerDateOfBirth)
 		{
 			var namesToAiderPersons = NormalizedDataMatcher.GroupPersonsByNames (aiderPersons);
 
@@ -203,8 +203,19 @@ namespace Epsitec.Aider.Data.Normalization
 
 			foreach (var filter in filters)
 			{
+				var fln = filter.Item1;
+				var ffn = filter.Item2;
+				var fdb = filter.Item3;
+				var fsx = filter.Item4;
+				var fad = filter.Item5;
+
+				if (!considerDateOfBirth)
+				{
+					fdb = JaroWinkler.MinValue;
+				}
+
 				var matches = NormalizedDataMatcher
-					.FindFuzzyMatches (todo, namesToAiderPersons, filter.Item1, filter.Item2, filter.Item3, filter.Item4, filter.Item5)
+					.FindFuzzyMatches (todo, namesToAiderPersons, fln, ffn, fdb, fsx, fad)
 					.ToList ();
 
 				NormalizedDataMatcher.AssignMatches (matches, todo, done, matched);
