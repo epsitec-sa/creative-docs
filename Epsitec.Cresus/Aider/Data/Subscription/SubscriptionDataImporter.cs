@@ -227,20 +227,25 @@ namespace Epsitec.Aider.Data.Subscription
 			var person = (AiderPersonEntity) dataContext.ResolveEntity (personKey);
 			
 			var households = person.Households;
+			var household = households.First ();
 
-			var hasSubscription = households
+			var subscriptions = households
 				.Select (h => AiderSubscriptionEntity.FindSubscription (businessContext, h))
 				.Where (s => s.IsNotNull ())
-				.Any ();
+				.ToList ();
 
-			if (!hasSubscription)
+			var parish = person.ParishGroup;
+			var regionId = subscription.RegionalEdition;
+			var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
+			
+			if (subscriptions.Any ())
 			{
-				var household = households.First ();
+				var existingSubscription = subscriptions.First ();
 
-				var parish = person.ParishGroup;
-				var regionId = subscription.RegionalEdition;
-				var region = SubscriptionDataImporter.GetRegion (businessContext, parish, regionId);
-
+				existingSubscription.RegionalEdition = region;
+			}
+			else
+			{
 				AiderSubscriptionEntity.Create (businessContext, household, region, 1);
 			}
 		}
