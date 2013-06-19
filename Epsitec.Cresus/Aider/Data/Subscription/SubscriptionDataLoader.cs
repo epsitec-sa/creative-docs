@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Data.Subscription
 	{
 
 
-		public static IEnumerable<Subscription> LoadSubscriptions
+		public static IEnumerable<SubscriptionData> LoadSubscriptions
 		(
 			FileInfo fileWeb,
 			FileInfo fileDoctor,
@@ -51,7 +51,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static Subscription LoadWebSubscription
+		private static SubscriptionData LoadWebSubscription
 		(
 			Dictionary<WebSubscriptionHeader, string> record,
 			AddressChecker addressChecker
@@ -111,7 +111,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var postBox = record[WebSubscriptionHeader.PostBox] ?? "";
 			var comment = record[WebSubscriptionHeader.Comment] ?? "";
 
-			return new Subscription
+			return new SubscriptionData
 			(
 				corporateName, title, firstname, lastname, firstAddressLine, postBox, streetName,
 				houseNumber, houseNumberComplement, zipCode, town, countryCode, comment, null
@@ -165,7 +165,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static Subscription LoadDoctorSubscription
+		private static SubscriptionData LoadDoctorSubscription
 		(
 			Dictionary<DoctorSubscriptionHeader, string> record,
 			AddressChecker addressChecker
@@ -209,7 +209,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var postBox = "";
 			var comment = "";
 
-			return new Subscription
+			return new SubscriptionData
 			(
 				corporateName, title, firstname, lastname, firstAddressLine, postBox, streetName,
 				houseNumber, houseNumberComplement, zipCode, town, countryCode, comment, true
@@ -257,7 +257,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static Subscription LoadProSubscription
+		private static SubscriptionData LoadProSubscription
 		(
 			Dictionary<ProSubscriptionHeader, string> record,
 			AddressChecker addressChecker
@@ -305,7 +305,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var countryCode = "CH";
 			var comment = "";
 
-			return new Subscription
+			return new SubscriptionData
 			(
 				corporateName, title, firstname, personName, firstAddressLine, postBox, streetName,
 				houseNumber, houseNumberComplement, zipCode, town, countryCode, comment, true
@@ -386,9 +386,9 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static LambdaComparer<Subscription> GetSubscriptionComparer()
+		private static LambdaComparer<SubscriptionData> GetSubscriptionComparer()
 		{
-			return new LambdaComparer<Subscription>
+			return new LambdaComparer<SubscriptionData>
 			(
 				(s1, s2) =>
 				{

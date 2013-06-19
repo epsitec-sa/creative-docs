@@ -2,11 +2,11 @@
 {
 
 
-	internal sealed class Subscription
+	internal sealed class SubscriptionData
 	{
 
 
-		public Subscription
+		public SubscriptionData
 		(
 			string corporateName,
 			string title,
