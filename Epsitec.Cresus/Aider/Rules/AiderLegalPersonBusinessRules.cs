@@ -1,12 +1,14 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -53,12 +55,30 @@ namespace Epsitec.Aider.Rules
 		{
 			AiderLegalPersonBusinessRules.UpdateName (legal);
 
+			this.UpdateParish (legal);
+
 			legal.RefreshCache ();
 		}
 
 		private static void UpdateName(AiderLegalPersonEntity legal)
 		{
 			legal.Name = legal.Name.TrimSpacesAndDashes ();
+		}
+
+		private void UpdateParish(AiderLegalPersonEntity legal)
+		{
+			if (legal.ParishGroup.IsNull ())
+			{
+				var parishRepository = ParishAddressRepository.Current;
+				var businessContext = this.GetBusinessContext ();
+
+				ParishAssigner.AssignToParish (parishRepository, businessContext, legal);
+			}
+			else
+			{
+				// TODO Should we create a warning or silently update the parish. For now we don't
+				// have the possibility to create a warning for somethint else than a person.
+			}
 		}
 	}
 }
