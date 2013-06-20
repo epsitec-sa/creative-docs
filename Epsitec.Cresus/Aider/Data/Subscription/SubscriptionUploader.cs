@@ -1,6 +1,8 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,9 +11,9 @@ namespace Epsitec.Aider.Data.Subscription
 {
 	public static class SubscriptionUploader
 	{
-		public static bool FtpUploadFile(System.IO.FileInfo fileInfo, System.IO.FileInfo responseFileInfo = null)
+		public static bool FtpUploadFile(System.IO.FileInfo fileInfo, System.IO.FileInfo responseFileInfo, Date date)
 		{
-			var fileName   = SubscriptionUploader.GetTargetFileName ();
+			var fileName   = SubscriptionUploader.GetTargetFileName (date);
 			var fileSize   = fileInfo.Length;
 			var ftpRequest = FtpWebRequest.Create (SubscriptionUploader.GetFtpUri (fileName)) as FtpWebRequest;
 
@@ -28,7 +30,7 @@ namespace Epsitec.Aider.Data.Subscription
 			using (var sourceStream = System.IO.File.OpenRead (fileInfo.FullName))
 			{
 				System.Console.WriteLine ("FTP: Uploading {0} to {1}, {2} MB", fileInfo.FullName, fileName, fileSize/(1024*1024));
-				
+
 				sourceStream.CopyTo (uploadStream);
 			}
 
@@ -46,11 +48,9 @@ namespace Epsitec.Aider.Data.Subscription
 			return true;
 		}
 		
-		private static string GetTargetFileName()
+		private static string GetTargetFileName(Date date)
 		{
-			var now = System.DateTime.Now;
-
-			return string.Format ("BN_{0:00}{1:00}{2:00}.slf", now.Year % 100, now.Month, now.Day);
+			return string.Format ("BN_{0:00}{1:00}{2:00}.slf", date.Year % 100, date.Month, date.Day);
 		}
 
 		private static System.Uri GetFtpUri()

@@ -9,6 +9,7 @@ using Epsitec.Aider.Data.Subscription;
 
 using Epsitec.Common.Debug;
 using Epsitec.Common.IO;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
@@ -168,8 +169,9 @@ namespace Epsitec.Aider
 		{
 			var outputFile = AiderProgram.GetFile (args, "-input:", true);
 			var responseFile = AiderProgram.GetFile (args, "-response:", false);
+			var date = AiderProgram.GetDate (args, "-publicationdate:");
 
-			SubscriptionUploader.FtpUploadFile (outputFile, responseFile);
+			SubscriptionUploader.FtpUploadFile (outputFile, responseFile, date);
 		}
 
 		private static void DownloadEchData(string[] args)
@@ -398,6 +400,13 @@ namespace Epsitec.Aider
 			return value != null
 				? (bool?) bool.Parse (value)
 				: (bool?) null;
+		}
+
+		private static Date GetDate(string[] args, string key)
+		{
+			var value = AiderProgram.GetString (args, key, true);
+
+			return new Date (DateTime.Parse (value));
 		}
 
 		private static string GetString(string[] args, string key, bool mandatory)
