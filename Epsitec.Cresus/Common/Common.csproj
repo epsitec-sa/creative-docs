@@ -1511,6 +1511,7 @@
     <Compile Include="Widgets\WindowStyles.cs" />
     <Compile Include="Widgets\WindowTitle.cs" />
     <Compile Include="Widgets\WindowType.cs" />
+    <Compile Include="WinFormsUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\external\images\bitmap\binocular-64x48.png">

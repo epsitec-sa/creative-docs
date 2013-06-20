@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
@@ -91,7 +93,11 @@ namespace Epsitec.Cresus.Core
 		private static void ExecuteJsServer()
 		{
 			Library.CoreContext.StartAsServer ();
-			System.Activator.CreateInstance (CoreProgramOperations.CoreServerAssembly, CoreProgramOperations.CoreServerProgram);
+
+			WinFormsUtils.ExecuteWithoutForm (() =>
+			{
+				System.Activator.CreateInstance (CoreProgramOperations.CoreServerAssembly, CoreProgramOperations.CoreServerProgram);
+			});
 		}
 
 		private static void ExecuteCreateEpsitecDatabase(string path)
