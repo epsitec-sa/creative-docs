@@ -121,28 +121,29 @@ namespace Epsitec.Aider.Data.ECh
 
 		public void AnalyseChanges()
 		{
-			var familyToAdd = new Dictionary<string, EChReportedPerson>();
-			var familyToRemove = new Dictionary<string, EChReportedPerson>();
-			var personToAdd = new Dictionary<string, EChPerson>();
-			var personToRemove = new Dictionary<string, EChPerson>();
+			var familyToAdd = new Dictionary<string, EChReportedPerson> ();
+			var familyToRemove = new Dictionary<string, EChReportedPerson> ();
+			var personToAdd = new Dictionary<string, EChPerson> ();
+			var personToRemove = new Dictionary<string, EChPerson> ();
 
 			var newUnion= new List<EChReportedPerson> ();
 			var newFamily = new List<EChReportedPerson> ();
-			var newFamilyWithChildren = new List<EChReportedPerson>();
-			var newFamilyMono = new List<EChReportedPerson>();
+			var newFamilyWithChildren = new List<EChReportedPerson> ();
+			var newFamilyMono = new List<EChReportedPerson> ();
 			var newFamilyMonoWithChildren = new List<EChReportedPerson>();
-			var newChilds = new List<Tuple<EChReportedPerson,EChPerson>>();
+			var familyWithNewChilds = new List<EChReportedPerson>();
+			var familyWithChildMissing = new List<EChReportedPerson> ();
+			var newChilds = new List<Tuple<EChReportedPerson,EChPerson>> ();
 			var childMissing = new List<Tuple<EChReportedPerson, EChPerson>> ();
-			var gainMajority = new List<EChReportedPerson>();
+			var gainMajority = new List<EChReportedPerson> ();
 			var missingUnion= new List<EChReportedPerson> ();
 			var missingFamily = new List<EChReportedPerson> ();
-			var missingFamilyWithChildren = new List<EChReportedPerson>();
-			var missingFamilyMono = new List<EChReportedPerson>();
-			var missingFamilyMonoWithChildren = new List<EChReportedPerson>();
-			var errorFamily = new List<EChReportedPerson>();
+			var missingFamilyWithChildren = new List<EChReportedPerson> ();
+			var missingFamilyMono = new List<EChReportedPerson> ();
+			var missingFamilyMonoWithChildren = new List<EChReportedPerson> ();
+			var errorFamily = new List<EChReportedPerson> ();
 
-			var addCaseToResolve = new List<EChReportedPerson>();
-			var remCaseToResolve = new List<EChReportedPerson>();
+			var addCaseToResolve = new List<EChReportedPerson> ();
 
 
 
@@ -158,26 +159,37 @@ namespace Epsitec.Aider.Data.ECh
 
 			foreach (var family in this.GetFamilyToAdd())
 			{
-				familyToAdd.Add(family.FamilyKey, family);
+				familyToAdd.Add(family.Adult1.Id, family);
 			}
 
 			foreach (var family in this.GetFamilyToRemove())
 			{
-				familyToRemove.Add(family.FamilyKey, family);
+				familyToRemove.Add (family.Adult1.Id, family);
 			}
 
 
-			
+
 			foreach (var family in familyToAdd.Values)
 			{
-				/* REFACTORING TODO
+
+				EChReportedPerson removedFamily = null;
 				var monoParental = false;
 				var hasChildren = false;
-				var isNew = false;
-				var familyDivided = false;
+				var structuralChange = false;
+				var unclassified = false;
 
-				//check adult composition
-				if (family.Adult2 != null)
+				var isNew = false;
+				var isDivided = false;
+				var isWidow = false;
+				var isMajority = false;
+				var isMajoritySideEffect = false;
+				var isChildMove = false;
+				var isChildMissing = false;
+				var isNewBorn = false;
+				var isUnion = false;
+
+
+				if (family.Adult2 == null)
 				{
 					monoParental = true;
 				}
@@ -187,176 +199,274 @@ namespace Epsitec.Aider.Data.ECh
 					hasChildren = true;
 				}
 
-
-				if (monoParental)
+				if (familyToRemove.ContainsKey (family.Adult1.Id))
 				{
-					if (personToAdd.ContainsKey (family.Adult1.Id))
+					structuralChange = true;
+					removedFamily = familyToRemove[family.Adult1.Id];
+				}
+
+				//check cases
+				if (!structuralChange)
+				{
+					if (monoParental)
 					{
-						isNew = true;
-					}
-					else
-					{
-						if(findFamilyToRemoveCase(family,familyToRemove))
+						if (personToAdd.ContainsKey (family.Adult1.Id))
 						{
-							familyDivided = true;
+							isNew = true;
 						}
 						else
 						{
-							
+							if (DateTime.Now.Year - family.Adult1.DateOfBirth.Year == 18)
+							{
+								isMajority = true;
+							}
+							else
+							{
+								isWidow = true;
+							}
 						}
-					}
-				}
-				else
-				{
-
-				}*/
-				//check adult composition
-				if (family.Adult2 != null)
-				{
-					//std family
-					var isNewFamily = isNewFamilyWithChildrenArrival(family, personToAdd); //check for a completely new family
-					if (isNewFamily)
-					{
-						newFamilyWithChildren.Add(family);
 					}
 					else
 					{
-						if (family.Children.Count > 0)
+						if (personToAdd.ContainsKey (family.Adult1.Id) && personToAdd.ContainsKey (family.Adult2.Id))
+						{
+							isNew = true;
+						}
+						else if (personToAdd.ContainsKey (family.Adult1.Id)&&!personToAdd.ContainsKey (family.Adult2.Id))
+						{
+							isUnion = true;
+						}
+						else
+						{
+							unclassified = true;
+						}
+					}
+
+				}
+				else
+				{
+					if (hasChildren)
+					{
+						if (family.Children.Count > removedFamily.Children.Count)
 						{
 							foreach (var child in family.Children)
 							{
 								if (personToAdd.ContainsKey (child.Id))
 								{
-									//new child
-									newChilds.Add (Tuple.Create (family, child));
+									isNewBorn = true;
+									newChilds.Add (Tuple.Create(family,child));
 								}
-								if (personToRemove.ContainsKey (child.Id))
+								else
 								{
-									//Miss :/
-									childMissing.Add (Tuple.Create (family, child));
+									isChildMove = true;
 								}
 							}
 						}
-						else
-						{
-							if (personToAdd.ContainsKey (family.Adult1.Id) && personToAdd.ContainsKey (family.Adult2.Id))
-							{
-								//new family without child arrived
-								newFamily.Add (family);
-							}
-							if (!personToAdd.ContainsKey (family.Adult1.Id) && personToAdd.ContainsKey (family.Adult2.Id))
-							{
-								//new union
-								newUnion.Add (family);
-							}
-						}
-					}
-				}
-				else
-				{
-					//check mono-adult cases
-					if (personToAdd.ContainsKey(family.Adult1.Id))
-					{
-						if (family.Children.Count > 0)
-						{
-							newFamilyMonoWithChildren.Add(family);
-						}
-						else
-						{
-							newFamilyMono.Add(family);
-						}
-						
-					}
-					else
-					{
-						if (family.Children.Count > 0)
+						if (family.Children.Count < removedFamily.Children.Count)
 						{
 							foreach (var child in family.Children)
 							{
-								if (personToAdd.ContainsKey (child.Id))
-								{
-									//new child in mono
-									newChilds.Add (Tuple.Create (family, child));
-								}
 								if (personToRemove.ContainsKey (child.Id))
 								{
-									//Miss in mono :/
-									childMissing.Add (Tuple.Create(family,child));
+									isChildMissing = true;
+								}
+								else
+								{
+									if (familyToAdd.ContainsKey (child.Id))
+									{
+										isMajoritySideEffect = true;
+									}
+									else
+									{
+										isChildMove = true;
+									}
+
 								}
 							}
 						}
-						else
+					}
+					else
+					{
+						if (family.Children.Count < removedFamily.Children.Count)
 						{
-							if (personToAdd.ContainsKey (family.Adult1.Id))
+							foreach (var child in family.Children)
 							{
-								//new family without child arrived
+								if (personToRemove.ContainsKey (child.Id))
+								{
+									isChildMissing = true;
+								}
+								else
+								{
+									if (familyToAdd.ContainsKey (child.Id))
+									{
+										isMajoritySideEffect = true;
+									}
+									else
+									{
+										isChildMove = true;
+									}
+								}
+							}
+						}
+					}
+					
+					if (monoParental)
+					{				
+						if (removedFamily.Adult2!=null)
+						{
+							isDivided = true;
+						}
+					}
+					else
+					{
+						if (removedFamily.Adult2==null)
+						{
+							isUnion = true;
+						}
+					}
+				}
+
+
+				if (!unclassified)
+				{
+					if (isNew)
+					{
+						if (monoParental)
+						{
+							if (hasChildren)
+							{
+								newFamilyMonoWithChildren.Add (family);
+							}
+							else
+							{
 								newFamilyMono.Add (family);
 							}
+							
+						}
+						else
+						{
+							if (hasChildren)
+							{
+								newFamilyWithChildren.Add (family);
+							}
+							else
+							{
+								newFamily.Add (family);
+							}
 						}
 					}
+
+					if (isDivided)
+					{
+						missingUnion.Add (family);
+					}
+
+					if (isWidow)
+					{
+						missingUnion.Add (family);
+					}
+
+					if (isUnion)
+					{
+						newUnion.Add (family);
+					}
+
+					if (isMajority)
+					{
+						gainMajority.Add (family);
+					}
+
+					if (isNewBorn)
+					{
+						familyWithNewChilds.Add (family);
+					}
+
+					if (isChildMissing)
+					{
+						familyWithChildMissing.Add (family);
+					}
+				}
+				else
+				{
+					if (!isMajoritySideEffect&&!isChildMove&&!isWidow)
+					{
+						addCaseToResolve.Add (family);
+					}
+					
 				}
 			}
+				
 
 			foreach (var family in familyToRemove.Values)
 			{
-				//check adult composition
-				if (family.Adult2 != null)
+				var monoParental = false;
+				var hasChildren = false;
+				var hasChange = false;
+
+				if (family.Adult2 == null)
 				{
-					var isFamilyDep = isFamilyWithChildrenDeparture(family, personToRemove); //check for a completely removal of the family in the register
-					if (isFamilyDep)
+					monoParental = true;
+				}
+
+				if (family.Children.Count > 0)
+				{
+					hasChildren = true;
+				}
+
+				if(familyToAdd.ContainsKey(family.Adult1.Id))
+				{
+					if (family.Adult2 != null)
 					{
-						missingFamilyWithChildren.Add(family);
+						if (familyToAdd.ContainsKey (family.Adult2.Id))
+						{
+							hasChange = true;
+						}
 					}
 					else
 					{
-						if (family.Children.Count > 0)
-						{
-							foreach (var child in family.Children)
-							{
-								if (familyToAdd.ContainsKey (child.Id))
-								{
-									//Majority
-									gainMajority.Add (familyToAdd[child.Id]);
-								}
+						hasChange = true;
+					}
+					
+				}
 
-							}
-						}
-						else
+				if (!hasChange)
+				{
+					if (monoParental)
+					{
+						if (personToRemove.ContainsKey (family.Adult1.Id))
 						{
-							if (personToRemove.ContainsKey (family.Adult1.Id) && personToRemove.ContainsKey (family.Adult2.Id))
+							if (hasChildren)
 							{
-								//family without child missing
+								missingFamilyMonoWithChildren.Add (family);
+							}
+							else
+							{
+								missingFamilyMono.Add (family);
+							}
+							
+						}
+					}
+					else
+					{
+						if (personToRemove.ContainsKey (family.Adult1.Id) && personToRemove.ContainsKey (family.Adult2.Id))
+						{
+							if (hasChildren)
+							{
+								missingFamilyWithChildren.Add (family);
+							}
+							else
+							{
 								missingFamily.Add (family);
 							}
-							if (!personToRemove.ContainsKey (family.Adult1.Id) && personToRemove.ContainsKey (family.Adult2.Id))
-							{
-								//member missing
-								missingUnion.Add (family);
-							}
+
 						}
-						
 					}
+					
 				}
 				else
 				{
-					//check mono-adult cases
-					if (personToRemove.ContainsKey(family.Adult1.Id))
-					{
-
-						if (family.Children.Count > 0)
-						{
-							missingFamilyMonoWithChildren.Add(family);
-						}
-						else
-						{
-							missingFamilyMono.Add(family);
-						}
-					}
-					else
-					{
-						remCaseToResolve.Add(family);
-					}
-				} 
+					//not treat
+				}
 			}
 
 
@@ -364,32 +474,22 @@ namespace Epsitec.Aider.Data.ECh
 			TextWriter tw = new StreamWriter("s:\\EChUpdateAnalyse.md");
 
 			tw.WriteLine("# Rapport Analyse ECH du " + DateTime.Now);
-			tw.WriteLine("## Résumé des modifications détéctée");
-
-			var structAddCount = (familyToAdd.Count - (newFamily.Count + newFamilyWithChildren.Count + newFamilyMono.Count + newFamilyMonoWithChildren.Count));
-			tw.WriteLine (structAddCount  + " ménages a recréer suite a une modification de leurs structures");
-			tw.WriteLine ("");
-
-
-			var structRemoveCount = (familyToRemove.Count - (missingFamily.Count + missingFamilyWithChildren.Count + missingFamilyMono.Count + missingFamilyMonoWithChildren.Count));
-			tw.WriteLine (structRemoveCount  + " ménages a supprimer suite a une modification de leurs structures");
-			tw.WriteLine ("");
 
 			tw.WriteLine ("## Résumé des départs et arrivées");
 			tw.WriteLine (newFamily.Count + " familles sans enfants sont arrivées dans le registre");
 			tw.WriteLine ("");
 			tw.WriteLine (missingFamily.Count + " familles sans enfants sont sorties du registre");
 			tw.WriteLine ("");
-			tw.WriteLine(newFamilyWithChildren.Count + " familles avec enfants sont arrivées dans le registre");
-			tw.WriteLine("");
+			tw.WriteLine (newFamilyWithChildren.Count + " familles avec enfants sont arrivées dans le registre");
+			tw.WriteLine ("");
 			tw.WriteLine (missingFamilyWithChildren.Count + " familles avec enfants sont sorties du registre");
 			tw.WriteLine ("");
-			tw.WriteLine(newFamilyMonoWithChildren.Count + " familles monoparentales avec enfants sont arrivées dans le registre");
+			tw.WriteLine (newFamilyMonoWithChildren.Count + " familles monoparentales avec enfants sont arrivées dans le registre");
 			tw.WriteLine ("");
 			tw.WriteLine (missingFamilyMonoWithChildren.Count + " familles monoparentales avec enfants sont sorties du registre");
 			tw.WriteLine ("");
 			tw.WriteLine (newFamilyMono.Count + " personnes seules sont arrivées dans le registre");
-			tw.WriteLine("");
+			tw.WriteLine ("");
 			tw.WriteLine (missingFamilyMono.Count + " personnes seules sont sorties du registre");
 			tw.WriteLine ("");
 			tw.WriteLine ("## Résumé des cas impactants les familles");
@@ -408,9 +508,7 @@ namespace Epsitec.Aider.Data.ECh
 			tw.WriteLine ("## Résumé des cas non-résolus");
 			tw.WriteLine(addCaseToResolve.Count + " ajouts non-résolus");
 			tw.WriteLine("");
-			tw.WriteLine(remCaseToResolve.Count + " suppressions non-résolues");
-			tw.WriteLine("");
-
+			
 			tw.WriteLine ("## Détail des arrivées");
 
 			tw.WriteLine ("### Nouvelles familles sans enfants dans le registre (" + newFamily.Count + ")");
@@ -444,6 +542,10 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
 				tw.WriteLine(" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " ( " + family.Adult1.MaritalStatus + " ) ");
+				if (family.Adult2 != null)
+				{
+					tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				}
 				tw.WriteLine("");
 				foreach (var child in family.Children)
 				{
@@ -455,6 +557,10 @@ namespace Epsitec.Aider.Data.ECh
 			foreach (var family in newFamilyMono)
 			{
 				tw.WriteLine ("* (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " ( " + family.Adult1.MaritalStatus + " ) ");
+				if (family.Adult2 != null)
+				{
+					tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				}
 			}
 
 			tw.WriteLine("### Nouveaux enfants (" + newChilds.Count + ")");
@@ -464,7 +570,7 @@ namespace Epsitec.Aider.Data.ECh
 				tw.WriteLine(" * (E) " + child.Item2.FirstNames + " " + child.Item2.OfficialName  + " né le " + child.Item2.DateOfBirth);
 			}
 
-
+			
 			tw.WriteLine("### Majorités (" + gainMajority.Count + ")");
 			foreach (var family in gainMajority)
 			{
@@ -504,6 +610,10 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				tw.WriteLine("#### Famille " + family.Adult1.OfficialName);
 				tw.WriteLine (" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " ( " + family.Adult1.MaritalStatus + " ) ");
+				if (family.Adult2 != null)
+				{
+					tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				}
 				tw.WriteLine("");
 				foreach (var child in family.Children)
 				{
@@ -515,6 +625,10 @@ namespace Epsitec.Aider.Data.ECh
 			foreach (var family in missingFamilyMono)
 			{
 				tw.WriteLine("* (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName);
+				if (family.Adult2 != null)
+				{
+					tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				}
 			}
 
 			tw.WriteLine ("### Enfants sortis du registre (" + childMissing.Count + ")");
@@ -524,92 +638,37 @@ namespace Epsitec.Aider.Data.ECh
 				tw.WriteLine (" * (E) " + child.Item2.FirstNames + " " + child.Item2.OfficialName  + " né le " + child.Item2.DateOfBirth);
 			}
 
-
+			
 			tw.WriteLine ("## Détail des cas impactants les familles");
 
-			tw.WriteLine ("### Union (" + newUnion.Count + ")");
+			tw.WriteLine ("### Nouvelles union (" + newUnion.Count + ")");
 			foreach (var family in newUnion)
 			{
 				tw.WriteLine ("#### Famille " + family.Adult1.OfficialName);
 				tw.WriteLine (" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " ( " + family.Adult1.MaritalStatus + " ) ");
 				tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				foreach (var child in family.Children)
+				{
+					tw.WriteLine (" * (E) " + child.FirstNames + " " + child.OfficialName);
+				}
 			}
 
-			tw.WriteLine ("### Séparations (" + missingUnion.Count + ")");
+			tw.WriteLine ("### Séparations / perte d'un conjoint (" + missingUnion.Count + ")");
 			foreach (var family in missingUnion)
 			{
 				tw.WriteLine ("#### Famille " + family.Adult1.OfficialName);
 				tw.WriteLine (" * (A) " + family.Adult1.FirstNames + " " + family.Adult1.OfficialName + " ( " + family.Adult1.MaritalStatus + " ) ");
-				tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				if (family.Adult2 != null)
+				{
+					tw.WriteLine (" * (A) " + family.Adult2.FirstNames + " " + family.Adult2.OfficialName + " ( " + family.Adult2.MaritalStatus + " ) ");
+				}
+				foreach (var child in family.Children)
+				{
+					tw.WriteLine (" * (E) " + child.FirstNames + " " + child.OfficialName);
+				}
 			}
 			tw.Close();
 
-		}
-
-		private bool findFamilyToRemoveCase(EChReportedPerson family, Dictionary<string, EChReportedPerson> familyToRemove)
-		{
-			foreach(var famToRem in familyToRemove)
-			{
-				if (famToRem.Value.Adult1.Id.Equals (family.Adult1.Id) && famToRem.Value.Adult2.Id.Equals (family.Adult2.Id))
-				{
-					return true;
-				}
-			}
-			return false;
-		}
-
-		private bool isNewFamilyWithChildrenArrival(EChReportedPerson family, Dictionary<string, EChPerson> personToAdd)
-		{
-			if (personToAdd.ContainsKey(family.Adult1.Id) && personToAdd.ContainsKey(family.Adult2.Id))
-			{
-				if (family.Children.Count > 0)
-				{
-					foreach (var child in family.Children)
-					{
-						if (!personToAdd.ContainsKey (child.Id))
-						{
-							return false;
-						}
-					}
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-				
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		private bool isFamilyWithChildrenDeparture(EChReportedPerson family, Dictionary<string, EChPerson> personToRemove)
-		{
-			if (personToRemove.ContainsKey(family.Adult1.Id) && personToRemove.ContainsKey(family.Adult2.Id))
-			{
-				if (family.Children.Count > 0)
-				{
-					foreach (var child in family.Children)
-					{
-						if (!personToRemove.ContainsKey (child.Id))
-						{
-							return false;
-						}
-					}
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-				
-			}
-			else
-			{
-				return false;
-			}
 		}
 
 		private void LoadFilesToCompare()
