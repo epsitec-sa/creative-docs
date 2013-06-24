@@ -97,9 +97,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						wall.AddBrick (x => x.LegalPerson)
 							/*.Icon ("Data.LegalPerson")*/;
 
-						wall.AddBrick (x => x.LegalPerson)
+						wall.AddBrick ()
 							.Title ("Adresse de base")
-							.Text (x => x.Address.GetSummary ())
+							.Text (x => x.LegalPerson.Address.GetSummary ())
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
 					if (string.IsNullOrEmpty (contact.PersonFullName) == false)
