@@ -103,16 +103,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Text (x => x.LegalPerson.Address.GetSummary ())
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
-					if (string.IsNullOrEmpty (contact.PersonFullName) == false)
-					{
-						var personSummary = TextFormatter.FormatText (contact.PersonMrMrs.GetShortText (), contact.PersonFullName);
+					
+					var contactPersonSummary = string.IsNullOrEmpty (contact.PersonFullName)
+						? FormattedText.Empty
+						: TextFormatter.FormatText (contact.PersonMrMrs.GetShortText (), contact.PersonFullName);
 
-						wall.AddBrick ()
-							.Icon (AiderPersonEntity.GetIconName ("Data", contact.PersonMrMrs, contact.LegalPerson.Language))
-							.Title ("Personne de contact")
-							.Text (personSummary)
-							.WithSpecialController (typeof (EditionAiderContactViewController2LegalContact));
-					}
+					wall.AddBrick ()
+						.Icon (AiderPersonEntity.GetIconName ("Data", contact.PersonMrMrs, contact.LegalPerson.Language))
+						.Title ("Personne de contact")
+						.Text (contactPersonSummary)
+						.WithSpecialController (typeof (EditionAiderContactViewController2LegalContact));
 					
 					if ((contact.Address.IsNotNull ()) &&
 						(contact.Address != contact.LegalPerson.Address))
