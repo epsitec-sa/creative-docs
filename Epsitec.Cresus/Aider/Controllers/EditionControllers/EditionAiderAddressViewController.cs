@@ -8,12 +8,20 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
+using System.Diagnostics;
+
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
 	public sealed class EditionAiderAddressViewController : EditionViewController<AiderAddressEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderAddressEntity> wall)
 		{
+			// We print a warning in the console because this controller should not be called. The
+			// problem is that if we edit an address with it, the business rules of the entities
+			// related to the address won't be triggered and that might lead to inconsitencies in
+			// their data.
+			Debug.WriteLine ("Warning: EditionAiderAddressViewController has been called.");
+
 			var currentUser = UserManager.Current.AuthenticatedUser;
 			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
 
