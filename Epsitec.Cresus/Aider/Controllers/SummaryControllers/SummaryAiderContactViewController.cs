@@ -94,7 +94,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case Enumerations.ContactType.Legal:
 					if (contact.LegalPerson.IsNotNull ())
 					{
-						wall.AddBrick (x => x.LegalPerson);
+						wall.AddBrick (x => x.LegalPerson)
+							.Attribute (BrickMode.DefaultToSummarySubView);
 
 						wall.AddBrick ()
 							.Title ("Adresse de base")
