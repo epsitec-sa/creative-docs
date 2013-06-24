@@ -101,7 +101,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv-new.xml -oldechfile:s:\eerv-old.xml
+				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv-new.xml -oldechfile:s:\eerv-old.xml -output:s:\analyse.md
 				{
 					AiderProgram.RunEchUpdate (args);
 					return;
@@ -209,8 +209,8 @@ namespace Epsitec.Aider
 			{
 				var newEChDataFile = AiderProgram.GetFile (args, "-newechfile:", true);
 				var oldEChDataFile = AiderProgram.GetFile (args, "-oldechfile:", true);
-
-				UpdateEChData.StartJob (oldEChDataFile.FullName, newEChDataFile.FullName, coreData);
+                var reportFile = AiderProgram.GetFile(args, "-output:", true);
+				UpdateEChData.StartJob (oldEChDataFile.FullName, newEChDataFile.FullName,reportFile.FullName, coreData);
 
 			});
 		}

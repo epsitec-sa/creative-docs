@@ -101,6 +101,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionViewController.cs" />
     <Compile Include="Data\Common\AddressChecker.cs" />
     <Compile Include="Data\Common\DataReader.cs" />
+    <Compile Include="Data\ECh\EChDataAnalyser.cs" />
     <Compile Include="Data\ECh\EChDataComparerLoader.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />

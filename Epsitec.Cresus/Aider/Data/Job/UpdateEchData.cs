@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Core;
@@ -13,17 +14,20 @@ namespace Epsitec.Aider.Data.Job
 	internal static class UpdateEChData
 	{
 
-		public static void StartJob(string oldEchFile, string newEchFile, CoreData coreData)
+		public static void StartJob(string oldEchFile, string newEchFile,string reportFile, CoreData coreData)
 		{
 
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
 
-				UpdateEChData.Comparer = new EChDataComparer(oldEchFile, newEchFile);
+				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile);
 
-				UpdateEChData.Comparer.AnalyseChanges();
+                Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
+				UpdateEChData.Analyser.AnalyseAllChanges();
+                Console.WriteLine("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + reportFile);
+                UpdateEChData.Analyser.CreateReport(reportFile);
 
-				/*
+                
 				if (UpdateEChData.UpdateEchPerson(coreData))
 				{
 					UpdateEChData.UpdateEchReportedPersons(coreData);
@@ -31,7 +35,9 @@ namespace Epsitec.Aider.Data.Job
 				else
 				{
 					Console.WriteLine("ECH DATA UPDATER : FAIL... VERIFY YOUR DATA");
-				}*/
+				}
+
+                UpdateEChData.CreateNewEChReportedPerson(coreData);
 			}
 			else
 			{
@@ -40,13 +46,28 @@ namespace Epsitec.Aider.Data.Job
 
 		}
 
-		private static  EChDataComparer Comparer;
+		private static  EChDataAnalyser Analyser;
+
+
+        public static void CreateNewEChReportedPerson(CoreData coreData)
+        {
+            Console.WriteLine("ECH DATA UPDATER : START CREATE FAMILY JOB");
+
+            var newFamilies = UpdateEChData.Analyser.GetNewFamilies();
+            Console.WriteLine(newFamilies.Count + " NEW ECH REPORTED PERSON TO IMPORT");
+            var parishRepository = ParishAddressRepository.Current;
+
+            EChDataImporter.Import(coreData, parishRepository, newFamilies);
+
+
+            Console.WriteLine("ECH DATA UPDATER : JOB DONE!");
+        }
 
 		private static bool UpdateEchPerson(CoreData coreData)
 		{
 
 			Console.WriteLine("ECH DATA UPDATER : START UPDATE PERSON JOB");
-			var personsToChange = UpdateEChData.Comparer.GetPersonToChange();
+			var personsToChange = UpdateEChData.Analyser.GetPersonToChange();
 			Console.WriteLine(personsToChange.Count + " ECH PERSON TO CHANGE");
 
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -116,7 +137,7 @@ namespace Epsitec.Aider.Data.Job
 		{
 
 			Console.WriteLine("ECH DATA UPDATER : START UPDATE REPORTED PERSON JOB");
-			var reportedPersonsToChange = UpdateEChData.Comparer.GetFamilyToChange();
+			var reportedPersonsToChange = UpdateEChData.Analyser.GetFamilyToChange();
 			Console.WriteLine(reportedPersonsToChange.Count + " ECH REPORTED PERSON TO CHANGE");
 			using (var businessContext = new BusinessContext(coreData, false))
 			{
