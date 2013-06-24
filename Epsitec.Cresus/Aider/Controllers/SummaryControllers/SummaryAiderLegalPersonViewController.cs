@@ -37,6 +37,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.End ()
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
+
+			wall.AddBrick (x => x.Comment)
+				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
 	}
 }
