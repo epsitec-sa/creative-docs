@@ -99,6 +99,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 						wall.AddBrick ()
 							.Title ("Adresse de base")
+							.Icon ("Data.AiderAddress")
 							.Text (x => x.LegalPerson.Address.GetSummary ())
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 					}
