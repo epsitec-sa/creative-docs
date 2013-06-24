@@ -21,14 +21,14 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			var bricks = wall.AddBrick ();
 			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope(this.BusinessContext, currentUser as AiderUserEntity);
-			
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+
 			bricks = this.GetHeader (bricks);
 
 			bricks = bricks
 				.Input ()
 				.Field (x => x.Address.Town)
-					.WithFavorites(favorites)
+					.WithFavorites (favorites)
 				.Field (x => x.Address.AddressLine1)
 				.Field (x => x.Address.StreetHouseNumberAndComplement)
 				.Field (x => x.Address.PostBox)

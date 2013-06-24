@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
 			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope(this.BusinessContext,currentUser as AiderUserEntity);
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
 
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse du ménage"))
