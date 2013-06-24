@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Bricks;
 
@@ -10,6 +11,7 @@ using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			return entity;
 		}
-		
+
 		public void NotifyChildItemDeleted<T>(T entity)
 			where T : AbstractEntity
 		{
@@ -104,6 +106,42 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				history.NavigateInPlace (path);
 			}
+		}
+
+
+
+		/// <summary>
+		/// This method checks that the controller type can be used with the given entity type.
+		/// </summary>
+		public static bool AreCompatible(Type entityType, Type controllerType)
+		{
+			if (!typeof (AbstractEntity).IsAssignableFrom (entityType))
+			{
+				throw new ArgumentException ("Invalid entity type: " + entityType.FullName);
+			}
+
+			if (!typeof (EntityViewController).IsAssignableFrom (controllerType))
+			{
+				throw new ArgumentException ("Invalid controller type: " + controllerType.FullName);
+			}
+
+			var entityViewControllerType = typeof (EntityViewController<>);
+
+			var entityTypes = entityType
+				.GetBaseTypes ()
+				.TakeWhile (t => t != typeof (AbstractEntity));
+
+			foreach (var type in entityTypes)
+			{
+				var expectedControllerType = entityViewControllerType.MakeGenericType (type);
+
+				if (expectedControllerType.IsAssignableFrom (controllerType))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 	}
 }
