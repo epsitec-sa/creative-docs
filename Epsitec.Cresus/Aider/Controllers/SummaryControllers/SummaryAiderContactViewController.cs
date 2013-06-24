@@ -113,16 +113,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Title ("Personne de contact")
 						.Text (contactPersonSummary)
 						.WithSpecialController (typeof (EditionAiderContactViewController2LegalContact));
-					
-					if ((contact.Address.IsNotNull ()) &&
-						(contact.Address != contact.LegalPerson.Address))
-					{
-						wall.AddBrick ()
-							.Title ("Adresse de contact")
-							.Text (contact.Address.GetSummary ())
-							.Icon ("Data.AiderAddress")
-							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
-					}
 					break;
 
 				default:
