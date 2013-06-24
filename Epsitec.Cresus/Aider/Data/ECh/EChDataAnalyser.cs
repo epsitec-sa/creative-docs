@@ -56,6 +56,8 @@ namespace Epsitec.Aider.Data.ECh
             {
                 FamilyToRemove.Add(family.Adult1.Id, family);
             }
+
+            this.AnalyseAllChanges();
         }
 
 
@@ -64,7 +66,7 @@ namespace Epsitec.Aider.Data.ECh
             return this.NewFamiliesDetected.Select(f => f.Value).ToList();
         }
 
-        public void AnalyseAllChanges()
+        private void AnalyseAllChanges()
         {
 
             //We check all the family to add in the register,
@@ -185,11 +187,11 @@ namespace Epsitec.Aider.Data.ECh
                 //Check Childrens Changes on changed core structure
                 if (hasChildren&&coreStructuralChange)
                 {
-                    if (family.Children.Count > removedFamily.Children.Count)
+                    if (family.Children.Count > removedFamily.Children.Count)//if we have more children
                     {
                         foreach (var child in family.Children)
                         {
-                            if (this.PersonToAdd.ContainsKey(child.Id))
+                            if (this.PersonToAdd.ContainsKey(child.Id))//if the child is new
                             {
                                 isNewBorn = true;
                                 this.NewChilds.Add(Tuple.Create(family, child));
@@ -200,7 +202,7 @@ namespace Epsitec.Aider.Data.ECh
                             }
                         }
                     }
-                    if (family.Children.Count < removedFamily.Children.Count)
+                    if (family.Children.Count < removedFamily.Children.Count)//if we have less children
                     {
                         foreach (var child in family.Children)
                         {
@@ -210,7 +212,7 @@ namespace Epsitec.Aider.Data.ECh
                             }
                             else
                             {
-                                if (this.FamilyToAdd.ContainsKey(child.Id))
+                                if (this.FamilyToAdd.ContainsKey(child.Id))//if we found the child as family
                                 {
                                     isMajoritySideEffect = true;
                                 }
@@ -223,9 +225,9 @@ namespace Epsitec.Aider.Data.ECh
                         }
                     }
                 }
-                else if (!hasChildren && coreStructuralChange)
+                else if (!hasChildren && coreStructuralChange)//if we don't have child
                 {
-                    if (family.Children.Count < removedFamily.Children.Count)
+                    if (family.Children.Count < removedFamily.Children.Count)//if we have child in the past
                     {
                         foreach (var child in family.Children)
                         {
@@ -235,7 +237,7 @@ namespace Epsitec.Aider.Data.ECh
                             }
                             else
                             {
-                                if (this.FamilyToAdd.ContainsKey(child.Id))
+                                if (this.FamilyToAdd.ContainsKey(child.Id))//if we found the child as family
                                 {
                                     isMajoritySideEffect = true;
                                 }
@@ -253,8 +255,6 @@ namespace Epsitec.Aider.Data.ECh
                 {
                     if (isNew)
                     {
-
-
                         //Result 
                         this.NewFamiliesDetected.Add(family.FamilyKey,family);
 
@@ -318,11 +318,11 @@ namespace Epsitec.Aider.Data.ECh
                         this.ChildMove.Add(family);
                     }
                 }
-                else
+                else//for unclassified case
                 {
-                    if (!isMajoritySideEffect && !isChildMove && !isWidow)
+                    if (!isMajoritySideEffect && !isChildMove && !isWidow)//exclude some special case
                     {
-                        this.AddCaseToResolve.Add(family);
+                        this.AddCaseToResolve.Add(family);//add to the resolve list
                     }
 
                 }
@@ -408,7 +408,7 @@ namespace Epsitec.Aider.Data.ECh
 
         public void CreateReport(string reportFile)
         {
-            //REPORT IN MARKDOWN
+            //REPORT IN MARKDOWN (offline markdown reader: http://stackoverflow.com/questions/9843609/view-md-file-offline)
             System.IO.TextWriter tw = new System.IO.StreamWriter(reportFile);
 
             tw.WriteLine("# Rapport Analyse ECH du " + DateTime.Now);

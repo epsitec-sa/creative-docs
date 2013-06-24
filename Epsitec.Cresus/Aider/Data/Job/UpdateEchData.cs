@@ -20,24 +20,25 @@ namespace Epsitec.Aider.Data.Job
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
 
+                Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
 				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile);
 
-                Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
-				UpdateEChData.Analyser.AnalyseAllChanges();
                 Console.WriteLine("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + reportFile);
                 UpdateEChData.Analyser.CreateReport(reportFile);
 
                 
-				if (UpdateEChData.UpdateEchPerson(coreData))
+				if (UpdateEChData.UpdateEChPerson(coreData))
 				{
-					UpdateEChData.UpdateEchReportedPersons(coreData);
+					UpdateEChData.UpdateEChReportedPersons(coreData);
+
+                    UpdateEChData.CreateNewEChReportedPerson(coreData);
+
 				}
 				else
 				{
 					Console.WriteLine("ECH DATA UPDATER : FAIL... VERIFY YOUR DATA");
 				}
 
-                UpdateEChData.CreateNewEChReportedPerson(coreData);
 			}
 			else
 			{
@@ -63,7 +64,7 @@ namespace Epsitec.Aider.Data.Job
             Console.WriteLine("ECH DATA UPDATER : JOB DONE!");
         }
 
-		private static bool UpdateEchPerson(CoreData coreData)
+		private static bool UpdateEChPerson(CoreData coreData)
 		{
 
 			Console.WriteLine("ECH DATA UPDATER : START UPDATE PERSON JOB");
@@ -133,7 +134,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static bool UpdateEchReportedPersons(CoreData coreData)
+		private static bool UpdateEChReportedPersons(CoreData coreData)
 		{
 
 			Console.WriteLine("ECH DATA UPDATER : START UPDATE REPORTED PERSON JOB");
