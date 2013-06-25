@@ -77,5 +77,16 @@ namespace Epsitec.Common.Support.Extensions
 				yield return entry;
 			}
 		}
+
+		public static List<V> GetOrCreateList<K, V>(this Dictionary<K, List<V>> dic, K key)
+		{
+			List<V> list;
+			if (!dic.TryGetValue (key, out list))
+			{
+				list = new List<V> ();
+				dic[key] = list;
+			}
+			return list;
+		}
 	}
 }
