@@ -228,12 +228,12 @@ function() {
 
       //check if navigation data is present
       if (path.id && path.name) {
-        var tab, callback;
+        var tab, openTileCallback, selectEntityCallback;
 
         //called after the summary tile is loaded
         openTileCallback = Epsitec.CallbackQueue.create(
             function() {
-              var lastTile = tab.columns[tab.columns.length - 1].items.items[0];
+              //var lastTile = tab.columns[tab.columns.length - 1].items.items[0];
               //lastTile.openNextTile(null);
               //remove callback on column-manager
               tab.afterSelection = null;
@@ -267,7 +267,7 @@ function() {
 
       //check if navigation data is present
       if (path.id && path.name) {
-        var tab, callback, endCallback, lastTile;
+        var tab, endCallback, lastTile, openTileCallback, selectEntityCallback;
 
         //executed when edition tile is loaded
         endCallback = Epsitec.CallbackQueue.create(
@@ -315,7 +315,7 @@ function() {
 
       //check if navigation data is present
       if (path.id && path.name) {
-        var tab, callback, endCallback, lastTile;
+        var tab, endCallback, openTileCallback, selectEntityCallback;
 
         //executed when edition tile is loaded
         endCallback = Epsitec.CallbackQueue.create(
