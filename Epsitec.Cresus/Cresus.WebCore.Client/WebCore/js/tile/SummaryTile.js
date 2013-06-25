@@ -65,9 +65,9 @@ function() {
       return tools;
     },
 
-    openNextTile: function (callback) {
-        this.column.selectTile(this);
-        this.column.addEntityColumnWithCallback(
+    openNextTile: function(callback) {
+      this.column.selectTile(this);
+      this.column.addEntityColumnWithCallback(
           this.subViewMode, this.subViewId, this.entityId, callback);
     },
 

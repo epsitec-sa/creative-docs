@@ -26,7 +26,6 @@ function() {
       return { };
     },
 
-
     // To be overriden in child classes.
     setState: function(state) {
     },
@@ -56,10 +55,10 @@ function() {
       );
     },
 
-    addEntityColumnWithCallback: function (viewMode, viewId, entityId, callback) {
-        this.columnManager.addEntityColumn(
-            viewMode, viewId, entityId, this, callback
-        );
+    addEntityColumnWithCallback: function(viewMode, viewId, entityId, callback) {
+      this.columnManager.addEntityColumn(
+          viewMode, viewId, entityId, this, callback
+      );
     },
 
     removeToRight: function() {

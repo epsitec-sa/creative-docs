@@ -29,9 +29,9 @@ function() {
         addLabel: Epsitec.Texts.getAddLabel(),
         removeLabel: Epsitec.Texts.getRemoveLabel(),
         onSelectionChange: Epsitec.Callback.create(
-              this.onSelectionChange,
-              this
-          )
+            this.onSelectionChange,
+            this
+        )
       };
       Ext.applyIf(newOptions, options);
 
@@ -39,9 +39,9 @@ function() {
       return this;
     },
 
-      /* Additional methods */
-    onSelectionChange: function () {
-        //todo add the right column
+    /* Additional methods */
+    onSelectionChange: function() {
+      //todo add the right column
     },
 
     handleAdd: function() {
