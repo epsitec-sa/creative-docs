@@ -47,7 +47,7 @@ function() {
         return this.loadingText;
       }
 
-      return this.store.findRecord('id', value).get('text');
+      return this.store.getById(value).get('text');
     },
 
     requestRefresh: function(view) {
