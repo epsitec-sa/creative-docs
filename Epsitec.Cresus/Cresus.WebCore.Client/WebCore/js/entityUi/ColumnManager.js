@@ -69,7 +69,9 @@ function() {
       var viewMode = Epsitec.ViewMode.summary;
       this.removeAllColumns();
       if (entityItems.length === 1) {
-        this.addEntityColumn(viewMode, 'null', entityItems[0].id, null, this.afterSelection);
+        this.addEntityColumn(
+            viewMode, 'null', entityItems[0].id, null, this.afterSelection
+        );
       }
 
     },

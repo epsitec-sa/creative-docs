@@ -233,7 +233,7 @@ function() {
         //called after the summary tile is loaded
         openTileCallback = Epsitec.CallbackQueue.create(
             function() {
-              //var lastTile = tab.columns[tab.columns.length - 1].items.items[0];
+              //var lastTile = tab.columns[tab.columns.length-1].items.items[0];
               //lastTile.openNextTile(null);
               //remove callback on column-manager
               tab.afterSelection = null;

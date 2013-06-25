@@ -601,7 +601,9 @@ function() {
       if (e.getKey() === e.ENTER) {
 
         if (this.fullSearchWindow) {
-          this.fullSearchWindow.items.items[0].items.items[0].setValue(field.value);
+          this.fullSearchWindow.items.items[0].items.items[0].setValue(
+              field.value
+          );
         }
         if (this.filters.filters.items.length === 0) {
           this.filters.addFilter(config);
@@ -624,7 +626,7 @@ function() {
     ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
-        var fields, form;
+        var fields, form, application, parent;
         Ext.QuickTips.init();
         fields = this.createSearchFormFields(this.columnDefinitions);
         form = Ext.widget({
@@ -653,6 +655,9 @@ function() {
           }]
         });
 
+        application = Epsitec.Cresus.Core.getApplication();
+        parent = Ext.get(application.tabManager.getLayout().getActiveItem().el);
+
         this.fullSearchWindow = Ext.create('Ext.Window', {
           title: 'Recherche',
           width: 400,
@@ -660,7 +665,7 @@ function() {
           header: 'false',
           layout: 'fit',
           constrain: true,
-          renderTo: Ext.get(Epsitec.Cresus.Core.getApplication().tabManager.getLayout().getActiveItem().el),
+          renderTo: parent,
           closable: true,
           closeAction: 'hide',
           items: form
@@ -678,7 +683,9 @@ function() {
         }
 
       }
-      this.fullSearchWindow.items.items[0].items.items[0].setValue(this.dockedItems.items[2].items.items[0].lastValue);
+      this.fullSearchWindow.items.items[0].items.items[0].setValue(
+          this.dockedItems.items[2].items.items[0].lastValue
+      );
     },
 
     onEnterExecuteFullSearch: function(field, e) {
@@ -693,34 +700,33 @@ function() {
       form = this.fullSearchWindow.items.items[0];
       list = this;
 
-      list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
+      list.dockedItems.items[2].items.items[0].setValue(
+          form.items.items[0].lastValue
+      );
+
       Ext.Array.each(form.items.items, function(item) {
-        if (Epsitec.Tools.isUndefined(list.filters.filters.getByKey(item.name)) && Epsitec.Tools.isDefined(item.lastValue)) {
-          var config = {
-            type: 'string',
-            dataIndex: item.name,
-            value: item.lastValue,
-            active: true
-          };
-          list.filters.addFilter(config);
-          list.filters.filters.getByKey(item.name).fireEvent(
-              'update', list.filters.filters.getByKey(item.name)
-          );
+        var filter = list.filters.filters.getByKey(item.name);
+        if (Epsitec.Tools.isUndefined(filter)) {
+          if (Epsitec.Tools.isDefined(item.lastValue)) {
+            list.filters.addFilter({
+              type: 'string',
+              dataIndex: item.name,
+              value: item.lastValue,
+              active: true
+            });
+            list.filters.filters.getByKey(item.name).fireEvent(
+                'update', list.filters.filters.getByKey(item.name)
+            );
+            filter = list.filters.filters.getByKey(item.name);
+          }
         }
         else {
-          if (Epsitec.Tools.isDefined(list.filters.filters.getByKey(item.name))) {
-            if (item.lastValue) {
-              if (item.lastValue.length > 0) {
-                list.filters.filters.getByKey(item.name).setValue(item.lastValue);
-                list.filters.filters.getByKey(item.name).setActive(true);
-              }
-              else {
-                list.filters.filters.getByKey(item.name).setActive(false);
-              }
-            }
-            else {
-              list.filters.filters.getByKey(item.name).setActive(false);
-            }
+          if (item.lastValue && item.lastValue.length > 0) {
+            filter.setValue(item.lastValue);
+            filter.setActive(true);
+          }
+          else {
+            filter.setActive(false);
           }
         }
       });
@@ -740,7 +746,9 @@ function() {
           list.filters.filters.getByKey(item.name).setActive(false);
         }
       });
-      list.dockedItems.items[2].items.items[0].setValue(form.items.items[0].lastValue);
+      list.dockedItems.items[2].items.items[0].setValue(
+          form.items.items[0].lastValue
+      );
     },
 
     ///EXPORT
