@@ -21,23 +21,24 @@ namespace Epsitec.Aider.Data.Job
 			{
 
                 Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
-				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile);
-
+				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile,true);
+				
                 Console.WriteLine("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + reportFile);
-                UpdateEChData.Analyser.CreateReport(reportFile);
 
-                
-				if (UpdateEChData.UpdateEChPerson(coreData))
-				{
-					UpdateEChData.UpdateEChReportedPersons(coreData);
+                //UpdateEChData.Analyser.CreateReport(reportFile);
 
-                    UpdateEChData.CreateNewEChReportedPerson(coreData);
 
-				}
-				else
-				{
-					Console.WriteLine("ECH DATA UPDATER : FAIL... VERIFY YOUR DATA");
-				}
+				//if (UpdateEChData.UpdateEChPerson (coreData))
+				//{
+				//	UpdateEChData.UpdateEChReportedPersons (coreData);
+
+				//	UpdateEChData.CreateNewEChReportedPerson (coreData);
+
+				//}
+				//else
+				//{
+				//	Console.WriteLine ("ECH DATA UPDATER : FAIL... VERIFY YOUR DATA");
+				//}
 
 			}
 			else
@@ -54,11 +55,11 @@ namespace Epsitec.Aider.Data.Job
         {
             Console.WriteLine("ECH DATA UPDATER : START CREATE FAMILY JOB");
 
-            var newFamilies = UpdateEChData.Analyser.GetNewFamilies();
-            Console.WriteLine(newFamilies.Count + " NEW ECH REPORTED PERSON TO IMPORT");
-            var parishRepository = ParishAddressRepository.Current;
+            //var newFamilies = UpdateEChData.Analyser.GetNewFamilies();
+            //Console.WriteLine(newFamilies.Count() + " NEW ECH REPORTED PERSON TO IMPORT");
+            //var parishRepository = ParishAddressRepository.Current;
 
-            EChDataImporter.Import(coreData, parishRepository, newFamilies);
+           //EChDataImporter.Import(coreData, parishRepository, newFamilies);
 
 
             Console.WriteLine("ECH DATA UPDATER : JOB DONE!");
