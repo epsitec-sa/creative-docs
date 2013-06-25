@@ -6,8 +6,12 @@ function() {
     alternateClassName: ['Epsitec.Tools'],
 
     statics: {
+      isDefined: function(item) {
+        return typeof item !== 'undefined';
+      },
+
       isUndefined: function(item) {
-        return typeof item === 'undefined';
+        return !this.isDefined(item);
       },
 
       isArrayEmpty: function(array) {
