@@ -4,6 +4,7 @@ using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
+using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
 using System;
@@ -86,16 +87,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		}
 
 
-		private string GetCell(AbstractPropertyAccessor columnAccessors, AbstractEntity entity)
+		private string GetCell(AbstractPropertyAccessor columnAccessor, AbstractEntity entity)
 		{
-			var value = columnAccessors.GetValue (entity);
+			var value = columnAccessor.GetValue (entity);
 
-			if (value != null && !(value is string))
+			var fieldType = columnAccessor.FieldType;
+			if (fieldType == FieldType.EntityReference || fieldType == FieldType.EntityCollection)
 			{
-				throw new InvalidOperationException ();
+				throw new NotImplementedException ("Unsupported field type");
 			}
 
-			return (string) value;
+			return FieldIO.ConvertToString (value, fieldType);
 		}
 
 

@@ -482,6 +482,140 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
+		public static string ConvertToString(object value, FieldType fieldType)
+		{
+			switch (fieldType)
+			{
+				case FieldType.Boolean:
+					return FieldIO.ConvertBooleanToString (value);
+
+				case FieldType.Date:
+					return FieldIO.ConvertDateToString (value);
+
+				case FieldType.Decimal:
+					return FieldIO.ConvertDecimalToString (value);
+
+				case FieldType.Enumeration:
+					return FieldIO.ConvertEnumerationToString (value);
+
+				case FieldType.Integer:
+					return FieldIO.ConvertIntegerToString (value);
+
+				case FieldType.Text:
+					return FieldIO.ConvertTextToString (value);
+
+				case FieldType.EntityCollection:
+				case FieldType.EntityReference:
+					throw new NotImplementedException ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static string ConvertBooleanToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var boolean = (bool) value;
+			var yesOrNo = boolean.ToYesOrNo ();
+
+			return FieldIO.GetEnumString (yesOrNo);
+		}
+
+
+		private static string ConvertDateToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var date = (Date) value;
+			var format = FieldIO.dateFormat;
+			var culture = FieldIO.dateCulture;
+
+			return date.ToString (format, culture);
+		}
+
+
+		private static string ConvertDecimalToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var number = (decimal) value;
+
+			return InvariantConverter.ToString (number);
+		}
+
+
+		private static string ConvertEnumerationToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var enumeration = (Enum) value;
+
+			return FieldIO.GetEnumString (enumeration);
+		}
+
+
+		private static string ConvertIntegerToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var number = InvariantConverter.ToLong (value);
+
+			return InvariantConverter.ToString (number);
+		}
+
+
+		private static string ConvertTextToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			if (value is FormattedText)
+			{
+				var formattedText = (FormattedText) value;
+
+				return formattedText.ToSimpleText ();
+			}
+			else if (value is FormattedText?)
+			{
+				var formattedText = (FormattedText?) value;
+
+				return formattedText.HasValue
+					? formattedText.Value.ToSimpleText ()
+					: "";
+			}
+			else
+			{
+				return (string) value;
+			}
+		}
+
+
+		private static string GetEnumString(Enum value)
+		{
+			return EnumKeyValues.GetEnumKeyValue ((object) value).Values.First ().ToSimpleText ();
+		}
+
+
 		private static readonly string dateFormat = "dd.MM.yyyy";
 
 
