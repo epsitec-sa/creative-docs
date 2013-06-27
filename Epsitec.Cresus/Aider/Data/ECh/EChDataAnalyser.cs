@@ -705,7 +705,7 @@ namespace Epsitec.Aider.Data.ECh
 				}
 
 
-
+                /*
 				var oldFamiliesMatched = family.GetAdults ().Select (ad => ad.Id).Select (id => FamilyToRemove.ContainsKey(id) ? FamilyToRemove[id] : null).Where(rec => rec != null).Distinct ().ToList();
 
 				//0
@@ -745,11 +745,9 @@ namespace Epsitec.Aider.Data.ECh
 					}
 
 				}
-
-
-
+                */
 				//Union and Separation Detector
-				/*
+				
 				if (monoParental)
 				{
 					if (this.FamilyToRemove.ContainsKey (family.Adult1.Id))//if we found the opposed record to remove
@@ -877,7 +875,7 @@ namespace Epsitec.Aider.Data.ECh
 						}
 					}
 
-				}*/
+				}
 
 				tw.WriteLine ("Check Childrens Changes on changed core structure");
 				tw.WriteLine ("");
@@ -915,8 +913,6 @@ namespace Epsitec.Aider.Data.ECh
 					}
 					
 				}
-
-
 
 				var removedChildren = oldChildren.Except (family.Children, EChDataAnalyser.PersonComparer);
 
