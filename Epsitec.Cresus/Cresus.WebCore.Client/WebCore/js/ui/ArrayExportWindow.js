@@ -88,7 +88,7 @@ function() {
         selModel: {
           selType: 'rowmodel',
           allowDeselect: true,
-          mode: 'SINGLE'
+          mode: 'MULTI'
         }
       };
 
