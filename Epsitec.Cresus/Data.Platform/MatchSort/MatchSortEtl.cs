@@ -598,7 +598,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private SQLiteCommand BuildMessengerCommand()
 		{
-			var sql = "select b.etappen_nr "
+			var sql = "select b.boten_bez "
 						+ "from new_plz1 as p "
 						+ "join new_str s on s.onrp = p.onrp "
 						+ "join new_geb as g on g.str_id = s.str_id "
@@ -621,7 +621,7 @@ namespace Epsitec.Data.Platform.MatchSort
 
 		private SQLiteCommand BuildMessengerCommandRelaxed()
 		{
-			var sql = "select b.etappen_nr "
+			var sql = "select b.boten_bez "
 						+ "from new_plz1 as p "
 						+ "join new_str s on s.onrp = p.onrp "
 						+ "join new_geb as g on g.str_id = s.str_id "
