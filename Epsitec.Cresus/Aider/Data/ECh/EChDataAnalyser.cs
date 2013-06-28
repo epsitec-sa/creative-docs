@@ -431,6 +431,7 @@ namespace Epsitec.Aider.Data.ECh
 
         public void CreateReport(string reportFile)
         {
+			Console.WriteLine ("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + reportFile);
             //REPORT IN MARKDOWN (offline markdown reader: http://stackoverflow.com/questions/9843609/view-md-file-offline)
 			using (System.IO.TextWriter tw = new System.IO.StreamWriter (reportFile))
 			{
@@ -646,6 +647,7 @@ namespace Epsitec.Aider.Data.ECh
 					}
 				}
 				tw.Close ();
+				Console.WriteLine ("ECH DATA UPDATER : DONE!");
 			}
         }
 

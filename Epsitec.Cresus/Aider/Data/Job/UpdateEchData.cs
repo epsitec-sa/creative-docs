@@ -24,24 +24,18 @@ namespace Epsitec.Aider.Data.Job
 			{
 
                 Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
-				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile,true);
+				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile, true);
 				
-                //Console.WriteLine("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + reportFile);
+                UpdateEChData.Analyser.CreateReport(reportFile);
 
-                //UpdateEChData.Analyser.CreateReport(reportFile);
+				UpdateEChData.UpdateEChPerson (coreData);
+				
+				UpdateEChData.UpdateEChReportedPersons (coreData);
 
+				UpdateEChData.CreateNewEChReportedPerson (coreData);
 
-				//if (UpdateEChData.UpdateEChPerson (coreData))
-				//{
-				//	UpdateEChData.UpdateEChReportedPersons (coreData);
+				UpdateEChData.TagForDeletionEChPersonEntity (coreData);
 
-				//	UpdateEChData.CreateNewEChReportedPerson (coreData);
-
-				//}
-				//else
-				//{
-				//	Console.WriteLine ("ECH DATA UPDATER : FAIL... VERIFY YOUR DATA");
-				//}
 
 			}
 			else
@@ -51,9 +45,7 @@ namespace Epsitec.Aider.Data.Job
 
 		}
 
-		private static  EChDataAnalyser Analyser;
-
-        public static void CreateNewEChPerson(CoreData coreData)
+        private static void CreateNewEChPerson(CoreData coreData)
         {
             Console.WriteLine("ECH DATA UPDATER : START CREATE ECH PERSON JOB");
 
@@ -105,7 +97,7 @@ namespace Epsitec.Aider.Data.Job
             }
         }
 
-        public static void TagForDeletionEChPersonEntity(CoreData coreData)
+        private static void TagForDeletionEChPersonEntity(CoreData coreData)
         {
             Console.WriteLine("ECH DATA UPDATER : START TAG FOR DELETION ECH PERSON JOB");
             using (var businessContext = new BusinessContext(coreData, false))
@@ -135,7 +127,7 @@ namespace Epsitec.Aider.Data.Job
             }
         }
 
-        public static void CreateNewEChReportedPerson(CoreData coreData)
+        private static void CreateNewEChReportedPerson(CoreData coreData)
         {
             Console.WriteLine("ECH DATA UPDATER : START CREATE FAMILY JOB");
 
@@ -360,5 +352,7 @@ namespace Epsitec.Aider.Data.Job
 
 			return businessContext.DataContext.GetByRequest<eCH_ReportedPersonEntity>(request).First();
 		}
+
+		private static  EChDataAnalyser Analyser;
 	}
 }
