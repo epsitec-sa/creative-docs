@@ -26,7 +26,7 @@ AiderSubscriptionRefusal = [LVGC32]
 <meta>
   <T>
     <t eid="@AiderContact" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Nom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Intitulé" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -40,7 +40,7 @@ AiderSubscriptionRefusal = [LVGC32]
       </col>
     </t>
     <t eid="@AiderLegalPerson" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAV8]" title="Nom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAV8]" title="Intitulé" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
