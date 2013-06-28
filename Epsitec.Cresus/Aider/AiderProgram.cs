@@ -68,15 +68,6 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-testmatchsort"))					//	-testmatchsort -input:Q:\logs2.txt
-				{
-					//	Analyzes the log file produced by an address export based on MAT[CH]sort
-					//	for the "Bonne Nouvelle" journal.
-
-					ConsoleCreator.RunWithConsole (() => Tests.TestMatchSort.AnalyzeLogs (AiderProgram.GetFile (args, "-input:", true)));
-					return;
-				}
-
 				if (args.Contains ("-analyzeparishfile"))
 				{
 					AiderProgram.AnalyzeParishFile (args);
@@ -137,7 +128,16 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-uploadsubscriptions"))				//	-uploadsubscriptions -input:Q:\output.txt -response:Q:\tamedia.log
+				if (args.Contains ("-testmatchsort"))					//	-testmatchsort -input:Q:\error.log
+				{
+					//	Analyzes the log file produced by an address export based on MAT[CH]sort
+					//	for the "Bonne Nouvelle" journal.
+
+					ConsoleCreator.RunWithConsole (() => Tests.TestMatchSort.AnalyzeLogs (AiderProgram.GetFile (args, "-input:", true)));
+					return;
+				}
+
+				if (args.Contains ("-uploadsubscriptions"))				//	-uploadsubscriptions -input:Q:\output.txt -publicationdate:2013-06-27 -response:Q:\tamedia.log
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.UploadSubscriptionExportation (args));
 					return;
