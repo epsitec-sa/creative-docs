@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetDisplayAddress()
 		{
-			return TextFormatter.FormatText (this.Town.Name, "~,~", this.StreetRoot);
+			return TextFormatter.FormatText (this.Town.Name, "~,~", this.StreetRoot, this.HouseNumberAndComplement);
 		}
 
 		public FormattedText GetDisplayZipCode()
