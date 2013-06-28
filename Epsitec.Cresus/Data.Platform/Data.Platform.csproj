@@ -80,9 +80,6 @@
     <Compile Include="MatchSort\MatchSortEtl.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
-    <Compile Include="MatchSort\MatchSortHouse.cs" />
-    <Compile Include="MatchSort\MatchSortPlace.cs" />
-    <Compile Include="MatchSort\MatchSortStreet.cs" />
     <Compile Include="SwissPostFullZip.cs" />
     <Compile Include="SwissPostZipCodeFolding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
