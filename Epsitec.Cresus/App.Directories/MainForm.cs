@@ -324,7 +324,7 @@ namespace App.Directories
 			{
 				var t = System.Diagnostics.Stopwatch.StartNew();
 				
-				var test = this.etl.GetMessenger(this.txt_zip.Text, this.txt_zip_add.Text, this.txt_street.Text, this.txt_house.Text, this.txt_house_a.Text);
+				var test = this.etl.GetDistrictNumber(this.txt_zip.Text, this.txt_zip_add.Text, this.txt_street.Text, this.txt_house.Text, this.txt_house_a.Text);
 				t.Stop();
 				this.lbl_time_get_messengerprepared.Text = "Messenger="+ test + " / " + t.Elapsed.Milliseconds + "ms";
 			}

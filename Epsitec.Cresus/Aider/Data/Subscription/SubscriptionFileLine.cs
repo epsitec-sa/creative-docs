@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string addressComplement,
 			string street,
 			string houseNumber,
-			int? postmanNumber,
+			int? districtNumber,
 			string zipCode,
 			string town,
 			string country,
@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.CheckArguments
 			(
 				subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
-				addressComplement, street, houseNumber, postmanNumber, zipCode, town, country,
+				addressComplement, street, houseNumber, districtNumber, zipCode, town, country,
 				isSwitzerland
 			);
 
@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Data.Subscription
 			this.AddressComplement = addressComplement;
 			this.Street = street;
 			this.HouseNumber = houseNumber;
-			this.PostmanNumber = postmanNumber;
+			this.DistrictNumber = districtNumber;
 			this.ZipCode = zipCode;
 			this.Town = town;
 			this.Country = country;
@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Data.Subscription
 			string addressComplement,
 			string street,
 			string houseNumber,
-			int? postmanNumber,
+			int? districtNumber,
 			string zipCode,
 			string town,
 			string country,
@@ -214,27 +214,27 @@ namespace Epsitec.Aider.Data.Subscription
 					"invalid zip code"
 				);
 
-				if (postmanNumber.HasValue)
+				if (districtNumber.HasValue)
 				{
-					postmanNumber.ThrowIf
+					districtNumber.ThrowIf
 					(
-						x => x < SubscriptionFileLine.SwissPostmanNumberMin,
-						"postmanNumber too small"
+						x => x < SubscriptionFileLine.SwissDistrictNumberMin,
+						"districtNumber too small"
 					);
 
-					postmanNumber.ThrowIf
+					districtNumber.ThrowIf
 					(
-						x => x > SubscriptionFileLine.SwissPostmanNumberMax,
-						"postmanNumber too large"
+						x => x > SubscriptionFileLine.SwissDistrictNumberMax,
+						"districtNumber too large"
 					);
 				}
 			}
 			else
 			{
-				postmanNumber.ThrowIf
+				districtNumber.ThrowIf
 				(
-					x => x != SubscriptionFileLine.ForeignPostmanNumber,
-					"postmanNumber invalid"
+					x => x != SubscriptionFileLine.ForeignDistrictNumber,
+					"districtNumber invalid"
 				);
 			}
 		}
@@ -271,7 +271,7 @@ namespace Epsitec.Aider.Data.Subscription
 				+ this.AddressComplement.PadRight (SubscriptionFileLine.AddressComplementLength)
 				+ this.Street.PadRight (SubscriptionFileLine.StreetLength)
 				+ this.HouseNumber.PadRight (SubscriptionFileLine.HouseNumberLength)
-				+ this.GetPostmanNumber ().PadRight (SubscriptionFileLine.PostmanNumberLength)
+				+ this.GetDistrictNumber ().PadRight (SubscriptionFileLine.DistrictNumberLength)
 				+ this.ZipCode.PadLeft (SubscriptionFileLine.ZipCodeLength)
 				+ this.Town.PadRight (SubscriptionFileLine.TownLength)
 				+ this.Country.PadRight (SubscriptionFileLine.CountryLength)
@@ -286,10 +286,10 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private string GetPostmanNumber()
+		private string GetDistrictNumber()
 		{
-			return this.PostmanNumber.HasValue
-				? InvariantConverter.ToString (this.PostmanNumber)
+			return this.DistrictNumber.HasValue
+				? InvariantConverter.ToString (this.DistrictNumber)
 				: "";
 		}
 
@@ -357,7 +357,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly string AddressComplement;
 		public readonly string Street;
 		public readonly string HouseNumber;
-		public readonly int? PostmanNumber;
+		public readonly int? DistrictNumber;
 		public readonly string ZipCode;
 		public readonly string Town;
 		public readonly string Country;
@@ -373,7 +373,7 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int AddressComplementLength = 30;
 		public static readonly int StreetLength = 30;
 		public static readonly int HouseNumberLength = 10;
-		public static readonly int PostmanNumberLength = 3;
+		public static readonly int DistrictNumberLength = 3;
 		public static readonly int ZipCodeLength = 10;
 		public static readonly int TownLength = 30;
 		public static readonly int CountryLength = 30;
@@ -384,11 +384,11 @@ namespace Epsitec.Aider.Data.Subscription
 		public static readonly int CopiesCountMax = 99999;
 		public static readonly int NameLengthMax = 47;
 		public static readonly int SwissZipCodeLength = 6;
-		public static readonly int SwissPostmanNumberMin = 1;
-		public static readonly int SwissPostmanNumberMax = 999;
-		public static readonly int SwissPostmanNumberPostbox = 999;
+		public static readonly int SwissDistrictNumberMin = 1;
+		public static readonly int SwissDistrictNumberMax = 999;
+		public static readonly int SwissDistrictNumberPostbox = 999;
 		public static readonly Regex SwissHouseNumberRegex = new Regex (@"^\d{0,7}[a-zA-z]{0,3}$");
-		public static readonly int ForeignPostmanNumber = 0;
+		public static readonly int ForeignDistrictNumber = 0;
 
 
 		private static readonly string LineEnding = "\r\n";

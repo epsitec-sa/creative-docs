@@ -76,8 +76,8 @@ namespace Epsitec.Data.Platform.MatchSort
 
 
 				//Prepare and Build SQL Commands
-				this.MessengerCommand = this.BuildMessengerCommand ();
-				this.MessengerCommandRelaxed = this.BuildMessengerCommandRelaxed ();
+				this.DistrictNumberCommand = this.BuildDistrictNumberCommand ();
+				this.DistrictNumberRelaxedCommand = this.BuildDistrictNumberRelaxedCommand ();
 				this.HousesAtStreetCommand = this.BuildHousesAtStreetCommand ();
 			}
 			catch
@@ -89,8 +89,8 @@ namespace Epsitec.Data.Platform.MatchSort
 		}
 
 		/// <summary>
-		/// Get the Messenger number
-		/// Ex: GetMessenger("1000","06","avenue floréal","10","a")
+		/// Get the district number
+		/// Ex: GetDistrictNumber("1000","06","avenue floréal","10","a")
 		/// </summary>
 		/// <param name="zip">4 digits zip </param>
 		/// <param name="zipAddon">2 digit zip add-on</param>
@@ -98,20 +98,20 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// <param name="house">house number without complement</param>
 		/// <param name="houseAlpha">alpha house number complement (non case-sensitive)</param>
 		/// <returns></returns>
-		public int? GetMessenger(string zip, string zipAddon, string street, string house, string houseAlpha)
+		public int? GetDistrictNumber(string zip, string zipAddon, string street, string house, string houseAlpha)
 		{
 			if (houseAlpha == null)
 			{
-				return this.GetMessengerRelaxed (zip, zipAddon, street, house);
+				return this.GetDistrictNumberRelaxed (zip, zipAddon, street, house);
 			}
 
-			this.MessengerCommand.Parameters["@zip"].Value = zip;
-			this.MessengerCommand.Parameters["@zip_addon"].Value = zipAddon;
-			this.MessengerCommand.Parameters["@street"].Value = street;
-			this.MessengerCommand.Parameters["@house"].Value = house;
-			this.MessengerCommand.Parameters["@house_alpha"].Value = houseAlpha;
+			this.DistrictNumberCommand.Parameters["@zip"].Value = zip;
+			this.DistrictNumberCommand.Parameters["@zip_addon"].Value = zipAddon;
+			this.DistrictNumberCommand.Parameters["@street"].Value = street;
+			this.DistrictNumberCommand.Parameters["@house"].Value = house;
+			this.DistrictNumberCommand.Parameters["@house_alpha"].Value = houseAlpha;
 
-			using (var dr = this.MessengerCommand.ExecuteReader ())
+			using (var dr = this.DistrictNumberCommand.ExecuteReader ())
 			{
 				dr.Read ();
 
@@ -190,8 +190,8 @@ namespace Epsitec.Data.Platform.MatchSort
 				MatchSortEtl.DisposeSQLiteObject (this.InsertPlaceCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.InsertStreetCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.HousesAtStreetCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommand);
-				MatchSortEtl.DisposeSQLiteObject (this.MessengerCommandRelaxed);
+				MatchSortEtl.DisposeSQLiteObject (this.DistrictNumberCommand);
+				MatchSortEtl.DisposeSQLiteObject (this.DistrictNumberRelaxedCommand);
 				MatchSortEtl.DisposeSQLiteObject (this.connection);
 				this.connection=null;
 			}
@@ -596,7 +596,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			return command;
 		}
 
-		private SQLiteCommand BuildMessengerCommand()
+		private SQLiteCommand BuildDistrictNumberCommand()
 		{
 			var sql = "select b.boten_bez "
 						+ "from new_plz1 as p "
@@ -619,7 +619,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			return command;
 		}
 
-		private SQLiteCommand BuildMessengerCommandRelaxed()
+		private SQLiteCommand BuildDistrictNumberRelaxedCommand()
 		{
 			var sql = "select b.boten_bez "
 						+ "from new_plz1 as p "
@@ -640,13 +640,13 @@ namespace Epsitec.Data.Platform.MatchSort
 			return command;
 		}
 
-		private int? GetMessengerRelaxed(string zip, string zip_addon, string street, string house)
+		private int? GetDistrictNumberRelaxed(string zip, string zip_addon, string street, string house)
 		{
-			this.MessengerCommandRelaxed.Parameters["@zip"].Value = zip;
-			this.MessengerCommandRelaxed.Parameters["@zip_addon"].Value = zip_addon;
-			this.MessengerCommandRelaxed.Parameters["@street"].Value = street;
-			this.MessengerCommandRelaxed.Parameters["@house"].Value = house;
-			using (var dr = this.MessengerCommandRelaxed.ExecuteReader ())
+			this.DistrictNumberRelaxedCommand.Parameters["@zip"].Value = zip;
+			this.DistrictNumberRelaxedCommand.Parameters["@zip_addon"].Value = zip_addon;
+			this.DistrictNumberRelaxedCommand.Parameters["@street"].Value = street;
+			this.DistrictNumberRelaxedCommand.Parameters["@house"].Value = house;
+			using (var dr = this.DistrictNumberRelaxedCommand.ExecuteReader ())
 			{
 				dr.Read ();
 				return dr.HasRows ? (int) dr.GetInt64 (0) : (int?) null;
@@ -688,8 +688,8 @@ namespace Epsitec.Data.Platform.MatchSort
 		private readonly SQLiteCommand			InsertHouseCommand;
 		private readonly SQLiteCommand			InsertMessengerCommand;
 		private readonly SQLiteCommand			HousesAtStreetCommand;
-		private readonly SQLiteCommand			MessengerCommand;
-		private readonly SQLiteCommand			MessengerCommandRelaxed;
+		private readonly SQLiteCommand			DistrictNumberCommand;
+		private readonly SQLiteCommand			DistrictNumberRelaxedCommand;
 
 		private SQLiteConnection				connection;
 		private SQLiteCommand					command;

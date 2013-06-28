@@ -37,17 +37,17 @@ namespace Epsitec.Aider.Data.Subscription
 			CoreData coreData,
 			FileInfo outputFile,
 			FileInfo errorFile,
-			bool skipLinesWithPostmanNumberError
+			bool skipLinesWithDistrictNumberError
 		)
 		{
 			this.coreData = coreData;
 			this.outputFile = outputFile;
 			this.errorFile = errorFile;
-			this.skipLinesWithPostmanNumberError = skipLinesWithPostmanNumberError;
+			this.skipLinesWithDistrictNumberError = skipLinesWithDistrictNumberError;
 			this.startTime = System.DateTime.UtcNow;
 
 			this.errors = new List<Tuple<string, string>> ();
-			this.postmanErrors = new List<Tuple<string, string>> ();
+			this.districtNumberErrors = new List<Tuple<string, string>> ();
 			this.editionStats = new int[16];
 			this.countries = new HashSet<string> ();
 		}
@@ -66,12 +66,12 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private void LogErrors()
 		{
-			if ((this.errors.Count > 0 || this.postmanErrors.Count > 0) && this.errorFile != null)
+			if ((this.errors.Count > 0 || this.districtNumberErrors.Count > 0) && this.errorFile != null)
 			{
 				using (var stream = this.errorFile.Open (FileMode.Create, FileAccess.Write))
 				using (var streamWriter = new StreamWriter (stream))
 				{
-					foreach (var error in this.errors.Concat (this.postmanErrors))
+					foreach (var error in this.errors.Concat (this.districtNumberErrors))
 					{
 						streamWriter.WriteLine (error.Item1 + " => " + error.Item2);
 					}
@@ -146,9 +146,9 @@ namespace Epsitec.Aider.Data.Subscription
 					this.errors.Add (Tuple.Create (subscription.Id, e.Message));
 				}
 
-				if (this.skipLinesWithPostmanNumberError)
+				if (this.skipLinesWithDistrictNumberError)
 				{
-					if (line != null && !line.PostmanNumber.HasValue)
+					if (line != null && !line.DistrictNumber.HasValue)
 					{
 						line = null;
 					}
@@ -265,7 +265,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var subscriptionNumber = subscription.Id;
 			var copiesCount = subscription.Count;
 			var editionId = subscription.GetEditionId ();
-			var postmanNumber = this.GetPostmanNumber (subscriptionNumber, address, etl);
+			var districtNumber = this.GetDistrictNumber (subscriptionNumber, address, etl);
 
 			string title;
 			string lastname;
@@ -311,7 +311,7 @@ namespace Epsitec.Aider.Data.Subscription
 			return new SubscriptionFileLine
 			(
 				subscriptionNumber, copiesCount, editionId, title, lastname, firstname,
-				addressComplement, street, houseNumber, postmanNumber, zipCode, townName,
+				addressComplement, street, houseNumber, districtNumber, zipCode, townName,
 				countryName, DistributionMode.Surface, isSwitzerland, canton
 			);
 		}
@@ -1211,7 +1211,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private int? GetPostmanNumber
+		private int? GetDistrictNumber
 		(
 			string subscriptionId,
 			AiderAddressEntity address,
@@ -1221,13 +1221,13 @@ namespace Epsitec.Aider.Data.Subscription
 			// The specs requires 0 for an addresses outside Switzerland.
 			if (!address.Town.Country.IsSwitzerland ())
 			{
-				return SubscriptionFileLine.ForeignPostmanNumber;
+				return SubscriptionFileLine.ForeignDistrictNumber;
 			}
 
 			// The specs requires 999 for adresses with a post box.
 			if (!String.IsNullOrEmpty (address.PostBox))
 			{
-				return SubscriptionFileLine.SwissPostmanNumberPostbox;
+				return SubscriptionFileLine.SwissDistrictNumberPostbox;
 			}
 
 			var zipCode  = address.Town.SwissZipCode.ToString ();
@@ -1238,7 +1238,7 @@ namespace Epsitec.Aider.Data.Subscription
 				: null;
 			var complement = address.HouseNumberComplement;
 
-			var postmanNumber = etl.GetMessenger
+			var districtNumber = etl.GetDistrictNumber
 			(
 				zipCode ?? "",
 				zipAddOn ?? "",
@@ -1247,18 +1247,18 @@ namespace Epsitec.Aider.Data.Subscription
 				complement ?? ""
 			);
 
-			if (postmanNumber.HasValue)
+			if (districtNumber.HasValue)
 			{
-				return postmanNumber.Value;
+				return districtNumber.Value;
 			}
 
-			// We have not found the postman number. We try to find one by using an empty house
+			// We have not found the district number. We try to find one by using an empty house
 			// number complement if the address has a house number complement. This is probably a
 			// wrong address.
 
 			if (!string.IsNullOrEmpty (complement))
 			{
-				postmanNumber = etl.GetMessenger
+				districtNumber = etl.GetDistrictNumber
 				(
 					zipCode ?? "",
 					zipAddOn ?? "",
@@ -1267,14 +1267,14 @@ namespace Epsitec.Aider.Data.Subscription
 					""
 				);
 
-				if (postmanNumber.HasValue)
+				if (districtNumber.HasValue)
 				{
-					return postmanNumber.Value;
+					return districtNumber.Value;
 				}
 			}
 
-			// We still have found no postman number. In this case, the spec requires an empty
-			// postman number.
+			// We still have found no district number. In this case, the spec requires an empty
+			// district number.
 
 			var message = SubscriptionFileWriter.ErrorMessage
 				+ zipCode + ", " + zipAddOn + ", "
@@ -1284,7 +1284,7 @@ namespace Epsitec.Aider.Data.Subscription
 			Debug.WriteLine (message);
 			System.Console.WriteLine (message);
 
-			this.postmanErrors.Add (Tuple.Create (subscriptionId, message));
+			this.districtNumberErrors.Add (Tuple.Create (subscriptionId, message));
 
 			return null;
 		}
@@ -1293,9 +1293,9 @@ namespace Epsitec.Aider.Data.Subscription
 		private readonly CoreData coreData;
 		private readonly FileInfo outputFile;
 		private readonly FileInfo errorFile;
-		private readonly bool skipLinesWithPostmanNumberError;
+		private readonly bool skipLinesWithDistrictNumberError;
 		private readonly List<Tuple<string, string>> errors;
-		private readonly List<Tuple<string, string>> postmanErrors;
+		private readonly List<Tuple<string, string>> districtNumberErrors;
 
 		private readonly int[] editionStats;
 		private readonly System.DateTime startTime;
@@ -1305,7 +1305,7 @@ namespace Epsitec.Aider.Data.Subscription
 		private int totalSwiss;
 		private int totalForeign;
 
-		internal const string ErrorMessage = "Postman number not found for address: ";
+		internal const string ErrorMessage = "District number not found for address: ";
 
 
 		// We need a delegate to define this, as the System.Action type cannot use arguments with

@@ -109,7 +109,7 @@ namespace Epsitec.Aider.Tests
 
 			public int? GetMessenger(Epsitec.Data.Platform.MatchSort.MatchSortEtl etl, bool relaxedStreetNumberComplement = false)
 			{
-				return etl.GetMessenger (this.ZipCode.ToString ("0000"), this.ZipCodeAddOn.ToString ("00"),
+				return etl.GetDistrictNumber (this.ZipCode.ToString ("0000"), this.ZipCodeAddOn.ToString ("00"),
 										 this.StreetName, this.StreetNumber.HasValue ? this.StreetNumber.Value.ToString () : "",
 										 relaxedStreetNumberComplement ? null : this.StreetNumberComplement);
 			}
