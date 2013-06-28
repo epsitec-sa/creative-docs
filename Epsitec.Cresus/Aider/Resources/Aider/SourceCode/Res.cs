@@ -16,17 +16,13 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Base.ShowAiderAddress, null);
+					global::System.Object.Equals (Base.ShowAiderContact, null);
 				}
 				
-				//	designer:cap/LVG202
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderAddress = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 2));
 				//	designer:cap/LVAFE
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 463));
 				//	designer:cap/LVG402
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
-				//	designer:cap/LVA3D
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderFunctionDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 419));
 				//	designer:cap/LVA1D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVGI22
@@ -35,20 +31,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupDef = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 418));
 				//	designer:cap/LVG422
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupMembersDisplay = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 68));
-				//	designer:cap/LVG522
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupMembersPick = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 69));
-				//	designer:cap/LVG322
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroupParticipant = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 67));
 				//	designer:cap/LVG102
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderHousehold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
 				//	designer:cap/LVAGG
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 528));
 				//	designer:cap/LVG832
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPersonContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 104));
-				//	designer:cap/LVG002
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 0));
-				//	designer:cap/LVG502
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonRelationship = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 5));
 				//	designer:cap/LVG232
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 98));
 				//	designer:cap/LVGJ32
@@ -68,14 +56,10 @@ namespace Epsitec.Aider
 		{
 			public static class Base
 			{
-				//	designer:cap/LVG202
-				public const long ShowAiderAddress = 0x3F500050000002L;
 				//	designer:cap/LVAFE
 				public const long ShowAiderContact = 0x3F50000A0001CFL;
 				//	designer:cap/LVG402
 				public const long ShowAiderCountry = 0x3F500050000004L;
-				//	designer:cap/LVA3D
-				public const long ShowAiderFunctionDef = 0x3F50000A0001A3L;
 				//	designer:cap/LVA1D
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVGI22
@@ -84,20 +68,12 @@ namespace Epsitec.Aider
 				public const long ShowAiderGroupDef = 0x3F50000A0001A2L;
 				//	designer:cap/LVG422
 				public const long ShowAiderGroupMembersDisplay = 0x3F500050000044L;
-				//	designer:cap/LVG522
-				public const long ShowAiderGroupMembersPick = 0x3F500050000045L;
-				//	designer:cap/LVG322
-				public const long ShowAiderGroupParticipant = 0x3F500050000043L;
 				//	designer:cap/LVG102
 				public const long ShowAiderHousehold = 0x3F500050000001L;
 				//	designer:cap/LVAGG
 				public const long ShowAiderLegalPerson = 0x3F50000A000210L;
 				//	designer:cap/LVG832
 				public const long ShowAiderLegalPersonContact = 0x3F500050000068L;
-				//	designer:cap/LVG002
-				public const long ShowAiderPerson = 0x3F500050000000L;
-				//	designer:cap/LVG502
-				public const long ShowAiderPersonRelationship = 0x3F500050000005L;
 				//	designer:cap/LVG232
 				public const long ShowAiderSubscription = 0x3F500050000062L;
 				//	designer:cap/LVGJ32

@@ -67,29 +67,9 @@ AiderSubscriptionRefusal = [LVGC32]
         <disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderPerson" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAI4]" title="Nom" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-    </t>
     <t eid="@AiderGroup" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroup:[LVAA4]" title="Nom" canSort="True" canFilter="True">
         <sort o="Ascending" />
-        <disp m="Visible" />
-      </col>
-    </t>
-    <t eid="@AiderGroupParticipant" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA84].[LVAA4]" title="Groupe" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA2]" title="Nom" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAU1].[LVA3]" title="Prenom" canSort="True" canFilter="True">
-        <sort o="None" />
         <disp m="Visible" />
       </col>
     </t>
@@ -149,31 +129,7 @@ AiderSubscriptionRefusal = [LVGC32]
         <disp m="Visible" />
       </col>
     </t>
-    <t eid="@AiderGroupParticipant" n="groupMembers">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAI4]" title="Nom" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAHG].[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-    </t>
-    <t eid="@AiderContact" n="groupMembers">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVACE]" title="Nom" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAEE]" title="NPA" dw="45" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-    </t>
-    <t eid="@AiderGroupParticipant" n="groupFunctionMembers">
+    <t eid="@AiderGroupParticipant" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVA94].[LVAI4]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
@@ -245,7 +201,7 @@ AiderSubscriptionRefusal = [LVGC32]
     <d cid="[LVAID]" teid="@AiderUserRole" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVG222]" teid="@AiderUserScope" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
     <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs"><R><r>@user</r></R></d>
-    <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="groupMembers" df="false" d="false" ec="true" ed="true" dg="">
+    <d cid="[LVG422]" teid="@AiderGroupParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
       <L>
@@ -253,7 +209,6 @@ AiderSubscriptionRefusal = [LVGC32]
         <l t="Adresse des parents" f="1"/>
       </L>
     </d>
-    <d cid="[LVG522]" teid="@AiderContact" tn="groupMembers" df="false" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
     <d cid="[LVGI22]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderContact:" /></M>
@@ -262,8 +217,6 @@ AiderSubscriptionRefusal = [LVGC32]
         <l t="Adresse des parents" f="1"/>
       </L>
     </d>
-    <d cid="[LVG002]" teid="@AiderPerson" tn="default" df="true" d="false" ec="false" ed="false" dg=""><R><r>@user</r></R></d>
-    <d cid="[LVG322]" teid="@AiderGroupParticipant" tn="default" d="false" ec="false" ed="false" df="true" dg=""><R><r>@user</r></R></d>
     <d cid="[LVG832]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
       <L>

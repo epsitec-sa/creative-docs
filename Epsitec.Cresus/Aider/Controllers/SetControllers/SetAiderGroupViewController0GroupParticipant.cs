@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 
 		public override Druid GetPickDataSetId()
 		{
-			return Res.CommandIds.Base.ShowAiderGroupMembersPick;
+			return Res.CommandIds.Base.ShowAiderContact;
 		}
 
 		public override bool? GetOverrideEnableCreate()
