@@ -25,6 +25,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 
 		private void CreateBricksForUserAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{
+			var favorites = AiderCountryEntity.GetCountryFavorites (this.BusinessContext);
+
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Input ()
@@ -48,6 +50,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Profession)
 					.Field (x => x.Language)
 					.Field (x => x.eCH_Person.Nationality)
+						.WithFavorites(favorites)
 					.Field (x => x.eCH_Person.Origins)
 				.End ();
 		}
