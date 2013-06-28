@@ -7,6 +7,8 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Entities;
 
+using System.Linq;
+
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
 	[ControllerSubType (0)]
@@ -15,39 +17,52 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> action)
 		{
 			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+			
+			var towns     = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+			var countries = AiderCountryEntity.GetCountryFavorites (this.BusinessContext);
+			var switzerland = this.BusinessContext.GetLocalEntity (countries.FirstOrDefault (x => x.IsoCode == "CH"));
 
 			action
 				.Title ("Créer un nouveau ménage")
+				.Field<PersonMrMrs> ()
+					.Title ("Appellation du chef de famille")
+					.InitialValue (PersonMrMrs.Monsieur)
+				.End ()
 				.Field<string> ()
 					.Title ("Prénom du chef de famille")
 				.End ()
 				.Field<string> ()
 					.Title ("Nom du chef de famille")
 				.End ()
-				.Field<PersonSex> ()
-					.Title ("Sexe du chef de famille")
-					.InitialValue (PersonSex.Unknown)
-				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Localité")
-					.WithFavorites (favorites)
+					.WithFavorites (towns)
 				.End ()
 				.Field<string> ()
-					.Title ("Rue")
+					.Title ("Rue et numéro (avec complément)")
 				.End ()
-				.Field<string> ()
-					.Title ("Numéro de maison (avec complément)")
+				.Field<PersonConfession> ()
+					.Title ("Confession du chef de famille")
+				.End ()
+				.Field<AiderCountryEntity> ()
+					.Title ("Nationalité du chef de famille")
+					.InitialValue (switzerland)
+					.WithFavorites (countries)
 				.End ();
 		}
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, string, PersonSex, AiderTownEntity, string, string, AiderHouseholdEntity> (this.Execute);
+			return FunctionExecutor.Create<PersonMrMrs, string, string, AiderTownEntity, string, PersonConfession, AiderCountryEntity, AiderHouseholdEntity> (this.Execute);
 		}
 
-		private AiderHouseholdEntity Execute(string firstname, string lastname, PersonSex sex, AiderTownEntity town, string street, string number)
+		private AiderHouseholdEntity Execute(PersonMrMrs mrMrs, string firstname, string lastname, AiderTownEntity town, string streetHouseNumberAndComplement, PersonConfession confession, AiderCountryEntity nationality)
 		{
+			if (mrMrs == PersonMrMrs.None)
+			{
+				throw new BusinessRuleException ("L'appellation est obligatoire");
+			}
+
 			if (string.IsNullOrEmpty (firstname))
 			{
 				throw new BusinessRuleException ("Le prénom est obligatoire");
@@ -63,7 +78,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException ("La localité est obligatoire");
 			}
 
-			if (string.IsNullOrEmpty (street))
+			if (string.IsNullOrEmpty (streetHouseNumberAndComplement))
 			{
 				throw new BusinessRuleException ("La rue est obligatoire");
 			}
@@ -72,13 +87,16 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			var address = household.Address;
 			address.Town = town;
-			address.StreetUserFriendly = street;
-			address.HouseNumberAndComplement = number;
+			address.StreetHouseNumberAndComplement = streetHouseNumberAndComplement;
 
 			var person = this.BusinessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+			person.MrMrs = mrMrs;
+			person.Confession = confession;
 			person.eCH_Person.PersonFirstNames = firstname;
 			person.eCH_Person.PersonOfficialName = lastname;
-			person.eCH_Person.PersonSex = sex;
+			person.eCH_Person.PersonSex = mrMrs == PersonMrMrs.Monsieur ? PersonSex.Male : PersonSex.Female;
+			person.eCH_Person.Nationality = nationality;
+
 			AiderContactEntity.Create (this.BusinessContext, person, household, true);
 
 			return household;
