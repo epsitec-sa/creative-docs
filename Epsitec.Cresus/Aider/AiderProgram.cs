@@ -160,6 +160,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixParishAssignation (args));
 					return;
 				}
+
+				if (args.Contains ("-fixcontactnames"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixContactNames (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -344,6 +350,14 @@ namespace Epsitec.Aider
 				(
 					parishRepository, coreData
 				)
+			);
+		}
+
+		private static void FixContactNames(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => ContactNameFixer.FixContactNames (coreData)
 			);
 		}
 
