@@ -2,6 +2,8 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Loader;
@@ -38,6 +40,22 @@ namespace Epsitec.Aider.Entities
 
 				case SubscriptionType.LegalPerson:
 					return this.LegalPersonContact.GetDisplayName ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		public FormattedText GetAddressLabelText()
+		{
+			switch (this.RefusalType)
+			{
+				case SubscriptionType.Household:
+					return this.Household.GetAddressLabelText ();
+
+				case SubscriptionType.LegalPerson:
+					return this.LegalPersonContact.GetAddressLabelText ();
 
 				default:
 					throw new NotImplementedException ();

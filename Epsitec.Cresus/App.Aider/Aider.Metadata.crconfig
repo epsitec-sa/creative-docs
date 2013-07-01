@@ -730,6 +730,9 @@ AiderPersonWarning = [LVALB]
 
     <d cid="[LVGJ32]" teid="@AiderSubscriptionRefusal" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuBonneNouvelle">
       <R><r>@user</r></R>
+      <L>
+        <l t="Adresse" f="0"/>
+       </L>
     </d>
 
     <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc">
