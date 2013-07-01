@@ -137,6 +137,7 @@
     <Compile Include="Labels\AiderContactLabelTextFactory1.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory1.cs" />
+    <Compile Include="Labels\AiderSubscriptionLabelTextFactory0.cs" />
     <Compile Include="Override\AiderActivityLogger.cs" />
     <Compile Include="Override\AiderDatabaseInitializer.cs" />
     <Compile Include="Override\AiderUserManager.cs" />

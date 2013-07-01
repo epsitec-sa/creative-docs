@@ -39,6 +39,22 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public FormattedText GetAddressLabelText()
+		{
+			switch (this.SubscriptionType)
+			{
+				case SubscriptionType.Household:
+					return this.Household.GetAddressLabelText ();
+
+				case SubscriptionType.LegalPerson:
+					return this.LegalPersonContact.GetAddressLabelText ();
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
 		public void RefreshCache()
 		{
 			this.DisplayName = this.GetDisplayName ();

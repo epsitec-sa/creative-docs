@@ -47,7 +47,25 @@ namespace Epsitec.Aider.Entities
 			return this.Contacts.Any (c => c.Person == person && c.HouseholdRole == HouseholdRole.Head);
 		}
 
+		public FormattedText GetAddressLabelText()
+		{
+			return TextFormatter.FormatText
+			(
+				this.GetAddressRecipientText (),
+				"\n",
+				this.Address.GetPostalAddress ()
+			);
+		}
 
+		public FormattedText GetAddressRecipientText()
+		{
+			return TextFormatter.FormatText
+			(
+				this.GetHonorific (false),
+				"\n",
+				this.GetNames ()
+			);
+		}
 
 		public FormattedText GetMembersTitle()
 		{
@@ -77,6 +95,38 @@ namespace Epsitec.Aider.Entities
 			return AiderHouseholdEntity.GetHeadTitle (honorific, heads, children, abbreviated);
 		}
 
+		public string GetNames()
+		{
+			var firstnames = this.GetFirstnames ();
+			var lastnames = this.GetLastnames ();
+			var parts = new List<string> ();
+
+			if (firstnames.Count == 1)
+			{
+				parts.Add (firstnames[0] + " " + lastnames[0]);
+			}
+			else if (firstnames.Count == 2 && lastnames.Count == 1)
+			{
+				parts.Add (firstnames[0] + " et " + firstnames[1]);
+				parts.Add (lastnames[0]);
+			}
+			else if (firstnames.Count == 2 && lastnames.Count == 2)
+			{
+				parts.Add (firstnames[0] + " " + lastnames[0]);
+				parts.Add (firstnames[1] + " " + lastnames[1]);
+			}
+			else
+			{
+				throw new NotImplementedException ();
+			}
+
+			var totalLength = parts.Sum (p => p.Length);
+			var separator = totalLength > 35
+				? "\n"
+				: " ";
+
+			return string.Join (separator, parts);
+		}
 
 		public List<string> GetFirstnames()
 		{
