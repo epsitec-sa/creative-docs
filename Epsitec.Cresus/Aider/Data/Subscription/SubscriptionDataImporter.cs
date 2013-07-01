@@ -360,9 +360,9 @@ namespace Epsitec.Aider.Data.Subscription
 
 				var firstname = subscription.Firstname;
 				var lastname = subscription.Lastname;
-				contact.PersonFullName = StringUtils.Join (" ", firstname, lastname);
+				contact.LegalPersonContactFullName = StringUtils.Join (" ", firstname, lastname);
 
-				contact.PersonMrMrs = TextParser.ParsePersonMrMrs (subscription.Title);
+				contact.LegalPersonContactMrMrs = TextParser.ParsePersonMrMrs (subscription.Title);
 			}
 
 			address.AddressLine1 = subscription.FirstAddressLine;

@@ -1353,18 +1353,18 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid HouseholdRole = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 457);
 				//	designer:cap/LVA7E
 				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 455);
+				//	designer:cap/LVAFG
+				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContactFullName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 527);
+				//	designer:cap/LVAEG
+				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContactMrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 526);
+				//	designer:cap/LVADG
+				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContactPrincipal = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 525);
 				//	designer:cap/LVAAE
 				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContactRole = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 458);
-				//	designer:cap/LVADG
-				public static readonly global::Epsitec.Common.Support.Druid LegalPersonPrincipal = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 525);
 				//	designer:cap/LVAKE
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 468);
 				//	designer:cap/LVA5E
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 453);
-				//	designer:cap/LVAFG
-				public static readonly global::Epsitec.Common.Support.Druid PersonFullName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 527);
-				//	designer:cap/LVAEG
-				public static readonly global::Epsitec.Common.Support.Druid PersonMrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 526);
 			}
 			
 			public static class AiderCountry

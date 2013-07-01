@@ -1044,8 +1044,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!string.IsNullOrWhiteSpace (eervLegalPerson.Name))
 			{
-				aiderContact.PersonFullName =  EervParishDataImporter.GetContactFullName (eervContact);
-				aiderContact.PersonMrMrs = TextParser.ParsePersonMrMrs (eervContact.Honorific);
+				aiderContact.LegalPersonContactFullName =  EervParishDataImporter.GetContactFullName (eervContact);
+				aiderContact.LegalPersonContactMrMrs = TextParser.ParsePersonMrMrs (eervContact.Honorific);
 			}
 
 			return aiderContact;

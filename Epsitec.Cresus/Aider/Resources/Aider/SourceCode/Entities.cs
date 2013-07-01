@@ -6052,50 +6052,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PersonMrMrs</c> field.
-		///	designer:fld/LVARD/LVAEG
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAEG]")]
-		public global::Epsitec.Aider.Enumerations.PersonMrMrs? PersonMrMrs
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.PersonMrMrs?> ("[LVAEG]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue = this.PersonMrMrs;
-				if (oldValue != value || !this.IsFieldDefined("[LVAEG]"))
-				{
-					this.OnPersonMrMrsChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.PersonMrMrs?> ("[LVAEG]", oldValue, value);
-					this.OnPersonMrMrsChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PersonFullName</c> field.
-		///	designer:fld/LVARD/LVAFG
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAFG]")]
-		public string PersonFullName
-		{
-			get
-			{
-				return this.GetField<string> ("[LVAFG]");
-			}
-			set
-			{
-				string oldValue = this.PersonFullName;
-				if (oldValue != value || !this.IsFieldDefined("[LVAFG]"))
-				{
-					this.OnPersonFullNameChanging (oldValue, value);
-					this.SetField<string> ("[LVAFG]", oldValue, value);
-					this.OnPersonFullNameChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>LegalPerson</c> field.
 		///	designer:fld/LVARD/LVA7E
 		///	</summary>
@@ -6114,6 +6070,28 @@ namespace Epsitec.Aider.Entities
 					this.OnLegalPersonChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.AiderLegalPersonEntity> ("[LVA7E]", oldValue, value);
 					this.OnLegalPersonChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LegalPersonContactPrincipal</c> field.
+		///	designer:fld/LVARD/LVADG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVADG]")]
+		public bool LegalPersonContactPrincipal
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVADG]");
+			}
+			set
+			{
+				bool oldValue = this.LegalPersonContactPrincipal;
+				if (oldValue != value || !this.IsFieldDefined("[LVADG]"))
+				{
+					this.OnLegalPersonContactPrincipalChanging (oldValue, value);
+					this.SetField<bool> ("[LVADG]", oldValue, value);
+					this.OnLegalPersonContactPrincipalChanged (oldValue, value);
 				}
 			}
 		}
@@ -6140,24 +6118,46 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>LegalPersonPrincipal</c> field.
-		///	designer:fld/LVARD/LVADG
+		///	The <c>LegalPersonContactMrMrs</c> field.
+		///	designer:fld/LVARD/LVAEG
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVADG]")]
-		public bool LegalPersonPrincipal
+		[global::Epsitec.Common.Support.EntityField ("[LVAEG]")]
+		public global::Epsitec.Aider.Enumerations.PersonMrMrs? LegalPersonContactMrMrs
 		{
 			get
 			{
-				return this.GetField<bool> ("[LVADG]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.PersonMrMrs?> ("[LVAEG]");
 			}
 			set
 			{
-				bool oldValue = this.LegalPersonPrincipal;
-				if (oldValue != value || !this.IsFieldDefined("[LVADG]"))
+				global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue = this.LegalPersonContactMrMrs;
+				if (oldValue != value || !this.IsFieldDefined("[LVAEG]"))
 				{
-					this.OnLegalPersonPrincipalChanging (oldValue, value);
-					this.SetField<bool> ("[LVADG]", oldValue, value);
-					this.OnLegalPersonPrincipalChanged (oldValue, value);
+					this.OnLegalPersonContactMrMrsChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.PersonMrMrs?> ("[LVAEG]", oldValue, value);
+					this.OnLegalPersonContactMrMrsChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>LegalPersonContactFullName</c> field.
+		///	designer:fld/LVARD/LVAFG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAFG]")]
+		public string LegalPersonContactFullName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAFG]");
+			}
+			set
+			{
+				string oldValue = this.LegalPersonContactFullName;
+				if (oldValue != value || !this.IsFieldDefined("[LVAFG]"))
+				{
+					this.OnLegalPersonContactFullNameChanging (oldValue, value);
+					this.SetField<string> ("[LVAFG]", oldValue, value);
+					this.OnLegalPersonContactFullNameChanged (oldValue, value);
 				}
 			}
 		}
@@ -6378,16 +6378,16 @@ namespace Epsitec.Aider.Entities
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
-		partial void OnPersonMrMrsChanging(global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs? newValue);
-		partial void OnPersonMrMrsChanged(global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs? newValue);
-		partial void OnPersonFullNameChanging(string oldValue, string newValue);
-		partial void OnPersonFullNameChanged(string oldValue, string newValue);
 		partial void OnLegalPersonChanging(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
 		partial void OnLegalPersonChanged(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);
+		partial void OnLegalPersonContactPrincipalChanging(bool oldValue, bool newValue);
+		partial void OnLegalPersonContactPrincipalChanged(bool oldValue, bool newValue);
 		partial void OnLegalPersonContactRoleChanging(global::Epsitec.Aider.Enumerations.ContactRole oldValue, global::Epsitec.Aider.Enumerations.ContactRole newValue);
 		partial void OnLegalPersonContactRoleChanged(global::Epsitec.Aider.Enumerations.ContactRole oldValue, global::Epsitec.Aider.Enumerations.ContactRole newValue);
-		partial void OnLegalPersonPrincipalChanging(bool oldValue, bool newValue);
-		partial void OnLegalPersonPrincipalChanged(bool oldValue, bool newValue);
+		partial void OnLegalPersonContactMrMrsChanging(global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs? newValue);
+		partial void OnLegalPersonContactMrMrsChanged(global::Epsitec.Aider.Enumerations.PersonMrMrs? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrs? newValue);
+		partial void OnLegalPersonContactFullNameChanging(string oldValue, string newValue);
+		partial void OnLegalPersonContactFullNameChanged(string oldValue, string newValue);
 		partial void OnHouseholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
 		partial void OnHouseholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
 		partial void OnHouseholdRoleChanging(global::Epsitec.Aider.Enumerations.HouseholdRole oldValue, global::Epsitec.Aider.Enumerations.HouseholdRole newValue);

@@ -824,8 +824,8 @@ namespace Epsitec.Aider.Data.Subscription
 			var legalPerson = contact.LegalPerson;
 
 			var corporateName = legalPerson.Name;
-			var personTitle = contact.PersonMrMrs;
-			var personName = contact.PersonFullName;
+			var personTitle = contact.LegalPersonContactMrMrs;
+			var personName = contact.LegalPersonContactFullName;
 
 			if (string.IsNullOrEmpty (personName))
 			{

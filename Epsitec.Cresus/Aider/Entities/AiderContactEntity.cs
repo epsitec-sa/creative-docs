@@ -67,8 +67,8 @@ namespace Epsitec.Aider.Entities
 			return StringUtils.Join
 			(
 				"\n",
-				this.PersonMrMrs.GetLongText (),
-				this.PersonFullName,
+				this.LegalPersonContactMrMrs.GetLongText (),
+				this.LegalPersonContactFullName,
 				this.LegalPerson.Name
 			);
 		}
@@ -139,8 +139,8 @@ namespace Epsitec.Aider.Entities
 
 			if (this.Person.IsNotNull ())
 			{
-				this.PersonMrMrs    = this.Person.MrMrs;
-				this.PersonFullName = this.Person.GetFullName ();
+				this.LegalPersonContactMrMrs    = this.Person.MrMrs;
+				this.LegalPersonContactFullName = this.Person.GetFullName ();
 			}
 		}
 
@@ -226,10 +226,10 @@ namespace Epsitec.Aider.Entities
 
 			if (string.IsNullOrEmpty (personFullName) == false)
 			{
-				contact.PersonMrMrs            = personMrMrs;
-				contact.PersonFullName         = personFullName;
-				contact.LegalPersonContactRole = personRole;
-				contact.LegalPersonPrincipal   = true;
+				contact.LegalPersonContactMrMrs     = personMrMrs;
+				contact.LegalPersonContactFullName  = personFullName;
+				contact.LegalPersonContactRole      = personRole;
+				contact.LegalPersonContactPrincipal = true;
 			}
 
 			return contact;
@@ -295,9 +295,9 @@ namespace Epsitec.Aider.Entities
 		{
 			var name = this.LegalPerson.Name;
 
-			if (!string.IsNullOrEmpty(this.PersonFullName))
+			if (!string.IsNullOrEmpty (this.LegalPersonContactFullName))
 			{
-				name += " (" + this.PersonFullName + ")";
+				name += " (" + this.LegalPersonContactFullName + ")";
 			}
 
 			return name;

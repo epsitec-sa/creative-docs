@@ -18,10 +18,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Title (Resources.Text ("Identité de la personne de contact"))
-				.Icon (AiderPersonEntity.GetIconName ("Data", this.Entity.PersonMrMrs, this.Entity.LegalPerson.Language))
+				.Icon (AiderPersonEntity.GetIconName ("Data", this.Entity.LegalPersonContactMrMrs, this.Entity.LegalPerson.Language))
 				.Input ()
-					.Field (x => x.PersonMrMrs)
-					.Field (x => x.PersonFullName)
+					.Field (x => x.LegalPersonContactMrMrs)
+					.Field (x => x.LegalPersonContactFullName)
 				.End ();
 		}
 	}
