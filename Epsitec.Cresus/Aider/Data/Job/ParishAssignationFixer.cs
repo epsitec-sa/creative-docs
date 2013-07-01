@@ -2,6 +2,8 @@
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.IO;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
@@ -28,18 +30,18 @@ namespace Epsitec.Aider.Data.Job
 		)
 		{
 			var personKeys = ParishAssignationFixer.GetPersonsToFix (parishRepository, coreData);
-			Debug.WriteLine ("[" + DateTime.Now + "] " + personKeys.Count + " PERSONS TO FIX");
+			Logger.LogToConsole (personKeys.Count + " PERSONS TO FIX");
 			ParishAssignationFixer.FixPersons (coreData, parishRepository, personKeys);
-			Debug.WriteLine ("[" + DateTime.Now + "] PERSONS FIXED");
+			Logger.LogToConsole ("PERSONS FIXED");
 
 			var legalPersonKeys = ParishAssignationFixer.GetLegalPersonsToFix (parishRepository, coreData);
-			Debug.WriteLine ("[" + DateTime.Now + "] " + legalPersonKeys.Count + " LEGAL PERSONS TO FIX");
+			Logger.LogToConsole (legalPersonKeys.Count + " LEGAL PERSONS TO FIX");
 			ParishAssignationFixer.FixLegalPersons (coreData, parishRepository, legalPersonKeys);
-			Debug.WriteLine ("[" + DateTime.Now + "] LEGAL PERSONS FIXED");
+			Logger.LogToConsole ("LEGAL PERSONS FIXED");
 
-			Debug.WriteLine ("[" + DateTime.Now + "] CLEANING WARNINGS");
+			Logger.LogToConsole ("CLEANING WARNINGS");
 			ParishAssignationFixer.RemoveParishMismatchWarnings (coreData);
-			Debug.WriteLine ("[" + DateTime.Now + "] CLEANED WARNINGS");
+			Logger.LogToConsole ("CLEANED WARNINGS");
 		}
 
 
@@ -76,7 +78,7 @@ namespace Epsitec.Aider.Data.Job
 
 			personKeys.AddRange (personsToFix);
 
-			Debug.WriteLine ("[" + DateTime.Now + "] DONE PERSON BATCH");
+			Logger.LogToConsole ("DONE PERSON BATCH");
 		}
 
 
@@ -152,7 +154,7 @@ namespace Epsitec.Aider.Data.Job
 
 			legalPersonKeys.AddRange (legalPersonsToFix);
 
-			Debug.WriteLine ("[" + DateTime.Now + "] DONE LEGAL PERSON BATCH");
+			Logger.LogToConsole ("DONE LEGAL PERSON BATCH");
 		}
 
 

@@ -1,6 +1,8 @@
 ﻿using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.IO;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
@@ -21,11 +23,11 @@ namespace Epsitec.Aider.Data.Job
 
 		public static void FixParticipations(CoreData coreData)
 		{
-			ParticipationFixer.Log ("START ALL BATCHES");
+			Logger.LogToConsole ("START ALL BATCHES");
 			
 			AiderEnumerator.Execute (coreData, ParticipationFixer.FixParticipations);
-			
-			ParticipationFixer.Log ("DONE ALL BATCHES");
+
+			Logger.LogToConsole ("DONE ALL BATCHES");
 		}
 
 
@@ -34,7 +36,7 @@ namespace Epsitec.Aider.Data.Job
 			BusinessContext businessContext,
 			IEnumerable<AiderGroupParticipantEntity> particpations)
 		{
-			ParticipationFixer.Log ("START BATCH");
+			Logger.LogToConsole ("START BATCH");
 
 			foreach (var participation in particpations)
 			{
@@ -46,7 +48,7 @@ namespace Epsitec.Aider.Data.Job
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
-			ParticipationFixer.Log ("DONE BATCH");
+			Logger.LogToConsole ("DONE BATCH");
 		}
 
 
@@ -71,7 +73,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 			else
 			{
-				ParticipationFixer.Log ("[WARNING] empty participation: " + entityKey);
+				Logger.LogToConsole ("[WARNING] empty participation: " + entityKey);
 			}
 
 			if (contact != null)
@@ -80,14 +82,8 @@ namespace Epsitec.Aider.Data.Job
 			}
 			else
 			{
-				ParticipationFixer.Log ("[WARNING] no contact: " + entityKey);
+				Logger.LogToConsole ("[WARNING] no contact: " + entityKey);
 			}
-		}
-
-
-		private static void Log(string message)
-		{
-			Debug.WriteLine (String.Format ("[{0}] {1}", DateTime.Now, message));
 		}
 
 

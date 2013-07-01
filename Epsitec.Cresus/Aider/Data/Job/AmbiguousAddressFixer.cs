@@ -1,6 +1,8 @@
 ﻿using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Entities;
 
+using Epsitec.Common.IO;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
@@ -123,7 +125,7 @@ namespace Epsitec.Aider.Data.Job
 				+ ", " + address.SwissZipCodeAddOn + ", " + address.SwissZipCodeId + ", "
 				+ address.Town;
 
-			Debug.WriteLine (message1);
+			Logger.LogToConsole (message1);
 
 			// Here we check that if we have two households, they are really at the same address
 			// and not at different addresses. If that where the case, we would probably not be
@@ -167,11 +169,11 @@ namespace Epsitec.Aider.Data.Job
 					+ eCH_address.SwissZipCode + ", " + eCH_address.SwissZipCodeAddOn + ", "
 					+ eCH_address.SwissZipCodeId + ", " + eCH_address.Town;
 
-				Debug.WriteLine (message2);
+				Logger.LogToConsole (message2);
 
 				if (eCH_address.SwissZipCodeAddOn != address.SwissZipCodeAddOn)
 				{
-					Debug.WriteLine ("CORRECTING ECH_ADDRESS");
+					Logger.LogToConsole ("CORRECTING ECH_ADDRESS");
 
 					eCH_address.SwissZipCodeAddOn = address.SwissZipCodeAddOn;
 					eCH_address.SwissZipCodeId = address.SwissZipCodeId;
@@ -223,8 +225,8 @@ namespace Epsitec.Aider.Data.Job
 						+ aiderTown.SwissZipCode + ", " + (SwissPostFullZip.GetZipCodeAddOn (aiderTown.SwissZipCodeAddOn) ?? "<null>") + ", "
 						+ aiderTown.SwissZipCodeId + ", " + aiderTown.Name + "\n"
 						+ "CORRECTING AIDER_ADDRESS";
-					
-					Debug.WriteLine (message3);
+
+					Logger.LogToConsole (message3);
 
 					aiderAddress.Town = town;
 				}
