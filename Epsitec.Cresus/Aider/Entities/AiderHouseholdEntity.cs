@@ -59,6 +59,13 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetAddressRecipientText()
 		{
+			if (this.Contacts.Count == 0)
+			{
+				// This may happen for corrupted households.
+
+				return FormattedText.Empty;
+			}
+
 			return TextFormatter.FormatText
 			(
 				this.GetHonorific (false),
