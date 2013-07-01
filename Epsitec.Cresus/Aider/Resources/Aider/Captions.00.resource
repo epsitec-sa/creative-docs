@@ -91,8 +91,6 @@
   <data name="Fld.AiderEventParticipant.Role" id="AD3">&lt;s:data id="_0" f:Name="Role" /&gt;</data>
   <data name="Val.Enum.EventParticipantRole.None" id="AF3">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Typ.Enum.EventParticipantRole" id="AE3">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.EventParticipantRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.EventParticipantRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAF3]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.EventParticipantRole, Aider/None" /&gt;</data>
-  <data name="Val.Enum.GroupParticipantRole.None" id="AH3">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
-  <data name="Typ.Enum.GroupParticipantRole" id="AG3">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupParticipantRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupParticipantRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAH3]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.GroupParticipantRole, Aider/None" /&gt;</data>
   <data name="Val.Enum.PersonRelationshipType.None" id="AK3">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Typ.Enum.PersonRelationshipType" id="AJ3">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.PersonRelationshipType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.PersonRelationshipType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAK3]'}}" /&gt;</data>
   <data name="Fld.AiderPersonRelationship.Type" id="AL3">&lt;s:data id="_0" f:Name="Type" /&gt;</data>
@@ -146,12 +144,6 @@
   <data name="Val.Enum.AddressType.Professional" id="AV5">&lt;s:data id="_0" f:Name="Professional" f:Labels="{Collection {Text 'Adresse professionnelle'}}" /&gt;</data>
   <data name="Val.Enum.AddressType.Secondary" id="A16">&lt;s:data id="_0" f:Name="Secondary" f:Labels="{Collection {Text 'Adresse secondaire'}}" /&gt;</data>
   <data name="Typ.Enum.AddressType" id="AT5">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.AddressType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.AddressType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAU5]'}, {Text '1 [LVAV5]'}, {Text '2 [LVA16]'}, {Text '3 [LVA4B]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.AddressType, Aider/Default" f:Labels="{Collection {Text 'Type d&amp;amp;apos;adresse'}}" /&gt;</data>
-  <data name="Val.Enum.GroupLevel.Default" id="A36">&lt;s:data id="_0" f:Name="Default" f:Labels="{Collection {Text '—'}}" /&gt;</data>
-  <data name="Typ.Enum.GroupLevel" id="A26">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.GroupLevel" f:_1.SystemType="E:Epsitec.Aider.Enumerations.GroupLevel, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA36]'}}" /&gt;</data>
-  <data name="Val.Enum.PlacePersonRole.None" id="A56">&lt;s:data id="_0" f:Name="None" /&gt;</data>
-  <data name="Typ.Enum.PlacePersonRole" id="A46">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.PlacePersonRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.PlacePersonRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA56]'}}" /&gt;</data>
-  <data name="Val.Enum.UserRole.None" id="A76">&lt;s:data id="_0" f:Name="None" /&gt;</data>
-  <data name="Typ.Enum.UserRole" id="A66">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.UserRole" f:_1.SystemType="E:Epsitec.Aider.Enumerations.UserRole, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA76]'}}" /&gt;</data>
   <data name="Fld.eCH_Person.CreationDate" id="AI6">&lt;s:data id="_0" f:Name="CreationDate" f:Labels="{Collection {Text 'Date de création'}}" /&gt;</data>
   <data name="Val.Enum.RemovalReason.None" id="AL6">&lt;s:data id="_0" f:Name="None" /&gt;</data>
   <data name="Val.Enum.RemovalReason.Unknown" id="AM6">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>

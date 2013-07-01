@@ -168,10 +168,6 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType EventType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 125));
 				//	designer:cap/LVATB
 				public static readonly Epsitec.Common.Types.EnumType GroupClassification = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 381));
-				//	designer:cap/LVA26
-				public static readonly Epsitec.Common.Types.EnumType GroupLevel = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 194));
-				//	designer:cap/LVAG3
-				public static readonly Epsitec.Common.Types.EnumType GroupParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 112));
 				//	designer:cap/LVA1E
 				public static readonly Epsitec.Common.Types.EnumType HouseholdRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 449));
 				//	designer:cap/LVA09
@@ -198,16 +194,12 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PesonMaritalStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
 				//	designer:cap/LVAQ1
 				public static readonly Epsitec.Common.Types.EnumType PesonNationalityStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
-				//	designer:cap/LVA46
-				public static readonly Epsitec.Common.Types.EnumType PlacePersonRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 196));
 				//	designer:cap/LVAK6
 				public static readonly Epsitec.Common.Types.EnumType RemovalReason = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212));
 				//	designer:cap/LVGU22
 				public static readonly Epsitec.Common.Types.EnumType SubscriptionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 94));
 				//	designer:cap/LVAIF
 				public static readonly Epsitec.Common.Types.EnumType SwissPostZipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 498));
-				//	designer:cap/LVA66
-				public static readonly Epsitec.Common.Types.EnumType UserRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 198));
 				//	designer:cap/LVA6G
 				public static readonly Epsitec.Common.Types.EnumType WarningTarget = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 518));
 				//	designer:cap/LVA2C
@@ -487,30 +479,6 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 383));
-						}
-					}
-				}
-				
-				public static class GroupLevel
-				{
-					//	designer:cap/LVA36
-					public static global::Epsitec.Common.Types.Caption Default
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 195));
-						}
-					}
-				}
-				
-				public static class GroupParticipantRole
-				{
-					//	designer:cap/LVAH3
-					public static global::Epsitec.Common.Types.Caption None
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 113));
 						}
 					}
 				}
@@ -1055,18 +1023,6 @@ namespace Epsitec.Aider
 					}
 				}
 				
-				public static class PlacePersonRole
-				{
-					//	designer:cap/LVA56
-					public static global::Epsitec.Common.Types.Caption None
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 197));
-						}
-					}
-				}
-				
 				public static class RemovalReason
 				{
 					//	designer:cap/LVAP6
@@ -1179,18 +1135,6 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 502));
-						}
-					}
-				}
-				
-				public static class UserRole
-				{
-					//	designer:cap/LVA76
-					public static global::Epsitec.Common.Types.Caption None
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 199));
 						}
 					}
 				}
