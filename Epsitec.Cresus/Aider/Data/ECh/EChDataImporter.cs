@@ -332,7 +332,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold, eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool isChild = false)
+		public static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold, eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool isChild = false)
 		{
 			var isHead = isHead1 || isHead2;
 
@@ -366,7 +366,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static PersonMrMrs GuessMrMrs(PersonSex personSex, Date dateOfBirth, PersonMaritalStatus maritalStatus)
+		public static PersonMrMrs GuessMrMrs(PersonSex personSex, Date dateOfBirth, PersonMaritalStatus maritalStatus)
 		{
 			int? age = dateOfBirth.ComputeAge ();
 

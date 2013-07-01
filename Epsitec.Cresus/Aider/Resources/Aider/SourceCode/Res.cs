@@ -1177,6 +1177,14 @@ namespace Epsitec.Aider
 				
 				public static class WarningType
 				{
+					//	designer:cap/LVGL32
+					public static global::Epsitec.Common.Types.Caption Duplicated
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 117));
+						}
+					}
 					//	designer:cap/LVA4C
 					public static global::Epsitec.Common.Types.Caption Generic
 					{

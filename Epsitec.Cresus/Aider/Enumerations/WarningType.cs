@@ -17,5 +17,7 @@ namespace Epsitec.Aider.Enumerations
 
 		Mismatch = 1000,
 		ParishMismatch = 1001,
+
+		Duplicated = 2000,
 	}
 }

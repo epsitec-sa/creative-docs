@@ -6,11 +6,13 @@ using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -24,17 +26,29 @@ namespace Epsitec.Aider.Data.Job
 			{
 
                 Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
-				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile, true);
+				UpdateEChData.Analyser = new EChDataAnalyser(oldEchFile, newEchFile, reportFile);
+			
+				UpdateEChData.UpdateEChPersonEntities (coreData);
 				
-                UpdateEChData.Analyser.CreateReport(reportFile);
+				UpdateEChData.UpdateEChReportedPersonEntities (coreData);
 
-				UpdateEChData.UpdateEChPerson (coreData);
-				
-				UpdateEChData.UpdateEChReportedPersons (coreData);
+				UpdateEChData.TagForDeletionEChPersonEntities (coreData);
 
-				UpdateEChData.CreateNewEChReportedPerson (coreData);
+				UpdateEChData.CreateNewEChPersonEntities (coreData);
 
-				UpdateEChData.TagForDeletionEChPersonEntity (coreData);
+				UpdateEChData.RemoveOldEChReportedPersonEntities (coreData);
+
+				UpdateEChData.CreateNewEChReportedPersonEntities (coreData);
+
+
+				//ECh -> Aider
+				UpdateEChData.CreateNewAiderPersonEntitities (coreData);
+
+				UpdateEChData.TagForDeletionAiderPersonEntities (coreData);
+
+				UpdateEChData.CreateNewAiderHouseholdEntities (coreData);
+
+				UpdateEChData.TagAiderPersonEntitiesForHouseholdMissing (coreData);
 
 
 			}
@@ -43,9 +57,46 @@ namespace Epsitec.Aider.Data.Job
 				Console.WriteLine("ECH DATA UPDATER : FAIL... VERIFY YOUR ECH FILES PARAMETERS");
 			}
 
+		
 		}
 
-        private static void CreateNewEChPerson(CoreData coreData)
+		private static void CreateNewAiderPersonEntitities(CoreData coreData)
+		{
+			Console.WriteLine ("ECH DATA UPDATER : START CREATE AIDER PERSON JOB");
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var eChPerson in UpdateEChData.Analyser.GetPersonToAdd ())
+				{
+					var eChPersonEntity = UpdateEChData.GetEchPersonEntity (businessContext, eChPerson);
+					var existingAiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, eChPersonEntity);
+
+					if (existingAiderPersonEntity == null)
+					{
+						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+
+						aiderPersonEntity.eCH_Person = eChPersonEntity;
+						aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
+						aiderPersonEntity.Confession = PersonConfession.Protestant;
+						
+					}
+					else
+					{
+						AiderPersonWarningEntity.Create (
+								businessContext,
+								existingAiderPersonEntity,
+								FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+								FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"),
+								WarningType.Duplicated);
+					}
+
+				}
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+				Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
+			}
+		}
+
+        private static void CreateNewEChPersonEntities(CoreData coreData)
         {
             Console.WriteLine("ECH DATA UPDATER : START CREATE ECH PERSON JOB");
 
@@ -97,7 +148,7 @@ namespace Epsitec.Aider.Data.Job
             }
         }
 
-        private static void TagForDeletionEChPersonEntity(CoreData coreData)
+        private static void TagForDeletionEChPersonEntities(CoreData coreData)
         {
             Console.WriteLine("ECH DATA UPDATER : START TAG FOR DELETION ECH PERSON JOB");
             using (var businessContext = new BusinessContext(coreData, false))
@@ -105,21 +156,10 @@ namespace Epsitec.Aider.Data.Job
                 foreach (var eChPerson in UpdateEChData.Analyser.GetPersonToRemove())
                 {
                     var existingPersonEntity = UpdateEChData.GetEchPersonEntity(businessContext, eChPerson);
-                    var existingAiderPersonEntity = UpdateEChData.GetAiderPersonEntity(businessContext, existingPersonEntity);
 
                     if (existingPersonEntity != null)
                     {
                         existingPersonEntity.RemovalReason = RemovalReason.Departed;
-
-                        if (existingAiderPersonEntity != null)
-                        {
-                            var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity>();
-                            warning.Title = "Mise à jour ECh";
-                            warning.Description = "Cette personne n'est plus dans le registre ECh depuis la dernière mise à jour";
-                            warning.WarningType = WarningType.Mismatch;
-
-                            existingAiderPersonEntity.Warnings.Add(warning);
-                        }
                     }
                 }
                 businessContext.SaveChanges(LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
@@ -127,21 +167,192 @@ namespace Epsitec.Aider.Data.Job
             }
         }
 
-        private static void CreateNewEChReportedPerson(CoreData coreData)
+		private static void TagForDeletionAiderPersonEntities(CoreData coreData)
+		{
+			Console.WriteLine ("ECH DATA UPDATER : START TAG FOR DELETION AIDER PERSON JOB");
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var eChPerson in UpdateEChData.Analyser.GetPersonToRemove ())
+				{
+					var existingPersonEntity = UpdateEChData.GetEchPersonEntity (businessContext, eChPerson);
+					var existingAiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, existingPersonEntity);
+
+					if (existingAiderPersonEntity != null)
+					{
+						AiderPersonWarningEntity.Create (
+							businessContext,
+							existingAiderPersonEntity,
+							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+							FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " n'est plus dans le registre ECh!"),
+							WarningType.Mismatch);
+					}
+					
+				}
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+				Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
+			}
+		}
+
+        private static void CreateNewEChReportedPersonEntities(CoreData coreData)
         {
-            Console.WriteLine("ECH DATA UPDATER : START CREATE FAMILY JOB");
+            Console.WriteLine("ECH DATA UPDATER : START CREATE ECH HOUSEHOLD JOB");
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var eChReportedPerson in UpdateEChData.Analyser.GetFamilyToAdd())
+				{
+					//Create address
+					var eChAddressEntity = businessContext.CreateAndRegisterEntity<eCH_AddressEntity> ();
+					var eChAddress = eChReportedPerson.Address;
+					eChAddressEntity.AddressLine1 = eChAddress.AddressLine1;
+					eChAddressEntity.Street = eChAddress.Street;
+					eChAddressEntity.HouseNumber = eChAddress.HouseNumber;
+					eChAddressEntity.Town = eChAddress.Town;
+					eChAddressEntity.SwissZipCode = eChAddress.SwissZipCode;
+					eChAddressEntity.SwissZipCodeAddOn = eChAddress.SwissZipCodeAddOn;
+					eChAddressEntity.SwissZipCodeId = eChAddress.SwissZipCodeId;
+					eChAddressEntity.Country = eChAddress.CountryCode;
 
-            var newFamilies = UpdateEChData.Analyser.GetNewFamilies();
-            Console.WriteLine(newFamilies.Count() + " NEW ECH REPORTED PERSON TO IMPORT");
-            var parishRepository = ParishAddressRepository.Current;
+					//Create household
+					var eChReportedPersonEntity = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
+					//Assign address
+					eChReportedPersonEntity.Address = eChAddressEntity;
 
-            EChDataImporter.Import(coreData, parishRepository, newFamilies.ToList());
+					//Relink ECh Person Entity
+					eChReportedPersonEntity.Adult1 = UpdateEChData.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
+					if (eChReportedPerson.Adult2 != null)
+					{
+						eChReportedPersonEntity.Adult2  = UpdateEChData.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
+					}
 
+					foreach (var eChChild in eChReportedPerson.Children)
+					{
+						eChReportedPersonEntity.Children.Add (UpdateEChData.GetEchPersonEntity (businessContext, eChChild));
+					}
 
-            Console.WriteLine("ECH DATA UPDATER : JOB DONE!");
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+				Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
+			} 
         }
 
-		private static bool UpdateEChPerson(CoreData coreData)
+		private static void CreateNewAiderHouseholdEntities(CoreData coreData)
+		{
+			Console.WriteLine ("ECH DATA UPDATER : START CREATE NEW AIDER HOUSEHOLD JOB");
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var eChReportedPerson in UpdateEChData.Analyser.GetNewFamilies())
+				{
+					var aiderHousehold = businessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+					aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
+
+					var aiderAddressEntity = aiderHousehold.Address;
+					var eChAddressEntity = UpdateEChData.GetEchAddressEntity (businessContext, eChReportedPerson.Address);
+
+
+					var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddressEntity.HouseNumber));
+					var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddressEntity.HouseNumber);
+
+					if (string.IsNullOrWhiteSpace (houseNumberComplement))
+					{
+						houseNumberComplement = null;
+					}
+
+					aiderAddressEntity.AddressLine1 = eChAddressEntity.AddressLine1;
+					aiderAddressEntity.Street = eChAddressEntity.Street;
+					aiderAddressEntity.HouseNumber = houseNumber;
+					aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
+					aiderAddressEntity.Town = UpdateEChData.GetAiderTownEntity (businessContext, eChReportedPerson.Address);
+
+
+					//Link household to ECh Entity
+					var eChReportedPersonEntity = UpdateEChData.GetEchReportedPersonEntity(businessContext,eChReportedPerson);
+					if (eChReportedPersonEntity.Adult1 != null)
+					{
+						var aiderPerson = UpdateEChData.GetAiderPersonEntity (businessContext, eChReportedPersonEntity.Adult1);
+
+						EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
+					}
+
+					if (eChReportedPersonEntity.Adult2 != null)
+					{
+						var aiderPerson = UpdateEChData.GetAiderPersonEntity (businessContext, eChReportedPersonEntity.Adult2);
+
+						EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);
+					}
+
+					foreach (var child in eChReportedPersonEntity.Children)
+					{
+						var aiderPerson = UpdateEChData.GetAiderPersonEntity (businessContext, child);
+
+						EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+				Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
+			}
+		}
+
+		private static void RemoveOldEChReportedPersonEntities(CoreData coreData)
+		{
+			Console.WriteLine("ECH DATA UPDATER : START ECH HOUSEHOLD DELETION JOB");
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var eChReportedPerson in Analyser.GetFamilyToRemove ())
+				{
+					var eChReportedPersonEntity = UpdateEChData.GetEchReportedPersonEntity (businessContext, eChReportedPerson);
+
+					//Unlink ECh Person Entity
+					var eChPersonEntityAdult1 = UpdateEChData.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
+
+					eChPersonEntityAdult1.ReportedPersons.ToList ().RemoveAll (h => h.GetEntitySerialId ().Equals (eChReportedPersonEntity.GetEntitySerialId ()));
+
+					if (eChReportedPerson.Adult2 != null)
+					{
+						var eChPersonEntityAdult2 = UpdateEChData.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
+						eChPersonEntityAdult2.ReportedPersons.ToList ().RemoveAll (h => h.GetEntitySerialId ().Equals (eChReportedPersonEntity.GetEntitySerialId ()));
+					}
+
+					businessContext.DeleteEntity (eChReportedPersonEntity.Address);
+					businessContext.DeleteEntity (eChReportedPersonEntity);
+
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+				Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
+			}
+		}
+
+		private static void TagAiderPersonEntitiesForHouseholdMissing(CoreData coreData)
+		{
+			Console.WriteLine ("ECH DATA UPDATER : START HOUSEHOLD MISSING TAG JOB");
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var eChReportedPerson in Analyser.GetMissingFamilies())
+				{
+					foreach (var eChPerson in eChReportedPerson.GetMembers ())
+					{
+						var eChPersonEntity = UpdateEChData.GetEchPersonEntity (businessContext, eChPerson);
+						var AiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, eChPersonEntity);
+
+						AiderPersonWarningEntity.Create (
+							businessContext,
+							AiderPersonEntity,
+							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+							FormattedText.FromSimpleText (AiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"),
+							WarningType.Mismatch);
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+				Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
+			}
+		}
+
+		private static bool UpdateEChPersonEntities(CoreData coreData)
 		{
 
 			Console.WriteLine("ECH DATA UPDATER : START UPDATE PERSON JOB");
@@ -211,7 +422,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static bool UpdateEChReportedPersons(CoreData coreData)
+		private static bool UpdateEChReportedPersonEntities(CoreData coreData)
 		{
 
 			Console.WriteLine("ECH DATA UPDATER : START UPDATE REPORTED PERSON JOB");
@@ -236,17 +447,20 @@ namespace Epsitec.Aider.Data.Job
 						{
 							reportedPersonEntityToUpdate.Address.Country = toChange.Item1.Address.CountryCode;
 						}
-
-						if (!toChange.Item1.Address.HouseNumber.Equals(toChange.Item2.Address.HouseNumber))
+						if (!String.IsNullOrEmpty (toChange.Item1.Address.HouseNumber))
 						{
-							reportedPersonEntityToUpdate.Address.HouseNumber = toChange.Item1.Address.HouseNumber;
+							if (!toChange.Item1.Address.HouseNumber.Equals (toChange.Item2.Address.HouseNumber))
+							{
+								reportedPersonEntityToUpdate.Address.HouseNumber = toChange.Item1.Address.HouseNumber;
+							}
 						}
-
-						if (!toChange.Item1.Address.Street.Equals(toChange.Item2.Address.Street))
+						if (!String.IsNullOrEmpty (toChange.Item1.Address.Street))
 						{
-							reportedPersonEntityToUpdate.Address.Street = toChange.Item1.Address.Street;
+							if (!toChange.Item1.Address.Street.Equals (toChange.Item2.Address.Street))
+							{
+								reportedPersonEntityToUpdate.Address.Street = toChange.Item1.Address.Street;
+							}
 						}
-
 						if (!toChange.Item1.Address.SwissZipCode.Equals(toChange.Item2.Address.SwissZipCode))
 						{
 							reportedPersonEntityToUpdate.Address.SwissZipCode = toChange.Item1.Address.SwissZipCode;
@@ -287,6 +501,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				return null;
 			}
+
 			var personExample = new eCH_PersonEntity ()
 			{
 				PersonId = person.Id
@@ -297,8 +512,7 @@ namespace Epsitec.Aider.Data.Job
 				RootEntity = personExample
 			};
 
-
-			return businessContext.DataContext.GetByRequest<eCH_PersonEntity> (request).First ();
+			return businessContext.DataContext.GetByRequest<eCH_PersonEntity> (request).FirstOrDefault();
 		}
 
         private static AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
@@ -318,7 +532,7 @@ namespace Epsitec.Aider.Data.Job
                 RootEntity = personExample
             };
 
-            return businessContext.DataContext.GetByRequest<AiderPersonEntity>(request).First();
+            return businessContext.DataContext.GetByRequest<AiderPersonEntity>(request).FirstOrDefault();
         }
 
 		private static eCH_ReportedPersonEntity GetEchReportedPersonEntity(BusinessContext businessContext, EChReportedPerson reportedPerson)
@@ -350,7 +564,46 @@ namespace Epsitec.Aider.Data.Job
 			};
 
 
-			return businessContext.DataContext.GetByRequest<eCH_ReportedPersonEntity>(request).First();
+			return businessContext.DataContext.GetByRequest<eCH_ReportedPersonEntity> (request).FirstOrDefault ();
+		}
+
+		private static eCH_AddressEntity GetEchAddressEntity(BusinessContext businessContext, EChAddress address)
+		{
+			var addressExample = new eCH_AddressEntity ()
+			{
+				SwissZipCode = address.SwissZipCode,
+				SwissZipCodeAddOn = address.SwissZipCodeAddOn,
+				Street = address.Street,
+				HouseNumber = address.HouseNumber
+			};
+
+			
+
+			var request = new Request ()
+			{
+				RootEntity = addressExample
+			};
+
+
+			return businessContext.DataContext.GetByRequest<eCH_AddressEntity> (request).FirstOrDefault ();
+		}
+
+		private static AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, EChAddress address)
+		{
+			var townExample = new AiderTownEntity ()
+			{
+				SwissZipCodeId = address.SwissZipCodeId
+			};
+
+
+
+			var request = new Request ()
+			{
+				RootEntity = townExample
+			};
+
+
+			return businessContext.DataContext.GetByRequest<AiderTownEntity> (request).FirstOrDefault ();
 		}
 
 		private static  EChDataAnalyser Analyser;

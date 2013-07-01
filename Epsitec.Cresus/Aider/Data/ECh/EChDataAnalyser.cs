@@ -9,7 +9,7 @@ namespace Epsitec.Aider.Data.ECh
 {
     class EChDataAnalyser : EChDataComparer
     {
-        public EChDataAnalyser(string OldEchFile, string NewEchFile,bool reportTrace)
+		public EChDataAnalyser(string OldEchFile, string NewEchFile, string reportFile)
             : base(OldEchFile, NewEchFile) 
         {
             this.FamilyToAdd = new Dictionary<string, EChReportedPerson>();
@@ -67,22 +67,19 @@ namespace Epsitec.Aider.Data.ECh
 					FamilyToRemove.Add (adu.Id, family);
 				}
             }
-			if (reportTrace)
+
+			this.ReportFile = reportFile;
+
+			try
 			{
-				try
-				{
-					this.AnalyseAllChangesAndReportTrace ();
-				}
-				catch (Exception e)
-				{
-					throw;
-				}
+				this.AnalyseAllChangesAndReportTrace ();
+			}
+			catch (Exception e)
+			{
+				throw;
+			}
 				
-			}
-			else
-			{
-				//this.AnalyseAllChanges ();
-			}
+
             
         }
 
@@ -92,348 +89,16 @@ namespace Epsitec.Aider.Data.ECh
             return this.NewHouseHolds;
         }
 
+		public IEnumerable<EChReportedPerson> GetMissingFamilies()
+		{
+			return this.MissingHouseHolds;
+		}
 
-		//private void AnalyseAllChanges()
-		//{
-
-		//	//We check all the family to add in the register,
-		//	//this addition can result from an replacement of an old record
-		//	//or be totaly new
-		//	foreach (var family in FamilyToAdd.Values)
-		//	{
-		//		EChReportedPerson removedFamily = null;
-		//		var monoParental = false;           //household with only one adult
-		//		var hasChildren = false;            //child detected
-		//		var coreStructuralChange = false;   //indicate that the core family structure has changed (adult1 and adult2 composition)
-		//		var unclassified = false;           //indicate that the analyser fail to find a matching "add change" case
-
-		//		var isNew = false;                  //the family is new in the register
-		//		var isSeparation = false;           //the family structure has change one adult missing now          
-		//		var isWidow = false;                //special case
-		//		var isMajority = false;             //special case
-		//		var isMajoritySideEffect = false;   //special case
-		//		var isChildMove = false;            //special case
-		//		var isChildMissing = false;         //special case
-		//		var isNewBorn = false;              //special case
-		//		var isUnion = false;                //special case
-
-
-		//		if (family.Adult2 == null)
-		//		{
-		//			monoParental = true;
-		//		}
-
-		//		if (family.Children.Count > 0)
-		//		{
-		//			hasChildren = true;
-		//		}
-
-                
-		//		//Union and Separation Detector
-		//		if (monoParental)
-		//		{
-		//			if (this.FamilyToRemove.ContainsKey(family.Adult1.Id))//if we found the opposed record to remove
-		//			{
-		//				coreStructuralChange = true;
-		//				removedFamily = this.FamilyToRemove[family.Adult1.Id];
-
-		//				if (removedFamily.Adult2 != null)//if the old record has an second adult
-		//				{
-		//					isSeparation = true;
-		//				}
-		//			}
-		//			else
-		//			{
-		//				if (this.PersonToAdd.ContainsKey(family.Adult1.Id))//if the adult is in the new person list
-		//				{
-		//					isNew = true;
-		//				}
-		//				else //in this case an child or an adult2 is now as first adult
-		//				{
-		//					if (DateTime.Now.Year - family.Adult1.DateOfBirth.Year == 18)//if majority condition match
-		//					{
-		//						isMajority = true;
-		//					}
-		//					else// in this case, this adult1 was an adult2
-		//					{
-		//						isWidow = true;
-		//					}
-		//				}
-		//			}
-		//		}
-		//		else //in case of two adult household
-		//		{
-		//			if (this.FamilyToRemove.ContainsKey(family.Adult1.Id))// if the first adult is found in opposed record to remove
-		//			{
-		//				coreStructuralChange = true;
-		//				removedFamily = this.FamilyToRemove[family.Adult1.Id];
-
-		//				if (removedFamily.Adult2 != null)//if the old record has an second adult
-		//				{
-		//					if (!removedFamily.Adult2.Id.Equals(family.Adult2.Id))//if this second adult is different to the actual second adult
-		//					{
-		//						isUnion = true;
-		//					}
-		//				}
-		//				else //we don't have a second adult in the old record
-		//				{
-		//					isUnion = true;
-		//				}
-		//			}
-		//			else if (this.FamilyToRemove.ContainsKey(family.Adult2.Id)) // if the second adult is found in opposed record
-		//			{
-		//				coreStructuralChange = true;
-		//				removedFamily = this.FamilyToRemove[family.Adult2.Id];
-		//				if (removedFamily.Adult2 != null) // if the old record has a second adult
-		//				{
-		//					if (!removedFamily.Adult2.Id.Equals(family.Adult1.Id)) //if this second adult is different to the actual first adult
-		//					{
-		//						isUnion = true;
-		//					}
-		//				}
-		//				else //if we don't have a second adult in the old record
-		//				{
-		//					isUnion = true;
-		//				}
-		//			}
-		//			else //if we don't found any opposed record
-		//			{
-		//				if (this.PersonToAdd.ContainsKey(family.Adult1.Id) && PersonToAdd.ContainsKey(family.Adult2.Id))//if two adults are new
-		//				{
-		//					isNew = true;
-		//				}
-		//				else // in this case it's unclassified
-		//				{
-		//					unclassified = true;
-		//				}
-		//			}
-
-		//		}
-
-
-		//		//Check Childrens Changes on changed core structure
-		//		if (hasChildren&&coreStructuralChange)
-		//		{
-		//			if (family.Children.Count > removedFamily.Children.Count)//if we have more children
-		//			{
-		//				foreach (var child in family.Children)
-		//				{
-		//					if (this.PersonToAdd.ContainsKey(child.Id))//if the child is new
-		//					{
-		//						isNewBorn = true;
-		//						this.NewChilds.Add(Tuple.Create(family, child));
-		//					}
-		//					else
-		//					{
-		//						isChildMove = true;
-		//					}
-		//				}
-		//			}
-		//			if (family.Children.Count < removedFamily.Children.Count)//if we have less children
-		//			{
-		//				foreach (var child in family.Children)
-		//				{
-		//					if (this.PersonToRemove.ContainsKey(child.Id))
-		//					{
-		//						isChildMissing = true;
-		//					}
-		//					else
-		//					{
-		//						if (this.FamilyToAdd.ContainsKey(child.Id))//if we found the child as family
-		//						{
-		//							isMajoritySideEffect = true;
-		//						}
-		//						else
-		//						{
-		//							isChildMove = true;
-		//						}
-
-		//					}
-		//				}
-		//			}
-		//		}
-		//		else if (!hasChildren && coreStructuralChange)//if we don't have child
-		//		{
-		//			if (family.Children.Count < removedFamily.Children.Count)//if we have child in the past
-		//			{
-		//				foreach (var child in family.Children)
-		//				{
-		//					if (this.PersonToRemove.ContainsKey(child.Id))
-		//					{
-		//						isChildMissing = true;
-		//					}
-		//					else
-		//					{
-		//						if (this.FamilyToAdd.ContainsKey(child.Id))//if we found the child as family
-		//						{
-		//							isMajoritySideEffect = true;
-		//						}
-		//						else
-		//						{
-		//							isChildMove = true;
-		//						}
-		//					}
-		//				}
-		//			}
-		//		}
-
-		//		//Classification for reporting purpose
-		//		if (!unclassified)
-		//		{
-		//			if (isNew)
-		//			{
-		//				//Result 
-		//				this.NewFamiliesDetected.Add(family.FamilyKey,family);
-
-		//				if (monoParental)
-		//				{
-		//					if (hasChildren)
-		//					{
-		//						this.NewFamilyMonoWithChildren.Add(family);
-		//					}
-		//					else
-		//					{
-		//						this.NewFamilyMono.Add(family);
-		//					}
-
-		//				}
-		//				else
-		//				{
-		//					if (hasChildren)
-		//					{
-		//						this.NewFamilyWithChildren.Add(family);
-		//					}
-		//					else
-		//					{
-		//						this.NewFamily.Add(family);
-		//					}
-		//				}
-		//			}
-
-		//			if (isSeparation)
-		//			{
-		//				this.MissingUnion.Add(family);
-		//			}
-
-		//			if (isWidow)
-		//			{
-		//				this.WidowFamily.Add(family);
-		//			}
-
-		//			if (isUnion)
-		//			{
-		//				this.NewUnion.Add(family);
-		//			}
-
-		//			if (isMajority)
-		//			{
-		//				this.GainMajority.Add(family);
-		//			}
-
-		//			if (isNewBorn)
-		//			{
-		//				this.FamilyWithNewChilds.Add(family);
-		//			}
-
-		//			if (isChildMissing)
-		//			{
-		//				this.FamilyWithChildMissing.Add(family);
-		//			}
-
-		//		}
-		//		else//for unclassified case
-		//		{
-		//			if (!isMajoritySideEffect && !isChildMove && !isWidow)//exclude some special case
-		//			{
-		//				this.AddCaseToResolve.Add(family);//add to the resolve list
-		//			}
-
-		//		}
-		//	}
-
-		//	//Analyse family to remove for finding family deletion
-		//	foreach (var family in FamilyToRemove.Values)
-		//	{
-		//		var monoParental = false;
-		//		var hasChildren = false;
-		//		var hasChange = false;
-
-		//		if (family.Adult2 == null)
-		//		{
-		//			monoParental = true;
-		//		}
-
-		//		if (family.Children.Count > 0)
-		//		{
-		//			hasChildren = true;
-		//		}
-
-		//		//we check for a change in the family to add (opposed side)
-		//		if (monoParental)
-		//		{
-		//			if (this.FamilyToAdd.ContainsKey(family.Adult1.Id))
-		//			{
-		//				hasChange = true;
-		//			}
-		//		}
-		//		else
-		//		{
-		//			if (this.FamilyToAdd.ContainsKey(family.Adult1.Id))
-		//			{
-		//				hasChange = true;
-
-
-		//			}
-		//			else if (this.FamilyToAdd.ContainsKey(family.Adult2.Id))
-		//			{
-		//				hasChange = true;
-		//			}
-
-		//		}
-
-		//		if (!hasChange)//if nothing found in family to add
-		//		{
-		//			if (monoParental)
-		//			{
-		//				if (this.PersonToRemove.ContainsKey(family.Adult1.Id))//if we found the person to remove
-		//				{
-		//					if (hasChildren)//and have children
-		//					{
-		//						this.MissingFamilyMonoWithChildren.Add(family);
-		//					}
-		//					else
-		//					{
-		//						this.MissingFamilyMono.Add(family);
-		//					}
-
-		//				}
-		//			}
-		//			else
-		//			{
-		//				if (this.PersonToRemove.ContainsKey(family.Adult1.Id) && this.PersonToRemove.ContainsKey(family.Adult2.Id))
-		//				{
-		//					if (hasChildren)
-		//					{
-		//						this.MissingFamilyWithChildren.Add(family);
-		//					}
-		//					else
-		//					{
-		//						this.MissingFamily.Add(family);
-		//					}
-
-		//				}
-		//			}
-
-		//		}
-		//	}
-		//}
-
-
-        public void CreateReport(string reportFile)
+        public void CreateReport()
         {
-			Console.WriteLine ("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + reportFile);
+			Console.WriteLine ("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + this.ReportFile);
             //REPORT IN MARKDOWN (offline markdown reader: http://stackoverflow.com/questions/9843609/view-md-file-offline)
-			using (System.IO.TextWriter tw = new System.IO.StreamWriter (reportFile))
+			using (System.IO.TextWriter tw = new System.IO.StreamWriter (this.ReportFile))
 			{
 				tw.WriteLine ("# Rapport Analyse ECH du " + DateTime.Now);
 
@@ -654,7 +319,7 @@ namespace Epsitec.Aider.Data.ECh
 
 		private void AnalyseAllChangesAndReportTrace()
 		{
-			System.IO.TextWriter tw = new System.IO.StreamWriter ("s:\\analyser_trace.md");
+			System.IO.TextWriter tw = new System.IO.StreamWriter (this.ReportFile);
 
 			tw.WriteLine ("# Analyser Trace " + DateTime.Now);
 			//We check all the family to add in the register,
@@ -1116,6 +781,8 @@ namespace Epsitec.Aider.Data.ECh
 
 		private readonly static IEqualityComparer<EChReportedPerson> HouseholdComparer = new LambdaComparer<EChReportedPerson> ((a, b) => a.FamilyKey == b.FamilyKey, a => a.FamilyKey.GetHashCode ());
 
+
+		private string ReportFile;
         private Dictionary<string, EChReportedPerson> FamilyToAdd;
         private Dictionary<string, EChReportedPerson> FamilyToRemove;
         private Dictionary<string, EChPerson> PersonToAdd;
