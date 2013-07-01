@@ -22,6 +22,7 @@ AiderUserScope = [LVACC]
 AiderGroupDef = [LVA2A]
 AiderSubscription = [LVGP22]
 AiderSubscriptionRefusal = [LVGC32]
+AiderPersonWarning = [LVALB]
 
 <meta>
   <T>
@@ -681,6 +682,23 @@ AiderSubscriptionRefusal = [LVGC32]
         <disp m="Visible" />
       </col>
     </t>
+
+    <t eid="@AiderPersonWarning" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVA7C]" title="Type" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVAKB]" title="Titre" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVANB]" title="Description" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
+
   </T>
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
@@ -764,8 +782,15 @@ AiderSubscriptionRefusal = [LVGC32]
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
       </f>
     </d>
+
+    <d cid="[LVGK32]" teid="@AiderPersonWarning" tn="default" df="true" d="true" ec="false" ed="false" dg="">
+      <R><r>@user</r></R>
+    </d>
+
   </D>
   <G/>
 </meta>
+
+
 
 DefineMetadata ("DataStoreMetadata", $0)

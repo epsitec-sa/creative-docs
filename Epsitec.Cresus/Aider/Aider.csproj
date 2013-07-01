@@ -95,6 +95,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2Warnings.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionRefusalViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
@@ -348,6 +349,7 @@
     <EmbeddedResource Include="Images\Data.AiderSubscription.icon" />
     <EmbeddedResource Include="Images\Data.AiderSubscriptionRefusal.icon" />
     <EmbeddedResource Include="Images\Data.AiderSubscriptionMenu.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPersonWarning.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

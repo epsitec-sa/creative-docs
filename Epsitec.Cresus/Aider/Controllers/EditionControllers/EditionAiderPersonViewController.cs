@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
-				.Input ()
+				.Input ()				
 					.HorizontalGroup ()
 						.Title ("Prénoms et nom selon le contrôle des habitants")
 						.Field (x => x.eCH_Person.PersonFirstNames).ReadOnly ()

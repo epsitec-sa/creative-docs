@@ -223,6 +223,22 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (text);
 		}
 
+		public FormattedText GetWarningsTitle()
+		{
+			return TextFormatter.FormatText ("Averstissements (" + this.Warnings.Count + ")");
+		}
+
+		public FormattedText GetWarningsDescription()
+		{
+			var warnings = this.Warnings
+				.Select (w => w.Title)
+				.CreateSummarySequence (10, "...");
+
+			var text = TextFormatter.Join ("\n", warnings);
+
+			return TextFormatter.FormatText (text);
+		}
+
 		public bool IsMemberOf(AiderGroupEntity group)
 		{
 			return this.GetMemberships (group).Any ();

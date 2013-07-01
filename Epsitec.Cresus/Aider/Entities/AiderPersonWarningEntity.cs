@@ -55,6 +55,14 @@ namespace Epsitec.Aider.Entities
 
 			return warning;
 		}
+
+		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, FormattedText title, FormattedText description,WarningType warningType)
+		{
+			var warning = AiderPersonWarningEntity.Create (businessContext, person, title, warningType);
+			warning.Description = description;
+
+			return warning;
+		}
 	}
 
 	public interface IAiderWarningExampleFactoryGetter

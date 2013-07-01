@@ -46,6 +46,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonViewController1Groups));
 
+			wall.AddBrick ()
+				.Icon("Data.AiderPersonWarning")
+				.Title(p => p.GetWarningsTitle ())
+				.Text(p => p.GetWarningsDescription ())
+				.Attribute(BrickMode.DefaultToSummarySubView)
+				.WithSpecialController(typeof (SummaryAiderPersonViewController2Warnings));
+
 			var households = this.Entity.Households;
 			var contacts   = this.Entity.Contacts;
 
