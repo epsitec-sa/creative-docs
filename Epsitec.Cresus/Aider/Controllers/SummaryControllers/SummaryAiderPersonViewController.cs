@@ -12,6 +12,7 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Library;
 
 using System.Linq;
 
@@ -46,12 +47,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonViewController1Groups));
 
-			wall.AddBrick ()
-				.Icon("Data.AiderPersonWarning")
-				.Title(p => p.GetWarningsTitle ())
-				.Text(p => p.GetWarningsDescription ())
-				.Attribute(BrickMode.DefaultToSummarySubView)
-				.WithSpecialController(typeof (SummaryAiderPersonViewController2Warnings));
+			if (CoreContext.HasExperimentalFeature ("Warnings"))
+			{
+				wall.AddBrick ()
+					.Icon ("Data.AiderPersonWarning")
+					.Title (p => p.GetWarningsTitle ())
+					.Text (p => p.GetWarningsDescription ())
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.WithSpecialController (typeof (SummaryAiderPersonViewController2Warnings));
+			}
 
 			var households = this.Entity.Households;
 			var contacts   = this.Entity.Contacts;
