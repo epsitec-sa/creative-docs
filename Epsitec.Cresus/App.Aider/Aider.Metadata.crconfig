@@ -666,6 +666,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGL32]" title="Adresse complète" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderSubscriptionRefusal" n="default">
@@ -680,6 +684,10 @@ AiderPersonWarning = [LVALB]
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGH32]" title="Adresse" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGM32]" title="Adresse complète" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
       </col>
     </t>
 

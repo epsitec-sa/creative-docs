@@ -63,6 +63,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		partial void GetFullAddressText(ref FormattedText value)
+		{
+			value = this.GetAddressLabelText ();
+		}
+
+
 		private string GetDisplayZipCode()
 		{
 			return this.GetAddress ().GetDisplayZipCode ().ToSimpleText ();

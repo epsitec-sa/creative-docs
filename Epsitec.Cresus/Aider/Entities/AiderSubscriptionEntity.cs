@@ -118,6 +118,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		partial void GetFullAddressText(ref FormattedText value)
+		{
+			value = this.GetAddressLabelText ();
+		}
+
+
 		public static AiderSubscriptionEntity Create
 		(
 			BusinessContext businessContext,

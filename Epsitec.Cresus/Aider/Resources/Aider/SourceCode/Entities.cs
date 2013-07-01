@@ -6758,6 +6758,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>FullAddressText</c> field.
+		///	designer:fld/LVGP22/LVGL32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGL32]", IsVirtual=true)]
+		public global::Epsitec.Common.Types.FormattedText FullAddressText
+		{
+			get
+			{
+				global::Epsitec.Common.Types.FormattedText value = default (global::Epsitec.Common.Types.FormattedText);
+				this.GetFullAddressText (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.FullAddressText;
+				if (oldValue != value || !this.IsFieldDefined("[LVGL32]"))
+				{
+					this.OnFullAddressTextChanging (oldValue, value);
+					this.SetFullAddressText (value);
+					this.OnFullAddressTextChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnIdChanging(string oldValue, string newValue);
 		partial void OnIdChanged(string oldValue, string newValue);
@@ -6777,7 +6801,11 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayAddressChanged(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFullAddressTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
+		partial void GetFullAddressText(ref global::Epsitec.Common.Types.FormattedText value);
+		partial void SetFullAddressText(global::Epsitec.Common.Types.FormattedText value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6943,6 +6971,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>FullAddressText</c> field.
+		///	designer:fld/LVGC32/LVGM32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGM32]", IsVirtual=true)]
+		public global::Epsitec.Common.Types.FormattedText FullAddressText
+		{
+			get
+			{
+				global::Epsitec.Common.Types.FormattedText value = default (global::Epsitec.Common.Types.FormattedText);
+				this.GetFullAddressText (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.FullAddressText;
+				if (oldValue != value || !this.IsFieldDefined("[LVGM32]"))
+				{
+					this.OnFullAddressTextChanging (oldValue, value);
+					this.SetFullAddressText (value);
+					this.OnFullAddressTextChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnHouseholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
 		partial void OnHouseholdChanged(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
@@ -6956,7 +7008,11 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayAddressChanged(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFullAddressTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
+		partial void GetFullAddressText(ref global::Epsitec.Common.Types.FormattedText value);
+		partial void SetFullAddressText(global::Epsitec.Common.Types.FormattedText value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
