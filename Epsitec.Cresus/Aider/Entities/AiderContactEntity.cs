@@ -136,12 +136,6 @@ namespace Epsitec.Aider.Entities
 			this.DisplayAddress       = this.GetDisplayAddress ();
 			this.DisplayVisibility    = this.GetDisplayVisibilityStatus ();
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
-
-			if (this.Person.IsNotNull ())
-			{
-				this.LegalPersonContactMrMrs    = this.Person.MrMrs;
-				this.LegalPersonContactFullName = this.Person.GetFullName ();
-			}
 		}
 
 
