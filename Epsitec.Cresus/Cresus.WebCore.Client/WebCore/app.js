@@ -77,17 +77,10 @@ function() {
 
     fixLocalizationBug: function() {
 
-      // There is a bug in extjs. The loading texts for Ext.view.AbstractView
-      // and Ext.LoadMask are not localized properly. That's a know bug as of
-      // version 4.1.2 and its id is EXTJSIV-7483. This method implement the
-      // suggested workaround that can be found on the sencha forums at the url
-      // http://www.sencha.com/forum/showthread.php?245783 .
+      // There is a bug in extjs. The loading texts Ext.LoadMask is not
+      // localized properly.
 
-      var loadingText = Ext.view.AbstractView.prototype.msg;
-
-      Ext.override(Ext.view.AbstractView, {
-        loadingText: loadingText
-      });
+      var loadingText = Ext.view.AbstractView.prototype.loadingText;
 
       Ext.override(Ext.LoadMask, {
         msg: loadingText
