@@ -27,7 +27,6 @@ function() {
     menu: null,
     loginPanel: null,
     tabManager: null,
-    notificationsClient: null,
 
     launch: function() {
       this.setupWindowTitle();
@@ -211,8 +210,7 @@ function() {
       }
 
       if (epsitecConfig.featureNotifications) {
-        this.notificationsClient = Ext.create(
-            'Epsitec.Notifications', NotificationsToastr, form);
+        Ext.create('Epsitec.Notifications', NotificationsToastr, form);
       }
 
       Ext.create('Ext.container.Viewport', {
