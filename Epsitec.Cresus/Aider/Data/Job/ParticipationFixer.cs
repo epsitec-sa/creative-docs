@@ -17,6 +17,12 @@ namespace Epsitec.Aider.Data.Job
 {
 
 
+	/// <summary>
+	/// This fixer corrects invalid group participation entities. It used to be that the contact
+	/// property of the group participation entity was not mandatory and thus not used in many
+	/// of those entities. This fixer fixes this by putting the default contact of a person or of a
+	/// legal person in the group participations entities that do not have a contact set.
+	/// </summary>
 	internal static class ParticipationFixer
 	{
 

@@ -15,6 +15,12 @@ namespace Epsitec.Aider.Data.Job
 {
 
 
+	/// <summary>
+	/// This fixer cleans the contact entities. There was a bug in the contact logic that made
+	/// person contact use some properties that where supposed to be used only for legal person
+	/// contact. This bug has been corrected by the commit 21084. This fixer makes those properties
+	/// blank when necessary.
+	/// </summary>
 	internal static class ContactNameFixer
 	{
 

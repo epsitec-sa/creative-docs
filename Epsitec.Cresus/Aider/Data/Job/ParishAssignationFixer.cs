@@ -19,6 +19,9 @@ namespace Epsitec.Aider.Data.Job
 {
 
 
+	/// <summary>
+	/// This job corrects all parish assignations in the database.
+	/// </summary>
 	public static class ParishAssignationFixer
 	{
 

@@ -12,7 +12,9 @@ namespace Epsitec.Aider.Data.Job
 	/// <summary>
 	/// This fixer is used to fix invalid subscriptions, where the regional edition has been set to
 	/// the wrong region. These wrong subscriptions are due to a wrong entry in the parish
-	/// definition file.
+	/// definition file. The parish assignation for the persons has been corrected at the time, but
+	/// not the region assignation for the subscriptions. The file has been corrected by commit
+	/// 20925.
 	/// </summary>
 	internal static class ChardonneSubscriptionFixer
 	{

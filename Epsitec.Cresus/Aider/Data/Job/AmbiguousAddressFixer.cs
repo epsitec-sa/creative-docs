@@ -26,7 +26,13 @@ using System.Linq;
 namespace Epsitec.Aider.Data.Job
 {
 
-	
+
+	/// <summary>
+	/// This fixer is used to fix a problem with some addresses in the database. Because of a bug
+	/// in the algorithm that finds the street data in the MAT[CH] street light file, some
+	/// addresses where registered in the wrong town. This job fixes these addresses for those that
+	/// come from the ECH file. See commits 20964 and 20974 for more information.
+	/// </summary>
 	internal static class AmbiguousAddressFixer
 	{
 
@@ -164,7 +170,7 @@ namespace Epsitec.Aider.Data.Job
 			foreach (var eCH_reportedPerson in eCH_reportedPersons)
 			{
 				var eCH_address = eCH_reportedPerson.Address;
-				
+
 				var message2 = "DB ECH_ADDRESS:".PadRight (20) + eCH_address.Street + ", "
 					+ eCH_address.SwissZipCode + ", " + eCH_address.SwissZipCodeAddOn + ", "
 					+ eCH_address.SwissZipCodeId + ", " + eCH_address.Town;
@@ -278,7 +284,7 @@ namespace Epsitec.Aider.Data.Job
 					&& s1.ZipCodeAddOn == s2.ZipCodeAddOn,
 				(s) => s.StreetName.GetHashCode ()
 			);
-			
+
 			return streetRepository
 				.Streets
 				.Distinct (streetComparer)
