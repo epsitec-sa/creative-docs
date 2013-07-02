@@ -1,4 +1,4 @@
-//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.PDF
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
 	/// 
-	public class Export
+	public sealed class Export : System.IDisposable
 	{
 		public Export(Document document)
 		{
@@ -23,9 +23,13 @@ namespace Epsitec.Common.Document.PDF
 			this.zoom = 1.0;
 		}
 
+		#region IDisposable Members
+
 		public void Dispose()
 		{
 		}
+
+		#endregion
 
 		public void SetZoom(double zoom)
 		{
@@ -59,6 +63,8 @@ namespace Epsitec.Common.Document.PDF
 			return "";
 		}
 
+		
+		
 		private void ExportPdf(string path)
 		{
 			var modifier = this.document.Modifier;
@@ -127,6 +133,7 @@ namespace Epsitec.Common.Document.PDF
 			port.PushColorModifier (new ColorModifierCallback (this.FinalOutputColorModifier));
 			return port;
 		}
+		
 		private Writer CreateWriter(string path)
 		{
 			Writer writer;
