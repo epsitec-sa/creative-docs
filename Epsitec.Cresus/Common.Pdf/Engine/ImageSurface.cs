@@ -1,10 +1,11 @@
-//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Pdf.Engine
 {
@@ -15,7 +16,7 @@ namespace Epsitec.Common.Pdf.Engine
 	/// </summary>
 	public sealed class ImageSurface : System.IDisposable
 	{
-		public ImageSurface(long uniqueId, int id, Image image)
+		public ImageSurface(string uniqueId, int id, Image image)
 		{
 			this.uniqueId = uniqueId;
 			this.id       = id;
@@ -24,13 +25,14 @@ namespace Epsitec.Common.Pdf.Engine
 			this.nativeBitmap = NativeBitmap.Create (this.image.BitmapImage.NativeBitmap);
 		}
 
-		public ImageSurface(long uniqueId, int id, Image image, ImageFilter filter)
+		public ImageSurface(string uniqueId, int id, Image image, ImageFilter filter)
 			: this (uniqueId, id, image)
 		{
 			this.filter = filter;
 		}
 
-		public Image Image
+		
+		public Image							Image
 		{
 			get
 			{
@@ -38,7 +40,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public NativeBitmap NativeBitmap
+		public NativeBitmap						NativeBitmap
 		{
 			get
 			{
@@ -46,7 +48,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public long UniqueId
+		public string							UniqueId
 		{
 			get
 			{
@@ -54,7 +56,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public ImageFilter Filter
+		public ImageFilter						Filter
 		{
 			//	Filtre de l'image.
 			get
@@ -63,7 +65,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public int Id
+		public int								Id
 		{
 			//	Identificateur unique.
 			get
@@ -72,101 +74,138 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public PdfImageStream ImageStream
+		public PdfImageStream					ImageStream
 		{
 			get;
 			set;
 		}
 
-		public ImageCompression ImageCompression
+		public ImageCompression					ImageCompression
 		{
 			get;
 			set;
 		}
 
-		public PdfComplexSurfaceType SurfaceType
+		public PdfComplexSurfaceType			SurfaceType
 		{
 			get;
 			set;
 		}
 
-		public ColorConversion ColorConversion
+		public ColorConversion					ColorConversion
 		{
 			get;
 			set;
 		}
 
-		public double JpegQuality
+		public double							JpegQuality
 		{
 			get;
 			set;
 		}
 
+		
 		public void Dispose()
 		{
 			if (this.ImageStream != null)
 			{
 				this.ImageStream.Dispose ();
 			}
+			
+			if (this.nativeBitmap != null)
+			{
+				this.nativeBitmap.Dispose ();
+			}
 		}
 
 
-		public static long GetUniqueId(Image image)
+		public static string GetUniqueId(Image image)
 		{
 			//	Retourne un identificateur unique basé sur les données de l'image.
 			//	Deux objets Image différents ayant les mêmes contenus doivent rendre
 			//	le même identificateur.
-			//	TODO: C'est une implémentation bricolée, il faudra faire mieux !!!
-			var bytes = image.BitmapImage.GetRawBitmapBytes ();
-			long sum = 0;
-			int i = 0;
 
-			foreach (var b in bytes)
+			var info = new UniqueIdInfo (image);
+			var uid  = "";
+
+			//	On maintient un cache pour éviter que si on passe plusieurs fois le
+			//	même object image en entrée, on ne recalcule chaque fois son hash,
+			//	vu que c'est une opération coûteuse.
+			
+			lock (ImageSurface.exclusion)
 			{
-				sum += b;
-				sum ^= ImageSurface.randomXor[(i++) % ImageSurface.randomXor.Length];
-			}
-
-			return sum;
-		}
-
-		private static long[] randomXor =
-		{
-			0x12345678,
-			0xa340bbcf,
-			0x029d4588,
-			0x33333333,
-			0x51860178,
-			0xff505620,
-			0x55dac972,
-			0x224411dd,
-			0x5079ee40,
-			0x10030f00,
-			0x9445b4c2,
-			0x30405588,
-			0x09aaffc3,
-		};
-
-
-		public static ImageSurface Search(IEnumerable<ImageSurface> list, long uniqueId)
-		{
-			//	Cherche une image dans une liste.
-			foreach (ImageSurface image in list)
-			{
-				if (image.uniqueId == uniqueId)
+				if (ImageSurface.infos.TryGetValue (info, out uid))
 				{
-					return image;
+					return uid;
 				}
 			}
 
-			return null;
+			uid = Epsitec.Common.IO.Checksum.ComputeMd5Hash (image.BitmapImage.GetRawBitmapBytes ());
+
+			lock (ImageSurface.exclusion)
+			{
+				var dead = ImageSurface.infos.Keys.Where (x => x.IsDead).ToList ();
+
+				dead.ForEach (x => ImageSurface.infos.Remove (x));
+
+				ImageSurface.infos[info] = uid;
+			}
+
+			return uid;
 		}
 
+		#region UniqueIdInfo Structure
 
-		private readonly long			uniqueId;
-		private readonly Image			image;
-		private readonly NativeBitmap	nativeBitmap;
-		private readonly ImageFilter	filter;
-		private readonly int			id;
+		private struct UniqueIdInfo
+		{
+			public UniqueIdInfo(Image image)
+			{
+				this.image = new System.WeakReference (image);
+				this.hash = image.GetHashCode ();
+			}
+
+
+			public bool							IsDead
+			{
+				get
+				{
+					return this.image.IsAlive == false;
+				}
+			}
+
+			public Image						Image
+			{
+				get
+				{
+					return this.image.Target as Image;
+				}
+			}
+
+			
+			public override int GetHashCode()
+			{
+				return this.hash;
+			}
+
+			public override bool Equals(object obj)
+			{
+				return ((UniqueIdInfo) obj).image.Target == this.image.Target;
+			}
+
+			
+			private readonly System.WeakReference image;
+			private readonly int				hash;
+		}
+
+		#endregion
+
+		private static readonly object			exclusion = new object ();
+		private static readonly Dictionary<UniqueIdInfo, string> infos = new Dictionary<UniqueIdInfo, string> ();
+
+		private readonly string					uniqueId;
+		private readonly Image					image;
+		private readonly NativeBitmap			nativeBitmap;
+		private readonly ImageFilter			filter;
+		private readonly int					id;
 	}
 }

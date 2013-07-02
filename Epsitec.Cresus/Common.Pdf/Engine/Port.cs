@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Pdf.Engine
@@ -16,7 +16,7 @@ namespace Epsitec.Common.Pdf.Engine
 	/// L'origine graphique est en bas à gauche.
 	/// [*] = documentation PDF Reference, version 1.6, fifth edition, 1236 pages
 	/// </summary>
-	public class Port : IPaintPort, IDisposable
+	public class Port : IPaintPort, System.IDisposable
 	{
 		public Port()
 		{
@@ -922,12 +922,12 @@ namespace Epsitec.Common.Pdf.Engine
 			//	Tous les modes ne sont pas supportés. imageOriginX/imageOriginY doivent être nuls,
 			//	et imageWidth/imageHeight doivent correspondre aux dimensions de l'image.
 			//	Autrement dit, il faut dessiner toute l'image.
+			
+			var uniqueId = ImageSurface.GetUniqueId (bitmap);
+			var imageSurface = this.imageSurfaces.FirstOrDefault (x => x.UniqueId == uniqueId);
+			
 			if (this.IsPreProcess)
 			{
-				long uniqueId = ImageSurface.GetUniqueId (bitmap);
-
-				var imageSurface = ImageSurface.Search (this.imageSurfaces, uniqueId);
-
 				if (imageSurface == null)
 				{
 					imageSurface = new ImageSurface (uniqueId, this.nextImageSurfaceId++, bitmap);
@@ -940,9 +940,6 @@ namespace Epsitec.Common.Pdf.Engine
 				System.Diagnostics.Debug.Assert (imageOriginY == 0);
 				System.Diagnostics.Debug.Assert (imageWidth == bitmap.Width);
 				System.Diagnostics.Debug.Assert (imageHeight == bitmap.Height);
-
-				long uniqueId = ImageSurface.GetUniqueId (bitmap);
-				var imageSurface = ImageSurface.Search (this.imageSurfaces, uniqueId);
 
 				if (imageSurface == null)
 				{

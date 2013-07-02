@@ -209,12 +209,12 @@ namespace Common.Pdf.Test
 				PrintCropMarks = true,
 			};
 
-			var setup = new LabelsSetup ()
+			var setup = new LabelPageLayout ()
 			{
-				PaintFrame = true,
+				ShouldPaintFrame = true,
 			};
 
-			var labels = new Labels (info, setup);
+			var labels = new LabelGenerator (info, setup, new LabelRenderer ());
 			Program.AddFixElements (labels, setup);
 
 			var path = "test2.pdf";

@@ -78,11 +78,13 @@
     <Compile Include="Engine\PdfFunctionType.cs" />
     <Compile Include="Engine\PdfImageStream.cs" />
     <Compile Include="Engine\Port.cs" />
+    <Compile Include="Labels\LabelRenderer.cs" />
+    <Compile Include="Labels\LabelRendererSheetA5.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\StringBuffer.cs" />
     <Compile Include="Engine\Writer.cs" />
-    <Compile Include="Labels\Labels.cs" />
-    <Compile Include="Labels\LabelsSetup.cs" />
+    <Compile Include="Labels\LabelGenerator.cs" />
+    <Compile Include="Labels\LabelPageLayout.cs" />
     <Compile Include="TextDocument\TextDocumentSetup.cs" />
     <Compile Include="TextDocument\TextDocument.cs" />
   </ItemGroup>

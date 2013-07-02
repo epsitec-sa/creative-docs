@@ -1,3 +1,6 @@
+//	Copyright © 2004-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using Epsitec.Common.Drawing;
 
 using System;
@@ -26,7 +29,7 @@ namespace Epsitec.Common.Pdf.Engine
 			this.cropMarksOffset  = 50.0;   // 5mm
 			this.textToCurve      = false;
 			this.colorConversion  = ColorConversion.None;
-			this.imageCompression = ImageCompression.ZIP;
+			this.imageCompression = ImageCompression.ZipDefault;
 			this.jpegQuality      = 0.7;
 			this.imageMinDpi      = 0.0;
 			this.imageMaxDpi      = 300.0;

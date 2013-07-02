@@ -11,7 +11,7 @@ namespace Epsitec.Common.Pdf.Common
 {
 	public abstract class CommonPdf
 	{
-		public CommonPdf(ExportPdfInfo info, CommonSetup setup)
+		protected CommonPdf(ExportPdfInfo info, CommonSetup setup)
 		{
 			this.info  = info;
 			this.setup = setup;
@@ -160,8 +160,9 @@ namespace Epsitec.Common.Pdf.Common
 		}
 
 
-		protected readonly CommonSetup setup;
-		protected readonly ExportPdfInfo info;
-		private readonly List<Layer> layers;
+		protected readonly CommonSetup			setup;
+		protected readonly ExportPdfInfo		info;
+		
+		private readonly List<Layer>			layers;
 	}
 }

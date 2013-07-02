@@ -4,7 +4,6 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Drawing.Platform;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,7 +39,7 @@ namespace Epsitec.Common.Pdf.Engine
 		}
 
 
-		public void ExportToFile(string path, int pageCount, Action<Port, int> renderPage)
+		public void ExportToFile(string path, int pageCount, System.Action<Port, int> renderPage)
 		{
 			using (var stream = File.Open (path, FileMode.Create))
 			{
@@ -48,7 +47,7 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		public void ExportToFile(Stream stream, int pageCount, Action<Port, int> renderPage)
+		public void ExportToFile(Stream stream, int pageCount, System.Action<Port, int> renderPage)
 		{
 			//	Exporte le document dans un stream.
 			//	Le renderer reçoit le port et le numéro de la page à générer (1..n).
@@ -57,7 +56,7 @@ namespace Epsitec.Common.Pdf.Engine
 			System.Diagnostics.Debug.Assert (renderPage != null);
 
 			this.pageCount  = pageCount;
-			this.renderPage = renderPage;
+			this.renderPageAction = renderPage;
 
 			this.pages.Clear ();
 			this.pages.AddRange (this.Pages);
@@ -172,7 +171,7 @@ namespace Epsitec.Common.Pdf.Engine
 					port.Reset ();
 					port.CurrentPage = page;
 
-					this.renderPage (port, page);  // pré-prossessing de la page
+					this.renderPageAction (port, page);  // pré-prossessing de la page
 				}
 
 				port.IsPreProcess = false;
@@ -379,7 +378,7 @@ namespace Epsitec.Common.Pdf.Engine
 			port.CurrentPage = page;
 
 			var gtBeforeZoom = this.SetupTransformForPageExport (port, currentPageOffset);
-			this.renderPage (port, page);  // effectue le rendu de la page
+			this.renderPageAction (port, page);  // effectue le rendu de la page
 			port.Transform = gtBeforeZoom;
 
 			this.CropToBleedBox (port, page);  // efface ce qui dépasse de la BleedBox
@@ -740,7 +739,7 @@ namespace Epsitec.Common.Pdf.Engine
 			{
 				bool isTransparent = image.NativeBitmap.IsTransparent;
 
-                this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObject, PdfComplexSurfaceType.XObjectMask);
+				this.CreateImageSurface (writer, image, PdfComplexSurfaceType.XObject, PdfComplexSurfaceType.XObjectMask);
 
 				if (isTransparent)
 				{
@@ -871,25 +870,104 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		private static PdfImageStream EmitLosslessImageSurface(PdfComplexSurfaceType baseType, ImageSurface image, ImageCompression compression, NativeBitmap fi, ColorConversion colorConversion)
+		private static byte[] CreateImageSurface(ImageSurface image, NativeBitmap fi, int dx, int dy, int bpp)
 		{
-			int dx = (int) image.Image.Width;
-			int dy = (int) image.Image.Height;
+			switch (bpp)
+			{
+				case -1:  // alpha ?
+					return Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Alpha, image.Filter);
 
-			int bpp = 3;
+				case 1:
+					return Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Grayscale, image.Filter);
+
+				case 3:
+					return Export.CreateImageSurfaceRgb (fi, dx, dy, image.Filter);
+
+				case 4:
+					return Export.CreateImageSurfaceCmyk (fi, dx, dy, image.Filter);
+
+				default:
+					throw new System.ArgumentException ();
+			}
+		}
+
+		private static byte[] CreateImageSurfaceRgb(NativeBitmap fi, int dx, int dy, ImageFilter imageFilter)
+		{
+			byte[] bufferRed   = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Red, imageFilter);
+			byte[] bufferGreen = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Green, imageFilter);
+			byte[] bufferBlue  = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Blue, imageFilter);
+
+			var data = new byte[dx*dy*3];
+
+			for (int i=0; i<dx*dy; i++)
+			{
+				data[i*3+0] = bufferRed[i];
+				data[i*3+1] = bufferGreen[i];
+				data[i*3+2] = bufferBlue[i];
+			}
+
+			return data;
+		}
+
+		private static byte[] CreateImageSurfaceCmyk(NativeBitmap fi, int dx, int dy, ImageFilter imageFilter)
+		{
+			byte[] bufferCyan    = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Cyan, imageFilter);
+			byte[] bufferMagenta = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Magenta, imageFilter);
+			byte[] bufferYellow  = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Yellow, imageFilter);
+			byte[] bufferBlack   = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Black, imageFilter);
+
+			var data = new byte[dx*dy*4];
+
+			for (int i=0; i<dx*dy; i++)
+			{
+				data[i*4+0] = bufferCyan[i];
+				data[i*4+1] = bufferMagenta[i];
+				data[i*4+2] = bufferYellow[i];
+				data[i*4+3] = bufferBlack[i];
+			}
+			return data;
+		}
+
+		private static byte[] CreateImageSurfaceChannel(NativeBitmap fi, BitmapColorChannel channel, ImageFilter filter)
+		{
+			var plan = fi.GetChannel (channel);
+			bool invert = false;
+
+			if (plan == null &&	channel == BitmapColorChannel.Alpha)
+			{
+				plan = fi.GetChannel (BitmapColorChannel.Red);
+				invert = true;
+			}
+
+			byte[] data = plan.GetRawImageDataInCompactFormFor8BitImage ();
+
+			if (invert)
+			{
+				for (int i = 0; i < data.Length; i++)
+				{
+					data[i] = (byte) (0xff ^ data[i]);
+				}
+			}
+
+			return data;
+		}
+
+
+		private static int GetImageBpp(PdfComplexSurfaceType baseType, NativeBitmap fi, ColorConversion colorConversion)
+		{
 			if (baseType == PdfComplexSurfaceType.XObject)
 			{
 				if (colorConversion == ColorConversion.ToGray)
 				{
-					bpp = 1;
+					return 1;
 				}
 				else if (colorConversion == ColorConversion.ToRgb)
 				{
-					bpp = 3;
+					return 3;
 				}
 				else if (colorConversion == ColorConversion.ToCmyk)
 				{
-					bpp = 4;
+					return 4;
 				}
 				else
 				{
@@ -897,18 +975,15 @@ namespace Epsitec.Common.Pdf.Engine
 					{
 						case BitmapColorType.MinIsBlack:
 						case BitmapColorType.MinIsWhite:
-							bpp = 1;
-							break;
+							return 1;
 
 						case BitmapColorType.Rgb:
 						case BitmapColorType.RgbAlpha:
 						case BitmapColorType.Palette:
-							bpp = 3;
-							break;
+							return 3;
 
 						case BitmapColorType.Cmyk:
-							bpp = 4;
-							break;
+							return 4;
 
 						default:
 							throw new System.InvalidOperationException ();
@@ -917,58 +992,28 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 			else
 			{
-				bpp = -1;
+				return -1;
 			}
+		}
+		
+		private static PdfImageStream EmitLosslessImageSurface(PdfComplexSurfaceType baseType, ImageSurface image, ImageCompression compression, NativeBitmap fi, ColorConversion colorConversion)
+		{
+			int dx = (int) image.Image.Width;
+			int dy = (int) image.Image.Height;
 
-			byte[] data = null;
+			int bpp = Export.GetImageBpp (baseType, fi, colorConversion);
 
-			if (bpp == -1)  // alpha ?
+			byte[] data = CreateImageSurface (image, fi, dx, dy, bpp);
+			
+			if ((compression >= ImageCompression.ZipFast) &&
+				(compression <= ImageCompression.ZipBest))
 			{
-				data = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Alpha, image.Filter);
-			}
+				int level = (int) compression;
 
-			if (bpp == 1)
-			{
-				data = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Grayscale, image.Filter);
-			}
+				System.Diagnostics.Debug.Assert (level >= 1);
+				System.Diagnostics.Debug.Assert (level <= 9);
 
-			if (bpp == 3)
-			{
-				byte[] bufferRed   = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Red, image.Filter);
-				byte[] bufferGreen = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Green, image.Filter);
-				byte[] bufferBlue  = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Blue, image.Filter);
-
-				data = new byte[dx*dy*3];
-				for (int i=0; i<dx*dy; i++)
-				{
-					data[i*3+0] = bufferRed[i];
-					data[i*3+1] = bufferGreen[i];
-					data[i*3+2] = bufferBlue[i];
-				}
-			}
-
-			if (bpp == 4)
-			{
-				byte[] bufferCyan    = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Cyan, image.Filter);
-				byte[] bufferMagenta = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Magenta, image.Filter);
-				byte[] bufferYellow  = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Yellow, image.Filter);
-				byte[] bufferBlack   = Export.CreateImageSurfaceChannel (fi, BitmapColorChannel.Black, image.Filter);
-
-				data = new byte[dx*dy*4];
-				for (int i=0; i<dx*dy; i++)
-				{
-					data[i*4+0] = bufferCyan[i];
-					data[i*4+1] = bufferMagenta[i];
-					data[i*4+2] = bufferYellow[i];
-					data[i*4+3] = bufferBlack[i];
-				}
-			}
-
-			if (compression == ImageCompression.ZIP)  // compression ZIP ?
-			{
-				byte[] zip = IO.DeflateCompressor.Compress (data, 9);  // 9 = compression forte mais lente
-				data = zip;
-				zip = null;
+				data = IO.DeflateCompressor.Compress (data, level);
 			}
 
 			using (Port port = new Port ())
@@ -980,7 +1025,8 @@ namespace Epsitec.Common.Pdf.Engine
 
 				data = null;
 
-				if (compression == ImageCompression.ZIP)  // compression ZIP ?
+				if ((compression >= ImageCompression.ZipFast) &&
+					(compression <= ImageCompression.ZipBest))
 				{
 					return new PdfImageStream ("/Filter [/ASCII85Decode /FlateDecode] ", port.GetPDF ());  // voir [*] page 43
 				}
@@ -1056,7 +1102,7 @@ namespace Epsitec.Common.Pdf.Engine
 				this.colorConversion == ColorConversion.ToCmyk &&
 				compression == ImageCompression.JPEG) // cmyk impossible en jpg !
 			{
-				return ImageCompression.ZIP;  // utilise la compression sans pertes
+				return ImageCompression.ZipFast;  // utilise la compression sans pertes
 			}
 			else
 			{
@@ -1064,29 +1110,6 @@ namespace Epsitec.Common.Pdf.Engine
 			}
 		}
 
-		private static byte[] CreateImageSurfaceChannel(NativeBitmap fi, BitmapColorChannel channel, ImageFilter filter)
-		{
-			var plan = fi.GetChannel (channel);
-			bool invert = false;
-
-			if (plan == null &&	channel == BitmapColorChannel.Alpha)
-			{
-				plan = fi.GetChannel (BitmapColorChannel.Red);
-				invert = true;
-			}
-
-			byte[] data = plan.GetRawImageDataInCompactFormFor8BitImage ();
-
-			if (invert)
-			{
-				for (int i = 0; i < data.Length; i++)
-				{
-					data[i] = (byte) (0xff ^ data[i]);
-				}
-			}
-
-			return data;
-		}
 		#endregion
 
 
@@ -1358,7 +1381,7 @@ namespace Epsitec.Common.Pdf.Engine
 		private readonly List<int>				pages;
 
 		private int								pageCount;
-		private Action<Port, int>				renderPage;
+		private System.Action<Port, int>		renderPageAction;
 		private ColorConversion					colorConversion;
 		private ImageCompression				imageCompression;
 		private double							jpegQuality;
@@ -1367,5 +1390,4 @@ namespace Epsitec.Common.Pdf.Engine
 		private string							documentTitle;
 		private double							zoom;
 	}
-
 }

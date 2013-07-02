@@ -11,21 +11,21 @@ namespace Epsitec.Common.Pdf.Common
 		{
 			//	Rappel: L'unité est le dixième de millimètre.
 			this.PageMargins = new Margins (100.0);
-			this.TextStyle   = new TextStyle ()
+			this.TextStyle   = new TextStyle
 			{
 				Font     = Font.GetFont ("Arial", "Regular"),
 				FontSize = 30.0,
 			};
 		}
 
-		public Margins PageMargins
+		public Margins							PageMargins
 		{
 			//	Marges globales de la page.
 			set;
 			get;
 		}
 
-		public TextStyle TextStyle
+		public TextStyle						TextStyle
 		{
 			//	Style pour tous les textes.
 			set;
