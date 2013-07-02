@@ -177,7 +177,9 @@ namespace Epsitec.Cresus.Core.Library.UI
 		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
 		{
 			string exMessage   = ex == null ? "" : ex.Message;
-			string fullMessage = string.Format (message.ToString (), Services.GetShortWindowTitle (), exMessage);
+			string title       = Services.GetShortWindowTitle ();
+			string fullMessage = string.Format (message.ToString (), title, exMessage);
+			
 			FormattedText formattedMessage;
 
 			if (hint.IsNullOrEmpty ())
@@ -191,11 +193,26 @@ namespace Epsitec.Cresus.Core.Library.UI
 					fullMessage,
 					Services.StringEndFontElement,
 					@"<br/><br/>",
-					string.Format (hint.ToString (), Services.GetShortWindowTitle (), exMessage),
+					string.Format (hint.ToString (), title, exMessage),
 					@"<br/>&#160;"));
 			}
 
-			MessageDialog.ShowError (formattedMessage, Services.GetShortWindowTitle (), null);
+			if (CoreContext.IsInteractive)
+			{
+				MessageDialog.ShowError (formattedMessage, title, null);
+			}
+			else
+			{
+				System.Console.ForegroundColor = System.ConsoleColor.Magenta;
+				
+				if (string.IsNullOrEmpty (title) == false)
+				{
+					System.Console.WriteLine ("**** {0} ****", title);
+				}
+				
+				System.Console.WriteLine (formattedMessage.ToSimpleText ());
+				System.Console.ResetColor ();
+			}
 		}
 
 

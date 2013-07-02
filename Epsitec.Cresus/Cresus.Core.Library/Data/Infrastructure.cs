@@ -176,13 +176,22 @@ namespace Epsitec.Cresus.Core.Data
 
 			if (allowDatabaseUpdate)
 			{
-				IDialog d = MessageDialog.CreateYesNo ("Base de données incompatible", DialogIcon.Warning, "La base de données est incompatible. Voulez vous la modifier pour la mettre à jour?");
-
-				d.OpenDialog ();
-
-				if (d.Result == DialogResult.Yes)
+				if (CoreContext.IsInteractive)
 				{
-					updateAllowed = true;
+					IDialog d = MessageDialog.CreateYesNo ("Base de données incompatible", DialogIcon.Warning, "La base de données est incompatible. Voulez vous la modifier pour la mettre à jour?");
+
+					d.OpenDialog ();
+
+					if (d.Result == DialogResult.Yes)
+					{
+						updateAllowed = true;
+					}
+				}
+				else
+				{
+					System.Console.ForegroundColor = System.ConsoleColor.Red;
+					System.Console.WriteLine ("Incompatible database. Cannot upgrade in server mode...");
+					System.Console.ResetColor ();
 				}
 			}
 

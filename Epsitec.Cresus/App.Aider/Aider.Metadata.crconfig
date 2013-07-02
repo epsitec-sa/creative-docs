@@ -713,7 +713,7 @@ AiderPersonWarning = [LVALB]
       <R><r>@user</r></R>
       <L>
         <l t="Adresse normale" f="0"/>
-        <l t="Adresse des parents" f="1"/>
+        <l t="Adresse aux parents de..." f="1"/>
       </L>
     </d>
 
@@ -776,7 +776,7 @@ AiderPersonWarning = [LVALB]
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
       <L>
         <l t="Adresse normale" f="0"/>
-        <l t="Adresse des parents" f="1"/>
+        <l t="Adresse aux parents de..." f="1"/>
       </L>
     </d>
 
@@ -785,7 +785,7 @@ AiderPersonWarning = [LVALB]
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderContact:" /></M>
       <L>
         <l t="Adresse normale" f="0"/>
-        <l t="Adresse des parents" f="1"/>
+        <l t="Adresse aux parents de..." f="1"/>
       </L>
     </d>
 
@@ -793,7 +793,7 @@ AiderPersonWarning = [LVALB]
       <R><r>@user</r></R>
       <L>
         <l t="Adresse normale" f="0"/>
-        <l t="Adresse des parents" f="1"/>
+        <l t="Adresse aux parents de..." f="1"/>
       </L>
       <f id="@AiderContact">
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
