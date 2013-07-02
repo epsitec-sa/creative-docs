@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
@@ -7,20 +7,24 @@ namespace Epsitec.Common.IO
 	/// La classe DeflateCompressor permet de réaliser une compression compatible
 	/// avec ZLIB/DEFLATE (RFC 1951).
 	/// </summary>
-	public sealed class DeflateCompressor
+	public static class DeflateCompressor
 	{
-		private DeflateCompressor()
-		{
-		}
-		
-		
 		public static byte[] Compress(byte[] data, int level)
 		{
-			System.IO.MemoryStream output = new System.IO.MemoryStream ();
-			ICSharpCode.SharpZipLib.Zip.Compression.Deflater deflater = new ICSharpCode.SharpZipLib.Zip.Compression.Deflater (level);
-			ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream compressor = new ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream (output, deflater);
-			
-			compressor.Write (data, 0, data.Length);
+			var output     = new System.IO.MemoryStream ();
+			var deflater   = new ICSharpCode.SharpZipLib.Zip.Compression.Deflater (level);
+			var compressor = new ICSharpCode.SharpZipLib.Zip.Compression.Streams.DeflaterOutputStream (output, deflater);
+
+			int chunkSize = 1024*1024;
+
+			for (int pos = 0; pos < data.Length; pos += chunkSize)
+			{
+				var remaining = data.Length - pos;
+				var blockSize = System.Math.Min (chunkSize, remaining);
+
+				compressor.Write (data, pos, blockSize);
+			}
+
 			compressor.Flush ();
 			compressor.Close ();
 			
@@ -34,7 +38,7 @@ namespace Epsitec.Common.IO
 			
 			ICSharpCode.SharpZipLib.Zip.Compression.Streams.InflaterInputStream decompressor = new ICSharpCode.SharpZipLib.Zip.Compression.Streams.InflaterInputStream (input);
 			
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[1024*64];
 			
 			for (;;)
 			{
