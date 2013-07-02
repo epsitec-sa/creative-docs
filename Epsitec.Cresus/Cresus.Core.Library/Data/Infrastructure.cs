@@ -107,14 +107,8 @@ namespace Epsitec.Cresus.Core.Data
 					if (!valid)
 					{
 						bool updateAllowed = Infrastructure.IsDatabasesSchemaUpdateAllowed (allowDatabaseUpdate);
-
-						bool updateSuccess = false;
-
-						if (updateAllowed)
-						{
-							updateSuccess = Infrastructure.UpdateDatabaseSchemas (this.dbInfrastructure, managedEntityTypeIds);
-						}
-
+						bool updateSuccess = updateAllowed && Infrastructure.UpdateDatabaseSchemas (this.dbInfrastructure, managedEntityTypeIds);
+						
 						if (!updateAllowed)
 						{
 							throw new System.Exception ("Database schema is incompatible.");

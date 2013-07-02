@@ -211,7 +211,14 @@ namespace Epsitec.Cresus.Core.Library.UI
 				}
 				
 				System.Console.WriteLine (formattedMessage.ToSimpleText ());
+				
+				if (ex != null)
+				{
+					System.Console.WriteLine (ex.StackTrace);
+				}
+
 				System.Console.ResetColor ();
+				System.Console.ReadLine ();
 			}
 		}
 
