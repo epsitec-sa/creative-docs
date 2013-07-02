@@ -9,15 +9,15 @@ function() {
 
     constructor: function(ToastrFunc, formData) {
       this.form = formData._fields.items;
-      var context = this;
+      var me = this;
 
       $.getScript('signalr/hubs', function() {
         $.connection.hub.logging = true;
         // Start the connection
         var toastrInstance = new ToastrFunc();
         $.connection.hub.start(function() {
-          toastrInstance.init(context.form[0].lastValue, context);
-          context.initHub();
+          toastrInstance.init(me.form[0].lastValue, me);
+          me.initHub();
         });
       });
     },
