@@ -69,7 +69,7 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAOE]" title="Moi de naissance" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAOE]" title="Mois de naissance" canSort="True" canFilter="True">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
