@@ -26,11 +26,35 @@ namespace Epsitec.Cresus.WebCore.Server
 			public static class LabelLayout
 			{
 				//	designer:cap/A1G102
-				public static global::Epsitec.Common.Types.Caption Label_3475_70_X_36
+				public static global::Epsitec.Common.Types.Caption Avery_3475
 				{
 					get
 					{
 						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
+					}
+				}
+				//	designer:cap/A1A
+				public static global::Epsitec.Common.Types.Caption Sheet_A5_Simple
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+					}
+				}
+				//	designer:cap/A1A1
+				public static global::Epsitec.Common.Types.Caption Sheet_A5_SimplePP
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
+					}
+				}
+				//	designer:cap/A1A2
+				public static global::Epsitec.Common.Types.Caption Sheet_A5_SimplePPPriority
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
 					}
 				}
 			}
