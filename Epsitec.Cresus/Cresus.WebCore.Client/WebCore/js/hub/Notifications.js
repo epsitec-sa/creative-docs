@@ -6,15 +6,14 @@ function() {
 
     hub: null,
 
-    constructor: function(ToastrFunc, formData) {
+    constructor: function(ToastrFunc, username) {
       var me = this;
-
       $.getScript('signalr/hubs', function() {
         $.connection.hub.logging = true;
         // Start the connection
         var toastrInstance = new ToastrFunc();
         $.connection.hub.start(function() {
-          toastrInstance.init(formData.getFieldValues().username, me);
+          toastrInstance.init(username, me);
           me.initHub();
         });
       });

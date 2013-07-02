@@ -130,9 +130,9 @@ function() {
         return;
       }
 
-      this.application.showMainPanel(form);
+      var username = form.getFieldValues().username;
 
-
+      this.application.showMainPanel(username);
     }
   });
 });
