@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -584,46 +584,89 @@ namespace Epsitec.Common.Drawing.Platform
 			int dx = bitmap.Width;
 			int dy = bitmap.Height;
 
-			WriteableBitmap output = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Bgra32, null);
-			
-			System.Drawing.Rectangle rect = new System.Drawing.Rectangle (0, 0, dx, dy);
-			System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
-			System.Drawing.Imaging.BitmapData raw;
-			System.Drawing.Color[] palette = bitmap.Palette.Entries;
+			if ((bitmap.Palette != null) &&
+				(bitmap.Palette.Entries.Length == 256) &&
+				(bitmap.Palette.IsGray ()))
+			{
+				return SystemDrawingBitmapHelper.CreateGrayImage (bitmap);
+			}
 
-			raw = bitmap.LockBits (rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, format);
+			//	Do we really want to create a 32-bit output file ? Probably not...
+
+			throw new System.NotImplementedException ("Code not ready for use");
+
+			var output  = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Bgra32, null);
+			var palette = bitmap.Palette.Entries;
+			var rect    = new System.Drawing.Rectangle (0, 0, dx, dy);
+			var format  = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+			var raw     = bitmap.LockBits (rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, format);
 
 			unsafe
 			{
-				int stride = raw.Stride;
-				byte* buffer = (byte*) raw.Scan0.ToPointer () + (dy-1) * stride;
-				byte[] rawDst = new byte[dx*4];
+				int srcStride  = raw.Stride;
+				var rawSrcBits = (byte*) raw.Scan0.ToPointer () + (dy-1) * srcStride;
+				var rawDstRow  = new byte[dx*4];
 					
 				for (int y = 0; y < dy; y++)
 				{
-					byte* rawSrc = buffer - y * stride;
+					var rawSrc = rawSrcBits - y * srcStride;
 					int rawDstIndex = 0;
 
 					for (int x = 0; x < dx; x++)
 					{
 						int index = *rawSrc++;
+						var color = palette[index];
 
-						int r = palette[index].R;
-						int g = palette[index].G;
-						int b = palette[index].B;
-						int a = 0xff;
-
-						rawDst[rawDstIndex++] = (byte) b;
-						rawDst[rawDstIndex++] = (byte) g;
-						rawDst[rawDstIndex++] = (byte) r;
-						rawDst[rawDstIndex++] = (byte) a;
+						rawDstRow[rawDstIndex++] = (byte) color.B;
+						rawDstRow[rawDstIndex++] = (byte) color.G;
+						rawDstRow[rawDstIndex++] = (byte) color.R;
+						rawDstRow[rawDstIndex++] = (byte) 0xff;
 					}
+
+					output.WritePixels (new System.Windows.Int32Rect (0, y, dx, 1), rawDstRow, dx*4, 0);
 				}
 			}
 
 			bitmap.UnlockBits (raw);
 
 			return new NativeBitmap (output, colorType: BitmapColorType.RgbAlpha);
+		}
+		
+		
+		private static NativeBitmap CreateGrayImage(System.Drawing.Bitmap bitmap)
+		{
+			int dx = bitmap.Width;
+			int dy = bitmap.Height;
+
+			var output  = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Gray8, null);
+			var palette = bitmap.Palette.Entries.Select (x => x.R).ToArray ();
+			var rect    = new System.Drawing.Rectangle (0, 0, dx, dy);
+			var format  = System.Drawing.Imaging.PixelFormat.Format8bppIndexed;
+			var raw     = bitmap.LockBits (rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, format);
+
+			unsafe
+			{
+				int srcStride  = raw.Stride;
+				var rawSrcBits = (byte*) raw.Scan0.ToPointer () + (dy-1) * srcStride;
+				var rawDstRow  = new byte[dx];
+					
+				for (int y = 0; y < dy; y++)
+				{
+					var rawSrc = rawSrcBits - y * srcStride;
+					var rawDstIndex = 0;
+
+					for (int x = 0; x < dx; x++)
+					{
+						rawDstRow[rawDstIndex++] = palette[*rawSrc++];
+					}
+
+					output.WritePixels (new System.Windows.Int32Rect (0, y, dx, 1), rawDstRow, dx, 0);
+				}
+			}
+
+			bitmap.UnlockBits (raw);
+
+			return new NativeBitmap (output, colorType: BitmapColorType.MinIsBlack);
 		}
 	}
 }

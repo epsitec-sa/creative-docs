@@ -531,15 +531,24 @@ namespace Epsitec.Common.Drawing
 			
 			Bitmap bitmap = new Bitmap ();
 			
-			bitmap.bitmap    = native;
+			bitmap.bitmap   = native;
 			bitmap.bitmapDx = native.Width;
 			bitmap.bitmapDy = native.Height;
-			bitmap.size      = size;
-			bitmap.origin    = origin;
+			bitmap.size     = size;
+			bitmap.origin   = origin;
 			
 			bitmap.isOriginDefined = true;
 			
 			return bitmap;
+		}
+
+		public static Image FromNativeBitmap(byte[] data)
+		{
+			var stream = new System.IO.MemoryStream (data);
+			var bitmap = Bitmap.DecompressBitmap (stream, data);
+
+			return Bitmap.FromNativeBitmap (bitmap);
+
 		}
 
 		public static Image FromNativeIcon(string path, int dx, int dy)
@@ -835,10 +844,17 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
+		
 		private static System.Drawing.Bitmap DecompressBitmap(System.IO.MemoryStream stream, byte[] data)
 		{
 			try
 			{
+				if (Bitmap.IsPngHeader (data))
+				{
+					return Bitmap.DecompressPngBitmap (stream);
+				}
+
 				return new System.Drawing.Bitmap (stream);
 			}
 			catch (ExternalException)
@@ -852,6 +868,35 @@ namespace Epsitec.Common.Drawing
 						return new System.Drawing.Bitmap (stream2);
 					}
 				}
+			}
+		}
+
+		private static bool IsPngHeader(byte[] data)
+		{
+			return (data[0] == 0x89)
+				&& (data[1] == 0x50)
+				&& (data[2] == 0x4e)
+				&& (data[3] == 0x47);
+		}
+
+		private static System.Drawing.Bitmap DecompressPngBitmap(System.IO.MemoryStream stream)
+		{
+			//	We have to use the WPF decompression code, since GDI+ 8-bit PNG palette handling
+			//	is broken (an 8-bit PNG will always be loaded as 32-bit by GDI+)
+			//	http://social.msdn.microsoft.com/Forums/vstudio/en-US/02b1caee-f26f-40e9-ba23-524e8bbf902e/gdi-or-net-bug-8bpp-png-loaded-as-32bpp
+
+			var pngDec = new System.Windows.Media.Imaging.PngBitmapDecoder (stream,
+									System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat,
+									System.Windows.Media.Imaging.BitmapCacheOption.OnDemand);
+
+			var bmpEnc = new System.Windows.Media.Imaging.BmpBitmapEncoder ();
+
+			bmpEnc.Frames.Add (pngDec.Frames[0]);
+
+			using (var copy = new System.IO.MemoryStream ())
+			{
+				bmpEnc.Save (copy);
+				return new System.Drawing.Bitmap (copy);
 			}
 		}
 
