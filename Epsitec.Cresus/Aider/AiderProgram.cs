@@ -166,6 +166,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixContactNames (args));
 					return;
 				}
+
+				if (args.Contains ("-fixchardonnesubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixChardonneSubscriptions (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -358,6 +364,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => ContactNameFixer.FixContactNames (coreData)
+			);
+		}
+
+		private static void FixChardonneSubscriptions(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => ChardonneSubscriptionFixer.FixChardonneSubscriptions (coreData)
 			);
 		}
 
