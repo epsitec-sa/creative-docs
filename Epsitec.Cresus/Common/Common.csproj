@@ -69,6 +69,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Presentation" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
@@ -231,7 +232,9 @@
     <Compile Include="Drawing\ColorCollectionType.cs" />
     <Compile Include="Drawing\ColorSpace.cs" />
     <Compile Include="Drawing\ContentAlignment.cs" />
+    <Compile Include="Drawing\DrawingColorExtensions.cs" />
     <Compile Include="Drawing\GridSnapping.cs" />
+    <Compile Include="Drawing\DrawingImagingPaletteExtensions.cs" />
     <Compile Include="Drawing\PointDistance.cs" />
     <Compile Include="Drawing\GripIds.cs" />
     <Compile Include="Drawing\GripIdExtensions.cs" />
