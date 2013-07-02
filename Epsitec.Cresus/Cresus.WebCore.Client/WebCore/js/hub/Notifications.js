@@ -5,10 +5,8 @@ function() {
     alternateClassName: ['Epsitec.Notifications'],
 
     hub: null,
-    form: null,
 
     constructor: function(ToastrFunc, formData) {
-      this.form = formData._fields.items;
       var me = this;
 
       $.getScript('signalr/hubs', function() {
@@ -16,7 +14,7 @@ function() {
         // Start the connection
         var toastrInstance = new ToastrFunc();
         $.connection.hub.start(function() {
-          toastrInstance.init(me.form[0].lastValue, me);
+          toastrInstance.init(formData.getFieldValues().username, me);
           me.initHub();
         });
       });
