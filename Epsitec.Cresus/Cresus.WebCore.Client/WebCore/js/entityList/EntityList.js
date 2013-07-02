@@ -148,6 +148,7 @@ function() {
 
       if (Epsitec.Tools.isArrayEmpty(columnDefinitions)) {
         basicColumns.push({
+          xtype: 'gridcolumn',
           text: Epsitec.Texts.getSummaryHeader(),
           flex: 1,
           dataIndex: 'summary',
@@ -203,6 +204,7 @@ function() {
           break;
 
         case 'string':
+          column.xtype = 'gridcolumn';
           break;
       }
 
