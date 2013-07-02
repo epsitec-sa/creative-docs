@@ -286,10 +286,10 @@ namespace Epsitec.Common.Types
 			{
 				System.Type[] array;
 
+				this.exclusion.EnterReadLock ();
+				
 				try
 				{
-					this.exclusion.EnterReadLock ();
-
 					int length = collection.Count - index;
 
 					if (length < 1)
@@ -338,10 +338,10 @@ namespace Epsitec.Common.Types
 				return;
 			}
 
+			this.exclusion.EnterWriteLock ();
+
 			try
 			{
-				this.exclusion.EnterWriteLock ();
-
 				if (this.assemblyNames.Add (assembly.FullName))
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: analyzing assembly {0}", assembly.FullName));
