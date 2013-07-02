@@ -32,13 +32,14 @@ function() {
     labelExportDefinitions: null,
     exportUrl: null,
     actionEditData: null,
-    contextMenu: null,
     fullSearchWindow: null,
 
     /* Constructor */
 
     constructor: function(options) {
-      var newOptions = {
+      var newOptions, contextMenu;
+
+      newOptions = {
         dockedItems: [
           this.createToolbar(options),
           this.createSecondaryToolbar()
@@ -60,14 +61,16 @@ function() {
       };
 
       if (epsitecConfig.featureContextualMenu) {
-        this.createDefaultContextMenuAction(options);
+        if (!Epsitec.Tools.isArrayEmpty(options.menuItems))
+        {
+          contextMenu = this.createContextMenu(options);
 
-
-        newOptions.listeners.itemcontextmenu = function(view, rec, node, i, e) {
-          e.stopEvent();
-          this.contextMenu.showAt(e.getXY());
-          return false;
-        };
+          newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
+            e.stopEvent();
+            contextMenu.showAt(e.getXY());
+            return false;
+          };
+        }
       }
 
       Ext.applyIf(newOptions, options);
@@ -78,43 +81,36 @@ function() {
 
     /* Additional methods */
 
-    createContextMenu: function(actions) {
-
-      this.contextMenu = Ext.create('Ext.menu.Menu', {
-        items: actions
+    createContextMenu: function(options) {
+      return Ext.create('Ext.menu.Menu', {
+        items: this.createContextMenuItems(options.menuItems)
       });
     },
 
-    createDefaultContextMenuAction: function(options) {
+    createContextMenuItems: function(menuItems) {
+      return menuItems.map(this.createContextMenuItem, this);
+    },
 
-      var menuItems, menuActions, gridPanel;
+    createContextMenuItem: function(item) {
+      switch (item.type) {
+        case 'summarynavigation':
+          return this.createContextMenuSummaryNavigationItem(item);
 
-      menuItems = options.menuItems;
-
-      if (menuItems) {
-
-        menuActions = [];
-        gridPanel = this;
-        Ext.Array.each(menuItems, function(item) {
-
-          switch (item.type) {
-            case 'summarynavigation':
-              var action = Ext.create('Ext.Action', {
-                icon: '/images/Epsitec/Cresus/Core/Images/Base/' +
-                    'BusinessSettings/icon16.png',
-                text: item.title,
-                disabled: false,
-                item: item,
-                handler: gridPanel.summaryNavigationMenuHandler,
-                scope: gridPanel
-              });
-              menuActions.push(action);
-              break;
-          }
-        });
-
-        this.createContextMenu(menuActions);
+        default:
+          throw 'invalid context menu item type: ' + item.type;
       }
+    },
+
+    createContextMenuSummaryNavigationItem: function(item) {
+      return Ext.create('Ext.Action', {
+        icon: '/images/Epsitec/Cresus/Core/Images/Base/' +
+            'BusinessSettings/icon16.png',
+        text: item.title,
+        disabled: false,
+        item: item,
+        handler: this.summaryNavigationMenuHandler,
+        scope: this
+      });
     },
 
     summaryNavigationMenuHandler: function(widget, event) {
