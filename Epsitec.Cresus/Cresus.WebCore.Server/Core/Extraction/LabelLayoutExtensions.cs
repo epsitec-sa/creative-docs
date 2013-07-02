@@ -1,22 +1,19 @@
-﻿using Epsitec.Common.Drawing;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Drawing;
 
 using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Pdf.Labels;
 
-using System;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
-
-
 	internal static class LabelLayoutExtensions
 	{
-
-
-		public static LabelsSetup GetLabelsSetup(this LabelLayout layout)
+		public static LabelPageLayout GetLabelPageLayout(this LabelLayout layout)
 		{
-			var labelSetup = new LabelsSetup ()
+			var labelSetup = new LabelPageLayout ()
 			{
 				TextStyle = new TextStyle ()
 				{
@@ -35,7 +32,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					// pretending that there is no margin on the left and right and that the
 					// labels are all 70mm wide.
 
-					labelSetup = new LabelsSetup ()
+					labelSetup = new LabelPageLayout
 					{
 						PageMargins = new Margins (0, 0, 45, 45),
 						LabelGap = new Size (0, 0),
@@ -44,31 +41,67 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					};
 					break;
 
+				case LabelLayout.Sheet_A5_Simple:
+				case LabelLayout.Sheet_A5_SimplePP:
+				case LabelLayout.Sheet_A5_SimplePPPriority:
+
+					labelSetup = new LabelPageLayout
+					{
+						PageMargins = new Margins (0, 0, 5, 5),
+						LabelGap = new Size (0, 0),
+						LabelSize = new Size (2100, 1480),
+						LabelMargins = new Margins (0, 0, 0, 0),
+					};
+					
+					break;
+				
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 
 			return labelSetup;
 		}
-
 
 		public static ExportPdfInfo GetExportPdfInfo(this LabelLayout layout)
 		{
 			switch (layout)
 			{
 				case LabelLayout.Avery_3475:
+				case LabelLayout.Sheet_A5_Simple:
+				case LabelLayout.Sheet_A5_SimplePP:
+				case LabelLayout.Sheet_A5_SimplePPPriority:
 					return new ExportPdfInfo ()
 					{
 						PageSize = PaperSize.A4,
 					};
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
+		public static LabelRenderer GetLabelRenderer(this LabelLayout layout)
+		{
+			switch (layout)
+			{
+				case LabelLayout.Avery_3475:
+					return new LabelRenderer ();
+				
+				case LabelLayout.Sheet_A5_Simple:
+					return new LabelRendererSheetA5 (); //.DefineLogo (@"S:\eerv.png", new Size (2100, 1480));
+				
+				case LabelLayout.Sheet_A5_SimplePP:
+				case LabelLayout.Sheet_A5_SimplePPPriority:
+					return new LabelRendererSheetA5
+					{
+						EmitterZipCode = 1002,
+						EmitterPostOffice = "Lausanne",
+						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A5_SimplePPPriority
+					};
 
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
 	}
-
-
 }
