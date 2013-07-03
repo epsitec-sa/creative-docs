@@ -73,6 +73,8 @@ namespace Epsitec.Aider.Data.ECh
 			try
 			{
 				this.AnalyseAllChangesAndReportTrace ();
+
+                this.DisposeReporting();
 			}
 			catch (Exception e)
 			{
@@ -83,6 +85,46 @@ namespace Epsitec.Aider.Data.ECh
             
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.FamilyToAdd = null;
+                this.FamilyToRemove = null;
+                this.PersonToAdd = null;
+                this.PersonToRemove = null;
+
+                //Result 
+                this.NewHouseHolds = null;
+                this.MissingHouseHolds = null;
+                this.PersonMovedOut = null;
+                this.PersonMovedIn = null;
+                this.NewPersons = null;
+                this.MissingPersons = null;
+
+                this.NewUnion = null;
+                this.NewFamily = null;
+                this.NewFamilyWithChildren = null;
+                this.NewFamilyMono = null;
+                this.NewFamilyMonoWithChildren = null;
+                this.FamilyWithNewChilds = null;
+                this.FamilyWithChildMissing = null;
+                this.NewChilds = null;
+                this.ChildrenMissing = null;
+                this.ChildrenMove = null;
+                this.GainMajority = null;
+                this.MissingUnion = null;
+                this.WidowFamily = null;
+                this.MissingFamily = null;
+                this.MissingFamilyWithChildren = null;
+                this.MissingFamilyMono = null;
+                this.MissingFamilyMonoWithChildren = null;
+                this.ChildrenLeaveHouseholdForMajority = null;
+                this.AddCaseToResolve = null;
+            }
+            // Call Dispose on your base class.
+            base.Dispose(disposing);
+        }
 
         public IEnumerable<EChReportedPerson> GetNewFamilies()
         {
@@ -776,6 +818,35 @@ namespace Epsitec.Aider.Data.ECh
 
 			tw.Close ();
 		}
+
+        private void DisposeReporting()
+        {
+            this.FamilyToAdd = null;
+            this.FamilyToRemove = null;
+            this.PersonToAdd = null;
+            this.PersonToRemove = null;
+            this.NewUnion = null;
+            this.NewFamily = null;
+            this.NewFamilyWithChildren = null;
+            this.NewFamilyMono = null;
+            this.NewFamilyMonoWithChildren = null;
+            this.FamilyWithNewChilds = null;
+            this.FamilyWithChildMissing = null;
+            this.NewChilds = null;
+            this.ChildrenMissing = null;
+            this.ChildrenMove = null;
+            this.GainMajority = null;
+            this.MissingUnion = null;
+            this.WidowFamily = null;
+            this.MissingFamily = null;
+            this.MissingFamilyWithChildren = null;
+            this.MissingFamilyMono = null;
+            this.MissingFamilyMonoWithChildren = null;
+            this.ChildrenLeaveHouseholdForMajority = null;
+            this.AddCaseToResolve = null;
+
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+        }
 
 		private readonly static IEqualityComparer<EChPerson> PersonComparer = new LambdaComparer<EChPerson>((a,b) => a.Id == b.Id,a => a.Id.GetHashCode());
 
