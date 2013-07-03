@@ -54,24 +54,12 @@ namespace Epsitec.Aider.Data.ECh
 
 		public string GetFamilyKey()
 		{
-			//Calculate a surrogate familyKey for traking slow change in entity
-			List<string> keysToOrder = new List<string> ();
-			keysToOrder.Add (this.Adult1.Id);
+			var sortedIds = this.GetMembers ()
+				.Select (m => m.Id)
+				.OrderBy (id => id)
+				.ToList ();
 
-			if (this.Adult2 != null)
-			{
-				keysToOrder.Add (this.Adult2.Id);
-			}
-
-			//Adding Childs to surrogate key
-			foreach (EChPerson c in this.Children)
-			{
-				keysToOrder.Add (c.Id);
-			}
-
-			keysToOrder.Sort ();
-
-			return string.Concat (keysToOrder);
+			return string.Concat (sortedIds);
 		}
 
 		public readonly EChPerson Adult1;
