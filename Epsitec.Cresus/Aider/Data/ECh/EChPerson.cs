@@ -13,7 +13,7 @@ using System.Xml.Linq;
 namespace Epsitec.Aider.Data.ECh
 {
 
-
+    [System.Serializable]
 	internal sealed class EChPerson
 	{
 
@@ -76,6 +76,7 @@ namespace Epsitec.Aider.Data.ECh
 		public readonly PersonMaritalStatus MaritalStatus;
 
 		//Used by EChDataComparer
+        [System.NonSerialized]
 		private XElement Xml;
 
 

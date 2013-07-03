@@ -1,7 +1,7 @@
 ﻿namespace Epsitec.Aider.Data.ECh
 {
 
-
+    [System.Serializable]
 	internal sealed class EChPlace
 	{
 

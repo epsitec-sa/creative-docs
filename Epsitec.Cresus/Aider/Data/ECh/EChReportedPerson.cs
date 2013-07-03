@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace Epsitec.Aider.Data.ECh
 {
 
-
+    [System.Serializable]
 	internal sealed class EChReportedPerson
 	{
 
@@ -93,6 +93,8 @@ namespace Epsitec.Aider.Data.ECh
 
 		//Used by DataComparer
 		public readonly string FamilyKey;
+
+        [System.NonSerialized]
 		private XElement Xml;
 
 
