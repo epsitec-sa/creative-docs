@@ -23,8 +23,8 @@ namespace Epsitec.Aider.Data.ECh
         /// <param name="newEchFile">new ECh XML data file</param>
         public EChDataComparer(string oldEchFile, string newEchFile)
         {
-            var origineEch = EChDataComparerLoader.Load(new FileInfo(oldEchFile), int.MaxValue).ToList();
-            var versionEch = EChDataComparerLoader.Load(new FileInfo(newEchFile), int.MaxValue).ToList();
+            var origineEch = EChDataLoader.Load(new FileInfo(oldEchFile), int.MaxValue).ToList();
+            var versionEch = EChDataLoader.Load(new FileInfo(newEchFile), int.MaxValue).ToList();
             this.CreateDictionaryFromEntity(origineEch, versionEch);
             origineEch = null;
             versionEch = null;
