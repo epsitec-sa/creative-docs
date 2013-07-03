@@ -106,7 +106,6 @@ function() {
       this.deleteEntities(entityItems);
     },
 
-
     deleteEntities: function(entityItems) {
       if (this.deletionViewId === null) {
         this.deleteEntitiesWithoutView(entityItems);
@@ -135,7 +134,6 @@ function() {
     deleteEntityWithViewCallback: function() {
       this.reloadStore();
     },
-
 
     deleteEntitiesWithoutView: function(entityItems) {
       this.setLoading();
