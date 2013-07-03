@@ -21,138 +21,55 @@ namespace Epsitec.Aider.Data.Job
 
 		public static void StartJob(string oldEchFile, string newEchFile,string reportFile, CoreData coreData)
 		{
-
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
-
                 Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
 
-                List<EChPerson> personsToCreate;
-                byte[] personsToCreateCopy = null;
-                List<EChPerson> personsToRemove;
-                byte[] personsToRemoveCopy = null;
-                List<System.Tuple<EChPerson, EChPerson>> personsToUpdate;
-                byte[] personsToUpdateCopy = null;
+                List<EChPerson> personsToCreate = new List<EChPerson>();
+                List<EChPerson> personsToRemove = new List<EChPerson>();
+                List<System.Tuple<EChPerson, EChPerson>> personsToUpdate = new List<System.Tuple<EChPerson, EChPerson>>();
 
-                List<EChReportedPerson> houseHoldsToCreate;
-                byte[] houseHoldsToCreateCopy = null;
-                List<EChReportedPerson> houseHoldsToRemove;
-                byte[] houseHoldsToRemoveCopy = null;
-                List<System.Tuple<EChReportedPerson, EChReportedPerson>> houseHoldsToUpdate;
-                byte[] houseHoldsToUpdateCopy = null;
-                List<EChReportedPerson> newHouseHoldsToCreate;
-                byte[] newHouseHoldsToCreateCopy = null;
-                List<EChReportedPerson> missingHouseHoldsToRemove;
-                byte[] missingHouseHoldsToRemoveCopy = null;
+                List<EChReportedPerson> houseHoldsToCreate = new List<EChReportedPerson>();
+                List<EChReportedPerson> houseHoldsToRemove = new List<EChReportedPerson>();
+                List<System.Tuple<EChReportedPerson, EChReportedPerson>> houseHoldsToUpdate = new List<System.Tuple<EChReportedPerson, EChReportedPerson>>();
 
+                List<EChReportedPerson> newHouseHoldsToCreate = new List<EChReportedPerson>();
+                List<EChReportedPerson> missingHouseHoldsToRemove = new List<EChReportedPerson>();
 
-                var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-
-                //Discharge analyser from is results before disposing
                 using (var analyser = new EChDataAnalyser(oldEchFile, newEchFile, reportFile))
                 {
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetPersonToAdd().ToList());
-                        personsToCreateCopy = stream.ToArray();
-                    }
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetPersonToRemove().ToList());
-                        personsToRemoveCopy = stream.ToArray();
-                    }
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetPersonToChange().ToList());
-                        personsToUpdateCopy = stream.ToArray();
-                    }
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetFamilyToAdd().ToList());
-                        houseHoldsToCreateCopy = stream.ToArray();
-                    }
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetFamilyToRemove().ToList());
-                        houseHoldsToRemoveCopy = stream.ToArray();
-                    }
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetFamilyToChange().ToList());
-                        houseHoldsToUpdateCopy = stream.ToArray();
-                    }   
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetNewFamilies().ToList());
-                        newHouseHoldsToCreateCopy = stream.ToArray();
-                    }
-                    using (var stream = new System.IO.MemoryStream())
-                    {
-                        formatter.Serialize(stream, analyser.GetMissingFamilies().ToList());
-                        missingHouseHoldsToRemoveCopy = stream.ToArray();
-                    }
+                    //Discharge analyser from is results before disposing
+                    personsToCreate = analyser.GetPersonToAdd().ToList();
+                    personsToRemove = analyser.GetPersonToRemove().ToList();
+                    personsToUpdate = analyser.GetPersonToChange().ToList();
+
+                    houseHoldsToCreate = analyser.GetFamilyToAdd().ToList();
+                    houseHoldsToRemove = analyser.GetFamilyToRemove().ToList();
+                    houseHoldsToUpdate = analyser.GetFamilyToChange().ToList();
+
+                    newHouseHoldsToCreate = analyser.GetNewFamilies().ToList();
+                    missingHouseHoldsToRemove = analyser.GetMissingFamilies().ToList();
                 }
 
-
-                using (var stream = new System.IO.MemoryStream(personsToUpdateCopy))
-                {
-                    personsToUpdate = (List<System.Tuple<EChPerson,EChPerson>>)formatter.Deserialize(stream);
-                }
                 UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
-                personsToUpdate = null;
 
-
-                using (var stream = new System.IO.MemoryStream(houseHoldsToUpdateCopy))
-                {
-                    houseHoldsToUpdate = (List<System.Tuple<EChReportedPerson, EChReportedPerson>>)formatter.Deserialize(stream);
-                }
                 UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
-                houseHoldsToUpdate = null;
 
-                using (var stream = new System.IO.MemoryStream(personsToCreateCopy))
-                {
-                    personsToCreate = (List<EChPerson>)formatter.Deserialize(stream);
-                }
-                UpdateEChData.CreateNewEChPersonEntities(coreData, personsToCreate);
-                UpdateEChData.CreateNewAiderPersonEntitities(coreData, personsToCreate);
-                personsToCreate = null;
-
-                using (var stream = new System.IO.MemoryStream(personsToRemoveCopy))
-                {
-                    personsToRemove = (List<EChPerson>)formatter.Deserialize(stream);
-                }
                 UpdateEChData.TagForDeletionEChPersonEntities(coreData, personsToRemove);
-                UpdateEChData.TagForDeletionAiderPersonEntities(coreData, personsToRemove);
-                personsToRemove = null;
 
-                using (var stream = new System.IO.MemoryStream(houseHoldsToRemoveCopy))
-                {
-                    houseHoldsToRemove = (List<EChReportedPerson>)formatter.Deserialize(stream);
-                }
+                UpdateEChData.CreateNewEChPersonEntities(coreData, personsToCreate);
+
                 UpdateEChData.RemoveOldEChReportedPersonEntities(coreData, houseHoldsToRemove);
-                houseHoldsToRemove = null;
 
-                using (var stream = new System.IO.MemoryStream(houseHoldsToCreateCopy))
-                {
-                    houseHoldsToCreate = (List<EChReportedPerson>)formatter.Deserialize(stream);
-                }
                 UpdateEChData.CreateNewEChReportedPersonEntities(coreData, houseHoldsToCreate);
-                houseHoldsToCreate = null;
 
-                using (var stream = new System.IO.MemoryStream(missingHouseHoldsToRemoveCopy))
-                {
-                    missingHouseHoldsToRemove = (List<EChReportedPerson>)formatter.Deserialize(stream);
-                }
+                UpdateEChData.TagForDeletionAiderPersonEntities(coreData, personsToRemove);
+
+                UpdateEChData.CreateNewAiderPersonEntitities(coreData, personsToCreate);
+ 
                 UpdateEChData.TagAiderPersonEntitiesForHouseholdMissing(coreData, missingHouseHoldsToRemove);
-                missingHouseHoldsToRemove = null;
 
-                using (var stream = new System.IO.MemoryStream(newHouseHoldsToCreateCopy))
-                {
-                    newHouseHoldsToCreate = (List<EChReportedPerson>)formatter.Deserialize(stream);
-                }
                 UpdateEChData.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);
-                newHouseHoldsToCreate = null;
-                
 			}
 			else
 			{
