@@ -79,6 +79,8 @@ function() {
           entityId: entityId,
           columnDefinitions: databaseDefinition.columns,
           sorterDefinitions: databaseDefinition.sorters,
+          labelExportDefinitions: databaseDefinition.labelItems,
+          menuItems: databaseDefinition.menuItems,
           multiSelect: true,
           onSelectionChange: null
         });
