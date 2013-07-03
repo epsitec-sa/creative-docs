@@ -171,8 +171,7 @@ namespace Epsitec.Aider.Data.ECh
 				maritalStatus = EChDataComparerLoader.GetEChPersonMaritalStatus (xMaritalStatus);
 			}
 
-			//!Add the XElement
-			return new EChPerson (id, officialName, firstNames, dateOfBirth, sex, nationalityStatus, nationalCountryCode, originPlaces, maritalStatus, xPerson);
+			return new EChPerson (id, officialName, firstNames, dateOfBirth, sex, nationalityStatus, nationalCountryCode, originPlaces, maritalStatus);
 		}
 
 

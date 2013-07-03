@@ -37,20 +37,6 @@ namespace Epsitec.Aider.Data.ECh
 			this.MaritalStatus = maritalStatus;
 		}
 
-		public EChPerson(string id, string officialname, string firstNames, Date dateOfBirth, PersonSex sex, PersonNationalityStatus nationalityStatus, string nationalCountryCode, IEnumerable<EChPlace> originPlaces, PersonMaritalStatus maritalStatus,XElement Xml)
-		{
-			this.Id = id;
-			this.OfficialName = officialname;
-			this.FirstNames = firstNames;
-			this.DateOfBirth = dateOfBirth;
-			this.Sex = sex;
-			this.NationalityStatus = nationalityStatus;
-			this.NationalCountryCode = nationalCountryCode;
-			this.OriginPlaces = originPlaces.AsReadOnlyCollection ();
-			this.MaritalStatus = maritalStatus;
-			this.Xml = Xml;
-		}
-
 		public bool CheckData(string on, string fn, Date dob, PersonSex s, PersonNationalityStatus ns, string ncc, PersonMaritalStatus ms, ReadOnlyCollection<EChPlace> op)
 		{
 			var originList= op.Select (p => System.Tuple.Create (p.Canton, p.Name)).ToList ();
@@ -58,11 +44,6 @@ namespace Epsitec.Aider.Data.ECh
 
 			bool result = this.OfficialName == on && this.FirstNames == fn && this.DateOfBirth == dob && this.Sex == s && this.NationalityStatus == ns && this.NationalCountryCode == ncc && this.MaritalStatus == ms && originList.SetEquals(originListToCompare);
 			return result;
-		}
-
-		public XElement GetXml()
-		{
-			return new XElement (this.Xml);
 		}
 
 		public readonly string Id;
@@ -74,10 +55,6 @@ namespace Epsitec.Aider.Data.ECh
 		public readonly string NationalCountryCode;
 		public readonly ReadOnlyCollection<EChPlace> OriginPlaces;
 		public readonly PersonMaritalStatus MaritalStatus;
-
-		//Used by EChDataComparer
-        [System.NonSerialized]
-		private XElement Xml;
 
 
 	}
