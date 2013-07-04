@@ -11,6 +11,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Data.Platform;
@@ -52,9 +53,9 @@ namespace Epsitec.Aider.Data.Job
                     missingHouseHoldsToRemove = analyser.GetMissingFamilies().ToList();
                 }
 
-                //UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
+                UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
 
-                //UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
+                UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
 
                 UpdateEChData.TagForDeletionEChPersonEntities(coreData, personsToRemove);
 
@@ -287,18 +288,18 @@ namespace Epsitec.Aider.Data.Job
 
                     //Link household to ECh Entity
                     var eChReportedPersonEntity = UpdateEChData.GetEchReportedPersonEntity(businessContext, eChReportedPerson);
-                    if (eChReportedPersonEntity.Adult1.PersonId != null)
+                    if (eChReportedPersonEntity.Adult1.IsNotNull())
                     {
                         var aiderPerson = UpdateEChData.GetAiderPersonEntity(businessContext, eChReportedPersonEntity.Adult1);
 
                         EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
                     }
 
-                    if (eChReportedPersonEntity.Adult2.PersonId != null)
+                    if (eChReportedPersonEntity.Adult2.IsNull())
                     {
-                        var aiderPerson = UpdateEChData.GetAiderPersonEntity(businessContext, eChReportedPersonEntity.Adult2);
+						var aiderPerson = UpdateEChData.GetAiderPersonEntity (businessContext, eChReportedPersonEntity.Adult2);
 
-                        EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);
+						EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);               
                     }
 
                     foreach (var child in eChReportedPersonEntity.Children)
