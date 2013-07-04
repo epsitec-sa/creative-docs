@@ -26,52 +26,39 @@ namespace Epsitec.Aider.Data.Job
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
                 Console.WriteLine("ECH DATA UPDATER : START ANALYSER");
-
-                List<EChPerson> personsToCreate = new List<EChPerson>();
-                List<EChPerson> personsToRemove = new List<EChPerson>();
-                List<System.Tuple<EChPerson, EChPerson>> personsToUpdate = new List<System.Tuple<EChPerson, EChPerson>>();
-
-                List<EChReportedPerson> houseHoldsToCreate = new List<EChReportedPerson>();
-                List<EChReportedPerson> houseHoldsToRemove = new List<EChReportedPerson>();
-                List<System.Tuple<EChReportedPerson, EChReportedPerson>> houseHoldsToUpdate = new List<System.Tuple<EChReportedPerson, EChReportedPerson>>();
-
-                List<EChReportedPerson> newHouseHoldsToCreate = new List<EChReportedPerson>();
-                List<EChReportedPerson> missingHouseHoldsToRemove = new List<EChReportedPerson>();
-
                 using (var analyser = new EChDataAnalyser(oldEchFile, newEchFile, reportFile))
                 {
-                    //Discharge analyser from is results before disposing
-                    personsToCreate = analyser.GetPersonToAdd().ToList();
-                    personsToRemove = analyser.GetPersonToRemove().ToList();
-                    personsToUpdate = analyser.GetPersonToChange().ToList();
+                    var personsToCreate = analyser.GetPersonToAdd().ToList();
+                    var personsToRemove = analyser.GetPersonToRemove().ToList();
+                    var personsToUpdate = analyser.GetPersonToChange().ToList();
 
-                    houseHoldsToCreate = analyser.GetFamilyToAdd().ToList();
-                    houseHoldsToRemove = analyser.GetFamilyToRemove().ToList();
-                    houseHoldsToUpdate = analyser.GetFamilyToChange().ToList();
+                    var houseHoldsToCreate = analyser.GetFamilyToAdd().ToList();
+                    var houseHoldsToRemove = analyser.GetFamilyToRemove().ToList();
+                    var houseHoldsToUpdate = analyser.GetFamilyToChange().ToList();
 
-                    newHouseHoldsToCreate = analyser.GetNewFamilies().ToList();
-                    missingHouseHoldsToRemove = analyser.GetMissingFamilies().ToList();
-                }
+                    var newHouseHoldsToCreate = analyser.GetNewFamilies().ToList();
+                    var missingHouseHoldsToRemove = analyser.GetMissingFamilies().ToList();
+                
+					UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
 
-                UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
+					/*UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
 
-                UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
+					UpdateEChData.TagForDeletionEChPersonEntities(coreData, personsToRemove);
 
-                UpdateEChData.TagForDeletionEChPersonEntities(coreData, personsToRemove);
+					UpdateEChData.CreateNewEChPersonEntities(coreData, personsToCreate);
 
-                UpdateEChData.CreateNewEChPersonEntities(coreData, personsToCreate);
+					UpdateEChData.RemoveOldEChReportedPersonEntities(coreData, houseHoldsToRemove);
 
-                UpdateEChData.RemoveOldEChReportedPersonEntities(coreData, houseHoldsToRemove);
+					UpdateEChData.CreateNewEChReportedPersonEntities(coreData, houseHoldsToCreate);
 
-                UpdateEChData.CreateNewEChReportedPersonEntities(coreData, houseHoldsToCreate);
+					UpdateEChData.TagForDeletionAiderPersonEntities(coreData, personsToRemove);
 
-                UpdateEChData.TagForDeletionAiderPersonEntities(coreData, personsToRemove);
-
-                UpdateEChData.CreateNewAiderPersonEntitities(coreData, personsToCreate);
+					UpdateEChData.CreateNewAiderPersonEntitities(coreData, personsToCreate);
  
-                UpdateEChData.TagAiderPersonEntitiesForHouseholdMissing(coreData, missingHouseHoldsToRemove);
+					UpdateEChData.TagAiderPersonEntitiesForHouseholdMissing(coreData, missingHouseHoldsToRemove);
 
-                UpdateEChData.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);
+					UpdateEChData.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);*/
+				}
 			}
 			else
 			{
@@ -355,13 +342,13 @@ namespace Epsitec.Aider.Data.Job
 					foreach (var eChPerson in eChReportedPerson.GetMembers ())
 					{
 						var eChPersonEntity = UpdateEChData.GetEchPersonEntity (businessContext, eChPerson);
-						var AiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, eChPersonEntity);
+						var aiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, eChPersonEntity);
 
 						AiderPersonWarningEntity.Create (
 							businessContext,
-							AiderPersonEntity,
+							aiderPersonEntity,
 							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
-							FormattedText.FromSimpleText (AiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"),
+							FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"),
 							WarningType.Mismatch);
 					}
 				}
@@ -381,48 +368,64 @@ namespace Epsitec.Aider.Data.Job
 					try
 					{
 						var personEntityToUpdate = UpdateEChData.GetEchPersonEntity(businessContext, toChange.Item1);
+						var aiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, personEntityToUpdate);
 						var changedEChPersonEntity = new eCH_PersonEntity ();
 						EChDataImporter.ConvertEChPersonToEntity (toChange.Item1, changedEChPersonEntity);
-
+						var changes = new List<string> ();
 						if (!toChange.Item1.DateOfBirth.Equals(toChange.Item2.DateOfBirth))
 						{
 							personEntityToUpdate.PersonDateOfBirth = changedEChPersonEntity.PersonDateOfBirth;
+							changes.Add ("Date de naissance: " + toChange.Item2.DateOfBirth + " -> " + changedEChPersonEntity.PersonDateOfBirth);
 						}
 
 						if (!toChange.Item1.FirstNames.Equals(toChange.Item2.FirstNames))
 						{
 							personEntityToUpdate.PersonFirstNames = changedEChPersonEntity.PersonFirstNames;
+							changes.Add ("Prénom: " + toChange.Item2.FirstNames + " -> " + changedEChPersonEntity.PersonFirstNames);
 						}
 
 						if (!toChange.Item1.MaritalStatus.Equals(toChange.Item2.MaritalStatus))
 						{
 							personEntityToUpdate.AdultMaritalStatus = changedEChPersonEntity.AdultMaritalStatus;
+							changes.Add ("Etat civil: " + toChange.Item2.MaritalStatus + " -> " + changedEChPersonEntity.AdultMaritalStatus);
 						}
 
 						if (!toChange.Item1.NationalCountryCode.Equals(toChange.Item2.NationalCountryCode))
 						{
 							personEntityToUpdate.NationalityCountryCode = changedEChPersonEntity.NationalityCountryCode;
+							changes.Add ("Nationalité: " + toChange.Item2.NationalCountryCode + " -> " + changedEChPersonEntity.NationalityCountryCode);
 						}
 
 						if (!toChange.Item1.NationalityStatus.Equals(toChange.Item2.NationalityStatus))
 						{
 							personEntityToUpdate.NationalityStatus = changedEChPersonEntity.NationalityStatus;
+							changes.Add ("Statut nationalité: " + toChange.Item2.NationalityStatus + " -> " + changedEChPersonEntity.NationalityStatus);
 						}
 
 						if (!toChange.Item1.OfficialName.Equals(toChange.Item2.OfficialName))
 						{
 							personEntityToUpdate.PersonOfficialName = changedEChPersonEntity.PersonOfficialName;
+							changes.Add ("Nom: " + toChange.Item2.OfficialName + " -> " + changedEChPersonEntity.PersonOfficialName);
 						}
 
-						if (!toChange.Item1.OriginPlaces.Equals(toChange.Item2.OriginPlaces))
+						if (!toChange.Item1.OriginPlaces.SetEquals(toChange.Item2.OriginPlaces))
 						{
 							personEntityToUpdate.Origins = changedEChPersonEntity.Origins;
+							changes.Add ("Origines: " + String.Join(" ",toChange.Item2.OriginPlaces) + " -> " + String.Join(" ",changedEChPersonEntity.Origins));
 						}
 
 						if (!toChange.Item1.Sex.Equals(toChange.Item2.Sex))
 						{
 							personEntityToUpdate.PersonSex = changedEChPersonEntity.PersonSex;
+							changes.Add ("Sex: " + toChange.Item2.Sex + " -> " + changedEChPersonEntity.PersonSex);
 						}
+
+						AiderPersonWarningEntity.Create (
+							businessContext,
+							aiderPersonEntity,
+							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+							TextFormatter.Join(FormattedText.HtmlBreak,changes.Select(c => FormattedText.Format(c))),
+							WarningType.Mismatch);
 					}
 					catch(Exception)
 					{
