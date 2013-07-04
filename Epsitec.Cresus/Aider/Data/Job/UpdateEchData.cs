@@ -11,6 +11,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Data.Platform;
 
@@ -51,9 +52,9 @@ namespace Epsitec.Aider.Data.Job
                     missingHouseHoldsToRemove = analyser.GetMissingFamilies().ToList();
                 }
 
-                UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
+                //UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
 
-                UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
+                //UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
 
                 UpdateEChData.TagForDeletionEChPersonEntities(coreData, personsToRemove);
 
@@ -90,7 +91,7 @@ namespace Epsitec.Aider.Data.Job
 					var eChPersonEntity = UpdateEChData.GetEchPersonEntity (businessContext, eChPerson);
 					var existingAiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, eChPersonEntity);
 
-					if (existingAiderPersonEntity == null)
+					if (existingAiderPersonEntity.eCH_Person == null)
 					{
 						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 
@@ -286,14 +287,14 @@ namespace Epsitec.Aider.Data.Job
 
                     //Link household to ECh Entity
                     var eChReportedPersonEntity = UpdateEChData.GetEchReportedPersonEntity(businessContext, eChReportedPerson);
-                    if (eChReportedPersonEntity.Adult1 != null)
+                    if (eChReportedPersonEntity.Adult1.PersonId != null)
                     {
                         var aiderPerson = UpdateEChData.GetAiderPersonEntity(businessContext, eChReportedPersonEntity.Adult1);
 
                         EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
                     }
 
-                    if (eChReportedPersonEntity.Adult2 != null)
+                    if (eChReportedPersonEntity.Adult2.PersonId != null)
                     {
                         var aiderPerson = UpdateEChData.GetAiderPersonEntity(businessContext, eChReportedPersonEntity.Adult2);
 
@@ -525,36 +526,28 @@ namespace Epsitec.Aider.Data.Job
             {
                 return null;
             }
-            var personExample = new AiderPersonEntity()
-            {
-                eCH_Person = person
-            };
+
+            var personExample = new AiderPersonEntity();
+
+            personExample.eCH_Person = new eCH_PersonEntity() { PersonId = person.PersonId };
 
             return businessContext.DataContext.GetByExample<AiderPersonEntity>(personExample).FirstOrDefault();
         }
 
 		private static eCH_ReportedPersonEntity GetEchReportedPersonEntity(BusinessContext businessContext, EChReportedPerson reportedPerson)
 		{
-			var adult1 = GetEchPersonEntity(businessContext, reportedPerson.Adult1);
-			var adult2 = GetEchPersonEntity(businessContext, reportedPerson.Adult2);
-
-			var reportedPersonExample = new eCH_ReportedPersonEntity() { };
-
-			if (adult1 != null && adult2 != null)
+            var reportedPersonExample = new eCH_ReportedPersonEntity();
+            var req = new Request();
+            if (reportedPerson.Adult1 != null && reportedPerson.Adult2 != null)
 			{
-				reportedPersonExample = new eCH_ReportedPersonEntity()
-				{
-					Adult1 = adult1,
-					Adult2 = adult2
-				};
+                reportedPersonExample.Adult1 = new eCH_PersonEntity() { PersonId = reportedPerson.Adult1.Id };
+                reportedPersonExample.Adult2 = new eCH_PersonEntity() { PersonId = reportedPerson.Adult2.Id };
+                
 			}
 
-			if (adult1 != null && adult2 == null)
+            if (reportedPerson.Adult1 != null && reportedPerson.Adult2 == null)
 			{
-				reportedPersonExample = new eCH_ReportedPersonEntity()
-				{
-					Adult1 = adult1
-				};
+                reportedPersonExample.Adult1 = new eCH_PersonEntity() { PersonId = reportedPerson.Adult1.Id };
 			}
 
             return businessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(reportedPersonExample).FirstOrDefault();
