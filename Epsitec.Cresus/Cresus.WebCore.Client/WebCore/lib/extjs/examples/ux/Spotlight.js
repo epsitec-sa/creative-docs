@@ -32,7 +32,7 @@ Ext.define('Ext.ux.Spotlight', {
      */
     active: false,
     
-    constructor: function (config) {
+    constructor: function(config){
         Ext.apply(this, config);
     },
 
@@ -200,10 +200,7 @@ Ext.define('Ext.ux.Spotlight', {
             this);
         }
     },
-    onMouseDown: function() {
-        this.hide();
-    },
-    
+
     /**
      * Removes all the elements for the spotlight
      */
