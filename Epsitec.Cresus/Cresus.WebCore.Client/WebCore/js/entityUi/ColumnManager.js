@@ -73,7 +73,6 @@ function() {
             viewMode, 'null', entityItems[0].id, null, this.afterSelection
         );
       }
-
     },
 
     createRightPanel: function() {
