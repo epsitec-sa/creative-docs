@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Data.Job
                 
 					UpdateEChData.UpdateEChPersonEntities(coreData, personsToUpdate);
 
-					/*UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
+					UpdateEChData.UpdateEChReportedPersonEntities(coreData, houseHoldsToUpdate);
 
 					UpdateEChData.TagForDeletionEChPersonEntities(coreData, personsToRemove);
 
@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Data.Job
  
 					UpdateEChData.TagAiderPersonEntitiesForHouseholdMissing(coreData, missingHouseHoldsToRemove);
 
-					UpdateEChData.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);*/
+					UpdateEChData.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);
 				}
 			}
 			else
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Data.Job
 					var eChPersonEntity = UpdateEChData.GetEchPersonEntity (businessContext, eChPerson);
 					var existingAiderPersonEntity = UpdateEChData.GetAiderPersonEntity (businessContext, eChPersonEntity);
 
-					if (existingAiderPersonEntity.eCH_Person == null)
+					if (existingAiderPersonEntity == null)
 					{
 						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 
