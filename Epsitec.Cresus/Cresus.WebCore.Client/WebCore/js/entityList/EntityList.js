@@ -30,6 +30,7 @@ function() {
     columnDefinitions: null,
     sorterDefinitions: null,
     labelExportDefinitions: null,
+    getUrl: null,
     exportUrl: null,
     actionEditData: null,
     fullSearchWindow: null,
@@ -45,7 +46,10 @@ function() {
           this.createSecondaryToolbar()
         ],
         columns: this.createColumns(options),
-        store: this.createStore(options),
+        store: this.createStore(
+            options.getUrl, true, options.columnDefinitions,
+            options.sorterDefinitions
+        ),
         selModel: this.createSelModel(options),
         onSelectionChangeCallback: options.onSelectionChange,
         listeners: {
@@ -265,17 +269,17 @@ function() {
       }
     },
 
-    createStore: function(options) {
+    createStore: function(url, autoLoad, columnDefinitions, sorterDefinitions) {
       return Ext.create('Ext.data.Store', {
-        fields: this.createFields(options.columnDefinitions),
-        sorters: this.createSorters(options.sorterDefinitions),
-        autoLoad: true,
+        fields: this.createFields(columnDefinitions),
+        sorters: this.createSorters(sorterDefinitions),
+        autoLoad: autoLoad,
         pageSize: 100,
         remoteSort: true,
         buffered: true,
         proxy: {
           type: 'ajax',
-          url: options.getUrl,
+          url: url,
           reader: {
             type: 'json',
             root: 'content.entities',
@@ -297,7 +301,7 @@ function() {
 
     setupColumnParameterAndRefresh: function() {
       this.setupColumnParameter();
-      this.reloadStore();
+      this.resetStore(true);
     },
 
     setupColumnParameter: function() {
@@ -798,42 +802,46 @@ function() {
     },
 
     onRefreshHandler: function() {
-      this.reloadStore();
+      this.resetStore(true);
     },
 
-    reloadStore: function() {
+    resetStore: function(autoLoad) {
+      var oldStore, newStore, columnDefinitions, sorterDefinitions;
 
-      // A call to this.store.reload() should work here, but it has a bug. It is
-      // complicated, but if there are not enough rows of data, and a new row is
-      // added, this row is not displayed, even with several calls to this
-      // method.
-      //this.store.reload();
+      // It looks like there is a bug somewhere in the store source code that
+      // throws an exception if we bind a new store while there is an item that
+      // is selected. Therfore, before doing a replacement of the store, we
+      // deselect all items. An improvement here would be to remember the
+      // selection and apply it again once the store has been replaced.
+      this.getSelectionModel().deselectAll();
 
-      // A call to this.store.load() should work here, but it has two bugs. It
-      // is also complicated, but if there are enough rows of data, and a new
-      // row is added, the scroll bar will bump when it reaches the bottom and
-      // we can never see the last row. And if we delete an row and click where
-      // it was, it is the deleted element that is selected internally, instead
-      // of being the one that is displayed. A call to this.store.removeAll()
-      // corrects those 2 bugs. But there is a third one. A call to
-      // this.store.load() resets the position of the scroll bar to the top,
-      // whereas a call to this.store.reload() would keep it. I did not find any
-      // workaround for this yet.
-      this.clearStore();
-      this.store.load();
-    },
+      oldStore = this.store;
 
-    clearStore: function() {
-      this.store.removeAll();
+      // Here we can simply reuse the initial column definitions, as we only
+      // use their name and type properties. We use all definitions and don't
+      // skip the hidden one for instance. If that where the case, we would
+      // need to get the column definition out of the old store.
+      columnDefinitions = this.columnDefinitions;
 
-      // The removeAll() method does not delete the totalCount, but we need to
-      // do it if the total count has changed on the server, otherwise this
-      // value would not be updated this leads to bugs where new rows are not
-      // shown or selected because they are above the total count.
-      // This stuff is done automatically in this.store.load() for instance, but
-      // it is not done in this.store.guaranteeRange() or other methods. We do
-      // it manually here so that we are sure that it is done at some point.
-      delete this.store.totalCount;
+      // Here we extract the sorters used in the old store. We can't use the
+      // initial sorter definitions because the sorters on the store might have
+      // been changed (i.e. by the user) and we don't want to reset them.
+      sorterDefinitions = oldStore.getSorters().map(function(s) {
+        return {
+          name: s.property,
+          sortDirection: s.direction
+        };
+      });
+
+      newStore = this.createStore(
+          this.getUrl, autoLoad, columnDefinitions, sorterDefinitions);
+
+      this.reconfigure(newStore, undefined);
+
+      // Here we need to cleanup the old store. Note that this method is private
+      // and might therefore not be available in future releases of ExtJs. See
+      // http://www.sencha.com/forum/showthread.php?212134 for more details.
+      oldStore.destroyStore();
     },
 
     onSortHandler: function() {
@@ -912,7 +920,7 @@ function() {
 
       if (sorters.length === 0) {
         this.store.sorters.clear();
-        this.reloadStore();
+        this.resetStore(true);
       }
       else {
         this.store.sort(newSorters);

@@ -132,7 +132,7 @@ function() {
     },
 
     deleteEntityWithViewCallback: function() {
-      this.reloadStore();
+      this.resetStore(true);
     },
 
     deleteEntitiesWithoutView: function(entityItems) {
@@ -159,11 +159,11 @@ function() {
         return;
       }
 
-      this.reloadStore();
+      this.resetStore(true);
     },
 
     selectEntity: function(entityId) {
-      this.clearStore();
+      this.resetStore(false);
       this.setLoading();
 
       Ext.Ajax.request({
@@ -185,7 +185,7 @@ function() {
     },
 
     selectEntityCallback: function(success, response, entityId) {
-      var json, index, halfRange;
+      var json, index;
 
       this.setLoading(false);
 
@@ -203,28 +203,32 @@ function() {
             Epsitec.Texts.getErrorTitle(),
             Epsitec.Texts.getEntitySelectionErrorMessage()
         );
-        this.reloadStore();
+        this.resetStore(true);
         return;
       }
 
-      halfRange = this.store.pageSize / 2;
-
-      this.store.guaranteeRange(
-          Math.max(0, index - halfRange),
-          index + halfRange,
-          function() {
-            this.selectEntityCallback2(entityId);
-          },
-          this
-      );
+      this.store.load({
+        callback: function() {
+          this.view.bufferedRenderer.scrollTo(
+              index,
+              false,
+              function() {
+                this.selectEntityCallback2(entityId);
+              },
+              this
+          );
+        },
+        scope: this
+      });
     },
 
     selectEntityCallback2: function(entityId) {
       // We don't look for the record by its index but by its id. This is
-      // the index might have changed if another user has added or removed
-      // entities. We hope that our record has not been shifted too far away
-      // from the index that we got. If that's the case, we'll still be able to
-      // find it in the data that has been loaded by the call to guaranteeRage.
+      // because the index might have changed if another user has added or
+      // removed entities. We hope that our record has not been shifted too far
+      // away from the index that we got. If that's the case, we'll still be
+      // able to find it in the data that has been loaded by the call to
+      // guaranteeRage.
       var record = this.store.getById(entityId);
 
       if (record === null) {

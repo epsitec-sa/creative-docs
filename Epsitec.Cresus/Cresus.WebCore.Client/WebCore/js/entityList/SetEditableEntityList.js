@@ -97,7 +97,7 @@ function() {
         return;
       }
 
-      this.reloadStore();
+      this.resetStore(true);
       this.setColumn.refreshToLeft(false);
     }
   });
