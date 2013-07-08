@@ -22,20 +22,6 @@ function() {
     initHub: function() {
       this.hub = $.connection.notificationHub;
       this.hub.server.setupUserConnection();
-    },
-
-    displayErrorInTile: function(tile, headerMsg, fieldName, fieldMsg) {
-      if (headerMsg) {
-        tile.showError(headerMsg);
-      }
-
-      if (fieldName && fieldMsg) {
-        var invalidField = tile.getForm().findField(fieldName);
-        if (invalidField) {
-          invalidField.markInvalid(fieldMsg);
-          invalidField.focus();
-        }
-      }
     }
   });
 });

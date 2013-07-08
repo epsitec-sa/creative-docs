@@ -254,7 +254,7 @@ function() {
       }
     },
 
-    showEditableEntityWithError: function(path, message, errorField, endCbk) {
+    showEditableEntityWithError: function(path, message, errorField) {
 
       //check if navigation data is present
       if (path.id && path.name) {
@@ -263,12 +263,24 @@ function() {
         //executed when edition tile is loaded
         endCallback = Epsitec.CallbackQueue.create(
             function() {
-              var lastTile = tab.columns[tab.columns.length - 1].items.items[0];
-              //finaly
-              endCbk(
-                  lastTile, errorField.header, errorField.name,
-                  errorField.message
-              );
+              var tile, tileMessage, field, fieldMessage, fieldName;
+
+              tile = tab.columns[tab.columns.length - 1].items.items[0];
+
+              tileMessage = errorField.header;
+              if (tileMessage) {
+                tile.showError(tileMessage);
+              }
+
+              fieldMessage = errorField.message;
+              fieldName = errorField.name;
+              if (fieldName && fieldMessage) {
+                field = tile.getForm().findField(fieldName);
+                if (field) {
+                  field.markInvalid(fieldMessage);
+                  field.focus();
+                }
+              }
             },
             this);
 

@@ -18,9 +18,7 @@ function NotificationsToastr() {
   this.hub.client.StickyWarningNavToast = function(title, msg, header, field,
       error, datasetId, entityId) {
 
-    var notif, path, message, errorField;
-
-    notif = notificationsClient;
+    var path, message, errorField;
 
     path = {};
     path.id = entityId;
@@ -42,7 +40,7 @@ function NotificationsToastr() {
       'positionClass': 'toast-bottom-full-width',
       'onclick': function() {
         Epsitec.Cresus.Core.app.showEditableEntityWithError(
-            path, message, errorField, notif.displayErrorInTile
+            path, message, errorField
         );
       },
       'fadeIn': 300,
