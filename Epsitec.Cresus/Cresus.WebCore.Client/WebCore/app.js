@@ -254,7 +254,7 @@ function() {
       }
     },
 
-    showEditableEntityWithError: function(path, message, errorField) {
+    showEditableEntityWithError: function(path, error) {
 
       //check if navigation data is present
       if (path.id && path.name) {
@@ -267,13 +267,13 @@ function() {
 
               tile = tab.columns[tab.columns.length - 1].items.items[0];
 
-              tileMessage = errorField.header;
+              tileMessage = error.header;
               if (tileMessage) {
                 tile.showError(tileMessage);
               }
 
-              fieldMessage = errorField.message;
-              fieldName = errorField.name;
+              fieldMessage = error.message;
+              fieldName = error.name;
               if (fieldName && fieldMessage) {
                 field = tile.getForm().findField(fieldName);
                 if (field) {
