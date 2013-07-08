@@ -51,18 +51,7 @@ function NotificationsToastr() {
     toastr.warning(message.body, message.title);
   };
 
-  this.hub.client.Toast = function(title, msg, datasetId, entityId) {
-    var path, message;
-
-    path = {};
-    path.id = entityId;
-    path.name = datasetId;
-
-    message = {
-      title: title,
-      body: msg
-    };
-
+  this.hub.client.Toast = function(title, message) {
     toastr.options = {
       'debug': false,
       'positionClass': 'toast-bottom-full-width',
@@ -70,6 +59,6 @@ function NotificationsToastr() {
       'timeOut': 5000,
       'extendedTimeOut': 1000
     };
-    toastr.info(message.body, message.title);
+    toastr.info(message, title);
   };
 }
