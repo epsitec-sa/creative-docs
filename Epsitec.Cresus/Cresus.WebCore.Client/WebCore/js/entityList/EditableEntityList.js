@@ -66,6 +66,10 @@ function() {
       }
 
       this.handleRemove(entityItems);
+
+      // Remove the selection, so as not to keep the entity selected after it
+      // has been deleted.
+      this.getSelectionModel().deselectAll();
     }
   });
 });

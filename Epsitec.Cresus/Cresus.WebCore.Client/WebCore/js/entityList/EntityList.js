@@ -254,19 +254,20 @@ function() {
     },
 
     createSelModel: function(options) {
+      var config = {
+        selType: 'rowmodel',
+        pruneRemoved: false
+      };
+
       if (options.multiSelect) {
-        return {
-          type: 'rowmodel',
-          mode: 'MULTI'
-        };
+        config.mode = 'MULTI';
       }
       else {
-        return {
-          selType: 'rowmodel',
-          allowDeselect: options.allowDeselect,
-          mode: 'SINGLE'
-        };
+        config.mode = 'SINGLE';
+        config.allowDeselect = options.allowDeselect;
       }
+
+      return config;
     },
 
     createStore: function(url, autoLoad, columnDefinitions, sorterDefinitions) {
@@ -807,13 +808,6 @@ function() {
 
     resetStore: function(autoLoad) {
       var oldStore, newStore, columnDefinitions, sorterDefinitions;
-
-      // It looks like there is a bug somewhere in the store source code that
-      // throws an exception if we bind a new store while there is an item that
-      // is selected. Therfore, before doing a replacement of the store, we
-      // deselect all items. An improvement here would be to remember the
-      // selection and apply it again once the store has been replaced.
-      this.getSelectionModel().deselectAll();
 
       oldStore = this.store;
 
