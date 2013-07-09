@@ -21,14 +21,14 @@ function NotificationsToastr() {
     var path, error;
 
     path = {
-      id: entityId,
-      name: datasetId
+      databaseName: datasetId,
+      entityId: entityId
     };
 
     error = {
-      name: field,
-      message: errorMsg,
-      header: headerMsg
+      tileMessage: headerMsg,
+      fieldMessage: errorMsg,
+      fieldName: field
     };
 
     toastr.options = {

@@ -139,6 +139,14 @@ function() {
       }
     },
 
+    showFieldError: function(fieldName, message) {
+      var field = this.getForm().findField(fieldName);
+      if (field) {
+        field.markInvalid(message);
+        field.focus();
+      }
+    },
+
     getState: function() {
       return {
         type: 'edidionTile',

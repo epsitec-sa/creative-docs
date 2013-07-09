@@ -52,14 +52,6 @@ function() {
       return entityTab;
     },
 
-    getEntityTab: function(database) {
-      var key, entityTab;
-
-      key = database.name;
-      entityTab = this.entityTabs[key] || null;
-      return entityTab;
-    },
-
     showPageTab: function(title, url) {
       var pageTab = this.pageTabs[url] || null;
 

@@ -123,11 +123,11 @@ function() {
       rec = this.getSelectionModel().getSelection()[0];
       if (rec) {
         path = {
-          name: widget.item.databaseName,
-          id: rec.raw[widget.item.columnName]
+          databaseName: widget.item.databaseName,
+          entityId: rec.raw[widget.item.columnName]
         };
         app = Epsitec.Cresus.Core.getApplication();
-        app.showEntity(path);
+        app.showEntity(path, null);
       }
     },
 

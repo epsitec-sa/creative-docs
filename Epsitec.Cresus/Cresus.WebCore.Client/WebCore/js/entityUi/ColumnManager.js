@@ -25,7 +25,6 @@ function() {
     rightPanel: null,
     columns: null,
     database: null,
-    afterSelection: null,
 
     /* Constructor */
 
@@ -66,16 +65,6 @@ function() {
       });
     },
 
-    onEntityListSelectionChange: function(entityItems) {
-      var viewMode = Epsitec.ViewMode.summary;
-      this.removeAllColumns();
-      if (entityItems.length === 1) {
-        this.addEntityColumn(
-            viewMode, 'null', entityItems[0].id, null, this.afterSelection
-        );
-      }
-    },
-
     createRightPanel: function() {
       return Ext.create('Ext.panel.Panel', {
         region: 'center',
@@ -83,6 +72,29 @@ function() {
         layout: 'hbox',
         autoScroll: true
       });
+    },
+
+    addEntityColumnWithCallback: function(
+        viewMode,
+        viewId,
+        entityId,
+        parentColumn,
+        callback) {
+      // Here we make a new callback so as to call callback with the proper
+      // arguments: the instance of EntityColumn instead of its configuration.
+      var callbackQueue = Epsitec.CallbackQueue.empty();
+      if (callback !== null) {
+        callbackQueue = callbackQueue.enqueueCallback(
+            function() {
+              var lastColumn = this.columns[this.columns.length - 1];
+              callback.execute([lastColumn]);
+            },
+            this);
+      }
+
+      this.addEntityColumn(
+          viewMode, viewId, entityId, parentColumn, callbackQueue
+      );
     },
 
     // The arguments parentColumn and callbackQueue are optional.
@@ -308,8 +320,32 @@ function() {
       );
     },
 
-    selectEntity: function(entityId) {
-      this.leftList.selectEntity(entityId);
+    onEntityListSelectionChange: function(entityItems) {
+      var entityId = entityItems.length === 1 ? entityItems[0].id : null;
+      this.showFirstEntityColumn(entityId, null);
+    },
+
+    selectEntity: function(entityId, callback) {
+      // Here, we tell the list not to fire the selection event which would
+      // trigger the display of the first column by executing the method
+      // onEntityListSelectionChange(...). The reason is that we want to display
+      // the first entity column ourselves. This allows us to have more control
+      // over the callback sequence and thus we can have another callback that
+      // will be executed once the first entity column has been created and not
+      // when the entity has been selected, at the point where the AJAX request
+      // that gets the column data has been started but not yet finished.
+      this.leftList.selectEntity(entityId, true);
+      this.showFirstEntityColumn(entityId, callback);
+    },
+
+    showFirstEntityColumn: function(entityId, callback) {
+      this.removeAllColumns();
+
+      if (entityId !== null) {
+        this.addEntityColumnWithCallback(
+            Epsitec.ViewMode.summary, 'null', entityId, null, callback
+        );
+      }
     }
   });
 });

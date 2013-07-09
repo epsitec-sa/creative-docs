@@ -215,9 +215,8 @@ function() {
       });
     },
 
-    showEntity: function(path) {
-
-      if (!Ext.isDefined(path.id) || !Ext.isDefined(path.name)) {
+    showEntity: function(path, callback) {
+      if (!Ext.isDefined(path.entityId) || !Ext.isDefined(path.databaseName)) {
         return;
       }
 
@@ -226,78 +225,63 @@ function() {
       // Todo complete this object. Otherwhise, the header of the list with the
       // title and the icon won't be shown.
       database = {
-        name: path.name
+        name: path.databaseName
       };
 
       columnManager = this.tabManager.showEntityTab(database);
 
-      entityId = path.id;
-      columnManager.selectEntity(entityId);
+      entityId = path.entityId;
+      columnManager.selectEntity(entityId, callback);
+    },
+
+    showEditableEntity: function(path, callback) {
+
+      // This callback is kind of brittle here:
+      // - It is supposed to open an editable column in the second column. But
+      //   it works by simple expanding the first tile in the first column. We
+      //   have no guarantee that this will open an edition tile. The server
+      //   might likely return a summary column instead.
+      // - Moreover, it assumes that the first tile in the first column is a (or
+      //   derives from a) summary tile. If it is a grouped summary tile or an
+      //   edition tile, it won't work.
+      // - What is less likely (but possible), is that the fist colum does not
+      //   contain any tile. This might happen if it is a set column for
+      //   instance.
+
+      var newCallback = Epsitec.Callback.create(
+          function(entityColumn) {
+            entityColumn.getTiles()[0].openNextTile(callback);
+          },
+          this);
+
+      this.showEntity(path, newCallback);
     },
 
     showEditableEntityWithError: function(path, error) {
 
-      //check if navigation data is present
-      if (path.id && path.name) {
-        var tab, endCallback, openTileCallback, selectEntityCallback;
+      // This callback is kind of brittle here.
+      // - It assumes that we have a column with an edition tile as the first
+      //   tile. But there is no guarantee that this is the case. If it is not,
+      //   the method won't display any error message.
+      // - It assumes that the field that we want to tag as wrong is in present
+      //   in this first edition tile. Again, there is no guarantee that this is
+      //   the case. If it is not, the method won't tag it.
 
-        //executed when edition tile is loaded
-        endCallback = Epsitec.CallbackQueue.create(
-            function() {
-              var tile, tileMessage, field, fieldMessage, fieldName;
+      var callback = Epsitec.Callback.create(
+          function(entityColumn) {
+            var tile = entityColumn.getTiles()[0];
 
-              tile = tab.columns[tab.columns.length - 1].items.items[0];
+            if (error.tileMessage) {
+              tile.showError(error.tileMessage);
+            }
 
-              tileMessage = error.header;
-              if (tileMessage) {
-                tile.showError(tileMessage);
-              }
+            if (error.fieldName && error.fieldMessage) {
+              tile.showFieldError(error.fieldName, error.fieldMessage);
+            }
+          },
+          this);
 
-              fieldMessage = error.message;
-              fieldName = error.name;
-              if (fieldName && fieldMessage) {
-                field = tile.getForm().findField(fieldName);
-                if (field) {
-                  field.markInvalid(fieldMessage);
-                  field.focus();
-                }
-              }
-            },
-            this);
-
-        //called after the summary tile is loaded
-        openTileCallback = Epsitec.CallbackQueue.create(
-            function() {
-              var lastTile = tab.columns[tab.columns.length - 1].items.items[0];
-              lastTile.openNextTile(endCallback);
-              //remove callback on column-manager
-              tab.afterSelection = null;
-            },
-            this);
-
-        //called after adding summary tile
-        selectEntityCallback = Epsitec.CallbackQueue.create(
-            function() {
-              tab.leftList.getEntityList().selectEntity(path.id);
-            },
-            this);
-
-        if (this.tabManager.getEntityTab(path) === null) {
-          this.tabManager.showEntityTab(path);
-          tab = this.tabManager.getEntityTab(path);
-        }
-        else {
-          tab = this.tabManager.getEntityTab(path);
-          this.tabManager.showTab(tab);
-          tab.removeAllColumns();
-        }
-
-        //open summary tile
-        tab.afterSelection = openTileCallback;
-        tab.addEntityColumn(
-            Epsitec.ViewMode.summary, null, path.id, null, selectEntityCallback
-        );
-      }
+      this.showEditableEntity(path, callback);
     },
 
     createBanner: function(region, cls) {

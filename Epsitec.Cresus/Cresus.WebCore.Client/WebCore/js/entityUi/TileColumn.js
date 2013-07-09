@@ -41,6 +41,10 @@ function() {
 
     /* Additional methods */
 
+    getTiles: function() {
+      return this.items.items;
+    },
+
     getState: function() {
       var tileIndex, tileState;
 

@@ -106,8 +106,7 @@ function() {
       return this.entityList;
     },
 
-    selectEntity: function(entityId) {
-
+    selectEntity: function(entityId, suppressEvent) {
       if (!this.allowEntitySelection) {
         throw 'Entity selection is not supported by this list panel.';
       }
@@ -116,11 +115,11 @@ function() {
       // otherwise, we create a callback that will be called later on when the
       // list will be created.
       if (this.entityList !== null) {
-        this.entityList.selectEntity(entityId);
+        this.entityList.selectEntity(entityId, suppressEvent);
       }
       else {
         this.listCreationCallback = function() {
-          this.entityList.selectEntity(entityId);
+          this.entityList.selectEntity(entityId, suppressEvent);
         };
       }
     }

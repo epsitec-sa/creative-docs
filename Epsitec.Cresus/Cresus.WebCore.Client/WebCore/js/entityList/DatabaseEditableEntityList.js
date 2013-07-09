@@ -72,7 +72,7 @@ function() {
     },
 
     createEntityWithViewCallback: function(entityId) {
-      this.selectEntity(entityId);
+      this.selectEntity(entityId, false);
     },
 
     createEntityWithoutView: function() {
@@ -99,7 +99,7 @@ function() {
       }
 
       entityId = json.content.id;
-      this.selectEntity(entityId);
+      this.selectEntity(entityId, false);
     },
 
     handleRemove: function(entityItems) {
@@ -162,7 +162,7 @@ function() {
       this.resetStore(true);
     },
 
-    selectEntity: function(entityId) {
+    selectEntity: function(entityId, suppressEvent) {
       this.resetStore(false);
       this.setLoading();
 
@@ -170,7 +170,7 @@ function() {
         url: this.buildGetIndexUrl(entityId),
         method: 'GET',
         callback: function(options, success, response) {
-          this.selectEntityCallback(success, response, entityId);
+          this.selectEntityCallback(success, response, entityId, suppressEvent);
         },
         scope: this
       });
@@ -184,7 +184,7 @@ function() {
       return this.buildUrlWithSortersAndFilters(base);
     },
 
-    selectEntityCallback: function(success, response, entityId) {
+    selectEntityCallback: function(success, response, entityId, suppressEvent) {
       var json, index;
 
       this.setLoading(false);
@@ -213,7 +213,7 @@ function() {
               index,
               false,
               function() {
-                this.selectEntityCallback2(entityId);
+                this.selectEntityCallback2(entityId, suppressEvent);
               },
               this
           );
@@ -222,7 +222,7 @@ function() {
       });
     },
 
-    selectEntityCallback2: function(entityId) {
+    selectEntityCallback2: function(entityId, suppressEvent) {
       // We don't look for the record by its index but by its id. This is
       // because the index might have changed if another user has added or
       // removed entities. We hope that our record has not been shifted too far
@@ -235,11 +235,11 @@ function() {
         // the record was not found, it is outside the range that was loaded by
         // the call to guaranteeRange. Therefore, we start again, hoping that
         // this time the index won't change.
-        this.selectEntity(entityId);
+        this.selectEntity(entityId, suppressEvent);
         return;
       }
 
-      this.getSelectionModel().select(record, false, false);
+      this.getSelectionModel().select(record, false, suppressEvent);
     }
   });
 });
