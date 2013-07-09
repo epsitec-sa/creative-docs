@@ -42,6 +42,7 @@ function() {
     },
 
     /* Additional methods */
+
     createLeftList: function(database) {
       return Ext.create('Epsitec.EntityListPanel', {
         list: {

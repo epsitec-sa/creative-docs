@@ -48,6 +48,7 @@ function() {
         this.addEntityColumn(this.entityId, false);
       }
     },
+
     /* Additional methods */
 
     createSummaryTools: function(options)  {
