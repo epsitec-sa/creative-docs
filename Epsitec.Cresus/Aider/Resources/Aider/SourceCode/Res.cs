@@ -1177,6 +1177,22 @@ namespace Epsitec.Aider
 				
 				public static class WarningType
 				{
+					//	designer:cap/LVGP32
+					public static global::Epsitec.Common.Types.Caption AddressChange
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 121));
+						}
+					}
+					//	designer:cap/LVGO32
+					public static global::Epsitec.Common.Types.Caption DataChangedECh
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
+						}
+					}
 					//	designer:cap/LVGL32
 					public static global::Epsitec.Common.Types.Caption Duplicated
 					{
@@ -1199,6 +1215,22 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 389));
+						}
+					}
+					//	designer:cap/LVGM32
+					public static global::Epsitec.Common.Types.Caption MissingECh
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 118));
+						}
+					}
+					//	designer:cap/LVGN32
+					public static global::Epsitec.Common.Types.Caption NoHouseholdECh
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 119));
 						}
 					}
 					//	designer:cap/LVA3C

@@ -93,7 +93,7 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 								businessContext,
 								existingAiderPersonEntity,
-								FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+                                UpdateEChData.WarningTitleMessage,
 								FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"),
 								WarningType.Duplicated);
 					}
@@ -190,9 +190,9 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 							businessContext,
 							existingAiderPersonEntity,
-							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+                            UpdateEChData.WarningTitleMessage,
 							FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " n'est plus dans le registre ECh!"),
-							WarningType.Mismatch);
+							WarningType.MissingECh);
 					}
 					
 				}
@@ -282,7 +282,7 @@ namespace Epsitec.Aider.Data.Job
                         EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
                     }
 
-                    if (eChReportedPersonEntity.Adult2.IsNull())
+                    if (eChReportedPersonEntity.Adult2.IsNotNull())
                     {
 						var aiderPerson = UpdateEChData.GetAiderPersonEntity (businessContext, eChReportedPersonEntity.Adult2);
 
@@ -314,12 +314,12 @@ namespace Epsitec.Aider.Data.Job
 					//Unlink ECh Person Entity
 					var eChPersonEntityAdult1 = UpdateEChData.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
 
-					eChPersonEntityAdult1.ReportedPersons.ToList ().RemoveAll (h => h.GetEntitySerialId ().Equals (eChReportedPersonEntity.GetEntitySerialId ()));
+                    eChPersonEntityAdult1.ReportedPerson1 = null;
 
 					if (eChReportedPerson.Adult2 != null)
 					{
 						var eChPersonEntityAdult2 = UpdateEChData.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
-						eChPersonEntityAdult2.ReportedPersons.ToList ().RemoveAll (h => h.GetEntitySerialId ().Equals (eChReportedPersonEntity.GetEntitySerialId ()));
+                        eChPersonEntityAdult2.ReportedPerson2 = null;
 					}
 
 					businessContext.DeleteEntity (eChReportedPersonEntity.Address);
@@ -347,9 +347,9 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
-							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+                            UpdateEChData.WarningTitleMessage,
 							FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"),
-							WarningType.Mismatch);
+							WarningType.NoHouseholdECh);
 					}
 				}
 
@@ -372,6 +372,9 @@ namespace Epsitec.Aider.Data.Job
 						var changedEChPersonEntity = new eCH_PersonEntity ();
 						EChDataImporter.ConvertEChPersonToEntity (toChange.Item1, changedEChPersonEntity);
 						var changes = new List<string> ();
+
+                        changes.Add(aiderPersonEntity.GetFullName());
+
 						if (!toChange.Item1.DateOfBirth.Equals(toChange.Item2.DateOfBirth))
 						{
 							personEntityToUpdate.PersonDateOfBirth = changedEChPersonEntity.PersonDateOfBirth;
@@ -411,7 +414,7 @@ namespace Epsitec.Aider.Data.Job
 						if (!toChange.Item1.OriginPlaces.SetEquals(toChange.Item2.OriginPlaces))
 						{
 							personEntityToUpdate.Origins = changedEChPersonEntity.Origins;
-							changes.Add ("Origines: " + String.Join(" ",toChange.Item2.OriginPlaces) + " -> " + String.Join(" ",changedEChPersonEntity.Origins));
+							changes.Add ("Origines: " + String.Join(" ",toChange.Item2.OriginPlaces.Select(o => o.Display()).ToList()) + " -> " + String.Join(" ",changedEChPersonEntity.Origins));
 						}
 
 						if (!toChange.Item1.Sex.Equals(toChange.Item2.Sex))
@@ -423,9 +426,9 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
-							FormattedText.FromSimpleText ("Mise à jour ECh -> Aider"),
+                            UpdateEChData.WarningTitleMessage,
 							TextFormatter.Join(FormattedText.HtmlBreak,changes.Select(c => FormattedText.Format(c))),
-							WarningType.Mismatch);
+							WarningType.DataChangedECh);
 					}
 					catch(Exception)
 					{
@@ -450,23 +453,27 @@ namespace Epsitec.Aider.Data.Job
 					try
 					{
 						var reportedPersonEntityToUpdate = UpdateEChData.GetEchReportedPersonEntity(businessContext, toChange.Item1);
-
+                        var changes = new List<string>();
+                        changes.Add("Changement dans l'adresse:");
 						if (!String.IsNullOrEmpty(toChange.Item1.Address.AddressLine1))
 						{
 							if (!toChange.Item1.Address.AddressLine1.Equals(toChange.Item2.Address.AddressLine1))
 							{
 								reportedPersonEntityToUpdate.Address.AddressLine1 = toChange.Item1.Address.AddressLine1;
+                                changes.Add("Ligne adresse: " + toChange.Item2.Address.AddressLine1 + " -> " + reportedPersonEntityToUpdate.Address.AddressLine1);
 							}
 						}
 						if (!toChange.Item1.Address.CountryCode.Equals(toChange.Item2.Address.CountryCode))
 						{
 							reportedPersonEntityToUpdate.Address.Country = toChange.Item1.Address.CountryCode;
+                            changes.Add("Pays: " + toChange.Item2.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
 						}
 						if (!String.IsNullOrEmpty (toChange.Item1.Address.HouseNumber))
 						{
 							if (!toChange.Item1.Address.HouseNumber.Equals (toChange.Item2.Address.HouseNumber))
 							{
 								reportedPersonEntityToUpdate.Address.HouseNumber = toChange.Item1.Address.HouseNumber;
+                                changes.Add("N° de maison: " + toChange.Item2.Address.HouseNumber + " -> " + reportedPersonEntityToUpdate.Address.HouseNumber);
 							}
 						}
 						if (!String.IsNullOrEmpty (toChange.Item1.Address.Street))
@@ -474,11 +481,13 @@ namespace Epsitec.Aider.Data.Job
 							if (!toChange.Item1.Address.Street.Equals (toChange.Item2.Address.Street))
 							{
 								reportedPersonEntityToUpdate.Address.Street = toChange.Item1.Address.Street;
+                                changes.Add("Rue: " + toChange.Item2.Address.Street + " -> " + reportedPersonEntityToUpdate.Address.Street);
 							}
 						}
 						if (!toChange.Item1.Address.SwissZipCode.Equals(toChange.Item2.Address.SwissZipCode))
 						{
 							reportedPersonEntityToUpdate.Address.SwissZipCode = toChange.Item1.Address.SwissZipCode;
+                            changes.Add("NPA: " + toChange.Item2.Address.SwissZipCode + " -> " + toChange.Item1.Address.SwissZipCode);
 						}
 
 						if (!toChange.Item1.Address.SwissZipCodeAddOn.Equals(toChange.Item2.Address.SwissZipCodeAddOn))
@@ -494,7 +503,45 @@ namespace Epsitec.Aider.Data.Job
 						if (!toChange.Item1.Address.Town.Equals(toChange.Item2.Address.Town))
 						{
 							reportedPersonEntityToUpdate.Address.Town = toChange.Item1.Address.Town;
+                            changes.Add("Localité: " + toChange.Item2.Address.Town + " -> " + reportedPersonEntityToUpdate.Address.Town);
 						}
+
+                        if (reportedPersonEntityToUpdate.Adult1.IsNotNull())
+                        {
+                            var aiderPersonEntity = UpdateEChData.GetAiderPersonEntity(businessContext, reportedPersonEntityToUpdate.Adult1);
+                            changes.Insert(0, aiderPersonEntity.GetFullName());
+                            AiderPersonWarningEntity.Create(
+                            businessContext,
+                            aiderPersonEntity,
+                            UpdateEChData.WarningTitleMessage,
+                            TextFormatter.Join(FormattedText.HtmlBreak, changes.Select(c => FormattedText.Format(c))),
+                            WarningType.AddressChange);      
+                        }
+
+                        if (reportedPersonEntityToUpdate.Adult2.IsNotNull())
+                        {
+                            var aiderPersonEntity = UpdateEChData.GetAiderPersonEntity(businessContext, reportedPersonEntityToUpdate.Adult2);
+                            changes.Insert(0, aiderPersonEntity.GetFullName());
+                            AiderPersonWarningEntity.Create(
+                            businessContext,
+                            aiderPersonEntity,
+                            UpdateEChData.WarningTitleMessage,
+                            TextFormatter.Join(FormattedText.HtmlBreak, changes.Select(c => FormattedText.Format(c))),
+                            WarningType.AddressChange);
+                        }
+
+                        foreach (var child in reportedPersonEntityToUpdate.Children)
+                        {
+                            var aiderPersonEntity = UpdateEChData.GetAiderPersonEntity(businessContext, child);
+                            changes.Insert(0, aiderPersonEntity.GetFullName());
+                            AiderPersonWarningEntity.Create(
+                            businessContext,
+                            aiderPersonEntity,
+                            UpdateEChData.WarningTitleMessage,
+                            TextFormatter.Join(FormattedText.HtmlBreak, changes.Select(c => FormattedText.Format(c))),
+                            WarningType.AddressChange);
+                        }
+                        
 					}
 					catch(Exception)
 					{
@@ -579,5 +626,7 @@ namespace Epsitec.Aider.Data.Job
 
             return businessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
 		}
+
+        private static FormattedText WarningTitleMessage = FormattedText.FromSimpleText("Mise à jour ECh du " + Date.Today.Day + " " + Date.Today.Month + " " + Date.Today.Year);
 	}
 }

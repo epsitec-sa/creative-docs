@@ -12,7 +12,10 @@
 			this.Canton = canton;
 		}
 
-
+        public string Display()
+        {
+            return this.Name + " (" + this.Canton + " )";
+        }
 		public readonly string Name;
 		public readonly string Canton;
 
