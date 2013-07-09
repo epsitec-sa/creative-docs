@@ -83,10 +83,7 @@ namespace Epsitec.Aider.Override
 
 				}, true);
 			}
-			
-			
-			
-			
+
 			base.NotifySusccessfulLogin (user);
 		}
 
@@ -99,7 +96,7 @@ namespace Epsitec.Aider.Override
 				Title = "Attention AIDER",
 				Body = "Merci de changer rapidement votre mot de passe! (cliquez sur ce message pour accéder à votre profil)",
 				Dataset = Res.CommandIds.Base.ShowAiderUser,
-				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey(user).Value,
+				EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (user).Value,
 				HeaderErrorMessage = "Réinitialisez votre mot de passe à l'aide du bouton d'action"
 
 			}, true);
@@ -114,7 +111,7 @@ namespace Epsitec.Aider.Override
 			if (aiderUser != null)
 			{
 				AiderActivityLogger.Current.RecordAccess (aiderUser);
-				
+
 				var notif = Epsitec.Cresus.Core.Library.NotificationManager.GetCurrentNotificationManager ();
 
 				var now  = System.DateTime.UtcNow;
@@ -146,7 +143,7 @@ namespace Epsitec.Aider.Override
 			using (var context = new BusinessContext (this.Host, false))
 			{
 				context.GlobalLock = GlobalLocks.UserManagement;
-				
+
 				var example = new AiderUserEntity ()
 				{
 					Code = userCode,
