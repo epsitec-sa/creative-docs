@@ -14,7 +14,7 @@ function() {
       getEnumerationStore: function(name, url) {
         var store = Ext.data.StoreManager.lookup(name);
 
-        if (Epsitec.Tools.isUndefined(store) || store === null) {
+        if (!Ext.isDefined(store) || store === null) {
           store = Ext.create('Ext.data.Store', {
             storeId: name,
             fields: ['id', 'text'],

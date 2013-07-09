@@ -134,7 +134,7 @@ function() {
         Epsitec.ErrorHandler.handleFormError(action);
 
         businessError = json.content.businesserror;
-        if (Epsitec.Tools.isDefined(businessError))
+        if (Ext.isDefined(businessError))
         {
           this.showError(businessError);
         }

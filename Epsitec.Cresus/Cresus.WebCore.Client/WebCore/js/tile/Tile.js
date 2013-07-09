@@ -40,13 +40,11 @@ function() {
     /* Additional methods */
 
     createEntityTileTools: function(options)  {
-      var tools, actions, noActions;
+      var tools, actions;
 
       actions = options.actions;
-      noActions = Epsitec.Tools.isUndefined(actions) ||
-          Epsitec.Tools.isArrayEmpty(actions);
 
-      if (noActions) {
+      if (!Ext.isDefined(actions) || Epsitec.Tools.isArrayEmpty(actions)) {
         return options.tools;
       }
 

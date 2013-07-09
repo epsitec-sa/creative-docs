@@ -709,8 +709,8 @@ function() {
 
       Ext.Array.each(form.items.items, function(item) {
         var filter = list.filters.filters.getByKey(item.name);
-        if (Epsitec.Tools.isUndefined(filter)) {
-          if (Epsitec.Tools.isDefined(item.lastValue)) {
+        if (!Ext.isDefined(filter)) {
+          if (Ext.isDefined(item.lastValue)) {
             list.filters.addFilter({
               type: 'string',
               dataIndex: item.name,

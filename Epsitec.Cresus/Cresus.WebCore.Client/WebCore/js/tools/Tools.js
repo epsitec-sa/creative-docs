@@ -6,21 +6,12 @@ function() {
     alternateClassName: ['Epsitec.Tools'],
 
     statics: {
-      isDefined: function(item) {
-        return typeof item !== 'undefined';
-      },
-
-      isUndefined: function(item) {
-        return !this.isDefined(item);
-      },
-
       isArrayEmpty: function(array) {
         return array && array.length === 0;
       },
 
       getValueOrDefault: function(value, defaultValue) {
-        return this.isUndefined(value) ?
-            defaultValue : value;
+        return Ext.isDefined(value) ? value : defaultValue;
       },
 
       getValueOrNull: function(value)  {
@@ -28,7 +19,7 @@ function() {
       },
 
       doCallback: function(callback, context, callbackArguments) {
-        if (this.isUndefined(callback) || callback === null) {
+        if (!Ext.isDefined(callback) || callback === null) {
           return;
         }
 
@@ -95,7 +86,7 @@ function() {
       decodeResponseInternal: function(response) {
         var text = response.responseText;
 
-        if (this.isUndefined(text)) {
+        if (!Ext.isDefined(text)) {
           return null;
         }
 
