@@ -219,17 +219,7 @@ function() {
 
       //check if navigation data is present
       if (path.id && path.name) {
-        var tab, openTileCallback, selectEntityCallback;
-
-        //called after the summary tile is loaded
-        openTileCallback = Epsitec.CallbackQueue.create(
-            function() {
-              //var lastTile = tab.columns[tab.columns.length-1].items.items[0];
-              //lastTile.openNextTile(null);
-              //remove callback on column-manager
-              tab.afterSelection = null;
-            },
-            this);
+        var tab, selectEntityCallback;
 
         selectEntityCallback = Epsitec.CallbackQueue.create(
             function() {
@@ -247,7 +237,6 @@ function() {
           tab.removeAllColumns();
         }
         //open summary tile
-        tab.afterSelection = openTileCallback;
         tab.addEntityColumn(
             Epsitec.ViewMode.summary, null, path.id, null, selectEntityCallback
         );
