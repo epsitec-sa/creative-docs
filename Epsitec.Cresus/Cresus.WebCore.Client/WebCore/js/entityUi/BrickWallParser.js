@@ -255,40 +255,27 @@ function() {
       },
 
       parseField: function(brick) {
-        if (brick.type === 'booleanField') {
-          return {
-            fieldLabel: null,
-            name: brick.name,
-            value: brick.value,
-            readOnly: brick.readOnly,
-            readOnlyCls: 'input-readonly',
-            labelSeparator: null,
-            boxLabel: brick.title,
-            allowBlank: brick.allowBlank
-          };
-        }
-        else {
-          return {
-            fieldLabel: brick.title,
-            name: brick.name,
-            value: brick.value,
-            readOnly: brick.readOnly,
-            readOnlyCls: 'input-readonly',
-            labelSeparator: null,
-            boxLabel: null,
-            allowBlank: brick.allowBlank
-          };
-        }
-
+        return {
+          fieldLabel: brick.title,
+          name: brick.name,
+          value: brick.value,
+          readOnly: brick.readOnly,
+          readOnlyCls: 'input-readonly',
+          labelSeparator: null,
+          allowBlank: brick.allowBlank
+        };
       },
 
       parseBooleanField: function(brick) {
         var field = this.parseField(brick);
 
         field.xtype = 'checkboxfield';
+        field.boxLabel = brick.title;
         field.inputValue = true;
         field.uncheckedValue = false;
         field.checked = field.value;
+
+        delete field.fieldLabel;
         delete field.value;
 
         return field;
