@@ -17,16 +17,28 @@ function() {
     /* Properties */
 
     entityList: null,
+    listCreationCallback: null,
+    allowEntitySelection: null,
 
     /* Constructor */
 
     constructor: function(options) {
-      this.callParent([options.container]);
+      var newOptions = {
+        allowEntitySelection: this.isEntitySelectionAllowed(options)
+      };
+      Ext.applyIf(newOptions, options.container);
+
+      this.callParent([newOptions]);
       this.setupEntityList(options.list);
       return this;
     },
 
     /* Additional methods */
+
+    isEntitySelectionAllowed: function(options) {
+      var entityListTypeName = options.list.entityListTypeName;
+      return entityListTypeName === 'Epsitec.DatabaseEditableEntityList';
+    },
 
     setupEntityList: function(options) {
       if (Ext.isDefined(options.databaseName)) {
@@ -83,10 +95,34 @@ function() {
     createEntityList: function(typeName, options) {
       this.entityList = Ext.create(typeName, options);
       this.add(this.entityList);
+
+      if (this.listCreationCallback !== null) {
+        this.listCreationCallback.apply(this, []);
+        this.listCreationCallback = null;
+      }
     },
 
     getEntityList: function() {
       return this.entityList;
+    },
+
+    selectEntity: function(entityId) {
+
+      if (!this.allowEntitySelection) {
+        throw 'Entity selection is not supported by this list panel.';
+      }
+
+      // If the entity list is already created, we simply select the entity and
+      // otherwise, we create a callback that will be called later on when the
+      // list will be created.
+      if (this.entityList !== null) {
+        this.entityList.selectEntity(entityId);
+      }
+      else {
+        this.listCreationCallback = function() {
+          this.entityList.selectEntity(entityId);
+        };
+      }
     }
   });
 });

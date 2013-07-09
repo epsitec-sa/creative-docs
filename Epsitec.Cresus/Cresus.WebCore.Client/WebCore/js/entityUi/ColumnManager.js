@@ -306,6 +306,10 @@ function() {
       Epsitec.EntityAction.showDialog(
           viewMode, viewId, entityId, aEntityId, callback
       );
+    },
+
+    selectEntity: function(entityId) {
+      this.leftList.selectEntity(entityId);
     }
   });
 });

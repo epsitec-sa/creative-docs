@@ -217,30 +217,22 @@ function() {
 
     showEntity: function(path) {
 
-      //check if navigation data is present
-      if (path.id && path.name) {
-        var tab, selectEntityCallback;
-
-        selectEntityCallback = Epsitec.CallbackQueue.create(
-            function() {
-              tab.leftList.getEntityList().selectEntity(path.id);
-            },
-            this);
-
-        if (this.tabManager.getEntityTab(path) === null) {
-          this.tabManager.showEntityTab(path);
-          tab = this.tabManager.getEntityTab(path);
-        }
-        else {
-          tab = this.tabManager.getEntityTab(path);
-          this.tabManager.showTab(tab);
-          tab.removeAllColumns();
-        }
-        //open summary tile
-        tab.addEntityColumn(
-            Epsitec.ViewMode.summary, null, path.id, null, selectEntityCallback
-        );
+      if (!Ext.isDefined(path.id) || !Ext.isDefined(path.name)) {
+        return;
       }
+
+      var database, entityId, columnManager;
+
+      // Todo complete this object. Otherwhise, the header of the list with the
+      // title and the icon won't be shown.
+      database = {
+        name: path.name
+      };
+
+      columnManager = this.tabManager.showEntityTab(database);
+
+      entityId = path.id;
+      columnManager.selectEntity(entityId);
     },
 
     showEditableEntityWithError: function(path, error) {

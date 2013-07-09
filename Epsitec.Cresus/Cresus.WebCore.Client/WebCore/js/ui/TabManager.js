@@ -48,6 +48,8 @@ function() {
       }
 
       this.showTab(entityTab);
+
+      return entityTab;
     },
 
     getEntityTab: function(database) {
@@ -77,6 +79,8 @@ function() {
       }
 
       this.showTab(pageTab);
+
+      return pageTab;
     },
 
     showTab: function(tab) {
