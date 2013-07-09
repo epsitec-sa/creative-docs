@@ -44,7 +44,7 @@ function() {
 
       actions = options.actions;
 
-      if (!Ext.isDefined(actions) || Epsitec.Tools.isArrayEmpty(actions)) {
+      if (!Ext.isDefined(actions) || Ext.isEmpty(actions)) {
         return options.tools;
       }
 

@@ -6,10 +6,6 @@ function() {
     alternateClassName: ['Epsitec.Tools'],
 
     statics: {
-      isArrayEmpty: function(array) {
-        return array && array.length === 0;
-      },
-
       getValueOrDefault: function(value, defaultValue) {
         return Ext.isDefined(value) ? value : defaultValue;
       },

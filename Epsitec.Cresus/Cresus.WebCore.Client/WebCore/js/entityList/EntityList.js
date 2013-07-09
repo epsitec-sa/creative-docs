@@ -65,7 +65,7 @@ function() {
       };
 
       if (epsitecConfig.featureContextualMenu) {
-        if (!Epsitec.Tools.isArrayEmpty(options.menuItems))
+        if (!Ext.isEmpty(options.menuItems))
         {
           contextMenu = this.createContextMenu(options);
 
@@ -146,7 +146,7 @@ function() {
         resizable: true
       }];
 
-      if (Epsitec.Tools.isArrayEmpty(columnDefinitions)) {
+      if (Ext.isEmpty(columnDefinitions)) {
         basicColumns.push({
           xtype: 'gridcolumn',
           text: Epsitec.Texts.getSummaryHeader(),
@@ -524,7 +524,7 @@ function() {
       }));
 
       exportMenuItems = this.createExportMenuItems(options);
-      if (!Epsitec.Tools.isArrayEmpty(exportMenuItems))
+      if (!Ext.isEmpty(exportMenuItems))
       {
         buttons.push('->');
         buttons.push({
@@ -550,7 +550,7 @@ function() {
         }
       });
 
-      if (!Epsitec.Tools.isArrayEmpty(options.labelExportDefinitions)) {
+      if (!Ext.isEmpty(options.labelExportDefinitions)) {
         items.push({
           text: Epsitec.Texts.getExportLabelLabel(),
           listeners: {
