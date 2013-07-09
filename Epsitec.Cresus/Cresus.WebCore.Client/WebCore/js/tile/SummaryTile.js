@@ -69,7 +69,8 @@ function() {
     openNextTile: function(callback) {
       this.column.selectTile(this);
       this.column.addEntityColumnWithCallback(
-          this.subViewMode, this.subViewId, this.entityId, callback);
+          this.subViewMode, this.subViewId, this.entityId, callback
+      );
     },
 
     addEntityColumn: function(entityId, refresh) {
