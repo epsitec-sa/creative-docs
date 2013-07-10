@@ -163,7 +163,7 @@ namespace Epsitec.Aider
 			}
 		}
 
-		private static void Test(CoreData coreData, string person, string activity, string group, string supergroup, string id)
+		private static void Test(CoreData coreData, string person, string activity, string group, string supergroup, string id, string forcedParishId = null)
 		{
 			var eervPersonsFile = new FileInfo (person);
 			var eervActivityFile = activity == null ? null : new FileInfo (activity);
@@ -172,7 +172,7 @@ namespace Epsitec.Aider
 			var eervIdFile = new FileInfo (id);
 
 			var eervParishData = new EervParishDataLoader ()
-				.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile)
+				.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile, forcedParishId)
 				.ToList ();
 
 			var parishRepository = ParishAddressRepository.Current;

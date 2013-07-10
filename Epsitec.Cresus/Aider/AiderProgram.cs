@@ -265,9 +265,10 @@ namespace Epsitec.Aider
 				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:", false);
 				var eervIdFile = AiderProgram.GetFile (args, "-idfile:", true);
 				var loadOnly = AiderProgram.GetBool (args, "-loadOnly:", false);
+				var forcedParishId = AiderProgram.GetString (args, "-forcedParishId:", false);
 
 				var eervParishData = new EervParishDataLoader ()
-					.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile)
+					.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile, forcedParishId)
 					.ToList ();
 
 				if (!loadOnly.GetValueOrDefault ())

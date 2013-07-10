@@ -32,8 +32,31 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile, FileInfo idFile)
+		public IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile, FileInfo idFile, string forcedParishId)
 		{
+			// Normally, we split the file by parish id, as a single file may contain the data of
+			// several parish file, and each record is supposed to have the parish id of its parish
+			// file.
+			// So in one file, we can have persons with the parish id 3010000000 and persons with
+			// the parish id 3020000000. All persons with the parish id 3010000000 are record that
+			// come from the file of the parish 3010000000. All persons with the parish id
+			// 3020000000 are record that come from the file of the parish 3020000000. These parish
+			// ids have nothing to do with the address of the person. They do not map with the
+			// parish where they live. They mean simply mean: this person come from the file of
+			// this parish.
+			// However, in some cases, the excel files that we are given do not match this
+			// specification and the parish id of a record represents the parish where this person
+			// live. This is stupid and do not match the spec. But, in order to import those file,
+			// as they are files from a single parish, we force the parish id for all the records.
+			// That's what the forcedParishId arguments do.
+			// Also note that parish id are may be something else than parish ids. They are simply
+			// the id of the "entity" to which the file belongs. At the start, they where only
+			// parishes, but not they are also regions or the main office files.
+			if (forcedParishId != null)
+			{
+				forcedParishId = EervParishDataLoader.GetParishId (forcedParishId);
+			}
+
 			var idRecords = EervDataReader.ReadIds (idFile).ToList ();
 			var personRecords = EervDataReader.ReadPersons (personFile)
 				.Where (r => !EervParishDataLoader.SkipPersonRecord (r))
@@ -50,11 +73,11 @@ namespace Epsitec.Aider.Data.Eerv
 			var allActivities = EervParishDataLoader.LoadEervActivities (activityRecords).ToList ();
 			var allGroups = EervParishDataLoader.LoadEervGroups (groupRecords).ToList ();
 
-			var groupedHouseholds = EervParishDataLoader.GroupByParish (allHouseholds);
-			var groupedPersons = EervParishDataLoader.GroupByParish (allPersons);
-			var groupedLegalPersons = EervParishDataLoader.GroupByParish (allLegalPersons);
-			var groupedActivities = EervParishDataLoader.GroupByParish (allActivities);
-			var groupedGroups = EervParishDataLoader.GroupByParish (allGroups);
+			var groupedHouseholds = EervParishDataLoader.GroupByParish (allHouseholds, forcedParishId);
+			var groupedPersons = EervParishDataLoader.GroupByParish (allPersons, forcedParishId);
+			var groupedLegalPersons = EervParishDataLoader.GroupByParish (allLegalPersons, forcedParishId);
+			var groupedActivities = EervParishDataLoader.GroupByParish (allActivities, forcedParishId);
+			var groupedGroups = EervParishDataLoader.GroupByParish (allGroups, forcedParishId);
 
 			foreach (var id in allIds)
 			{
@@ -143,10 +166,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<string, List<T>> GroupByParish<T>(IEnumerable<Tuple<T, string>> items)
+		private static Dictionary<string, List<T>> GroupByParish<T>(IEnumerable<Tuple<T, string>> items, string forcedParishId)
 		{
 			return items
-				.GroupBy (t => t.Item2)
+				.GroupBy (t => forcedParishId ?? t.Item2)
 				.ToDictionary (g => g.Key, g => g.Select (t => t.Item1).ToList());
 		}
 
