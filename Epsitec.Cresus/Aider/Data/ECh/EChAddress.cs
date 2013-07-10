@@ -6,7 +6,7 @@ using Epsitec.Data.Platform;
 namespace Epsitec.Aider.Data.ECh
 {
 
-    [System.Serializable]
+
 	internal sealed partial class EChAddress
 	{
 		

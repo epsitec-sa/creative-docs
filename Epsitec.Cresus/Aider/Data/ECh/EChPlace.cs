@@ -1,7 +1,7 @@
 ﻿namespace Epsitec.Aider.Data.ECh
 {
 
-    [System.Serializable]
+
 	internal sealed class EChPlace
 	{
 
@@ -12,10 +12,13 @@
 			this.Canton = canton;
 		}
 
-        public string Display()
-        {
-            return this.Name + " (" + this.Canton + " )";
-        }
+		
+		public string Display()
+		{
+			return this.Name + " (" + this.Canton + " )";
+		}
+
+
 		public readonly string Name;
 		public readonly string Canton;
 

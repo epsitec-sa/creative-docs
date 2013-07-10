@@ -8,7 +8,7 @@ using System.Xml.Linq;
 namespace Epsitec.Aider.Data.ECh
 {
 
-	[System.Serializable]
+
 	internal sealed class EChReportedPerson
 	{
 
