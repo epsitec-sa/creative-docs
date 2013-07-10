@@ -593,6 +593,11 @@ namespace Epsitec.Aider.Data.Eerv
 				countryCode = "CH";
 			}
 
+			if (countryCode.Length != 2)
+			{
+				throw new Exception ("Invalid country code: " + countryCode);
+			}
+
 			// We check the addresses in Switzerland.
 			if (countryCode == "CH")
 			{
