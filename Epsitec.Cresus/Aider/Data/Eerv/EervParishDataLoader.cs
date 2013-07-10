@@ -247,13 +247,17 @@ namespace Epsitec.Aider.Data.Eerv
 				var memberExists = idToPersons.ContainsKey (memberId) || idToLegalPersons.ContainsKey (memberId);
 				var groupExists = idToGroups.ContainsKey (groupId);
 
-				if (memberExists && groupExists)
+				if (!groupExists)
 				{
-					yield return activityData;
+					EervParishDataLoader.Warn ("activity between member " + memberId + " and group " + groupId + " is discarded because the group is not defined");
+				}
+				else if (!memberExists)
+				{
+					EervParishDataLoader.Warn ("activity between member " + memberId + " and group " + groupId + " is discarded because the member is not defined");
 				}
 				else
 				{
-					EervParishDataLoader.Warn ("activity between member " + memberId + " and group " + groupId + " is discarded because one of these references is not defined");
+					yield return activityData;
 				}
 			}
 		}
