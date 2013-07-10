@@ -1177,28 +1177,28 @@ namespace Epsitec.Aider
 				
 				public static class WarningType
 				{
-					//	designer:cap/LVGP32
+					//	designer:cap/LVGR32
 					public static global::Epsitec.Common.Types.Caption AddressChange
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 121));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 123));
 						}
 					}
-					//	designer:cap/LVGO32
+					//	designer:cap/LVGQ32
 					public static global::Epsitec.Common.Types.Caption DataChangedECh
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 122));
 						}
 					}
-					//	designer:cap/LVGL32
+					//	designer:cap/LVGN32
 					public static global::Epsitec.Common.Types.Caption Duplicated
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 117));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 119));
 						}
 					}
 					//	designer:cap/LVA4C
@@ -1217,20 +1217,20 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 389));
 						}
 					}
-					//	designer:cap/LVGM32
+					//	designer:cap/LVGO32
 					public static global::Epsitec.Common.Types.Caption MissingECh
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 118));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
 						}
 					}
-					//	designer:cap/LVGN32
+					//	designer:cap/LVGP32
 					public static global::Epsitec.Common.Types.Caption NoHouseholdECh
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 119));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 121));
 						}
 					}
 					//	designer:cap/LVA3C
@@ -1741,6 +1741,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 105);
 				//	designer:cap/LVGB32
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 107);
+				//	designer:cap/LVGL32
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressText = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 117);
 				//	designer:cap/LVGS22
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 92);
 				//	designer:cap/LVG332
@@ -1766,6 +1768,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 112);
 				//	designer:cap/LVGI32
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 114);
+				//	designer:cap/LVGM32
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressText = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 118);
 				//	designer:cap/LVGD32
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 109);
 				//	designer:cap/LVGE32
