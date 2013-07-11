@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.WebCore.Server
 			var now    = System.DateTime.Now;
 			var format = "crash {1:0000}-{2:00}-{3:00} {4:00}-{5:00}-{6:00} {0}.log";
 			var name   = string.Format (format, System.Guid.NewGuid (), now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
-			
+
 			return Path.Combine
 			(
 				System.Environment.GetFolderPath (System.Environment.SpecialFolder.CommonApplicationData),
