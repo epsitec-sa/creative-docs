@@ -5,16 +5,16 @@ using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>EntityModificationEntry</c> class is an immutable object that represents an entry in
 	/// the entity modification log.
 	/// </summary>
 	public sealed class EntityModificationEntry
 	{
-		
-		
+
+
 		/// <summary>
 		/// Builds a new <c>EntityModificationEntry</c>.
 		/// </summary>

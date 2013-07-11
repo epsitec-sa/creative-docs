@@ -14,12 +14,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
 
 
+	/// <summary>
+	/// The EntityDeletionLog is used to manage everything which relates to the entity deletion
+	/// logs.
+	/// </summary>
 	internal sealed class EntityDeletionLog
 	{
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		public EntityDeletionLog(DbInfrastructure dbInfrastructure, ServiceSchemaEngine schemaEngine)
@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.table = table;
 			this.tableQueryHelper = tableQueryHelper;
 		}
-		
-		
+
+
 		public EntityDeletionEntry CreateEntry(DbId entityModificationEntryId, Druid entityTypeId, DbId entityId)
 		{
 			entityModificationEntryId.ThrowIf (id => id.IsEmpty, "entityModificationEntryId cannot be empty.");
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
-			    { EntityDeletionLog.TableFactory.ColumnEntityModificationEntryIdName, entityModificationEntryId.Value },
+				{ EntityDeletionLog.TableFactory.ColumnEntityModificationEntryIdName, entityModificationEntryId.Value },
 				{ EntityDeletionLog.TableFactory.ColumnEntityTypeIdName, entityTypeId.ToLong () },
 				{ EntityDeletionLog.TableFactory.ColumnEntityIdName, entityId },
 			};
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public IEnumerable<EntityDeletionEntry> GetEntriesNewerThan(DbId minimumId)
 		{
 			minimumId.ThrowIf (id => id.IsEmpty, "minimumId cannot be empty.");
-			
+
 			SqlFunction condition = this.CreateConditionForMinimumEntryId (minimumId);
 
 			IList<IList<object>> data = this.tableQueryHelper.GetRows (condition);
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 			return condition;
 		}
-		
+
 
 		/// <summary>
 		/// Creates a new instance of <see cref="EntityDeletionEntry"/> based on the given data.
@@ -117,8 +117,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 		public class TableBuilder : ITableFactory
 		{
-			
-	
+
+
 			#region ITableHelper Members
 
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 			#endregion
-			
+
 
 			public string ColumnIdName
 			{

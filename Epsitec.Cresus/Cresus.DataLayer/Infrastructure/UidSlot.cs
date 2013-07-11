@@ -6,16 +6,16 @@ using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>UidSlot</c> defines a tuple based on inclusive minimum and maximum
 	/// values, used to define a slot for the <see cref="UidGenerator"/>.
 	/// </summary>
 	public sealed class UidSlot
 	{
-		
-		
+
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UidSlot"/> class.
 		/// </summary>

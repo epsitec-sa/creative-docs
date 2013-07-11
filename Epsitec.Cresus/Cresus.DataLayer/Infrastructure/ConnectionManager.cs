@@ -32,10 +32,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	{
 
 
-		// TODO Comment this class
-		// Marc
-
-
 		/// <summary>
 		/// Creates a new <c>ConnectionManager</c>.
 		/// </summary>
@@ -89,8 +85,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
 			{
 				{ ConnectionManager.TableFactory.ColumnStatusName, (int) ConnectionStatus.Closed },
-			};			
-			
+			};
+
 			SqlFunction[] conditions = new SqlFunction[]
 			{
 				this.CreateConditionForId (id),
@@ -105,7 +101,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				transaction.Commit ();
 			}
-	
+
 			if (nbRowsAffected == 0)
 			{
 				throw new System.InvalidOperationException ("Could not close connection because it not open or it does not exist.");
@@ -145,8 +141,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				{ConnectionManager.TableFactory.ColumnStatusName, (int) ConnectionStatus.Open}
 			};
-			
-			SqlFunction[] conditions = new SqlFunction []
+
+			SqlFunction[] conditions = new SqlFunction[]
 			{
 				this.CreateConditionForId (id),
 				this.CreateConditionForStatus (ConnectionStatus.Open),
@@ -180,8 +176,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				{ConnectionManager.TableFactory.ColumnStatusName, (int) ConnectionStatus.Interrupted}
 			};
-			
-			SqlFunction[] conditions = new SqlFunction []
+
+			SqlFunction[] conditions = new SqlFunction[]
 			{
 				this.CreateConditionForStatus (ConnectionStatus.Open),
 				this.CreateConditionForTimeOut (timeOutValue),
@@ -265,7 +261,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 					(
 						SqlFunctionCode.MathSubstract,
 						this.dbInfrastructure.DefaultSqlBuilder.GetSqlFieldForCurrentTimeStamp (),
-						SqlField.CreateName (this.table.Columns[ConnectionManager.TableFactory.ColumnRefreshTimeName].GetSqlName ())		
+						SqlField.CreateName (this.table.Columns[ConnectionManager.TableFactory.ColumnRefreshTimeName].GetSqlName ())
 					)
 				),
 				SqlField.CreateConstant (timeOutValue.TotalDays, DbRawType.SmallDecimal)

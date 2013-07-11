@@ -30,10 +30,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	internal sealed class LockManager
 	{
-		
-		
-		// TODO Comment this class.
-		// Marc
 
 
 		/// <summary>
@@ -268,9 +264,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			IDictionary<string, object> columnNameToValues = new Dictionary<string, object> ()
 			{
-			    {LockManager.TableFactory.ColumnNameName, lockName},
-			    {LockManager.TableFactory.ColumnConnectionIdName, connectionId},
-			    {LockManager.TableFactory.ColumnCounterName, 0},
+				{LockManager.TableFactory.ColumnNameName, lockName},
+				{LockManager.TableFactory.ColumnConnectionIdName, connectionId},
+				{LockManager.TableFactory.ColumnCounterName, 0},
 			};
 
 			this.tableLockQueryHelper.AddRow (columnNameToValues);
@@ -314,7 +310,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 					var table = this.tableLock;
 					var column = table.Columns[LockManager.TableFactory.ColumnCounterName];
-					
+
 					var tableName = table.GetSqlName ();
 					var columnName = column.GetSqlName ();
 
@@ -399,7 +395,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private readonly DbTable tableLock;
 
 
-		private readonly DbTable tableConnection ;
+		private readonly DbTable tableConnection;
 
 
 		private readonly DbInfrastructure dbInfrastructure;
@@ -424,7 +420,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public class TableBuilder : ITableFactory
 		{
 
-			
+
 			#region ITableHelper Members
 
 

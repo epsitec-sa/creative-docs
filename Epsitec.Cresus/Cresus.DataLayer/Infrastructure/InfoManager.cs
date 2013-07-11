@@ -23,10 +23,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	{
 
 
-		// TODO Comment this class.
-		// Marc
-
-
 		/// <summary>
 		/// Builds a new <c>InfoManager</c>.
 		/// </summary>
@@ -51,7 +47,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// <returns><c>true</c> if the information exists, <c>false</c> if it does not.</returns>
 		/// <exception cref="System.ArgumentException">If <paramref name="key"/> is <c>null</c> or empty.</exception>
 		public bool DoesInfoExists(string key)
-		{	
+		{
 			key.ThrowIfNullOrEmpty ("key");
 
 			return this.DoesValueExists (key);
@@ -172,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			{
 				 {InfoManager.TableFactory.ColumnValueName, value},
 			};
-			
+
 			SqlFunction condition = this.CreateConditionForValueKey (key);
 
 			return this.tableQueryHelper.SetRow (columNamesToValues, condition);

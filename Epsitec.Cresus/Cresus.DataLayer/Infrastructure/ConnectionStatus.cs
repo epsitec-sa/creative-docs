@@ -13,12 +13,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// The connection is open and thus active.
 		/// </summary>
 		Open = 0,
-		
+
 		/// <summary>
 		/// The connection has been properly closed and is thus inactive.
 		/// </summary>
 		Closed = 1,
-		
+
 		/// <summary>
 		/// The connection has been interrupted after a time out and is thus inactive.
 		/// </summary>

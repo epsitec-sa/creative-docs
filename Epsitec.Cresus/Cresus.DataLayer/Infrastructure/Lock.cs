@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	public sealed class Lock
 	{
 
-		
-		internal Lock(Connection owner , string name, System.DateTime creationTime)
+
+		internal Lock(Connection owner, string name, System.DateTime creationTime)
 		{
 			owner.ThrowIfNull ("owner");
 			name.ThrowIfNullOrEmpty ("name");

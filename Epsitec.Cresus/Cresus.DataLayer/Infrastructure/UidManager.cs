@@ -22,10 +22,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	internal sealed class UidManager
 	{
-		
-		
-		// TODO Comment this class.
-		// Marc
 
 
 		/// <summary>
@@ -49,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			name.ThrowIfNullOrEmpty ("name");
 			slots.ThrowIfNull ("slots");
-			slots.ThrowIf(s=>s.IsEmpty(), "No slots defined.");
+			slots.ThrowIf (s => s.IsEmpty (), "No slots defined.");
 
 			for (int i = 0; i < slots.Count - 1; i++)
 			{
@@ -70,7 +66,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				{
 					long minValue = slots[i].MinValue;
 					long maxValue = slots[i].MaxValue;
-					
+
 					this.InsertRow (name, minValue, maxValue);
 				}
 
@@ -138,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				var slot = this.GetRows (name)
 					.Select (r => new { MinValue = (long) r[2], MaxValue = (long) r[3], NextValue = (long) r[4] })
-					.Where(s => s.NextValue <= s.MaxValue)
+					.Where (s => s.NextValue <= s.MaxValue)
 					.OrderBy (s => s.MinValue)
 					.FirstOrDefault ();
 
@@ -150,9 +146,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 					result = slot.NextValue;
 				}
-				
+
 				transaction.Commit ();
-				
+
 				return result;
 			}
 		}
@@ -161,12 +157,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private void InsertRow(string name, long minValue, long maxValue)
 		{
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
-            {
-                {UidManager.TableFactory.ColumnNameName, name},
-                {UidManager.TableFactory.ColumnMinName, minValue},
-                {UidManager.TableFactory.ColumnMaxName, maxValue},
-                {UidManager.TableFactory.ColumnNextName, minValue},
-            };
+			{
+				{UidManager.TableFactory.ColumnNameName, name},
+				{UidManager.TableFactory.ColumnMinName, minValue},
+				{UidManager.TableFactory.ColumnMaxName, maxValue},
+				{UidManager.TableFactory.ColumnNextName, minValue},
+			};
 
 			this.tableQueryHelper.AddRow (columnNamesToValues);
 		}
@@ -175,13 +171,13 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private bool DoesRowExist(string name)
 		{
 			SqlFunction[] conditions = new SqlFunction[]
-            {
-            	this.CreateConditionForName (name),
-            };
+			{
+				this.CreateConditionForName (name),
+			};
 
 			return this.tableQueryHelper.DoesRowExist (conditions);
 		}
-		
+
 
 		private IList<IList<object>> GetRows(string name)
 		{
@@ -194,9 +190,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private int DeleteRow(string name)
 		{
 			SqlFunction[] conditions = new SqlFunction[]
-            {
-            	this.CreateConditionForName (name),
-            };
+			{
+				this.CreateConditionForName (name),
+			};
 
 			return this.tableQueryHelper.RemoveRows (conditions);
 		}
@@ -205,16 +201,16 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		private void IncrementRow(string name, long minValue, long nextValue)
 		{
 			IDictionary<string, object> columnNamesToValues = new Dictionary<string, object> ()
-		    {
-		        {UidManager.TableFactory.ColumnNextName, nextValue + 1},
-		    };
+			{
+				{UidManager.TableFactory.ColumnNextName, nextValue + 1},
+			};
 
 			SqlFunction[] conditions = new SqlFunction[]
-		    {
-		        this.CreateConditionForName (name),
+			{
+				this.CreateConditionForName (name),
 				this.CreateConditionForMinValue (minValue),
-		        this.CreateConditionForNextValue (nextValue),
-		    };
+				this.CreateConditionForNextValue (nextValue),
+			};
 
 			this.tableQueryHelper.SetRow (columnNamesToValues, conditions);
 		}
@@ -378,7 +374,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				}
 			}
 
-		
+
 		}
 
 	}

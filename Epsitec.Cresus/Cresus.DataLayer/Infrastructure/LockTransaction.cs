@@ -13,8 +13,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>LockTransaction</c> class provides the tools required to manage the high level lock
 	/// transactions.
@@ -23,10 +23,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	public sealed class LockTransaction : System.IDisposable
 	{
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		/// <summary>
@@ -82,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			private set;
 		}
 
-		
+
 		/// <summary>
 		/// Requests all the locks within the transaction. The success or failure is indicated by
 		/// the return value.
@@ -160,11 +156,11 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
-			
-		
+
+
 		#endregion
-		
-		
+
+
 		/// <summary>
 		/// Disposes the transaction, which release the locks if they haven't been released before.
 		/// </summary>
@@ -182,7 +178,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				{
 					this.lockManager.ReleaseOwnedLocks (this.connectionId, this.lockNames);
 				}
-				
+
 				this.State = LockState.Disposed;
 			}
 		}

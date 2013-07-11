@@ -24,10 +24,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	{
 
 
-		// TODO Comment this class
-		// Marc
-
-
 		/// <summary>
 		/// Creates a new instance of <c>UidGenerator</c>.
 		/// </summary>

@@ -12,8 +12,8 @@ using System.Collections;
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>EntityModificationLog</c> class is used to manage the entity modification log table
 	/// in the database, that contains the log entries used to archive who has done what and when in
@@ -21,10 +21,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	internal sealed class EntityModificationLog
 	{
-
-
-		// TODO Comment this class.
-		// Marc
 
 
 		/// <summary>
@@ -71,7 +67,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public EntityModificationEntry GetEntry(DbId entryId)
 		{
 			entryId.ThrowIf (id => id.IsEmpty, "entryId cannot be empty");
-			
+
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
 			return this.GetEntry (condition);
@@ -93,7 +89,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public void DeleteEntry(DbId entryId)
 		{
 			entryId.ThrowIf (id => id.IsEmpty, "entryId cannot be empty");
-			
+
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
 			using (DbTransaction transaction = this.tableQueryHelper.CreateLockTransaction ())
@@ -113,7 +109,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public bool DoesEntryExists(DbId entryId)
 		{
 			entryId.ThrowIf (id => id.IsEmpty, "entryId cannot be empty");
-			
+
 			SqlFunction condition = this.CreateConditionForEntryId (entryId);
 
 			return this.tableQueryHelper.DoesRowExist (condition);
@@ -250,7 +246,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 			#endregion
-			
+
 
 			public string ColumnIdName
 			{
@@ -280,8 +276,8 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 
 		}
-                            
-		
+
+
 	}
 
 

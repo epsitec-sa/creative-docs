@@ -43,8 +43,6 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </remarks>
 	public sealed class DataInfrastructure : IIsDisposed
 	{
-		// TODO Comment this class
-		// Marc
 
 
 		/// <summary>
@@ -52,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// </summary>
 		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to query the Database.</param>
 		/// <param name="entityEngine">The instance of <see cref="EntityEngine"/> used by this object.</param>
-		public DataInfrastructure(DbInfrastructure dbInfrastructure , EntityEngine entityEngine)
+		public DataInfrastructure(DbInfrastructure dbInfrastructure, EntityEngine entityEngine)
 		{
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 			entityEngine.ThrowIfNull ("entityEngine");
@@ -171,9 +169,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				{
 					//	Beware: deleting a data context will modify the content of the pool;
 					//	don't iterate on the original contents.
-					
+
 					var dataContexts = this.dataContextPool.ToArray ();
-					
+
 					foreach (DataContext dataContext in dataContexts)
 					{
 						this.DeleteDataContext (dataContext);
@@ -228,7 +226,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		{
 			var schemaEngine = this.EntityEngine.EntitySchemaEngine;
 			var typeEngine = this.EntityEngine.EntityTypeEngine;
-			
+
 			foreach (var entityTypeId in entityTypeIds)
 			{
 				yield return schemaEngine.GetEntityTable (entityTypeId);
@@ -545,7 +543,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public void DeleteDataContext(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
-			
+
 			bool removed = this.dataContextPool.Remove (dataContext);
 
 			if (!removed)
@@ -631,7 +629,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.AssertIsConnected ();
 
 			DbInfrastructure dbInfrastructure = this.dbInfrastructure;
-			
+
 			EntityTypeEngine typeEngine = this.EntityEngine.EntityTypeEngine;
 			EntitySchemaEngine schemaEngine = this.EntityEngine.EntitySchemaEngine;
 

@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 	/// </summary>
 	internal sealed class EntityDeletionEntry
 	{
-		
+
 
 		/// <summary>
 		/// Builds a new <c>DbDeletionLogEntry.</c>

@@ -4,15 +4,15 @@
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>LockState</c> describes the state of a <see cref="LockTransaction"/> object.
 	/// </summary>
 	public enum LockState
 	{
-		
-		
+
+
 		/// <summary>
 		/// Lock is not active. It has never been acquired.
 		/// </summary>
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		/// The lock is active (successfully acquired).
 		/// </summary>
 		Locked,
-		
+
 
 		/// <summary>
 		/// The lock is no longer active.

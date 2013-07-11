@@ -12,12 +12,12 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 {
 
 
+	/// <summary>
+	/// The TableQueryHelper class provides tools that make easier the execution of SQL queries and
+	/// insertions, updates and deletions of rows.
+	/// </summary>
 	internal sealed class TableQueryHelper
 	{
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		public TableQueryHelper(DbInfrastructure dbInfrastructure, DbTable dbTable)
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 			this.dbInfrastructure = dbInfrastructure;
 			this.dbTable = dbTable;
 		}
-		
+
 
 		/// <summary>
 		/// Adds a new row to the table in the database with the given values and returns the value
@@ -201,9 +201,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		public DbTransaction CreateLockTransaction()
 		{
 			List<DbTable> tablesToLock = new List<DbTable> ()
-		    {
-		       this.dbTable
-		    };
+			{
+				this.dbTable
+			};
 
 			return this.dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite, tablesToLock);
 		}
