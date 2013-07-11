@@ -82,11 +82,11 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		public object FromDatabaseToCresusValue(INamedType type, DbRawType rawType, DbSimpleType simpleType, DbNumDef numDef, object value)
 		{
 			type.ThrowIfNull ("type");
-			rawType.ThrowIf (rt => rt==DbRawType.Null, "rawType cannot be null");
-			rawType.ThrowIf (rt => rt==DbRawType.Unknown, "rawType cannot be unknown");
-			simpleType.ThrowIf (st => st==DbSimpleType.Null, "simpleType cannot be null");
-			simpleType.ThrowIf (st => st==DbSimpleType.Unknown, "simpleType cannot be unknown");
-			numDef.ThrowIf (nd => nd!=null&&!nd.IsValid, "numDef must be null or valid");
+			rawType.ThrowIf (rt => rt == DbRawType.Null, "rawType cannot be null");
+			rawType.ThrowIf (rt => rt== DbRawType.Unknown, "rawType cannot be unknown");
+			simpleType.ThrowIf (st => st == DbSimpleType.Null, "simpleType cannot be null");
+			simpleType.ThrowIf (st => st == DbSimpleType.Unknown, "simpleType cannot be unknown");
+			numDef.ThrowIf (nd => nd != null && !nd.IsValid, "numDef must be null or valid");
 			value.ThrowIfNull ("value");
 
 			object newValue = value;
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 				newValue = rawTypeConverter.ConvertFromInternalType (newValue);
 			}
-			
+
 			return newValue;
 		}
 
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			return newValue;
 		}
-		
+
 
 		/// <summary>
 		/// Applies a special treatment required for the string values.
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private object ProcessDotNetToCresusString(INamedType type, object value)
 		{
 			object newValue = value;
-			
+
 			IStringType stringType = type as IStringType;
 
 			if (stringType != null && stringType.UseFormattedText)
@@ -217,13 +217,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		/// <exception cref="System.ArgumentNullException">If <paramref name="value"/> is <c>null</c>.</exception>
 		public object FromCresusToDatabaseValue(DbRawType rawType, DbSimpleType simpleType, DbNumDef numDef, object value)
 		{
-			rawType.ThrowIf (rt => rt==DbRawType.Null, "rawType cannot be null");
-			rawType.ThrowIf (rt => rt==DbRawType.Unknown, "rawType cannot be unknown");
-			simpleType.ThrowIf (st => st==DbSimpleType.Null, "simpleType cannot be null");
-			simpleType.ThrowIf (st => st==DbSimpleType.Unknown, "simpleType cannot be unknown");
-			numDef.ThrowIf (nd => nd!=null&&!nd.IsValid, "numDef must be null or valid");
+			rawType.ThrowIf (rt => rt == DbRawType.Null, "rawType cannot be null");
+			rawType.ThrowIf (rt => rt == DbRawType.Unknown, "rawType cannot be unknown");
+			simpleType.ThrowIf (st => st == DbSimpleType.Null, "simpleType cannot be null");
+			simpleType.ThrowIf (st => st == DbSimpleType.Unknown, "simpleType cannot be unknown");
+			numDef.ThrowIf (nd => nd != null && !nd.IsValid, "numDef must be null or valid");
 			value.ThrowIfNull ("value");
-			
+
 			object newValue = value;
 
 			if (newValue != System.DBNull.Value)
@@ -256,13 +256,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			{
 				newValue = this.ProcessCresusToDotNetNumber (value);
 			}
-			
+
 			newValue = TypeConverter.ConvertFromSimpleType (newValue, simpleType, numDef);
 
 			return newValue;
 		}
 
-		
+
 		/// <summary>
 		/// Applies a special treatment required for the string values.
 		/// </summary>
