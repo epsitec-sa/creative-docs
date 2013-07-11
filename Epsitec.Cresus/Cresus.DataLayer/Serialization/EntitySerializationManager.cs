@@ -18,7 +18,7 @@ using System.Linq;
 namespace Epsitec.Cresus.DataLayer.Serialization
 {
 
-	
+
 	/// <summary>
 	/// The <c>EntitySerializationManager</c> is used to convert <see cref="AbstractEntity"/> to
 	/// <see cref="EntityData"/> back and forth.
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		public EntitySerializationManager(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
-			
+
 			this.DataContext = dataContext;
 		}
 
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		public EntityData Serialize(AbstractEntity entity, long logId)
 		{
 			entity.ThrowIfNull ("entity");
-			
+
 			DbKey rowKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid loadedEntityId = entity.GetEntityStructuredTypeId ();
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			ValueData valueData = this.GetValueData (entity);
 			ReferenceData referenceData = this.GetReferenceData (entity);
 			CollectionData collectionData = this.GetCollectionData (entity);
-			
+
 			return new EntityData (rowKey, leafEntityId, loadedEntityId, logId, valueData, referenceData, collectionData);
 		}
 
@@ -122,12 +122,12 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in this.TypeEngine.GetReferenceFields(leafEntityId)
+			var fields = from field in this.TypeEngine.GetReferenceFields (leafEntityId)
 						 let fieldId = field.CaptionId
 						 let fieldTarget = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
 						 where fieldTarget != null
 						 where this.DataContext.IsPersistent (fieldTarget)
-						 let fieldTargetKey = this.DataContext.GetNormalizedEntityKey(fieldTarget).Value.RowKey
+						 let fieldTargetKey = this.DataContext.GetNormalizedEntityKey (fieldTarget).Value.RowKey
 						 select new
 						 {
 							 Id = field.CaptionId,
@@ -155,14 +155,14 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			var fields = from field in this.TypeEngine.GetCollectionFields(leafEntityId)
+			var fields = from field in this.TypeEngine.GetCollectionFields (leafEntityId)
 						 let fieldId = field.CaptionId
 						 let fieldTargets = entity.GetFieldCollection<AbstractEntity> (fieldId.ToResourceId ())
 						 let fieldTargetKeys = new List<DbKey>
 						 (
 							from t in fieldTargets
 							where t != null
-							where this.DataContext.IsPersistent(t)
+							where this.DataContext.IsPersistent (t)
 							select this.DataContext.GetNormalizedEntityKey (t).Value.RowKey
 						 )
 						 where fieldTargetKeys.Count > 0
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 
 			return collectionData;
 		}
-		
+
 
 		/// <summary>
 		/// Builds a new <see cref="AbstractEntity"/> whose type and data are defined by an
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 		public AbstractEntity Deserialize(EntityData data)
 		{
 			data.ThrowIfNull ("data");
-			
+
 			Druid leafEntityId = data.LeafEntityId;
 			DbKey rowKey = data.RowKey;
 
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			this.DeserializeEntityFields (data, entity);
 		}
 
-		
+
 		/// <summary>
 		/// Deserializes the given <see cref="EntityData"/> in the given <see cref="AbstractEntity"/>.
 		/// </summary>
@@ -244,10 +244,17 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			using (entity.DisableEvents ())
 			using (entity.DisableReadOnlyChecks ())
 			{
+				// We deserialize the entity in two parts. First we deserialize all the data that
+				// has not been loaded in memory by inserting proxies in the fields.
+
 				foreach (Druid currentId in entityIds.TakeWhile (id => id != data.LoadedEntityId))
 				{
 					this.DeserializeEntityLocalWithProxies (entity, currentId);
 				}
+
+				// Then we deserialize the data that has been loaded in memory by inserting its
+				// values in the fields. In case of reference and collection fields, we still
+				// use proxies, that will be used later on to resolve the real targets.
 
 				foreach (Druid currentId in entityIds.SkipWhile (id => id != data.LoadedEntityId))
 				{
@@ -339,6 +346,10 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			{
 				case FieldRelation.None:
 
+					// Here it might happen that we don't have the value for the field. This would
+					// be the case if the field has been marked as "deleay load" in Designer. The
+					// goal was to make some expensive fields (such as large byte arrays) to be
+					// loaded only on demand, when they are really used.
 					if (entityData.ValueData.ContainsValue (field.CaptionId))
 					{
 						this.DeserializeEntityLocalFieldValue (entity, entityData, field);

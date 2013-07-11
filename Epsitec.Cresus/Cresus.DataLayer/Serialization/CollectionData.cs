@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 				{
 					this.collectionKeys[fieldId] = new List<DbKey> ();
 				}
-		
+
 				return this.collectionKeys[fieldId];
 			}
 		}

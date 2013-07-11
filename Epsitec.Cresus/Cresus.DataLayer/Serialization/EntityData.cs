@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Serialization
 			valueData.ThrowIfNull ("valueData");
 			referenceData.ThrowIfNull ("referenceData");
 			collectionData.ThrowIfNull ("collectionData");
-			
+
 			this.RowKey = rowKey;
 			this.LeafEntityId = leafEntityId;
 			this.LoadedEntityId = loadedEntityId;
