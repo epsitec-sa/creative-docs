@@ -94,11 +94,125 @@ namespace Epsitec.Aider.Data.Normalization
 
 			NormalizedDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched, considerDateOfBirth);
 			NormalizedDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
+
+			NormalizedDataMatcher.LogMatched (todo, done);
+			NormalizedDataMatcher.LogNotMatched (aiderPersons, todo, done);
+			NormalizedDataMatcher.LogWarnings (done);
+
 			NormalizedDataMatcher.AssignUnmatchedPersons (todo, done);
 
-			NormalizedDataMatcher.Warn (done);
-
 			return NormalizedDataMatcher.GetResultsWithMatchData (done);
+		}
+
+
+		private static void LogMatched
+		(
+			HashSet<NormalizedPerson> todo,
+			Dictionary<NormalizedPerson, NormalizedPerson> done
+		)
+		{
+			var sb  = new StringBuilder ();
+
+			sb.AppendLine ("================================================================");
+
+			var doneCount = done.Count;
+			var totalCount = done.Count + todo.Count;
+			var format = "Number of file persons with match in DB: {0}/{1}";
+			sb.AppendLine (string.Format (format, doneCount, totalCount));
+
+			foreach (var match in done)
+			{
+				sb.AppendLine ("---------------------------------------------------------------");
+				sb.AppendLine ("FILE: " + match.Key.ToString ());
+				sb.AppendLine ("DB:   " + match.Value.ToString ());
+			}
+
+			Debug.WriteLine (sb.ToString ());
+		}
+
+
+		private static void LogNotMatched
+		(
+			IEnumerable<NormalizedPerson> aiderPersons,
+			HashSet<NormalizedPerson> todo,
+			Dictionary<NormalizedPerson, NormalizedPerson> done
+		)
+		{
+			var sb = new StringBuilder ();
+
+			sb.AppendLine ("================================================================");
+
+			var todoCount = todo.Count;
+			var totalCount = done.Count + todo.Count;
+			var format = "Number of file persons without match in DB {0}/{1}";
+			sb.AppendLine (string.Format (format, todoCount, totalCount));
+
+			var namesToPersons = NormalizedDataMatcher.GroupPersonsByNames (aiderPersons);
+
+			foreach (var d in todo)
+			{
+				sb.AppendLine ("---------------------------------------------------------------");
+				sb.AppendLine ("FILE: " + d.ToString ());
+
+				var debugMatches = NormalizedDataMatcher.GetDebugMatches (d, namesToPersons);
+
+				foreach (var m in debugMatches.Take (15))
+				{
+					sb.AppendLine ("DB:   " + m.ToString ());
+				}
+			}
+
+			Debug.WriteLine (sb.ToString ());
+		}
+
+
+		private static IEnumerable<NormalizedPerson> GetDebugMatches
+		(
+			NormalizedPerson person,
+			Dictionary<string, Dictionary<string, List<NormalizedPerson>>> namesToPersons
+		)
+		{
+			return from m in NormalizedDataMatcher.FindFuzzyMatches (person, namesToPersons, 0.75, 0.75, JaroWinkler.MinValue, false, AddressMatch.None)
+				   let sfn = JaroWinkler.ComputeJaroWinklerDistance (person.Firstname, m.Firstname)
+				   where sfn >= 075
+				   let sln = JaroWinkler.ComputeJaroWinklerDistance (person.Lastname, m.Lastname)
+				   where sln >= 0.75
+				   let sdb = NormalizedDataMatcher.GetDateSimilarity (person.DateOfBirth, m.DateOfBirth)
+				   let ssx = NormalizedDataMatcher.IsSexMatch (person, m, true)
+				   let sad = NormalizedDataMatcher.GetAddressSimilarity (person.GetAddresses (), m.GetAddresses ())
+				   let metric = NormalizedDataMatcher.GetMetric (sfn, sln, sdb, ssx, person.DateOfBirth, m.DateOfBirth, person.Sex, m.Sex)
+				   orderby metric descending
+				   select m;
+		}
+
+
+		private static void LogWarnings(Dictionary<NormalizedPerson, NormalizedPerson> done)
+		{
+			var sb = new StringBuilder ();
+
+			var multipleMatches = done
+				.Select (m => Tuple.Create (m.Value, m.Key))
+				.Where (t => t.Item1 != null)
+				.GroupBy (t => t.Item1)
+				.ToDictionary (g => g.Key, g => g.Select (t => t.Item2).ToList ());
+
+			sb.AppendLine ("================================================================");
+
+			var format = "Number of DB persons with multiple match in file: {0}";
+			sb.AppendLine (string.Format (format, multipleMatches.Count));
+
+			foreach (var match in multipleMatches.Where (m => m.Value.Count > 1))
+			{
+				sb.AppendLine ("---------------------------------------------------------------");
+				sb.AppendLine ("DB:   " + match.Key.ToString ());
+
+				foreach (var p in match.Value)
+				{
+					sb.AppendLine ("FILE: " + p.ToString ());
+				}
+			}
+
+			Debug.WriteLine (sb.ToString ());
 		}
 
 
@@ -146,33 +260,6 @@ namespace Epsitec.Aider.Data.Normalization
 				Sex = sex,
 				Address = address,
 			};
-		}
-
-
-		private static void Warn(Dictionary<NormalizedPerson, NormalizedPerson> done)
-		{
-			var sb = new StringBuilder ();
-
-			var reversedDone = done
-				.Select (m => Tuple.Create (m.Value, m.Key))
-				.Where (t => t.Item1 != null)
-				.GroupBy (t => t.Item1)
-				.ToDictionary (g => g.Key, g => g.Select (t => t.Item2).ToList ());
-
-			foreach (var match in reversedDone.Where (m => m.Value.Count > 1))
-			{
-				sb.AppendLine ("======================================================================");
-				sb.AppendLine ("WARNING: person in database has been matched by multiple persons in file:");
-				sb.AppendLine (match.Key.ToString ());
-				sb.AppendLine ("----------------------------------------------------------------------");
-
-				foreach (var p in match.Value)
-				{
-					sb.AppendLine (p.ToString ());
-				}
-			}
-
-			Debug.WriteLine (sb.ToString ());
 		}
 
 
