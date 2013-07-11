@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// <remarks>
 	/// A Request is basically a search by example query with more power and flexibility. What you
 	/// do is to give it a directed acyclic graph of entities where all entities are reachable from
-	/// the root of the graphe, which is given by the property RootEntity. This gives you a subset
+	/// the root of the graph, which is given by the property RootEntity. This gives you a subset
 	/// of the entities in the database.
 	/// Moreover, you can reduce this subset furthermore by adding conditions that will allow you to
 	/// express things that are not expressable as examples, such a if a value is smaller that
@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// </remarks>
 	public class Request
 	{
-		
-		
+
+
 		/// <summary>
 		/// Builds a brand new <c>Request</c>.
 		/// </summary>
@@ -153,6 +153,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.sortClauses.Add (new SortClause (field, sortOrder));
 		}
 
+
 		public void AddIdSortClause(AbstractEntity example)
 		{
 			// If we have one sort clause, we use its sort order as we can hopefully benefit from
@@ -217,16 +218,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public Request Clone()
 		{
 			var copy = this.CloneEmpty ();
-			
+
 			copy.RootEntity      = this.RootEntity;
 			copy.RequestedEntity = this.RequestedEntity;
 			copy.Skip            = this.Skip;
 			copy.Take            = this.Take;
 			copy.Distinct        = this.Distinct;
-			
+
 			copy.Conditions.AddRange (this.Conditions);
 			copy.SortClauses.AddRange (this.SortClauses);
-			copy.SignificantFields.AddRange (this.SignificantFields); 
+			copy.SignificantFields.AddRange (this.SignificantFields);
 
 			return copy;
 		}
@@ -314,7 +315,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void CheckForCycle(Dictionary<AbstractEntity, List<AbstractEntity>> parents, AbstractEntity entity)
 		{
-			var todo = new Stack <AbstractEntity> ();
+			var todo = new Stack<AbstractEntity> ();
 
 			todo.Push (entity);
 
@@ -337,7 +338,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 						todo.Push (parent);
 					}
-				}			
+				}
 			}
 		}
 
@@ -431,14 +432,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		private readonly List<DataExpression> conditions;
-		
-		
+
+
 		private readonly List<SortClause> sortClauses;
 
 
 		private readonly List<EntityField> significantFields;
- 
-		
+
+
 		private AbstractEntity requestedEntity;
 
 

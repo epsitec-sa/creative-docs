@@ -10,6 +10,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// This class is used to manage aliases for database tables that are to be referenced in SQL
+	/// queries by the LoaderQueryGenerator.
+	/// </summary>
 	internal sealed class AliasManager
 	{
 

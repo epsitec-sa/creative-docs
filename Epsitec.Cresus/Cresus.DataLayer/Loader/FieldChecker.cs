@@ -14,6 +14,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// This is an helper class that is used by the DataExpression to check their validity.
+	/// </summary>
 	internal sealed class FieldChecker
 	{
 
@@ -50,7 +53,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public void CheckCollectionField(AbstractEntity entity, Druid fieldId, string name)
 		{
 			this.CheckEntity (entity);
-			
+
 			if (!this.IsCollectionField (entity, fieldId))
 			{
 				throw new ArgumentException ("Invalid collection field id");

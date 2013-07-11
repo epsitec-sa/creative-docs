@@ -15,6 +15,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// This class contains helper methods used to walk graph of entities and to get information
+	/// about their fields or what kind of entities they target.
+	/// </summary>
 	internal static class EntityHelper
 	{
 
@@ -87,7 +91,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			var leafEntityTypeId = entity.GetEntityStructuredTypeId ();
 			var valueFields = typeEngine.GetValueFields (leafEntityTypeId);
-			
+
 			return valueFields.Any (f => entity.IsFieldDefined (f.Id));
 		}
 

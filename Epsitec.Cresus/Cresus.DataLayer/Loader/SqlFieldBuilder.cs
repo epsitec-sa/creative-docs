@@ -16,6 +16,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// This class is responsible for the creation of all SqlFields objects that will be used in
+	/// the SQL queries made by the LoaderQueryGenerator.
+	/// </summary>
 	internal sealed class SqlFieldBuilder
 	{
 
@@ -120,7 +124,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			DbRawType dbRawType;
 			DbSimpleType dbSimpleType;
-			
+
 			if (systemType == typeof (string) || systemType == typeof (FormattedText))
 			{
 				dbRawType = DbRawType.String;

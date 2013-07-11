@@ -9,6 +9,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// This class provides a method that sorts elements given their dependency. The dependency
+	/// graph is given as a dictionary, where an entry means: the key depends on the values, and
+	/// must thus be after them in the result.
+	/// </summary>
 	internal sealed class TopologicalSort
 	{
 

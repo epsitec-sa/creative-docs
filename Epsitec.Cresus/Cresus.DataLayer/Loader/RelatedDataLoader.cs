@@ -18,6 +18,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// The RelatedDataLoader is used to quiclky resolve proxies in entities. Imagine that we have
+	/// persons which have addresses. If we have 100 persons, and we access their addresses, we
+	/// will generate 100 requests to the database to fetch their data. By using this class, we
+	/// will generate a single request to the database that will directly fetch the data of the
+	/// 100 addresses.
+	/// </summary>
 	internal sealed class RelatedDataLoader
 	{
 

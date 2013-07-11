@@ -18,10 +18,10 @@ using System.Linq;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
-	
+
 	/// <summary>
 	/// The <c>DataLoader</c> class is provides the tools used to load from the database the data of
-	/// <see cref="AbstractEntity"/>.
+	/// <see cref="AbstractEntity"/>, and to use that data to create instances of them.
 	/// </summary>
 	internal sealed class DataLoader
 	{
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public DataLoader(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
-			
+
 			this.DataContext = dataContext;
 			this.LoaderQueryGenerator = new LoaderQueryGenerator (dataContext);
 		}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			entityId.ThrowIf (id => id.IsEmpty, "entityId cannot be empty");
 			rowKey.ThrowIf (key => key.IsEmpty, "rowKey cannot be empty");
-			
+
 			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
 
 			Request request = Request.Create (entity, rowKey);
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			EntityModificationEntry latestEntityModificationEntry;
 			EntityData entityData;
-			
+
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				latestEntityModificationEntry = this.GetLatestEntityModificationEntry ();
@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
-			
+
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				latestEntityModificationEntry = this.GetLatestEntityModificationEntry ();
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				dbTransaction.Commit ();
 			}
-			
+
 			var entities = entityData.Select (d => this.DeserializeEntityData (d)).ToList ();
 
 			this.AssignModificationEntryIds (latestEntityModificationEntry, entities);
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entityData.LeafEntityId;
 			DbKey rowKey = entityData.RowKey;
 
-			EntityKey entityKey = new EntityKey(leafEntityId, rowKey);
+			EntityKey entityKey = new EntityKey (leafEntityId, rowKey);
 			AbstractEntity entity = this.DataContext.GetEntity (entityKey);
 
 			if (entity == null)
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				if (!oldEntityLogId.HasValue || oldEntityLogId.Value < newEntityLogId)
 				{
 					this.DataContext.SerializationManager.Deserialize (entity, entityData);
-					
+
 					entity.ResetDataGeneration ();
 
 					this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.Reload, EntityChangedEventType.Updated);
@@ -443,7 +443,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-		
+
 	}
 
 

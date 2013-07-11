@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 namespace Epsitec.Cresus.DataLayer.Loader
 {
 
+
 	/// <summary>
 	/// The <c>Request&lt;TEntity&gt;</c> class is a specialized version of the
 	/// <see cref="Request"/> class.

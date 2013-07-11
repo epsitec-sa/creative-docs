@@ -26,6 +26,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 {
 
 
+	/// <summary>
+	/// The LoaderQueryGenerator is the class that builds and executes the SQL queries that are
+	/// used to get entity data out of the database.
+	/// </summary>
 	internal sealed class LoaderQueryGenerator
 	{
 
@@ -98,7 +102,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private SqlSelect BuildSelectForCount(Request request)
 		{
 			var builder = this.GetBuilder ();
-			
+
 			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
 			var fieldForCount = this.BuildFieldForCount (builder, request);
 
@@ -131,8 +135,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var rootEntityTypeId = this.TypeEngine.GetRootType (leafEntityTypeId).CaptionId;
 
 			return from DataRow row in data.Tables[0].Rows
-			       let rowKey = this.ExtractKey (row[0])
-			       select new EntityKey (rootEntityTypeId, rowKey);
+				   let rowKey = this.ExtractKey (row[0])
+				   select new EntityKey (rootEntityTypeId, rowKey);
 		}
 
 
@@ -153,7 +157,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			var sqlSelect = this.BuildSelectForIndex (request, entityKey);
 
-			using (var dbTransaction = this.StartTransaction())
+			using (var dbTransaction = this.StartTransaction ())
 			{
 				var index = this.GetNullableInteger (sqlSelect, dbTransaction);
 
@@ -162,13 +166,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				return this.PostProcessIndex (index);
 			}
 		}
-		
-		
+
+
 		public int? GetIndex(Request request, EntityKey entityKey, DbTransaction dbTransaction)
 		{
 			// NOTE This SQL query could probably be improved by using the windowing function that
 			// will be available in Firebird 3 which is not even yet in alpha stage.
-			
+
 			var sqlSelect = this.BuildSelectForIndex (request, entityKey);
 
 			var index = this.GetNullableInteger (sqlSelect, dbTransaction);
@@ -265,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			outerBuilder.AliasManager.AliasCount = innerBuilder.AliasManager.AliasCount;
 
 			var fromAndWhere = this.BuildFromAndWhere (outerBuilder, request);
-			
+
 			var innerQueryAlias = outerBuilder.AliasManager.GetAlias ();
 			var innerQueryJoin = this.BuildOuterRequestForIndexInnerQueryJoin (innerSelect, innerQueryAlias);
 
@@ -382,7 +386,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			// The SQL expression for that is
 			// ((O IS NULL) AND (I IS NOT NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O < I))
 			// 
- 			// This expression can be simplified with the boolean algebra to
+			// This expression can be simplified with the boolean algebra to
 			// => ((O IS NULL) AND (I IS NOT NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O < I))
 			// => (I IS NOT NULL) AND ((O IS NULL) OR ((O IS NOT NULL) AND (O < I)))
 			// => (I IS NOT NULL) AND ((O IS NULL) OR (O < I))
@@ -424,7 +428,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			// equals (O, I) => O = I
 			// before-ASC (O, I) => O < I
 			// before-DESC (O, I) => O > I
-			
+
 			// Holds the current condition. At the end, that's our condition.
 			SqlFunction condition = null;
 
@@ -461,7 +465,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					var fieldAccumulator = SqlField.CreateFunction (accumulator);
 					var fieldBefore = SqlField.CreateFunction (before);
 					var fieldEqual = SqlField.CreateFunction (equal);
-				
+
 					// Creates the local part of the condition, based on the previous accumulator
 					// and the "before" condition.
 					var localCondition = new SqlFunction (SqlFunctionCode.LogicAnd, fieldAccumulator, fieldBefore);
@@ -478,8 +482,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			// Finally, we append the accumulator to the condition one last time.
 			var lastFieldCondition = SqlField.CreateFunction (condition);
 			var lastFieldAccumulator = SqlField.CreateFunction (accumulator);
-	
-			return new SqlFunction (SqlFunctionCode.LogicOr, lastFieldCondition, lastFieldAccumulator);		
+
+			return new SqlFunction (SqlFunctionCode.LogicOr, lastFieldCondition, lastFieldAccumulator);
 		}
 
 
@@ -549,8 +553,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			return field.AsQualifier + "_" + field.AsName;
 		}
-		
-		
+
+
 		public IEnumerable<EntityData> GetEntitiesData(Request request)
 		{
 			List<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> valuesAndReferencesData;
@@ -590,7 +594,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			);
 
 			var referenceFields = this.GetReferenceFields (leafEntityTypeId).ToList ();
-			
+
 			return data.Tables[0].Rows
 				.Cast<DataRow> ()
 				.Select (r => this.ProcessValueAndReferenceRow (valueFields, referenceFields, r))
@@ -624,7 +628,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				{
 					var key = this.ExtractKey (value);
 					var fieldId = referenceFields[i].CaptionId;
-					
+
 					entityReferenceData[fieldId] = key;
 				}
 			}
@@ -642,7 +646,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private SqlSelect BuildSelectForValueAndReferenceData(Request request)
 		{
 			var builder = this.GetBuilder ();
-			
+
 			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
 			var select = this.BuildSelectForValuesAndReferences (builder, request);
 			var predicate = this.GetSqlSelectPredicate (request);
@@ -668,7 +672,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				yield return builder.BuildEntityField (entity, fieldId);
 			}
 
-			foreach(var field in request.SignificantFields)
+			foreach (var field in request.SignificantFields)
 			{
 				yield return field.CreateSqlField (builder);
 			}
@@ -743,18 +747,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var data = this.DbInfrastructure.ExecuteRetData (transaction);
 
 			return from DataRow row in data.Tables[0].Rows
-			       let targetKey = this.ExtractKey (row[0])
-			       let sourceKey = this.ExtractKey (row[1])
-			       select Tuple.Create (sourceKey, targetKey);
+				   let targetKey = this.ExtractKey (row[0])
+				   let sourceKey = this.ExtractKey (row[1])
+				   select Tuple.Create (sourceKey, targetKey);
 		}
 
 
 		private SqlSelect BuildSelectForCollectionData(Request request, Druid fieldId)
 		{
 			var builder = this.GetBuilder ();
-			
+
 			var innerSelect = this.BuildInnerSelectForCollectionData (request, builder);
-			
+
 			return this.BuildOuterSelectForCollectionData (builder, request, fieldId, innerSelect);
 		}
 
@@ -781,7 +785,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var tableAlias = builder.AliasManager.GetAlias ();
 			var dbTable = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
-			
+
 			var table = builder.BuildTable (tableAlias, dbTable);
 
 			var targetId = builder.BuildRelationTargetId (tableAlias, localEntityId, fieldId);
@@ -803,19 +807,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private IEnumerable<EntityData> GetEntitiesData(Request request, IEnumerable<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> valuesAndReferencesData, Dictionary<DbKey, CollectionData> collectionsData)
 		{
 			return from valueAndReferenceData in valuesAndReferencesData
-				let loadedTypeId = request.RequestedEntity.GetEntityStructuredTypeId ()
-				let id = valueAndReferenceData.Item1
-				let leafTypeId = valueAndReferenceData.Item2
-				let logId = valueAndReferenceData.Item3
-				let values = valueAndReferenceData.Item4
-				let references = valueAndReferenceData.Item5
-				let collections = collectionsData.ContainsKey (id)
+				   let loadedTypeId = request.RequestedEntity.GetEntityStructuredTypeId ()
+				   let id = valueAndReferenceData.Item1
+				   let leafTypeId = valueAndReferenceData.Item2
+				   let logId = valueAndReferenceData.Item3
+				   let values = valueAndReferenceData.Item4
+				   let references = valueAndReferenceData.Item5
+				   let collections = collectionsData.ContainsKey (id)
 					? collectionsData[id]
 					: new CollectionData ()
-				select new EntityData (id, leafTypeId, loadedTypeId, logId, values, references, collections);
+				   select new EntityData (id, leafTypeId, loadedTypeId, logId, values, references, collections);
 		}
-		
-		
+
+
 		public object GetValueField(AbstractEntity entity, Druid fieldId)
 		{
 			var request = this.BuildRequestForValueField (entity, fieldId);
@@ -889,8 +893,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				.PlusSqlFields (select)
 				.BuildSqlSelect ();
 		}
-		
-		
+
+
 		public EntityData GetReferenceField(AbstractEntity entity, Druid fieldId)
 		{
 			var request = this.GetRequestForReferenceField (entity, fieldId);
@@ -906,7 +910,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var source = EntityClassFactory.CreateEmptyEntity (leafEntityTypeId);
 			var sourceKey = this.dataContext.GetNormalizedEntityKey (entity).Value.RowKey;
-			
+
 			var target = EntityClassFactory.CreateEmptyEntity (field.TypeId);
 
 			using (source.DefineOriginalValues ())
@@ -918,8 +922,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return Request.Create (source, sourceKey, target);
 		}
-		
-		
+
+
 		public IEnumerable<EntityData> GetCollectionField(AbstractEntity entity, Druid fieldId)
 		{
 			// NOTE This query will return duplicate entries for duplicates in the collection. This
@@ -939,7 +943,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var source = EntityClassFactory.CreateEmptyEntity (leafEntityTypeId);
 			var sourceKey = this.dataContext.GetNormalizedEntityKey (entity).Value.RowKey;
-			
+
 			var target = EntityClassFactory.CreateEmptyEntity (field.TypeId);
 
 			using (source.DefineOriginalValues ())
@@ -968,8 +972,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return fromAndWhere.PlusSqlOrderBys (orderBy.ToArray ());
 		}
-		
-		
+
+
 		private SqlContainer BuildFromAndWhere(SqlFieldBuilder builder, Request request)
 		{
 			var nonPersistentEntities = request.GetNonPersistentEntities (this.dataContext);
@@ -1014,7 +1018,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				{
 					var fieldId = fieldWithTarget.Item1;
 					var target = fieldWithTarget.Item2;
-					
+
 					HashSet<Tuple<AbstractEntity, Druid>> parents;
 
 					if (!targetsWithsources.TryGetValue (target, out parents))
@@ -1113,7 +1117,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void BuildTablesAndJoinsForEntities(SqlFieldBuilder builder, IEnumerable<AbstractEntity> entities, HashSet<AbstractEntity> mandatoryEntities, Dictionary<string, SqlField> tables, List<Tuple<string, SqlField, string, SqlField, bool>> joins)
 		{
-			foreach(var entity in entities)
+			foreach (var entity in entities)
 			{
 				var isMandatory = this.IsMandatory (entity, mandatoryEntities);
 
@@ -1144,7 +1148,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				var localTableAlias = builder.AliasManager.GetAlias (entity, localEntityTypeId);
 				var localTable = builder.BuildEntityTable (entity, localEntityTypeId);
-				
+
 				tables[localTableAlias] = localTable;
 
 				if (localEntityTypeId != rootEntityTypeId)
@@ -1160,11 +1164,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private void BuildTablesAndJoinsForRelations(SqlFieldBuilder builder, HashSet<AbstractEntity> mandatoryEntities, Dictionary<AbstractEntity, HashSet<Tuple<AbstractEntity, Druid>>> targetsWithsources, Dictionary<string, SqlField> tables, List<Tuple<string, SqlField, string, SqlField, bool>> joins)
 		{
-			foreach(var targetWithsourcesItem in targetsWithsources)
+			foreach (var targetWithsourcesItem in targetsWithsources)
 			{
 				var target = targetWithsourcesItem.Key;
 
-				foreach(var sourceItem in targetWithsourcesItem.Value)
+				foreach (var sourceItem in targetWithsourcesItem.Value)
 				{
 					var source = sourceItem.Item1;
 					var fieldId = sourceItem.Item2;
@@ -1239,7 +1243,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var joinToRelation = Tuple.Create (sourceTableAlias, sourceColumnId, relationTableAlias, relationColumnSourceId, isMandatory);
 			joins.Add (joinToRelation);
-		
+
 			if (!this.dataContext.IsPersistent (target))
 			{
 				var leafTargetTypeId = target.GetEntityStructuredTypeId ();
@@ -1288,19 +1292,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var sqlJoins = new List<SqlJoin> ();
 
-			foreach(var secondaryTableAlias in ordering.Skip (1))
+			foreach (var secondaryTableAlias in ordering.Skip (1))
 			{
 				var joinsWithTable = aliasesToJoins[secondaryTableAlias];
 
 				var sqlJoinCode = joinsWithTable.Any (j => j.Item5)
-				    ? SqlJoinCode.Inner
-				    : SqlJoinCode.OuterLeft;
+					? SqlJoinCode.Inner
+					: SqlJoinCode.OuterLeft;
 
 				var sqlSecondaryTable = tables[secondaryTableAlias];
 
 				SqlFunction sqlConditions = null;
 
-				foreach(var join in joinsWithTable)
+				foreach (var join in joinsWithTable)
 				{
 					var sqlCondition = new SqlFunction
 					(
@@ -1345,17 +1349,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private IEnumerable<SqlFunction> BuildConstraints(SqlFieldBuilder builder, Request request)
 		{
 			return from condition in request.Conditions
-			       select condition.CreateSqlCondition (builder);
+				   select condition.CreateSqlCondition (builder);
 		}
 
 
 		private IEnumerable<SqlFunction> BuildConditions(SqlFieldBuilder builder, IEnumerable<AbstractEntity> entities)
 		{
 			var conditions = from entity in entities
-			                 let leafEntityTypeId = entity.GetEntityStructuredTypeId ()
-			                 from field in this.TypeEngine.GetFields (leafEntityTypeId)
-			                 where entity.IsFieldDefined (field.Id)
-			                 select this.BuildCondition (builder, entity, field);
+							 let leafEntityTypeId = entity.GetEntityStructuredTypeId ()
+							 from field in this.TypeEngine.GetFields (leafEntityTypeId)
+							 where entity.IsFieldDefined (field.Id)
+							 select this.BuildCondition (builder, entity, field);
 
 			return conditions.SelectMany (c => c);
 		}
@@ -1365,7 +1369,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			var conditions = new List<SqlFunction> ();
 
-			switch(field.Relation)
+			switch (field.Relation)
 			{
 				case FieldRelation.None:
 					conditions.Add (this.BuildValueCondition (builder, entity, field));
@@ -1396,7 +1400,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private SqlFunction BuildValueCondition(SqlFieldBuilder builder, AbstractEntity entity, StructuredTypeField field)
 		{
 			var fieldId = field.CaptionId;
-			
+
 			var sqlFieldColumn = builder.BuildEntityField (entity, fieldId);
 			var sqlFieldValue = builder.BuildConstantForField (entity, fieldId);
 			var sqlFunctionCode = SqlFunctionCode.CompareEqual;
@@ -1434,8 +1438,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var fieldName = fieldId.ToResourceId ();
 
 			return from target in entity.GetFieldCollection<AbstractEntity> (fieldName)
-			       where dataContext.IsPersistent (target)
-			       select this.BuildCollectionCondition (builder, entity, field, target);
+				   where dataContext.IsPersistent (target)
+				   select this.BuildCollectionCondition (builder, entity, field, target);
 		}
 
 
@@ -1460,7 +1464,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private IEnumerable<SqlField> BuildOrderBy(SqlFieldBuilder builder, Request request)
 		{
 			return from sortClause in request.SortClauses
-			       select sortClause.CreateSqlField (builder);
+				   select sortClause.CreateSqlField (builder);
 		}
 
 
