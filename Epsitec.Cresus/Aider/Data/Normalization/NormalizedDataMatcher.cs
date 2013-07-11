@@ -86,13 +86,23 @@ namespace Epsitec.Aider.Data.Normalization
 	{
 
 
-		public static IEnumerable<Tuple<NormalizedPerson, Tuple<NormalizedPerson, MatchData>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons, bool considerDateOfBirth = true)
+		public static IEnumerable<Tuple<NormalizedPerson, Tuple<NormalizedPerson, MatchData>>> FindMatches
+		(
+			IEnumerable<NormalizedPerson> eervPersons,
+			IEnumerable<NormalizedPerson> aiderPersons,
+			bool considerDateOfBirth,
+			bool considerSex
+		)
 		{
 			var todo = new HashSet<NormalizedPerson> (eervPersons);
 			var done = new Dictionary<NormalizedPerson, NormalizedPerson> ();
 			var matched = new HashSet<NormalizedPerson> ();
 
-			NormalizedDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched, considerDateOfBirth);
+			NormalizedDataMatcher.FindMatchesWithFuzzyMethod
+			(
+				aiderPersons, todo, done, matched, considerDateOfBirth, considerSex
+			);
+
 			NormalizedDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
 
 			NormalizedDataMatcher.LogMatched (todo, done);
@@ -267,7 +277,15 @@ namespace Epsitec.Aider.Data.Normalization
 		}
 
 
-		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched, bool considerDateOfBirth)
+		private static void FindMatchesWithFuzzyMethod
+		(
+			IEnumerable<NormalizedPerson> aiderPersons,
+			HashSet<NormalizedPerson> todo,
+			Dictionary<NormalizedPerson, NormalizedPerson> done,
+			HashSet<NormalizedPerson> matched,
+			bool considerDateOfBirth,
+			bool considerSex
+		)
 		{
 			var namesToAiderPersons = NormalizedDataMatcher.GroupPersonsByNames (aiderPersons);
 
@@ -303,6 +321,11 @@ namespace Epsitec.Aider.Data.Normalization
 				if (!considerDateOfBirth)
 				{
 					fdb = JaroWinkler.MinValue;
+				}
+
+				if (!considerSex)
+				{
+					fsx = false;
 				}
 
 				var matches = NormalizedDataMatcher

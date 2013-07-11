@@ -163,7 +163,7 @@ namespace Epsitec.Aider
 			}
 		}
 
-		private static void Test(CoreData coreData, string person, string activity, string group, string supergroup, string id, string forcedParishId = null)
+		private static void Test(CoreData coreData, string person, string activity, string group, string supergroup, string id, string forcedParishId = null, bool considerDateOfBirth = true, bool considerSex = true)
 		{
 			var eervPersonsFile = new FileInfo (person);
 			var eervActivityFile = activity == null ? null : new FileInfo (activity);
@@ -179,7 +179,7 @@ namespace Epsitec.Aider
 
 			foreach (var eervParishDatum in eervParishData)
 			{
-				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum);
+				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
 			}
 		}
 

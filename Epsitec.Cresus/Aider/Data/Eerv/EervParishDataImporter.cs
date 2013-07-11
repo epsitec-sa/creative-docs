@@ -32,13 +32,34 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, EervParishData eervParishData)
+		public static void Import
+		(
+			CoreData coreData,
+			ParishAddressRepository parishRepository,
+			EervParishData eervParishData,
+			bool considerDateOfBirth,
+			bool considerSex
+		)
 		{
-			var persons = EervParishDataImporter.ImportEervPhysicalPersons (coreData, parishRepository, eervParishData);
-			var legalPersons = EervParishDataImporter.ImportEervLegalPersons (coreData, parishRepository, eervParishData);
-			var groups = EervParishDataImporter.ImportEervGroups (coreData, parishRepository, eervParishData);
+			var persons = EervParishDataImporter.ImportEervPhysicalPersons
+			(
+				coreData, parishRepository, eervParishData, considerDateOfBirth, considerSex
+			);
 
-			EervParishDataImporter.ImportEervActivities (coreData, eervParishData, persons, legalPersons, groups);
+			var legalPersons = EervParishDataImporter.ImportEervLegalPersons
+			(
+				coreData, parishRepository, eervParishData
+			);
+
+			var groups = EervParishDataImporter.ImportEervGroups
+			(
+				coreData, parishRepository, eervParishData
+			);
+
+			EervParishDataImporter.ImportEervActivities
+			(
+				coreData, eervParishData, persons, legalPersons, groups
+			);
 
 			coreData.ResetIndexes ();
 		}
@@ -48,10 +69,15 @@ namespace Epsitec.Aider.Data.Eerv
 		(
 			CoreData coreData,
 			ParishAddressRepository parishRepository,
-			EervParishData eervParishData
+			EervParishData eervParishData,
+			bool considerDateOfBirth,
+			bool considerSex
 		)
 		{
-			var matches = EervParishDataImporter.FindMatches (coreData, eervParishData);
+			var matches = EervParishDataImporter.FindMatches
+			(
+				coreData, eervParishData, considerDateOfBirth, considerSex
+			);
 
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
@@ -92,7 +118,9 @@ namespace Epsitec.Aider.Data.Eerv
 		private static Dictionary<EervPerson, Tuple<EntityKey, MatchData>> FindMatches
 		(
 			CoreData coreData,
-			EervParishData eervParishData
+			EervParishData eervParishData,
+			bool considerDateOfBirth,
+			bool considerSex
 		)
 		{
 			var normalizedAiderPersons = Normalizer.Normalize (coreData);
@@ -100,7 +128,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var matches = NormalizedDataMatcher.FindMatches
 			(
-				normalizedEervPersons.Keys, normalizedAiderPersons.Keys
+				normalizedEervPersons.Keys, normalizedAiderPersons.Keys, considerDateOfBirth,
+				considerSex
 			);
 
 			return matches.ToDictionary

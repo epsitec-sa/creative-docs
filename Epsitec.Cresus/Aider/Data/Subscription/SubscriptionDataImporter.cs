@@ -85,7 +85,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			var matches = NormalizedDataMatcher.FindMatches
 			(
-				normalizedSubscriptionPersons.Keys, normalizedAiderPersons.Keys, false
+				normalizedSubscriptionPersons.Keys, normalizedAiderPersons.Keys, false, true
 			);
 
 			SubscriptionDataImporter.LogMatchResult (normalizedSubscriptionPersons, matches);

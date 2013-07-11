@@ -266,6 +266,8 @@ namespace Epsitec.Aider
 				var eervIdFile = AiderProgram.GetFile (args, "-idfile:", true);
 				var loadOnly = AiderProgram.GetBool (args, "-loadOnly:", false);
 				var forcedParishId = AiderProgram.GetString (args, "-forcedparishid:", false);
+				var considerDateOfBirth = AiderProgram.GetBool (args, "-considerdateofbirth", false) ?? true;
+				var considerSex = AiderProgram.GetBool (args, "-considersex", false) ?? true;
 
 				var eervParishData = new EervParishDataLoader ()
 					.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile, forcedParishId)
@@ -277,7 +279,7 @@ namespace Epsitec.Aider
 
 					foreach (var eervParishDatum in eervParishData)
 					{
-						EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum);
+						EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
 					}
 				}
 			});
