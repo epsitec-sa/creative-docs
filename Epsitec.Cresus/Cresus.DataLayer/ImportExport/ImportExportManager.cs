@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.DataLayer.ImportExport
 {
-	
+
 
 	// TODO Comment this class.
 	// Marc
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-        public static void Import(FileInfo file, DataInfrastructure dataInfrastructure)
+		public static void Import(FileInfo file, DataInfrastructure dataInfrastructure)
 		{
 			XDocument xDocument = XDocument.Load (file.FullName);
 

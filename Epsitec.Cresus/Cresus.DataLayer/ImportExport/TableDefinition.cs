@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			this.WriteXmlStart (xmlWriter, index);
 
-			foreach (IList<string> row in this.ProcessRowsWrite(dbInfrastructure.Converter, this.GetRows (dbInfrastructure, exportOnlyUserData)))
+			foreach (IList<string> row in this.ProcessRowsWrite (dbInfrastructure.Converter, this.GetRows (dbInfrastructure, exportOnlyUserData)))
 			{
 				this.WriteXmlRow (xmlWriter, row);
 			}
@@ -259,8 +259,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private SqlField CreateConditionForInterval(long firstIndex, long lastIndex)
 		{
-			string rowIdColumnName = GetRowIdColumnName ();		
-			
+			string rowIdColumnName = GetRowIdColumnName ();
+
 			return SqlField.CreateFunction
 			(
 				new SqlFunction (
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private IEnumerable<IList<string>> ProcessRowsWrite(ITypeConverter iTypeConverter, IEnumerable<object> rows)
 		{
 			var converters = this.Columns.Select (c => this.GetSerializationConverter (iTypeConverter, c)).ToList ();
-			
+
 			foreach (IList<object> row in rows)
 			{
 				yield return this.ProcessRowWrite (converters, row);
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private IList<string> ProcessRowWrite(IList<ISerializationConverter> converters, IList<object> row)
 		{
 			List<string> processedRow = new List<string> ();
-			
+
 			for (int i = 0; i < row.Count; i++)
 			{
 				object valueAsObject = row[i];
@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			xmlReader.ReadStartElement ("columns");
 
 			List<ColumnDefinition> columnDefinitions = new List<ColumnDefinition> ();
-			
+
 			while (xmlReader.IsStartElement () && string.Equals (xmlReader.Name, "column"))
 			{
 				ColumnDefinition columnDefinition = ColumnDefinition.ReadXmlDefinition (xmlReader, columnDefinitions.Count);
@@ -452,7 +452,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private IEnumerable<IList<string>> ReadXmlRows(XmlReader xmlReader)
 		{
 			List<ColumnDefinition> columns = this.Columns.ToList ();
-			
+
 			while (xmlReader.IsStartElement () && string.Equals (xmlReader.Name, "row"))
 			{
 				List<string> row = new List<string> ();
@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					if (index < columns.Count)
 					{
 						bool isEmpty = xmlReader.IsEmptyElement;
-						
+
 						string idAsString = xmlReader.GetAttribute ("id");
 						int idAsInt = InvariantConverter.ConvertFromString<int> (idAsString);
 
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				{
 					throw new System.FormatException ("Invalid number of columns in row.");
 				}
-				
+
 				xmlReader.ReadEndElement ();
 
 				yield return row;
@@ -617,7 +617,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				DbRawType internalDbRawType = this.GetInternalRawType (dbInfrastructure.Converter, column.Type.RawType);
 
 				object value = TypeConverter.GetDefaultValueForDbRawType (internalDbRawType);
-				
+
 				SqlField sqlField = SqlField.CreateConstant (value, internalDbRawType);
 				sqlField.Alias = column.GetSqlName ();
 
@@ -636,7 +636,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private void UpdateAutoIncrementStartValue(DbInfrastructure dbInfrastructure)
 		{
-			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction(DbTransactionMode.ReadWrite))
+			using (DbTransaction dbTransaction = dbInfrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				string rowIdColumnName = this.GetRowIdColumnName ();
 
@@ -656,7 +656,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 							SqlField.CreateName (dbColumn.GetSqlName ())
 						)
 					);
-					
+
 					dbTransaction.SqlBuilder.SelectData (query);
 
 					object value = dbInfrastructure.ExecuteScalar (dbTransaction);
@@ -720,7 +720,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				case TableCategory.Relation:
 					return EntitySchemaBuilder.EntityFieldTableColumnIdName;
-					
+
 				default:
 					throw new System.NotImplementedException ();
 			}
@@ -747,7 +747,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		}
 
 
-        public override string ToString()
+		public override string ToString()
 		{
 			string value = "Table : Name = " + this.SqlName;
 

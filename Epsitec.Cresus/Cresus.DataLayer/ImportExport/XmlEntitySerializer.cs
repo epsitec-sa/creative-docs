@@ -17,7 +17,7 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.DataLayer.ImportExport
 {
 
-	
+
 	// TODO Comment this class.
 	// Marc
 
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static IDictionary<T, int> AssignId<T>(IEnumerable<T> items)
 		{
 			IDictionary<T, int> itemsToIds = new Dictionary<T, int> ();
-			
+
 			int id = 0;
 
 			foreach (T item in items)
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				xField.SetAttributeValue (XName.Get (XmlConstants.NameTag), fName);
 				xField.SetAttributeValue (XName.Get (XmlConstants.DefinitionIdTag), fId);
-				xField.SetAttributeValue (XName.Get (XmlConstants.DruidTag), fDruid);	
+				xField.SetAttributeValue (XName.Get (XmlConstants.DruidTag), fDruid);
 
 				xEntity.Add (xField);
 			}
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 			foreach (StructuredTypeField field in dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine.GetFields (entity.GetEntityStructuredTypeId ()))
 			{
-				XElement xField = XmlEntitySerializer.SerializeEntityField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
+				XElement xField = XmlEntitySerializer.SerializeEntityField (discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 
 				if (xField != null)
 				{
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static XElement CreateXElementForEntity(IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> entityDefinitionsToIds, AbstractEntity entity)
 		{
 			Druid entityDruid = entity.GetEntityStructuredTypeId ();
-			
+
 			XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
 
 			string id = InvariantConverter.ConvertToString<int> (entitiesToIds[entity]);
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static XElement SerializeEntityField(ISet<AbstractEntity> discardedEntities, IDictionary<AbstractEntity, int> entitiesToIds, IDictionary<Druid, int> fieldDefinitionsToIds, AbstractEntity entity, StructuredTypeField field)
 		{
 			XElement xField;
-			
+
 			switch (field.Relation)
 			{
 				case FieldRelation.None:
@@ -202,11 +202,11 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					break;
 
 				case FieldRelation.Reference:
-					xField = XmlEntitySerializer.SerializeEntityReferenceField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
+					xField = XmlEntitySerializer.SerializeEntityReferenceField (discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 					break;
 
 				case FieldRelation.Collection:
-					xField = XmlEntitySerializer.SerializeEntityCollectionField(discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
+					xField = XmlEntitySerializer.SerializeEntityCollectionField (discardedEntities, entitiesToIds, fieldDefinitionsToIds, entity, field);
 					break;
 
 				default:
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			//	Detect the special case of an XML BLOB, encoded as a "U"-prefixed string by the
 			//	automatic type converter; since we cannot be sure that the data is indeed valid
 			//	XML, we have no other choice than to try to parse it:
-			
+
 			if ((value != null) &&
 				(value.StartsWith ("U<")) &&
 				(value.EndsWith (">")))
@@ -325,8 +325,8 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 					//	text in the 'value' attribute.
 				}
 			}
-			
-				
+
+
 			xField.SetAttributeValue (XmlConstants.ValueTag, value);
 
 			return xField;
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				string id = InvariantConverter.ConvertToString (entitiesToIds[externalEntity]);
 				string key = dataContext.GetNormalizedEntityKey (externalEntity).Value.ToString ();
 				string name = DbContext.Current.ResourceManager.GetCaption (entityDruid).Name;
-				
+
 				XElement xEntity = new XElement (XName.Get (XmlConstants.EntityTag));
 
 				xEntity.SetAttributeValue (XName.Get (XmlConstants.NameTag), name);

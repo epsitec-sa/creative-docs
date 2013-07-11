@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace Epsitec.Cresus.DataLayer.ImportExport
 {
-	
+
 
 	// TODO Comment this class.
 	// Marc
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			string dbName = ColumnDefinition.ReadXmlDbName (xmlReader);
 			string sqlName = ColumnDefinition.ReadXmlSqlName (xmlReader);
 			DbRawType dbRawType = ColumnDefinition.ReadXmlDbRawType (xmlReader);
-			System.Type adoType = ColumnDefinition.ReadXmlAdoType(xmlReader);
+			System.Type adoType = ColumnDefinition.ReadXmlAdoType (xmlReader);
 			bool isIdColumn = ColumnDefinition.ReadXmlIsIdColumn (xmlReader);
 
 			ColumnDefinition.ReadXmlEnd (xmlReader);
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			{
 				throw new System.FormatException ("Unexpected tag: " + xmlReader.Name + " found but column expected.");
 			}
-			
+
 			string idAsString = xmlReader.GetAttribute ("id");
 			int idAsInt = InvariantConverter.ConvertFromString<int> (idAsString);
 

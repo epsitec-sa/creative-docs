@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 		private static IEnumerable<TableDefinition> GetValueTableDefinitions(EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine)
 		{
-			return from entityType in typeEngine.GetEntityTypes()
+			return from entityType in typeEngine.GetEntityTypes ()
 				   select RawEntitySerializer.GetValueTableDefinition (typeEngine, schemaEngine, entityType);
 		}
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static IEnumerable<TableDefinition> GetCollectionTableDefinitions(EntityTypeEngine typeEngine, EntitySchemaEngine schemaEngine)
 		{
 			return from entityType in typeEngine.GetEntityTypes ()
-				   from field in typeEngine.GetLocalCollectionFields(entityType.CaptionId)
+				   from field in typeEngine.GetLocalCollectionFields (entityType.CaptionId)
 				   select RawEntitySerializer.GetCollectionTableDefinition (schemaEngine, entityType, field);
 		}
 
@@ -84,9 +84,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			DbTable dbTable = schemaEngine.GetEntityTable (entityTypeId);
 
 			IList<DbColumn> idDbColumns = new List<DbColumn> ()
-		    {
-		        dbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName],
-		    };
+			{
+				dbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName],
+			};
 
 			foreach (var field in typeEngine.GetLocalReferenceFields (entityTypeId))
 			{
@@ -111,16 +111,16 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			DbTable dbTable = schemaEngine.GetEntityFieldTable (type.CaptionId, field.CaptionId);
 
 			IList<DbColumn> idDbColumns = new List<DbColumn> ()
-		    {
-		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnIdName],
-		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName],
-		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName],
-		    };
+			{
+				dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnIdName],
+				dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName],
+				dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName],
+			};
 
 			IList<DbColumn> regularDbColumns = new List<DbColumn> ()
-		    {
-		        dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnRankName],
-		    };
+			{
+				dbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnRankName],
+			};
 
 			return RawEntitySerializer.GetTableDefitition (dbTable, TableCategory.Relation, idDbColumns, regularDbColumns);
 		}
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		private static void WriteDefinition(XmlWriter xmlWriter, IList<TableDefinition> tableDefinitions)
 		{
 			xmlWriter.WriteStartElement ("definition");
-			
+
 			for (int i = 0; i < tableDefinitions.Count; i++)
 			{
 				tableDefinitions[i].WriteXmlDefinition (xmlWriter, i);
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 			{
 				RawEntitySerializer.ReadDocumentStart (xmlReader);
 				RawEntitySerializer.ReadHeader (xmlReader);
-				var tableDefinitions = RawEntitySerializer.ReadDefinition(xmlReader);
+				var tableDefinitions = RawEntitySerializer.ReadDefinition (xmlReader);
 				RawEntitySerializer.ReadData (dbInfrastructure, xmlReader, entityModificationEntry, tableDefinitions, importMode);
 				RawEntitySerializer.ReadDocumentEnd (xmlReader);
 			}
@@ -229,9 +229,9 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			xmlReader.ReadStartElement ("header");
 			xmlReader.ReadStartElement ("version");
-			
+
 			string version = xmlReader.ReadString ();
-			
+
 			xmlReader.ReadEndElement ();
 			xmlReader.ReadStartElement ("idShift");
 
@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 
 				while (xmlReader.IsStartElement () && string.Equals (xmlReader.Name, "table"))
 				{
-					TableDefinition tableDefinition = TableDefinition.ReadXmlDefinition(xmlReader, tableDefinitions.Count);
+					TableDefinition tableDefinition = TableDefinition.ReadXmlDefinition (xmlReader, tableDefinitions.Count);
 
 					tableDefinitions.Add (tableDefinition);
 				}
@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 		{
 			bool isEmpty = xmlReader.IsEmptyElement;
 			bool decrementIds = importMode == RawImportMode.DecrementIds;
-			
+
 			xmlReader.ReadStartElement ("data");
 
 			if (!isEmpty)
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.DataLayer.ImportExport
 				RawEntitySerializer.ReadDocumentStart (xmlReader);
 				RawEntitySerializer.ReadHeader (xmlReader);
 
-				var tableDefinitions = RawEntitySerializer.ReadDefinition(xmlReader);
+				var tableDefinitions = RawEntitySerializer.ReadDefinition (xmlReader);
 
 				RawEntitySerializer.CleanTables (dbInfrastructure, importMode, tableDefinitions);
 			}
