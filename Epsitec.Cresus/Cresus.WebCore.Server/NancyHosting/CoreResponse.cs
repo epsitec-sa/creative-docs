@@ -8,8 +8,8 @@ using System.IO;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-	
-	
+
+
 	/// <summary>
 	/// Responses that are sent to the ExtJS client.
 	/// Every response should be one of them, because ExtJS or the global JS
@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				StatusCode = HttpStatusCode.InternalServerError,
 			};
 		}
-		
-		
+
+
 		public static Response Failure()
 		{
 			var content = new Dictionary<string, object> ();
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		public static Response Success()
 		{
 			var content = new Dictionary<string, object> ();
-			
+
 			return CoreResponse.Success (content);
 		}
 

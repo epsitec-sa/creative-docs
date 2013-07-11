@@ -12,8 +12,8 @@ using Nancy.TinyIoc;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-	
-	
+
+
 	/// <summary>
 	/// Called by Nancy when the server is starting
 	/// </summary>
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		
+
 		private void ConfigureCookies(NancyContext context)
 		{
 			// We want that each cookie has the same path

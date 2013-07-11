@@ -8,8 +8,8 @@ using System;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-	
-	
+
+
 	/// <summary>
 	/// Handles the error that have not been caught before and return an error message to the user
 	/// </summary>
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			context.Response = CoreResponse.InternalServerError ();
 
 			string error;
-			
+
 			object exception;
 			object trace;
 
