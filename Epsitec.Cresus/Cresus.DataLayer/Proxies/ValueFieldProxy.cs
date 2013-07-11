@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Proxies
 		}
 
 
-		#region IEntityProxy Members
+		#region IValueProxy Members
 
 
 		/// <summary>
