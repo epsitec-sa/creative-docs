@@ -703,13 +703,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="entity">The <see cref="AbstractEntity"/> to delete.</param>
 		/// <returns><c>true</c> if the entity has been added to the list of pending deletes; otherwise, <c>false</c>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		///   
 		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If this instance is in read only mode.</exception>
-		///   
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		///   
 		/// <exception cref="Epsitec.Common.Types.Exceptions.ReadOnlyException">If <paramref name="entity"/> is in read only mode.</exception>
-		///   
 		/// <exception cref="System.ArgumentException">If <paramref name="entity"/> is managed by another <see cref="DataContext"/>.</exception>
 		/// <remarks>
 		/// Take care with this feature, because it is subtle. It will remove the <see cref="AbstractEntity"/>

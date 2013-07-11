@@ -386,9 +386,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				fields.Add (this.CreateSqlFieldForType (table, leafEntityId));
 
 				SqlFieldList fieldsToReturn = new SqlFieldList ()
-			    {
-			        new SqlField () { Alias = table.Columns[EntitySchemaBuilder.EntityTableColumnIdName].GetSqlName() },
-			    };
+				{
+					new SqlField () { Alias = table.Columns[EntitySchemaBuilder.EntityTableColumnIdName].GetSqlName() },
+				};
 
 				transaction.SqlBuilder.InsertData (tableName, fields, fieldsToReturn);
 				object data = this.DbInfrastructure.ExecuteScalar (transaction);

@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			//
 			// The SQL expression for that is :
 			// ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))
-			//     
+			//
 			// This expression always returns a boolean value because we can reduce it like that :
 			// - If O is not NULL and I is not NULL
 			//   => ((O IS NULL) AND (I IS NULL)) OR ((O IS NOT NULL) AND (I IS NOT NULL) AND (O = I))

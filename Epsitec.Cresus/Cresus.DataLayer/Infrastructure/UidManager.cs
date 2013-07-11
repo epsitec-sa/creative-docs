@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 				DbTable table = new DbTable (this.TableName);
 
-				DbColumn columnId =    new DbColumn (this.ColumnIdName, typeKeyId, DbColumnClass.KeyId, DbElementCat.Internal)
+				DbColumn columnId = new DbColumn (this.ColumnIdName, typeKeyId, DbColumnClass.KeyId, DbElementCat.Internal)
 				{
 					IsAutoIncremented = true
 				};
