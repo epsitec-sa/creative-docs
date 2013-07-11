@@ -5,16 +5,16 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>DataContextEventArgs</c> holds the data that should be provided to an event handler
 	/// when an event in relation to a <see cref="DataContext"/> is fired.
 	/// </summary>
 	public class DataContextEventArgs : EventArgs
 	{
-		
-		
+
+
 		/// <summary>
 		/// Builds a new <c>DataContextEventArgs</c> holding a reference to <paramref name="dataContext"/>.
 		/// </summary>
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// The reference to the <see cref="DataContext"/> targeted by the event.
 		/// </summary>
 		private readonly DataContext dataContext;
-	
-	
+
+
 	}
 
 

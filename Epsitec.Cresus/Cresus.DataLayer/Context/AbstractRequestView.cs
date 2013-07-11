@@ -14,8 +14,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
-	
-	
+
+
 	/// <remarks>
 	/// The <c>RequestView</c> uses its request more than once. In fact it uses it each time
 	/// one of its method is called. The <c>Request</c> used internally is copy of the one given in the

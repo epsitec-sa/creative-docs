@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 	public sealed class DataContextPool : IEnumerable<DataContext>, System.IDisposable
 	{
 		/// <summary>
-		/// Builds a new empty <c>DataContext</c>.
+		/// Builds a new empty <c>DataContextPool</c>.
 		/// </summary>
 		internal DataContextPool()
 		{

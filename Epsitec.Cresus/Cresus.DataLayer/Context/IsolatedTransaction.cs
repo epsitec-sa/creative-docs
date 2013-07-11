@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-		
+
 		private static IDbAbstraction CreateIDbAbstraction(DbInfrastructure dbInfrastructure)
 		{
 			var idbAbstraction = dbInfrastructure.CreateDatabaseAbstraction ();

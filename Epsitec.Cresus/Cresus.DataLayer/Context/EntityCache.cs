@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
-	
+
 
 	/// <summary>
 	/// The <see cref="EntityCache"/> class is used to cache <see cref="AbstractEntity"/> in
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityTypeIdToEntityModificationEntryId = new Dictionary<Druid, long> ();
 			this.entityIdToEntityModificationEntryId = new Dictionary<long, long> ();
 		}
-		
+
 
 		private EntityTypeEngine EntityTypeEngine
 		{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.entityTypeEngine;
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Adds an <see cref="AbstractEntity"/> to this instance.
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void Add(AbstractEntity entity)
 		{
 			entity.ThrowIfNull ("entity");
-			
+
 			long id = entity.GetEntitySerialId ();
 
 			this.entityIdToEntity[id] = entity;
@@ -76,11 +76,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public void Remove(AbstractEntity entity)
 		{
 			entity.ThrowIfNull ("entity");
-			
+
 			long id = entity.GetEntitySerialId ();
 
 			this.entityIdToEntity.Remove (id);
-			
+
 			if (this.entityIdToEntityKey.ContainsKey (id))
 			{
 				EntityKey entityKey = this.entityIdToEntityKey[id];
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public bool ContainsEntity(AbstractEntity entity)
 		{
 			entity.ThrowIfNull ("entity");
-			
+
 			long id = entity.GetEntitySerialId ();
 
 			return this.entityIdToEntity.ContainsKey (id);
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public EntityKey? GetEntityKey(AbstractEntity entity)
 		{
 			entity.ThrowIfNull ("entity");
-			
+
 			long id = entity.GetEntitySerialId ();
 
 			if (this.entityIdToEntityKey.ContainsKey (id))
@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return this.entityTypeIdToEntityModificationEntryId.Keys;
 		}
-		
+
 
 		private readonly EntityTypeEngine entityTypeEngine;
 
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Maps the <see cref="Druid"/> of the entity types known by this instance to their log id.
 		/// </summary>
 		private readonly Dictionary<Druid, long> entityTypeIdToEntityModificationEntryId;
-		
+
 		/// <summary>
 		/// Maps the entity serial ids to their corresponding log sequence number.
 		/// </summary>

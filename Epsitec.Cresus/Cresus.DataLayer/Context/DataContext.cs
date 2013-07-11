@@ -510,7 +510,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			this.entitiesCache.DefineRowKey (entity, key);
 		}
-		
+
 
 		/// <summary>
 		/// Associates a new log id to an entity type id.
@@ -539,7 +539,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entitiesCache.DefineEntityModificationEntryId (entity, logId);
 		}
 
-		
+
 		/// <summary>
 		/// Gets the log id associated to an entity type id.
 		/// </summary>
@@ -611,8 +611,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			if (this.emptyEntities.Add (entity))
 			{
-//-				System.Diagnostics.Debug.WriteLine ("Empty entity registered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
-
 				entity.UpdateDataGeneration ();
 				this.ResaveReferencingFields (entity);
 			}
@@ -642,9 +640,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (this.emptyEntities.Remove (entity))
 			{
 				entity.ThrowIf (e => this.IsPersistent (e), "entity");
-				
-//-				System.Diagnostics.Debug.WriteLine ("Empty entity unregistered : " + entity.DebuggerDisplayValue + " #" + entity.GetEntitySerialId ());
-				
+
 				entity.UpdateDataGeneration ();
 				this.ResaveReferencingFields (entity);
 			}
@@ -678,7 +674,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.UnregisterEmptyEntity (entity);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is registered as an empty one within this
@@ -727,7 +723,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			this.AssertDataContextIsNotDisposed ();
 			this.ThrowIfReadOnly ();
-			
+
 			entity.ThrowIfNull ("entity");
 			entity.AssertIsNotReadOnly ();
 			this.AssertEntityIsNotForeign (entity);
@@ -762,7 +758,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.entitiesDeleted.Contains (entity) || this.entitiesToDelete.Contains (entity);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> managed by this instance.
@@ -981,7 +977,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return this.ResolveEntity (entityKey.Value.EntityId, entityKey.Value.RowKey);
 		}
-		
+
 
 		/// <summary>
 		/// Gets the <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> with a given
@@ -1071,7 +1067,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private bool ReloadOutDatedEntities()
 		{
 			bool modifications = false;
-			
+
 			EntityModificationEntry latestEntityModificationEntry = this.DataInfrastructure.GetLatestEntityModificationEntry ();
 
 			foreach (Druid entityTypeId in this.GetManagedEntityTypeIds ().ToList ())
@@ -1269,11 +1265,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.ThrowIfReadOnly ();
 
 			IEnumerable<AbstractSynchronizationJob> jobs = this.DataSaver.SaveChanges ();
-			
+
 			this.DataContextPool.Synchronize (this, jobs);
 		}
 
-		
+
 		/// <summary>
 		/// Makes this instance isolated. See <see cref="DataContext.IsIsolated"/>.
 		/// </summary>
@@ -1317,7 +1313,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 				// TODO Here we could have a significant performance benefit by executing all the
 				// delete synchronization jobs at once.
-				this.CleanDeletedEntities(deletedEntities, EntityChangedEventSource.Synchronization, EntityChangedEventSource.Synchronization);
+				this.CleanDeletedEntities (deletedEntities, EntityChangedEventSource.Synchronization, EntityChangedEventSource.Synchronization);
 			}
 		}
 
@@ -1352,7 +1348,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Updated);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Applies the modifications described by the given <see cref="ReferenceSynchronizationJob"/>
@@ -1489,7 +1485,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 					foreach (var localSourceEntityType in localSourceEntityTypes)
 					{
 						List<StructuredTypeField> localFields;
-						
+
 						if (fields.TryGetValue (localSourceEntityType, out localFields))
 						{
 							foreach (var field in localFields)
@@ -1637,7 +1633,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		#endregion
 
-		
+
 		/// <summary>
 		/// Release all the resources kept by this instance.
 		/// </summary>
@@ -1682,8 +1678,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 			{
 				throw new System.ArgumentException ("entity is managed by another DataContext.");
 			}
-		}		
-		
+		}
+
 
 		/// <summary>
 		/// Tells whether an <see cref="AbstractEntity"/> is managed by another
@@ -1752,7 +1748,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 					long  keyId;
 
 					if ((entityId.IsValid) &&
-					(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
+						(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
 					{
 						key = new DbKey (keyId);
 					}
@@ -1870,7 +1866,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				entity.DefineLockFunctions (this.LockRead, this.LockWrite);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Adds the given <see cref="AbstractEntity"/> to the cache of this instance.

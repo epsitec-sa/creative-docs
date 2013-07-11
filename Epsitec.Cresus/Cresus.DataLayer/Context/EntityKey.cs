@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityId = entity.GetEntityStructuredTypeId ();
 			this.rowKey = rowKey;
 		}
-		
+
 
 		/// <summary>
 		/// Gets the <see cref="DbKey"/> of the <see cref="AbstractEntity"/> in the database.
@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Gets the <see cref="Druid"/> that represents the type of the <see cref="AbstractEntity"/>.
 		/// </summary>
@@ -69,6 +70,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
+
 		/// <summary>
 		/// Tells whether this <see cref="EntityKey"/> is empty.
 		/// </summary>
@@ -80,6 +82,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 				return this.RowKey.IsEmpty || this.EntityId.IsEmpty;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets a value indicating whether this entity defines template data. All template
@@ -103,10 +106,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 				}
 			}
 		}
-		
+
 
 		#region IEquatable<EntityKey> Members
-		
+
 		/// <summary>
 		/// Tells whether this <see cref="EntityKey"/> is equal to another.
 		/// </summary>
@@ -116,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return (this.rowKey == that.RowKey) && (this.entityId == that.EntityId);
 		}
-		
+
 		#endregion
 
 
@@ -129,7 +132,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return (that is EntityKey) && this.Equals ((EntityKey) that);
 		}
-		
+
+
 		/// <summary>
 		/// Computes the hash code of this instance.
 		/// </summary>
@@ -138,6 +142,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
 		}
+
 
 		/// <summary>
 		/// Returns a <c>string</c> that represents this instance. Use <see cref="Parse"/>
@@ -180,7 +185,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return new EntityKey (Druid.Parse (entityIdValue), new DbKey (DbId.Parse (rowKeyValue)));
 		}
-		
+
+
 		/// <summary>
 		/// Tells whether two <see cref="EntityKey"/> are equal.
 		/// </summary>
@@ -192,6 +198,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return a.Equals (b);
 		}
 
+
 		/// <summary>
 		/// Tells whether two <see cref="EntityKey"/> are different.
 		/// </summary>
@@ -202,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return !a.Equals (b);
 		}
-		
+
 
 		/// <summary>
 		/// Gets the normalized version of this instance. Normalized means that if this instance
@@ -220,7 +227,8 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			return new EntityKey (rootEntityId, this.rowKey);
 		}
-		
+
+
 		/// <summary>
 		/// Creates a normalized <c>EntityKey</c>.
 		/// </summary>
@@ -234,12 +242,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return new EntityKey (entityId, rowKey).GetNormalizedEntityKey (entityTypeEngine);
 		}
 
-		
+
 		/// <summary>
 		/// An instance of the empty <see cref="EntityKey"/>.
 		/// </summary>
 		public static readonly EntityKey		Empty = new EntityKey ();
-		
+
 
 		/// <summary>
 		/// The <see cref="DbKey"/> which tells the id of the <see cref="AbstractEntity"/> represented
