@@ -190,18 +190,22 @@ namespace Epsitec.Aider.Data.Normalization
 		{
 			var sb = new StringBuilder ();
 
-			var multipleMatches = done
+			var reversedDone = done
 				.Select (m => Tuple.Create (m.Value, m.Key))
 				.Where (t => t.Item1 != null)
 				.GroupBy (t => t.Item1)
 				.ToDictionary (g => g.Key, g => g.Select (t => t.Item2).ToList ());
+
+			var multipleMatches = reversedDone
+				.Where (m => m.Value.Count > 1)
+				.ToList ();
 
 			sb.AppendLine ("================================================================");
 
 			var format = "Number of DB persons with multiple match in file: {0}";
 			sb.AppendLine (string.Format (format, multipleMatches.Count));
 
-			foreach (var match in multipleMatches.Where (m => m.Value.Count > 1))
+			foreach (var match in multipleMatches)
 			{
 				sb.AppendLine ("---------------------------------------------------------------");
 				sb.AppendLine ("DB:   " + match.Key.ToString ());
