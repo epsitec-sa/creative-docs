@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			checker.CheckInternalEntityField (this.Entity, this.Name);
 		}
-		
-		
+
+
 		/// <summary>
 		/// Creates a new InternalField instance that will target the id field of the given entity.
 		/// </summary>

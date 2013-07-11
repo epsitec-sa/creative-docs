@@ -32,8 +32,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			this.Value = value;
 		}
-		
-		
+
+
 		/// <summary>
 		/// The value of the <c>Constant</c>.
 		/// </summary>

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		public ReferenceField(AbstractEntity entity, Druid fieldId)
 			: base (entity, fieldId)
-		{		
+		{
 		}
 
 
@@ -41,8 +41,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			return new ReferenceField (entity, EntityInfo.GetFieldDruid (expression));
 		}
-	
-	
+
+
 	}
 
 

@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			var entityType = entity.GetType ();
 			var parameterType = lambda.Parameters[0].Type;
 
-			if (!parameterType.IsSubclassOf (typeof(AbstractEntity)))
+			if (!parameterType.IsSubclassOf (typeof (AbstractEntity)))
 			{
 				var message = "Wrong type for lambda parameter";
 
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				throw new NotSupportedException ();
 			}
-			
+
 			return this.PushAndReturn (node, result);
 		}
 
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				return this.ConvertBinaryOperation (left, nodeType, right);
 			}
-			
+
 			throw new NotSupportedException ();
 		}
 
@@ -424,19 +424,19 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				case ExpressionType.Equal:
 					return BinaryComparator.IsEqual;
-					
+
 				case ExpressionType.NotEqual:
 					return BinaryComparator.IsNotEqual;
-					
+
 				case ExpressionType.GreaterThan:
 					return BinaryComparator.IsGreater;
-					
+
 				case ExpressionType.GreaterThanOrEqual:
 					return BinaryComparator.IsGreaterOrEqual;
-					
+
 				case ExpressionType.LessThan:
 					return BinaryComparator.IsLower;
-					
+
 				case ExpressionType.LessThanOrEqual:
 					return BinaryComparator.IsLowerOrEqual;
 
@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					new UnaryComparison (entityField, UnaryComparator.IsNull)
 				);
 			}
-			
+
 			return expression;
 		}
 
@@ -675,7 +675,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			else
 			{
 				var constant = new Constant (value);
-				
+
 				return new BinaryComparison (valueField, BinaryComparator.IsEqual, constant);
 			}
 		}
@@ -807,7 +807,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		protected override Expression VisitConstant(ConstantExpression node)
 		{
 			object value = node.Value;
-			
+
 			object result;
 
 			// If we have an entity at this point, we must get its row key and use that as a

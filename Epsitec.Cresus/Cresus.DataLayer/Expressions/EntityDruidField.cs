@@ -14,16 +14,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>EntityDruidField</c> class represents a field of an <see cref="AbstractEntity"/> in an
 	/// <see cref="DataExpression"/> that is referenced by a Druid.
 	/// </summary>
 	public abstract class EntityDruidField : EntityField
 	{
-		
-		
+
+
 		/// <summary>
 		/// Creates a new <c>EntityDruidField</c>.
 		/// </summary>

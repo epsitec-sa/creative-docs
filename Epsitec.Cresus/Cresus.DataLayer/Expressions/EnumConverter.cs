@@ -3,8 +3,8 @@
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>EnumConverter</c> class provides the tools required to convert between enumerations
 	/// defined in this layer and enumerations defined in the lower layers.

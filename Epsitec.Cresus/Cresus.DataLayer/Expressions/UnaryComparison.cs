@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
-	
+
 
 	/// <summary>
 	/// The <c>UnaryComparison</c> class represents a predicate on a single <see cref="Field"/> such
@@ -26,10 +26,11 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <param name="field">The field on which to apply the <see cref="UnaryComparator"/>.</param>
 		/// <param name="op">The predicate to apply on the <see cref="EntityField"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="field"/> is null.</exception>
-		public UnaryComparison(EntityField field, UnaryComparator op) : base()
+		public UnaryComparison(EntityField field, UnaryComparator op)
+			: base ()
 		{
 			field.ThrowIfNull ("field");
-			
+
 			this.Operator = op;
 			this.Field = field;
 		}

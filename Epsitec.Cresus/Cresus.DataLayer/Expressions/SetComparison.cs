@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		public SetComparison(EntityField field, SetComparator comparator)
 		{
 			field.ThrowIfNull ("field");
-			
+
 			this.Field = field;
 			this.Comparator = comparator;
 		}

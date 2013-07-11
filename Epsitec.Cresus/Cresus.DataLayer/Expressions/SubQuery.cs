@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
-	
+
 	public sealed class SubQuery : Value
 	{
 

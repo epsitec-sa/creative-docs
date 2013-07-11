@@ -10,8 +10,8 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>SortClause</c> class defines a part of an ordering for the result of requests.
 	/// </summary>

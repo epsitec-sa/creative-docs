@@ -14,7 +14,7 @@ using System.Linq;
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
 
-	
+
 	public sealed class SubQuerySetComparison : SetComparison
 	{
 

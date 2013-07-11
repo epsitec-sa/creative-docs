@@ -9,7 +9,7 @@
 	public enum BinaryComparator
 	{
 
-		
+
 		/// <summary>
 		/// The arithmetic equality comparison.
 		/// </summary>
@@ -21,25 +21,25 @@
 		/// </summary>
 		IsNotEqual,
 
-		
+
 		/// <summary>
 		/// The arithmetic lower comparison.
 		/// </summary>
 		IsLower,
 
-		
+
 		/// <summary>
 		/// The arithmetic lower or equal comparison.
 		/// </summary>
 		IsLowerOrEqual,
 
-		
+
 		/// <summary>
 		/// The arithmetic greater comparison.
 		/// </summary>
 		IsGreater,
-		
-	
+
+
 		/// <summary>
 		/// The arithmetic greater or equal comparison.
 		/// </summary>

@@ -8,7 +8,7 @@
 	/// </summary>
 	public abstract class Comparison : DataExpression
 	{
-		
+
 
 	}
 

@@ -11,16 +11,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
-	
-	
+
+
 	/// <summary>
 	/// The <c>EntityField</c> class represents a field of an <see cref="AbstractEntity"/> in an
 	/// <see cref="DataExpression"/>.
 	/// </summary>
 	public abstract class EntityField : Value
 	{
-		
-		
+
+
 		/// <summary>
 		/// Creates a new <c>EntityField</c>.
 		/// </summary>
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			entities.Add (this.entity);
 		}
 
-		
+
 		private readonly AbstractEntity entity;
 
 

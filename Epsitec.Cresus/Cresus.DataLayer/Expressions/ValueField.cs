@@ -38,8 +38,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			return new ValueField (entity, EntityInfo.GetFieldDruid (expression));
 		}
-	
-	
+
+
 	}
 
 

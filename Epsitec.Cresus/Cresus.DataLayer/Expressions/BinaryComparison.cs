@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			left.ThrowIfNull ("left");
 			right.ThrowIfNull ("right");
-			
+
 			this.Left = left;
 			this.Operator = op;
 			this.Right = right;
