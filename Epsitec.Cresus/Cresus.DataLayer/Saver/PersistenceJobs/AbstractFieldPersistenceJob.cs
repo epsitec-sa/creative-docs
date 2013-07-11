@@ -5,7 +5,8 @@ using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 {
-	
+
+
 	/// <summary>
 	/// The <c>AbstractFieldPersistenceJob</c> class is the base class for the description of all
 	/// the modification that have been made to the fields of an <see cref="AbstractEntity"/> and
@@ -23,10 +24,11 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		/// <param name="jobType">The job type of the <c>AbstractFieldPersistenceJob</c>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="localEntityId"/> is empty.</exception>
-		protected AbstractFieldPersistenceJob(AbstractEntity entity, Druid localEntityId, PersistenceJobType jobType) : base (entity)
+		protected AbstractFieldPersistenceJob(AbstractEntity entity, Druid localEntityId, PersistenceJobType jobType)
+			: base (entity)
 		{
 			localEntityId.ThrowIf (l => l.IsEmpty, "localEntityId cannot be null.");
-			
+
 			this.LocalEntityId = localEntityId;
 			this.JobType = jobType;
 		}

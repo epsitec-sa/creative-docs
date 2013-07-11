@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		private IEnumerable<AbstractPersistenceJob> CreateInsertionValueJobs(AbstractEntity entity)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			
+
 			return from localEntityType in this.TypeEngine.GetBaseTypes (leafEntityId)
 				   let localEntityId = localEntityType.CaptionId
 				   select this.CreateInsertionValueJob (entity, localEntityId);
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The <see cref="AbstractPersistenceJob"/>.</returns>
 		private AbstractPersistenceJob CreateInsertionValueJob(AbstractEntity entity, Druid localEntityId)
 		{
-			var fieldIds = from field in this.TypeEngine.GetLocalValueFields(localEntityId)
+			var fieldIds = from field in this.TypeEngine.GetLocalValueFields (localEntityId)
 						   select field.CaptionId;
 
 			return this.CreateValueJob (entity, localEntityId, fieldIds, PersistenceJobType.Insert);
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractPersistenceJob job = null;
 
 			List<Druid> fieldIds = new List<Druid> (
-				from field in this.TypeEngine.GetLocalValueFields(localEntityId)
+				from field in this.TypeEngine.GetLocalValueFields (localEntityId)
 				let fieldId = field.CaptionId
 				where entity.HasValueChanged (fieldId)
 				select fieldId
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			AbstractPersistenceJob job = null;
 
 			var fieldIds = new List<Druid> (
-				from field in this.TypeEngine.GetLocalReferenceFields(localEntityId)
+				from field in this.TypeEngine.GetLocalReferenceFields (localEntityId)
 				let fieldId = field.CaptionId
 				let target = entity.GetField<AbstractEntity> (fieldId.ToResourceId ())
 				where this.DataContext.DataSaver.CheckIfEntityCanBeSaved (target)
@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			return job;
 		}
 
-		
+
 		/// <summary>
 		/// Creates the appropriate <see cref="AbstractPersistenceJob"/> that must be used to insert
 		/// or update the given fields of the given <see cref="AbstractEntity"/> in the database.
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			return from field in this.TypeEngine.GetCollectionFields(leafEntityId)
+			return from field in this.TypeEngine.GetCollectionFields (leafEntityId)
 				   select this.CreateInsertionCollectionJob (entity, field.CaptionId);
 		}
 
@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
-			return from field in this.TypeEngine.GetCollectionFields(leafEntityId)
+			return from field in this.TypeEngine.GetCollectionFields (leafEntityId)
 				   let fieldId = field.CaptionId
 				   where entity.HasCollectionChanged (fieldId)
 					  || this.DataContext.DataSaver.CheckIfFieldMustBeResaved (entity, fieldId)

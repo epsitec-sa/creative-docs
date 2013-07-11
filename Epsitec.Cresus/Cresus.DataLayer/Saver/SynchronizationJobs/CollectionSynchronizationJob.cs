@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		public override void Synchronize(DataContext dataContext)
 		{
 			dataContext.ThrowIfNull ("dataContext");
-			
+
 			dataContext.Synchronize (this);
 		}
 

@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 		protected AbstractSynchronizationJob(long dataContextId, EntityKey entityKey)
 		{
 			entityKey.ThrowIf (k => k.IsEmpty, "entityKey cannot be empty");
-			
+
 			this.DataContextId = dataContextId;
 			this.EntityKey = entityKey;
 		}
-		
+
 
 		/// <summary>
 		/// Gets the unique id of the <see cref="DataContext"/> that created this instance.

@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> concerned by the <c>DeletePersistenceJob</c>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is <c>null</c>.</exception>
-		public DeletePersistenceJob(AbstractEntity entity) : base (entity)
+		public DeletePersistenceJob(AbstractEntity entity)
+			: base (entity)
 		{
 		}
 

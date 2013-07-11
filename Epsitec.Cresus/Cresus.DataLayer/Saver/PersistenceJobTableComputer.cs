@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				foreach (var field in item.Value)
 				{
 					Druid fieldId = field.CaptionId;
-					
+
 					switch (field.Relation)
 					{
 						case FieldRelation.Reference:

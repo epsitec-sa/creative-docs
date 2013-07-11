@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 	/// </summary>
 	internal class ValueSynchronizationJob : AbstractFieldSynchronizationJob
 	{
-		
+
 
 		/// <summary>
 		/// Creates a new <c>ValueSynchronizationJob</c>.

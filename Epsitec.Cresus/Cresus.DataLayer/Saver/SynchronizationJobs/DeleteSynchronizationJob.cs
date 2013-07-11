@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 	/// </summary>
 	internal class DeleteSynchronizationJob : AbstractSynchronizationJob
 	{
-		
+
 
 		/// <summary>
 		/// Creates a new <c>DeleteSynchronizationJob</c>.

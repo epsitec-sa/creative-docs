@@ -32,8 +32,8 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 
 			this.Entity = entity;
 		}
-		
-		
+
+
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> concerned by this instance.
 		/// </summary>
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 		/// <returns>The sequence of <see cref="DbTable"/> affected by this instance.</returns>
 		public abstract IEnumerable<DbTable> GetAffectedTables(PersistenceJobTableComputer tableComputer);
 
-		
+
 	}
 
 

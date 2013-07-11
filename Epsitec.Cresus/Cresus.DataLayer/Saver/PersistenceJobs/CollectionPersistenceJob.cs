@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.PersistenceJobs
 			private set;
 		}
 
-		
+
 		/// <summary>
 		/// The new targets of the field that has been modified.
 		/// </summary>

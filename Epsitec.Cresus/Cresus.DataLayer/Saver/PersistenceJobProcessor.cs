@@ -133,10 +133,17 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				this.ProcessJob (transaction, entityModificationEntry, deleteJob);
 			}
 
+			// First we execute the root value jobs, as they are the one that will create the
+			// entity keys for the new entities with the autoincrement on the CR_ID column.
+
 			foreach (var rootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => j.IsRootTypeJob))
 			{
 				this.ProcessJob (transaction, newEntityKeys, entityModificationEntry, rootValueJob);
 			}
+
+			// Now we can use the id of the new entities in the other jobs, such as the jobs that
+			// insert row in the subtype tables or in the reference and collection jobs that might
+			// also target these entities.
 
 			foreach (var subRootValueJob in jobsCopy.OfType<ValuePersistenceJob> ().Where (j => !j.IsRootTypeJob))
 			{

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 	internal abstract class AbstractFieldSynchronizationJob : AbstractSynchronizationJob
 	{
 
-		
+
 		/// <summary>
 		/// Creates a new <c>AbstractFieldSynchronizationJob</c>.
 		/// </summary>
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer.Saver.SynchronizationJobs
 			: base (dataContextId, entityKey)
 		{
 			fieldId.ThrowIf (f => f.IsEmpty, "fieldId cannot be empty");
-			
+
 			this.FieldId = fieldId;
 		}
 
