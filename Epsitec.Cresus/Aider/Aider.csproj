@@ -129,6 +129,7 @@
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
     <Compile Include="Enumerations\ContactType.cs" />
+    <Compile Include="Enumerations\EnumUtils.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
     <Compile Include="Enumerations\SubscriptionType.cs" />

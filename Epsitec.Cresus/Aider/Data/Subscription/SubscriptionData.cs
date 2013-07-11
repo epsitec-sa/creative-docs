@@ -118,23 +118,6 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		public static PersonSex GuessSex(string title)
-		{
-			switch (TextParser.ParsePersonMrMrs (title))
-			{
-				case PersonMrMrs.Madame:
-				case PersonMrMrs.Mademoiselle:
-					return PersonSex.Female;
-
-				case PersonMrMrs.Monsieur:
-					return PersonSex.Male;
-
-				default:
-					return PersonSex.Unknown;
-			}
-		}
-
-
 		public readonly string CorporateName;
 		public readonly string Title;
 		public readonly string Firstname;

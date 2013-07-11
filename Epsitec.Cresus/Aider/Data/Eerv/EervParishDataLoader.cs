@@ -559,6 +559,11 @@ namespace Epsitec.Aider.Data.Eerv
 			var confession = EervParishDataLoader.ParseConfession (rawConfession);
 			var remarks = record[PersonHeader.RemarksPerson];
 
+			if (sex == PersonSex.Unknown)
+			{
+				sex = EnumUtils.GuessSex (honorific);
+			}
+
 			var father = record[PersonHeader.Father];
 			var mother = record[PersonHeader.Mother];
 			var placeOfBirth = record[PersonHeader.PlaceOfBirth];

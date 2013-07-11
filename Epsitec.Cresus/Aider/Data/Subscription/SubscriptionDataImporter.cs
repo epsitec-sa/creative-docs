@@ -285,7 +285,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 				var title = subscription.GetPersonTitle (i);
 				person.MrMrs = TextParser.ParsePersonMrMrs (title);
-				eChPerson.PersonSex = SubscriptionData.GuessSex (title);
+				eChPerson.PersonSex = EnumUtils.GuessSex (title);
 
 				eChPerson.DataSource = Enumerations.DataSource.Undefined;
 				eChPerson.DeclarationStatus = PersonDeclarationStatus.NotDeclared;

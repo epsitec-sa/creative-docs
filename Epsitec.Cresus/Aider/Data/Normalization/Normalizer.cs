@@ -157,7 +157,7 @@ namespace Epsitec.Aider.Data.Normalization
 
 				var firstnames = Normalizer.NormalizeComposedName (firstname);
 				var lastnames = Normalizer.NormalizeComposedName (lastname);
-				var sex = SubscriptionData.GuessSex (title);
+				var sex = EnumUtils.GuessSex (title);
 
 				var normalizedPerson = new NormalizedPerson ()
 				{
