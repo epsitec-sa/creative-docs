@@ -11,8 +11,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-	
-	
+
+
 	/// <summary>
 	/// Called from the login page to check if the user can access the application
 	/// </summary>
@@ -45,13 +45,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			else
 			{
 				this.SessionLogout ();
-				
+
 				var errors = new Dictionary<string, object> ()
 				{
 					{ "username" , Res.Strings.IncorrectUsername.ToSimpleText () },
 					{ "password" , Res.Strings.IncorrectPassword.ToSimpleText () },
 				};
-				
+
 				return CoreResponse.FormFailure (errors);
 			}
 		}
@@ -76,14 +76,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.Session[LoginModule.UserName]     = userName;
 			this.Session[LoginModule.SessionId]    = LoginModule.CreateSessionId ();
 		}
-		
+
 		private void SessionLogout()
 		{
 			this.Session.Delete (LoginModule.UserName);
 			this.Session.Delete (LoginModule.SessionId);
 			this.Session[LoginModule.LoggedInName] = false;
 		}
-		
+
 		private bool CheckCredentials(string userName, string password)
 		{
 			return this.CoreServer.AuthenticationManager.CheckCredentials (userName, password);
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return (string) module.Session[LoginModule.UserName];
 		}
 
-		
+
 		public static string GetSessionId(NancyModule module)
 		{
 			return (string) module.Session[LoginModule.SessionId];

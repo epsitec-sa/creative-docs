@@ -135,10 +135,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// <returns>The result of the execution of the function.</returns>
 		private T Execute<T>(Func<WorkerApp, T> function)
 		{
-			using (this.safeSectionManager.Create())
+			using (this.safeSectionManager.Create ())
 			{
 				var value = default (T);
-				
+
 				this.workerThread.ExecuteSynchronously (() => value = function (this.workerApp));
 
 				return value;

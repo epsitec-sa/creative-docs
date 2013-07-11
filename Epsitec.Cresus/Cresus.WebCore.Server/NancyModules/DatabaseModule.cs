@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var userManager = workerApp.UserManager;
 			var commandId = DataIO.ParseDruid ((string) parameters.name);
 
-			var database = this.CoreServer.DatabaseManager.GetDatabase (userManager, commandId);		
+			var database = this.CoreServer.DatabaseManager.GetDatabase (userManager, commandId);
 			var content = database.GetDataDictionary (this.CoreServer.Caches);
 
 			return CoreResponse.Success (content);
@@ -103,8 +103,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var menuItems = database.MenuItems
 				.OfType<SummaryNavigationContextualMenuItem> ()
 				.ToList ();
-			
-			var columnExpressions = columns.Select(c => c.LambdaExpression);
+
+			var columnExpressions = columns.Select (c => c.LambdaExpression);
 			var menuItemsExpressions = menuItems.Select (m => m.LambdaExpression);
 			var expressions = columnExpressions.Concat (menuItemsExpressions);
 
@@ -206,14 +206,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		)
 		{
 			string rawColumns = query.columns;
-			
+
 			var metaData = extractor.Metadata;
 			var accessor = extractor.Accessor;
 
 			var properties = caches.PropertyAccessorCache;
 			var format = new CsvArrayFormat ();
 			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
-			
+
 			return new ArrayWriter (properties, metaData, columns, accessor, format);
 		}
 

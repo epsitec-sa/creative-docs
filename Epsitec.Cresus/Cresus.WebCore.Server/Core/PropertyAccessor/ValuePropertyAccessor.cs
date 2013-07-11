@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				value = this.ConvertFromUI (value);
 			}
-			
+
 			base.SetValue (entity, value);
 		}
 

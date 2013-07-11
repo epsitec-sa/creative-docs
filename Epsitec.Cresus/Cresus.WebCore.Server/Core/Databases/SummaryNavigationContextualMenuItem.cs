@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			return caches.ColumnIdCache.GetId (this.ColumnName);
 		}
 
+
 		public object GetEntityId(DataContext dataContext, Caches caches, AbstractEntity entity)
 		{
 			var propertyAccessor = caches.PropertyAccessorCache.Get (this.LambdaExpression);

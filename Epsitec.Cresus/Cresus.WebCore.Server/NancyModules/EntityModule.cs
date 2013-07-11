@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var valueType = propertyAccessor.Type;
 				var value = (DynamicDictionaryValue) form[propertyAccessorId];
 				var fieldType = propertyAccessor.FieldType;
-				
+
 				var convertedValue = FieldIO.ConvertFromClient (businessContext, value, valueType, fieldType);
 
 				yield return Tuple.Create (propertyAccessor, convertedValue);
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				var index = int.Parse (name.Substring (2));
 				var argumentType = argumentTypes[index];
-		
+
 				var convertedValue = FieldIO.ConvertFromClient (businessContext, value, argumentType);
 
 				arguments[index] = convertedValue;

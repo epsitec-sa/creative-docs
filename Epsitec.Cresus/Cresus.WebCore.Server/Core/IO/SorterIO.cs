@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 				if (data.Length == 2)
 				{
-					var column = ColumnIO.ParseColumn(caches, database, data[0]);
+					var column = ColumnIO.ParseColumn (caches, database, data[0]);
 					var columnId = column.MetaData.Id;
 
 					var entityColumnSort = new EntityColumnSort ()

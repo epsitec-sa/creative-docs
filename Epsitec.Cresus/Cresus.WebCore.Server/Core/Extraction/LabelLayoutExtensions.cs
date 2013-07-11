@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 						LabelSize = new Size (2100, 1480),
 						LabelMargins = new Margins (0, 0, 0, 0),
 					};
-					
+
 					break;
-				
+
 				default:
 					throw new System.NotImplementedException ();
 			}
@@ -86,10 +86,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			{
 				case LabelLayout.Avery_3475:
 					return new LabelRenderer ();
-				
+
 				case LabelLayout.Sheet_A5_Simple:
 					return new LabelRendererSheetA5 (); //.DefineLogo (@"S:\eerv.png", new Size (2100, 1480));
-				
+
 				case LabelLayout.Sheet_A5_SimplePP:
 				case LabelLayout.Sheet_A5_SimplePPPriority:
 					return new LabelRendererSheetA5

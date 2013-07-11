@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			string rawEntityId = parameters.entityId;
 			string rawViewId = parameters.viewId;
-			
+
 			var entity = EntityIO.ResolveEntity (businessContext, rawEntityId);
 			var viewId = DataIO.ParseViewId (rawViewId);
 			var viewMode = ViewControllerMode.Set;

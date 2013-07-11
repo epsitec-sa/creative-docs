@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 	internal sealed class LabelWriter : EntityWriter
 	{
-		public LabelWriter (DataSetMetadata metadata, DataSetAccessor accessor, LabelTextFactory textFactory, LabelLayout layout)
+		public LabelWriter(DataSetMetadata metadata, DataSetAccessor accessor, LabelTextFactory textFactory, LabelLayout layout)
 			: base (metadata, accessor)
 		{
 			this.textFactory = textFactory;

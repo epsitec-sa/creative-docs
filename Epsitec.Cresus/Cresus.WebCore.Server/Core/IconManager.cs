@@ -13,8 +13,8 @@ using System.IO;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-	
-	
+
+
 	/// <summary>
 	/// Used to write every available *.icon into their PNG equivalent so that they are available
 	/// through the web server.
@@ -152,9 +152,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
 			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFileNamePattern, name.Replace ('.', '/'), size);
-			
+
 			IconManager.EnsureDirectoryStructureExists (path);
-			
+
 			return path;
 		}
 

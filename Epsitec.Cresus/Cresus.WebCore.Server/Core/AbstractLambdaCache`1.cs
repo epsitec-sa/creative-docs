@@ -3,8 +3,8 @@
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
-	
-	
+
+
 	internal abstract class AbstractLambdaCache<T> : ItemCache<LambdaExpression, string, T, string, T>
 	{
 

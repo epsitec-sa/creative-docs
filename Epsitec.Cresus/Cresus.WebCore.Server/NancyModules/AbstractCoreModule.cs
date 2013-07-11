@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		protected AbstractCoreModule(CoreServer coreServer)
 			: base ()
 		{
-			this.coreServer = coreServer;			
+			this.coreServer = coreServer;
 		}
 
 

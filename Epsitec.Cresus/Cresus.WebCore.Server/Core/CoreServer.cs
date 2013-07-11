@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 				return this.coreWorkerPool;
 			}
 		}
-		
+
 		public AuthenticationManager			AuthenticationManager
 		{
 			get

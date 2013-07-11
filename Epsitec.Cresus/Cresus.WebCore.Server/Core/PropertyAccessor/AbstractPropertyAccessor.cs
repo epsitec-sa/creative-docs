@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 		private readonly Delegate setter;
 
-	
+
 	}
 
 

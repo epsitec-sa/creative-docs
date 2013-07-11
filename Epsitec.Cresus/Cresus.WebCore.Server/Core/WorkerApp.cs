@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			}
 		}
 
-		
+
 		public T Execute<T>(Func<UserManager, T> action)
 		{
 			return this.Execute (() => action (this.userManager));

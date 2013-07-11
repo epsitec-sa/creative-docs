@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetScopeList(WorkerApp workerApp)
 		{
 			var session = workerApp.UserManager.ActiveSession;
-			
+
 			var scopes = session.GetAvailableUserScopes ()
 				.Select (s => this.GetScopeData (s))
 				.ToList ();

@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		private static string GetBackupFileName()
 		{
 			var database = CoreContext.DatabaseName;
-			
+
 			var time   = DateTime.Now;
 			var year   = time.Year;
 			var month  = time.Month;
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		private readonly DirectoryInfo backupDirectory;
 
-		
+
 		private readonly DbAccess dbAccess;
 
 

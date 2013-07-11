@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
 			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
-			
+
 			var databaseId = favorites.DatabaseId;
 
 			Action<DataContext, DataLayer.Loader.Request, AbstractEntity> customizer = (d, r, e) =>

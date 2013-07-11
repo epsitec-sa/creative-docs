@@ -46,12 +46,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			var dataSets = this.dataStore.DataSets;
 
-			var globalDataSets = dataSets.Where (x => this.IsGlobalDataSet(x));
+			var globalDataSets = dataSets.Where (x => this.IsGlobalDataSet (x));
 			var userDataSets = dataSets.Where (x => this.IsUserDataSet (x, roles));
 
 			return globalDataSets.Concat (userDataSets);
 		}
-		
+
 
 		private bool IsGlobalDataSet(DataSetMetadata dataSet)
 		{
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		}
 
 
-		private IEnumerable<AbstractMenuItem > GetSecondaryDatabases(IEnumerable<DataSetMetadata> dataSets)
+		private IEnumerable<AbstractMenuItem> GetSecondaryDatabases(IEnumerable<DataSetMetadata> dataSets)
 		{
 			return dataSets
 				.Where (d => !d.DisplayGroupId.IsEmpty)
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			var enableDelete = dataSet.EnableDelete;
 			var creationViewId = dataSet.CreationViewId;
 			var deletionViewId = dataSet.DeletionViewId;
-			
+
 			return new Database
 			(
 				dataSet, columns, sorters, menuItems, labelExportItems, enableCreate,

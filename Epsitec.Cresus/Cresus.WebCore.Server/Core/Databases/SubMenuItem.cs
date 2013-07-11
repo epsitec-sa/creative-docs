@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 		private readonly List<AbstractMenuItem> items;
 
-	
+
 	}
 
 

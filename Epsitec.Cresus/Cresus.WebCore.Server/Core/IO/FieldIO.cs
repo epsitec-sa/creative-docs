@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				return Constants.KeyForNullValue;
 			}
-			
+
 			var intValue = EnumType.ConvertToInt ((Enum) value);
 
 			return InvariantConverter.ToString (intValue);
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				return null;
 			}
-			
+
 			if (value is FormattedText)
 			{
 				var formattedText = (FormattedText) value;
@@ -241,12 +241,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return FieldIO.ConvertEntityToClient (dataContext, entity);
 		}
 
-		
+
 		private static object ConvertEntityToClient(DataContext dataContext, AbstractEntity entity)
 		{
 			string id;
 			string summary;
-			
+
 			if (entity.IsNull ())
 			{
 				id = Constants.KeyForNullValue;
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				return null;
 			}
-			
+
 			return val;
 		}
 
@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		private static object ConvertIntegerFromClient(DynamicDictionaryValue value, Type valueType)
 		{
 			var val = FieldIO.ConvertFromNancyValue (value, v => (long) v);
-			
+
 			if (val == null)
 			{
 				return null;
