@@ -44,6 +44,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		public static DataExpression Convert(DataContext dataContext, string entityName, AbstractEntity entity, Expression expression)
 		{
+			// We start by computing what can be in the given expression. This will ensure that
+			// all things that are not strictly relevant to build the DataExpression is out of the
+			// way, like method calls, access to object fields and properties, etc. After this
+			// call, they will be replaced by the constant they evaluate to.
 			var computedExpression = LambdaComputer.Compute (expression, LambdaConverter.IsExpressionComputable);
 
 			var entities = new Dictionary<string, AbstractEntity> ()
@@ -51,9 +55,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 				{ entityName, entity }
 			};
 			var converter = new LambdaConverter (dataContext, entities);
-			var dataExpression = converter.Convert (computedExpression);
 
-			return dataExpression;
+			return converter.Convert (computedExpression);
 		}
 
 
@@ -1006,9 +1009,19 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		private readonly DataContext dataContext;
 
 
+		/// <summary>
+		/// This is a mapping from the lambda parameter names to the entities they match. We use it
+		/// to get the entitiy when we encounter an parameter on the right side of a lambda
+		/// expression.
+		/// </summary>
 		private readonly Dictionary<string, AbstractEntity> entities;
 
 
+		/// <summary>
+		/// As usual with the ExpressionVisitor, it is a little bit ankward to return values of
+		/// another type than Expressions. So, instead of our function having regular return
+		/// values, we put the return values on this stack of results.
+		/// </summary>
 		private readonly Stack<object> results;
 
 
