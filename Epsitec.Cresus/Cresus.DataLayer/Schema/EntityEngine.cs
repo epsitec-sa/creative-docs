@@ -14,12 +14,12 @@ namespace Epsitec.Cresus.DataLayer.Schema
 {
 
 
+	/// <summary>
+	/// The purpose of this class is to be a wrapper around all the classes that are used to
+	/// manipulate the entity and service tables in the database.
+	/// </summary>
 	public sealed class EntityEngine
 	{
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		private EntityEngine(DbInfrastructure infrastructure, IEnumerable<Druid> entityTypeIds)
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 			return action (tables);
 		}
-		
+
 
 		private readonly EntitySchemaEngine entitySchemaEngine;
 

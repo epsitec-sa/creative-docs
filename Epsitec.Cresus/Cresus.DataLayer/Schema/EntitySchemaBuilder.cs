@@ -18,14 +18,14 @@ using System;
 
 namespace Epsitec.Cresus.DataLayer.Schema
 {
-	
-	
+
+
+	/// <summary>
+	/// The purpose of this class is to build the instance of DbTable and DbTypeDef that are used
+	/// to represent the entities in the database.
+	/// </summary>
 	internal static class EntitySchemaBuilder
 	{
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		public static IEnumerable<DbTable> BuildTables(EntityTypeEngine entityTypeEngine)
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 		private static IEnumerable<DbTypeDef> BuildDbTypeDefs(IEnumerable<INamedType> namedTypes)
 		{
-			return namedTypes.Select(t => new DbTypeDef (t));
+			return namedTypes.Select (t => new DbTypeDef (t));
 		}
 
 
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private static DbCollation? GetCollation(StructuredTypeField field)
 		{
 			var options = field.Options;
-			
+
 			if (!(field.Type is IStringType))
 			{
 				return null;

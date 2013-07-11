@@ -17,6 +17,12 @@ namespace Epsitec.Cresus.DataLayer.Schema
 {
 
 
+	/// <summary>
+	/// The purpose of this class is to have a fast cache of data relating to the entity types. It
+	/// will know stuff like what is the type of this entity id, what fields does a given type has,
+	/// are they local fields or inherited fields, are they value, reference or collection fields,
+	/// etc.
+	/// </summary>
 	internal sealed class EntityTypeEngine
 	{
 
@@ -36,10 +42,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		 * might turn out to be false and then we'll be screwed up.
 		 * Marc
 		 */
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		public EntityTypeEngine(IEnumerable<Druid> entityTypeIds)
@@ -390,7 +392,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			foreach (var type in this.GetEntityTypes ())
 			{
 				var typeCaption = type.Caption;
-				
+
 				// The call to type.Fields ensures that the cache for the fields are built.
 				// Marc
 
@@ -528,7 +530,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 		private readonly ReadOnlyDictionary<Druid, ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>>> referencingFieldsCache;
-		
+
 
 	}
 

@@ -23,10 +23,12 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 	/// <summary>
 	/// The <c>SchemaEngine</c> class provides functions used to manipulate the schema of the
-	/// <see cref="AbstractEntity"/> in the database.
+	/// <see cref="AbstractEntity"/> in the database. It maintains a cache of the DbTables that
+	/// represent the entity.
 	/// </summary>
 	internal sealed class EntitySchemaEngine
 	{
+
 
 		/*
 		 * All the method of this class are thread safe, but the DbTable, DbColumn, etc objects that
@@ -44,15 +46,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		 * Marc
 		 */
 
+
 		// TODO Add more checks so that we are sure that everything is defined properly in the
 		// database as it is defined in the EntityTypeEngine.
 		// Marc
 
+
 		// TODO Add methods to retrieve extra columns from the tables, such as the ones for the
 		// row id, the relation source id, the relation target id and the relation rank.
- 		// Marc
-
-		// TODO Comment this class
 		// Marc
 
 
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			dbInfrastructure.ThrowIfNull ("dbInfrastructure");
 			entityTypeEngine.ThrowIfNull ("entityTypeEngine");
 
-			using (DbTransaction transaction = dbInfrastructure.InheritOrBeginTransaction(DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				this.entityTableCache = this.ComputeEntityTableCache (dbInfrastructure, entityTypeEngine);
 				this.entityFieldTableCache = this.ComputeEntityFieldTableCache (dbInfrastructure, entityTypeEngine);

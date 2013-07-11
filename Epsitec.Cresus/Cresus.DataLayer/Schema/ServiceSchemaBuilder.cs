@@ -11,12 +11,14 @@ namespace Epsitec.Cresus.DataLayer.Schema
 {
 
 
+	/// <summary>
+	/// The purpose of this class is to build the DbTables instances that represents all the SQL
+	/// tables that are used by the tools that relate to the database in the Infrastructure
+	/// namespace, such as the tables for the lock manager, , the entity modification log, the
+	/// entity deletion log, etc.
+	/// </summary>
 	internal static class ServiceSchemaBuilder
 	{
-
-
-		// TODO Comment this class
-		// Marc
 
 
 		public static IEnumerable<string> GetServiceTableNames()
@@ -59,7 +61,6 @@ namespace Epsitec.Cresus.DataLayer.Schema
 
 
 	}
-
 
 
 }
