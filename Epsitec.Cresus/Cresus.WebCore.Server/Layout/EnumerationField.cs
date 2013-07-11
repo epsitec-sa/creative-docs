@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			return "enumerationField";
 		}
-		
-		
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
@@ -38,4 +38,3 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 
 }
-

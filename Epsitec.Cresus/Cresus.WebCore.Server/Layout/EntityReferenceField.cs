@@ -12,14 +12,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
+
+
 	internal sealed class EntityReferenceField : AbstractField
 	{
-		public EntityReferenceField()
-		{
-		}
 
-		
-		public string							DatabaseName
+
+		public string DatabaseName
 		{
 			get;
 			set;
@@ -43,6 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 		}
 
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var brick = base.ToDictionary ();
@@ -58,12 +58,20 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return brick;
 		}
 
+
 		protected override string GetEditionTilePartType()
 		{
 			return "entityReferenceField";
 		}
 
-		private string							favoritesId;
-		private bool							favoritesOnly;
+
+		private string favoritesId;
+
+
+		private bool favoritesOnly;
+
+
 	}
+
+
 }

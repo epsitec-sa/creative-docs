@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var brickProperty = e.Property;
 			var childBrick = brickProperty.Brick;
 			var parentBrick = e.Brick;
-			
+
 			switch (brickProperty.Key)
 			{
 				case BrickPropertyKey.OfType:
@@ -196,4 +196,3 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 
 }
-

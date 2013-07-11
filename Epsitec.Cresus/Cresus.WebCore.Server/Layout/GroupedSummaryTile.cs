@@ -5,8 +5,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-	
-	
+
+
 	internal sealed class GroupedSummaryTile : AbstractTile
 	{
 

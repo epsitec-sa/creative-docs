@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var tile = base.ToDictionary ();
-		
-			tile["bricks"] = this.Bricks.Select (i => i.ToDictionary ()).ToList ();	
+
+			tile["bricks"] = this.Bricks.Select (i => i.ToDictionary ()).ToList ();
 
 			return tile;
 		}

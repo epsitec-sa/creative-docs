@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			get;
 			set;
 		}
-		
+
 
 		public string FieldName
 		{

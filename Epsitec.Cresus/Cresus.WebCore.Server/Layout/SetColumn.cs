@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public override string GetColumnType()
 		{
-			return "set";		
+			return "set";
 		}
 
 
@@ -65,4 +65,3 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 
 }
-
