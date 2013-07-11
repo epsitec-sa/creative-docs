@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public EntityChangedEventType EventType
 		{
 			get;
-			set;
+			private set;
 		}
 
 
