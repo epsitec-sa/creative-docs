@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 		public OwinServer(Uri uri, CoreServer server)
 		{
 			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
-			this.hubClient = NotificationClient.Create(server);
+			this.hubClient = NotificationClient.Create (server);
 
 			OwinServer.CleanTraceListeners ();
 
