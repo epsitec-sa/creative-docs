@@ -417,12 +417,12 @@
   <data name="Fld.AiderSubscriptionRefusal.DisplayAddress" id="GH32">&lt;s:data id="_0" f:Name="DisplayAddress" f:Labels="{Collection {Text 'Adresse'}}" /&gt;</data>
   <data name="Fld.AiderSubscriptionRefusal.DisplayZipCode" id="GI32">&lt;s:data id="_0" f:Name="DisplayZipCode" f:Labels="{Collection {Text 'NPA'}}" /&gt;</data>
   <data name="Cmd.Base.ShowAiderSubscriptionRefusal" id="GJ32">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderSubscriptionRefusal" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderSubscriptionRefusal.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Refus'}}" /&gt;</data>
-  <data name="Cmd.Base.ShowAiderPersonWarning" id="GK32">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderPersonWarning" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderWarning.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Avertissements sur les personnes'}}" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderPersonWarning" id="GK32">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderPersonWarning" f:Icon="manifest:Epsitec.Aider.Images.Data.AiderWarning.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Avertissements'}}" /&gt;</data>
   <data name="Fld.AiderSubscription.FullAddressText" id="GL32">&lt;s:data id="_0" f:Name="FullAddressText" /&gt;</data>
   <data name="Fld.AiderSubscriptionRefusal.FullAddressText" id="GM32">&lt;s:data id="_0" f:Name="FullAddressText" /&gt;</data>
   <data name="Val.Enum.WarningType.Duplicated" id="GN32">&lt;s:data id="_0" f:Name="Duplicated" f:Labels="{Collection {Text 'Doublon'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.MissingECh" id="GO32">&lt;s:data id="_0" f:Name="MissingECh" f:Labels="{Collection {Text 'Personne sorties du registre'}}" /&gt;</data>
-  <data name="Val.Enum.WarningType.NoHouseholdECh" id="GP32">&lt;s:data id="_0" f:Name="NoHouseholdECh" f:Labels="{Collection {Text 'Personne à réassigner dans un ménage'}}" /&gt;</data>
-  <data name="Val.Enum.WarningType.DataChangedECh" id="GQ32">&lt;s:data id="_0" f:Name="DataChangedECh" f:Labels="{Collection {Text 'Changement ou correction sur personnes'}}" /&gt;</data>
+  <data name="Val.Enum.WarningType.NoHouseholdECh" id="GP32">&lt;s:data id="_0" f:Name="NoHouseholdECh" f:Labels="{Collection {Text 'Personne sans ménage'}}" /&gt;</data>
+  <data name="Val.Enum.WarningType.DataChangedECh" id="GQ32">&lt;s:data id="_0" f:Name="DataChangedECh" f:Labels="{Collection {Text 'Personne modifiée'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.AddressChange" id="GR32">&lt;s:data id="_0" f:Name="AddressChange" f:Labels="{Collection {Text 'Changement d&amp;amp;apos;adresse'}}" /&gt;</data>
 </bundle>
