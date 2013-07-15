@@ -15,7 +15,7 @@
 		
 		public string Display()
 		{
-			return this.Name + " (" + this.Canton + " )";
+			return this.Name + " (" + this.Canton + ")";
 		}
 
 
