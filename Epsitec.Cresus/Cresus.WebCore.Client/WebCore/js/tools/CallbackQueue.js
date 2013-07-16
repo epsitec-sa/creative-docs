@@ -1,8 +1,8 @@
 // This class represents an immutable queue of callbacks. The callbacks can be
 // enqueued one after another and they will be called in the order in that they
 // where added with the execute() method.
-// Two queues can be merged, in which case with the statement q1.merge(q2). In
-// this cases, the elements of q1 will be executed before those of q2.
+// Two queues can be merged with the statement q1.merge(q2). In this cases, the
+// elements of q1 will be executed before those of q2.
 // Note that all the callbacks will be called synchronously. That means if part
 // of a callback executes asynchronously, all the callback in the queue will be
 // executed before the asynchronous operation terminates. Keep that in mind when
