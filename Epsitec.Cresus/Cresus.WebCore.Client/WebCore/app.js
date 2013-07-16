@@ -64,7 +64,8 @@ function() {
 
           if (isTextField || isTextArea) {
             doPrevent = d.readOnly || d.disabled;
-          } else {
+          }
+          else {
             doPrevent = true;
           }
         }

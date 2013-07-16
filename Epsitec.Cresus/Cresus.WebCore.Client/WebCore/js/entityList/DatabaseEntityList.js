@@ -15,7 +15,8 @@ function() {
           getUrl: 'proxy/favorites/get/' + options.favoritesId,
           exportUrl: 'proxy/favorites/export/' + options.favoritesId
         };
-      } else {
+      }
+      else {
         newOptions = {
           getUrl: 'proxy/database/get/' + options.databaseName,
           exportUrl: 'proxy/database/export/' + options.databaseName

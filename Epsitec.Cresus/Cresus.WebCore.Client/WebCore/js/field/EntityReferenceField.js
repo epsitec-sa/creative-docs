@@ -24,7 +24,8 @@ function() {
             this.databaseName, this.favoritesId, this.favoritesOnly, false,
             callback
         );
-      } else {
+      }
+      else {
         Epsitec.EntityListPicker.showDatabase(
             this.databaseName, false, callback
         );

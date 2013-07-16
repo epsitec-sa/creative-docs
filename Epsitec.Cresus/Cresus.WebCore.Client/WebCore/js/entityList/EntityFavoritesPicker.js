@@ -52,7 +52,8 @@ function() {
           items: [this.entityListPanel1],
           entityListPanel: this.entityListPanel1
         }];
-      } else {
+      }
+      else {
         tabItems = [{
           xtype: 'panel',
           layout: 'fit',
@@ -103,7 +104,8 @@ function() {
     handleEntityListSelectionChange: function(entityItems) {
       if (entityItems.length === 0) {
         this.disableOkButton();
-      } else {
+      }
+      else {
         this.enableOkButton();
       }
     },
