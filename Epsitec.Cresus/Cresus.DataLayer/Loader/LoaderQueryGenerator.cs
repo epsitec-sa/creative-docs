@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public SqlSelect BuildSelectForIndex(Request request, EntityKey entityKey)
+		private SqlSelect BuildSelectForIndex(Request request, EntityKey entityKey)
 		{
 			// Basically what we do here is that we count the number of rows that come before or at
 			// the same position in the order. Say that if we order by firstnames ascending, we
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public SqlSelect BuildInnerRequestForIndex(SqlFieldBuilder builder, Request request, EntityKey entityKey)
+		private SqlSelect BuildInnerRequestForIndex(SqlFieldBuilder builder, Request request, EntityKey entityKey)
 		{
 			var fromWhereAndOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
 			var condition = this.BuildInnerRequestForIndexCondition (builder, request, entityKey);
