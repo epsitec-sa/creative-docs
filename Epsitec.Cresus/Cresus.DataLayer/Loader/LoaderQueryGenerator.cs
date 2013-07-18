@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			var builder = this.GetBuilder ();
 
-			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
+			var fromWhereOrderBy = this.BuildFromAndWhere (builder, request);
 			var fieldForCount = this.BuildFieldForCount (builder, request);
 
 			return fromWhereOrderBy
