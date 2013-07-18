@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelect BuildInnerRequestForIndex(SqlFieldBuilder builder, Request request, EntityKey entityKey)
 		{
-			var fromWhereAndOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
+			var fromWhereAndOrderBy = this.BuildFromAndWhere (builder, request);
 			var condition = this.BuildInnerRequestForIndexCondition (builder, request, entityKey);
 			var fields = this.BuildInnerRequestForIndexFields (builder, request);
 
