@@ -1104,7 +1104,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					}
 				}
 
-				todo.UnionWith (newMandatory);
 				mandatoryEntities.UnionWith (newMandatory);
 
 				oldMandatory = newMandatory;
