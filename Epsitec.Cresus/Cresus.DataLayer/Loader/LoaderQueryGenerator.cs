@@ -159,11 +159,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (var dbTransaction = this.StartTransaction ())
 			{
-				var index = this.GetNullableInteger (sqlSelect, dbTransaction);
+				var count = this.GetNullableInteger (sqlSelect, dbTransaction);
 
 				dbTransaction.Commit ();
 
-				return this.PostProcessIndex (index);
+				return this.PostProcessIndex (count);
 			}
 		}
 
@@ -175,25 +175,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var sqlSelect = this.BuildSelectForIndex (request, entityKey);
 
-			var index = this.GetNullableInteger (sqlSelect, dbTransaction);
+			var count = this.GetNullableInteger (sqlSelect, dbTransaction);
 
-			return this.PostProcessIndex (index);
+			return this.PostProcessIndex (count);
 		}
 
 
-		private int? PostProcessIndex(int? index)
+		private int? PostProcessIndex(int? count)
 		{
-			if (!index.HasValue)
+			if (!count.HasValue)
 			{
 				return null;
 			}
 
-			if (index == 0)
+			if (count == 0)
 			{
 				return null;
 			}
 
-			return index - 1;
+			return count - 1;
 		}
 
 
