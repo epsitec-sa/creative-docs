@@ -605,7 +605,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private Tuple<DbKey, Druid, long, ValueData, ReferenceData> ProcessValueAndReferenceRow(List<Tuple<StructuredTypeField, DbColumn>> valueFields, List<StructuredTypeField> referenceFields, DataRow row)
 		{
 			var entityValueData = new ValueData ();
-			var entityReferenceData = new ReferenceData ();
 
 			for (int i = 0; i < valueFields.Count; i++)
 			{
@@ -619,6 +618,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				entityValueData[field.CaptionId] = cresusValue;
 			}
+
+			var entityReferenceData = new ReferenceData ();
 
 			for (int i = 0; i < referenceFields.Count; i++)
 			{
