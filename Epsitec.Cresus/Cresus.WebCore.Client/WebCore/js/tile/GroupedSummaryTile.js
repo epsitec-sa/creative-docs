@@ -13,6 +13,10 @@ function() {
     /* Config */
 
     bodyCls: 'grouped-summary-tile',
+    layout: {
+      type: 'vbox',
+      align: 'stretch'
+    },
 
     /* Properties */
 
