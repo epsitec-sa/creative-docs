@@ -35,6 +35,19 @@ function() {
           this
       );
 
+      newOptions.layout = {
+        type: 'vbox'
+      };
+
+      // In the normal case, we want to use the stretchmax property, so that all
+      // items are expanded to have the same width as the widest. But if we have
+      // a single item, there is a bug in ext js which displayed it improperly.
+      // Therefore we use the stretchmax value only if we have more than one
+      // item.
+      if (newOptions.items.length > 1) {
+        newOptions.layout.align = 'stretchmax';
+      }
+
       this.callParent([newOptions]);
       return this;
     },
