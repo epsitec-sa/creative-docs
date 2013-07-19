@@ -41,11 +41,10 @@ function() {
       return Ext.create('Ext.form.Panel', {
         xtype: 'form',
         url: this.getFormUrl(options),
-        border: false,
+        border: true,
         autoScroll: true,
-        frame: true,
         width: 350,
-        margin: '5 5 5 5',
+        bodyCls: 'action',
         fieldDefaults: {
           labelAlign: 'top',
           msgTarget: 'side',

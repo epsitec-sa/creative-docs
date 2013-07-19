@@ -12,6 +12,12 @@ html, body {
   background-color: #EBF4FF;
 }
 
+.action {
+  margin: 0px;
+  padding: 5px;
+  background-color: #EBF4FF;
+}
+
 .tile-over .tile {
   background: #FFCC00;
   cursor: pointer;
