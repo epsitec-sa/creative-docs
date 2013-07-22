@@ -20,15 +20,15 @@ function () {
           expanded: true,
           children: [
             {
-              text: "Privée", expanded: true, children: [
-                { text: "1", leaf: true },
-                { text: "2", leaf: true }
+              text: 'Privée', expanded: true, children: [
+                { text: '1', leaf: true },
+                { text: '2', leaf: true }
               ]
             },
             {
-              text: "Publique", expanded: true, children: [
-                { text: "Canton de VD", leaf: true },
-                { text: "Lausannois", leaf: true }
+              text: 'Publique', expanded: true, children: [
+                { text: 'Canton de VD', leaf: true },
+                { text: 'Lausannois', leaf: true }
               ]
             }
           ]
