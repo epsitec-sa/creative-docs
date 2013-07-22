@@ -13,9 +13,10 @@ function() {
     builder: null,
 
     constructor: function(columnDefinitions) {
+      var store, config;
 
       this.builder = Ext.create('Epsitec.QueryBuilderPanel', columnDefinitions);
-      var store = Ext.create('Ext.data.TreeStore', {
+      store = Ext.create('Ext.data.TreeStore', {
         root: {
           expanded: true,
           children: [
@@ -41,7 +42,7 @@ function() {
         rootVisible: false
       });
 
-      var config = {
+      config = {
         title: 'Editeur de requêtes',
         width: 800,
         height: 600,
