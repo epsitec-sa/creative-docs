@@ -667,10 +667,30 @@ function() {
 
       this.reconfigure(newStore, undefined);
 
-      // Here we need to cleanup the old store. Note that this method is private
-      // and might therefore not be available in future releases of ExtJs. See
+      // Here we need to cleanup the old store. If the store is not performing
+      // any load operation, we can do it right now. Otherwise, we have to wait
+      // until the load is done. If we don't wait, there is a warning in the
+      // console, because the load callback is called on a destroyed store,
+      // which causes an exception.
+
+      // Note that the method used to destroy the store is private and might
+      // therefore not be available in future releases of ExtJs. See
       // http://www.sencha.com/forum/showthread.php?212134 for more details.
-      oldStore.destroyStore();
+
+      if (!Epsitec.EntityList.isStoreLoading(oldStore)) {
+        oldStore.destroyStore();
+      }
+      else {
+        oldStore.on(
+            'load',
+            function() {
+              if (!Epsitec.EntityList.isStoreLoading(oldStore)) {
+                this.destroyStore();
+              }
+            },
+            oldStore
+        );
+      }
     },
 
     onSortHandler: function() {
@@ -800,6 +820,33 @@ function() {
       }
 
       return Epsitec.Tools.createUrl(base, parameters);
+    },
+
+    statics: {
+      isStoreLoading: function(store) {
+        if (store.isLoading()) {
+          return true;
+        }
+
+        // In ExtJs 4.2.1, if we have a store with the autoLoad option set, the
+        // first load operation is deferred in the constructor of the store. So
+        // if the store has been constructed, but the load operation has not
+        // been started yet, the isLoading() method will return false, but there
+        // is a load operation that has been scheduled. That's what we check
+        // here.
+        if (store.autoLoad) {
+          // The totalCount property is supposed to hold the number of items in
+          // in the store according to the proxy. If this property is undefined,
+          // it means that the first request has not yet been finished (thus not
+          // yet started either). Note that this is a private property from the
+          // store and it might not work in future versions of ExtJs.
+          if (store.getTotalCount() === 0 && !Ext.isDefined(store.totalCount)) {
+            return true;
+          }
+        }
+
+        return false;
+      }
     }
   });
 });
