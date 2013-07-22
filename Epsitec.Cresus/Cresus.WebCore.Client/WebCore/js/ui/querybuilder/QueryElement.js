@@ -16,7 +16,6 @@ function() {
 
     constructor: function(builder, columnDefinitions, first) {
       this.components = [];
-      var me = this;
       var config = {
         minHeight: 50,
         minWidth: 300,
