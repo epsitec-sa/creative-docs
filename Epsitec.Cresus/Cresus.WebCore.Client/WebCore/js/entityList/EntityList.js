@@ -542,7 +542,7 @@ function() {
     },
 
     ///QUERY BUILDER
-    onQueryBuildHandler: function (e) {
+    onQueryBuildHandler: function(e) {
 
     },
     ///FULL SEARCH

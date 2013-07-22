@@ -1,6 +1,6 @@
 ﻿Ext.require([
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.ui.querybuilder.QueryElement', {
     extend: 'Ext.Panel',
     alternateClassName: ['Epsitec.QueryElement'],
@@ -14,7 +14,7 @@ function () {
     valueField: null,
     components: null,
 
-    constructor: function (builder,columnDefinitions,first) {
+    constructor: function(builder,columnDefinitions,first) {
       this.components = [];
       var me = this;
       var config = {
@@ -41,8 +41,8 @@ function () {
 
       if (first) {
         this.initOperatorDataStore();
-        this.operatorCombo.on('select', function (combo, records, eOpts) {
-          Ext.Array.each(records, function (record) {
+        this.operatorCombo.on('select', function(combo, records, eOpts) {
+          Ext.Array.each(records, function(record) {
             this.title = record.get('value');
           });
         });
@@ -60,7 +60,7 @@ function () {
       this.components.push(this.valueField);
     },
 
-    initComparatorDataStore: function () {
+    initComparatorDataStore: function() {
       this.comparatorComboStore = Ext.create('Ext.data.Store', {
         fields: ['id', 'symbol'],
         data: [
@@ -81,7 +81,7 @@ function () {
       this.components.push(this.comparatorCombo);
     },
 
-    initQueryFieldDataStore: function (columnDefinitions) {
+    initQueryFieldDataStore: function(columnDefinitions) {
       this.fieldComboStore = Ext.create('Ext.data.Store', {
         fields: ['id', 'title'],
         data: this.initQueryFieldFromDef(columnDefinitions)
@@ -95,8 +95,8 @@ function () {
       this.components.push(this.fieldCombo);
     },
 
-    initQueryFieldFromDef: function (columnDefinitions) {
-      return columnDefinitions.map(function (c) {
+    initQueryFieldFromDef: function(columnDefinitions) {
+      return columnDefinitions.map(function(c) {
         var field = {
           id: c.name,
           title: c.title,

@@ -1,6 +1,6 @@
 ﻿Ext.require([
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.ui.querybuilder.QueryOp', {
     extend: 'Ext.Panel',
     alternateClassName: ['Epsitec.QueryOp'],
@@ -9,7 +9,7 @@ function () {
     operatorCombo: null,
     components: null,
 
-    constructor: function (builder) {
+    constructor: function(builder) {
       var me = this;
       this.components = [];
 

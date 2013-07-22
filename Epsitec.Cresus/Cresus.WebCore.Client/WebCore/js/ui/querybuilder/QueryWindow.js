@@ -3,7 +3,7 @@
   'Epsitec.cresus.webcore.querybuilder.QueryOp',
   'Epsitec.cresus.webcore.querybuilder.QueryBuilderPanel'
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.ui.querybuilder.QueryWindow', {
     extend: 'Ext.Window',
     alternateClassName: ['Epsitec.QueryWindow'],
@@ -12,7 +12,7 @@ function () {
     myQueryTree: null,
     builder: null,
 
-    constructor: function (columnDefinitions) {
+    constructor: function(columnDefinitions) {
 
       this.builder = Ext.create('Epsitec.QueryBuilderPanel', columnDefinitions);
       var store = Ext.create('Ext.data.TreeStore', {
