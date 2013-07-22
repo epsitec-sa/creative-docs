@@ -142,3 +142,7 @@ html, body {
   border-bottom-width: 1px;
   border-left-width: 0px;
 }
+
+.form-field-label-top {
+  margin-bottom: 3px;
+}

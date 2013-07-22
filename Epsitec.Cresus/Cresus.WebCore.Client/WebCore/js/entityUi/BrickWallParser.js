@@ -262,6 +262,7 @@ function() {
           readOnly: brick.readOnly,
           readOnlyCls: 'input-readonly',
           labelSeparator: null,
+          labelClsExtra: 'form-field-label-top',
           allowBlank: brick.allowBlank
         };
       },
@@ -275,7 +276,10 @@ function() {
         field.uncheckedValue = false;
         field.checked = field.value;
 
+        // The boolean fields are special and don't require some properties that
+        // are set up for regular fields.
         delete field.fieldLabel;
+        delete field.labelClsExtra;
         delete field.value;
 
         return field;
