@@ -36,7 +36,7 @@ function() {
           handler: builder.onAddElement,
           scope: builder
         }],
-        items: this.components,
+        items: this.components
       };
 
       if (first) {
@@ -99,7 +99,7 @@ function() {
       return columnDefinitions.map(function(c) {
         var field = {
           id: c.name,
-          title: c.title,
+          title: c.title
         };
         return field;
       });
@@ -121,6 +121,6 @@ function() {
         valueField: 'id'
       });
       this.components.push(this.operatorCombo);
-    },
+    }
   });
 });

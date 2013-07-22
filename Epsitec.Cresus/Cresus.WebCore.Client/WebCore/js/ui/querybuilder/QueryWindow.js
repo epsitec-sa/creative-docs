@@ -38,7 +38,7 @@ function() {
       this.myQueryTree = Ext.create('Ext.tree.Panel', {
         store: store,
         border: false,
-        rootVisible: false,
+        rootVisible: false
       });
 
       var config = {

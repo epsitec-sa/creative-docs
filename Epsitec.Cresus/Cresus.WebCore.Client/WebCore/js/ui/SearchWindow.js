@@ -213,6 +213,6 @@ function() {
 
         return field;
       });
-    },
+    }
   });
 });
