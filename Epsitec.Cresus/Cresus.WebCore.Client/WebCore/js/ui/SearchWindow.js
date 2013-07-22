@@ -209,9 +209,9 @@ function () {
               scope: list
             };
             break;
-          }
+        }
 
-          return field;
+        return field;
       });
     },
   });
