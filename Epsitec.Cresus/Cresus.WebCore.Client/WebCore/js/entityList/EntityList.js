@@ -10,6 +10,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.LabelExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
   'Epsitec.cresus.webcore.ui.SearchWindow',
+  'Epsitec.cresus.webcore.ui.querybuilder.QueryWindow',
   'Ext.ux.grid.FiltersFeature',
   'Ext.ux.DataTip',
   'Ext.Action'
@@ -35,7 +36,8 @@ function() {
     exportUrl: null,
     actionEditData: null,
     fullSearchWindow: null,
-
+    queryBuilder: null,
+    isSearching: false,
     /* Constructor */
 
     constructor: function(options) {
@@ -296,6 +298,7 @@ function() {
         },
         listeners: {
           beforeLoad: this.setupColumnParameter,
+          datachanged: this.onDataChange,
           scope: this
         }
       });
@@ -504,7 +507,13 @@ function() {
 
       return buttons;
     },
+    onDataChange: function (store, e) {
 
+        if (this.isSearching) {
+            //alert('proxy update when dataChange');
+        }
+
+    },
     ///QUICK SEARCH
     onQuickSearchHandler: function(field, e) {
       var columnName, config;
@@ -543,7 +552,19 @@ function() {
 
     ///QUERY BUILDER
     onQueryBuildHandler: function(e) {
+        if (!this.queryBuilder) {
+            this.queryBuilder = Ext.create('Epsitec.QueryWindow', this.columnDefinitions);
+            this.queryBuilder.showAt(e.container.getXY());
+        }
+        else {
+            if (this.queryBuilder.isVisible()) {
+                this.queryBuilder.hide();
+            }
+            else {
+                this.queryBuilder.show();
+            }
 
+        }
     },
     ///FULL SEARCH
     onFullSearchHandler: function(e) {

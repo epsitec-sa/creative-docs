@@ -1,221 +1,244 @@
-﻿Ext.require([
-],
-function() {
-  Ext.define('Epsitec.cresus.webcore.ui.SearchWindow', {
-    extend: 'Ext.Window',
-    alternateClassName: ['Epsitec.SearchWindow'],
+﻿Ext.require([],
+function () {
+    Ext.define('Epsitec.cresus.webcore.ui.SearchWindow', {
+        extend: 'Ext.Window',
+        alternateClassName: ['Epsitec.SearchWindow'],
 
-    application: null,
-    parent: null,
-    fields: null,
-    form: null,
-    panel: null,
-    caller: null,
+        application: null,
+        parent: null,
+        fields: null,
+        form: null,
+        panel: null,
+        caller: null,
 
-    constructor: function(columnDefinitions, caller) {
-      var tabManager, config;
-
-      this.caller = caller;
-      Ext.QuickTips.init();
-      this.fields = this.createSearchFormFields(columnDefinitions);
-      this.form = Ext.widget({
-        xtype: 'form',
-        layout: 'form',
-        url: '',
-        bodyPadding: '5 5 0',
-        width: 350,
-        fieldDefaults: {
-          msgTarget: 'side',
-          labelWidth: 75
-        },
-        plugins: {
-          ptype: 'datatip'
-        },
-        defaultType: 'textfield',
-        items: this.fields,
-        buttons: [{
-          text: 'Reinitialiser',
-          handler: this.resetFullSearch,
-          scope: this
-        }, {
-          text: 'Rechercher',
-          handler: this.executeFullSearch,
-          scope: this
-        }]
-      });
-      this.panel = Ext.widget({
-        xtype: 'panel',
-        autoHeight: true,
-        items: this.form
-      });
-      this.application = Epsitec.Cresus.Core.getApplication();
-      tabManager = this.application.tabManager;
-      this.parent = Ext.get(tabManager.getLayout().getActiveItem().el);
-      config = {
-        title: 'Recherche',
-        width: 400,
-        height: 600,
-        header: 'false',
-        autoScroll: true,
-        constrain: true,
-        renderTo: this.parent,
-        closable: true,
-        closeAction: 'hide',
-        items: this.panel
-      };
-
-      this.callParent([config]);
-    },
-
-    executeFullSearch: function() {
-      var list = this.caller;
-
-      list.dockedItems.items[2].items.items[0].setValue(
-          this.form.items.items[0].lastValue
-      );
-
-      Ext.Array.each(this.form.items.items, function(item) {
-        var filter = list.filters.getFilter(item.name);
-        if (!Ext.isDefined(filter)) {
-          if (Ext.isDefined(item.lastValue)) {
-            list.filters.addFilter({
-              type: 'string',
-              dataIndex: item.name,
-              value: item.lastValue,
-              active: true
+        constructor: function (columnDefinitions, caller) {
+            this.caller = caller;
+            Ext.QuickTips.init();
+            this.fields = this.createSearchFormFields(columnDefinitions);
+            this.form = Ext.widget({
+                xtype: 'form',
+                layout: 'form',
+                url: '',
+                bodyPadding: '5 5 0',
+                width: 350,
+                fieldDefaults: {
+                    msgTarget: 'side',
+                    labelWidth: 75
+                },
+                plugins: {
+                    ptype: 'datatip'
+                },
+                defaultType: 'textfield',
+                items: this.fields,
+                buttons: [{
+                    text: 'Reinitialiser',
+                    handler: this.resetFullSearch,
+                    scope: this
+                }, {
+                    text: 'Rechercher',
+                    handler: this.executeFullSearch,
+                    scope: this
+                }]
             });
-            list.filters.getFilter(item.name).fireEventArgs(
-                'update', list.filters.getFilter(item.name)
+            this.panel = Ext.widget({
+                xtype: 'panel',
+                autoHeight: true,
+                items: this.form
+            });
+            this.application = Epsitec.Cresus.Core.getApplication();
+            this.parent = Ext.get(this.application.tabManager.getLayout().getActiveItem().el);
+            var config = {
+                title: 'Recherche',
+                width: 400,
+                height: 600,
+                header: 'false',
+                autoScroll: true,
+                constrain: true,
+                renderTo: this.parent,
+                closable: true,
+                closeAction: 'hide',
+                items: this.panel
+            };
+
+            this.callParent([config]);
+        },
+
+        executeFullSearch: function () {
+            
+            var list = this.caller;
+            var window = this;
+
+            list.dockedItems.items[2].items.items[0].setValue(
+                this.form.items.items[0].lastValue
             );
-            filter = list.filters.getFilter(item.name);
-          }
-        }
-        else {
-          if (item.lastValue && item.lastValue.length > 0) {
-            filter.setValue(item.lastValue);
-            filter.setActive(true);
-          }
-          else {
-            filter.setActive(false);
-          }
-        }
-      });
 
-      this.hide();
-    },
+            var index = 1; //we start at one because we have a first numbered column
+            list.isSearching = true;
+            //Show needed column 
+            Ext.Array.each(this.form.items.items, function (item) {
+                
+                if (Ext.isDefined(item.lastValue) && !list.columns[index].isVisible()){
+                    list.columns[index].show();   
+                }
+                else {
+                    if (window.fields[index - 1].isHidden) {
+                        list.columns[index].hide();
+                    }
+                }
+                index++;
+            });
 
-    resetFullSearch: function() {
-      var list = this.caller;
+            //appli filtering
+            Ext.Array.each(this.form.items.items, function (item) {
+                var filter = list.filters.getFilter(item.name);
+                if (!Ext.isDefined(filter)) {
+                    if (Ext.isDefined(item.lastValue)) {
+ 
+                        list.filters.addFilter({
+                            type: 'string',
+                            dataIndex: item.name,
+                            value: item.lastValue,
+                            active: true
+                        });
+                        list.filters.getFilter(item.name).fireEventArgs(
+                            'update', list.filters.getFilter(item.name)
+                        );
+                    }
+                }
+                else {
+                    if (item.lastValue && item.lastValue.length > 0) {
+                        filter.setValue(item.lastValue);
+                        filter.setActive(true);
+                    }
+                    else {
+                        filter.setActive(false);
+                    }
+                }
+            });
 
-      Ext.Array.each(this.form.items.items, function(item) {
-        item.reset();
-        if (list.filters.filters.getKey(item.name) !== null) {
-          list.filters.filters.getKey(item.name).setValue(item.lastValue);
-          list.filters.filters.getKey(item.name).setActive(false);
-        }
-      });
-      this.parent.dockedItems.items[2].items.items[0].setValue(
-          this.form.items.items[0].lastValue
-      );
-    },
+            this.hide();
+        },
 
-    setQuickSearchValue: function(val) {
-      this.form.items.items[0].setValue(val);
-    },
+        resetFullSearch: function () {
+            var list = this.caller;
 
-    onEnterExecuteFullSearch: function(field, e) {
-      if (e.getKey() === e.ENTER) {
-        this.executeFullSearch();
-      }
-    },
+            Ext.Array.each(this.form.items.items, function (item) {
+                item.reset();
+                if (list.filters.filters.getKey(item.name) != null) {
+                    list.filters.filters.getKey(item.name).setValue(item.lastValue);
+                    list.filters.filters.getKey(item.name).setActive(false);
+                }
+            });
+            this.parent.dockedItems.items[2].items.items[0].setValue(
+                this.form.items.items[0].lastValue
+            );
+        },
 
-    createSearchFormFields: function(columnDefinitions) {
-      var list = this;
-      return columnDefinitions.map(function(c) {
-        var field = {
-          name: c.name,
-          type: c.type.type
-        };
+        setQuickSearchValue : function(val){
+            this.form.items.items[0].setValue(val);
+        },
 
-        switch (c.type.type) {
-          case 'int':
-            field.xtype = 'numberfield';
-            field.fieldLabel = c.title;
-            field.name = c.name;
-            break;
+        onEnterExecuteFullSearch: function (field, e) {
+            if (e.getKey() === e.ENTER) {
+                this.executeFullSearch();
+            }
+        },
 
-          case 'float':
-            field.xtype = 'numberfield';
-            field.fieldLabel = c.title;
-            field.name = c.name;
-            break;
+        createSearchFormFields: function (columnDefinitions) {
+            var list = this;
+            return columnDefinitions.map(function (c) {
+                var field = {
+                    name: c.name,
+                    type: c.type.type,
+                };
+                if(c.hidden)
+                {
+                    field.isHidden = true;
+                }
+                else
+                {
+                    field.isHidden = false;
+                }
 
-          case 'boolean':
-            field.xtype = 'fieldset';
-            field.useNull = true;
-            field.title = c.title;
-            field.name = c.name;
-            field.defaultType = 'checkbox';
-            field.layout = 'anchor';
-            field.defaults = {
-              anchor: '100%'
-            };
-            field.items = [{
-              boxLabel: 'True',
-              name: 'isTrue'
-            }, {
-              boxLabel: 'False',
-              name: 'isFalse'
-            }, {
-              boxLabel: 'Null',
-              name: 'isNull'
-            }];
-            break;
+                switch (c.type.type) {
+                    case 'int':
+                        field.xtype = 'numberfield';
+                        field.fieldLabel = c.title;
+                        field.name = c.name;
+                        break;
 
-          case 'date':
-            field.xtype = 'fieldset';
-            field.title = c.title;
-            field.name = c.name;
-            field.defaultType = 'datefield';
-            field.layout = 'anchor';
-            field.defaults = {
-              anchor: '100%'
-            };
-            field.items = [{
-              fieldLabel: 'Before',
-              name: 'before'
-            }, {
-              fieldLabel: 'After',
-              name: 'after',
-              dateFormat: 'd.m.Y'
-            }, {
-              fieldLabel: 'At',
-              name: 'at',
-              dateFormat: 'd.m.Y'
-            }];
-            break;
+                    case 'float':
+                        field.xtype = 'numberfield';
+                        field.fieldLabel = c.title;
+                        field.name = c.name;
+                        break;
 
-          case 'list':
-            field.fieldLabel = c.title;
-            field.xtype = 'combo';
-            field.name = c.name;
-            field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
-            break;
+                    case 'boolean':
+                        field.xtype = 'fieldset';
+                        field.useNull = true;
+                        field.title = c.title;
+                        field.name = c.name;
+                        field.defaultType = 'checkbox';
+                        field.layout = 'anchor';
+                        field.defaults = {
+                            anchor: '100%'
+                        };
+                        field.items = [{
+                            boxLabel: 'True',
+                            name: 'isTrue'
+                        }, {
+                            boxLabel: 'False',
+                            name: 'isFalse'
+                        }, {
+                            boxLabel: 'Null',
+                            name: 'isNull'
+                        }];
+                        break;
 
-          default:
-            field.fieldLabel = c.title;
-            field.name = c.name;
-            field.xtype = 'textfield';
-            field.tooltip = 'Touche ENTER pour lancer';
-            field.listeners = {
-              specialkey: list.onEnterExecuteFullSearch,
-              scope: list
-            };
-            break;
-        }
+                    case 'date':
+                        field.xtype = 'fieldset';
+                        field.title = c.title;
+                        field.name = c.name;
+                        field.defaultType = 'datefield';
+                        field.layout = 'anchor';
+                        field.defaults = {
+                            anchor: '100%'
+                        };
+                        field.items = [{
+                            fieldLabel: 'Before',
+                            name: 'before'
+                        }, {
+                            fieldLabel: 'After',
+                            name: 'after',
+                            dateFormat: 'd.m.Y'
+                        }, {
+                            fieldLabel: 'At',
+                            name: 'at',
+                            dateFormat: 'd.m.Y'
+                        }];
+                        break;
 
-        return field;
-      });
-    }
-  });
+                    case 'list':
+                        field.fieldLabel = c.title;
+                        field.xtype = 'combo';
+                        field.name = c.name;
+                        field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
+                        break;
+
+                    default:
+                        field.fieldLabel = c.title;
+                        field.name = c.name;
+                        field.xtype = 'textfield';
+                        field.tooltip = 'Touche ENTER pour lancer';
+                        field.listeners = {
+                            specialkey: list.onEnterExecuteFullSearch,
+                            scope: list
+                        };
+                        break;
+                }
+
+                return field;
+            });
+        },
+    });
 });
