@@ -9,6 +9,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.ArrayExportWindow',
   'Epsitec.cresus.webcore.ui.LabelExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
+  'Epsitec.cresus.webcore.ui.SearchWindow',
   'Ext.ux.grid.FiltersFeature',
   'Ext.ux.DataTip',
   'Ext.Action'
@@ -371,99 +372,6 @@ function() {
       });
     },
 
-    createSearchFormFields: function(columnDefinitions) {
-      var list = this;
-      return columnDefinitions.map(function(c) {
-        var field = {
-          name: c.name,
-          type: c.type.type
-        };
-
-        switch (c.type.type) {
-          case 'int':
-            field.xtype = 'numberfield';
-            field.fieldLabel = c.title;
-            field.name = c.name;
-            field.value = 1;
-            break;
-
-          case 'float':
-            field.xtype = 'numberfield';
-            field.fieldLabel = c.title;
-            field.name = c.name;
-            field.value = 0.5;
-            break;
-
-          case 'boolean':
-            field.xtype = 'fieldset';
-            field.useNull = true;
-            field.title = c.title;
-            field.name = c.name;
-            field.defaultType = 'checkbox';
-            field.layout = 'anchor';
-            field.defaults = {
-              anchor: '100%'
-            };
-            field.items = [{
-              boxLabel: 'True',
-              name: 'isTrue'
-            }, {
-              boxLabel: 'False',
-              name: 'isFalse'
-            }, {
-              boxLabel: 'Null',
-              name: 'isNull'
-            }];
-            break;
-
-          case 'date':
-            field.xtype = 'fieldset';
-            field.title = c.title;
-            field.name = c.name;
-            field.defaultType = 'datefield';
-            field.layout = 'anchor';
-            field.defaults = {
-              anchor: '100%'
-            };
-            field.items = [{
-              fieldLabel: 'Before',
-              name: 'before'
-            }, {
-              fieldLabel: 'After',
-              name: 'after',
-              dateFormat: 'd.m.Y'
-            }, {
-              fieldLabel: 'At',
-              name: 'at',
-              dateFormat: 'd.m.Y'
-            }];
-
-            break;
-
-          case 'list':
-            field.fieldLabel = c.title;
-            field.xtype = 'combo';
-            field.name = c.name;
-            field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
-            break;
-
-          default:
-            field.fieldLabel = c.title;
-            field.name = c.name;
-            field.xtype = 'textfield';
-            field.tooltip = 'Touche ENTER pour lancer';
-            field.listeners = {
-              specialkey: list.onEnterExecuteFullSearch,
-              scope: list
-            };
-
-            break;
-        }
-
-        return field;
-      });
-    },
-
     createSorters: function(sorterDefinitions) {
       return sorterDefinitions.map(function(s) {
         return {
@@ -584,6 +492,14 @@ function() {
             scope: this
           }
         }));
+        buttons.push(Ext.create('Ext.Button', {
+            text: '',
+            iconCls: 'icon-filter',
+            listeners: {
+                click: this.onQueryBuildHandler,
+                scope: this
+            }
+        }));
       }
 
       return buttons;
@@ -604,20 +520,19 @@ function() {
       if (e.getKey() === e.ENTER) {
 
         if (this.fullSearchWindow) {
-          this.fullSearchWindow.items.items[0].items.items[0].setValue(
-              field.value
-          );
+            this.fullSearchWindow.setQuickSearchValue(field.value);
         }
         if (this.filters.filters.items.length === 0) {
-          this.filters.addFilter(config);
-          this.filters.filters.getByKey(columnName).fireEvent(
-              'update', this.filters.filters.getByKey(columnName)
+            this.filters.addFilter(config);
+            
+            this.filters.getFilter(columnName).fireEventArgs(
+              'update', this.filters.getFilter(columnName)
           );
         }
         else {
-          this.filters.filters.getByKey(columnName).setValue(field.value);
+            this.filters.getFilter(columnName).setValue(field.value);
           if (field.value !== '') {
-            this.filters.filters.getByKey(columnName).setActive(true);
+              this.filters.getFilter(columnName).setActive(true);
           }
           else {
             this.filters.clearFilters();
@@ -626,54 +541,15 @@ function() {
       }
     },
 
+    ///QUERY BUILDER
+    onQueryBuildHandler: function (e) {
+
+    },
     ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
-        var fields, form, application, parent;
-        Ext.QuickTips.init();
-        fields = this.createSearchFormFields(this.columnDefinitions);
-        form = Ext.widget({
-          xtype: 'form',
-          layout: 'form',
-          url: '',
-          bodyPadding: '5 5 0',
-          width: 350,
-          fieldDefaults: {
-            msgTarget: 'side',
-            labelWidth: 75
-          },
-          plugins: {
-            ptype: 'datatip'
-          },
-          defaultType: 'textfield',
-          items: fields,
-          buttons: [{
-            text: 'Reinitialiser',
-            handler: this.resetFullSearch,
-            scope: this
-          }, {
-            text: 'Rechercher',
-            handler: this.executeFullSearch,
-            scope: this
-          }]
-        });
-
-        application = Epsitec.Cresus.Core.getApplication();
-        parent = Ext.get(application.tabManager.getLayout().getActiveItem().el);
-
-        this.fullSearchWindow = Ext.create('Ext.Window', {
-          title: 'Recherche',
-          width: 400,
-          height: 200,
-          header: 'false',
-          layout: 'fit',
-          constrain: true,
-          renderTo: parent,
-          closable: true,
-          closeAction: 'hide',
-          items: form
-        });
-
+      
+        this.fullSearchWindow = Ext.create('Epsitec.SearchWindow',this.columnDefinitions,this);
         this.fullSearchWindow.showAt(e.container.getXY());
 
       }
@@ -686,72 +562,7 @@ function() {
         }
 
       }
-      this.fullSearchWindow.items.items[0].items.items[0].setValue(
-          this.dockedItems.items[2].items.items[0].lastValue
-      );
-    },
-
-    onEnterExecuteFullSearch: function(field, e) {
-      if (e.getKey() === e.ENTER) {
-        this.executeFullSearch();
-      }
-    },
-
-    executeFullSearch: function() {
-      var form, list;
-
-      form = this.fullSearchWindow.items.items[0];
-      list = this;
-
-      list.dockedItems.items[2].items.items[0].setValue(
-          form.items.items[0].lastValue
-      );
-
-      Ext.Array.each(form.items.items, function(item) {
-        var filter = list.filters.filters.getByKey(item.name);
-        if (!Ext.isDefined(filter)) {
-          if (Ext.isDefined(item.lastValue)) {
-            list.filters.addFilter({
-              type: 'string',
-              dataIndex: item.name,
-              value: item.lastValue,
-              active: true
-            });
-            list.filters.filters.getByKey(item.name).fireEvent(
-                'update', list.filters.filters.getByKey(item.name)
-            );
-            filter = list.filters.filters.getByKey(item.name);
-          }
-        }
-        else {
-          if (item.lastValue && item.lastValue.length > 0) {
-            filter.setValue(item.lastValue);
-            filter.setActive(true);
-          }
-          else {
-            filter.setActive(false);
-          }
-        }
-      });
-
-      this.fullSearchWindow.hide();
-    },
-    resetFullSearch: function() {
-      var form, list;
-
-      form = this.fullSearchWindow.items.items[0];
-      list = this;
-
-      Ext.Array.each(form.items.items, function(item) {
-        item.reset();
-        if (list.filters.filters.getByKey(item.name) !== null) {
-          list.filters.filters.getByKey(item.name).setValue(item.lastValue);
-          list.filters.filters.getByKey(item.name).setActive(false);
-        }
-      });
-      list.dockedItems.items[2].items.items[0].setValue(
-          form.items.items[0].lastValue
-      );
+      this.fullSearchWindow.setQuickSearchValue(this.dockedItems.items[2].items.items[0].lastValue);
     },
 
     ///EXPORT
