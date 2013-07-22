@@ -493,12 +493,12 @@ function() {
           }
         }));
         buttons.push(Ext.create('Ext.Button', {
-            text: '',
-            iconCls: 'icon-filter',
-            listeners: {
-                click: this.onQueryBuildHandler,
-                scope: this
-            }
+          text: '',
+          iconCls: 'icon-filter',
+          listeners: {
+            click: this.onQueryBuildHandler,
+            scope: this
+          }
         }));
       }
 
@@ -520,19 +520,19 @@ function() {
       if (e.getKey() === e.ENTER) {
 
         if (this.fullSearchWindow) {
-            this.fullSearchWindow.setQuickSearchValue(field.value);
+          this.fullSearchWindow.setQuickSearchValue(field.value);
         }
         if (this.filters.filters.items.length === 0) {
-            this.filters.addFilter(config);
-            
-            this.filters.getFilter(columnName).fireEventArgs(
+          this.filters.addFilter(config);
+
+          this.filters.getFilter(columnName).fireEventArgs(
               'update', this.filters.getFilter(columnName)
           );
         }
         else {
-            this.filters.getFilter(columnName).setValue(field.value);
+          this.filters.getFilter(columnName).setValue(field.value);
           if (field.value !== '') {
-              this.filters.getFilter(columnName).setActive(true);
+            this.filters.getFilter(columnName).setActive(true);
           }
           else {
             this.filters.clearFilters();
@@ -548,7 +548,7 @@ function() {
     ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
-      
+
         this.fullSearchWindow = Ext.create('Epsitec.SearchWindow',this.columnDefinitions,this);
         this.fullSearchWindow.showAt(e.container.getXY());
 
