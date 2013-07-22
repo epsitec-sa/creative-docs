@@ -30,8 +30,8 @@ function() {
         },
         bodyCls: 'tile',
         title: 'Condition',
-        tools:[{
-          type:'plus',
+        tools: [{
+          type: 'plus',
           tooltip: 'Ajouter une condition',
           handler: builder.onAddElement,
           scope: builder
@@ -53,7 +53,7 @@ function() {
       this.callParent([config]);
     },
 
-    initValueField: function(){
+    initValueField: function() {
       this.valueField = Ext.create('Ext.form.field.Text', {
         emptyText: 'Valeur'
       });

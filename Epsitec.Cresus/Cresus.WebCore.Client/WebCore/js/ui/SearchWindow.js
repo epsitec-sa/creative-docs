@@ -116,7 +116,7 @@ function() {
       );
     },
 
-    setQuickSearchValue : function(val){
+    setQuickSearchValue: function(val) {
       this.form.items.items[0].setValue(val);
     },
 
