@@ -549,7 +549,8 @@ function() {
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
 
-        this.fullSearchWindow = Ext.create('Epsitec.SearchWindow', this.columnDefinitions, this);
+        this.fullSearchWindow = Ext.create(
+            'Epsitec.SearchWindow', this.columnDefinitions, this);
         this.fullSearchWindow.showAt(e.container.getXY());
 
       }
@@ -562,7 +563,9 @@ function() {
         }
 
       }
-      this.fullSearchWindow.setQuickSearchValue(this.dockedItems.items[2].items.items[0].lastValue);
+      this.fullSearchWindow.setQuickSearchValue(
+          this.dockedItems.items[2].items.items[0].lastValue
+      );
     },
 
     ///EXPORT

@@ -13,7 +13,7 @@ function() {
     builder: null,
 
     constructor: function(columnDefinitions) {
-      var store, config;
+      var tabManager, store, config;
 
       this.builder = Ext.create('Epsitec.QueryBuilderPanel', columnDefinitions);
       store = Ext.create('Ext.data.TreeStore', {
@@ -42,13 +42,15 @@ function() {
         rootVisible: false
       });
 
+      tabManager = Epsitec.Cresus.Core.getApplication().tabManager;
+
       config = {
         title: 'Editeur de requêtes',
         width: 800,
         height: 600,
         header: 'false',
         constrain: true,
-        renderTo: Ext.get(Epsitec.Cresus.Core.getApplication().tabManager.getLayout().getActiveItem().el),
+        renderTo: Ext.get(tabManager.getLayout().getActiveItem().el),
         layout: {
           type: 'border',
           padding: 5
