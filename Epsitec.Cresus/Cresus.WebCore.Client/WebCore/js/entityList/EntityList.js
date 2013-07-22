@@ -549,7 +549,7 @@ function() {
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {
 
-        this.fullSearchWindow = Ext.create('Epsitec.SearchWindow',this.columnDefinitions,this);
+        this.fullSearchWindow = Ext.create('Epsitec.SearchWindow', this.columnDefinitions, this);
         this.fullSearchWindow.showAt(e.container.getXY());
 
       }

@@ -14,7 +14,7 @@ function() {
     valueField: null,
     components: null,
 
-    constructor: function(builder,columnDefinitions,first) {
+    constructor: function(builder, columnDefinitions, first) {
       this.components = [];
       var me = this;
       var config = {

@@ -21,13 +21,13 @@ function() {
     },
 
     init: function() {
-      var firstElement = Ext.create('Epsitec.QueryElement', this, this.columnDefinitions,false);
+      var firstElement = Ext.create('Epsitec.QueryElement', this, this.columnDefinitions, false);
       this.insert(firstElement);
       this.doLayout();
     },
 
     onAddElement: function(event, toolEl, panel) {
-      this.insert(Ext.create('Epsitec.QueryElement', this, this.columnDefinitions,true));
+      this.insert(Ext.create('Epsitec.QueryElement', this, this.columnDefinitions, true));
       this.doLayout();
     }
   });
