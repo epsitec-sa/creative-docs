@@ -105,7 +105,7 @@ function() {
       });
     },
 
-    initOperatorDataStore: function () {
+    initOperatorDataStore: function() {
       this.operatorComboStore = Ext.create('Ext.data.Store', {
         fields: ['id', 'symbol'],
         data: [

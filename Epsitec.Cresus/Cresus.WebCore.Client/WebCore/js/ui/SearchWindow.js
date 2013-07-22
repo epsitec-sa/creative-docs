@@ -1,6 +1,6 @@
 ﻿Ext.require([
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.ui.SearchWindow', {
     extend: 'Ext.Window',
     alternateClassName: ['Epsitec.SearchWindow'],
@@ -12,7 +12,7 @@ function () {
     panel: null,
     caller: null,
 
-    constructor: function (columnDefinitions, caller) {
+    constructor: function(columnDefinitions, caller) {
       this.caller = caller;
       Ext.QuickTips.init();
       this.fields = this.createSearchFormFields(columnDefinitions);
@@ -64,14 +64,14 @@ function () {
       this.callParent([config]);
     },
 
-    executeFullSearch: function () {
+    executeFullSearch: function() {
       var list = this.caller;
 
       list.dockedItems.items[2].items.items[0].setValue(
           this.form.items.items[0].lastValue
       );
 
-      Ext.Array.each(this.form.items.items, function (item) {
+      Ext.Array.each(this.form.items.items, function(item) {
         var filter = list.filters.getFilter(item.name);
         if (!Ext.isDefined(filter)) {
           if (Ext.isDefined(item.lastValue)) {
@@ -95,16 +95,16 @@ function () {
           else {
             filter.setActive(false);
           }
-      }
+        }
       });
 
       this.hide();
     },
 
-    resetFullSearch: function () {
+    resetFullSearch: function() {
       var list = this.caller;
 
-      Ext.Array.each(this.form.items.items, function (item) {
+      Ext.Array.each(this.form.items.items, function(item) {
         item.reset();
         if (list.filters.filters.getKey(item.name) !== null) {
           list.filters.filters.getKey(item.name).setValue(item.lastValue);
@@ -120,15 +120,15 @@ function () {
       this.form.items.items[0].setValue(val);
     },
 
-    onEnterExecuteFullSearch: function (field, e) {
+    onEnterExecuteFullSearch: function(field, e) {
       if (e.getKey() === e.ENTER) {
         this.executeFullSearch();
       }
     },
 
-    createSearchFormFields: function (columnDefinitions) {
+    createSearchFormFields: function(columnDefinitions) {
       var list = this;
-      return columnDefinitions.map(function (c) {
+      return columnDefinitions.map(function(c) {
         var field = {
           name: c.name,
           type: c.type.type
