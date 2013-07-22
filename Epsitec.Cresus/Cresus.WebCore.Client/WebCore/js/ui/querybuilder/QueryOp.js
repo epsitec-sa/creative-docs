@@ -10,7 +10,6 @@ function() {
     components: null,
 
     constructor: function(builder) {
-      var me = this;
       this.components = [];
 
       var config = {
