@@ -1,9 +1,8 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Metadata;
-
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Cresus.Core.Metadata;
 
 using Epsitec.Cresus.DataLayer.Expressions;
 

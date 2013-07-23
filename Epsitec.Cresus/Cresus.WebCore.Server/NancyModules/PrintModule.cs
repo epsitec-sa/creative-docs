@@ -3,12 +3,6 @@ using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using Nancy;
 
-using System;
-
-using System.Collections.Generic;
-
-using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {

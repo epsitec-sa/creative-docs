@@ -1,12 +1,10 @@
 ﻿using Epsitec.Common.IO;
+using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Owin.Hubs;
-
 using Microsoft.Owin.Hosting;
-
 using System;
 using System.Diagnostics;
 using System.Linq;
-using Epsitec.Cresus.WebCore.Server.Core;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin
 {

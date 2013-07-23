@@ -3,10 +3,6 @@
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Metadata;
 
-using System;
-
-using System.Collections.Generic;
-
 using System.IO;
 
 

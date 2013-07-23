@@ -3,9 +3,6 @@
 
 
 using Microsoft.AspNet.SignalR;
-using Epsitec.Cresus.WebCore.Server.Core;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs

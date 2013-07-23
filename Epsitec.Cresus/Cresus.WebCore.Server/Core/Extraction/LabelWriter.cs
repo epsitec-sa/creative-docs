@@ -1,17 +1,17 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Pdf.Engine;
 using Epsitec.Common.Pdf.Labels;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.Core.Labels;
+using Epsitec.Cresus.Core.Metadata;
 
 using System.Collections.Generic;
+
 using System.IO;
+
 using System.Linq;
 
 

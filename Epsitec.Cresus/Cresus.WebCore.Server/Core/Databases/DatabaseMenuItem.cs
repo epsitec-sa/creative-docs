@@ -4,8 +4,6 @@ using Epsitec.Cresus.WebCore.Server.Core.IO;
 
 using System.Collections.Generic;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {

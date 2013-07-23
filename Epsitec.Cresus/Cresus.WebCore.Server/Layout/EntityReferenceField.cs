@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Favorites;
 
 using System.Collections.Generic;
-using System.Linq;
+
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {

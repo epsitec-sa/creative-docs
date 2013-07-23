@@ -3,7 +3,6 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;

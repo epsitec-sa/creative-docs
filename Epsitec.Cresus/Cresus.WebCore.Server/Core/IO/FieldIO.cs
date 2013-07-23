@@ -6,11 +6,10 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
-
-using Epsitec.Cresus.WebCore.Server.NancyModules;
-
 using Epsitec.Cresus.DataLayer.Context;
+
+using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using Nancy;
 

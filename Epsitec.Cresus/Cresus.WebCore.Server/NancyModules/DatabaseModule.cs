@@ -1,6 +1,4 @@
-﻿using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Core.Business;
+﻿using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Resolvers;
 
