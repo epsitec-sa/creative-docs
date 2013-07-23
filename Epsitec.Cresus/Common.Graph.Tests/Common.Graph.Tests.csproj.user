@@ -16,4 +16,10 @@
     <StartArguments>..\Common.Graph.Tests\bin\Debug\Common.Graph.Tests.dll</StartArguments>
     <StartAction>Program</StartAction>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartProgram>S:\Epsitec.Cresus\External\nunit-2.4.x\nunit.exe</StartProgram>
+    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartArguments>..\Common.Graph.Tests\bin\Debug\Common.Graph.Tests.dll</StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>

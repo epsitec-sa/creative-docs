@@ -3,4 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <StartArguments>-listen http://+:8081/debugservice/ D:\log</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>-listen http://+:8081/debugservice/ D:\log</StartArguments>
+  </PropertyGroup>
 </Project>
