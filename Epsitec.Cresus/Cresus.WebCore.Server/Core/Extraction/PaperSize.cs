@@ -5,6 +5,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 
 
+	/// <summary>
+	/// This class contains predefined paper sizes.
+	/// </summary>
 	internal static class PaperSize
 	{
 

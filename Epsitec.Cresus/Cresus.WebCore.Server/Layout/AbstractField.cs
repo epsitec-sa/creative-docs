@@ -5,6 +5,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This is the base class for all fields that are used in edition tiles.
+	/// </summary>
 	internal abstract class AbstractField : AbstractEditionTilePart
 	{
 

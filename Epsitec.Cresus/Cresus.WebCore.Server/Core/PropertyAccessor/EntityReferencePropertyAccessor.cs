@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 
+	/// <summary>
+	/// This class is the property accessor class used to read, write and check values for entity
+	/// fields that are references to a single entity.
+	/// </summary>
 	internal sealed class EntityReferencePropertyAccessor : AbstractPropertyAccessor
 	{
 

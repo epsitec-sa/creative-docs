@@ -25,6 +25,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 
+	/// <summary>
+	/// This class is the basic component that is used by WebCore to access to the resources
+	/// provided by the application, such as BusinessContexts, UserManager, etc.
+	/// </summary>
+	/// <remarks>
+	/// Because of intensive use of ThreadLocal storage within a CoreApp, it is mandatory to
+	/// always use it within the same thread. So for a given instance of CoreApp, it must have a
+	/// dedicated thread that calls its constructor, uses it and disposes it. This thread should
+	/// never be used to access another instance of CoreApp.
+	/// </remarks>
 	public class WorkerApp : CoreApp
 	{
 
@@ -145,7 +155,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 						// We discard the BusinessContext so any unsaved changes won't be
 						// persisted to the database. Such changes could happen if an exception
 						// is thrown after some entities have been modified. In such a case, we
-						// want to make sure that the changed are not persisted to the databse.
+						// want to make sure that the changed are not persisted to the database.
 
 						businessContext.Discard ();
 					}
@@ -168,6 +178,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			{
 				CoreApp.current = null;
 
+				// We flush the user manager so that it does not hold any reference to an entity
+				// anymore. This way, we are sure that the next time it is used, there is no
+				// outdated cached data within it.
 				this.userManager.Flush ();
 			}
 		}

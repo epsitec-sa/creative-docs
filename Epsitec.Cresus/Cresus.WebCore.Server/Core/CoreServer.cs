@@ -10,6 +10,11 @@ using System.Globalization;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
+	/// <summary>
+	/// This class is used to initialize all objects that will be used globally accross the server
+	/// to access data, and to hold references on them, so that they can be used by the Nancy
+	/// modules.
+	/// </summary>
 	public sealed class CoreServer : System.IDisposable
 	{
 		public CoreServer(int nbCoreWorkers, CultureInfo uiCulture)

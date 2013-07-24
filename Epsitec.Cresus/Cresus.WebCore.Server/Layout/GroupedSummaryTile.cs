@@ -7,6 +7,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents a tile for a template (i.e. multiple elements from a list), with the
+	/// auto grouping enabled.
+	/// </summary>
 	internal sealed class GroupedSummaryTile : AbstractTile
 	{
 

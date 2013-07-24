@@ -5,6 +5,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 
+	/// <summary>
+	/// This class is used to instantiates types relating to lambda expressions, and keep a mapping
+	/// between these lambda expression and these items, and another mapping between the ids of
+	/// the items and the items. We have thus the two mappings
+	/// - lambda => items
+	/// - id => items
+	/// This allows reference of these objects to be given to the javascript client as small ids,
+	/// that can then be resolved as these objects later on when the client gives back an id.
+	/// </summary>
 	internal abstract class AbstractLambdaCache<T> : ItemCache<LambdaExpression, string, T, string, T>
 	{
 

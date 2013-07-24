@@ -19,23 +19,28 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	using Array = Epsitec.Common.Pdf.Array.Array;
 
 
-	// This class is not finished and thus not used yet. There are two main problems
-	// - If should be more configurable. Like the client should be able to choose stuff like
-	//   - The paper size
-	//   - The paper orientation
-	//   - The font
-	//   - The font size
-	//   - Basic colors
-	//   - Basic line stuff
-	//   - Wheter to display the page number
-	//   - Some headers and footers
-	//   - ...
-	// - The Common.Pdf classes are way too slow to use in procution. This must be corrected before
-	//   this class is used in production.
-	// Once these two points are resolved, the javascript client and the server must be modified so
-	// that the client can configure its pdf exportation and do it.
+	/// <summary>
+	/// This class will serialize an array of entities to a pdf file.
+	/// </summary>
 	internal sealed class PdfArrayFormat : ArrayFormat
 	{
+
+
+		// This class is not finished and thus not used yet. There are two main problems:
+		// - If should be more configurable. Like the user should be able to choose stuff like
+		//   - The paper size
+		//   - The paper orientation
+		//   - The font
+		//   - The font size
+		//   - Basic colors
+		//   - Basic line stuff
+		//   - Whether to display the page number
+		//   - Some headers and footers
+		//   - ...
+		// - The Common.Pdf classes are way too slow to use in procution. This must be corrected
+		//   before this class is used in production.
+		// Once these two points are resolved, the javascript client and the server must be
+		// modified so that the client can configure its pdf exportation and do it.
 
 
 		public override string Extension

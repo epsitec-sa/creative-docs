@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 
+	/// <summary>
+	/// This class is used to map a given type (typically a type of an entity property) to the
+	/// kind of FieldType that will be used to represent it.
+	/// </summary>
 	internal static class FieldTypeSelector
 	{
 

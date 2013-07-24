@@ -5,6 +5,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents an item in a grouped summary tile, i.e. the summary of an entity that
+	/// is contained within the list.
+	/// </summary>
 	internal sealed class GroupedSummaryTileItem
 	{
 

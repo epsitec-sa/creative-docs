@@ -14,7 +14,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	/// <summary>
-	/// Called from the login page to check if the user can access the application
+	/// This module handles the http requests relating the log in and the log out of a user. This
+	/// is the only module which doesn't require the user to be already authenticated. It also
+	/// provides a function that is used by other modules to check if the user is logged in or to
+	/// access to some session data.
 	/// </summary>
 	public class LoginModule : AbstractCoreModule
 	{
@@ -23,8 +26,17 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public LoginModule(CoreServer coreServer)
 			: base (coreServer, "/log")
 		{
-			this.Post["/in"]  = p => this.Login ();
-			this.Post["/out"] = p => this.Logout ();
+			// Logs the user in. This request will store some session data in the cookie. This is
+			// safe to do, as the content of the cookie is automatically encrypted by Nancy.
+			// POST arguments:
+			// - username:    the name of the user.
+			// - password:    the password of the user.
+			this.Post["/in"]  = p =>
+				this.Login ();
+
+			// Logs the user out. This request will remove the session data from the cookie.
+			this.Post["/out"] = p =>
+				this.Logout ();
 		}
 
 
@@ -77,12 +89,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.Session[LoginModule.SessionId]    = LoginModule.CreateSessionId ();
 		}
 
+
 		private void SessionLogout()
 		{
 			this.Session.Delete (LoginModule.UserName);
 			this.Session.Delete (LoginModule.SessionId);
 			this.Session[LoginModule.LoggedInName] = false;
 		}
+
 
 		private bool CheckCredentials(string userName, string password)
 		{
@@ -100,6 +114,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			return System.Guid.NewGuid ().ToString ("D");
 		}
+
 
 		private static Response RequiresAuthentication(NancyContext context)
 		{

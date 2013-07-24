@@ -9,6 +9,19 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 
+	/// <summary>
+	/// This class is used to write a simple javascript configuration file that contains a single
+	/// object stored in a global variable, so that it can contain key/value pairs that can be
+	/// accessed from anywhere in the javascript client.
+	/// 
+	/// The resulting configuration file looks like
+	/// var myConfiguration = {
+	///   key1: true,
+	///   key2: false,
+	///   key3: 'value1',
+	///   key3, 'value2'
+	/// };
+	/// </summary>
 	internal sealed class ConfigurationFileGenerator
 	{
 

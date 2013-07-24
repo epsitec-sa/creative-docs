@@ -15,6 +15,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
+	/// <summary>
+	/// This is the base class for all modules that requires the user to be logged in. It is thus
+	/// the base class of all modules except the LoginModule. It adds checks to ensure that the
+	/// user is properly logged in.
+	/// In addition, it provides methods that can be used to access the services provided by the
+	/// CoreServer, like BusinessContexts and WorkerApps. All modules that need to access these
+	/// two services must use the call to the appropriate Execute(...) method, in order to ensure
+	/// that the resources are set up and cleaned properly. Note that all calls to these methods
+	/// might be blocking if the resources are not immediately available.
+	/// </summary>
 	public abstract class AbstractAuthenticatedModule : AbstractCoreModule
 	{
 

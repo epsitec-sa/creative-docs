@@ -7,6 +7,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The AbstractContexttualMenuItem is a class that represents an entry in the contextual menu
+	/// that must be shown when the user clicks on an entity within a database.
+	/// </summary>
 	internal abstract class AbstractContextualMenuItem
 	{
 

@@ -10,6 +10,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// The set column is a column that displays the content of a SetViewController.
+	/// </summary>
 	internal sealed class SetColumn : EntityColumn
 	{
 

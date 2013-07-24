@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	/// <summary>
-	/// Used to provide Enum values to the ExtJS store
+	/// This module is used to provide the enumeration values for the javascript client.
 	/// </summary>
 	public class EnumModule : AbstractAuthenticatedModule
 	{
@@ -30,7 +30,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public EnumModule(CoreServer coreServer)
 			: base (coreServer, "/enum")
 		{
-			Get["/get/{name}"] = p => this.GetEnum (p);
+			// Gets the id/text pairs for the values of an enumeration.
+			// URL arguments: 
+			// - name:   The id of the enumeration type whose data to get, as used by the TypeCache
+			//           class.
+			Get["/get/{name}"] = p =>
+				this.GetEnum (p);
 		}
 
 

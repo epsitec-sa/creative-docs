@@ -21,8 +21,14 @@ using System.Threading;
 
 namespace Epsitec.Cresus.WebCore.Server
 {
+	/// <summary>
+	/// This class is the main entry point of this dll. It manages the server for all its lifetime.
+	/// </summary>
 	public sealed class CoreServerProgram
 	{
+		/// <summary>
+		/// Starts the server. This constructor won't return until the server has been shut down.
+		/// </summary>
 		public CoreServerProgram()
 		{
 			ConsoleCreator.RunWithConsole (() =>

@@ -12,6 +12,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// This class provides methods to convert back and forth from the server to the javascript
+	/// client references to columns of data sets.
+	/// </summary>
 	internal static class ColumnIO
 	{
 

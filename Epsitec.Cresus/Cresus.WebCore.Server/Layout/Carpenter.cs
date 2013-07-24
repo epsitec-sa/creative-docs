@@ -35,6 +35,24 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// This class is used to create instance of BrickWall using the Mason, and then transform
+	/// these instances into instances of EntityColum that will be returned to the javascript
+	/// client.
+	/// </summary>
+	/// <remarks>
+	/// This class has been inspired by the behavior of the Bridge<T> class, which has been used as
+	/// a rough specification. It is highly probable that despite my best efforts, they are sublty
+	/// different and might have diverged over time. In particular, I know that several recent
+	/// features of the bricks have been added here but are not handled at all in Bridge<T>.
+	/// The general idea behind the implementation of this class is quite simple, it simply
+	/// processes the trees of Bricks that compose a BrickWall and transform them in another
+	/// representation that is more stuited for the javascript client, the EntityColumns. However
+	/// some details might be tricky or hard to understand because the structure of the trees of
+	/// Bricks are not always very consistent and visitor friendly. For instance, the InputBrick is
+	/// a mess that contains directly several fields, instead of having each field in a separate
+	/// brick.
+	/// </remarks>
 	internal sealed class Carpenter
 	{
 
@@ -227,7 +245,31 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private IEnumerable<AbstractTile> BuildSummaryTiles(Brick brick, bool isFirst)
 		{
+			// To get the summary brick that will be used to generate the layout, we must skip over
+			// any OfType brick that we might encounter. This happens if the structure is like:
+			//
+			// wall.AddBrick (x => x.MainContact)
+			//     .OfType<MailContactEntity> ()
+			//     ...
+			//
+			// or
+			//
+			// wall.AddBrick (x => x.Contacts)
+			//     .OfType<MailContactEntity> ()
+			//     ...
+			//
+			// In such cases, we should only consider the last OfType brick, wich will the proper
+			// values for the icons, and other resources.
 			var summaryBrick = Carpenter.GetSummaryBrick (brick);
+
+			// If we have a template brick, we must used that on to generate the layout. This
+			// happens if the structure is like:
+			//
+			// wall.AddBrick (x => x.Contacts)
+			//     ...
+			//     .Template()
+			//     ...
+			//     .End()
 			var templateBrick = Carpenter.GetOptionalTemplateBrick (summaryBrick);
 
 			if (templateBrick == null)
@@ -371,6 +413,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				};
 			}
 
+			// If the list is empty, we must return an EmptySummaryTile, so that the user can click
+			// on it to create the entity, or can use it to access to the actions.
+
 			if (empty)
 			{
 				var availableActions = actions
@@ -411,6 +456,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var resolver = brick.GetResolver (null);
 
 			var entities = (IEnumerable<AbstractEntity>) resolver.DynamicInvoke (this.entity);
+
+			// Here we return only the entities that are of the same type as the entity type stored
+			// in the brick, or a subtype of it. With this behavior, we are compliant with the
+			// OfType(...) meaning and only return elements that are of the expected type.
 
 			return from entity in entities
 				   let entityType = entity.GetType ()

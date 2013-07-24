@@ -7,6 +7,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents an horizontal group of several fields, bounded in a box.
+	/// </summary>
 	internal class HorizontalGroup : AbstractEditionTilePart
 	{
 

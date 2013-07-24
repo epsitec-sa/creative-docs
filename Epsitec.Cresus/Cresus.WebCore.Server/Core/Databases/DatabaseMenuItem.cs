@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The DatabaseMenuItem class represents an entry in the top menu that lets the user show a
+	/// given database.
+	/// </summary>
 	internal sealed class DatabaseMenuItem : AbstractMenuItem
 	{
 

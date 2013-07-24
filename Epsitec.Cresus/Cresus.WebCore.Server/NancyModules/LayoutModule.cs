@@ -18,21 +18,52 @@ using System;
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
-
+	/// <summary>
+	/// Gets the layout representations of the various EntityViewControllers.
+	/// </summary>
 	public class LayoutModule : AbstractAuthenticatedModule
 	{
 
 
-		/// <summary>
-		/// Call the <see cref="PanelBuilder"/> to create the ExtJS interface.
-		/// It is called to show the summary of the edition interface.
-		/// </summary>
 		public LayoutModule(CoreServer coreServer)
 			: base (coreServer, "/layout")
 		{
-			Get["/entity/{viewMode}/{viewId}/{entityId}"] = p => this.Execute (b => this.GetLayoutWithEntity (b, p));
-			Get["/entity/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p => this.Execute (b => this.GetLayoutWithEntity (b, p));
-			Get["/type/{viewMode}/{viewId}/{typeId}"] = p => this.Execute (b => this.GetLayoutWithType (b, p));
+			// Gets the layout representation of an EntityViewController based on a single entity.
+			// URL arguments:
+			// - viewMode:   The view mode of the EntityViewController to use, as used by the
+			//               DataIO class.
+			// - viewId:     The view id of the EntityViewController to use, as used by the DataIO
+			//               class.
+			// - entityId:   The entity key of the entity on which the EntityViewController will be
+			//               used, in the format used by the EntityIO class.
+			Get["/entity/{viewMode}/{viewId}/{entityId}"] = p =>
+				this.Execute (b => this.GetLayoutWithEntity (b, p));
+
+			// Gets the layout representation of an EntityViewController, based on an entity and
+			// an additional entity.
+			// URL arguments:
+			// - viewMode:             The view mode of the EntityViewController to use, as used by
+			//                         the DataIO class.
+			// - viewId:               The view id of the EntityViewController to use, as used by
+			//                         the DataIO class.
+			// - entityId:             The entity key of the entity on which the EntityViewController
+			//                         will be used, in the format used by the EntityIO class.
+			// - additionalEntityId:   The entity key of the additional entity on which the
+			//                         EntityViewController will be used, in the format used by the
+			//                         EntityIO class.
+			Get["/entity/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p =>
+				this.Execute (b => this.GetLayoutWithEntity (b, p));
+
+			// Gets the layout reprensentation of an EntityViewControoler, based on an entity type.
+			// URL arguments:
+			// - viewMode:   The view mode of the EntityViewController to use, as used by the
+			//               DataIO class.
+			// - viewId:     The view id of the EntityViewController to use, as used by the DataIO
+			//               class.
+			// - typeId:     The id of the entity type with which to used the EntityViewController,
+			//               in the format used by the TypeCache class.
+			Get["/type/{viewMode}/{viewId}/{typeId}"] = p =>
+				this.Execute (b => this.GetLayoutWithType (b, p));
 		}
 
 

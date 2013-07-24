@@ -10,6 +10,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 
 
+	/// <summary>
+	/// This class is the base class of all writers that are used to serialize a sequence of
+	/// entities to a stream, like a PDF or a CSV file.
+	/// </summary>
 	internal abstract class EntityWriter
 	{
 

@@ -20,6 +20,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 
 
+	/// <summary>
+	/// This class is used to serialize a sequence of entities into an array where each entity has
+	/// one row in the array, and where the columns are customizable. Moreover, the format in which
+	/// the file is written is customizable by using an ArrayFormat.
+	/// </summary>
 	internal sealed class ArrayWriter : EntityWriter
 	{
 

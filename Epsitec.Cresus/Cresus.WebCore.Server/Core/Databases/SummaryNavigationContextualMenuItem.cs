@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The SummaryNavigationContextualMenuItem class represents an entry within the contextual
+	/// menu that should be shown to the user when it clicks on an entity, that lets him navigate
+	/// to another entity (possibly in another database).
+	/// </summary>
 	internal sealed class SummaryNavigationContextualMenuItem : AbstractContextualMenuItem
 	{
 

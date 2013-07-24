@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	/// <summary>
-	/// Allows to add or delete an entity within a collection
+	/// This module is used to add or remove an entity from an entity list.
 	/// </summary>
 	public class ListModule : AbstractAuthenticatedModule
 	{
@@ -32,8 +32,27 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public ListModule(CoreServer coreServer)
 			: base (coreServer, "/list")
 		{
-			Post["/delete"] = p => this.Execute (b => this.DeleteEntity (b));
-			Post["/create"] = p => this.Execute (b => this.CreateEntity (b));
+			// Removes an entity that is present in an entity list and deletes it.
+			// POST arguments:
+			// - parentEntityId:     The entity key of the entity that contains the entity list, in
+			//                       the format used by the EntityIO Class.
+			// - deletedEntityId:    The entity key of the entity that must be removed from the
+			//                       list and deleted, in the format used by the EntityIO class.
+			// - propertyAccessorId: The id of the property accessor that defines the entity list
+			//                       that must be updated, in the format used by the
+			//                       PropertyAccessorCache class.
+			Post["/delete"] = p =>
+				this.Execute (b => this.DeleteEntity (b));
+
+			// Creates an entity and puts it in an entity list.
+			// POST arguments:
+			// - parentEntityId:     The entity key of the entity that contains the entity list, in
+			//                       the format used by the EntityIO Class.
+			// - propertyAccessorId: The id of the property accessor that defines the entity list
+			//                       that must be updated, in the format used by the
+			//                       PropertyAccessorCache class.
+			Post["/create"] = p =>
+				this.Execute (b => this.CreateEntity (b));
 		}
 
 

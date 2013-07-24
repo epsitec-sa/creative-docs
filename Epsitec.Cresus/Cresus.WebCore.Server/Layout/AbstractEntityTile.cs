@@ -5,6 +5,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This is the base class for all tiles that are bound to an entity.
+	/// </summary>
 	internal abstract class AbstractEntityTile : AbstractTile
 	{
 

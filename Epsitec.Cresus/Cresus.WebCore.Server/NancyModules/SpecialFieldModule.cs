@@ -18,6 +18,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
+	/// <summary>
+	/// This module handles all requests dealing with special fields.
+	/// </summary>
 	public sealed class SpecialFieldModule : AbstractAuthenticatedModule
 	{
 
@@ -25,6 +28,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public SpecialFieldModule(CoreServer coreServer)
 			: base (coreServer, "/specialField")
 		{
+			// Executes a methods of a special field controller on an entity.
+			// URL arguments:
+			// - controllerId:  The id of the type of the special field controller that will be
+			//                  used, as used by the TypeCache class.
+			// - entityId:      The entity key of the entity that will be used with the controller,
+			//                  in the format used by the EntityIO class.
+			// - methodName:    The name of the method of the controller that will be invoked.
+			// GET arguments:
+			// The GET arguments are dynamic and are the arguments that will be passed to the
+			// method that will be invoked.
 			Get["/{controllerId}/{entityId}/{methodName}"] =
 				p => this.Execute (b => this.Call (b, p));
 		}

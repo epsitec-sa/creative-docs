@@ -21,6 +21,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server
 {
+	/// <summary>
+	/// This class contains some general purpose methods that are used throughout the project.
+	/// </summary>
 	internal static class Tools
 	{
 		public static System.IDisposable Bind(this BusinessContext businessContext, params AbstractEntity[] entities)

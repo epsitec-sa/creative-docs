@@ -30,6 +30,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// This modules is used to retrieve and manipulate the entities contained in set DataSets. Set
+	/// DataSets are the data sets provided by instances of SetViewController.
+	/// </summary>
 	public class SetModule : AbstractAuthenticatedModule
 	{
 
@@ -37,12 +41,77 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public SetModule(CoreServer coreServer)
 			: base (coreServer, "/set")
 		{
-			Get["/{viewId}/{entityId}/get/{dataset}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
-			Get["/{viewId}/{entityId}/export/{dataset}"] = p => this.Execute ((wa, b) => this.Export (wa, b, p));
-			Post["/{viewId}/{entityId}/add"] = p => this.Execute (b => this.Add (b, p));
-			Post["/{viewId}/{entityId}/remove"] = p => this.Execute (b => this.Remove (b, p));
-		}
+			// Gets the data of the entities in a set DataSet.
+			// URL arguments:
+			// - viewId:    The view id of the SetViewController to use, as used by the DataIO
+			//              class.
+			// - entityId:  The entity key of the entity on which the SetViewController will be
+			//              used, in the format used by the EntityIO class.
+			// - dataset:   The type of dataset to use:
+			//              - display:  for the dataset that displays its elements
+			//              - pick:     for the dataset that displays the elements that can be
+			//                          picked to be added to the dataset.
+			// GET arguments:
+			// - start:   The index of the first entity to return, as an integer.
+			// - limit:   The maximum number of entities to return, as an integer.
+			// - columns: The id of the columns whose data to return, in the format used by the
+			//            ColumnIO class.
+			// - sort:    The sort clauses, in the format used by SorterIO class.
+			// - filter:  The filters, in the format used by FilterIO class.
+			Get["/{viewId}/{entityId}/get/{dataset}"] = p =>
+				this.Execute ((wa, b) => this.GetEntities (wa, b, p));
 
+			// Exports the data of the entities that are in a set DataSet.
+			// URL arguments:
+			// - viewId:    The view id of the SetViewController to use, as used by the DataIO
+			//              class.
+			// - entityId:  The entity key of the entity on which the SetViewController will be
+			//              used, in the format used by the EntityIO class.
+			// - dataset:   The type of dataset to use:
+			//              - display:  for the dataset that displays its elements
+			//              - pick:     for the dataset that displays the elements that can be
+			//                          picked to be added to the dataset.
+			// GET arguments:
+			// - sort:    The sort clauses, in the format used by SorterIO class.
+			// - filter:  The filters, in the format used by FilterIO class.
+			// - type:    The type of export to do.
+			//            - array for entity daty as a csv file.
+			//            - label for labels as a pdf file.
+			// If the type is array, then:
+			// - columns: The id of the columns whose data to return, in the format used by the
+			//            ColumnIO class.
+			// If the type is label, then:
+			// - layout:  The kind of layout desired. This is the value of the LabelLayout type, as
+			//            used by the Enum.Parse(...) method.
+			// - text:    The id of the LabelTextFactory used to generate the label text, as an
+			//            integer value.
+			Get["/{viewId}/{entityId}/export/{dataset}"] = p =>
+				this.Execute ((wa, b) => this.Export (wa, b, p));
+
+			// Adds entities to the set DataSet
+			// URL arguments:
+			// - viewId:    The view id of the SetViewController to use, as used by the DataIO
+			//              class.
+			// - entityId:  The entity key of the entity on which the SetViewController will be
+			//              used, in the format used by the EntityIO class.
+			// POST arguments:
+			// - entityIds: The entity keys of the entities to add to the DataSet, in the format
+			//              used by the EntityIO class.
+			Post["/{viewId}/{entityId}/add"] = p =>
+				this.Execute (b => this.Add (b, p));
+			
+			// Removes entities from the set DataSet
+			// URL arguments:
+			// - viewId:    The view id of the SetViewController to use, as used by the DataIO
+			//              class.
+			// - entityId:  The entity key of the entity on which the SetViewController will be
+			//              used, in the format used by the EntityIO class.
+			// POST arguments:
+			// - entityIds: The entity keys of the entities to removre from the DataSet, in the
+			//              format used by the EntityIO class.
+			Post["/{viewId}/{entityId}/remove"] = p =>
+				this.Execute (b => this.Remove (b, p));
+		}
 
 		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{

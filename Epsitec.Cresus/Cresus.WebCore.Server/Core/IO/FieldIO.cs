@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 {
 
 
+	/// <summary>
+	/// This class provides methods used to process data of entity properties in order to send them
+	/// to the javascript client and then to parse the data that is coming back from the client.
+	/// </summary>
 	internal static class FieldIO
 	{
 

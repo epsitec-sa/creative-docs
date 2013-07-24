@@ -2,6 +2,9 @@
 {
 
 
+	/// <summary>
+	/// This class represents a separator which adds an horizontal line between two elements.
+	/// </summary>
 	internal class Separator : AbstractEditionTilePart
 	{
 

@@ -18,6 +18,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The Column class is used to represent a column within a Database. It contains method used
+	/// to serialze it to the javascript client and to obtain entity values.
+	/// </summary>
 	internal sealed class Column
 	{
 

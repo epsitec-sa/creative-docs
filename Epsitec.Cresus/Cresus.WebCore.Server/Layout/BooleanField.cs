@@ -2,6 +2,9 @@
 {
 
 
+	/// <summary>
+	/// This class represents an edition field used to edit a boolean value.
+	/// </summary>
 	internal sealed class BooleanField : AbstractField
 	{
 

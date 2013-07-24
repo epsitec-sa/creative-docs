@@ -27,11 +27,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
 
 
+	/// <summary>
+	/// This class is the Nancy server. It listens to an uri and processes the http requests with
+	/// the regular Nancy pipeline.
+	/// </summary>
+	/// <remarks>
+	/// This class has been largely inspired by the source code of the official Nancy self host.
+	/// </remarks>
 	internal sealed class NancyServer : IDisposable
 	{
-
-
-		// This class has been largely inspired by the source code of the official Nancy self host.
 
 
 		public NancyServer(CoreServer coreServer, Uri uri)

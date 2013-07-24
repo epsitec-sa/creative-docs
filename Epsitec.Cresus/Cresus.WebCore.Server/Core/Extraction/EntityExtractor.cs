@@ -25,6 +25,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// This class provies a view over a database, possible filtered and sorted. It can be used to
+	/// access ranges of entities within this view.
+	/// </summary>
 	internal sealed class EntityExtractor : IDisposable
 	{
 

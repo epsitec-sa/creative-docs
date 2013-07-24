@@ -7,6 +7,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents the edition tiles, i.e. the tiles that have edition fields that the
+	/// user can fill and save, in order to update the data of an entity.
+	/// </summary>
 	internal sealed class EditionTile : AbstractActionTile
 	{
 

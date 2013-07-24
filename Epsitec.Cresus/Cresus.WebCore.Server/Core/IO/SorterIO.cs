@@ -12,6 +12,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// This class provides the method used to parse sorter data sent by the javascript client.
+	/// </summary>
 	internal static class SorterIO
 	{
 

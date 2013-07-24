@@ -3,6 +3,18 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
+	/// <summary>
+	/// This class is used to normalize expressions, so that two similar expression will map to the
+	/// same normalized form. If we have (Person p) => p.Address and (Person x) => x.Address, these
+	/// expressions are logically the same, even if their text is different. As we use this text
+	/// to check if two expressions are the same, we must have a way to normalize them before.
+	/// </summary>
+	/// <remarks>
+	/// For now, this class only normalizes the parameter names. If we wanted more advanced
+	/// normalization, we could get insipration from this article:
+	/// http://petemontgomery.wordpress.com/2008/08/07/caching-the-results-of-linq-queries
+	/// Interrestingly, this article does not normalizes the parameter names.
+	/// </remarks>
 	public sealed class ExpressionNormalizer : ExpressionVisitor
 	{
 		private ExpressionNormalizer()
@@ -37,12 +49,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		/// This method takes an expression and normalizes it so that it would become similar to
 		/// another one with the same structure.
 		/// </summary>
-		/// <remarks>
-		/// For now, this method only normalizes the parameter names. If we wanted more advanced
-		/// normalization, we could get insipration from this article:
-		/// http://petemontgomery.wordpress.com/2008/08/07/caching-the-results-of-linq-queries
-		/// Interrestingly, this article does not normalizes the parameter names.
-		/// </remarks>
 		public static Expression Normalize(Expression expression)
 		{
 			var normalizer = new ExpressionNormalizer ();

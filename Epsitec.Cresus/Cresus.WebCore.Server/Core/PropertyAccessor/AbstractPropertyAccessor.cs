@@ -11,6 +11,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
 
 
+	/// <summary>
+	/// This class is the base class of all property accessors. The property accessors are used to
+	/// read, write, and check values of entity properties. Each subclass  manages different kind
+	/// of properties (value, reference and collection properties).
+	/// </summary>
+	/// <remarks>
+	/// A property accessor is fully defined by the lambda expression that is used to create it. It
+	/// also contains an id that can be given to the javascript client and the used to resolve the
+	/// property accessor back.
+	/// The GetValue(...), SetValue(...) and CheckValue(...) methods are thread safe.
+	/// </remarks>
 	internal abstract class AbstractPropertyAccessor
 	{
 

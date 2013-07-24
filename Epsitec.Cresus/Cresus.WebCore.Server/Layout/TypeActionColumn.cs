@@ -7,6 +7,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class is used to represent columns that display action tiles, but for actions that are
+	/// not related to an entity but to an entity type.
+	/// </summary>
 	internal sealed class TypeActionColumn : TileColumn
 	{
 

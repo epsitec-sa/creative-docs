@@ -11,6 +11,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 {
 
 
+	/// <summary>
+	/// This class provides methods to convert some data back and forth from the server to the
+	/// javascript client.
+	/// </summary>
 	internal static class DataIO
 	{
 

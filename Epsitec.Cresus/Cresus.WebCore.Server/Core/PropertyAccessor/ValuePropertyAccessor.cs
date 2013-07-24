@@ -11,6 +11,14 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 {
+	/// <summary>
+	/// This class is the property accessor class used to read, write and check values for entity
+	/// fields that are values, like int, decimal, etc.
+	/// This kind of property accessor takes into account an optional field binder that might be
+	/// associated to the property by Cresus.Designer. If there is one, it is used to convert the
+	/// values back and forth from the entity property representation to the UI representation when
+	/// required.
+	/// </summary>
 	internal sealed class ValuePropertyAccessor : AbstractPropertyAccessor
 	{
 		public ValuePropertyAccessor(LambdaExpression lambda, FieldType fieldType, string id)
@@ -19,11 +27,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			this.fieldBinder = FieldBinderFactory.Create (this.Property.Type);
 		}
 
-
 		public override object GetValue(AbstractEntity entity)
 		{
 			var value = base.GetValue (entity);
 
+			// Before giving the value to the javascript client,, we must conver it to its UI
+			// representation by using the field binder.
 			if (this.fieldBinder != null)
 			{
 				value = this.ConvertToUI (value);
@@ -34,6 +43,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 		public override void SetValue(AbstractEntity entity, object value)
 		{
+			// Before setting the value to the property, we must convert its UI reprensetation to
+			// the one that will be used to store the value.
 			if (this.fieldBinder != null)
 			{
 				value = this.ConvertFromUI (value);
@@ -64,8 +75,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 			return ValidationResult.Create (valid);
 		}
-
-
 
 		private bool CheckValueInternal(object value)
 		{
@@ -144,7 +153,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 				return ValidationResult.Create (true);
 			}
 		}
-
 
 		private readonly IFieldBinder			fieldBinder;
 	}

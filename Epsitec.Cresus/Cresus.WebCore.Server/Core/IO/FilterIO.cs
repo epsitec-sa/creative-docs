@@ -30,6 +30,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 	using Database = Core.Databases.Database;
 
 
+	/// <summary>
+	/// This class provides the methods required to parse filters sent by the javascript client.
+	/// </summary>
 	internal static class FilterIO
 	{
 

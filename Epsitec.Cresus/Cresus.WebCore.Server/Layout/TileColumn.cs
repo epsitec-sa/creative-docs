@@ -10,6 +10,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// A tile column is an entity column which is composed by a list of tiles that must be
+	/// displayed.
+	/// </summary>
 	internal class TileColumn : EntityColumn
 	{
 

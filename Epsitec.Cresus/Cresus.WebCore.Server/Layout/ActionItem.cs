@@ -5,6 +5,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class is used to defined what actions are available in an AbstractActionTile.
+	/// </summary>
 	internal sealed class ActionItem
 	{
 

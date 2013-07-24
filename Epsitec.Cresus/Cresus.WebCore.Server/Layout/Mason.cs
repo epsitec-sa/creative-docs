@@ -21,6 +21,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class is responsible for finding the appropriate ViewController instances, and using
+	/// them to build their brick wall.
+	/// </summary>
+	/// <remarks>
+	/// The implementation of this class has been inspired by the Bridge class. The Bridge class
+	/// has been used as a rough specification for the Mason, in how the default values and the
+	/// handling of new bricks and brick properties should be handled. It is highly probable that
+	/// despite my best efforts, they are sublty different and might have diverged over time.
+	/// </remarks>
 	internal static class Mason
 	{
 

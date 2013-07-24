@@ -17,6 +17,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The DatabaseManager class is used to instantiate Database instances based on the
+	/// DataSetMetadata and EntityTableMetadata definitions.
+	/// </summary>
 	internal sealed class DatabaseManager
 	{
 

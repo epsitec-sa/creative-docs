@@ -21,6 +21,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The Database class is the representation of a DataSet that is returned to the javascript
+	/// client. In addition, it contains methods that are used to manipulate them.
+	/// </summary>
 	internal sealed class Database
 	{
 

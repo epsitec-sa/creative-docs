@@ -11,9 +11,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 
 	/// <summary>
-	/// Responses that are sent to the ExtJS client.
-	/// Every response should be one of them, because ExtJS or the global JS
-	/// use the "success" field to know what to do with the data.
+	/// This class is a factory for all the responses that are sent to the javascript client.
 	/// </summary>
 	internal static class CoreResponse
 	{

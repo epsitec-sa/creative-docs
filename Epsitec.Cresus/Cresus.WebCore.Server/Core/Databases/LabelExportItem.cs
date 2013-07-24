@@ -6,7 +6,10 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
-
+	/// <summary>
+	/// The LabelExportItem class represents an entry that must appear in the export menu for a
+	/// kind of label that can be exported.
+	/// </summary>
 	internal sealed class LabelExportItem
 	{
 

@@ -5,6 +5,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents the summary tile that is used to display an item of a template (i.e.
+	/// an entity list) with the auto grouping disabled.
+	/// </summary>
 	internal class CollectionSummaryTile : SummaryTile
 	{
 

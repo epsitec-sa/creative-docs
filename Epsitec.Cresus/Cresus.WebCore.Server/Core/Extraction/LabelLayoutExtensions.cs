@@ -9,6 +9,10 @@ using Epsitec.Common.Pdf.Labels;
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
+	/// <summary>
+	/// This class contains methods used to obtain objects used by the PDF export engine to export
+	/// labels to a PDF file.
+	/// </summary>
 	internal static class LabelLayoutExtensions
 	{
 		public static LabelPageLayout GetLabelPageLayout(this LabelLayout layout)

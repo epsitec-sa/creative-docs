@@ -9,6 +9,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 
+	/// <summary>
+	/// The Caches class contains all the different caches that are used to access to global data
+	/// throughout the server.
+	/// The main idea of those caches, is that they allow the transfer of data to and from the
+	/// javascript client with minimal overhead. Take the type cache for instance. At some places
+	/// we want to give to the client a reference to a .Net type, that it will send later on. If
+	/// we send the whole type name, that is very long. So we have this cache that contains a
+	/// mapping from short ids (typically id1, id2, id3, ...) to the type instances.
+	/// Note that all these caches are fully thread safe, and can therefore be accessed
+	/// concurrently by several threads.
+	/// </summary>
 	internal sealed class Caches : IDisposable
 	{
 
@@ -22,6 +33,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		/// <summary>
+		/// Stores a mapping from auto generated ids or lambda expressions to the PropertyAccessor
+		/// instances.
+		/// </summary>
 		internal PropertyAccessorCache PropertyAccessorCache
 		{
 			get
@@ -31,6 +46,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		/// <summary>
+		/// Stores a mapping from auto generated ids or lambda expressions to the AutoCreator
+		/// instances.
+		/// </summary>
 		internal AutoCreatorCache AutoCreatorCache
 		{
 			get
@@ -40,6 +59,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		/// <summary>
+		/// Stores a mapping from auto generated ids to the column names that are used in the
+		/// data sets.
+		/// </summary>
 		internal IdCache<string> ColumnIdCache
 		{
 			get
@@ -49,6 +72,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
+		/// <summary>
+		/// Stores a mapping from auto generated ids to .Net type instances.
+		/// </summary>
 		internal IdCache<Type> TypeCache
 		{
 			get

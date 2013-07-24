@@ -16,24 +16,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 	/// <summary>
 	/// This modules handles all the requests related to scope management
-	/// 
-	/// There are two kind of requests for now:
-	/// 
-	/// 1) Url: /scope/list/
-	///    Method: GET
-	///    Response format: content: {
-	///      scopes: [{
-	///         id: ID_OF_SCOPE,
-	///         name: NAME_OF_SCOPE,
-	///      }],
-	///      activeId: ID_OF_ACTIVE_SCOPE
-	///    }
-	///    This request returns the list of scopes available for the current user.
-	///    
-	/// 2) Url /scope/set/
-	///    Method: POST
-	///    Post parameters: scopeId
-	///    This request sets the scope to the one given by the id passed with the post parameter.
 	/// </summary>
 	public sealed class ScopeModule : AbstractAuthenticatedModule
 	{
@@ -42,8 +24,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public ScopeModule(CoreServer coreServer)
 			: base (coreServer, "/scope")
 		{
-			Get["/list/"] = p => this.Execute (wa => this.GetScopeList (wa));
-			Post["/set/"] = p => this.Execute (wa => this.SetScope (wa));
+			// Gets the list of scopes available for the current user, as well as the active scope
+			// id.
+			Get["/list/"] = p =>
+				this.Execute (wa => this.GetScopeList (wa));
+
+			// Sets the scope for the current user.
+			// POST arguments:
+			// - scopeId: The id of the scope that must be the user's current scope.
+			Post["/set/"] = p =>
+				this.Execute (wa => this.SetScope (wa));
 		}
 
 

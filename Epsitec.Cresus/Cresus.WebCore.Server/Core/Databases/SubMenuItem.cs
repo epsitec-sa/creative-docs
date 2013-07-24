@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The SubMenuItem class represents an item in the top menu of the application that is itself
+	/// a menu with more items.
+	/// </summary>
 	internal sealed class SubMenuItem : AbstractMenuItem
 	{
 

@@ -11,6 +11,9 @@ namespace Epsitec.Cresus.WebCore.Server
 {
 
 
+	/// <summary>
+	/// This class manages the NGinx server that is embedded within this project.
+	/// </summary>
 	internal sealed class NGinxServer : IDisposable
 	{
 

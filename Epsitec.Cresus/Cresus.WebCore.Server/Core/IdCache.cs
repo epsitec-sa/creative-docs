@@ -2,6 +2,15 @@
 {
 
 
+	/// <summary>
+	/// This class is used to keep a bidirectional mapping between instances of a type and auto
+	/// generated ids. For each instance of T that you give it, it maintains the two mappings:
+	/// - t => id
+	/// - id => t
+	/// This allows references to some complex object to be given to the client as a small id that
+	/// can then be resolved back to the same complex object, when the client gives bach the
+	/// reference to the server.
+	/// </summary>
 	internal sealed class IdCache<T> : ItemCache<T, T, string, string, T>
 	{
 

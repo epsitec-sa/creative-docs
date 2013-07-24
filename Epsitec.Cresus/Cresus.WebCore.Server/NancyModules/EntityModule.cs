@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	/// <summary>
-	/// Used to update value of an existing entity
+	/// This module is used to update the data of existing entities.
 	/// </summary>
 	public class EntityModule : AbstractAuthenticatedModule
 	{
@@ -35,11 +35,76 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public EntityModule(CoreServer coreServer)
 			: base (coreServer, "/entity")
 		{
-			Post["/edit/{id}"] = p => this.Execute (b => this.Edit (b, p));
-			Post["/autoCreate"] = _ => this.Execute (b => this.AutoCreateNullEntity (b));
-			Post["/action/entity/{viewMode}/{viewId}/{entityId}"] = p => this.Execute (b => this.ExecuteEntityAction (b, p));
-			Post["/action/entity/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p => this.Execute (b => this.ExecuteEntityAction (b, p));
-			Post["/action/type/{viewMode}/{viewId}/{typeId}"] = p => this.Execute (b => this.ExecuteTypeAction (b, p));
+			// Edits the values of an entity.
+			// URL arguments:
+			// - id:    The entity key of the entity to edit, in the format used by the EntityIO
+			//          class.
+			// POST arguments:
+			// The post arguments are dynamic. They are the fields of the entity that must be
+			// edited. The name of the argument is the id of the field to edit, as used by the
+			// PropertyAccessorCache, and the value is the value of the field, in the format used
+			// by the FieldIO class.
+			Post["/edit/{id}"] = p =>
+				this.Execute (b => this.Edit (b, p));
+
+			// Invokes an autoCreator on an entity.
+			// Post arguments:
+			// - entityId:        The entity key of the entity on which the autoCreator will be
+			//                    invoked, in the format used by the EntityIO class.
+			// - autoCreatorId:   The id of the autoCreator to invoke, as used by the
+			//                    AutoCreatorCache class.
+			Post["/autoCreate"] = _ =>
+				this.Execute (b => this.AutoCreateNullEntity (b));
+
+			// Executes an action on an entity.
+			// URL arguments:
+			// - viewMode:   The view mode of the EntityViewController to use, as used by the
+			//               DataIO class.
+			// - viewId:     The view id of the EntityViewController to use, as used by the DataIO
+			//               class.
+			// - entityId:   The entity key of the entity on which the EntityViewController will be
+			//               used, in the format used by the EntityIO class.
+			// POST arguments:
+			// The post arguments are dynamic. The are the ids of the edition values of the form
+			// that will be passed to the callback that executes the action. Their name is the id
+			// of the edition fields and their values are the value of these edition fields.
+			Post["/action/entity/{viewMode}/{viewId}/{entityId}"] = p =>
+				this.Execute (b => this.ExecuteEntityAction (b, p));
+
+			// Executes an action on an entity, with an additional entity. This is used for
+			// instance in actions on an entity list.
+			// URL arguments:
+			// - viewMode:             The view mode of the EntityViewController to use, as used by
+			//                         the DataIO class.
+			// - viewId:               The view id of the EntityViewController to use, as used by
+			//                         the DataIO class.
+			// - entityId:             The entity key of the entity on which the EntityViewController
+			//                         will be used, in the format used by the EntityIO class.
+			// - additionalEntityId:   The entity key of the additional entity on which the
+			//                         EntityViewController will be used, in the format used by the
+			//                         EntityIO class.
+			// POST arguments:
+			// The post arguments are dynamic. The are the ids of the edition values of the form
+			// that will be passed to the callback that executes the action. Their name is the id
+			// of the edition fields and their values are the value of these edition fields.
+			Post["/action/entity/{viewMode}/{viewId}/{entityId}/{additionalEntityId}"] = p =>
+				this.Execute (b => this.ExecuteEntityAction (b, p));
+
+			// Executes an action on an entity type. This is used for the creation controllers for
+			// instance.
+			// URL arguments:
+			// - viewMode:   The view mode of the EntityViewController to use, as used by the
+			//               DataIO class.
+			// - viewId:     The view id of the EntityViewController to use, as used by the DataIO
+			//               class.
+			// - typeId:     The id of the entity type with which to used the EntityViewController,
+			//               in the format used by the TypeCache class.
+			// POST arguments:
+			// The post arguments are dynamic. The are the ids of the edition values of the form
+			// that will be passed to the callback that executes the action. Their name is the id
+			// of the edition fields and their values are the value of these edition fields.
+			Post["/action/type/{viewMode}/{viewId}/{typeId}"] = p =>
+				this.Execute (b => this.ExecuteTypeAction (b, p));
 		}
 
 

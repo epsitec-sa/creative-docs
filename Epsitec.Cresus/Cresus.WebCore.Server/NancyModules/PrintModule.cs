@@ -8,6 +8,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
+	/// <summary>
+	/// This module is used to retrieve some configuration data for the production of pdf files.
+	/// </summary>
 	public class PrintModule : AbstractAuthenticatedModule
 	{
 
@@ -15,7 +18,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public PrintModule(CoreServer coreServer)
 			: base (coreServer, "/print")
 		{
-			Get["/labellayouts"] = p => this.GetLabelLayouts ();
+			// Gets the list of label layouts that are allowed to print labels.
+			Get["/labellayouts"] = p =>
+				this.GetLabelLayouts ();
 		}
 
 

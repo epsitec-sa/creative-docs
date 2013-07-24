@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	/// <summary>
-	/// Proxy to retrieve a page stored in the Views folder
+	/// This module is used to get the data of static pages.
 	/// </summary>
 	public class PageModule : AbstractAuthenticatedModule
 	{
@@ -17,7 +17,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public PageModule(CoreServer coreServer)
 			: base (coreServer, "/page/")
 		{
-			Get["/{name}"] = p => this.GetPageView (p);
+			// Gets a static page.
+			// URL argument:
+			// - name:   the name of the static page.
+			Get["/{name}"] = p =>
+				this.GetPageView (p);
 		}
 
 

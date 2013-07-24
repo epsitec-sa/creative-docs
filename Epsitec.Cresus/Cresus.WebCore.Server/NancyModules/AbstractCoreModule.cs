@@ -7,6 +7,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 
 
+	/// <summary>
+	/// This is the base class of all modules used in this project. It provides them with the
+	/// instance of CoreServer that will be used to access to the application services like the
+	/// CoreWorkerPool, the Caches, etc.
+	/// </summary>
 	public abstract class AbstractCoreModule : NancyModule
 	{
 

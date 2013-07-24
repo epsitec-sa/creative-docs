@@ -17,6 +17,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
+	/// <summary>
+	/// This class is used to serialize a sequence of entities to a PDF documents which contains
+	/// one label for each entity. The text of the label can be customized by using a
+	/// LabelTextFactory and their layout by using a LabelLayout.
+	/// </summary>
 	internal sealed class LabelWriter : EntityWriter
 	{
 		public LabelWriter(DataSetMetadata metadata, DataSetAccessor accessor, LabelTextFactory textFactory, LabelLayout layout)

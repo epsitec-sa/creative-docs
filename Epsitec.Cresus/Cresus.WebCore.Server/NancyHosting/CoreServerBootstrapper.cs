@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 
 	/// <summary>
-	/// Called by Nancy when the server is starting
+	/// This class initializes the Nancy server engine.
 	/// </summary>
 	internal class CoreServerBootstrapper : DefaultNancyBootstrapper
 	{

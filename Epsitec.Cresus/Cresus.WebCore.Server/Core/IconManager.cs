@@ -16,9 +16,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 
 	/// <summary>
-	/// Used to write every available *.icon into their PNG equivalent so that they are available
-	/// through the web server.
-	/// It also creates a CSS file to be able to call the icons in the JS code.
+	/// This class is used to convert every ICON file that might be used in the application into
+	/// their equivalent PNG file. It creates a CSS file with classes that allow for easy access by
+	/// the javascript client.
+	/// Moreover, it provides the server with methods that lets it references those classes in the
+	/// layout engine.
 	/// </summary>
 	internal sealed class IconManager
 	{
@@ -73,11 +75,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		/// <summary>
-		/// Create an image using a brick
-		/// </summary>
-		/// <param name="brick">Brick to use</param>
-		/// <returns>Key/value pair with the icon name and the filename</returns>
 		private void CreateIcon(string iconUri)
 		{
 			if (iconUri == null)
@@ -128,12 +125,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		/// <summary>
-		/// Create CSS content to be able to call an icon from the HTML code
-		/// </summary>
-		/// <param name="iconName">Name of the icon (ressource)</param>
-		/// <param name="path">Icon filename</param>
-		/// <returns>CSS classname</returns>
 		private void AddToCSS(string iconUri, string path, IconSize size)
 		{
 			var cssClassname = IconManager.GetCssClassName (iconUri, size);
@@ -144,11 +135,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		/// <summary>
-		/// Get the filename of an image
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
 			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFileNamePattern, name.Replace ('.', '/'), size);
@@ -165,10 +151,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		/// <summary>
-		/// checks if the folder exists, otherwise creates it
-		/// </summary>
-		/// <param name="path"></param>
 		private static void EnsureDirectoryStructureExists(string path)
 		{
 			var directory = System.IO.Path.GetDirectoryName (path);

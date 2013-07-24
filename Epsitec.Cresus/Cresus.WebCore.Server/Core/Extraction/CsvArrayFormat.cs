@@ -13,6 +13,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 {
 
 
+	/// <summary>
+	/// This ArrayFormat will serializes an array of entities to a CSV file.
+	/// </summary>
 	internal sealed class CsvArrayFormat : ArrayFormat
 	{
 

@@ -7,6 +7,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This is the base class for all tiles that might have some actions that can be triggered.
+	/// </summary>
 	internal abstract class AbstractActionTile : AbstractEntityTile
 	{
 

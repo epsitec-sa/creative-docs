@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// A sorter represents a sort clause that can be used to sort a Database, according to the
+	/// values of a column in a give direction.
+	/// </summary>
 	internal sealed class Sorter
 	{
 

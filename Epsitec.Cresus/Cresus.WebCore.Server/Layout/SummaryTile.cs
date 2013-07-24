@@ -5,6 +5,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represent the tiles that are regular summary tiles, i.e. the tiles that display
+	/// some information about an entity.
+	/// </summary>
 	internal class SummaryTile : AbstractActionTile
 	{
 

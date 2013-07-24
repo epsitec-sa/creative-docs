@@ -5,6 +5,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents a special field that is used to edit a value.
+	/// </summary>
 	internal sealed class SpecialField : AbstractField
 	{
 

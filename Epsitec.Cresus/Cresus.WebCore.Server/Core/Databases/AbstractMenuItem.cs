@@ -5,6 +5,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 {
 
 
+	/// <summary>
+	/// The AbstractMenuItem class is the base class of all kinds of elements that may appear in
+	/// the top menu of the application.
+	/// </summary>
 	internal abstract class AbstractMenuItem
 	{
 

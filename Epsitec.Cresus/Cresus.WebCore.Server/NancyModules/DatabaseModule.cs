@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 	/// <summary>
-	/// Used to retrieve data about the databases, such as the list of defined databases, the number
-	/// of entities within a database, a subset of a database or to create or delete an entity
-	/// within a database.
+	/// This module is used to retrieve data about the databases, such as the list of defined
+	/// databases, the number of entities within a database, a subset of a database, to create or
+	/// delete entities within a database, etc.
 	/// </summary>
 	public class DatabaseModule : AbstractAuthenticatedModule
 	{
@@ -36,13 +36,77 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public DatabaseModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
-			Get["/list"] = p => this.Execute (wa => this.GetDatabaseList (wa));
-			Get["/definition/{name}"] = p => this.Execute (wa => this.GetDatabase (wa, p));
-			Get["/get/{name}"] = p => this.Execute ((wa, b) => this.GetEntities (wa, b, p));
-			Get["/getindex/{name}/{id}"] = p => this.Execute ((wa, b) => this.GetEntityIndex (wa, b, p));
-			Get["/export/{name}"] = p => this.Execute ((wa, b) => this.Export (wa, b, p));
-			Post["/delete"] = p => this.Execute (b => this.DeleteEntities (b));
-			Post["/create/"] = p => this.Execute (b => this.CreateEntity (b));
+			// Gets the databases that should be displayed in the top menu of the application. They
+			// are returned as a tree that represents the structure of this menu. The data returned
+			// for each database is limited to its id, title and icon.
+			Get["/list"] = p =>
+				this.Execute (wa => this.GetDatabaseList (wa));
+
+			// Gets the complete definition of a database, including all columns, sorters and other
+			// parameters used to configure it.
+			// URL arguments:
+			// - name:    the DRUID of the dataset whose definition to return.
+			Get["/definition/{name}"] = p =>
+				this.Execute (wa => this.GetDatabase (wa, p));
+
+			// Gets the data of the entities in a database.
+			// URL arguments:
+			// - name:    The DRUID of the dataset whose definition to return, in the format used
+			//            by the DataIO class.
+			// GET arguments:
+			// - start:   The index of the first entity to return, as an integer.
+			// - limit:   The maximum number of entities to return, as an integer.
+			// - columns: The id of the columns whose data to return, in the format used by the
+			//            ColumnIO class.
+			// - sort:    The sort clauses, in the format used by SorterIO class.
+			// - filter:  The filters, in the format used by FilterIO class.
+			Get["/get/{name}"] = p =>
+				this.Execute ((wa, b) => this.GetEntities (wa, b, p));
+
+			// Gets the index of an entity within a database.
+			// URL arguments:
+			// - name:    The DRUID of the dataset whose definition to return, in the format used
+			//            by the DataIO class..
+			// - id:      The entity key of the entity whose index to return, in the format used by
+			//            the EntityIO class.
+			// GET arguments:
+			// - sort:    The sort clauses, in the format used by SorterIO class.
+			// - filter:  The filters, in the format used by FilterIO class.
+			Get["/getindex/{name}/{id}"] = p =>
+				this.Execute ((wa, b) => this.GetEntityIndex (wa, b, p));
+
+			// Exports the entities of a database to a file.
+			// URL arguments:
+			// - name:    The DRUID of the dataset whose definition to return.
+			// GET arguments:
+			// - sort:    The sort clauses, in the format used by SorterIO class.
+			// - filter:  The filters, in the format used by FilterIO class.
+			// - type:    The type of export to do.
+			//            - array for entity daty as a csv file.
+			//            - label for labels as a pdf file.
+			// If the type is array, then:
+			// - columns: The id of the columns whose data to return, in the format used by the
+			//            ColumnIO class.
+			// If the type is label, then:
+			// - layout:  The kind of layout desired. This is the value of the LabelLayout type, as
+			//            used by the Enum.Parse(...) method.
+			// - text:    The id of the LabelTextFactory used to generate the label text, as an
+			//            integer value.
+			Get["/export/{name}"] = p =>
+				this.Execute ((wa, b) => this.Export (wa, b, p));
+
+			// Deletes some enties.
+			// POST arguments:
+			// - entityIds:  The id of the entities to delete, as used by the EntityIO class.
+			Post["/delete"] = p =>
+				this.Execute (b => this.DeleteEntities (b));
+
+			// Ceates a new entity.
+			// POST arguments:
+			// - databaseName:    The DRUID of the dataset in which to create a new entity, in the
+			//                    format used by the DataIO class.
+			Post["/create/"] = p =>
+				this.Execute (b => this.CreateEntity (b));
 		}
 
 

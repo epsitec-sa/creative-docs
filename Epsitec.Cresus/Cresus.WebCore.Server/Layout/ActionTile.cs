@@ -7,6 +7,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 
 
+	/// <summary>
+	/// This class represents the action tiles, i.e. the layout that must be presented to the user
+	/// when he decides to perform an action.
+	/// </summary>
 	internal sealed class ActionTile : AbstractEntityTile
 	{
 

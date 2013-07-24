@@ -15,6 +15,11 @@ using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
+	/// <summary>
+	/// This class contains a blocking set of CoreWorkers. Its purpose is to provide them in a
+	/// thread safe way to the Nancy modules that want to access them. The core of this class is
+	/// the Execute(...) method.
+	/// </summary>
 	public sealed class CoreWorkerPool : System.IDisposable
 	{
 		public CoreWorkerPool(int coreWorkerCount, CultureInfo uiCulture)
@@ -31,20 +36,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			Logger.LogToConsole ("Core worker pool started");
 		}
 
-
-
-
 		public T Execute<T>(string username, string sessionId, System.Func<BusinessContext, T> function)
 		{
 			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
 		}
 
-
 		public T Execute<T>(string username, string sessionId, System.Func<WorkerApp, T> function)
 		{
 			return this.Execute (coreWorker => coreWorker.Execute (username, sessionId, function));
 		}
-
 
 		public T Execute<T>(System.Func<UserManager, T> function)
 		{
@@ -123,9 +123,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 		#endregion
 
-
-		private readonly List<CoreWorker>		workers;
-		private readonly BlockingBag<CoreWorker> idleWorkers;
-		private readonly SafeSectionManager		safeSectionManager;
+		private readonly List<CoreWorker>			workers;
+		private readonly BlockingBag<CoreWorker>	idleWorkers;
+		private readonly SafeSectionManager			safeSectionManager;
 	}
 }

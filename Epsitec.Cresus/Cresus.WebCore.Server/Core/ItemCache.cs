@@ -10,6 +10,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 {
 
 
+	/// <summary>
+	/// This is the base class of all caches classes used in WebCore to create objects and keep a
+	/// mapping between them and some kind of ids.
+	/// </summary>
+	/// <remarks>
+	/// The general idea, is that you can create an object of type TOut1, by giving this class an
+	/// object of type TIn1. Later on, you can access to this instance of TOut1 by using the same
+	/// instance of TIn1 that you provided to create it. There is an optional conversion step
+	/// between TIn1 and TKey1, if TIn1 cannot be used directly as a key of a dictionnary.
+	/// In addition, we keep another mapping between TIn2 and TOut2, which are both created after
+	/// the creation of the instance of TOut1. They are used to offer some kind of reverse mapping.
+	/// If you have troubles understanding this class, as it is quite tricky, maybe a look in its
+	/// subclasses will shed some light on it and how it can be used.
+	/// 
+	/// The methods used to create or access items are threadsafe, but not the constructor or the
+	/// Dispose() method.
+	/// </remarks>
 	internal abstract class ItemCache<TIn1, TKey1, TOut1, TIn2, TOut2> : IDisposable
 	{
 
