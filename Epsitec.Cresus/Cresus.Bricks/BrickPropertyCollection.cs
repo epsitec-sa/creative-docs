@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Bricks
 				var property = this.properties[this.index++];
 
 				if ((this.filter.Count == 0) ||
-							(this.filter.Contains (property.Key)))
+					(this.filter.Contains (property.Key)))
 				{
 					yield return property;
 				}
