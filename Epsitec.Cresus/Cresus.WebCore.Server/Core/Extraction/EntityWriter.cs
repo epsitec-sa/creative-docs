@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		private string GetRootFilename()
 		{
 			var entityName = this.Metadata.Command.Caption.DefaultLabel;
-			var rootName= StringUtils.RemoveDiacritics (entityName.ToLowerInvariant ());
-			return rootName;
+
+			return StringUtils.RemoveDiacritics (entityName.ToLowerInvariant ());
 		}
 
 
