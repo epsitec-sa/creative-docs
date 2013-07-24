@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.sessions = new Dictionary<string, UserSession> ();
 		}
 
-	
+
 		/// <summary>
 		/// Gets the authenticated user.
 		/// </summary>
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 
 			this.SetAuthenticatedUser (userCode, NotificationMode.OnChange);
 			this.SetActiveSessionId ("Interactive:" + userCode);
-			
+
 			return true;
 		}
 
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		public virtual void SetActiveSessionId(string sessionId)
 		{
 			this.activeSessionId = sessionId;
-			
+
 			if (sessionId != null)
 			{
 				this.EnsureSessionExists (sessionId);
@@ -309,7 +309,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		{
 			var type  = CoreContext.ResolveType (typeof (SoftwareUserEntity));
 			var druid = EntityInfo.GetTypeId (type);
-			
+
 			return this.BusinessContext.CreateEntity (druid) as SoftwareUserEntity;
 		}
 
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			this.sessions.Clear ();
 		}
 
-		
+
 		/// <summary>
 		/// Finds the active user, based on the user currently logged in to Windows.
 		/// </summary>
@@ -487,14 +487,14 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			}
 		}
 
-        public virtual void NotifySusccessfulLogin(SoftwareUserEntity user)
+		public virtual void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
-            
+
 		}
 
 		public virtual void NotifyChangePassword(SoftwareUserEntity user)
 		{
-			
+
 		}
 
 		private bool CheckSystemUserAuthentication(SoftwareUserEntity user, string password)
@@ -527,7 +527,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 				handler (this);
 			}
 		}
-		
+
 		private void OnAuthenticatedUserChanged()
 		{
 			var handler = this.AuthenticatedUserChanged;
@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 			public CoreDataComponent Create(CoreData data)
 			{
 				var enableReload = !CoreContext.DisableUserManagerReload;
-					
+
 				return CoreContext.New<UserManager> (data, enableReload);
 			}
 
