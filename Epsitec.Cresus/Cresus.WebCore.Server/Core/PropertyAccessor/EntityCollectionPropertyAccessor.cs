@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		{
 			if (value == null)
 			{
-				return this.Property.IsNullable;
+				return false;
 			}
 
 			var collection = value as IEnumerable<AbstractEntity>;
