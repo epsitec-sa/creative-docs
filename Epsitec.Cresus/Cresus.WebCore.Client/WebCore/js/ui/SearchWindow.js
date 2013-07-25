@@ -129,7 +129,7 @@ function() {
 
       Ext.Array.each(this.form.items.items, function(item) {
         item.reset();
-        if (list.filters.filters.getKey(item.name) != null) {
+        if (list.filters.filters.containsKey(item.name)) {
           list.filters.filters.getKey(item.name).setValue(item.lastValue);
           list.filters.filters.getKey(item.name).setActive(false);
         }
