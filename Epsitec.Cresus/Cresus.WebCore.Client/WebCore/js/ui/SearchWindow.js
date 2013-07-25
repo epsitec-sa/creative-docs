@@ -67,16 +67,19 @@ function() {
 
     executeFullSearch: function() {
 
-      var list = this.caller;
-      var window = this;
+      var list, window, index;
+
+      list = this.caller;
+      window = this;
 
       list.dockedItems.items[2].items.items[0].setValue(
           this.form.items.items[0].lastValue
       );
 
-      var index = 1; //we start at one because we have a first numbered column
+      // We start at one because we have a first numbered column.
+      index = 1;
       list.isSearching = true;
-      //Show needed column
+      // Show needed column
       Ext.Array.each(this.form.items.items, function(item) {
 
         if (Ext.isDefined(item.lastValue) && !list.columns[index].isVisible()) {
