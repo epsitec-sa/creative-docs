@@ -5,7 +5,6 @@ function() {
     extend: 'Ext.Window',
     alternateClassName: ['Epsitec.SearchWindow'],
 
-    application: null,
     parent: null,
     fields: null,
     form: null,
@@ -13,6 +12,8 @@ function() {
     caller: null,
 
     constructor: function(columnDefinitions, caller) {
+      var tabManager, config;
+
       this.caller = caller;
       Ext.QuickTips.init();
       this.fields = this.createSearchFormFields(columnDefinitions);
@@ -46,9 +47,9 @@ function() {
         autoHeight: true,
         items: this.form
       });
-      this.application = Epsitec.Cresus.Core.getApplication();
-      this.parent = Ext.get(this.application.tabManager.getLayout().getActiveItem().el);
-      var config = {
+      tabManager = Epsitec.Cresus.Core.getApplication().tabManager;
+      this.parent = Ext.get(tabManager.getLayout().getActiveItem().el);
+      config = {
         title: 'Recherche',
         width: 400,
         height: 600,

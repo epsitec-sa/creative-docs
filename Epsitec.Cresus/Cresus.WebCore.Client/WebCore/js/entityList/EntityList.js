@@ -553,7 +553,8 @@ function() {
     ///QUERY BUILDER
     onQueryBuildHandler: function(e) {
       if (!this.queryBuilder) {
-        this.queryBuilder = Ext.create('Epsitec.QueryWindow', this.columnDefinitions);
+        this.queryBuilder = Ext.create(
+            'Epsitec.QueryWindow', this.columnDefinitions);
         this.queryBuilder.showAt(e.container.getXY());
       }
       else {
