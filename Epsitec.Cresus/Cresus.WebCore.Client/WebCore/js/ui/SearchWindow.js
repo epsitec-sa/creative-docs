@@ -1,6 +1,6 @@
 ﻿Ext.require([
 ],
-function () {
+function() {
   Ext.define('Epsitec.cresus.webcore.ui.SearchWindow', {
     extend: 'Ext.Window',
     alternateClassName: ['Epsitec.SearchWindow'],
@@ -12,7 +12,7 @@ function () {
     panel: null,
     caller: null,
 
-    constructor: function (columnDefinitions, caller) {
+    constructor: function(columnDefinitions, caller) {
       this.caller = caller;
       Ext.QuickTips.init();
       this.fields = this.createSearchFormFields(columnDefinitions);
@@ -64,7 +64,7 @@ function () {
       this.callParent([config]);
     },
 
-    executeFullSearch: function () {
+    executeFullSearch: function() {
 
       var list = this.caller;
       var window = this;
@@ -76,9 +76,9 @@ function () {
       var index = 1; //we start at one because we have a first numbered column
       list.isSearching = true;
       //Show needed column
-      Ext.Array.each(this.form.items.items, function (item) {
+      Ext.Array.each(this.form.items.items, function(item) {
 
-        if (Ext.isDefined(item.lastValue) && !list.columns[index].isVisible()){
+        if (Ext.isDefined(item.lastValue) && !list.columns[index].isVisible()) {
           list.columns[index].show();
         }
         else {
@@ -90,7 +90,7 @@ function () {
       });
 
       //appli filtering
-      Ext.Array.each(this.form.items.items, function (item) {
+      Ext.Array.each(this.form.items.items, function(item) {
         var filter = list.filters.getFilter(item.name);
         if (!Ext.isDefined(filter)) {
           if (Ext.isDefined(item.lastValue)) {
@@ -120,10 +120,10 @@ function () {
       this.hide();
     },
 
-    resetFullSearch: function () {
+    resetFullSearch: function() {
       var list = this.caller;
 
-      Ext.Array.each(this.form.items.items, function (item) {
+      Ext.Array.each(this.form.items.items, function(item) {
         item.reset();
         if (list.filters.filters.getKey(item.name) != null) {
           list.filters.filters.getKey(item.name).setValue(item.lastValue);
@@ -135,24 +135,24 @@ function () {
       );
     },
 
-    setQuickSearchValue : function(val){
+    setQuickSearchValue: function(val) {
       this.form.items.items[0].setValue(val);
     },
 
-    onEnterExecuteFullSearch: function (field, e) {
+    onEnterExecuteFullSearch: function(field, e) {
       if (e.getKey() === e.ENTER) {
         this.executeFullSearch();
       }
     },
 
-    createSearchFormFields: function (columnDefinitions) {
+    createSearchFormFields: function(columnDefinitions) {
       var list = this;
-      return columnDefinitions.map(function (c) {
+      return columnDefinitions.map(function(c) {
         var field = {
           name: c.name,
           type: c.type.type,
         };
-        if(c.hidden)
+        if (c.hidden)
         {
           field.isHidden = true;
         }

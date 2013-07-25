@@ -508,7 +508,7 @@ function() {
       return buttons;
     },
 
-    onDataChange: function (store, e) {
+    onDataChange: function(store, e) {
       if (this.isSearching) {
         //alert('proxy update when dataChange');
       }
