@@ -509,9 +509,9 @@ function() {
     },
 
     onDataChange: function(store, e) {
-      if (this.isSearching) {
-        //alert('proxy update when dataChange');
-      }
+      //if (this.isSearching) {
+      //  alert('proxy update when dataChange');
+      //}
     },
 
     ///QUICK SEARCH
