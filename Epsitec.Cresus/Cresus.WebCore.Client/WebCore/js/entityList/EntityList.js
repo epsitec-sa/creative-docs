@@ -507,13 +507,13 @@ function() {
 
       return buttons;
     },
+
     onDataChange: function (store, e) {
-
-        if (this.isSearching) {
-            //alert('proxy update when dataChange');
-        }
-
+      if (this.isSearching) {
+        //alert('proxy update when dataChange');
+      }
     },
+
     ///QUICK SEARCH
     onQuickSearchHandler: function(field, e) {
       var columnName, config;
@@ -552,20 +552,20 @@ function() {
 
     ///QUERY BUILDER
     onQueryBuildHandler: function(e) {
-        if (!this.queryBuilder) {
-            this.queryBuilder = Ext.create('Epsitec.QueryWindow', this.columnDefinitions);
-            this.queryBuilder.showAt(e.container.getXY());
+      if (!this.queryBuilder) {
+        this.queryBuilder = Ext.create('Epsitec.QueryWindow', this.columnDefinitions);
+        this.queryBuilder.showAt(e.container.getXY());
+      }
+      else {
+        if (this.queryBuilder.isVisible()) {
+          this.queryBuilder.hide();
         }
         else {
-            if (this.queryBuilder.isVisible()) {
-                this.queryBuilder.hide();
-            }
-            else {
-                this.queryBuilder.show();
-            }
-
+          this.queryBuilder.show();
         }
+      }
     },
+
     ///FULL SEARCH
     onFullSearchHandler: function(e) {
       if (!this.fullSearchWindow) {

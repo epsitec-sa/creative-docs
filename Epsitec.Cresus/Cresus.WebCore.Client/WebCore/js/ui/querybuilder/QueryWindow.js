@@ -1,7 +1,7 @@
 ﻿Ext.require([
-    'Epsitec.cresus.webcore.ui.querybuilder.QueryElement',
-    'Epsitec.cresus.webcore.ui.querybuilder.QueryOp',
-    'Epsitec.cresus.webcore.ui.querybuilder.QueryBuilderPanel'
+  'Epsitec.cresus.webcore.ui.querybuilder.QueryElement',
+  'Epsitec.cresus.webcore.ui.querybuilder.QueryOp',
+  'Epsitec.cresus.webcore.ui.querybuilder.QueryBuilderPanel'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.ui.querybuilder.QueryWindow', {
