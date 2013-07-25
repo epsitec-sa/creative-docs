@@ -150,7 +150,7 @@ function() {
       return columnDefinitions.map(function(c) {
         var field = {
           name: c.name,
-          type: c.type.type,
+          type: c.type.type
         };
         if (c.hidden)
         {
@@ -240,6 +240,6 @@ function() {
 
         return field;
       });
-    },
+    }
   });
 });
