@@ -90,7 +90,7 @@ function() {
             list.columns[index].hide();
           }
         }
-        index++;
+        index += 1;
       });
 
       //appli filtering
