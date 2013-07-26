@@ -10,14 +10,15 @@ namespace Epsitec.Cresus.Strings.Bundles
 	{
 		public ResourceVersions(XElement element)
 		{
-			this.items = element.Elements ("Version").Select (e => new ResourceVersion (e)).ToList();
+			this.element = element;
+			this.items = new Lazy<IEnumerable<ResourceVersion>>(() => this.element.Elements ("Version").Select (e => new ResourceVersion (e)).ToList());
 		}
 
 		#region IEnumerable<ModuleVersion> Members
 
 		public IEnumerator<ResourceVersion> GetEnumerator()
 		{
-			return this.items.GetEnumerator ();
+			return this.items.Value.GetEnumerator ();
 		}
 
 		#endregion
@@ -26,11 +27,12 @@ namespace Epsitec.Cresus.Strings.Bundles
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.items.GetEnumerator ();
+			return this.GetEnumerator ();
 		}
 
 		#endregion
 
-		private readonly List<ResourceVersion> items;
+		private readonly XElement element;
+		private readonly Lazy<IEnumerable<ResourceVersion>> items;
 	}
 }

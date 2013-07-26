@@ -17,19 +17,17 @@ namespace Epsitec.Cresus.Strings.Bundles
 
 		public ResourceBundle(XElement element)
 		{
-			this.name = element.Attribute ("name").GetString ();
-			this.type = element.Attribute ("type").GetString ();
-			this.culture = element.Attribute ("culture").GetString ();
-			this.items = element.Elements ("data").Select (e => new ResourceItem (e)).ToList ();
-			this.byName = new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.items.ToDictionary (i => i.Name));
-			this.byId = new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.items.ToDictionary (i => i.Id));
+			this.element = element;
+			this.items   = new Lazy<IEnumerable<ResourceItem>>(() => this.element.Elements ("data").Select (e => new ResourceItem (e)).ToList());
+			this.byName  = new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.ToDictionary (i => i.Name));
+			this.byId    = new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.ToDictionary (i => i.Id));
 		}
 
 		public string Name
 		{
 			get
 			{
-				return this.name;
+				return this.element.Attribute ("name").GetString ();
 			}
 		}
 
@@ -37,7 +35,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.type;
+				return this.element.Attribute ("type").GetString ();
 			}
 		}
 
@@ -45,7 +43,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.culture;
+				return this.element.Attribute ("culture").GetString ();
 			}
 		}
 
@@ -78,7 +76,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 
 		public IEnumerator<ResourceItem> GetEnumerator()
 		{
-			return this.items.GetEnumerator ();
+			return this.items.Value.GetEnumerator ();
 		}
 
 		#endregion
@@ -87,21 +85,19 @@ namespace Epsitec.Cresus.Strings.Bundles
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.items.GetEnumerator ();
+			return this.GetEnumerator ();
 		}
 
 		#endregion
 
 		private IEnumerable<string> ToStringAtoms()
 		{
-			yield return this.name;
-			yield return this.culture;
+			yield return this.Name;
+			yield return this.Culture;
 		}
 
-		private readonly string name;
-		private readonly string type;
-		private readonly string culture;
-		private readonly List<ResourceItem> items;
+		private readonly XElement element;
+		private readonly Lazy<IEnumerable<ResourceItem>> items;
 		private readonly Lazy<IReadOnlyDictionary<string, ResourceItem>> byName;
 		private readonly Lazy<IReadOnlyDictionary<string, ResourceItem>> byId;
 	}

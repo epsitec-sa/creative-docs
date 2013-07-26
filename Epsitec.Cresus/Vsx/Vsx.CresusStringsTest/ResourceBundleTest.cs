@@ -8,17 +8,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Epsitec.Cresus.Strings
 {
-
-
 	[TestClass]
 	public class ResourceBundleTest
 	{
 		[TestMethod]
 		public void Load()
 		{
-			var bundle = ResourceBundle.Load (SampleResourceFilePath1);
+			var bundle = ResourceBundle.Load (TestData.Strings00Path);
 		}
-
-		private const string SampleResourceFilePath1 = @"..\..\TestData\Strings.00.resource";
 	}
 }

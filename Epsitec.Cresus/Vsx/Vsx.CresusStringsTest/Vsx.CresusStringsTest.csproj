@@ -60,6 +60,8 @@
     <Compile Include="ResourceBundleTest.cs" />
     <Compile Include="ResourceModuleTest.cs" />
     <Compile Include="ProjectResourcesTest.cs" />
+    <Compile Include="TestData.cs" />
+    <Compile Include="XmlAccessTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Vsx.CresusStrings\Vsx.CresusStrings.csproj">

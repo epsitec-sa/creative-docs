@@ -10,13 +10,33 @@ namespace Epsitec.Cresus.Strings.Bundles
 	{
 		public ResourceVersion(XElement element)
 		{
-			this.id = element.Attribute ("id").GetString ();
-			this.build = element.Attribute ("build").GetString ();
-			this.date = element.Attribute ("date").GetString ();
+			this.element = element;
 		}
 
-		private readonly string id;
-		private readonly string build;
-		private readonly string date;
+		public string Id
+		{
+			get
+			{
+				return this.element.Attribute ("id").GetString ();
+			}
+		}
+
+		public string Build
+		{
+			get
+			{
+				return this.element.Attribute ("build").GetString ();
+			}
+		}
+
+		public string Date
+		{
+			get
+			{
+				return this.element.Attribute ("date").GetString ();
+			}
+		}
+
+		private readonly XElement element;
 	}
 }

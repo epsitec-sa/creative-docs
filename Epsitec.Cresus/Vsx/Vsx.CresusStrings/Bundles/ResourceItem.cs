@@ -11,16 +11,14 @@ namespace Epsitec.Cresus.Strings.Bundles
 	{
 		public ResourceItem(XElement element)
 		{
-			this.name = element.Attribute ("name").GetString ();
-			this.id = element.Attribute ("id").GetString ();
-			this.value = element.Value;
+			this.element = element;
 		}
 
 		public string Name
 		{
 			get
 			{
-				return this.name;
+				return this.element.Attribute ("name").GetString ();
 			}
 		}
 
@@ -28,7 +26,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.id;
+				return this.element.Attribute ("id").GetString ();
 			}
 		}
 
@@ -36,7 +34,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.value;
+				return this.element.Value;
 			}
 		}
 
@@ -51,13 +49,11 @@ namespace Epsitec.Cresus.Strings.Bundles
 
 		private IEnumerable<string> ToStringAtoms()
 		{
-			yield return string.Format ("[{0}]", this.id);
-			yield return string.Format ("{0} :", this.name);
-			yield return string.Format ("<{0}>", this.value);
+			yield return string.Format ("[{0}]", this.Id);
+			yield return string.Format ("{0} :", this.Name);
+			yield return string.Format ("<{0}>", this.Value);
 		}
 
-		private string name;
-		private string id;
-		private string value;
+		private readonly XElement element;
 	}
 }

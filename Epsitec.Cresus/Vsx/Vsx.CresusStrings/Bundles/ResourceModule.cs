@@ -11,20 +11,18 @@ namespace Epsitec.Cresus.Strings.Bundles
 	{
 		public static ResourceModule Load(string moduleInfoFilePath)
 		{
-			var info = ResourceModuleInfo.Load (moduleInfoFilePath);
-
-			var directory = Path.GetDirectoryName (moduleInfoFilePath);
-			var fileNames = Directory.EnumerateFiles (directory, "*.??.resource");
-			var bundles = fileNames.Select (fn => ResourceBundle.Load (fn)).ToList ();
+			var info      = ResourceModuleInfo.Load (moduleInfoFilePath);
+			var fileNames = Directory.EnumerateFiles (Path.GetDirectoryName (moduleInfoFilePath), "*.??.resource");
+			var bundles   = fileNames.Select (fn => ResourceBundle.Load (fn)).ToList ();
 
 			return new ResourceModule (info, bundles);
 		}
 
 		private ResourceModule(ResourceModuleInfo info, List<ResourceBundle> bundles)
 		{
-			this.info = info;
-			this.bundles = bundles;
-			this.byNameFirst = new Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> (this.ByNameFirstFactory);
+			this.info           = info;
+			this.bundles        = bundles;
+			this.byNameFirst    = new Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> (this.ByNameFirstFactory);
 			this.byCultureFirst = new Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> (this.ByCultureFirstFactory);
 		}
 

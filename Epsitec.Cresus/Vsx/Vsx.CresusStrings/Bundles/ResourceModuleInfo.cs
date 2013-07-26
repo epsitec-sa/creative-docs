@@ -17,13 +17,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 
 		public ResourceModuleInfo(XElement element)
 		{
-			this.id = element.Attribute ("id").GetString ();
-			this.name = element.Attribute ("name").GetString ();
-			this.layer = element.Attribute ("layer").GetString ();
-			this.textMode = element.Attribute ("textMode").GetString ();
-			this.assemblies = element.Attribute ("assemblies").GetString ();
-			this.@namespace = element.Attribute ("namespace").GetString ();
-			this.namespaceRes = element.Attribute ("namespaceRes").GetString ();
+			this.element = element;
 			this.versions = new ResourceVersions (element.Element ("Versions"));
 		}
 
@@ -31,7 +25,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.id;
+				return this.element.Attribute ("id").GetString ();
 			}
 		}
 
@@ -39,7 +33,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.name;
+				return this.element.Attribute ("name").GetString ();
 			}
 		}
 
@@ -47,7 +41,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.layer;
+				return this.element.Attribute ("layer").GetString ();
 			}
 		}
 
@@ -55,7 +49,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.textMode;
+				return this.element.Attribute ("textMode").GetString ();
 			}
 		}
 
@@ -63,7 +57,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.assemblies;
+				return this.element.Attribute ("assemblies").GetString ();
 			}
 		}
 
@@ -71,7 +65,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.@namespace;
+				return this.element.Attribute ("namespace").GetString ();
 			}
 		}
 
@@ -79,7 +73,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 		{
 			get
 			{
-				return this.namespaceRes;
+				return this.element.Attribute ("namespaceRes").GetString ();
 			}
 		}
 
@@ -91,13 +85,7 @@ namespace Epsitec.Cresus.Strings.Bundles
 			}
 		}
 
-		private readonly string id;
-		private readonly string name;
-		private readonly string layer;
-		private readonly string textMode;
-		private readonly string assemblies;
-		private readonly string @namespace;
-		private readonly string namespaceRes;
+		private readonly XElement element;
 		private readonly ResourceVersions versions;
 	}
 }
