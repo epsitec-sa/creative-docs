@@ -1,3 +1,6 @@
+// This class is an edition field that lets the user pick an entity from an
+// entity list, by using an EntityPicker window.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPicker',
   'Epsitec.cresus.webcore.entityList.EntityFavoritesPicker',
@@ -15,6 +18,8 @@ function() {
     databaseName: null,
     favoritesId: null,
     favoritesOnly: null,
+
+    /* Methods */
 
     onPickClick: function() {
       var callback = Epsitec.Callback.create(this.onPickClickCallback, this);

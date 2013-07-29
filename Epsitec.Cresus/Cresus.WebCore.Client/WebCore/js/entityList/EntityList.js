@@ -1,3 +1,8 @@
+// This class is the base class of all entity lists. Entity lists are an array
+// of entites that are loaded dynamicall from the server in a buffered store
+// that can be sorted and filtered. The columns that are displayed are choosen
+// by the user.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Callback',
   'Epsitec.cresus.webcore.tools.BooleanNullableColumn',
@@ -20,7 +25,7 @@ function() {
     extend: 'Ext.grid.Panel',
     alternateClassName: ['Epsitec.EntityList'],
 
-    /* Config */
+    /* Configuration */
 
     border: false,
     viewConfig: {
@@ -28,6 +33,7 @@ function() {
     },
 
     /* Properties */
+
     onSelectionChangeCallback: null,
     columnDefinitions: null,
     sorterDefinitions: null,
@@ -38,6 +44,7 @@ function() {
     fullSearchWindow: null,
     queryBuilder: null,
     isSearching: false,
+
     /* Constructor */
 
     constructor: function(options) {
@@ -86,7 +93,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createContextMenu: function(options) {
       return Ext.create('Ext.menu.Menu', {
@@ -822,6 +829,8 @@ function() {
 
       return Epsitec.Tools.createUrl(base, parameters);
     },
+
+    /* Static methods */
 
     statics: {
       isStoreLoading: function(store) {

@@ -1,3 +1,7 @@
+// This class is the login panel that is presented to the user when it starts
+// the application. It provides him with a simple form that it can fill to log
+// in.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.ErrorHandler',
   'Epsitec.cresus.webcore.tools.Texts'
@@ -7,10 +11,9 @@ function() {
     extend: 'Ext.form.Panel',
     alternateClassName: ['Epsitec.LoginPanel'],
 
+    /* Configuration */
+
     renderTo: document.body,
-
-    /* Config */
-
     id: 'loginwindow',
     title: Epsitec.Texts.getLoginTitle(),
     bodyPadding: 5,
@@ -46,7 +49,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     getItems: function() {
       var header, usernameField, passwordField;

@@ -1,3 +1,8 @@
+// This class represents tiles that are the summary of a single entity. It is
+// mainly composed of a summary text, and if its entity does not exist (like
+// the comment for a person for instance), a click on it will instantiate the
+// comment.
+
 Ext.require([
   'Epsitec.cresus.webcore.tile.EntityTile',
   'Epsitec.cresus.webcore.tools.Texts',
@@ -10,7 +15,7 @@ function() {
     alternateClassName: ['Epsitec.SummaryTile'],
     alias: 'widget.epsitec.summarytile',
 
-    /* Config */
+    /* Configuration */
 
     overCls: 'tile-over',
 
@@ -49,7 +54,7 @@ function() {
       }
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createSummaryTools: function(options)  {
       var tools = Ext.Array.clone(options.tools || []);

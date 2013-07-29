@@ -1,5 +1,10 @@
+// This file defines the locale text values for the french language.
+
 Ext.define('Epsitec.cresus.webcore.locale.Locale', {
   alternateClassName: ['Epsitec.Locale'],
+
+  /* Static methods */
+
   statics: {
     getLocaleName: function() {
       return 'fr';

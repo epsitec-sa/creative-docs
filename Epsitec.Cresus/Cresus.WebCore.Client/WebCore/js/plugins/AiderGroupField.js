@@ -1,3 +1,9 @@
+// This class is an edition field that allows a user to pick a group. It is used
+// as a child of AiderGroupSpecialField. We need a separate classe because
+// AiderGroupSpecialField inherits from SpecialField and we need to inherit
+// ReferenceField. And there is no multiple inheritance in the ExtJs class
+// system.
+
 Ext.require([
   'Epsitec.cresus.webcore.field.ReferenceField',
   'Epsitec.cresus.webcore.plugins.AiderGroupPicker',
@@ -13,7 +19,7 @@ function() {
     getGroupTreeUrl: null,
     getSubGroupsUrl: null,
 
-    /* Additional methods */
+    /* Methods */
 
     onPickClick: function() {
       Ext.Ajax.request({

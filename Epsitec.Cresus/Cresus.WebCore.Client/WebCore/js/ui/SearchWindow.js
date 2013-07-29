@@ -5,11 +5,15 @@ function() {
     extend: 'Ext.Window',
     alternateClassName: ['Epsitec.SearchWindow'],
 
+    /* Properties */
+
     parent: null,
     fields: null,
     form: null,
     panel: null,
     caller: null,
+
+    /* Constructor */
 
     constructor: function(columnDefinitions, caller) {
       var tabManager, config;
@@ -64,6 +68,8 @@ function() {
 
       this.callParent([config]);
     },
+
+    /* Methods */
 
     executeFullSearch: function() {
 

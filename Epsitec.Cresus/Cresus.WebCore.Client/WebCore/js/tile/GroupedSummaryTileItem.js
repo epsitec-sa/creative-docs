@@ -1,3 +1,6 @@
+// This class represents the sub items of the GroupedSummaryTile class, that are
+// used to display each individual items in the entity collection.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Tools'
 ],
@@ -7,7 +10,7 @@ function() {
     alternateClassName: ['Epsitec.GroupedSummaryTileItem'],
     alias: 'widget.epsitec.groupedsummarytileitem',
 
-    /* Config */
+    /* Configuration */
 
     border: false,
     bodyCls: 'tile',
@@ -48,7 +51,7 @@ function() {
       this.groupedSummaryTile.handleItemClick(this);
     },
 
-    /* Additional methods */
+    /* Methods */
 
     select: function(selected) {
       if (this.selected !== selected) {

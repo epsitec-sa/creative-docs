@@ -1,3 +1,9 @@
+// This class represents the tile of an entity which is part of a collection,
+// when the template auto grouping has not been enabled. In addition to the
+// regular stuff of summary tiles, these tiles also contains an add button that
+// can be used to add an entity to the collection, and a remove button to remove
+// the current element.
+
 Ext.require([
   'Epsitec.cresus.webcore.tile.SummaryTile',
   'Epsitec.cresus.webcore.tools.Texts',
@@ -25,7 +31,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createCollectionTools: function(options) {
       var tools = Ext.Array.clone(options.tools || []);

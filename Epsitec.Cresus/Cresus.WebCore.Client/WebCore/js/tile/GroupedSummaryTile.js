@@ -1,3 +1,7 @@
+// This class represents the tile used to display the collection of an entity
+// whose template has the auto grouping enabled. It is composed of one subitem
+// for each item that is in the collection.
+
 Ext.require([
   'Epsitec.cresus.webcore.tile.Tile',
   'Epsitec.cresus.webcore.tools.Texts',
@@ -10,7 +14,7 @@ function() {
     alternateClassName: ['Epsitec.GroupedSummaryTile'],
     alias: 'widget.epsitec.groupedsummarytile',
 
-    /* Config */
+    /* Configuration */
 
     bodyCls: 'grouped-summary-tile',
     layout: {
@@ -67,7 +71,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     initComponent: function() {
       this.selectItem(null);

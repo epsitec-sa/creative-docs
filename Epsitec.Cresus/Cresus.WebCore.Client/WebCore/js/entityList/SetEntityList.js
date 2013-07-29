@@ -1,3 +1,6 @@
+// This class represents a entity list that is backed by a SetViewController on
+// the webcore server.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityList'
 ],
@@ -22,6 +25,8 @@ function() {
       this.callParent([newOptions]);
       return this;
     },
+
+    /* Static methods */
 
     statics: {
       getUrl: function(viewId, entityId, urlSuffix) {

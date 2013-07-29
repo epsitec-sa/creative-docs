@@ -5,9 +5,13 @@ function() {
     extend: 'Ext.Panel',
     alternateClassName: ['Epsitec.QueryOp'],
 
+    /* Properties */
+
     operatorComboStore: null,
     operatorCombo: null,
     components: null,
+
+    /* Constructor */
 
     constructor: function(builder) {
       this.components = [];

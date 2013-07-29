@@ -8,9 +8,13 @@ function() {
     extend: 'Ext.Window',
     alternateClassName: ['Epsitec.QueryWindow'],
 
+    /* Properties */
+
     finalQuery: null,
     myQueryTree: null,
     builder: null,
+
+    /* Constructor */
 
     constructor: function(columnDefinitions) {
       var tabManager, store, config;

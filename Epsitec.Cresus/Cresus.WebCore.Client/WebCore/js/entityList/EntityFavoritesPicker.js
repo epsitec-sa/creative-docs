@@ -1,3 +1,7 @@
+// This class is an entity picker with two entity lists, the main one backed by
+// a favourite collection on the server and another one backed by a database on
+// the server.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
   'Epsitec.cresus.webcore.tools.EntityPicker',
@@ -94,7 +98,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     handleTabChange: function(tabPanel, newCard, oldCard, eOpts) {
       this.activeEntityListPanel = newCard.entityListPanel;
@@ -120,6 +124,8 @@ function() {
     getSelectedItems: function() {
       return this.activeEntityListPanel.getEntityList().getSelectedItems();
     },
+
+    /* Static methods */
 
     statics: {
       showDatabase: function(dbName, favId, favOnly, multiSelect, callback) {

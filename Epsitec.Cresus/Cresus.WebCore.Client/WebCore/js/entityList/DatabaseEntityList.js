@@ -1,3 +1,11 @@
+// This class represents two kinds of entity lists:
+// - entity lists that are backed by a regular database on the server.
+// - entity lists that are backed by a favourite list on the server.
+// It really only should by used for the database entity lists (as it is said by
+// its name) but the support for favourites entity lists has been quickly added
+// in a hacky way. Ideally, we should have another class that would be called
+// FavouritesEntityList that would deal with them.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityList'
 ],

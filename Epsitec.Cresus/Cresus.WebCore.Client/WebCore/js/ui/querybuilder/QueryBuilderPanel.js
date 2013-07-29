@@ -5,7 +5,11 @@ function() {
     extend: 'Ext.Panel',
     alternateClassName: ['Epsitec.QueryBuilderPanel'],
 
+    /* Properties */
+
     columnDefinitions: null,
+
+    /* Constructor */
 
     constructor: function(columnDefinitions) {
       this.columnDefinitions = columnDefinitions;
@@ -19,6 +23,8 @@ function() {
 
       this.callParent([config]);
     },
+
+    /* Methods */
 
     init: function() {
       var firstElement = Ext.create(

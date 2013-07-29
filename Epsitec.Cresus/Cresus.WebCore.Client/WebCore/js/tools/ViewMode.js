@@ -1,3 +1,6 @@
+// This class contains static constants that are used throughout the javascript
+// client to refer to the different view modes.
+
 Ext.define('Epsitec.cresus.webcore.tools.ViewMode', {
   alternateClassName: ['Epsitec.ViewMode'],
 

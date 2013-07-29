@@ -1,3 +1,8 @@
+// This class represents the empty summary tile that is displayed for the empty
+// collections whose template has the auto grouping disabled. This is usefull so
+// that the use can click on the empty summary tile to create the first item in
+// the collection.
+
 Ext.require([
   'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
   'Epsitec.cresus.webcore.tools.Texts'
@@ -8,7 +13,7 @@ function() {
     alternateClassName: ['Epsitec.EmptySummaryTile'],
     alias: 'widget.epsitec.emptysummarytile',
 
-    /* Config */
+    /* Configuration */
 
     html: Epsitec.Texts.getEmptySummaryText(),
 
@@ -24,7 +29,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     bodyClickHandler: function() {
       this.addEntityHandler();

@@ -1,3 +1,6 @@
+// This class is a hidden field that is used by EntityCollectionField to store
+// the values that must be submitted to the server.
+
 Ext.define('Epsitec.cresus.webcore.field.EntityCollectionHiddenField', {
   extend: 'Ext.form.field.Hidden',
   alternateClassName: ['Epsitec.EntityCollectionHiddenField'],
@@ -7,7 +10,7 @@ Ext.define('Epsitec.cresus.webcore.field.EntityCollectionHiddenField', {
   submitValueGetter: null,
   onReset: null,
 
-  /* Additional methods */
+  /* Methods */
 
   getSubmitValue: function() {
     return this.submitValueGetter();

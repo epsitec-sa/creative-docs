@@ -1,3 +1,6 @@
+// This class is used to parse the serialized layout tree structure given by the
+// server and map it to the appropriate instances of ExtJs classes.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.SetColumn',
   'Epsitec.cresus.webcore.entityUi.TileColumn',
@@ -16,6 +19,8 @@ Ext.require([
 function() {
   Ext.define('Epsitec.cresus.webcore.entityUi.BrickWallParser', {
     alternateClassName: ['Epsitec.BrickWallParser'],
+
+    /* Static methods */
 
     statics: {
       parseColumn: function(column) {

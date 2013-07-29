@@ -1,3 +1,7 @@
+// This class is a grid panel that is used to display a list of entities for the
+// EntityCollectionFields. They are the entities that are selected for the value
+// of the field. It contains two buttons to add and remove entities from itself.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPicker',
   'Epsitec.cresus.webcore.field.EntityFieldListItem',
@@ -9,7 +13,7 @@ function() {
     extend: 'Ext.grid.Panel',
     alternateClassName: ['Epsitec.EntityFieldList'],
 
-    /* Config */
+    /* Configuration */
 
     border: true,
     selModel: {
@@ -53,7 +57,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createTBar: function() {
       var buttonAdd, buttonRemove;

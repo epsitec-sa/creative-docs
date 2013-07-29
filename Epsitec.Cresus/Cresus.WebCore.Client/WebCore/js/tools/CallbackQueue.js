@@ -1,6 +1,6 @@
 // This class represents an immutable queue of callbacks. The callbacks can be
-// enqueued one after another and they will be called in the order in that they
-// where added with the execute() method.
+// enqueued one after another. The execute() method will call them in the same
+// order as they have been enqueued.
 // Two queues can be merged with the statement q1.merge(q2). In this cases, the
 // elements of q1 will be executed before those of q2.
 // Note that all the callbacks will be called synchronously. That means if part
@@ -58,6 +58,8 @@ function() {
         this.head.execute(callbackArguments);
       }
     },
+
+    /* Static methods */
 
     statics: {
       empty: function() {

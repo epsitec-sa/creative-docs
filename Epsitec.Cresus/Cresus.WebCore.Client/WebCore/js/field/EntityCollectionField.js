@@ -1,3 +1,8 @@
+// This class represent a complex edition field that is used to edit collections
+// of entities. Basicall it is composed by an editable list of targets that the
+// user can use to add and remove entities from the list. It used a hidden field
+// to submit the value of the list to the server when the form is submitted.
+
 Ext.require([
   'Epsitec.cresus.webcore.field.EntityCollectionHiddenField',
   'Epsitec.cresus.webcore.field.EntityFieldList'
@@ -8,7 +13,7 @@ function() {
     alternateClassName: ['Epsitec.EntityCollectionField'],
     alias: 'widget.epsitec.entitycollectionfield',
 
-    /* Config */
+    /* Configuration */
 
     layout: 'vbox',
 
@@ -36,7 +41,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createEntityFieldList: function(options) {
       var value = options.value,

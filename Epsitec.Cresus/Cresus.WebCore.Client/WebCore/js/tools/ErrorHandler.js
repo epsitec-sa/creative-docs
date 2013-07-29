@@ -1,9 +1,15 @@
+// This class provides all the error handling functions that are used in the
+// client, when the communication with the server fails for one reason or
+// another.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.tools.ErrorHandler', {
     alternateClassName: ['Epsitec.ErrorHandler'],
+
+    /* Static methods */
 
     statics: {
       handleError: function() {

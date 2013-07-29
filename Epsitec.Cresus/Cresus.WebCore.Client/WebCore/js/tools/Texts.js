@@ -1,9 +1,15 @@
+// This class provides methods to get all texts that are displayed to the user
+// and that don't come from the server. They are localized according to the
+// files in the 'locale' folder.
+
 Ext.require([
   'Epsitec.cresus.webcore.locale.Locale'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.tools.Texts', {
     alternateClassName: ['Epsitec.Texts'],
+
+    /* Static methods */
 
     statics: {
 

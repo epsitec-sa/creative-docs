@@ -1,3 +1,9 @@
+// This class is the base class of all edition fields that let the user pick an
+// entity, in one way or another. It mainly contains an area where the summary
+// of the currently selected entity is dislpayed, a button to clear the current
+// selected entity and a button that the derived class must implement in order
+// to let the user pick another entity.
+
 Ext.require([
 ],
 function() {
@@ -5,7 +11,7 @@ function() {
     extend: 'Ext.form.TriggerField',
     alternateClassName: ['Epsitec.ReferenceField'],
 
-    /* Config */
+    /* Configuration */
 
     trigger1Cls: 'x-form-clear-trigger',
     trigger2Cls: 'x-form-arrow-trigger',
@@ -32,6 +38,8 @@ function() {
       this.callParent([newOptions]);
       return this;
     },
+
+    /* Methods */
 
     onClearClick: function() {
       this.setValue(null);

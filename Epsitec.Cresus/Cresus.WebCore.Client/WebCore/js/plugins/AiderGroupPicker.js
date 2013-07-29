@@ -1,3 +1,6 @@
+// This class is an entity picker that lets the user pick a group within its
+// tree hierarchy.
+
 Ext.require([
   'Epsitec.cresus.webcore.plugins.AiderGroupReader',
   'Epsitec.cresus.webcore.tools.EntityPicker'
@@ -32,7 +35,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createTreePanel: function(options) {
       return Ext.create('Ext.tree.Panel', {

@@ -1,3 +1,10 @@
+// This class is the menu bar that appears at the top of the application. It is
+// composed of two parts:
+// - A part with buttons that allow the user to select a database to display on
+//   the left
+// - A part with some tools that allow the user to log out and make other
+//   actions on the left.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
@@ -8,7 +15,7 @@ function() {
     extend: 'Ext.Toolbar',
     alternateClassName: ['Epsitec.Menu'],
 
-    /* Config */
+    /* Configuration */
 
     layout: {
       xtype: 'hbox',
@@ -33,7 +40,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createMenuGroup: function() {
       var group = Ext.create('Ext.container.ButtonGroup', {

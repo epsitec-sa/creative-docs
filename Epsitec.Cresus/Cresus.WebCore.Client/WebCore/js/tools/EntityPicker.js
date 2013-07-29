@@ -1,3 +1,9 @@
+// This class is the base class of all entity pickers, i.e. the windows that are
+// used to pick one or more entities from a list of them. It is derived by
+// EntityListPicker, EntityFavouritesPicker and AiderGroupPicker. Basically this
+// is simply a window with an OK and a Cancel buttons, that the child classes
+// must fill in order to let the user pick an entity.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts'
 ],
@@ -5,7 +11,7 @@ function() {
   Ext.define('Epsitec.cresus.webcore.tools.EntityPicker', {
     extend: 'Ext.window.Window',
 
-    /* Config */
+    /* Configuration */
 
     width: 640,
     height: 480,
@@ -38,7 +44,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createCancelButton: function() {
       return Ext.create('Ext.Button', {

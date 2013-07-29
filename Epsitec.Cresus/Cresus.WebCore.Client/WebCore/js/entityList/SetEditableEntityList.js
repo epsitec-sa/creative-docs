@@ -1,3 +1,6 @@
+// This class represents an entity list that can be edited and that is backed by
+// a database on the server.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EditableEntityList',
   'Epsitec.cresus.webcore.entityList.SetEntityList',
@@ -16,6 +19,7 @@ function() {
     entityId: null,
     pickDatabaseDefinition: null,
     toProcess: null,
+
     /* Constructor */
 
     constructor: function(options) {
@@ -39,7 +43,8 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
+
     onSelectionChange: function() {
       //todo add the right column
     },

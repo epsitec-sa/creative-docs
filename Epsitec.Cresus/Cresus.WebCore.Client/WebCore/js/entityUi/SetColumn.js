@@ -1,3 +1,7 @@
+// This class represents an entity column that contains a list of entities that
+// are dynamicall loaded from the server through an entity list. They are the
+// result of SetViewController layouts.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
   'Epsitec.cresus.webcore.entityUi.EntityColumn'
@@ -7,7 +11,7 @@ function() {
     extend: 'Epsitec.cresus.webcore.entityUi.EntityColumn',
     alternateClassName: ['Epsitec.SetColumn'],
 
-    /* Config */
+    /* Configuration */
 
     border: true,
     width: 400,
@@ -33,7 +37,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createEntityListPanel: function(options) {
       return Ext.create('Epsitec.EntityListPanel', {

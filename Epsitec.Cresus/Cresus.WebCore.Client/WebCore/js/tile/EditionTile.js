@@ -1,3 +1,6 @@
+// This class represents the tiles that contain a form with edition fields that
+// the user can use to update the data of a entity.
+
 Ext.require([
   'Epsitec.cresus.webcore.field.EntityCollectionField',
   'Epsitec.cresus.webcore.field.EntityReferenceField',
@@ -13,7 +16,7 @@ function() {
     alternateClassName: ['Epsitec.EditionTile'],
     alias: 'widget.epsitec.editiontile',
 
-    /* Config */
+    /* Configuration */
 
     width: 300,
     defaults: {

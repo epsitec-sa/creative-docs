@@ -1,3 +1,9 @@
+// This class manages all the tabs that are displayed in the main window of the
+// application. There are two kinds of tabs:
+// - entity tabs which display a list of entities on the left with their data on
+//   the right
+// - page tabs, which display a static html page
+
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.ColumnManager'
 ],
@@ -6,7 +12,7 @@ function() {
     extend: 'Ext.panel.Panel',
     alternateClassName: ['Epsitec.TabManager'],
 
-    /* Config */
+    /* Configuration */
 
     border: false,
     plain: true,
@@ -28,7 +34,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     showEntityTab: function(database) {
       var key, entityTab;

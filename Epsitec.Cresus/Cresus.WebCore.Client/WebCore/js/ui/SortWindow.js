@@ -1,3 +1,8 @@
+// This class is a window that lets the used choose a sort order for a grid
+// panel. The available sorters are displayed in a grid panel, and the user can
+// drag and drop them to another grid panel that contains the sorters that will
+// be chosen.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.ui.SortItem'
@@ -7,7 +12,7 @@ function() {
     extend: 'Ext.window.Window',
     alternateClassName: ['Epsitec.SortWindow'],
 
-    /* Config */
+    /* Configuration */
 
     width: 400,
     height: 300,
@@ -50,7 +55,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createLeftGrid: function(options) {
       return this.createGrid(false, {

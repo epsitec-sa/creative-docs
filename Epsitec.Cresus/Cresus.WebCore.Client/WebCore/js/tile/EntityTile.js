@@ -1,3 +1,6 @@
+// This class is the abstract class that represents tiles that are bound to a
+// single entity.
+
 Ext.require([
   'Epsitec.cresus.webcore.tile.Tile',
   'Epsitec.cresus.webcore.tools.Tools'
@@ -12,7 +15,7 @@ function() {
     entityId: null,
     selectedClass: 'tile-selected',
 
-    /* Additional methods */
+    /* Methods */
 
     // Overrides the method defined in Tile.
     showAction: function(viewId, callback) {

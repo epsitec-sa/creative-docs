@@ -1,5 +1,11 @@
 /*jslint white: true */
 
+// This file is the main entry point of the javascript client application. It
+// is mainly used to set up other objects and show the login or main panels of
+// the application. It also provides ways to navigate to a given entity, based
+// on its entity id and its database name. In addition, it provides fixes to
+// localization errors and undesirable behaviors in ExtJs.
+
 Ext.Loader.setConfig({
   enabled: true,
   paths: {
@@ -28,6 +34,8 @@ function() {
     loginPanel: null,
     tabManager: null,
 
+    /* Application entry point */
+
     launch: function() {
       this.setupWindowTitle();
       this.fixLocalizationBug();
@@ -38,7 +46,7 @@ function() {
       this.showLoginPanel();
     },
 
-    /* Additional methods */
+    /* Methods */
 
     setupWindowTitle: function() {
       window.document.title = Epsitec.Texts.getWindowTitle();

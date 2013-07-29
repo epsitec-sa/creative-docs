@@ -1,3 +1,6 @@
+// This class is a column that can be used in grid panels to show nullable
+// boolean values with proper localization for null values.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts'
 ],
@@ -7,11 +10,11 @@ function() {
     alias: ['widget.booleannullablecolumn'],
     alternateClassName: ['Epsitec.BooleanNullableColumn'],
 
-    /* Config */
+    /* Configuration */
 
     nullText: Epsitec.Texts.getNullItemText(),
 
-    /* Additional methods */
+    /* Methods */
 
     defaultRenderer: function(value) {
       if (value === null) {

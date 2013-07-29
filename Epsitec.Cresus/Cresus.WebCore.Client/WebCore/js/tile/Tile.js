@@ -1,3 +1,6 @@
+// This class is the base class for all tiles. The tiles are the elements that
+// compose tile columns.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Tools'
 ],
@@ -6,7 +9,7 @@ function() {
     extend: 'Ext.form.Panel',
     alternateClassName: ['Epsitec.Tile'],
 
-    /* Config */
+    /* Configuration */
 
     minHeight: 50,
     minWidth: 200,
@@ -37,7 +40,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createEntityTileTools: function(options)  {
       var tools, actions;

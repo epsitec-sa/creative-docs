@@ -1,3 +1,6 @@
+// This class is the action window that is used for actions that are not related
+// to some entities but to an entity type.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.Action',
   'Epsitec.cresus.webcore.entityUi.BrickWallParser',
@@ -9,7 +12,7 @@ function() {
     extend: 'Epsitec.cresus.webcore.entityUi.Action',
     alternateClassName: ['Epsitec.TypeAction'],
 
-    /* Additional methods */
+    /* Methods */
 
     getFormUrl: function(options) {
       return 'proxy/entity/action/type/' + options.viewMode + '/' +

@@ -1,3 +1,6 @@
+// This class represents entity lists that are backed by a database on the
+// webcore server and that can be edited.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EditableEntityList',
   'Epsitec.cresus.webcore.tools.Callback',
@@ -31,7 +34,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     handleAdd: function() {
       if (this.filters.getFilterData().length > 0) {

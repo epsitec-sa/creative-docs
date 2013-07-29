@@ -1,3 +1,8 @@
+// This class is used to manage the columns that are displayed on the right part
+// of the main window. It queries the server to get their layout when the user
+// makes an action that triggers the addition of a new column, parses the
+// response and displays the resulting instances of EntityColumn.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
   'Epsitec.cresus.webcore.entityUi.BrickWallParser',
@@ -15,7 +20,7 @@ function() {
     extend: 'Ext.panel.Panel',
     alternateClassName: ['Epsitec.ColumnManager'],
 
-    /* Config */
+    /* Configuration */
 
     layout: 'border',
 
@@ -40,7 +45,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createLeftList: function(database) {
       return Ext.create('Epsitec.EntityListPanel', {

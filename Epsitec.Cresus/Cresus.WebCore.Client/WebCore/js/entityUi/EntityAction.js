@@ -1,3 +1,6 @@
+// This class is used to display an action window for all action that are
+// related to one or two entity (a main entity and an additional entity).
+
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.Action',
   'Epsitec.cresus.webcore.entityUi.BrickWallParser',
@@ -8,7 +11,7 @@ function() {
     extend: 'Epsitec.cresus.webcore.entityUi.Action',
     alternateClassName: ['Epsitec.EntityAction'],
 
-    /* Additional method */
+    /* Method */
 
     getFormUrl: function(options) {
       var prefix, viewMode, viewId, entityId, additionalEntityId;

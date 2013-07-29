@@ -1,3 +1,7 @@
+// This class represents an entity column, that is a column that will be
+// displayed to the user and that displays the data of an entity, as specified
+// by a view controller that ran on the server.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.CallbackQueue',
   'Epsitec.cresus.webcore.tools.ViewMode'
@@ -7,7 +11,7 @@ function() {
     extend: 'Ext.Panel',
     alternateClassName: ['Epsitec.EntityColumn'],
 
-    /* Config */
+    /* Configuration */
 
     margin: '0 0 0 1',
 
@@ -19,7 +23,7 @@ function() {
     viewMode: Epsitec.ViewMode.summary,
     viewId: 'null',
 
-    /* Additional methods */
+    /* Methods */
 
     // To be overriden in child classes.
     getState: function() {

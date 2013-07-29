@@ -5,6 +5,8 @@ function() {
     extend: 'Ext.Panel',
     alternateClassName: ['Epsitec.QueryElement'],
 
+    /* Properties */
+
     operatorComboStore: null,
     operatorCombo: null,
     fieldComboStore: null,
@@ -13,6 +15,8 @@ function() {
     comparatorCombo: null,
     valueField: null,
     components: null,
+
+    /* Constructor */
 
     constructor: function(builder, columnDefinitions, first) {
       this.components = [];
@@ -51,6 +55,8 @@ function() {
       this.initValueField();
       this.callParent([config]);
     },
+
+    /* Methods */
 
     initValueField: function() {
       this.valueField = Ext.create('Ext.form.field.Text', {

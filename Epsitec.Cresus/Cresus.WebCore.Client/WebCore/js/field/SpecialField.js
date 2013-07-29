@@ -1,11 +1,13 @@
+// This class is the base class of all special fields. Special fields are some
+// kind of application defined plugin fields, that may behave in specific ways
+// and access the server through AJAX requests.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Tools'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.field.SpecialField', {
     extend: 'Ext.form.FieldContainer',
-
-    /* Config */
 
     /* Properties */
 
@@ -14,7 +16,7 @@ function() {
     fieldData: null,
     fieldConfig: null,
 
-    /* Additional methods */
+    /* Methods */
 
     callServer: function(name, callback, parameters) {
       Ext.Ajax.request({

@@ -1,3 +1,6 @@
+// This class is the base class of all entity lists that can be edited. The user
+// can add or remove elements in the list.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityList'
 ],
@@ -23,7 +26,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createEditionButtons: function(options) {
       var buttons = [];

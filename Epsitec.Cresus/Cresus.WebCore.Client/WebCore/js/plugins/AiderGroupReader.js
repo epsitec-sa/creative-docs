@@ -1,3 +1,6 @@
+// This class is a json data reader that is used by the AiderGroupPicker
+// window.
+
 // We need this subclass in order to override the readRecords method. The
 // problem is that the same setting is used to configure where the tree store
 // should look for children within a node and for nodes within the result of a
@@ -8,7 +11,7 @@ Ext.define('Epsitec.cresus.webcore.plugins.AiderGroupReader', {
   extend: 'Ext.data.reader.Json',
   alternateClassName: ['Epsitec.AiderGroupReader'],
 
-  /* Additional methods */
+  /* Methods */
 
   readRecords: function(data) {
     return this.callParent([{

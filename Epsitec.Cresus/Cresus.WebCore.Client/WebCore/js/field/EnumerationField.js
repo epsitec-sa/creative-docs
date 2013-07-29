@@ -1,3 +1,6 @@
+// This class is an edition field that lets the user choose a value from an
+// enumeration, by using a combo box.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Enumeration'
 ],
@@ -7,7 +10,7 @@ function() {
     alternateClassName: ['Epsitec.EnumerationField'],
     alias: 'widget.epsitec.enumerationfield',
 
-    /* Config */
+    /* Configuration */
 
     valueField: 'id',
     displayField: 'text',

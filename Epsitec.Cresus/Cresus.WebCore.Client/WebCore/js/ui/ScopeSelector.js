@@ -1,3 +1,6 @@
+// This class provides a combo box to the user so that it can select the current
+// scope that he wishes to work in.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Tools'
 ],
@@ -28,7 +31,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createComboBox: function() {
       return Ext.create('Ext.form.field.ComboBox', {

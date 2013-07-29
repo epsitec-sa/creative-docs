@@ -1,3 +1,6 @@
+// This class is a window that lets the user configure the details of an
+// exportation of entities to pages that contains labels.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Enumeration',
   'Epsitec.cresus.webcore.tools.Texts',
@@ -8,7 +11,7 @@ function() {
     extend: 'Ext.window.Window',
     alternateClassName: ['Epsitec.LabelExportWindow'],
 
-    /* Config */
+    /* Configuration */
 
     width: 400,
     border: false,
@@ -47,7 +50,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createTextFactoryCombo: function(options) {
       return Ext.create('Ext.form.ComboBox', {

@@ -1,3 +1,9 @@
+// This class is a wrapper around an entity list. The idea with this class is
+// that is it immediately constructed so it can be placed within the UI at the
+// appropriate location, but the list is not yet loaded because the definition
+// has to be obtained with an AJAX request to the server. Once the definition is
+// loaded, the list can be instantiated and placed within the wrapper.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.DatabaseEntityList',
   'Epsitec.cresus.webcore.entityList.DatabaseEditableEntityList',
@@ -10,7 +16,7 @@ function() {
     extend: 'Ext.panel.Panel',
     alternateClassName: ['Epsitec.EntityListPanel'],
 
-    /* Config */
+    /* Configuration */
 
     layout: 'fit',
 
@@ -33,7 +39,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     isEntitySelectionAllowed: function(options) {
       var entityListTypeName = options.list.entityListTypeName;

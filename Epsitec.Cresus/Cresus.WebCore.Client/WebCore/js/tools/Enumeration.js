@@ -1,3 +1,9 @@
+// This class provides functions that let the javascript client get enumeration
+// data from the server and create store with this data. The content of these
+// store never changes, and they are cached to speed up the process. If the data
+// of an enumeration has already been loaded in a store, the exact same store
+// will always be returned for this enumeration.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Tools'
 ],
@@ -5,6 +11,8 @@ function() {
   Ext.define('Epsitec.cresus.webcore.tools.Enumeration', {
     extend: 'Ext.Base',
     alternateClassName: ['Epsitec.Enumeration'],
+
+    /* Static methods */
 
     statics: {
       getStore: function(name) {

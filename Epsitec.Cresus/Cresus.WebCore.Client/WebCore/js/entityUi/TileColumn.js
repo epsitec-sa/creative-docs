@@ -1,3 +1,5 @@
+// This class represents entity columns that are composed of tiles.
+
 Ext.require([
   'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.EditionTile',
@@ -11,7 +13,7 @@ function() {
     extend: 'Epsitec.cresus.webcore.entityUi.EntityColumn',
     alternateClassName: ['Epsitec.TileColumn'],
 
-    /* Config */
+    /* Configuration */
 
     border: false,
     style: {
@@ -52,7 +54,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     getTiles: function() {
       return this.items.items;

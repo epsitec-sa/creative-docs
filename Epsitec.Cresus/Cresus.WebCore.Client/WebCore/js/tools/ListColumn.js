@@ -1,3 +1,6 @@
+// This class is a column that can be used in grid panels that can display
+// values of an enumeration backed by a store.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Enumeration',
   'Epsitec.cresus.webcore.tools.Texts'
@@ -8,7 +11,7 @@ function() {
     alias: ['widget.listcolumn'],
     alternateClassName: ['Epsitec.ListColumn'],
 
-    /* Config */
+    /* Configuration */
 
     loadingText: Epsitec.Texts.getLoadingText(),
 
@@ -29,7 +32,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     defaultRenderer: function(value, data, record, idx1, idx2, store, view) {
 

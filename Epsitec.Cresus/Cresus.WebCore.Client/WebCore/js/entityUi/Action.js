@@ -1,3 +1,7 @@
+// This class is the base class of all windows that allow the user to execute an
+// action over something. It contains a form with some fields and buttons to
+// accept or cancel the action.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.BrickWallParser',
   'Epsitec.cresus.webcore.tools.Tools'
@@ -7,7 +11,7 @@ function() {
     extend: 'Ext.window.Window',
     alternateClassName: ['Epsitec.Action'],
 
-    /* Config */
+    /* Configuration */
 
     maxHeight: 500,
     layout: 'fit',
@@ -35,7 +39,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     getForm: function(options) {
       return Ext.create('Ext.form.Panel', {

@@ -1,9 +1,13 @@
+// This class contains several general purpose methods.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.ErrorHandler'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.tools.Tools', {
     alternateClassName: ['Epsitec.Tools'],
+
+    /* Static methods */
 
     statics: {
       getValueOrDefault: function(value, defaultValue) {

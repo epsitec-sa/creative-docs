@@ -1,3 +1,6 @@
+// This class represents an entity picker whose entity list is backed by a
+// database on the server.
+
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
   'Epsitec.cresus.webcore.tools.EntityPicker'
@@ -41,7 +44,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createEntityListPanel: function(options) {
       return Ext.create('Epsitec.EntityListPanel', {
@@ -62,6 +65,8 @@ function() {
     getSelectedItems: function() {
       return this.entityListPanel.getEntityList().getSelectedItems();
     },
+
+    /* Static methods */
 
     statics: {
       showDatabase: function(databaseName, multiSelect, callback) {

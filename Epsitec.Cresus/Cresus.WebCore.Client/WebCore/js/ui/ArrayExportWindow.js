@@ -1,3 +1,8 @@
+// This class is a window that lets the used configure an exportation of
+// entities to an array file (.csv or .pdf for instance). Mostly, it is used to
+// select the columns that will be exported to the file. But in the future, it
+// might include other options as well.
+
 Ext.require([
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.Tools',
@@ -8,7 +13,7 @@ function() {
     extend: 'Ext.window.Window',
     alternateClassName: ['Epsitec.ArrayExportWindow'],
 
-    /* Config */
+    /* Configuration */
 
     width: 400,
     height: 300,
@@ -49,7 +54,7 @@ function() {
       return this;
     },
 
-    /* Additional methods */
+    /* Methods */
 
     createLeftGrid: function(options) {
       var title = Epsitec.Texts.getExportExportedColumns();
