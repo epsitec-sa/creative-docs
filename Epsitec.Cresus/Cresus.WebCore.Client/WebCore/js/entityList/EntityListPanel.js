@@ -7,6 +7,7 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityList.DatabaseEntityList',
   'Epsitec.cresus.webcore.entityList.DatabaseEditableEntityList',
+  'Epsitec.cresus.webcore.entityList.FavoritesEntityList',
   'Epsitec.cresus.webcore.entityList.SetEntityList',
   'Epsitec.cresus.webcore.entityList.SetEditableEntityList',
   'Epsitec.cresus.webcore.tools.Tools'
