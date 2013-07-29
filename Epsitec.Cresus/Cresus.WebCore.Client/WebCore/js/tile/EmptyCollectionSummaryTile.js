@@ -8,10 +8,10 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.Texts'
 ],
 function() {
-  Ext.define('Epsitec.cresus.webcore.tile.EmptySummaryTile', {
+  Ext.define('Epsitec.cresus.webcore.tile.EmptyCollectionSummaryTile', {
     extend: 'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
-    alternateClassName: ['Epsitec.EmptySummaryTile'],
-    alias: 'widget.epsitec.emptysummarytile',
+    alternateClassName: ['Epsitec.EmptyCollectionSummaryTile'],
+    alias: 'widget.epsitec.emptycollectionsummarytile',
 
     /* Configuration */
 

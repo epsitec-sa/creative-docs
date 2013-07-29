@@ -10,7 +10,7 @@ Ext.require([
   'Epsitec.cresus.webcore.plugins.AiderGroupSpecialField',
   'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.EditionTile',
-  'Epsitec.cresus.webcore.tile.EmptySummaryTile',
+  'Epsitec.cresus.webcore.tile.EmptyCollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.GroupedSummaryTile',
   'Epsitec.cresus.webcore.tile.GroupedSummaryTileItem',
   'Epsitec.cresus.webcore.tile.SummaryTile',
@@ -102,8 +102,8 @@ function() {
           case 'collectionSummary':
             return this.parseCollectionSummaryTile(tile);
 
-          case 'emptySummary':
-            return this.parseEmptySummaryTile(tile);
+          case 'emptyCollectionSummary':
+            return this.parseEmptyCollectionSummaryTile(tile);
 
           case 'edition':
             return this.parseEditionTile(tile);
@@ -163,9 +163,9 @@ function() {
         return t;
       },
 
-      parseEmptySummaryTile: function(tile) {
+      parseEmptyCollectionSummaryTile: function(tile) {
         var t = this.parseCollectionSummaryTile(tile);
-        t.xtype = 'epsitec.emptysummarytile';
+        t.xtype = 'epsitec.emptycollectionsummarytile';
         return t;
       },
 

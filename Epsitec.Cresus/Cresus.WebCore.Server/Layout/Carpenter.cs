@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					.Where (a => !a.RequiresAdditionalEntity)
 					.ToList ();
 
-				yield return new EmptySummaryTile ()
+				yield return new EmptyCollectionSummaryTile ()
 				{
 					EntityId = null,
 					IsRoot = false,

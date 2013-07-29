@@ -177,7 +177,7 @@
     <Compile Include="Layout\EntityCollectionField.cs" />
     <Compile Include="Layout\CollectionSummaryTile.cs" />
     <Compile Include="Layout\DateField.cs" />
-    <Compile Include="Layout\EmptySummaryTile.cs" />
+    <Compile Include="Layout\EmptyCollectionSummaryTile.cs" />
     <Compile Include="Layout\Mason.cs" />
     <Compile Include="Layout\AbstractField.cs" />
     <Compile Include="Layout\EntityReferenceField.cs" />

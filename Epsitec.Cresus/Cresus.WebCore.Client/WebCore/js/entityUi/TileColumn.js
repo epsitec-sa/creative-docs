@@ -3,7 +3,7 @@
 Ext.require([
   'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.EditionTile',
-  'Epsitec.cresus.webcore.tile.EmptySummaryTile',
+  'Epsitec.cresus.webcore.tile.EmptyCollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.GroupedSummaryTile',
   'Epsitec.cresus.webcore.tile.SummaryTile',
   'Epsitec.cresus.webcore.tile.Tile'
