@@ -3,7 +3,6 @@
 
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPicker',
-  'Epsitec.cresus.webcore.entityList.EntityFavoritesPicker',
   'Epsitec.cresus.webcore.field.ReferenceField',
   'Epsitec.cresus.webcore.tools.Callback'
 ],
@@ -25,7 +24,7 @@ function() {
       var callback = Epsitec.Callback.create(this.onPickClickCallback, this);
 
       if (this.favoritesId) {
-        Epsitec.EntityFavoritesPicker.showFavorites(
+        Epsitec.EntityListPicker.showFavorites(
             this.databaseName, this.favoritesId, this.favoritesOnly, false,
             callback
         );
