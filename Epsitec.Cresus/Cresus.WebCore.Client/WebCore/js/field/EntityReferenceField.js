@@ -25,7 +25,7 @@ function() {
       var callback = Epsitec.Callback.create(this.onPickClickCallback, this);
 
       if (this.favoritesId) {
-        Epsitec.EntityFavoritesPicker.showDatabase(
+        Epsitec.EntityFavoritesPicker.showFavorites(
             this.databaseName, this.favoritesId, this.favoritesOnly, false,
             callback
         );

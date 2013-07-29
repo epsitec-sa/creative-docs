@@ -128,7 +128,7 @@ function() {
     /* Static methods */
 
     statics: {
-      showDatabase: function(dbName, favId, favOnly, multiSelect, callback) {
+      showFavorites: function(dbName, favId, favOnly, multiSelect, callback) {
         this.show(callback, {
           entityListTypeName: 'Epsitec.DatabaseEntityList',
           databaseName: dbName,
