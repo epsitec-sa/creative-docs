@@ -34,13 +34,15 @@ function() {
       // above, the property 'onselectionChange' will be copied as 'null'.
       // [PA: 2013-02-24]
 
-      list1 = {};
-      list2 = {};
+      list1 = {
+        entityListTypeName: 'Epsitec.FavoritesEntityList'
+      };
+      list2 = {
+        entityListTypeName: 'Epsitec.DatabaseEntityList'
+      };
 
       Ext.apply(list1, options.list);
-      Ext.apply(list2, list1);
-
-      delete list2.favoritesId;
+      Ext.apply(list2, options.list);
 
       list1.onSelectionChange = callback;
       list2.onSelectionChange = callback;
@@ -130,7 +132,6 @@ function() {
     statics: {
       showFavorites: function(dbName, favId, favOnly, multiSelect, callback) {
         this.show(callback, {
-          entityListTypeName: 'Epsitec.DatabaseEntityList',
           databaseName: dbName,
           favoritesId: favId,
           favoritesOnly: favOnly,

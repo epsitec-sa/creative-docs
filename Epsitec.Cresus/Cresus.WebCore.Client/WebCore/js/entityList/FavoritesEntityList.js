@@ -1,20 +1,20 @@
-// This class represents an entity list that is backed by a database on the
-// server.
+// This class represents an entity list that is backed by a favorites collection
+// on the server.
 
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityList'
 ],
 function() {
-  Ext.define('Epsitec.cresus.webcore.entityList.DatabaseEntityList', {
+  Ext.define('Epsitec.cresus.webcore.entityList.FavoritesEntityList', {
     extend: 'Epsitec.cresus.webcore.entityList.EntityList',
-    alternateClassName: ['Epsitec.DatabaseEntityList'],
+    alternateClassName: ['Epsitec.FavoritesEntityList'],
 
     /* Constructor */
 
     constructor: function(options) {
       var newOptions = {
-        getUrl: 'proxy/database/get/' + options.databaseName,
-        exportUrl: 'proxy/database/export/' + options.databaseName
+        getUrl: 'proxy/favorites/get/' + options.favoritesId,
+        exportUrl: 'proxy/favorites/export/' + options.favoritesId
       };
       Ext.applyIf(newOptions, options);
 
