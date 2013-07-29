@@ -152,6 +152,21 @@ function() {
     refreshColumns: function(firstColumnId, lastColumnId) {
       var configs, nbConfigs, callbackQueue, callbackQueueCreator, i, column;
 
+      // The idea of this method is to make one request for each column that
+      // must be refreshed. We will store the decoded json responses of these
+      // requests in the configs variable. The last response that is processed
+      // will trigger the column replacement.
+
+      // Note that the configs array stores the responses ordered by their
+      // index. This is why we need a separate variable nbConfigs to count the
+      // number of elements that are returned.
+
+      // We need to have this callback queue creation embedded in a new function
+      // because otherwise the closure would capture the i variable within the
+      // loop, and all callbacks would execute with the same value for i. This
+      // is the classical problem of variables captures in closures within
+      // loops.
+
       configs = [];
       nbConfigs = 0;
       callbackQueueCreator = function(index) {
@@ -243,21 +258,20 @@ function() {
     replaceExistingColumns: function(firstColumnId, lastColumnId, configs) {
       // The table layout used to show the columns does not allow to replace
       // some column in the middle of the table. The only solution I've found is
-      // the following
+      // the following:
       // 1) Remove all the columns to the right of the ones that we want to
       //    replace but keep them around for later reuse.
       // 2) Remove and delete the columns that we want to replace.
       // 3) Add the new version of the columns that we wanted to replace.
       // 4) Add the columns that were to the right of the columns that we have
       //    replaced.
-      //
+
       // We have to remember the state of the columns. so we can re-apply it
       // once they are replaced.
-      //
+
       // We have to remember the scroll, to re-apply it once the layout has been
       // rebuilt.
 
-      // Used in the for loops to iterate.
       var i, dom, scrollLeft, scrollTop, savedColumns, columnStates, config,
           column;
 
