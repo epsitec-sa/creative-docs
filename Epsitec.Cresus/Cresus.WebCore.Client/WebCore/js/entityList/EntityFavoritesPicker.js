@@ -29,23 +29,17 @@ function() {
       callback = Epsitec.Callback.create(
           this.handleEntityListSelectionChange, this);
 
-      // I've no clue why I need to assign the callback manually to both lists;
-      // I've observed that if I insert the callback before calling Ext.apply
-      // above, the property 'onselectionChange' will be copied as 'null'.
-      // [PA: 2013-02-24]
-
       list1 = {
-        entityListTypeName: 'Epsitec.FavoritesEntityList'
+        entityListTypeName: 'Epsitec.FavoritesEntityList',
+        onSelectionChange: callback
       };
       list2 = {
-        entityListTypeName: 'Epsitec.DatabaseEntityList'
+        entityListTypeName: 'Epsitec.DatabaseEntityList',
+        onSelectionChange: callback
       };
 
-      Ext.apply(list1, options.list);
-      Ext.apply(list2, options.list);
-
-      list1.onSelectionChange = callback;
-      list2.onSelectionChange = callback;
+      Ext.applyIf(list1, options.list);
+      Ext.applyIf(list2, options.list);
 
       this.entityListPanel1 = this.createEntityListPanel(list1);
       this.entityListPanel2 = this.createEntityListPanel(list2);
@@ -135,8 +129,7 @@ function() {
           databaseName: dbName,
           favoritesId: favId,
           favoritesOnly: favOnly,
-          multiSelect: multiSelect,
-          onSelectionChange: null
+          multiSelect: multiSelect
         });
       },
 

@@ -22,14 +22,10 @@ function() {
       callback = Epsitec.Callback.create(
           this.handleEntityListSelectionChange, this);
 
-      // I've no clue why I need to assign the callback manually to both lists;
-      // I've observed that if I insert the callback before calling Ext.apply
-      // above, the property 'onselectionChange' will be copied as 'null'.
-      // [PA: 2013-02-24]
-
-      list = {};
-      Ext.apply(list, options.list);
-      list.onSelectionChange = callback;
+      list = {
+        onSelectionChange: callback
+      };
+      Ext.applyIf(list, options.list);
 
       this.entityListPanel = this.createEntityListPanel(list);
 
@@ -87,8 +83,7 @@ function() {
           sorterDefinitions: databaseDefinition.sorters,
           labelExportDefinitions: databaseDefinition.labelItems,
           menuItems: databaseDefinition.menuItems,
-          multiSelect: true,
-          onSelectionChange: null
+          multiSelect: true
         });
       },
 
