@@ -40,7 +40,6 @@ function() {
     labelExportDefinitions: null,
     getUrl: null,
     exportUrl: null,
-    actionEditData: null,
     fullSearchWindow: null,
     queryBuilder: null,
     isSearching: false,
