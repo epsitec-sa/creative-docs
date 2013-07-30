@@ -71,12 +71,11 @@ function() {
       return value.summary;
     },
 
-    rawToValue: function(object) {
-      var value = this.currentValue;
-      if (value === null || value.summary !== object) {
+    rawToValue: function(raw) {
+      if (this.currentValue === null || this.currentValue.summary !== raw) {
         return null;
       }
-      return value;
+      return this.currentValue;
     },
 
     getSubmitValue: function() {
