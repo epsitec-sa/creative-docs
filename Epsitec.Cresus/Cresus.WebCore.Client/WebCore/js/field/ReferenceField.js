@@ -15,6 +15,9 @@ function() {
 
     trigger1Cls: 'x-form-clear-trigger',
     trigger2Cls: 'x-form-arrow-trigger',
+
+    // We don't want the user to edit the field directly. He has to go through
+    // an entity picker.
     editable: false,
 
     /* Properties */
@@ -24,6 +27,10 @@ function() {
     //   id: ...,
     //   summary: ...,
     // }
+    // With that, we can store the id of the entity so we can send it back to
+    // the server when the form is submitted, and we can display the summary to
+    // the user in the field. The valueToRaw and rawToValue functions handle the
+    // conversion.
     currentValue: null,
 
     /* Constructor */
@@ -65,6 +72,9 @@ function() {
     },
 
     valueToRaw: function(value) {
+      // Here we extract the summary from the current value to display it to the
+      // user.
+
       if (value === null || value.summary === null) {
         return '';
       }
@@ -72,6 +82,12 @@ function() {
     },
 
     rawToValue: function(raw) {
+      // This field cannot be directly edited by the user. He has to go through
+      // an entity picker which will call the setValue function. This is the
+      // only way to change the current value. So we know that unless something
+      // weird happens, the raw value will always match the summary of the
+      // current value.
+
       if (this.currentValue === null || this.currentValue.summary !== raw) {
         return null;
       }
@@ -80,7 +96,8 @@ function() {
 
     getSubmitValue: function() {
       // We need to override the getSubmitValue function as we don't want to
-      // send the whole value to the server, but only part of it.
+      // send the whole value to the server, but only the entity id.
+
       var value = this.getValue();
       if (value === null || value.id === null) {
         return '';
