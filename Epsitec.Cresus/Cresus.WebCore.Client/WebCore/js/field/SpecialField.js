@@ -13,7 +13,6 @@ function() {
 
     entityId: null,
     controllerName: null,
-    fieldData: null,
     fieldConfig: null,
 
     /* Methods */
