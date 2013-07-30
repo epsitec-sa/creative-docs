@@ -25,13 +25,17 @@ function() {
 
     /* Methods */
 
-    // To be overriden in child classes.
+    // When the columns are refreshed in the ColumnManager, they are replaced by
+    // new instances. These two methods are used in order to save and restore
+    // their state.
+
     getState: function() {
+      // Can be overriden in child classes.
       return { };
     },
 
-    // To be overriden in child classes.
     setState: function(state) {
+      // Can be overriden in child classes.
     },
 
     refresh: function() {

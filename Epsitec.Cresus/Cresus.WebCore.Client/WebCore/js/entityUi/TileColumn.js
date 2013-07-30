@@ -60,6 +60,7 @@ function() {
       return this.items.items;
     },
 
+    // Overrides the method defined in EntityColumn.
     getState: function() {
       var tileIndex, tileState;
 
@@ -81,6 +82,7 @@ function() {
       };
     },
 
+    // Overrides the method defined in EntityColumn.
     setState: function(state) {
       var tileIndex, tileState;
 
