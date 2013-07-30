@@ -17,6 +17,9 @@ function() {
 
     /* Methods */
 
+    // This method is the way for the special field to query data from the
+    // server, by using methods that are defined in a SpecialFieldController
+    // subclass.
     callServer: function(name, callback, parameters) {
       Ext.Ajax.request({
         url: this.getUrl(name),
