@@ -116,6 +116,7 @@ function() {
       this.addEntityColumn(this.entityId, refresh);
     },
 
+    // Overrides the method defined in Tile.
     getState: function() {
       return {
         type: 'summaryTile',
@@ -123,10 +124,12 @@ function() {
       };
     },
 
+    // Overrides the method defined in Tile.
     setState: function(state) {
       this.select(true);
     },
 
+    // Overrides the method defined in Tile.
     isStateApplicable: function(state) {
       return state.type === 'summaryTile' && state.entityId === this.entityId;
     }

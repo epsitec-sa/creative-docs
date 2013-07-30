@@ -150,6 +150,7 @@ function() {
       }
     },
 
+    // Overrides the method defined in Tile.
     getState: function() {
       return {
         type: 'edidionTile',
@@ -157,10 +158,13 @@ function() {
       };
     },
 
+    // Overrides the method defined in Tile.
     setState: function(state) {
-      // Nothing to do here.
+      // Nothing to do here, as this kind of tile doesn't really have a state
+      // to keep track.
     },
 
+    // Overrides the method defined in Tile.
     isStateApplicable: function(state) {
       return state.type === 'editionTile' && state.entityId === this.entityId;
     }

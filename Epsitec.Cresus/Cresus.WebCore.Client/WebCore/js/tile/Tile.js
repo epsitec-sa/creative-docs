@@ -95,6 +95,8 @@ function() {
       this.column.refreshAll();
     },
 
+    // Some actions in the menu requires an additional entity to be enabled. We
+    // update their enabled status with this method here.
     updateActionMenuState: function(hasAdditionalEntity) {
       var items, item, i;
 
@@ -117,12 +119,30 @@ function() {
       }
     },
 
+    // A tile might be selected by the user when he clicks on it. We keep track
+    // of the selection status with these two methods.
     setSelected: function(selected) {
       this.selected = selected;
     },
 
     isSelected: function() {
       return this.selected;
+    },
+
+    // The getState, setState and isStateApplicable methods are used when the
+    // columns are refreshed. As their instances are replaced by new ones, the
+    // instances of tiles are also replaced by new ones and we must have a way
+    // to restore their state.
+    getState: function() {
+      // This method is supposed to be overriden in derived classes.
+    },
+
+    setState: function(state) {
+      // This method is supposed to be overriden in derived classes.
+    },
+
+    isStateApplicable: function(state) {
+      // This method is supposed to be overriden in derived classes.
     }
   });
 });

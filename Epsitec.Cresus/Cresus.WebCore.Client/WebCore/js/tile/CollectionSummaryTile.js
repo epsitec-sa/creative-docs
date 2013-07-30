@@ -126,6 +126,7 @@ function() {
       this.column.showTemplateAction(viewId, this.entityId, callback);
     },
 
+    // Overrides the method defined in Tile and SummaryTile.
     getState: function() {
       return this.getTileState(this.entityId, this.propertyAccessorId);
     },
@@ -138,10 +139,12 @@ function() {
       };
     },
 
+    // Overrides the method defined in Tile and SummaryTile.
     setState: function(state) {
       this.select(true);
     },
 
+    // Overrides the method defined in Tile and SummaryTile.
     isStateApplicable: function(state) {
       return state.type === 'collectionSummaryTile' &&
           state.entityId === this.entityId &&

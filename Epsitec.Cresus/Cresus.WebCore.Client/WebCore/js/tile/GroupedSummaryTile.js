@@ -206,6 +206,7 @@ function() {
       this.column.showTemplateAction(viewId, entityId, callback);
     },
 
+    // Overrides the method defined in Tile.
     getState: function() {
       var entityId, itemIndex;
 
@@ -226,6 +227,7 @@ function() {
       };
     },
 
+    // Overrides the method defined in Tile.
     setState: function(state) {
       var item;
       if (state.itemIndex !== null && state.entityId !== null)
@@ -268,6 +270,7 @@ function() {
       return null;
     },
 
+    // Overrides the method defined in Tile.
     isStateApplicable: function(state) {
       return state.type === 'groupedSummaryTile' &&
           state.propertyAccessorId === this.propertyAccessorId;
