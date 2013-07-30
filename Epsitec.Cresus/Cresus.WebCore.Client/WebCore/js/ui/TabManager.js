@@ -27,8 +27,8 @@ function() {
     /* Constructor */
 
     constructor: function() {
-      this.entityTabs = [];
-      this.pageTabs = [];
+      this.entityTabs = {};
+      this.pageTabs = {};
 
       this.callParent(arguments);
       return this;
