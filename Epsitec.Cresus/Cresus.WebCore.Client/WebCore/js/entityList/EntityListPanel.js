@@ -48,26 +48,36 @@ function() {
     },
 
     setupEntityList: function(options) {
-      if (Ext.isDefined(options.databaseName)) {
-        this.setupDatabaseEntityList(options);
+      if (this.isAsynchronousSetupRequired(options)) {
+        this.setupEntityListAsynchronously(options);
       }
       else {
-        this.setupSetEntityList(options);
+        this.setupEntityListSynchronously(options);
       }
     },
 
-    setupDatabaseEntityList: function(options) {
+    isAsynchronousSetupRequired: function(options) {
+      var asynchronous = [
+        'Epsitec.DatabaseEntityList',
+        'Epsitec.DatabaseEditableEntityList',
+        'Epsitec.FavoritesEntityList'
+      ];
+
+      return Ext.Array.contains(asynchronous, options.entityListTypeName);
+    },
+
+    setupEntityListAsynchronously: function(options) {
       this.setLoading(true);
       Ext.Ajax.request({
         url: 'proxy/database/definition/' + options.databaseName,
         callback: function(requestOptions, success, response) {
-          this.setupDatabaseEntityListCallback(options, success, response);
+          this.setupEntityListCallback(options, success, response);
         },
         scope: this
       });
     },
 
-    setupDatabaseEntityListCallback: function(options, success, response) {
+    setupEntityListCallback: function(options, success, response) {
       var json;
 
       this.setLoading(false);
@@ -95,7 +105,7 @@ function() {
       });
     },
 
-    setupSetEntityList: function(options) {
+    setupEntityListSynchronously: function(options) {
       this.createEntityList(options.entityListTypeName, options);
     },
 
