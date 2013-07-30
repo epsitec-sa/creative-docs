@@ -36,6 +36,7 @@ function() {
 
     /* Methods */
 
+    // Overrides the method defined in EditableEntityList.
     handleAdd: function() {
       if (this.filters.getFilterData().length > 0) {
         Ext.MessageBox.confirm(
@@ -57,6 +58,9 @@ function() {
     },
 
     createEntity: function() {
+      // If we have a creation view, we use this view to create the new entity,
+      // otherwise we use the regular creation process.
+
       if (this.creationViewId === null) {
         this.createEntityWithoutView();
       }
@@ -105,11 +109,15 @@ function() {
       this.selectEntity(entityId, false);
     },
 
+    // Overrides the method defined in EditableEntityList.
     handleRemove: function(entityItems) {
       this.deleteEntities(entityItems);
     },
 
     deleteEntities: function(entityItems) {
+      // If we have a deletion view, we use this view to delete the entity,
+      // otherwise we use the regular deletion process.
+
       if (this.deletionViewId === null) {
         this.deleteEntitiesWithoutView(entityItems);
       }
@@ -169,6 +177,10 @@ function() {
       this.resetStore(false);
       this.setLoading();
 
+      // The first step of the entity selection is to get its index within the
+      // list. The selectEntityCallback method will be called once the server
+      // gives us this index.
+
       Ext.Ajax.request({
         url: this.buildGetIndexUrl(entityId),
         method: 'GET',
@@ -210,6 +222,13 @@ function() {
         return;
       }
 
+      // Now that we have the index of the entity, we load the store and scroll
+      // to the given index. The scrollTo method will handle the loading of the
+      // data that is not yet loaded, if it is outside of the range of entities
+      // that are currently loaded by the store. Once the view will show the
+      // range of entities around the index, the selectEntityCallback2 will be
+      // called and we'll be able to proceed.
+
       this.store.load({
         callback: function() {
           this.view.bufferedRenderer.scrollTo(
@@ -226,22 +245,25 @@ function() {
     },
 
     selectEntityCallback2: function(entityId, suppressEvent) {
+      // Now we try to select the entity that we want to.
+
       // We don't look for the record by its index but by its id. This is
       // because the index might have changed if another user has added or
       // removed entities. We hope that our record has not been shifted too far
       // away from the index that we got. If that's the case, we'll still be
-      // able to find it in the data that has been loaded by the call to
-      // guaranteeRage.
+      // able to find it in the data that has been loaded by the call to the
+      // scrollTo method.
       var record = this.store.getById(entityId);
 
       if (record === null) {
         // the record was not found, it is outside the range that was loaded by
-        // the call to guaranteeRange. Therefore, we start again, hoping that
-        // this time the index won't change.
+        // the call to the scrollTo method.. Therefore, we start again, hoping
+        // that this time the index won't change that much.
         this.selectEntity(entityId, suppressEvent);
         return;
       }
 
+      // At last, we can select the entity record.
       this.getSelectionModel().select(record, false, suppressEvent);
     }
   });

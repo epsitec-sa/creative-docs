@@ -1,5 +1,6 @@
 // This class represents an entity picker where the user can pick an entity by
-// using one or more entity lists.
+// using one or more entity lists. The lists are displayed within tabs (if
+// there is only a single list, the tabs are not displayed).
 
 Ext.require([
   'Epsitec.cresus.webcore.entityList.EntityListPanel',
@@ -152,6 +153,9 @@ function() {
             multiSelect: multiSelect
           }
         }];
+
+        // If we are not required to display only the favorites list, we add a
+        // tab to display the full content of the database.
 
         if (!favOnly) {
           lists.push({

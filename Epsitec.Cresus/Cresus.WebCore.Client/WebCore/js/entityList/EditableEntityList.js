@@ -60,6 +60,10 @@ function() {
       this.handleAdd();
     },
 
+    handleAdd: function() {
+      // To be overriden in derived classes.
+    },
+
     onRemoveHandler: function() {
       var entityItems;
 
@@ -73,6 +77,10 @@ function() {
       // Remove the selection, so as not to keep the entity selected after it
       // has been deleted.
       this.getSelectionModel().deselectAll();
+    },
+
+    handleRemove: function(entityItems) {
+      // To be overriden in derived classes.
     }
   });
 });

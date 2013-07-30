@@ -46,9 +46,10 @@ function() {
     /* Methods */
 
     onSelectionChange: function() {
-      //todo add the right column
+      // TODO: add the right column
     },
 
+    // Overrides the method defined in EditableEntityList.
     handleAdd: function() {
       var callback = Epsitec.Callback.create(this.handleAddCallback, this);
       Epsitec.EntityListPicker.showSet(
@@ -60,6 +61,7 @@ function() {
       this.processEntities(entityItems, 'add');
     },
 
+    // Overrides the method defined in EditableEntityList.
     handleRemove: function(entityItems) {
       var list = this;
       this.toProcess = entityItems;

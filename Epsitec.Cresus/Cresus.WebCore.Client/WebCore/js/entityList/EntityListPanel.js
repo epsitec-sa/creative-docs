@@ -48,6 +48,13 @@ function() {
     },
 
     setupEntityList: function(options) {
+      // Some entity lists must be asynchronously set up. They are the lists
+      // that don't already have their definition loaded in the client. That's
+      // most of them, as only the lists backed by a set view controller have
+      // their definition already loaded on the client. For the asynchronous
+      // case, we make an ajax request to the server to get the definition of
+      // the list, and only the do we setup the list in the callback.
+
       if (this.isAsynchronousSetupRequired(options)) {
         this.setupEntityListAsynchronously(options);
       }
@@ -113,6 +120,8 @@ function() {
       this.entityList = Ext.create(typeName, options);
       this.add(this.entityList);
 
+      // If there is a callback that must be invoked when the list is created,
+      // this is the time to do it.
       if (this.listCreationCallback !== null) {
         this.listCreationCallback.apply(this, []);
         this.listCreationCallback = null;
