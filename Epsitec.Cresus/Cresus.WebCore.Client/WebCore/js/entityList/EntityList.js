@@ -65,6 +65,7 @@ function() {
           selectionchange: this.onSelectionChangeHandler,
           columnhide: this.setupColumnParameter,
           columnshow: this.setupColumnParameterAndRefresh,
+          reconfigure: this.reconfigureFiltersFeature,
           scope: this
         },
         features: [{
@@ -313,6 +314,20 @@ function() {
     setupColumnParameterAndRefresh: function() {
       this.setupColumnParameter();
       this.resetStore(true);
+
+      // This is a hack around a bug in the filters feature in Ext JS 4.2.1. The
+      // feature is supposed to adapt to the columns of the grid panel, in such
+      // a way that new columns also have a menu entry to filter it. It was its
+      // behavior before in version 4.1.2, but it is not the same anymore. So
+      // when we add a new column, we reset the internal state of the filters
+      // feature to enable this menu item for the new column. It does not change
+      // the filetrs criterions that might exist, it only enables the menu item
+      // for the new column.
+      if (this.filters) {
+        // Note that this is a call to a private method. It might not be
+        // supported in future versions of Ext JS.
+        this.filters.createFilters();
+      }
     },
 
     setupColumnParameter: function() {
@@ -342,6 +357,19 @@ function() {
           dynamicFields = this.createDynamicFields(columnDefinitions);
 
       return basicFields.concat(dynamicFields);
+    },
+
+    reconfigureFiltersFeature: function() {
+      // This method is a hack around a bug in Ext JS 4.2.1. The documentation
+      // for the filters feature that we use explicitely states that the feature
+      // listens on the reconfigure event of its associate grid panel in order
+      // to rebind to the new store if it has changed. This is wrong, the
+      // filters feature keeps its binding to the old store. So here we do this
+      // work manually.
+
+      if (this.filters && this.filters.store !== this.store) {
+        this.filters.bindStore(this.store);
+      }
     },
 
     createBasicFields: function() {
