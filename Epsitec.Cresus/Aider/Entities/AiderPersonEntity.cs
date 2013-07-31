@@ -365,6 +365,11 @@ namespace Epsitec.Aider.Entities
 			value = this.GetCallName ();
 		}
 
+		partial void SetCallNameDisplay(string value)
+		{
+			throw new NotSupportedException ("Do not call this method.");
+		}
+
 
 
 		private AiderAddressEntity GetAddress()
