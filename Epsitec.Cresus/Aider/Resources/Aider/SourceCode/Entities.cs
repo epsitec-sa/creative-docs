@@ -982,6 +982,30 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>CallNameDisplay</c> field.
+		///	designer:fld/LVAF/LVGS32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGS32]", IsVirtual=true)]
+		public string CallNameDisplay
+		{
+			get
+			{
+				string value = default (string);
+				this.GetCallNameDisplay (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.CallNameDisplay;
+				if (oldValue != value || !this.IsFieldDefined("[LVGS32]"))
+				{
+					this.OnCallNameDisplayChanging (oldValue, value);
+					this.SetCallNameDisplay (value);
+					this.OnCallNameDisplayChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1015,6 +1039,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		partial void OnCallNameDisplayChanging(string oldValue, string newValue);
+		partial void OnCallNameDisplayChanged(string oldValue, string newValue);
 		
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
@@ -1023,6 +1049,8 @@ namespace Epsitec.Aider.Entities
 		partial void GetAddress(ref global::Epsitec.Aider.Entities.AiderAddressEntity value);
 		partial void SetAddress(global::Epsitec.Aider.Entities.AiderAddressEntity value);
 		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
+		partial void GetCallNameDisplay(ref string value);
+		partial void SetCallNameDisplay(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

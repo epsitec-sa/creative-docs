@@ -49,7 +49,11 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA3]" title="Prénom complet" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA3]" title="Prénom (complet)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVGS32]" title="Prénom (usuel)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -101,7 +105,11 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA7]" title="Nationalité" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA7]" title="Nationalité (code)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVACB].[LVAD5]" title="Nationalité (nom)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>

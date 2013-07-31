@@ -178,7 +178,7 @@ namespace Epsitec.Aider.Entities
 				return prefix + suffix + "French";
 			}
 		}
-		
+
 		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
 		{
 			string suffix;
@@ -311,7 +311,7 @@ namespace Epsitec.Aider.Entities
 					this.ProcessPersonRevival ();
 					break;
 			}
-			
+
 			switch (newValue)
 			{
 				case PersonVisibilityStatus.Deceased:
@@ -319,9 +319,9 @@ namespace Epsitec.Aider.Entities
 					break;
 			}
 		}
-		
-		
-		
+
+
+
 		partial void GetAddress(ref AiderAddressEntity value)
 		{
 			value = this.GetAddress ();
@@ -336,7 +336,7 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
-		
+
 		partial void GetHouseholds(ref IList<AiderHouseholdEntity> value)
 		{
 			value = this.GetHouseholds ().OrderBy (x => x.DisplayName).AsReadOnlyCollection ();
@@ -359,6 +359,12 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetWarnings ().AsReadOnlyCollection ();
 		}
+
+		partial void GetCallNameDisplay(ref string value)
+		{
+			value = this.GetCallName ();
+		}
+
 
 
 		private AiderAddressEntity GetAddress()
@@ -440,7 +446,7 @@ namespace Epsitec.Aider.Entities
 				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
 				.ToList ();
 		}
-		
+
 		private IList<AiderContactEntity> FindContacts(DataContext dataContext)
 		{
 			var example = new AiderContactEntity ()
@@ -465,7 +471,7 @@ namespace Epsitec.Aider.Entities
 		{
 			this.DisplayName = this.GetDisplayName ();
 		}
-		
+
 		private void RefreshBirthdayDate()
 		{
 			Date? date = null;
@@ -516,7 +522,7 @@ namespace Epsitec.Aider.Entities
 		public void AddContactInternal(AiderContactEntity contact)
 		{
 			this.GetContacts ().Add (contact);
-			this.ClearHouseholdCache ();					
+			this.ClearHouseholdCache ();
 		}
 
 		public void RemoveContactInternal(AiderContactEntity contact)

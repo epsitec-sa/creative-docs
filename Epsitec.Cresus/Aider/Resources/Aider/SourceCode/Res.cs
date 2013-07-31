@@ -1610,6 +1610,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid BirthdayYear = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 473);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
+				//	designer:cap/LVGS32
+				public static readonly global::Epsitec.Common.Support.Druid CallNameDisplay = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 124);
 				//	designer:cap/LVAI5
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
 				//	designer:cap/LVAIE
