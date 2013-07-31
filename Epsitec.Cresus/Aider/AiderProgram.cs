@@ -172,6 +172,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixChardonneSubscriptions (args));
 					return;
 				}
+
+				if (args.Contains ("-fixprillysubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixPrillySubscriptions (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -375,6 +381,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => ChardonneSubscriptionFixer.FixChardonneSubscriptions (coreData)
+			);
+		}
+
+		private static void FixPrillySubscriptions(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => PrillySubscriptionFixer.FixPrillySubscriptions (coreData)
 			);
 		}
 
