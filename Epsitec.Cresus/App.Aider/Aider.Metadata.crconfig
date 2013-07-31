@@ -692,7 +692,7 @@ AiderPersonWarning = [LVALB]
     </t>
 
     <t eid="@AiderPersonWarning" n="default">
-	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVAKB]" title="Titre" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVAKB]" title="Titre" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -700,7 +700,7 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVAMB].[LVAI4]" title="Persone" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVAMB].[LVAI4]" title="Persone" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -708,7 +708,7 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVA5G]" title="Cible" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVA5G]" title="Cible" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
