@@ -1918,6 +1918,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Nationality = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 364);
 				//	designer:cap/LVA7
 				public static readonly global::Epsitec.Common.Support.Druid NationalityCountryCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+				//	designer:cap/LVGT32
+				public static readonly global::Epsitec.Common.Support.Druid NationalityCountryName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 125);
 				//	designer:cap/LVA8
 				public static readonly global::Epsitec.Common.Support.Druid NationalityStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 				//	designer:cap/LVAB

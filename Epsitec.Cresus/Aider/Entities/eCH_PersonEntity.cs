@@ -64,6 +64,24 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		partial void GetNationalityCountryName(ref string value)
+		{
+			var nationality = this.Nationality;
+
+			// Here we check explicitely for null and not IsNotNull(), because the this.Nationality
+			// property won't create "null" entities, because it is a virtual property. This is
+			// another flaw in the EntityNullReferenceVirtualizer design.
+
+			value = nationality != null
+				? nationality.Name
+				: "";
+		}
+
+		partial void SetNationalityCountryName(string value)
+		{
+			throw new System.NotSupportedException ("Do not call this method.");
+		}
+
 		partial void GetNationality(ref AiderCountryEntity value)
 		{
 			if (string.IsNullOrWhiteSpace (this.NationalityCountryCode))
