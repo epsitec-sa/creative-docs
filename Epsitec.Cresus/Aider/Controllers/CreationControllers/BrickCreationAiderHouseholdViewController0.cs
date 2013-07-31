@@ -1,5 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.UserManagement;
@@ -98,6 +100,17 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			person.eCH_Person.Nationality = nationality;
 
 			AiderContactEntity.Create (this.BusinessContext, person, household, true);
+
+			// This is a hack around a limitation in the business rules. The business rules of the
+			// person will assign the parish to the person, but it will do it only after that the
+			// business rule of the household has used the (at the time null) parish of the person
+			// to set its path. We come back to this old problem: there is no dependency management
+			// between the execution of the business rules and we must pray that they execute in
+			// the order in which we think they will.
+			// So here we force the parish assignation now, so we know for sure that the household
+			// will have its parish group path cache set correctly.
+			var parishRepository = ParishAddressRepository.Current;
+			ParishAssigner.AssignToParish (parishRepository, this.BusinessContext, person);
 
 			return household;
 		}
