@@ -1708,6 +1708,78 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>HonorificDisplay</c> field.
+		///	designer:fld/LVAI2/LVGU32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGU32]", IsVirtual=true)]
+		public string HonorificDisplay
+		{
+			get
+			{
+				string value = default (string);
+				this.GetHonorificDisplay (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.HonorificDisplay;
+				if (oldValue != value || !this.IsFieldDefined("[LVGU32]"))
+				{
+					this.OnHonorificDisplayChanging (oldValue, value);
+					this.SetHonorificDisplay (value);
+					this.OnHonorificDisplayChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Head1FullName</c> field.
+		///	designer:fld/LVAI2/LVGV32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGV32]", IsVirtual=true)]
+		public string Head1FullName
+		{
+			get
+			{
+				string value = default (string);
+				this.GetHead1FullName (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.Head1FullName;
+				if (oldValue != value || !this.IsFieldDefined("[LVGV32]"))
+				{
+					this.OnHead1FullNameChanging (oldValue, value);
+					this.SetHead1FullName (value);
+					this.OnHead1FullNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Head2FullName</c> field.
+		///	designer:fld/LVAI2/LVG042
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG042]", IsVirtual=true)]
+		public string Head2FullName
+		{
+			get
+			{
+				string value = default (string);
+				this.GetHead2FullName (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.Head2FullName;
+				if (oldValue != value || !this.IsFieldDefined("[LVG042]"))
+				{
+					this.OnHead2FullNameChanging (oldValue, value);
+					this.SetHead2FullName (value);
+					this.OnHead2FullNameChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnHouseholdMrMrsChanging(global::Epsitec.Aider.Enumerations.HouseholdMrMrs oldValue, global::Epsitec.Aider.Enumerations.HouseholdMrMrs newValue);
 		partial void OnHouseholdMrMrsChanged(global::Epsitec.Aider.Enumerations.HouseholdMrMrs oldValue, global::Epsitec.Aider.Enumerations.HouseholdMrMrs newValue);
@@ -1725,9 +1797,21 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		partial void OnHonorificDisplayChanging(string oldValue, string newValue);
+		partial void OnHonorificDisplayChanged(string oldValue, string newValue);
+		partial void OnHead1FullNameChanging(string oldValue, string newValue);
+		partial void OnHead1FullNameChanged(string oldValue, string newValue);
+		partial void OnHead2FullNameChanging(string oldValue, string newValue);
+		partial void OnHead2FullNameChanged(string oldValue, string newValue);
 		
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetMembers(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
+		partial void GetHonorificDisplay(ref string value);
+		partial void SetHonorificDisplay(string value);
+		partial void GetHead1FullName(ref string value);
+		partial void SetHead1FullName(string value);
+		partial void GetHead2FullName(ref string value);
+		partial void SetHead2FullName(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -329,7 +329,19 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="Titre" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="Titre (option)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVGU32]" title="Titre (valeur)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVGV32]" title="Nom du chef de ménage 1" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVG042]" title="Nom du chef de ménage 2" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>

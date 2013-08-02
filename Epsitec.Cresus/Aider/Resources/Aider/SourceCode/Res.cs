@@ -1548,6 +1548,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayVisibility = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 488);
 				//	designer:cap/LVA6F
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 486);
+				//	designer:cap/LVGV32
+				public static readonly global::Epsitec.Common.Support.Druid Head1FullName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 127);
+				//	designer:cap/LVG042
+				public static readonly global::Epsitec.Common.Support.Druid Head2FullName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 128);
+				//	designer:cap/LVGU32
+				public static readonly global::Epsitec.Common.Support.Druid HonorificDisplay = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 126);
 				//	designer:cap/LVAG8
 				public static readonly global::Epsitec.Common.Support.Druid HouseholdMrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 272);
 				//	designer:cap/LVAH9

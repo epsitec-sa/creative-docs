@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText
 			(
-				this.GetAddressRecipientText(false, 50),
+				this.GetAddressRecipientText (false, 50),
 				"~\n",
 				this.Address.GetPostalAddress ());
 		}
@@ -249,7 +249,7 @@ namespace Epsitec.Aider.Entities
 
 			if (result.Count == 0)
 			{
-				var child = this.GetChildren().FirstOrDefault ();
+				var child = this.GetChildren ().FirstOrDefault ();
 
 				if (child != null)
 				{
@@ -264,7 +264,7 @@ namespace Epsitec.Aider.Entities
 		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
 		{
 			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			
+
 			household.Address = AiderAddressEntity.Create (context, templateAddress);
 
 			return household;
@@ -305,7 +305,7 @@ namespace Epsitec.Aider.Entities
 			this.ClearMemberCache ();
 		}
 
-		
+
 		partial void GetMembers(ref IList<AiderPersonEntity> value)
 		{
 			value = this.GetMembers ().AsReadOnlyCollection ();
@@ -316,7 +316,7 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetContacts ().AsReadOnlyCollection ();
 		}
-		
+
 
 		private IList<AiderPersonEntity> GetMembers()
 		{
@@ -359,7 +359,65 @@ namespace Epsitec.Aider.Entities
 				.ToList ();
 		}
 
-		
+
+		partial void GetHonorificDisplay(ref string value)
+		{
+			value = this.GetHonorific (false);
+		}
+
+
+		partial void SetHonorificDisplay(string value)
+		{
+			throw new NotImplementedException ("Do not call this method.");
+		}
+
+
+		partial void GetHead1FullName(ref string value)
+		{
+			value = "";
+
+			if (this.GetMembers ().Count >= 1)
+			{
+				var names = this.GetHeadNames ();
+				var firstnames = names.Item1;
+				var lastnames = names.Item2;
+
+				value = firstnames[0] + " " + lastnames[0];
+			}
+		}
+
+
+		partial void SetHead1FullName(string value)
+		{
+			throw new NotImplementedException ("Do not call this method.");
+		}
+
+
+		partial void GetHead2FullName(ref string value)
+		{
+			value = "";
+
+			if (this.GetMembers ().Count >= 1)
+			{
+				var names = this.GetHeadNames ();
+				var firstnames = names.Item1;
+				var lastnames = names.Item2;
+
+				if (firstnames.Count > 1)
+				{
+					var index = lastnames.Count > 1 ? 1 : 0;
+					value = firstnames[1] + " " + lastnames[index];
+				}
+			}
+		}
+
+
+		partial void SetHead2FullName(string value)
+		{
+			throw new NotImplementedException ("Do not call this method.");
+		}
+
+
 		private void ClearMemberCache()
 		{
 			this.membersCache = null;
@@ -409,7 +467,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		
+
 		private AiderGroupEntity GetParishGroup()
 		{
 			//	With the AIDER data model, we cannot represent households where persons
