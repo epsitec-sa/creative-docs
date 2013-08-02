@@ -326,27 +326,6 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private IList<AiderPersonEntity> GetHeads()
-		{
-			return this.GetMembers (HouseholdRole.Head);
-		}
-
-
-		private IList<AiderPersonEntity> GetChildren()
-		{
-			return this.GetMembers (HouseholdRole.None);
-		}
-
-
-		private IList<AiderPersonEntity> GetMembers(HouseholdRole role)
-		{
-			return this.GetContacts ()
-				.Where (x => x.HouseholdRole == role)
-				.Select (x => x.Person)
-				.ToList ();
-		}
-
-
 		private IEnumerable<AiderPersonEntity> GetHeadForNames()
 		{
 			var heads = this.GetHeads ();
@@ -415,6 +394,27 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return result;
+		}
+
+
+		private IList<AiderPersonEntity> GetHeads()
+		{
+			return this.GetMembers (HouseholdRole.Head);
+		}
+
+
+		private IList<AiderPersonEntity> GetChildren()
+		{
+			return this.GetMembers (HouseholdRole.None);
+		}
+
+
+		private IList<AiderPersonEntity> GetMembers(HouseholdRole role)
+		{
+			return this.GetContacts ()
+				.Where (x => x.HouseholdRole == role)
+				.Select (x => x.Person)
+				.ToList ();
 		}
 
 
