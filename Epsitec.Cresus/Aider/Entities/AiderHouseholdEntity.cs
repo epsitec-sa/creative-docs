@@ -303,7 +303,10 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.membersCache == null)
 			{
-				this.membersCache = this.GetMembers (this.GetContacts ());
+				var heads = this.GetHeads ().OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+				var children = this.GetChildren ().OrderBy (x => x.eCH_Person.PersonDateOfBirth);
+
+				this.membersCache = heads.Concat (children).ToList ();
 			}
 
 			return this.membersCache;
@@ -333,19 +336,6 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByExample (example)
 				.Where (x => x.Person.IsAlive)
 				.ToList ();
-		}
-
-		private List<AiderPersonEntity> GetMembers(IList<AiderContactEntity> contacts)
-		{
-			var members = new List<AiderPersonEntity> ();
-
-			var heads   = contacts.Where (x => x.HouseholdRole == HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-			var others  = contacts.Where (x => x.HouseholdRole != HouseholdRole.Head).Select (x => x.Person).OrderBy (x => x.eCH_Person.PersonDateOfBirth);
-
-			members.AddRange (heads);
-			members.AddRange (others);
-
-			return members;
 		}
 
 		
