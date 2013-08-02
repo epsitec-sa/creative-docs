@@ -106,33 +106,28 @@ namespace Epsitec.Aider.Entities
 		{
 			var firstnames = this.GetFirstnames ();
 			var lastnames = this.GetLastnames ();
-			var parts = new List<string> ();
+
+			string result;
 
 			if (firstnames.Count == 1)
 			{
-				parts.Add (firstnames[0] + " " + lastnames[0]);
+				result = firstnames[0] + " " + lastnames[0];
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 1)
 			{
-				parts.Add (firstnames[0] + " et " + firstnames[1]);
-				parts.Add (lastnames[0]);
+				result = firstnames[0] + " et " + firstnames[1] + " " + lastnames[0];
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 2)
 			{
-				parts.Add (firstnames[0] + " " + lastnames[0]);
-				parts.Add (firstnames[1] + " " + lastnames[1]);
+				result = firstnames[0] + " " + lastnames[0] + " et "
+					+ firstnames[1] + " " + lastnames[1];
 			}
 			else
 			{
 				throw new NotImplementedException ();
 			}
 
-			var totalLength = parts.Sum (p => p.Length);
-			var separator = totalLength > 35
-				? "\n"
-				: " ";
-
-			return string.Join (separator, parts);
+			return result.BreakInLines (35);
 		}
 
 		public List<string> GetFirstnames()

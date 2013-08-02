@@ -732,6 +732,69 @@ namespace Epsitec.Common.Support.Extensions
 			return new string (chars);
 		}
 
+		public static string BreakInLines(this string value, int lineLength)
+		{
+			value.ThrowIfNull ("value");
+			lineLength.ThrowIf (l => l < 1, "lineLength too small");
+
+			if (value.Length <= lineLength)
+			{
+				return value;
+			}
+
+			var result = new StringBuilder ();
+			var currentLineLength = 0;
+
+			foreach (var word in value.Split (" "))
+			{
+				var toAdd = currentLineLength == 0
+					? word
+					: " " + word;
+
+				if (currentLineLength + toAdd.Length <= lineLength)
+				{
+					// We can add the current word on the current line.
+					result.Append (toAdd);
+					currentLineLength += toAdd.Length;
+				}
+				else if (word.Length <= lineLength)
+				{
+					// The current word is too long to fit on the current line, but short enough to
+					// fit on a new one, so we add it to the next line.
+					result.Append ("\n" + word);
+					currentLineLength = word.Length;
+				}
+				else
+				{
+					// The current word is too long to fit on a single line, so we split it into
+					// the remaining space of the current line and the next lines.
+
+					var remainingLength = lineLength - currentLineLength;
+
+					if (remainingLength > 0)
+					{
+						// If there is still space on the current line, we add part of the word to it.
+						result.Append (toAdd.Substring (0, remainingLength));
+					}
+					else
+					{
+						// We strip the extra space characted added above, so as not to start a new
+						// line with a space.
+						toAdd = word;
+					}
+
+					for (int i = remainingLength; i < toAdd.Length; i += lineLength)
+					{
+						var lengthToAppend = System.Math.Min (lineLength, toAdd.Length - i);
+						result.Append ("\n" + toAdd.Substring (i, lengthToAppend));
+						currentLineLength = lengthToAppend;
+					}
+				}
+			}
+
+			return result.ToString ();
+		}
+
 		static StringExtensions()
 		{
 			StringExtensions.alphaRegex = new Regex ("^[a-zA-Z]*$", RegexOptions.Compiled);
