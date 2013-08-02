@@ -93,18 +93,13 @@ namespace Epsitec.Aider.Entities
 
 		public string GetHonorific(bool abbreviated)
 		{
-			var heads = this.GetHeads ();
-			var children = this.GetChildren ();
+			var members = this.GetMembers ();
 
 			// If we have a single member, we return its title instead of the title of the
 			// household.
-			if (heads.Count + children.Count == 1)
+			if (members.Count == 1)
 			{
-				var member = heads.Count == 1
-					? heads[0]
-					: children[0];
-
-				return member.MrMrs.GetText (abbreviated);
+				return members[0].MrMrs.GetText (abbreviated);
 			}
 
 			var honorific = this.HouseholdMrMrs;
@@ -113,7 +108,7 @@ namespace Epsitec.Aider.Entities
 				case HouseholdMrMrs.MonsieurEtMadame:
 				case HouseholdMrMrs.MadameEtMonsieur:
 					// If we have a single head and some children, we use the "Family" title.
-					if (heads.Count == 1)
+					if (this.GetHeads ().Count == 1)
 					{
 						goto case HouseholdMrMrs.Famille;
 					}
