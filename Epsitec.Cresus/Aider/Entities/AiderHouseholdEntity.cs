@@ -358,14 +358,36 @@ namespace Epsitec.Aider.Entities
 			return this.Address.GetDisplayAddress ().ToSimpleText ();
 		}
 
+
 		public string GetDisplayName()
 		{
-			if (string.IsNullOrEmpty (this.HouseholdName))
+			if (this.GetMembers ().Count == 0)
 			{
-				return this.BuildDisplayName ();
+				return "";
 			}
-			
-			return this.HouseholdName;
+
+			var names = this.GetHeadNames ();
+			var firstnames = names.Item1;
+			var lastnames = names.Item2;
+
+			if (firstnames.Count == 1)
+			{
+				return lastnames[0] + ", " + firstnames[0];
+			}
+			else if (firstnames.Count == 2 && lastnames.Count == 1)
+			{
+				return lastnames[0] + ", " + firstnames[0] + " et " + firstnames[1];
+
+			}
+			else if (firstnames.Count == 2 && lastnames.Count == 2)
+			{
+				return lastnames[0] + ", " + firstnames[0] + " et "
+					+ lastnames[1] + ", " + firstnames[1];
+			}
+			else
+			{
+				throw new NotImplementedException ();
+			}
 		}
 
 		
@@ -377,16 +399,6 @@ namespace Epsitec.Aider.Entities
 			return this.Members
 				.Select (m => m.ParishGroup)
 				.FirstOrDefault (p => p.IsNotNull ());
-		}
-
-		private string BuildDisplayName()
-		{
-			var headTitle = this.GetHonorific (true);
-
-			var headLastnames = this.GetHeadNames ().Item2;
-			var headLastname = StringUtils.Join (" ", headLastnames);
-
-			return StringUtils.Join (" ", headTitle, headLastname);
 		}
 
 
