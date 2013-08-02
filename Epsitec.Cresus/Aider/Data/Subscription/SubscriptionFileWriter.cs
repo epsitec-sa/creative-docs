@@ -328,8 +328,9 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			var household = subscription.Household;
 
-			var firstnames = household.GetFirstnames ();
-			var lastnames = household.GetLastnames ();
+			var names = household.GetHeadNames ();
+			var firstnames = names.Item1;
+			var lastnames = names.Item2;
 
 			title = SubscriptionFileWriter.Process
 			(

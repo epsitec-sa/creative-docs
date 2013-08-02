@@ -128,8 +128,9 @@ namespace Epsitec.Aider.Entities
 
 		public string GetNames()
 		{
-			var firstnames = this.GetFirstnames ();
-			var lastnames = this.GetLastnames ();
+			var names = this.GetHeadNames ();
+			var firstnames = names.Item1;
+			var lastnames = names.Item2;
 
 			string result;
 
@@ -154,27 +155,26 @@ namespace Epsitec.Aider.Entities
 			return result.BreakInLines (35);
 		}
 
-		public List<string> GetFirstnames()
-		{
 
-			return this.GetHeadForNames ()
+		public Tuple<List<string>, List<string>> GetHeadNames()
+		{
+			var heads = this.GetHeadForNames ();
+
+			var firstnames = heads
 				.Select (p => p.GetCallName ())
 				.ToList ();
-		}
 
-
-		public List<string> GetLastnames()
-		{
-			var headNames = this.GetHeadForNames ()
+			var lastnames = heads
 				.Select (p => p.eCH_Person.PersonOfficialName)
-				.Distinct ()
 				.ToList ();
 
-			return NameProcessor.FilterLastnamePseudoDuplicates (headNames);
+			lastnames = NameProcessor.FilterLastnamePseudoDuplicates (lastnames);
+
+			return Tuple.Create (firstnames, lastnames);
 		}
 
 
-		private IEnumerable<AiderPersonEntity> GetHeadForNames()
+		private List<AiderPersonEntity> GetHeadForNames()
 		{
 			var heads = this.GetHeads ();
 
@@ -380,7 +380,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var headTitle = this.GetHonorific (true);
 
-			var headLastnames = this.GetLastnames ();
+			var headLastnames = this.GetHeadNames ().Item2;
 			var headLastname = StringUtils.Join (" ", headLastnames);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
