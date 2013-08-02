@@ -167,9 +167,9 @@ namespace Epsitec.Aider.Entities
 				.Select (p => p.GetCallName ())
 				.ToList ();
 
-			var lastnames = heads
-				.Select (p => p.eCH_Person.PersonOfficialName)
-				.ToList ();
+			var lastnames = !string.IsNullOrEmpty (this.HouseholdName)
+				? new List<string> () { this.HouseholdName }
+				: heads.Select (p => p.eCH_Person.PersonOfficialName).ToList ();
 
 			lastnames = NameProcessor.FilterLastnamePseudoDuplicates (lastnames);
 
