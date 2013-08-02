@@ -2199,6 +2199,54 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>AddressTextSingleLine</c> field.
+		///	designer:fld/LVAJ2/LVG142
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG142]", IsVirtual=true)]
+		public string AddressTextSingleLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetAddressTextSingleLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.AddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG142]"))
+				{
+					this.OnAddressTextSingleLineChanging (oldValue, value);
+					this.SetAddressTextSingleLine (value);
+					this.OnAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>AddressTextMultiLine</c> field.
+		///	designer:fld/LVAJ2/LVG242
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG242]", IsVirtual=true)]
+		public string AddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.AddressTextMultiLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG242]"))
+				{
+					this.OnAddressTextMultiLineChanging (oldValue, value);
+					this.SetAddressTextMultiLine (value);
+					this.OnAddressTextMultiLineChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnAddressLine1Changing(string oldValue, string newValue);
 		partial void OnAddressLine1Changed(string oldValue, string newValue);
@@ -2230,6 +2278,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnEmailChanged(string oldValue, string newValue);
 		partial void OnWebChanging(string oldValue, string newValue);
 		partial void OnWebChanged(string oldValue, string newValue);
+		partial void OnAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnAddressTextMultiLineChanged(string oldValue, string newValue);
 		
 		partial void GetStreetUserFriendly(ref string value);
 		partial void SetStreetUserFriendly(string value);
@@ -2237,6 +2289,10 @@ namespace Epsitec.Aider.Entities
 		partial void SetStreetHouseNumberAndComplement(string value);
 		partial void GetHouseNumberAndComplement(ref string value);
 		partial void SetHouseNumberAndComplement(string value);
+		partial void GetAddressTextSingleLine(ref string value);
+		partial void SetAddressTextSingleLine(string value);
+		partial void GetAddressTextMultiLine(ref string value);
+		partial void SetAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

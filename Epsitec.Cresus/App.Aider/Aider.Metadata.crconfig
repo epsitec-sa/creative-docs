@@ -136,7 +136,15 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVA25]" title="Rue" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVACG]" title="Rue" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVA25]" title="Nom de rue (tri)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVAJD]" title="Nom de rue (affichage)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -157,6 +165,14 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVA55].[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -263,7 +279,15 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVA25]" title="Rue" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVACG]" title="Rue" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVA25]" title="Nom de rue (tri)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVAJD]" title="Nom de rue (affichage)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -284,6 +308,14 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVA55].[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -356,7 +388,15 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVA25]" title="Rue" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVACG]" title="Rue" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVA25]" title="Nom de rue (tri)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVAJD]" title="Nom de rue (affichage)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -377,6 +417,14 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVA55].[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -585,7 +633,15 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVA25]" title="Rue" canSort="True" canFilter="True">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVACG]" title="Rue" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVA25]" title="Nom de rue (tri)" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVAJD]" title="Nom de rue (affichage)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -606,6 +662,14 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVA55].[LVAA5].[LVAD5]" title="Pays" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>

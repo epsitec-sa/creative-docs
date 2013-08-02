@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderAddressEntity
 	{
-		public string							StreetRoot
+		public string StreetRoot
 		{
 			get
 			{
@@ -42,13 +42,13 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
-		
-		
+
+
 		public FormattedText GetPostalAddress()
 		{
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
-				this.StreetUserFriendly.CapitalizeFirstLetter(), this.HouseNumberAndComplement, "\n",
+				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",
 				this.PostBox, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
@@ -86,7 +86,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.GetShortStreetAddress (), "~,", this.Town.ZipCode, this.Town.Name);
 		}
 
-		
+
 		public FormattedText GetPhoneSummary()
 		{
 			return TextFormatter.FormatText (
@@ -94,7 +94,7 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.FormatField (() => this.Phone2), "\n",
 				TextFormatter.FormatField (() => this.Mobile), "\n",
 				TextFormatter.FormatField (() => this.Fax), "~(fax)"
-				);
+			);
 		}
 
 		public FormattedText GetWebEmailSummary()
@@ -102,7 +102,7 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (
 				UriFormatter.ToFormattedText (this.Email), "\n",
 				UriFormatter.ToFormattedText (this.Web, "_blank")
-				);
+			);
 		}
 
 
@@ -112,7 +112,7 @@ namespace Epsitec.Aider.Entities
 				this.GetPostalAddress (), "\n",
 				this.GetPhoneSummary (), "\n",
 				this.GetWebEmailSummary ()
-				);
+			);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -215,7 +215,7 @@ namespace Epsitec.Aider.Entities
 				case 0:
 					value = houseNumber;
 					break;
-				
+
 				case 1:
 					value = houseNumber+complement;
 					break;
@@ -284,7 +284,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		
+
 		private static int? ParseHouseNumber(string number)
 		{
 			if (string.IsNullOrEmpty (number))
@@ -314,6 +314,32 @@ namespace Epsitec.Aider.Entities
 			{
 				return value.ToLowerInvariant ();
 			}
+		}
+
+
+		partial void GetAddressTextSingleLine(ref string value)
+		{
+			this.GetAddressTextMultiLine (ref value);
+
+			value = value.Replace ("\n", ", ");
+		}
+
+
+		partial void SetAddressTextSingleLine(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
+
+		partial void GetAddressTextMultiLine(ref string value)
+		{
+			value = this.GetPostalAddress ().ToSimpleText ();
+		}
+
+
+		partial void SetAddressTextMultiLine(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
 		}
 
 

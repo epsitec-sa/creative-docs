@@ -1265,6 +1265,10 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVA15
 				public static readonly global::Epsitec.Common.Support.Druid AddressLine1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 161);
+				//	designer:cap/LVG242
+				public static readonly global::Epsitec.Common.Support.Druid AddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 130);
+				//	designer:cap/LVG142
+				public static readonly global::Epsitec.Common.Support.Druid AddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 129);
 				//	designer:cap/LVAN5
 				public static readonly global::Epsitec.Common.Support.Druid Email = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 183);
 				//	designer:cap/LVA5B
