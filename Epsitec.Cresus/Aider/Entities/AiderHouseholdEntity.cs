@@ -174,6 +174,77 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		private IEnumerable<AiderPersonEntity> GetHeadForNames()
+		{
+			var heads = this.GetHeads ();
+
+			var man = heads
+				.Where (x => x.eCH_Person.PersonSex == PersonSex.Male)
+				.FirstOrDefault ();
+
+			var woman = heads
+				.Where (x => x.eCH_Person.PersonSex == PersonSex.Female)
+				.FirstOrDefault ();
+
+			var result = new List<AiderPersonEntity> ();
+
+			switch (this.HouseholdMrMrs)
+			{
+				case HouseholdMrMrs.None:
+				case HouseholdMrMrs.Auto:
+				case HouseholdMrMrs.Famille:
+				case HouseholdMrMrs.MonsieurEtMadame:
+					if (man != null)
+					{
+						result.Add (man);
+					}
+					if (woman != null)
+					{
+						result.Add (woman);
+					}
+					break;
+
+				case HouseholdMrMrs.MadameEtMonsieur:
+					if (woman != null)
+					{
+						result.Add (woman);
+					}
+					if (man != null)
+					{
+						result.Add (man);
+					}
+					break;
+
+				default:
+					throw new NotImplementedException ();
+			}
+
+			if (result.Count == 0)
+			{
+				var noSex = heads
+					.Where (x => x.eCH_Person.PersonSex == PersonSex.Unknown)
+					.FirstOrDefault ();
+
+				if (noSex != null)
+				{
+					result.Add (noSex);
+				}
+			}
+
+			if (result.Count == 0)
+			{
+				var child = this.GetChildren ().FirstOrDefault ();
+
+				if (child != null)
+				{
+					result.Add (child);
+				}
+			}
+
+			return result;
+		}
+
+
 		public static AiderHouseholdEntity Create(BusinessContext context, AiderAddressEntity templateAddress = null)
 		{
 			var household = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
@@ -323,77 +394,6 @@ namespace Epsitec.Aider.Entities
 			var headLastname = StringUtils.Join (" ", headLastnames);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
-		}
-
-
-		private IEnumerable<AiderPersonEntity> GetHeadForNames()
-		{
-			var heads = this.GetHeads ();
-
-			var man = heads
-				.Where (x => x.eCH_Person.PersonSex == PersonSex.Male)
-				.FirstOrDefault ();
-
-			var woman = heads
-				.Where (x => x.eCH_Person.PersonSex == PersonSex.Female)
-				.FirstOrDefault ();
-
-			var result = new List<AiderPersonEntity> ();
-
-			switch (this.HouseholdMrMrs)
-			{
-				case HouseholdMrMrs.None:
-				case HouseholdMrMrs.Auto:
-				case HouseholdMrMrs.Famille:
-				case HouseholdMrMrs.MonsieurEtMadame:
-					if (man != null)
-					{
-						result.Add (man);
-					}
-					if (woman != null)
-					{
-						result.Add (woman);
-					}
-					break;
-
-				case HouseholdMrMrs.MadameEtMonsieur:
-					if (woman != null)
-					{
-						result.Add (woman);
-					}
-					if (man != null)
-					{
-						result.Add (man);
-					}
-					break;
-
-				default:
-					throw new NotImplementedException ();
-			}
-
-			if (result.Count == 0)
-			{
-				var noSex = heads
-					.Where (x => x.eCH_Person.PersonSex == PersonSex.Unknown)
-					.FirstOrDefault ();
-
-				if (noSex != null)
-				{
-					result.Add (noSex);
-				}
-			}
-
-			if (result.Count == 0)
-			{
-				var child = this.GetChildren ().FirstOrDefault ();
-
-				if (child != null)
-				{
-					result.Add (child);
-				}
-			}
-
-			return result;
 		}
 
 
