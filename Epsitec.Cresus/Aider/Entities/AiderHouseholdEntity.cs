@@ -130,6 +130,11 @@ namespace Epsitec.Aider.Entities
 
 		private string GetAddressName()
 		{
+			if (this.GetMembers ().Count == 0)
+			{
+				return "";
+			}
+
 			var names = this.GetHeadNames ();
 			var firstnames = names.Item1;
 			var lastnames = names.Item2;
