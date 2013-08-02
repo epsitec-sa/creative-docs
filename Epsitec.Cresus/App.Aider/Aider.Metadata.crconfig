@@ -500,6 +500,34 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVGF22]" title="Email" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVGD22].[LVAA4]" title="Appartenance paroissiale" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVALC].[LVAMC]" title="Role" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVAD]" title="Désactivé" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVGJ22]" title="Edition de groupes cantonaux" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVGK22]" title="Edition de groupes régionaux" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVGL22]" title="Edition de groupes paroissiaux" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Visible" />
+#[Feature:NewColumns]      </col>
     </t>
 
     <t eid="@AiderUserRole" n="default">
