@@ -51,13 +51,14 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText
 			(
-				this.GetAddressRecipientText (),
+				this.GetAddressRecipientText (false, 35),
 				"\n",
 				this.Address.GetPostalAddress ()
 			);
 		}
 
-		public FormattedText GetAddressRecipientText()
+
+		private FormattedText GetAddressRecipientText(bool abbreviatedTitle, int lineLength)
 		{
 			if (this.Contacts.Count == 0)
 			{
@@ -68,9 +69,9 @@ namespace Epsitec.Aider.Entities
 
 			return TextFormatter.FormatText
 			(
-				this.GetHonorific (false),
+				this.GetHonorific (abbreviatedTitle),
 				"\n",
-				this.GetNames ()
+				this.GetAddressName ().BreakInLines (lineLength)
 			);
 		}
 
@@ -126,33 +127,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public string GetNames()
+
+		private string GetAddressName()
 		{
 			var names = this.GetHeadNames ();
 			var firstnames = names.Item1;
 			var lastnames = names.Item2;
 
-			string result;
-
 			if (firstnames.Count == 1)
 			{
-				result = firstnames[0] + " " + lastnames[0];
+				return firstnames[0] + " " + lastnames[0];
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 1)
 			{
-				result = firstnames[0] + " et " + firstnames[1] + " " + lastnames[0];
+				return firstnames[0] + " et " + firstnames[1] + " " + lastnames[0];
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 2)
 			{
-				result = firstnames[0] + " " + lastnames[0] + " et "
+				return firstnames[0] + " " + lastnames[0] + " et "
 					+ firstnames[1] + " " + lastnames[1];
 			}
 			else
 			{
 				throw new NotImplementedException ();
 			}
-
-			return result.BreakInLines (35);
 		}
 
 
