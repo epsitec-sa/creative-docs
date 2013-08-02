@@ -93,13 +93,7 @@ namespace Epsitec.Aider.Entities
 
 		public string GetHonorific(bool abbreviated)
 		{
-			var honorific = this.HouseholdMrMrs;
-
-			var contacts = this.GetContacts ();
-			var heads = AiderHouseholdEntity.GetHeads (contacts);
-			var children = AiderHouseholdEntity.GetChildren (contacts);
-
-			return AiderHouseholdEntity.GetHeadTitle (honorific, heads, children, abbreviated);
+			return this.GetHeadTitle (abbreviated);
 		}
 
 		public string GetNames()
@@ -132,25 +126,14 @@ namespace Epsitec.Aider.Entities
 
 		public List<string> GetFirstnames()
 		{
-			var honorific = this.HouseholdMrMrs;
 
-			var contacts = this.GetContacts ();
-			var heads = AiderHouseholdEntity.GetHeads (contacts);
-			var children = AiderHouseholdEntity.GetChildren (contacts);
-
-			return AiderHouseholdEntity.GetHeadFirstnames (honorific, heads, children);
+			return this.GetHeadFirstnames ();
 		}
 
 
 		public List<string> GetLastnames()
 		{
-			var honorific = this.HouseholdMrMrs;
-
-			var contacts = this.GetContacts ();
-			var heads = AiderHouseholdEntity.GetHeads (contacts);
-			var children = AiderHouseholdEntity.GetChildren (contacts);
-
-			return AiderHouseholdEntity.GetHeadLastnames (honorific, heads, children, true);
+			return this.GetHeadLastnames (true);
 		}
 
 
@@ -278,7 +261,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (string.IsNullOrEmpty (this.HouseholdName))
 			{
-				return AiderHouseholdEntity.BuildDisplayName (this.GetContacts (), this.HouseholdMrMrs);
+				return this.BuildDisplayName ();
 			}
 			
 			return this.HouseholdName;
@@ -295,55 +278,41 @@ namespace Epsitec.Aider.Entities
 				.FirstOrDefault (p => p.IsNotNull ());
 		}
 
-
-		private static string BuildDisplayName(IList<AiderContactEntity> contacts, HouseholdMrMrs order)
+		private string BuildDisplayName()
 		{
-			if (contacts == null)
-			{
-				return null;
-			}
+			var headTitle = this.GetHeadTitle (true);
 
-			var heads = AiderHouseholdEntity.GetHeads (contacts);
-			var children = AiderHouseholdEntity.GetChildren (contacts);
-
-			return AiderHouseholdEntity.BuildDisplayName (heads, children, order);
-		}
-
-		private static string BuildDisplayName(IList<AiderPersonEntity> heads, IList<AiderPersonEntity> children, HouseholdMrMrs order)
-		{
-			var headTitle = AiderHouseholdEntity.GetHeadTitle (order, heads, children, true);
-
-			var headLastnames = AiderHouseholdEntity.GetHeadLastnames (order, heads, children, removePseudoDuplicates: true);
+			var headLastnames = this.GetHeadLastnames (true);
 			var headLastname = StringUtils.Join (" ", headLastnames);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
 		}
 
 
-		private static IList<AiderPersonEntity> GetHeads(IEnumerable<AiderContactEntity> contacts)
+		private IList<AiderPersonEntity> GetHeads()
 		{
-			return AiderHouseholdEntity.GetMembers (contacts, HouseholdRole.Head);
+			return this.GetMembers (HouseholdRole.Head);
 		}
 
 
-		private static IList<AiderPersonEntity> GetChildren(IEnumerable<AiderContactEntity> contacts)
+		private IList<AiderPersonEntity> GetChildren()
 		{
-			return AiderHouseholdEntity.GetMembers (contacts, HouseholdRole.None);
+			return this.GetMembers (HouseholdRole.None);
 		}
 
 
-		private static IList<AiderPersonEntity> GetMembers(IEnumerable<AiderContactEntity> contacts, HouseholdRole role)
+		private IList<AiderPersonEntity> GetMembers(HouseholdRole role)
 		{
-			return contacts
+			return this.GetContacts ()
 				.Where (x => x.HouseholdRole == role)
 				.Select (x => x.Person)
 				.ToList ();
 		}
 
 
-		private static List<string> GetHeadLastnames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children, bool removePseudoDuplicates)
+		private List<string> GetHeadLastnames(bool removePseudoDuplicates)
 		{
-			var headNames = AiderHouseholdEntity.GetHeadForNames (order, heads, children)
+			var headNames = this.GetHeadForNames ()
 				.Select (p => p.eCH_Person.PersonOfficialName)
 				.Distinct ()
 				.ToList ();
@@ -357,16 +326,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static List<string> GetHeadFirstnames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		private List<string> GetHeadFirstnames()
 		{
-			return AiderHouseholdEntity.GetHeadForNames (order, heads, children)
+			return this.GetHeadForNames ()
 				.Select (p => p.GetCallName ())
 				.ToList ();
 		}
 
 
-		private static IEnumerable<AiderPersonEntity> GetHeadForNames(HouseholdMrMrs order, IEnumerable<AiderPersonEntity> heads, IEnumerable<AiderPersonEntity> children)
+		private IEnumerable<AiderPersonEntity> GetHeadForNames()
 		{
+			var heads = this.GetHeads ();
+
 			var man = heads
 				.Where (x => x.eCH_Person.PersonSex == PersonSex.Male)
 				.FirstOrDefault ();
@@ -377,7 +348,7 @@ namespace Epsitec.Aider.Entities
 
 			var result = new List<AiderPersonEntity> ();
 
-			switch (order)
+			switch (this.HouseholdMrMrs)
 			{
 				case HouseholdMrMrs.None:
 				case HouseholdMrMrs.Auto:
@@ -422,7 +393,7 @@ namespace Epsitec.Aider.Entities
 
 			if (result.Count == 0)
 			{
-				var child = children.FirstOrDefault ();
+				var child = this.GetChildren ().FirstOrDefault ();
 
 				if (child != null)
 				{
@@ -434,8 +405,11 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private static string GetHeadTitle(HouseholdMrMrs honorific, IList<AiderPersonEntity> heads, IList<AiderPersonEntity> children, bool abbreviated)
+		private string GetHeadTitle(bool abbreviated)
 		{
+			var heads = this.GetHeads ();
+			var children = this.GetChildren ();
+
 			// If we have a single member, we return its title instead of the title of the
 			// household.
 			if (heads.Count + children.Count == 1)
@@ -447,6 +421,7 @@ namespace Epsitec.Aider.Entities
 				return member.MrMrs.GetText (abbreviated);
 			}
 
+			var honorific = this.HouseholdMrMrs;
 			switch (honorific)
 			{
 				case HouseholdMrMrs.MonsieurEtMadame:
