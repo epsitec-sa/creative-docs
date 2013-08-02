@@ -93,7 +93,42 @@ namespace Epsitec.Aider.Entities
 
 		public string GetHonorific(bool abbreviated)
 		{
-			return this.GetHeadTitle (abbreviated);
+			var heads = this.GetHeads ();
+			var children = this.GetChildren ();
+
+			// If we have a single member, we return its title instead of the title of the
+			// household.
+			if (heads.Count + children.Count == 1)
+			{
+				var member = heads.Count == 1
+					? heads[0]
+					: children[0];
+
+				return member.MrMrs.GetText (abbreviated);
+			}
+
+			var honorific = this.HouseholdMrMrs;
+			switch (honorific)
+			{
+				case HouseholdMrMrs.MonsieurEtMadame:
+				case HouseholdMrMrs.MadameEtMonsieur:
+					// If we have a single head and some children, we use the "Family" title.
+					if (heads.Count == 1)
+					{
+						goto case HouseholdMrMrs.Famille;
+					}
+
+					// Only if we have 2 heads, do we use the real title.
+					return honorific.GetText (abbreviated);
+
+				case HouseholdMrMrs.Famille:
+				case HouseholdMrMrs.None:
+				case HouseholdMrMrs.Auto:
+					return HouseholdMrMrs.Famille.GetText (abbreviated);
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 		public string GetNames()
@@ -127,13 +162,20 @@ namespace Epsitec.Aider.Entities
 		public List<string> GetFirstnames()
 		{
 
-			return this.GetHeadFirstnames ();
+			return this.GetHeadForNames ()
+				.Select (p => p.GetCallName ())
+				.ToList ();
 		}
 
 
 		public List<string> GetLastnames()
 		{
-			return this.GetHeadLastnames (true);
+			var headNames = this.GetHeadForNames ()
+				.Select (p => p.eCH_Person.PersonOfficialName)
+				.Distinct ()
+				.ToList ();
+
+			return NameProcessor.FilterLastnamePseudoDuplicates (headNames);
 		}
 
 
@@ -280,9 +322,9 @@ namespace Epsitec.Aider.Entities
 
 		private string BuildDisplayName()
 		{
-			var headTitle = this.GetHeadTitle (true);
+			var headTitle = this.GetHonorific (true);
 
-			var headLastnames = this.GetHeadLastnames (true);
+			var headLastnames = this.GetLastnames ();
 			var headLastname = StringUtils.Join (" ", headLastnames);
 
 			return StringUtils.Join (" ", headTitle, headLastname);
@@ -306,30 +348,6 @@ namespace Epsitec.Aider.Entities
 			return this.GetContacts ()
 				.Where (x => x.HouseholdRole == role)
 				.Select (x => x.Person)
-				.ToList ();
-		}
-
-
-		private List<string> GetHeadLastnames(bool removePseudoDuplicates)
-		{
-			var headNames = this.GetHeadForNames ()
-				.Select (p => p.eCH_Person.PersonOfficialName)
-				.Distinct ()
-				.ToList ();
-
-			if (removePseudoDuplicates)
-			{
-				headNames = NameProcessor.FilterLastnamePseudoDuplicates (headNames);
-			}
-
-			return headNames;
-		}
-
-
-		private List<string> GetHeadFirstnames()
-		{
-			return this.GetHeadForNames ()
-				.Select (p => p.GetCallName ())
 				.ToList ();
 		}
 
@@ -402,47 +420,6 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return result;
-		}
-
-
-		private string GetHeadTitle(bool abbreviated)
-		{
-			var heads = this.GetHeads ();
-			var children = this.GetChildren ();
-
-			// If we have a single member, we return its title instead of the title of the
-			// household.
-			if (heads.Count + children.Count == 1)
-			{
-				var member = heads.Count == 1
-					? heads[0]
-					: children[0];
-
-				return member.MrMrs.GetText (abbreviated);
-			}
-
-			var honorific = this.HouseholdMrMrs;
-			switch (honorific)
-			{
-				case HouseholdMrMrs.MonsieurEtMadame:
-				case HouseholdMrMrs.MadameEtMonsieur:
-					// If we have a single head and some children, we use the "Family" title.
-					if (heads.Count == 1)
-					{
-						goto case HouseholdMrMrs.Famille;
-					}
-
-					// Only if we have 2 heads, do we use the real title.
-					return honorific.GetText (abbreviated);
-
-				case HouseholdMrMrs.Famille:
-				case HouseholdMrMrs.None:
-				case HouseholdMrMrs.Auto:
-					return HouseholdMrMrs.Famille.GetText (abbreviated);
-
-				default:
-					throw new NotImplementedException ();
-			}
 		}
 
 
