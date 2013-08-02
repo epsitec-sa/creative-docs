@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.DisplayName, "~\n", this.Address.GetPostalAddress ());
+			return TextFormatter.FormatText (this.GetAddressRecipientText(false, 50), "~\n", this.Address.GetPostalAddress ());
 		}
 
 		public void RefreshCache()
