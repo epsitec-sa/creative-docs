@@ -3,7 +3,6 @@
 
 using Epsitec.Aider.Enumerations;
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Text;
 using Epsitec.Common.Types;
@@ -14,9 +13,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
 
 
@@ -26,13 +23,24 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.DisplayName, "~,", this.Address.GetStreetZipAndTownAddress ());
+			return TextFormatter.FormatText
+			(
+				this.DisplayName,
+				"~,",
+				this.Address.GetStreetZipAndTownAddress ()
+			);
 		}
+
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.GetAddressRecipientText(false, 50), "~\n", this.Address.GetPostalAddress ());
+			return TextFormatter.FormatText
+			(
+				this.GetAddressRecipientText(false, 50),
+				"~\n",
+				this.Address.GetPostalAddress ());
 		}
+
 
 		public void RefreshCache()
 		{
@@ -42,10 +50,13 @@ namespace Epsitec.Aider.Entities
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
 		}
 
+
 		public bool IsHead(AiderPersonEntity person)
 		{
-			return this.Contacts.Any (c => c.Person == person && c.HouseholdRole == HouseholdRole.Head);
+			return this.Contacts
+				.Any (c => c.Person == person && c.HouseholdRole == HouseholdRole.Head);
 		}
+
 
 		public FormattedText GetAddressLabelText()
 		{
@@ -75,12 +86,14 @@ namespace Epsitec.Aider.Entities
 			);
 		}
 
+
 		public FormattedText GetMembersTitle()
 		{
 			var nbMembers = this.Members.Count;
 
 			return TextFormatter.FormatText ("Membres (", nbMembers, ")");
 		}
+
 
 		public FormattedText GetMembersSummary()
 		{
@@ -236,7 +249,7 @@ namespace Epsitec.Aider.Entities
 
 			if (result.Count == 0)
 			{
-				var child = this.GetChildren ().FirstOrDefault ();
+				var child = this.GetChildren().FirstOrDefault ();
 
 				if (child != null)
 				{
@@ -256,6 +269,7 @@ namespace Epsitec.Aider.Entities
 
 			return household;
 		}
+
 
 		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
@@ -284,6 +298,7 @@ namespace Epsitec.Aider.Entities
 			this.ClearMemberCache ();
 		}
 
+
 		internal void RemoveContactInternal(AiderContactEntity contact)
 		{
 			this.GetContacts ().Remove (contact);
@@ -295,6 +310,7 @@ namespace Epsitec.Aider.Entities
 		{
 			value = this.GetMembers ().AsReadOnlyCollection ();
 		}
+
 
 		partial void GetContacts(ref IList<AiderContactEntity> value)
 		{
@@ -315,6 +331,7 @@ namespace Epsitec.Aider.Entities
 			return this.membersCache;
 		}
 
+
 		private IList<AiderContactEntity> GetContacts()
 		{
 			if (this.contactsCache == null)
@@ -328,6 +345,7 @@ namespace Epsitec.Aider.Entities
 
 			return this.contactsCache;
 		}
+
 
 		private IList<AiderContactEntity> GetContacts(DataContext dataContext)
 		{
@@ -352,6 +370,7 @@ namespace Epsitec.Aider.Entities
 		{
 			return this.Address.GetDisplayZipCode ().ToSimpleText ();
 		}
+
 
 		private string GetDisplayAddress()
 		{
