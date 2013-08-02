@@ -5,6 +5,7 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Text;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -17,7 +18,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using Epsitec.Common.Types.Converters;
 
 
 namespace Epsitec.Aider.Entities
@@ -353,61 +353,9 @@ namespace Epsitec.Aider.Entities
 				.Distinct ()
 				.ToList ();
 
-			//	If we are asked to, we remove the pseudo duplicates here. Pseudo duplicates are
-			//	names that contains another name. Like when we have a family where the wife has
-			//	kept its maiden name and appended the name of her husband to it.
-			//	For instance the husband is called "Albert Dupond" and the wife is called "Ginette
-			//	Dupond-Dupuis" or "Ginette Dupuis-Dupond".
-
 			if (removePseudoDuplicates)
 			{
-				//	Order the names by size, so that we know that a name can only be included in
-				//	names that are after it in the list.
-
-				var copy = headNames
-					.OrderBy (n => n.Length)
-					.Select (x => new { Original = x, LowerCase = TextConverter.ConvertToLowerAndStripAccents (x).Replace ('-', ' ') })
-					.ToList ();
-
-				for (int i = 0; i < copy.Count; i++)
-				{
-					var shorter = copy[i].LowerCase;
-					var length  = shorter.Length;
-
-					for (int j = i + 1; j < copy.Count; j++)
-					{
-						var longer = copy[j].LowerCase;
-
-						if (longer == shorter)
-						{
-							//	Exact duplicate based on lower-case accent-stripped name ("André" = "Andre",
-							//	"von Siebenthal" = "Von Siebenthal").
-						}
-						else
-						{
-							int pos = longer.IndexOf (shorter);
-
-							if (pos < 0)					//	nothing in common
-							{
-								continue;
-							}
-
-							int end = pos + shorter.Length;
-
-							if (((end < longer.Length) && (longer[end] != ' ')) ||
-								((pos > 0) && longer[pos-1] != ' '))
-							{
-								//	The longer word does not start or end with the short name, nor is it
-								//	part of the longer name...
-
-								continue;
-							}
-						}
-
-						headNames.Remove (copy[j].Original);
-						copy.RemoveAt (j);
-					}
-				}
+				headNames = NameProcessor.FilterLastnamePseudoDuplicates (headNames);
 			}
 
 			return headNames;

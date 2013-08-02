@@ -1,5 +1,9 @@
 ﻿using Epsitec.Common.Support;
 
+using System.Collections.Generic;
+
+using System.Linq;
+
 using System.Text;
 
 namespace Epsitec.Common.Text
@@ -161,6 +165,78 @@ namespace Epsitec.Common.Text
 			}
 
 			return lastname.Substring (0, shortSize);
+		}
+
+		public static List<string> FilterLastnamePseudoDuplicates(IEnumerable<string> lastnames)
+		{
+			// Pseudo duplicates are names that contains another name. Like when we have a family
+			// where the wife has kept its maiden name and appended the name of her husband to it.
+			// For instance the husband is called "Albert Dupond" and the wife is called "Ginette
+			// Dupond-Dupuis" or "Ginette Dupuis-Dupond".
+
+			var originalNames = lastnames
+				.Distinct ()
+				.ToList ();
+
+			// Order the names by size, so that we know that a name can only be included in names
+			// that are after it in the list.
+
+			var normalizedNames = originalNames
+				.OrderBy (n => n.Length)
+				.Select (x => new
+				{
+					Original = x,
+					Normalized = NameProcessor.NormalizeName(x)
+				})
+				.ToList ();
+
+			for (int i = 0; i < normalizedNames.Count; i++)
+			{
+				var shorter = normalizedNames[i].Normalized;
+				var length  = shorter.Length;
+
+				for (int j = i + 1; j < normalizedNames.Count; j++)
+				{
+					var longer = normalizedNames[j].Normalized;
+
+					if (longer == shorter)
+					{
+						// Exact duplicate based on lower-case accent-stripped name ("André" =
+						// "Andre", "von Siebenthal" = "Von Siebenthal").
+					}
+					else
+					{
+						int pos = longer.IndexOf (shorter);
+
+						//	nothing in common
+						if (pos < 0)
+						{
+							continue;
+						}
+
+						int end = pos + shorter.Length;
+
+						if (((end < longer.Length) && (longer[end] != ' ')) ||
+							((pos > 0) && longer[pos-1] != ' '))
+						{
+							// The longer word does not start or end with the short name, nor is it
+							// part of the longer name...
+
+							continue;
+						}
+					}
+
+					originalNames.Remove (normalizedNames[j].Original);
+					normalizedNames.RemoveAt (j);
+				}
+			}
+
+			return originalNames;
+		}
+
+		private static string NormalizeName(string name)
+		{
+			return Epsitec.Common.Types.Converters.TextConverter.ConvertToLowerAndStripAccents (name).Replace ('-', ' ');
 		}
 	}
 }
