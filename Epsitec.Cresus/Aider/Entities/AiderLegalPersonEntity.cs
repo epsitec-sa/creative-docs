@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -134,6 +135,41 @@ namespace Epsitec.Aider.Entities
 		partial void GetContacts(ref IList<AiderContactEntity> value)
 		{
 			value = this.GetContacts ().AsReadOnlyCollection ();
+		}
+
+
+		partial void GetFullAddressTextSingleLine(ref string value)
+		{
+			this.GetFullAddressTextMultiLine (ref value);
+
+			value = value.Replace ("\n", ", ");
+		}
+
+
+		partial void SetFullAddressTextSingleLine(string value)
+		{
+			throw new NotImplementedException ("Do not use this method");
+		}
+
+
+		partial void GetFullAddressTextMultiLine(ref string value)
+		{
+			var contact = this.GetMainContact ();
+
+			if (contact != null)
+			{
+				value = contact.GetAddressLabelText ().ToSimpleText ();
+			}
+			else
+			{
+				value = this.Name + "\n" + this.Address.GetPostalAddress ().ToSimpleText ();
+			}
+		}
+
+
+		partial void SetFullAddressTextMultiLine(string value)
+		{
+			throw new NotImplementedException ("Do not use this method");
 		}
 
 		

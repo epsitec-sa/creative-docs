@@ -38,13 +38,21 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVADE]" title="Adresse (résumé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <!--
-        Person data
-      -->
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVG442]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <!--
+#[Feature:NewColumns]        Person data
+#[Feature:NewColumns]      -->
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA2]" title="Nom de famille" canSort="True" canFilter="True">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
@@ -168,11 +176,11 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVG142]" title="Addresse (une ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVG242]" title="Addresse (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -248,10 +256,18 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAFF]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAFF]" title="Adresse (résumé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVG742]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVG842]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAV8]" title="Raison sociale" canSort="True" canFilter="True">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
@@ -311,11 +327,11 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVG142]" title="Addresse (une ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVG242]" title="Addresse (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -357,10 +373,18 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA5F]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVA5F]" title="Adresse (résumé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVG542]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVG642]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAG8]" title="Titre (option)" canSort="True" canFilter="True">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
@@ -420,11 +444,11 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVG142]" title="Address (une ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVG242]" title="Addresse (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -563,10 +587,18 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVADE]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVADE]" title="Adresse (résumé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVG442]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <!--
 #[Feature:NewColumns]        Person data
 #[Feature:NewColumns]      -->
@@ -693,11 +725,11 @@ AiderPersonWarning = [LVALB]
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVG142]" title="Address complète" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVG142]" title="Addresse (une ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
-#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVG242]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVG242]" title="Addresse (multi ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
 #[Feature:NewColumns]      </col>
@@ -774,7 +806,7 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGA32]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGA32]" title="Adresse (résumé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -786,7 +818,11 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGL32]" title="Adresse complète" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGA42]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVGL32]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -801,11 +837,15 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGH32]" title="Adresse" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGH32]" title="Adresse (résumé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGM32]" title="Adresse complète" canSort="False" canFilter="False">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVG942]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGM32]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>

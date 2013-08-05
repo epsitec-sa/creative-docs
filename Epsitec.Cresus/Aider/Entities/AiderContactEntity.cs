@@ -167,6 +167,32 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		partial void GetFullAddressTextSingleLine(ref string value)
+		{
+			this.GetFullAddressTextMultiLine (ref value);
+
+			value = value.Replace ("\n", ", ");
+		}
+
+
+		partial void SetFullAddressTextSingleLine(string value)
+		{
+			throw new NotImplementedException ("Do not use this method");
+		}
+
+
+		partial void GetFullAddressTextMultiLine(ref string value)
+		{
+			value = this.GetAddressLabelText ().ToSimpleText ();
+		}
+
+
+		partial void SetFullAddressTextMultiLine(string value)
+		{
+			throw new NotImplementedException ("Do not use this method");
+		}
+
+
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, bool isHead)
 		{
 			var role = isHead

@@ -118,9 +118,29 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		partial void GetFullAddressText(ref FormattedText value)
+		partial void GetFullAddressTextSingleLine(ref string value)
 		{
-			value = this.GetAddressLabelText ();
+			this.GetFullAddressTextMultiLine (ref value);
+
+			value = value.Replace ("\n", ", ");
+		}
+
+
+		partial void SetFullAddressTextSingleLine(string value)
+		{
+			throw new NotImplementedException ("Do not use this method");
+		}
+
+
+		partial void GetFullAddressTextMultiLine(ref string value)
+		{
+			value = this.GetAddressLabelText ().ToSimpleText ();
+		}
+
+
+		partial void SetFullAddressTextMultiLine(string value)
+		{
+			throw new NotImplementedException ("Do not use this method");
 		}
 
 

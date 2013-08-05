@@ -1780,6 +1780,54 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>FullAddressTextSingleLine</c> field.
+		///	designer:fld/LVAI2/LVG542
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG542]", IsVirtual=true)]
+		public string FullAddressTextSingleLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextSingleLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG542]"))
+				{
+					this.OnFullAddressTextSingleLineChanging (oldValue, value);
+					this.SetFullAddressTextSingleLine (value);
+					this.OnFullAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FullAddressTextMultiLine</c> field.
+		///	designer:fld/LVAI2/LVG642
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG642]", IsVirtual=true)]
+		public string FullAddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextMultiLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG642]"))
+				{
+					this.OnFullAddressTextMultiLineChanging (oldValue, value);
+					this.SetFullAddressTextMultiLine (value);
+					this.OnFullAddressTextMultiLineChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnHouseholdMrMrsChanging(global::Epsitec.Aider.Enumerations.HouseholdMrMrs oldValue, global::Epsitec.Aider.Enumerations.HouseholdMrMrs newValue);
 		partial void OnHouseholdMrMrsChanged(global::Epsitec.Aider.Enumerations.HouseholdMrMrs oldValue, global::Epsitec.Aider.Enumerations.HouseholdMrMrs newValue);
@@ -1803,6 +1851,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnHead1FullNameChanged(string oldValue, string newValue);
 		partial void OnHead2FullNameChanging(string oldValue, string newValue);
 		partial void OnHead2FullNameChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
 		
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetMembers(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
@@ -1812,6 +1864,10 @@ namespace Epsitec.Aider.Entities
 		partial void SetHead1FullName(string value);
 		partial void GetHead2FullName(ref string value);
 		partial void SetHead2FullName(string value);
+		partial void GetFullAddressTextSingleLine(ref string value);
+		partial void SetFullAddressTextSingleLine(string value);
+		partial void GetFullAddressTextMultiLine(ref string value);
+		partial void SetFullAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -4369,6 +4425,54 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>FullAddressTextSingleLine</c> field.
+		///	designer:fld/LVAR6/LVG742
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG742]", IsVirtual=true)]
+		public string FullAddressTextSingleLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextSingleLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG742]"))
+				{
+					this.OnFullAddressTextSingleLineChanging (oldValue, value);
+					this.SetFullAddressTextSingleLine (value);
+					this.OnFullAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FullAddressTextMultiLine</c> field.
+		///	designer:fld/LVAR6/LVG842
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG842]", IsVirtual=true)]
+		public string FullAddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextMultiLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG842]"))
+				{
+					this.OnFullAddressTextMultiLineChanging (oldValue, value);
+					this.SetFullAddressTextMultiLine (value);
+					this.OnFullAddressTextMultiLineChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRemovalReasonChanging(global::Epsitec.Aider.Enumerations.RemovalReason oldValue, global::Epsitec.Aider.Enumerations.RemovalReason newValue);
 		partial void OnRemovalReasonChanged(global::Epsitec.Aider.Enumerations.RemovalReason oldValue, global::Epsitec.Aider.Enumerations.RemovalReason newValue);
@@ -4390,9 +4494,17 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
 		
 		partial void GetContacts(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderContactEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
+		partial void GetFullAddressTextSingleLine(ref string value);
+		partial void SetFullAddressTextSingleLine(string value);
+		partial void GetFullAddressTextMultiLine(ref string value);
+		partial void SetFullAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6569,6 +6681,54 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>FullAddressTextSingleLine</c> field.
+		///	designer:fld/LVARD/LVG342
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG342]", IsVirtual=true)]
+		public string FullAddressTextSingleLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextSingleLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG342]"))
+				{
+					this.OnFullAddressTextSingleLineChanging (oldValue, value);
+					this.SetFullAddressTextSingleLine (value);
+					this.OnFullAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FullAddressTextMultiLine</c> field.
+		///	designer:fld/LVARD/LVG442
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG442]", IsVirtual=true)]
+		public string FullAddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextMultiLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG442]"))
+				{
+					this.OnFullAddressTextMultiLineChanging (oldValue, value);
+					this.SetFullAddressTextMultiLine (value);
+					this.OnFullAddressTextMultiLineChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnContactTypeChanging(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
@@ -6602,8 +6762,16 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayVisibilityChanged(global::Epsitec.Aider.Enumerations.PersonVisibilityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonVisibilityStatus newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
 		
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
+		partial void GetFullAddressTextSingleLine(ref string value);
+		partial void SetFullAddressTextSingleLine(string value);
+		partial void GetFullAddressTextMultiLine(ref string value);
+		partial void SetFullAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -6955,26 +7123,50 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FullAddressText</c> field.
-		///	designer:fld/LVGP22/LVGL32
+		///	The <c>FullAddressTextSingleLine</c> field.
+		///	designer:fld/LVGP22/LVGA42
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGL32]", IsVirtual=true)]
-		public global::Epsitec.Common.Types.FormattedText FullAddressText
+		[global::Epsitec.Common.Support.EntityField ("[LVGA42]", IsVirtual=true)]
+		public string FullAddressTextSingleLine
 		{
 			get
 			{
-				global::Epsitec.Common.Types.FormattedText value = default (global::Epsitec.Common.Types.FormattedText);
-				this.GetFullAddressText (ref value);
+				string value = default (string);
+				this.GetFullAddressTextSingleLine (ref value);
 				return value;
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.FullAddressText;
+				string oldValue = this.FullAddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVGA42]"))
+				{
+					this.OnFullAddressTextSingleLineChanging (oldValue, value);
+					this.SetFullAddressTextSingleLine (value);
+					this.OnFullAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FullAddressTextMultiLine</c> field.
+		///	designer:fld/LVGP22/LVGL32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGL32]", IsVirtual=true)]
+		public string FullAddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextMultiLine;
 				if (oldValue != value || !this.IsFieldDefined("[LVGL32]"))
 				{
-					this.OnFullAddressTextChanging (oldValue, value);
-					this.SetFullAddressText (value);
-					this.OnFullAddressTextChanged (oldValue, value);
+					this.OnFullAddressTextMultiLineChanging (oldValue, value);
+					this.SetFullAddressTextMultiLine (value);
+					this.OnFullAddressTextMultiLineChanged (oldValue, value);
 				}
 			}
 		}
@@ -6997,11 +7189,15 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayAddressChanged(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
-		partial void OnFullAddressTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnFullAddressTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFullAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
 		
-		partial void GetFullAddressText(ref global::Epsitec.Common.Types.FormattedText value);
-		partial void SetFullAddressText(global::Epsitec.Common.Types.FormattedText value);
+		partial void GetFullAddressTextSingleLine(ref string value);
+		partial void SetFullAddressTextSingleLine(string value);
+		partial void GetFullAddressTextMultiLine(ref string value);
+		partial void SetFullAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -7168,26 +7364,50 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>FullAddressText</c> field.
-		///	designer:fld/LVGC32/LVGM32
+		///	The <c>FullAddressTextSingleLine</c> field.
+		///	designer:fld/LVGC32/LVG942
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGM32]", IsVirtual=true)]
-		public global::Epsitec.Common.Types.FormattedText FullAddressText
+		[global::Epsitec.Common.Support.EntityField ("[LVG942]", IsVirtual=true)]
+		public string FullAddressTextSingleLine
 		{
 			get
 			{
-				global::Epsitec.Common.Types.FormattedText value = default (global::Epsitec.Common.Types.FormattedText);
-				this.GetFullAddressText (ref value);
+				string value = default (string);
+				this.GetFullAddressTextSingleLine (ref value);
 				return value;
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.FullAddressText;
+				string oldValue = this.FullAddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVG942]"))
+				{
+					this.OnFullAddressTextSingleLineChanging (oldValue, value);
+					this.SetFullAddressTextSingleLine (value);
+					this.OnFullAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FullAddressTextMultiLine</c> field.
+		///	designer:fld/LVGC32/LVGM32
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVGM32]", IsVirtual=true)]
+		public string FullAddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFullAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FullAddressTextMultiLine;
 				if (oldValue != value || !this.IsFieldDefined("[LVGM32]"))
 				{
-					this.OnFullAddressTextChanging (oldValue, value);
-					this.SetFullAddressText (value);
-					this.OnFullAddressTextChanged (oldValue, value);
+					this.OnFullAddressTextMultiLineChanging (oldValue, value);
+					this.SetFullAddressTextMultiLine (value);
+					this.OnFullAddressTextMultiLineChanged (oldValue, value);
 				}
 			}
 		}
@@ -7204,11 +7424,15 @@ namespace Epsitec.Aider.Entities
 		partial void OnDisplayAddressChanged(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanging(string oldValue, string newValue);
 		partial void OnDisplayZipCodeChanged(string oldValue, string newValue);
-		partial void OnFullAddressTextChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnFullAddressTextChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFullAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
 		
-		partial void GetFullAddressText(ref global::Epsitec.Common.Types.FormattedText value);
-		partial void SetFullAddressText(global::Epsitec.Common.Types.FormattedText value);
+		partial void GetFullAddressTextSingleLine(ref string value);
+		partial void SetFullAddressTextSingleLine(string value);
+		partial void GetFullAddressTextMultiLine(ref string value);
+		partial void SetFullAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

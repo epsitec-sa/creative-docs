@@ -1333,6 +1333,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayVisibility = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 487);
 				//	designer:cap/LVAEE
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 462);
+				//	designer:cap/LVG442
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 132);
+				//	designer:cap/LVG342
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 131);
 				//	designer:cap/LVAKG
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 532);
 				//	designer:cap/LVA6E
@@ -1552,6 +1556,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayVisibility = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 488);
 				//	designer:cap/LVA6F
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 486);
+				//	designer:cap/LVG642
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 134);
+				//	designer:cap/LVG542
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 133);
 				//	designer:cap/LVGV32
 				public static readonly global::Epsitec.Common.Support.Druid Head1FullName = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 127);
 				//	designer:cap/LVG042
@@ -1583,6 +1591,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DisplayAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 495);
 				//	designer:cap/LVAEF
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 494);
+				//	designer:cap/LVG842
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 136);
+				//	designer:cap/LVG742
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 135);
 				//	designer:cap/LVAJG
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 531);
 				//	designer:cap/LVAN7
@@ -1754,7 +1766,9 @@ namespace Epsitec.Aider
 				//	designer:cap/LVGB32
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 107);
 				//	designer:cap/LVGL32
-				public static readonly global::Epsitec.Common.Support.Druid FullAddressText = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 117);
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 117);
+				//	designer:cap/LVGA42
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 138);
 				//	designer:cap/LVGS22
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 92);
 				//	designer:cap/LVG332
@@ -1781,7 +1795,9 @@ namespace Epsitec.Aider
 				//	designer:cap/LVGI32
 				public static readonly global::Epsitec.Common.Support.Druid DisplayZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 114);
 				//	designer:cap/LVGM32
-				public static readonly global::Epsitec.Common.Support.Druid FullAddressText = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 118);
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 118);
+				//	designer:cap/LVG942
+				public static readonly global::Epsitec.Common.Support.Druid FullAddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 137);
 				//	designer:cap/LVGD32
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 109);
 				//	designer:cap/LVGE32
