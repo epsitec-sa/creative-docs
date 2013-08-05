@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Epsitec.Cresus.WebCore.Server.Core
+namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// This class is used to normalize expressions, so that two similar expression will map to the

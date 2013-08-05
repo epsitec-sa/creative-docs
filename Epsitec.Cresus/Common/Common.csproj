@@ -375,6 +375,7 @@
     <Compile Include="IO\ByteStream.cs" />
     <Compile Include="IO\CsvWriter.cs" />
     <Compile Include="IO\Web.cs" />
+    <Compile Include="Support\ExpressionNormalizer.cs" />
     <Compile Include="Support\Extensions\ConcurrentDictionaryExtensions.cs" />
     <Compile Include="Support\ResourceManager.BundleRelatedCache.cs" />
     <Compile Include="Support\EntityEngine\EntityColumn.cs" />

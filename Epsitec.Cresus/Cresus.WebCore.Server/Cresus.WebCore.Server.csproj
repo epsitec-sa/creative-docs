@@ -127,7 +127,6 @@
     <Compile Include="Core\IO\DataIO.cs" />
     <Compile Include="Core\IO\EntityIO.cs" />
     <Compile Include="Core\ItemCache.cs" />
-    <Compile Include="Core\ExpressionNormalizer.cs" />
     <Compile Include="Core\PropertyAccessor\FieldTypeSelector.cs" />
     <Compile Include="Core\PropertyAccessor\FieldType.cs" />
     <Compile Include="Core\IO\FieldIO.cs" />
