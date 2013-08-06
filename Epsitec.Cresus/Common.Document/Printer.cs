@@ -1307,6 +1307,19 @@ namespace Epsitec.Common.Document
 		{
 			//	Exporte la géométrie complexe de tous les objets de toutes les pages,
 			//	en utilisant un bitmap intermédiaire pour chaque page.
+			try
+			{
+				System.IO.Directory.CreateDirectory (filename);
+			}
+			catch (System.Exception e)
+			{
+				return e.Message;
+			}
+
+			//	Transforme "C:\toto\abc.ico" en "C:\toto\abc.ico\abc.ico".
+			var name = System.IO.Path.GetFileName (filename);
+			filename = System.IO.Path.Combine (filename, name);
+			
 			this.ExportGeometryICOPng (drawingContext, filename);
 
 			var pageNumbers = this.GetPageNumbers (drawingContext);
@@ -1353,9 +1366,20 @@ namespace Epsitec.Common.Document
 					return err;
 				}
 
+				var f = this.GetICOPngFilename (filename, hopeSize);
+
 				try
 				{
-					var f = this.GetICOPngFilename (filename, hopeSize);
+					var path = System.IO.Path.GetDirectoryName (f);
+					System.IO.Directory.CreateDirectory (path);
+				}
+				catch (System.Exception e)
+				{
+					return e.Message;
+				}
+
+				try
+				{
 					System.IO.File.WriteAllBytes (f, data);
 				}
 				catch (System.Exception e)
@@ -1369,12 +1393,12 @@ namespace Epsitec.Common.Document
 
 		private string GetICOPngFilename(string filename, int size)
 		{
-			var i = filename.LastIndexOf ('.');
+			var path = System.IO.Path.GetDirectoryName (filename);
+			var name = System.IO.Path.GetFileNameWithoutExtension (filename);
 
-			string p1 = filename.Substring (0, i);
-			string p2 = size.ToString ();
+			var n = string.Concat (name, "-", size.ToString (), ".png");
 
-			return string.Concat (p1, "-", p2, ".png");
+			return System.IO.Path.Combine (path, n);
 		}
 
 		private string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
