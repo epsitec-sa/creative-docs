@@ -128,6 +128,7 @@
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
     <Compile Include="Data\Job\DisplayValuesFixer.cs" />
+    <Compile Include="Data\Job\SubscriptionAndRefusalFixer.cs" />
     <Compile Include="Data\Job\PrillySubscriptionFixer.cs" />
     <Compile Include="Data\Job\ParishAssignationFixer.cs" />
     <Compile Include="Data\Job\ParticipationFixer.cs" />
