@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		public static void FixAiderContacts
+		private static void FixAiderContacts
 		(
 			BusinessContext businessContext,
 			IEnumerable<AiderContactEntity> contacts
@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		public static void FixAiderHouseholds
+		private static void FixAiderHouseholds
 		(
 			BusinessContext businessContext,
 			IEnumerable<AiderHouseholdEntity> households
@@ -63,7 +63,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		public static void FixAiderLegalPersons
+		private static void FixAiderLegalPersons
 		(
 			BusinessContext businessContext,
 			IEnumerable<AiderLegalPersonEntity> legalPersons
@@ -85,7 +85,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		public static void FixAiderSubscriptions
+		private static void FixAiderSubscriptions
 		(
 			BusinessContext businessContext,
 			IEnumerable<AiderSubscriptionEntity> subscriptions
@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		public static void FixAiderSubscriptionRefusals
+		private static void FixAiderSubscriptionRefusals
 		(
 			BusinessContext businessContext,
 			IEnumerable<AiderSubscriptionRefusalEntity> refusals
