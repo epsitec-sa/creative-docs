@@ -284,6 +284,18 @@ namespace Epsitec.Aider.Entities
 				businessContext.DeleteEntity (household.Address);
 			}
 
+			var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+			if (subscription.IsNotNull ())
+			{
+				businessContext.DeleteEntity (subscription);
+			}
+
+			var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
+			if (refusal.IsNotNull ())
+			{
+				businessContext.DeleteEntity (refusal);
+			}
+
 			businessContext.DeleteEntity (household);
 		}
 
