@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -50,15 +51,19 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ()
 				.Field<string> ()
 					.Title ("Case postale")
+				.End ()
+				.Field<bool> ()
+					.Title ("Inscription au Bonne Nouvelle")
+					.InitialValue (false)
 				.End ();
 		}
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, ContactRole, PersonMrMrs, string, AiderTownEntity, string, string, AiderLegalPersonEntity> (this.Execute);
+			return FunctionExecutor.Create<string, ContactRole, PersonMrMrs, string, AiderTownEntity, string, string, bool, AiderLegalPersonEntity> (this.Execute);
 		}
 
-		private AiderLegalPersonEntity Execute(string name, ContactRole personRole, PersonMrMrs personMrMrs, string personName, AiderTownEntity town, string street, string postBox)
+		private AiderLegalPersonEntity Execute(string name, ContactRole personRole, PersonMrMrs personMrMrs, string personName, AiderTownEntity town, string street, string postBox, bool generateSubscription)
 		{
 			if (string.IsNullOrEmpty (name))
 			{
@@ -83,7 +88,28 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			address.StreetHouseNumberAndComplement = street;
 			address.PostBox = postBox;
 
-			AiderContactEntity.Create (this.BusinessContext, legalPerson, personMrMrs, personName, personRole);
+			var contact = AiderContactEntity.Create (this.BusinessContext, legalPerson, personMrMrs, personName, personRole);
+
+			// Here we assign directly the parish, so we can use this information later on if there
+			// is a subscription to generate. This is not strictly necessery here, as it would be
+			// done by the business rules, and the business rules of the legal person are called
+			// before the business rules of the contact, so the contact business rules can safely
+			// use the parish information from the legal person to set up its parish group path
+			// cache.
+			var parishRepository = ParishAddressRepository.Current;
+			ParishAssigner.AssignToParish(parishRepository, this.BusinessContext, legalPerson);
+
+			if (generateSubscription)
+			{
+				// Here we know that the parish has been set up just before, so we reuse that
+				// information to get the subscription group. If the address is not within a parish
+				// we use the region of Lausanne by default.
+				var region = legalPerson.ParishGroup.IsNotNull ()
+					? legalPerson.ParishGroup.Parent
+					: ParishAssigner.FindRegionGroup (this.BusinessContext, 4);
+
+				AiderSubscriptionEntity.Create (this.BusinessContext, contact, region, 1);
+			}
 
 			return legalPerson;
 		}

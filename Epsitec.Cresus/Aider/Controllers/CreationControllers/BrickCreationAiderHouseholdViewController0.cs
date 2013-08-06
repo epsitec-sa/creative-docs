@@ -50,15 +50,19 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					.Title ("Nationalité du chef de famille")
 					.InitialValue (switzerland)
 					.WithFavorites (countries)
+				.End ()
+				.Field<bool> ()
+					.Title ("Inscription au Bonne Nouvelle")
+					.InitialValue (false)
 				.End ();
 		}
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<PersonMrMrs, string, string, AiderTownEntity, string, PersonConfession, AiderCountryEntity, AiderHouseholdEntity> (this.Execute);
+			return FunctionExecutor.Create<PersonMrMrs, string, string, AiderTownEntity, string, PersonConfession, AiderCountryEntity, bool, AiderHouseholdEntity> (this.Execute);
 		}
 
-		private AiderHouseholdEntity Execute(PersonMrMrs mrMrs, string firstname, string lastname, AiderTownEntity town, string streetHouseNumberAndComplement, PersonConfession confession, AiderCountryEntity nationality)
+		private AiderHouseholdEntity Execute(PersonMrMrs mrMrs, string firstname, string lastname, AiderTownEntity town, string streetHouseNumberAndComplement, PersonConfession confession, AiderCountryEntity nationality, bool generateSubscription)
 		{
 			if (mrMrs == PersonMrMrs.None)
 			{
@@ -111,6 +115,18 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			// will have its parish group path cache set correctly.
 			var parishRepository = ParishAddressRepository.Current;
 			ParishAssigner.AssignToParish (parishRepository, this.BusinessContext, person);
+
+			if (generateSubscription)
+			{
+				// Here we know that the parish has been set up just before, so we reuse that
+				// information to get the subscription group. If the address is not within a parish
+				// we use the region of Lausanne by default.
+				var region = person.ParishGroup.IsNotNull()
+					? person.ParishGroup.Parent
+					: ParishAssigner.FindRegionGroup (this.BusinessContext, 4);
+
+				AiderSubscriptionEntity.Create (this.BusinessContext, household, region, 1);
+			}
 
 			return household;
 		}
