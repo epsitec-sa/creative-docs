@@ -231,23 +231,5 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 			Assert.AreEqual ("", "-".TrimSpacesAndDashes ());
 			Assert.AreEqual ("", " - - - ".TrimSpacesAndDashes ());
 		}
-
-		[TestMethod]
-		public void CheckBreakInLines()
-		{
-			ExceptionAssert.Throw<ArgumentNullException> (() => StringExtensions.BreakInLines (null, 1));
-			ExceptionAssert.Throw<ArgumentException> (() => StringExtensions.BreakInLines ("test", 0));
-
-			Assert.AreEqual ("", StringExtensions.BreakInLines ("", 1));
-			Assert.AreEqual ("test", StringExtensions.BreakInLines ("test", 5));
-			Assert.AreEqual ("t\ne\ns\nt", StringExtensions.BreakInLines ("test", 1));
-			Assert.AreEqual ("test\nabc\ndef", StringExtensions.BreakInLines ("test abc def", 5));
-			Assert.AreEqual ("test\nabc\ndef", StringExtensions.BreakInLines ("test abc def", 6));
-			Assert.AreEqual ("test\nabc def", StringExtensions.BreakInLines ("test abc def", 7));
-			Assert.AreEqual ("test abc\ndef", StringExtensions.BreakInLines ("test abc def", 8));
-			Assert.AreEqual ("test abc\ndef", StringExtensions.BreakInLines ("test abc def", 11));
-			Assert.AreEqual ("test abc def", StringExtensions.BreakInLines ("test abc def", 12));
-			Assert.AreEqual ("test\nabcd\nefgh", StringExtensions.BreakInLines ("test abcd efgh", 4));
-		}
 	}
 }

@@ -34,11 +34,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-			(
-				this.GetAddressRecipientText (false, 50),
-				"~\n",
-				this.Address.GetPostalAddress ());
+			return this.GetAddressLabelText ();
 		}
 
 
@@ -62,14 +58,14 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText
 			(
-				this.GetAddressRecipientText (false, 35),
+				this.GetAddressRecipientText (),
 				"\n",
 				this.Address.GetPostalAddress ()
 			);
 		}
 
 
-		private FormattedText GetAddressRecipientText(bool abbreviatedTitle, int lineLength)
+		private FormattedText GetAddressRecipientText()
 		{
 			if (this.Contacts.Count == 0)
 			{
@@ -80,9 +76,9 @@ namespace Epsitec.Aider.Entities
 
 			return TextFormatter.FormatText
 			(
-				this.GetHonorific (abbreviatedTitle),
+				this.GetHonorific (false),
 				"\n",
-				this.GetAddressName ().BreakInLines (lineLength)
+				this.GetAddressName ()
 			);
 		}
 
