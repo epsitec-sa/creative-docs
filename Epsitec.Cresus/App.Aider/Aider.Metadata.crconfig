@@ -42,6 +42,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA4E]" title="Type de contact" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
 #[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
 #[Feature:NewColumns]        <sort o="None" />
 #[Feature:NewColumns]        <disp m="Hidden" />
@@ -810,6 +814,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG132]" title="Type d'abonnement" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscription:[LVG432]" title="Quantité" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
@@ -841,6 +849,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+#[Feature:NewColumns]      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVGF32]" title="Type de refus" canSort="True" canFilter="True">
+#[Feature:NewColumns]        <sort o="None" />
+#[Feature:NewColumns]        <disp m="Hidden" />
+#[Feature:NewColumns]      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderSubscriptionRefusal:[LVG942]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
