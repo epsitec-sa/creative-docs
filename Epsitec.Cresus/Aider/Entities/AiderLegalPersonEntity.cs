@@ -123,7 +123,32 @@ namespace Epsitec.Aider.Entities
 
 		public static void Delete(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
 		{
-			//	TODO: ...
+			foreach (var contact in legalPerson.Contacts.ToArray ())
+			{
+				AiderContactEntity.Delete (businessContext, contact);
+			}
+
+			if (legalPerson.Comment.IsNotNull ())
+			{
+				businessContext.DeleteEntity (legalPerson.Comment);
+			}
+
+			if (legalPerson.Address.IsNotNull ())
+			{
+				businessContext.DeleteEntity (legalPerson.Address);
+			}
+
+			foreach (var subscription in AiderSubscriptionEntity.FindSubscriptions (businessContext, legalPerson))
+			{
+				businessContext.DeleteEntity (subscription);
+			}
+
+			foreach (var refusal in AiderSubscriptionRefusalEntity.FindRefusals (businessContext, legalPerson))
+			{
+				businessContext.DeleteEntity (refusal);
+			}
+
+			businessContext.DeleteEntity (legalPerson);
 		}
 
 		
