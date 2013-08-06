@@ -1307,6 +1307,18 @@ namespace Epsitec.Common.Document
 		{
 			//	Exporte la géométrie complexe de tous les objets de toutes les pages,
 			//	en utilisant un bitmap intermédiaire pour chaque page.
+			//	Lors de l'exportation de abc.ico, on crée un dossier abc.ico contenant:
+			//		abc.ico
+			//		abc-16.png
+			//		abc-32.png
+			//		abc-48.png
+			//		abc-64.png
+			//		abc-96.png
+			//		abc-128.png
+			//		abc-256.png
+			//		abc-512.png
+			//		abc-1024.png
+
 			try
 			{
 				System.IO.Directory.CreateDirectory (filename);
