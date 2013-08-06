@@ -45,6 +45,12 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
+		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderSubscriptionRefusalEntity>> action)
+		{
+			AiderEnumerator.Execute (coreData, AiderEnumerator.GetSubscriptionRefusalBatch, action);
+		}
+
+
 		public static void Execute(CoreData coreData, Action<BusinessContext, IEnumerable<AiderGroupParticipantEntity>> action)
 		{
 			AiderEnumerator.Execute (coreData, AiderEnumerator.GetParticipantBatch, action);
@@ -127,6 +133,17 @@ namespace Epsitec.Aider.Data.Common
 			AiderEnumerator.LoadRelatedData (dataContext, aiderSubscriptions);
 
 			return aiderSubscriptions;
+		}
+
+
+		private static IList<AiderSubscriptionRefusalEntity> GetSubscriptionRefusalBatch(DataContext dataContext, int skip, int take)
+		{
+			var request = AiderEnumerator.CreateBatchRequest<AiderSubscriptionRefusalEntity> (skip, take);
+			var aiderSubscriptionsRefusals = dataContext.GetByRequest<AiderSubscriptionRefusalEntity> (request);
+
+			AiderEnumerator.LoadRelatedData (dataContext, aiderSubscriptionsRefusals);
+
+			return aiderSubscriptionsRefusals;
 		}
 
 
@@ -269,14 +286,38 @@ namespace Epsitec.Aider.Data.Common
 
 		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderSubscriptionEntity> aiderSubscriptions)
 		{
-			// TODO load legal subscriptions data.
-
 			var aiderHouseholds = aiderSubscriptions
 				.Where (s => s.SubscriptionType == SubscriptionType.Household)
 				.Select (s => s.Household)
 				.ToList ();
 
 			AiderEnumerator.LoadRelatedData (dataContext, aiderHouseholds);
+
+			var aiderLegalPersonContacts = aiderSubscriptions
+				.Where (s => s.SubscriptionType == SubscriptionType.LegalPerson)
+				.Select (s => s.LegalPersonContact)
+				.ToList ();
+
+			AiderEnumerator.LoadRelatedData (dataContext, aiderLegalPersonContacts);
+
+		}
+
+
+		public static void LoadRelatedData(DataContext dataContext, IEnumerable<AiderSubscriptionRefusalEntity> aiderSubscriptionRefusals)
+		{
+			var aiderHouseholds = aiderSubscriptionRefusals
+				.Where (s => s.RefusalType == SubscriptionType.Household)
+				.Select (s => s.Household)
+				.ToList ();
+
+			AiderEnumerator.LoadRelatedData (dataContext, aiderHouseholds);
+
+			var aiderLegalPersonContacts = aiderSubscriptionRefusals
+				.Where (s => s.RefusalType == SubscriptionType.LegalPerson)
+				.Select (s => s.LegalPersonContact)
+				.ToList ();
+
+			AiderEnumerator.LoadRelatedData (dataContext, aiderLegalPersonContacts);
 		}
 
 
