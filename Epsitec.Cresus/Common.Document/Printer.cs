@@ -1241,7 +1241,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected string ExportGeometry(DrawingContext drawingContext, string filename, int pageNumber)
+		private string ExportGeometry(DrawingContext drawingContext, string filename, int pageNumber)
 		{
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
@@ -1264,7 +1264,7 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-        protected string ExportGeometryICO(DrawingContext drawingContext, string filename, int pageNumber)
+        private string ExportGeometryICO(DrawingContext drawingContext, string filename, int pageNumber)
         {
             //	Exporte la géométrie complexe de tous les objets d'une page donnée,
 			//	en utilisant un bitmap intermédiaire.
@@ -1303,16 +1303,13 @@ namespace Epsitec.Common.Document
             return "";  // ok
         }
 
-		protected string ExportGeometryICO(DrawingContext drawingContext, string filename)
+		private string ExportGeometryICO(DrawingContext drawingContext, string filename)
 		{
 			//	Exporte la géométrie complexe de tous les objets de toutes les pages,
 			//	en utilisant un bitmap intermédiaire pour chaque page.
-			var pageNumbers = new List<int> ();
-			int count = drawingContext.TotalPages ();
-			for (int page=0; page<count; page++)
-			{
-				pageNumbers.Add (page);
-			}
+			this.ExportGeometryICOPng (drawingContext, filename);
+
+			var pageNumbers = this.GetPageNumbers (drawingContext);
 
 			byte[] data;
 			string err = this.ExportGeometry (drawingContext, pageNumbers, 254.0, 32, 1.0, true, this.ImageOnlySelected, this.ImageCrop, out data);
@@ -1333,7 +1330,54 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-        protected string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
+		private string ExportGeometryICOPng(DrawingContext drawingContext, string filename)
+		{
+			//	Lors de l'exportation d'une icône paginée, exporte en plus les différentes tailles
+			//	dans autant de fichiers PNG séparés. Cela est principalement utile pour pouvoir
+			//	générer l'icône pour Mac.
+			var sizes = new int[] { 16, 32, 48, 64, 96, 128, 256, 512, 1024 };
+			var pageNumbers = this.GetPageNumbers (drawingContext);
+
+			foreach (var hopeSize in sizes)
+			{
+				int pageSize;
+				int pageNumber = this.GetBestPageNumber (pageNumbers, hopeSize, hopeSize, out pageSize);
+
+				int dpi = 254 * hopeSize / pageSize;
+
+				byte[] data;
+				string err = this.ExportGeometry (drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 32, 85, 1, false, false, ExportImageCrop.Page, out data);
+
+				if (err != "")
+				{
+					return err;
+				}
+
+				try
+				{
+					var f = this.GetICOPngFilename (filename, hopeSize);
+					System.IO.File.WriteAllBytes (f, data);
+				}
+				catch (System.Exception e)
+				{
+					return e.Message;
+				}
+			}
+
+			return "";  // ok
+		}
+
+		private string GetICOPngFilename(string filename, int size)
+		{
+			var i = filename.LastIndexOf ('.');
+
+			string p1 = filename.Substring (0, i);
+			string p2 = size.ToString ();
+
+			return string.Concat (p1, "-", p2, ".png");
+		}
+
+		private string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets d'une page donnée, en
 			//	utilisant un bitmap intermédiaire. Retourne un éventuel message d'erreur
@@ -1395,20 +1439,12 @@ namespace Epsitec.Common.Document
 			{
 				if (bitmaps.Where (x => x.Width == supplement && x.Height == supplement).Any () == false)
 				{
-					//	On cherche d'abord s'il existe une page ayant exactement la moitié
-					//	de la taille souhaitée.
-					int size = supplement/2;
-					int pageNumber = this.GetPage (pageNumbers, size, size);
-
-					//	Si on n'a pas trouvé, on cherche la plus grande page carrée.
-					if (pageNumber == -1)
-					{
-						pageNumber = this.GetGreatestPage (pageNumbers, out size);
-					}
+					int pageSize;
+					int pageNumber = this.GetBestPageNumber (pageNumbers, supplement, supplement, out pageSize);
 
 					if (pageNumber != -1)
 					{
-						double zdpi = dpi * supplement / size;
+						double zdpi = dpi * supplement / pageSize;
 						var nb = this.GetNativeBitmap (drawingContext, pageNumber, zdpi, depth, AA, paintMark, onlySelected, crop);
 
 						if (nb != null)
@@ -1450,7 +1486,54 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		private int GetPage(IEnumerable<int> pageNumbers, int width, int height)
+		private List<int> GetPageNumbers(DrawingContext drawingContext)
+		{
+			var pageNumbers = new List<int> ();
+			int count = drawingContext.TotalPages ();
+			for (int page=0; page<count; page++)
+			{
+				pageNumbers.Add (page);
+			}
+
+			return pageNumbers;
+		}
+
+		private int GetBestPageNumber(IEnumerable<int> pageNumbers, int width, int height, out int pageSize)
+		{
+			//	Cherche la meilleure page possible.
+			int pageNumber;
+
+			//	On cherche d'abord la taille exacte.
+			pageNumber = this.GetPageNumber (pageNumbers, width, height);
+			if (pageNumber != -1)
+			{
+				pageSize = width;
+				return pageNumber;
+			}
+
+			//	On cherche ensuite s'il existe une page ayant exactement la moitié
+			//	de la taille souhaitée.
+			pageNumber = this.GetPageNumber (pageNumbers, width/2, height/2);
+			if (pageNumber != -1)
+			{
+				pageSize = width/2;
+				return pageNumber;
+			}
+
+			//	On cherche ensuite s'il existe une page ayant exactement le quart
+			//	de la taille souhaitée.
+			pageNumber = this.GetPageNumber (pageNumbers, width/4, height/4);
+			if (pageNumber != -1)
+			{
+				pageSize = width/4;
+				return pageNumber;
+			}
+
+			//	Si on n'a pas trouvé, on cherche la plus grande page carrée.
+			return this.GetGreatestPageNumber (pageNumbers, out pageSize);
+		}
+
+		private int GetPageNumber(IEnumerable<int> pageNumbers, int width, int height)
 		{
 			//	Retourne le numéro de la page ayant une dimension donnée.
 			foreach (var pageNumber in pageNumbers)
@@ -1466,7 +1549,7 @@ namespace Epsitec.Common.Document
 			return -1;
 		}
 
-		private int GetGreatestPage(IEnumerable<int> pageNumbers, out int size)
+		private int GetGreatestPageNumber(IEnumerable<int> pageNumbers, out int size)
 		{
 			//	Retourne le numéro de la plus grande page carrée.
 			int greatestPage = -1;
@@ -1486,7 +1569,7 @@ namespace Epsitec.Common.Document
 			return greatestPage;
 		}
 
-		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop)
+		private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
 			//	Retourne le bitmap contenant le dessin des objets à exporter.
 			Rectangle pageBox;
