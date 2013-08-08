@@ -8,4 +8,3 @@
 # ConfigureExperimentalFeature ("Search");
 # ConfigureExperimentalFeature ("ContextualMenu");
 # ConfigureExperimentalFeature ("Warnings");
-# ConfigureExperimentalFeature ("NewColumns");
