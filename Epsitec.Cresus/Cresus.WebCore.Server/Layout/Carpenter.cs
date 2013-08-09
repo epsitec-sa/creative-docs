@@ -696,6 +696,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				case FieldType.Text:
 					return this.BuildTextField (entity, propertyAccessor, brickProperties, includeTitle);
 
+				case FieldType.Time:
+					return this.BuildTimeField (entity, propertyAccessor, brickProperties, includeTitle);
+
 				default:
 					throw new NotImplementedException ();
 			}
@@ -792,6 +795,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				return field;
 			}
+		}
+
+
+		private TimeField BuildTimeField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			return this.BuildField<TimeField> (entity, propertyAccessor, brickProperties, includeTitle, null);
 		}
 
 
@@ -932,6 +941,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				case FieldType.Text:
 					return this.BuildTextField (entity, brick, fieldType, id);
 
+				case FieldType.Time:
+					return this.BuildTimeField (entity, brick, fieldType, actionFieldType, id);
+
 				default:
 					throw new NotImplementedException ();
 			}
@@ -1029,6 +1041,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				return field;
 			}
+		}
+
+
+		private TimeField BuildTimeField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+
+			return this.BuildField<TimeField> (entity, brick, fieldType, id, allowBlank);
 		}
 
 

@@ -126,6 +126,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Text:
 					return FieldIO.ConvertTextToClient (value);
 
+				case FieldType.Time:
+					return FieldIO.ConvertTimeToClient (value);
+
 				case FieldType.EntityCollection:
 					return FieldIO.ConvertEntityCollectionToClient (dataContext, value);
 
@@ -158,7 +161,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			var date = (Date) value;
 			var format = FieldIO.dateFormat;
-			var culture = FieldIO.dateCulture;
+			var culture = FieldIO.culture;
 
 			return date.ToString (format, culture);
 		}
@@ -224,6 +227,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				return (string) value;
 			}
+		}
+
+
+		private static object ConvertTimeToClient(object value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+
+			var time = (Time) value;
+			var format = FieldIO.timeFormat;
+			var culture = FieldIO.culture;
+
+			return time.ToString (format, culture);
 		}
 
 
@@ -297,6 +315,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Text:
 					return FieldIO.ConvertTextFromClient (value, type);
 
+				case FieldType.Time:
+					return FieldIO.ConvertTimeFromClient (value);
+
 				case FieldType.EntityCollection:
 					return FieldIO.ConvertEntityCollectionFromClient (dataContext, value, type);
 
@@ -333,7 +354,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			}
 
 			var format = FieldIO.dateFormat;
-			var culture = FieldIO.dateCulture;
+			var culture = FieldIO.culture;
 
 			return new Date (DateTime.ParseExact (stringValue, format, culture));
 		}
@@ -436,6 +457,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
+		private static object ConvertTimeFromClient(DynamicDictionaryValue value)
+		{
+			var val = FieldIO.ConvertFromNancyValue (value, v => (string) v);
+			var stringValue = val == null ? null : (string) val;
+
+			if (string.IsNullOrEmpty (stringValue))
+			{
+				return null;
+			}
+
+			var format = FieldIO.timeFormat;
+			var culture = FieldIO.culture;
+
+			return new Time (DateTime.ParseExact (stringValue, format, culture));
+		}
+
+
 		private static object ConvertEntityCollectionFromClient(DataContext dataContext, DynamicDictionaryValue value, Type valueType)
 		{
 			var listType = typeof (List<>);
@@ -507,6 +545,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Text:
 					return FieldIO.ConvertTextToString (value);
 
+				case FieldType.Time:
+					return FieldIO.ConvertTimeToString (value);
+
 				case FieldType.EntityCollection:
 				case FieldType.EntityReference:
 					throw new NotImplementedException ();
@@ -540,7 +581,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			var date = (Date) value;
 			var format = FieldIO.dateFormat;
-			var culture = FieldIO.dateCulture;
+			var culture = FieldIO.culture;
 
 			return date.ToString (format, culture);
 		}
@@ -613,6 +654,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		}
 
 
+		private static string ConvertTimeToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var time = (Time) value;
+			var format = FieldIO.timeFormat;
+			var culture = FieldIO.culture;
+
+			return time.ToString (format, culture);
+		}
+
+
 		private static string GetEnumString(Enum value)
 		{
 			return EnumKeyValues.GetEnumKeyValue ((object) value).Values.First ().ToSimpleText ();
@@ -622,7 +678,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		private static readonly string dateFormat = "dd.MM.yyyy";
 
 
-		private static readonly CultureInfo dateCulture = CultureInfo.InvariantCulture;
+		private static readonly string timeFormat = "HH:mm:ss";
+
+
+		private static readonly CultureInfo culture = CultureInfo.InvariantCulture;
 
 
 	}

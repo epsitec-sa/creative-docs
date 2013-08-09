@@ -34,6 +34,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		Text,
 
 
+		Time,
+
+
 	}
 
 

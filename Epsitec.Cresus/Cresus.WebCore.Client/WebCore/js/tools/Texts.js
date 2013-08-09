@@ -234,6 +234,18 @@ function() {
 
       getExportImpossibleTooMany: function() {
         return this.texts.exportImpossibleTooMany;
+      },
+
+      getTimeFilterBefore: function() {
+        return this.texts.timeFilterBefore;
+      },
+
+      getTimeFilterOn: function() {
+        return this.texts.timeFilterOn;
+      },
+
+      getTimeFilterAfter: function() {
+        return this.texts.timeFilterAfter;
       }
     }
   });

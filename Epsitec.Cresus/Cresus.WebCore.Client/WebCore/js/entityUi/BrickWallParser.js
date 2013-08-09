@@ -254,6 +254,9 @@ function() {
           case 'textField':
             return this.parseTextField(brick);
 
+          case 'timeField':
+            return this.parseTimeField(brick);
+
           default:
             throw 'invalid brick type: ' + brick.type;
         }
@@ -411,6 +414,13 @@ function() {
           field.inputType = 'password';
         }
 
+        return field;
+      },
+
+      parseTimeField: function(brick) {
+        var field = this.parseField(brick);
+        field.xtype = 'timefield';
+        field.format = 'H:i:s';
         return field;
       }
     }

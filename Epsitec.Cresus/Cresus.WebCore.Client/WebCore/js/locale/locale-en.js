@@ -73,7 +73,10 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         exportImpossibleTitle: 'Export impossible',
         exportImpossibleEmpty: 'You cannot export an empty list.',
         exportImpossibleTooMany: 'You cannot export a list with more than ' +
-            '10000 elements.'
+            '10000 elements.',
+        timeFilterBefore: 'Before',
+        timeFilterOn: 'On',
+        timeFilterAfter: 'After'
       };
     }
   }

@@ -229,6 +229,30 @@ function() {
             field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
             break;
 
+          case 'time':
+            field.xtype = 'fieldset';
+            field.title = c.title;
+            field.name = c.name;
+            field.defaultType = 'timefield';
+            field.layout = 'anchor';
+            field.defaults = {
+              anchor: '100%'
+            };
+            field.items = [{
+              fieldLabel: 'Before',
+              name: 'before',
+              format: 'H:i:s'
+            }, {
+              fieldLabel: 'After',
+              name: 'after',
+              format: 'H:i:s'
+            }, {
+              fieldLabel: 'At',
+              name: 'at',
+              format: 'H:i:s'
+            }];
+            break;
+
           default:
             field.fieldLabel = c.title;
             field.name = c.name;

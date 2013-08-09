@@ -10,6 +10,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.ErrorHandler',
   'Epsitec.cresus.webcore.tools.ListColumn',
   'Epsitec.cresus.webcore.tools.Texts',
+  'Epsitec.cresus.webcore.tools.TimeFilter',
   'Epsitec.cresus.webcore.tools.Tools',
   'Epsitec.cresus.webcore.ui.ArrayExportWindow',
   'Epsitec.cresus.webcore.ui.LabelExportWindow',
@@ -216,6 +217,11 @@ function() {
         case 'string':
           column.xtype = 'gridcolumn';
           break;
+
+        case 'time':
+          column.xtype = 'datecolumn';
+          column.format = 'H:i:s';
+          break;
       }
 
       return column;
@@ -256,6 +262,12 @@ function() {
         case 'string':
           return {
             type: 'string'
+          };
+
+        case 'time':
+          return {
+            type: 'time',
+            timeFormant: 'H:i:s'
           };
 
         default:
@@ -402,6 +414,11 @@ function() {
 
           case 'list':
             field.type = 'string';
+            break;
+
+          case 'time':
+            field.type = 'date';
+            field.dateFormat = 'H:i:s';
             break;
         }
 

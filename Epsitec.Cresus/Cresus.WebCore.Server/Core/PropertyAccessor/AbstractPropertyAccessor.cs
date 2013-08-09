@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 				case FieldType.Enumeration:
 				case FieldType.Integer:
 				case FieldType.Text:
+				case FieldType.Time:
 					return new ValuePropertyAccessor (lambda, fieldType, id);
 
 				default:

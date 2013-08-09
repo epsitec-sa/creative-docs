@@ -51,6 +51,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				return FieldType.Text;
 			}
+			else if (FieldTypeSelector.IsTimeType (type))
+			{
+				return FieldType.Time;
+			}
 			else
 			{
 				throw new NotSupportedException ();
@@ -115,6 +119,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			return type == typeof (string)
 				|| type == typeof (FormattedText)
 				|| type == typeof (FormattedText?);
+		}
+
+
+		private static bool IsTimeType(Type type)
+		{
+			return type == typeof (Time)
+				|| type == typeof (Time?);
 		}
 
 

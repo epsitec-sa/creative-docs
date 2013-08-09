@@ -183,6 +183,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				case FieldType.Text:
 					return "string";
 
+				case FieldType.Time:
+					return "time";
+
 				case FieldType.EntityReference:
 				case FieldType.EntityCollection:
 					throw new NotSupportedException ();

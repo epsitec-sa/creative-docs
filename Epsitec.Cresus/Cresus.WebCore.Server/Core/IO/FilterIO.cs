@@ -223,6 +223,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 							return ColumnFilterConstant.From (pattern);
 					}
 
+				case FieldType.Time:
+					return ColumnFilterConstant.From ((Time?) entityValue);
 
 				default:
 					throw new NotImplementedException ();
