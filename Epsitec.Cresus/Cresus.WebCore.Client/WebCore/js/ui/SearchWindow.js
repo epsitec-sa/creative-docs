@@ -160,16 +160,9 @@ function() {
       return columnDefinitions.map(function(c) {
         var field = {
           name: c.name,
-          type: c.type.type
+          type: c.type.type,
+          isHidden: c.isHidden
         };
-        if (c.hidden)
-        {
-          field.isHidden = true;
-        }
-        else
-        {
-          field.isHidden = false;
-        }
 
         switch (c.type.type) {
           case 'int':
