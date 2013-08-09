@@ -210,7 +210,8 @@ function() {
             };
             field.items = [{
               fieldLabel: 'Before',
-              name: 'before'
+              name: 'before',
+              dateFormat: 'd.m.Y'
             }, {
               fieldLabel: 'After',
               name: 'after',
