@@ -1,9 +1,9 @@
-// This class is a hidden field that is used by EntityCollectionField to store
-// the values that must be submitted to the server.
+// This class is a hidden field that is used by some user defined field. It does
+// not store the value directly, but instead gets its from a callback.
 
-Ext.define('Epsitec.cresus.webcore.field.EntityCollectionHiddenField', {
+Ext.define('Epsitec.cresus.webcore.field.CallbackHiddenField', {
   extend: 'Ext.form.field.Hidden',
-  alternateClassName: ['Epsitec.EntityCollectionHiddenField'],
+  alternateClassName: ['Epsitec.CallbackHiddenField'],
 
   /* Properties */
 

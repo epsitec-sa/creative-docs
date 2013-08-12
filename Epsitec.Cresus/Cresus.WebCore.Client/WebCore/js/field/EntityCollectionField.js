@@ -4,7 +4,7 @@
 // to submit the value of the list to the server when the form is submitted.
 
 Ext.require([
-  'Epsitec.cresus.webcore.field.EntityCollectionHiddenField',
+  'Epsitec.cresus.webcore.field.CallbackHiddenField',
   'Epsitec.cresus.webcore.field.EntityFieldList'
 ],
 function() {
@@ -57,7 +57,7 @@ function() {
 
     createHiddenField: function(options) {
       var me = this;
-      return Ext.create('Epsitec.EntityCollectionHiddenField', {
+      return Ext.create('Epsitec.CallbackHiddenField', {
         name: options.name,
         submitValueGetter: function() { return me.getSubmitValue(); },
         onReset: function() { me.resetEntityFieldList(); }
