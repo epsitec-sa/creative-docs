@@ -16,6 +16,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		Date,
 
 
+		DateTime,
+
+
 		Decimal,
 
 

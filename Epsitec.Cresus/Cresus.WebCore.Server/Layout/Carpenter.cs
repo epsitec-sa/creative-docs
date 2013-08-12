@@ -678,6 +678,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				case FieldType.Date:
 					return this.BuildDateField (entity, propertyAccessor, brickProperties, includeTitle);
 
+				case FieldType.DateTime:
+					return this.BuildDateTimeField (entity, propertyAccessor, brickProperties, includeTitle);
+
 				case FieldType.Decimal:
 					return this.BuildDecimalField (entity, propertyAccessor, brickProperties, includeTitle);
 
@@ -734,6 +737,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		private DateField BuildDateField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
 		{
 			return this.BuildField<DateField> (entity, propertyAccessor, brickProperties, includeTitle, null);
+		}
+
+
+		private DateTimeField BuildDateTimeField(AbstractEntity entity, AbstractPropertyAccessor propertyAccessor, BrickPropertyCollection brickProperties, bool includeTitle)
+		{
+			return this.BuildField<DateTimeField> (entity, propertyAccessor, brickProperties, includeTitle, null);
 		}
 
 
@@ -923,6 +932,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				case FieldType.Date:
 					return this.BuildDateField (entity, brick, fieldType, actionFieldType, id);
 
+				case FieldType.DateTime:
+					return this.BuildDateTimeField (entity, brick, fieldType, actionFieldType, id);
+
 				case FieldType.Decimal:
 					return this.BuildDecimalField (entity, brick, fieldType, actionFieldType, id);
 
@@ -975,6 +987,14 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			var allowBlank = actionFieldType.IsNullable ();
 
 			return this.BuildField<DateField> (entity, brick, fieldType, id, allowBlank);
+		}
+
+
+		private DateTimeField BuildDateTimeField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+
+			return this.BuildField<DateTimeField> (entity, brick, fieldType, id, allowBlank);
 		}
 
 

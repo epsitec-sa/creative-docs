@@ -171,6 +171,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				case FieldType.Date:
 					return "date";
 
+				case FieldType.DateTime:
+					return "dateTime";
+
 				case FieldType.Integer:
 					return "int";
 

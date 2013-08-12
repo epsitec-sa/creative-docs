@@ -4,6 +4,7 @@
 Ext.require([
   'Epsitec.cresus.webcore.entityUi.SetColumn',
   'Epsitec.cresus.webcore.entityUi.TileColumn',
+  'Epsitec.cresus.webcore.field.DateTimeField',
   'Epsitec.cresus.webcore.field.EntityCollectionField',
   'Epsitec.cresus.webcore.field.EntityReferenceField',
   'Epsitec.cresus.webcore.field.EnumerationField',
@@ -221,6 +222,9 @@ function() {
           case 'dateField':
             return this.parseDateField(brick);
 
+          case 'dateTimeField':
+            return this.parseDateTimeField(brick);
+
           case 'decimalField':
             return this.parseDecimalField(brick);
 
@@ -297,6 +301,12 @@ function() {
         var field = this.parseField(brick);
         field.xtype = 'datefield';
         field.format = 'd.m.Y';
+        return field;
+      },
+
+      parseDateTimeField: function(brick) {
+        var field = this.parseField(brick);
+        field.xtype = 'epsitec.datetimefield';
         return field;
       },
 

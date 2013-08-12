@@ -114,6 +114,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Date:
 					return FieldIO.ConvertDateToClient (value);
 
+				case FieldType.DateTime:
+					return FieldIO.ConvertDateTimeToClient (value);
+
 				case FieldType.Decimal:
 					return FieldIO.ConvertDecimalToClient (value);
 
@@ -164,6 +167,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var culture = FieldIO.culture;
 
 			return date.ToString (format, culture);
+		}
+
+
+		private static object ConvertDateTimeToClient(object value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+
+			var dateTime = (DateTime) value;
+			var format = FieldIO.dateTimeFormat;
+			var culture = FieldIO.culture;
+
+			return dateTime.ToString (format, culture);
 		}
 
 
@@ -303,6 +321,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Date:
 					return FieldIO.ConvertDateFromClient (value);
 
+				case FieldType.DateTime:
+					return FieldIO.ConvertDateTimeFromClient (value);
+
 				case FieldType.Decimal:
 					return FieldIO.ConvertDecimalFromClient (value);
 
@@ -357,6 +378,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var culture = FieldIO.culture;
 
 			return new Date (DateTime.ParseExact (stringValue, format, culture));
+		}
+
+
+		private static object ConvertDateTimeFromClient(DynamicDictionaryValue value)
+		{
+			var val = FieldIO.ConvertFromNancyValue (value, v => (string) v);
+			var stringValue = val == null ? null : (string) val;
+
+			if (string.IsNullOrEmpty (stringValue))
+			{
+				return null;
+			}
+
+			var format = FieldIO.dateTimeFormat;
+			var culture = FieldIO.culture;
+
+			return DateTime.ParseExact (stringValue, format, culture);
 		}
 
 
@@ -533,6 +571,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Date:
 					return FieldIO.ConvertDateToString (value);
 
+				case FieldType.DateTime:
+					return FieldIO.ConvertDateTimeToString (value);
+
 				case FieldType.Decimal:
 					return FieldIO.ConvertDecimalToString (value);
 
@@ -584,6 +625,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var culture = FieldIO.culture;
 
 			return date.ToString (format, culture);
+		}
+
+
+		private static string ConvertDateTimeToString(object value)
+		{
+			if (value == null)
+			{
+				return "";
+			}
+
+			var dateTime = (DateTime) value;
+			var format = FieldIO.dateTimeFormat;
+			var culture = FieldIO.culture;
+
+			return dateTime.ToString (format, culture);
 		}
 
 
@@ -676,6 +732,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 
 		private static readonly string dateFormat = "dd.MM.yyyy";
+
+
+		private static readonly string dateTimeFormat = "dd.MM.yyyy HH:mm:ss";
 
 
 		private static readonly string timeFormat = "HH:mm:ss";

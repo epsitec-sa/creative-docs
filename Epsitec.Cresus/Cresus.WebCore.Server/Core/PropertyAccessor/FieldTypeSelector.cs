@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			{
 				return FieldType.Date;
 			}
+			else if (FieldTypeSelector.IsDateTimeType (type))
+			{
+				return FieldType.DateTime;
+			}
 			else if (FieldTypeSelector.IsBooleanType (type))
 			{
 				return FieldType.Boolean;
@@ -78,6 +82,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		{
 			return type == typeof (Date)
 				|| type == typeof (Date?);
+		}
+
+
+		private static bool IsDateTimeType(Type type)
+		{
+			return type == typeof (DateTime)
+				|| type == typeof (DateTime?);
 		}
 
 

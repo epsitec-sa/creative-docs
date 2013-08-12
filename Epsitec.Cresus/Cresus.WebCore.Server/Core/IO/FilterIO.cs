@@ -176,6 +176,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				case FieldType.Date:
 					return ColumnFilterConstant.From ((Date?) entityValue);
 
+				case FieldType.DateTime:
+					return ColumnFilterConstant.From ((DateTime?) entityValue);
+
 				case FieldType.Decimal:
 					return ColumnFilterConstant.From ((decimal?) entityValue);
 

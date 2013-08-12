@@ -200,6 +200,11 @@ function() {
           column.format = 'd.m.Y';
           break;
 
+        case 'dateTime':
+          column.xtype = 'datecolumn';
+          column.format = 'd.m.Y H:i:s';
+          break;
+
         case 'int':
           column.xtype = 'numbercolumn';
           column.format = '0,000';
@@ -244,6 +249,21 @@ function() {
           return {
             type: 'date',
             dateFormat: 'd.m.Y'
+          };
+
+        case 'dateTime':
+          return {
+            type: 'datetime',
+            date: {
+              format: 'd.m.Y'
+            },
+            time: {
+              format: 'H:i:s'
+            },
+            dock: {
+              buttonText: Epsitec.Texts.getOkLabel(),
+              dock: 'bottom'
+            }
           };
 
         case 'int':
@@ -410,6 +430,11 @@ function() {
 
           case 'date':
             field.dateFormat = 'd.m.Y';
+            break;
+
+          case 'dateTime':
+            field.type = 'date';
+            field.dateFormat = 'd.m.Y H:i:s';
             break;
 
           case 'list':

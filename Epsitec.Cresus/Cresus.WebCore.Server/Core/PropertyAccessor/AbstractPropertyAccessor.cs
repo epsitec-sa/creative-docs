@@ -118,6 +118,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 
 				case FieldType.Boolean:
 				case FieldType.Date:
+				case FieldType.DateTime:
 				case FieldType.Decimal:
 				case FieldType.Enumeration:
 				case FieldType.Integer:

@@ -223,6 +223,27 @@ function() {
             }];
             break;
 
+          case 'dateTime':
+            field.xtype = 'fieldset';
+            field.title = c.title;
+            field.name = c.name;
+            field.defaultType = 'epsitec.datetimefield';
+            field.layout = 'anchor';
+            field.defaults = {
+              anchor: '100%'
+            };
+            field.items = [{
+              fieldLabel: 'Before',
+              name: 'before'
+            }, {
+              fieldLabel: 'After',
+              name: 'after'
+            }, {
+              fieldLabel: 'At',
+              name: 'at'
+            }];
+            break;
+
           case 'list':
             field.fieldLabel = c.title;
             field.xtype = 'combo';
