@@ -540,6 +540,14 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVAOG]" title="Dernière connexion" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVAPG]" title="Dernière activité" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVAD]" title="Désactivé" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
