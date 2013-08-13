@@ -183,20 +183,37 @@ namespace Epsitec.Aider.Data.Subscription
 			IEnumerable<SubscriptionHousehold> households
 		)
 		{
+			var aiderHouseholds = households.Select
+			(
+				h => businessContext.ResolveEntity<AiderHouseholdEntity>
+				(
+					h.EntityKey
+				)
+			);
+
+			SubscriptionGenerator.SubscribeHouseholds
+			(
+				businessContext, parishRepository, aiderHouseholds.ToList ()
+			);
+		}
+
+
+		public static void SubscribeHouseholds
+		(
+			BusinessContext businessContext,
+			ParishAddressRepository parishRepository,
+			IEnumerable<AiderHouseholdEntity> households
+		)
+		{
 			var regionGroups = SubscriptionGenerator.GetRegionGroups (businessContext);
 
 			foreach (var household in households)
 			{
-				var aiderHousehold = businessContext.ResolveEntity<AiderHouseholdEntity>
-				(
-					household.EntityKey
-				);
-
-				if (!SubscriptionGenerator.DiscardHousehold (aiderHousehold))
+				if (!SubscriptionGenerator.DiscardHousehold (household))
 				{
 					SubscriptionGenerator.SubscribeHousehold
 					(
-						businessContext, parishRepository, regionGroups, aiderHousehold
+						businessContext, parishRepository, regionGroups, household
 					);
 				}
 			}

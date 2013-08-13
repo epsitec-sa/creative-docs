@@ -3,6 +3,7 @@
 
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.Normalization;
+using Epsitec.Aider.Data.Subscription;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -86,7 +87,7 @@ namespace Epsitec.Aider.Data.Eerv
 					businessContext, eervParishData.Id, matches
 				);
 
-				EervParishDataImporter.ProcessHouseholdMatches
+				var newHouseholds = EervParishDataImporter.ProcessHouseholdMatches
 				(
 					businessContext, eervToAiderPersons, eervParishData.Households
 				);
@@ -94,6 +95,11 @@ namespace Epsitec.Aider.Data.Eerv
 				EervParishDataImporter.AssignToParishes
 				(
 					businessContext, parishRepository, matches, eervToAiderPersons
+				);
+
+				SubscriptionGenerator.SubscribeHouseholds
+				(
+					businessContext, parishRepository, newHouseholds
 				);
 
 				EervParishDataImporter.AssignToImportationGroup
@@ -624,7 +630,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatches
+		private static List<AiderHouseholdEntity> ProcessHouseholdMatches
 		(
 			BusinessContext businessContext,
 			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
@@ -647,16 +653,25 @@ namespace Epsitec.Aider.Data.Eerv
 			AiderEnumerator.LoadRelatedData (businessContext.DataContext, otherAiderPersons);
 			businessContext.Register (otherAiderPersons);
 
+			var newHouseholds = new List<AiderHouseholdEntity> ();
+
 			foreach (var eervHousehold in eervHouseholds)
 			{
-				EervParishDataImporter.ProcessHouseholdMatch
+				var newHousehold = EervParishDataImporter.ProcessHouseholdMatch
 				(
 					businessContext,
 					eervToAiderPersons,
 					eervHousehold,
 					aiderTowns
 				);
+
+				if (newHousehold != null)
+				{
+					newHouseholds.Add (newHousehold);
+				}
 			}
+
+			return newHouseholds;
 		}
 
 
@@ -684,7 +699,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatch
+		private static AiderHouseholdEntity ProcessHouseholdMatch
 		(
 			BusinessContext businessContext,
 			Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons,
@@ -699,7 +714,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (aiderHouseholds.Count == 0)
 			{
-				EervParishDataImporter.CreateHousehold
+				return EervParishDataImporter.CreateHousehold
 				(
 					businessContext,
 					eervHousehold,
@@ -727,6 +742,8 @@ namespace Epsitec.Aider.Data.Eerv
 					aiderHouseholds
 				);
 			}
+
+			return null;
 		}
 
 
@@ -745,7 +762,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void CreateHousehold
+		private static AiderHouseholdEntity CreateHousehold
 		(
 			BusinessContext businessContext,
 			EervHousehold eervHousehold,
@@ -769,6 +786,8 @@ namespace Epsitec.Aider.Data.Eerv
 				aiderHousehold.Address,
 				eervHousehold.Address
 			);
+
+			return aiderHousehold;
 		}
 
 
@@ -885,10 +904,59 @@ namespace Epsitec.Aider.Data.Eerv
 					AiderContactEntity.Create (businessContext, contact.Person, mainHousehold, false);
 				}
 
+				EervParishDataImporter.CombineSubscriptionsAndRefusals
+				(
+					businessContext, mainHousehold, secondaryHousehold
+				);
+
 				AiderHouseholdEntity.Delete (businessContext, secondaryHousehold);
 			}
 
 			return mainHousehold;
+		}
+
+
+		private static void CombineSubscriptionsAndRefusals
+		(
+			BusinessContext businessContext,
+			AiderHouseholdEntity mainHousehold,
+			AiderHouseholdEntity secondaryHousehold
+		)
+		{
+			var mainSubscription = AiderSubscriptionEntity.FindSubscription
+			(
+				businessContext, mainHousehold
+			);
+
+			var mainRefusal = AiderSubscriptionRefusalEntity.FindRefusal
+			(
+				businessContext, mainHousehold
+			);
+
+			if (mainSubscription.IsNull () && mainRefusal.IsNull ())
+			{
+				var secondarySubscription = AiderSubscriptionEntity.FindSubscription
+				(
+					businessContext, secondaryHousehold
+				);
+
+				var secondaryRefusal = AiderSubscriptionRefusalEntity.FindRefusal
+				(
+					businessContext, secondaryHousehold
+				);
+
+				if (secondarySubscription.IsNotNull ())
+				{
+					var edition = secondarySubscription.RegionalEdition;
+					var count = secondarySubscription.Count;
+
+					AiderSubscriptionEntity.Create (businessContext, mainHousehold, edition, count);
+				}
+				else if (secondaryRefusal.IsNotNull ())
+				{
+					AiderSubscriptionRefusalEntity.Create (businessContext, mainHousehold);
+				}
+			}
 		}
 
 
