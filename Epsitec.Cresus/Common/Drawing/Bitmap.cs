@@ -850,10 +850,15 @@ namespace Epsitec.Common.Drawing
 		{
 			try
 			{
+				//	[DR] Ce code produit un bug dans l'affichage du fond de certains
+				//	widgets. Il a été ajouté par Pierre le 02.07.2013 dans la révision
+				//	21113.
+				//	TODO: Corriger...
 				if (Bitmap.IsPngHeader (data))
 				{
 					return Bitmap.DecompressPngBitmap (stream);
 				}
+				//	[DR] Fin.
 
 				return new System.Drawing.Bitmap (stream);
 			}
