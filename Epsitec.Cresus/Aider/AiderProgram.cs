@@ -300,10 +300,15 @@ namespace Epsitec.Aider
 			{
 				var parishRepository = ParishAddressRepository.Current;
 
-				SubscriptionGenerator.Create
-				(
-					coreData, parishRepository, subscribeHouseholds, subscribeLegalPersons
-				);
+				if (subscribeHouseholds)
+				{
+					SubscriptionGenerator.SubscribeHouseholds(coreData, parishRepository);
+				}
+
+				if (subscribeLegalPersons)
+				{
+					SubscriptionGenerator.SubscribeLegalPersons (coreData, parishRepository);
+				}
 			});
 		}
 

@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -26,37 +27,37 @@ namespace Epsitec.Aider.Data.Subscription
 	{
 
 
-		public static void Create
+		/// <summary>
+		/// This method will add subscriptions to households that do not have a subscription or a
+		/// refusal yet.
+		/// </summary>
+		/// <remarks>
+		/// This method will consider two households whose member share the same name and that live
+		/// at the exact same address as a single household, and will generate a single
+		/// subscription for both of them.
+		/// This method can be called several time on the same database, it will only add
+		/// subscriptions for the household that have none and that don't have a refusal yet.
+		/// </remarks>
+		public static void SubscribeHouseholds
 		(
 			CoreData coreData,
-			ParishAddressRepository parishRepository,
-			bool subscribeHouseholds,
-			bool subscribeLegalPersons
+			ParishAddressRepository parishRepository
 		)
 		{
-			if (subscribeHouseholds)
-			{
-				var households = SubscriptionGenerator.GetHouseholds (coreData);
-				Logger.LogToConsole ("Households loaded");
+			var households = SubscriptionGenerator.GetHouseholds (coreData);
+			Logger.LogToConsole ("Households loaded");
 
-				var householdsToSubscribe = SubscriptionGenerator.GetHouseholdsToSubscribe
-				(
-					households
-				);
-				Logger.LogToConsole ("Household compared");
+			var householdsToSubscribe = SubscriptionGenerator.GetHouseholdsToSubscribe
+			(
+				households
+			);
+			Logger.LogToConsole ("Household compared");
 
-				SubscriptionGenerator.SubscribeHouseholds
-				(
-					coreData, parishRepository, householdsToSubscribe
-				);
-				Logger.LogToConsole ("Household subscribed");
-			}
-
-			if (subscribeLegalPersons)
-			{
-				SubscriptionGenerator.SubscribeLegalPersons (coreData, parishRepository);
-				Logger.LogToConsole ("Legal persons subscribed");
-			}
+			SubscriptionGenerator.SubscribeHouseholds
+			(
+				coreData, parishRepository, householdsToSubscribe
+			);
+			Logger.LogToConsole ("Household subscribed");
 		}
 
 
@@ -83,17 +84,15 @@ namespace Epsitec.Aider.Data.Subscription
 			IEnumerable<AiderHouseholdEntity> households
 		)
 		{
-			var dataContext = businessContext.DataContext;
-
 			return households
-				.Select (h => SubscriptionGenerator.GetHousehold (dataContext, h))
+				.Select (h => SubscriptionGenerator.GetHousehold (businessContext, h))
 				.ToList ();
 		}
 
 
 		private static SubscriptionHousehold GetHousehold
 		(
-			DataContext dataContext,
+			BusinessContext businessContext,
 			AiderHouseholdEntity household
 		)
 		{
@@ -101,9 +100,12 @@ namespace Epsitec.Aider.Data.Subscription
 			var town = address.Town;
 			var members = household.Members;
 
+			var subscribtion = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+			var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
+
 			return new SubscriptionHousehold
 			(
-				dataContext.GetNormalizedEntityKey (household).Value,
+				businessContext.DataContext.GetNormalizedEntityKey (household).Value,
 				address.AddressLine1,
 				address.PostBox,
 				address.Street,
@@ -115,7 +117,9 @@ namespace Epsitec.Aider.Data.Subscription
 				town.Country.IsoCode,
 				members.Select (m => m.eCH_Person.PersonOfficialName),
 				members.Select (m => m.Age).Max () ?? 0,
-				members.Count ()
+				members.Count (),
+				subscribtion.IsNotNull (),
+				refusal.IsNotNull ()
 			);
 		}
 
@@ -129,8 +133,17 @@ namespace Epsitec.Aider.Data.Subscription
 
 			return households
 				.GroupBy (h => h, comparer)
+				.Select (g => g.ToList ())
+				.Where (g => !SubscriptionGenerator.DiscardHouseholdGroup (g))
 				.Select (g => SubscriptionGenerator.GetHouseholdToSubscribe (g))
 				.ToList ();
+		}
+
+
+		private static bool DiscardHouseholdGroup(IEnumerable<SubscriptionHousehold> households)
+		{
+			return households.Any (h => h.HasSubscription)
+				|| households.Any (h => h.HasRefusal);
 		}
 
 
@@ -285,7 +298,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void SubscribeLegalPersons
+		public static void SubscribeLegalPersons
 		(
 			CoreData coreData,
 			ParishAddressRepository parishRepository

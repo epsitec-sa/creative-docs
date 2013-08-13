@@ -25,7 +25,9 @@ namespace Epsitec.Aider.Data.Subscription
 			string countryCode,
 			IEnumerable<string> lastnames,
 			int memberMaxAge,
-			int memberCount
+			int memberCount,
+			bool hasSubscription,
+			bool hasRefusal
 		)
 		{
 			this.EntityKey = entityKey;
@@ -43,6 +45,8 @@ namespace Epsitec.Aider.Data.Subscription
 				.AsReadOnly ();
 			this.MemberMaxAge = memberMaxAge;
 			this.MemberCount = memberCount;
+			this.HasSubscription = hasSubscription;
+			this.HasRefusal = hasRefusal;
 		}
 
 
@@ -57,6 +61,8 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly IEnumerable<string> Lastnames;
 		public readonly int MemberMaxAge;
 		public readonly int MemberCount;
+		public readonly bool HasSubscription;
+		public readonly bool HasRefusal;
 
 
 	}
