@@ -161,9 +161,6 @@
     </Content>
     <EmbeddedResource Include="DataFiles\MatchStreetLight.zip" />
     <EmbeddedResource Include="DataFiles\CountryInfo.zip" />
-    <Content Include="DataFiles\MatchSort.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="app.config" />
     <None Include="Service References\ServiceReference.Directories.Security\security.wsdl" />
   </ItemGroup>
