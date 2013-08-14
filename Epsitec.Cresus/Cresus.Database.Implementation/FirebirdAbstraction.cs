@@ -9,6 +9,8 @@ using System.Collections.Generic;
 
 using System.IO;
 
+using System.Linq;
+
 namespace Epsitec.Cresus.Database.Implementation
 {
 	/// <summary>
@@ -501,25 +503,33 @@ namespace Epsitec.Cresus.Database.Implementation
 		/// <returns>The database transaction object.</returns>
 		public System.Data.IDbTransaction BeginReadOnlyTransaction()
 		{
-			return this.BeginReadOnlyTransaction (new List<DbTable> ());
+			return this.BeginReadOnlyTransaction (Enumerable.Empty<string> ());
 		}
 
 		/// <summary>
-		/// Begins a read only transaction that locks the given <see cref="DbTable"/> for shared
-		/// read access.
+		/// Begins a read only transaction that locks the given tables for shared read access.
 		/// </summary>
-		/// <param name="tablesToLock">The <see cref="DbDable"/> to lock.</param>
+		/// <param name="tablesToLock">The name of the tables to lock.</param>
 		/// <returns>The database transaction object.</returns>
-		public System.Data.IDbTransaction BeginReadOnlyTransaction(IEnumerable<DbTable> tablesToLock)
+		public System.Data.IDbTransaction BeginReadOnlyTransaction(IEnumerable<string> tablesToLock)
 		{
 			this.EnsureConnection ();
 
+			var transactionBehavior = FbTransactionBehavior.Concurrency
+									| FbTransactionBehavior.Wait
+									| FbTransactionBehavior.Read;
+
+			var tableBehavior = FbTransactionBehavior.LockRead
+							  | FbTransactionBehavior.Shared;
+
 			FbTransactionOptions options = new FbTransactionOptions ()
 			{
-				TransactionBehavior = FbTransactionBehavior.Concurrency
-									| FbTransactionBehavior.Wait
-									| FbTransactionBehavior.Read,
-				LockTables = this.GetLockTables (tablesToLock, FbTransactionBehavior.LockRead | FbTransactionBehavior.Shared),
+				TransactionBehavior = transactionBehavior,
+				LockTables = tablesToLock.ToDictionary
+				(
+					t => t,
+					t => tableBehavior
+				)
 			};
 
 			return this.dbConnection.BeginTransaction (options);
@@ -531,47 +541,36 @@ namespace Epsitec.Cresus.Database.Implementation
 		/// <returns>The database transaction object.</returns>
 		public System.Data.IDbTransaction BeginReadWriteTransaction()
 		{
-			return this.BeginReadWriteTransaction (new List<DbTable> ());
+			return this.BeginReadWriteTransaction (Enumerable.Empty<string> ());
 		}
 
 		/// <summary>
-		/// Begins a read-write transaction that locks the given <see cref="DbTable"/> for exclusive
-		/// write access.
+		/// Begins a read-write transaction that locks the given tables for exclusive write access.
 		/// </summary>
-		/// <param name="tablesToLock">The <see cref="DbDable"/> to lock.</param>
+		/// <param name="tablesToLock">The name of the tables to lock.</param>
 		/// <returns>The database transaction object.</returns>
-		public System.Data.IDbTransaction BeginReadWriteTransaction(IEnumerable<DbTable> tablesToLock)
+		public System.Data.IDbTransaction BeginReadWriteTransaction(IEnumerable<string> tablesToLock)
 		{
 			this.EnsureConnection ();
 
+			var transactionBehavior = FbTransactionBehavior.Concurrency
+									| FbTransactionBehavior.Wait
+									| FbTransactionBehavior.Write;
+
+			var tableBehavior = FbTransactionBehavior.LockWrite
+							  | FbTransactionBehavior.Exclusive;
+
 			FbTransactionOptions options = new FbTransactionOptions ()
 			{
-				TransactionBehavior = FbTransactionBehavior.Concurrency
-									| FbTransactionBehavior.Wait
-									| FbTransactionBehavior.Write,
-				LockTables = this.GetLockTables (tablesToLock, FbTransactionBehavior.LockWrite | FbTransactionBehavior.Exclusive),
+				TransactionBehavior = transactionBehavior,
+				LockTables = tablesToLock.ToDictionary
+				(
+					t => t,
+					t => tableBehavior
+				)
 			};
 
 			return this.dbConnection.BeginTransaction (options);
-		}
-
-		/// <summary>
-		/// Builds the table locking argument that must be given to an <see cref="FbTransactionBehavior"/>
-		/// object in order to configure a <see cref="FbTransaction"/>.
-		/// </summary>
-		/// <param name="tablesToLock">The <see cref="DbTable"/> to lock.</param>
-		/// <param name="behavior">The mode to used to lock the <see cref="DbTable"/>.</param>
-		/// <returns>The object that must be used to configure the <see cref="FbTransaction"/>.</returns>
-		private IDictionary<string, FbTransactionBehavior> GetLockTables(IEnumerable<DbTable> tablesToLock, FbTransactionBehavior behavior)
-		{
-			Dictionary<string, FbTransactionBehavior> locks = new Dictionary<string, FbTransactionBehavior> ();
-
-			foreach (DbTable table in tablesToLock)
-			{
-				locks[table.GetSqlName ()] = behavior;
-			}
-
-			return locks;
 		}
 
 		public void ReleaseConnection()

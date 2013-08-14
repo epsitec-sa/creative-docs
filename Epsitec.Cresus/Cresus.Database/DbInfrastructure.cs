@@ -527,6 +527,10 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbTransaction iDbTransaction = null;
 			DbTransaction transaction = null;
 
+			var tablesToLockName = tablesToLock
+				.Select (t => t.GetSqlName ())
+				.ToList ();
+
 			//	Make sure we can get a lock on the database. If not, this means
 			//	that someone holds a global lock and we may not access the database
 			//	at all, even within a transaction. This is the case when restoring
@@ -539,11 +543,11 @@ namespace Epsitec.Cresus.Database
 				switch (mode)
 				{
 					case DbTransactionMode.ReadOnly:
-						iDbTransaction = abstraction.BeginReadOnlyTransaction (tablesToLock);
+						iDbTransaction = abstraction.BeginReadOnlyTransaction (tablesToLockName);
 						break;
 
 					case DbTransactionMode.ReadWrite:
-						iDbTransaction = abstraction.BeginReadWriteTransaction (tablesToLock);
+						iDbTransaction = abstraction.BeginReadWriteTransaction (tablesToLockName);
 						break;
 
 					default:

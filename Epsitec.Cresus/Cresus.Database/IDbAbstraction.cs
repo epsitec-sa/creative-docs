@@ -122,12 +122,11 @@ namespace Epsitec.Cresus.Database
 		System.Data.IDbTransaction BeginReadOnlyTransaction();
 
 		/// <summary>
-		/// Begins a read only transaction that locks the given <see cref="DbTable"/> for shared
-		/// read access.
+		/// Begins a read only transaction that locks the given tables for shared read access.
 		/// </summary>
-		/// <param name="tablesToLock">The <see cref="DbTable"/> to lock.</param>
+		/// <param name="tablesToLock">The name of the tables to lock.</param>
 		/// <returns>The database transaction object.</returns>
-		System.Data.IDbTransaction BeginReadOnlyTransaction(IEnumerable<DbTable> tablesToLock);
+		System.Data.IDbTransaction BeginReadOnlyTransaction(IEnumerable<string> tablesToLock);
 		
 		/// <summary>
 		/// Begins a read-write transaction.
@@ -136,12 +135,11 @@ namespace Epsitec.Cresus.Database
 		System.Data.IDbTransaction BeginReadWriteTransaction();
 
 		/// <summary>
-		/// Begins a read-write transaction that locks the given <see cref="DbTable"/> for exclusive
-		/// write access.
+		/// Begins a read-write transaction that locks the given tables for exclusive write access.
 		/// </summary>
-		/// <param name="tablesToLock">The <see cref="DbTable"/> to lock.</param>
+		/// <param name="tablesToLock">The name of the tables to lock.</param>
 		/// <returns>The database transaction object.</returns>
-		System.Data.IDbTransaction BeginReadWriteTransaction(IEnumerable<DbTable> tablesToLock);
+		System.Data.IDbTransaction BeginReadWriteTransaction(IEnumerable<string> tablesToLock);
 
 		/// <summary>
 		/// Releases the connection.
