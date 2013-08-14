@@ -29,7 +29,5 @@ namespace Epsitec.Cresus.Database
 		/// like a foreign key.
 		/// </summary>
 		RefInternal			= 4,
-
-		Virtual				= 5,
 	}
 }

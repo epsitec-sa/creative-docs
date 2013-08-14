@@ -119,20 +119,19 @@ namespace Epsitec.Cresus.Database
 		private static IEnumerable<DbTable> GetDbTablesIn(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction)
 		{
 			return dbInfrastructure.FindDbTables (dbTransaction, DbElementCat.Any)
-				.Where (t => !DbSchemaUpdater.IsBuiltInOrRelation (dbInfrastructure, t));
+				.Where (t => !DbSchemaUpdater.IsBuiltIn (dbInfrastructure, t));
 		}
 
 
 		private static IEnumerable<DbTable> GetDbTablesOut(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newSchema)
 		{
-			return newSchema.Where (t => !DbSchemaUpdater.IsBuiltInOrRelation (dbInfrastructure, t));
+			return newSchema.Where (t => !DbSchemaUpdater.IsBuiltIn (dbInfrastructure, t));
 		}
 
 
-		private static bool IsBuiltInOrRelation(DbInfrastructure dbInfrastructure, DbTable dbTable)
+		private static bool IsBuiltIn(DbInfrastructure dbInfrastructure, DbTable dbTable)
 		{
-			return dbTable.Category == DbElementCat.Relation
-				|| dbInfrastructure.FindBuiltInDbTables ().Contains (dbTable, INameComparer.Instance);
+			return dbInfrastructure.FindBuiltInDbTables ().Contains (dbTable, INameComparer.Instance);
 		}
 
 
@@ -297,17 +296,9 @@ namespace Epsitec.Cresus.Database
 
 		private static bool IsDbTableDefinitionDifferenceInvalid(DbTable a, DbTable b)
 		{
-			bool valid = a.CaptionId == b.CaptionId
+			return !(a.CaptionId == b.CaptionId
 				&& string.Equals (a.Name, b.Name)
-				&& a.Category == b.Category;
-
-			if (valid && a.Category == DbElementCat.Relation)
-			{
-				valid = string.Equals (a.RelationSourceTableName, b.RelationSourceTableName)
-						&& string.Equals (a.RelationTargetTableName, b.RelationTargetTableName);
-			}
-
-			return !valid;
+				&& a.Category == b.Category);
 		}
 
 
@@ -323,7 +314,6 @@ namespace Epsitec.Cresus.Database
 					|| !string.Equals (a.TargetColumnName, b.TargetColumnName)
 					|| a.Category != b.Category
 					|| a.ColumnClass != b.ColumnClass
-					|| a.Cardinality != b.Cardinality
 					|| a.IsPrimaryKey != b.IsPrimaryKey
 					|| a.IsForeignKey != b.IsForeignKey
 					|| a.IsAutoIncremented != b.IsAutoIncremented

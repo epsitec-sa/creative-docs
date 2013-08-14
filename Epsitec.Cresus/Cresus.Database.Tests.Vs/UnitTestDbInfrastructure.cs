@@ -311,55 +311,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
-		public void AddTableWithRelationTest()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTableRef = infrastructure.FindDbTables (DbElementCat.Any).First ();
-
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
-				relationColumn.DefineDisplayName ("column");
-
-				dbTable1.Columns.Add (relationColumn);
-								
-				infrastructure.AddTable (dbTable1);
-				infrastructure.ClearCaches ();
-
-				DbTable dbTable2 = infrastructure.ResolveDbTable ("table");
-				DbTable dbTableRelation2 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn));
-
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (dbTable1, dbTable2));
-				Assert.IsNotNull (dbTableRelation2);
-			}
-		}
-
-
-		[TestMethod]
-		public void AddTableWithInvalidRelationExceptionTest()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
-				dbTable1.Columns.Add (relationColumn);
-
-				ExceptionAssert.Throw<GenericException>
-				(
-					() => infrastructure.AddTable (dbTable1)
-				);
-			}
-		}
-
-
-		[TestMethod]
 		public void AddTableWithInvalidTypeExceptionTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
@@ -376,67 +327,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				(
 					() => infrastructure.AddTable (dbTable)
 				);
-			}
-		}
-
-
-		[TestMethod]
-		public void AddTablesWithRelationTest()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbCardinality.Collection);
-				relationColumn1.DefineDisplayName ("column1");
-				dbTable2.Columns.Add (relationColumn1);
-
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
-				relationColumn2.DefineDisplayName ("column2");
-				dbTable1.Columns.Add (relationColumn2);
-
-				infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTable2 });
-				infrastructure.ClearCaches ();
-
-				DbTable dbTable3 = infrastructure.ResolveDbTable ("table1");
-				DbTable dbTable4 = infrastructure.ResolveDbTable ("table2");
-				DbTable dbTableRelation3 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
-				DbTable dbTableRelation4 = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
-
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (dbTable1, dbTable3));
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (dbTable2, dbTable4));
-				Assert.IsNotNull (dbTableRelation3);
-				Assert.IsNotNull (dbTableRelation4);
-			}
-		}
-
-
-		[TestMethod]
-		public void AddTablesWithRelationExceptionTest()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
-				DbTable dbTable3 = infrastructure.CreateDbTable ("table3", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
-				relationColumn1.DefineDisplayName ("column1");
-				dbTable1.Columns.Add (relationColumn1);
-
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable3, DbCardinality.Collection);
-				relationColumn2.DefineDisplayName ("column2");
-				dbTable1.Columns.Add (relationColumn2);
-
-				ExceptionAssert.Throw<GenericException>
-				(
-					() => infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTable2 })
-				);			
 			}
 		}
 
@@ -532,35 +422,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
-		public void RemoveTablesWithRelationTest()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable1, DbCardinality.Collection);
-				relationColumn1.DefineDisplayName ("column1");
-				dbTable2.Columns.Add (relationColumn1);
-
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTable2, DbCardinality.Collection);
-				relationColumn2.DefineDisplayName ("column2");
-				dbTable1.Columns.Add (relationColumn2);
-
-				infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTable2 });
-				infrastructure.RemoveTable (infrastructure.ResolveDbTable ("table1"));
-
-				Assert.IsNull (infrastructure.ResolveDbTable ("table1"));
-				Assert.IsNull (infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn2)));
-				Assert.IsNull (infrastructure.ResolveDbTable (dbTable2.GetRelationTableName (relationColumn1)));
-				Assert.IsNotNull (infrastructure.ResolveDbTable ("table2"));
-			}
-		}
-
-
-		[TestMethod]
 		public void RemoveUnexistingTableExeptionTest()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
@@ -598,40 +459,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbTable result = infrastructure.ResolveDbTable ("table");
 
 				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (result, table2));
-			}
-		}
-
-
-		[TestMethod]
-		public void AddColumnWithRelationToTable()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
-
-				infrastructure.AddTable (dbTable1);
-
-				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
-				relationColumn1.DefineDisplayName ("column");
-				dbTable1.Columns.Add (relationColumn1);
-
-				DbColumn relationColumn2 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
-				relationColumn2.DefineDisplayName ("column");
-				dbTable2.Columns.Add (relationColumn2);
-
-				infrastructure.AddTable (dbTableRef);
-				infrastructure.AddColumnToTable (dbTable1, relationColumn1);
-
-				DbTable resulta = infrastructure.ResolveDbTable ("table");
-				DbTable resultb = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
-
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (resulta, dbTable2));
-				Assert.IsNotNull (resultb);
 			}
 		}
 
@@ -732,35 +559,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbTable result = infrastructure.ResolveDbTable ("table");
 
 				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (result, table2));
-			}
-		}
-
-
-		[TestMethod]
-		public void RemoveColumnWithRelationFromTable()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable dbTable1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
-				DbTable dbTable2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
-
-				DbTable dbTableRef = infrastructure.CreateDbTable ("tableRef", DbElementCat.ManagedUserData, false);
-
-				DbColumn relationColumn1 = DbTable.CreateRelationColumn (Druid.FromLong (0), dbTableRef, DbCardinality.Collection);
-				relationColumn1.DefineDisplayName ("column");
-				dbTable1.Columns.Add (relationColumn1);
-
-				infrastructure.AddTables (new List<DbTable> () { dbTable1, dbTableRef });
-
-				infrastructure.RemoveColumnFromTable (dbTable1, relationColumn1);
-
-				DbTable resulta = infrastructure.ResolveDbTable ("table");
-				DbTable resultb = infrastructure.ResolveDbTable (dbTable1.GetRelationTableName (relationColumn1));
-
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (resulta, dbTable2));
-				Assert.IsNull (resultb);
 			}
 		}
 

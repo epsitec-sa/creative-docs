@@ -96,31 +96,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				() => table.DefineCategory (DbElementCat.ExternalUserData)
 			);
 		}
-		
-
-		[TestMethod]
-		public void RelationTableTest()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable sourceTable = new DbTable ("A");
-				DbTable targetTable = new DbTable ("B");
-				DbColumn sourceColumn = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), targetTable, DbCardinality.Reference);
-
-				Assert.AreEqual ("1234", sourceColumn.Name);
-
-				DbTable table = DbTable.CreateRelationTable (dbInfrastructure, sourceTable, sourceColumn);
-
-				Assert.AreEqual ("1234:A", table.Name);
-				Assert.AreEqual ("X_1234_A", table.GetSqlName ());
-				Assert.AreEqual (4, table.Columns.Count);
-
-				Assert.AreEqual ("CR_ID", table.Columns[0].Name);
-				Assert.AreEqual ("CREF_SOURCE_ID", table.Columns[1].Name);
-				Assert.AreEqual ("CREF_TARGET_ID", table.Columns[2].Name);
-				Assert.AreEqual ("CREF_RANK", table.Columns[3].Name);
-			}
-		}
 
 
 	}

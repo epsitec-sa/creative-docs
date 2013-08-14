@@ -31,19 +31,8 @@ namespace Epsitec.Cresus.Database
 		ExternalUserData = 3,
 		
 		/// <summary>
-		/// Synthetic element; it has no real existence.
-		/// </summary>
-		Synthetic = 4,
-		
-		/// <summary>
 		/// Any element; this is only valid as an extraction criterion.
 		/// </summary>
 		Any	= 5,
-
-		/// <summary>
-		/// Relation table; used to link a source column with target rows and
-		/// not intended for public use.
-		/// </summary>
-		Relation = 7
 	}
 }

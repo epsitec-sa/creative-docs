@@ -305,18 +305,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		/// <summary>
-		/// Gets the cardinality for the column relation.
-		/// </summary>
-		/// <value>The cardinality.</value>
-		public DbCardinality					Cardinality
-		{
-			get
-			{
-				return this.cardinality;
-			}
-		}
-
 
 		public string Comment
 		{
@@ -537,26 +525,6 @@ namespace Epsitec.Cresus.Database
 		internal void DefineColumnClass(DbColumnClass value)
 		{
 			this.columnClass = value;
-		}
-
-		/// <summary>
-		/// Defines the column cardinality.
-		/// </summary>
-		/// <param name="value">The cardinality.</param>
-		public void DefineCardinality(DbCardinality value)
-		{
-			if (this.cardinality == value)
-			{
-				return;
-			}
-			if (this.cardinality == DbCardinality.None)
-			{
-				this.cardinality = value;
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its cardinality", this.Name));
-			}
 		}
 
 		/// <summary>
@@ -848,7 +816,6 @@ namespace Epsitec.Cresus.Database
 				column.captionId         = DbTools.ParseDruid (xmlReader.GetAttribute ("capt"));
 				column.category          = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				column.columnClass       = DbTools.ParseColumnClass (xmlReader.GetAttribute ("class"));
-				column.cardinality       = DbTools.ParseCardinality (xmlReader.GetAttribute ("card"));
 				column.isPrimaryKey      = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("pk"));
 				column.targetTableName   = DbTools.ParseString (xmlReader.GetAttribute ("ttab"));
 				column.comment			 = DbTools.ParseString (xmlReader.GetAttribute ("com"));
@@ -884,7 +851,6 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "capt", DbTools.DruidToString (this.CaptionId));
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.Category));
 			DbTools.WriteAttribute (xmlWriter, "class", DbTools.ColumnClassToString (this.ColumnClass));
-			DbTools.WriteAttribute (xmlWriter, "card", DbTools.CardinalityToString (this.Cardinality));
 			DbTools.WriteAttribute (xmlWriter, "pk", DbTools.BoolDefaultingToFalseToString (this.IsPrimaryKey));
 			DbTools.WriteAttribute (xmlWriter, "ttab", DbTools.StringToString (this.TargetTableName));
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.comment));
@@ -922,7 +888,6 @@ namespace Epsitec.Cresus.Database
 			clone.comment = this.comment;
 			clone.category = this.category;
 			clone.columnClass = this.columnClass;
-			clone.cardinality = this.cardinality;
 			clone.IsNullable = this.IsNullable;
 
 			return clone;
@@ -953,7 +918,6 @@ namespace Epsitec.Cresus.Database
 		private DbCollation?					collation;
 		private DbElementCat					category;
 		private DbColumnClass					columnClass;
-		private DbCardinality					cardinality;
 
 	}
 }

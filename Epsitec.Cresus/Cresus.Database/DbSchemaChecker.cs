@@ -38,65 +38,11 @@ namespace Epsitec.Cresus.Database
 			schema.ThrowIfNull ("schema");
 			schema.ThrowIf (s => s.Contains (null), "schema cannot contain null items");
 
-			var tablesToCheck = DbSchemaChecker.GetTablesToCheck (dbInfrastructure, schema).ToList ();
-
-			return DbSchemaChecker.CheckTables (dbInfrastructure, tablesToCheck);
-		}
-
-
-		/// <summary>
-		/// Gets the <see cref="DbTable"/> that must be checked, including the relation tables if
-		/// they are missing.
-		/// </summary>
-		/// <param name="infrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
-		/// <param name="schema">The <see cref="DbTable"/> that must be checked.</param>
-		/// <returns>The <see cref="DbTable"/> that must be checked.</returns>
-		internal static IEnumerable<DbTable> GetTablesToCheck(DbInfrastructure infrastructure, IEnumerable<DbTable> schema)
-		{
-			var mainTables = schema.Where (t => t.Category != DbElementCat.Relation);
-
-			foreach (DbTable mainTable in mainTables)
-			{
-				yield return mainTable;
-
-				var relationTables = DbSchemaChecker.GetRelationTables (infrastructure, mainTable);
-
-				foreach (DbTable relationTable in relationTables)
-				{
-					yield return relationTable;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the relation tables corresponding to the relation columns of a given <see cref="DbTable"/>.
-		/// </summary>
-		/// <param name="infrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
-		/// <param name="table">The <see cref="DbTable"/> whose relation tables to get.</param>
-		/// <returns>The relation tables of the table.</returns>
-		internal static IEnumerable<DbTable> GetRelationTables(DbInfrastructure infrastructure, DbTable table)
-		{
-			return from column in table.Columns
-				   let cardinality = column.Cardinality
-				   where cardinality == DbCardinality.Reference || cardinality == DbCardinality.Collection
-				   select DbTable.CreateRelationTable (infrastructure, table, column);
-		}
-		
-
-		/// <summary>
-		/// Checks that the given sequence of <see cref="DbTable"/> is defined in the database.
-		/// </summary>
-		/// <param name="dbInfrastructure">The <see cref="DbInfrastructure"/> used to communicate with the database.</param>
-		/// <param name="tables">The <see cref="DbTable"/> to check.</param>
-		/// <returns><c>true</c> if the sequence of <see cref="DbTable"/> si defined in the database, <c>false</c> if it is not.</returns>
-		private static bool CheckTables(DbInfrastructure dbInfrastructure, IList<DbTable> tables)
-		{
 			bool ok = true;
 
-			for (int i = 0; ok && i < tables.Count; i++)
+			for (int i = 0; ok && i < schema.Count; i++)
 			{
-				DbTable expected = tables[i];
+				DbTable expected = schema[i];
 				DbTable actual = dbInfrastructure.ResolveDbTable (expected.Name);
 
 				ok = DbSchemaChecker.AreDbTablesEqual (expected, actual);
@@ -144,18 +90,10 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> if the values of both <see cref="DbTable"/> are equal, <c>false</c> if they are not.</returns>
 		public static bool AreDbTableValuesEqual(DbTable a, DbTable b)
 		{
-			bool same = a.CaptionId == b.CaptionId
+			return a.CaptionId == b.CaptionId
 				&& string.Equals (a.Name, b.Name)
 				&& string.Equals (a.Comment, b.Comment)
 				&& a.Category == b.Category;
-
-			if (same && a.Category == DbElementCat.Relation)
-			{
-				same = string.Equals (a.RelationSourceTableName, b.RelationSourceTableName)
-					&& string.Equals (a.RelationTargetTableName, b.RelationTargetTableName);
-			}
-
-			return same;
 		}
 
 
@@ -255,7 +193,6 @@ namespace Epsitec.Cresus.Database
 				&& string.Equals (a.TargetColumnName, b.TargetColumnName)
 				&& a.Category == b.Category
 				&& a.ColumnClass == b.ColumnClass
-				&& a.Cardinality == b.Cardinality
 				&& a.IsNullable == b.IsNullable
 				&& a.IsPrimaryKey == b.IsPrimaryKey
 				&& a.IsForeignKey == b.IsForeignKey

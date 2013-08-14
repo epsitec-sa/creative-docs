@@ -146,7 +146,6 @@
     <Compile Include="Exceptions\IncompatibleDatabaseException.cs" />
     <Compile Include="SqlIndex.cs" />
     <Compile Include="DbIndex.cs" />
-    <Compile Include="DbCardinality.cs" />
     <Compile Include="DbCharacterEncoding.cs" />
     <Compile Include="SqlSelectSetOp.cs" />
     <Compile Include="SqlSelectPredicate.cs" />

@@ -275,33 +275,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-
-		/// <summary>
-		/// Gets the name of the source table if this table is a relation table.
-		/// </summary>
-		/// <value>The name of the source table.</value>
-		public string							RelationSourceTableName
-		{
-			get
-			{
-				System.Diagnostics.Debug.Assert (this.category == DbElementCat.Relation);
-				return this.relationSourceTableName;
-			}
-		}
-
-		/// <summary>
-		/// Gets the name of the target table if this table is a relation table.
-		/// </summary>
-		/// <value>The name of the target table.</value>
-		public string							RelationTargetTableName
-		{
-			get
-			{
-				System.Diagnostics.Debug.Assert (this.category == DbElementCat.Relation);
-				return this.relationTargetTableName;
-			}
-		}
-
 		/// <summary>
 		/// Defines the name for this table. A table name may not be changed
 		/// after it has been defined.
@@ -424,19 +397,16 @@ namespace Epsitec.Cresus.Database
 
 			foreach (DbColumn dbColumn in this.columns)
 			{
-				if (dbColumn.Cardinality == DbCardinality.None)
+				SqlColumn sqlColumn = dbColumn.CreateSqlColumn (converter);
+
+				//	Make sure we don't try to create an SQL column more than once.
+				if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
 				{
-					SqlColumn sqlColumn = dbColumn.CreateSqlColumn (converter);
-
-					//	Make sure we don't try to create an SQL column more than once.
-					if (sqlTable.Columns.IndexOf (sqlColumn.Name) >= 0)
-					{
-						string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
-						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
-					}
-
-					sqlTable.Columns.Add (sqlColumn);
+					string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sqlColumn.Name);
+					throw new Exceptions.SyntaxException (DbAccess.Empty, message);
 				}
+
+				sqlTable.Columns.Add (sqlColumn);
 			}
 
 			if (this.HasPrimaryKeys)
@@ -504,7 +474,7 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL name.</returns>
 		public string GetSqlName()
 		{
-			if (this.category == DbElementCat.Relation || this.EnableUglyHackInOrderToRemoveSuffixFromTableName)
+			if (this.EnableUglyHackInOrderToRemoveSuffixFromTableName)
 			{
 				return DbSqlStandard.MakeSqlTableName (this.Name, false, this.Category, this.Key);
 			}
@@ -512,28 +482,6 @@ namespace Epsitec.Cresus.Database
 			{
 				return DbSqlStandard.MakeSqlTableName (this.Name, this.CaptionId.IsEmpty, this.Category, this.Key);
 			}
-		}
-
-		/// <summary>
-		/// Gets the name of the relation table for the specified column.
-		/// </summary>
-		/// <param name="sourceColumn">The source column.</param>
-		/// <returns>The name of the relation table.</returns>
-		public string GetRelationTableName(DbColumn sourceColumn)
-		{
-			System.Diagnostics.Debug.Assert (sourceColumn.Cardinality != DbCardinality.None);
-			return DbTable.GetRelationTableName (this.Name, sourceColumn.Name);
-		}
-
-		/// <summary>
-		/// Gets the name of the relation table for the specified table and column.
-		/// </summary>
-		/// <param name="sourceTableName">Name of the source table.</param>
-		/// <param name="sourceColumnName">Name of the source column.</param>
-		/// <returns>The name of the relation table.</returns>
-		public static string GetRelationTableName(string sourceTableName, string sourceColumnName)
-		{
-			return string.Concat (sourceColumnName, ":", sourceTableName);
 		}
 
 
@@ -614,8 +562,6 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "cat", DbTools.ElementCategoryToString (this.category));
 			DbTools.WriteAttribute (xmlWriter, "typ", DbTools.DruidToString (this.captionId));
 			DbTools.WriteAttribute (xmlWriter, "idx", DbTools.StringToString (this.SerializeIndexes (this.indexes)));
-			DbTools.WriteAttribute (xmlWriter, "rstn", DbTools.StringToString (this.relationSourceTableName));
-			DbTools.WriteAttribute (xmlWriter, "rttn", DbTools.StringToString (this.relationTargetTableName));
 			DbTools.WriteAttribute (xmlWriter, "com", DbTools.StringToString (this.Comment));
 			DbTools.WriteAttribute (xmlWriter, "uhr", DbTools.BoolDefaultingToFalseToString (this.EnableUglyHackInOrderToRemoveSuffixFromTableName));
 
@@ -749,8 +695,6 @@ namespace Epsitec.Cresus.Database
 
 				table.category                = DbTools.ParseElementCategory (xmlReader.GetAttribute ("cat"));
 				table.captionId               = DbTools.ParseDruid (xmlReader.GetAttribute ("typ"));
-				table.relationSourceTableName = DbTools.ParseString (xmlReader.GetAttribute ("rstn"));
-				table.relationTargetTableName = DbTools.ParseString (xmlReader.GetAttribute ("rttn"));
 				table.serializedIndexTuples   = DbTools.ParseString (xmlReader.GetAttribute ("idx"));
 				table.Comment				  = DbTools.ParseString (xmlReader.GetAttribute ("com"));
 				table.EnableUglyHackInOrderToRemoveSuffixFromTableName = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("uhr"));
@@ -808,26 +752,6 @@ namespace Epsitec.Cresus.Database
 
 			return column;
 		}
-
-		/// <summary>
-		/// Creates the relation column.
-		/// </summary>
-		/// <param name="columnCaptionId">The column caption id.</param>
-		/// <param name="targetTable">The target table.</param>
-		/// <param name="cardinality">The cardinality.</param>
-		/// <returns>The column.</returns>
-		public static DbColumn CreateRelationColumn(Druid columnCaptionId, DbTable targetTable, DbCardinality cardinality)
-		{
-			System.Diagnostics.Debug.Assert (targetTable != null);
-			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
-
-			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, null);
-
-			column.DefineCardinality (cardinality);
-			column.DefineTargetTableName (targetTable.Name);
-
-			return column;
-		}
 		
 		/// <summary>
 		/// Creates a column for user data.
@@ -842,50 +766,6 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (columnName, type, DbColumnClass.Data, DbElementCat.ManagedUserData);
 		}
 
-		/// <summary>
-		/// Creates the relation table for the specified source table and column.
-		/// </summary>
-		/// <param name="infrastructure">The infrastructure.</param>
-		/// <param name="sourceTable">The source table.</param>
-		/// <param name="sourceColumn">The source column.</param>
-		/// <returns>The relation table.</returns>
-		public static DbTable CreateRelationTable(DbInfrastructure infrastructure, DbTable sourceTable, DbColumn sourceColumn)
-		{
-			string sourceTableName   = sourceTable.Name;
-			string targetTableName   = sourceColumn.TargetTableName;
-			string relationTableName = sourceTable.GetRelationTableName (sourceColumn);
-			
-			DbTable relationTable = new DbTable (relationTableName);
-
-			relationTable.Comment = sourceTable.DisplayName + ":" + sourceColumn.DisplayName;
-
-			relationTable.DefineCategory (DbElementCat.Relation);
-			relationTable.relationSourceTableName = sourceTableName;
-			relationTable.relationTargetTableName = targetTableName;
-
-			DbTypeDef refIdType  = infrastructure.ResolveDbType (Tags.TypeKeyId);
-			DbTypeDef rankType   = infrastructure.ResolveDbType (Tags.TypeCollectionRank);
-
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnId, refIdType, DbColumnClass.KeyId, DbElementCat.Internal)
-			{
-				IsAutoIncremented = true,
-				AutoIncrementStartValue = 0
-			});
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefSourceId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefTargetId, refIdType, DbColumnClass.RefInternal, DbElementCat.Internal));
-			relationTable.Columns.Add (new DbColumn (Tags.ColumnRefRank, rankType, DbColumnClass.Data, DbElementCat.Internal));
-
-			relationTable.PrimaryKeys.Add (relationTable.Columns[Tags.ColumnId]);
-
-			string indexName = "IDX_" + relationTable.GetSqlName ();
-
-			relationTable.AddIndex (indexName, SqlSortOrder.Ascending, relationTable.Columns[Tags.ColumnRefSourceId], relationTable.Columns[Tags.ColumnRefTargetId]);
-
-			relationTable.UpdatePrimaryKeyInfo ();
-
-			return relationTable;
-		}
-		
 		#region Private Methods
 
 		private void HandleColumnInserted(object sender, ValueEventArgs e)
@@ -917,7 +797,5 @@ namespace Epsitec.Cresus.Database
 		private List<DbIndex>					indexes;
 		private string							serializedIndexTuples;
 		private DbElementCat					category;
-		private string							relationSourceTableName;
-		private string							relationTargetTableName;
 	}
 }

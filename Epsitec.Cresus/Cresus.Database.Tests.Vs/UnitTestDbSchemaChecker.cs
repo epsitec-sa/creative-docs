@@ -14,8 +14,8 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Database.Tests.Vs
 {
-	
-	
+
+
 	[TestClass]
 	public sealed class UnitTestDbSchemaChecker
 	{
@@ -263,68 +263,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
-		public void RelationSourceTableNameTest()
-		{
-			DbTable tableSource1 = new DbTable ();
-			DbTable tableSource2 = new DbTable ();
-			DbTable tableSource3 = new DbTable ();
-
-			tableSource1.DefineDisplayName ("sourceA");
-			tableSource2.DefineDisplayName ("sourceA");
-			tableSource3.DefineDisplayName ("sourceB");
-
-			DbTable tableTarget = new DbTable ();
-
-			tableTarget.DefineDisplayName ("targetA");
-
-			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbCardinality.Reference);
-			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbCardinality.Reference);
-			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget, DbCardinality.Reference);
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable relationTable1 = DbTable.CreateRelationTable (dbInfrastructure, tableSource1, columnSource1);
-				DbTable relationTable2 = DbTable.CreateRelationTable (dbInfrastructure, tableSource2, columnSource2);
-				DbTable relationTable3 = DbTable.CreateRelationTable (dbInfrastructure, tableSource3, columnSource3);
-
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable2));
-				Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable3));
-			}		
-		}
-
-
-		[TestMethod]
-		public void RelationTargetTableNameTest()
-		{
-			DbTable tableSource = new DbTable ();
-
-			tableSource.DefineDisplayName ("sourceA");
-
-			DbTable tableTarget1 = new DbTable ();
-			DbTable tableTarget2 = new DbTable ();
-			DbTable tableTarget3 = new DbTable ();
-
-			tableTarget1.DefineDisplayName ("targetA");
-			tableTarget2.DefineDisplayName ("targetA");
-			tableTarget3.DefineDisplayName ("targetB");
-
-			DbColumn columnSource1 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget1, DbCardinality.Reference);
-			DbColumn columnSource2 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget2, DbCardinality.Reference);
-			DbColumn columnSource3 = DbTable.CreateRelationColumn (Druid.Parse ("[1234]"), tableTarget3, DbCardinality.Reference);
-
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable relationTable1 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource1);
-				DbTable relationTable2 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource2);
-				DbTable relationTable3 = DbTable.CreateRelationTable (dbInfrastructure, tableSource, columnSource3);
-
-				Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable2));
-				Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (relationTable1, relationTable3));
-			}
-		}
-
-
-		[TestMethod]
 		public void DbTableColumnCaptionIdTest()
 		{
 			DbTable table1 = new DbTable ();
@@ -338,26 +276,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			table1.Columns[0].DefineCaptionId (Druid.FromLong (1));
 			table2.Columns[0].DefineCaptionId (Druid.FromLong (1));
 			table3.Columns[0].DefineCaptionId (Druid.FromLong (2));
-
-			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
-			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
-		}
-
-
-		[TestMethod]
-		public void DbTableColumnCardinalityTest()
-		{
-			DbTable table1 = new DbTable ();
-			DbTable table2 = new DbTable ();
-			DbTable table3 = new DbTable ();
-
-			table1.Columns.Add (new DbColumn ());
-			table2.Columns.Add (new DbColumn ());
-			table3.Columns.Add (new DbColumn ());
-
-			table1.Columns[0].DefineCardinality (DbCardinality.Collection);
-			table2.Columns[0].DefineCardinality (DbCardinality.Collection);
-			table3.Columns[0].DefineCardinality (DbCardinality.Reference);
 
 			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
 			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
@@ -605,7 +523,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			DbTable table1 = new DbTable ();
 			DbTable table2 = new DbTable ();
 			DbTable table3 = new DbTable ();
-			
+
 			table1.Columns.Add (new DbColumn ());
 			table2.Columns.Add (new DbColumn ());
 			table3.Columns.Add (new DbColumn ());
@@ -643,7 +561,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			(
 				() => DbSchemaChecker.CheckSchema (null, new List<DbTable> () { new DbTable () })
 			);
-		
+
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				ExceptionAssert.Throw<System.ArgumentNullException>
@@ -728,61 +646,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 		}
 
 
-		[TestMethod]
-		public void CheckSchema4()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable table1 = dbInfrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, true);
-				DbTable table2 = dbInfrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, true);
-				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Collection);
-				relationColumn.DefineDisplayName ("relationColumn");
-
-				table1.Columns.Add (relationColumn);
-
-				List<DbTable> tables = new List<DbTable> () { table1, table2 };
-
-				dbInfrastructure.AddTables (tables);
-
-				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
-
-				DbTable tableRelation = dbInfrastructure.ResolveDbTable (table1.GetRelationTableName (relationColumn));
-				DbColumn newColumn = new DbColumn ("newColumn", dbInfrastructure.FindDbTypes ().First (), DbColumnClass.Data, DbElementCat.ManagedUserData);
-				
-				dbInfrastructure.AddColumnToTable (tableRelation, newColumn);
-
-				Assert.IsFalse (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
-			}
-		}
-
-
-		[TestMethod]
-		public void CheckSchema5()
-		{
-			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable table1 = dbInfrastructure.CreateDbTable ("table1", DbElementCat.ManagedUserData, true);
-				DbTable table2 = dbInfrastructure.CreateDbTable ("table2", DbElementCat.ManagedUserData, true);
-				DbColumn relationColumn = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Collection);
-				relationColumn.DefineDisplayName ("relationColumn");
-
-				table1.Columns.Add (relationColumn);
-
-				List<DbTable> tables = new List<DbTable> () { table1, table2 };
-
-				dbInfrastructure.AddTables (tables);
-
-				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
-
-				DbTable tableRelation = dbInfrastructure.ResolveDbTable (table1.GetRelationTableName (relationColumn));
-				
-				dbInfrastructure.RemoveTable (tableRelation);
-
-				Assert.IsFalse (DbSchemaChecker.CheckSchema (dbInfrastructure, tables));
-			}
-		}
-
-				
 		private IEnumerable<DbTable> GetSampleTablesMemory(DbInfrastructure dbInfrastructure)
 		{
 			yield return this.CreateDbTableSample1 ();
@@ -825,7 +688,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 		}
 
 
-        private IEnumerable<DbTable> GetSampleTablesDatabase(DbInfrastructure dbInfrastructure)
+		private IEnumerable<DbTable> GetSampleTablesDatabase(DbInfrastructure dbInfrastructure)
 		{
 			return from tableName in this.GetSampleTableNames ()
 				   select dbInfrastructure.ResolveDbTable (tableName);

@@ -381,11 +381,6 @@ namespace Epsitec.Cresus.Database
 					buffer = new System.Text.StringBuilder ();
 					buffer.Append (TablePrefixes.ManagedUserDataTablePrefix);
 					break;
-
-				case DbElementCat.Relation:
-					buffer = new System.Text.StringBuilder ();
-					buffer.Append (TablePrefixes.RelationTablePrefix);
-					break;
 				
 				default:
 					throw new System.NotImplementedException (string.Format ("Support for category {0} not implemented", category));
@@ -630,7 +625,6 @@ namespace Epsitec.Cresus.Database
 		private static class TablePrefixes
 		{
 			public static readonly string ManagedUserDataTablePrefix	= "MUD_";
-			public static readonly string RelationTablePrefix			= "X_";
 		}
 
 		#endregion

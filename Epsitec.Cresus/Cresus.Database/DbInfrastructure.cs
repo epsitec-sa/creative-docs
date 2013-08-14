@@ -681,12 +681,8 @@ namespace Epsitec.Cresus.Database
 
 		public void AddTable(DbTransaction transaction, DbTable table)
 		{
-			// TODO Ensure that the table is not a relation table?
-			// Marc
-
 			this.CheckForRegisteredTypes (transaction, table);
 			this.CheckForUnknownTable (transaction, table);
-			this.CheckForRelations (table, this.FindDbTables (DbElementCat.Any).Append (table).ToList ());
 
 			this.AddTableInternal (transaction, table);
 		}
@@ -703,9 +699,6 @@ namespace Epsitec.Cresus.Database
 
 		public void AddTables(DbTransaction transaction, IEnumerable<DbTable> tables)
 		{
-			// TODO Ensure that the table is not a relation table?
-			// Marc
-
 			var existingTables = this.FindDbTables (DbElementCat.Any);
 			var newTables = tables.ToList ();
 
@@ -713,10 +706,12 @@ namespace Epsitec.Cresus.Database
 			{
 				this.CheckForRegisteredTypes (transaction, table);
 				this.CheckForUnknownTable (transaction, table);
-				this.CheckForRelations (table, existingTables.Concat (newTables).ToList ());
 			}
 
-			this.AddTablesInternal (transaction, newTables);
+			foreach (DbTable table in newTables)
+			{
+				this.AddTableInternal (transaction, table);
+			}
 		}
 
 		public void RemoveTable(DbTable table)
@@ -731,13 +726,6 @@ namespace Epsitec.Cresus.Database
 
 		public void RemoveTable(DbTransaction transaction, DbTable table)
 		{
-			// TODO Ensure that the table is not a relation table?
-			// Marc
-
-			// TODO Do not remove the inward relation columns but throw an exception if the table
-			// to be removed is targeted by a relation table?
-			// Marc
-
 			DbTable internalTable = this.ResolveDbTable (transaction, table.Name);
 
 			if (internalTable == null)
@@ -787,21 +775,8 @@ namespace Epsitec.Cresus.Database
 			// TODO Mutate the dbColumn object and the dbTable object?
 			// Marc
 
-			switch (column.Cardinality)
-			{
-				case DbCardinality.None:
-					this.AddConcreteColumnToTable (transaction, internalTable, column);
-					break;
-
-				case DbCardinality.Reference:
-				case DbCardinality.Collection:
-					this.AddRelationTableAndColumn (transaction, internalTable, column);
-					break;
-
-				default:
-					throw new System.NotImplementedException ();
-			}
-
+			this.InsertColumnToTable (transaction, internalTable, column);
+			this.RegisterTableColumn (transaction, internalTable, column);
 			this.RemoveFromCache (internalTable);
 		}
 
@@ -850,21 +825,8 @@ namespace Epsitec.Cresus.Database
 			// because the column can be referenced only if it is a primary key, and we check for that.
 			// Marc
 
-			switch (column.Cardinality)
-			{
-				case DbCardinality.None:
-					this.RemoveConcreteColumnFromTable (transaction, internalTable, internalColumn);
-					break;
-
-				case DbCardinality.Reference:
-				case DbCardinality.Collection:
-					this.RemoveRelationTableAndColumn (transaction, internalColumn);
-					break;
-
-				default:
-					throw new System.NotImplementedException ();
-			}
-
+			this.DropColumnFromTable (transaction, internalTable, internalColumn);
+			this.UnregisterTableColumn (transaction, internalColumn);
 			this.RemoveFromCache (internalTable);
 		}
 
@@ -1033,11 +995,6 @@ namespace Epsitec.Cresus.Database
 				throw new GenericException (this.access, "The column " + column.Name + " is not defined for table " + table.Name + ".");
 			}
 
-			if (internalColumn.Cardinality == DbCardinality.Collection)
-			{
-				throw new GenericException (this.access, "Cannot rename collection columns!");
-			}
-
 			if (internalTable.Columns[newName] != null)
 			{
 				throw new GenericException (this.access, "There is already a column with name " + newName + " in table " + table.Name + ".");
@@ -1054,111 +1011,18 @@ namespace Epsitec.Cresus.Database
 			this.RemoveFromCache (internalTable);
 		}
 
-		private void AddTableInternal(DbTransaction transaction, DbTable table)
-		{
-			this.AddConcreteTable (transaction, table);
-			this.AddRelationTablesAndColumns (transaction, table);
-			this.RemoveFromCache (table);
-		}
-
-		private void AddTablesInternal(DbTransaction transaction, List<DbTable> newTables)
-		{
-			foreach (DbTable table in newTables)
-			{
-				this.AddConcreteTable (transaction, table);
-			}
-
-			foreach (DbTable table in newTables)
-			{
-				this.AddRelationTablesAndColumns (transaction, table);
-			}
-
-			foreach (DbTable table in newTables)
-			{
-				this.RemoveFromCache (table);
-			}
-		}
-
-
 		private void RemoveTableInternal(DbTransaction transaction, DbTable internalTable)
 		{
-			this.RemoveRelationTablesAndColumns (transaction, internalTable);
-			this.RemoveConcreteTable (transaction, internalTable);
-
+			this.DropTable (transaction, internalTable);
+			this.UnregisterTable (transaction, internalTable);
 			this.RemoveFromCache (internalTable);
 		}
 
-		private void AddConcreteTable(DbTransaction transaction, DbTable table)
+		private void AddTableInternal(DbTransaction transaction, DbTable table)
 		{
 			this.RegisterTable (transaction, table);
 			this.InsertTable (transaction, table);
-		}
-
-		private void RemoveConcreteTable(DbTransaction transaction, DbTable table)
-		{
-			this.DropTable (transaction, table);
-			this.UnregisterTable (transaction, table);
-		}
-
-		private void AddConcreteColumnToTable(DbTransaction transaction, DbTable table, DbColumn column)
-		{
-			this.InsertConcreteColumnToTable (transaction, table, column);
-			this.RegisterConcreteTableColumn (transaction, table, column);
-		}
-
-		private void RemoveConcreteColumnFromTable(DbTransaction transaction, DbTable table, DbColumn column)
-		{
-			this.DropConcreteColumnFromTable (transaction, table, column);
-			this.UnregisterConcreteTableColumn (transaction, column);
-		}
-
-		private void AddRelationTablesAndColumns(DbTransaction transaction, DbTable table)
-		{
-			foreach (DbColumn column in table.Columns.Where (c => c.Cardinality != DbCardinality.None))
-			{
-				this.AddRelationTableAndColumn (transaction, table, column);
-			}
-		}
-
-		private void AddRelationTableAndColumn(DbTransaction transaction, DbTable table, DbColumn column)
-		{
-			this.AddRelationTable (transaction, table, column);
-			this.RegisterRelationTableColumn (transaction, table, column);
-		}
-
-		private void AddRelationTable(DbTransaction transaction, DbTable table, DbColumn column)
-		{
-			DbTable relationTable = DbTable.CreateRelationTable (this, table, column);
-
-			this.AddTableInternal (transaction, relationTable);
-		}
-
-		private void RemoveRelationTablesAndColumns(DbTransaction transaction, DbTable table)
-		{
-			var relationColumnsIn = this.FindInwardRelationColumns (table).ToList ();
-			var relationColumnsOut = this.FindOutwardRelationColumns (table).ToList ();
-
-			foreach (DbColumn column in relationColumnsIn.Concat (relationColumnsOut))
-			{
-				this.RemoveRelationTableAndColumn (transaction, column);
-			}
-		}
-
-		private void RemoveRelationTableAndColumn(DbTransaction transaction, DbColumn column)
-		{
-			this.RemoveRelationTable (transaction, column);
-			this.UnregisterRelationTableColumn (transaction, column);
-			this.RemoveFromCache (column.Table);
-		}
-
-		private void RemoveRelationTable(DbTransaction transaction, DbColumn column)
-		{
-			DbTable sourceTable = column.Table;
-
-			string relationTableName = sourceTable.GetRelationTableName (column);
-			DbTable relationTable = this.ResolveDbTable (relationTableName);
-
-			this.RemoveTableInternal (transaction, relationTable);
+			this.RemoveFromCache (table);
 		}
 
 		private void AddIndexInternal(DbTransaction transaction, DbTable table, DbIndex index)
@@ -1214,9 +1078,9 @@ namespace Epsitec.Cresus.Database
 			DbKey tableKey = this.InsertTableDefRow (transaction, table);
 			table.DefineKey (tableKey);
 
-			foreach (DbColumn column in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			foreach (DbColumn column in table.Columns)
 			{
-				this.RegisterConcreteTableColumn (transaction, table, column);
+				this.RegisterTableColumn (transaction, table, column);
 			}
 		}
 
@@ -1226,48 +1090,16 @@ namespace Epsitec.Cresus.Database
 			this.DeleteTableDefRow (transaction, table);
 		}
 
-		private void RegisterConcreteTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
+		private void RegisterTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
 		{
 			DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
 
 			column.DefineKey (columnKey);
 		}
 
-		private void UnregisterConcreteTableColumn(DbTransaction dbTransaction, DbColumn dbColumn)
+		private void UnregisterTableColumn(DbTransaction dbTransaction, DbColumn dbColumn)
 		{
 			this.DeleteColumnDefRow (dbTransaction, dbColumn);
-		}
-
-		private void RegisterRelationTableColumn(DbTransaction transaction, DbTable table, DbColumn column)
-		{
-			switch (column.ColumnClass)
-			{
-				// TODO Should it include other classes in this case?
-				// Marc
-
-				case DbColumnClass.RefId:
-					{
-						string targetTableName = column.TargetTableName;
-
-						DbTable targetTable = this.ResolveDbTable (transaction, targetTableName);
-
-						DbKey columnKey = this.InsertRelationColumnDefRow (transaction, table, column, targetTable);
-						column.DefineKey (columnKey);
-					}
-					break;
-
-				default:
-					{
-						DbKey columnKey = this.InsertColumnDefRow (transaction, table, column);
-						column.DefineKey (columnKey);
-					}
-					break;
-			}
-		}
-
-		public void UnregisterRelationTableColumn(DbTransaction transaction, DbColumn column)
-		{
-			this.DeleteColumnDefRow (transaction, column);
 		}
 
 		private void InsertTable(DbTransaction transaction, DbTable table)
@@ -1277,7 +1109,7 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
-			foreach (DbColumn dbColumn in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			foreach (DbColumn dbColumn in table.Columns)
 			{
 				this.InsertAutoIncrementForColumn (transaction, table, dbColumn);
 				this.InsertAutoTimeStampForColumn (transaction, table, dbColumn);
@@ -1289,7 +1121,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private void InsertConcreteColumnToTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
+		private void InsertColumnToTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
 			string dbTableName = dbTable.GetSqlName ();
 			SqlColumn sqlColumn = dbColumn.CreateSqlColumn (this.converter);
@@ -1344,7 +1176,7 @@ namespace Epsitec.Cresus.Database
 				this.DropIndex (dbTransaction, index);
 			}
 
-			foreach (DbColumn dbColumn in dbTable.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			foreach (DbColumn dbColumn in dbTable.Columns)
 			{
 				this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
 				this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
@@ -1354,7 +1186,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (dbTransaction);
 		}
 
-		private void DropConcreteColumnFromTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
+		private void DropColumnFromTable(DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
 			this.DropAutoIncrementFromColumn (dbTransaction, dbTable, dbColumn);
 			this.DropAutoTimeStampFromColumn (dbTransaction, dbTable, dbColumn);
@@ -1560,24 +1392,6 @@ namespace Epsitec.Cresus.Database
 		internal IEnumerable<DbTable> FindBuiltInDbTables()
 		{
 			return this.internalTables;
-		}
-
-		private IEnumerable<DbColumn> FindInwardRelationColumns(DbTable dbTable)
-		{
-			// This request might be optimized because it looks at all the table in the database. It
-			// might be more efficient to execute an appropriate SQL request or to use the method that
-			// gets the source reference resolvers.
-			// Marc
-
-			return this.FindDbTables (DbElementCat.Any)
-				.SelectMany (t => t.Columns)
-				.Where (c => c.Cardinality != DbCardinality.None)
-				.Where (c => c.TargetTableName == dbTable.Name);
-		}
-
-		private IEnumerable<DbColumn> FindOutwardRelationColumns(DbTable dbTable)
-		{
-			return dbTable.Columns.Where (c => c.Cardinality != DbCardinality.None);
 		}
 
 		public void AddType(DbTypeDef type)
@@ -1895,7 +1709,7 @@ namespace Epsitec.Cresus.Database
 		/// /// <exception cref="Exceptions.GenericException">Thrown if a type is not registered.</exception>
 		private void CheckForRegisteredTypes(DbTransaction transaction, DbTable table)
 		{
-			foreach (DbColumn column in table.Columns.Where (c => c.Cardinality == DbCardinality.None))
+			foreach (DbColumn column in table.Columns)
 			{
 				DbTypeDef typeDef = column.Type;
 
@@ -2001,23 +1815,6 @@ namespace Epsitec.Cresus.Database
 			{
 				string message = string.Format ("Table {0} does not exist in database.", table.Name);
 				throw new Exceptions.GenericException (this.access, message);
-			}
-		}
-
-		private void CheckForRelations(DbTable table, List<DbTable> tables)
-		{
-			IEnumerable<DbColumn> relationColumns = table.Columns.Where (c => c.Cardinality != DbCardinality.None);
-
-			foreach (DbColumn column in relationColumns)
-			{
-				string targetTableName = column.TargetTableName;
-
-				if (!tables.Any (t => t.Name == targetTableName))
-				{
-					string message = string.Format ("Column {0} of table {1} targets a tables which does not exist.", column.Name, table.Name);
-
-					throw new Exceptions.GenericException (this.access, message);
-				}
 			}
 		}
 
@@ -3133,33 +2930,6 @@ namespace Epsitec.Cresus.Database
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id),
 				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id),
-			};
-
-			SqlFieldList fieldsToReturn = new SqlFieldList ()
-			{
-				new SqlField() { Alias = columnDefTable.Columns[Tags.ColumnId].GetSqlName (), },
-			};
-
-			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fieldsToInsert, fieldsToReturn);
-			object data = this.ExecuteScalar (transaction);
-
-			return new DbKey (new DbId ((long) data));
-		}
-
-		private DbKey InsertRelationColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column, DbTable targetTable)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-
-			DbTable columnDefTable = this.internalTables[Tags.TableColumnDef];
-
-			SqlFieldList fieldsToInsert = new SqlFieldList ()
-			{
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName], column.Name),
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName),
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml], DbTools.GetCompactXml (column)),
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable], table.Key.Id),
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType], column.Type == null ? 0 : column.Type.Key.Id),
-				this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTarget], targetTable.Key.Id),
 			};
 
 			SqlFieldList fieldsToReturn = new SqlFieldList ()

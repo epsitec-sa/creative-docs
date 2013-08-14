@@ -250,74 +250,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 			this.CheckCoreAndServiceTables ();
 		}
-
-
-		[TestMethod]
-		public void AddRelationTableColumnTest()
-		{
-			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
-
-				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
-
-				relationColumn.DefineCardinality (DbCardinality.Collection);
-				relationColumn.DefineTargetTableName (table1.Name);
-
-				table2.Columns.Add (relationColumn);
-				
-				dbInfrastructure1.AddTable (table1);
-				dbInfrastructure1.ClearCaches ();
-				dbInfrastructure2.ClearCaches ();
-
-				List<DbTable> tables = new List<DbTable> ()
-				{
-					table2,
-				};
-
-				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
-
-				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
-			}
-
-			this.CheckCoreAndServiceTables ();
-		}
-
-
-		[TestMethod]
-		public void RemoveRelationTableColumnTest()
-		{
-			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTable table1 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
-				DbTable table2 = this.BuildNewTableWithExistingTypes (dbInfrastructure1, 2, DbElementCat.ManagedUserData);
-
-				DbColumn relationColumn = new DbColumn ("myRelCol", null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
-
-				relationColumn.DefineCardinality (DbCardinality.Collection);
-				relationColumn.DefineTargetTableName (table1.Name);
-
-				table1.Columns.Add (relationColumn);
-
-				dbInfrastructure1.AddTable (table1);
-				dbInfrastructure1.ClearCaches ();
-				dbInfrastructure2.ClearCaches ();
-
-				List<DbTable> tables = new List<DbTable> ()
-				{
-					table2,
-				};
-
-				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
-
-				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
-			}
-
-			this.CheckCoreAndServiceTables ();
-		}
 		
 
 		[TestMethod]
@@ -628,10 +560,10 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					for (int i = 0; i < 10; i++)
 					{
 						var sqlFields = new SqlFieldList ()
-				        {
-				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
-				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
-				        };
+						{
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
+						};
 
 						transaction.SqlBuilder.InsertData (table1.GetSqlName (), sqlFields);
 						dbInfrastructure1.ExecuteSilent (transaction);
@@ -700,10 +632,10 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					for (int i = 0; i < 10; i++)
 					{
 						var sqlFields = new SqlFieldList ()
-				        {
-				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
-				            dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
-				        };
+						{
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[0], i),
+							dbInfrastructure1.CreateSqlFieldFromAdoValue (table1.Columns[1], i),
+						};
 
 						transaction.SqlBuilder.InsertData (table1.GetSqlName (), sqlFields);
 						dbInfrastructure1.ExecuteSilent (transaction);
@@ -914,18 +846,6 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				table2.Columns.Add (column2b);
 				table3.Columns.Add (column3);
 
-				DbColumn columnRelation1 = DbTable.CreateRelationColumn (Druid.FromLong (0), table2, DbCardinality.Reference);
-				DbColumn columnRelation2 = DbTable.CreateRelationColumn (Druid.FromLong (0), table3, DbCardinality.Reference);
-				DbColumn columnRelation3 = DbTable.CreateRelationColumn (Druid.FromLong (0), table1, DbCardinality.Reference);
-
-				columnRelation1.DefineDisplayName ("relation1");
-				columnRelation2.DefineDisplayName ("relation2");
-				columnRelation3.DefineDisplayName ("relation3");
-
-				table1.Columns.Add (columnRelation1);
-				table2.Columns.Add (columnRelation2);
-				table3.Columns.Add (columnRelation3);
-
 				table2.AddIndex ("idx2", SqlSortOrder.Ascending, column2b);
 				table3.AddIndex ("idx3", SqlSortOrder.Descending, column3);
 
@@ -953,15 +873,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				tableB.Columns.Remove ("0");
 
 				DbColumn columnA = DbTable.CreateUserDataColumn ("columnA", type1);
-				DbColumn columnRelationB = DbTable.CreateRelationColumn (Druid.FromLong (1), tableC, DbCardinality.Reference);
-				DbColumn columnRelationC = DbTable.CreateRelationColumn (Druid.FromLong (1), dbInfrastructure1.FindBuiltInDbTables ().First (), DbCardinality.Reference);
-
-				columnRelationB.DefineDisplayName ("relationB");
-				columnRelationC.DefineDisplayName ("relationC");
-
 				tableA.Columns.Add (columnA);
-				tableB.Columns.Add (columnRelationB);
-				tableC.Columns.Add (columnRelationC);
 
 				tableA.AddIndex ("idx1", SqlSortOrder.Ascending, columnA);
 				tableB.Indexes.Clear ();
@@ -1060,7 +972,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 		{
 			DbInfrastructureHelper.ConnectToTestDatabase ().Dispose ();
 		}
-                
+				
 
 	}
 
