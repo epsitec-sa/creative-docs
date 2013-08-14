@@ -137,6 +137,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAA8].[LVA88]" title="Commentaire (personne)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <!--
         Address data
       -->
@@ -212,6 +216,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA8E].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <!--
         Legal person data
       -->
@@ -228,6 +236,10 @@ AiderPersonWarning = [LVALB]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA7E].[LVAN7]" title="Langue de la personne morale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA7E].[LVAA8].[LVA88]" title="Commentaire (personne morale)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -285,6 +297,10 @@ AiderPersonWarning = [LVALB]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAN7]" title="Langue" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVAA8].[LVA88]" title="Commentaire (personne morale)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -363,6 +379,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderHousehold" n="default">
@@ -402,6 +422,10 @@ AiderPersonWarning = [LVALB]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVG042]" title="Nom du chef de ménage 2" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAA8].[LVA88]" title="Commentaire (ménage)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -477,6 +501,10 @@ AiderPersonWarning = [LVALB]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVAI8]" title="Page web" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderHousehold:[LVAT2].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -612,6 +640,13 @@ AiderPersonWarning = [LVALB]
         <disp m="Hidden" />
       </col>
       <!--
+        Group participation data
+      -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAA8].[LVA88]" title="Commentaire (participation)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <!--
         Person data
       -->
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAU1].[LVA2]" title="Nom de famille" canSort="True" canFilter="True">
@@ -694,6 +729,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAA8].[LVA88]" title="Commentaire (personne)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <!--
         Address data
       -->
@@ -769,6 +808,10 @@ AiderPersonWarning = [LVALB]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA8E].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <!--
         Legal person data
       -->
@@ -785,6 +828,10 @@ AiderPersonWarning = [LVALB]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA7E].[LVAN7]" title="Langue de la personne morale" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA7E].[LVAA8].[LVA88]" title="Commentaire (personne morale)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
