@@ -438,7 +438,7 @@ function() {
             break;
 
           case 'list':
-            field.type = 'string';
+            field.type = 'list'; //list?string
             break;
 
           case 'time':
@@ -585,9 +585,10 @@ function() {
     },
 
     onDataChange: function(store, e) {
-      //if (this.isSearching) {
-      //  alert('proxy update when dataChange');
-      //}
+      if (this.isSearching) {
+        this.fullSearchWindow.appliFilters();
+        this.isSearching = false;
+      }
     },
 
     ///QUICK SEARCH

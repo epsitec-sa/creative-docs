@@ -1,4 +1,4 @@
-﻿Ext.require([
+Ext.require([
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.ui.SearchWindow', {
@@ -55,9 +55,9 @@ function() {
       this.parent = Ext.get(tabManager.getLayout().getActiveItem().el);
       config = {
         title: 'Recherche',
-        width: 400,
+        width: 500,
         height: 600,
-        header: 'false',
+        header: 'true',
         autoScroll: true,
         constrain: true,
         renderTo: this.parent,
@@ -70,7 +70,6 @@ function() {
     },
 
     /* Methods */
-
     executeFullSearch: function() {
 
       var list, window, index;
@@ -85,49 +84,164 @@ function() {
       // We start at one because we have a first numbered column.
       index = 1;
       list.isSearching = true;
-      // Show needed column
-      Ext.Array.each(this.form.items.items, function(item) {
-
-        if (Ext.isDefined(item.lastValue) && !list.columns[index].isVisible()) {
+      // Show needed columns and appli filters
+      Ext.Array.each(this.form.items.items, function(item) {   
+        if (window.valueExist(item) && !list.columns[index].isVisible()) {
           list.columns[index].show();
         }
         else {
           if (window.fields[index - 1].isHidden) {
             list.columns[index].hide();
           }
-        }
+        }        
         index += 1;
-      });
+      }); 
+      this.appliFilters();
+      this.hide();
+    },
 
-      //appli filtering
+    appliFilters: function() {
+      var list = this.caller;
+      var window = this;
       Ext.Array.each(this.form.items.items, function(item) {
         var filter = list.filters.getFilter(item.name);
-        if (!Ext.isDefined(filter)) {
-          if (Ext.isDefined(item.lastValue)) {
+        
+        if (!Ext.isDefined(filter)&&window.valueExist(item)) {
+            window.addFilterToList(item,list);     
+        }    
+        if (Ext.isDefined(filter)&&window.valueExist(item)) {
+          var value = window.getFormItemValue(item);
+          filter.setValue(value);
+          filter.setActive(true);
+        }
+        if(Ext.isDefined(filter)&&!window.valueExist(item)) {
+          filter.setActive(false);
+        } 
+      });     
+    },
 
+    addFilterToList: function(item,list) {
+      var value = this.getFormItemValue(item);
+      switch(item.filterType)
+      {
+        case 'list':
+            list.filters.addFilter({
+              type: 'list',
+              dataIndex: item.name,
+              value: value,
+              active: true
+            });
+            var filter = list.filters.getMenuFilter(item.name);
+            filter.fireEventArgs(
+              'update', filter
+            );            
+        break;
+        case 'date':         
+            list.filters.addFilter({
+              type: 'date',
+              dataIndex: item.name,
+              value: value,
+              active: true
+            });
+            var filter = list.filters.getFilter(item.name);
+            filter.fireEventArgs(
+              'update', filter
+            );
+        break;
+        case 'datetime':
+        break;
+        case 'boolean':
+        break;
+        case 'string':
             list.filters.addFilter({
               type: 'string',
               dataIndex: item.name,
-              value: item.lastValue,
+              value: value,
               active: true
             });
-            list.filters.getFilter(item.name).fireEventArgs(
-                'update', list.filters.getFilter(item.name)
+            var filter = list.filters.getFilter(item.name);
+            filter.fireEventArgs(
+              'update', filter
             );
-          }
-        }
-        else {
-          if (item.lastValue && item.lastValue.length > 0) {
-            filter.setValue(item.lastValue);
-            filter.setActive(true);
-          }
-          else {
-            filter.setActive(false);
-          }
-        }
-      });
+        break;
+      }
+    }, 
 
-      this.hide();
+    valueExist: function(item) {
+      if(Ext.isDefined(item.lastValue))
+      {
+        return true;
+      }
+      else
+      {
+        if(item.filterType=='date' || item.filterType=='datetime')
+        {
+          var exist = false;
+          Ext.Array.each(item.items.items, function(subitem) {
+            if(Ext.isDefined(subitem.lastValue))
+            {
+              exist = true;
+            }
+          });
+          if(exist)
+          {
+            return true;
+          } 
+          else
+          {
+            return false;
+          }
+        } 
+        else
+        {
+          return false;
+        }
+        
+      }
+    },
+
+    getFormItemValue: function(item) {
+      if(Ext.isDefined(item.lastValue))
+      {
+        return item.lastValue;
+      }
+      else
+      {
+        switch(item.filterType)
+        {
+          case 'date':
+          case 'datetime':
+            var values = {}; 
+            var valuesExist = false;
+            Ext.Array.each(item.items.items, function(subitem) {
+              if(Ext.isDefined(subitem.lastValue))
+              {
+                valuesExist = true;
+                switch(subitem.name)
+                {
+                  case 'after':
+                  values.after = subitem.lastValue;
+                  break;
+                  case 'before':
+                  values.before = subitem.lastValue;
+                  break;
+                  case 'on':
+                  values.on = subitem.lastValue;
+                  break;
+                }      
+              }
+            });
+
+            if(valuesExist)
+            {
+              return values; 
+            }
+          break;
+          default:
+              return null;
+          break;
+        }
+      }
     },
 
     resetFullSearch: function() {
@@ -166,18 +280,21 @@ function() {
 
         switch (c.type.type) {
           case 'int':
+            field.filterType = 'numeric';
             field.xtype = 'numberfield';
             field.fieldLabel = c.title;
             field.name = c.name;
             break;
 
           case 'float':
+            field.filterType = 'numeric';
             field.xtype = 'numberfield';
             field.fieldLabel = c.title;
             field.name = c.name;
             break;
 
           case 'boolean':
+            field.filterType = 'boolean';
             field.xtype = 'fieldset';
             field.useNull = true;
             field.title = c.title;
@@ -200,6 +317,7 @@ function() {
             break;
 
           case 'date':
+            field.filterType = 'date';
             field.xtype = 'fieldset';
             field.title = c.title;
             field.name = c.name;
@@ -209,21 +327,19 @@ function() {
               anchor: '100%'
             };
             field.items = [{
-              fieldLabel: 'Before',
+              fieldLabel: 'Avant le',
               name: 'before',
-              dateFormat: 'd.m.Y'
             }, {
-              fieldLabel: 'After',
+              fieldLabel: 'Après le',
               name: 'after',
-              dateFormat: 'd.m.Y'
             }, {
-              fieldLabel: 'At',
+              fieldLabel: 'Le',
               name: 'at',
-              dateFormat: 'd.m.Y'
             }];
             break;
 
           case 'dateTime':
+            field.filterType = 'datetime';
             field.xtype = 'fieldset';
             field.title = c.title;
             field.name = c.name;
@@ -233,25 +349,33 @@ function() {
               anchor: '100%'
             };
             field.items = [{
-              fieldLabel: 'Before',
+              fieldLabel: 'Avant le',
+              format: 'm/d/Y',
               name: 'before'
             }, {
-              fieldLabel: 'After',
+              fieldLabel: 'Après le',
+              format: 'm/d/Y',
               name: 'after'
             }, {
-              fieldLabel: 'At',
+              fieldLabel: 'Le',
+              format: 'm/d/Y',
               name: 'at'
             }];
             break;
 
           case 'list':
+            field.filterType = 'list';
             field.fieldLabel = c.title;
-            field.xtype = 'combo';
+            field.xtype = 'combobox';
             field.name = c.name;
+            field.displayField = 'text';
+            field.valueField = 'id';
+            field.multiSelect = true;
             field.store = Epsitec.Enumeration.getStore(c.type.enumerationName);
             break;
 
           case 'time':
+            field.filterType = 'datetime';
             field.xtype = 'fieldset';
             field.title = c.title;
             field.name = c.name;
@@ -276,6 +400,7 @@ function() {
             break;
 
           default:
+            field.filterType = 'string';
             field.fieldLabel = c.title;
             field.name = c.name;
             field.xtype = 'textfield';
