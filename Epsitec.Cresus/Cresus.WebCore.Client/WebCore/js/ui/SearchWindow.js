@@ -81,20 +81,19 @@ function() {
           this.form.items.items[0].lastValue
       );
 
-      // We start at one because we have a first numbered column.
-      index = 1;
+      var index = 1
       list.isSearching = true;
       // Show needed columns and appli filters
-      Ext.Array.each(this.form.items.items, function(item) {   
+      Ext.Array.each(this.form.items.items, function(item) { 
         if (window.valueExist(item) && !list.columns[index].isVisible()) {
           list.columns[index].show();
         }
         else {
-          if (window.fields[index - 1].isHidden) {
+          if (window.fields[index-1].isHidden) {
             list.columns[index].hide();
           }
-        }        
-        index += 1;
+        }   
+        index++;     
       }); 
       this.appliFilters();
       this.hide();
@@ -128,7 +127,7 @@ function() {
         value: value,
         active: true
       });
-      var filter = list.filters.getMenuFilter(item.name);
+      var filter = list.filters.getFilter(item.name);
       filter.fireEventArgs(
         'update', filter
       );                  
@@ -141,7 +140,7 @@ function() {
       }
       else
       {
-        if(item.filterType=='date' || item.filterType=='datetime' || item.filterType=='numeric')
+        if(this.isSubItemField(item))
         {
           var exist = false;
           Ext.Array.each(item.items.items, function(subitem) {
@@ -164,6 +163,15 @@ function() {
           return false;
         }
         
+      }
+    },
+
+    isSubItemField: function(item) {
+      if(item.filterType=='date' || item.filterType=='datetime' || item.filterType=='numeric') {
+        return true;
+      }
+      else {
+        return false;
       }
     },
 
@@ -240,15 +248,25 @@ function() {
 
     resetFullSearch: function() {
       var list = this.caller;
+      var window = this;
+      Ext.Array.each(this.form.items.items, function(item) {        
+        if(window.isSubItemField(item)) {
+          Ext.Array.each(item.items.items, function(subitem) {
+            subitem.reset();
+          });
+        }
+        else {
+          item.reset();
+        }
 
-      Ext.Array.each(this.form.items.items, function(item) {
-        item.reset();
         if (list.filters.filters.containsKey(item.name)) {
-          list.filters.filters.getKey(item.name).setValue(item.lastValue);
-          list.filters.filters.getKey(item.name).setActive(false);
+          var filter = list.filters.getFilter(item.name);
+          var value = window.getFormItemValue(item);
+          filter.setValue(value);
+          filter.setActive(false);
         }
       });
-      this.parent.dockedItems.items[2].items.items[0].setValue(
+      list.dockedItems.items[2].items.items[0].setValue(
           this.form.items.items[0].lastValue
       );
     },
