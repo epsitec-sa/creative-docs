@@ -122,49 +122,16 @@ function() {
 
     addFilterToList: function(item,list) {
       var value = this.getFormItemValue(item);
-      switch(item.filterType)
-      {
-        case 'list':
-            list.filters.addFilter({
-              type: 'list',
-              dataIndex: item.name,
-              value: value,
-              active: true
-            });
-            var filter = list.filters.getMenuFilter(item.name);
-            filter.fireEventArgs(
-              'update', filter
-            );            
-        break;
-        case 'date':         
-            list.filters.addFilter({
-              type: 'date',
-              dataIndex: item.name,
-              value: value,
-              active: true
-            });
-            var filter = list.filters.getFilter(item.name);
-            filter.fireEventArgs(
-              'update', filter
-            );
-        break;
-        case 'datetime':
-        break;
-        case 'boolean':
-        break;
-        case 'string':
-            list.filters.addFilter({
-              type: 'string',
-              dataIndex: item.name,
-              value: value,
-              active: true
-            });
-            var filter = list.filters.getFilter(item.name);
-            filter.fireEventArgs(
-              'update', filter
-            );
-        break;
-      }
+      list.filters.addFilter({
+        type: item.filterType,
+        dataIndex: item.name,
+        value: value,
+        active: true
+      });
+      var filter = list.filters.getMenuFilter(item.name);
+      filter.fireEventArgs(
+        'update', filter
+      );                  
     }, 
 
     valueExist: function(item) {
@@ -174,7 +141,7 @@ function() {
       }
       else
       {
-        if(item.filterType=='date' || item.filterType=='datetime')
+        if(item.filterType=='date' || item.filterType=='datetime' || item.filterType=='numeric')
         {
           var exist = false;
           Ext.Array.each(item.items.items, function(subitem) {
@@ -237,6 +204,33 @@ function() {
               return values; 
             }
           break;
+          case 'numeric':
+            var values = {}; 
+            var valuesExist = false;
+            Ext.Array.each(item.items.items, function(subitem) {
+              if(Ext.isDefined(subitem.lastValue))
+              {
+                valuesExist = true;
+                switch(subitem.name)
+                {
+                  case 'eq':
+                  values.eq = subitem.lastValue;
+                  break;
+                  case 'lt':
+                  values.lt = subitem.lastValue;
+                  break;
+                  case 'gt':
+                  values.gt = subitem.lastValue;
+                  break;
+                }      
+              }
+            });
+
+            if(valuesExist)
+            {
+              return values; 
+            }
+          break;
           default:
               return null;
           break;
@@ -281,16 +275,46 @@ function() {
         switch (c.type.type) {
           case 'int':
             field.filterType = 'numeric';
-            field.xtype = 'numberfield';
-            field.fieldLabel = c.title;
+            field.xtype = 'fieldset';
+            field.defaultType = 'numberfield';
+            field.title = c.title;
             field.name = c.name;
+            field.layout = 'anchor';
+            field.defaults = {
+              anchor: '100%'
+            };
+            field.items = [{
+              fieldLabel: 'Egal',
+              name: 'eq',
+            }, {
+              fieldLabel: 'Plus petit',
+              name: 'lt',
+            }, {
+              fieldLabel: 'Plus grand',
+              name: 'gt',
+            }];
             break;
 
           case 'float':
             field.filterType = 'numeric';
-            field.xtype = 'numberfield';
-            field.fieldLabel = c.title;
+            field.xtype = 'fieldset';
+            field.defaultType = 'numberfield';
+            field.title = c.title;
             field.name = c.name;
+            field.layout = 'anchor';
+            field.defaults = {
+              anchor: '100%'
+            };
+            field.items = [{
+              fieldLabel: 'Egal',
+              name: 'eq',
+            }, {
+              fieldLabel: 'Plus petit',
+              name: 'lt',
+            }, {
+              fieldLabel: 'Plus grand',
+              name: 'gt',
+            }];
             break;
 
           case 'boolean':
