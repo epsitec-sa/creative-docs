@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Data.Job
 
 					EChDataUpdater.TagForDeletionAiderPersonEntities (coreData, personsToRemove);
 
-					EChDataUpdater.CreateNewAiderPersonEntitities (coreData, personsToCreate);
+					EChDataUpdater.CreateNewAiderPersonEntities (coreData, personsToCreate);
 
 					EChDataUpdater.TagAiderPersonEntitiesForHouseholdMissing (coreData, missingHouseHoldsToRemove);
 
@@ -69,7 +69,7 @@ namespace Epsitec.Aider.Data.Job
 
 		}
 
-		private static void CreateNewAiderPersonEntitities(CoreData coreData, List<EChPerson> personsToCreate)
+		private static void CreateNewAiderPersonEntities(CoreData coreData, List<EChPerson> personsToCreate)
 		{
 			Console.WriteLine ("ECH DATA UPDATER : START CREATE AIDER PERSON JOB");
 
@@ -375,17 +375,23 @@ namespace Epsitec.Aider.Data.Job
 						var changes = new List<string> ();
 
 						changes.Add (aiderPersonEntity.GetFullName ());
-
-						if (!toChange.Item1.DateOfBirth.Equals (toChange.Item2.DateOfBirth))
+					
+						if (!toChange.Item1.OfficialName.Equals (toChange.Item2.OfficialName))
 						{
-							personEntityToUpdate.PersonDateOfBirth = changedEChPersonEntity.PersonDateOfBirth;
-							changes.Add ("Date de naissance: " + toChange.Item2.DateOfBirth + " -> " + changedEChPersonEntity.PersonDateOfBirth);
+							personEntityToUpdate.PersonOfficialName = changedEChPersonEntity.PersonOfficialName;
+							changes.Add ("Nom: " + toChange.Item2.OfficialName + " -> " + changedEChPersonEntity.PersonOfficialName);
 						}
 
 						if (!toChange.Item1.FirstNames.Equals (toChange.Item2.FirstNames))
 						{
 							personEntityToUpdate.PersonFirstNames = changedEChPersonEntity.PersonFirstNames;
 							changes.Add ("Prénom: " + toChange.Item2.FirstNames + " -> " + changedEChPersonEntity.PersonFirstNames);
+						}
+
+						if (!toChange.Item1.DateOfBirth.Equals (toChange.Item2.DateOfBirth))
+						{
+							personEntityToUpdate.PersonDateOfBirth = changedEChPersonEntity.PersonDateOfBirth;
+							changes.Add ("Date de naissance: " + toChange.Item2.DateOfBirth + " -> " + changedEChPersonEntity.PersonDateOfBirth);
 						}
 
 						if (!toChange.Item1.MaritalStatus.Equals (toChange.Item2.MaritalStatus))
@@ -405,13 +411,7 @@ namespace Epsitec.Aider.Data.Job
 							personEntityToUpdate.NationalityStatus = changedEChPersonEntity.NationalityStatus;
 							changes.Add ("Statut nationalité: " + toChange.Item2.NationalityStatus + " -> " + changedEChPersonEntity.NationalityStatus);
 						}
-
-						if (!toChange.Item1.OfficialName.Equals (toChange.Item2.OfficialName))
-						{
-							personEntityToUpdate.PersonOfficialName = changedEChPersonEntity.PersonOfficialName;
-							changes.Add ("Nom: " + toChange.Item2.OfficialName + " -> " + changedEChPersonEntity.PersonOfficialName);
-						}
-
+				
 						if (!toChange.Item1.OriginPlaces.SetEquals (toChange.Item2.OriginPlaces))
 						{
 							personEntityToUpdate.Origins = changedEChPersonEntity.Origins;
@@ -464,11 +464,7 @@ namespace Epsitec.Aider.Data.Job
 								changes.Add ("Ligne adresse: " + toChange.Item2.Address.AddressLine1 + " -> " + reportedPersonEntityToUpdate.Address.AddressLine1);
 							}
 						}
-						if (!toChange.Item1.Address.CountryCode.Equals (toChange.Item2.Address.CountryCode))
-						{
-							reportedPersonEntityToUpdate.Address.Country = toChange.Item1.Address.CountryCode;
-							changes.Add ("Pays: " + toChange.Item2.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
-						}
+		
 						if (!String.IsNullOrEmpty (toChange.Item1.Address.HouseNumber))
 						{
 							if (!toChange.Item1.Address.HouseNumber.Equals (toChange.Item2.Address.HouseNumber))
@@ -494,11 +490,13 @@ namespace Epsitec.Aider.Data.Job
 						if (!toChange.Item1.Address.SwissZipCodeAddOn.Equals (toChange.Item2.Address.SwissZipCodeAddOn))
 						{
 							reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn = toChange.Item1.Address.SwissZipCodeAddOn;
+							changes.Add ("NPA+: " + toChange.Item2.Address.SwissZipCodeAddOn + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn);
 						}
 
 						if (!toChange.Item1.Address.SwissZipCodeId.Equals (toChange.Item2.Address.SwissZipCodeId))
 						{
 							reportedPersonEntityToUpdate.Address.SwissZipCodeId = toChange.Item1.Address.SwissZipCodeId;
+							changes.Add ("NPA ID: " + toChange.Item2.Address.SwissZipCodeId + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeId);
 						}
 
 						if (!toChange.Item1.Address.Town.Equals (toChange.Item2.Address.Town))
@@ -507,10 +505,15 @@ namespace Epsitec.Aider.Data.Job
 							changes.Add ("Localité: " + toChange.Item2.Address.Town + " -> " + reportedPersonEntityToUpdate.Address.Town);
 						}
 
+						if (!toChange.Item1.Address.CountryCode.Equals (toChange.Item2.Address.CountryCode))
+						{
+							reportedPersonEntityToUpdate.Address.Country = toChange.Item1.Address.CountryCode;
+							changes.Add ("Pays: " + toChange.Item2.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
+						}
+
 						if (reportedPersonEntityToUpdate.Adult1.IsNotNull ())
 						{
 							var aiderPersonEntity = EChDataUpdater.GetAiderPersonEntity (businessContext, reportedPersonEntityToUpdate.Adult1);
-							changes.Insert (0, aiderPersonEntity.GetFullName ());
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
@@ -522,7 +525,6 @@ namespace Epsitec.Aider.Data.Job
 						if (reportedPersonEntityToUpdate.Adult2.IsNotNull ())
 						{
 							var aiderPersonEntity = EChDataUpdater.GetAiderPersonEntity (businessContext, reportedPersonEntityToUpdate.Adult2);
-							changes.Insert (0, aiderPersonEntity.GetFullName ());
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
@@ -534,7 +536,6 @@ namespace Epsitec.Aider.Data.Job
 						foreach (var child in reportedPersonEntityToUpdate.Children)
 						{
 							var aiderPersonEntity = EChDataUpdater.GetAiderPersonEntity (businessContext, child);
-							changes.Insert (0, aiderPersonEntity.GetFullName ());
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
