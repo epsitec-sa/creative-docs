@@ -191,7 +191,7 @@ namespace Epsitec.Aider.Rules
 			var title = Resources.Text ("La paroisse ne correspond pas à l'adresse principale");
 			var type = WarningType.ParishMismatch;
 
-			AiderPersonWarningEntity.Create (context, person, title, type);
+			AiderPersonWarningEntity.Create (context, person, person.ParishGroupPathCache, title, type);
 		}
 
 		private static void AssignParish(BusinessContext context, AiderPersonEntity person)

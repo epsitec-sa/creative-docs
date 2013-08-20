@@ -94,6 +94,7 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 								businessContext,
 								existingAiderPersonEntity,
+                                existingAiderPersonEntity.ParishGroupPathCache,
 								EChDataUpdater.WarningTitleMessage,
 								FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"),
 								WarningType.Duplicated);
@@ -191,6 +192,7 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 							businessContext,
 							existingAiderPersonEntity,
+                            existingAiderPersonEntity.ParishGroupPathCache,
 							EChDataUpdater.WarningTitleMessage,
 							FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " n'est plus dans le registre ECh!"),
 							WarningType.MissingECh);
@@ -348,6 +350,7 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
+                            aiderPersonEntity.ParishGroupPathCache,
 							EChDataUpdater.WarningTitleMessage,
 							FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"),
 							WarningType.NoHouseholdECh);
@@ -427,6 +430,7 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
+                            aiderPersonEntity.ParishGroupPathCache,
 							EChDataUpdater.WarningTitleMessage,
 							TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))),
 							WarningType.DataChangedECh);
@@ -517,6 +521,7 @@ namespace Epsitec.Aider.Data.Job
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
+                            aiderPersonEntity.ParishGroupPathCache,
 							EChDataUpdater.WarningTitleMessage,
 							TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))),
 							WarningType.AddressChange);
@@ -528,6 +533,7 @@ namespace Epsitec.Aider.Data.Job
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
+                            aiderPersonEntity.ParishGroupPathCache,
 							EChDataUpdater.WarningTitleMessage,
 							TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))),
 							WarningType.AddressChange);
@@ -539,6 +545,7 @@ namespace Epsitec.Aider.Data.Job
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
+                            aiderPersonEntity.ParishGroupPathCache,
 							EChDataUpdater.WarningTitleMessage,
 							TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))),
 							WarningType.AddressChange);

@@ -178,6 +178,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixPrillySubscriptions (args));
 					return;
 				}
+
+                if (args.Contains("-fixwarningparishgroup"))
+                {
+                    ConsoleCreator.RunWithConsole(() => AiderProgram.FixWarningParishGroup(args));
+                    return;
+                }
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -396,6 +402,14 @@ namespace Epsitec.Aider
 				coreData => PrillySubscriptionFixer.FixPrillySubscriptions (coreData)
 			);
 		}
+
+        private static void FixWarningParishGroup(string[] args)
+        {
+            AiderProgram.RunWithCoreData
+            (
+                coreData => WarningParishGroupPathFixer.StartJob(coreData)
+            );
+        }
 
 		private static void AnalyzeParishFile(string[] args)
 		{

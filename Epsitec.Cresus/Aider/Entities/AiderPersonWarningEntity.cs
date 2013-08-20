@@ -43,24 +43,23 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, FormattedText title, WarningType warningType)
+		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, string parishGroupPath, FormattedText title, WarningType warningType)
 		{
 			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
 
 			warning.Person = person;
 			warning.Title = title;
 			warning.WarningType = warningType;
-
+            warning.ParishGroupPathCache = parishGroupPath;
 			person.AddWarningInternal (warning);
 
 			return warning;
 		}
 
-		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, FormattedText title, FormattedText description,WarningType warningType)
+		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, string parishGroupPath, FormattedText title, FormattedText description,WarningType warningType)
 		{
-			var warning = AiderPersonWarningEntity.Create (businessContext, person, title, warningType);
+			var warning = AiderPersonWarningEntity.Create (businessContext, person, parishGroupPath, title, warningType);
 			warning.Description = description;
-            warning.ParishGroupPathCache = person.ParishGroupPathCache;
 			return warning;
 		}
 	}
