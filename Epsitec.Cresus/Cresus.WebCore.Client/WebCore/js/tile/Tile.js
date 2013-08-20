@@ -27,12 +27,13 @@ function() {
     column: null,
     selected: false,
     actionMenu: null,
-
+    maxCharForButtons: 20,
     /* Constructor */
 
     constructor: function(options) {
       var newOptions = {
-        tools: this.createEntityTileTools(options)
+        tools: this.createEntityTileTools(options),
+        dockedItems: this.createEntityTileDockTools(options)
       };
       Ext.applyIf(newOptions, options);
 
@@ -41,6 +42,50 @@ function() {
     },
 
     /* Methods */
+    createEntityTileDockTools: function(options) {
+      var actions, toolsbars;
+      actions = options.actions;
+      toolsbars = [];
+      var tile = this;
+      Ext.Array.each(actions, function(a) { 
+        var text;
+        var textLength = a.title.length;
+        var isLarge = false;
+        if(textLength>tile.maxCharForButtons)
+        {
+            isLarge = true;
+            var end = a.title.substring(tile.maxCharForButtons,textLength);
+            var sepPos = end.indexOf(' ') + tile.maxCharForButtons;
+            var start = a.title.substring(0,sepPos);
+            end = a.title.substring(sepPos,textLength);
+            text = start + '<br>' + end;
+        }
+        else
+        {
+            text = a.title;
+        }
+        var button = {};
+        button.xtype = 'button';
+        button.text = text;
+        button.width = 350;
+        button.textAlign = 'left';
+        if(isLarge)
+        {
+          button.scale = 'large';
+        }
+        button.requiresAdditionalEntity = a.requiresAdditionalEntity;
+        button.handler = function() { this.handleAction(a.viewId); };
+        button.scope = tile;
+
+        var toolbar = Ext.create('Ext.Toolbar', {
+          dock: 'bottom',
+          width: 400,
+          items: button
+        });
+        toolsbars.unshift(toolbar);
+      });
+      return toolsbars;        
+    },
 
     createEntityTileTools: function(options)  {
       var tools, actions;
@@ -117,6 +162,37 @@ function() {
           }
         }
       }
+
+      items = this.dockedItems;
+      if(!Ext.isDefined(items.items))
+      {
+        for (i = 0; i < items.length; i += 1) {
+          item = items[i];
+          if (item.items.items[0].requiresAdditionalEntity) {
+            if (hasAdditionalEntity) {
+              item.items.items[0].enable();
+            }
+            else {
+              item.items.items[0].disable();
+            }
+          }
+        }
+      }
+      else
+      {
+        for (i = 0; i < items.length; i += 1) {
+          item = items.items[i];
+          if (item.items.items[0].requiresAdditionalEntity) {
+            if (hasAdditionalEntity) {
+              item.items.items[0].enable();
+            }
+            else {
+              item.items.items[0].disable();
+            }
+          }
+        }
+      }
+      
     },
 
     // A tile might be selected by the user when he clicks on it. We keep track
