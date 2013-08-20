@@ -60,7 +60,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var warning = AiderPersonWarningEntity.Create (businessContext, person, title, warningType);
 			warning.Description = description;
-
+            warning.ParishGroupPathCache = person.ParishGroupPathCache;
 			return warning;
 		}
 	}
