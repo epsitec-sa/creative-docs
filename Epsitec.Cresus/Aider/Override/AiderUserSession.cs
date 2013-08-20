@@ -97,6 +97,10 @@ namespace Epsitec.Aider.Override
 				{
 					return this.GetAiderHouseholdEntityFilter ((AiderHouseholdEntity) example, pattern + "%");
 				}
+                else if (entityType == typeof(AiderPersonWarningEntity))
+                {
+                    return this.GetAiderPersonWarningEntityFilter((AiderPersonWarningEntity)example, pattern + "%");
+                }
 			}
 
 			return null;
@@ -126,6 +130,11 @@ namespace Epsitec.Aider.Override
 		{
 			return new LambdaFilter<AiderHouseholdEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
+
+        private IFilter GetAiderPersonWarningEntityFilter(AiderPersonWarningEntity example, string pattern)
+        {
+            return new LambdaFilter<AiderPersonWarningEntity>(x => SqlMethods.Like(x.ParishGroupPathCache, pattern));
+        }
 
 		private string GetActiveScopePathPattern()
 		{

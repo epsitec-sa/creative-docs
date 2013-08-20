@@ -5720,6 +5720,28 @@ namespace Epsitec.Aider.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>ParishGroupPathCache</c> field.
+		///	designer:fld/LVALB/LVQ002
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVQ002]")]
+		public string ParishGroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVQ002]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVQ002]"))
+				{
+					this.OnParishGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVQ002]", oldValue, value);
+					this.OnParishGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Person</c> field.
 		///	designer:fld/LVALB/LVAMB
 		///	</summary>
@@ -5742,6 +5764,8 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		
+		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		

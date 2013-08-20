@@ -1698,9 +1698,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderPersonWarning.Person, null);
+					global::System.Object.Equals (AiderPersonWarning.ParishGroupPathCache, null);
 				}
 				
+				//	designer:cap/LVQ002
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 90, 0);
 				//	designer:cap/LVAMB
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 374);
 			}
