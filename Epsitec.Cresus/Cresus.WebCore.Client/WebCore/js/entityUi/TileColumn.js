@@ -121,7 +121,7 @@ function() {
             return tile;
           }
         }
-        if (down >= 0) {
+        if (down >= 0 && tiles.length > 0) {
           tile = tiles[down];
           if (tile.isStateApplicable(tileState)) {
             return tile;

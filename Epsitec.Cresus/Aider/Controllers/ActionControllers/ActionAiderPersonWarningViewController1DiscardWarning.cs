@@ -19,32 +19,25 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
-    public sealed class ActionAiderPersonWarningViewController0SetVisibility : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (1)]
+    public sealed class ActionAiderPersonWarningViewController1DiscardWarning : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Traiter");
+			return Resources.FormattedText ("Marquer comme lu");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool,bool>(this.Execute);
+            return ActionExecutor.Create<bool>(this.Execute);
 		}
 
-		private void Execute(bool setInvisible,bool isDecease)
+		private void Execute(bool confirmed)
 		{
-            if (isDecease)
+            if (confirmed)
             {
-                this.Entity.Person.Visibility = PersonVisibilityStatus.Deceased;
-                this.Entity.Person.ProcessPersonDeath();
-            }
-            if (setInvisible)
-            {
-                this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
-            }
-
-            this.Entity.Person.RemoveWarningInternal(this.Entity);
+                this.Entity.Person.RemoveWarningInternal(this.Entity);
+            }       
 		}
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
@@ -52,12 +45,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             form
                 .Title(this.GetTitle())
                 .Field<bool>()
-                    .Title("Je veux rendre invisible cette personne")
-                    .InitialValue(false)
-                .End()
-                .Field<bool>()
-                    .Title("Cette personne est décédée")
-                    .InitialValue(false)
+                    .Title("Je confirme")
+                    .InitialValue(true)
                 .End()
             .End();
         }

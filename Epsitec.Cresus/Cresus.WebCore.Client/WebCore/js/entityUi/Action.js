@@ -126,11 +126,11 @@ function() {
         Epsitec.ErrorHandler.handleDefaultFailure();
         return;
       }
-
       json = responseData.data;
 
       if (success) {
         this.close();
+        alert(json);
         this.handleSave(json);
       }
       else {

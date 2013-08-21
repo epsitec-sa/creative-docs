@@ -23,7 +23,7 @@ function() {
     application: null,
     entityTabs: null,
     pageTabs: null,
-
+    currentTab: null,
     /* Constructor */
 
     constructor: function() {
@@ -51,6 +51,7 @@ function() {
 
         this.add(entityTab);
         this.entityTabs[key] = entityTab;
+        this.currentTab = key;
       }
 
       this.showTab(entityTab);

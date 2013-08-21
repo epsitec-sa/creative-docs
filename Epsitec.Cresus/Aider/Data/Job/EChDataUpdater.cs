@@ -40,6 +40,8 @@ namespace Epsitec.Aider.Data.Job
 					var newHouseHoldsToCreate = analyser.GetNewFamilies ().ToList ();
 					var missingHouseHoldsToRemove = analyser.GetMissingFamilies ().ToList ();
 
+
+                    //Appli update to EChPerson and add a DataChangedECh warning on AiderPerson
 					EChDataUpdater.UpdateEChPersonEntities (coreData, personsToUpdate);
 
 					EChDataUpdater.UpdateEChReportedPersonEntities (coreData, houseHoldsToUpdate);
@@ -518,6 +520,21 @@ namespace Epsitec.Aider.Data.Job
 						if (reportedPersonEntityToUpdate.Adult1.IsNotNull ())
 						{
 							var aiderPersonEntity = EChDataUpdater.GetAiderPersonEntity (businessContext, reportedPersonEntityToUpdate.Adult1);
+                            var aiderHousehold = EChDataUpdater.GetAiderHousehold(businessContext, aiderPersonEntity);
+                            var houseNumber = StringUtils.ParseNullableInt(SwissPostStreet.StripHouseNumber(reportedPersonEntityToUpdate.Address.HouseNumber));
+                            var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement(reportedPersonEntityToUpdate.Address.HouseNumber);
+
+                            if (string.IsNullOrWhiteSpace(houseNumberComplement))
+                            {
+                                houseNumberComplement = null;
+                            }
+                            var aiderAddressEntity = aiderHousehold.Address;
+                            aiderAddressEntity.AddressLine1 = reportedPersonEntityToUpdate.Address.AddressLine1;
+                            aiderAddressEntity.Street = reportedPersonEntityToUpdate.Address.Street;
+                            aiderAddressEntity.HouseNumber = houseNumber;
+                            aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
+                            aiderAddressEntity.Town = EChDataUpdater.GetAiderTownEntity(businessContext,reportedPersonEntityToUpdate.Address.SwissZipCodeId);
+
 							AiderPersonWarningEntity.Create (
 							businessContext,
 							aiderPersonEntity,
@@ -638,6 +655,18 @@ namespace Epsitec.Aider.Data.Job
 			return businessContext.DataContext.GetByExample<eCH_AddressEntity> (addressExample).FirstOrDefault ();
 		}
 
+        private static AiderHouseholdEntity GetAiderHousehold(BusinessContext businessContext, AiderPersonEntity refPerson)
+        {
+            var contactExample = new AiderContactEntity();
+            var householdExample = new AiderHouseholdEntity();
+            contactExample.Person = refPerson;
+            contactExample.Household = householdExample;
+            var dbKey = businessContext.DataContext.GetNormalizedEntityKey (contactExample).Value.RowKey;
+            var request = Request.Create(contactExample,dbKey,householdExample);
+
+            return businessContext.DataContext.GetByRequest(request).Cast<AiderHouseholdEntity>().FirstOrDefault();
+        }
+
 		private static AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, EChAddress address)
 		{
 			var townExample = new AiderTownEntity ()
@@ -647,6 +676,16 @@ namespace Epsitec.Aider.Data.Job
 
 			return businessContext.DataContext.GetByExample<AiderTownEntity> (townExample).FirstOrDefault ();
 		}
+
+        private static AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, int swissZipCodeId)
+        {
+            var townExample = new AiderTownEntity()
+            {
+                SwissZipCodeId = swissZipCodeId
+            };
+
+            return businessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
+        }
 
 		private static FormattedText WarningTitleMessage = FormattedText.FromSimpleText ("Mise à jour ECh du " + Date.Today.Day + " " + Date.Today.Month + " " + Date.Today.Year);
 	}

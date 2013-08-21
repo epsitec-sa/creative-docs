@@ -20,7 +20,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
                     wall.AddBrick()
                         .EnableAction<ActionAiderPersonWarningViewController0SetVisibility>();
                     break;
-
+                case WarningType.DataChangedECh:
+                    wall.AddBrick()
+                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
+                    break;
                 default :
                     wall.AddBrick();
                     break;
