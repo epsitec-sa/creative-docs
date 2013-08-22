@@ -46,14 +46,7 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public void FixStreetName
-		(
-			ref string firstAddressLine,
-			ref string streetName,
-			int? houseNumber,
-			ref string zipCode,
-			ref string town
-		)
+		public void FixStreetName(ref string firstAddressLine, ref string streetName, int? houseNumber, ref string zipCode, ref string town, string postBox = null)
 		{
 			if (string.IsNullOrEmpty (town) ||  string.IsNullOrWhiteSpace (zipCode))
 			{
@@ -69,11 +62,7 @@ namespace Epsitec.Aider.Data.Common
 			var saveZipCodeInt = zipCodeInt;
 			var saveTown = town;
 
-			this.addressPatchEngine.FixAddress
-			(
-				ref firstAddressLine, ref streetName, houseNumber, ref zipCodeInt,
-				ref zipCodeAddOn, ref zipCodeId, ref town
-			);
+			this.addressPatchEngine.FixAddress (ref firstAddressLine, ref streetName, houseNumber, ref zipCodeInt, ref zipCodeAddOn, ref zipCodeId, ref town, logFailures: true, postBox: postBox);
 
 			var diff = firstAddressLine != saveFirstAddressLine
 				|| streetName  != saveStreetName

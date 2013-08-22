@@ -37,6 +37,18 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public static IEnumerable<SwissPostZipCodeFolding> FindSimilar(int zipCode)
+		{
+			var baseZip = SwissPostZipCodeFoldingRepository.foldings.Keys.FirstOrDefault (x => x.ZipCode == zipCode);
+
+			if (baseZip.IsEmpty)
+			{
+				return Epsitec.Common.Types.Collections.EmptyArray<SwissPostZipCodeFolding>.Instance;
+			}
+
+			return SwissPostZipCodeFoldingRepository.FindDerived (SwissPostZipCodeFoldingRepository.foldings[baseZip].BaseZipCode);
+		}
+
 		public static IEnumerable<SwissPostZipCodeFolding> FindDerived(int baseZipCode)
 		{
 			return SwissPostZipCodeFoldingRepository.foldings.Values.Where (x => x.BaseZipCode == baseZipCode);

@@ -165,6 +165,23 @@ namespace Epsitec.Data.Platform
 			return this.FindStreetFromStreetName (zipCode, zipAddOn, street) != null;
 		}
 
+		public bool IsBusinessAddressOrPostBox(int zipCode, int zipAddOn, string postBox)
+		{
+			//	We were not able to match the street based on the given ZIP code. But the
+			//	ZIP code might be the one associated with the post box, or it might be a
+			//	special ZIP code referring to an administration or a big company.
+			//
+			//	Examples:
+			//
+			//	Martin Schwarz, rue de la Plaine 13, Case postale, 1401 Yverdon-les-Bains
+			//	Service de la population, Division Etrangers, Av. de Beaulieu 19, 1014 Lausanne
+
+			var info = SwissPostZipCodeFoldingRepository.Resolve (zipCode, zipAddOn);
+
+			return info.ZipCodeType == SwissPostZipType.Company || (string.IsNullOrEmpty (postBox) == false);
+		}
+
+		
 		internal SwissPostStreetInformation FindStreetFromUserFriendlyStreetNameDictionary(int zipCode, int zipAddOn, string street)
 		{
 			SwissPostStreetInformation result;

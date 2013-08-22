@@ -1,45 +1,40 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
 
 namespace Epsitec.Aider.Data.Subscription
 {
-
-
 	internal sealed class SubscriptionDataLoader
 	{
-
-
-		public static IEnumerable<SubscriptionData> LoadSubscriptions
-		(
-			FileInfo fileWeb,
-			FileInfo fileDoctor,
-			FileInfo filePro
-		)
+		public static IEnumerable<SubscriptionData> LoadSubscriptions(FileInfo fileWeb, FileInfo fileDoctor, FileInfo filePro, FileInfo fileGeneric)
 		{
 			var addressChecker = new AddressChecker ();
 
-			var subscriptionsWeb = SubscriptionDataReader
-				.ReadWebSubscriptions (fileWeb)
+			var subscriptionsWeb = SubscriptionDataReader.ReadWebSubscriptions (fileWeb)
 				.Select (r => SubscriptionDataLoader.LoadWebSubscription (r, addressChecker));
 
-			var subscriptionsDoctor	= SubscriptionDataReader
-				.ReadDoctorSubscriptions (fileDoctor)
+			var subscriptionsDoctor	= SubscriptionDataReader.ReadDoctorSubscriptions (fileDoctor)
 				.Select (r => SubscriptionDataLoader.LoadDoctorSubscription (r, addressChecker));
 
-			var subscriptionsPro = SubscriptionDataReader
-				.ReadProSubscriptions (filePro)
+			var subscriptionsPro = SubscriptionDataReader.ReadProSubscriptions (filePro)
 				.Select (r => SubscriptionDataLoader.LoadProSubscription (r, addressChecker));
 
+			var subscriptionsGeneric = SubscriptionDataReader.ReadGenericSubscriptions (fileGeneric)
+				.Select (r => SubscriptionDataLoader.LoadWebSubscription (r, addressChecker));
+
 			var subscriptions = subscriptionsWeb
+				.Concat (subscriptionsGeneric)
 				.Concat (subscriptionsDoctor)
 				.Concat (subscriptionsPro)
 				.Distinct (SubscriptionDataLoader.GetSubscriptionComparer ())
@@ -51,25 +46,21 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static SubscriptionData LoadWebSubscription
-		(
-			Dictionary<WebSubscriptionHeader, string> record,
-			AddressChecker addressChecker
-		)
+		private static SubscriptionData LoadWebSubscription(Dictionary<WebSubscriptionHeader, string> record, AddressChecker addressChecker)
 		{
-			var rawCorporateName = record[WebSubscriptionHeader.CorporateName] ?? "";
-			var rawTitle = record[WebSubscriptionHeader.Title] ?? "";
-			var rawFirstname = record[WebSubscriptionHeader.Firstname] ?? "";
-			var rawLastname = record[WebSubscriptionHeader.Lastname] ?? "";
+			var rawCorporateName = record.GetValueOrDefault (WebSubscriptionHeader.CorporateName, "");
+			var rawTitle         = record.GetValueOrDefault (WebSubscriptionHeader.Title, "");
+			var rawFirstname     = record.GetValueOrDefault (WebSubscriptionHeader.Firstname, "");
+			var rawLastname      = record.GetValueOrDefault (WebSubscriptionHeader.Lastname, "");
 
 			var corporateName = NamePatchEngine.SanitizeCapitalization (rawCorporateName);
-			var title = rawTitle;
-			var firstname = NamePatchEngine.SanitizeCapitalization (rawFirstname);
-			var lastname = NamePatchEngine.SanitizeCapitalization (rawLastname);
+			var title         = rawTitle;
+			var firstname     = NamePatchEngine.SanitizeCapitalization (rawFirstname);
+			var lastname      = NamePatchEngine.SanitizeCapitalization (rawLastname);
 
-			var zipCode = record[WebSubscriptionHeader.ZipCode] ?? "";
-			var town = record[WebSubscriptionHeader.Town] ?? "";
-			var countryCode = record[WebSubscriptionHeader.CountryCode];
+			var zipCode     = record.GetValueOrDefault (WebSubscriptionHeader.ZipCode, "");
+			var town        = record.GetValueOrDefault (WebSubscriptionHeader.Town, "");
+			var countryCode = record.GetValueOrDefault (WebSubscriptionHeader.CountryCode, "");
 
 			// We assume that the country is Switzerland if it is not set explicitely in the
 			// record.
@@ -86,62 +77,50 @@ namespace Epsitec.Aider.Data.Subscription
 				addressChecker.FixZipCodeAndTown (ref zipCode, ref town);
 			}
 
-			var rawAddress = record[WebSubscriptionHeader.Address] ?? "";
+			var rawAddress = record.GetValueOrDefault (WebSubscriptionHeader.Address, "");
+			var postBox = record.GetValueOrDefault (WebSubscriptionHeader.PostBox, "");
 
-			string firstAddressLine;
+			string addressLine1;
 			string streetName;
-			int? houseNumber;
+			int?   houseNumber;
 			string houseNumberComplement;
 
-			SubscriptionDataLoader.ParseWebAddress
-			(
-				rawAddress, out firstAddressLine, out streetName, out houseNumber,
-				out houseNumberComplement
-			);
+			SubscriptionDataLoader.ParseWebAddress (rawAddress,
+				out addressLine1, out streetName, out houseNumber,
+				out houseNumberComplement);
 
 			// We check the addresses in Switzerland.
 			if (isIsSwitzerland)
 			{
-				addressChecker.FixStreetName
-				(
-					ref firstAddressLine, ref streetName, houseNumber, ref zipCode, ref town
-				);
+				addressChecker.FixStreetName (ref addressLine1, ref streetName, houseNumber, ref zipCode, ref town, postBox);
 			}
 
-			var postBox = record[WebSubscriptionHeader.PostBox] ?? "";
-			var comment = record[WebSubscriptionHeader.Comment] ?? "";
+			var comment = record.GetValueOrDefault (WebSubscriptionHeader.Comment, "");
 
-			var rawRegionalEdition = record[WebSubscriptionHeader.RegionalEdition];
-			var regionalEdition = rawRegionalEdition == null
+			var rawRegionalEdition = record.GetValueOrDefault (WebSubscriptionHeader.RegionalEdition, "");
+			var regionalEdition = string.IsNullOrWhiteSpace (rawRegionalEdition)
 				? null
 				: (int?) int.Parse (rawRegionalEdition);
 
-			var rawNbCopies = record[WebSubscriptionHeader.NbCopies];
-			var nbCopies = rawNbCopies == null
+			var rawNbCopies = record.GetValueOrDefault (WebSubscriptionHeader.NbCopies, "");
+			var nbCopies    = string.IsNullOrWhiteSpace (rawNbCopies)
 				? null
 				: (int?) int.Parse (rawNbCopies);
 
 			return new SubscriptionData
 			(
-				corporateName, title, firstname, lastname, firstAddressLine, postBox, streetName,
+				corporateName, title, firstname, lastname, addressLine1, postBox, streetName,
 				houseNumber, houseNumberComplement, zipCode, town, countryCode, comment,
 				regionalEdition, nbCopies, null
 			);
 		}
 
 
-		private static void ParseWebAddress
-		(
-			string address,
-			out string firstAddressLine,
-			out string streetName,
-			out int? houseNumber,
-			out string houseNumberComplement
-		)
+		private static void ParseWebAddress (string address, out string addressLine1, out string streetName, out int? houseNumber, out string houseNumberComplement)
 		{
-			firstAddressLine = "";
-			streetName = "";
-			houseNumber = null;
+			addressLine1          = "";
+			streetName            = "";
+			houseNumber           = null;
 			houseNumberComplement = "";
 
 			address = address.Trim ();
@@ -153,11 +132,11 @@ namespace Epsitec.Aider.Data.Subscription
 
 			// The address and the complement are separated by a " - " if there is a complement.
 
-			var separatorIndex = address.IndexOf (" - ");
+			var separatorIndex = address.IndexOfAny (" - ", "; ");
 			if (separatorIndex >= 0)
 			{
-				firstAddressLine = address.Substring (0, separatorIndex).Trim ();
-				address = address.Substring (separatorIndex + 3).Trim ();
+				addressLine1 = address.Substring (0, separatorIndex).Trim ();
+				address      = address.Substring (separatorIndex + 2).Trim ();
 			}
 
 			// If there is a /, we strip what comes after, as it is probably the appartement
@@ -169,10 +148,7 @@ namespace Epsitec.Aider.Data.Subscription
 				address = address.Substring (0, slashIndex).Trim ();
 			}
 
-			SubscriptionDataLoader.ParseAddress
-			(
-				address, out streetName, out houseNumber, out houseNumberComplement
-			);
+			SubscriptionDataLoader.ParseAddress (address, out streetName, out houseNumber, out houseNumberComplement);
 		}
 
 
@@ -182,39 +158,32 @@ namespace Epsitec.Aider.Data.Subscription
 			AddressChecker addressChecker
 		)
 		{
-			var rawCorporateName = record[DoctorSubscriptionHeader.CorporateName] ?? "";
-			var rawTitle = record[DoctorSubscriptionHeader.Title] ?? "";
-			var rawFirstname = record[DoctorSubscriptionHeader.Firstname] ?? "";
-			var rawLastname = record[DoctorSubscriptionHeader.Lastname] ?? "";
+			var rawCorporateName = record.GetValueOrDefault (DoctorSubscriptionHeader.CorporateName, "");
+			var rawTitle = record.GetValueOrDefault (DoctorSubscriptionHeader.Title, "");
+			var rawFirstname = record.GetValueOrDefault (DoctorSubscriptionHeader.Firstname, "");
+			var rawLastname = record.GetValueOrDefault (DoctorSubscriptionHeader.Lastname, "");
 
 			var corporateName = NamePatchEngine.SanitizeCapitalization (rawCorporateName);
 			var title = rawTitle;
 			var firstname = NamePatchEngine.SanitizeCapitalization (rawFirstname);
 			var lastname = NamePatchEngine.SanitizeCapitalization (rawLastname);
 
-			var zipCode = record[DoctorSubscriptionHeader.ZipCode] ?? "";
-			var town = record[DoctorSubscriptionHeader.Town] ?? "";
+			var zipCode = record.GetValueOrDefault (DoctorSubscriptionHeader.ZipCode, "");
+			var town = record.GetValueOrDefault (DoctorSubscriptionHeader.Town, "");
 
 			addressChecker.FixZipCodeAndTown (ref zipCode, ref town);
 
-			var rawAddress1 = record[DoctorSubscriptionHeader.Address1] ?? "";
-			var rawAddress2 = record[DoctorSubscriptionHeader.Address2] ?? "";
+			var rawAddress1 = record.GetValueOrDefault (DoctorSubscriptionHeader.Address1, "");
+			var rawAddress2 = record.GetValueOrDefault (DoctorSubscriptionHeader.Address2, "");
 
 			string firstAddressLine;
 			string streetName;
 			int? houseNumber;
 			string houseNumberComplement;
 
-			SubscriptionDataLoader.ParseDoctorAddress
-			(
-				rawAddress1, rawAddress2, out firstAddressLine, out streetName, out houseNumber,
-				out houseNumberComplement
-			);
+			SubscriptionDataLoader.ParseDoctorAddress (rawAddress1, rawAddress2, out firstAddressLine, out streetName, out houseNumber,	out houseNumberComplement);
 
-			addressChecker.FixStreetName
-			(
-				ref firstAddressLine, ref streetName, houseNumber, ref zipCode, ref town
-			);
+			addressChecker.FixStreetName (ref firstAddressLine, ref streetName, houseNumber, ref zipCode, ref town);
 
 			var countryCode = "CH";
 			var postBox = "";
@@ -275,10 +244,10 @@ namespace Epsitec.Aider.Data.Subscription
 			AddressChecker addressChecker
 		)
 		{
-			var rawPersonInName1 = record[ProSubscriptionHeader.PersonInName1] ?? "";
-			var rawName1 = record[ProSubscriptionHeader.Name1] ?? "";
-			var rawName2 = record[ProSubscriptionHeader.Name2] ?? "";
-			var rawName3 = record[ProSubscriptionHeader.Name3] ?? "";
+			var rawPersonInName1 = record.GetValueOrDefault (ProSubscriptionHeader.PersonInName1, "");
+			var rawName1 = record.GetValueOrDefault (ProSubscriptionHeader.Name1, "");
+			var rawName2 = record.GetValueOrDefault (ProSubscriptionHeader.Name2, "");
+			var rawName3 = record.GetValueOrDefault (ProSubscriptionHeader.Name3, "");
 
 			string corporateName;
 			string personName;
@@ -288,29 +257,22 @@ namespace Epsitec.Aider.Data.Subscription
 				rawPersonInName1, rawName1, rawName2, rawName3, out corporateName, out personName
 			);
 
-			var zipCode = record[ProSubscriptionHeader.ZipCode] ?? "";
-			var town = record[ProSubscriptionHeader.Town] ?? "";
+			var zipCode = record.GetValueOrDefault (ProSubscriptionHeader.ZipCode, "");
+			var town = record.GetValueOrDefault (ProSubscriptionHeader.Town, "");
 
 			addressChecker.FixZipCodeAndTown (ref zipCode, ref town);
 
-			var rawAddress = record[ProSubscriptionHeader.Address] ?? "";
+			var rawAddress = record.GetValueOrDefault (ProSubscriptionHeader.Address, "");
+			var postBox = record.GetValueOrDefault (ProSubscriptionHeader.PostBox, "");
 
 			string firstAddressLine = "";
 			string streetName;
 			int? houseNumber;
 			string houseNumberComplement;
 
-			SubscriptionDataLoader.ParseAddress
-			(
-				rawAddress, out streetName, out houseNumber, out houseNumberComplement
-			);
+			SubscriptionDataLoader.ParseAddress (rawAddress, out streetName, out houseNumber, out houseNumberComplement);
 
-			addressChecker.FixStreetName
-			(
-				ref firstAddressLine, ref streetName, houseNumber, ref zipCode, ref town
-			);
-
-			var postBox = record[ProSubscriptionHeader.PostBox] ?? "";
+			addressChecker.FixStreetName (ref firstAddressLine, ref streetName, houseNumber, ref zipCode, ref town, postBox);
 
 			var title = "";
 			var firstname = "";
@@ -349,16 +311,10 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void ParseAddress
-		(
-			string address,
-			out string streetName,
-			out int? houseNumber,
-			out string houseNumberComplement
-		)
+		private static void ParseAddress(string address, out string streetName, out int? houseNumber, out string houseNumberComplement)
 		{
-			streetName = "";
-			houseNumber = null;
+			streetName            = "";
+			houseNumber           = null;
 			houseNumberComplement = "";
 
 			if (string.IsNullOrEmpty (address))

@@ -83,10 +83,7 @@ namespace Epsitec.Aider.Data.Subscription
 			var normalizedSubscriptionPersons = Normalizer.Normalize (subscriptions);
 			var normalizedAiderPersons = Normalizer.Normalize (coreData);
 
-			var matches = NormalizedDataMatcher.FindMatches
-			(
-				normalizedSubscriptionPersons.Keys, normalizedAiderPersons.Keys, false, true
-			);
+			var matches = NormalizedDataMatcher.FindMatches	(normalizedSubscriptionPersons.Keys, normalizedAiderPersons.Keys, considerDateOfBirth: false, considerSex: true, considerAddressAsMostRelevant: true);
 
 			SubscriptionDataImporter.LogMatchResult (normalizedSubscriptionPersons, matches);
 
@@ -285,11 +282,13 @@ namespace Epsitec.Aider.Data.Subscription
 
 				var title = subscription.GetPersonTitle (i);
 				person.MrMrs = TextParser.ParsePersonMrMrs (title);
+				
 				eChPerson.PersonSex = EnumUtils.GuessSex (title);
-
 				eChPerson.DataSource = Enumerations.DataSource.Undefined;
 				eChPerson.DeclarationStatus = PersonDeclarationStatus.NotDeclared;
 				eChPerson.RemovalReason = RemovalReason.None;
+
+				person.RefreshCache ();
 
 				AiderContactEntity.Create (businessContext, person, household, true);
 			}

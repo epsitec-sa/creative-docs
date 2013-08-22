@@ -1,44 +1,49 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 
 using System.Collections.Generic;
-
 using System.IO;
 
 
 namespace Epsitec.Aider.Data.Subscription
 {
-
-
 	internal static class SubscriptionDataReader
 	{
-
-
-		public static IEnumerable<Dictionary<WebSubscriptionHeader, string>> ReadWebSubscriptions
-		(
-			FileInfo input
-		)
+		public static IEnumerable<Dictionary<WebSubscriptionHeader, string>> ReadWebSubscriptions(FileInfo input)
 		{
 			return DataReader.GetRecords (input, SubscriptionDataReader.webSubscriptionHeaders);
 		}
 
-
-		public static IEnumerable<Dictionary<DoctorSubscriptionHeader, string>> ReadDoctorSubscriptions
-		(
-			FileInfo input
-		)
+		public static IEnumerable<Dictionary<DoctorSubscriptionHeader, string>> ReadDoctorSubscriptions(FileInfo input)
 		{
 			return DataReader.GetRecords (input, SubscriptionDataReader.doctorSubscriptionHeaders);
 		}
 
-
-		public static IEnumerable<Dictionary<ProSubscriptionHeader, string>> ReadProSubscriptions
-		(
-			FileInfo input
-		)
+		public static IEnumerable<Dictionary<ProSubscriptionHeader, string>> ReadProSubscriptions(FileInfo input)
 		{
 			return DataReader.GetRecords (input, SubscriptionDataReader.proSubscriptionHeaders);
 		}
 
+		public static IEnumerable<Dictionary<WebSubscriptionHeader, string>> ReadGenericSubscriptions(FileInfo input)
+		{
+			return DataReader.GetRecords (input, SubscriptionDataReader.genericSubscriptionHeaders);
+		}
+
+
+		private static readonly Dictionary<WebSubscriptionHeader, string> genericSubscriptionHeaders =
+			new Dictionary<WebSubscriptionHeader, string> ()
+			{
+				{ WebSubscriptionHeader.CorporateName, "Raison sociale" },
+				{ WebSubscriptionHeader.Title, "Titre" },
+				{ WebSubscriptionHeader.Lastname, "Nom" },
+				{ WebSubscriptionHeader.Firstname, "Prénom" },
+				{ WebSubscriptionHeader.Address, "Adresse" },
+				{ WebSubscriptionHeader.PostBox, "Case postale" },
+				{ WebSubscriptionHeader.ZipCode, "NPA" },
+				{ WebSubscriptionHeader.Town, "Localité" },
+			};
 
 		private static readonly Dictionary<WebSubscriptionHeader, string> webSubscriptionHeaders =
 			new Dictionary<WebSubscriptionHeader, string> ()

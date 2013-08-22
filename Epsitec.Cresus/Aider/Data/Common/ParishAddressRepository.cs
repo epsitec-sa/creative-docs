@@ -75,7 +75,22 @@ namespace Epsitec.Aider.Data.Common
 		/// <returns>The name of the parish or <c>null</c>.</returns>
 		public string FindParishName(int zipCode, string townName, string normalizedStreetName, int houseNumber)
 		{
-			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, houseNumber);
+			var name = this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, houseNumber);
+
+			if (name == null)
+			{
+				foreach (var similar in Epsitec.Data.Platform.SwissPostZipCodeFoldingRepository.FindSimilar (zipCode))
+				{
+					name = this.FindParishName (ParishAddressRepository.GetKey (similar.ZipCode, townName), normalizedStreetName, houseNumber);
+
+					if (name != null)
+					{
+						break;
+					}
+				}
+			}
+			
+			return name;
 		}
 
 		/// <summary>

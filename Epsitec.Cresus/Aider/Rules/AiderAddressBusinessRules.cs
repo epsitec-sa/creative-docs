@@ -185,11 +185,8 @@ namespace Epsitec.Aider.Rules
 					//	Martin Schwarz, rue de la Plaine 13, Case postale, 1401 Yverdon-les-Bains
 					//	Service de la population, Division Etrangers, Av. de Beaulieu 19, 1014 Lausanne
 
-					var info = SwissPostZipCodeFoldingRepository.Resolve (zipCode, zipAddOn);
-					
-					bool isBusinessAddress = info.ZipCodeType == SwissPostZipType.Company || (string.IsNullOrEmpty (postBox) == false);
-
-					if (isBusinessAddress && repo.IsStreetKnownRelaxed (zipCode, zipAddOn, street))
+					if ((repo.IsBusinessAddressOrPostBox (zipCode, zipAddOn, postBox)) &&
+						(repo.IsStreetKnownRelaxed (zipCode, zipAddOn, street)))
 					{
 						return;
 					}

@@ -41,14 +41,16 @@ namespace Epsitec.Aider.Tools
 		}
 
 
-		public FixStatus FixAddress(ref string firstAddressLine, ref string street, int? houseNumber, ref int zipCode, ref int zipCodeAddOn, ref int zipCodeId, ref string town, bool logFailures = true)
+		public FixStatus FixAddress(ref string firstAddressLine, ref string street, int? houseNumber, ref int zipCode, ref int zipCodeAddOn, ref int zipCodeId, ref string town, bool logFailures = true, string postBox = null)
 		{
 			if (string.IsNullOrEmpty (street))
 			{
 				return FixStatus.Invalid;
 			}
 
-			var streets = SwissPostStreetRepository.Current.FindStreets (zipCode, zipCodeAddOn);
+			var streetRepository = SwissPostStreetRepository.Current;
+
+			var streets = streetRepository.FindStreets (zipCode, zipCodeAddOn);
 			var tokens  = SwissPostStreet.TokenizeStreetName (street).ToArray ();
 
 			int n = tokens.Length;
@@ -62,7 +64,7 @@ namespace Epsitec.Aider.Tools
 			//	applying the fuzzier logic, which can lead to false positives (e.g. "RUE NORD"
 			//	might match "RUE COLLÈGE" if no exact match could be found for it, since the
 			//	root of "RUE NORD" is "RUE", not "NORD" as one might expect).
-			
+
 			var normalizedStreetName = string.Join (" ", tokens);
 			var exactMatches = streets.Where (x => x.NormalizedStreetName == normalizedStreetName).ToList ();
 
@@ -100,9 +102,18 @@ namespace Epsitec.Aider.Tools
 				return FixStatus.Applied;
 			}
 
+			//	The address has a post box specified; therefore, we should relax the constaint on the
+			//	ZIP code (e.g. an address at 1003 Lausanne with a post box will be located at 1002).
+			
+			if ((streetRepository.IsBusinessAddressOrPostBox (zipCode, zipCodeAddOn, postBox)) &&
+				(streetRepository.IsStreetKnownRelaxed (zipCode, zipCodeAddOn, street)))
+			{
+				return FixStatus.Applied;
+			}
+
 			//	Failed to match any of the attempts: if there is an additional address
 			//	line, try that one too (in case the address was stored in the wrong field
-			//	by the eCH software).
+			//	by the eCH software), else fail:
 
 			if (string.IsNullOrEmpty (firstAddressLine))
 			{
@@ -112,7 +123,7 @@ namespace Epsitec.Aider.Tools
 			string newFirstAddressLine = null;
 			string newStreet = firstAddressLine;
 
-			var status = this.FixAddress (ref newFirstAddressLine, ref newStreet, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town, false);
+			var status = this.FixAddress (ref newFirstAddressLine, ref newStreet, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town, false, postBox);
 
 			if (status == FixStatus.Invalid)
 			{

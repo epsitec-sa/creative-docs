@@ -1,16 +1,13 @@
-﻿using Epsitec.Aider.Enumerations;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
-using System;
-
+using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Aider.Data.Subscription
 {
-
-
 	internal sealed class SubscriptionData
 	{
-
-
 		public SubscriptionData
 		(
 			string corporateName,
@@ -31,22 +28,28 @@ namespace Epsitec.Aider.Data.Subscription
 			bool? isLegalPerson
 		)
 		{
-			this.CorporateName = corporateName;
-			this.Title = title;
-			this.Firstname = firstname;
-			this.Lastname = lastname;
-			this.FirstAddressLine = firstAddressLine;
-			this.PostBox = postBox;
-			this.StreetName = streetName;
-			this.HouseNumber = houseNumber;
+			if ((string.IsNullOrWhiteSpace (postBox) == false) &&
+				(postBox.IsInteger ()))
+			{
+				postBox = "Case postale " + postBox;
+			}
+
+			this.CorporateName         = corporateName;
+			this.Title                 = title;
+			this.Firstname             = firstname;
+			this.Lastname              = lastname;
+			this.FirstAddressLine      = firstAddressLine;
+			this.PostBox               = postBox;
+			this.StreetName            = streetName;
+			this.HouseNumber           = houseNumber;
 			this.HouseNumberComplement = houseNumberComplement;
-			this.ZipCode = zipCode;
-			this.Town = town;
-			this.CountryCode = countryCode;
-			this.Comment = comment;
-			this.RegionalEdition = regionalEdition;
-			this.NbCopies = nbCopies;
-			this.isLegalPerson = isLegalPerson;
+			this.ZipCode               = zipCode;
+			this.Town                  = town;
+			this.CountryCode           = countryCode;
+			this.Comment               = comment;
+			this.RegionalEdition       = regionalEdition;
+			this.NbCopies              = nbCopies;
+			this.isLegalPerson         = isLegalPerson;
 		}
 
 
@@ -63,9 +66,9 @@ namespace Epsitec.Aider.Data.Subscription
 
 
 		/// <summary>
-		/// Sometimes, for the physical persons, we have two persons in one subcription. Their
-		/// firstname and title are separated by the string " et ". They always share the same
-		/// lastname.
+		/// Sometimes, for the physical persons, we have two persons in one subscription. Their
+		/// first name and title are separated by the string " et ". They always share the same
+		/// last name.
 		/// </summary>
 		public int GetNbPersons()
 		{
@@ -95,7 +98,7 @@ namespace Epsitec.Aider.Data.Subscription
 			{
 				if (index != 0)
 				{
-					throw new ArgumentException ();
+					throw new System.ArgumentException ();
 				}
 
 				return value;
@@ -112,7 +115,7 @@ namespace Epsitec.Aider.Data.Subscription
 				}
 				else
 				{
-					throw new ArgumentException ();
+					throw new System.ArgumentException ();
 				}
 			}
 		}
@@ -134,9 +137,5 @@ namespace Epsitec.Aider.Data.Subscription
 		public readonly int? RegionalEdition;
 		public readonly int? NbCopies;
 		private readonly bool? isLegalPerson;
-
-
 	}
-
-
 }

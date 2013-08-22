@@ -91,18 +91,15 @@ namespace Epsitec.Aider.Data.Normalization
 			IEnumerable<NormalizedPerson> eervPersons,
 			IEnumerable<NormalizedPerson> aiderPersons,
 			bool considerDateOfBirth,
-			bool considerSex
+			bool considerSex,
+			bool considerAddressAsMostRelevant = false
 		)
 		{
 			var todo = new HashSet<NormalizedPerson> (eervPersons);
 			var done = new Dictionary<NormalizedPerson, NormalizedPerson> ();
 			var matched = new HashSet<NormalizedPerson> ();
 
-			NormalizedDataMatcher.FindMatchesWithFuzzyMethod
-			(
-				aiderPersons, todo, done, matched, considerDateOfBirth, considerSex
-			);
-
+			NormalizedDataMatcher.FindMatchesWithFuzzyMethod (aiderPersons, todo, done, matched, considerDateOfBirth, considerSex, considerAddressAsMostRelevant);
 			NormalizedDataMatcher.FindMatchesWithSplitMethod (aiderPersons, todo, done, matched);
 
 			NormalizedDataMatcher.LogMatched (todo, done);
@@ -284,7 +281,8 @@ namespace Epsitec.Aider.Data.Normalization
 			Dictionary<NormalizedPerson, NormalizedPerson> done,
 			HashSet<NormalizedPerson> matched,
 			bool considerDateOfBirth,
-			bool considerSex
+			bool considerSex,
+			bool considerAddressAsMostRelevant = false
 		)
 		{
 			var namesToAiderPersons = NormalizedDataMatcher.GroupPersonsByNames (aiderPersons);
@@ -318,6 +316,11 @@ namespace Epsitec.Aider.Data.Normalization
 				var fsx = filter.Item4;
 				var fad = filter.Item5;
 
+				if (considerAddressAsMostRelevant && fad == AddressMatch.None)
+				{
+					continue;
+				}
+
 				if (!considerDateOfBirth)
 				{
 					fdb = JaroWinkler.MinValue;
@@ -334,7 +337,7 @@ namespace Epsitec.Aider.Data.Normalization
 
 				NormalizedDataMatcher.AssignMatches (matches, todo, done, matched);
 
-				var newMatches = NormalizedDataMatcher.FindNewMatchesWithinMathingHouseholds (matches, todo)
+				var newMatches = NormalizedDataMatcher.FindNewMatchesWithinMatchingHouseholds (matches, todo)
 					.ToList ();
 
 				NormalizedDataMatcher.AssignMatches (newMatches, todo, done, matched);
@@ -368,7 +371,7 @@ namespace Epsitec.Aider.Data.Normalization
 		}
 
 
-		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesWithinMathingHouseholds(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches, HashSet<NormalizedPerson> todo)
+		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesWithinMatchingHouseholds(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches, HashSet<NormalizedPerson> todo)
 		{
 			var matchingHouseholds = NormalizedDataMatcher.FindMatchingHouseholds (personMatches);
 

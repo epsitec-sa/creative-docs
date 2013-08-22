@@ -38,6 +38,14 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.code == 0;
+			}
+		}
+
 
 		#region IComparable<SwissPostFullZip> Members
 

@@ -132,6 +132,18 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
+		public static int IndexOfAny(this string text, params string[] patterns)
+		{
+			var indexes = patterns.Select (x => text.IndexOf (x)).Where (x => x > -1);
+			
+			if (indexes.IsEmpty ())
+			{
+				return -1;
+			}
+
+			return indexes.Min ();
+		}
+
 		/// <summary>
 		/// Determines whether the specified string contains any of the
 		/// words, using space, non-breaking space, tab and newlines as

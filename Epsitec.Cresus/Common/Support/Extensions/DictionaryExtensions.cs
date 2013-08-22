@@ -88,5 +88,19 @@ namespace Epsitec.Common.Support.Extensions
 			}
 			return list;
 		}
+
+		public static V GetValueOrDefault<K, V>(this Dictionary<K, V> dictionary, K key, V defaultValue)
+			where V : class
+		{
+			V value;
+			if (dictionary.TryGetValue (key, out value))
+			{
+				return value ?? defaultValue;
+			}
+			else
+			{
+				return defaultValue;
+			}
+		}
 	}
 }

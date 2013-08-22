@@ -1,11 +1,12 @@
-﻿using ClosedXML.Excel;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using ClosedXML.Excel;
 
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
-
 using System.IO;
-
 using System.Linq;
 
 
@@ -17,13 +18,13 @@ namespace Epsitec.Aider.Data.Common
 	{
 
 
-		public static IEnumerable<Dictionary<T, string>> GetRecords<T>
-		(
-			FileInfo input,
-			Dictionary<T, string> stringMapping,
-			int nbToSkip = 0
-		)
+		public static IEnumerable<Dictionary<T, string>> GetRecords<T>(FileInfo input, Dictionary<T, string> stringMapping, int nbToSkip = 0)
 		{
+			if (input == null)
+			{
+				yield break;
+			}
+
 			Dictionary<T, int?> indexMapping = null;
 
 			foreach (var line in DataReader.GetLines (input).Skip (nbToSkip))
