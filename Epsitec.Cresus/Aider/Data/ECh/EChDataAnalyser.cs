@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Data.ECh
 
                 this.DisposeReporting();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				throw;
 			}

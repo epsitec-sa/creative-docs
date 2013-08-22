@@ -120,7 +120,10 @@ namespace Epsitec.Aider.Entities
 					// If we have a single head and some children, we use the "Family" title.
 					if (this.GetHeads ().Count == 1)
 					{
-						goto case HouseholdMrMrs.Famille;
+						if (string.IsNullOrWhiteSpace (this.HouseholdName))
+						{
+							goto case HouseholdMrMrs.Famille;
+						}
 					}
 
 					// Only if we have 2 heads, do we use the real title.

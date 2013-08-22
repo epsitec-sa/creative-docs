@@ -116,7 +116,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-importsubscriptions"))
+				if (args.Contains ("-importsubscriptions"))				//	-importsubscriptions -web:xxx -doctor:xxx -pro:xxx -generic:xxx
 				{
 					AiderProgram.RunSubscriptionImportation (args);
 					return;
@@ -179,11 +179,11 @@ namespace Epsitec.Aider
 					return;
 				}
 
-                if (args.Contains("-fixwarningparishgroup"))
-                {
-                    ConsoleCreator.RunWithConsole(() => AiderProgram.FixWarningParishGroup(args));
-                    return;
-                }
+				if (args.Contains("-fixwarningparishgroup"))
+				{
+					ConsoleCreator.RunWithConsole(() => AiderProgram.FixWarningParishGroup(args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -192,7 +192,7 @@ namespace Epsitec.Aider
 		private static void UploadSubscriptionExportation(string[] args)
 		{
 			var outputFile = AiderProgram.GetFile (args, "-input:", true);
-			var responseFile = AiderProgram.GetFile (args, "-response:", false);
+			var responseFile = AiderProgram.GetFile (args, "-response:");
 			var date = AiderProgram.GetDate (args, "-publicationdate:");
 
 			SubscriptionUploader.FtpUploadFile (outputFile, responseFile, date);
@@ -201,7 +201,7 @@ namespace Epsitec.Aider
 		private static void DownloadEchData(string[] args)
 		{
 			var eChDataDirPath  = AiderProgram.GetString (args, "-echdir:", true);
-			var eChDataFileName = AiderProgram.GetString (args, "-echfile:", false);
+			var eChDataFileName = AiderProgram.GetString (args, "-echfile:");
 
 			var download = EchDataDownloader.Download (eChDataDirPath, eChDataFileName);
 
@@ -216,7 +216,7 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
-				var mode = AiderProgram.GetString (args, "-mode:", false);
+				var mode = AiderProgram.GetString (args, "-mode:");
 
 				var maxCount = AiderProgram.GetMaxCount (mode);
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile, maxCount);
@@ -272,12 +272,12 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var eervPersonsFile = AiderProgram.GetFile (args, "-personfile:", true);
-				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile:", false);
-				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:", false);
-				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:", false);
+				var eervActivityFile = AiderProgram.GetFile (args, "-activityfile:");
+				var eervGroupFile = AiderProgram.GetFile (args, "-groupfile:");
+				var eervSuperGroupFile = AiderProgram.GetFile (args, "-supergroupfile:");
 				var eervIdFile = AiderProgram.GetFile (args, "-idfile:", true);
 				var loadOnly = AiderProgram.GetBool (args, "-loadOnly:", false);
-				var forcedParishId = AiderProgram.GetString (args, "-forcedparishid:", false);
+				var forcedParishId = AiderProgram.GetString (args, "-forcedparishid:");
 				var considerDateOfBirth = AiderProgram.GetBool (args, "-considerdateofbirth", false) ?? true;
 				var considerSex = AiderProgram.GetBool (args, "-considersex", false) ?? true;
 
@@ -320,14 +320,12 @@ namespace Epsitec.Aider
 
 		private static void RunSubscriptionImportation(string[] args)
 		{
-			var fileWeb = AiderProgram.GetFile (args, "-web:", true);
-			var fileDoctor = AiderProgram.GetFile (args, "-doctor:", true);
-			var filePro = AiderProgram.GetFile (args, "-pro:", true);
+			var fileWeb     = AiderProgram.GetFile (args, "-web:");
+			var fileDoctor  = AiderProgram.GetFile (args, "-doctor:");
+			var filePro     = AiderProgram.GetFile (args, "-pro:");
+			var fileGeneric = AiderProgram.GetFile (args, "-generic:");
 
-			var subscriptions = SubscriptionDataLoader.LoadSubscriptions
-			(
-				fileWeb, fileDoctor, filePro
-			);
+			var subscriptions = SubscriptionDataLoader.LoadSubscriptions (fileWeb, fileDoctor, filePro, fileGeneric);
 
 			var parishRepository = ParishAddressRepository.Current;
 
@@ -342,7 +340,7 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var outputFile = AiderProgram.GetFile (args, "-output:", true);
-				var errorFile = AiderProgram.GetFile (args, "-error:", false);
+				var errorFile = AiderProgram.GetFile (args, "-error:");
 
 				var writer = new SubscriptionFileWriter (coreData, outputFile, errorFile, true);
 
@@ -403,13 +401,13 @@ namespace Epsitec.Aider
 			);
 		}
 
-        private static void FixWarningParishGroup(string[] args)
-        {
-            AiderProgram.RunWithCoreData
-            (
-                coreData => WarningParishGroupPathFixer.StartJob(coreData)
-            );
-        }
+		private static void FixWarningParishGroup(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => WarningParishGroupPathFixer.StartJob(coreData)
+			);
+		}
 
 		private static void AnalyzeParishFile(string[] args)
 		{
@@ -443,7 +441,7 @@ namespace Epsitec.Aider
 			}
 		}
 
-		private static FileInfo GetFile(string[] args, string key, bool mandatory)
+		private static FileInfo GetFile(string[] args, string key, bool mandatory = false)
 		{
 			var path = AiderProgram.GetString (args, key, mandatory);
 
@@ -473,7 +471,7 @@ namespace Epsitec.Aider
 			return new Date (DateTime.Parse (value));
 		}
 
-		private static string GetString(string[] args, string key, bool mandatory)
+		private static string GetString(string[] args, string key, bool mandatory = false)
 		{
 			foreach (var arg in args)
 			{
