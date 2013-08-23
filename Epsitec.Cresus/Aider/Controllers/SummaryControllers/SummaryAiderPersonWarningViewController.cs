@@ -24,6 +24,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
                     wall.AddBrick()
                         .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
                     break;
+                case WarningType.AddressChange:
+                    wall.AddBrick()
+                        .EnableAction<ActionAiderPersonWarningViewController2Relocate>();
+                    break;
                 default :
                     wall.AddBrick();
                     break;

@@ -19,36 +19,30 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (1)]
-    public sealed class ActionAiderPersonWarningViewController1DiscardWarning : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (2)]
+    public sealed class ActionAiderPersonWarningViewController2Relocate : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Marquer comme lu");
+			return Resources.FormattedText ("Traiter");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool>(this.Execute);
+            return ActionExecutor.Create(this.Execute);
 		}
 
-		private void Execute(bool confirmed)
+		private void Execute()
 		{
-            if (confirmed)
-            {
-                this.Entity.Person.RemoveWarningInternal(this.Entity);
-                this.BusinessContext.DeleteEntity(this.Entity);
-            }       
+
+            this.Entity.Person.RemoveWarningInternal(this.Entity);
+            this.BusinessContext.DeleteEntity(this.Entity);
 		}
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
         {
             form
                 .Title(this.GetTitle())
-                .Field<bool>()
-                    .Title("Je confirme")
-                    .InitialValue(true)
-                .End()
             .End();
         }
 	}

@@ -45,6 +45,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             }
 
             this.Entity.Person.RemoveWarningInternal(this.Entity);
+            this.BusinessContext.DeleteEntity(this.Entity);
 		}
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
