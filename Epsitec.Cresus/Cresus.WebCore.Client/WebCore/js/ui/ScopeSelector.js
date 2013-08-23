@@ -94,6 +94,9 @@ function() {
         },
         scope: this
       });
+
+      //Reload current database
+      Epsitec.Cresus.Core.app.reloadCurrentDatabase();
     }
   });
 });

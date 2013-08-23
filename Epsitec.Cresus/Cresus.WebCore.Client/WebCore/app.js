@@ -224,6 +224,18 @@ function() {
       });
     },
 
+    reloadCurrentDatabase: function() {
+      var key = this.tabManager.currentTab;
+      var columnManager = this.tabManager.entityTabs[key];
+      if(Ext.isDefined(columnManager))
+      {
+        columnManager.leftList.entityList.store.load(function(records, operation, success) {
+          console.log('loaded records');
+        });
+      }
+      
+    },
+
     showEntity: function(path, callback) {
       if (!Ext.isDefined(path.entityId) || !Ext.isDefined(path.databaseName)) {
         return;

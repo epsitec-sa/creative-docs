@@ -130,7 +130,7 @@ function() {
 
       if (success) {
         this.close();
-        alert(json);
+        
         this.handleSave(json);
       }
       else {
