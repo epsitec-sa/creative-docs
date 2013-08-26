@@ -1,8 +1,10 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Text;
@@ -14,42 +16,28 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Data.Platform.MatchSort;
 
 using System;
-
 using System.Collections.Generic;
-
 using System.Diagnostics;
-
 using System.IO;
-
 using System.Linq;
 
 
 namespace Epsitec.Aider.Data.Subscription
 {
-
-
 	internal sealed class SubscriptionFileWriter
 	{
-
-
-		public SubscriptionFileWriter
-		(
-			CoreData coreData,
-			FileInfo outputFile,
-			FileInfo errorFile,
-			bool skipLinesWithDistrictNumberError
-		)
+		public SubscriptionFileWriter(CoreData coreData, FileInfo outputFile, FileInfo errorFile, bool skipLinesWithDistrictNumberError)
 		{
-			this.coreData = coreData;
-			this.outputFile = outputFile;
-			this.errorFile = errorFile;
+			this.coreData                         = coreData;
+			this.outputFile                       = outputFile;
+			this.errorFile                        = errorFile;
 			this.skipLinesWithDistrictNumberError = skipLinesWithDistrictNumberError;
-			this.startTime = System.DateTime.UtcNow;
+			this.startTime                        = DateTime.UtcNow;
 
-			this.errors = new List<Tuple<string, string>> ();
+			this.errors               = new List<Tuple<string, string>> ();
 			this.districtNumberErrors = new List<Tuple<string, string>> ();
-			this.editionStats = new int[16];
-			this.countries = new HashSet<string> ();
+			this.editionStats         = new int[16];
+			this.countries            = new HashSet<string> ();
 		}
 
 
@@ -108,31 +96,30 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private IEnumerable<SubscriptionFileLine> GetLines()
 		{
-			var lines = new List<SubscriptionFileLine> ();
-
+			var lines          = new List<SubscriptionFileLine> ();
 			var encodingHelper = new EncodingHelper (SubscriptionFileLine.GetEncoding ());
 
 			using (var etl = new MatchSortEtl (MatchSortEtl.MatchSortCsvPath))
 			{
-				AiderEnumerator.Execute (this.coreData, (b, subscriptions) =>
-				{
-					lines.AddRange (this.GetLines (subscriptions, etl, encodingHelper));
-				});
+				AiderEnumerator.Execute (this.coreData,
+					(b, subscriptions) =>
+					{
+						lines.AddRange (this.GetLines (subscriptions, etl, encodingHelper));
+					});
 			}
 
 			return lines;
 		}
 
-
-		private IEnumerable<SubscriptionFileLine> GetLines
-		(
-			IEnumerable<AiderSubscriptionEntity> subscriptions,
-			MatchSortEtl etl,
-			EncodingHelper encodingHelper
-		)
+		private IEnumerable<SubscriptionFileLine> GetLines(IEnumerable<AiderSubscriptionEntity> subscriptions, MatchSortEtl etl, EncodingHelper encodingHelper)
 		{
 			foreach (var subscription in subscriptions)
 			{
+				if (subscription.Id != "1149448")
+				{
+					continue;
+				}
+
 				SubscriptionFileLine line;
 
 				try
@@ -188,12 +175,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private SubscriptionFileLine GetLine
-		(
-			AiderSubscriptionEntity subscription,
-			MatchSortEtl etl,
-			EncodingHelper encodingHelper
-		)
+		private SubscriptionFileLine GetLine(AiderSubscriptionEntity subscription, MatchSortEtl etl, EncodingHelper encodingHelper)
 		{
 			switch (subscription.SubscriptionType)
 			{
@@ -208,13 +190,7 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 		}
 
-
-		private SubscriptionFileLine GetHouseholdLine
-		(
-			AiderSubscriptionEntity subscription,
-			MatchSortEtl etl,
-			EncodingHelper encodingHelper
-		)
+		private SubscriptionFileLine GetHouseholdLine(AiderSubscriptionEntity subscription, MatchSortEtl etl, EncodingHelper encodingHelper)
 		{
 			if (subscription.Household.IsNull ())
 			{
@@ -229,82 +205,43 @@ namespace Epsitec.Aider.Data.Subscription
 			return this.GetLine (subscription, etl, encodingHelper, this.GetHouseholdReceiverData);
 		}
 
-
-		private SubscriptionFileLine GetLegalPersonLine
-		(
-			AiderSubscriptionEntity subscription,
-			MatchSortEtl etl,
-			EncodingHelper encodingHelper
-		)
+		private SubscriptionFileLine GetLegalPersonLine(AiderSubscriptionEntity subscription, MatchSortEtl etl, EncodingHelper encodingHelper)
 		{
 			if (subscription.LegalPersonContact.IsNull ())
 			{
 				return null;
 			}
 
-			return this.GetLine
-			(
-				subscription, etl, encodingHelper, this.GetLegalPersonReceiverData
-			);
+			return this.GetLine	(subscription, etl, encodingHelper, this.GetLegalPersonReceiverData);
 		}
 
-
-		private SubscriptionFileLine GetLine
-		(
-			AiderSubscriptionEntity subscription,
-			MatchSortEtl etl,
-			EncodingHelper encodingHelper,
-			ReceiverDataGetter receiverDataGetter
-		)
+		private SubscriptionFileLine GetLine(AiderSubscriptionEntity subscription, MatchSortEtl etl, EncodingHelper encodingHelper, ReceiverDataGetter receiverDataGetter)
 		{
 			var address = subscription.GetAddress ();
-			var town = address.Town;
+			var town    = address.Town;
 			var country = town.Country;
-			var canton = town.SwissCantonCode;
+			var canton  = town.SwissCantonCode;
 
 			var subscriptionNumber = subscription.Id;
-			var copiesCount = subscription.Count;
-			var editionId = subscription.GetEditionId ();
-			var districtNumber = this.GetDistrictNumber (subscriptionNumber, address, etl);
+			var copiesCount        = subscription.Count;
+			var editionId          = subscription.GetEditionId ();
+			var districtNumber     = this.GetDistrictNumber (subscriptionNumber, address, etl);
 
 			string title;
 			string lastname;
 			string firstname;
 
-			receiverDataGetter
-			(
-				subscription, encodingHelper, out title, out lastname, out firstname
-			);
+			receiverDataGetter (subscription, encodingHelper, out title, out lastname, out firstname);
 
 			string addressComplement;
 			string street;
 			string houseNumber;
 
-			SubscriptionFileWriter.GetAddressData
-			(
-				address, encodingHelper, out addressComplement, out street, out houseNumber
-			);
+			SubscriptionFileWriter.GetAddressData (address, encodingHelper, out addressComplement, out street, out houseNumber);
 
-			var zipCode = SubscriptionFileWriter.Process
-			(
-				SubscriptionFileWriter.GetZipCode (town),
-				SubscriptionFileLine.ZipCodeLength,
-				encodingHelper
-			);
-
-			var townName = SubscriptionFileWriter.Process
-			(
-				town.Name,
-				SubscriptionFileLine.TownLength,
-				encodingHelper
-			);
-
-			var countryName = SubscriptionFileWriter.Process
-			(
-				country.Name,
-				SubscriptionFileLine.CountryLength,
-				encodingHelper
-			);
+			var zipCode = SubscriptionFileWriter.Format (SubscriptionFileWriter.GetZipCode (town), SubscriptionFileLine.ZipCodeLength, encodingHelper);
+			var townName = SubscriptionFileWriter.Format (town.Name, SubscriptionFileLine.TownLength, encodingHelper);
+			var countryName = SubscriptionFileWriter.Format (country.Name, SubscriptionFileLine.CountryLength, encodingHelper);
 
 			var isSwitzerland = country.IsSwitzerland ();
 
@@ -317,87 +254,48 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private void GetHouseholdReceiverData
-		(
-			AiderSubscriptionEntity subscription,
-			EncodingHelper encodingHelper,
-			out string title,
-			out string lastname,
-			out string firstname
-		)
+		private void GetHouseholdReceiverData(AiderSubscriptionEntity subscription, EncodingHelper encodingHelper, out string title, out string lastname, out string firstname)
 		{
 			var household = subscription.Household;
 
 			var names = household.GetHeadNames ();
+			
 			var firstnames = names.Item1;
-			var lastnames = names.Item2;
+			var lastnames  = names.Item2;
 
-			title = SubscriptionFileWriter.Process
-			(
-				household.GetHonorific (false),
-				SubscriptionFileLine.TitleLength,
-				encodingHelper
-			);
+			title = SubscriptionFileWriter.Format (household.GetHonorific (false), SubscriptionFileLine.TitleLength, encodingHelper);
 
 			if (firstnames.Count == 1)
 			{
-				SubscriptionFileWriter.GetHouseholdName
-				(
-					firstnames[0],
-					lastnames[0],
-					encodingHelper,
-					out firstname,
-					out lastname
-				);
+				SubscriptionFileWriter.GetHouseholdName (firstnames[0], lastnames[0], encodingHelper,
+														 out firstname, out lastname);
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 1)
 			{
-				SubscriptionFileWriter.GetHouseholdName
-				(
-					firstnames,
-					lastnames[0],
-					encodingHelper,
-					out firstname,
-					out lastname
-				);
+				SubscriptionFileWriter.GetHouseholdName (firstnames, lastnames[0], encodingHelper,
+														 out firstname, out lastname);
 			}
 			else if (firstnames.Count == 2 && lastnames.Count == 2)
 			{
 				string titleOverride;
 
-				SubscriptionFileWriter.GetHouseholdName
-				(
-					firstnames,
-					lastnames,
-					encodingHelper,
-					out titleOverride,
-					out firstname,
-					out lastname
-				);
+				SubscriptionFileWriter.GetHouseholdName (firstnames, lastnames, encodingHelper,
+														 out titleOverride, out firstname, out lastname);
 
 				title = titleOverride ?? title;
 			}
 			else
 			{
-				throw new NotSupportedException ();
+				throw new System.NotSupportedException ();
 			}
 		}
 
-
-		private static void GetHouseholdName
-		(
-			string rawFirstname,
-			string rawLastname,
-			EncodingHelper encodingHelper,
-			out string firstname,
-			out string lastname
-		)
+		private static void GetHouseholdName(string rawFirstname, string rawLastname, EncodingHelper encodingHelper, out string firstname, out string lastname)
 		{
-			// This case is simple, we have a single person, so firstname and lastname are its
-			// firstname and lastname.
+			//	This case is simple, we have a single person, so firstname and lastname are its
+			//	firstname and lastname.
 
-			SubscriptionFileWriter.GetFirstAndLastname
-			(
+			SubscriptionFileWriter.GetFirstAndLastname (
 				() => rawFirstname,
 				() => NameProcessor.GetAbbreviatedFirstname (rawFirstname),
 				() => rawLastname,
@@ -406,26 +304,17 @@ namespace Epsitec.Aider.Data.Subscription
 				SubscriptionFileLine.FirstnameLength,
 				SubscriptionFileLine.LastnameLength,
 				SubscriptionFileLine.NameLengthMax,
-				false,
-				false,
-				out firstname,
-				out lastname
-			);
+				forceShortFirstname: false,
+				forceShortLastname: false,
+				firstname: out firstname,
+				lastname: out lastname);
 		}
 
-
-		private static void GetHouseholdName
-		(
-			List<string> rawFirstnames,
-			string rawLastname,
-			EncodingHelper encodingHelper,
-			out string firstname,
-			out string lastname
-		)
+		private static void GetHouseholdName(List<string> rawFirstnames, string rawLastname, EncodingHelper encodingHelper, out string firstname, out string lastname)
 		{
-			// Here we have two persons with a common lastname. So we want to put both firstnames
-			// in firstname and the lastname in lastname. Both firstnames are supposed to be joined
-			// by a "et".
+			//	Here we have two persons with a common lastname. So we want to put both firstnames
+			//	in firstname and the lastname in lastname. Both firstnames are supposed to be joined
+			//	by a "et".
 
 			SubscriptionFileWriter.GetFirstAndLastname
 			(
@@ -441,30 +330,20 @@ namespace Epsitec.Aider.Data.Subscription
 				SubscriptionFileLine.FirstnameLength,
 				SubscriptionFileLine.LastnameLength,
 				SubscriptionFileLine.NameLengthMax,
-				false,
-				false,
-				out firstname,
-				out lastname
-			);
+				forceShortFirstname: false,
+				forceShortLastname: false,
+				firstname: out firstname,
+				lastname: out lastname);
 		}
 
-
-		private static void GetHouseholdName
-		(
-			List<string> rawFirstnames,
-			List<string> rawLastnames,
-			EncodingHelper encodingHelper,
-			out string titleOverride,
-			out string firstname,
-			out string lastname
-		)
+		private static void GetHouseholdName(List<string> rawFirstnames, List<string> rawLastnames, EncodingHelper encodingHelper, out string titleOverride, out string firstname, out string lastname)
 		{
-			// Here we have to persons with different lastnames. So we want to put the firstname and
-			// the lastname of the first person in lastname and the firstname and the lastname of
-			// the second person in the firstname. Both fields are supposed to be joined by a "et",
-			// either at the end of the lastname or at the start of the firstname.
-			// We use this order because the order of the two fields on the printed address will be
-			// lastname and then firstname.
+			//	Here we have to persons with different lastnames. So we want to put the firstname and
+			//	the lastname of the first person in lastname and the firstname and the lastname of
+			//	the second person in the firstname. Both fields are supposed to be joined by a "et",
+			//	either at the end of the lastname or at the start of the firstname.
+			//	We use this order because the order of the two fields on the printed address will be
+			//	lastname and then firstname.
 
 			titleOverride = null;
 
@@ -501,14 +380,13 @@ namespace Epsitec.Aider.Data.Subscription
 						forceShortFirstname,
 						forceShortLastname,
 						out fn,
-						out ln
-					);
+						out ln);
 
 					firstnames[i] = fn;
 					lastnames[i] = ln;
 				}
 
-				lastname = firstnames[0] + " " + lastnames[0];
+				lastname  = firstnames[0] + " " + lastnames[0];
 				firstname = firstnames[1] + " " + lastnames[1];
 
 				if (lastname.Length < SubscriptionFileLine.LastnameLength - 3)
@@ -542,53 +420,23 @@ namespace Epsitec.Aider.Data.Subscription
 
 			titleOverride = HouseholdMrMrs.Famille.GetLongText ();
 
-			SubscriptionFileWriter.GetHouseholdName
-			(
-				rawFirstnames[0],
-				rawLastnames[0],
-				encodingHelper,
-				out firstname,
-				out lastname
-			);
+			SubscriptionFileWriter.GetHouseholdName (rawFirstnames[0], rawLastnames[0], encodingHelper, out firstname, out lastname);
 		}
 
 
-		private static void GetFirstAndLastname
-		(
-			Func<string> firstnameGetter,
-			Func<string> shortFirstnameGetter,
-			Func<string> lastnameGetter,
-			Func<string> shortLastnameGetter,
-			EncodingHelper encodingHelper,
-			int maxFirstnameLength,
-			int maxLastnameLength,
-			int maxFullnameLength,
-			bool forceShortFirstname,
-			bool forceShortLastname,
-			out string firstname,
-			out string lastname
-		)
+		private static void GetFirstAndLastname(Func<string> firstnameGetter, Func<string> shortFirstnameGetter, Func<string> lastnameGetter, Func<string> shortLastnameGetter, EncodingHelper encodingHelper,
+												int maxFirstnameLength, int maxLastnameLength, int maxFullnameLength, bool forceShortFirstname, bool forceShortLastname,
+												out string firstname, out string lastname)
 		{
 			bool truncatedLastname;
 			bool shortenedLastname = false;
 
-			lastname = SubscriptionFileWriter.Process
-			(
-				lastnameGetter (),
-				maxLastnameLength,
-				encodingHelper,
-				out truncatedLastname
-			);
+			lastname = SubscriptionFileWriter.Format (lastnameGetter (), maxLastnameLength, encodingHelper, out truncatedLastname);
 
 			// If the lastname has been truncated, we shorten it.
 			if (truncatedLastname || forceShortLastname)
 			{
-				lastname = SubscriptionFileWriter.Process
-				(
-					shortLastnameGetter (),
-					maxLastnameLength,
-					encodingHelper
-				);
+				lastname = SubscriptionFileWriter.Format (shortLastnameGetter (), maxLastnameLength, encodingHelper);
 
 				shortenedLastname = true;
 			}
@@ -596,23 +444,12 @@ namespace Epsitec.Aider.Data.Subscription
 			bool truncatedFirstname;
 			bool shortenedFirstname = false;
 
-			firstname = SubscriptionFileWriter.Process
-			(
-				firstnameGetter (),
-				maxFirstnameLength,
-				encodingHelper,
-				out truncatedFirstname
-			);
+			firstname = SubscriptionFileWriter.Format (firstnameGetter (), maxFirstnameLength, encodingHelper, out truncatedFirstname);
 
 			// If the first name has been truncated, we shorten it.
 			if (truncatedFirstname || forceShortFirstname)
 			{
-				firstname = SubscriptionFileWriter.Process
-				(
-					shortFirstnameGetter (),
-					maxFirstnameLength,
-					encodingHelper
-				);
+				firstname = SubscriptionFileWriter.Format (shortFirstnameGetter (), maxFirstnameLength, encodingHelper);
 
 				shortenedFirstname = true;
 			}
@@ -640,7 +477,7 @@ namespace Epsitec.Aider.Data.Subscription
 			// Shorten the firstname if we haven't done it already.
 			if (!shortenedFirstname)
 			{
-				firstname = SubscriptionFileWriter.Process
+				firstname = SubscriptionFileWriter.Format
 				(
 					shortFirstnameGetter (),
 					maxFirstnameLength,
@@ -665,7 +502,7 @@ namespace Epsitec.Aider.Data.Subscription
 			// Shorten the lastname if we haven't done it already.
 			if (!shortenedLastname)
 			{
-				lastname = SubscriptionFileWriter.Process
+				lastname = SubscriptionFileWriter.Format
 				(
 					shortLastnameGetter (),
 					maxLastnameLength,
@@ -709,68 +546,27 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static void GetAddressData
-		(
-			AiderAddressEntity address,
-			EncodingHelper encodingHelper,
-			out string addressComplement,
-			out string street,
-			out string houseNumber
-		)
+		private static void GetAddressData(AiderAddressEntity address, EncodingHelper encodingHelper,
+										   out string addressComplement, out string street, out string houseNumber)
 		{
 			if (string.IsNullOrEmpty (address.PostBox))
 			{
-				SubscriptionFileWriter.GetAddressDataRegular
-				(
-					address,
-					encodingHelper,
-					out addressComplement,
-					out street,
-					out houseNumber
-				);
+				SubscriptionFileWriter.GetAddressDataRegular (address, encodingHelper, out addressComplement, out street, out houseNumber);
 			}
 			else
 			{
-				SubscriptionFileWriter.GetAddressDataPostBox
-				(
-					address,
-					encodingHelper,
-					out addressComplement,
-					out street,
-					out houseNumber
-				);
+				SubscriptionFileWriter.GetAddressDataPostBox (address, encodingHelper, out addressComplement, out street, out houseNumber);
 			}
 		}
 
-
-		private static void GetAddressDataRegular
-		(
-			AiderAddressEntity address,
-			EncodingHelper encodingHelper,
-			out string addressComplement,
-			out string street,
-			out string houseNumber)
+		private static void GetAddressDataRegular(AiderAddressEntity address, EncodingHelper encodingHelper,
+												  out string addressComplement, out string streetAddress, out string houseNumber)
 		{
-			addressComplement = SubscriptionFileWriter.Process
-			(
-				address.AddressLine1,
-				SubscriptionFileLine.AddressComplementLength,
-				encodingHelper
-			);
-
-			street = SubscriptionFileWriter.Process
-			(
-				address.StreetUserFriendly,
-				SubscriptionFileLine.StreetLength,
-				encodingHelper
-			);
-
-			houseNumber = SubscriptionFileWriter.Process
-			(
-				address.HouseNumberAndComplement.Replace (" ", ""),
-				SubscriptionFileLine.HouseNumberLength,
-				encodingHelper
-			);
+			var houseNumberAndComplement = address.HouseNumberAndComplement.Replace (" ", "");
+			
+			addressComplement = SubscriptionFileWriter.Format (address.AddressLine1, SubscriptionFileLine.AddressComplementLength, encodingHelper);
+			streetAddress     = SubscriptionFileWriter.Format (address.StreetUserFriendly, SubscriptionFileLine.StreetLength, encodingHelper);
+			houseNumber       = SubscriptionFileWriter.Format (houseNumberAndComplement, SubscriptionFileLine.HouseNumberLength, encodingHelper);
 
 			if (!SubscriptionFileLine.SwissHouseNumberRegex.IsMatch (houseNumber))
 			{
@@ -781,45 +577,19 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 		}
 
-
-		private static void GetAddressDataPostBox
-		(
-			AiderAddressEntity address,
-			EncodingHelper encodingHelper,
-			out string addressComplement,
-			out string street,
-			out string houseNumber
-		)
+		private static void GetAddressDataPostBox(AiderAddressEntity address, EncodingHelper encodingHelper,
+												  out string addressComplement, out string streetAddress, out string houseNumber)
 		{
 			// If we have a post box, we put it in place of the street, we put the street (with
 			// house number and complement) in place of the complement and we drop the complement.
 
-			addressComplement = SubscriptionFileWriter.Process
-			(
-				address.StreetHouseNumberAndComplement,
-				SubscriptionFileLine.AddressComplementLength,
-				encodingHelper
-			);
-
-			street = SubscriptionFileWriter.Process
-			(
-				address.PostBox,
-				SubscriptionFileLine.StreetLength,
-				encodingHelper
-			);
-
-			houseNumber = "";
+			addressComplement = SubscriptionFileWriter.Format (address.StreetHouseNumberAndComplement, SubscriptionFileLine.AddressComplementLength, encodingHelper);
+			streetAddress     = SubscriptionFileWriter.Format (address.PostBox, SubscriptionFileLine.StreetLength, encodingHelper);
+			houseNumber       = "";
 		}
 
-
-		private void GetLegalPersonReceiverData
-		(
-			AiderSubscriptionEntity subscription,
-			EncodingHelper encodingHelper,
-			out string title,
-			out string lastname,
-			out string firstname
-		)
+		private void GetLegalPersonReceiverData(AiderSubscriptionEntity subscription, EncodingHelper encodingHelper,
+												out string title, out string lastname, out string firstname)
 		{
 			var contact = subscription.LegalPersonContact;
 			var legalPerson = contact.LegalPerson;
@@ -846,14 +616,8 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private void GetLegalPersonReceiverData
-		(
-			EncodingHelper encodingHelper,
-			string corporateName,
-			out string title,
-			out string lastname,
-			out string firstname
-		)
+		private void GetLegalPersonReceiverData(EncodingHelper encodingHelper, string corporateName,
+												out string title, out string lastname, out string firstname)
 		{
 			// Here we simply try to fit the corporate name in the lastname and firstname fields.
 
@@ -875,17 +639,8 @@ namespace Epsitec.Aider.Data.Subscription
 			}
 		}
 
-
-		private void GetLegalPersonReceiverData
-		(
-			EncodingHelper encodingHelper,
-			string corporateName,
-			PersonMrMrs? personTitle,
-			string personName,
-			out string title,
-			out string lastname,
-			out string firstname
-		)
+		private void GetLegalPersonReceiverData(EncodingHelper encodingHelper, string corporateName, PersonMrMrs? personTitle, string personName,
+												out string title, out string lastname, out string firstname)
 		{
 			title = "";
 			lastname = "";
@@ -962,7 +717,7 @@ namespace Epsitec.Aider.Data.Subscription
 				// We try to fit the texts on the lines.
 				bool line1Truncated;
 
-				title = SubscriptionFileWriter.Process
+				title = SubscriptionFileWriter.Format
 				(
 					line1,
 					SubscriptionFileLine.TitleLength,
@@ -1022,13 +777,8 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static bool FitTextInFirstnameAndLastname
-		(
-			EncodingHelper encodingHelper,
-			string text,
-			out string lastname,
-			out string firstname
-		)
+		private static bool FitTextInFirstnameAndLastname(EncodingHelper encodingHelper, string text,
+														  out string lastname, out string firstname)
 		{
 			firstname = "";
 			lastname = "";
@@ -1037,7 +787,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			bool truncated;
 
-			lastname = SubscriptionFileWriter.Process
+			lastname = SubscriptionFileWriter.Format
 			(
 				text,
 				SubscriptionFileLine.LastnameLength,
@@ -1115,21 +865,13 @@ namespace Epsitec.Aider.Data.Subscription
 			return true;
 		}
 
-
-		private static bool FitTextInFirstnameAndLastname
-		(
-			EncodingHelper encodingHelper,
-			string corporateName,
-			int part1Count,
-			int part2Start,
-			out string lastname,
-			out string firstname
-		)
+		private static bool FitTextInFirstnameAndLastname(EncodingHelper encodingHelper, string corporateName, int part1Count, int part2Start,
+														  out string lastname, out string firstname)
 		{
 			var part1 = corporateName.Substring (0, part1Count);
 			var part2 = corporateName.Substring (part2Start);
 
-			lastname = SubscriptionFileWriter.Process
+			lastname = SubscriptionFileWriter.Format
 			(
 				part1,
 				SubscriptionFileLine.LastnameLength,
@@ -1144,7 +886,7 @@ namespace Epsitec.Aider.Data.Subscription
 
 			bool truncated;
 
-			firstname = SubscriptionFileWriter.Process
+			firstname = SubscriptionFileWriter.Format
 			(
 				part2,
 				maxFirstnameLength,
@@ -1156,17 +898,11 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private static string Process(string value, int maxLength, EncodingHelper encodingHelper)
+		private static string Format(string value, int maxLength, EncodingHelper encodingHelper)
 		{
 			bool truncated;
 
-			var result = SubscriptionFileWriter.Process
-			(
-				value,
-				maxLength,
-				encodingHelper,
-				out truncated
-			);
+			var result = SubscriptionFileWriter.Format (value, maxLength, encodingHelper, out truncated);
 
 			if (truncated)
 			{
@@ -1176,14 +912,7 @@ namespace Epsitec.Aider.Data.Subscription
 			return result;
 		}
 
-
-		private static string Process
-		(
-			string value,
-			int maxLength,
-			EncodingHelper encodingHelper,
-			out bool truncated
-		)
+		private static string Format(string value, int maxLength, EncodingHelper encodingHelper, out bool truncated)
 		{
 			truncated = false;
 
@@ -1212,12 +941,7 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private int? GetDistrictNumber
-		(
-			string subscriptionId,
-			AiderAddressEntity address,
-			MatchSortEtl etl
-		)
+		private int? GetDistrictNumber(string subscriptionId, AiderAddressEntity address, MatchSortEtl etl)
 		{
 			// The specs requires 0 for an addresses outside Switzerland.
 			if (!address.Town.Country.IsSwitzerland ())
@@ -1291,37 +1015,27 @@ namespace Epsitec.Aider.Data.Subscription
 		}
 
 
-		private readonly CoreData coreData;
-		private readonly FileInfo outputFile;
-		private readonly FileInfo errorFile;
-		private readonly bool skipLinesWithDistrictNumberError;
+		private readonly CoreData				coreData;
+		private readonly FileInfo				outputFile;
+		private readonly FileInfo				errorFile;
+		private readonly bool					skipLinesWithDistrictNumberError;
 		private readonly List<Tuple<string, string>> errors;
 		private readonly List<Tuple<string, string>> districtNumberErrors;
 
-		private readonly int[] editionStats;
-		private readonly System.DateTime startTime;
-		private readonly HashSet<string> countries;
-		private int totalCount;
-		private int totalVaud;
-		private int totalSwiss;
-		private int totalForeign;
+		private readonly int[]					editionStats;
+		private readonly System.DateTime		startTime;
+		private readonly HashSet<string>		countries;
+		private int								totalCount;
+		private int								totalVaud;
+		private int								totalSwiss;
+		private int								totalForeign;
 
-		internal const string ErrorMessage = "District number not found for address: ";
-
-
-		// We need a delegate to define this, as the System.Action type cannot use arguments with
-		// the out keyword. We need an old school delegate for this kind of stuff.
-		private delegate void ReceiverDataGetter
-		(
-			AiderSubscriptionEntity subscription,
-			EncodingHelper encodingHelper,
-			out string title,
-			out string lastname,
-			out string firstname
-		);
+		internal const string					ErrorMessage = "District number not found for address: ";
 
 
+		//	We need a delegate to define this, as the System.Action type cannot use arguments with
+		//	the out keyword. We need an old school delegate for this kind of stuff.
+
+		private delegate void ReceiverDataGetter(AiderSubscriptionEntity subscription, EncodingHelper encodingHelper, out string title, out string lastname, out string firstname);
 	}
-
-
 }
