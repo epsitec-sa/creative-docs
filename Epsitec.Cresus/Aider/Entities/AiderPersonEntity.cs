@@ -290,6 +290,7 @@ namespace Epsitec.Aider.Entities
 		internal void ProcessPersonDeath()
 		{
 			//	TODO: process the death of the person (remove from all associated groups)
+            this.Groups.RemoveAll(p => true);
 		}
 
 		internal void ProcessPersonRevival()

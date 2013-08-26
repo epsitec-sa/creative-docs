@@ -37,7 +37,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             if (isDecease)
             {
                 this.Entity.Person.Visibility = PersonVisibilityStatus.Deceased;
-                this.Entity.Person.ProcessPersonDeath();
             }
             if (setInvisible)
             {
