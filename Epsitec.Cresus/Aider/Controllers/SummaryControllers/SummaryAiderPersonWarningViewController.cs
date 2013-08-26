@@ -20,6 +20,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
                     wall.AddBrick()
                         .EnableAction<ActionAiderPersonWarningViewController0SetVisibility>();
                     break;
+                case WarningType.DepartureProcessNeeded:
+                    wall.AddBrick()
+                        .EnableAction<ActionAiderPersonWarningViewController0SetVisibility>();
+                    break;
+                case WarningType.ArrivalProcessNeeded:
+                    wall.AddBrick()
+                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
+                    break;
                 case WarningType.DataChangedECh:
                     wall.AddBrick()
                         .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
@@ -27,6 +35,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
                 case WarningType.AddressChange:
                     wall.AddBrick()
                         .EnableAction<ActionAiderPersonWarningViewController2Relocate>();
+                    break;
+                case WarningType.ParishArrival:
+                    wall.AddBrick()
+                        .EnableAction<ActionAiderPersonWarningViewController2Relocate>();
+                    break;
+                case WarningType.ParishDeparture:
+                    wall.AddBrick()
+                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
                     break;
                 default :
                     wall.AddBrick();

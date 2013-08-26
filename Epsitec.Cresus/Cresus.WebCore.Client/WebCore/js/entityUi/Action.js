@@ -130,6 +130,8 @@ function() {
 
       if (success) {
         this.close();
+        //Reload current database
+        Epsitec.Cresus.Core.app.reloadCurrentDatabase();
         
         this.handleSave(json);
       }

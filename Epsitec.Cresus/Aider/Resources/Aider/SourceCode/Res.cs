@@ -1185,12 +1185,28 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 123));
 						}
 					}
+					//	designer:cap/LVQ202
+					public static global::Epsitec.Common.Types.Caption ArrivalProcessNeeded
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 2));
+						}
+					}
 					//	designer:cap/LVGQ32
 					public static global::Epsitec.Common.Types.Caption DataChangedECh
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 122));
+						}
+					}
+					//	designer:cap/LVQ102
+					public static global::Epsitec.Common.Types.Caption DepartureProcessNeeded
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 1));
 						}
 					}
 					//	designer:cap/LVGN32
@@ -1239,6 +1255,22 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 387));
+						}
+					}
+					//	designer:cap/LVQ302
+					public static global::Epsitec.Common.Types.Caption ParishArrival
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 3));
+						}
+					}
+					//	designer:cap/LVQ402
+					public static global::Epsitec.Common.Types.Caption ParishDeparture
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 4));
 						}
 					}
 					//	designer:cap/LVA6C

@@ -17,10 +17,14 @@ namespace Epsitec.Aider.Enumerations
 
 		Mismatch = 1000,
 		ParishMismatch = 1001,
+        ParishArrival = 1002,
+        ParishDeparture = 1003,
 		Duplicated = 2000,
 		MissingECh = 2001,
 		NoHouseholdECh = 2002,
 		DataChangedECh = 2003,
-		AddressChange = 3000
+		AddressChange = 3000,
+        DepartureProcessNeeded = 3001,
+        ArrivalProcessNeeded = 3002
 	}
 }
