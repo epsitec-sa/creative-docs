@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using EnvDTE80;
 
-namespace Epsitec.Cresus.Strings
+namespace Epsitec.VisualStudio
 {
 	public class DTE2Provider
 	{

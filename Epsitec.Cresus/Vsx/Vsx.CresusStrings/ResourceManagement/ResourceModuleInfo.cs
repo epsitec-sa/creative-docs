@@ -5,19 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Strings.Bundles
+namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceModuleInfo
 	{
-		public static ResourceModuleInfo Load(string fileName)
+		public ResourceModuleInfo(string filePath)
 		{
-			var doc = XDocument.Load (fileName);
-			return new ResourceModuleInfo (doc.Root);
-		}
-
-		public ResourceModuleInfo(XElement element)
-		{
-			this.element = element;
+			var doc = XDocument.Load (filePath);
+			this.filePath = filePath;
+			this.element = doc.Root;
 			this.versions = new ResourceVersions (element.Element ("Versions"));
 		}
 
@@ -85,6 +81,23 @@ namespace Epsitec.Cresus.Strings.Bundles
 			}
 		}
 
+		public string FilePath
+		{
+			get
+			{
+				return this.filePath;
+			}
+		}
+
+		#region Object Overrides
+
+		public override string ToString()
+		{
+			return string.Format ("Id : {0}, Folder : {1}", this.Id, System.IO.Path.GetDirectoryName(this.FilePath));
+		}
+		#endregion
+
+		private readonly string filePath;
 		private readonly XElement element;
 		private readonly ResourceVersions versions;
 	}

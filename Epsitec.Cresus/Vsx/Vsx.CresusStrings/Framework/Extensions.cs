@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Epsitec.VisualStudio;
 using Microsoft.VisualStudio.Text;
 using Roslyn.Compilers;
 using Roslyn.Compilers.Common;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 
-namespace Epsitec.Cresus.Strings
+namespace Epsitec
 {
 	public static class Extensions
 	{
@@ -45,7 +46,20 @@ namespace Epsitec.Cresus.Strings
 				action (x);
 				return x;
 			});
-		} 
+		}
+
+		public static IEnumerable<T> AsSequence<T>(this T first)
+		{
+			yield return first;
+		}
+		public static IEnumerable<T> AsSequence<T>(T first, params T[] others)
+		{
+			yield return first;
+			foreach (var other in others)
+			{
+				yield return other;
+			}
+		}
 
 		#endregion
 
@@ -112,7 +126,6 @@ namespace Epsitec.Cresus.Strings
 
 		#endregion
 
-
 		#region XLinq
 
 		public static string GetString(this XAttribute attribute)
@@ -121,6 +134,19 @@ namespace Epsitec.Cresus.Strings
 		}
 	
 		#endregion
+
+		#region Dictionary
+
+		public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> valueFactory)
+		{
+			TValue value;
+			if (source.TryGetValue (key, out value))
+			{
+				return value;
+			}
+			return source[key] = valueFactory (key);
+		}
+		#endregion
 		
 		#region Helpers
 		
@@ -128,10 +154,6 @@ namespace Epsitec.Cresus.Strings
 		{
 			public override SyntaxTrivia VisitTrivia(SyntaxTrivia trivia)
 			{
-				//if (trivia.Kind == SyntaxKind.WhitespaceTrivia)
-				//{
-				//	return base.VisitTrivia (trivia);
-				//}
 				return default (SyntaxTrivia);
 			}
 		}

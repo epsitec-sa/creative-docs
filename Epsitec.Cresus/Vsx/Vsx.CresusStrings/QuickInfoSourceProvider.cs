@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Epsitec.Cresus.Strings.Bundles;
+using Epsitec.Cresus.ResourceManagement;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
@@ -30,13 +30,6 @@ namespace Epsitec.Cresus.Strings
 
 		[Import]
 		internal ITextBufferFactoryService TextBufferFactoryService
-		{
-			get;
-			set;
-		}
-
-		[Import]
-		internal SolutionResources BundleManager
 		{
 			get;
 			set;

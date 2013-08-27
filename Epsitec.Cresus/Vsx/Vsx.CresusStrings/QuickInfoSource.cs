@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Epsitec.Cresus.Strings.Bundles;
+using Epsitec.Cresus.ResourceManagement;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Strings
 			this.subjectBuffer = subjectBuffer;
 			this.subjectBuffer.Changed += this.HandleSubjectBufferChanged;
 			this.cts = new CancellationTokenSource ();
+			this.solutionResourceTask = Task.Run (() => new SolutionResource (solution, this.cts.Token), this.cts.Token);
 			this.Initialize (solution, this.cts.Token);
 		}
 
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Strings
 				this.documentTask.ForgetSafely ();
 				this.syntaxRootTask.ForgetSafely ();
 				this.semanticModelTask.ForgetSafely ();
+				this.solutionResourceTask.ForgetSafely ();
 			}
 		}
 
@@ -103,16 +105,7 @@ namespace Epsitec.Cresus.Strings
 			}
 		}
 
-		private IEnumerable<string> GetQiPathsContent()
-		{
-			var document = this.documentTask.Result;
-			var project = document.Project;
-			this.provider.BundleManager.Load (project);
-			yield return string.Format ("DOC : {0}", document.FilePath);
-			yield return string.Format ("PRJ : {0}", document.Project.FilePath);
-			yield return string.Format ("SLN : {0}", document.Project.Solution.FilePath);
-		}
-
+		
 		private static ITrackingSpan SetQiPending(Task task, string subject, IList<object> qiContent, SnapshotPoint point)
 		{
 			task.ForgetSafely ();
@@ -215,6 +208,7 @@ namespace Epsitec.Cresus.Strings
 			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 		}
 
+
 		private void Initialize(ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			this.Initialize(Task.Run (() => QuickInfoSource.GetActiveDocument (solution, cancellationToken), cancellationToken));
@@ -225,6 +219,15 @@ namespace Epsitec.Cresus.Strings
 			this.documentTask = documentTask;
 			this.syntaxRootTask = this.documentTask.ContinueWith (t => QuickInfoSource.GetSyntaxRoot (t.Result, cancellationToken), cancellationToken);
 			this.semanticModelTask = this.documentTask.ContinueWith (t => QuickInfoSource.GetSemanticModel (t.Result, cancellationToken), cancellationToken);
+		}
+
+		private IEnumerable<string> GetQiPathsContent()
+		{
+			var document = this.documentTask.Result;
+			var project = document.Project;
+			yield return string.Format ("DOC : {0}", document.FilePath);
+			yield return string.Format ("PRJ : {0}", document.Project.FilePath);
+			yield return string.Format ("SLN : {0}", document.Project.Solution.FilePath);
 		}
 
 		private async Task<Tuple<CommonSyntaxToken, SyntaxNode, IEnumerable<string>>> GetQiSyntaxDataAsync(int position, CancellationToken cancellationToken = default(CancellationToken))
@@ -317,13 +320,14 @@ namespace Epsitec.Cresus.Strings
 			this.Initialize(Task.FromResult (document), this.cts.Token);
 		}
 
+		
 		private readonly QuickInfoSourceProvider provider;
 		private readonly ITextBuffer subjectBuffer;
 		private bool isDisposed;
-
 		private CancellationTokenSource cts;
 		private Task<IDocument> documentTask;
 		private Task<CommonSyntaxNode> syntaxRootTask;
 		private Task<ISemanticModel> semanticModelTask;
+		private Task<SolutionResource> solutionResourceTask;
 	}
 }

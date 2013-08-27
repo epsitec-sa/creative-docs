@@ -61,6 +61,9 @@
     <Compile Include="ResourceModuleTest.cs" />
     <Compile Include="ProjectResourcesTest.cs" />
     <Compile Include="TestData.cs" />
+    <Compile Include="DicTest.cs" />
+    <Compile Include="CompositeDictionaryTest.cs" />
+    <Compile Include="CompositeKeyTest.cs" />
     <Compile Include="XmlAccessTest.cs" />
   </ItemGroup>
   <ItemGroup>

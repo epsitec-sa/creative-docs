@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Epsitec.Cresus.Strings.Bundles
+namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceVersions : IEnumerable<ResourceVersion>
 	{
