@@ -23,6 +23,8 @@ namespace Epsitec.Aider.Enumerations
 		MissingECh = 2001,
 		NoHouseholdECh = 2002,
 		DataChangedECh = 2003,
+		HouseholdChangeECh = 2004,
+		NewHouseholdECh = 2005,
 		AddressChange = 3000,
         DepartureProcessNeeded = 3001,
         ArrivalProcessNeeded = 3002

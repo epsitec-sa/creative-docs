@@ -103,7 +103,7 @@ function() {
 
       var cm, exists;
 
-      cm = Ext.ClassManager,
+      cm = Ext.ClassManager;
       exists = Ext.Function.bind(cm.get, cm);
 
       if (Epsitec.Locale.getLocaleName() === 'fr') {
@@ -231,7 +231,10 @@ function() {
       {
         columnManager.leftList.entityList.store.load(function(records, operation, success) {
           console.log('loaded records');
+          
         });
+
+        
       }
       
     },

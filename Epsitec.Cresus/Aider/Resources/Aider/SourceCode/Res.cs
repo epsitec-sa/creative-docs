@@ -1225,6 +1225,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 388));
 						}
 					}
+					//	designer:cap/LVGB42
+					public static global::Epsitec.Common.Types.Caption HouseholdChangeECh
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 139));
+						}
+					}
 					//	designer:cap/LVA5C
 					public static global::Epsitec.Common.Types.Caption Mismatch
 					{
@@ -1239,6 +1247,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
+						}
+					}
+					//	designer:cap/LVGC42
+					public static global::Epsitec.Common.Types.Caption NewHouseholdECh
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 140));
 						}
 					}
 					//	designer:cap/LVGP32
