@@ -9,7 +9,6 @@ namespace Epsitec
 	public interface ICompositeKey : IKey
 	{
 		ICompositeKey Concat(IKey key);
-		IKey[] ToArray();
 	}
 
 	public class CompositeKey : ICompositeKey
@@ -56,11 +55,6 @@ namespace Epsitec
 		public ICompositeKey Concat(IKey key)
 		{
 			return new CompositeKey (this.keys.Concat (key.AsSequence ()));
-		}
-
-		public IKey[] ToArray()
-		{
-			return this.keys as IKey[];
 		}
 
 		#endregion

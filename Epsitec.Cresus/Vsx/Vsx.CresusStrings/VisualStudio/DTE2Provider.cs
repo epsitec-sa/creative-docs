@@ -48,62 +48,65 @@ namespace Epsitec.VisualStudio
 
 		public static DTE2 GetDTE2(int processId)
 		{
-			string progId = "!VisualStudio.DTE.11.0:" + processId.ToString ();
-
-			IBindCtx bindCtx = null;
-			IRunningObjectTable rot = null;
-			IEnumMoniker enumMoniker = null;
-
-			try
+			using (new TimeTrace ("GetDTE2"))
 			{
-				Marshal.ThrowExceptionForHR (Interop.CreateBindCtx (reserved: 0, ppbc: out bindCtx));
-				bindCtx.GetRunningObjectTable (out rot);
-				rot.EnumRunning (out enumMoniker);
+				string progId = "!VisualStudio.DTE.11.0:" + processId.ToString ();
 
-				IMoniker[] moniker = new IMoniker[1];
-				IntPtr fetched = IntPtr.Zero;
-				while (enumMoniker.Next (1, moniker, fetched) == 0)
+				IBindCtx bindCtx = null;
+				IRunningObjectTable rot = null;
+				IEnumMoniker enumMoniker = null;
+
+				try
 				{
-					IMoniker runningObjectMoniker = moniker[0];
-					string name = null;
-					try
+					Marshal.ThrowExceptionForHR (Interop.CreateBindCtx (reserved: 0, ppbc: out bindCtx));
+					bindCtx.GetRunningObjectTable (out rot);
+					rot.EnumRunning (out enumMoniker);
+
+					IMoniker[] moniker = new IMoniker[1];
+					IntPtr fetched = IntPtr.Zero;
+					while (enumMoniker.Next (1, moniker, fetched) == 0)
 					{
-						if (runningObjectMoniker != null)
+						IMoniker runningObjectMoniker = moniker[0];
+						string name = null;
+						try
 						{
-							runningObjectMoniker.GetDisplayName (bindCtx, null, out name);
+							if (runningObjectMoniker != null)
+							{
+								runningObjectMoniker.GetDisplayName (bindCtx, null, out name);
+							}
+						}
+						catch (UnauthorizedAccessException)
+						{
+							// Do nothing, there is something in the ROT that we do not have access to.
+						}
+
+						if (!string.IsNullOrEmpty (name) && string.Equals (name, progId, StringComparison.Ordinal))
+						{
+							object runningObject = null;
+							Marshal.ThrowExceptionForHR (rot.GetObject (runningObjectMoniker, out runningObject));
+							return (DTE2) runningObject;
 						}
 					}
-					catch (UnauthorizedAccessException)
+				}
+				finally
+				{
+					if (enumMoniker != null)
 					{
-						// Do nothing, there is something in the ROT that we do not have access to.
+						Marshal.ReleaseComObject (enumMoniker);
 					}
 
-					if (!string.IsNullOrEmpty (name) && string.Equals (name, progId, StringComparison.Ordinal))
+					if (rot != null)
 					{
-						object runningObject = null;
-						Marshal.ThrowExceptionForHR (rot.GetObject (runningObjectMoniker, out runningObject));
-						return (DTE2) runningObject;
+						Marshal.ReleaseComObject (rot);
+					}
+
+					if (bindCtx != null)
+					{
+						Marshal.ReleaseComObject (bindCtx);
 					}
 				}
+				return null;
 			}
-			finally
-			{
-				if (enumMoniker != null)
-				{
-					Marshal.ReleaseComObject (enumMoniker);
-				}
-
-				if (rot != null)
-				{
-					Marshal.ReleaseComObject (rot);
-				}
-
-				if (bindCtx != null)
-				{
-					Marshal.ReleaseComObject (bindCtx);
-				}
-			}
-			return null;
 		}
 		
 		

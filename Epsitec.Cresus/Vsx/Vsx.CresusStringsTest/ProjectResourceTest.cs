@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Epsitec.Cresus.Strings
 {
 	[TestClass]
-	public class ProjectResourcesTest
+	public class ProjectResourceTest
 	{
 		[TestMethod]
 		public void Load()

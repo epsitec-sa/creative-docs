@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Epsitec.Cresus.Strings
+namespace Epsitec
 {
 	public class TimeTrace : IDisposable
 	{

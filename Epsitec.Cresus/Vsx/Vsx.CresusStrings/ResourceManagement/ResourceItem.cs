@@ -31,15 +31,14 @@ namespace Epsitec.Cresus.ResourceManagement
 			{
 				return new ResourceItemError (errors, id, name, element, sourceBundle, neutralItem);
 			}
-			return new ResourceItem (id, name, element, sourceBundle, neutralItem);
+			return new ResourceItem (id, name, element, neutralItem);
 		}
 
-		protected ResourceItem(string id, string name, XElement element, ResourceBundle sourceBundle, ResourceItem neutralItem)
+		protected ResourceItem(string id, string name, XElement element, ResourceItem neutralItem)
 		{
 			this.id = id;
 			this.name = name;
 			this.element = element;
-			this.sourceBundle = sourceBundle;
 			this.neutralItem = neutralItem;
 		}
 
@@ -83,14 +82,6 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public ResourceBundle Bundle
-		{
-			get
-			{
-				return this.sourceBundle;
-			}
-		}
-
 		public bool IsNeutral
 		{
 			get
@@ -106,6 +97,7 @@ namespace Epsitec.Cresus.ResourceManagement
 				return this.neutralItem;
 			}
 		}
+
 
 		#region Object Overrides
 
@@ -224,8 +216,6 @@ namespace Epsitec.Cresus.ResourceManagement
 		private readonly string id;
 		private readonly string name;
 		private readonly XElement element;
-		private readonly ResourceBundle sourceBundle;
-
 		private readonly ResourceItem neutralItem;
 	}
 }

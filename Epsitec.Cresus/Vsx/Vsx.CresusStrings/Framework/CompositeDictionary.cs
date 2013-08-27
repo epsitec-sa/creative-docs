@@ -252,6 +252,7 @@ namespace Epsitec
 		{
 			value = null;
 			var map = this.map;
+			var result = false;
 			foreach (var subkey in subkeys)
 			{
 				if (map == null || !map.TryGetValue (subkey, out value))
@@ -259,8 +260,9 @@ namespace Epsitec
 					return false;
 				}
 				map = value as Dictionary<IKey, object>;
+				result = true;
 			}
-			return true;
+			return result;
 		}
 
 		private static IEnumerable<object> Flatten(IDictionary<IKey, object> map)

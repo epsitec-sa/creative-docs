@@ -76,6 +76,21 @@ namespace Epsitec.Cresus.Strings
 							{
 								QuickInfoSource.AddQiContent (qiContent, syntaxData.Item3);
 
+								// get project resources
+								if (this.solutionResourceTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
+								{
+									var document = this.documentTask.Result;
+									var project = document.Project;
+									var solutionResource = this.solutionResourceTask.Result;
+									var projectResource = solutionResource[project.Id];
+									QuickInfoSource.AddQiContent (qiContent, string.Format("RES: {0}", projectResource));
+								}
+								else
+								{
+									cts.Cancel ();
+									applicableToSpan = QuickInfoSource.SetQiPending (syntaxTask, "Resources", qiContent, point);
+								}
+
 								var semanticTask = this.GetQiSemanticDataAsync (node, cts.Token);
 								if (semanticTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
 								{
@@ -153,7 +168,8 @@ namespace Epsitec.Cresus.Strings
 
 		private static int Timeout(int milliseconds)
 		{
-			return Debugger.IsAttached ? -1 : milliseconds;
+			//return Debugger.IsAttached ? -1 : milliseconds;
+			return milliseconds;
 		}
 
 		private static ISemanticModel GetSemanticModel(IDocument document, CancellationToken cancellationToken)
@@ -197,7 +213,7 @@ namespace Epsitec.Cresus.Strings
 		private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint)
 		{
 			ITextSnapshot currentSnapshot = snapshotPoint.Snapshot;
-			var span = new Span (snapshotPoint.Position, 0);
+			var span = new Span (snapshotPoint.Position, 1);
 			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 		}
 

@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Strings
 		[TestMethod]
 		public void Flattening()
 		{
-			var sk1 = Key.Create("AB");
+			var sk1 = Key.Create("A.B");
 
 			var sk21 = Key.Create ("ab");
 
@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Strings
 			var sk2 = new CompositeKey (sk21, sk22);
 
 			var k1 = new CompositeKey (sk1, sk2);
+
+			var a1 = k1.ToArray ();
 		}
 	}
 }

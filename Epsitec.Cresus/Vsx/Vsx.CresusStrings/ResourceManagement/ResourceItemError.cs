@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.ResourceManagement
 	public class ResourceItemError : ResourceItem
 	{
 		public ResourceItemError(ResourceItemErrors reasons, string id, string name, XElement element, ResourceBundle sourceBundle, ResourceItem neutralItem)
-			: base (id, name, element, sourceBundle, neutralItem)
+			: base (id, name, element, neutralItem)
 		{
 			this.reasons = reasons;
 		}

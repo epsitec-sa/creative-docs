@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Strings
 			Assert.IsTrue (dic.TryGetValue (Key.Split ("Strings.Application.Name.fr"), out value));
 			Assert.AreEqual (value, "Strings.Application.Name.fr");
 			Assert.IsTrue (dic.TryGetValue (Key.Split ("Strings.Application.Name"), out value));
-			Assert.IsTrue (value is IDictionary<Key<string>, object>);
+			Assert.IsTrue (value is IDictionary<IKey, object>);
 
 			Assert.IsFalse (dic.TryGetValue (Key.Split ("Strings.Application.Name.fr.xxx"), out value));
 			Assert.IsFalse (dic.TryGetValue (Key.Split ("Strings.Application.Name.en"), out value));
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Strings
 			var solutionResource = new SolutionResource (solution);
 			var visitor = new MappingVisitor ();
 			visitor.VisitSolution (solutionResource);
-			return new CompositeDictionary (visitor.map);
+			return visitor.map;
 		}
 
 		private class MappingVisitor : ResourceVisitor
@@ -121,26 +121,18 @@ namespace Epsitec.Cresus.Strings
 
 				try
 				{
-					var compositeKey = new CompositeKey (Key.Create (this.bundle.Name), Key.Split (item.Name));
-					//var subkeys = this.bundle.Name.AsSequence().Concat (item.Name.Split ('.')).Select (s => Key.Create (s));
-
-					var map = this.map;
-					foreach (var subkey in compositeKey)
-					{
-						map = map.GetOrAdd (subkey, _ => new Dictionary<IKey, object> ()) as Dictionary<IKey, object>;
-					}
-					var cultureKey = Key.Create (this.bundle.Culture);
-					if (map.ContainsKey (cultureKey))
-					{
-						throw new InvalidOperationException ("Duplicate culture resource string");
-					}
-					map[cultureKey] = item;
-					return item;
+					var key = new CompositeKey (
+						Key.Create (this.bundle.Culture),
+						Key.Create (this.project.ToString ()),
+						Key.Create (this.module.Info.ResourceNamespace),
+						Key.Create (this.bundle.Name),
+						Key.Split (item.Name));
+					map[key] = item;
 				}
 				catch (NullReferenceException)
 				{
-					throw;
 				}
+				return item;
 			}
 
 			public override ResourceNode VisitBundle(ResourceBundle bundle)
@@ -167,7 +159,9 @@ namespace Epsitec.Cresus.Strings
 				return base.VisitSolution (solution);
 			}
 
-			public readonly Dictionary<IKey, object> map = new Dictionary<IKey, object> ();
+			//public readonly Dictionary<IKey, object> map = new Dictionary<IKey, object> ();
+
+			public readonly CompositeDictionary map = new CompositeDictionary ();
 
 			private SolutionResource solution;
 			private ProjectResource project;

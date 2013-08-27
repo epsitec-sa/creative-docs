@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public string Namespace
+		public string DefaultNamespace
 		{
 			get
 			{
@@ -65,11 +65,12 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public string NamespaceRes
+		public string ResourceNamespace
 		{
 			get
 			{
-				return this.element.Attribute ("namespaceRes").GetString ();
+				var resourceNamespace = this.element.Attribute ("namespaceRes").GetString ();
+				return resourceNamespace ?? this.DefaultNamespace;
 			}
 		}
 

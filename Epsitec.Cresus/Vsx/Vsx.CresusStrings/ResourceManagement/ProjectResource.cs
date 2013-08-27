@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		#region Object Overrides
 		public override string ToString()
 		{
-			return System.IO.Path.GetFullPath(project.FilePath);
+			return System.IO.Path.GetFullPath(this.project.FilePath);
 		}
 		#endregion
 
