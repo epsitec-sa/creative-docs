@@ -48,7 +48,14 @@ namespace Epsitec.Aider.Data.ECh
 
 		public bool CheckData(string hn, string cc, string al, string s, int szc, int szca, int szci, string t)
 		{
-			return this.Address.HouseNumber == hn && this.Address.CountryCode == cc && this.Address.AddressLine1 == al && this.Address.Street == s && this.Address.SwissZipCode == szc && this.Address.SwissZipCodeAddOn == szca && this.Address.SwissZipCodeId == szci && this.Address.Town == t;
+			return this.Address.HouseNumber == hn
+				&& this.Address.CountryCode == cc
+				&& this.Address.AddressLine1 == al
+				&& this.Address.Street == s
+				&& this.Address.SwissZipCode == szc
+				&& this.Address.SwissZipCodeAddOn == szca
+				&& this.Address.SwissZipCodeId == szci
+				&& this.Address.Town == t;
 		}
 
 
@@ -56,8 +63,7 @@ namespace Epsitec.Aider.Data.ECh
 		{
 			var sortedIds = this.GetMembers ()
 				.Select (m => m.Id)
-				.OrderBy (id => id)
-				.ToList ();
+				.OrderBy (id => id);
 
 			return string.Concat (sortedIds);
 		}

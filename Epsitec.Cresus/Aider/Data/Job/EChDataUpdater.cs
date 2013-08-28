@@ -1,4 +1,8 @@
-﻿using Epsitec.Aider.Data.ECh;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel Loup, Maintainer: Samuel Loup
+
+using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -9,6 +13,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using Epsitec.Data.Platform;
@@ -16,30 +21,28 @@ using Epsitec.Data.Platform;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Aider.Data.Common;
-using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Aider.Data.Job
 {
-	internal static class EChDataUpdater
+	internal class EChDataUpdater
 	{
-
-		public static void StartJob(string oldEchFile, string newEchFile, string reportFile, CoreData coreData,ParishAddressRepository parishAddressRepository)
+		public static void StartJob(string oldEchFile, string newEchFile, string reportFile, CoreData coreData, ParishAddressRepository parishAddressRepository)
 		{
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
 				Console.WriteLine ("ECH DATA UPDATER : START ANALYSER");
-				using (var analyser = new EChDataAnalyser (oldEchFile, newEchFile, reportFile))
+				
+				using (var analyser = new EChDataAnalyserReporter (oldEchFile, newEchFile, reportFile))
 				{
-					var personsToCreate = analyser.GetPersonToAdd ().ToList ();
-					var personsToRemove = analyser.GetPersonToRemove ().ToList ();
-					var personsToUpdate = analyser.GetPersonToChange ().ToList ();
+					var personsToCreate = analyser.GetPersonsToAdd ().ToList ();
+					var personsToRemove = analyser.GetPersonsToRemove ().ToList ();
+					var personsToUpdate = analyser.GetPersonsToChange ().ToList ();
 
-					var houseHoldsToCreate = analyser.GetFamilyToAdd ().ToList ();
-					var houseHoldsToRemove = analyser.GetFamilyToRemove ().ToList ();
-					var houseHoldsToUpdate = analyser.GetFamilyToChange ().ToList ();
+					var houseHoldsToCreate = analyser.GetFamiliesToAdd ().ToList ();
+					var houseHoldsToRemove = analyser.GetFamiliesToRemove ().ToList ();
+					var houseHoldsToUpdate = analyser.GetFamiliesToChange ().ToList ();
 
-					var newHouseHoldsToCreate = analyser.GetNewFamilies ().ToList ();
+					var newHouseHoldsToCreate     = analyser.GetNewFamilies ().ToList ();
 					var missingHouseHoldsToRemove = analyser.GetMissingFamilies ().ToList ();
 
 					
@@ -438,7 +441,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static bool UpdateEChPersonEntities(CoreData coreData, List<System.Tuple<EChPerson, EChPerson>> personsToUpdate)
+		private static bool UpdateEChPersonEntities(CoreData coreData, List<Change<EChPerson>> personsToUpdate)
 		{
 			Console.WriteLine ("ECH DATA UPDATER : START UPDATE PERSON JOB");
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -447,66 +450,66 @@ namespace Epsitec.Aider.Data.Job
 				{
 					try
 					{
-						var personEntityToUpdate = EChDataUpdater.GetEchPersonEntity (businessContext, toChange.Item1);
+						var personEntityToUpdate = EChDataUpdater.GetEchPersonEntity (businessContext, toChange.OldValue);
 						var aiderPersonEntity = EChDataUpdater.GetAiderPersonEntity (businessContext, personEntityToUpdate);
 						var changedEChPersonEntity = new eCH_PersonEntity ();
-						EChDataImporter.ConvertEChPersonToEntity (toChange.Item1, changedEChPersonEntity);
+						EChDataImporter.ConvertEChPersonToEntity (toChange.OldValue, changedEChPersonEntity);
 						var changes = new List<string> ();
 						var mustWarn = false;
 						changes.Add (aiderPersonEntity.GetFullName ());
 					
-						if (!toChange.Item1.OfficialName.Equals (toChange.Item2.OfficialName))
+						if (!toChange.OldValue.OfficialName.Equals (toChange.NewValue.OfficialName))
 						{
 							personEntityToUpdate.PersonOfficialName = changedEChPersonEntity.PersonOfficialName;
-							changes.Add ("Nom: " + toChange.Item2.OfficialName + " -> " + changedEChPersonEntity.PersonOfficialName);
+							changes.Add ("Nom: " + toChange.NewValue.OfficialName + " -> " + changedEChPersonEntity.PersonOfficialName);
 							mustWarn = true;
 						}
 
-						if (!toChange.Item1.FirstNames.Equals (toChange.Item2.FirstNames))
+						if (!toChange.OldValue.FirstNames.Equals (toChange.NewValue.FirstNames))
 						{
 							personEntityToUpdate.PersonFirstNames = changedEChPersonEntity.PersonFirstNames;
-							changes.Add ("Prénom: " + toChange.Item2.FirstNames + " -> " + changedEChPersonEntity.PersonFirstNames);
+							changes.Add ("Prénom: " + toChange.NewValue.FirstNames + " -> " + changedEChPersonEntity.PersonFirstNames);
 							mustWarn = true;
 						}
 
-						if (!toChange.Item1.DateOfBirth.Equals (toChange.Item2.DateOfBirth))
+						if (!toChange.OldValue.DateOfBirth.Equals (toChange.NewValue.DateOfBirth))
 						{
 							personEntityToUpdate.PersonDateOfBirth = changedEChPersonEntity.PersonDateOfBirth;
-							changes.Add ("Date de naissance: " + toChange.Item2.DateOfBirth + " -> " + changedEChPersonEntity.PersonDateOfBirth);
+							changes.Add ("Date de naissance: " + toChange.NewValue.DateOfBirth + " -> " + changedEChPersonEntity.PersonDateOfBirth);
 							mustWarn = true;
 						}
 
-						if (!toChange.Item1.MaritalStatus.Equals (toChange.Item2.MaritalStatus))
+						if (!toChange.OldValue.MaritalStatus.Equals (toChange.NewValue.MaritalStatus))
 						{
 							personEntityToUpdate.AdultMaritalStatus = changedEChPersonEntity.AdultMaritalStatus;
-							changes.Add ("Etat civil: " + toChange.Item2.MaritalStatus + " -> " + changedEChPersonEntity.AdultMaritalStatus);
+							changes.Add ("Etat civil: " + toChange.NewValue.MaritalStatus + " -> " + changedEChPersonEntity.AdultMaritalStatus);
 							mustWarn = true;
 						}
 
-						if (!toChange.Item1.NationalCountryCode.Equals (toChange.Item2.NationalCountryCode))
+						if (!toChange.OldValue.NationalCountryCode.Equals (toChange.NewValue.NationalCountryCode))
 						{
 							personEntityToUpdate.NationalityCountryCode = changedEChPersonEntity.NationalityCountryCode;
-							changes.Add ("Nationalité: " + toChange.Item2.NationalCountryCode + " -> " + changedEChPersonEntity.NationalityCountryCode);
+							changes.Add ("Nationalité: " + toChange.NewValue.NationalCountryCode + " -> " + changedEChPersonEntity.NationalityCountryCode);
 							mustWarn = true;
 						}
 
-						if (!toChange.Item1.NationalityStatus.Equals (toChange.Item2.NationalityStatus))
+						if (!toChange.OldValue.NationalityStatus.Equals (toChange.NewValue.NationalityStatus))
 						{
 							personEntityToUpdate.NationalityStatus = changedEChPersonEntity.NationalityStatus;
-							changes.Add ("Statut nationalité: " + toChange.Item2.NationalityStatus + " -> " + changedEChPersonEntity.NationalityStatus);
+							changes.Add ("Statut nationalité: " + toChange.NewValue.NationalityStatus + " -> " + changedEChPersonEntity.NationalityStatus);
 							mustWarn = true;
 						}
 				
-						if (!toChange.Item1.OriginPlaces.SetEquals (toChange.Item2.OriginPlaces))
+						if (!toChange.OldValue.OriginPlaces.SetEquals (toChange.NewValue.OriginPlaces))
 						{
 							personEntityToUpdate.Origins = changedEChPersonEntity.Origins;
-							changes.Add ("Origines: " + String.Join (" ", toChange.Item2.OriginPlaces.Select (o => o.Display ()).ToList ()) + " -> " + String.Join (" ", changedEChPersonEntity.Origins));
+							changes.Add ("Origines: " + String.Join (" ", toChange.NewValue.OriginPlaces.Select (o => o.Display ()).ToList ()) + " -> " + String.Join (" ", changedEChPersonEntity.Origins));
 						}
 
-						if (!toChange.Item1.Sex.Equals (toChange.Item2.Sex))
+						if (!toChange.OldValue.Sex.Equals (toChange.NewValue.Sex))
 						{
 							personEntityToUpdate.PersonSex = changedEChPersonEntity.PersonSex;
-							changes.Add ("Sex: " + toChange.Item2.Sex + " -> " + changedEChPersonEntity.PersonSex);
+							changes.Add ("Sex: " + toChange.NewValue.Sex + " -> " + changedEChPersonEntity.PersonSex);
 							mustWarn = true;
 						}
 
@@ -534,7 +537,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private static bool UpdateHouseholdsAndPropagate(CoreData coreData, List<System.Tuple<EChReportedPerson, EChReportedPerson>> houseHoldsToUpdate,ParishAddressRepository parishAddressRepository)
+		private static bool UpdateHouseholdsAndPropagate(CoreData coreData, List<Change<EChReportedPerson>> houseHoldsToUpdate,ParishAddressRepository parishAddressRepository)
 		{
 			Console.WriteLine ("ECH DATA UPDATER : START UPDATE REPORTED PERSON JOB");
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -543,62 +546,62 @@ namespace Epsitec.Aider.Data.Job
 				{
 					try
 					{
-						var reportedPersonEntityToUpdate = EChDataUpdater.GetEchReportedPersonEntity (businessContext, toChange.Item1);
+						var reportedPersonEntityToUpdate = EChDataUpdater.GetEchReportedPersonEntity (businessContext, toChange.OldValue);
 						var changes = new List<string> ();
 						changes.Add ("Changement dans l'adresse:");
-						if (!String.IsNullOrEmpty (toChange.Item1.Address.AddressLine1))
+						if (!String.IsNullOrEmpty (toChange.OldValue.Address.AddressLine1))
 						{
-							if (!toChange.Item1.Address.AddressLine1.Equals (toChange.Item2.Address.AddressLine1))
+							if (!toChange.OldValue.Address.AddressLine1.Equals (toChange.NewValue.Address.AddressLine1))
 							{
-								reportedPersonEntityToUpdate.Address.AddressLine1 = toChange.Item1.Address.AddressLine1;
-								changes.Add ("Ligne adresse: " + toChange.Item2.Address.AddressLine1 + " -> " + reportedPersonEntityToUpdate.Address.AddressLine1);
+								reportedPersonEntityToUpdate.Address.AddressLine1 = toChange.OldValue.Address.AddressLine1;
+								changes.Add ("Ligne adresse: " + toChange.NewValue.Address.AddressLine1 + " -> " + reportedPersonEntityToUpdate.Address.AddressLine1);
 							}
 						}
 		
-						if (!String.IsNullOrEmpty (toChange.Item1.Address.HouseNumber))
+						if (!String.IsNullOrEmpty (toChange.OldValue.Address.HouseNumber))
 						{
-							if (!toChange.Item1.Address.HouseNumber.Equals (toChange.Item2.Address.HouseNumber))
+							if (!toChange.OldValue.Address.HouseNumber.Equals (toChange.NewValue.Address.HouseNumber))
 							{
-								reportedPersonEntityToUpdate.Address.HouseNumber = toChange.Item1.Address.HouseNumber;
-								changes.Add ("N° de maison: " + toChange.Item2.Address.HouseNumber + " -> " + reportedPersonEntityToUpdate.Address.HouseNumber);
+								reportedPersonEntityToUpdate.Address.HouseNumber = toChange.OldValue.Address.HouseNumber;
+								changes.Add ("N° de maison: " + toChange.NewValue.Address.HouseNumber + " -> " + reportedPersonEntityToUpdate.Address.HouseNumber);
 							}
 						}
-						if (!String.IsNullOrEmpty (toChange.Item1.Address.Street))
+						if (!String.IsNullOrEmpty (toChange.OldValue.Address.Street))
 						{
-							if (!toChange.Item1.Address.Street.Equals (toChange.Item2.Address.Street))
+							if (!toChange.OldValue.Address.Street.Equals (toChange.NewValue.Address.Street))
 							{
-								reportedPersonEntityToUpdate.Address.Street = toChange.Item1.Address.Street;
-								changes.Add ("Rue: " + toChange.Item2.Address.Street + " -> " + reportedPersonEntityToUpdate.Address.Street);
+								reportedPersonEntityToUpdate.Address.Street = toChange.OldValue.Address.Street;
+								changes.Add ("Rue: " + toChange.NewValue.Address.Street + " -> " + reportedPersonEntityToUpdate.Address.Street);
 							}
 						}
-						if (!toChange.Item1.Address.SwissZipCode.Equals (toChange.Item2.Address.SwissZipCode))
+						if (!toChange.OldValue.Address.SwissZipCode.Equals (toChange.NewValue.Address.SwissZipCode))
 						{
-							reportedPersonEntityToUpdate.Address.SwissZipCode = toChange.Item1.Address.SwissZipCode;
-							changes.Add ("NPA: " + toChange.Item2.Address.SwissZipCode + " -> " + toChange.Item1.Address.SwissZipCode);
+							reportedPersonEntityToUpdate.Address.SwissZipCode = toChange.OldValue.Address.SwissZipCode;
+							changes.Add ("NPA: " + toChange.NewValue.Address.SwissZipCode + " -> " + toChange.OldValue.Address.SwissZipCode);
 						}
 
-						if (!toChange.Item1.Address.SwissZipCodeAddOn.Equals (toChange.Item2.Address.SwissZipCodeAddOn))
+						if (!toChange.OldValue.Address.SwissZipCodeAddOn.Equals (toChange.NewValue.Address.SwissZipCodeAddOn))
 						{
-							reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn = toChange.Item1.Address.SwissZipCodeAddOn;
-							changes.Add ("NPA+: " + toChange.Item2.Address.SwissZipCodeAddOn + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn);
+							reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn = toChange.OldValue.Address.SwissZipCodeAddOn;
+							changes.Add ("NPA+: " + toChange.NewValue.Address.SwissZipCodeAddOn + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn);
 						}
 
-						if (!toChange.Item1.Address.SwissZipCodeId.Equals (toChange.Item2.Address.SwissZipCodeId))
+						if (!toChange.OldValue.Address.SwissZipCodeId.Equals (toChange.NewValue.Address.SwissZipCodeId))
 						{
-							reportedPersonEntityToUpdate.Address.SwissZipCodeId = toChange.Item1.Address.SwissZipCodeId;
-							changes.Add ("NPA ID: " + toChange.Item2.Address.SwissZipCodeId + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeId);
+							reportedPersonEntityToUpdate.Address.SwissZipCodeId = toChange.OldValue.Address.SwissZipCodeId;
+							changes.Add ("NPA ID: " + toChange.NewValue.Address.SwissZipCodeId + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeId);
 						}
 
-						if (!toChange.Item1.Address.Town.Equals (toChange.Item2.Address.Town))
+						if (!toChange.OldValue.Address.Town.Equals (toChange.NewValue.Address.Town))
 						{
-							reportedPersonEntityToUpdate.Address.Town = toChange.Item1.Address.Town;
-							changes.Add ("Localité: " + toChange.Item2.Address.Town + " -> " + reportedPersonEntityToUpdate.Address.Town);
+							reportedPersonEntityToUpdate.Address.Town = toChange.OldValue.Address.Town;
+							changes.Add ("Localité: " + toChange.NewValue.Address.Town + " -> " + reportedPersonEntityToUpdate.Address.Town);
 						}
 
-						if (!toChange.Item1.Address.CountryCode.Equals (toChange.Item2.Address.CountryCode))
+						if (!toChange.OldValue.Address.CountryCode.Equals (toChange.NewValue.Address.CountryCode))
 						{
-							reportedPersonEntityToUpdate.Address.Country = toChange.Item1.Address.CountryCode;
-							changes.Add ("Pays: " + toChange.Item2.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
+							reportedPersonEntityToUpdate.Address.Country = toChange.OldValue.Address.CountryCode;
+							changes.Add ("Pays: " + toChange.NewValue.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
 						}
 
 						
@@ -924,5 +927,10 @@ namespace Epsitec.Aider.Data.Job
 		private static Dictionary<EntityKey, AiderPersonEntity> AiderPersonEntitiesTagedForDeletion;
 		private static Dictionary<EntityKey, AiderHouseholdEntity> AiderPersonEntitiesWithDeletedHousehold;
 		private static FormattedText WarningTitleMessage = FormattedText.FromSimpleText ("Mise à jour ECh du " + Date.Today.Day + " " + Date.Today.Month + " " + Date.Today.Year);
+
+
+		private readonly List<EChPerson> personsToCreate;
+		private readonly List<EChPerson> personsToRemove;
+		private readonly List<EChPerson> personsToUpdate;
 	}
 }

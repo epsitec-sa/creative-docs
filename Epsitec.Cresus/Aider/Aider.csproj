@@ -123,7 +123,11 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionViewController.cs" />
     <Compile Include="Data\Common\AddressChecker.cs" />
     <Compile Include="Data\Common\DataReader.cs" />
+    <Compile Include="Data\ECh\Change.cs" />
+    <Compile Include="Data\ECh\Change`1.cs" />
+    <Compile Include="Data\ECh\DictionaryExtensions.cs" />
     <Compile Include="Data\ECh\EChDataAnalyser.cs" />
+    <Compile Include="Data\ECh\EChDataAnalyserReporter.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
