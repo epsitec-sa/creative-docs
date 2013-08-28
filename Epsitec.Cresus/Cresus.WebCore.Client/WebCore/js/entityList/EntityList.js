@@ -19,6 +19,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.querybuilder.QueryWindow',
   'Ext.ux.grid.FiltersFeature',
   'Ext.ux.DataTip',
+  'Ext.grid.plugin.BufferedRenderer',
   'Ext.Action'
 ],
 function() {
@@ -44,6 +45,7 @@ function() {
     fullSearchWindow: null,
     queryBuilder: null,
     isSearching: false,
+    isReloading: false,
 
     /* Constructor */
 
@@ -68,6 +70,10 @@ function() {
           columnshow: this.setupColumnParameterAndRefresh,
           reconfigure: this.reconfigureFiltersFeature,
           scope: this
+        },
+        plugins: {
+          ptype: 'bufferedrenderer',
+          pluginId: 'bufferedrenderer'
         },
         features: [{
           ftype: 'filters',
@@ -318,8 +324,9 @@ function() {
         sorters: this.createSorters(sorterDefinitions),
         autoLoad: autoLoad,
         pageSize: 100,
-        remoteSort: true,
         buffered: true,
+        leadingBufferZone: 200,
+        remoteSort: true,
         proxy: {
           type: 'ajax',
           url: url,
@@ -586,8 +593,14 @@ function() {
 
     onDataChange: function(store, e) {
       if (this.isSearching) {
-        this.fullSearchWindow.appliFilters();
         this.isSearching = false;
+        this.fullSearchWindow.appliFilters();
+        
+      }
+      if(this.isReloading) {
+        this.isReloading = false;
+        this.selModel.selectPrevious();
+        
       }
     },
 

@@ -229,9 +229,9 @@ function() {
       var columnManager = this.tabManager.entityTabs[key];
       if(Ext.isDefined(columnManager))
       {
+        columnManager.leftList.entityList.isReloading = true;
         columnManager.leftList.entityList.store.load(function(records, operation, success) {
-          console.log('loaded records');
-          
+          console.log('reloaded');
         });
 
         
