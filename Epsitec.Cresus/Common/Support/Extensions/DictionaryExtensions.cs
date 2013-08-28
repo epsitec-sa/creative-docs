@@ -26,6 +26,16 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
+		public static void AddIfValueNotNull<TKey, TValue>(this Dictionary<TKey, TValue> dictionary, TKey key, TValue value)
+			where TValue : class
+		{
+			if (value != null)
+			{
+				dictionary.Add (key, value);
+			}
+		}
+
+
 		/// <summary>
 		/// Returns a read only dictionary that contains the elements of the given
 		/// <see cref="IDictionary{TKey,TValue}"/>.
