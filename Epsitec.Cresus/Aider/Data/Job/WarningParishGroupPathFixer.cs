@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Data.Job
                 var count = 0;
                 foreach (var warning in businessContext.GetAllEntities<AiderPersonWarningEntity>())
                 {
-                    warning.ParishGroupPathCache = warning.Person.ParishGroupPathCache;
+                    warning.ParishGroupPath = warning.Person.ParishGroupPathCache;
                     count++;
                 }
                 Console.WriteLine("AIDER PERSON WARNING ENTITY : " + count + " ENTITY FIXED, SAVING...");

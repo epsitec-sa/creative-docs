@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 {
                     foreach (var warn in member.Warnings)
                     {
-                        if(warn.WarningType.Equals(WarningType.AddressChange))
+                        if(warn.WarningType.Equals(WarningType.EChAddressChanged))
                         {
                             member.RemoveWarningInternal(warn);
                             this.BusinessContext.DeleteEntity(warn);

@@ -1199,7 +1199,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				}
 				else
 				{
-					throw new NotSupportedException ();
+					return (TextFormatter.FormatText (objectValue)).ToString ();
 				}
 			}
 

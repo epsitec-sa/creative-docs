@@ -1178,43 +1178,75 @@ namespace Epsitec.Aider
 				public static class WarningType
 				{
 					//	designer:cap/LVGR32
-					public static global::Epsitec.Common.Types.Caption AddressChange
+					public static global::Epsitec.Common.Types.Caption EChAddressChanged
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 123));
 						}
 					}
-					//	designer:cap/LVQ202
-					public static global::Epsitec.Common.Types.Caption ArrivalProcessNeeded
+					//	designer:cap/LVA0H
+					public static global::Epsitec.Common.Types.Caption EChHouseholdAdded
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 2));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 544));
+						}
+					}
+					//	designer:cap/LVAVG
+					public static global::Epsitec.Common.Types.Caption EChHouseholdChanged
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 543));
+						}
+					}
+					//	designer:cap/LVGP32
+					public static global::Epsitec.Common.Types.Caption EChHouseholdMissing
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 121));
 						}
 					}
 					//	designer:cap/LVGQ32
-					public static global::Epsitec.Common.Types.Caption DataChangedECh
+					public static global::Epsitec.Common.Types.Caption EChPersonDataChanged
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 122));
 						}
 					}
-					//	designer:cap/LVQ102
-					public static global::Epsitec.Common.Types.Caption DepartureProcessNeeded
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 1));
-						}
-					}
 					//	designer:cap/LVGN32
-					public static global::Epsitec.Common.Types.Caption Duplicated
+					public static global::Epsitec.Common.Types.Caption EChPersonDuplicated
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 119));
+						}
+					}
+					//	designer:cap/LVGO32
+					public static global::Epsitec.Common.Types.Caption EChPersonMissing
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
+						}
+					}
+					//	designer:cap/LVQ202
+					public static global::Epsitec.Common.Types.Caption EChProcessArrival
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 2));
+						}
+					}
+					//	designer:cap/LVQ102
+					public static global::Epsitec.Common.Types.Caption EChProcessDeparture
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 90, 1));
 						}
 					}
 					//	designer:cap/LVA4C
@@ -1225,44 +1257,12 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 388));
 						}
 					}
-					//	designer:cap/LVGB42
-					public static global::Epsitec.Common.Types.Caption HouseholdChangeECh
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 139));
-						}
-					}
 					//	designer:cap/LVA5C
 					public static global::Epsitec.Common.Types.Caption Mismatch
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 389));
-						}
-					}
-					//	designer:cap/LVGO32
-					public static global::Epsitec.Common.Types.Caption MissingECh
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
-						}
-					}
-					//	designer:cap/LVGC42
-					public static global::Epsitec.Common.Types.Caption NewHouseholdECh
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 140));
-						}
-					}
-					//	designer:cap/LVGP32
-					public static global::Epsitec.Common.Types.Caption NoHouseholdECh
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 121));
 						}
 					}
 					//	designer:cap/LVA3C
@@ -1746,11 +1746,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderPersonWarning.ParishGroupPathCache, null);
+					global::System.Object.Equals (AiderPersonWarning.ParishGroupPath, null);
 				}
 				
 				//	designer:cap/LVQ002
-				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 90, 0);
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPath = new global::Epsitec.Common.Support.Druid (_moduleId, 90, 0);
 				//	designer:cap/LVAMB
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 374);
 			}

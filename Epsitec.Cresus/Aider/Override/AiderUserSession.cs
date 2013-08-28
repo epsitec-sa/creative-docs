@@ -133,7 +133,7 @@ namespace Epsitec.Aider.Override
 
         private IFilter GetAiderPersonWarningEntityFilter(AiderPersonWarningEntity example, string pattern)
         {
-            return new LambdaFilter<AiderPersonWarningEntity>(x => SqlMethods.Like(x.ParishGroupPathCache, pattern));
+            return new LambdaFilter<AiderPersonWarningEntity>(x => SqlMethods.Like(x.ParishGroupPath, pattern));
         }
 
 		private string GetActiveScopePathPattern()

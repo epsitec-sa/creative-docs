@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -11,44 +11,55 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	public sealed class SummaryAiderPersonWarningViewController : SummaryViewController<AiderPersonWarningEntity>
 	{
-        protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
-        {
+		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
+		{
+			switch (this.Entity.WarningType)
+			{
+				case WarningType.EChPersonMissing:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController0SetVisibility> ();
+					break;
+				
+				case WarningType.EChProcessDeparture:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController0SetVisibility> ();
+					break;
+				
+				case WarningType.EChProcessArrival:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+					break;
+				
+				case WarningType.EChPersonDataChanged:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+					break;
+				
+				case WarningType.EChAddressChanged:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController2Relocate> ();
+					break;
+				
+				case WarningType.ParishArrival:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController2Relocate> ();
+					break;
+				
+				case WarningType.ParishDeparture:
+					this.AddDefaultBrick (wall)
+						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+					break;
+				
+				default:
+					this.AddDefaultBrick (wall);
+					break;
+			}
+		}
 
-            switch (this.Entity.WarningType)
-            {
-                case WarningType.MissingECh: 
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController0SetVisibility>();
-                    break;
-                case WarningType.DepartureProcessNeeded:
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController0SetVisibility>();
-                    break;
-                case WarningType.ArrivalProcessNeeded:
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
-                    break;
-                case WarningType.DataChangedECh:
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
-                    break;
-                case WarningType.AddressChange:
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController2Relocate>();
-                    break;
-                case WarningType.ParishArrival:
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController2Relocate>();
-                    break;
-                case WarningType.ParishDeparture:
-                    wall.AddBrick()
-                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning>();
-                    break;
-                default :
-                    wall.AddBrick();
-                    break;
-            }
-              
-        }
+		private SimpleBrick<AiderPersonWarningEntity> AddDefaultBrick(BrickWall<AiderPersonWarningEntity> wall)
+		{
+			return wall.AddBrick ()
+				.Title (x => x.WarningType);
+		}
 	}
 }

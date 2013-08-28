@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -17,16 +17,19 @@ namespace Epsitec.Aider.Enumerations
 
 		Mismatch = 1000,
 		ParishMismatch = 1001,
-        ParishArrival = 1002,
-        ParishDeparture = 1003,
-		Duplicated = 2000,
-		MissingECh = 2001,
-		NoHouseholdECh = 2002,
-		DataChangedECh = 2003,
-		HouseholdChangeECh = 2004,
-		NewHouseholdECh = 2005,
-		AddressChange = 3000,
-        DepartureProcessNeeded = 3001,
-        ArrivalProcessNeeded = 3002
+		ParishArrival = 1002,
+		ParishDeparture = 1003,
+		
+		EChPersonDuplicated = 2000,
+		EChPersonMissing = 2001,
+		EChHouseholdMissing = 2002,
+		EChPersonDataChanged = 2003,
+		EChHouseholdChanged = 2004,
+		EChHouseholdAdded = 2005,
+		
+		EChAddressChanged = 3000,
+		
+		EChProcessDeparture = 3001,
+		EChProcessArrival = 3002
 	}
 }
