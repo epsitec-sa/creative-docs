@@ -296,7 +296,7 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static void ImportAiderAddressEntity(BusinessContext businessContext, AiderAddressEntity aiderAddressEntity, EChAddress eChAddress, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
 		{
-			var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddress.HouseNumber));
+			var houseNumber           = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (eChAddress.HouseNumber));
 			var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (eChAddress.HouseNumber);
 
 			if (string.IsNullOrWhiteSpace (houseNumberComplement))
@@ -305,28 +305,28 @@ namespace Epsitec.Aider.Data.ECh
 			}
 
 			var townEntityKey = zipCodeIdToEntityKey[eChAddress.SwissZipCodeId];
-			var town = businessContext.ResolveEntity<AiderTownEntity> (townEntityKey);
+			var town          = businessContext.ResolveEntity<AiderTownEntity> (townEntityKey);
 
-			aiderAddressEntity.AddressLine1 = eChAddress.AddressLine1;
-			aiderAddressEntity.Street = eChAddress.Street;
-			aiderAddressEntity.HouseNumber = houseNumber;
+			aiderAddressEntity.AddressLine1          = eChAddress.AddressLine1;
+			aiderAddressEntity.Street                = eChAddress.Street;
+			aiderAddressEntity.HouseNumber           = houseNumber;
 			aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-			aiderAddressEntity.Town = town;
+			aiderAddressEntity.Town                  = town;
 		}
 
 
-		private static eCH_AddressEntity ImportEchAddressEntity(BusinessContext businessContext, EChAddress eChAddress)
+		public static eCH_AddressEntity ImportEchAddressEntity(BusinessContext businessContext, EChAddress eChAddress)
 		{
 			var eChAddressEntity = businessContext.CreateAndRegisterEntity<eCH_AddressEntity> ();
 
-			eChAddressEntity.AddressLine1 = eChAddress.AddressLine1;
-			eChAddressEntity.Street = eChAddress.Street;
-			eChAddressEntity.HouseNumber = eChAddress.HouseNumber;
-			eChAddressEntity.Town = eChAddress.Town;
-			eChAddressEntity.SwissZipCode = eChAddress.SwissZipCode;
+			eChAddressEntity.AddressLine1      = eChAddress.AddressLine1;
+			eChAddressEntity.Street            = eChAddress.Street;
+			eChAddressEntity.HouseNumber       = eChAddress.HouseNumber;
+			eChAddressEntity.Town              = eChAddress.Town;
+			eChAddressEntity.SwissZipCode      = eChAddress.SwissZipCode;
 			eChAddressEntity.SwissZipCodeAddOn = eChAddress.SwissZipCodeAddOn;
-			eChAddressEntity.SwissZipCodeId = eChAddress.SwissZipCodeId;
-			eChAddressEntity.Country = eChAddress.CountryCode;
+			eChAddressEntity.SwissZipCodeId    = eChAddress.SwissZipCodeId;
+			eChAddressEntity.Country           = eChAddress.CountryCode;
 
 			return eChAddressEntity;
 		}

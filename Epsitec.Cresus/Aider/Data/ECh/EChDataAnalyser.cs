@@ -7,66 +7,66 @@ using System.Text;
 
 namespace Epsitec.Aider.Data.ECh
 {
-    class EChDataAnalyser : EChDataComparer
-    {
+	class EChDataAnalyser : EChDataComparer
+	{
 		public EChDataAnalyser(string OldEchFile, string NewEchFile, string reportFile)
-            : base(OldEchFile, NewEchFile) 
-        {
-            this.FamilyToAdd = new Dictionary<string, EChReportedPerson>();
-            this.FamilyToRemove = new Dictionary<string, EChReportedPerson>();
-            this.PersonToAdd = new Dictionary<string, EChPerson>();
-            this.PersonToRemove = new Dictionary<string, EChPerson>();
+			: base(OldEchFile, NewEchFile) 
+		{
+			this.FamilyToAdd = new Dictionary<string, EChReportedPerson>();
+			this.FamilyToRemove = new Dictionary<string, EChReportedPerson>();
+			this.PersonToAdd = new Dictionary<string, EChPerson>();
+			this.PersonToRemove = new Dictionary<string, EChPerson>();
 
 			//Result 
-            this.NewHouseHolds = new HashSet<EChReportedPerson> (EChDataAnalyser.HouseholdComparer);
+			this.NewHouseHolds = new HashSet<EChReportedPerson> (EChDataAnalyser.HouseholdComparer);
 			this.MissingHouseHolds = new HashSet<EChReportedPerson> (EChDataAnalyser.HouseholdComparer);
 			this.PersonMovedOut = new Dictionary<EChPerson, List<EChReportedPerson>> (EChDataAnalyser.PersonComparer);
 			this.PersonMovedIn = new Dictionary<EChPerson, List<EChReportedPerson>> (EChDataAnalyser.PersonComparer);
 			this.NewPersons = new HashSet<EChPerson> (EChDataAnalyser.PersonComparer);
 			this.MissingPersons = new HashSet<EChPerson> (EChDataAnalyser.PersonComparer);
 
-            this.NewUnion = new List<EChReportedPerson>();
-            this.NewFamily = new List<EChReportedPerson>();
-            this.NewFamilyWithChildren = new List<EChReportedPerson>();
-            this.NewFamilyMono = new List<EChReportedPerson>();
-            this.NewFamilyMonoWithChildren = new List<EChReportedPerson>();
-            this.FamilyWithNewChilds = new List<EChReportedPerson>();
-            this.FamilyWithChildMissing = new List<EChReportedPerson>();
-            this.NewChilds = new List<Tuple<EChReportedPerson, EChPerson>>();
-            this.ChildrenMissing = new List<Tuple<EChReportedPerson, EChPerson>>();
+			this.NewUnion = new List<EChReportedPerson>();
+			this.NewFamily = new List<EChReportedPerson>();
+			this.NewFamilyWithChildren = new List<EChReportedPerson>();
+			this.NewFamilyMono = new List<EChReportedPerson>();
+			this.NewFamilyMonoWithChildren = new List<EChReportedPerson>();
+			this.FamilyWithNewChilds = new List<EChReportedPerson>();
+			this.FamilyWithChildMissing = new List<EChReportedPerson>();
+			this.NewChilds = new List<Tuple<EChReportedPerson, EChPerson>>();
+			this.ChildrenMissing = new List<Tuple<EChReportedPerson, EChPerson>>();
 			this.ChildrenMove  = new List<Tuple<EChReportedPerson, EChPerson>> ();
-            this.GainMajority = new List<EChReportedPerson>();
-            this.MissingUnion = new List<EChReportedPerson>();
-            this.WidowFamily = new List<EChReportedPerson>();
-            this.MissingFamily = new List<EChReportedPerson>();
-            this.MissingFamilyWithChildren = new List<EChReportedPerson>();
-            this.MissingFamilyMono = new List<EChReportedPerson>();
-            this.MissingFamilyMonoWithChildren = new List<EChReportedPerson>();
+			this.GainMajority = new List<EChReportedPerson>();
+			this.MissingUnion = new List<EChReportedPerson>();
+			this.WidowFamily = new List<EChReportedPerson>();
+			this.MissingFamily = new List<EChReportedPerson>();
+			this.MissingFamilyWithChildren = new List<EChReportedPerson>();
+			this.MissingFamilyMono = new List<EChReportedPerson>();
+			this.MissingFamilyMonoWithChildren = new List<EChReportedPerson>();
 			this.ChildrenLeaveHouseholdForMajority = new List<Tuple<EChReportedPerson, EChPerson>> ();
-            this.AddCaseToResolve = new List<EChReportedPerson>();
+			this.AddCaseToResolve = new List<EChReportedPerson>();
 
-            foreach (var person in this.GetPersonToAdd())
-            {
-                PersonToAdd.Add(person.Id, person);
-            }
+			foreach (var person in this.GetPersonToAdd())
+			{
+				PersonToAdd.Add(person.Id, person);
+			}
 
-            foreach (var person in this.GetPersonToRemove())
-            {
-                PersonToRemove.Add(person.Id, person);
-            }
+			foreach (var person in this.GetPersonToRemove())
+			{
+				PersonToRemove.Add(person.Id, person);
+			}
 
-            foreach (var family in this.GetFamilyToAdd())
-            {
-                FamilyToAdd.Add(family.Adult1.Id, family);
-            }
+			foreach (var family in this.GetFamilyToAdd())
+			{
+				FamilyToAdd.Add(family.Adult1.Id, family);
+			}
 
-            foreach (var family in this.GetFamilyToRemove())
-            {
+			foreach (var family in this.GetFamilyToRemove())
+			{
 				foreach (var adu in family.GetAdults())
 				{
 					FamilyToRemove.Add (adu.Id, family);
 				}
-            }
+			}
 
 			this.ReportFile = reportFile;
 
@@ -74,7 +74,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				this.AnalyseAllChangesAndReportTrace ();
 
-                this.DisposeReporting();
+				this.DisposeReporting();
 			}
 			catch (Exception)
 			{
@@ -82,64 +82,64 @@ namespace Epsitec.Aider.Data.ECh
 			}
 				
 
-            
-        }
+			
+		}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.FamilyToAdd = null;
-                this.FamilyToRemove = null;
-                this.PersonToAdd = null;
-                this.PersonToRemove = null;
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.FamilyToAdd = null;
+				this.FamilyToRemove = null;
+				this.PersonToAdd = null;
+				this.PersonToRemove = null;
 
-                //Result 
-                this.NewHouseHolds = null;
-                this.MissingHouseHolds = null;
-                this.PersonMovedOut = null;
-                this.PersonMovedIn = null;
-                this.NewPersons = null;
-                this.MissingPersons = null;
+				//Result 
+				this.NewHouseHolds = null;
+				this.MissingHouseHolds = null;
+				this.PersonMovedOut = null;
+				this.PersonMovedIn = null;
+				this.NewPersons = null;
+				this.MissingPersons = null;
 
-                this.NewUnion = null;
-                this.NewFamily = null;
-                this.NewFamilyWithChildren = null;
-                this.NewFamilyMono = null;
-                this.NewFamilyMonoWithChildren = null;
-                this.FamilyWithNewChilds = null;
-                this.FamilyWithChildMissing = null;
-                this.NewChilds = null;
-                this.ChildrenMissing = null;
-                this.ChildrenMove = null;
-                this.GainMajority = null;
-                this.MissingUnion = null;
-                this.WidowFamily = null;
-                this.MissingFamily = null;
-                this.MissingFamilyWithChildren = null;
-                this.MissingFamilyMono = null;
-                this.MissingFamilyMonoWithChildren = null;
-                this.ChildrenLeaveHouseholdForMajority = null;
-                this.AddCaseToResolve = null;
-            }
-            // Call Dispose on your base class.
-            base.Dispose(disposing);
-        }
+				this.NewUnion = null;
+				this.NewFamily = null;
+				this.NewFamilyWithChildren = null;
+				this.NewFamilyMono = null;
+				this.NewFamilyMonoWithChildren = null;
+				this.FamilyWithNewChilds = null;
+				this.FamilyWithChildMissing = null;
+				this.NewChilds = null;
+				this.ChildrenMissing = null;
+				this.ChildrenMove = null;
+				this.GainMajority = null;
+				this.MissingUnion = null;
+				this.WidowFamily = null;
+				this.MissingFamily = null;
+				this.MissingFamilyWithChildren = null;
+				this.MissingFamilyMono = null;
+				this.MissingFamilyMonoWithChildren = null;
+				this.ChildrenLeaveHouseholdForMajority = null;
+				this.AddCaseToResolve = null;
+			}
+			// Call Dispose on your base class.
+			base.Dispose(disposing);
+		}
 
-        public IEnumerable<EChReportedPerson> GetNewFamilies()
-        {
-            return this.NewHouseHolds;
-        }
+		public IEnumerable<EChReportedPerson> GetNewFamilies()
+		{
+			return this.NewHouseHolds;
+		}
 
 		public IEnumerable<EChReportedPerson> GetMissingFamilies()
 		{
 			return this.MissingHouseHolds;
 		}
 
-        public void CreateReport()
-        {
+		public void CreateReport()
+		{
 			Console.WriteLine ("ECH DATA UPDATER : CREATING REPORT OF CHANGES ON " + this.ReportFile);
-            //REPORT IN MARKDOWN (offline markdown reader: http://stackoverflow.com/questions/9843609/view-md-file-offline)
+			//REPORT IN MARKDOWN (offline markdown reader: http://stackoverflow.com/questions/9843609/view-md-file-offline)
 			using (System.IO.TextWriter tw = new System.IO.StreamWriter (this.ReportFile))
 			{
 				tw.WriteLine ("# Rapport Analyse ECH du " + DateTime.Now);
@@ -356,7 +356,7 @@ namespace Epsitec.Aider.Data.ECh
 				tw.Close ();
 				Console.WriteLine ("ECH DATA UPDATER : DONE!");
 			}
-        }
+		}
 
 
 		private void AnalyseAllChangesAndReportTrace()
@@ -414,7 +414,7 @@ namespace Epsitec.Aider.Data.ECh
 				}
 
 
-                /*
+				/*
 				var oldFamiliesMatched = family.GetAdults ().Select (ad => ad.Id).Select (id => FamilyToRemove.ContainsKey(id) ? FamilyToRemove[id] : null).Where(rec => rec != null).Distinct ().ToList();
 
 				//0
@@ -454,7 +454,7 @@ namespace Epsitec.Aider.Data.ECh
 					}
 
 				}
-                */
+				*/
 				//Union and Separation Detector
 				
 				if (monoParental)
@@ -819,34 +819,34 @@ namespace Epsitec.Aider.Data.ECh
 			tw.Close ();
 		}
 
-        private void DisposeReporting()
-        {
-            this.FamilyToAdd = null;
-            this.FamilyToRemove = null;
-            this.PersonToAdd = null;
-            this.PersonToRemove = null;
-            this.NewUnion = null;
-            this.NewFamily = null;
-            this.NewFamilyWithChildren = null;
-            this.NewFamilyMono = null;
-            this.NewFamilyMonoWithChildren = null;
-            this.FamilyWithNewChilds = null;
-            this.FamilyWithChildMissing = null;
-            this.NewChilds = null;
-            this.ChildrenMissing = null;
-            this.ChildrenMove = null;
-            this.GainMajority = null;
-            this.MissingUnion = null;
-            this.WidowFamily = null;
-            this.MissingFamily = null;
-            this.MissingFamilyWithChildren = null;
-            this.MissingFamilyMono = null;
-            this.MissingFamilyMonoWithChildren = null;
-            this.ChildrenLeaveHouseholdForMajority = null;
-            this.AddCaseToResolve = null;
+		private void DisposeReporting()
+		{
+			this.FamilyToAdd = null;
+			this.FamilyToRemove = null;
+			this.PersonToAdd = null;
+			this.PersonToRemove = null;
+			this.NewUnion = null;
+			this.NewFamily = null;
+			this.NewFamilyWithChildren = null;
+			this.NewFamilyMono = null;
+			this.NewFamilyMonoWithChildren = null;
+			this.FamilyWithNewChilds = null;
+			this.FamilyWithChildMissing = null;
+			this.NewChilds = null;
+			this.ChildrenMissing = null;
+			this.ChildrenMove = null;
+			this.GainMajority = null;
+			this.MissingUnion = null;
+			this.WidowFamily = null;
+			this.MissingFamily = null;
+			this.MissingFamilyWithChildren = null;
+			this.MissingFamilyMono = null;
+			this.MissingFamilyMonoWithChildren = null;
+			this.ChildrenLeaveHouseholdForMajority = null;
+			this.AddCaseToResolve = null;
 
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
-        }
+			GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+		}
 
 		private readonly static IEqualityComparer<EChPerson> PersonComparer = new LambdaComparer<EChPerson>((a,b) => a.Id == b.Id,a => a.Id.GetHashCode());
 
@@ -854,36 +854,36 @@ namespace Epsitec.Aider.Data.ECh
 
 
 		private string ReportFile;
-        private Dictionary<string, EChReportedPerson> FamilyToAdd;
-        private Dictionary<string, EChReportedPerson> FamilyToRemove;
-        private Dictionary<string, EChPerson> PersonToAdd;
-        private Dictionary<string, EChPerson> PersonToRemove;
+		private Dictionary<string, EChReportedPerson> FamilyToAdd;
+		private Dictionary<string, EChReportedPerson> FamilyToRemove;
+		private Dictionary<string, EChPerson> PersonToAdd;
+		private Dictionary<string, EChPerson> PersonToRemove;
 
-        private List<EChReportedPerson> NewUnion;
-        private List<EChReportedPerson> NewFamily;
-        private List<EChReportedPerson> NewFamilyWithChildren;
-        private List<EChReportedPerson> NewFamilyMono;
-        private List<EChReportedPerson> NewFamilyMonoWithChildren;
-        private List<EChReportedPerson> FamilyWithNewChilds;
-        private List<EChReportedPerson> FamilyWithChildMissing;
-        
-        private List<EChReportedPerson> GainMajority;
-        private List<EChReportedPerson> MissingUnion;
-        private List<EChReportedPerson> WidowFamily;
-        private List<EChReportedPerson> MissingFamily;
-        private List<EChReportedPerson> MissingFamilyWithChildren;
-        private List<EChReportedPerson> MissingFamilyMono;
-        private List<EChReportedPerson> MissingFamilyMonoWithChildren;
-        private List<EChReportedPerson> AddCaseToResolve;
+		private List<EChReportedPerson> NewUnion;
+		private List<EChReportedPerson> NewFamily;
+		private List<EChReportedPerson> NewFamilyWithChildren;
+		private List<EChReportedPerson> NewFamilyMono;
+		private List<EChReportedPerson> NewFamilyMonoWithChildren;
+		private List<EChReportedPerson> FamilyWithNewChilds;
+		private List<EChReportedPerson> FamilyWithChildMissing;
+		
+		private List<EChReportedPerson> GainMajority;
+		private List<EChReportedPerson> MissingUnion;
+		private List<EChReportedPerson> WidowFamily;
+		private List<EChReportedPerson> MissingFamily;
+		private List<EChReportedPerson> MissingFamilyWithChildren;
+		private List<EChReportedPerson> MissingFamilyMono;
+		private List<EChReportedPerson> MissingFamilyMonoWithChildren;
+		private List<EChReportedPerson> AddCaseToResolve;
 
-        private List<Tuple<EChReportedPerson, EChPerson>> NewChilds;
-        private List<Tuple<EChReportedPerson, EChPerson>> ChildrenMissing;
+		private List<Tuple<EChReportedPerson, EChPerson>> NewChilds;
+		private List<Tuple<EChReportedPerson, EChPerson>> ChildrenMissing;
 		private List<Tuple<EChReportedPerson, EChPerson>> ChildrenMove;
 		private List<Tuple<EChReportedPerson, EChPerson>> ChildrenLeaveHouseholdForMajority;
 
 
-        //RESULT DICTIONARY
-        private ISet<EChReportedPerson> NewHouseHolds;
+		//RESULT DICTIONARY
+		private ISet<EChReportedPerson> NewHouseHolds;
 		private ISet<EChReportedPerson> MissingHouseHolds;
 		private ISet<EChPerson> NewPersons;
 		private ISet<EChPerson> MissingPersons;
@@ -891,5 +891,5 @@ namespace Epsitec.Aider.Data.ECh
 		private Dictionary<EChPerson, List<EChReportedPerson>> PersonMovedIn;
 
 
-    }
+	}
 }
