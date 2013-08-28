@@ -34,7 +34,17 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					this.AddDefaultBrick (wall)
 						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
 					break;
-				
+
+				case WarningType.EChHouseholdAdded:
+                    this.AddDefaultBrick(wall)
+                        .EnableAction<ActionAiderPersonWarningViewController3ProcessNewHousehold> ();
+                    break;
+
+                case WarningType.EChHouseholdChanged:
+                    this.AddDefaultBrick(wall)
+                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+                    break;
+
 				case WarningType.EChAddressChanged:
 					this.AddDefaultBrick (wall)
 						.EnableAction<ActionAiderPersonWarningViewController2Relocate> ();

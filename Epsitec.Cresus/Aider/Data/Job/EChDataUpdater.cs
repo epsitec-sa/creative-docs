@@ -48,23 +48,17 @@ namespace Epsitec.Aider.Data.Job
 					
 					//Appli update to EChPerson and add a DataChangedECh warning on AiderPerson
 					EChDataUpdater.UpdateEChPersonEntities (coreData, personsToUpdate);
-
 					EChDataUpdater.UpdateHouseholdsAndPropagate (coreData, houseHoldsToUpdate, parishAddressRepository);
-
 					EChDataUpdater.TagForDeletionEChPersonEntities (coreData, personsToRemove);
-
+                    EChDataUpdater.AiderPersonEntitiesTagedForDeletion = new Dictionary<EntityKey, AiderPersonEntity>();
+                    EChDataUpdater.TagForDeletionAiderPersonEntities(coreData, personsToRemove);
+                    EChDataUpdater.TagAiderPersonEntitiesForHouseholdMissing(coreData, missingHouseHoldsToRemove);
 					EChDataUpdater.CreateNewEChPersonEntities (coreData, personsToCreate);
-
-					EChDataUpdater.AiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity> ();
-					EChDataUpdater.RemoveOldEChReportedPersonEntities (coreData, houseHoldsToRemove);
-					EChDataUpdater.CreateNewEChReportedPersonEntities (coreData, houseHoldsToCreate);
-
-					EChDataUpdater.AiderPersonEntitiesTagedForDeletion = new Dictionary<EntityKey, AiderPersonEntity>();
-					EChDataUpdater.TagForDeletionAiderPersonEntities (coreData, personsToRemove);
-					EChDataUpdater.TagAiderPersonEntitiesForHouseholdMissing(coreData, missingHouseHoldsToRemove);
-
-					EChDataUpdater.CreateNewAiderPersonEntities(coreData, personsToCreate, parishAddressRepository);
-					EChDataUpdater.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);
+                    EChDataUpdater.CreateNewAiderPersonEntities(coreData, personsToCreate, parishAddressRepository);
+                    EChDataUpdater.AiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity>();
+                    EChDataUpdater.RemoveOldEChReportedPersonEntities(coreData, houseHoldsToRemove);
+                    EChDataUpdater.CreateNewEChReportedPersonEntities(coreData, houseHoldsToCreate);
+                    EChDataUpdater.CreateNewAiderHouseholdEntities(coreData, newHouseHoldsToCreate);		
 				}
 			}
 			else
@@ -212,8 +206,6 @@ namespace Epsitec.Aider.Data.Job
 			{
 				foreach (var eChReportedPerson in houseHoldsToCreate)
 				{
-					int newMemberCompositionCount = 0;
-
 					//	Create eCH ReportedPerson entity, with the new eCH address, and assign the
 					//	two adults (if any) and the children found in the eCH data:
 
@@ -225,13 +217,11 @@ namespace Epsitec.Aider.Data.Job
 					if (eChReportedPerson.Adult1 != null)	//	always true...
 					{
 						eChReportedPersonEntity.Adult1 = EChDataUpdater.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
-						newMemberCompositionCount++;
 					}
 
 					if (eChReportedPerson.Adult2 != null)
 					{
 						eChReportedPersonEntity.Adult2 = EChDataUpdater.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
-						newMemberCompositionCount++;
 					}
 
 					foreach (var eChChild in eChReportedPerson.Children)
@@ -683,7 +673,7 @@ namespace Epsitec.Aider.Data.Job
 			};
 
 			var subscription = businessContext.DataContext.GetByExample<AiderSubscriptionEntity>(subscriptionExample).FirstOrDefault();
-			if (subscription != null)
+			if (subscription.IsNotNull())
 			{
 				subscription.RefreshCache();
 			}
