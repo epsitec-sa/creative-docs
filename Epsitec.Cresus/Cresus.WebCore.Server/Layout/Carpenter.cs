@@ -1199,6 +1199,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				}
 				else
 				{
+					//	Let the text formatter format the text by using its own complex
+					//	algorithm (this will resolve enums, numbers, etc.)
+
 					return (TextFormatter.FormatText (objectValue)).ToString ();
 				}
 			}
