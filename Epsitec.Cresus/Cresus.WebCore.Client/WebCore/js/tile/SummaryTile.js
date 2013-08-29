@@ -80,9 +80,12 @@ function() {
 
     addEntityColumn: function(entityId, refresh) {
       this.column.selectTile(this);
-      this.column.addEntityColumn(
+      if(Ext.isDefined(this.subViewId)) {
+        this.column.addEntityColumn(
           this.subViewMode, this.subViewId, entityId, refresh
-      );
+        );
+      }
+      
     },
 
     autoCreateNullEntity: function()  {

@@ -20,12 +20,12 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (2)]
-    public sealed class ActionAiderPersonWarningViewController2Relocate : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (3)]
+    public sealed class ActionAiderPersonWarningViewController3ProcessParishDeparture : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Traiter");
+			return Resources.FormattedText ("Marquer comme lu");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -40,23 +40,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             this.BusinessContext.DeleteEntity(this.Entity);
 
             if (appliForAll)
-            {
-                var contactExample = new AiderContactEntity();
-                var householdExample = new AiderHouseholdEntity();
-                contactExample.Person = this.Entity.Person;
-                contactExample.Household = householdExample;
-                var request = new Request()
-                {
-                    RootEntity = contactExample,
-                    RequestedEntity = householdExample
-                };
-
-                var houshold = this.BusinessContext.DataContext.GetByRequest<AiderHouseholdEntity>(request).FirstOrDefault();
-                foreach (var member in houshold.Members)
+            {	
+                foreach (var member in this.Entity.Person.Contacts.First().Household.Members)
                 {
                     foreach (var warn in member.Warnings)
                     {
-                        if(warn.WarningType.Equals(WarningType.EChAddressChanged))
+                        if(warn.WarningType.Equals(WarningType.ParishDeparture))
                         {
                             member.RemoveWarningInternal(warn);
                             this.BusinessContext.DeleteEntity(warn);

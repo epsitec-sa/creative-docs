@@ -22,8 +22,8 @@ using Epsitec.Aider.Data.ECh;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (3)]
-    public sealed class ActionAiderPersonWarningViewController3ProcessNewHousehold : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (4)]
+    public sealed class ActionAiderPersonWarningViewController4ProcessNewHousehold : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -123,23 +123,24 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 .End()
                 .Field<bool>()
                     .Title("Souscrire à un abonnement BN")
-                    .InitialValue(true)
+                    .InitialValue(false)
                 .End();
             }
             else
             {
-                analyse = analyse.AppendLine(TextFormatter.FormatText("Nouveau ménage:\n",newHousehold.Address.GetCompactSummary()));            
-                form
-                .Title(this.GetTitle())
-                .Text(analyse)
-                .Field<bool>()
-                    .Title("Créer le nouveau ménage")
-                    .InitialValue(true)
-                .End()
-                .Field<bool>()
-                    .Title("Souscrire à un abonnement BN")
-                    .InitialValue(true)
-                .End();
+                analyse = analyse.AppendLine(TextFormatter.FormatText("Nouveau ménage:\n",newHousehold.Address.GetCompactSummary()));
+				form
+					.Title (this.GetTitle ())
+					.Text (analyse)
+					.Field<bool> ()
+						.Title ("Créer le nouveau ménage")
+						.InitialValue (true)
+					.End ()
+					.Field<bool> ()
+						.Title ("Souscrire à un abonnement BN")
+						.InitialValue (true)
+					.End ()
+				.End ();
             } 
         }
 	}

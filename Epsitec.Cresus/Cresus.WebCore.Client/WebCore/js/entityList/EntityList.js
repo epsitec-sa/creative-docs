@@ -323,9 +323,11 @@ function() {
         fields: this.createFields(columnDefinitions),
         sorters: this.createSorters(sorterDefinitions),
         autoLoad: autoLoad,
-        pageSize: 100,
+        pageSize: 120,
         buffered: true,
-        leadingBufferZone: 200,
+        trailingBufferZone: 60,
+        leadingBufferZone: 60,
+        purgePageCount: 0,
         remoteSort: true,
         proxy: {
           type: 'ajax',
@@ -599,8 +601,7 @@ function() {
       }
       if(this.isReloading) {
         this.isReloading = false;
-        this.selModel.selectPrevious();
-        
+
       }
     },
 

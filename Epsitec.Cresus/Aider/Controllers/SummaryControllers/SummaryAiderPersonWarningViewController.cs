@@ -2,9 +2,12 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Bricks;
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -21,8 +24,17 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 				
 				case WarningType.EChProcessDeparture:
+					wall.AddBrick (x => x.Person.Contacts[0])
+							.Title ("saisir une adresse hors du canton")
+							.Icon ("Data.AiderAddress")
+							.Text (x => x.GetSummary ())
+							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController0SetVisibility> ();
+						.EnableAction<ActionAiderPersonWarningViewController6ProcessDeparture> ();
+
+					
+
 					break;
 				
 				case WarningType.EChProcessArrival:
@@ -37,27 +49,27 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				case WarningType.EChHouseholdAdded:
                     this.AddDefaultBrick(wall)
-                        .EnableAction<ActionAiderPersonWarningViewController3ProcessNewHousehold> ();
+                        .EnableAction<ActionAiderPersonWarningViewController4ProcessNewHousehold> ();
                     break;
 
                 case WarningType.EChHouseholdChanged:
                     this.AddDefaultBrick(wall)
-                        .EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+						.EnableAction<ActionAiderPersonWarningViewController5ProcessHouseholdChange> ();
                     break;
 
 				case WarningType.EChAddressChanged:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController2Relocate> ();
+						.EnableAction<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
 					break;
 				
 				case WarningType.ParishArrival:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController2Relocate> ();
+						.EnableAction<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
 					break;
 				
 				case WarningType.ParishDeparture:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+						.EnableAction<ActionAiderPersonWarningViewController3ProcessParishDeparture> ();
 					break;
 				
 				default:

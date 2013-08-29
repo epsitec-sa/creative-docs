@@ -96,8 +96,11 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController0SetVisibility.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController1DiscardWarning.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController2Relocate.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController3ProcessNewHousehold.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController2ProcessParishArrival.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController4ProcessNewHousehold.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController3ProcessParishDeparture.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController5ProcessHouseholdChange.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController6ProcessDeparture.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />

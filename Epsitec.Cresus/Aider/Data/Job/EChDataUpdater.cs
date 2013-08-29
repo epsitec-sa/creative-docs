@@ -484,8 +484,7 @@ namespace Epsitec.Aider.Data.Job
 					}
 					catch (Exception)
 					{
-						Console.WriteLine ("ECH DATA UPDATER : ERROR DURING UPDATE, ABORT");
-						return false;
+						Console.WriteLine ("Error: EChPerson {0} {1} throw exception",toChange.NewValue.OfficialName,toChange.NewValue.FirstNames);
 					}
 				}
 
@@ -654,8 +653,7 @@ namespace Epsitec.Aider.Data.Job
 					}
 					catch (Exception)
 					{
-						Console.WriteLine ("ECH DATA UPDATER : ERROR DURING UPDATE, ABORT");
-						return false;
+						Console.WriteLine ("Error: EChReportedPerson (FAMILYKEY:{0}) throw exception", toChange.NewValue.FamilyKey);
 					}
 				}
 
