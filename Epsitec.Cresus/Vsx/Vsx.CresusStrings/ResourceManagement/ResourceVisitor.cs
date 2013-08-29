@@ -15,31 +15,30 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		public virtual ResourceNode VisitBundle(ResourceBundle bundle)
 		{
-			ResourceItem[] newItems = null;
-			var items = bundle.Items;
-			for (int i = 0; i < items.Length; ++i)
+			Dictionary<string, ResourceItem> newTable = null;
+			foreach (var kv in bundle)
 			{
-				var item = items[i];
+				var item = kv.Value;
 				var newItem = (ResourceItem) item.Accept (this);
 				if (item != newItem)
 				{
-					if (newItems == null)
+					if (newTable == null)
 					{
-						newItems = new ResourceItem[items.Length];
+						newTable = new Dictionary<string, ResourceItem>();
 					}
-					newItems[i] = newItem;
+					newTable[kv.Key] = newItem;
 				}
 			}
-			if (newItems != null)
+			if (newTable != null)
 			{
-				for (int i = 0; i < newItems.Length; ++i)
+				foreach (var kv in bundle)
 				{
-					if (newItems[i] == null)
+					if (!newTable.ContainsKey (kv.Key))
 					{
-						newItems[i] = items[i];
+						newTable[kv.Key] = kv.Value;
 					}
 				}
-				bundle = new ResourceBundle (bundle, newItems);
+				bundle = new ResourceBundle (bundle, newTable);
 			}
 			return bundle;
 		}

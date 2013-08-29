@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -8,15 +9,15 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.ResourceManagement
 {
-	public class ResourceBundle : ResourceNode, IEnumerable<ResourceItem>
+	public class ResourceBundle : ResourceNode, IResourceTable
 	{
-		public ResourceBundle(string fileName, ResourceBundle neutralBundle)
-			: this (fileName, XDocument.Load (fileName, LoadOptions.SetLineInfo).Root, neutralBundle)
+		public ResourceBundle(string fileName, ResourceBundle neutralCultureBundle)
+			: this (fileName, XDocument.Load (fileName, LoadOptions.SetLineInfo).Root, neutralCultureBundle)
 		{
 		}
 
-		public ResourceBundle(ResourceBundle bundle, ResourceItem[] items)
-			: this (bundle.fileName, bundle.element, bundle.NeutralBundle, _ => items)
+		public ResourceBundle(ResourceBundle bundle, IReadOnlyDictionary<string, ResourceItem> byId)
+			: this (bundle.fileName, bundle.element, byId)
 		{
 		}
 
@@ -37,35 +38,11 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public string Culture
-		{
-			get
-			{
-				return this.element.Attribute ("culture").GetString ();
-			}
-		}
-
-		public ResourceItem[] Items
-		{
-			get
-			{
-				return this.items;
-			}
-		}
-
 		public IReadOnlyDictionary<string, ResourceItem> ByName
 		{
 			get
 			{
 				return this.byName.Value;
-			}
-		}
-
-		public IReadOnlyDictionary<string, ResourceItem> ById
-		{
-			get
-			{
-				return this.byId.Value;
 			}
 		}
 
@@ -77,21 +54,6 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public bool IsNeutral
-		{
-			get
-			{
-				return this.neutralBundle == null;
-			}
-		}
-
-		public ResourceBundle NeutralBundle
-		{
-			get
-			{
-				return this.neutralBundle;
-			}
-		}
 
 		#region Object Overrides
 
@@ -112,11 +74,74 @@ namespace Epsitec.Cresus.ResourceManagement
 		#endregion
 
 
-		#region IEnumerable<BundleItem> Members
 
-		public IEnumerator<ResourceItem> GetEnumerator()
+		#region IResourceTable Members
+
+		public CultureInfo Culture
 		{
-			return this.items.AsEnumerable<ResourceItem>().GetEnumerator ();
+			get
+			{
+				return this.culture;
+			}
+		}
+
+		#endregion
+
+		#region IReadOnlyDictionary<string,ResourceItem> Members
+
+		public bool ContainsKey(string key)
+		{
+			return this.byId.ContainsKey (key);
+		}
+
+		public IEnumerable<string> Keys
+		{
+			get
+			{
+				return this.byId.Keys;
+			}
+		}
+
+		public bool TryGetValue(string key, out ResourceItem value)
+		{
+			return this.byId.TryGetValue (key, out value);
+		}
+
+		public IEnumerable<ResourceItem> Values
+		{
+			get
+			{
+				return this.byId.Values;
+			}
+		}
+
+		public ResourceItem this[string key]
+		{
+			get
+			{
+				return this.byId[key];
+			}
+		}
+
+		#endregion
+
+		#region IReadOnlyCollection<KeyValuePair<string,ResourceItem>> Members
+
+		public int Count
+		{
+			get
+			{
+				return this.byId.Count;
+			}
+		}
+
+		#endregion
+
+		#region IEnumerable<KeyValuePair<string,ResourceItem>> Members
+
+		public IEnumerator<KeyValuePair<string, ResourceItem>> GetEnumerator()
+		{
+			return this.byId.GetEnumerator ();
 		}
 
 		#endregion
@@ -130,37 +155,38 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		#endregion
 
-		private static IEnumerable<ResourceItem> LoadItems(XElement element, ResourceBundle sourceBundle)
+
+		private static IEnumerable<ResourceItem> LoadItems(XElement element, ResourceBundle neutralCultureBundle)
 		{
-			return element.Elements ("data").Select (e => ResourceItem.Load (e, sourceBundle));
+			return element.Elements ("data").Select (e => ResourceItem.Load (e, neutralCultureBundle));
 		}
 
-		private ResourceBundle(string fileName, XElement element, ResourceBundle neutralBundle)
-			: this (fileName, element, neutralBundle, sourceBundle => ResourceBundle.LoadItems (element, sourceBundle).ToArray ())
+	
+		private ResourceBundle(string fileName, XElement element, ResourceBundle neutralCultureBundle)
+			: this (fileName, element, ResourceBundle.LoadItems (element, neutralCultureBundle).ToDictionary (i => i.Id))
 		{
 		}
 
-		private ResourceBundle(string fileName, XElement element, ResourceBundle neutralBundle, Func<ResourceBundle, ResourceItem[]> itemsFactory)
+		private ResourceBundle(string fileName, XElement element, IReadOnlyDictionary<string, ResourceItem> byId)
 		{
-			this.fileName		= fileName;
-			this.element		= element;
-			this.neutralBundle	= neutralBundle;
-			this.items			= itemsFactory(this);
-			this.byName			= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.ToDictionary (i => i.Name));
-			this.byId			= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.ToDictionary (i => i.Id));
+			this.fileName	= fileName;
+			this.element	= element;
+			this.culture	= CultureInfo.CreateSpecificCulture(this.element.Attribute ("culture").GetString ());
+
+			this.byId		= byId;
+			this.byName		= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.Values.ToDictionary (i => i.Name));
 		}
 
 		private IEnumerable<string> ToStringAtoms()
 		{
 			yield return this.Name;
-			yield return this.Culture;
+			yield return this.Culture.Name;
 		}
 
 		private readonly string fileName;
-		private readonly ResourceBundle neutralBundle;
 		private readonly XElement element;
-		private readonly ResourceItem[] items;
+		private readonly CultureInfo culture;
+		private readonly IReadOnlyDictionary<string, ResourceItem> byId;
 		private readonly Lazy<IReadOnlyDictionary<string, ResourceItem>> byName;
-		private readonly Lazy<IReadOnlyDictionary<string, ResourceItem>> byId;
 	}
 }

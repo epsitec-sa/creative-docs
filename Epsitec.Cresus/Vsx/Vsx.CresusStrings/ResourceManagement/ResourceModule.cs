@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,8 +36,8 @@ namespace Epsitec.Cresus.ResourceManagement
 		{
 			this.info            = info;
 			this.bundles         = bundles;
-			this.byNameFirst     = new Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> (this.ByNameFirstFactory);
-			this.byCultureFirst  = new Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> (this.ByCultureFirstFactory);
+			this.byNameFirst     = new Lazy<Dictionary<string, Dictionary<CultureInfo, ResourceBundle>>> (this.ByNameFirstFactory);
+			this.byCultureFirst  = new Lazy<Dictionary<CultureInfo, Dictionary<string, ResourceBundle>>> (this.ByCultureFirstFactory);
 		}
 
 		public ResourceModuleInfo Info
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public Dictionary<string, Dictionary<string, ResourceBundle>> ByNameFirst
+		public IReadOnlyDictionary<string, Dictionary<CultureInfo, ResourceBundle>> ByNameFirst
 		{
 			get
 			{
@@ -55,12 +56,17 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public Dictionary<string, Dictionary<string, ResourceBundle>> ByCultureFirst
+		public IReadOnlyDictionary<CultureInfo, Dictionary<string, ResourceBundle>> ByCultureFirst
 		{
 			get
 			{
 				return this.byCultureFirst.Value;
 			}
+		}
+
+		public ResourceBundle GetNeutralCultureBundle()
+		{
+			return this.bundles.FirstOrDefault ();
 		}
 
 		#region Object Overrides
@@ -99,7 +105,7 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		#endregion
 
-		private Dictionary<string, Dictionary<string, ResourceBundle>> ByNameFirstFactory()
+		private Dictionary<string, Dictionary<CultureInfo, ResourceBundle>> ByNameFirstFactory()
 		{
 			return
 			(
@@ -122,7 +128,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			).ToDictionary (a => a.Name, a => a.NameGroups);
 		}
 
-		private Dictionary<string, Dictionary<string, ResourceBundle>> ByCultureFirstFactory()
+		private Dictionary<CultureInfo, Dictionary<string, ResourceBundle>> ByCultureFirstFactory()
 		{
 			return
 			(
@@ -188,7 +194,14 @@ namespace Epsitec.Cresus.ResourceManagement
 					var neutralGroup = nameGrouping.NameGroups.First ();
 					var otherGroups = nameGrouping.NameGroups.Skip (1);
 
+
+
+
 					var neutralBundle = new ResourceBundle (neutralGroup.FileName, null);
+
+
+
+
 					yield return neutralBundle;
 
 					foreach (var otherGroup in otherGroups)
@@ -200,8 +213,8 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 		private readonly ResourceModuleInfo info;
-		private readonly List<ResourceBundle> bundles;
-		private readonly Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> byNameFirst;
-		private readonly Lazy<Dictionary<string, Dictionary<string, ResourceBundle>>> byCultureFirst;
+		private readonly IEnumerable<ResourceBundle> bundles;
+		private readonly Lazy<Dictionary<string, Dictionary<CultureInfo, ResourceBundle>>> byNameFirst;
+		private readonly Lazy<Dictionary<CultureInfo, Dictionary<string, ResourceBundle>>> byCultureFirst;
 	}
 }

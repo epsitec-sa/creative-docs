@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -20,8 +21,8 @@ namespace Epsitec.Cresus.ResourceManagement
 
 	public class ResourceItemError : ResourceItem
 	{
-		public ResourceItemError(ResourceItemErrors reasons, string id, string name, XElement element, ResourceBundle sourceBundle, ResourceItem neutralItem)
-			: base (id, name, element, neutralItem)
+		public ResourceItemError(ResourceItemErrors reasons, string id, string name, XElement element)
+			: base (ResourceItemError.EnsureKey(id), ResourceItemError.EnsureKey(name), element)
 		{
 			this.reasons = reasons;
 		}
@@ -33,6 +34,17 @@ namespace Epsitec.Cresus.ResourceManagement
 				return this.reasons;
 			}
 		}
+
+		private static string EnsureKey(string key)
+		{
+			if (key != null)
+			{
+				return key;
+			}
+			return '?' + Interlocked.Increment (ref ResourceItemError.missingKey).ToString ();
+		}
+
+		private static int missingKey;
 
 		private readonly ResourceItemErrors reasons;
 	}

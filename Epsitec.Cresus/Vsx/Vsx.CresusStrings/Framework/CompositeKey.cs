@@ -45,7 +45,19 @@ namespace Epsitec
 
 		public override string ToString()
 		{
-			return '{' + string.Join (".", this.Select (k => k.ToString ())) + '}';
+			return string.Join (";", this.Select (k => k.ToString ()));
+		}
+
+		#endregion
+
+		#region IKey Members
+
+		public IEnumerable<object> Values
+		{
+			get
+			{
+				return keys.SelectMany (k => k.Values);
+			}
 		}
 
 		#endregion
@@ -104,6 +116,18 @@ namespace Epsitec
 			public override string ToString()
 			{
 				return "{}";
+			}
+
+			#endregion
+
+			#region IKey Members
+
+			public IEnumerable<object> Values
+			{
+				get
+				{
+					yield break;
+				}
 			}
 
 			#endregion

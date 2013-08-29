@@ -10,51 +10,50 @@ namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceItem : ResourceNode, IXmlLineInfo
 	{
-		public static ResourceItem Load(XElement element, ResourceBundle sourceBundle)
+		public static ResourceItem Load(XElement element, ResourceBundle neutralCultureBundle)
 		{
 			var id = element.Attribute ("id").GetString ();
 			var name = element.Attribute ("name").GetString ();
 
 			ResourceItemErrors errors = 0;
 			ResourceItem neutralItem = null;
-			if (sourceBundle.IsNeutral)
+			if (neutralCultureBundle == null)
 			{
-				errors = GetNeutralErrors (id, name);
+				errors = GetKeysErrors (id, name);
 			}
 			else
 			{
-				neutralItem = ResourceItem.GetNeutralItem (id, name, element, sourceBundle.NeutralBundle);
-				errors = GetNonNeutralErrors (id, name, neutralItem);
+				neutralItem = ResourceItem.GetNeutralItem (id, name, element, neutralCultureBundle);
+				if (id == null)
+				{
+					id = neutralItem.Id;
+				}
+				if (name == null)
+				{
+					name = neutralItem.Name;
+				}
+				errors = GetErrors (id, name, neutralItem);
 			}
 
 			if (errors != 0)
 			{
-				return new ResourceItemError (errors, id, name, element, sourceBundle, neutralItem);
+				return new ResourceItemError (errors, id, name, element);
 			}
-			return new ResourceItem (id, name, element, neutralItem);
+			return new ResourceItem (id, name, element);
 		}
 
-		protected ResourceItem(string id, string name, XElement element, ResourceItem neutralItem)
+		protected ResourceItem(string id, string name, XElement element)
 		{
 			this.id = id;
 			this.name = name;
 			this.element = element;
-			this.neutralItem = neutralItem;
 		}
 
 		public string Id
 		{
 			get
 			{
-				if (this.id != null)
-				{
-					return this.id;
-				}
-				else if (this.neutralItem != null)
-				{
-					return this.neutralItem.id;
-				}
-				return null;
+				return this.id;
 			}
 		}
 
@@ -62,15 +61,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		{
 			get
 			{
-				if (this.name != null)
-				{
-					return this.name;
-				}
-				else if (this.neutralItem != null)
-				{
-					return this.neutralItem.name;
-				}
-				return null;
+				return this.name;
 			}
 		}
 
@@ -79,22 +70,6 @@ namespace Epsitec.Cresus.ResourceManagement
 			get
 			{
 				return this.element == null ? null : this.element.Value;
-			}
-		}
-
-		public bool IsNeutral
-		{
-			get
-			{
-				return this.neutralItem == null;
-			}
-		}
-
-		public ResourceItem NeutralItem
-		{
-			get
-			{
-				return this.neutralItem;
 			}
 		}
 
@@ -144,18 +119,19 @@ namespace Epsitec.Cresus.ResourceManagement
 		#endregion
 
 
-		private static ResourceItem GetNeutralItem(string id, string name, XElement sourceElement, ResourceBundle neutralBundle)
+		private static ResourceItem GetNeutralItem(string id, string name, XElement sourceElement, ResourceBundle neutralCultureBundle)
 		{
 			ResourceItem neutralItem;
-			if (id != null && neutralBundle.ById.TryGetValue (id, out neutralItem) || name != null && neutralBundle.ByName.TryGetValue (name, out neutralItem))
+			if (id   != null && neutralCultureBundle.TryGetValue (id, out neutralItem) ||
+				name != null && neutralCultureBundle.ByName.TryGetValue (name, out neutralItem))
 			{
 				return neutralItem;
 			}
-			var errors = ResourceItemErrors.UndefinedResource | ResourceItem.GetNeutralErrors (id, name);
-			return new ResourceItemError (errors, id, name, null, neutralBundle, null);
+			var errors = ResourceItemErrors.UndefinedResource | ResourceItem.GetKeysErrors (id, name);
+			return new ResourceItemError (errors, id, name, null);
 		}
 
-		private static ResourceItemErrors GetNeutralErrors(string id, string name)
+		private static ResourceItemErrors GetKeysErrors(string id, string name)
 		{
 			ResourceItemErrors errors = 0;
 			if (id == null)
@@ -169,23 +145,15 @@ namespace Epsitec.Cresus.ResourceManagement
 			return errors;
 		}
 
-		private static ResourceItemErrors GetNonNeutralErrors(string id, string name, ResourceItem neutralItem)
+		private static ResourceItemErrors GetErrors(string id, string name, ResourceItem neutralItem)
 		{
-			ResourceItemErrors errors = 0;
+			ResourceItemErrors errors = ResourceItem.GetKeysErrors(id, name);
 			var neutralId = neutralItem.id;
 			var neutralName = neutralItem.name;
 
 			if (neutralItem is ResourceItemError)
 			{
 				errors |= ResourceItemErrors.NoNeutralResource;
-			}
-			if (id == null && neutralId == null)
-			{
-				errors |= ResourceItemErrors.NoId;
-			}
-			if (name == null && neutralName == null)
-			{
-				errors |= ResourceItemErrors.NoName;
 			}
 			if (id != null && neutralId != null && id != neutralId)
 			{
@@ -216,6 +184,5 @@ namespace Epsitec.Cresus.ResourceManagement
 		private readonly string id;
 		private readonly string name;
 		private readonly XElement element;
-		private readonly ResourceItem neutralItem;
 	}
 }

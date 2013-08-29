@@ -9,9 +9,8 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
-using Roslyn.Compilers;
-using Roslyn.Services;
-using Roslyn.Services.Host;
+//using Roslyn.Compilers;
+//using Roslyn.Services.Host;
 
 namespace Epsitec.Cresus.Strings
 {
@@ -21,6 +20,23 @@ namespace Epsitec.Cresus.Strings
 	[ContentType ("CSharp")]
 	internal class QuickInfoSourceProvider : IQuickInfoSourceProvider
 	{
+		public QuickInfoSourceProvider()
+		{
+			using (new TimeTrace ("QuickInfoSourceProvider"))
+			{
+				var solution = Roslyn.Services.Workspace.PrimaryWorkspace.CurrentSolution;
+				var workspace = Roslyn.Services.Workspace.LoadSolution (solution.FilePath, enableFileTracking: true);
+				this.Solution = workspace.CurrentSolution;
+			}
+		}
+
+		public Roslyn.Services.ISolution Solution
+		{
+			get;
+			set;
+		}
+
+
 		[Import]
 		internal ITextStructureNavigatorSelectorService NavigatorService
 		{
@@ -40,17 +56,7 @@ namespace Epsitec.Cresus.Strings
 			//Trace.WriteLine (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 			using (new TimeTrace ("TryCreateQuickInfoSource"))
 			{
-				var workspace = Workspace.PrimaryWorkspace;
-				var solution = workspace.CurrentSolution;
-				var newWorkspace = Workspace.LoadSolution (solution.FilePath, enableFileTracking: true);
-				var newSolution = newWorkspace.CurrentSolution;
-
-				//var eq1 = workspace == newWorkspace;
-				//var eq2 = Workspace.PrimaryWorkspace == newWorkspace;
-				//var eq3 = solution == newSolution;
-				//var eq4 = Workspace.PrimaryWorkspace.CurrentSolution == newSolution;
-	
-				return new QuickInfoSource (this, textBuffer, newSolution);
+				return new QuickInfoSource (this, textBuffer);
 			}
 		}
 	}

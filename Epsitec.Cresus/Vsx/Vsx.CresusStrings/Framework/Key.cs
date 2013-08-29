@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,40 +9,35 @@ namespace Epsitec
 {
 	public interface IKey : IEnumerable<IKey>, IEquatable<IKey>
 	{
-	}
-
-	public static class Key
-	{
-		public static IKey Create(string value)
-		{
-			return new Key<string> (value);
-		}
-		public static ICompositeKey Split(string value, char separator = '.')
-		{
-			value.ThrowIfNull ();
-			return new CompositeKey (value.Split (separator).Select (s => Key.Create (s)));
-		}
-	}
-
-	public class Key<T> : IKey
-	{
-		public Key(T value)
-		{
-			value.ThrowIfNull ();
-			this.Value = value;
-		}
-
-		public T Value
+		IEnumerable<object> Values
 		{
 			get;
-			private set;
 		}
+	}
+
+	public class Key : IKey
+	{
+		public static IKey Create(object key)
+		{
+			return Key.ToKey(key);
+		}
+
+		public static ICompositeKey Create(IEnumerable<object> subkeys)
+		{
+			return new CompositeKey (subkeys.Select (s => Key.ToKey (s)));
+		}
+
+		public static ICompositeKey Create(object key, params object[] subkeys)
+		{
+			return Key.Create(key.AsSequence().Concat(subkeys));
+		}
+
 
 		#region Object Overrides
 
 		public override int GetHashCode()
 		{
-			return this.Value.GetHashCode ();
+			return this.value.GetHashCode ();
 		}
 
 		public override bool Equals(object obj)
@@ -51,7 +47,19 @@ namespace Epsitec
 
 		public override string ToString()
 		{
-			return this.Value.ToString ();
+			return this.value.ToString ();
+		}
+
+		#endregion
+
+		#region IKey Members
+
+		public IEnumerable<object> Values
+		{
+			get
+			{
+				yield return this.value;
+			}
 		}
 
 		#endregion
@@ -60,8 +68,8 @@ namespace Epsitec
 
 		public bool Equals(IKey other)
 		{
-			var otherKey = other as Key<T>;
-			return otherKey != null && (this == otherKey || object.Equals (this.Value, otherKey.Value));
+			var otherKey = other as Key;
+			return otherKey != null && (this == otherKey || object.Equals (this.value, otherKey.value));
 		}
 
 		#endregion
@@ -83,5 +91,29 @@ namespace Epsitec
 		}
 
 		#endregion
+
+		private static IKey ToKey(object o)
+		{
+			if (o is IKey)
+			{
+				return o as IKey;
+			}
+			else if (o is IEnumerable<object>)
+			{
+				return Key.Create (o as IEnumerable<object>);
+			}
+			else
+			{
+				return new Key (o);
+			}
+		}
+
+		private Key(object value)
+		{
+			value.ThrowIfNull ();
+			this.value = value;
+		}
+
+		private readonly object value;
 	}
 }

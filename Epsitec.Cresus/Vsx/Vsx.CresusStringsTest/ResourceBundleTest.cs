@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Strings
 				{
 					map = map.GetOrAdd (subkey, key => new Dictionary<string, object> ()) as Dictionary<string, object>;
 				}
-				map[this.bundle.Culture] = item;
+				map[this.bundle.Culture.Name] = item;
 				return item;
 			}
 

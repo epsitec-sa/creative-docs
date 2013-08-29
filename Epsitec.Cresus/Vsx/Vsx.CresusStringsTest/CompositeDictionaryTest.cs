@@ -29,16 +29,16 @@ namespace Epsitec.Cresus.Strings
 		{
 			var dic = CompositeDictionaryTest.CreateDic1 ();
 
-			var value1 = dic[Key.Split ("Strings.Application.Name.fr")];
+			var value1 = dic["Strings.Application.Name.fr".Split('.')];
 			Assert.AreEqual ("Strings.Application.Name.fr", value1);
 
-			dic[Key.Split ("Strings.Application.Name.fr")] = "new value";
-			Assert.AreEqual (dic[Key.Split ("Strings.Application.Name.fr")], "new value");
+			dic["Strings.Application.Name.fr".Split ('.')] = "new value";
+			Assert.AreEqual (dic["Strings.Application.Name.fr".Split ('.')], "new value");
 
-			dic[Key.Split ("Strings.Application.Name.en")] = "english";
-			Assert.AreEqual (dic[Key.Split ("Strings.Application.Name.en")], "english");
+			dic["Strings.Application.Name.en".Split ('.')] = "english";
+			Assert.AreEqual (dic["Strings.Application.Name.en".Split ('.')], "english");
 
-			var value2 = dic[Key.Split ("Strings.Application.Name")];
+			var value2 = dic["Strings.Application.Name".Split ('.')];
 			var dic2 = new CompositeDictionary (value2 as Dictionary<IKey, object>);
 		}
 
@@ -47,14 +47,14 @@ namespace Epsitec.Cresus.Strings
 		{
 			var dic = CompositeDictionaryTest.CreateDic1 ();
 			Assert.IsTrue (dic.ContainsKey (CompositeKey.Empty));
-			Assert.IsTrue (dic.ContainsKey (Key.Split ("Strings")));
-			Assert.IsTrue (dic.ContainsKey (Key.Split ("Strings.Root")));
-			Assert.IsTrue (dic.ContainsKey (Key.Split ("Strings.Application")));
-			Assert.IsTrue (dic.ContainsKey (Key.Split ("Strings.Application.Name")));
-			Assert.IsTrue (dic.ContainsKey (Key.Split ("Strings.Application.Name.fr")));
+			Assert.IsTrue (dic.ContainsKey ("Strings"));
+			Assert.IsTrue (dic.ContainsKey ("Strings.Root".Split ('.')));
+			Assert.IsTrue (dic.ContainsKey ("Strings.Application".Split ('.')));
+			Assert.IsTrue (dic.ContainsKey ("Strings.Application.Name".Split ('.')));
+			Assert.IsTrue (dic.ContainsKey ("Strings.Application.Name.fr".Split ('.')));
 
-			Assert.IsFalse (dic.ContainsKey (Key.Split ("Strings.Application.Name.fr.xxx")));
-			Assert.IsFalse (dic.ContainsKey (Key.Split ("Strings.Application.Name.en")));
+			Assert.IsFalse (dic.ContainsKey ("Strings.Application.Name.fr.xxx".Split ('.')));
+			Assert.IsFalse (dic.ContainsKey ("Strings.Application.Name.en".Split ('.')));
 		}
 
 		[TestMethod]
@@ -62,13 +62,13 @@ namespace Epsitec.Cresus.Strings
 		{
 			var dic = CompositeDictionaryTest.CreateDic1 ();
 			object value;
-			Assert.IsTrue (dic.TryGetValue (Key.Split ("Strings.Application.Name.fr"), out value));
+			Assert.IsTrue (dic.TryGetValue ("Strings.Application.Name.fr".Split ('.'), out value));
 			Assert.AreEqual (value, "Strings.Application.Name.fr");
-			Assert.IsTrue (dic.TryGetValue (Key.Split ("Strings.Application.Name"), out value));
+			Assert.IsTrue (dic.TryGetValue ("Strings.Application.Name".Split ('.'), out value));
 			Assert.IsTrue (value is IDictionary<IKey, object>);
 
-			Assert.IsFalse (dic.TryGetValue (Key.Split ("Strings.Application.Name.fr.xxx"), out value));
-			Assert.IsFalse (dic.TryGetValue (Key.Split ("Strings.Application.Name.en"), out value));
+			Assert.IsFalse (dic.TryGetValue ("Strings.Application.Name.fr.xxx".Split ('.'), out value));
+			Assert.IsFalse (dic.TryGetValue ("Strings.Application.Name.en".Split ('.'), out value));
 			Assert.IsFalse (dic.TryGetValue (CompositeKey.Empty, out value));
 		}
 
@@ -77,36 +77,38 @@ namespace Epsitec.Cresus.Strings
 		{
 			var dic = CompositeDictionaryTest.CreateDic1 ();
 			var keys0 = dic.Keys;
-			Assert.IsTrue (dic.Remove (Key.Split ("Strings.Application.Name.fr")));
+			Assert.IsTrue (dic.Remove ("Strings.Application.Name.fr".Split ('.')));
 			var keys1 = dic.Keys;
 			var diff1 = keys0.Except (keys1).Single ();
-			Assert.AreEqual (Key.Split("Strings.Application.Name.fr"), diff1);
+			Assert.AreEqual (Key.Create("Strings.Application.Name.fr".Split ('.')), diff1);
 
-			Assert.IsFalse (dic.Remove (Key.Split ("Strings.Application.Name.fr.xxx")));
+			Assert.IsFalse (dic.Remove ("Strings.Application.Name.fr.xxx".Split ('.')));
 			var keys2 = dic.Keys;
 			var diff2 = keys1.Except (keys2);
 			Assert.AreEqual (0, diff2.Count ());
 		}
 
 		[TestMethod]
-		public void SolutionDic()
+		public void SolutionResources()
 		{
-			var dic = CompositeDictionaryTest.CreateDic2 ();
+			var workspace = Workspace.LoadSolution (TestData.CresusGraphSolutionPath);
+			var solution = workspace.CurrentSolution;
+			var project = solution.Projects.First ();
+			var solutionResources = CompositeDictionaryTest.LoadResources (solution);
+			var projectResources = CompositeDictionary.Create (solutionResources[project.Id, "Epsitec", "Cresus", "Res"]);
 		}
 
 		private static CompositeDictionary CreateDic1()
 		{
 			var dic = new CompositeDictionary ();
-			dic.Add (Key.Split ("Strings.Application.Name.fr"), "Strings.Application.Name.fr");
-			dic.Add (Key.Split ("Strings.Application.Name.de"), "Strings.Application.Name.de");
-			dic.Add (Key.Split ("Strings.Root"), "Strings.Root");
+			dic.Add ("Strings.Application.Name.fr".Split ('.'), "Strings.Application.Name.fr");
+			dic.Add ("Strings.Application.Name.de".Split ('.'), "Strings.Application.Name.de");
+			dic.Add ("Strings.Root".Split ('.'), "Strings.Root");
 			return dic;
 		}
 
-		private static CompositeDictionary CreateDic2()
+		private static CompositeDictionary LoadResources(ISolution solution)
 		{
-			var workspace = Workspace.LoadSolution (TestData.CresusGraphSolutionPath);
-			var solution = workspace.CurrentSolution;
 			var solutionResource = new SolutionResource (solution);
 			var visitor = new MappingVisitor ();
 			visitor.VisitSolution (solutionResource);
@@ -119,19 +121,15 @@ namespace Epsitec.Cresus.Strings
 			{
 				item = base.VisitItem (item) as ResourceItem;
 
-				try
-				{
-					var key = new CompositeKey (
-						Key.Create (this.bundle.Culture),
-						Key.Create (this.project.ToString ()),
-						Key.Create (this.module.Info.ResourceNamespace),
-						Key.Create (this.bundle.Name),
-						Key.Split (item.Name));
-					map[key] = item;
-				}
-				catch (NullReferenceException)
-				{
-				}
+				var key = Key.Create (
+					this.project.Project.Id,
+					this.module.Info.ResourceNamespace.Split('.'),
+					"Res",
+					this.bundle.Name,
+					item.Name.Split ('.'),
+					this.bundle.Culture);
+
+				map[key] = item;
 				return item;
 			}
 
@@ -158,8 +156,6 @@ namespace Epsitec.Cresus.Strings
 				this.solution = solution;
 				return base.VisitSolution (solution);
 			}
-
-			//public readonly Dictionary<IKey, object> map = new Dictionary<IKey, object> ();
 
 			public readonly CompositeDictionary map = new CompositeDictionary ();
 

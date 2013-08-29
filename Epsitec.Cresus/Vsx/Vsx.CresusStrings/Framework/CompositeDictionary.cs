@@ -7,8 +7,14 @@ using System.Threading.Tasks;
 
 namespace Epsitec
 {
-	public class CompositeDictionary : IDictionary<ICompositeKey, object>
+	public class CompositeDictionary : IDictionary<IKey, object>
 	{
+		public static CompositeDictionary Create(object content)
+		{
+			var map = content as Dictionary<IKey, object>;
+			return map == null ? null : new CompositeDictionary (map);
+		}
+
 		public CompositeDictionary()
 		{
 			this.map = new Dictionary<IKey, object> ();
@@ -19,17 +25,72 @@ namespace Epsitec
 			this.map = map;
 		}
 
-		public ReadOnlyDictionary<IKey, object> Map
+		public ICollection<IKey> FirstLevelKeys
 		{
 			get
 			{
-				return new ReadOnlyDictionary<IKey, object> (this.map);
+				return this.map.Keys;
 			}
 		}
 
-		#region IDictionary<ICompositeKey,object> Members
+		public object this[IEnumerable<object> subkeys]
+		{
+			get
+			{
+				return this[Key.Create (subkeys)];
+			}
+			set
+			{
+				this[Key.Create (subkeys)] = value;
+			}
+		}
 
-		public ICollection<ICompositeKey> Keys
+		public object this[params object[] subkeys]
+		{
+			get
+			{
+				return this[Key.Create (subkeys)];
+			}
+			set
+			{
+				this[Key.Create (subkeys)] = value;
+			}
+		}
+
+		public bool ContainsKey(IEnumerable<object> subkeys)
+		{
+			return this.ContainsKey (Key.Create (subkeys));
+		}
+
+		public bool ContainsKey(params object[] subkeys)
+		{
+			return this.ContainsKey (Key.Create (subkeys));
+		}
+
+		public bool TryGetValue(IEnumerable<object> subkeys, out object value)
+		{
+			return this.TryGetValue (Key.Create (subkeys), out value);
+		}
+
+		public void Add(IEnumerable<object> subkeys, object value)
+		{
+			this.Add (Key.Create (subkeys), value);
+		}
+
+		public bool Remove(IEnumerable<object> subkeys)
+		{
+			return this.Remove (Key.Create (subkeys));
+		}
+
+		public bool Remove(params object[] subkeys)
+		{
+			return this.Remove (Key.Create (subkeys));
+		}
+
+
+		#region IDictionary<IKey,object> Members
+
+		public ICollection<IKey> Keys
 		{
 			get
 			{
@@ -45,7 +106,7 @@ namespace Epsitec
 			}
 		}
 
-		public object this[ICompositeKey key]
+		public object this[IKey key]
 		{
 			get
 			{
@@ -62,7 +123,7 @@ namespace Epsitec
 			}
 		}
 
-		public bool ContainsKey(ICompositeKey key)
+		public bool ContainsKey(IKey key)
 		{
 			var map = this.map;
 			foreach (var subkey in key)
@@ -76,12 +137,12 @@ namespace Epsitec
 			return true;
 		}
 
-		public bool TryGetValue(ICompositeKey key, out object value)
+		public bool TryGetValue(IKey key, out object value)
 		{
 			return this.TryGetValue (key as IEnumerable<IKey>, out value);
 		}
 
-		public void Add(ICompositeKey key, object value)
+		public void Add(IKey key, object value)
 		{
 			var subkeys = new CompositeDictionary.HeadAndLast (key);
 			var map = this.map;
@@ -92,7 +153,7 @@ namespace Epsitec
 			map[subkeys.Last] = value;
 		}
 
-		public bool Remove(ICompositeKey key)
+		public bool Remove(IKey key)
 		{
 			var subkeys = new CompositeDictionary.HeadAndLast (key);
 			object value;
@@ -109,9 +170,9 @@ namespace Epsitec
 
 		#endregion
 
-		#region ICollection<KeyValuePair<ICompositeKey,object>> Members
+		#region ICollection<KeyValuePair<IKey,object>> Members
 
-		public void Add(KeyValuePair<ICompositeKey, object> item)
+		public void Add(KeyValuePair<IKey, object> item)
 		{
 			this.Add (item.Key, item.Value);
 		}
@@ -121,14 +182,14 @@ namespace Epsitec
 			this.map.Clear ();
 		}
 
-		public bool Contains(KeyValuePair<ICompositeKey, object> item)
+		public bool Contains(KeyValuePair<IKey, object> item)
 		{
 			object value;
 			return this.TryGetValue (item.Key, out value) && object.Equals (value, item.Value);
 
 		}
 
-		public void CopyTo(KeyValuePair<ICompositeKey, object>[] array, int arrayIndex)
+		public void CopyTo(KeyValuePair<IKey, object>[] array, int arrayIndex)
 		{
 			this.ToArray ().CopyTo (array, arrayIndex);
 		}
@@ -149,7 +210,7 @@ namespace Epsitec
 			}
 		}
 
-		public bool Remove(KeyValuePair<ICompositeKey, object> item)
+		public bool Remove(KeyValuePair<IKey, object> item)
 		{
 			var subkeys = new CompositeDictionary.HeadAndLast (item.Key);
 			object value;
@@ -166,9 +227,9 @@ namespace Epsitec
 
 		#endregion
 
-		#region IEnumerable<KeyValuePair<ICompositeKey,object>> Members
+		#region IEnumerable<KeyValuePair<IKey,object>> Members
 
-		public IEnumerator<KeyValuePair<ICompositeKey, object>> GetEnumerator()
+		public IEnumerator<KeyValuePair<IKey, object>> GetEnumerator()
 		{
 			return CompositeDictionary.GetKeyValuePairs (CompositeKey.Empty, this.map).GetEnumerator ();
 		}
@@ -187,7 +248,7 @@ namespace Epsitec
 
 		private class HeadAndLast
 		{
-			public HeadAndLast(ICompositeKey key)
+			public HeadAndLast(IKey key)
 			{
 				var array = key.ToArray ();
 				var lastIndex = array.Length - 1;
@@ -208,7 +269,7 @@ namespace Epsitec
 			}
 		}
 
-		private static IEnumerable<ICompositeKey> GetKeys(ICompositeKey rootKey, IDictionary<IKey, object> map)
+		private static IEnumerable<IKey> GetKeys(ICompositeKey rootKey, IDictionary<IKey, object> map)
 		{
 			foreach (var kv in map)
 			{
@@ -228,7 +289,7 @@ namespace Epsitec
 			}
 		}
 
-		private static IEnumerable<KeyValuePair<ICompositeKey, object>> GetKeyValuePairs(ICompositeKey rootKey, IDictionary<IKey, object> map)
+		private static IEnumerable<KeyValuePair<IKey, object>> GetKeyValuePairs(ICompositeKey rootKey, IDictionary<IKey, object> map)
 		{
 			foreach (var kv in map)
 			{
@@ -236,7 +297,7 @@ namespace Epsitec
 				var newKey = rootKey.Concat (kv.Key);
 				if (newMap == null)
 				{
-					yield return new KeyValuePair<ICompositeKey, object> (newKey, kv.Value);
+					yield return new KeyValuePair<IKey, object> (newKey, kv.Value);
 				}
 				else
 				{

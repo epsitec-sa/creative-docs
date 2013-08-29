@@ -11,19 +11,28 @@ namespace Epsitec.Cresus.Strings
 		[TestMethod]
 		public void Flattening()
 		{
-			var sk1 = Key.Create("A.B");
+			var sk1 = "A.B";
 
-			var sk21 = Key.Create ("ab");
+			var sk21 = "ab";
 
-			var sk221 = Key.Split ("1.2");
-			var sk222 = Key.Split ("3.4");
-			var sk223 = Key.Create ("cd");
-			var sk22 = new CompositeKey (sk221, sk222, sk223);
-			var sk2 = new CompositeKey (sk21, sk22);
+			var sk221 = "1.2".Split('.');
+			var sk222 = "3.4".Split ('.');
+			var sk223 = Key.Create("cd");
 
-			var k1 = new CompositeKey (sk1, sk2);
+			var sk22 = Key.Create (sk221, sk222, sk223);
+			var sk2 = Key.Create (sk21, sk22);
+
+			var k1 = Key.Create (sk1, sk2);
 
 			var a1 = k1.ToArray ();
+		}
+
+		[TestMethod]
+		public void Equality()
+		{
+			var k1 = Key.Create ("1", "2", "3");
+			var k2 = Key.Create ("1.2.3".Split('.'));
+			Assert.AreEqual (k1, k2);
 		}
 	}
 }
