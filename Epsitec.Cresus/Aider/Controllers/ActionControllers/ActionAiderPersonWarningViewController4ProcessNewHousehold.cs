@@ -108,10 +108,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
         {
-            var householdAddress = this.Entity.Person.Address.StreetUserFriendly;
-            var newHousehold = this.GetNewHousehold();
-            var analyse = TextFormatter.FormatText("Résultat de l'analyse:\n");
-            if (newHousehold.Address.StreetUserFriendly.Equals(householdAddress))
+            var householdAddress = this.Entity.Person.Contacts.Where(c => c.Household.IsNotNull()).First().Household.Address;
+            var newHousehold = this.GetNewHousehold ();
+            var analyse = TextFormatter.FormatText ("Résultat de l'analyse:\n");
+            if (newHousehold.Address.StreetUserFriendly.Equals (householdAddress.StreetUserFriendly))
             {
                 analyse = analyse.AppendLine(TextFormatter.FormatText("Ménage identique que le précédent!\n",newHousehold.Address.GetCompactSummary()));
                 form

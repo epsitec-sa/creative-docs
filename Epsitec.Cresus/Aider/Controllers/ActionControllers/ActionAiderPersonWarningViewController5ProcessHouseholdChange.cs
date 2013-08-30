@@ -35,15 +35,24 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             return ActionExecutor.Create<bool>(this.Execute);
 		}
 
-		private void Execute(bool appliChanges)
-		{
-            this.Entity.Person.RemoveWarningInternal(this.Entity);
-            this.BusinessContext.DeleteEntity(this.Entity);
-
-            if (appliChanges)
+		private void Execute(bool confirmed)
+		{        
+            if (confirmed)
             {
-			
-                
+                var householdMembers = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household.Members;
+                foreach (var member in householdMembers)
+                {
+                    var warnCount = member.Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) || w.WarningType.Equals(WarningType.EChHouseholdAdded)).ToList().Count;
+                    if (warnCount > 0)
+                    {
+                        var message = "Il faut d'abord traiter l'avertissement sur ce member: " + member.GetDisplayName();
+
+                        throw new BusinessRuleException(message);
+                    }
+                }
+
+                this.Entity.Person.RemoveWarningInternal(this.Entity);
+                this.BusinessContext.DeleteEntity(this.Entity);
             }
 		}
 
@@ -77,11 +86,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
         {
-			
+            var householdMembers = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household.Members;
+            var newHousehold = this.GetNewHousehold();
+            var analyse = TextFormatter.FormatText("Résultat de l'analyse:\n");
+            if (householdMembers.Count < newHousehold.GetMembersCount())
+            {
+                analyse = analyse.AppendLine(TextFormatter.FormatText("Le ménage ECh contient plus de membres"));
+            }
+            if (householdMembers.Count > newHousehold.GetMembersCount())
+            {
+                analyse = analyse.AppendLine(TextFormatter.FormatText("Le ménage ECh contient moins de membres"));
+            }
 			form
 			.Title (this.GetTitle ())
+            .Text (analyse)
 			.Field<bool> ()
-				.Title ("Appliquer les changements selon le registre ECh")
+				.Title ("Je confirme")
 				.InitialValue (true)
 			.End ();
             

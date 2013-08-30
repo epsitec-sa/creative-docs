@@ -19,8 +19,8 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (1)]
-    public sealed class ActionAiderPersonWarningViewController1DiscardWarning : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (0)]
+    public sealed class ActionAiderPersonWarningViewController0DiscardWarning : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{

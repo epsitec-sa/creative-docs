@@ -19,8 +19,8 @@ using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
-    public sealed class ActionAiderPersonWarningViewController0SetVisibility : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (1)]
+    public sealed class ActionAiderPersonWarningViewController1ProcessPersonMissing : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -32,15 +32,45 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             return ActionExecutor.Create<bool,bool>(this.Execute);
 		}
 
-		private void Execute(bool setInvisible,bool isDecease)
+        private void Execute(bool setInvisible, bool isDecease)
 		{
             if (isDecease)
             {
                 this.Entity.Person.Visibility = PersonVisibilityStatus.Deceased;
             }
+
             if (setInvisible)
             {
                 this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
+            }
+
+            foreach (var household in this.Entity.Person.Households)
+            {
+                var person = this.Entity.Person;
+                var contacts = person.Contacts;
+                var contact = contacts.FirstOrDefault(x => x.Household == household);
+
+                if (contacts.Count == 1)
+                {
+                    var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
+                    AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
+                }
+
+                if (household.Members.Count == 1)
+                {
+                    this.BusinessContext.DeleteEntity(household);
+                }
+
+                if (contact.IsNotNull())
+                {
+                    AiderContactEntity.Delete(this.BusinessContext, contact);
+                }
+
+                var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
+                if (subscription.IsNotNull())
+                {
+                    subscription.RefreshCache();
+                }
             }
 
             this.Entity.Person.RemoveWarningInternal(this.Entity);

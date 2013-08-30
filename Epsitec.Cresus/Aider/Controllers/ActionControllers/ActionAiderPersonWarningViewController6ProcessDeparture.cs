@@ -33,30 +33,66 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool,bool>(this.Execute);
+            return ActionExecutor.Create<bool,bool,bool,bool>(this.Execute);
 		}
 
-		private void Execute(bool setInvisible,bool appliForAll)
+		private void Execute(bool setInvisible,bool removeHousehold,bool suppressSubscription,bool appliForAll)
 		{
             this.Entity.Person.RemoveWarningInternal(this.Entity);
             this.BusinessContext.DeleteEntity(this.Entity);
 
 			if (appliForAll)
 			{
-				foreach (var member in this.Entity.Person.Contacts.First ().Household.Members)
+                foreach (var household in this.Entity.Person.Households)
 				{
-					foreach (var warn in member.Warnings)
-					{
-						if (warn.WarningType.Equals (WarningType.EChProcessDeparture))
-						{
-							member.RemoveWarningInternal (warn);
-							this.BusinessContext.DeleteEntity (warn);
-						}
-					}
-					if (setInvisible)
-					{
-						member.Visibility = PersonVisibilityStatus.Hidden;
-					}
+                    foreach (var member in household.Members)
+                    {
+                        foreach (var warn in member.Warnings)
+                        {
+                            if (warn.WarningType.Equals(WarningType.EChProcessDeparture))
+                            {
+                                member.RemoveWarningInternal(warn);
+                                this.BusinessContext.DeleteEntity(warn);
+                            }
+                        }
+
+                        if (setInvisible)
+                        {
+                            member.Visibility = PersonVisibilityStatus.Hidden;
+                        }
+
+                        if (suppressSubscription)
+                        {
+                            var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
+                            if (subscription.IsNotNull())
+                            {
+                                AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
+                            }
+                        }
+
+                        if (removeHousehold)
+                        {
+                            var person = member;
+                            var contacts = person.Contacts;
+                            var contact = contacts.FirstOrDefault(x => x.Household == household);
+
+                            if (contacts.Count == 1)
+                            {
+                                var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
+                                AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
+                            }
+
+                            if (household.Members.Count == 1)
+                            {
+                                this.BusinessContext.DeleteEntity(household);
+                            }
+                            if (contact.IsNotNull())
+                            {
+                                AiderContactEntity.Delete(this.BusinessContext, contact);
+                            }
+                        }
+                    
+                    }    
 				}
 			}
 			else
@@ -65,6 +101,40 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
 				}
+                        
+                foreach (var household in this.Entity.Person.Households)
+                {
+                    if (removeHousehold)
+                    {
+                        var person = this.Entity.Person;
+                        var contacts = person.Contacts;
+                        var contact = contacts.FirstOrDefault(x => x.Household == household);
+                        
+                        if (contacts.Count == 1)
+                        {
+                            var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
+                            AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
+                        }
+
+                        if (household.Members.Count == 1)
+                        {
+                            this.BusinessContext.DeleteEntity(household);
+                        }
+                        if (contact.IsNotNull())
+                        {
+                            AiderContactEntity.Delete(this.BusinessContext, contact);
+                        }
+                    }
+                    if (suppressSubscription)
+                    {
+                        var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
+                        if (subscription.IsNotNull())
+                        {
+                            AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
+                        }
+                    }
+                }             
+                
 			}
 		}
 
@@ -104,6 +174,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Changer la visibilité")
 					.InitialValue (false)
 				.End ()
+                .Field<bool>()
+                    .Title("Supprimer le ménage")
+                    .InitialValue(true)
+                .End()
+                .Field<bool>()
+                    .Title("Supprimer l'abonnement BN si existant")
+                    .InitialValue(true)
+                .End()
 				.Field<bool> ()
 					.Title ("Appliquer à tout le ménage")
 					.InitialValue (true)

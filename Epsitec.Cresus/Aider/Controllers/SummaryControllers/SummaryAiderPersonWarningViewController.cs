@@ -20,31 +20,32 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				case WarningType.EChPersonMissing:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController0SetVisibility> ();
+						.EnableAction<ActionAiderPersonWarningViewController1ProcessPersonMissing> ();
 					break;
 				
 				case WarningType.EChProcessDeparture:
-					wall.AddBrick (x => x.Person.Contacts[0])
-							.Title ("saisir une adresse hors du canton")
-							.Icon ("Data.AiderAddress")
-							.Text (x => x.GetSummary ())
-							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+                    if (this.Entity.Person.Contacts.Count > 0)
+                    {
+                        wall.AddBrick(x => x.Person.Contacts[0])
+                            .Title("Nouvelle adresse")
+                            .Icon("Data.AiderAddress")
+                            .Text("(merci de saisir une adresse hors du canton)")
+                            .WithSpecialController(typeof(EditionAiderContactViewController1Address));
+                    }
+					
 
 					this.AddDefaultBrick (wall)
 						.EnableAction<ActionAiderPersonWarningViewController6ProcessDeparture> ();
-
-					
-
 					break;
 				
 				case WarningType.EChProcessArrival:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+						.EnableAction<ActionAiderPersonWarningViewController7ProcessArrival> ();
 					break;
 				
 				case WarningType.EChPersonDataChanged:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController1DiscardWarning> ();
+						.EnableAction<ActionAiderPersonWarningViewController0DiscardWarning> ();
 					break;
 
 				case WarningType.EChHouseholdAdded:
@@ -54,12 +55,23 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
                 case WarningType.EChHouseholdChanged:
                     this.AddDefaultBrick(wall)
-						.EnableAction<ActionAiderPersonWarningViewController5ProcessHouseholdChange> ();
+                        .EnableAction<ActionAiderPersonWarningViewController5ProcessHouseholdChange>();
+
+                    wall.AddBrick(x => x.Person.Contacts[0].Household.Members)
+                        .Attribute(BrickMode.HideAddButton)
+                        .Attribute(BrickMode.HideRemoveButton)
+                        .Attribute(BrickMode.DefaultToSummarySubView)
+                        .Attribute(BrickMode.AutoGroup)
+                        .Template()
+                            .Icon("Data.AiderPersons")
+                            .Title("Membres du ménage")
+                            .Text(p => p.GetCompactSummary(p.Households[0]))
+                        .End();
                     break;
 
 				case WarningType.EChAddressChanged:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
+                        .EnableAction<ActionAiderPersonWarningViewController0DiscardWarning>();
 					break;
 				
 				case WarningType.ParishArrival:
@@ -73,7 +85,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 				
 				default:
-					this.AddDefaultBrick (wall);
+					this.AddDefaultBrick (wall)
+                    .EnableAction<ActionAiderPersonWarningViewController0DiscardWarning>();
 					break;
 			}
 		}

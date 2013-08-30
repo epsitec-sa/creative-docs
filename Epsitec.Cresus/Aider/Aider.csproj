@@ -94,13 +94,14 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonViewController7RemoveHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderGroupViewController1DeleteSubGroup.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController3ChangeHeadOfHousehold.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController0SetVisibility.cs" />
-    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController1DiscardWarning.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController1ProcessPersonMissing.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController0DiscardWarning.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController2ProcessParishArrival.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController4ProcessNewHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController3ProcessParishDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController5ProcessHouseholdChange.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController6ProcessDeparture.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController7ProcessArrival.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory`2.cs" />
+    <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />
     <Compile Include="Enumerations\ContactType.cs" />

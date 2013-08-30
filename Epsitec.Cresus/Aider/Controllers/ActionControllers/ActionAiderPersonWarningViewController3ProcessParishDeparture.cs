@@ -40,8 +40,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             this.BusinessContext.DeleteEntity(this.Entity);
 
             if (appliForAll)
-            {	
-                foreach (var member in this.Entity.Person.Contacts.First().Household.Members)
+            {
+                foreach (var member in this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household.Members)
                 {
                     foreach (var warn in member.Warnings)
                     {
