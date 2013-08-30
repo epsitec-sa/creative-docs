@@ -71,10 +71,6 @@ function() {
           reconfigure: this.reconfigureFiltersFeature,
           scope: this
         },
-        plugins: {
-          ptype: 'bufferedrenderer',
-          pluginId: 'bufferedrenderer'
-        },
         features: [{
           ftype: 'filters',
           encode: true
@@ -323,11 +319,8 @@ function() {
         fields: this.createFields(columnDefinitions),
         sorters: this.createSorters(sorterDefinitions),
         autoLoad: autoLoad,
-        pageSize: 120,
+        pageSize: 100,
         buffered: true,
-        trailingBufferZone: 60,
-        leadingBufferZone: 60,
-        purgePageCount: 0,
         remoteSort: true,
         proxy: {
           type: 'ajax',
@@ -601,7 +594,7 @@ function() {
       }
       if(this.isReloading) {
         this.isReloading = false;
-
+        this.selModel.selectPrevious();
       }
     },
 
