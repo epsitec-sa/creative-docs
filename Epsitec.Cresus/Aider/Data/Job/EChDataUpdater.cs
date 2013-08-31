@@ -464,7 +464,10 @@ namespace Epsitec.Aider.Data.Job
 							mustWarn = true;
 						}
 
-						if (!toChange.OldValue.OriginPlaces.SetEquals (toChange.NewValue.OriginPlaces))
+                        var oldOriginList = toChange.OldValue.OriginPlaces.Select(p => System.Tuple.Create(p.Canton, p.Name)).ToList();
+                        var newOriginList = toChange.NewValue.OriginPlaces.Select(p => System.Tuple.Create(p.Canton, p.Name)).ToList();
+
+                        if (!oldOriginList.SetEquals(newOriginList))
 						{
 							personEntityToUpdate.Origins = changedEChPersonEntity.Origins;
 							changes.Add ("Origines: " + String.Join (" ", toChange.NewValue.OriginPlaces.Select (o => o.Display ()).ToList ()) + " -> " + String.Join (" ", changedEChPersonEntity.Origins));
