@@ -83,9 +83,11 @@ namespace Epsitec.Common.Identity
 			IdentityCard cardDD = new IdentityCard ("Denis Dumoulin",     6, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DD.png")));
 			IdentityCard cardYR = new IdentityCard ("Yves Raboud",        4, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "YR.png")));
 			IdentityCard cardDR = new IdentityCard ("Daniel Roux",        2, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "DR.png")));
-			IdentityCard cardJS = new IdentityCard ("Jonas Schmid",       9, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "JS.png")));
+//			IdentityCard cardJS = new IdentityCard ("Jonas Schmid",       9, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "JS.png")));
 			IdentityCard cardMS = new IdentityCard ("Mathieu Schroeter", 10, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MS.png")));
 			IdentityCard cardMW = new IdentityCard ("Michael Walz",       7, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "MW.png")));
+			IdentityCard cardRV = new IdentityCard ("Roger Vuistiner",   11, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "RV.png")));
+			IdentityCard cardSL = new IdentityCard ("Samuel Loup",       12, System.IO.File.ReadAllBytes (System.IO.Path.Combine (path, "SL.png")));
 
 			repository.IdentityCards.Add (cardCA);
 			repository.IdentityCards.Add (cardPA);
@@ -94,9 +96,11 @@ namespace Epsitec.Common.Identity
 			repository.IdentityCards.Add (cardDD);
 			repository.IdentityCards.Add (cardYR);
 			repository.IdentityCards.Add (cardDR);
-			repository.IdentityCards.Add (cardJS);
+//			repository.IdentityCards.Add (cardJS);
 			repository.IdentityCards.Add (cardMS);
 			repository.IdentityCards.Add (cardMW);
+			repository.IdentityCards.Add (cardRV);
+			repository.IdentityCards.Add (cardSL);
 
 			string xml = Epsitec.Common.Types.Serialization.SimpleSerialization.SerializeToString (repository);
 

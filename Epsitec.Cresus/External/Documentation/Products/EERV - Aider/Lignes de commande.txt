@@ -9,3 +9,17 @@ Exportation Bonne Nouvelle
   -exportsubscriptions -output:export-2013-08-29.txt -error:error-2013-08-29.txt
   -uploadsubscriptions -input:export-2013-08-29.txt -publicationdate:2013-08-29 -response:tamedia-2013-08-29.log
 
+
+
+
+eCHReportedPerson: 169772
+
+
+Aline Berthe André
+1921-08-28
+819119280
+
+
+-echupdate -newechfile:S:\eerv\eerv-2013-08-22.xml -oldechfile:S:\Epsitec.Cresus\App.Aider\Samples\eerv.xml -output:S:\eerv\ech-diff.md
+-echupdate -newechfile:S:\eerv\eerv-new.xml -oldechfile:S:\eerv\eerv-old.xml -output:S:\eerv\ech-diff.md
+
