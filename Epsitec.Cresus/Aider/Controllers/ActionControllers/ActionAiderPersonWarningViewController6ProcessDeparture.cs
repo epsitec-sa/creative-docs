@@ -33,10 +33,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool,bool,bool,bool>(this.Execute);
+            return ActionExecutor.Create<bool,bool,bool,bool,bool>(this.Execute);
 		}
 
-		private void Execute(bool setInvisible,bool removeHousehold,bool suppressSubscription,bool appliForAll)
+		private void Execute(bool setInvisible,bool isDecease,bool removeHousehold,bool suppressSubscription,bool appliForAll)
 		{
             this.Entity.Person.RemoveWarningInternal(this.Entity);
             this.BusinessContext.DeleteEntity(this.Entity);
@@ -60,6 +60,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                         {
                             member.Visibility = PersonVisibilityStatus.Hidden;
                         }
+
+						if (isDecease)
+						{
+							member.Visibility = PersonVisibilityStatus.Deceased;
+						}
 
                         if (suppressSubscription)
                         {
@@ -101,7 +106,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
 				}
-                        
+
+				if (isDecease && !this.Entity.Person.IsDeceased)
+				{
+					var message = "Merci d'entrer une date de décès et recommencez l'opération";
+
+					throw new BusinessRuleException (message);
+				}
+
                 foreach (var household in this.Entity.Person.Households)
                 {
                     if (removeHousehold)
@@ -174,17 +186,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Changer la visibilité")
 					.InitialValue (false)
 				.End ()
+				.Field<bool> ()
+					.Title ("Cette personne est décédée")
+					.InitialValue (false)
+				.End ()
                 .Field<bool>()
                     .Title("Supprimer le ménage")
-                    .InitialValue(true)
+                    .InitialValue(false)
                 .End()
                 .Field<bool>()
                     .Title("Supprimer l'abonnement BN si existant")
-                    .InitialValue(true)
+                    .InitialValue(false)
                 .End()
 				.Field<bool> ()
-					.Title ("Appliquer à tout le ménage")
-					.InitialValue (true)
+					.Title ("Appliquer à tout les membres du ménage")
+					.InitialValue (false)
 				.End ()
 			.End ();           
         }

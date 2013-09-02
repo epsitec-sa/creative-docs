@@ -1233,6 +1233,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 120));
 						}
 					}
+					//	designer:cap/LVGB42
+					public static global::Epsitec.Common.Types.Caption EChPersonNew
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 139));
+						}
+					}
 					//	designer:cap/LVQ202
 					public static global::Epsitec.Common.Types.Caption EChProcessArrival
 					{

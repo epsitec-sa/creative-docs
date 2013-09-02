@@ -42,10 +42,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 var householdMembers = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household.Members;
                 foreach (var member in householdMembers)
                 {
-                    var warnCount = member.Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) || w.WarningType.Equals(WarningType.EChHouseholdAdded)).ToList().Count;
+					var warnCount = member.Warnings.Where (w => w.WarningType.Equals (WarningType.EChPersonMissing) ||
+																w.WarningType.Equals (WarningType.EChHouseholdAdded) ||
+																w.WarningType.Equals (WarningType.EChPersonNew) ||
+																w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList ().Count;
+
+
                     if (warnCount > 0)
                     {
-                        var message = "Il faut d'abord traiter l'avertissement sur ce member: " + member.GetDisplayName();
+                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + member.GetDisplayName();
 
                         throw new BusinessRuleException(message);
                     }
@@ -101,7 +106,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			.Title (this.GetTitle ())
             .Text (analyse)
 			.Field<bool> ()
-				.Title ("Je confirme")
+				.Title ("Contrôler et supprimer l'avertissement")
 				.InitialValue (true)
 			.End ();
             

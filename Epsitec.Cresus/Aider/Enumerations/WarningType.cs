@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Enumerations
 		ParishArrival = 1002,
 		ParishDeparture = 1003,
 		
-		EChPersonDuplicated = 2000,
+		EChPersonNew = 2000,
 		EChPersonMissing = 2001,
 		EChHouseholdMissing = 2002,
 		EChPersonDataChanged = 2003,
@@ -30,6 +30,8 @@ namespace Epsitec.Aider.Enumerations
 		EChAddressChanged = 3000,
 		
 		EChProcessDeparture = 3001,
-		EChProcessArrival = 3002
+		EChProcessArrival = 3002,
+
+		EChPersonDuplicated = 4000
 	}
 }

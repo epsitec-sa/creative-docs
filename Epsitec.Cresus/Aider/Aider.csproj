@@ -102,6 +102,8 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController5ProcessHouseholdChange.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController6ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController7ProcessArrival.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController8ProcessNewPerson.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController9ProcessAddressChange.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
@@ -114,6 +116,8 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController0DeceaseDateController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController2LegalContact.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderHouseholdViewController1Address.cs" />

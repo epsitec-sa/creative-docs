@@ -34,10 +34,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
         private void Execute(bool setInvisible, bool isDecease)
 		{
-            if (isDecease)
-            {
-                this.Entity.Person.Visibility = PersonVisibilityStatus.Deceased;
-            }
+			if (isDecease && !this.Entity.Person.IsDeceased)
+			{
+				var message = "Merci d'entrer une date de décès et recommencez l'opération";
+
+				throw new BusinessRuleException (message);
+			}
 
             if (setInvisible)
             {
@@ -46,26 +48,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
             foreach (var household in this.Entity.Person.Households)
             {
-                var person = this.Entity.Person;
-                var contacts = person.Contacts;
-                var contact = contacts.FirstOrDefault(x => x.Household == household);
-
-                if (contacts.Count == 1)
-                {
-                    var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
-                    AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
-                }
-
-                if (household.Members.Count == 1)
-                {
-                    this.BusinessContext.DeleteEntity(household);
-                }
-
-                if (contact.IsNotNull())
-                {
-                    AiderContactEntity.Delete(this.BusinessContext, contact);
-                }
-
                 var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);
                 if (subscription.IsNotNull())
                 {

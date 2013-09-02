@@ -16,12 +16,11 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (2)]
-    public sealed class ActionAiderPersonWarningViewController2ProcessParishArrival : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (9)]
+	public sealed class ActionAiderPersonWarningViewController9ProcessAddressChange : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -36,33 +35,39 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(bool appliForAll)
 		{
 
+			if (appliForAll)
+			{
+				foreach (var household in this.Entity.Person.Households)
+				{
+					foreach (var member in household.Members)
+					{
+						foreach (var warn in member.Warnings)
+						{
+							if (warn.WarningType.Equals (WarningType.EChAddressChanged))
+							{
+								member.RemoveWarningInternal (warn);
+								this.BusinessContext.DeleteEntity (warn);
+							}
+						}
+					}
+				}
+			}
+
             this.Entity.Person.RemoveWarningInternal(this.Entity);
             this.BusinessContext.DeleteEntity(this.Entity);
-
-            if (appliForAll)
-            {	
-                foreach (var member in this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household.Members)
-                {
-                    foreach (var warn in member.Warnings)
-                    {
-                        if(warn.WarningType.Equals(WarningType.ParishArrival))
-                        {
-                            member.RemoveWarningInternal(warn);
-                            this.BusinessContext.DeleteEntity(warn);
-                        }
-                    }
-                }  
-            }
+                   
 		}
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
         {
             form
                 .Title(this.GetTitle())
-                .Field<bool>()
-                    .Title("Appliquer à tout les membres du ménage")
-                    .InitialValue(true)
+				.Field<bool> ()
+					.Title ("Appliquer à tout les membres du ménage")
+					.InitialValue (false)
+				.End ()
             .End();
         }
 	}
 }
+

@@ -235,7 +235,8 @@ namespace Epsitec.Aider
 				var oldEChDataFile = AiderProgram.GetFile (args, "-oldechfile:", true);
 				var reportFile = AiderProgram.GetFile (args, "-output:", true);
 				var parishRepository = ParishAddressRepository.Current;
-				EChDataUpdater.StartJob (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
+				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
+				updater.StartJob ();
 
 			});
 		}
