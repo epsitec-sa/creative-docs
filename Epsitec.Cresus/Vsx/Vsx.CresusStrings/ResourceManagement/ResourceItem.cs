@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.ResourceManagement
 {
-	public class ResourceItem : ResourceNode, IXmlLineInfo
+	public class ResourceItem : ResourceElement, IXmlLineInfo
 	{
 		public static ResourceItem Load(XElement element, ResourceBundle neutralCultureBundle)
 		{
@@ -43,10 +43,10 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 		protected ResourceItem(string id, string name, XElement element)
+			: base(element)
 		{
 			this.id = id;
 			this.name = name;
-			this.element = element;
 		}
 
 		public string Id
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		{
 			get
 			{
-				return this.element == null ? null : this.element.Value;
+				return this.Element == null ? null : this.Element.Value;
 			}
 		}
 
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		public override ResourceNode Accept(ResourceVisitor visitor)
 		{
 			return visitor.VisitItem (this);
-		} 
+		}
 
 		#endregion
 
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		{
 			get
 			{
-				return this.element as IXmlLineInfo;
+				return this.Element as IXmlLineInfo;
 			}
 		}
 
@@ -183,6 +183,5 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		private readonly string id;
 		private readonly string name;
-		private readonly XElement element;
 	}
 }

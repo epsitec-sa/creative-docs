@@ -1,0 +1,44 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vw="clr-namespace:Epsitec.Cresus.Strings.Views"
+	xmlns:vm="clr-namespace:Epsitec.Cresus.Strings.ViewModels"
+	xmlns:w="clr-namespace:Epsitec.Windows">
+
+	<DataTemplate DataType="{x:Type vm:ResourceItemViewModel}">
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition SharedSizeGroup="RIC"/>
+				<ColumnDefinition SharedSizeGroup="RIV" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+
+			<Border Grid.Column="0" BorderBrush="Black" BorderThickness="0,0,1,1" Background="AliceBlue" >
+				<TextBlock Margin="3" Text="{Binding CultureName}" VerticalAlignment="Center" FontStyle="Italic" FontWeight="SemiBold" />
+			</Border>
+			<Border Grid.Column="1" BorderBrush="Black" BorderThickness="0,0,0,1" Background="White" >
+				<TextBlock Margin="3" w:TextLayout.Html="{Binding Value}" VerticalAlignment="Center" />
+			</Border>
+		</Grid>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:MultiCultureResourceItemViewModel}">
+		<Border BorderBrush="Black" BorderThickness="1,1,1,0" >
+			<DockPanel>
+				<Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="0,0,0,1" Background="Aquamarine" >
+					<TextBlock Margin="3" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="SemiBold" />
+				</Border>
+				<!-- Item Type = vm:ResourceItemViewModel -->
+				<ItemsControl ItemsSource="{Binding Items}" />
+			</DockPanel>
+		</Border>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type vm:MultiCultureResourceItemCollectionViewModel}">
+		<!-- Item Type = vm:MultiCultureResourceItemViewModel -->
+		<ItemsControl ItemsSource="{Binding Items}"/>
+	</DataTemplate>
+
+</ResourceDictionary>

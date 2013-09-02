@@ -9,15 +9,15 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.ResourceManagement
 {
-	public class ResourceBundle : ResourceNode, IResourceTable
+	public class ResourceBundle : ResourceElement, IResourceTable
 	{
-		public ResourceBundle(string fileName, ResourceBundle neutralCultureBundle)
+		public ResourceBundle(string fileName, ResourceBundle neutralCultureBundle = null)
 			: this (fileName, XDocument.Load (fileName, LoadOptions.SetLineInfo).Root, neutralCultureBundle)
 		{
 		}
 
 		public ResourceBundle(ResourceBundle bundle, IReadOnlyDictionary<string, ResourceItem> byId)
-			: this (bundle.fileName, bundle.element, byId)
+			: this (bundle.fileName, bundle.Element, byId)
 		{
 		}
 
@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		{
 			get
 			{
-				return this.element.Attribute ("name").GetString ();
+				return this.Element.Attribute ("name").GetString ();
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		{
 			get
 			{
-				return this.element.Attribute ("type").GetString ();
+				return this.Element.Attribute ("type").GetString ();
 			}
 		}
 
@@ -168,10 +168,10 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 		private ResourceBundle(string fileName, XElement element, IReadOnlyDictionary<string, ResourceItem> byId)
+			: base(element)
 		{
 			this.fileName	= fileName;
-			this.element	= element;
-			this.culture	= CultureInfo.CreateSpecificCulture(this.element.Attribute ("culture").GetString ());
+			this.culture	= CultureInfo.CreateSpecificCulture(this.Element.Attribute ("culture").GetString ());
 
 			this.byId		= byId;
 			this.byName		= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.Values.ToDictionary (i => i.Name));
@@ -184,7 +184,6 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 		private readonly string fileName;
-		private readonly XElement element;
 		private readonly CultureInfo culture;
 		private readonly IReadOnlyDictionary<string, ResourceItem> byId;
 		private readonly Lazy<IReadOnlyDictionary<string, ResourceItem>> byName;
