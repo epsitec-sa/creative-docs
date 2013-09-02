@@ -55,6 +55,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 }
             }
 
+			//Auto-delete empty household
+			foreach (var household in this.Entity.Person.Households)
+			{
+				if (household.Members.Count == 0)
+				{
+					this.BusinessContext.DeleteEntity (household);
+				}
+			}
+
             this.Entity.Person.RemoveWarningInternal(this.Entity);
             this.BusinessContext.DeleteEntity(this.Entity);
 		}

@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             return ActionExecutor.Create<bool,bool,bool,bool,bool>(this.Execute);
 		}
 
-		private void Execute(bool setInvisible,bool isDecease,bool removeHousehold,bool suppressSubscription,bool appliForAll)
+		private void Execute(bool setInvisible,bool isDecease,bool removeFromHousehold,bool suppressSubscription,bool appliForAll)
 		{
             this.Entity.Person.RemoveWarningInternal(this.Entity);
             this.BusinessContext.DeleteEntity(this.Entity);
@@ -75,7 +75,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                             }
                         }
 
-                        if (removeHousehold)
+                        if (removeFromHousehold)
                         {
                             var person = member;
                             var contacts = person.Contacts;
@@ -87,17 +87,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                                 AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
                             }
 
-                            if (household.Members.Count == 1)
-                            {
-                                this.BusinessContext.DeleteEntity(household);
-                            }
                             if (contact.IsNotNull())
                             {
                                 AiderContactEntity.Delete(this.BusinessContext, contact);
                             }
-                        }
-                    
-                    }    
+                        }                   
+                    }
+				}
+
+				//Auto-delete empty household
+				foreach (var household in this.Entity.Person.Households)
+				{
+					if (household.Members.Count == 0)
+					{
+						this.BusinessContext.DeleteEntity (household);
+					}
 				}
 			}
 			else
@@ -116,7 +120,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
                 foreach (var household in this.Entity.Person.Households)
                 {
-                    if (removeHousehold)
+                    if (removeFromHousehold)
                     {
                         var person = this.Entity.Person;
                         var contacts = person.Contacts;
@@ -127,11 +131,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                             var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
                             AiderContactEntity.Create(this.BusinessContext, person, newHousehold, true);
                         }
-
-                        if (household.Members.Count == 1)
-                        {
-                            this.BusinessContext.DeleteEntity(household);
-                        }
+                        
                         if (contact.IsNotNull())
                         {
                             AiderContactEntity.Delete(this.BusinessContext, contact);
@@ -145,7 +145,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                             AiderSubscriptionEntity.Delete(this.BusinessContext, subscription);
                         }
                     }
-                }             
+                }
+
+				//Auto-delete empty household
+				foreach (var household in this.Entity.Person.Households)
+				{
+					if (household.Members.Count == 0)
+					{
+						this.BusinessContext.DeleteEntity (household);
+					}
+				}
                 
 			}
 		}
@@ -191,7 +200,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.InitialValue (false)
 				.End ()
                 .Field<bool>()
-                    .Title("Supprimer le ménage")
+                    .Title("Supprimer du ménage")
                     .InitialValue(false)
                 .End()
                 .Field<bool>()
