@@ -96,6 +96,9 @@ namespace Epsitec.Aider.Data.Eerv
 					var idToHouseholds = households.ToDictionary (h => h.Id);
 					var idToPersons = rawPersons.ToDictionary (p => p.Id);
 					var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
+
+					EervParishDataLoader.DumpDuplicates (groups, g => g.Id, (g1, g2) => System.Diagnostics.Debug.WriteLine ("Duplicate group {0}, name A={1}, name B={2}", g1.Id, g1.Name, g2.Name));
+
 					var idToGroups = groups.ToDictionary (g => g.Id);
 
 					var filteredActivities = EervParishDataLoader
@@ -115,6 +118,32 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			this.addressChecker.DisplayWarnings ();
+		}
+
+		private static bool DumpDuplicates<T1, T2>(IEnumerable<T1> collection, System.Func<T1, T2> selector, System.Action<T1, T1> displayDuplicate)
+		{
+			Dictionary<T2, T1> dict = new Dictionary<T2, T1> ();
+			bool duplicateFound = false;
+
+			foreach (var item in collection)
+			{
+				T1 oldValue;
+				T1 newValue = item;
+
+				T2 key = selector (item);
+
+				if (dict.TryGetValue (key, out oldValue))
+				{
+					displayDuplicate (oldValue, newValue);
+					duplicateFound = true;
+				}
+				else
+				{
+					dict[key] = newValue;
+				}
+			}
+			
+			return duplicateFound;
 		}
 
 
