@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document
 			this.imageFormat = ImageFormat.Unknown;
 			this.imageDpi = (this.document.Type == DocumentType.Pictogram) ? 254 : 100;
 			this.imageCompression = ImageCompression.None;
-			this.imageDepth = 24;
+			this.imageDepth = (this.document.Type == DocumentType.Pictogram) ? 32 : 24;
 			this.imageQuality = 0.85;
 			this.imageAA = 1.0;
 

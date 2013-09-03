@@ -253,6 +253,10 @@ namespace Epsitec.Common.Document.Settings
 
 		public void InitCombo(TextFieldCombo combo)
 		{
+			if (this.name == "ImageDepth")  //?
+			{
+			}
+
 			combo.Items.Clear();
 
 			for ( int rank=0 ; rank<10 ; rank++ )
@@ -379,10 +383,17 @@ namespace Epsitec.Common.Document.Settings
 
 		public int TypeToRank(int type)
 		{
-			for ( int rank=0 ; rank<10 ; rank++ )
+			if (type != -1)
 			{
-				if ( this.RankToType(rank) == type )  return rank;
+				for (int rank=0; rank<10; rank++)
+				{
+					if (this.RankToType (rank) == type)
+					{
+						return rank;
+					}
+				}
 			}
+
 			return -1;
 		}
 
