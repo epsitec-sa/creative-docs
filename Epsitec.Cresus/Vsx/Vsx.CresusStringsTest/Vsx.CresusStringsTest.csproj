@@ -61,10 +61,6 @@
   <ItemGroup>
     <Compile Include="ResourceItemViewTest.cs" />
     <Compile Include="HtmlToInlinesConverterTest.cs" />
-    <Compile Include="ViewModels\ResourceItemViewModel.cs" />
-    <Compile Include="Views\ResourceItemView.xaml.cs">
-      <DependentUpon>ResourceItemView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="RoslynTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceBundleTest.cs" />
@@ -81,12 +77,6 @@
       <Project>{09561271-a15a-47e4-9eb8-752639eb8ec8}</Project>
       <Name>Vsx.CresusStrings</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Views\ResourceItemView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup />
   <Choose>

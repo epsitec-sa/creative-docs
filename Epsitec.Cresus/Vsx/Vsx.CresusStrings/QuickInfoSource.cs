@@ -20,8 +20,9 @@ using Roslyn.Services;
 
 // Properties / Debug / Command Line Arguments
 //		/rootsuffix Exp "..\..\..\..\App.CresusGraph\App.CresusGraph.sln"
+//		/rootsuffix Exp "..\..\..\..\App.CresusGraph\App.CresusGraph.sln"
+//		/rootsuffix Exp "..\..\..\..\Epsitec.Cresus.sln"
 //		/rootsuffix Exp "..\..\..\Vsx.CresusStrings.Sample1\Vsx.CresusStrings.Sample1.sln"
-
 namespace Epsitec.Cresus.Strings
 {
 	internal class QuickInfoSource : IQuickInfoSource
@@ -55,19 +56,6 @@ namespace Epsitec.Cresus.Strings
 			}
 		}
 
-		private async Task<Tuple<CommonSyntaxToken, SyntaxNode>> GetQiSyntaxDataAsync(int position, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var token = await this.GetSyntaxTokenAsync (position, cancellationToken);
-			cancellationToken.ThrowIfCancellationRequested ();
-			var node = QuickInfoSource.FilterSyntaxToken (token);
-			if (node != null)
-			{
-				cancellationToken.ThrowIfCancellationRequested ();
-				return Tuple.Create (token, node);
-			}
-			return Tuple.Create (token, default (SyntaxNode));
-		}
-
 		public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> qiContent, out ITrackingSpan applicableToSpan)
 		{
 			applicableToSpan = null;
@@ -97,13 +85,11 @@ namespace Epsitec.Cresus.Strings
 								// get project resources
 								if (this.resourceMapperTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
 								{
-									var memberAccessName = node.RemoveTrivias ().ToString ();
-									var memberAccessKey = Key.Create (memberAccessName.Split ('.'));
-									var cultureMap = QuickInfoSource.CreateCultureFirstMap (this.ResourceMap, memberAccessKey);
-
-									var symbolMap = QuickInfoSource.ToSymbolFirstMap (cultureMap);
-									var content = QuickInfoSource.GetQiResourceView (symbolMap);
+									var symbolTail = node.RemoveTrivias ().ToString ();
+									var symbolMap = this.ResourceMapper.MatchItemSymbolTail (symbolTail);
+									var content = MultiCultureResourceItemCollectionView.Create (symbolMap);
 									qiContent.Add (content);
+									applicableToSpan = QuickInfoSource.GetTrackingSpan (point, node.Span);
 
 									//var context = SynchronizationContext.Current;
 									//var element = content as System.Windows.FrameworkElement;
@@ -125,7 +111,7 @@ namespace Epsitec.Cresus.Strings
 								//if (semanticTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
 								//{
 								//	//QuickInfoSource.AddQiContent (qiContent, semanticTask.Result);
-								//	applicableToSpan = QuickInfoSource.GetTrackingSpan (point, token);
+								//	applicableToSpan = QuickInfoSource.GetTrackingSpan (point, node.Span);
 								//	Trace.WriteLine ("DONE: " + applicableToSpan.ToString ());
 								//}
 								//else
@@ -139,7 +125,7 @@ namespace Epsitec.Cresus.Strings
 						else
 						{
 							cts.Cancel ();
-							applicableToSpan = QuickInfoSource.SetQiPending (syntaxTask, "Syntax", qiContent, point);
+							applicableToSpan = QuickInfoSource.SetQiPending (tokenTask, "Syntax", qiContent, point);
 						}
 					}
 					else
@@ -149,99 +135,24 @@ namespace Epsitec.Cresus.Strings
 					}
 				}
 			}
+			catch (AggregateException e)
+			{
+				QuickInfoSource.AddQiException (qiContent, e);
+				foreach (var ie in e.InnerExceptions)
+				{
+					QuickInfoSource.AddQiException (qiContent, ie, "  ");
+				}
+			}
 			catch (Exception e)
 			{
-				string message = string.Format("Cresus Strings Extension Exception\n{0} : {1}", e.GetType().Name, e.Message);
-				QuickInfoSource.AddQiContent(qiContent, message);
+				QuickInfoSource.AddQiException (qiContent, e);
 			}
 		}
 
-		private static CompositeDictionary CreateCultureFirstMap(CompositeDictionary resourceMap, IKey memberAccessKey)
+		private static void AddQiException(IList<object> qiContent, Exception e, string prefix = "Cresus Strings Extension Exception\n")
 		{
-			var map = new CompositeDictionary ();
-
-			foreach (var cultureKey in resourceMap.FirstLevelKeys)
-			{
-				var cultureMap = CompositeDictionary.Create (resourceMap[cultureKey]);
-				var resourceKeys = QuickInfoSource.GetCandidateResourceKeys (cultureMap, memberAccessKey).ToList ();
-				foreach (var resourceKey in resourceKeys)
-				{
-					var key = Key.Create (cultureKey, resourceKey);
-					var resourceItem = cultureMap[resourceKey] as ResourceItem;
-					map[key] = resourceItem;
-				}
-			}
-			return map;
-		}
-
-		private static CompositeDictionary ToSymbolFirstMap(CompositeDictionary cultureFirstMap)
-		{
-			var symbolFirstMap = new CompositeDictionary ();
-			foreach (var cultureKey in cultureFirstMap.FirstLevelKeys)
-			{
-				var cultureMap = CompositeDictionary.Create (cultureFirstMap[cultureKey]);
-				foreach (var symbolKey in cultureMap.Keys)
-				{
-					var symbolName = string.Join (".", symbolKey.Select (i => i.ToString ()));
-					symbolFirstMap[symbolName, cultureKey] = cultureMap[symbolKey];
-				}
-			}
-			return symbolFirstMap;
-		}
-
-		private static object GetQiResourceView(CompositeDictionary symbolFirstMap)
-		{
-			var view = new MultiCultureResourceItemCollectionView ();
-			var viewModel = new MultiCultureResourceItemCollectionViewModel ();
-			view.DataContext = viewModel;
-
-			var symbolKeys = symbolFirstMap.FirstLevelKeys;
-			foreach (var symbolKey in symbolKeys)
-			{
-				var symbolMap = CompositeDictionary.Create (symbolFirstMap[symbolKey]);
-				var symbolName = symbolKey.Values.Single () as string;
-				var multiCulturalViewModel = new MultiCultureResourceItemViewModel (symbolName);
-				viewModel.Items.Add (multiCulturalViewModel);
-
-				var cultureKeys = symbolMap.Keys;
-				foreach (var cultureKey in cultureKeys)
-				{
-					var culture = cultureKey.Values.Single () as CultureInfo;
-					var resourceItem = symbolMap[cultureKey] as ResourceItem;
-					multiCulturalViewModel.Items.Add (new ResourceItemViewModel (resourceItem, culture));
-				}
-			}
-			return view;
-		}
-
-		private static IEnumerable<IKey> GetCandidateResourceKeys(CompositeDictionary cultureMap, IKey memberAccessKey)
-		{
-			foreach (var resourceKey in cultureMap.Keys)
-			{
-				if (QuickInfoSource.Match (memberAccessKey, resourceKey))
-				{
-					yield return resourceKey;
-				}
-			}
-		}
-
-		private static bool Match(IKey memberAccessKey, IKey resourceKey)
-		{
-			var memberAccessKeyEnumerator = memberAccessKey.Reverse().GetEnumerator ();
-			var resourceKeyEnumerator = resourceKey.Reverse ().GetEnumerator ();
-
-			while (memberAccessKeyEnumerator.MoveNext ())
-			{
-				if (!resourceKeyEnumerator.MoveNext ())
-				{
-					return false;
-				}
-				if (!object.Equals (memberAccessKeyEnumerator.Current, resourceKeyEnumerator.Current))
-				{
-					return false;
-				}
-			}
-			return true;
+			string message = string.Format ("{0}{1} : {2}", prefix, e.GetType ().Name, e.Message);
+			QuickInfoSource.AddQiContent (qiContent, message);
 		}
 
 		private static ResourceMapper LoadResources(ISolution solution, CancellationToken cancellationToken)
@@ -306,12 +217,11 @@ namespace Epsitec.Cresus.Strings
 		{
 			if (token != default (CommonSyntaxToken))
 			{
-				var identifier = token.Parent as IdentifierNameSyntax;
-				if (identifier != null)
+				if (token.Parent.IsMemberAccess())
 				{
-					var memberAccessAncestors = identifier.Ancestors ().TakeWhile (a => a is MemberAccessExpressionSyntax && !a.IsInvocation());
+					var memberAccessAncestors = token.Parent.AncestorsAndSelf ().TakeWhile (a => a.IsMemberAccess() && !a.IsInvocation ());
 					var node = memberAccessAncestors.LastOrDefault ();
-					return node;
+					return node as SyntaxNode;
 				}
 			}
 			return null;
@@ -373,10 +283,24 @@ namespace Epsitec.Cresus.Strings
 			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 		}
 
-		private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint, CommonSyntaxToken token)
+		//private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint, CommonSyntaxToken token)
+		//{
+		//	ITextSnapshot currentSnapshot = snapshotPoint.Snapshot;
+		//	var span = Span.FromBounds (token.Span.Start, token.Span.End);
+		//	return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
+		//}
+
+		//private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint, SyntaxNode node)
+		//{
+		//	ITextSnapshot currentSnapshot = snapshotPoint.Snapshot;
+		//	var span = Span.FromBounds (node.Span.Start, node.Span.End);
+		//	return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
+		//}
+
+		private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint, TextSpan textSpan)
 		{
 			ITextSnapshot currentSnapshot = snapshotPoint.Snapshot;
-			var span = Span.FromBounds (token.Span.Start, token.Span.End);
+			var span = Span.FromBounds (textSpan.Start, textSpan.End);
 			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 		}
 
@@ -408,11 +332,11 @@ namespace Epsitec.Cresus.Strings
 			}
 		}
 
-		private CompositeDictionary ResourceMap
+		private ResourceMapper ResourceMapper
 		{
 			get
 			{
-				return this.resourceMapperTask.Result.Map;
+				return this.resourceMapperTask.Result;
 			}
 		}
 
@@ -427,19 +351,6 @@ namespace Epsitec.Cresus.Strings
 			yield return string.Format ("DOC : {0}", this.Document.FilePath);
 			yield return string.Format ("PRJ : {0}", this.Project.FilePath);
 			yield return string.Format ("SLN : {0}", this.Solution.FilePath);
-		}
-
-		private async Task<Tuple<CommonSyntaxToken, SyntaxNode>> GetQiSyntaxDataAsync(int position, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			var token = await this.GetSyntaxTokenAsync (position, cancellationToken);
-			cancellationToken.ThrowIfCancellationRequested ();
-			var node = QuickInfoSource.FilterSyntaxToken (token);
-			if (node != null)
-			{
-				cancellationToken.ThrowIfCancellationRequested ();
-				return Tuple.Create (token, node);
-			}
-			return Tuple.Create (token, default(SyntaxNode));
 		}
 
 		private async Task<IEnumerable<string>> GetQiSemanticDataAsync(SyntaxNode node, CancellationToken cancellationToken = default(CancellationToken))

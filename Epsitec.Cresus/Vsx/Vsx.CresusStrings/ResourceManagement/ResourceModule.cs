@@ -194,19 +194,19 @@ namespace Epsitec.Cresus.ResourceManagement
 					var neutralGroup = nameGrouping.NameGroups.First ();
 					var otherGroups = nameGrouping.NameGroups.Skip (1);
 
-
-
-
-					var neutralBundle = new ResourceBundle (neutralGroup.FileName, null);
-
-
-
-
-					yield return neutralBundle;
-
-					foreach (var otherGroup in otherGroups)
+					var neutralBundle = ResourceBundle.Create (neutralGroup.FileName, null);
+					if (neutralBundle != null)
 					{
-						yield return new ResourceBundle (otherGroup.FileName, neutralBundle);
+						yield return neutralBundle;
+
+						foreach (var otherGroup in otherGroups)
+						{
+							var otherBundle = ResourceBundle.Create (otherGroup.FileName, neutralBundle);
+							if (otherBundle != null)
+							{
+								yield return otherBundle;
+							}
+						}
 					}
 				}
 			}

@@ -74,9 +74,18 @@ namespace Epsitec
 
 		#region Roslyn
 
-		public static IEnumerable<IDocument> Documents(this ISolution solution)
+		public static IEnumerable<IDocument> Documents(this ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return solution.Projects.SelectMany (p => p.Documents);
+			//return solution.Projects.SelectMany (p => p.Documents);
+			foreach (var project in solution.Projects)
+			{
+				cancellationToken.ThrowIfCancellationRequested ();
+				foreach (var document in project.Documents)
+				{
+					cancellationToken.ThrowIfCancellationRequested ();
+					yield return document;
+				}
+			}
 		}
 
 		public static IDocument ActiveDocument(this ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
@@ -85,29 +94,18 @@ namespace Epsitec
 			var dte2 = DTE2Provider.GetDTE2 (System.Diagnostics.Process.GetCurrentProcess ().Id);
 			cancellationToken.ThrowIfCancellationRequested ();
 			var dteActiveDocumentPath = dte2.ActiveDocument.FullName;
-			return solution.Documents ().Do (_ => cancellationToken.ThrowIfCancellationRequested ()).Where (d => string.Compare (d.FilePath, dteActiveDocumentPath, true) == 0).Single ();
+			for (int retryCount = 0; retryCount < 3; ++retryCount)
+			{
+				try
+				{
+					return solution.Documents (cancellationToken).Where (d => string.Compare (d.FilePath, dteActiveDocumentPath, true) == 0).Single ();
+				}
+				catch (InvalidOperationException)
+				{
+				}
+			}
+			return null;
 		}
-
-		//public static CommonSyntaxNode GetNarrowestEnclosingNode(this CommonSyntaxNode node, int position)
-		//{
-		//	if (!node.Span.Contains (position))
-		//	{
-		//		return null;
-		//	}
-		//	var narrowestEnclosingNode = node;
-		//	foreach (var child in node.ChildNodes ().Where (n => n.Span.Contains (position)))
-		//	{
-		//		if (narrowestEnclosingNode.Span.Contains (child.Span))
-		//		{
-		//			narrowestEnclosingNode = child;
-		//		}
-		//	}
-		//	if (narrowestEnclosingNode == node)
-		//	{
-		//		return node;
-		//	}
-		//	return narrowestEnclosingNode.GetNarrowestEnclosingNode (position);
-		//}
 
 		public static SyntaxNode RemoveTrivias(this SyntaxNode node)
 		{
@@ -117,6 +115,11 @@ namespace Epsitec
 		public static IEnumerable<TextChange> ToRoslynTextChanges(this INormalizedTextChangeCollection changes)
 		{
 			return changes.Select (change => new TextChange (new TextSpan (change.OldSpan.Start, change.OldSpan.Length), change.NewText));
+		}
+
+		public static bool IsMemberAccess(this CommonSyntaxNode node)
+		{
+			return node is MemberAccessExpressionSyntax || node is IdentifierNameSyntax;
 		}
 
 		public static bool IsInvocation(this CommonSyntaxNode node)
@@ -131,6 +134,11 @@ namespace Epsitec
 		public static string GetString(this XAttribute attribute)
 		{
 			return attribute == null ? default (string) : (string) attribute;
+		}
+
+		public static string GetStringOrEmpty(this XAttribute attribute)
+		{
+			return attribute == null ? string.Empty : (string) attribute;
 		}
 	
 		#endregion

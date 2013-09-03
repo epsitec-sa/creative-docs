@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Xml.Linq;
 
@@ -87,6 +88,27 @@ namespace Epsitec.Windows
 			}
 		}
 
+		private static Inline EndOfLine()
+		{
+			return new InlineUIContainer (
+				new Border ()
+				{
+					CornerRadius = new CornerRadius (3),
+					Padding = new Thickness (3, 0, 3, 0),
+					Background = Brushes.Gray,
+					Child = new TextBlock (
+						new Run (TextLayout.EndOfLineSymbol)
+						{
+							FontFamily = TextLayout.Wingdings3,
+							Foreground = Brushes.White,
+						}
+					)
+				});
+		}
+
+		private static readonly string EndOfLineSymbol = '\u00C9'.ToString ();
+		private static readonly FontFamily  Wingdings3 = new FontFamily ("Wingdings 3");
+
 		private static readonly Dictionary<string, Action<XElement, InlineCollection>> factories = new Dictionary<string, Action<XElement, InlineCollection>> ()
 		{
 			{
@@ -117,6 +139,7 @@ namespace Epsitec.Windows
 				"br",
 				(element, container) =>
 				{
+					container.Add (TextLayout.EndOfLine ());
 					container.Add (new LineBreak ());
 				}
 			},

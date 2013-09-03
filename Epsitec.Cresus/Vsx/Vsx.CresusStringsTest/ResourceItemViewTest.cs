@@ -10,6 +10,8 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Xml.Linq;
 using Epsitec.Cresus.ResourceManagement;
+using Epsitec.Cresus.Strings.ViewModels;
+using Epsitec.Cresus.Strings.Views;
 using Epsitec.Windows;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,25 +22,7 @@ namespace Epsitec.Cresus.Strings
 	{
 		[TestMethod]
 		[STAThread]
-		public void Mvvm()
-		{
-			var bundle = new ResourceBundle (TestData.Strings00Path);
-			var item = bundle.ByName["Message.MoreThanPiccolo"];
-
-			var viewModel = new ResourceItemViewModel ();
-			viewModel.Value = item.Value;
-
-			var window = new Window ();
-			var view = new ResourceItemView ();
-			view.DataContext = viewModel;
-
-			window.Content = view;
-			window.ShowDialog ();
-		}
-
-		[TestMethod]
-		[STAThread]
-		public void Inlines_Manual()
+		public void InlinesSpike()
 		{
 			// <img src="http://www.epsitec.ch/products/graphe/images/boite-graphe1.gif" />
 
@@ -75,149 +59,19 @@ namespace Epsitec.Cresus.Strings
 
 		[TestMethod]
 		[STAThread]
-		public void Content()
+		public void DisplayHyperlink_MoreThanPiccolo()
 		{
 			var bundle = new ResourceBundle (TestData.Strings00Path);
 			var item = bundle.ByName["Message.MoreThanPiccolo"];
 
-			var window = new Window ();
-			var control = new TextBlock ();
-			TextLayout.SetHtml(control, item.Value);
-			window.Content = control;
-			window.ShowDialog ();
-		}
+			var viewModel = new ResourceItemViewModel (item, bundle.Culture);
+			viewModel.Value = item.Value;
 
-		[TestMethod]
-		[STAThread]
-		public void ContentAndSymbol()
-		{
-			var bundle = new ResourceBundle (TestData.Strings00Path);
-			var item = bundle.ByName["Message.MoreThanPiccolo"];
+			var window = WpfHelper.CreateWindow ();
+			var view = new ResourceItemView ();
+			view.DataContext = viewModel;
 
-			var window = new Window ();
-
-			var grid = new Grid ();
-			grid.ColumnDefinitions.Add (new ColumnDefinition ()
-			{
-				Width = GridLength.Auto
-			});
-			grid.RowDefinitions.Add (new RowDefinition ()
-			{
-				Height = GridLength.Auto
-			});
-			grid.RowDefinitions.Add (new RowDefinition ()
-			{
-				Height = GridLength.Auto
-			});
-
-			var border0 = new Border ()
-			{
-				Padding = new Thickness (6),
-				BorderThickness = new Thickness (1.0),
-				BorderBrush = Brushes.Black,
-				Child = new TextBlock ()
-				{
-					Text = item.Name
-				}
-			};
-
-			var control = new TextBlock ();
-			TextLayout.SetHtml (control, item.Value);
-			var border1 = new Border ()
-			{
-				Padding = new Thickness (6),
-				BorderThickness = new Thickness (1, 0, 1, 1),
-				BorderBrush = Brushes.Black,
-				Child = control
-			};
-			Grid.SetRow (border1, 1);
-
-			grid.Children.Add (border0);
-			grid.Children.Add (border1);
-
-			window.Content = grid;
-			window.ShowDialog ();
-		}
-
-		[TestMethod]
-		[STAThread]
-		public void ContentSymbolAndCulture()
-		{
-			var bundle = new ResourceBundle (TestData.Strings00Path);
-			var item = bundle.ByName["Message.MoreThanPiccolo"];
-
-			var window = new Window ();
-
-			var grid = new Grid ();
-			grid.ColumnDefinitions.Add (new ColumnDefinition ()
-			{
-				Width = GridLength.Auto
-			});
-			grid.ColumnDefinitions.Add (new ColumnDefinition ()
-			{
-				Width = GridLength.Auto
-			});
-
-			grid.RowDefinitions.Add (new RowDefinition ()
-			{
-				Height = GridLength.Auto
-			});
-			grid.RowDefinitions.Add (new RowDefinition ()
-			{
-				Height = GridLength.Auto
-			});
-			grid.RowDefinitions.Add (new RowDefinition ()
-			{
-				Height = GridLength.Auto
-			});
-
-			// row 0 : symbol
-			var border0 = new Border ()
-			{
-				Padding = new Thickness (6),
-				BorderThickness = new Thickness (1.0),
-				BorderBrush = Brushes.Black,
-				Child = new TextBlock ()
-				{
-					Text = item.Name,
-					HorizontalAlignment = HorizontalAlignment.Center
-				}
-			};
-			Grid.SetColumnSpan (border0, 2);
-
-			// row 1, col 0
-			var border10 = new Border ()
-			{
-				Padding = new Thickness (6),
-				BorderThickness = new Thickness (1, 0, 1, 1),
-				BorderBrush = Brushes.Black,
-				Child = new TextBlock ()
-				{
-					Text = bundle.Culture.Parent.DisplayName
-				}
-			};
-			Grid.SetRow (border10, 1);
-			Grid.SetColumn (border10, 0);
-
-			// row 1, col 1
-			var control = new TextBlock ();
-			TextLayout.SetHtml (control, item.Value);
-			var border11 = new Border ()
-			{
-				Padding = new Thickness (6),
-				BorderThickness = new Thickness (0, 0, 1, 1),
-				BorderBrush = Brushes.Black,
-				Child = control
-			};
-			Grid.SetRow (border11, 1);
-			Grid.SetColumn (border11, 1);
-
-
-			grid.Children.Add (border0);
-			grid.Children.Add (border10);
-			grid.Children.Add (border11);
-
-			window.Content = grid;
+			window.Content = view;
 			window.ShowDialog ();
 		}
 

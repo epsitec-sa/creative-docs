@@ -59,14 +59,21 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		protected virtual ICompositeKey CreateAccessKey(ResourceItem item)
+		/// <summary>
+		/// Creates a composite dictionary that contains resource items that
+		/// match with the given resource item name tail. The composite key
+		/// is a sequence of the resource item symbol and the culture.
+		/// </summary>
+		/// <param name="itemSymbolTail"></param>
+		/// <returns></returns>
+		public CompositeDictionary MatchItemSymbolTail(string itemSymbolTail)
 		{
-			return Key.Create (													// Example
-				this.CurrentResourceBundle.Culture,								// fr-CH
-				this.CurrentResourceModule.Info.ResourceNamespace.Split ('.'),	// .Epsitec.Cresus
-				"Res",															// .Res
-				this.CurrentResourceBundle.Name,								// .Strings
-				item.Name.Split ('.'));											// .Application.Name
+			return this.MatchItemSymbolTail (Key.Create (itemSymbolTail.Split ('.')));
+		}
+
+		protected virtual ICompositeKey CreateItemAccessKey(ResourceItem item)
+		{
+			return Key.Create (this.GetItemAccessSubkeys (item));
 		}
 
 		#region ResourceVisitor Overrides
@@ -79,7 +86,7 @@ namespace Epsitec.Cresus.ResourceManagement
 				this.resourceItemErrors.Add (item as ResourceItemError);
 			}
 
-			var key = this.CreateAccessKey (item);
+			var key = this.CreateItemAccessKey (item);
 			if (this.map.ContainsKey (key))
 			{
 				this.duplicateKeys.Add (key);
@@ -117,6 +124,104 @@ namespace Epsitec.Cresus.ResourceManagement
 		}
 
 		#endregion
+
+		private static IEnumerable<IKey> MatchedKeys(IEnumerable<IKey> fullKeys, IKey tailKey)
+		{
+			foreach (var fullKey in fullKeys)
+			{
+				if (ResourceMapper.KeyMatch (fullKey, tailKey))
+				{
+					yield return fullKey;
+				}
+			}
+		}
+
+		private static bool KeyMatch(IKey fullKey, IKey tailKey)
+		{
+			var tailEnumerator = tailKey.Reverse ().GetEnumerator ();
+			var fullEnumerator = fullKey.Reverse ().GetEnumerator ();
+
+			while (tailEnumerator.MoveNext ())
+			{
+				if (!fullEnumerator.MoveNext ())
+				{
+					return false;
+				}
+				if (!object.Equals (tailEnumerator.Current, fullEnumerator.Current))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private static CompositeDictionary ToSymbolFirstMap(CompositeDictionary cultureFirstMap)
+		{
+			var symbolFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in cultureFirstMap.FirstLevelKeys)
+			{
+				var cultureMap = CompositeDictionary.Create (cultureFirstMap[cultureKey]);
+				foreach (var symbolKey in cultureMap.Keys)
+				{
+					var symbolName = string.Join (".", symbolKey.Select (i => i.ToString ()));
+					symbolFirstMap[symbolName, cultureKey] = cultureMap[symbolKey];
+				}
+			}
+			return symbolFirstMap;
+		}
+
+		private CompositeDictionary MatchItemSymbolTail(IKey itemSymbolTailKey)
+		{
+			var cultureFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in this.map.FirstLevelKeys)
+			{
+				var symbolsOnlyMap = CompositeDictionary.Create (this.map[cultureKey]);
+				var symbolKeys = ResourceMapper.MatchedKeys (symbolsOnlyMap.Keys, itemSymbolTailKey).ToList ();
+				foreach (var symbolKey in symbolKeys)
+				{
+					cultureFirstMap[Key.Create (cultureKey, symbolKey)] = symbolsOnlyMap[symbolKey] as ResourceItem;
+				}
+			}
+			var symbolFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in cultureFirstMap.FirstLevelKeys)
+			{
+				var symbolsOnlyMap = CompositeDictionary.Create (cultureFirstMap[cultureKey]);
+				foreach (var symbolKey in symbolsOnlyMap.Keys)
+				{
+					var symbol = string.Join (".", symbolKey.Select (i => i.ToString ()));
+					symbolFirstMap[symbol, cultureKey] = symbolsOnlyMap[symbolKey];
+				}
+			}
+			return symbolFirstMap;
+		}
+
+		/// <summary>
+		/// Resource Item Access Key has following format
+		///   bundle.Culture;module.ResourceNamespace;Res;bundle.Name;item.Name
+		///   <example>fr-CH;Epsitec.Cisus;Res;Strings;Application.Name</example>
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
+		private IEnumerable<object> GetItemAccessSubkeys(ResourceItem item)
+		{
+			if (this.CurrentResourceBundle != null && this.CurrentResourceBundle.Culture != null)
+			{
+				yield return this.CurrentResourceBundle.Culture;
+			}
+			if (this.CurrentResourceModule != null && !string.IsNullOrEmpty (this.CurrentResourceModule.Info.ResourceNamespace))
+			{
+				yield return this.CurrentResourceModule.Info.ResourceNamespace.Split ('.');
+			}
+			yield return "Res";
+			if (this.CurrentResourceBundle != null && !string.IsNullOrEmpty (this.CurrentResourceBundle.Name))
+			{
+				yield return this.CurrentResourceBundle.Name.Split ('.');
+			}
+			if (!string.IsNullOrEmpty (item.Name))
+			{
+				yield return item.Name.Split ('.');
+			}
+		}
 
 		private readonly CompositeDictionary map = new CompositeDictionary ();
 		private readonly HashSet<IKey> duplicateKeys = new HashSet<IKey> ();

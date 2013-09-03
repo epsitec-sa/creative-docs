@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Cresus.ResourceManagement;
+using Epsitec.Cresus.Strings.ViewModels;
+using Epsitec.Cresus.Strings.Views;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Epsitec.Cresus.Strings

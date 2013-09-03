@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.ResourceManagement
 				var fileNames = Directory.EnumerateFiles (directory, "module.info", SearchOption.AllDirectories);
 				return fileNames
 					.Select (fn => ResourceModule.Load (fn, cancellationToken))
+					.Where (m => m != null)
 					.Do (_ => cancellationToken.ThrowIfCancellationRequested ())
 					.ToList();
 			}

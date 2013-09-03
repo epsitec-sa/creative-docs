@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Strings
 			var resourceDictionary = new ResourceDictionary ();
 			resourceDictionary.Source = new Uri ("pack://application:,,,/Vsx.CresusStrings;component/CresusStrings.xaml");
 			window.Resources.MergedDictionaries.Add (resourceDictionary);
+			window.SizeToContent = SizeToContent.WidthAndHeight;
 			return window;
 		}
 	}

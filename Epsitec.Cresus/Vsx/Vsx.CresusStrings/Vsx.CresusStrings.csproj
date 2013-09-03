@@ -110,6 +110,9 @@
     <Compile Include="Views\MultiCultureResourceItemView.xaml.cs">
       <DependentUpon>MultiCultureResourceItemView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\ResourceItemView.xaml.cs">
+      <DependentUpon>ResourceItemView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
@@ -145,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MultiCultureResourceItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ResourceItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

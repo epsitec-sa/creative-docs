@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Epsitec.Cresus.Strings
+namespace Epsitec.Cresus.Strings.Views
 {
 	/// <summary>
 	/// Interaction logic for ResourceItemView.xaml

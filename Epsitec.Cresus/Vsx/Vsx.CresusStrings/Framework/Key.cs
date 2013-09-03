@@ -24,7 +24,7 @@ namespace Epsitec
 
 		public static ICompositeKey Create(IEnumerable<object> subkeys)
 		{
-			return new CompositeKey (subkeys.Select (s => Key.ToKey (s)));
+			return new CompositeKey (subkeys.Select (s => Key.ToKey (s)).Where(k => k != null));
 		}
 
 		public static ICompositeKey Create(object key, params object[] subkeys)
@@ -101,6 +101,10 @@ namespace Epsitec
 			else if (o is IEnumerable<object>)
 			{
 				return Key.Create (o as IEnumerable<object>);
+			}
+			else if (o == null)
+			{
+				return null;
 			}
 			else
 			{

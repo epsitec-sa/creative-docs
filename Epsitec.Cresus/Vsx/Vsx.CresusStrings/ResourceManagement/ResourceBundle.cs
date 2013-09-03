@@ -11,6 +11,18 @@ namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceBundle : ResourceElement, IResourceTable
 	{
+		public static ResourceBundle Create(string fileName, ResourceBundle neutralCultureBundle = null)
+		{
+			try
+			{
+				return new ResourceBundle (fileName, neutralCultureBundle);
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		public ResourceBundle(string fileName, ResourceBundle neutralCultureBundle = null)
 			: this (fileName, XDocument.Load (fileName, LoadOptions.SetLineInfo).Root, neutralCultureBundle)
 		{
@@ -171,7 +183,15 @@ namespace Epsitec.Cresus.ResourceManagement
 			: base(element)
 		{
 			this.fileName	= fileName;
-			this.culture	= CultureInfo.CreateSpecificCulture(this.Element.Attribute ("culture").GetString ());
+			var cultureName = this.Element.Attribute ("culture").GetString ();
+			if (string.IsNullOrEmpty (cultureName))
+			{
+				this.culture = CultureInfo.DefaultThreadCurrentUICulture;
+			}
+			else
+			{
+				this.culture = CultureInfo.CreateSpecificCulture (cultureName);
+			}
 
 			this.byId		= byId;
 			this.byName		= new Lazy<IReadOnlyDictionary<string, ResourceItem>> (() => this.Values.ToDictionary (i => i.Name));
