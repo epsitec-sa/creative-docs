@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
@@ -108,10 +108,17 @@ namespace Epsitec.Aider.Rules
 		{
 			var eCH = person.eCH_Person;
 
-			if ((eCH.IsNull ()) ||
-				(eCH.PersonSex == PersonSex.Unknown))
+			if (eCH.IsNull ())
 			{
-				Logic.BusinessRuleException (person, Resources.Text ("Cette personne n'a pas de sexe défini."));
+				Logic.BusinessRuleException (person, Resources.Text ("Cette personne n'a pas de données eCH associées. Cela ne devrait jamais arriver..."));
+
+				//	TODO: log this fatal error (as it is probably caused by a database corruption)
+
+				return;
+			}
+
+			if (eCH.PersonSex == PersonSex.Unknown)
+			{
 				return;
 			}
 
