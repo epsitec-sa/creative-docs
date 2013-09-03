@@ -41,7 +41,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 				if (eChHousehold.IsNotNull())
 				{
-					var aiderHousehold = this.GetAiderHousehold (eChHousehold);
+					var aiderHousehold = this.GetAiderHousehold (eChHousehold.Adult1);
 					AiderContactEntity.Create (this.BusinessContext, this.Entity.Person, aiderHousehold, false);
 				}
 
@@ -50,13 +50,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             }        
 		}
 
-		private AiderHouseholdEntity GetAiderHousehold(eCH_ReportedPersonEntity eChHousehold)
+		private AiderHouseholdEntity GetAiderHousehold(eCH_PersonEntity eChPerson)
 		{
 			var aiderPersonExample = new AiderPersonEntity ();
 			var contactExample = new AiderContactEntity ();
 			var householdExample = new AiderHouseholdEntity ();
 
-			aiderPersonExample.eCH_Person.ReportedPerson1 = eChHousehold;
+            aiderPersonExample.eCH_Person = eChPerson;
 			contactExample.Person = aiderPersonExample;
 			contactExample.Household = householdExample;
 			var request = new Request ()

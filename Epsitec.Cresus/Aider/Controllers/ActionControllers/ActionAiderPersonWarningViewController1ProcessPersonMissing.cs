@@ -41,6 +41,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
+            if (!isDecease && this.Entity.Person.IsDeceased)
+            {
+                var message = "Cette personne est décédée";
+
+                throw new BusinessRuleException(message);
+            }
+
             if (setInvisible)
             {
                 this.Entity.Person.Visibility = PersonVisibilityStatus.Hidden;
@@ -52,6 +59,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 if (subscription.IsNotNull())
                 {
                     subscription.RefreshCache();
+                }
+
+
+                if (setInvisible)
+                {
+                    var contacts = this.Entity.Person.Contacts;
+                    var contact = contacts.FirstOrDefault(x => x.Household == household);
+
+                    if (contact.IsNotNull())
+                    {
+                        AiderContactEntity.Delete(this.BusinessContext, contact);
+                    }
                 }
             }
 
@@ -75,10 +94,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 .Field<bool>()
                     .Title("Je veux rendre invisible cette personne")
                     .InitialValue(false)
-                .End()
+                .End()            
                 .Field<bool>()
                     .Title("Cette personne est décédée")
-                    .InitialValue(false)
+                    .InitialValue(this.Entity.Person.IsDeceased)
                 .End()
             .End();
         }

@@ -43,12 +43,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 foreach (var member in householdMembers)
                 {
 					var warnCount = member.Warnings.Where (w => w.WarningType.Equals (WarningType.EChPersonMissing) ||
-																w.WarningType.Equals (WarningType.EChHouseholdAdded) ||
-																w.WarningType.Equals (WarningType.EChPersonNew) ||
-																w.WarningType.Equals (WarningType.EChProcessArrival) ||
+																w.WarningType.Equals (WarningType.EChHouseholdAdded) ||		
+													            w.WarningType.Equals(WarningType.EChPersonNew) ||
+                                                                w.WarningType.Equals(WarningType.EChProcessArrival) ||
 																w.WarningType.Equals (WarningType.EChProcessDeparture)).ToList ().Count;
-
-
                     if (warnCount > 0)
                     {
                         var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + member.GetDisplayName();
@@ -57,6 +55,41 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                     }
                 }
 
+
+                var newHousehold = this.GetNewHousehold();
+                if (newHousehold.Adult2.IsNotNull())
+                {
+                    var adult2WarnCount = this.GetAiderPerson(newHousehold.Adult2).Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) ||
+                                                                w.WarningType.Equals(WarningType.EChHouseholdAdded) ||
+                                                                w.WarningType.Equals(WarningType.EChPersonNew) ||
+                                                                w.WarningType.Equals(WarningType.EChProcessArrival) ||
+                                                                w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList().Count;
+
+                    if (adult2WarnCount > 0)
+                    {
+                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + newHousehold.Adult2.GetSummary();
+                        throw new BusinessRuleException(message);
+                    }
+                }
+                
+                foreach (var child in newHousehold.Children)
+                {
+
+
+                    var childWarnCount = this.GetAiderPerson(child).Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) ||
+                                                                w.WarningType.Equals(WarningType.EChHouseholdAdded) ||
+                                                                w.WarningType.Equals(WarningType.EChPersonNew) ||
+                                                                w.WarningType.Equals(WarningType.EChProcessArrival) ||
+                                                                w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList().Count;
+                    if (childWarnCount > 0)
+                    {
+                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + child.GetSummary();
+
+                        throw new BusinessRuleException(message);
+                    }
+                }
+
+                
                 this.Entity.Person.RemoveWarningInternal(this.Entity);
                 this.BusinessContext.DeleteEntity(this.Entity);
             }
@@ -90,12 +123,27 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity> (echHouseholdExample).FirstOrDefault ();
 		}
 
+        private AiderPersonEntity GetAiderPerson(eCH_PersonEntity person)
+        {
+            var personExample = new AiderPersonEntity()
+            {
+                eCH_Person = person
+            };
+            return this.BusinessContext.DataContext.GetByExample<AiderPersonEntity>(personExample).FirstOrDefault();
+        }
+
 		private int analyseChanges()
 		{
 			var householdMembers = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members;
 			var newHousehold = this.GetNewHousehold ();
 			this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Résultat de l'analyse:\n"));
-
+            var newHouseholdIds = new HashSet<string>();
+            newHouseholdIds.Add(newHousehold.Adult1.PersonId);
+            newHouseholdIds.Add(newHousehold.Adult2.PersonId);
+            foreach (var child in newHousehold.Children)
+            {
+                newHouseholdIds.Add(child.PersonId);
+            }
 
 			if (householdMembers.Count < newHousehold.GetMembersCount ())
 			{
@@ -120,14 +168,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient moins de membres : "));
 
-				var newHouseholdIds = new HashSet<string> ();
-				newHouseholdIds.Add (newHousehold.Adult1.PersonId);
-				newHouseholdIds.Add(newHousehold.Adult2.PersonId);
-				foreach(var child in newHousehold.Children)
-				{
-					newHouseholdIds.Add(child.PersonId);
-				}
-
 				var missing = householdMembers.Where(p => !newHouseholdIds.Contains(p.eCH_Person.PersonId));
 				foreach (var miss in missing)
 				{
@@ -137,9 +177,26 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return -1;
 			}
 
+            if (householdMembers.Count == newHousehold.GetMembersCount())
+            {
+                var mismatch = false;
+                foreach (var member in householdMembers)
+                {
+                    if (!newHouseholdIds.Contains(member.eCH_Person.PersonId))
+                    {
+                        this.analyse = this.analyse.AppendLine(member.DisplayName + " est à controler");
+                        mismatch = true;
+                    }
+                }
 
-				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Un échange de membres a eu lieu entre deux ménages ECh"));
-				return 0;
+                if (mismatch)
+                {
+                    return 2;
+                }
+            }
+
+			this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("OK"));
+			return 0;
 		}
 
 

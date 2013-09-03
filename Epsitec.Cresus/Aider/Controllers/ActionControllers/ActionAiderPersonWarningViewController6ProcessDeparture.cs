@@ -41,6 +41,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             this.Entity.Person.RemoveWarningInternal(this.Entity);
             this.BusinessContext.DeleteEntity(this.Entity);
 
+
+            if (isDecease && appliForAll)
+            {
+                var message = "Impossible d'appliquer le décès a tout le ménage";
+
+                throw new BusinessRuleException(message);
+            }
+
 			if (appliForAll)
 			{
                 foreach (var household in this.Entity.Person.Households)
@@ -60,11 +68,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                         {
                             member.Visibility = PersonVisibilityStatus.Hidden;
                         }
-
-						if (isDecease)
-						{
-							member.Visibility = PersonVisibilityStatus.Deceased;
-						}
 
                         if (suppressSubscription)
                         {

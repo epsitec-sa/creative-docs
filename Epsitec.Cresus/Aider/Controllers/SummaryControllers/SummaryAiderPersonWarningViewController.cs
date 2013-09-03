@@ -44,7 +44,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					this.AddDefaultBrick (wall)
 						.EnableAction<ActionAiderPersonWarningViewController1ProcessPersonMissing> ();
 					break;
-				
+				case WarningType.EChPersonNew:
+                    this.AddDefaultBrick(wall)
+                        .EnableAction<ActionAiderPersonWarningViewController8ProcessNewPerson> ();
+                    break;
 				case WarningType.EChProcessDeparture:
                     if (this.Entity.Person.Contacts.Count > 0)
                     {
