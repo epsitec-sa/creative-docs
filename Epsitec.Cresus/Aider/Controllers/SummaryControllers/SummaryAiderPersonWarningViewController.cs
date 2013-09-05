@@ -42,68 +42,68 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.WithSpecialController (typeof (EditionAiderPersonViewController0DeceaseDateController));
 
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController1ProcessPersonMissing> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController1ProcessPersonMissing> ();
 					break;
 				case WarningType.EChPersonNew:
-                    this.AddDefaultBrick(wall)
-                        .EnableAction<ActionAiderPersonWarningViewController8ProcessNewPerson> ();
-                    break;
+					this.AddDefaultBrick(wall)
+						.EnableActionButton<ActionAiderPersonWarningViewController8ProcessNewPerson> ();
+					break;
 				case WarningType.EChProcessDeparture:
-                    if (this.Entity.Person.Contacts.Count > 0)
-                    {
-                        wall.AddBrick(x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ())
-                            .Title("Nouvelle adresse (si connue)")
-                            .Icon("Data.AiderAddress")
-                            .Text("(merci de saisir une adresse hors du canton)")
-                            .WithSpecialController(typeof(EditionAiderContactViewController1Address));
-                    }
+					if (this.Entity.Person.Contacts.Count > 0)
+					{
+						wall.AddBrick(x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ())
+							.Title("Nouvelle adresse (si connue)")
+							.Icon("Data.AiderAddress")
+							.Text("(merci de saisir une adresse hors du canton)")
+							.WithSpecialController(typeof(EditionAiderContactViewController1Address));
+					}
 					wall.AddBrick (x => x.Person)
 							.Title ("En cas de décès (entrer une date)")
 							.Icon (this.Entity.Person.GetIconName ("Data"))
 							.WithSpecialController (typeof (EditionAiderPersonViewController0DeceaseDateController));
 
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController6ProcessDeparture> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController6ProcessDeparture> ();
 					break;
 				
 				case WarningType.EChProcessArrival:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController7ProcessArrival> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ();
 					break;
 				
 				case WarningType.EChPersonDataChanged:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController0DiscardWarning> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
 					break;
 
 				case WarningType.EChHouseholdAdded:
-                    this.AddDefaultBrick(wall)
-                        .EnableAction<ActionAiderPersonWarningViewController4ProcessNewHousehold> ();
-                    break;
+					this.AddDefaultBrick(wall)
+						.EnableActionButton<ActionAiderPersonWarningViewController4ProcessNewHousehold> ();
+					break;
 
-                case WarningType.EChHouseholdChanged:
-                    this.AddDefaultBrick(wall)
-                        .EnableAction<ActionAiderPersonWarningViewController5ProcessHouseholdChange>();
-                    break;
+				case WarningType.EChHouseholdChanged:
+					this.AddDefaultBrick(wall)
+						.EnableActionButton<ActionAiderPersonWarningViewController5ProcessHouseholdChange> ();
+					break;
 
 				case WarningType.EChAddressChanged:
 					this.AddDefaultBrick (wall)
-                        .EnableAction<ActionAiderPersonWarningViewController9ProcessAddressChange>();
+						.EnableActionButton<ActionAiderPersonWarningViewController9ProcessAddressChange> ();
 					break;
 				
 				case WarningType.ParishArrival:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
 					break;
 				
 				case WarningType.ParishDeparture:
 					this.AddDefaultBrick (wall)
-						.EnableAction<ActionAiderPersonWarningViewController3ProcessParishDeparture> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController3ProcessParishDeparture> ();
 					break;
 				
 				default:
 					this.AddDefaultBrick (wall)
-                    .EnableAction<ActionAiderPersonWarningViewController0DiscardWarning>();
+					.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
 					break;
 			}
 			//Add household view if possible
@@ -124,8 +124,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 		private SimpleBrick<AiderPersonWarningEntity> AddDefaultBrick(BrickWall<AiderPersonWarningEntity> wall)
 		{
-			return wall.AddBrick ()
-				.Title (x => x.WarningType);
+			var brick = wall.AddBrick ()
+							.Title (x => x.WarningType);
+
+			wall.AddBrick (x => x.Person);
+
+			return brick;
 		}
 	}
 }
