@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Data.Job
 
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
-				using (var analyser = new EChDataAnalyserReporter (oldEchFile, newEchFile, reportFile))
+				using (var analyser = new EChDataAnalyzerReporter (oldEchFile, newEchFile, reportFile))
 				{
 					System.Console.WriteLine ("ECH DATA UPDATER : START ANALYSER");
 

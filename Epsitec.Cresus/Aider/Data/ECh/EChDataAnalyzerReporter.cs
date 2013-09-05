@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data.ECh
 {
-	internal class EChDataAnalyserReporter : EChDataAnalyser
+	internal class EChDataAnalyzerReporter : EChDataAnalyzer
 	{
-		public EChDataAnalyserReporter(string oldEchFile, string newEchFile, string reportFile)
+		public EChDataAnalyzerReporter(string oldEchFile, string newEchFile, string reportFile)
 			: base (oldEchFile, newEchFile)
 		{
 			this.reportFile = reportFile;
@@ -480,7 +480,7 @@ namespace Epsitec.Aider.Data.ECh
 
 				//Check Childrens Changes on changed core structure
 				var oldChildren = removedFamily == null ? Enumerable.Empty<EChPerson> () : removedFamily.Children;
-				var addedChildren = family.Children.Except (oldChildren, EChDataAnalyser.PersonComparer);
+				var addedChildren = family.Children.Except (oldChildren, EChDataAnalyzer.PersonComparer);
 
 				foreach (var child in addedChildren)
 				{
@@ -511,7 +511,7 @@ namespace Epsitec.Aider.Data.ECh
 
 				}
 
-				var removedChildren = oldChildren.Except (family.Children, EChDataAnalyser.PersonComparer);
+				var removedChildren = oldChildren.Except (family.Children, EChDataAnalyzer.PersonComparer);
 
 				foreach (var child in removedChildren)
 				{

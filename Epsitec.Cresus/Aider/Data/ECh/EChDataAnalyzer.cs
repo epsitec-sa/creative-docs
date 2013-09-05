@@ -8,9 +8,9 @@ using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Aider.Data.ECh
 {
-	internal class EChDataAnalyser : EChDataComparer
+	internal class EChDataAnalyzer : EChDataComparer
 	{
-		public EChDataAnalyser(string oldEchFile, string newEchFile)
+		public EChDataAnalyzer(string oldEchFile, string newEchFile)
 			: base (oldEchFile, newEchFile)
 		{
 			this.FamilyToAdd    = new Dictionary<string, EChReportedPerson> ();
@@ -19,12 +19,12 @@ namespace Epsitec.Aider.Data.ECh
 			this.PersonToRemove = new Dictionary<string, EChPerson> ();
 
 			//	Result 
-			this.NewHouseHolds     = new HashSet<EChReportedPerson> (EChDataAnalyser.HouseholdComparer);
-			this.MissingHouseHolds = new HashSet<EChReportedPerson> (EChDataAnalyser.HouseholdComparer);
-			this.PersonMovedOut    = new Dictionary<EChPerson, List<EChReportedPerson>> (EChDataAnalyser.PersonComparer);
-			this.PersonMovedIn     = new Dictionary<EChPerson, List<EChReportedPerson>> (EChDataAnalyser.PersonComparer);
-			this.NewPersons        = new HashSet<EChPerson> (EChDataAnalyser.PersonComparer);
-			this.MissingPersons    = new HashSet<EChPerson> (EChDataAnalyser.PersonComparer);
+			this.NewHouseHolds     = new HashSet<EChReportedPerson> (EChDataAnalyzer.HouseholdComparer);
+			this.MissingHouseHolds = new HashSet<EChReportedPerson> (EChDataAnalyzer.HouseholdComparer);
+			this.PersonMovedOut    = new Dictionary<EChPerson, List<EChReportedPerson>> (EChDataAnalyzer.PersonComparer);
+			this.PersonMovedIn     = new Dictionary<EChPerson, List<EChReportedPerson>> (EChDataAnalyzer.PersonComparer);
+			this.NewPersons        = new HashSet<EChPerson> (EChDataAnalyzer.PersonComparer);
+			this.MissingPersons    = new HashSet<EChPerson> (EChDataAnalyzer.PersonComparer);
 
 			this.NewUnion                          = new List<EChReportedPerson> ();
 			this.NewFamily                         = new List<EChReportedPerson> ();
