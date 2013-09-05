@@ -725,21 +725,16 @@ namespace Epsitec.Aider.Data.Job
 
 		private void ReassignAndWarnParish(BusinessContext businessContext, AiderPersonEntity aiderPersonEntity, List<string> changes)
 		{
-			//Keep a copy of ParishGroupPath
 			var oldParishGroupPath = aiderPersonEntity.ParishGroupPathCache;
 
-			//Reasign to parish
 			ParishAssigner.ReassignToParish (this.parishAddressRepository, businessContext, aiderPersonEntity);
 
-			//Check if we need warn parish for arrival/departure
-			if (!oldParishGroupPath.Equals (aiderPersonEntity.ParishGroupPathCache))
+			var newParishGroupPath = aiderPersonEntity.ParishGroupPathCache;
+
+			if (oldParishGroupPath != newParishGroupPath)
 			{
-
-				//Create the first warning with the old ParishGroupPath
 				this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
-
-
-				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.ParishArrival, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+				this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
 			}
 			else //if no change in parish group path, we create an simple address change warning
 			{
