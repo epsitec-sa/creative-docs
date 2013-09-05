@@ -30,6 +30,10 @@ namespace Epsitec.Aider.Data.Job
 			this.coreData = coreData;
 			this.parishAddressRepository = parishAddressRepository;
 
+			this.jobDateTime = System.DateTime.Now;
+			this.jobName     = "EChDataUpdate";
+			this.jobDescription = string.Format ("Importation des données eCH.\nBase {0}\nInc. {1}", oldEchFile, newEchFile);
+
 			this.aiderPersonEntitiesTaggedForDeletion = new Dictionary<EntityKey, AiderPersonEntity> ();
 			this.aiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity> ();
 
@@ -96,12 +100,38 @@ namespace Epsitec.Aider.Data.Job
 
 			using (var businessContext = new BusinessContext (this.coreData, false))
 			{
+				this.EnsureWarningSource (businessContext);
+
 				action (businessContext);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 			}
 			
 			this.LogToConsole (time, "{0}, done", callerName);
+		}
+
+		private void EnsureWarningSource(BusinessContext businessContext)
+		{
+			if (this.warningSource == null)
+			{
+				this.warningSource = new AiderWarningSourceEntity
+				{
+					CreationDate = this.jobDateTime,
+					Name = this.jobName,
+					Description = TextFormatter.FormatText (this.jobDescription)
+				};
+			}
+			else
+			{
+				var example = new AiderWarningSourceEntity
+				{
+					CreationDate = this.jobDateTime,
+					Name = this.jobName,
+				};
+
+				this.warningSource = businessContext.DataContext.GetByExample (example).FirstOrDefault ();
+			}
+
 		}
 
 		private System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
@@ -885,6 +915,9 @@ namespace Epsitec.Aider.Data.Job
 		private readonly List<EChReportedPerson> newHouseHoldsToCreate;
 		private readonly List<EChReportedPerson> missingHouseHoldsToRemove;
 
-
+		private System.DateTime					jobDateTime;
+		private string							jobName;
+		private string							jobDescription;
+		private AiderWarningSourceEntity		warningSource;
 	}
 }
