@@ -445,7 +445,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Retourne false si la ressource doit être exclue.
 			CultureMap cultureMap = obj as CultureMap;
 
-			if (this.resourceType == ResourceAccess.Type.Entities)
+			//	Si "Propriété virtuelle" est cochée, la liste de droite montre les interfaces.
+			if (this.options.IsVirtual == false &&
+				this.resourceType == ResourceAccess.Type.Entities)
 			{
 				StructuredData data = cultureMap.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
@@ -754,6 +756,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (button == this.buttonIsVirtual)
 			{
 				this.options.IsVirtual = !this.options.IsVirtual;
+				this.UpdateAccess ();
+				this.UpdateArray ();
 				this.UpdateRadios ();
 				this.UpdateRelationSample ();
 			}
