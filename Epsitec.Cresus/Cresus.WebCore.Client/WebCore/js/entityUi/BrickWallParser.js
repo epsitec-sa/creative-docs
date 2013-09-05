@@ -206,7 +206,8 @@ function() {
         return {
           title: action.title,
           viewId: action.viewId,
-          requiresAdditionalEntity: action.requiresAdditionalEntity
+          requiresAdditionalEntity: action.requiresAdditionalEntity,
+          displayMode: action.displayMode
         };
       },
 

@@ -47,52 +47,60 @@ function() {
       actions = options.actions;
       toolsbars = [];
       var tile = this;
-      Ext.Array.each(actions, function(a) { 
-        var text;
-        var textLength = a.title.length;
-        var isLarge = false;
-        if(textLength>tile.maxCharForButtons)
+      Ext.Array.each(actions, function(a) {   
+        if(a.displayMode == "Button")
         {
-            isLarge = true;
-            var end = a.title.substring(tile.maxCharForButtons,textLength);
-            var sepPos = end.indexOf(' ') + tile.maxCharForButtons;
-            var start = a.title.substring(0,sepPos);
-            end = a.title.substring(sepPos,textLength);
-            text = start + '<br>' + end;
-        }
-        else
-        {
-            text = a.title;
-        }
-        var button = {};
-        button.xtype = 'button';
-        button.text = text;
-        button.width = 350;
-        button.textAlign = 'left';
-        if(isLarge)
-        {
-          button.scale = 'large';
-        }
-        button.requiresAdditionalEntity = a.requiresAdditionalEntity;
-        button.handler = function() { this.handleAction(a.viewId); };
-        button.scope = tile;
+          var text;
+          var textLength = a.title.length;
+          var isLarge = false;
+          if(textLength>tile.maxCharForButtons)
+          {
+              isLarge = true;
+              var end = a.title.substring(tile.maxCharForButtons,textLength);
+              var sepPos = end.indexOf(' ') + tile.maxCharForButtons;
+              var start = a.title.substring(0,sepPos);
+              end = a.title.substring(sepPos,textLength);
+              text = start + '<br>' + end;
+          }
+          else
+          {
+              text = a.title;
+          }
+          var button = {};
+          button.xtype = 'button';
+          button.text = text;
+          button.width = 350;
+          button.textAlign = 'left';
+          if(isLarge)
+          {
+            button.scale = 'large';
+          }
+          button.requiresAdditionalEntity = a.requiresAdditionalEntity;
+          button.handler = function() { this.handleAction(a.viewId); };
+          button.scope = tile;
 
-        var toolbar = Ext.create('Ext.Toolbar', {
-          dock: 'bottom',
-          width: 400,
-          items: button
-        });
-        toolsbars.unshift(toolbar);
+          var toolbar = Ext.create('Ext.Toolbar', {
+            dock: 'bottom',
+            width: 400,
+            items: button
+          });
+          toolsbars.unshift(toolbar);
+        }        
       });
       return toolsbars;        
     },
 
     createEntityTileTools: function(options)  {
-      var tools, actions;
+      var tools, actions, needToCreateTool;
 
       actions = options.actions;
-
-      if (!Ext.isDefined(actions) || Ext.isEmpty(actions)) {
+      needToCreateTool  = false;
+      Ext.Array.each(actions, function(action) {
+        if(action.displayMode=="Menu" || action.displayMode=="Default"){
+          needToCreateTool = true;
+        }
+      });
+      if (!Ext.isDefined(actions) || Ext.isEmpty(actions) || !needToCreateTool) {
         return options.tools;
       }
 
@@ -119,12 +127,17 @@ function() {
     },
 
     createActionMenuItem: function(action) {
-      return {
-        text: action.title,
-        requiresAdditionalEntity: action.requiresAdditionalEntity,
-        handler: function() { this.handleAction(action.viewId); },
-        scope: this
-      };
+      if(action.displayMode=="Menu" || action.displayMode=="Default")
+      {
+        return {
+          text: action.title,
+          requiresAdditionalEntity: action.requiresAdditionalEntity,
+          handler: function() { this.handleAction(action.viewId); },
+          scope: this
+        };
+      }
+      else
+        return null;
     },
 
     handleAction: function(viewId) {
