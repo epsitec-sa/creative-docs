@@ -140,6 +140,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                             AiderContactEntity.Delete(this.BusinessContext, contact);
                         }
                     }
+
                     if (suppressSubscription)
                     {
                         var subscription = AiderSubscriptionEntity.FindSubscription(this.BusinessContext, household);

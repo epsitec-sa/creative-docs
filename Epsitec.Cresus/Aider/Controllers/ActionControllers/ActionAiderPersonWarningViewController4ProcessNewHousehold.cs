@@ -42,6 +42,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
             if (createNewHousehold)
             {
+
+                var oldHousehold = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household;
+                var contacts = this.Entity.Person.Contacts;
+                var contact = contacts.FirstOrDefault(x => x.Household == oldHousehold);
+                if (contact.IsNotNull())
+                {
+                    AiderContactEntity.Delete(this.BusinessContext, contact);
+                }
+
                 var newHousehold = this.GetNewHousehold();
                 var aiderHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity>();
                 aiderHousehold.HouseholdMrMrs = HouseholdMrMrs.Auto;
@@ -66,7 +75,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
                 //Link household to ECh Entity
                 if (newHousehold.Adult1.IsNotNull())
-                {
+                {               
                     EChDataImporter.SetupHousehold(this.BusinessContext, this.Entity.Person, aiderHousehold, newHousehold, isHead1: true);
                 }
 
