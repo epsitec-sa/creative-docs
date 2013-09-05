@@ -253,10 +253,6 @@ namespace Epsitec.Common.Document.Settings
 
 		public void InitCombo(TextFieldCombo combo)
 		{
-			if (this.name == "ImageDepth")  //?
-			{
-			}
-
 			combo.Items.Clear();
 
 			for ( int rank=0 ; rank<10 ; rank++ )

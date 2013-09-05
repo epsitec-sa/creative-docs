@@ -405,7 +405,7 @@ namespace Epsitec.Common.Document
 				if ( this.windowExport == null || !this.windowExport.IsVisible )  return;
 			}
 
-			this.UpdateDialogSettings("Export");
+			this.UpdateDialogSettings ("Export");
 			this.UpdateBool("ImageCropSelection");
 			this.UpdateBool("ImageOnlySelected");
 			this.UpdateDouble("ImageDpi");
@@ -1297,7 +1297,11 @@ namespace Epsitec.Common.Document
 			field.PreferredWidth = 140;
 			field.IsReadOnly = true;
 			field.Name = sInteger.Name;
-			sInteger.InitCombo(field);
+
+			this.ignoreChanged = true;
+			sInteger.InitCombo (field);
+			this.ignoreChanged = false;
+			
 			field.SelectedItemChanged += this.HandleFieldComboChanged;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -1340,7 +1344,9 @@ namespace Epsitec.Common.Document
 			TextFieldCombo combo = this.WidgetsTableSearch(name, "") as TextFieldCombo;
 			if ( combo == null )  return;
 
-			sInteger.InitCombo(combo);
+			this.ignoreChanged = true;
+			sInteger.InitCombo (combo);
+			this.ignoreChanged = false;
 		}
 		#endregion
 
