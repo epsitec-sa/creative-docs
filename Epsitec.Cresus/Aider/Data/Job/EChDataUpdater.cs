@@ -30,12 +30,14 @@ namespace Epsitec.Aider.Data.Job
 			this.coreData = coreData;
 			this.parishAddressRepository = parishAddressRepository;
 
+			this.aiderPersonEntitiesTaggedForDeletion = new Dictionary<EntityKey, AiderPersonEntity> ();
+			this.aiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity> ();
+
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
 				using (var analyser = new EChDataAnalyserReporter (oldEchFile, newEchFile, reportFile))
 				{
 					System.Console.WriteLine ("ECH DATA UPDATER : START ANALYSER");
-
 
 					this.personsToCreate = analyser.GetPersonsToAdd ().ToList ();
 					this.personsToRemove = analyser.GetPersonsToRemove ().ToList ();
@@ -61,28 +63,27 @@ namespace Epsitec.Aider.Data.Job
 
 
 		public void StartJob()
-		{				
-			//Appli update to EChPerson and add a DataChangedECh warning on AiderPerson
+		{
+			//	Update the EChPerson entities and add all required DataChangedECh warnings on
+			//	the corresponding AiderPersons.
+
 			this.UpdateEChPersonEntities ();
-			
-	
+
 			this.UpdateHouseholdsAndPropagate ();
 
-			this.TagForDeletionEChPersonEntities ();
-			this.aiderPersonEntitiesTagedForDeletion = new Dictionary<EntityKey, AiderPersonEntity>();
-			this.TagForDeletionAiderPersonEntities();
-			this.TagAiderPersonEntitiesForHouseholdMissing();
-			this.CreateNewEChPersonEntities ();
-			
-			this.aiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity>();
+			this.TagEChPersonsForDeletion ();
+			this.TagAiderPersonsForDeletion ();
+			this.TagAiderPersonsForMissingHousehold ();
 
-			this.CreateNewAiderPersonEntities();
-			this.RemoveOldEChReportedPersonEntities();
-			this.CreateNewEChReportedPersonEntities();
-			this.CreateNewAiderHouseholdEntities();		
+			this.CreateNewEChPersons ();
+			this.CreateNewAiderPersons ();
+
+			this.RemoveOldEChReportedPersons ();
+			this.CreateNewEChReportedPersons ();
+			this.CreateNewAiderHouseholds ();
 		}
 
-		private void CreateNewAiderPersonEntities()
+		private void CreateNewAiderPersons()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START CREATE AIDER PERSON JOB");
 
@@ -126,7 +127,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void CreateNewEChPersonEntities()
+		private void CreateNewEChPersons()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START CREATE ECH PERSON JOB");
 
@@ -178,7 +179,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void TagForDeletionEChPersonEntities()
+		private void TagEChPersonsForDeletion()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START TAG FOR DELETION ECH PERSON JOB");
 			using (var businessContext = new BusinessContext (this.coreData, false))
@@ -197,7 +198,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void TagForDeletionAiderPersonEntities()
+		private void TagAiderPersonsForDeletion()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START TAG FOR DELETION AIDER PERSON JOB");
 			using (var businessContext = new BusinessContext (this.coreData, false))
@@ -212,7 +213,7 @@ namespace Epsitec.Aider.Data.Job
 						AiderPersonWarningEntity.Create (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonMissing, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " n'est plus dans le registre ECh!"));
 
 						var key = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPersonEntity).Value;
-						this.aiderPersonEntitiesTagedForDeletion.Add (key, existingAiderPersonEntity);
+						this.aiderPersonEntitiesTaggedForDeletion.Add (key, existingAiderPersonEntity);
 					}
 
 				}
@@ -221,7 +222,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void CreateNewEChReportedPersonEntities()
+		private void CreateNewEChReportedPersons()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START CREATE ECH HOUSEHOLD JOB");
 			using (var businessContext = new BusinessContext (this.coreData, false))
@@ -288,7 +289,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void CreateNewAiderHouseholdEntities()
+		private void CreateNewAiderHouseholds()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START CREATE NEW AIDER HOUSEHOLD JOB");
 			using (var businessContext = new BusinessContext (this.coreData, false))
@@ -373,7 +374,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void RemoveOldEChReportedPersonEntities()
+		private void RemoveOldEChReportedPersons()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START ECH HOUSEHOLD DELETION JOB");
 			using (var businessContext = new BusinessContext (this.coreData, false))
@@ -419,7 +420,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void TagAiderPersonEntitiesForHouseholdMissing()
+		private void TagAiderPersonsForMissingHousehold()
 		{
 			System.Console.WriteLine ("ECH DATA UPDATER : START HOUSEHOLD MISSING TAG JOB");
 			using (var businessContext = new BusinessContext (this.coreData, false))
@@ -433,7 +434,7 @@ namespace Epsitec.Aider.Data.Job
 
 						var personKey = businessContext.DataContext.GetNormalizedEntityKey (aiderPersonEntity).Value;
 
-						if (this.aiderPersonEntitiesTagedForDeletion.ContainsKey (personKey))
+						if (this.aiderPersonEntitiesTaggedForDeletion.ContainsKey (personKey))
 						{
 							foreach (var warn in aiderPersonEntity.Warnings)
 							{
@@ -851,8 +852,8 @@ namespace Epsitec.Aider.Data.Job
 
 		private CoreData coreData;
 		private ParishAddressRepository parishAddressRepository;
-		private Dictionary<EntityKey, AiderPersonEntity> aiderPersonEntitiesTagedForDeletion;
-		private Dictionary<EntityKey, AiderHouseholdEntity> aiderPersonEntitiesWithDeletedHousehold;
+		private readonly Dictionary<EntityKey, AiderPersonEntity> aiderPersonEntitiesTaggedForDeletion;
+		private readonly Dictionary<EntityKey, AiderHouseholdEntity> aiderPersonEntitiesWithDeletedHousehold;
 		private HashSet<string> eChPersonIdWithNewHousehold;
 		private FormattedText warningTitleMessage = FormattedText.FromSimpleText ("Mise à jour ECh du " + Date.Today.Day + "." + Date.Today.Month + "." + Date.Today.Year);
 
