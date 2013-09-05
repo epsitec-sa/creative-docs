@@ -34,14 +34,19 @@ namespace Epsitec.Aider.Data.Job
 			this.jobName     = "EChDataUpdate";
 			this.jobDescription = string.Format ("Importation des données eCH.\nBase {0}\nInc. {1}", oldEchFile, newEchFile);
 
+			this.warningTitleMessage = TextFormatter.FormatText ("Mise à jour ECh ", this.jobDateTime.ToShortDateString ());
+
+
 			this.aiderPersonEntitiesTaggedForDeletion = new Dictionary<EntityKey, AiderPersonEntity> ();
 			this.aiderPersonEntitiesWithDeletedHousehold = new Dictionary<EntityKey, AiderHouseholdEntity> ();
 
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
+				var time1 = this.LogToConsole ("generating diff");
+				
 				using (var analyzer = new EChDataAnalyzerReporter (oldEchFile, newEchFile, reportFile))
 				{
-					var time = this.LogToConsole ("starting analysis");
+					var time2 = this.LogToConsole ("starting analysis");
 
 					this.personsToCreate = analyzer.GetPersonsToAdd ().ToList ();
 					this.personsToRemove = analyzer.GetPersonsToRemove ().ToList ();
@@ -56,8 +61,10 @@ namespace Epsitec.Aider.Data.Job
 
 					this.PrepareHashSetForAnalytics ();
 
-					this.LogToConsole (time, "analysis done");
+					this.LogToConsole (time2, "analysis done");
 				}
+
+				this.LogToConsole (time1, "diff done, ready");
 			}
 			else
 			{
@@ -70,6 +77,8 @@ namespace Epsitec.Aider.Data.Job
 		{
 			//	Update the EChPerson entities and add all required DataChangedECh warnings on
 			//	the corresponding AiderPersons.
+
+			var time = this.LogToConsole ("starting main job");
 
 			this.UpdateEChPersonEntities ();
 
@@ -85,6 +94,8 @@ namespace Epsitec.Aider.Data.Job
 			this.RemoveOldEChReportedPersons ();
 			this.CreateNewEChReportedPersons ();
 			this.CreateNewAiderHouseholds ();
+
+			this.LogToConsole (time, "done");
 		}
 
 		
@@ -114,12 +125,11 @@ namespace Epsitec.Aider.Data.Job
 		{
 			if (this.warningSource == null)
 			{
-				this.warningSource = new AiderWarningSourceEntity
-				{
-					CreationDate = this.jobDateTime,
-					Name = this.jobName,
-					Description = TextFormatter.FormatText (this.jobDescription)
-				};
+				this.warningSource = businessContext.CreateEntity<AiderWarningSourceEntity> ();
+				
+				this.warningSource.CreationDate = this.jobDateTime;
+				this.warningSource.Name = this.jobName;
+				this.warningSource.Description = TextFormatter.FormatText (this.jobDescription);
 			}
 			else
 			{
@@ -129,9 +139,8 @@ namespace Epsitec.Aider.Data.Job
 					Name = this.jobName,
 				};
 
-				this.warningSource = businessContext.DataContext.GetByExample (example).FirstOrDefault ();
+				this.warningSource = businessContext.DataContext.GetSingleByExample (example);
 			}
-
 		}
 
 		private System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
@@ -146,7 +155,11 @@ namespace Epsitec.Aider.Data.Job
 			System.Console.WriteLine ("EChDataUpdater: {0}", message);
 			System.Console.ResetColor ();
 
-			return new System.Diagnostics.Stopwatch ();
+			var time = new System.Diagnostics.Stopwatch ();
+
+			time.Start ();
+
+			return time;
 		}
 
 		private void LogToConsole(System.Diagnostics.Stopwatch time, string format, params object[] args)
@@ -759,6 +772,7 @@ namespace Epsitec.Aider.Data.Job
 			};
 
 			var subscription = businessContext.DataContext.GetByExample<AiderSubscriptionEntity>(subscriptionExample).FirstOrDefault();
+			
 			if (subscription.IsNotNull())
 			{
 				subscription.RefreshCache();
@@ -903,19 +917,19 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		private CoreData coreData;
-		private ParishAddressRepository parishAddressRepository;
-		private readonly Dictionary<EntityKey, AiderPersonEntity> aiderPersonEntitiesTaggedForDeletion;
+		private CoreData						coreData;
+		private ParishAddressRepository			parishAddressRepository;
+		
+		private readonly Dictionary<EntityKey, AiderPersonEntity>	 aiderPersonEntitiesTaggedForDeletion;
 		private readonly Dictionary<EntityKey, AiderHouseholdEntity> aiderPersonEntitiesWithDeletedHousehold;
-		private HashSet<string> eChPersonIdWithNewHousehold;
-		private FormattedText warningTitleMessage = FormattedText.FromSimpleText ("Mise à jour ECh du " + Date.Today.Day + "." + Date.Today.Month + "." + Date.Today.Year);
+		private HashSet<string>					eChPersonIdWithNewHousehold;
 
-		private readonly List<EChPerson> personsToCreate;
-		private readonly List<EChPerson> personsToRemove;
+		private readonly List<EChPerson>		 personsToCreate;
+		private readonly List<EChPerson>		 personsToRemove;
 		private readonly List<Change<EChPerson>> personsToUpdate;
 
-		private readonly List<EChReportedPerson> houseHoldsToCreate;
-		private readonly List<EChReportedPerson> houseHoldsToRemove;
+		private readonly List<EChReportedPerson>		  houseHoldsToCreate;
+		private readonly List<EChReportedPerson>		  houseHoldsToRemove;
 		private readonly List<Change<EChReportedPerson>>  houseHoldsToUpdate;
 
 		private readonly List<EChReportedPerson> newHouseHoldsToCreate;
@@ -924,6 +938,8 @@ namespace Epsitec.Aider.Data.Job
 		private System.DateTime					jobDateTime;
 		private string							jobName;
 		private string							jobDescription;
+		
 		private AiderWarningSourceEntity		warningSource;
+		private FormattedText					warningTitleMessage;
 	}
 }

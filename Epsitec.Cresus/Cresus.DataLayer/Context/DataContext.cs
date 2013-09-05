@@ -1115,6 +1115,11 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return this.GetByRequest<TEntity> (request);
 		}
 
+		public TEntity GetSingleByExample<TEntity>(TEntity example)
+			where TEntity : AbstractEntity
+		{
+			return this.GetByExample<TEntity> (example).Single ();
+		}
 
 		/// <summary>
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which correspond
