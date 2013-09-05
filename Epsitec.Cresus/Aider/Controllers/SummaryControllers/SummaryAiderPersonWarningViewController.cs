@@ -5,13 +5,14 @@ using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Common.Support;
-using System.Linq;
+
 using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
 
+using System.Linq;
 
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -20,9 +21,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
-
-
-			var displayableHousehold = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).Count ();
+			var hasDisplayableHousehold = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).Any ();
 
 			switch (this.Entity.WarningType)
 			{
@@ -44,10 +43,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					this.AddDefaultBrick (wall)
 						.EnableActionButton<ActionAiderPersonWarningViewController1ProcessPersonMissing> ();
 					break;
+				
 				case WarningType.EChPersonNew:
 					this.AddDefaultBrick(wall)
 						.EnableActionButton<ActionAiderPersonWarningViewController8ProcessNewPerson> ();
 					break;
+				
 				case WarningType.EChProcessDeparture:
 					if (this.Entity.Person.Contacts.Count > 0)
 					{
@@ -106,10 +107,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
 					break;
 			}
-			//Add household view if possible
-			if (displayableHousehold > 0)
+
+			if (hasDisplayableHousehold)
 			{
-				wall.AddBrick (x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members)
+				this.AddHouseholdBrick (wall);
+			}
+		}
+
+		private void AddHouseholdBrick(BrickWall<AiderPersonWarningEntity> wall)
+		{
+			wall.AddBrick (x => x.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
@@ -119,9 +126,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Membres du ménage")
 					.Text (p => p.GetCompactSummary (p.Households[0]))
 				.End ();
-			}
 		}
-
 		private SimpleBrick<AiderPersonWarningEntity> AddDefaultBrick(BrickWall<AiderPersonWarningEntity> wall)
 		{
 			var brick = wall.AddBrick ()
