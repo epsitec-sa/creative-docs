@@ -88,13 +88,13 @@ namespace Epsitec.Aider
 
 				if (args.Contains ("-echimportation"))
 				{
-					AiderProgram.RunEchImportation (args);
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchImportation (args));
 					return;
 				}
 
 				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv-new.xml -oldechfile:s:\eerv-old.xml -output:s:\analyse.md
 				{
-					AiderProgram.RunEchUpdate (args);
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchUpdate (args));
 					return;
 				}
 
@@ -118,7 +118,7 @@ namespace Epsitec.Aider
 
 				if (args.Contains ("-importsubscriptions"))				//	-importsubscriptions -web:xxx -doctor:xxx -pro:xxx -generic:xxx
 				{
-					AiderProgram.RunSubscriptionImportation (args);
+					ConsoleCreator.RunWithConsole (() => AiderProgram.RunSubscriptionImportation (args));
 					return;
 				}
 
