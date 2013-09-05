@@ -1,32 +1,36 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
-	/// This class is used to defined what actions are available in an AbstractActionTile.
+	/// The <c>ActionItem</c> class is used to define which actions are available
+	/// in an <see cref="AbstractActionTile"/>.
 	/// </summary>
 	internal sealed class ActionItem
 	{
-
-
-		public string ViewId
+		public string							ViewId
 		{
 			get;
 			set;
 		}
 
-
-		public string Title
+		public string							Title
 		{
 			get;
 			set;
 		}
 
+		public bool								RequiresAdditionalEntity
+		{
+			get;
+			set;
+		}
 
-		public bool RequiresAdditionalEntity
+		public ActionItemDisplayMode			DisplayMode
 		{
 			get;
 			set;
@@ -40,11 +44,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				{ "viewId", this.ViewId },
 				{ "title", this.Title },
 				{ "requiresAdditionalEntity", this.RequiresAdditionalEntity },
+				{ "displayMode", this.DisplayMode },
 			};
 		}
-
-
 	}
-
-
 }

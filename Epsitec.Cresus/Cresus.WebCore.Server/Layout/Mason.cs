@@ -12,15 +12,11 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Resolvers;
 
-using System;
-
 using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
 	/// This class is responsible for finding the appropriate ViewController instances, and using
 	/// them to build their brick wall.
@@ -33,8 +29,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	/// </remarks>
 	internal static class Mason
 	{
-
-
 		public static BrickWall BuildBrickWall(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 		{
 			using (var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId))
@@ -57,7 +51,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 		}
 
-
 		public static EntityViewController BuildController(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 		{
 			var name = "js";
@@ -66,20 +59,19 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return EntityViewControllerFactory.Create (name, entity, viewMode, null, null, viewId, null, resolutionMode, businessContext, additionalEntity);
 		}
 
-
 		public static T BuildController<T>(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, ViewControllerMode viewMode, int? viewId)
 			where T : class
 		{
-			// Here I would simply be able to cast the controller, but it is not possible because
-			// I might want to cast it to an interface. The compiler won't let me cast it to an
-			// interface that is not in the controller type hierarchy. So I simulate the cast with
-			// the as operator and I throw an exception if the result is null.
+			//	Here I would simply be able to cast the controller, but it is not possible because
+			//	I might want to cast it to an interface. The compiler won't let me cast it to an
+			//	interface that is not in the controller type hierarchy. So I simulate the cast with
+			//	the as operator and I throw an exception if the result is null.
 
 			var controller = Mason.BuildController (businessContext, entity, additionalEntity, viewMode, viewId) as T;
 
 			if (controller == null)
 			{
-				throw new Exception ("Controller is not of expected type.");
+				throw new System.Exception ("Controller is not of expected type.");
 			}
 
 			return controller;
@@ -90,7 +82,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			Mason.CreateDefaultProperties (e.Brick);
 		}
-
 
 		private static void HandleBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
 		{
@@ -136,24 +127,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			Mason.CreateExpressionProperty (brick, BrickPropertyKey.Text, x => x.GetSummary ());
 		}
 
-
-		private static void CopyProperties(Brick parent, Brick child, params BrickPropertyKey[] brickPropertyKeys)
-		{
-			foreach (var brickProperty in Brick.GetProperties (parent))
-			{
-				if (Array.IndexOf (brickPropertyKeys, brickProperty.Key) >= 0)
-				{
-					Brick.AddProperty (child, brickProperty);
-				}
-			}
-		}
-
-
 		private static void CreateStringProperty(Brick brick, BrickPropertyKey key, string value)
 		{
 			Brick.AddProperty (brick, new BrickProperty (key, value));
 		}
-
 
 		private static void CreateLabelProperty(Brick brick, BrickPropertyKey key, Caption caption)
 		{
@@ -165,12 +142,22 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			}
 		}
 
-
-		private static void CreateExpressionProperty(Brick brick, BrickPropertyKey key, Expression<Func<AbstractEntity, FormattedText>> expression)
+		private static void CreateExpressionProperty(Brick brick, BrickPropertyKey key, Expression<System.Func<AbstractEntity, FormattedText>> expression)
 		{
 			Brick.AddProperty (brick, new BrickProperty (key, expression));
 		}
 
+
+		private static void CopyProperties(Brick parent, Brick child, params BrickPropertyKey[] brickPropertyKeys)
+		{
+			foreach (var brickProperty in Brick.GetProperties (parent))
+			{
+				if (System.Array.IndexOf (brickPropertyKeys, brickProperty.Key) >= 0)
+				{
+					Brick.AddProperty (child, brickProperty);
+				}
+			}
+		}
 
 		private static void SetupInheritedValues(BrickWall brickWall)
 		{
@@ -179,7 +166,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				Mason.SetupInheritedValues (brick);
 			}
 		}
-
 
 		private static void SetupInheritedValues(Brick brick)
 		{
@@ -195,12 +181,8 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
 
 				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.Attribute);
-				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.EnableAction);
+				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.EnableAction, BrickPropertyKey.EnableActionButton);
 			}
 		}
-
-
 	}
-
-
 }

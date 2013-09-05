@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Bricks
 		{
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableAction, controllerSubTypeId));
 		}
-		
+
 		public SimpleBrick<T> EnableAction<T1>()
 		{
 			var ids = typeof (T1).GetCustomAttributes<BrickControllerSubTypeAttribute> (false).Select (x => x.Id);
@@ -112,7 +112,24 @@ namespace Epsitec.Cresus.Bricks
 				return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableAction, ids.First ()));
 			}
 
-			throw new System.ArgumentException ("The type " + typeof (T1).FullName + " does not support ControllerSubTypeAttribute."); 
+			throw new System.ArgumentException ("The type " + typeof (T1).FullName + " does not support ControllerSubTypeAttribute.");
+		}
+
+		public SimpleBrick<T> EnableActionButton(int controllerSubTypeId)
+		{
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableActionButton, controllerSubTypeId));
+		}
+
+		public SimpleBrick<T> EnableActionButton<T1>()
+		{
+			var ids = typeof (T1).GetCustomAttributes<BrickControllerSubTypeAttribute> (false).Select (x => x.Id);
+
+			if (ids.Any ())
+			{
+				return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.EnableActionButton, ids.First ()));
+			}
+
+			throw new System.ArgumentException ("The type " + typeof (T1).FullName + " does not support ControllerSubTypeAttribute.");
 		}
 
 		public SimpleBrick<TOutput> OfType<TOutput>()

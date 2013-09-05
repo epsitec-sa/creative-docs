@@ -133,6 +133,7 @@
     <Compile Include="Layout\AbstractActionTile.cs" />
     <Compile Include="Layout\AbstractEntityTile.cs" />
     <Compile Include="Layout\ActionItem.cs" />
+    <Compile Include="Layout\ActionItemDisplayMode.cs" />
     <Compile Include="Layout\ActionTile.cs" />
     <Compile Include="Layout\DateTimeField.cs" />
     <Compile Include="Layout\TimeField.cs" />

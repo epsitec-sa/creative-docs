@@ -20,8 +20,6 @@ using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 using Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor;
 
-using System;
-
 using System.Collections.Generic;
 
 using System.Linq;
@@ -30,8 +28,6 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	using Database = Core.Databases.Database;
 
 
@@ -55,8 +51,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 	/// </remarks>
 	internal sealed class Carpenter
 	{
-
-
 		private Carpenter(BusinessContext businessContext, Caches caches, DatabaseManager databaseManager, AbstractEntity entity, AbstractEntity additionalEntity)
 		{
 			this.businessContext = businessContext;
@@ -100,7 +94,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return this.BuildSetColumn (viewMode, viewId);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -238,7 +232,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return this.BuildSummaryTiles (brick, isFirst);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -703,7 +697,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return this.BuildTimeField (entity, propertyAccessor, brickProperties, includeTitle);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -842,13 +836,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private IEnumerable<ActionItem> BuildActionItems(AbstractEntity entity, Brick brick)
 		{
-			return Brick.GetProperties (brick, BrickPropertyKey.EnableAction)
-				.Select (p => this.BuildActionItem (entity, p.IntValue.Value))
+			//	Action items are described by one of the properties EnableAction or
+			//	EnableActionButton, which get then mapped to an ActionItem instance.
+
+			return Brick.GetProperties (brick, BrickPropertyKey.EnableAction, BrickPropertyKey.EnableActionButton)
+				.Select (p => this.BuildActionItem (entity, p.IntValue.Value, p.Key))
 				.Where (a => a != null);
 		}
 
 
-		private ActionItem BuildActionItem(AbstractEntity entity, int viewId)
+		private ActionItem BuildActionItem(AbstractEntity entity, int viewId, BrickPropertyKey propertyKey)
 		{
 			if (Epsitec.Cresus.Core.Library.CoreContext.EnableReadOnlyMode)
 			{
@@ -863,9 +860,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				return new ActionItem ()
 				{
-					ViewId = InvariantConverter.ToString (viewId),
-					Title = controller.GetTitle ().ToString (),
+					ViewId                   = InvariantConverter.ToString (viewId),
+					Title                    = controller.GetTitle ().ToString (),
 					RequiresAdditionalEntity = templateController != null && templateController.RequiresAdditionalEntity (),
+					DisplayMode              = propertyKey == BrickPropertyKey.EnableActionButton ? ActionItemDisplayMode.Button : ActionItemDisplayMode.Menu
 				};
 			}
 		}
@@ -873,16 +871,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		private ActionTile BuildActionTile(Brick brick)
 		{
-			var tileEntity = this.entity;
+			var tileEntity  = this.entity;
 			var actionBrick = Carpenter.GetBrickProperty (brick, BrickPropertyKey.DefineAction).Brick;
 
 			return new ActionTile ()
 			{
-				EntityId = this.GetEntityId (tileEntity),
+				EntityId  = this.GetEntityId (tileEntity),
 				IconClass = Carpenter.GetIconClass (actionBrick),
-				Title = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Title),
-				Text = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Text),
-				Fields = this.BuildActionFields (tileEntity, actionBrick).ToList (),
+				Title     = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Title),
+				Text      = Carpenter.GetOptionalText (tileEntity, actionBrick, BrickPropertyKey.Text),
+				Fields    = this.BuildActionFields (tileEntity, actionBrick).ToList (),
 			};
 		}
 
@@ -922,7 +920,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private AbstractField BuildRegularActionField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private AbstractField BuildRegularActionField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			switch (fieldType)
 			{
@@ -957,7 +955,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					return this.BuildTimeField (entity, brick, fieldType, actionFieldType, id);
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 
@@ -974,7 +972,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private BooleanField BuildBooleanField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private BooleanField BuildBooleanField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 
@@ -982,7 +980,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private DateField BuildDateField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private DateField BuildDateField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 
@@ -990,7 +988,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private DateTimeField BuildDateTimeField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private DateTimeField BuildDateTimeField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 
@@ -998,7 +996,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private DecimalField BuildDecimalField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private DecimalField BuildDecimalField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 
@@ -1006,7 +1004,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private EntityCollectionField BuildEntityCollectionField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private EntityCollectionField BuildEntityCollectionField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var field = this.BuildField<EntityCollectionField> (entity, brick, fieldType, id, true);
 
@@ -1017,7 +1015,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private EntityReferenceField BuildEntityReferenceField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private EntityReferenceField BuildEntityReferenceField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var field = this.BuildField<EntityReferenceField> (entity, brick, fieldType, id, true);
 
@@ -1028,7 +1026,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private EnumerationField BuildEnumerationField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private EnumerationField BuildEnumerationField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 			var field = this.BuildField<EnumerationField> (entity, brick, fieldType, id, allowBlank);
@@ -1039,7 +1037,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private IntegerField BuildIntegerField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private IntegerField BuildIntegerField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 
@@ -1064,7 +1062,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private TimeField BuildTimeField(AbstractEntity entity, Brick brick, FieldType fieldType, Type actionFieldType, string id)
+		private TimeField BuildTimeField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 
@@ -1242,7 +1240,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			if (!brickProperty.HasValue)
 			{
-				throw new NotSupportedException ("Brick property is missing.");
+				throw new System.NotSupportedException ("Brick property is missing.");
 			}
 
 			return brickProperty.Value;
@@ -1328,13 +1326,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private static string GetIconClass(string iconUri, Type entityType)
+		private static string GetIconClass(string iconUri, System.Type entityType)
 		{
 			return IconManager.GetCssClassName (iconUri, IconSize.Sixteen, entityType);
 		}
 
 
-		private string GetDatabaseName(BrickPropertyCollection properties, Type entityType)
+		private string GetDatabaseName(BrickPropertyCollection properties, System.Type entityType)
 		{
 			var property = Carpenter.GetBrickProperty (properties, BrickPropertyKey.DataSetCommandId);
 
@@ -1342,7 +1340,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private string GetDatabaseName(Brick brick, Type entityType)
+		private string GetDatabaseName(Brick brick, System.Type entityType)
 		{
 			var property = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.DataSetCommandId);
 
@@ -1350,7 +1348,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private string GetDatabaseName(BrickProperty? property, Type entityType)
+		private string GetDatabaseName(BrickProperty? property, System.Type entityType)
 		{
 			var commandId = property.HasValue
 				? property.Value.DruidValue.Value
@@ -1360,22 +1358,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		private readonly BusinessContext businessContext;
-
-
-		private readonly Caches caches;
-
-
-		private readonly DatabaseManager databaseManager;
-
-
-		private readonly AbstractEntity entity;
-
-
-		private readonly AbstractEntity additionalEntity;
-
-
+		private readonly BusinessContext		businessContext;
+		private readonly Caches					caches;
+		private readonly DatabaseManager		databaseManager;
+		private readonly AbstractEntity			entity;
+		private readonly AbstractEntity			additionalEntity;
 	}
-
-
 }
