@@ -35,29 +35,29 @@ namespace Epsitec.Aider.Data.Job
 
 			if (System.IO.File.Exists (oldEchFile) && System.IO.File.Exists (newEchFile))
 			{
-				using (var analyser = new EChDataAnalyzerReporter (oldEchFile, newEchFile, reportFile))
+				using (var analyzer = new EChDataAnalyzerReporter (oldEchFile, newEchFile, reportFile))
 				{
-					System.Console.WriteLine ("ECH DATA UPDATER : START ANALYSER");
+					var time = this.LogToConsole ("starting analysis");
 
-					this.personsToCreate = analyser.GetPersonsToAdd ().ToList ();
-					this.personsToRemove = analyser.GetPersonsToRemove ().ToList ();
-					this.personsToUpdate = analyser.GetPersonsToChange ().ToList ();
+					this.personsToCreate = analyzer.GetPersonsToAdd ().ToList ();
+					this.personsToRemove = analyzer.GetPersonsToRemove ().ToList ();
+					this.personsToUpdate = analyzer.GetPersonsToChange ().ToList ();
 
-					this.houseHoldsToCreate = analyser.GetFamiliesToAdd ().ToList ();
-					this.houseHoldsToRemove = analyser.GetFamiliesToRemove ().ToList ();
-					this.houseHoldsToUpdate	= analyser.GetFamiliesToChange ().ToList ();
+					this.houseHoldsToCreate = analyzer.GetFamiliesToAdd ().ToList ();
+					this.houseHoldsToRemove = analyzer.GetFamiliesToRemove ().ToList ();
+					this.houseHoldsToUpdate	= analyzer.GetFamiliesToChange ().ToList ();
 
-					this.newHouseHoldsToCreate     = analyser.GetNewFamilies ().ToList ();
-					this.missingHouseHoldsToRemove = analyser.GetMissingFamilies ().ToList ();
+					this.newHouseHoldsToCreate     = analyzer.GetNewFamilies ().ToList ();
+					this.missingHouseHoldsToRemove = analyzer.GetMissingFamilies ().ToList ();
 
 					this.PrepareHashSetForAnalytics ();
-					
-					System.Console.WriteLine ("ECH DATA UPDATER : ANALYSE DONE!");
+
+					this.LogToConsole (time, "analysis done");
 				}
 			}
 			else
 			{
-				System.Console.WriteLine ("ECH DATA UPDATER : FAIL... VERIFY YOUR ECH FILES PARAMETERS");
+				throw new System.Exception ("Failed to load ECh files");
 			}
 		}
 
@@ -83,6 +83,7 @@ namespace Epsitec.Aider.Data.Job
 			this.CreateNewAiderHouseholds ();
 		}
 
+		
 		private void ExecuteWithBusinessContext(System.Action<BusinessContext> action)
 		{
 			var stackTrace    = new System.Diagnostics.StackTrace ();
@@ -91,7 +92,7 @@ namespace Epsitec.Aider.Data.Job
 
 			var callerName = callingMethod.Name;
 
-			System.Console.WriteLine ("EChDataUpdater.{0}: start job", callerName);
+			var time = this.LogToConsole ("{0}, start job", callerName);
 
 			using (var businessContext = new BusinessContext (this.coreData, false))
 			{
@@ -100,7 +101,28 @@ namespace Epsitec.Aider.Data.Job
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 			}
 			
-			System.Console.WriteLine ("EChDataUpdater.{0}: done", callerName);
+			this.LogToConsole (time, "{0}, done", callerName);
+		}
+
+		private System.Diagnostics.Stopwatch LogToConsole(string format, params object[] args)
+		{
+			var message = string.Format (format, args);
+
+			if (message.StartsWith ("Error"))
+			{
+				System.Console.ForegroundColor = System.ConsoleColor.Red;
+			}
+
+			System.Console.WriteLine ("EChDataUpdater: {0}", message);
+			System.Console.ResetColor ();
+
+			return new System.Diagnostics.Stopwatch ();
+		}
+
+		private void LogToConsole(System.Diagnostics.Stopwatch time, string format, params object[] args)
+		{
+			var message = string.Format (format, args);
+			System.Console.WriteLine ("EChDataUpdater: {0} - {1} ms", message, time.ElapsedMilliseconds);
 		}
 
 
@@ -291,7 +313,7 @@ namespace Epsitec.Aider.Data.Job
 						}
 						else
 						{
-							System.Console.WriteLine ("Error: Adult with PersonId={0} has no matching AiderPerson", referenceAdult.PersonId);
+							this.LogToConsole ("Error: Adult with PersonId={0} has no matching AiderPerson", referenceAdult.PersonId);
 						}
 					}
 				});
@@ -404,7 +426,7 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								System.Console.WriteLine ("Error: AiderPerson {0} ({1}) has no associated AiderHousehold", aiderPersonEntity.DisplayName, personKey);
+								this.LogToConsole ("Error: AiderPerson {0} ({1}) has no associated AiderHousehold", aiderPersonEntity.DisplayName, personKey);
 							}
 						}
 
@@ -534,7 +556,7 @@ namespace Epsitec.Aider.Data.Job
 						}
 						catch (System.Exception)
 						{
-							System.Console.WriteLine ("Error: EChPerson {0} {1} throw exception",toChange.NewValue.OfficialName,toChange.NewValue.FirstNames);
+							this.LogToConsole ("Error: EChPerson {0} {1} throw exception",toChange.NewValue.OfficialName,toChange.NewValue.FirstNames);
 						}
 					}
 				});
@@ -643,7 +665,7 @@ namespace Epsitec.Aider.Data.Job
 						}
 						catch (System.Exception)
 						{
-							System.Console.WriteLine ("Error: EChReportedPerson (FAMILYKEY:{0}) throw exception", toChange.NewValue.FamilyKey);
+							this.LogToConsole ("Error: EChReportedPerson (FAMILYKEY:{0}) throw exception", toChange.NewValue.FamilyKey);
 						}
 					}
 				});
