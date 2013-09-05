@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				{ "viewId", this.ViewId },
 				{ "title", this.Title },
 				{ "requiresAdditionalEntity", this.RequiresAdditionalEntity },
-				{ "displayMode", this.DisplayMode },
+				{ "displayMode", this.DisplayMode.ToString () },
 			};
 		}
 	}
