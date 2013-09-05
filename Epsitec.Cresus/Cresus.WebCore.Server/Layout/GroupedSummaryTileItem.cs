@@ -1,26 +1,24 @@
+//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
 	/// This class represents an item in a grouped summary tile, i.e. the summary of an entity that
 	/// is contained within the list.
 	/// </summary>
 	internal sealed class GroupedSummaryTileItem
 	{
-
-
-		public string EntityId
+		public string							EntityId
 		{
 			get;
 			set;
 		}
 
-
-		public string Text
+		public string							Text
 		{
 			get;
 			set;
@@ -36,9 +34,5 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 			return item;
 		}
-
-
 	}
-
-
 }

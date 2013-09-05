@@ -1,80 +1,67 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
 	/// This class represents a tile for a template (i.e. multiple elements from a list), with the
 	/// auto grouping enabled.
 	/// </summary>
 	internal sealed class GroupedSummaryTile : AbstractTile
 	{
-
-
-		public bool IsRoot
+		public bool								IsRoot
 		{
 			get;
 			set;
 		}
 
-
-		public string SubViewMode
+		public string							SubViewMode
 		{
 			get;
 			set;
 		}
 
-
-		public string SubViewId
+		public string							SubViewId
 		{
 			get;
 			set;
 		}
 
-
-		public string PropertyAccessorId
+		public string							PropertyAccessorId
 		{
 			get;
 			set;
 		}
 
-
-		public bool HideRemoveButton
+		public bool								HideRemoveButton
 		{
 			get;
 			set;
 		}
 
-
-		public bool HideAddButton
+		public bool								HideAddButton
 		{
 			get;
 			set;
 		}
 
-
-		public List<GroupedSummaryTileItem> Items
+		public List<GroupedSummaryTileItem>		Items
 		{
 			get;
 			set;
 		}
 
-
-		public IList<ActionItem> Actions
+		public IList<ActionItem>				Actions
 		{
 			get;
 			set;
 		}
 
-
-		protected override string GetTileType()
-		{
-			return "groupedSummary";
-		}
 
 
 		public override Dictionary<string, object> ToDictionary()
@@ -93,8 +80,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return tile;
 		}
 
-
+		
+		protected override string GetTileType()
+		{
+			return "groupedSummary";
+		}
 	}
-
-
 }

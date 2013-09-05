@@ -1,4 +1,7 @@
-﻿using Nancy;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Nancy;
 using Nancy.Responses;
 
 using System.Collections.Generic;
@@ -8,15 +11,11 @@ using System.IO;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-
-
 	/// <summary>
 	/// This class is a factory for all the responses that are sent to the javascript client.
 	/// </summary>
 	internal static class CoreResponse
 	{
-
-
 		public static Response InternalServerError()
 		{
 			var jsonData = new Dictionary<string, object> ();
@@ -136,9 +135,5 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				}
 			};
 		}
-
-
 	}
-
-
 }
