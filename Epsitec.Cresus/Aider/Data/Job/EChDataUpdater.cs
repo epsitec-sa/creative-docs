@@ -83,48 +83,66 @@ namespace Epsitec.Aider.Data.Job
 			this.CreateNewAiderHouseholds ();
 		}
 
-		private void CreateNewAiderPersons()
+		private void ExecuteWithBusinessContext(System.Action<BusinessContext> action)
 		{
-			System.Console.WriteLine ("ECH DATA UPDATER : START CREATE AIDER PERSON JOB");
+			var stackTrace    = new System.Diagnostics.StackTrace ();
+			var stackFrames   = stackTrace.GetFrames ();
+			var callingMethod = stackFrames[0].GetMethod ();
+
+			var callerName = callingMethod.Name;
+
+			System.Console.WriteLine ("EChDataUpdater.{0}: start job", callerName);
 
 			using (var businessContext = new BusinessContext (this.coreData, false))
 			{
-				foreach (var eChPerson in this.personsToCreate)
+				action (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+			}
+			
+			System.Console.WriteLine ("EChDataUpdater.{0}: done", callerName);
+		}
+
+
+		private void CreateNewAiderPersons()
+		{
+			this.ExecuteWithBusinessContext (
+				businessContext =>
 				{
-					var eChPersonEntity = this.GetEchPersonEntity (businessContext, eChPerson);
-					var existingAiderPersonEntity = this.GetAiderPersonEntity (businessContext, eChPersonEntity);
-
-					if (existingAiderPersonEntity.IsNull())
+					foreach (var eChPerson in this.personsToCreate)
 					{
-						var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+						var eChPersonEntity = this.GetEchPersonEntity (businessContext, eChPerson);
+						var existingAiderPersonEntity = this.GetAiderPersonEntity (businessContext, eChPersonEntity);
 
-						aiderPersonEntity.eCH_Person = eChPersonEntity;
-						aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
-						aiderPersonEntity.Confession = PersonConfession.Protestant;
-
-						ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonEntity);
-
-						//if this person come from new household
-						if (this.eChPersonIdWithNewHousehold.Contains (eChPerson.Id))
+						if (existingAiderPersonEntity.IsNull ())
 						{
-							AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée avec sa famille dans le registre ECh!"));
+							var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
+
+							aiderPersonEntity.eCH_Person = eChPersonEntity;
+							aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
+							aiderPersonEntity.Confession = PersonConfession.Protestant;
+
+							ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonEntity);
+
+							//if this person come from new household
+							if (this.eChPersonIdWithNewHousehold.Contains (eChPerson.Id))
+							{
+								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée avec sa famille dans le registre ECh!"));
+							}
+							else
+							{
+								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée dans le registre ECh!"));
+							}
+
+
 						}
 						else
 						{
-							AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée dans le registre ECh!"));
+							AiderPersonWarningEntity.Create (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDuplicated, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"));
 						}
-						
 
 					}
-					else
-					{
-						AiderPersonWarningEntity.Create (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDuplicated, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"));
-					}
-
-				}
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
-				System.Console.WriteLine ("ECH DATA UPDATER : JOB DONE!");
-			}
+				});
 		}
 
 		private void CreateNewEChPersons()
