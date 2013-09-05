@@ -179,22 +179,28 @@ namespace Epsitec.Aider.Data.Job
 							//if this person come from new household
 							if (this.eChPersonIdWithNewHousehold.Contains (eChPerson.Id))
 							{
-								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée avec sa famille dans le registre ECh!"));
+								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée avec sa famille dans le registre ECh!"));
 							}
 							else
 							{
-								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée dans le registre ECh!"));
+								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonNew, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " est arrivée dans le registre ECh!"));
 							}
 
 
 						}
 						else
 						{
-							AiderPersonWarningEntity.Create (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDuplicated, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"));
+							this.CreateWarning (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDuplicated, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " existe déjà dans Aider"));
 						}
 
 					}
 				});
+		}
+
+		private void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath,
+								   WarningType warningType, FormattedText title, FormattedText description)
+		{
+			AiderPersonWarningEntity.Create (context, person, parishGroupPath, warningType, title, description, this.warningSource);
 		}
 
 		private void CreateNewEChPersons()
@@ -275,7 +281,7 @@ namespace Epsitec.Aider.Data.Job
 
 						if (existingAiderPersonEntity != null)
 						{
-							AiderPersonWarningEntity.Create (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonMissing, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " n'est plus dans le registre ECh!"));
+							this.CreateWarning (businessContext, existingAiderPersonEntity, existingAiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonMissing, this.warningTitleMessage, FormattedText.FromSimpleText (existingAiderPersonEntity.GetDisplayName () + " n'est plus dans le registre ECh!"));
 
 							var key = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPersonEntity).Value;
 							this.aiderPersonEntitiesTaggedForDeletion.Add (key, existingAiderPersonEntity);
@@ -332,13 +338,13 @@ namespace Epsitec.Aider.Data.Job
 							{
 								var warningMessage = FormattedText.FromSimpleText ("Un changement de composition a eu lieu dans ce ménage.");
 
-								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChHouseholdChanged, this.warningTitleMessage, warningMessage);
+								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChHouseholdChanged, this.warningTitleMessage, warningMessage);
 							}
 							else
 							{
 								var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage");
 
-								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
 							}
 						}
 						else
@@ -500,7 +506,7 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChHouseholdMissing, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"));
+								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChHouseholdMissing, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'est plus assigné a une famille dans le registre ECh!"));
 							}
 
 						}
@@ -581,7 +587,7 @@ namespace Epsitec.Aider.Data.Job
 
 							if (mustWarn)
 							{
-								AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDataChanged, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDataChanged, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
 							}
 						}
 						catch (System.Exception)
@@ -717,14 +723,14 @@ namespace Epsitec.Aider.Data.Job
 			{
 
 				//Create the first warning with the old ParishGroupPath
-				AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+				this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
 
 
-				AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.ParishArrival, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.ParishArrival, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
 			}
 			else //if no change in parish group path, we create an simple address change warning
 			{
-				AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChAddressChanged, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChAddressChanged, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
 			}
 		}
 
@@ -782,7 +788,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 			else
 			{
-				AiderPersonWarningEntity.Create (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.Mismatch, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'a pas de ménage dans Aider"));
+				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.Mismatch, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'a pas de ménage dans Aider"));
 			}
 
 

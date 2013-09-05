@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, string parishGroupPath,
-													  WarningType warningType, FormattedText title)
+													  WarningType warningType, FormattedText title, AiderWarningSourceEntity warningSource = null)
 		{
 			var warning = businessContext.CreateAndRegisterEntity<AiderPersonWarningEntity> ();
 
@@ -56,6 +56,7 @@ namespace Epsitec.Aider.Entities
 //-			warning.Description   = null;
 			warning.WarningType   = warningType;
 			warning.WarningTarget = WarningTarget.Person;
+			warning.WarningSource = warningSource;
 
 			warning.ParishGroupPath = parishGroupPath;
 			warning.Person          = person;
@@ -66,9 +67,10 @@ namespace Epsitec.Aider.Entities
 		}
 
 		public static AiderPersonWarningEntity Create(BusinessContext businessContext, AiderPersonEntity person, string parishGroupPath,
-													  WarningType warningType, FormattedText title, FormattedText description)
+													  WarningType warningType, FormattedText title, FormattedText description,
+													  AiderWarningSourceEntity warningSource = null)
 		{
-			var warning = AiderPersonWarningEntity.Create (businessContext, person, parishGroupPath, warningType, title);
+			var warning = AiderPersonWarningEntity.Create (businessContext, person, parishGroupPath, warningType, title, warningSource);
 
 			warning.Description = description;
 
