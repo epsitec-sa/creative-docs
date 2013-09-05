@@ -36,6 +36,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVATF]", typeof (Epsitec.Aider.Entities.AiderDataManagersEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVGP22]", typeof (Epsitec.Aider.Entities.AiderSubscriptionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVGC32]", typeof (Epsitec.Aider.Entities.AiderSubscriptionRefusalEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA1H]", typeof (Epsitec.Aider.Entities.AiderWarningSourceEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -5497,6 +5498,16 @@ namespace Epsitec.Aider.Entities
 			get;
 			set;
 		}
+		///	<summary>
+		///	The <c>WarningSource</c> field.
+		///	designer:fld/LVAEB/LVA3H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3H]")]
+		global::Epsitec.Aider.Entities.AiderWarningSourceEntity WarningSource
+		{
+			get;
+			set;
+		}
 	}
 	public static partial class IAiderWarningInterfaceImplementation
 	{
@@ -5590,6 +5601,24 @@ namespace Epsitec.Aider.Entities
 		}
 		static partial void OnWarningTargetChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningTarget oldValue, global::Epsitec.Aider.Enumerations.WarningTarget newValue);
 		static partial void OnWarningTargetChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningTarget oldValue, global::Epsitec.Aider.Enumerations.WarningTarget newValue);
+		public static global::Epsitec.Aider.Entities.AiderWarningSourceEntity GetWarningSource(global::Epsitec.Aider.Entities.IAiderWarning obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Aider.Entities.AiderWarningSourceEntity> ("[LVA3H]");
+		}
+		public static void SetWarningSource(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Entities.AiderWarningSourceEntity value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Aider.Entities.AiderWarningSourceEntity oldValue = obj.WarningSource;
+			if (oldValue != value || !entity.IsFieldDefined("[LVA3H]"))
+			{
+				IAiderWarningInterfaceImplementation.OnWarningSourceChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Aider.Entities.AiderWarningSourceEntity> ("[LVA3H]", oldValue, value);
+				IAiderWarningInterfaceImplementation.OnWarningSourceChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWarningSourceChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Entities.AiderWarningSourceEntity oldValue, global::Epsitec.Aider.Entities.AiderWarningSourceEntity newValue);
+		static partial void OnWarningSourceChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Entities.AiderWarningSourceEntity oldValue, global::Epsitec.Aider.Entities.AiderWarningSourceEntity newValue);
 	}
 }
 #endregion
@@ -5716,6 +5745,22 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetWarningTarget (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>WarningSource</c> field.
+		///	designer:fld/LVALB/LVA3H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3H]")]
+		public global::Epsitec.Aider.Entities.AiderWarningSourceEntity WarningSource
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetWarningSource (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetWarningSource (this, value);
 			}
 		}
 		#endregion
@@ -7473,6 +7518,99 @@ namespace Epsitec.Aider.Entities
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderSubscriptionRefusalEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderWarningSource Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderWarningSource</c> entity.
+	///	designer:cap/LVA1H
+	///	</summary>
+	public partial class AiderWarningSourceEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/LVA1H/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/LVA1H/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/LVA1H/LVA2H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA2H]")]
+		public global::System.DateTime? CreationDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime?> ("[LVA2H]");
+			}
+			set
+			{
+				global::System.DateTime? oldValue = this.CreationDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVA2H]"))
+				{
+					this.OnCreationDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVA2H]", oldValue, value);
+					this.OnCreationDateChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnCreationDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnCreationDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderWarningSourceEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderWarningSourceEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 545);	// [LVA1H]
+		public static readonly string EntityStructuredTypeKey = "[LVA1H]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderWarningSourceEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
 			{
 			}
 		}

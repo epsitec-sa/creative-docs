@@ -273,6 +273,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderUserRole = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 404));
 			//	designer:cap/LVACC
 			public static readonly Epsitec.Common.Types.StructuredType AiderUserScope = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 396));
+			//	designer:cap/LVA1H
+			public static readonly Epsitec.Common.Types.StructuredType AiderWarningSource = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 545));
 			//	designer:cap/LVA22
 			public static readonly Epsitec.Common.Types.StructuredType eCH_Address = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
 			//	designer:cap/LVA
@@ -1952,6 +1954,17 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 399);
 			}
 			
+			public static class AiderWarningSource
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderWarningSource.CreationDate, null);
+				}
+				
+				//	designer:cap/LVA2H
+				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 546);
+			}
+			
 			public static class eCH_Address
 			{
 				internal static void _Initialize()
@@ -2091,6 +2104,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid HideUntilDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 394);
 				//	designer:cap/LVAKB
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 372);
+				//	designer:cap/LVA3H
+				public static readonly global::Epsitec.Common.Support.Druid WarningSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 547);
 				//	designer:cap/LVA5G
 				public static readonly global::Epsitec.Common.Support.Druid WarningTarget = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 517);
 				//	designer:cap/LVA7C
@@ -2459,6 +2474,7 @@ namespace Epsitec.Aider
 			Fields.AiderUser._Initialize ();
 			Fields.AiderUserRole._Initialize ();
 			Fields.AiderUserScope._Initialize ();
+			Fields.AiderWarningSource._Initialize ();
 			Fields.eCH_Address._Initialize ();
 			Fields.eCH_Person._Initialize ();
 			Fields.eCH_ReportedPerson._Initialize ();
