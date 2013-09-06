@@ -157,26 +157,36 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private int analyseChanges()
 		{
-			var householdMembers = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members;
+			var householdMembers = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members.Where(p => p.IsGovernmentDefined).ToList ();
 			var newHousehold = this.GetNewHousehold ();
 			this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Résultat de l'analyse:\n"));
             var newHouseholdIds = new HashSet<string>();
             newHouseholdIds.Add(newHousehold.Adult1.PersonId);
-            newHouseholdIds.Add(newHousehold.Adult2.PersonId);
+            if (newHousehold.Adult2.IsNotNull())
+            {
+                newHouseholdIds.Add(newHousehold.Adult2.PersonId);
+            }           
             foreach (var child in newHousehold.Children)
             {
-                newHouseholdIds.Add(child.PersonId);
+                if (child.IsNotNull())
+                {
+                    newHouseholdIds.Add(child.PersonId);
+                }          
             }
 
 			if (householdMembers.Count < newHousehold.GetMembersCount ())
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient plus de membres : "));
 
-				if (!householdMembers.Select (m => m.eCH_Person.PersonId).Contains (newHousehold.Adult2.PersonId))
-				{
-					this.analyse = this.analyse.AppendLine (TextFormatter.FormatText (newHousehold.Adult2.PersonOfficialName + " " + newHousehold.Adult2.PersonFirstNames));
-                    this.contactToAdd.Add(newHousehold.Adult2);
-				}
+                if (newHousehold.Adult2.IsNotNull())
+                {
+                    if (!householdMembers.Select(m => m.eCH_Person.PersonId).Contains(newHousehold.Adult2.PersonId))
+                    {
+                        this.analyse = this.analyse.AppendLine(TextFormatter.FormatText(newHousehold.Adult2.PersonOfficialName + " " + newHousehold.Adult2.PersonFirstNames));
+                        this.contactToAdd.Add(newHousehold.Adult2);
+                    }
+                }
+				
 
 				foreach (var child in newHousehold.Children)
 				{

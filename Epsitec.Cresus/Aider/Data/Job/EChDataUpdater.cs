@@ -335,6 +335,7 @@ namespace Epsitec.Aider.Data.Job
                             if (aiderHousehold.IsNotNull())
                             {
                                 EChDataImporter.SetupHousehold(businessContext, aiderPersonA1, aiderHousehold, eChReportedPersonEntity, isHead1: true);
+                                this.eChPersonIdWithHouseholdSetupDone.Add (aiderPersonA1.eCH_Person.PersonId);
                                 ParishAssigner.AssignToParish(parishAddressRepository, businessContext, aiderPersonA1);
                             }
                         }
@@ -362,6 +363,7 @@ namespace Epsitec.Aider.Data.Job
                                 if (aiderHousehold.IsNotNull())
                                 {
                                     EChDataImporter.SetupHousehold(businessContext, aiderPersonA2, aiderHousehold, eChReportedPersonEntity, isHead2: true);
+                                    this.eChPersonIdWithHouseholdSetupDone.Add(aiderPersonA2.eCH_Person.PersonId);
                                     ParishAssigner.AssignToParish(parishAddressRepository, businessContext, aiderPersonA2);
                                 }
                             }
@@ -390,6 +392,7 @@ namespace Epsitec.Aider.Data.Job
                                 if(aiderHousehold.IsNotNull())
                                 {
                                     EChDataImporter.SetupHousehold(businessContext, aiderPersonC, aiderHousehold, eChReportedPersonEntity, isChild: true);
+                                    this.eChPersonIdWithHouseholdSetupDone.Add(aiderPersonC.eCH_Person.PersonId);
                                     ParishAssigner.AssignToParish(parishAddressRepository, businessContext, aiderPersonC);
                                 }
                                 if (this.eChPersonIdWithNewPerson.Contains(aiderPersonC.eCH_Person.PersonId))
@@ -472,8 +475,11 @@ namespace Epsitec.Aider.Data.Job
 									businessContext.DeleteEntity (warning);
 								}
 							}
-
-							EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
+                            if (!this.eChPersonIdWithHouseholdSetupDone.Contains(aiderPerson.eCH_Person.PersonId))
+                            {
+                                EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
+                            }
+							
 						}
 
 						if (eChReportedPersonEntity.Adult2.IsNotNull ())
@@ -489,7 +495,11 @@ namespace Epsitec.Aider.Data.Job
 								}
 							}
 
-							EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);
+                            if (!this.eChPersonIdWithHouseholdSetupDone.Contains(aiderPerson.eCH_Person.PersonId))
+                            {
+                                EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead2: true);
+                            }
+							
 						}
 
 						foreach (var child in eChReportedPersonEntity.Children)
@@ -504,8 +514,11 @@ namespace Epsitec.Aider.Data.Job
 									businessContext.DeleteEntity (warning);
 								}
 							}
-
-							EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
+                            if (!this.eChPersonIdWithHouseholdSetupDone.Contains(aiderPerson.eCH_Person.PersonId))
+                            {
+                                EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
+                            }
+							
 						}
 					}
 				});
@@ -807,6 +820,8 @@ namespace Epsitec.Aider.Data.Job
 		{
             this.eChPersonIdWithNewPerson = new HashSet<string> ();
 			this.eChPersonIdWithNewHousehold = new HashSet<string> ();
+            this.eChPersonIdWithHouseholdSetupDone = new HashSet<string> ();
+
 			foreach (var eChReportedPerson in this.newHouseHoldsToCreate)
 			{
 				this.eChPersonIdWithNewHousehold.Add (eChReportedPerson.Adult1.Id);
@@ -998,6 +1013,7 @@ namespace Epsitec.Aider.Data.Job
 		private readonly Dictionary<EntityKey, AiderHouseholdEntity> aiderPersonEntitiesWithDeletedHousehold;
 		private HashSet<string>					eChPersonIdWithNewHousehold;
         private HashSet<string>                 eChPersonIdWithNewPerson;
+        private HashSet<string>                 eChPersonIdWithHouseholdSetupDone;
 
 		private readonly List<EChPerson>		 personsToCreate;
 		private readonly List<EChPerson>		 personsToRemove;
