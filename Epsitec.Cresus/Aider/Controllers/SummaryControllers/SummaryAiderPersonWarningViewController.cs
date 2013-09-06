@@ -74,7 +74,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				
 				case WarningType.EChPersonDataChanged:
 					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController10ProcessPersonChanges> ();
 					break;
 
 				case WarningType.EChHouseholdAdded:

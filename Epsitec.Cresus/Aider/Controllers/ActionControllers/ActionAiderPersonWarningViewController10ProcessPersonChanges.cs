@@ -16,12 +16,11 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Enumerations;
-using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (8)]
-	public sealed class ActionAiderPersonWarningViewController8ProcessNewPerson : ActionViewController<AiderPersonWarningEntity>
+	[ControllerSubType (10)]
+    public sealed class ActionAiderPersonWarningViewController10ProcessPersonChanges : ActionViewController<AiderPersonWarningEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -33,31 +32,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             return ActionExecutor.Create<bool>(this.Execute);
 		}
 
-        private void Execute(bool confirmed)
+		private void Execute(bool confirmed)
 		{
             if (confirmed)
             {
-				this.Entity.Person.RemoveWarningInternal (this.Entity);
-				this.BusinessContext.DeleteEntity (this.Entity);
-            }        
-		}
-
-		private AiderHouseholdEntity GetAiderHousehold(eCH_PersonEntity eChPerson)
-		{
-			var aiderPersonExample = new AiderPersonEntity ();
-			var contactExample = new AiderContactEntity ();
-			var householdExample = new AiderHouseholdEntity ();
-
-            aiderPersonExample.eCH_Person = eChPerson;
-			contactExample.Person = aiderPersonExample;
-			contactExample.Household = householdExample;
-			var request = new Request ()
-			{
-				RootEntity = contactExample,
-				RequestedEntity = householdExample
-			};
-
-			return this.BusinessContext.DataContext.GetByRequest<AiderHouseholdEntity> (request).FirstOrDefault ();
+                foreach (var contact in this.Entity.Person.Contacts)
+                {
+                    contact.RefreshCache();
+                }
+                this.Entity.Person.RemoveWarningInternal(this.Entity);
+                this.BusinessContext.DeleteEntity(this.Entity);
+            }       
 		}
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
@@ -65,7 +50,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             form
                 .Title(this.GetTitle())
                 .Field<bool>()
-                    .Title("Confirmer")
+                    .Title("Mettre à jour les contacts si besoin")
                     .InitialValue(true)
                 .End()
             .End();

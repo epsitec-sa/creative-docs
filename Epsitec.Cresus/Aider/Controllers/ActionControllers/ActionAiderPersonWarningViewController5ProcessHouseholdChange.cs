@@ -32,10 +32,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool>(this.Execute);
+            return ActionExecutor.Create<bool,bool>(this.Execute);
 		}
 
-		private void Execute(bool confirmed)
+		private void Execute(bool correctHousehold,bool confirmed)
 		{        
             if (confirmed)
             {
@@ -44,12 +44,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 {
 					var warnCount = member.Warnings.Where (w => w.WarningType.Equals (WarningType.EChPersonMissing) ||
 																w.WarningType.Equals (WarningType.EChHouseholdAdded) ||		
-													            w.WarningType.Equals(WarningType.EChPersonNew) ||
                                                                 w.WarningType.Equals(WarningType.EChProcessArrival) ||
 																w.WarningType.Equals (WarningType.EChProcessDeparture)).ToList ().Count;
                     if (warnCount > 0)
                     {
-                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + member.GetDisplayName();
+                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + member.GetCompactSummary();
 
                         throw new BusinessRuleException(message);
                     }
@@ -61,13 +60,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 {
                     var adult2WarnCount = this.GetAiderPerson(newHousehold.Adult2).Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) ||
                                                                 w.WarningType.Equals(WarningType.EChHouseholdAdded) ||
-                                                                w.WarningType.Equals(WarningType.EChPersonNew) ||
                                                                 w.WarningType.Equals(WarningType.EChProcessArrival) ||
                                                                 w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList().Count;
 
                     if (adult2WarnCount > 0)
                     {
-                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + newHousehold.Adult2.GetSummary();
+                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + newHousehold.Adult2.GetCompactSummary();
                         throw new BusinessRuleException(message);
                     }
                 }
@@ -77,19 +75,44 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 
                     var childWarnCount = this.GetAiderPerson(child).Warnings.Where(w => w.WarningType.Equals(WarningType.EChPersonMissing) ||
-                                                                w.WarningType.Equals(WarningType.EChHouseholdAdded) ||
-                                                                w.WarningType.Equals(WarningType.EChPersonNew) ||
                                                                 w.WarningType.Equals(WarningType.EChProcessArrival) ||
                                                                 w.WarningType.Equals(WarningType.EChProcessDeparture)).ToList().Count;
                     if (childWarnCount > 0)
                     {
-                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + child.GetSummary();
+                        var message = "Il faut d'abord traiter l'avertissement sur ce membre: " + child.GetCompactSummary();
 
                         throw new BusinessRuleException(message);
                     }
+
                 }
 
-                
+                this.Entity.Person.RemoveWarningInternal(this.Entity);
+                this.BusinessContext.DeleteEntity(this.Entity);
+            }
+
+            var household = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household;
+            if (correctHousehold && household.IsNotNull ())
+            {
+                var result = this.analyseChanges();
+                    
+                switch (result)
+                {
+                    case -1:
+                        foreach (var contactToAdd in this.contactToAdd)
+                        {
+                            var aiderPerson = this.GetAiderPerson(contactToAdd);
+                            AiderContactEntity.Create(this.BusinessContext, aiderPerson, household, false);
+                        }
+                        break;
+                    case 1:
+                        foreach (var personToRemove in this.contactToRemove)
+                        {
+                            var contact = personToRemove.Contacts.Where(c => c.Household == household).First();
+                            this.BusinessContext.DeleteEntity(contact);
+                        }
+                        break;
+                }
+
                 this.Entity.Person.RemoveWarningInternal(this.Entity);
                 this.BusinessContext.DeleteEntity(this.Entity);
             }
@@ -149,18 +172,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient plus de membres : "));
 
-
 				if (!householdMembers.Select (m => m.eCH_Person.PersonId).Contains (newHousehold.Adult2.PersonId))
 				{
 					this.analyse = this.analyse.AppendLine (TextFormatter.FormatText (newHousehold.Adult2.PersonOfficialName + " " + newHousehold.Adult2.PersonFirstNames));
+                    this.contactToAdd.Add(newHousehold.Adult2);
 				}
+
 				foreach (var child in newHousehold.Children)
 				{
 					if (!householdMembers.Select (m => m.eCH_Person.PersonId).Contains (child.PersonId))
 					{
 						this.analyse = this.analyse.AppendLine (TextFormatter.FormatText (child.PersonOfficialName + " " + child.PersonFirstNames));
-					}
-				}			
+                        this.contactToAdd.Add(child);
+                    }
+				}		
+	
 				return 1;
 			}
 
@@ -168,10 +194,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient moins de membres : "));
 
-				var missing = householdMembers.Where(p => !newHouseholdIds.Contains(p.eCH_Person.PersonId));
+				var missing = householdMembers.Where(p => !newHouseholdIds.Contains(p.eCH_Person.PersonId) && p.eCH_Person.IsNotNull());
 				foreach (var miss in missing)
 				{
 					this.analyse = this.analyse.AppendLine (TextFormatter.FormatText (miss.DisplayName));
+                    this.contactToRemove.Add (miss);
 				}
 				
 				return -1;
@@ -207,6 +234,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			form
 			.Title (this.GetTitle ())
             .Text (analyse)
+            .Field<bool>()
+                .Title("Adapter à la composition ECh")
+                .InitialValue(false)
+            .End ()
 			.Field<bool> ()
 				.Title ("Contrôler et supprimer l'avertissement")
 				.InitialValue (true)
@@ -214,6 +245,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             
         }
 
-		private FormattedText analyse = new FormattedText ();
+		private FormattedText   analyse = new FormattedText ();
+        private List<eCH_PersonEntity> contactToAdd     = new List<eCH_PersonEntity> ();
+        private List<AiderPersonEntity> contactToRemove = new List<AiderPersonEntity> ();
 	}
 }
