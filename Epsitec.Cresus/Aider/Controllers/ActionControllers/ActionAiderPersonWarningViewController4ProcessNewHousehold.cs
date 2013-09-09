@@ -19,6 +19,7 @@ using Epsitec.Aider.Enumerations;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Data.Platform;
 using Epsitec.Aider.Data.ECh;
+using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -71,28 +72,36 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 aiderAddressEntity.Street = eChAddressEntity.Street;
                 aiderAddressEntity.HouseNumber = houseNumber;
                 aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-                aiderAddressEntity.Town = this.GetAiderTownEntity(newHousehold.Address);
+                aiderAddressEntity.Town = this.GetAiderTownEntity (newHousehold.Address);
 
                 //Link household to ECh Entity
                 if (newHousehold.Adult1.IsNotNull())
                 {               
-                    EChDataImporter.SetupHousehold(this.BusinessContext, this.Entity.Person, aiderHousehold, newHousehold, isHead1: true);
+                    EChDataImporter.SetupHousehold (this.BusinessContext, this.Entity.Person, aiderHousehold, newHousehold, isHead1: true);
                 }
 
                 if (newHousehold.Adult2.IsNotNull())
                 {
-                    EChDataImporter.SetupHousehold(this.BusinessContext, this.Entity.Person, aiderHousehold, newHousehold, isHead2: true);
+					var aiderPerson = this.GetAiderPersonEntity (this.BusinessContext, newHousehold.Adult2);
+                    EChDataImporter.SetupHousehold (this.BusinessContext, aiderPerson, aiderHousehold, newHousehold, isHead2: true);
                 }
 
                 foreach (var child in newHousehold.Children)
                 {
-                    EChDataImporter.SetupHousehold(this.BusinessContext, this.Entity.Person, aiderHousehold, newHousehold, isChild: true);
+					var aiderPerson = this.GetAiderPersonEntity (this.BusinessContext, child);
+                    EChDataImporter.SetupHousehold (this.BusinessContext, aiderPerson, aiderHousehold, newHousehold, isChild: true);
                 }
                 
             }
             if (subscribe)
             {
-
+				var household = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household;
+				if (household.IsNotNull ())
+				{
+					var edition = this.GetEdition (household.Address);
+					AiderSubscriptionEntity.Create (this.BusinessContext, household, edition, 1);
+				}
+				
             }
 		}
 
@@ -114,6 +123,38 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             };
             return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(echHouseholdExample).FirstOrDefault();
         }
+
+		private AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
+		{
+			if (person == null)
+			{
+				return null;
+			}
+
+			var personExample = new AiderPersonEntity ();
+
+			personExample.eCH_Person = new eCH_PersonEntity ()
+			{
+				PersonId = person.PersonId
+			};
+
+			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
+		}
+
+		private AiderGroupEntity GetEdition(AiderAddressEntity address)
+		{
+			var parishRepository = ParishAddressRepository.Current;
+			var parishName = ParishAssigner.FindParishName (parishRepository, address);
+
+			// If we can't find the region code, we default to the region 4, which is the one of
+			// Lausanne.
+
+			var regionCode = parishName != null
+				? parishRepository.GetDetails (parishName).RegionCode
+				: 4;
+
+			return ParishAssigner.FindRegionGroup (this.BusinessContext, regionCode);
+		}
 
         protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
         {

@@ -79,7 +79,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				if (household.Members.Count == 0)
 				{
-					this.BusinessContext.DeleteEntity (household);
+					var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, household);
+					if (subscription.IsNotNull ())
+					{
+						this.BusinessContext.DeleteEntity (household);
+					}
+
+					AiderSubscriptionEntity.Delete (this.BusinessContext, subscription);
 				}
 			}
 

@@ -63,7 +63,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             form
                 .Title(this.GetTitle())
 				.Field<bool> ()
-					.Title ("Appliquer à tout les membres du ménage")
+					.Title ("Appliquer à tous les membres du ménage")
 					.InitialValue (false)
 				.End ()
             .End();

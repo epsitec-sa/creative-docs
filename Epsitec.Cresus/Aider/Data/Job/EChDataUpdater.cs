@@ -20,6 +20,7 @@ using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -75,9 +76,11 @@ namespace Epsitec.Aider.Data.Job
 
 		public void StartJob()
 		{
+
+			//Try to repair broken things, and warn as Ech for corrections if needed
+			//this.PerformDataQuality ();
 			//	Update the EChPerson entities and add all required DataChangedECh warnings on
 			//	the corresponding AiderPersons.
-
 			var time = this.LogToConsole ("starting main job");
 
 			this.UpdateEChPersonEntities ();
@@ -164,9 +167,42 @@ namespace Epsitec.Aider.Data.Job
 			System.Console.WriteLine ("EChDataUpdater: {0} - {1} ms", message, time.ElapsedMilliseconds);
 		}
 
+		private void PerformDataQuality()
+		{
+			this.ExecuteWithBusinessContext (
+				businessContext =>
+				{
+					var personExample = new AiderPersonEntity ();
+					var request = new Request ();
+					
+					request.AddCondition (businessContext.DataContext, personExample, p => p.Contacts.Any( c => c.IsNull()));
+					this.LogToConsole ("Perform DataQuality on Contacts");
+					var personsWithoutContact = businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).ToList ();
+
+					this.LogToConsole (personsWithoutContact.Count + " persons without contacts detected");
+					foreach (var person in personsWithoutContact)
+					{
+						//Retreive person aider household
+						var household = this.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
+						if (household.IsNotNull ())
+						{
+							AiderContactEntity.Create (businessContext, person, household, isHead: household.IsHead (person));
+							this.LogToConsole ("Corrected: {0}",person.GetDisplayName ());
+						}
+						else //warn
+						{
+							var warningMessage = FormattedText.FromSimpleText ("Ménage a recréer (problème de qualité de données)");
+							this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+							this.LogToConsole ("Warning added for: {0}", person.GetDisplayName ());
+						}
+						
+					}
+				});
+		}
 
 		private void CreateNewAiderPersons()
 		{
+			this.LogToConsole ("CreateNewAiderPersons()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -212,6 +248,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void CreateNewEChPersons()
 		{
+			this.LogToConsole ("CreateNewEChPersons()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -261,6 +298,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void TagEChPersonsForDeletion()
 		{
+			this.LogToConsole ("TagEChPersonsForDeletion()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -278,6 +316,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void TagAiderPersonsForDeletion()
 		{
+			this.LogToConsole ("TagAiderPersonsForDeletion()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -300,6 +339,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void CreateNewEChReportedPersons()
 		{
+			this.LogToConsole ("CreateNewEChReportedPersons()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -415,9 +455,38 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								var warningMessage = FormattedText.FromSimpleText ("Cette personne a maintenant son propre ménage");
+								var warningMessage = FormattedText.FromSimpleText ("Cette personne à maintenant son propre ménage");
+								//Check AiderHousehold addresses
+								if (!aiderPersonA1.Contacts.IsEmpty ())
+								{
+									var currentHouseholdAddress = aiderPersonA1.Contacts.Where (c => c.Household.IsNotNull ()).First ().Household.Address;
+									if (currentHouseholdAddress.IsNotNull ())
+									{
+										//if the address and town is different put a warning
+										if (!eChAddressEntity.StreetUserFriendly.Equals (currentHouseholdAddress.StreetUserFriendly) && !eChAddressEntity.SwissZipCodeId.Equals (currentHouseholdAddress.Town.SwissZipCodeId))
+										{
+											this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+										}
+										else
+										{
+											//this person is at the same place -> do nothing
+										}
 
-								this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+									}
+									else
+									{
+										this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+									}
+									
+									
+								}
+								else
+								{
+									this.CreateWarning (businessContext, aiderPersonA1, aiderPersonA1.ParishGroupPathCache, WarningType.EChHouseholdAdded, this.warningTitleMessage, warningMessage);
+								}
+								
+
+								
 							}
 						}
 						else
@@ -430,6 +499,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void CreateNewAiderHouseholds()
 		{
+			this.LogToConsole ("CreateNewAiderHouseholds()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -471,8 +541,27 @@ namespace Epsitec.Aider.Data.Job
 									businessContext.DeleteEntity (warning);
 								}
 							}
+
+							//Setup household if needed
                             if (!this.eChPersonIdWithHouseholdSetupDone.Contains(aiderPerson.eCH_Person.PersonId))
                             {
+								//we check that no equivalent (based on display name) member exist before doing the setup
+								var nonEchEquivalentMemberExist = aiderHousehold.Members.Where (m => m.GetDisplayName ().Equals (aiderPerson.GetDisplayName ()) && m.IsGovernmentDefined == false).Any ();
+								if (nonEchEquivalentMemberExist)
+								{
+									var nonEChmember = aiderHousehold.Members.Where (m => m.GetDisplayName ().Equals (aiderPerson.GetDisplayName ()) && m.IsGovernmentDefined == false).First ();
+									
+									if (nonEChmember.IsNotNull ())
+									{
+										var contact = nonEChmember.Contacts.Where (c => c.Household == aiderHousehold).First ();
+										if (contact.IsNotNull ())
+										{
+											businessContext.DeleteEntity (contact);
+										}
+										businessContext.DeleteEntity (nonEChmember);
+									}
+								}
+
                                 EChDataImporter.SetupHousehold(businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isHead1: true);
                             }
 							
@@ -522,6 +611,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void RemoveOldEChReportedPersons()
 		{
+			this.LogToConsole ("RemoveOldEChReportedPersons()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -565,6 +655,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private void TagAiderPersonsForMissingHousehold()
 		{
+			this.LogToConsole ("TagAiderPersonsForMissingHousehold()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -599,6 +690,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private bool UpdateEChPersonEntities()
 		{
+			this.LogToConsole ("UpdateEChPersonEntities()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -685,6 +777,7 @@ namespace Epsitec.Aider.Data.Job
 
 		private bool UpdateHouseholdsAndPropagate()
 		{
+			this.LogToConsole ("UpdateHouseholdsAndPropagate()");
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -750,35 +843,25 @@ namespace Epsitec.Aider.Data.Job
 								changes.Add ("Pays: " + toChange.NewValue.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
 							}
 
-
-
-
-							if (reportedPersonEntityToUpdate.Adult1.IsNotNull ())
+							var refPerson = this.GetAiderPersonEntity (businessContext,reportedPersonEntityToUpdate.Adult1);
+							var aiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
+							if (aiderHousehold.IsNotNull ())
 							{
-								var aiderPersonEntity = this.GetAiderPersonEntity (businessContext, reportedPersonEntityToUpdate.Adult1);
+								foreach (var member in aiderHousehold.Members)
+								{
+									//Update AiderHouseholdEntity
+									this.UpdateAiderHouseholdAndSubscription (
+										  businessContext,
+										  reportedPersonEntityToUpdate,
+										  member);
 
-
-								//Update AiderHouseholdEntity
-								this.UpdateAiderHouseholdAndSubscription (
-									  businessContext,
-									  reportedPersonEntityToUpdate,
-									  aiderPersonEntity);
-
-								this.ReassignAndWarnParish (businessContext, aiderPersonEntity, changes);
+									this.ReassignAndWarnParish (businessContext, member, changes);
+								}
 							}
-
-							if (reportedPersonEntityToUpdate.Adult2.IsNotNull ())
+							else
 							{
-								var aiderPersonEntity = this.GetAiderPersonEntity (businessContext, reportedPersonEntityToUpdate.Adult2);
-
-								this.ReassignAndWarnParish (businessContext, aiderPersonEntity, changes);
-							}
-
-							foreach (var child in reportedPersonEntityToUpdate.Children)
-							{
-								var aiderPersonEntity = this.GetAiderPersonEntity (businessContext, child);
-
-								this.ReassignAndWarnParish (businessContext, aiderPersonEntity, changes);
+								//AIDER PERSON WITH NO CONTACT/HOUSEHOLD
+								this.LogToConsole ("N'a pas encore été corrigé: {0]", refPerson.GetDisplayName ());
 							}
 
 						}
@@ -1000,7 +1083,6 @@ namespace Epsitec.Aider.Data.Job
 
 			return businessContext.DataContext.GetByExample<AiderTownEntity>(townExample).FirstOrDefault();
 		}
-
 
 		private CoreData						coreData;
 		private ParishAddressRepository			parishAddressRepository;

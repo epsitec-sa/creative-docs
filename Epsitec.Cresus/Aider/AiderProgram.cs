@@ -92,7 +92,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv-new.xml -oldechfile:s:\eerv-old.xml -output:s:\analyse.md
+				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchUpdate (args));
 					return;

@@ -212,7 +212,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                     .InitialValue(false)
                 .End()
 				.Field<bool> ()
-					.Title ("Appliquer à tout les membres du ménage")
+					.Title ("Appliquer à tous les membres du ménage")
 					.InitialValue (false)
 				.End ()
 			.End ();           
