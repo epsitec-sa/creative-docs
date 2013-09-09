@@ -37,6 +37,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVGP22]", typeof (Epsitec.Aider.Entities.AiderSubscriptionEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVGC32]", typeof (Epsitec.Aider.Entities.AiderSubscriptionRefusalEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA1H]", typeof (Epsitec.Aider.Entities.AiderWarningSourceEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVA6H]", typeof (Epsitec.Aider.Entities.AiderPersonWarningSourceEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -7648,6 +7649,56 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderWarningSourceEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderPersonWarningSource Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderPersonWarningSource</c> entity.
+	///	designer:cap/LVA6H
+	///	</summary>
+	public partial class AiderPersonWarningSourceEntity : global::Epsitec.Aider.Entities.AiderWarningSourceEntity
+	{
+		///	<summary>
+		///	The <c>PersonWarnings</c> field.
+		///	designer:fld/LVA6H/LVA7H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA7H]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> PersonWarnings
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity>);
+				this.GetPersonWarnings (ref value);
+				return value;
+			}
+		}
+		
+		
+		partial void GetPersonWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderPersonWarningSourceEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderPersonWarningSourceEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 550);	// [LVA6H]
+		public static readonly new string EntityStructuredTypeKey = "[LVA6H]";
+		
+		#region Repository Class
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPersonWarningSourceEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
 			{

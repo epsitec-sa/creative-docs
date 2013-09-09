@@ -257,6 +257,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderPersonRelationship = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 95));
 			//	designer:cap/LVALB
 			public static readonly Epsitec.Common.Types.StructuredType AiderPersonWarning = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 373));
+			//	designer:cap/LVA6H
+			public static readonly Epsitec.Common.Types.StructuredType AiderPersonWarningSource = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 550));
 			//	designer:cap/LVAV3
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlace = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 127));
 			//	designer:cap/LVAQ5
@@ -1765,6 +1767,17 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 374);
 			}
 			
+			public static class AiderPersonWarningSource
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderPersonWarningSource.PersonWarnings, null);
+				}
+				
+				//	designer:cap/LVA7H
+				public static readonly global::Epsitec.Common.Support.Druid PersonWarnings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 551);
+			}
+			
 			public static class AiderPlace
 			{
 				internal static void _Initialize()
@@ -2469,6 +2482,7 @@ namespace Epsitec.Aider
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();
 			Fields.AiderPersonWarning._Initialize ();
+			Fields.AiderPersonWarningSource._Initialize ();
 			Fields.AiderPlace._Initialize ();
 			Fields.AiderPlacePerson._Initialize ();
 			Fields.AiderRelationshipType._Initialize ();

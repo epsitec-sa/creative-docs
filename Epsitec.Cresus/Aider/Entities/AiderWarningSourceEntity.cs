@@ -21,7 +21,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Description);
+			return TextFormatter.FormatText (this.Description, "\n", "Création:", this.CreationDate);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -44,21 +44,31 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetWarnings(ref IList<IAiderWarning> value)
 		{
-			throw new System.NotImplementedException ();
+			if (this.warnings == null)
+			{
+				this.warnings = new List<IAiderWarning> ();
+				
+				//	TODO: resolve and load list of warnings
+			}
+
+			value = this.warnings;
 		}
 
-		public static AiderWarningSourceEntity Create<T>(BusinessContext context, System.DateTime date, FormattedText name, FormattedText description)
-			where T : AbstractEntity, IAiderWarning, new ()
+		public static TSource Create<TSource, TItem>(BusinessContext context, System.DateTime date, FormattedText name, FormattedText description)
+			where TSource : AiderWarningSourceEntity, new ()
+			where TItem : AbstractEntity, IAiderWarning, new ()
 		{
-			var warningSource = context.CreateEntity<AiderWarningSourceEntity> ();
+			var warningSource = context.CreateEntity<TSource> ();
 
 			warningSource.CreationDate  = date;
 			warningSource.Name          = name;
 			warningSource.Description   = description;
-			warningSource.WarningEntity = EntityInfo<T>.GetTypeId ().ToString ();
+			warningSource.WarningEntity = EntityInfo<TItem>.GetTypeId ().ToString ();
 
 			return warningSource;
 		}
+
+
+		private List<IAiderWarning>				warnings;
 	}
 }
-
