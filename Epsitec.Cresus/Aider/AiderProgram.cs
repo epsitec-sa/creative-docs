@@ -231,13 +231,17 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				var newEChDataFile = AiderProgram.GetFile (args, "-newechfile:", true);
-				var oldEChDataFile = AiderProgram.GetFile (args, "-oldechfile:", true);
-				var reportFile = AiderProgram.GetFile (args, "-output:", true);
+				var newEChDataFile   = AiderProgram.GetFile (args, "-newechfile:", true);
+				var oldEChDataFile   = AiderProgram.GetFile (args, "-oldechfile:", true);
+				var reportFile       = AiderProgram.GetFile (args, "-output:", true);
 				var parishRepository = ParishAddressRepository.Current;
+				
 				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
+				
 				updater.StartJob ();
 
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
 			});
 		}
 

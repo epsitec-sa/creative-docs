@@ -31,30 +31,27 @@ namespace Epsitec.Cresus.WebCore.Server
 		/// </summary>
 		public CoreServerProgram()
 		{
-			ConsoleCreator.RunWithConsole (() =>
-			{
-				this.SetupParameters ();
-				this.SetupConfiguration ();
-				this.SetupDatabaseClient ();
-				this.Initialize
-				(
-					uiCulture: CoreServerProgram.uiCulture,
-					clientDirectory: this.clientDirectory
-				);
-				this.Run
-				(
-					enableUserNotifications: this.enableUserNotifications,
-					nGinxAutorun: CoreServerProgram.nGinxAutorun,
-					nGinxPath: CoreServerProgram.nGinxPath,
-					uiCulture: CoreServerProgram.uiCulture,
-					nancyUri: this.nancyUri,
-					owinUri: this.owinUri,
-					nbCoreWorkers: this.nbCoreWorkers,
-					backupDirectory: this.backupDirectory,
-					backupInterval: this.backupInterval,
-					backupStart: this.backupStart
-				);
-			}, 200);
+			ConsoleCreator.RunWithConsole (
+				() =>
+				{
+					this.SetupParameters ();
+					this.SetupConfiguration ();
+					this.SetupDatabaseClient ();
+				
+					this.Initialize (CoreServerProgram.uiCulture, this.clientDirectory);
+				
+					this.Run (
+						enableUserNotifications: CoreContext.HasExperimentalFeature ("Notifications"),
+						nGinxAutorun: CoreServerProgram.nGinxAutorun,
+						nGinxPath: CoreServerProgram.nGinxPath,
+						uiCulture: CoreServerProgram.uiCulture,
+						nancyUri: this.nancyUri,
+						owinUri: this.owinUri,
+						nbCoreWorkers: this.nbCoreWorkers,
+						backupDirectory: this.backupDirectory,
+						backupInterval: this.backupInterval,
+						backupStart: this.backupStart);
+				}, 200);
 		}
 
 		private void SetupParameters()
@@ -119,18 +116,6 @@ namespace Epsitec.Cresus.WebCore.Server
 				CoreServerProgram.defaultBackupInterval
 			);
 			Logger.LogToConsole ("Backup interval: " + this.backupInterval);
-
-			this.enableUserNotifications = this.SetupParameter
-			(
-				"enableUserNotifications",
-				s => bool.Parse (s),
-				CoreServerProgram.defaultEnableUserNotifications
-			);
-			if (!CoreContext.HasExperimentalFeature ("Notifications"))
-			{
-				this.enableUserNotifications = false;
-			}
-			Logger.LogToConsole ("Enable user notifications: " + this.enableUserNotifications);
 
 			Logger.LogToConsole ("Configuration read");
 		}
@@ -252,7 +237,6 @@ namespace Epsitec.Cresus.WebCore.Server
 		private static readonly DirectoryInfo	defaultBackupDirectory = new DirectoryInfo (AppDomain.CurrentDomain.BaseDirectory);
 		private static readonly TimeSpan		defaultBackupInterval = TimeSpan.FromDays (1);
 		private static readonly Time?			defaultBackupStart = null;
-		private static readonly bool			defaultEnableUserNotifications = false;
 		private static readonly CultureInfo		uiCulture = new CultureInfo ("fr-CH");
 		private static readonly FileInfo		nGinxPath = new FileInfo ("Nginx\\nginx.exe");
 		private static readonly bool			nGinxAutorun = true;
@@ -266,7 +250,5 @@ namespace Epsitec.Cresus.WebCore.Server
 		private DirectoryInfo					backupDirectory;
 		private TimeSpan						backupInterval;
 		private Time?							backupStart;
-
-		private bool							enableUserNotifications;
 	}
 }
