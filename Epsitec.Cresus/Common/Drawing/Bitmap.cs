@@ -544,9 +544,7 @@ namespace Epsitec.Common.Drawing
 
 		public static Image FromNativeBitmap(byte[] data)
 		{
-			var stream = new System.IO.MemoryStream (data);
-			var bitmap = Bitmap.DecompressBitmap (stream, data);
-
+			var bitmap = Bitmap.DecompressBitmap (data);
 			return Bitmap.FromNativeBitmap (bitmap);
 
 		}
@@ -799,39 +797,36 @@ namespace Epsitec.Common.Drawing
 				{
 					try
 					{
-						using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+						System.Drawing.Bitmap srcBitmap = Bitmap.DecompressBitmap (data);
+						System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (8, 8);
+
+						double dpiX = srcBitmap.HorizontalResolution;
+						double dpiY = srcBitmap.VerticalResolution;
+
+						srcBitmap.SetResolution (dstBitmap.HorizontalResolution, dstBitmap.VerticalResolution);
+
+						using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 						{
-							System.Drawing.Bitmap srcBitmap = Bitmap.DecompressBitmap (stream, data);
-							System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (8, 8);
-
-							double dpiX = srcBitmap.HorizontalResolution;
-							double dpiY = srcBitmap.VerticalResolution;
-
-							srcBitmap.SetResolution (dstBitmap.HorizontalResolution, dstBitmap.VerticalResolution);
-
-							using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
+							try
 							{
-								try
-								{
-									graphics.DrawImageUnscaled (srcBitmap, 0, 0);
-								}
-								catch
-								{
-									graphics.DrawImageUnscaled (srcBitmap, 0, 0);
-								}
+								graphics.DrawImageUnscaled (srcBitmap, 0, 0);
 							}
-
-							dstBitmap = srcBitmap;
-							Image image = Bitmap.FromNativeBitmap (dstBitmap, origin, size);
-
-							if (image != null)
+							catch
 							{
-								image.dpiX = dpiX;
-								image.dpiY = dpiY;
+								graphics.DrawImageUnscaled (srcBitmap, 0, 0);
 							}
-
-							return image;
 						}
+
+						dstBitmap = srcBitmap;
+						Image image = Bitmap.FromNativeBitmap (dstBitmap, origin, size);
+
+						if (image != null)
+						{
+							image.dpiX = dpiX;
+							image.dpiY = dpiY;
+						}
+
+						return image;
 					}
 					catch
 					{
@@ -846,21 +841,24 @@ namespace Epsitec.Common.Drawing
 
 		
 		
-		private static System.Drawing.Bitmap DecompressBitmap(System.IO.MemoryStream stream, byte[] data)
+		private static System.Drawing.Bitmap DecompressBitmap(byte[] data)
 		{
 			try
 			{
-				//	[DR] Ce code produit un bug dans l'affichage du fond de certains
-				//	widgets. Il a été ajouté par Pierre le 02.07.2013 dans la révision
-				//	21113.
-				//	TODO: Corriger...
 				if (Bitmap.IsPngHeader (data))
 				{
-					return Bitmap.DecompressPngBitmap (stream);
-				}
-				//	[DR] Fin.
+					var bitmap = Bitmap.DecompressPngBitmap (data);
 
-				return new System.Drawing.Bitmap (stream);
+					if (bitmap != null)
+					{
+						return bitmap;
+					}
+				}
+
+				using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+				{
+					return new System.Drawing.Bitmap (stream);
+				}
 			}
 			catch (ExternalException)
 			{
@@ -884,27 +882,45 @@ namespace Epsitec.Common.Drawing
 				&& (data[3] == 0x47);
 		}
 
-		private static System.Drawing.Bitmap DecompressPngBitmap(System.IO.MemoryStream stream)
+		private static System.Drawing.Bitmap DecompressPngBitmap(byte[] data)
 		{
-			//	We have to use the WPF decompression code, since GDI+ 8-bit PNG palette handling
-			//	is broken (an 8-bit PNG will always be loaded as 32-bit by GDI+)
-			//	http://social.msdn.microsoft.com/Forums/vstudio/en-US/02b1caee-f26f-40e9-ba23-524e8bbf902e/gdi-or-net-bug-8bpp-png-loaded-as-32bpp
-
-			var pngDec = new System.Windows.Media.Imaging.PngBitmapDecoder (stream,
-									System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat,
-									System.Windows.Media.Imaging.BitmapCacheOption.OnDemand);
-
-			var bmpEnc = new System.Windows.Media.Imaging.BmpBitmapEncoder ();
-
-			bmpEnc.Frames.Add (pngDec.Frames[0]);
-
-			using (var copy = new System.IO.MemoryStream ())
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 			{
-				bmpEnc.Save (copy);
-				return new System.Drawing.Bitmap (copy);
+				//	We have to use the WPF decompression code, since GDI+ 8-bit PNG palette handling
+				//	is broken (an 8-bit PNG will always be loaded as 32-bit by GDI+)
+				//	http://social.msdn.microsoft.com/Forums/vstudio/en-US/02b1caee-f26f-40e9-ba23-524e8bbf902e/gdi-or-net-bug-8bpp-png-loaded-as-32bpp
+
+				var pngDecoder = new System.Windows.Media.Imaging.PngBitmapDecoder (stream,
+										System.Windows.Media.Imaging.BitmapCreateOptions.PreservePixelFormat,
+										System.Windows.Media.Imaging.BitmapCacheOption.OnDemand);
+				var pngFrame   = pngDecoder.Frames[0];
+				var pngSource  = pngFrame as System.Windows.Media.Imaging.BitmapSource;
+				var pngFormat  = pngSource.Format;
+
+				if (pngFormat.BitsPerPixel > 24)
+				{
+					return null;
+				}
+
+				return Bitmap.CreateBmpBitmap (pngFrame);
 			}
 		}
+		
+		private static System.Drawing.Bitmap CreateBmpBitmap(System.Windows.Media.Imaging.BitmapFrame pngFrame)
+		{
+			var bmpEncoder = new System.Windows.Media.Imaging.BmpBitmapEncoder ();
 
+			bmpEncoder.Frames.Add (pngFrame);
+
+			using (var bmpStream = new System.IO.MemoryStream ())
+			{
+				bmpEncoder.Save (bmpStream);
+				bmpStream.Seek (0, System.IO.SeekOrigin.Begin);
+
+				return new System.Drawing.Bitmap (bmpStream);
+			}
+		}
+		
 		private static void NotifyMemoryExhauted()
 		{
 			Bitmap.OnOutOfMemoryEncountered ();
