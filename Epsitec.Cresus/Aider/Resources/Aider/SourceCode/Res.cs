@@ -1963,6 +1963,10 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVA2H
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 546);
+				//	designer:cap/LVA5H
+				public static readonly global::Epsitec.Common.Support.Druid WarningEntity = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 549);
+				//	designer:cap/LVA4H
+				public static readonly global::Epsitec.Common.Support.Druid Warnings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 548);
 			}
 			
 			public static class eCH_Address

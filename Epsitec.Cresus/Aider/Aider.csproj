@@ -168,6 +168,7 @@
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory.cs" />
     <Compile Include="Entities\AiderWarningExampleFactory`2.cs" />
+    <Compile Include="Entities\AiderWarningSourceEntity.cs" />
     <Compile Include="Entities\eCH_ReportedPersonEntity.cs" />
     <Compile Include="Entities\IAiderWarningExampleFactoryGetter.cs" />
     <Compile Include="Entities\ParticipationData.cs" />

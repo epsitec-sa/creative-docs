@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
@@ -47,9 +48,59 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public static EntityStatus GetEntityStatus(this System.DateTime date)
+		{
+			if (date.Ticks != 0)
+			{
+				return EntityStatus.Valid;
+			}
+			else
+			{
+				return EntityStatus.Empty;
+			}
+		}
+
+		public static EntityStatus GetEntityStatus(this System.DateTime? date)
+		{
+			if ((date.HasValue) &&
+				(date.Value.Ticks != 0))
+			{
+				return EntityStatus.Valid;
+			}
+			else
+			{
+				return EntityStatus.Empty;
+			}
+		}
+
 		public static EntityStatus GetEntityStatus(this int? number)
 		{
 			if (number.HasValue)
+			{
+				return EntityStatus.Valid;
+			}
+			else
+			{
+				return EntityStatus.Empty;
+			}
+		}
+
+		public static EntityStatus GetEntityStatus(this Druid? druid)
+		{
+			if ((druid.HasValue) &&
+				(druid.Value.IsEmpty == false))
+			{
+				return EntityStatus.Valid;
+			}
+			else
+			{
+				return EntityStatus.Empty;
+			}
+		}
+
+		public static EntityStatus GetEntityStatus(this Druid druid)
+		{
+			if (druid.IsEmpty == false)
 			{
 				return EntityStatus.Valid;
 			}

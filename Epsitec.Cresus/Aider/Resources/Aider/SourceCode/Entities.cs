@@ -7574,27 +7574,66 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVA1H/LVA2H
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA2H]")]
-		public global::System.DateTime? CreationDate
+		public global::System.DateTime CreationDate
 		{
 			get
 			{
-				return this.GetField<global::System.DateTime?> ("[LVA2H]");
+				return this.GetField<global::System.DateTime> ("[LVA2H]");
 			}
 			set
 			{
-				global::System.DateTime? oldValue = this.CreationDate;
+				global::System.DateTime oldValue = this.CreationDate;
 				if (oldValue != value || !this.IsFieldDefined("[LVA2H]"))
 				{
 					this.OnCreationDateChanging (oldValue, value);
-					this.SetField<global::System.DateTime?> ("[LVA2H]", oldValue, value);
+					this.SetField<global::System.DateTime> ("[LVA2H]", oldValue, value);
 					this.OnCreationDateChanged (oldValue, value);
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>WarningEntity</c> field.
+		///	designer:fld/LVA1H/LVA5H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5H]")]
+		public string WarningEntity
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA5H]");
+			}
+			set
+			{
+				string oldValue = this.WarningEntity;
+				if (oldValue != value || !this.IsFieldDefined("[LVA5H]"))
+				{
+					this.OnWarningEntityChanging (oldValue, value);
+					this.SetField<string> ("[LVA5H]", oldValue, value);
+					this.OnWarningEntityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Warnings</c> field.
+		///	designer:fld/LVA1H/LVA4H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA4H]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.IAiderWarning> Warnings
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.IAiderWarning> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.IAiderWarning>);
+				this.GetWarnings (ref value);
+				return value;
+			}
+		}
 		
-		partial void OnCreationDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
-		partial void OnCreationDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnCreationDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnCreationDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnWarningEntityChanging(string oldValue, string newValue);
+		partial void OnWarningEntityChanged(string oldValue, string newValue);
 		
+		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.IAiderWarning> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

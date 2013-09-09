@@ -41,8 +41,12 @@ namespace Epsitec.Aider.Entities
 
 		public static void Accumulate(IAiderWarning warning, EntityStatusAccumulator a)
 		{
+			a.Accumulate (warning.StartDate.GetEntityStatus ().TreatAsOptional ());
+			a.Accumulate (warning.EndDate.GetEntityStatus ().TreatAsOptional ());
+			a.Accumulate (warning.HideUntilDate.GetEntityStatus ().TreatAsOptional ());
 			a.Accumulate (warning.Title.GetEntityStatus ().TreatAsOptional ());
 			a.Accumulate (warning.WarningType == Enumerations.WarningType.None ? EntityStatus.Empty | EntityStatus.Valid : EntityStatus.Valid);
+			a.Accumulate (warning.WarningSource);
 			a.Accumulate (warning.Description.GetEntityStatus ().TreatAsOptional ());
 		}
 	}

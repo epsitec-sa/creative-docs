@@ -125,11 +125,8 @@ namespace Epsitec.Aider.Data.Job
 		{
 			if (this.warningSource == null)
 			{
-				this.warningSource = businessContext.CreateEntity<AiderWarningSourceEntity> ();
-				
-				this.warningSource.CreationDate = this.jobDateTime;
-				this.warningSource.Name = this.jobName;
-				this.warningSource.Description = TextFormatter.FormatText (this.jobDescription);
+				this.warningSource = AiderWarningSourceEntity.Create<AiderPersonWarningEntity> (
+										businessContext, this.jobDateTime, this.jobName, TextFormatter.FormatText (this.jobDescription));
 			}
 			else
 			{
