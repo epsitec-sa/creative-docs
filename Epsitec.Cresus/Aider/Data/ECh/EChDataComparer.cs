@@ -112,16 +112,14 @@ namespace Epsitec.Aider.Data.ECh
 		/// <returns>a list of modified EChPerson</returns>
 		public IEnumerable<Change<EChPerson>> GetPersonsToChange()
 		{
-			var PersonToCheck = from e in this.newPersonMap
-								where this.oldPersonMap.ContainsKey(e.Key)
-								select e;
+			var personToCheck = this.newPersonMap.Where (x => this.oldPersonMap.ContainsKey (x.Key));
 
-			var PersonToChange = from c in PersonToCheck
+			var personToChange = from c in personToCheck
 								 join e in this.oldPersonMap on c.Key equals e.Key
 								 where !c.Value.CheckData (e.Value.OfficialName, e.Value.FirstNames, e.Value.DateOfBirth, e.Value.Sex, e.Value.NationalityStatus, e.Value.NationalCountryCode, e.Value.MaritalStatus, e.Value.OriginPlaces)
-								 select Change.Create (c.Value, e.Value);
+								 select Change.Create (oldValue: e.Value, newValue: c.Value);
 
-			return PersonToChange;
+			return personToChange;
 		}
 
 

@@ -140,80 +140,80 @@ namespace Epsitec.Aider.Data.Job
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
-					foreach (var toChange in this.personsToUpdate)
+					foreach (var item in this.personsToUpdate)
 					{
 						try
 						{
-							var personEntityToUpdate = this.GetEchPersonEntity (businessContext, toChange.OldValue);
-							var aiderPersonEntity = this.GetAiderPersonEntity (businessContext, personEntityToUpdate);
-							var changedEChPersonEntity = new eCH_PersonEntity ();
-							EChDataImporter.ConvertEChPersonToEntity (toChange.OldValue, changedEChPersonEntity);
+							var eChPersonNew = EChDataImporter.CopyEChPerson (item.NewValue, new eCH_PersonEntity ());
+							var eChPerson    = this.GetEchPersonEntity (businessContext, item.NewValue);
+							var aiderPerson  = this.GetAiderPersonEntity (businessContext, eChPerson);
+
 							var changes = new List<string> ();
 							var mustWarn = false;
-							changes.Add (aiderPersonEntity.GetFullName ());
+							
+							changes.Add (aiderPerson.GetFullName ());
 
-							if (!toChange.OldValue.OfficialName.Equals (toChange.NewValue.OfficialName))
+							if (eChPerson.PersonOfficialName != eChPersonNew.PersonOfficialName)
 							{
-								personEntityToUpdate.PersonOfficialName = changedEChPersonEntity.PersonOfficialName;
-								changes.Add ("Nom: " + toChange.NewValue.OfficialName + " -> " + changedEChPersonEntity.PersonOfficialName);
+								changes.Add ("Nom: " + eChPerson.PersonOfficialName + " -> " + eChPersonNew.PersonOfficialName);
+								eChPerson.PersonOfficialName = eChPersonNew.PersonOfficialName;
 								mustWarn = true;
 							}
 
-							if (!toChange.OldValue.FirstNames.Equals (toChange.NewValue.FirstNames))
+							if (eChPerson.PersonFirstNames != eChPersonNew.PersonFirstNames)
 							{
-								personEntityToUpdate.PersonFirstNames = changedEChPersonEntity.PersonFirstNames;
-								changes.Add ("Prénom: " + toChange.NewValue.FirstNames + " -> " + changedEChPersonEntity.PersonFirstNames);
-							}
-
-							if (!toChange.OldValue.DateOfBirth.Equals (toChange.NewValue.DateOfBirth))
-							{
-								personEntityToUpdate.PersonDateOfBirth = changedEChPersonEntity.PersonDateOfBirth;
-								changes.Add ("Date de naissance: " + toChange.NewValue.DateOfBirth + " -> " + changedEChPersonEntity.PersonDateOfBirth);
-							}
-
-							if (!toChange.OldValue.MaritalStatus.Equals (toChange.NewValue.MaritalStatus))
-							{
-								personEntityToUpdate.AdultMaritalStatus = changedEChPersonEntity.AdultMaritalStatus;
-								changes.Add ("Etat civil: " + toChange.NewValue.MaritalStatus + " -> " + changedEChPersonEntity.AdultMaritalStatus);
+								changes.Add ("Prénom: " + eChPerson.PersonFirstNames + " -> " + eChPersonNew.PersonFirstNames);
+								eChPerson.PersonFirstNames = eChPersonNew.PersonFirstNames;
 								mustWarn = true;
 							}
 
-							if (!toChange.OldValue.NationalCountryCode.Equals (toChange.NewValue.NationalCountryCode))
+							if (eChPerson.PersonDateOfBirth != eChPersonNew.PersonDateOfBirth)
 							{
-								personEntityToUpdate.NationalityCountryCode = changedEChPersonEntity.NationalityCountryCode;
-								changes.Add ("Nationalité: " + toChange.NewValue.NationalCountryCode + " -> " + changedEChPersonEntity.NationalityCountryCode);
-							}
-
-							if (!toChange.OldValue.NationalityStatus.Equals (toChange.NewValue.NationalityStatus))
-							{
-								personEntityToUpdate.NationalityStatus = changedEChPersonEntity.NationalityStatus;
-								changes.Add ("Statut nationalité: " + toChange.NewValue.NationalityStatus + " -> " + changedEChPersonEntity.NationalityStatus);
-							}
-
-							var oldOriginList = toChange.OldValue.OriginPlaces.Select(p => System.Tuple.Create(p.Canton, p.Name)).ToList();
-							var newOriginList = toChange.NewValue.OriginPlaces.Select(p => System.Tuple.Create(p.Canton, p.Name)).ToList();
-
-							if (!oldOriginList.SetEquals(newOriginList))
-							{
-								personEntityToUpdate.Origins = changedEChPersonEntity.Origins;
-								changes.Add ("Origines: " + string.Join (" ", toChange.NewValue.OriginPlaces.Select (o => o.Display ()).ToList ()) + " -> " + string.Join (" ", changedEChPersonEntity.Origins));
-							}
-
-							if (!toChange.OldValue.Sex.Equals (toChange.NewValue.Sex))
-							{
-								personEntityToUpdate.PersonSex = changedEChPersonEntity.PersonSex;
-								changes.Add ("Sex: " + toChange.NewValue.Sex + " -> " + changedEChPersonEntity.PersonSex);
+								changes.Add ("Date de naissance: " + eChPerson.PersonDateOfBirth + " -> " + eChPersonNew.PersonDateOfBirth);
+								eChPerson.PersonDateOfBirth = eChPersonNew.PersonDateOfBirth;
 								mustWarn = true;
+							}
+
+							if (eChPerson.AdultMaritalStatus != eChPersonNew.AdultMaritalStatus)
+							{
+								changes.Add ("État civil: " + eChPerson.AdultMaritalStatus + " -> " + eChPersonNew.AdultMaritalStatus);
+								eChPerson.AdultMaritalStatus = eChPersonNew.AdultMaritalStatus;
+								mustWarn = true;
+							}
+
+							if (eChPerson.PersonSex != eChPersonNew.PersonSex)
+							{
+								changes.Add ("Sexe: " + eChPerson.PersonSex + " -> " + eChPersonNew.PersonSex);
+								eChPerson.PersonSex = eChPersonNew.PersonSex;
+								mustWarn = true;
+							}
+
+							if (eChPerson.NationalityCountryCode != eChPersonNew.NationalityCountryCode)
+							{
+								changes.Add ("Nationalité: " + eChPerson.NationalityCountryCode + " -> " + eChPersonNew.NationalityCountryCode);
+								eChPerson.NationalityCountryCode = eChPersonNew.NationalityCountryCode;
+							}
+
+							if (eChPerson.NationalityStatus != eChPersonNew.NationalityStatus)
+							{
+								changes.Add ("Statut nationalité: " + eChPerson.NationalityStatus + " -> " + eChPersonNew.NationalityStatus);
+								eChPerson.NationalityStatus = eChPersonNew.NationalityStatus;
+							}
+
+							if (eChPerson.Origins != eChPersonNew.Origins)
+							{
+								changes.Add ("Origines: " + eChPerson.Origins + " -> " + eChPersonNew.Origins);
+								eChPerson.Origins = eChPersonNew.Origins;
 							}
 
 							if (mustWarn)
 							{
-								this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChPersonDataChanged, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+								this.CreateWarning (businessContext, aiderPerson, aiderPerson.ParishGroupPathCache, WarningType.EChPersonDataChanged, this.warningTitleMessage, changes);
 							}
 						}
 						catch (System.Exception)
 						{
-							this.LogToConsole ("Error: EChPerson {0} {1} throw exception",toChange.NewValue.OfficialName,toChange.NewValue.FirstNames);
+							this.LogToConsole ("Error: EChPerson {0} {1} throw exception", item.OldValue.OfficialName, item.NewValue.FirstNames);
 						}
 					}
 				});
@@ -803,12 +803,12 @@ namespace Epsitec.Aider.Data.Job
 
 			if (oldParishGroupPath != newParishGroupPath)
 			{
-				this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
-				this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+				this.CreateWarning (businessContext, aiderPersonEntity, oldParishGroupPath, WarningType.ParishDeparture, this.warningTitleMessage, changes);
+				this.CreateWarning (businessContext, aiderPersonEntity, newParishGroupPath, WarningType.ParishArrival, this.warningTitleMessage, changes);
 			}
 			else //if no change in parish group path, we create an simple address change warning
 			{
-				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChAddressChanged, this.warningTitleMessage, TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.EChAddressChanged, this.warningTitleMessage, changes);
 			}
 		}
 
@@ -891,6 +891,12 @@ namespace Epsitec.Aider.Data.Job
 			return businessContext.DataContext.GetByExample<eCH_PersonEntity> (personExample).FirstOrDefault ();
 		}
 
+
+		private void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath, WarningType warningType, FormattedText title, IEnumerable<string> changes)
+		{
+			this.CreateWarning (context, person, parishGroupPath, warningType, title,
+				TextFormatter.Join (FormattedText.HtmlBreak, changes.Select (c => FormattedText.Format (c))));
+		}
 
 		private void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath,
 								   WarningType warningType, FormattedText title, FormattedText description)

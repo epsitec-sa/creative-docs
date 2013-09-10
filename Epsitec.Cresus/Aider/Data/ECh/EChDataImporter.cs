@@ -265,7 +265,7 @@ namespace Epsitec.Aider.Data.ECh
 			var aiderPersonEntity = businessContext.CreateAndRegisterEntity<AiderPersonEntity> ();
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
-			EChDataImporter.ConvertEChPersonToEntity (eChPerson, eChPersonEntity);
+			EChDataImporter.CopyEChPerson (eChPerson, eChPersonEntity);
 
 			aiderPersonEntity.MrMrs = EChDataImporter.GuessMrMrs (eChPerson.Sex, eChPerson.DateOfBirth, eChPerson.MaritalStatus);
 			aiderPersonEntity.Confession = PersonConfession.Protestant;
@@ -273,25 +273,26 @@ namespace Epsitec.Aider.Data.ECh
 			return aiderPersonEntity;
 		}
 
-		public static void ConvertEChPersonToEntity(EChPerson eChPerson, eCH_PersonEntity eChPersonEntity)
+		public static eCH_PersonEntity CopyEChPerson(EChPerson eChPerson, eCH_PersonEntity eChPersonEntity)
 		{
-			eChPersonEntity.PersonId = eChPerson.Id;
-			eChPersonEntity.PersonOfficialName = eChPerson.OfficialName;
-			eChPersonEntity.PersonFirstNames = eChPerson.FirstNames;
-			eChPersonEntity.PersonDateOfBirth = eChPerson.DateOfBirth;
-			eChPersonEntity.PersonSex = eChPerson.Sex;
-			eChPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
+			eChPersonEntity.PersonId               = eChPerson.Id;
+			eChPersonEntity.PersonOfficialName     = eChPerson.OfficialName;
+			eChPersonEntity.PersonFirstNames       = eChPerson.FirstNames;
+			eChPersonEntity.PersonDateOfBirth      = eChPerson.DateOfBirth;
+			eChPersonEntity.PersonSex              = eChPerson.Sex;
+			eChPersonEntity.NationalityStatus      = eChPerson.NationalityStatus;
 			eChPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
-			eChPersonEntity.Origins = eChPerson.OriginPlaces
-				.Select (p => p.Name + " (" + p.Canton + ")")
-				.Join ("\n");
+
+			eChPersonEntity.Origins = eChPerson.OriginPlaces.Select (p => p.Name + " (" + p.Canton + ")").Join ("\n");
+			
 			eChPersonEntity.AdultMaritalStatus = eChPerson.MaritalStatus;
 
-			eChPersonEntity.CreationDate = Date.Today;
-			eChPersonEntity.DataSource = Enumerations.DataSource.Government;
+			eChPersonEntity.CreationDate      = Date.Today;
+			eChPersonEntity.DataSource        = Enumerations.DataSource.Government;
 			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
-			eChPersonEntity.RemovalReason = RemovalReason.None;
+			eChPersonEntity.RemovalReason     = RemovalReason.None;
 
+			return eChPersonEntity;
 		}
 
 		private static void ImportAiderAddressEntity(BusinessContext businessContext, AiderAddressEntity aiderAddressEntity, EChAddress eChAddress, Dictionary<int, EntityKey> zipCodeIdToEntityKey)
