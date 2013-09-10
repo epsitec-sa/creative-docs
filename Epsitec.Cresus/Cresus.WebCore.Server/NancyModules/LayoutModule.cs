@@ -14,17 +14,13 @@ using Nancy;
 
 using System;
 
-
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-
 	/// <summary>
 	/// Gets the layout representations of the various EntityViewControllers.
 	/// </summary>
 	public class LayoutModule : AbstractAuthenticatedModule
 	{
-
-
 		public LayoutModule(CoreServer coreServer)
 			: base (coreServer, "/layout")
 		{
@@ -75,7 +71,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return this.GetLayout (businessContext, entity, additionalEntity, parameters);
 		}
 
-
 		private Response GetLayoutWithType(BusinessContext businessContext, dynamic parameters)
 		{
 			var type = this.CoreServer.Caches.TypeCache.GetItem ((string) parameters.typeId);
@@ -83,7 +78,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			return this.GetLayout (businessContext, dummyEntity, null, parameters);
 		}
-
 
 		private Response GetLayout(BusinessContext businessContext, AbstractEntity entity, AbstractEntity additionalEntity, dynamic parameters)
 		{
@@ -98,9 +92,5 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			return CoreResponse.Success (content);
 		}
-
-
 	}
-
-
 }

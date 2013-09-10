@@ -1,6 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
-using System;
+using Epsitec.Common.Support.EntityEngine;
 
 using System.Linq.Expressions;
 
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Title, value));
 		}
 
-		public ActionBrick<T, TParent> Title<TResult>(Expression<Func<T, TResult>> expression)
+		public ActionBrick<T, TParent> Title<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			return this.Title (new Mortar<T, TResult> (expression));
 		}
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Text, value));
 		}
 
-		public ActionBrick<T, TParent> Text<TResult>(Expression<Func<T, TResult>> expression)
+		public ActionBrick<T, TParent> Text<TResult>(Expression<System.Func<T, TResult>> expression)
 		{
 			return this.Text (new Mortar<T, TResult> (expression));
 		}

@@ -1,23 +1,35 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
-
-using System;
 
 namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
 	public abstract class ActionViewController<T> : EntityViewController<T>, IActionViewController, IActionExecutorProvider
 		where T : AbstractEntity, new ()
 	{
+		protected virtual bool					NeedsInteraction
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		protected sealed override void CreateBricks(BrickWall<T> wall)
 		{
 			var action = wall
 				.AddBrick ()
 				.DefineAction ();
 
-			this.GetForm (action);
+			if (this.NeedsInteraction)
+			{
+				this.GetForm (action);
+			}
 		}
 
 		protected abstract void GetForm(ActionBrick<T, SimpleBrick<T>> action);
