@@ -19,6 +19,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (7)]
 	public sealed class ActionAiderPersonViewController7RemoveHousehold : TemplateActionViewController<AiderPersonEntity, AiderHouseholdEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return Resources.Text ("Retirer le ménage sélectionné");
@@ -29,17 +38,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-		public override bool RequiresAdditionalEntity()
+
+		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-			return true;
+			form
+				.Title ("Retirer le ménage sélectionné ?")
+					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le ménage", this.AdditionalEntity.DisplayName, "associé à cette personne ?"))
+				.End ();
 		}
 
+		
 		private void Execute()
 		{
 			var context   = this.BusinessContext;
 			var person    = this.Entity;
 			var household = this.AdditionalEntity;
-			
+
 			var contacts = person.Contacts;
 			var contact  = contacts.FirstOrDefault (x => x.Household == household);
 
@@ -53,19 +67,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				AiderHouseholdEntity.Delete (context, household);
 			}
-			
+
 			if (contact.IsNotNull ())
 			{
 				AiderContactEntity.Delete (context, contact);
 			}
-		}
-
-		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
-		{
-			form
-				.Title ("Retirer le ménage sélectionné ?")
-					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment retirer le ménage", this.AdditionalEntity.DisplayName, "associé à cette personne ?"))
-				.End ();
 		}
 	}
 }

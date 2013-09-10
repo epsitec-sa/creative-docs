@@ -27,7 +27,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		#region ITemplateActionViewController Members
 
-		public abstract bool RequiresAdditionalEntity();
+		public abstract bool RequiresAdditionalEntity
+		{
+			get;
+		}
 
 		#endregion
 	}

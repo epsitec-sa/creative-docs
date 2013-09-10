@@ -20,6 +20,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (3)]
 	public sealed class ActionAiderHouseholdViewController3ChangeHeadOfHousehold : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return Resources.FormattedText ("Modifier le statut de chef du ménage");
@@ -30,31 +39,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-		public override bool RequiresAdditionalEntity()
-		{
-			return true;
-		}
-
-		private void Execute()
-		{
-			var person    = this.AdditionalEntity;
-			var household = this.Entity;
-			var contacts  = person.Contacts;
-			var contact   = contacts.FirstOrDefault (x => x.Household == household);
-
-			if (contact.IsNotNull ())
-			{
-				if (contact.HouseholdRole == Enumerations.HouseholdRole.Head)
-				{
-					contact.HouseholdRole = Enumerations.HouseholdRole.None;
-				}
-				else
-				{
-					contact.HouseholdRole = Enumerations.HouseholdRole.Head;
-				}
-			}
-		}
-
+		
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
 			var household  = this.Entity;
@@ -109,6 +94,27 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Title ("Modifier le statut de chef du ménage ?")
 				.Text (message)
 				.End ();
+		}
+		
+		
+		private void Execute()
+		{
+			var person    = this.AdditionalEntity;
+			var household = this.Entity;
+			var contacts  = person.Contacts;
+			var contact   = contacts.FirstOrDefault (x => x.Household == household);
+
+			if (contact.IsNotNull ())
+			{
+				if (contact.HouseholdRole == Enumerations.HouseholdRole.Head)
+				{
+					contact.HouseholdRole = Enumerations.HouseholdRole.None;
+				}
+				else
+				{
+					contact.HouseholdRole = Enumerations.HouseholdRole.Head;
+				}
+			}
 		}
 	}
 }

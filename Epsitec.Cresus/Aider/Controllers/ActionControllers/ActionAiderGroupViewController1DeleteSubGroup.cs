@@ -16,6 +16,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (1)]
 	public sealed class ActionAiderGroupViewController1DeleteSubGroup : TemplateActionViewController<AiderGroupEntity, AiderGroupEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return "Supprimer le sous groupe sélectionné";
@@ -28,16 +37,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return string.Format (format, this.AdditionalEntity.Name);
 		}
 
-		public override bool RequiresAdditionalEntity()
-		{
-			return true;
-		}
-
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create (this.Execute);
 		}
 
+		
+		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
+		{
+			form
+				.Title (this.GetTitle ())
+				.Text (this.GetText ())
+			.End ();
+		}
+
+		
 		private void Execute()
 		{
 			var group = this.Entity;
@@ -58,14 +72,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			group.DeleteSubgroup (this.BusinessContext, subgroup);
-		}
-
-		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
-		{
-			form
-				.Title (this.GetTitle ())
-				.Text (this.GetText ())
-			.End ();
 		}
 	}
 }

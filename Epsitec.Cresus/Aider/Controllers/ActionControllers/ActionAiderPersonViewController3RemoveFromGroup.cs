@@ -18,14 +18,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (3)]
 	public sealed class ActionAiderPersonViewController3RemoveFromGroup : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return "Retirer du groupe";
-		}
-
-		public override bool RequiresAdditionalEntity()
-		{
-			return true;
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -33,25 +37,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<AiderGroupEntity, Date, FormattedText> (this.Execute);
 		}
 
-		private void Execute(AiderGroupEntity group, Date endDate, FormattedText comment)
-		{
-			if (endDate < this.AdditionalEntity.StartDate)
-			{
-				var message = "La date de sortie doit être postérieure à la date d'entrée";
-
-				throw new BusinessRuleException (message);
-			}
-
-			if (!group.CanBeEditedByCurrentUser ())
-			{
-				var message = "Vous n'avez pas le droit d'éditer ce groupe";
-
-				throw new BusinessRuleException (message);
-			}
-
-			AiderGroupParticipantEntity.StopParticipation (this.AdditionalEntity, endDate, comment);
-		}
-
+		
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
@@ -71,6 +57,26 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.InitialValue (this.AdditionalEntity.Comment.Text)
 				.End ()
 			.End ();
+		}
+
+		
+		private void Execute(AiderGroupEntity group, Date endDate, FormattedText comment)
+		{
+			if (endDate < this.AdditionalEntity.StartDate)
+			{
+				var message = "La date de sortie doit être postérieure à la date d'entrée";
+
+				throw new BusinessRuleException (message);
+			}
+
+			if (!group.CanBeEditedByCurrentUser ())
+			{
+				var message = "Vous n'avez pas le droit d'éditer ce groupe";
+
+				throw new BusinessRuleException (message);
+			}
+
+			AiderGroupParticipantEntity.StopParticipation (this.AdditionalEntity, endDate, comment);
 		}
 	}
 }

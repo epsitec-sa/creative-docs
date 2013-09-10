@@ -862,7 +862,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				{
 					ViewId                   = InvariantConverter.ToString (viewId),
 					Title                    = controller.GetTitle ().ToString (),
-					RequiresAdditionalEntity = templateController != null && templateController.RequiresAdditionalEntity (),
+					RequiresAdditionalEntity = templateController != null && templateController.RequiresAdditionalEntity,
 					DisplayMode              = Carpenter.GetDisplayMode (propertyKey)
 				};
 			}

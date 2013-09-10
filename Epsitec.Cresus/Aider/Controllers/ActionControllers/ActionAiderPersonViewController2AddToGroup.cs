@@ -19,7 +19,6 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	//	@PA: faut-il déplacer ce contrôleur pour qu'il manipule des contacts?
@@ -27,14 +26,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (2)]
 	public sealed class ActionAiderPersonViewController2AddToGroup : TemplateActionViewController<AiderPersonEntity, AiderGroupParticipantEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return "Ajouter à un groupe";
-		}
-
-		public override bool RequiresAdditionalEntity()
-		{
-			return false;
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -42,6 +45,27 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create<AiderGroupEntity, Date, FormattedText> (this.Execute);
 		}
 
+		
+		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
+		{
+			form
+				.Title (this.GetTitle ())
+				.Field<AiderGroupEntity> ()
+					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
+					.Title ("Groupe")
+				.End ()
+				.Field<Date> ()
+					.Title ("Date d'entrée dans le groupe")
+					.InitialValue (Date.Today)
+				.End ()
+				.Field<FormattedText> ()
+					.Title ("Commentaire")
+					.Multiline ()
+				.End ()
+			.End ();
+		}
+
+		
 		private void Execute(AiderGroupEntity group, Date startDate, FormattedText comment)
 		{
 			if (group.IsNull ())
@@ -69,25 +93,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var participationData = new ParticipationData (this.Entity);
 
 			AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, group, participationData, startDate, comment);
-		}
-
-		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
-		{
-			form
-				.Title (this.GetTitle ())
-				.Field<AiderGroupEntity> ()
-					.WithSpecialField<AiderGroupSpecialField<AiderPersonEntity>> ()
-					.Title ("Groupe")
-				.End ()
-				.Field<Date> ()
-					.Title ("Date d'entrée dans le groupe")
-					.InitialValue (Date.Today)
-				.End ()
-				.Field<FormattedText> ()
-					.Title ("Commentaire")
-					.Multiline ()
-				.End ()
-			.End ();
 		}
 	}
 }

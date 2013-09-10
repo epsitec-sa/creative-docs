@@ -20,6 +20,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (2)]
 	public sealed class ActionAiderHouseholdViewController2RemoveMemberFromHousehold : TemplateActionViewController<AiderHouseholdEntity, AiderPersonEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return Resources.FormattedText ("Retirer le membre sélectionné de ce ménage");
@@ -30,36 +39,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-		public override bool RequiresAdditionalEntity()
-		{
-			return true;
-		}
-
-		private void Execute()
-		{
-			var context = this.BusinessContext;
-			
-			var person    = this.AdditionalEntity;
-			var household = this.Entity;
-			var contacts  = person.Contacts;
-			var contact   = contacts.FirstOrDefault (x => x.Household == household);
-
-			if (contacts.Count == 1)
-			{
-				var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-				AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
-			}
-
-			if (household.Members.Count == 1)
-			{
-				context.DeleteEntity (household);
-			}
-			if (contact.IsNotNull ())
-			{
-				AiderContactEntity.Delete (this.BusinessContext, contact);
-			}
-		}
-
+		
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> form)
 		{
 			var person = this.AdditionalEntity;
@@ -88,6 +68,31 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Title ("Retirer le membre du ménage ?")
 				.Text (message)
 				.End ();
+		}
+
+		
+		private void Execute()
+		{
+			var context   = this.BusinessContext;
+			var person    = this.AdditionalEntity;
+			var household = this.Entity;
+			var contacts  = person.Contacts;
+			var contact   = contacts.FirstOrDefault (x => x.Household == household);
+
+			if (contacts.Count == 1)
+			{
+				var newHousehold = this.BusinessContext.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+				AiderContactEntity.Create (this.BusinessContext, person, newHousehold, true);
+			}
+
+			if (household.Members.Count == 1)
+			{
+				context.DeleteEntity (household);
+			}
+			if (contact.IsNotNull ())
+			{
+				AiderContactEntity.Delete (this.BusinessContext, contact);
+			}
 		}
 	}
 }

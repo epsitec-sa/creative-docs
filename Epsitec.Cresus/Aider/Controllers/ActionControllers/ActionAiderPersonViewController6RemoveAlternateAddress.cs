@@ -18,6 +18,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (6)]
 	public sealed class ActionAiderPersonViewController6RemoveAlternateAddress : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		
 		public override FormattedText GetTitle()
 		{
 			return Resources.Text ("Supprimer l'adresse alternative");
@@ -28,16 +37,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-		public override bool RequiresAdditionalEntity()
-		{
-			return true;
-		}
-
-
-		private void Execute()
-		{
-			AiderContactEntity.Delete (this.BusinessContext, this.AdditionalEntity);
-		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
@@ -45,6 +44,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Title ("Supprimer l'adresse alternative ?")
 					.Text (TextFormatter.FormatText ("Souhaitez-vous vraiment supprimer l'adresse alternative suivante:\n \n", this.AdditionalEntity.Address.GetSummary ()))
 				.End ();
+		}
+		
+		
+		private void Execute()
+		{
+			AiderContactEntity.Delete (this.BusinessContext, this.AdditionalEntity);
 		}
 	}
 }

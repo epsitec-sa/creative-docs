@@ -16,19 +16,34 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (0)]
 	public sealed class ActionAiderGroupViewController0CreateSubGroup : TemplateActionViewController<AiderGroupEntity, AiderGroupEntity>
 	{
+		public override bool					RequiresAdditionalEntity
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
+		
 		public override FormattedText GetTitle()
 		{
 			return "Créer un sous groupe";
 		}
 
-		public override bool RequiresAdditionalEntity()
-		{
-			return false;
-		}
-
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create<string> (this.Execute);
+		}
+
+
+		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
+		{
+			form
+				.Title (this.GetTitle ())
+				.Field<string> ()
+					.Title ("Nom du sous groupe")
+				.End ()
+			.End ();
 		}
 
 		private void Execute(string name)
@@ -39,16 +54,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			this.Entity.CreateSubgroup (this.BusinessContext, name);
-		}
-
-		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
-		{
-			form
-				.Title (this.GetTitle ())
-				.Field<string> ()
-					.Title ("Nom du sous groupe")
-				.End ()
-			.End ();
 		}
 	}
 }
