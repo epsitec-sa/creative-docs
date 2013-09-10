@@ -1,16 +1,20 @@
-﻿using Epsitec.Common.IO;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+
+using Epsitec.Common.IO;
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Owin.Hubs;
+
 using Microsoft.Owin.Hosting;
-using System;
+
 using System.Diagnostics;
 using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin
 {
-	internal sealed class OwinServer : IDisposable
+	internal sealed class OwinServer : System.IDisposable
 	{
-		public OwinServer(Uri uri, CoreServer server)
+		public OwinServer(System.Uri uri, CoreServer server)
 		{
 			this.owin = WebApplication.Start<Startup> (uri.AbsoluteUri);
 			this.hubClient = NotificationClient.Create (server);
@@ -20,6 +24,8 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 			Logger.LogToConsole ("Owin Server started");
 		}
 
+		#region IDisposable Members
+
 		public void Dispose()
 		{
 			if (this.owin!=null)
@@ -27,6 +33,8 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 				this.owin.Dispose ();
 			}
 		}
+
+		#endregion
 
 		private static void CleanTraceListeners()
 		{
@@ -48,7 +56,8 @@ namespace Epsitec.Cresus.WebCore.Server.Owin
 			}
 		}
 
-		private readonly IDisposable owin;
-		private readonly NotificationClient hubClient;
+		
+		private readonly System.IDisposable		owin;
+		private readonly NotificationClient		hubClient;
 	}
 }

@@ -1,13 +1,12 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-
 using Microsoft.AspNet.SignalR;
+
 using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
-
 	public class NotificationHub : Hub
 	{
 
@@ -50,6 +49,5 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			var backendClient = NotificationClient.Instance;
 			Clients.Client (backendClient.getConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
 		}
-
 	}
 }
