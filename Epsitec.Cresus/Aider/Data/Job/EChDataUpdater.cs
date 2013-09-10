@@ -5,6 +5,7 @@ using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Rules;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -137,6 +138,7 @@ namespace Epsitec.Aider.Data.Job
 		private bool UpdateEChPersonEntities()
 		{
 			this.LogToConsole ("UpdateEChPersonEntities()");
+
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
@@ -148,72 +150,75 @@ namespace Epsitec.Aider.Data.Job
 							var eChPerson    = this.GetEchPersonEntity (businessContext, item.NewValue);
 							var aiderPerson  = this.GetAiderPersonEntity (businessContext, eChPerson);
 
-							var changes = new List<string> ();
-							var mustWarn = false;
-							
+							System.Diagnostics.Debug.Assert (aiderPerson.IsNotNull ());
+
+							var changes = new List<FormattedText> ();
 							changes.Add (aiderPerson.GetFullName ());
 
 							if (eChPerson.PersonOfficialName != eChPersonNew.PersonOfficialName)
 							{
-								changes.Add ("Nom: " + eChPerson.PersonOfficialName + " -> " + eChPersonNew.PersonOfficialName);
+								changes.Add (TextFormatter.FormatText ("Nom:", eChPerson.PersonOfficialName, "->", eChPersonNew.PersonOfficialName));
 								eChPerson.PersonOfficialName = eChPersonNew.PersonOfficialName;
-								mustWarn = true;
 							}
 
 							if (eChPerson.PersonFirstNames != eChPersonNew.PersonFirstNames)
 							{
-								changes.Add ("Prénom: " + eChPerson.PersonFirstNames + " -> " + eChPersonNew.PersonFirstNames);
+								changes.Add (TextFormatter.FormatText ("Prénom:", eChPerson.PersonFirstNames, "->", eChPersonNew.PersonFirstNames));
 								eChPerson.PersonFirstNames = eChPersonNew.PersonFirstNames;
-								mustWarn = true;
 							}
 
 							if (eChPerson.PersonDateOfBirth != eChPersonNew.PersonDateOfBirth)
 							{
-								changes.Add ("Date de naissance: " + eChPerson.PersonDateOfBirth + " -> " + eChPersonNew.PersonDateOfBirth);
+								changes.Add (TextFormatter.FormatText ("Date de naissance:", eChPerson.PersonDateOfBirth, "->", eChPersonNew.PersonDateOfBirth));
 								eChPerson.PersonDateOfBirth = eChPersonNew.PersonDateOfBirth;
-								mustWarn = true;
 							}
 
 							if (eChPerson.AdultMaritalStatus != eChPersonNew.AdultMaritalStatus)
 							{
-								changes.Add ("État civil: " + eChPerson.AdultMaritalStatus + " -> " + eChPersonNew.AdultMaritalStatus);
+								changes.Add (TextFormatter.FormatText ("État civil:", eChPerson.AdultMaritalStatus, "->", eChPersonNew.AdultMaritalStatus));
 								eChPerson.AdultMaritalStatus = eChPersonNew.AdultMaritalStatus;
-								mustWarn = true;
 							}
 
 							if (eChPerson.PersonSex != eChPersonNew.PersonSex)
 							{
-								changes.Add ("Sexe: " + eChPerson.PersonSex + " -> " + eChPersonNew.PersonSex);
+								changes.Add (TextFormatter.FormatText ("Sexe:", eChPerson.PersonSex, "->", eChPersonNew.PersonSex));
 								eChPerson.PersonSex = eChPersonNew.PersonSex;
-								mustWarn = true;
 							}
 
 							if (eChPerson.NationalityCountryCode != eChPersonNew.NationalityCountryCode)
 							{
-								changes.Add ("Nationalité: " + eChPerson.NationalityCountryCode + " -> " + eChPersonNew.NationalityCountryCode);
+								changes.Add (TextFormatter.FormatText ("Nationalité:", eChPerson.NationalityCountryCode, "->", eChPersonNew.NationalityCountryCode));
 								eChPerson.NationalityCountryCode = eChPersonNew.NationalityCountryCode;
 							}
 
 							if (eChPerson.NationalityStatus != eChPersonNew.NationalityStatus)
 							{
-								changes.Add ("Statut nationalité: " + eChPerson.NationalityStatus + " -> " + eChPersonNew.NationalityStatus);
+								changes.Add (TextFormatter.FormatText ("Statut nationalité:", eChPerson.NationalityStatus, "->", eChPersonNew.NationalityStatus));
 								eChPerson.NationalityStatus = eChPersonNew.NationalityStatus;
 							}
 
 							if (eChPerson.Origins != eChPersonNew.Origins)
 							{
-								changes.Add ("Origines: " + eChPerson.Origins + " -> " + eChPersonNew.Origins);
+								changes.Add (TextFormatter.FormatText ("Origines:", eChPerson.Origins, "->", eChPersonNew.Origins));
 								eChPerson.Origins = eChPersonNew.Origins;
 							}
 
-							if (mustWarn)
+							if (changes.Count > 1)
 							{
+								AiderPersonBusinessRules.UpdatePersonOfficialName (aiderPerson);
+								AiderPersonBusinessRules.UpdatePersonSex (aiderPerson);
+								AiderPersonBusinessRules.UpdateVisibility (aiderPerson);
+
+								aiderPerson.RefreshCache ();
+								aiderPerson.Households.ForEach (x => x.RefreshCache ());
+								aiderPerson.Contacts.ForEach (x => x.RefreshCache ());
+							
 								this.CreateWarning (businessContext, aiderPerson, aiderPerson.ParishGroupPathCache, WarningType.EChPersonDataChanged, this.warningTitleMessage, changes);
 							}
 						}
-						catch (System.Exception)
+						catch (System.Exception exception)
 						{
-							this.LogToConsole ("Error: EChPerson {0} {1} throw exception", item.OldValue.OfficialName, item.NewValue.FirstNames);
+							this.LogToConsole ("Error: EChPerson {0} {1} threw an exception.\n{2}", item.OldValue.OfficialName, item.NewValue.FirstNames, exception.GetFullText ());
 						}
 					}
 				});
@@ -224,96 +229,102 @@ namespace Epsitec.Aider.Data.Job
 		private bool UpdateHouseholdsAndPropagate()
 		{
 			this.LogToConsole ("UpdateHouseholdsAndPropagate()");
+
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
-					foreach (var toChange in this.houseHoldsToUpdate)
+					foreach (var item in this.houseHoldsToUpdate)
 					{
 						try
 						{
-							var reportedPersonEntityToUpdate = this.GetEchReportedPersonEntity (businessContext, toChange.OldValue);
-							var changes = new List<string> ();
-							changes.Add ("Changement dans l'adresse:");
-							if (!string.IsNullOrEmpty (toChange.OldValue.Address.AddressLine1))
+							var family  = this.GetEchReportedPersonEntity (businessContext, item.NewValue);
+							var changes = new List<FormattedText> ();
+
+							changes.Add (TextFormatter.FormatText ("Changement dans l'adresse:"));
+
+							if (family.Address.AddressLine1 != item.NewValue.Address.AddressLine1)
 							{
-								if (!toChange.OldValue.Address.AddressLine1.Equals (toChange.NewValue.Address.AddressLine1))
-								{
-									reportedPersonEntityToUpdate.Address.AddressLine1 = toChange.OldValue.Address.AddressLine1;
-									changes.Add ("Ligne adresse: " + toChange.NewValue.Address.AddressLine1 + " -> " + reportedPersonEntityToUpdate.Address.AddressLine1);
-								}
+								changes.Add (TextFormatter.FormatText ("Ligne adresse:", family.Address.AddressLine1, "->", item.NewValue.Address.AddressLine1));
+								
+								family.Address.AddressLine1 = item.NewValue.Address.AddressLine1;
 							}
 
-							if (!string.IsNullOrEmpty (toChange.OldValue.Address.HouseNumber))
+							if (family.Address.HouseNumber != item.NewValue.Address.HouseNumber)
 							{
-								if (!toChange.OldValue.Address.HouseNumber.Equals (toChange.NewValue.Address.HouseNumber))
-								{
-									reportedPersonEntityToUpdate.Address.HouseNumber = toChange.OldValue.Address.HouseNumber;
-									changes.Add ("N° de maison: " + toChange.NewValue.Address.HouseNumber + " -> " + reportedPersonEntityToUpdate.Address.HouseNumber);
-								}
+								changes.Add (TextFormatter.FormatText ("N° de maison:", family.Address.HouseNumber, "->", item.NewValue.Address.HouseNumber));
+								
+								family.Address.HouseNumber = item.NewValue.Address.HouseNumber;
 							}
-							if (!string.IsNullOrEmpty (toChange.OldValue.Address.Street))
+							
+							if (family.Address.Street != item.NewValue.Address.Street)
 							{
-								if (!toChange.OldValue.Address.Street.Equals (toChange.NewValue.Address.Street))
-								{
-									reportedPersonEntityToUpdate.Address.Street = toChange.OldValue.Address.Street;
-									changes.Add ("Rue: " + toChange.NewValue.Address.Street + " -> " + reportedPersonEntityToUpdate.Address.Street);
-								}
-							}
-							if (!toChange.OldValue.Address.SwissZipCode.Equals (toChange.NewValue.Address.SwissZipCode))
-							{
-								reportedPersonEntityToUpdate.Address.SwissZipCode = toChange.OldValue.Address.SwissZipCode;
-								changes.Add ("NPA: " + toChange.NewValue.Address.SwissZipCode + " -> " + toChange.OldValue.Address.SwissZipCode);
+								changes.Add (TextFormatter.FormatText ("Rue:", family.Address.Street, "->", item.NewValue.Address.Street));
+								
+								family.Address.Street = item.NewValue.Address.Street;
 							}
 
-							if (!toChange.OldValue.Address.SwissZipCodeAddOn.Equals (toChange.NewValue.Address.SwissZipCodeAddOn))
+							if ((family.Address.SwissZipCode != item.NewValue.Address.SwissZipCode) ||
+								(family.Address.SwissZipCodeAddOn != item.NewValue.Address.SwissZipCodeAddOn))
 							{
-								reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn = toChange.OldValue.Address.SwissZipCodeAddOn;
-								changes.Add ("NPA+: " + toChange.NewValue.Address.SwissZipCodeAddOn + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeAddOn);
+								changes.Add (TextFormatter.FormatText ("NPA:", family.Address.SwissZipCode, family.Address.SwissZipCodeAddOn, "->", item.NewValue.Address.SwissZipCode, item.NewValue.Address.SwissZipCodeAddOn));
+								
+								family.Address.SwissZipCode      = item.NewValue.Address.SwissZipCode;
+								family.Address.SwissZipCodeAddOn = item.NewValue.Address.SwissZipCodeAddOn;
 							}
 
-							if (!toChange.OldValue.Address.SwissZipCodeId.Equals (toChange.NewValue.Address.SwissZipCodeId))
+							if (family.Address.SwissZipCodeId != item.NewValue.Address.SwissZipCodeId)
 							{
-								reportedPersonEntityToUpdate.Address.SwissZipCodeId = toChange.OldValue.Address.SwissZipCodeId;
-								changes.Add ("NPA ID: " + toChange.NewValue.Address.SwissZipCodeId + " -> " + reportedPersonEntityToUpdate.Address.SwissZipCodeId);
+								changes.Add (TextFormatter.FormatText ("NPA ID:", family.Address.SwissZipCodeId, "->", item.NewValue.Address.SwissZipCodeId));
+								
+								family.Address.SwissZipCodeId = item.NewValue.Address.SwissZipCodeId;
 							}
 
-							if (!toChange.OldValue.Address.Town.Equals (toChange.NewValue.Address.Town))
+							if (family.Address.Town != item.NewValue.Address.Town)
 							{
-								reportedPersonEntityToUpdate.Address.Town = toChange.OldValue.Address.Town;
-								changes.Add ("Localité: " + toChange.NewValue.Address.Town + " -> " + reportedPersonEntityToUpdate.Address.Town);
+								changes.Add (TextFormatter.FormatText ("Localité:", family.Address.Town, "->", item.NewValue.Address.Town));
+
+								family.Address.Town = item.NewValue.Address.Town;
 							}
 
-							if (!toChange.OldValue.Address.CountryCode.Equals (toChange.NewValue.Address.CountryCode))
+							if (family.Address.Country != item.NewValue.Address.CountryCode)
 							{
-								reportedPersonEntityToUpdate.Address.Country = toChange.OldValue.Address.CountryCode;
-								changes.Add ("Pays: " + toChange.NewValue.Address.CountryCode + " -> " + reportedPersonEntityToUpdate.Address.Country);
+								changes.Add (TextFormatter.FormatText ("Pays:", family.Address.Country, "->", item.NewValue.Address.CountryCode));
+								
+								family.Address.Country = item.NewValue.Address.CountryCode;
 							}
 
-							var refPerson = this.GetAiderPersonEntity (businessContext,reportedPersonEntityToUpdate.Adult1);
+							var refPerson      = this.GetAiderPersonEntity (businessContext,family.Adult1);
 							var aiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
+
 							if (aiderHousehold.IsNotNull ())
 							{
-								foreach (var member in aiderHousehold.Members)
-								{
-									//Update AiderHouseholdEntity
-									this.UpdateAiderHouseholdAndSubscription (
-										  businessContext,
-										  reportedPersonEntityToUpdate,
-										  member);
+								var members = aiderHousehold.Members;
 
+								//	First, reassign the parents, then the children. This simplifies the updating
+								//	of the children' household address in UpdateAiderHouseholdAndSubscription.
+
+								foreach (var member in members.Where (x => aiderHousehold.IsHead (x)))
+								{
+									this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
+									this.ReassignAndWarnParish (businessContext, member, changes);
+								}
+								
+								foreach (var member in members.Where (x => aiderHousehold.IsHead (x) == false))
+								{
+									this.UpdateAiderHouseholdAndSubscription (businessContext, family, member);
 									this.ReassignAndWarnParish (businessContext, member, changes);
 								}
 							}
 							else
 							{
-								//AIDER PERSON WITH NO CONTACT/HOUSEHOLD
-								this.LogToConsole ("N'a pas encore été corrigé: {0]", refPerson.GetDisplayName ());
+								//	Found a person without any contact/household...
+								
+								this.LogToConsole ("N'a pas encore été corrigé; pas de ménage pour {0}", refPerson.GetDisplayName ());
 							}
-
 						}
 						catch (System.Exception)
 						{
-							this.LogToConsole ("Error: EChReportedPerson (FAMILYKEY:{0}) throw exception", toChange.NewValue.FamilyKey);
+							this.LogToConsole ("Error: EChReportedPerson (FAMILYKEY:{0}) threw an exception", item.OldValue.FamilyKey);
 						}
 					}
 				});
@@ -793,7 +804,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		private void ReassignAndWarnParish(BusinessContext businessContext, AiderPersonEntity aiderPersonEntity, List<string> changes)
+		private void ReassignAndWarnParish(BusinessContext businessContext, AiderPersonEntity aiderPersonEntity, List<FormattedText> changes)
 		{
 			var oldParishGroupPath = aiderPersonEntity.ParishGroupPathCache;
 
@@ -832,48 +843,70 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void RefreshAiderSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
+		private void UpdateAiderHouseholdAndSubscription(BusinessContext businessContext, eCH_ReportedPersonEntity family, AiderPersonEntity person)
 		{
-			var subscriptionExample = new AiderSubscriptionEntity()
+			var aiderHouseholds = this.GetAiderHouseholds (businessContext, person).ToList ();
+
+			if (aiderHouseholds.Any ())
+			{
+				foreach (var household in aiderHouseholds)
+				{
+					//	Only update households where this person is a head; children and
+					//	other person won't affect the address of the household...
+
+					if (household.IsHead (person))
+					{
+						this.UpdateAiderHouseholdAddress (businessContext, household, family);
+						this.UpdateAiderSubscription (businessContext, household);
+					}
+				}
+
+				person.Contacts.ForEach (x => x.RefreshCache ());
+			}
+			else
+			{
+				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.Mismatch, this.warningTitleMessage, FormattedText.FromSimpleText (person.GetDisplayName () + " n'a pas de ménage dans Aider"));
+			}
+
+			person.Contacts.ForEach (x => x.RefreshCache ());
+		}
+
+		private void UpdateAiderHouseholdAddress(BusinessContext businessContext, AiderHouseholdEntity aiderHousehold, eCH_ReportedPersonEntity family)
+		{
+			var houseNumberAlpha      = SwissPostStreet.StripHouseNumber (family.Address.HouseNumber);
+			var houseNumber           = StringUtils.ParseNullableInt (houseNumberAlpha);
+			var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (family.Address.HouseNumber);
+
+			if (string.IsNullOrWhiteSpace (houseNumberComplement))
+			{
+				houseNumberComplement = null;
+			}
+
+			var address = aiderHousehold.Address;
+			var town    = this.GetAiderTownEntity (businessContext, family.Address.SwissZipCodeId);
+
+			address.AddressLine1          = family.Address.AddressLine1;
+			address.Street                = family.Address.Street;
+			address.HouseNumber           = houseNumber;
+			address.HouseNumberComplement = houseNumberComplement;
+			address.Town                  = town;
+
+			aiderHousehold.RefreshCache ();
+		}
+
+		private void UpdateAiderSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
+		{
+			var subscriptionExample = new AiderSubscriptionEntity ()
 			{
 				Household = household
 			};
 
-			var subscription = businessContext.DataContext.GetByExample<AiderSubscriptionEntity>(subscriptionExample).FirstOrDefault();
-			
-			if (subscription.IsNotNull())
+			var subscription = businessContext.DataContext.GetByExample<AiderSubscriptionEntity> (subscriptionExample).FirstOrDefault ();
+
+			if (subscription.IsNotNull ())
 			{
-				subscription.RefreshCache();
+				subscription.RefreshCache ();
 			}
-		}
-
-		private void UpdateAiderHouseholdAndSubscription(BusinessContext businessContext, eCH_ReportedPersonEntity reportedPersonEntityToUpdate, AiderPersonEntity aiderPersonEntity)
-		{
-			var aiderHousehold = this.GetAiderHousehold (businessContext, aiderPersonEntity);
-			if (aiderHousehold != null)
-			{
-				var houseNumber = StringUtils.ParseNullableInt (SwissPostStreet.StripHouseNumber (reportedPersonEntityToUpdate.Address.HouseNumber));
-				var houseNumberComplement = SwissPostStreet.GetHouseNumberComplement (reportedPersonEntityToUpdate.Address.HouseNumber);
-
-				if (string.IsNullOrWhiteSpace (houseNumberComplement))
-				{
-					houseNumberComplement = null;
-				}
-				var aiderAddressEntity = aiderHousehold.Address;
-				aiderAddressEntity.AddressLine1 = reportedPersonEntityToUpdate.Address.AddressLine1;
-				aiderAddressEntity.Street = reportedPersonEntityToUpdate.Address.Street;
-				aiderAddressEntity.HouseNumber = houseNumber;
-				aiderAddressEntity.HouseNumberComplement = houseNumberComplement;
-				aiderAddressEntity.Town = this.GetAiderTownEntity (businessContext, reportedPersonEntityToUpdate.Address.SwissZipCodeId);
-
-				this.RefreshAiderSubscription (businessContext, aiderHousehold);
-			}
-			else
-			{
-				this.CreateWarning (businessContext, aiderPersonEntity, aiderPersonEntity.ParishGroupPathCache, WarningType.Mismatch, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPersonEntity.GetDisplayName () + " n'a pas de ménage dans Aider"));
-			}
-
-
 		}
 
 		private eCH_PersonEntity GetEchPersonEntity(BusinessContext businessContext, EChPerson person)
@@ -891,6 +924,11 @@ namespace Epsitec.Aider.Data.Job
 			return businessContext.DataContext.GetByExample<eCH_PersonEntity> (personExample).FirstOrDefault ();
 		}
 
+
+		private void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath, WarningType warningType, FormattedText title, IEnumerable<FormattedText> changes)
+		{
+			this.CreateWarning (context, person, parishGroupPath, warningType, title, TextFormatter.Join (FormattedText.HtmlBreak, changes));
+		}
 
 		private void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath, WarningType warningType, FormattedText title, IEnumerable<string> changes)
 		{
@@ -999,6 +1037,11 @@ namespace Epsitec.Aider.Data.Job
 
 		private AiderHouseholdEntity GetAiderHousehold(BusinessContext businessContext, AiderPersonEntity refPerson)
 		{
+			return this.GetAiderHouseholds (businessContext, refPerson).FirstOrDefault ();
+		}
+
+		private IEnumerable<AiderHouseholdEntity> GetAiderHouseholds(BusinessContext businessContext, AiderPersonEntity refPerson)
+		{
 			var contactExample = new AiderContactEntity();
 			var householdExample = new AiderHouseholdEntity();
 			contactExample.Person = refPerson;
@@ -1009,7 +1052,7 @@ namespace Epsitec.Aider.Data.Job
 				RequestedEntity = householdExample
 			};
 
-			return businessContext.DataContext.GetByRequest<AiderHouseholdEntity>(request).FirstOrDefault();
+			return businessContext.DataContext.GetByRequest<AiderHouseholdEntity> (request);
 		}
 
 		private AiderTownEntity GetAiderTownEntity(BusinessContext businessContext, EChAddress address)

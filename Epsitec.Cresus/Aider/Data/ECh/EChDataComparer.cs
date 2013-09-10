@@ -68,16 +68,14 @@ namespace Epsitec.Aider.Data.ECh
 		/// <returns>a list of modified ECh ReportedPerson</returns>
 		public IEnumerable<Change<EChReportedPerson>> GetFamiliesToChange()
 		{
-			var FamilyToCheck = from e in this.newFamilyMap
-								where this.oldFamilyMap.ContainsKey (e.Key)
-								select e;
+			var familyToCheck = this.newFamilyMap.Where (x => this.oldFamilyMap.ContainsKey (x.Key));
 
-			var FamilyToChange = from c in FamilyToCheck
+			var familyToChange = from c in familyToCheck
 								 join e in this.oldFamilyMap on c.Key equals e.Key
 								 where !c.Value.CheckData(e.Value.Address.HouseNumber, e.Value.Address.CountryCode, e.Value.Address.AddressLine1, e.Value.Address.Street, e.Value.Address.SwissZipCode, e.Value.Address.SwissZipCodeAddOn, e.Value.Address.SwissZipCodeId, e.Value.Address.Town)
-								 select Change.Create (c.Value, e.Value);
+								 select Change.Create (oldValue: e.Value, newValue: c.Value);
 
-			return FamilyToChange;
+			return familyToChange;
 		}
 
 		/// <summary>
