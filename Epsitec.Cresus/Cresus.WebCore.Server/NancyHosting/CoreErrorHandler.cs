@@ -1,23 +1,19 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using Nancy;
 using Nancy.ErrorHandling;
 
-using System;
-
-
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-
-
 	/// <summary>
-	/// This error handler logs all unhandled exceptions thrown during the Nancy processing of a
-	/// request.
+	/// The <c>CoreErrorHandler</c> class logs all unhandled exceptions thrown during
+	/// the Nancy processing of a request.
 	/// </summary>
 	public class CoreErrorHandler : IStatusCodeHandler
 	{
-
-
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
 		{
 			context.Response = CoreResponse.InternalServerError ();
@@ -29,7 +25,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			if (context.Items.TryGetValue ("ERROR_EXCEPTION", out exception))
 			{
-				error = ((Exception) exception).GetFullText ();
+				var ex = exception as System.Exception;
+				error = ex.GetFullText ();
 			}
 			else if (context.Items.TryGetValue ("ERROR_TRACE", out trace))
 			{
@@ -48,9 +45,5 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		{
 			return statusCode == HttpStatusCode.InternalServerError;
 		}
-
-
 	}
-
-
 }
