@@ -1,8 +1,6 @@
-﻿<!-- DataContext = MultiCultureResourceItemViewModel -->
-<!-- DataContext = vm:MultiCultureResourceItemViewModel -->
-
+﻿<!-- DataContext = MultiCultureResourceItemContextViewModel -->
 <UserControl
-	x:Class="Epsitec.Cresus.Strings.Views.MultiCultureResourceItemView"
+	x:Class="Epsitec.Cresus.Strings.Views.ResourceCultureCollectionView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,6 +12,6 @@
 		<ResourceDictionary Source="../CresusStrings.xaml"/>
 	</UserControl.Resources>
 
-	<ContentControl	Content="{Binding}" ContentTemplateSelector="{StaticResource ResourceTemplateSelector}"/>
-	
+	<ContentControl	Content="{Binding}" />
+
 </UserControl>

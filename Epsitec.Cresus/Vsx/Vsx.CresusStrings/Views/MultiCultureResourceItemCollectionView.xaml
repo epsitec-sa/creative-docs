@@ -1,4 +1,4 @@
-﻿<!-- DataContext = MultiSymbolResourceItemViewModel -->
+﻿<!-- DataContext = MultiSymbolResourceItemCollectionViewModel -->
 <UserControl
 	x:Class="Epsitec.Cresus.Strings.Views.MultiCultureResourceItemCollectionView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

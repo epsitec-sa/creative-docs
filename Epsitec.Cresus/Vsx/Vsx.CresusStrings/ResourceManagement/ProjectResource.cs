@@ -13,44 +13,55 @@ namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ProjectResource : ResourceNode, IEnumerable<ResourceModule>
 	{
-		public static ProjectResource Load(IProject project, CancellationToken cancellationToken)
+		public static ProjectResource Load(SolutionResource solution, IProject project, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var modules = ProjectResource.LoadModules (project.FilePath, cancellationToken);
+			var projectModules = new List<ResourceModule> ();
+			var projectResource = new ProjectResource (projectModules, solution, project);
+			var modules = ProjectResource.LoadModules (project.FilePath, projectResource, cancellationToken);
 			if (modules.Any ())
 			{
-				return new ProjectResource (project, modules);
+				projectModules.AddRange (modules);
+				return projectResource;
 			}
 			return null;
 		}
 
-		public static ProjectResource Load(string projectFilePath, CancellationToken cancellationToken)
+		public static ProjectResource Load(string projectFilePath, CancellationToken cancellationToken = default(CancellationToken))
 		{
-			var modules = ProjectResource.LoadModules (projectFilePath, cancellationToken);
+			var projectModules = new List<ResourceModule> ();
+			var projectResource = new ProjectResource (projectModules, default (SolutionResource), default (IProject));
+			var modules = ProjectResource.LoadModules (projectFilePath, projectResource, cancellationToken);
 			if (modules.Any ())
 			{
-				return new ProjectResource (default(IProject), modules);
+				projectModules.AddRange (modules);
+				return projectResource;
 			}
 			return null;
 		}
 
-		public ProjectResource(ProjectResource resource, IEnumerable<ResourceModule> modules)
-			: this(resource.project, modules)
-		{
-		}
 
-		public ProjectResource(IProject project, IEnumerable<ResourceModule> modules)
+		internal ProjectResource(IEnumerable<ResourceModule> modules, SolutionResource solution, IProject project)
 		{
+			this.solution = solution;
 			this.project = project;
-			this.modules = modules.ToList ();
+			this.modules = modules;
 		}
 
-		public IProject Project
+		public SolutionResource					Solution
+		{
+			get
+			{
+				return this.solution;
+			}
+		}
+		public IProject							Project
 		{
 			get
 			{
 				return this.project;
 			}
 		}
+
 
 		#region Object Overrides
 		public override string ToString()
@@ -86,7 +97,10 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		#endregion
 
-		private static IEnumerable<ResourceModule> LoadModules(string projectFilePath, CancellationToken cancellationToken)
+
+		#region Helpers
+		
+		private static IEnumerable<ResourceModule> LoadModules(string projectFilePath, ProjectResource project, CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();
 			var directory = Path.GetDirectoryName (projectFilePath) + @"\Resources\";
@@ -94,15 +108,19 @@ namespace Epsitec.Cresus.ResourceManagement
 			{
 				var fileNames = Directory.EnumerateFiles (directory, "module.info", SearchOption.AllDirectories);
 				return fileNames
-					.Select (fn => ResourceModule.Load (fn, cancellationToken))
+					.Select (fn => ResourceModule.Load (fn, project, cancellationToken))
 					.Where (m => m != null)
 					.Do (_ => cancellationToken.ThrowIfCancellationRequested ())
-					.ToList();
+					.ToList ();
 			}
 			return Enumerable.Empty<ResourceModule> ();
 		}
+		
+		#endregion
 
+
+		private readonly SolutionResource solution;
 		private readonly IProject project;
-		private readonly List<ResourceModule> modules;
+		private readonly IEnumerable<ResourceModule> modules;
 	}
 }

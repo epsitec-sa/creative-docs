@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.ResourceManagement
 						newModules[i] = modules[i];
 					}
 				}
-				project = new ProjectResource (project, newModules);
+				project = new ProjectResource (newModules, project.Solution, project.Project);
 			}
 			return project;
 		}

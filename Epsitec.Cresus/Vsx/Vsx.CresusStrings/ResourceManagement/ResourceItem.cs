@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceItem : ResourceElement, IXmlLineInfo
 	{
-		public static ResourceItem Load(XElement element, ResourceBundle neutralCultureBundle)
+		public static ResourceItem Load(XElement element, ResourceBundle bundle, ResourceBundle neutralCultureBundle)
 		{
 			var id = element.Attribute ("id").GetString ();
 			var name = element.Attribute ("name").GetString ();
@@ -23,7 +24,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 			else
 			{
-				neutralItem = ResourceItem.GetNeutralItem (id, name, element, neutralCultureBundle);
+				neutralItem = ResourceItem.GetNeutralItem (id, name, element, bundle, neutralCultureBundle);
 				if (id == null)
 				{
 					id = neutralItem.Id;
@@ -37,48 +38,113 @@ namespace Epsitec.Cresus.ResourceManagement
 
 			if (errors != 0)
 			{
-				return new ResourceItemError (errors, id, name, element);
+				return new ResourceItemError (bundle, errors, id, name, element);
 			}
-			return new ResourceItem (id, name, element);
+			return new ResourceItem (id, name, element, bundle);
 		}
 
-		protected ResourceItem(string id, string name, XElement element)
+		protected ResourceItem(string id, string name, XElement element, ResourceBundle bundle)
 			: base(element)
 		{
+			this.bundle = bundle;
 			this.id = id;
 			this.name = name;
 		}
 
-		public string Id
+		public SolutionResource					Solution
+		{
+			get
+			{
+				return this.Project == null ? null : this.Project.Solution;
+			}
+		}
+		public ProjectResource					Project
+		{
+			get
+			{
+				return this.Module.Project;
+			}
+		}
+
+		public ResourceModule					Module
+		{
+			get
+			{
+				return this.Bundle.Module;
+			}
+		}
+		public ResourceBundle					Bundle
+		{
+			get
+			{
+				return this.bundle;
+			}
+		}
+
+		public string							Id
 		{
 			get
 			{
 				return this.id;
 			}
 		}
-
-		public string Name
+		public string							Name
 		{
 			get
 			{
 				return this.name;
 			}
 		}
-
-		public string Value
+		public string							Value
 		{
 			get
 			{
-				return this.Element == null ? null : this.Element.Value;
+				return this.Element.Value;
 			}
 		}
 
+		public CultureInfo						Culture
+		{
+			get
+			{
+				return this.Bundle.Culture;
+			}
+		}
+		public string							CultureName
+		{
+			get
+			{
+				return this.Culture.Parent.DisplayName;
+			}
+		}
+		public string							Namespace
+		{
+			get
+			{
+				return this.Module.Info.ResourceNamespace;
+			}
+		}
+		public string							SymbolName
+		{
+			get
+			{
+				return string.Join (".", this.SymbolAtoms);
+			}
+		}
+		public bool								HasNeutralCulture
+		{
+			get
+			{
+				return this.Bundle.HasNeutralCulture;
+			}
+		}
 
 		#region Object Overrides
 
 		public override string ToString()
 		{
-			return string.Join (" ", this.ToStringAtoms ());
+			return string.Format ("{0}[{1}] = {2}", this.SymbolName, this.CultureName, this.Value);
+			//return string.Join (" ", this.StringAtoms);
 		}
 
 		#endregion
@@ -119,7 +185,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		#endregion
 
 
-		private static ResourceItem GetNeutralItem(string id, string name, XElement sourceElement, ResourceBundle neutralCultureBundle)
+		private static ResourceItem GetNeutralItem(string id, string name, XElement sourceElement, ResourceBundle bundle, ResourceBundle neutralCultureBundle)
 		{
 			ResourceItem neutralItem;
 			if (id   != null && neutralCultureBundle.TryGetValue (id, out neutralItem) ||
@@ -128,7 +194,7 @@ namespace Epsitec.Cresus.ResourceManagement
 				return neutralItem;
 			}
 			var errors = ResourceItemErrors.UndefinedResource | ResourceItem.GetKeysErrors (id, name);
-			return new ResourceItemError (errors, id, name, null);
+			return new ResourceItemError (bundle, errors, id, name, null);
 		}
 
 		private static ResourceItemErrors GetKeysErrors(string id, string name)
@@ -166,7 +232,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			return errors;
 		}
 
-		private IXmlLineInfo LineInfo
+		private IXmlLineInfo					LineInfo
 		{
 			get
 			{
@@ -174,13 +240,31 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		private IEnumerable<string> ToStringAtoms()
+		private IEnumerable<string>				SymbolAtoms
 		{
-			yield return string.Format ("[{0}]", this.Id ?? "?");
-			yield return string.Format ("{0} :", this.Name ?? "?");
-			yield return string.Format ("<{0}>", this.Value ?? string.Empty);
+			get
+			{
+				if (this.Module != null)
+				{
+					yield return this.Module.Info.ResourceNamespace;
+				}
+				yield return "Res";
+				yield return this.Bundle.Name;
+				yield return this.Bundle.GetSymbolTail (this);
+			}
 		}
 
+		private IEnumerable<string>				StringAtoms
+		{
+			get
+			{
+				yield return string.Format ("[{0}]", this.Id ?? "?");
+				yield return string.Format ("{0} :", this.Name ?? "?");
+				yield return string.Format ("<{0}>", this.Value ?? string.Empty);
+			}
+		}
+
+		private readonly ResourceBundle bundle;
 		private readonly string id;
 		private readonly string name;
 	}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Epsitec.Cresus.ResourceManagement;
 using Epsitec.Cresus.Strings.ViewModels;
@@ -17,27 +18,29 @@ namespace Epsitec.Cresus.Strings
 		[TestMethod]
 		public void Load()
 		{
-			var bundle = new ResourceBundle (TestData.Strings00Path, null);
-		}
-
-		[TestMethod]
-		public void TraceBundle()
-		{
-			var bundle = new ResourceBundle (TestData.Strings00Path, null);
+			var bundle = ResourceBundle.Load (TestData.Strings00Path);
 			bundle.Accept (new ResourceBundleTracer ());
 		}
 
 		[TestMethod]
 		public void MapBundle()
 		{
-			var bundle1 = new ResourceBundle (TestData.Strings00Path, null);
-			var bundle2 = new ResourceBundle (TestData.StringsDePath, bundle1);
-			var bundle3 = new ResourceBundle (TestData.Captions00Path, null);
+			var bundle1 = ResourceBundle.Load (TestData.Strings00Path);
+			var bundle2 = ResourceBundle.Load (TestData.StringsDePath);
+			var bundle3 = ResourceBundle.Load (TestData.Captions00Path);
 
-			var mapper = new ResourceMapper ();
+			var mapper = new ResourceBundleTracer ();
 			bundle1.Accept (mapper);
 			bundle2.Accept (mapper);
 			bundle3.Accept (mapper);
+		}
+
+		[TestMethod]
+		public void FixAmpersands()
+		{
+			var text = "&amp;amp;quot;TITI&amp;quot; &amp; &amp;amp;quot;TOTO&amp;quot;\r\n&amp;amp;quot;TITI&amp;quot; &amp; &amp;amp;quot;TOTO&amp;quot;";
+			text = Regex.Replace (text, @"&(amp;)+",    "&$1");
+			text = Regex.Replace (text, @"&amp;(\w+;)", "&$1");
 		}
 
 		private class ResourceBundleTracer : ResourceVisitor

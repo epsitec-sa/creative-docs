@@ -34,8 +34,7 @@ namespace Epsitec.Windows
 			var inlines = TextLayout.GetInlines(d);
 			if (inlines != null)
 			{
-				var htmlString = e.NewValue as string;
-				TextLayout.Parse (TextLayout.ToXElement (htmlString).Nodes (), inlines);
+				TextLayout.Parse (e.NewValue as string, inlines);
 			}
 		}
 
@@ -56,19 +55,31 @@ namespace Epsitec.Windows
 			return null;
 		}
 
-		private static XElement ToXElement(string htmlString)
+		private static IEnumerable<XNode> ToXNodes(string htmlString)
 		{
-			return XElement.Parse ("<html>" + htmlString + "</html>");
+			try
+			{
+				return XElement.Parse ("<html>" + htmlString + "</html>").Nodes();
+			}
+			catch
+			{
+				return new XText (htmlString).AsSequence();
+			}
 		}
 
-		private static void Parse(IEnumerable<XNode> nodes, InlineCollection container)
+		private static void Parse(string htmlString, InlineCollection inlines)
+		{
+			TextLayout.Parse (TextLayout.ToXNodes (htmlString), inlines);
+		}
+
+		private static void Parse(IEnumerable<XNode> nodes, InlineCollection inlines)
 		{
 			foreach (var node in nodes)
 			{
 				if (node is XText)
 				{
 					var text = node as XText;
-					container.Add (new Run (text.Value));
+					inlines.Add (new Run (text.Value));
 				}
 				else if (node is XElement)
 				{
@@ -78,11 +89,14 @@ namespace Epsitec.Windows
 					Action<XElement, InlineCollection> factory;
 					if (TextLayout.factories.TryGetValue (name, out factory))
 					{
-						factory (element, container);
+						factory (element, inlines);
 					}
 					else
 					{
-						throw new NotImplementedException (string.Format ("TextLayout.Html : tag '{0}' factory not implemented", name));
+						inlines.Add (new Run (string.Format ("ERROR: tag '{0}' not implemented", name))
+						{
+							Foreground = Brushes.Red
+						});
 					}
 				}
 			}
@@ -139,7 +153,11 @@ namespace Epsitec.Windows
 				"br",
 				(element, container) =>
 				{
-					container.Add (TextLayout.EndOfLine ());
+					var lastInline = container.LastInline;
+					if (lastInline == null || lastInline is LineBreak)
+					{
+						container.Add (TextLayout.EndOfLine ());
+					}
 					container.Add (new LineBreak ());
 				}
 			},

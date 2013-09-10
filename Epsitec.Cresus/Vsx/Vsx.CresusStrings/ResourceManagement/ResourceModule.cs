@@ -11,36 +11,48 @@ namespace Epsitec.Cresus.ResourceManagement
 {
 	public class ResourceModule : ResourceNode, IEnumerable<ResourceBundle>
 	{
-		public static ResourceModule Load(string moduleInfoFilePath, CancellationToken cancellationToken = default(CancellationToken))
+		public static ResourceModule Load(string moduleInfoFilePath, ProjectResource project = null, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (File.Exists (moduleInfoFilePath))
 			{
 				cancellationToken.ThrowIfCancellationRequested ();
 				var info = new ResourceModuleInfo (moduleInfoFilePath);
 				cancellationToken.ThrowIfCancellationRequested ();
-				var bundles = ResourceModule.LoadBundles (Path.GetDirectoryName (moduleInfoFilePath), cancellationToken).ToList ();
+
+				var moduleBundles = new List<ResourceBundle> ();
+				var module = new ResourceModule (info, moduleBundles, project);
+				var bundles = ResourceModule.LoadBundles (Path.GetDirectoryName (moduleInfoFilePath), module, cancellationToken).ToList ();
 				if (bundles.Any())
 				{
-					return new ResourceModule (info, bundles);
+					moduleBundles.AddRange (bundles);
+					return module;
 				}
 			}
 			return null;
 		}
 
 		public ResourceModule(ResourceModule module, IEnumerable<ResourceBundle> bundles)
-			: this(module.Info, bundles.ToList())
+			: this (module.Info, bundles.ToList (), module.project)
 		{
 		}
 
-		private ResourceModule(ResourceModuleInfo info, List<ResourceBundle> bundles)
+		private ResourceModule(ResourceModuleInfo info, IEnumerable<ResourceBundle> bundles, ProjectResource project)
 		{
+			this.project		 = project;
 			this.info            = info;
 			this.bundles         = bundles;
 			this.byNameFirst     = new Lazy<Dictionary<string, Dictionary<CultureInfo, ResourceBundle>>> (this.ByNameFirstFactory);
 			this.byCultureFirst  = new Lazy<Dictionary<CultureInfo, Dictionary<string, ResourceBundle>>> (this.ByCultureFirstFactory);
 		}
 
-		public ResourceModuleInfo Info
+		public ProjectResource					Project
+		{
+			get
+			{
+				return this.project;
+			}
+		}
+		public ResourceModuleInfo				Info
 		{
 			get
 			{
@@ -64,9 +76,9 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public ResourceBundle GetNeutralCultureBundle()
+		public ResourceBundle GetNeutralCultureBundle(ResourceBundle bundle)
 		{
-			return this.bundles.FirstOrDefault ();
+			return this.ByNameFirst[bundle.Name].Values.FirstOrDefault ();
 		}
 
 		#region Object Overrides
@@ -151,15 +163,15 @@ namespace Epsitec.Cresus.ResourceManagement
 			).ToDictionary (a => a.Culture, a => a.CultureGroups);
 		}
 
-		private static IEnumerable<ResourceBundle> LoadBundles(string directory, CancellationToken cancellationToken)
+		private static IEnumerable<ResourceBundle> LoadBundles(string directory, ResourceModule module, CancellationToken cancellationToken)
 		{
 			cancellationToken.ThrowIfCancellationRequested ();
 			return
-				ResourceModule.EnumerateBundles(directory)
+				ResourceModule.EnumerateBundles (directory, module)
 				.Do (_ => cancellationToken.ThrowIfCancellationRequested ());
 		}
 
-		private static IEnumerable<ResourceBundle> EnumerateBundles(string directory)
+		private static IEnumerable<ResourceBundle> EnumerateBundles(string directory, ResourceModule module)
 		{
 			var fileNames = Directory.EnumerateFiles (directory, "*.??.resource").Select (fn => fn.ToLower ());
 			if (fileNames.Any ())
@@ -194,14 +206,14 @@ namespace Epsitec.Cresus.ResourceManagement
 					var neutralGroup = nameGrouping.NameGroups.First ();
 					var otherGroups = nameGrouping.NameGroups.Skip (1);
 
-					var neutralBundle = ResourceBundle.Create (neutralGroup.FileName, null);
+					var neutralBundle = ResourceBundle.Load (neutralGroup.FileName, module, null);
 					if (neutralBundle != null)
 					{
 						yield return neutralBundle;
 
 						foreach (var otherGroup in otherGroups)
 						{
-							var otherBundle = ResourceBundle.Create (otherGroup.FileName, neutralBundle);
+							var otherBundle = ResourceBundle.Load (otherGroup.FileName, module, neutralBundle);
 							if (otherBundle != null)
 							{
 								yield return otherBundle;
@@ -212,6 +224,8 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
+
+		private readonly ProjectResource project;
 		private readonly ResourceModuleInfo info;
 		private readonly IEnumerable<ResourceBundle> bundles;
 		private readonly Lazy<Dictionary<string, Dictionary<CultureInfo, ResourceBundle>>> byNameFirst;

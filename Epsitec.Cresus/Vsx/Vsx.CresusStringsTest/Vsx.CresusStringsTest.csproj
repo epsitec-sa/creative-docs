@@ -59,7 +59,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ResourceItemViewTest.cs" />
+    <Compile Include="MultiCultureResourceItemViewTest.cs" />
     <Compile Include="HtmlToInlinesConverterTest.cs" />
     <Compile Include="RoslynTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +69,8 @@
     <Compile Include="TestData.cs" />
     <Compile Include="CompositeDictionaryTest.cs" />
     <Compile Include="CompositeKeyTest.cs" />
+    <Compile Include="ResourceSymbolMapperTest.cs" />
+    <Compile Include="MultiCultureResourceItemCollectionViewTest.cs" />
     <Compile Include="WpfHelper.cs" />
     <Compile Include="XmlAccessTest.cs" />
   </ItemGroup>

@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Epsitec.Cresus.ResourceManagement;
 
 namespace Epsitec.Cresus.Strings.ViewModels
 {
-	public class MultiCultureResourceItemCollectionViewModel
+	public class MultiCultureResourceItemCollectionViewModel : ObservableCollection<MultiCultureResourceItemViewModel>
 	{
-		public ObservableCollection<MultiCultureResourceItemViewModel> Items
+		public MultiCultureResourceItemCollectionViewModel (IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
 		{
-			get
+			foreach (var cultureMaps in resources)
 			{
-				return this.items;
+				this.Add (new MultiCultureResourceItemViewModel (cultureMaps));
 			}
 		}
-
-		private readonly ObservableCollection<MultiCultureResourceItemViewModel> items = new ObservableCollection<MultiCultureResourceItemViewModel> ();
 	}
 }

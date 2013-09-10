@@ -64,11 +64,45 @@ namespace Epsitec.Cresus.ResourceManagement
 		/// match with the given resource item name tail. The composite key
 		/// is a sequence of the resource item symbol and the culture.
 		/// </summary>
-		/// <param name="itemSymbolTail"></param>
+		/// <param name="symbolTail"></param>
 		/// <returns></returns>
-		public CompositeDictionary MatchItemSymbolTail(string itemSymbolTail)
+		public CompositeDictionary MatchSymbolTail(string symbolTail)
 		{
-			return this.MatchItemSymbolTail (Key.Create (itemSymbolTail.Split ('.')));
+			//return this.MatchSymbolTail (Key.Create (symbolTail));
+
+			var cultureFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in this.map.FirstLevelKeys)
+			{
+				var symbolsOnlyMap = this.map[cultureKey] as Dictionary<IKey, object>;
+				var symbolKeys = ResourceMapper.MatchedTailKeys (symbolsOnlyMap.Keys, symbolTail).ToList ();
+				foreach (var symbolKey in symbolKeys)
+				{
+					cultureFirstMap[Key.Create (cultureKey, symbolKey)] = symbolsOnlyMap[symbolKey] as ResourceItem;
+				}
+			}
+			var symbolFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in cultureFirstMap.FirstLevelKeys)
+			{
+				var symbolsOnlyMap = CompositeDictionary.Create (cultureFirstMap[cultureKey]);
+				foreach (var symbolKey in symbolsOnlyMap.Keys)
+				{
+					var symbol = string.Join (".", symbolKey.Select (i => i.ToString ()));
+					symbolFirstMap[symbol, cultureKey] = symbolsOnlyMap[symbolKey];
+				}
+			}
+			return symbolFirstMap;
+		}
+
+		/// <summary>
+		/// Creates a composite dictionary that contains resource items that
+		/// match with the given partial resource item name. The composite key
+		/// is a sequence of the resource item symbol and the culture.
+		/// </summary>
+		/// <param name="symbolPart"></param>
+		/// <returns></returns>
+		public CompositeDictionary MatchSymbolPart(string symbolPart)
+		{
+			return this.MatchSymbolPart (Key.Create (symbolPart));
 		}
 
 		protected virtual ICompositeKey CreateItemAccessKey(ResourceItem item)
@@ -125,19 +159,51 @@ namespace Epsitec.Cresus.ResourceManagement
 
 		#endregion
 
-		private static IEnumerable<IKey> MatchedKeys(IEnumerable<IKey> fullKeys, IKey tailKey)
+		private static IEnumerable<IKey> MatchedTailKeys(IEnumerable<IKey> fullKeys, string symbolTail)
 		{
 			foreach (var fullKey in fullKeys)
 			{
-				if (ResourceMapper.KeyMatch (fullKey, tailKey))
+				if (ResourceMapper.MatchesTailKey (fullKey, symbolTail))
 				{
 					yield return fullKey;
 				}
 			}
 		}
 
-		private static bool KeyMatch(IKey fullKey, IKey tailKey)
+		private static bool MatchesTailKey(IKey fullKey, string symbolTail)
 		{
+			return true;
+		}
+
+
+		private static IEnumerable<IKey> MatchedTailKeys(IEnumerable<IKey> fullKeys, IKey tailKey)
+		{
+			foreach (var fullKey in fullKeys)
+			{
+				if (ResourceMapper.MatchesTailKey (fullKey, tailKey))
+				{
+					yield return fullKey;
+				}
+			}
+		}
+
+		private static IEnumerable<IKey> MatchedPartialKeys(IEnumerable<IKey> fullKeys, IKey tailKey)
+		{
+			foreach (var fullKey in fullKeys)
+			{
+				if (ResourceMapper.MatchesPartialKey (fullKey, tailKey))
+				{
+					yield return fullKey;
+				}
+			}
+		}
+
+		private static bool MatchesTailKey(IKey fullKey, IKey tailKey)
+		{
+			if (!tailKey.Any ())
+			{
+				return false;
+			}
 			var tailEnumerator = tailKey.Reverse ().GetEnumerator ();
 			var fullEnumerator = fullKey.Reverse ().GetEnumerator ();
 
@@ -150,6 +216,39 @@ namespace Epsitec.Cresus.ResourceManagement
 				if (!object.Equals (tailEnumerator.Current, fullEnumerator.Current))
 				{
 					return false;
+				}
+			}
+			return true;
+		}
+
+		private static bool MatchesPartialKey(IKey fullKey, IKey partKey)
+		{
+			if (!partKey.Any ())
+			{
+				return false;
+			}
+			var partEnumerator = partKey.Reverse ().GetEnumerator ();
+			var fullEnumerator = fullKey.Reverse ().GetEnumerator ();
+
+			if (partEnumerator.MoveNext () && fullEnumerator.MoveNext ())
+			{
+				while (!object.Equals (fullEnumerator.Current, partEnumerator.Current))
+				{
+					if (!fullEnumerator.MoveNext ())
+					{
+						return false;
+					}
+				}
+				while (partEnumerator.MoveNext ())
+				{
+					if (!fullEnumerator.MoveNext ())
+					{
+						return false;
+					}
+					if (!object.Equals (partEnumerator.Current, fullEnumerator.Current))
+					{
+						return false;
+					}
 				}
 			}
 			return true;
@@ -170,13 +269,38 @@ namespace Epsitec.Cresus.ResourceManagement
 			return symbolFirstMap;
 		}
 
-		private CompositeDictionary MatchItemSymbolTail(IKey itemSymbolTailKey)
+		private CompositeDictionary MatchSymbolTail(IKey symbolTailKey)
 		{
 			var cultureFirstMap = new CompositeDictionary ();
 			foreach (var cultureKey in this.map.FirstLevelKeys)
 			{
 				var symbolsOnlyMap = CompositeDictionary.Create (this.map[cultureKey]);
-				var symbolKeys = ResourceMapper.MatchedKeys (symbolsOnlyMap.Keys, itemSymbolTailKey).ToList ();
+				var symbolKeys = ResourceMapper.MatchedTailKeys (symbolsOnlyMap.Keys, symbolTailKey).ToList ();
+				foreach (var symbolKey in symbolKeys)
+				{
+					cultureFirstMap[Key.Create (cultureKey, symbolKey)] = symbolsOnlyMap[symbolKey] as ResourceItem;
+				}
+			}
+			var symbolFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in cultureFirstMap.FirstLevelKeys)
+			{
+				var symbolsOnlyMap = CompositeDictionary.Create (cultureFirstMap[cultureKey]);
+				foreach (var symbolKey in symbolsOnlyMap.Keys)
+				{
+					var symbol = string.Join (".", symbolKey.Select (i => i.ToString ()));
+					symbolFirstMap[symbol, cultureKey] = symbolsOnlyMap[symbolKey];
+				}
+			}
+			return symbolFirstMap;
+		}
+
+		private CompositeDictionary MatchSymbolPart(IKey symbolPartKey)
+		{
+			var cultureFirstMap = new CompositeDictionary ();
+			foreach (var cultureKey in this.map.FirstLevelKeys)
+			{
+				var symbolsOnlyMap = CompositeDictionary.Create (this.map[cultureKey]);
+				var symbolKeys = ResourceMapper.MatchedPartialKeys (symbolsOnlyMap.Keys, symbolPartKey).ToList ();
 				foreach (var symbolKey in symbolKeys)
 				{
 					cultureFirstMap[Key.Create (cultureKey, symbolKey)] = symbolsOnlyMap[symbolKey] as ResourceItem;
@@ -208,18 +332,23 @@ namespace Epsitec.Cresus.ResourceManagement
 			{
 				yield return this.CurrentResourceBundle.Culture;
 			}
+			yield return string.Join(".", this.GetSymbolSubkeys (item));
+		}
+
+		private IEnumerable<string> GetSymbolSubkeys(ResourceItem item)
+		{
 			if (this.CurrentResourceModule != null && !string.IsNullOrEmpty (this.CurrentResourceModule.Info.ResourceNamespace))
 			{
-				yield return this.CurrentResourceModule.Info.ResourceNamespace.Split ('.');
+				yield return this.CurrentResourceModule.Info.ResourceNamespace;
 			}
 			yield return "Res";
 			if (this.CurrentResourceBundle != null && !string.IsNullOrEmpty (this.CurrentResourceBundle.Name))
 			{
-				yield return this.CurrentResourceBundle.Name.Split ('.');
+				yield return this.CurrentResourceBundle.Name;
 			}
 			if (!string.IsNullOrEmpty (item.Name))
 			{
-				yield return item.Name.Split ('.');
+				yield return item.Name;
 			}
 		}
 

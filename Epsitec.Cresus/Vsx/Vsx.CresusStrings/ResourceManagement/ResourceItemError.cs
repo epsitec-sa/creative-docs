@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.ResourceManagement
 
 	public class ResourceItemError : ResourceItem
 	{
-		public ResourceItemError(ResourceItemErrors reasons, string id, string name, XElement element)
-			: base (ResourceItemError.EnsureKey(id), ResourceItemError.EnsureKey(name), element)
+		public ResourceItemError(ResourceBundle bundle, ResourceItemErrors reasons, string id, string name, XElement element)
+			: base (ResourceItemError.EnsureKey (id), ResourceItemError.EnsureKey (name), element, bundle)
 		{
 			this.reasons = reasons;
 		}

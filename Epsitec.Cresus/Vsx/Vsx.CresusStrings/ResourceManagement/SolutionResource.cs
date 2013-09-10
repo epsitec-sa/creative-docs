@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.ResourceManagement
 				.Select (p => new
 					{
 						Key = p.Id,
-						Resource = ProjectResource.Load (p, cancellationToken)
+						Resource = ProjectResource.Load (this, p, cancellationToken)
 					})
 				.Where(a => a.Resource != null)
 				.Do (_ => cancellationToken.ThrowIfCancellationRequested ())

@@ -122,6 +122,19 @@ namespace Epsitec
 			return node is MemberAccessExpressionSyntax || node is IdentifierNameSyntax;
 		}
 
+		public static bool IsPropertyOrField(this CommonSyntaxNode node)
+		{
+			if (node is IdentifierNameSyntax)
+			{
+				node = node.Parent;
+				if (node == null || node is MemberAccessExpressionSyntax && !node.IsInvocation ())
+				{
+					return true;
+				}
+			}
+			return node is MemberAccessExpressionSyntax && !node.IsInvocation ();
+		}
+
 		public static bool IsInvocation(this CommonSyntaxNode node)
 		{
 			return node is InvocationExpressionSyntax || (node.Parent != null && node.Parent is InvocationExpressionSyntax);

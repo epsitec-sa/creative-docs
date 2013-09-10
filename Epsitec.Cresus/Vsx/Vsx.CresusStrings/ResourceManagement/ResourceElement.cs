@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.ResourceManagement
 	{
 		public ResourceElement(XElement element)
 		{
+			element.ThrowIfNull ();
 			this.element = element;
 		}
 

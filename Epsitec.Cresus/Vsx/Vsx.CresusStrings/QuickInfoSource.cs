@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Strings
 			this.cts = new CancellationTokenSource ();
 
 			this.documentIdTask = QuickInfoSource.GetActiveDocumentIdAsync (this.Solution, this.cts.Token);
-			this.resourceMapperTask = QuickInfoSource.LoadResourcesAsync (this.Solution, this.cts.Token);
+			this.resourceSymbolMapperTask = QuickInfoSource.LoadResourcesAsync (this.Solution, this.cts.Token);
 
 			this.Initialize (this.cts.Token);
 		}
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Strings
 				this.documentIdTask.ForgetSafely ();
 				this.syntaxRootTask.ForgetSafely ();
 				this.semanticModelTask.ForgetSafely ();
-				this.resourceMapperTask.ForgetSafely ();
+				this.resourceSymbolMapperTask.ForgetSafely ();
 			}
 		}
 
@@ -77,19 +77,21 @@ namespace Epsitec.Cresus.Strings
 						if (tokenTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
 						{
 							var token = tokenTask.Result;
-							var node = QuickInfoSource.FilterSyntaxToken (token);
+							var node = QuickInfoSource.LookAheadSyntaxNode (token, point, out applicableToSpan);
 							if (node != null)
 							{
 								//QuickInfoSource.AddQiContent (qiContent, syntaxData.Item3);
 
 								// get project resources
-								if (this.resourceMapperTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
+								if (this.resourceSymbolMapperTask.Wait (QuickInfoSource.Timeout (100), this.cts.Token))
 								{
-									var symbolTail = node.RemoveTrivias ().ToString ();
-									var symbolMap = this.ResourceMapper.MatchItemSymbolTail (symbolTail);
-									var content = MultiCultureResourceItemCollectionView.Create (symbolMap);
+									var symbol = node.RemoveTrivias ().ToString ();
+									var resources = this.ResourceSymbolMapper.FindPartial (symbol);
+									var content = new MultiCultureResourceItemCollectionView (resources)
+									{
+										MaxHeight = 600
+									};
 									qiContent.Add (content);
-									applicableToSpan = QuickInfoSource.GetTrackingSpan (point, node.Span);
 
 									//var context = SynchronizationContext.Current;
 									//var element = content as System.Windows.FrameworkElement;
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.Strings
 								else
 								{
 									cts.Cancel ();
-									applicableToSpan = QuickInfoSource.SetQiPending (tokenTask, "Resources", qiContent, point);
+									QuickInfoSource.SetQiPending (tokenTask, "Resources", qiContent);
 								}
 
 								//var semanticTask = this.GetQiSemanticDataAsync (node, cts.Token);
@@ -117,7 +119,7 @@ namespace Epsitec.Cresus.Strings
 								//else
 								//{
 								//	cts.Cancel ();
-								//	applicableToSpan = QuickInfoSource.SetQiPending (semanticTask, "Semantic", qiContent, point);
+								//	QuickInfoSource.SetQiPending (semanticTask, "Semantic", qiContent);
 								//}
 
 							}
@@ -125,13 +127,13 @@ namespace Epsitec.Cresus.Strings
 						else
 						{
 							cts.Cancel ();
-							applicableToSpan = QuickInfoSource.SetQiPending (tokenTask, "Syntax", qiContent, point);
+							QuickInfoSource.SetQiPending (tokenTask, "Syntax", qiContent);
 						}
 					}
 					else
 					{
 						cts.Cancel ();
-						applicableToSpan = QuickInfoSource.SetQiPending (this.documentIdTask, "Document", qiContent, point);
+						QuickInfoSource.SetQiPending (this.documentIdTask, "Document", qiContent);
 					}
 				}
 			}
@@ -149,38 +151,36 @@ namespace Epsitec.Cresus.Strings
 			}
 		}
 
+		private static ResourceSymbolMapper LoadResources(ISolution solution, CancellationToken cancellationToken)
+		{
+			var solutionResource = new SolutionResource (solution, cancellationToken);
+			var mapper = new ResourceSymbolMapper ();
+			mapper.VisitSolution (solutionResource);
+			return mapper;
+		}
+
+		private static Task<ResourceSymbolMapper> LoadResourcesAsync(ISolution solution, CancellationToken cancellationToken)
+		{
+			return Task.Run (() => QuickInfoSource.LoadResources (solution, cancellationToken), cancellationToken);
+		}
+
+		private static void SetQiPending(Task task, string subject, IList<object> qiContent)
+		{
+			task.ForgetSafely ();
+			QuickInfoSource.AddQiContent (qiContent, string.Format("({0} cache is still being constructed. Please try again in a few seconds...)", subject));
+			Trace.WriteLine ("CANCELING");
+		}
+
 		private static void AddQiException(IList<object> qiContent, Exception e, string prefix = "Cresus Strings Extension Exception\n")
 		{
 			string message = string.Format ("{0}{1} : {2}", prefix, e.GetType ().Name, e.Message);
 			QuickInfoSource.AddQiContent (qiContent, message);
 		}
 
-		private static ResourceMapper LoadResources(ISolution solution, CancellationToken cancellationToken)
-		{
-			var solutionResource = new SolutionResource (solution, cancellationToken);
-			var mapper = new ResourceMapper ();
-			mapper.VisitSolution (solutionResource);
-			return mapper;
-		}
-
-		private static Task<ResourceMapper> LoadResourcesAsync(ISolution solution, CancellationToken cancellationToken)
-		{
-			return Task.Run (() => QuickInfoSource.LoadResources (solution, cancellationToken), cancellationToken);
-		}
-
-		private static ITrackingSpan SetQiPending(Task task, string subject, IList<object> qiContent, SnapshotPoint point)
-		{
-			task.ForgetSafely ();
-			QuickInfoSource.AddQiContent (qiContent, string.Format("({0} cache is still being constructed. Please try again in a few seconds...)", subject));
-			var applicableToSpan = QuickInfoSource.GetTrackingSpan (point);
-			Trace.WriteLine ("CANCELING: " + applicableToSpan.ToString ());
-			return applicableToSpan;
-		}
-
-		private static SyntaxNode FilterSyntaxToken(CommonSyntaxToken token)
-		{
-			return QuickInfoSource.FilterFieldOrPropertyAccessSyntax (token);
-		}
+		//private static SyntaxNode FilterSyntaxToken(CommonSyntaxToken token)
+		//{
+		//	return QuickInfoSource.FilterFieldOrPropertyAccessSyntax (token);
+		//}
 
 		private static SyntaxNode FilterAnySyntax(CommonSyntaxToken token)
 		{
@@ -213,14 +213,42 @@ namespace Epsitec.Cresus.Strings
 		//	return null;
 		//}
 
-		private static SyntaxNode FilterFieldOrPropertyAccessSyntax(CommonSyntaxToken token)
+		private static SyntaxNode LookAroundSyntaxNode(CommonSyntaxToken token, SnapshotPoint point, out ITrackingSpan applicableToSpan)
 		{
+			applicableToSpan = QuickInfoSource.GetTrackingSpan (point);
 			if (token != default (CommonSyntaxToken))
 			{
-				if (token.Parent.IsMemberAccess())
+				if (token.Parent.IsMemberAccess ())
 				{
-					var memberAccessAncestors = token.Parent.AncestorsAndSelf ().TakeWhile (a => a.IsMemberAccess() && !a.IsInvocation ());
-					var node = memberAccessAncestors.LastOrDefault ();
+					var ancestors = token.Parent.AncestorsAndSelf ();
+					var properties = ancestors
+						.TakeWhile (a => a.IsPropertyOrField ());
+					var node = properties.LastOrDefault ();
+					if (node != null)
+					{
+						applicableToSpan = QuickInfoSource.GetTrackingSpan (point, node.Span);
+					}
+					return node as SyntaxNode;
+				}
+			}
+			return null;
+		}
+
+		private static SyntaxNode LookAheadSyntaxNode(CommonSyntaxToken token, SnapshotPoint point, out ITrackingSpan applicableToSpan)
+		{
+			applicableToSpan = QuickInfoSource.GetTrackingSpan (point);
+			if (token != default (CommonSyntaxToken))
+			{
+				if (token.Parent.IsMemberAccess ())
+				{
+					var ancestors = token.Parent.AncestorsAndSelf ();
+					var properties = ancestors
+						.TakeWhile (a => a.Span.End <= token.Span.End && a.IsPropertyOrField ());
+					var node = properties.LastOrDefault ();
+					if (node != null)
+					{
+						applicableToSpan = QuickInfoSource.GetTrackingSpan (point, token.Span);
+					}
 					return node as SyntaxNode;
 				}
 			}
@@ -332,11 +360,11 @@ namespace Epsitec.Cresus.Strings
 			}
 		}
 
-		private ResourceMapper ResourceMapper
+		private ResourceSymbolMapper ResourceSymbolMapper
 		{
 			get
 			{
-				return this.resourceMapperTask.Result;
+				return this.resourceSymbolMapperTask.Result;
 			}
 		}
 
@@ -430,7 +458,7 @@ namespace Epsitec.Cresus.Strings
 		private CancellationTokenSource cts;
 
 		private Task<DocumentId> documentIdTask;
-		private Task<ResourceMapper> resourceMapperTask;
+		private Task<ResourceSymbolMapper> resourceSymbolMapperTask;
 
 		private Task<CommonSyntaxNode> syntaxRootTask;
 		private Task<ISemanticModel> semanticModelTask;
