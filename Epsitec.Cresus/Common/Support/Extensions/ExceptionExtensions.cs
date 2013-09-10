@@ -1,43 +1,56 @@
-﻿using System;
-using System.Text;
-
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Extensions
 {
-	
-	
 	public static class ExceptionExtensions
 	{
-
-
-		public static string GetFullText(this Exception exception)
+		/// <summary>
+		/// Gets the full text for the exception (and possibly for the inner exceptions too).
+		/// </summary>
+		/// <param name="exception">The exception.</param>
+		/// <returns>The full text.</returns>
+		public static string GetFullText(this System.Exception exception)
 		{
-			var text = new StringBuilder ();
+			var buffer = new System.Text.StringBuilder ();
+			var title  = "Exception:";
 
 			for (var e = exception; e != null; e = e.InnerException)
 			{
-				var headerText = e == exception
-					? "Exception:"
-					: "Inner exception:";
-
-				var format = "\tType: {0}\n\tMessage: {1}\n\tSource: {2}\n\tStack trace: {3}\n";
-
-				var type = e.GetType ();
-				var message = e.Message;
-				var source = e.Source;
-				var stackTrace = e.StackTrace;
-
-				var exceptionText = string.Format (format, type, message, source, stackTrace);
-
-				text.AppendLine (headerText);
-				text.AppendLine (exceptionText);
+				ExceptionExtensions.DumpException (buffer, "", title, e);
+				title = "Inner exception:";
 			}
 
-			return text.ToString ();
+			return buffer.ToString ();
 		}
 
+		private static void DumpException(System.Text.StringBuilder buffer, string prefix, string title, System.Exception exception)
+		{
+			var format = "{0}\n"
+					   + "  Type: {0}\n"
+					   + "  Message: {1}\n"
+					   + "  Source: {2}\n"
+					   + "  Stack trace:\n"
+					   + "    {3}";
 
+			var type    = exception.GetType ();
+			var message = exception.Message;
+			var source  = exception.Source;
+			var trace   = exception.StackTrace.Replace ("\n", "\n    ");
+
+			var exceptionText = prefix + string.Format (format, title, type, message, source, trace).Replace ("\n", "\n" + prefix);
+
+			buffer.AppendLine (exceptionText);
+
+			var aggregate = exception as System.AggregateException;
+
+			if (aggregate != null)
+			{
+				foreach (var ex in aggregate.InnerExceptions)
+				{
+					ExceptionExtensions.DumpException (buffer, prefix + "  ", "Aggregate inner exception:", ex);
+				}
+			}
+		}
 	}
-
-
 }
