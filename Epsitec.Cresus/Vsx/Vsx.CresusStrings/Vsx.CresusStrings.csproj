@@ -122,7 +122,6 @@
     <Compile Include="QuickInfoControllerProvider.cs" />
     <Compile Include="QuickInfoSource.cs" />
     <Compile Include="QuickInfoSourceProvider.cs" />
-    <Compile Include="TextStructureNavigatorEx.cs" />
     <Compile Include="Framework\TimeTrace.cs" />
     <Compile Include="ResourceManagement\ResourceBundle.cs" />
     <Compile Include="ResourceManagement\ResourceModule.cs" />
