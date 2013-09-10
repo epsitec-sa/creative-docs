@@ -14,7 +14,9 @@ set configurationDirectory=0
 for %%a in (%*) do (
     if "%%a"=="-nocleanup" set cleanup=0
     if "%%a"=="-production" set configurationDirectory=ServerConfigProduction
+    if "%%a"=="-production" set suffix=prod
     if "%%a"=="-test" set configurationDirectory=ServerConfigTest
+    if "%%a"=="-test" set suffix=test
 )
 
 @rem Exits if the configuration directory is not set up properly
@@ -102,4 +104,5 @@ copy %configurationDirectory%\Aider.Environment.crconfig bin\Build\aider\server\
 copy %configurationDirectory%\Aider.Features.crconfig bin\Build\aider\server\Aider.Features.crconfig
 
 @rem Zip the build.
-..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\aider.zip bin\Build\aider
+set zipname = aider-%suffix%
+..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\%zipname%.zip bin\Build\aider
