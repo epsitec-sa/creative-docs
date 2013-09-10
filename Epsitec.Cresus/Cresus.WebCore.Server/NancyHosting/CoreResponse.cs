@@ -8,7 +8,6 @@ using System.Collections.Generic;
 
 using System.IO;
 
-
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
 	/// <summary>
@@ -26,14 +25,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			};
 		}
 
-
 		public static Response Failure()
 		{
 			var content = new Dictionary<string, object> ();
 
 			return CoreResponse.Failure (content);
 		}
-
 
 		public static Response Failure(string title, string message)
 		{
@@ -45,7 +42,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			return CoreResponse.Failure (content);
 		}
-
 
 		public static Response Failure(Dictionary<string, object> content)
 		{
@@ -60,12 +56,38 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			return CoreResponse.Success (content);
 		}
 
-
 		public static Response Success(Dictionary<string, object> content)
 		{
 			return CoreResponse.CreateJsonResponse (true, content);
 		}
 
+
+		public static Response FormSuccess()
+		{
+			return CoreResponse.CreateFormResponse (true, null);
+		}
+
+		public static Response FormFailure(Dictionary<string, object> errors)
+		{
+			return CoreResponse.CreateFormResponse (false, errors);
+		}
+
+
+		public static Response CreateStreamResponse(Stream stream, string filename)
+		{
+			// This tells the browser that it should automatically propose the user to download the
+			// file instead of trying to open it within the browser.
+			var contentType = "application/force-download";
+
+			return new StreamResponse (() => stream, contentType)
+			{
+				Headers =
+				{
+					// This tells the browser the file name that it should use to save the file.
+					{ "Content-Disposition", "attachment; filename=\"" + filename + "\"" }
+				}
+			};
+		}
 
 		private static Response CreateJsonResponse(bool success, object content)
 		{
@@ -77,19 +99,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			return CoreResponse.CreateJsonResponse (jsonData, HttpStatusCode.OK);
 		}
-
-
-		public static Response FormSuccess()
-		{
-			return CoreResponse.CreateFormResponse (true, null);
-		}
-
-
-		public static Response FormFailure(Dictionary<string, object> errors)
-		{
-			return CoreResponse.CreateFormResponse (false, errors);
-		}
-
 
 		private static Response CreateFormResponse(bool success, object errors)
 		{
@@ -110,29 +119,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			return CoreResponse.CreateJsonResponse (jsonData, HttpStatusCode.OK);
 		}
 
-
 		private static Response CreateJsonResponse(Dictionary<string, object> jsonData, HttpStatusCode code)
 		{
 			return new JsonResponse (jsonData, new DefaultJsonSerializer ())
 			{
 				StatusCode = HttpStatusCode.OK,
-			};
-		}
-
-
-		public static Response CreateStreamResponse(Stream stream, string filename)
-		{
-			// This tells the browser that it should automatically propose the user to download the
-			// file instead of trying to open it within the browser.
-			var contentType = "application/force-download";
-
-			return new StreamResponse (() => stream, contentType)
-			{
-				Headers =
-				{
-					// This tells the browser the file name that it should use to save the file.
-					{ "Content-Disposition", "attachment; filename=\"" + filename + "\"" }
-				}
 			};
 		}
 	}

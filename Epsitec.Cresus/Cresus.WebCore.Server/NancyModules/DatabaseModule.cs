@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.Core.Business;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Resolvers;
 
@@ -16,13 +19,9 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-
-
 	using Database = Core.Databases.Database;
-
 
 	/// <summary>
 	/// This module is used to retrieve data about the databases, such as the list of defined
@@ -31,8 +30,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	/// </summary>
 	public class DatabaseModule : AbstractAuthenticatedModule
 	{
-
-
 		public DatabaseModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
@@ -110,49 +107,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response GetDatabaseList(WorkerApp workerApp)
-		{
-			var databases = this.CoreServer.DatabaseManager
-				.GetDatabases (workerApp.UserManager)
-				.Select (d => d.GetDataDictionary ())
-				.ToList ();
-
-			var content = new Dictionary<string, object> ()
-			{
-				{ "menu", databases },
-			};
-
-			return CoreResponse.Success (content);
-		}
-
-
-		private Response GetDatabase(WorkerApp workerApp, dynamic parameters)
-		{
-			var userManager = workerApp.UserManager;
-			var commandId = DataIO.ParseDruid ((string) parameters.name);
-
-			var database = this.CoreServer.DatabaseManager.GetDatabase (userManager, commandId);
-			var content = database.GetDataDictionary (this.CoreServer.Caches);
-
-			return CoreResponse.Success (content);
-		}
-
-
-		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
-		{
-			var caches = this.CoreServer.Caches;
-
-			string rawColumns = Request.Query.columns;
-			int start = Request.Query.start;
-			int limit = Request.Query.limit;
-
-			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
-			{
-				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
-			}
-		}
-
-
 		internal static Response GetEntities(Caches caches, EntityExtractor extractor, string rawColumns, int start, int limit)
 		{
 			var total = extractor.Accessor.GetItemCount ();
@@ -185,6 +139,62 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (content);
 		}
 
+		internal static Response Export(Caches caches, EntityExtractor extractor, dynamic query)
+		{
+			if (extractor.Accessor.GetItemCount () > 10000)
+			{
+				throw new InvalidOperationException ("Too much data in extractor");
+			}
+
+			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
+
+			var filename = writer.GetFilename ();
+			var stream   = writer.GetStream ();
+
+			return CoreResponse.CreateStreamResponse (stream, filename);
+		}
+
+
+		private Response GetDatabaseList(WorkerApp workerApp)
+		{
+			var databases = this.CoreServer.DatabaseManager
+				.GetDatabases (workerApp.UserManager)
+				.Select (d => d.GetDataDictionary ())
+				.ToList ();
+
+			var content = new Dictionary<string, object> ()
+			{
+				{ "menu", databases },
+			};
+
+			return CoreResponse.Success (content);
+		}
+
+		private Response GetDatabase(WorkerApp workerApp, dynamic parameters)
+		{
+			var userManager = workerApp.UserManager;
+			var commandId = DataIO.ParseDruid ((string) parameters.name);
+
+			var database = this.CoreServer.DatabaseManager.GetDatabase (userManager, commandId);
+			var content = database.GetDataDictionary (this.CoreServer.Caches);
+
+			return CoreResponse.Success (content);
+		}
+
+		private Response GetEntities(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
+		{
+			var caches = this.CoreServer.Caches;
+
+			string rawColumns = Request.Query.columns;
+			int start = Request.Query.start;
+			int limit = Request.Query.limit;
+
+			using (EntityExtractor extractor = this.GetEntityExtractor (workerApp, businessContext, parameters))
+			{
+				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
+			}
+		}
+
 
 		private Response GetEntityIndex(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
@@ -209,7 +219,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 		}
 
-
 		private Response Export(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
 			var caches = this.CoreServer.Caches;
@@ -219,86 +228,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				return DatabaseModule.Export (caches, extractor, this.Request.Query);
 			}
 		}
-
-
-		internal static Response Export(Caches caches, EntityExtractor extractor, dynamic query)
-		{
-			if (extractor.Accessor.GetItemCount () > 10000)
-			{
-				throw new InvalidOperationException ("Too much data in extractor");
-			}
-
-			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
-
-			var filename = writer.GetFilename ();
-			var stream = writer.GetStream ();
-
-			return CoreResponse.CreateStreamResponse (stream, filename);
-		}
-
-
-		private static EntityWriter GetEntityWriter
-		(
-			Caches caches,
-			EntityExtractor extractor,
-			dynamic query
-		)
-		{
-			string type = query.type;
-
-			switch (type)
-			{
-				case "array":
-					return DatabaseModule.GetArrayWriter (caches, extractor, query);
-
-				case "label":
-					return DatabaseModule.GetLabelWriter (extractor, query);
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static EntityWriter GetArrayWriter
-		(
-			Caches caches,
-			EntityExtractor extractor,
-			dynamic query
-		)
-		{
-			string rawColumns = query.columns;
-
-			var metaData = extractor.Metadata;
-			var accessor = extractor.Accessor;
-
-			var properties = caches.PropertyAccessorCache;
-			var format = new CsvArrayFormat ();
-			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
-
-			return new ArrayWriter (properties, metaData, columns, accessor, format);
-		}
-
-
-		private static EntityWriter GetLabelWriter
-		(
-			EntityExtractor extractor,
-			dynamic query
-		)
-		{
-			string rawLayout = query.layout;
-			int rawTextFactoryId = query.text;
-
-			var metaData = extractor.Metadata;
-			var accessor = extractor.Accessor;
-
-			var layout = (LabelLayout) Enum.Parse (typeof (LabelLayout), rawLayout);
-			var entitytype = metaData.EntityTableMetadata.EntityType;
-			var textFactory = LabelTextFactoryResolver.Resolve (entitytype, rawTextFactoryId);
-
-			return new LabelWriter (metaData, accessor, textFactory, layout);
-		}
-
 
 		private EntityExtractor GetEntityExtractor(WorkerApp workerApp, BusinessContext businessContext, dynamic parameters)
 		{
@@ -323,7 +252,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				databaseId, rawSorters, rawFilters
 			);
 		}
-
 
 		private Response DeleteEntities(BusinessContext businessContext)
 		{
@@ -355,7 +283,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				: CoreResponse.Failure ();
 		}
 
-
 		private Response CreateEntity(BusinessContext businessContext)
 		{
 			var caches = this.CoreServer.Caches;
@@ -372,8 +299,51 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (entityData);
 		}
 
+		
+		private static EntityWriter GetEntityWriter(Caches caches, EntityExtractor extractor, dynamic query)
+		{
+			string type = query.type;
 
+			switch (type)
+			{
+				case "array":
+					return DatabaseModule.GetArrayWriter (caches, extractor, query);
+
+				case "label":
+					return DatabaseModule.GetLabelWriter (extractor, query);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+		private static EntityWriter GetArrayWriter(Caches caches, EntityExtractor extractor, dynamic query)
+		{
+			string rawColumns = query.columns;
+
+			var metaData = extractor.Metadata;
+			var accessor = extractor.Accessor;
+
+			var properties = caches.PropertyAccessorCache;
+			var format = new CsvArrayFormat ();
+			var columns = ColumnIO.ParseColumns (caches, extractor.Database, rawColumns);
+
+			return new ArrayWriter (properties, metaData, columns, accessor, format);
+		}
+
+		private static EntityWriter GetLabelWriter(EntityExtractor extractor, dynamic query)
+		{
+			string rawLayout = query.layout;
+			int rawTextFactoryId = query.text;
+
+			var metaData = extractor.Metadata;
+			var accessor = extractor.Accessor;
+
+			var layout = (LabelLayout) Enum.Parse (typeof (LabelLayout), rawLayout);
+			var entitytype = metaData.EntityTableMetadata.EntityType;
+			var textFactory = LabelTextFactoryResolver.Resolve (entitytype, rawTextFactoryId);
+
+			return new LabelWriter (metaData, accessor, textFactory, layout);
+		}
 	}
-
-
 }

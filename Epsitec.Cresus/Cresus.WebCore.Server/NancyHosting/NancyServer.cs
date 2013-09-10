@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.IO;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.IO;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -10,23 +13,14 @@ using Nancy.Extensions;
 using Nancy.Helpers;
 using Nancy.IO;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Diagnostics;
-
 using System.Globalization;
-
 using System.Linq;
-
 using System.Net;
-
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-
-
 	/// <summary>
 	/// This class is the Nancy server. It listens to an uri and processes the http requests with
 	/// the regular Nancy pipeline.
@@ -34,28 +28,30 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	/// <remarks>
 	/// This class has been largely inspired by the source code of the official Nancy self host.
 	/// </remarks>
-	internal sealed class NancyServer : IDisposable
+	internal sealed class NancyServer : System.IDisposable
 	{
-
-
-		public NancyServer(CoreServer coreServer, Uri uri)
+		public NancyServer(CoreServer coreServer, System.Uri uri)
 		{
-			this.baseUri = uri;
+			this.baseUri    = uri;
 			this.httpServer = new HttpServer (uri, this.ProcessRequest);
 
 			var bootStrapper = new CoreServerBootstrapper (coreServer);
 
 			bootStrapper.Initialise ();
+			
 			this.engine = bootStrapper.GetEngine ();
 
 			Logger.LogToConsole ("Nancy server started");
 		}
 
+		#region IDisposable Members
 
 		public void Dispose()
 		{
 			this.httpServer.Dispose ();
 		}
+
+		#endregion
 
 
 		private void ProcessRequest(HttpListenerRequest httpRequest, HttpListenerResponse httpResponse)
@@ -82,7 +78,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 				Tools.LogMessage (message);
 			}
-			catch (Exception e)
+			catch (System.Exception e)
 			{
 				var message = "Uncaught exception while processing http request :\n"
 					+ e.GetFullText ();
@@ -92,17 +88,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		private static Uri GetUrlAndPathComponents(Uri uri)
-		{
-			return new Uri (uri.GetComponents (UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
-		}
-
-
 		private Request ConvertHttpRequestToNancyRequest(HttpListenerRequest request)
 		{
 			if (this.baseUri == null)
 			{
-				throw new InvalidOperationException ("Unable to locate base URI for request: " + request.Url);
+				throw new System.InvalidOperationException ("Unable to locate base URI for request: " + request.Url);
 			}
 
 			var expectedRequestLength = NancyServer.GetExpectedRequestLength (request.Headers.ToDictionary ());
@@ -132,6 +122,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			);
 		}
 
+		private static System.Uri GetUrlAndPathComponents(System.Uri uri)
+		{
+			return new System.Uri (uri.GetComponents (System.UriComponents.SchemeAndServer | System.UriComponents.Path, System.UriFormat.Unescaped));
+		}
 
 		private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
 		{
@@ -161,7 +155,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			return contentLength;
 		}
 
-
 		private static void ConvertNancyResponseToHttpResponse(Response nancyResponse, HttpListenerResponse response)
 		{
 			foreach (var header in nancyResponse.Headers)
@@ -184,16 +177,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		private readonly HttpServer httpServer;
-
-
-		private readonly INancyEngine engine;
-
-
-		private readonly Uri baseUri;
-
-
+		private readonly HttpServer				httpServer;
+		private readonly INancyEngine			engine;
+		private readonly System.Uri				baseUri;
 	}
-
-
 }

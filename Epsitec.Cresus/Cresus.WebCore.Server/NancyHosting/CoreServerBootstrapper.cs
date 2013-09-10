@@ -9,18 +9,13 @@ using Nancy.ErrorHandling;
 using Nancy.Session;
 using Nancy.TinyIoc;
 
-
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
-
-
 	/// <summary>
 	/// This class initializes the Nancy server engine.
 	/// </summary>
 	internal class CoreServerBootstrapper : DefaultNancyBootstrapper
 	{
-
-
 		public CoreServerBootstrapper(CoreServer coreServer)
 		{
 			this.coreServer = coreServer;
@@ -35,7 +30,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			container.Register<CoreServer> (this.coreServer);
 		}
 
-
 		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
 		{
 			base.ApplicationStartup (container, pipelines);
@@ -44,7 +38,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 			pipelines.AfterRequest += this.ConfigureCookies;
 		}
-
 
 
 		private void ConfigureCookies(NancyContext context)
@@ -61,6 +54,4 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		private readonly CoreServer				coreServer;
 	}
-
-
 }
