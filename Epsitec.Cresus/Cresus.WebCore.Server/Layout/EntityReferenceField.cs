@@ -9,19 +9,14 @@ using Epsitec.Cresus.Core.Favorites;
 
 using System.Collections.Generic;
 
-
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
 	/// This class represents an edition field used to edit entity references values.
 	/// </summary>
 	internal sealed class EntityReferenceField : AbstractField
 	{
-
-
-		public string DatabaseName
+		public string							DatabaseName
 		{
 			get;
 			set;
@@ -61,20 +56,13 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return brick;
 		}
 
-
 		protected override string GetEditionTilePartType()
 		{
 			return "entityReferenceField";
 		}
 
 
-		private string favoritesId;
-
-
-		private bool favoritesOnly;
-
-
+		private string							favoritesId;
+		private bool							favoritesOnly;
 	}
-
-
 }

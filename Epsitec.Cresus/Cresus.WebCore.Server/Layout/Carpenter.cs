@@ -870,8 +870,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		
 		private static ActionItemDisplayMode GetDisplayMode(BrickPropertyKey propertyKey)
 		{
-			ActionItemDisplayMode displayMode;
-
 			switch (propertyKey)
 			{
 				case BrickPropertyKey.EnableActionMenu:

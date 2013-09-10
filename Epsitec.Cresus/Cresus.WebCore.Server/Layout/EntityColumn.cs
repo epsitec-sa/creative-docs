@@ -1,35 +1,31 @@
-﻿using Epsitec.Cresus.WebCore.Server.Core;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Cresus.WebCore.Server.Core;
 
 using System.Collections.Generic;
 
-
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
-
-
 	/// <summary>
 	/// This class represents an entity column, which is what the javascript client will recieve
 	/// when asking for a layout. It is the base class of all columns kinds.
 	/// </summary>
 	internal abstract class EntityColumn
 	{
-
-
-		public string EntityId
+		public string							EntityId
 		{
 			get;
 			set;
 		}
 
-
-		public string ViewMode
+		public string							ViewMode
 		{
 			get;
 			set;
 		}
 
-
-		public string ViewId
+		public string							ViewId
 		{
 			get;
 			set;
@@ -38,21 +34,21 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 		public abstract string GetColumnType();
 
-
-		public virtual Dictionary<string, object> ToDictionary(Caches caches)
+		public Dictionary<string, object> ToDictionary(Caches caches)
 		{
 			var column = new Dictionary<string, object> ();
 
-			column["type"] = this.GetColumnType ();
-			column["entityId"] = this.EntityId;
-			column["viewMode"] = this.ViewMode;
-			column["viewId"] = this.ViewId;
+			this.FillDictionary (column, caches);
 
 			return column;
 		}
 
-
+		protected virtual void FillDictionary(Dictionary<string, object> column, Caches caches)
+		{
+			column["type"]     = this.GetColumnType ();
+			column["entityId"] = this.EntityId;
+			column["viewMode"] = this.ViewMode;
+			column["viewId"]   = this.ViewId;
+		}
 	}
-
-
 }

@@ -6,8 +6,6 @@ using Epsitec.Cresus.WebCore.Server.Core;
 using System.Collections.Generic;
 using System.Linq;
 
-
-
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 	/// <summary>
@@ -28,13 +26,12 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			return "tile";
 		}
 
-		public override Dictionary<string, object> ToDictionary(Caches caches)
+		
+		protected override void FillDictionary(Dictionary<string, object> column, Caches caches)
 		{
-			var column = base.ToDictionary (caches);
+			base.FillDictionary (column, caches);
 
 			column["tiles"] = this.Tiles.Select (t => t.ToDictionary ()).ToList ();
-
-			return column;
 		}
 	}
 }

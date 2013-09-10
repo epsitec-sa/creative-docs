@@ -18,13 +18,10 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-		public override Dictionary<string, object> ToDictionary()
+		protected override void FillDictionary(Dictionary<string, object> tile)
 		{
-			var tile = base.ToDictionary ();
-
+			base.FillDictionary (tile);
 			tile["actions"] = this.Actions.Select (a => a.ToDictionary ()).ToList ();
-
-			return tile;
 		}
 	}
 }

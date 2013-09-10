@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 using System.Linq;
 
-
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 	/// <summary>
@@ -63,23 +62,19 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		}
 
 
-
-		public override Dictionary<string, object> ToDictionary()
+		protected override void FillDictionary(Dictionary<string, object> tile)
 		{
-			var tile = base.ToDictionary ();
-
-			tile["isRoot"] = this.IsRoot;
-			tile["subViewMode"] = this.SubViewMode;
-			tile["subViewId"] = this.SubViewId;
-			tile["hideRemoveButton"] = this.HideRemoveButton;
-			tile["hideAddButton"] = this.HideAddButton;
+			base.FillDictionary (tile);
+			
+			tile["isRoot"]             = this.IsRoot;
+			tile["subViewMode"]        = this.SubViewMode;
+			tile["subViewId"]          = this.SubViewId;
+			tile["hideRemoveButton"]   = this.HideRemoveButton;
+			tile["hideAddButton"]      = this.HideAddButton;
 			tile["propertyAccessorId"] = this.PropertyAccessorId;
-			tile["items"] = this.Items.Select (i => i.ToDictionary ()).ToList ();
-			tile["actions"] = this.Actions.Select (a => a.ToDictionary ()).ToList ();
-
-			return tile;
+			tile["items"]              = this.Items.Select (i => i.ToDictionary ()).ToList ();
+			tile["actions"]            = this.Actions.Select (a => a.ToDictionary ()).ToList ();
 		}
-
 		
 		protected override string GetTileType()
 		{

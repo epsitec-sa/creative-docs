@@ -14,7 +14,6 @@ using Epsitec.Cresus.Core.Resolvers;
 
 using System.Linq.Expressions;
 
-
 namespace Epsitec.Cresus.WebCore.Server.Layout
 {
 	/// <summary>
