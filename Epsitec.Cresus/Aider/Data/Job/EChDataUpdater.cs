@@ -619,32 +619,21 @@ namespace Epsitec.Aider.Data.Job
 					{
 						var eChReportedPersonEntity = this.GetEchReportedPersonEntity (businessContext, eChReportedPerson);
 
-						//	Unlink ECh Person Entity
-
-						var eChPersonEntityAdult1 = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult1);
-						var aiderPersonEntity     = this.GetAiderPersonEntity (businessContext, eChPersonEntityAdult1);
+						var aiderPersonEntity     = this.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
 
 						if (aiderPersonEntity.IsNotNull ())
 						{
 							var personKey      = businessContext.DataContext.GetNormalizedEntityKey (aiderPersonEntity).Value;
-							var aiderHousehold = this.GetAiderHousehold (businessContext, aiderPersonEntity);
+                            if (!aiderPersonEntity.Contacts.IsEmpty())
+                            {
+                                var aiderHousehold = this.GetAiderHousehold(businessContext, aiderPersonEntity);
 
-							if (aiderHousehold.IsNotNull ())
-							{
-								this.aiderPersonEntitiesWithDeletedHousehold.Add (personKey, aiderHousehold);
-							}
-							else
-							{
-								this.LogToConsole ("Error: AiderPerson {0} ({1}) has no associated AiderHousehold", aiderPersonEntity.DisplayName, personKey);
-							}
-						}
-
-						eChPersonEntityAdult1.ReportedPerson1 = null;
-
-						if (eChReportedPerson.Adult2 != null)
-						{
-							var eChPersonEntityAdult2 = this.GetEchPersonEntity (businessContext, eChReportedPerson.Adult2);
-							eChPersonEntityAdult2.ReportedPerson2 = null;
+                                if (aiderHousehold.IsNotNull())
+                                {
+                                    this.aiderPersonEntitiesWithDeletedHousehold.Add(personKey, aiderHousehold);
+                                }
+                            }
+							
 						}
 
 						businessContext.DeleteEntity (eChReportedPersonEntity.Address);
@@ -973,6 +962,24 @@ namespace Epsitec.Aider.Data.Job
 
 			return businessContext.DataContext.GetByExample<eCH_PersonEntity> (personExample).FirstOrDefault ();
 		}
+
+
+        private AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, EChPerson person)
+        {
+            if (person == null)
+            {
+                return null;
+            }
+
+            var personExample = new AiderPersonEntity();
+
+            personExample.eCH_Person = new eCH_PersonEntity()
+            {
+                PersonId = person.Id
+            };
+
+            return businessContext.DataContext.GetByExample<AiderPersonEntity>(personExample).FirstOrDefault();
+        }
 
 		private AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, eCH_PersonEntity person)
 		{
