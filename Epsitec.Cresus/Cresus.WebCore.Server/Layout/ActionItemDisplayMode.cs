@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		Default,
 		Menu,
 		Button,
+		OnDrop,
 	}
 }
 

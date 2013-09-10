@@ -19,8 +19,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableAction<ActionAiderHouseholdViewController0NewHouseholdMember> ()
-				.EnableAction<ActionAiderHouseholdViewController1AddHouseholdMember> ();
+				.EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ();
 
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse"))
@@ -33,8 +33,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableAction<ActionAiderHouseholdViewController2RemoveMemberFromHousehold> ()
-				.EnableAction<ActionAiderHouseholdViewController3ChangeHeadOfHousehold> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController2RemoveMemberFromHousehold> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController3ChangeHeadOfHousehold> ()
 				.Template ()
 					.Icon ("Data.AiderPersons")
 					.Title ("Membres du ménage")

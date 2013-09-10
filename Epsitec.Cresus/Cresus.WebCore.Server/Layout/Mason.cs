@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 				var templateBrick = Brick.GetProperty (brick, BrickPropertyKey.Template).Brick;
 
 				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.Attribute);
-				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.EnableAction, BrickPropertyKey.EnableActionButton);
+				Mason.CopyProperties (currentBrick, templateBrick, BrickPropertyKey.EnableActionMenu, BrickPropertyKey.EnableActionButton, BrickPropertyKey.EnableActionOnDrop);
 			}
 		}
 	}

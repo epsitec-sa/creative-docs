@@ -32,8 +32,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private static void AddUserDataBrick(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableAction<ActionAiderUserViewController0SetPassword> ()
-				.EnableAction<ActionAiderUserViewController1SetAdministrator> ()
+				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
+				.EnableActionMenu<ActionAiderUserViewController1SetAdministrator> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Parish)
@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableAction<ActionAiderUserViewController0SetPassword> ()
+				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Parish).ReadOnly ()

@@ -48,8 +48,11 @@ namespace Epsitec.Cresus.Bricks
 		Include,
 
 		DefineAction,
-		EnableAction,
+		
+		EnableActionMenu,
 		EnableActionButton,
+		EnableActionOnDrop,
+		
 		Value,
 		Type,
 	}

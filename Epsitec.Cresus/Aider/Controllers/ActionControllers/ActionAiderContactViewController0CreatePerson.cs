@@ -16,7 +16,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (0)]
-	public sealed class ActionAiderContactViewController0 : ActionViewController<AiderContactEntity>
+	public sealed class ActionAiderContactViewController0CreatePerson : ActionViewController<AiderContactEntity>
 	{
 		public override FormattedText GetTitle()
 		{

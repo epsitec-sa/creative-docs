@@ -23,8 +23,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableAction<ActionAiderPersonViewController2AddToGroup> ()
-				.EnableAction<ActionAiderPersonViewController3RemoveFromGroup> ()
+				.EnableActionMenu<ActionAiderPersonViewController2AddToGroup> ()
+				.EnableActionMenu<ActionAiderPersonViewController3RemoveFromGroup> ()
 				.Template ()
 					.Text (g => g.GetSummaryWithHierarchicalGroupName ())
 				.End ();

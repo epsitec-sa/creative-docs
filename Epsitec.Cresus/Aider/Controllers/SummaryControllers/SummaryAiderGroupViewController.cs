@@ -18,12 +18,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (this.Entity.CanBeEdited ())
 			{
 				var bricks = wall.AddBrick ()
-					.EnableAction<ActionAiderGroupViewController2MoveGroup> ();
+					.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ();
 
 				if (this.Entity.Subgroups.Count == 0)
 				{
 					bricks = bricks
-						.EnableAction<ActionAiderGroupViewController5MergeGroup> ();
+						.EnableActionMenu<ActionAiderGroupViewController5MergeGroup> ();
 				}
 			}
 			else
@@ -42,8 +42,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				if (this.Entity.CanSubgroupsBeEdited () && this.Entity.CanBeEditedByCurrentUser ())
 				{
 					bricks = bricks
-						.EnableAction<ActionAiderGroupViewController0CreateSubGroup> ()
-						.EnableAction<ActionAiderGroupViewController1DeleteSubGroup> ();
+						.EnableActionMenu<ActionAiderGroupViewController0CreateSubGroup> ()
+						.EnableActionMenu<ActionAiderGroupViewController1DeleteSubGroup> ();
 				}
 
 				bricks = bricks
@@ -65,8 +65,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				if (this.Entity.CanBeEditedByCurrentUser ())
 				{
 					bricks = bricks
-						.EnableAction<ActionAiderGroupViewController3ImportGroupMembers> ()
-						.EnableAction<ActionAiderGroupViewController4ExportGroupMembers> ();
+						.EnableActionMenu<ActionAiderGroupViewController3ImportGroupMembers> ()
+						.EnableActionMenu<ActionAiderGroupViewController4ExportGroupMembers> ();
 				}
 			}
 

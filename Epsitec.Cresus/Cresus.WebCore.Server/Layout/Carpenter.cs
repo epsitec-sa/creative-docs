@@ -839,7 +839,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			//	Action items are described by one of the properties EnableAction or
 			//	EnableActionButton, which get then mapped to an ActionItem instance.
 
-			return Brick.GetProperties (brick, BrickPropertyKey.EnableAction, BrickPropertyKey.EnableActionButton)
+			return Brick.GetProperties (brick, BrickPropertyKey.EnableActionMenu, BrickPropertyKey.EnableActionButton, BrickPropertyKey.EnableActionOnDrop)
 				.Select (p => this.BuildActionItem (entity, p.IntValue.Value, p.Key))
 				.Where (a => a != null);
 		}
@@ -863,9 +863,26 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					ViewId                   = InvariantConverter.ToString (viewId),
 					Title                    = controller.GetTitle ().ToString (),
 					RequiresAdditionalEntity = templateController != null && templateController.RequiresAdditionalEntity (),
-					DisplayMode              = propertyKey == BrickPropertyKey.EnableActionButton ? ActionItemDisplayMode.Button : ActionItemDisplayMode.Menu
+					DisplayMode              = Carpenter.GetDisplayMode (propertyKey)
 				};
 			}
+		}
+		
+		private static ActionItemDisplayMode GetDisplayMode(BrickPropertyKey propertyKey)
+		{
+			ActionItemDisplayMode displayMode;
+
+			switch (propertyKey)
+			{
+				case BrickPropertyKey.EnableActionMenu:
+					return ActionItemDisplayMode.Menu;
+				case BrickPropertyKey.EnableActionButton:
+					return ActionItemDisplayMode.Button;
+				case BrickPropertyKey.EnableActionOnDrop:
+					return ActionItemDisplayMode.OnDrop;
+			}
+
+			throw new System.ArgumentException (string.Format ("{0} cannot be used for an action item", propertyKey.GetQualifiedName ()));
 		}
 
 

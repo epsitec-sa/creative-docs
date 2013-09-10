@@ -4,7 +4,8 @@
 # This file defines the (experimental) features to enable in AIDER.
 #
 
-# ConfigureExperimentalFeature ("Notifications");
+ConfigureExperimentalFeature ("ContextualMenu");
+ConfigureExperimentalFeature ("Notifications");
+# ConfigureExperimentalFeature ("QuickSearch");
 # ConfigureExperimentalFeature ("Search");
-# ConfigureExperimentalFeature ("ContextualMenu");
 # ConfigureExperimentalFeature ("Warnings");

@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -28,7 +29,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				(contact.LegalPerson.IsNull ()))
 			{
 				wall.AddBrick ()
-					.EnableAction (0);
+					.EnableActionMenu<ActionAiderContactViewController0CreatePerson> ();
 			}
 
 			FormattedText contactSummary = this.GetPersonContactSummary (contact);
