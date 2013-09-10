@@ -692,9 +692,24 @@ namespace Epsitec.Common.Types
 			items.RemoveRange (startIndex, num);
 		}
 
+		private static string MakeStringPretty(string x)
+		{
+			if (string.IsNullOrEmpty (x))
+			{
+				return x;
+			}
+
+			x = x.Replace ("<->", "↔");
+			x = x.Replace ("<-", "←");
+			x = x.Replace ("->", "→");
+
+			return x;
+		}
+
+		
 		static TextFormatter()
 		{
-			TextFormatter.DefineDefaultConverter<string> (x => x);
+			TextFormatter.DefineDefaultConverter<string> (x => TextFormatter.MakeStringPretty (x));
 			TextFormatter.DefineDefaultConverter<Date> (x => x.ToString ("d", DateTimeFormatInfo.CurrentInfo));
 			TextFormatter.DefineDefaultConverter<Time> (x => x.ToString ("t", DateTimeFormatInfo.CurrentInfo));
 			TextFormatter.DefineDefaultConverter<System.DateTime> (x => x.ToString ("g", DateTimeFormatInfo.CurrentInfo));

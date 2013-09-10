@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		#endregion
 
-		public string getConnectionId()
+		public string GetConnectionId()
 		{
 			return this.hubConnection.ConnectionId;
 		}

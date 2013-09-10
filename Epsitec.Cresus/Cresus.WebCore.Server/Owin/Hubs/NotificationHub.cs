@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			var backendClient = NotificationClient.Instance;
 
 
-			Clients.Client (backendClient.getConnectionId ()).FlushConnectionId (Context.ConnectionId);
+			Clients.Client (backendClient.GetConnectionId ()).FlushConnectionId (Context.ConnectionId);
 
 			return base.OnDisconnected ();
 		}
@@ -40,14 +40,14 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			var backendClient = NotificationClient.Instance;
 
-			Clients.Client (backendClient.getConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Context.ConnectionId);
+			Clients.Client (backendClient.GetConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Context.ConnectionId);
 			return base.OnReconnected ();
 		}
 
 		public void SetupUserConnection()
 		{
 			var backendClient = NotificationClient.Instance;
-			Clients.Client (backendClient.getConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
+			Clients.Client (backendClient.GetConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
 		}
 	}
 }
