@@ -104,5 +104,5 @@ copy %configurationDirectory%\Aider.Environment.crconfig bin\Build\aider\server\
 copy %configurationDirectory%\Aider.Features.crconfig bin\Build\aider\server\Aider.Features.crconfig
 
 @rem Zip the build.
-set zipname = aider-%suffix%
+set zipname=aider-%suffix%
 ..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\%zipname%.zip bin\Build\aider
