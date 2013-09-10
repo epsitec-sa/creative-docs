@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Rules
 			AiderPersonBusinessRules.UpdateVisibility (person);
 
 			AiderPersonBusinessRules.VerifyParish (context, person);
-
+			
 			person.RefreshCache ();
 		}
 
@@ -61,8 +61,8 @@ namespace Epsitec.Aider.Rules
 			AiderPersonBusinessRules.ValidateMrMrs (person);
 		}
 
-		
-		private static void UpdatePersonOfficialName(AiderPersonEntity person)
+
+		public static void UpdatePersonOfficialName(AiderPersonEntity person)
 		{
 			//	There might be a problem with this official name, since it is mixing
 			//	spaces and dashes... We have seen things such as "X- Y" or "X - Y",
@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Rules
 			}
 		}
 
-		private static void UpdateVisibility(AiderPersonEntity person)
+		public static void UpdateVisibility(AiderPersonEntity person)
 		{
 			if (person.eCH_Person.IsDeceased)
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Aider.Rules
 			}
 		}
 
-		private static void UpdatePersonSex(AiderPersonEntity person)
+		public static void UpdatePersonSex(AiderPersonEntity person)
 		{
 			if (person.eCH_Person.DataSource != Enumerations.DataSource.Government)
 			{
