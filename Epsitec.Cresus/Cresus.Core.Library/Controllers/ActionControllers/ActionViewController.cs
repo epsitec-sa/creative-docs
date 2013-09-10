@@ -32,7 +32,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		protected abstract void GetForm(ActionBrick<T, SimpleBrick<T>> action);
+		protected virtual void GetForm(ActionBrick<T, SimpleBrick<T>> action)
+		{
+		}
 
 		#region IActionViewController Members
 

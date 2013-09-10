@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		protected override void FillDictionary(Dictionary<string, object> tile)
 		{
 			base.FillDictionary (tile);
+
 			tile["actions"] = this.Actions.Select (a => a.ToDictionary ()).ToList ();
 		}
 	}
