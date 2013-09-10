@@ -238,7 +238,7 @@ namespace Epsitec.Aider
 				
 				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository);
 				
-				updater.StartJob ();
+				updater.ProcessJob ();
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
