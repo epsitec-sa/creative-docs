@@ -188,12 +188,19 @@ function() {
         if (json === null) {
           return;
         }
-
+        
         options = Epsitec.BrickWallParser.parseColumn(json.content);
         options.callback = callback;
-
         dialog = Ext.create(actionType, options);
-        dialog.show();
+
+        if(json.content.tiles[0].fields.length > 0)
+        {
+          dialog.show(); 
+        }    
+        else
+        {
+          dialog.onSaveClick();
+        }  
       }
     }
   });
