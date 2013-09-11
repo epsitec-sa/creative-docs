@@ -1588,6 +1588,7 @@
     </Content>
     <Content Include="Resources\Common.Dialogs\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Common.Dialogs\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

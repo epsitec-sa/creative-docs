@@ -20,8 +20,7 @@ namespace Epsitec.Designer.Protocol
 
 			foreach (System.Diagnostics.Process process in System.Diagnostics.Process.GetProcesses ())
 			{
-				if ((process.ProcessName.Contains ("Designer")) &&
-					(process.MainWindowTitle.StartsWith ("Crésus Designer")))
+				if (process.ProcessName.Contains ("App.CresusDesigner"))
 				{
 					designerProcess = process;
 					break;
@@ -148,6 +147,7 @@ namespace Epsitec.Designer.Protocol
 
 		private static void HandleDesignerProtocol(string argument)
 		{
+			argument = argument.Replace ("designer://", "designer:");
 			string[] args = argument.Split ('/');
 
 			if (args.Length < 2)

@@ -95,6 +95,10 @@
       <Project>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</Project>
       <Name>App.CresusGraph</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tool.Designer.Protocol\Tool.Designer.Protocol.csproj">
+      <Project>{ff4203b6-50d1-4915-9bba-e0b57ea07d13}</Project>
+      <Name>Tool.Designer.Protocol</Name>
+    </ProjectReference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
