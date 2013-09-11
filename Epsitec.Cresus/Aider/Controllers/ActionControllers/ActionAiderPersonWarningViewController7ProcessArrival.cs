@@ -28,41 +28,27 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Traiter");
+            return Resources.FormattedText("Marquer comme lu");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool>(this.Execute);
+            return ActionExecutor.Create(this.Execute);
 		}
 
-		private void Execute(bool confirmed)
+		private void Execute()
 		{
-            if (confirmed)
-            {
-                this.Entity.Person.RemoveWarningInternal(this.Entity);
-                this.BusinessContext.DeleteEntity(this.Entity);
-            }
+            this.Entity.Person.RemoveWarningInternal(this.Entity);
+            this.BusinessContext.DeleteEntity(this.Entity);
 		}
 
-        private eCH_ReportedPersonEntity GetNewHousehold()
+        protected override bool NeedsInteraction
         {
-            var echHouseholdExample = new eCH_ReportedPersonEntity()
+            get
             {
-                Adult1 = this.Entity.Person.eCH_Person
-            };
-            return this.BusinessContext.DataContext.GetByExample<eCH_ReportedPersonEntity>(echHouseholdExample).FirstOrDefault();
+                return false;
+            }
         }
 
-        protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-        {
-			form
-				.Title (this.GetTitle ())
-				.Field<bool> ()
-					.Title ("Confirmer")
-					.InitialValue (true)
-				.End ()
-			.End ();           
-        }
 	}
 }

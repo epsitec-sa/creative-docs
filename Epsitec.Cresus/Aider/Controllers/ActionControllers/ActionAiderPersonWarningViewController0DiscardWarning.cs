@@ -29,27 +29,22 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool>(this.Execute);
+            return ActionExecutor.Create(this.Execute);
 		}
 
-		private void Execute(bool confirmed)
+		private void Execute()
 		{
-            if (confirmed)
-            {
-                this.Entity.Person.RemoveWarningInternal(this.Entity);
-                this.BusinessContext.DeleteEntity(this.Entity);
-            }       
+            this.Entity.Person.RemoveWarningInternal(this.Entity);
+            this.BusinessContext.DeleteEntity(this.Entity);               
 		}
 
-        protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
+        protected override bool NeedsInteraction
         {
-            form
-                .Title(this.GetTitle())
-                .Field<bool>()
-                    .Title("Je confirme")
-                    .InitialValue(true)
-                .End()
-            .End();
+            get
+            {
+                return false;
+            }
         }
+
 	}
 }

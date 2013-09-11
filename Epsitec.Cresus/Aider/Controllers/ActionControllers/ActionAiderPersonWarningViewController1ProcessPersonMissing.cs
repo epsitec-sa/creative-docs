@@ -29,10 +29,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool,bool>(this.Execute);
+            return ActionExecutor.Create<bool,bool,bool>(this.Execute);
 		}
 
-        private void Execute(bool setInvisible, bool isDecease)
+        private void Execute(bool setInvisible,bool deleteFromHousehold, bool isDecease)
 		{
 			if (isDecease && !this.Entity.Person.IsDeceased)
 			{
@@ -61,8 +61,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                     subscription.RefreshCache();
                 }
 
-
-                if (setInvisible)
+                if (deleteFromHousehold)
                 {
                     var contacts = this.Entity.Person.Contacts;
                     var contact = contacts.FirstOrDefault(x => x.Household == household);
@@ -100,7 +99,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 .Field<bool>()
                     .Title("Je veux rendre invisible cette personne")
                     .InitialValue(false)
-                .End()            
+                .End()
+                .Field<bool>()
+                    .Title("Supprimer du ménage")
+                    .InitialValue(true)
+                .End()
                 .Field<bool>()
                     .Title("Cette personne est décédée")
                     .InitialValue(this.Entity.Person.IsDeceased)

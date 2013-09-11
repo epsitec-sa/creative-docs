@@ -25,50 +25,26 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Traiter");
+            return Resources.FormattedText("Marquer comme lu");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-            return ActionExecutor.Create<bool>(this.Execute);
+            return ActionExecutor.Create(this.Execute);
 		}
 
-        private void Execute(bool confirmed)
+        private void Execute()
 		{
-            if (confirmed)
-            {
-				this.Entity.Person.RemoveWarningInternal (this.Entity);
-				this.BusinessContext.DeleteEntity (this.Entity);
-            }        
+		    this.Entity.Person.RemoveWarningInternal (this.Entity);
+		    this.BusinessContext.DeleteEntity (this.Entity);     
 		}
 
-		private AiderHouseholdEntity GetAiderHousehold(eCH_PersonEntity eChPerson)
-		{
-			var aiderPersonExample = new AiderPersonEntity ();
-			var contactExample = new AiderContactEntity ();
-			var householdExample = new AiderHouseholdEntity ();
-
-            aiderPersonExample.eCH_Person = eChPerson;
-			contactExample.Person = aiderPersonExample;
-			contactExample.Household = householdExample;
-			var request = new Request ()
-			{
-				RootEntity = contactExample,
-				RequestedEntity = householdExample
-			};
-
-			return this.BusinessContext.DataContext.GetByRequest<AiderHouseholdEntity> (request).FirstOrDefault ();
-		}
-
-        protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
+        protected override bool NeedsInteraction
         {
-            form
-                .Title(this.GetTitle())
-                .Field<bool>()
-                    .Title("Confirmer")
-                    .InitialValue(true)
-                .End()
-            .End();
+            get
+            {
+                return false;
+            }
         }
 	}
 }

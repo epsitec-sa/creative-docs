@@ -157,40 +157,40 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private int analyseChanges()
 		{
-			var householdMembers = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members.Where(p => p.IsGovernmentDefined).ToList ();
-			var newHousehold = this.GetNewHousehold ();
+			var aiderHouseholdMembers = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).First ().Household.Members.Where(p => p.IsGovernmentDefined).ToList ();
+			var newEChHousehold = this.GetNewHousehold ();
 			this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Résultat de l'analyse:\n"));
             var newHouseholdIds = new HashSet<string>();
-            newHouseholdIds.Add(newHousehold.Adult1.PersonId);
-            if (newHousehold.Adult2.IsNotNull())
+            newHouseholdIds.Add(newEChHousehold.Adult1.PersonId);
+            if (newEChHousehold.Adult2.IsNotNull())
             {
-                newHouseholdIds.Add(newHousehold.Adult2.PersonId);
+                newHouseholdIds.Add(newEChHousehold.Adult2.PersonId);
             }           
-            foreach (var child in newHousehold.Children)
+            foreach (var child in newEChHousehold.Children)
             {
                 if (child.IsNotNull())
                 {
                     newHouseholdIds.Add(child.PersonId);
                 }          
             }
-
-			if (householdMembers.Count < newHousehold.GetMembersCount ())
+          
+			if (aiderHouseholdMembers.Count < newEChHousehold.GetMembersCount ())
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient plus de membres : "));
 
-                if (newHousehold.Adult2.IsNotNull())
+                if (newEChHousehold.Adult2.IsNotNull())
                 {
-                    if (!householdMembers.Select(m => m.eCH_Person.PersonId).Contains(newHousehold.Adult2.PersonId))
+                    if (!aiderHouseholdMembers.Select(m => m.eCH_Person.PersonId).Contains(newEChHousehold.Adult2.PersonId))
                     {
-                        this.analyse = this.analyse.AppendLine(TextFormatter.FormatText(newHousehold.Adult2.PersonOfficialName + " " + newHousehold.Adult2.PersonFirstNames));
-                        this.contactToAdd.Add(newHousehold.Adult2);
+                        this.analyse = this.analyse.AppendLine(TextFormatter.FormatText(newEChHousehold.Adult2.PersonOfficialName + " " + newEChHousehold.Adult2.PersonFirstNames));
+                        this.contactToAdd.Add(newEChHousehold.Adult2);
                     }
                 }
 				
 
-				foreach (var child in newHousehold.Children)
+				foreach (var child in newEChHousehold.Children)
 				{
-					if (!householdMembers.Select (m => m.eCH_Person.PersonId).Contains (child.PersonId))
+					if (!aiderHouseholdMembers.Select (m => m.eCH_Person.PersonId).Contains (child.PersonId))
 					{
 						this.analyse = this.analyse.AppendLine (TextFormatter.FormatText (child.PersonOfficialName + " " + child.PersonFirstNames));
                         this.contactToAdd.Add(child);
@@ -200,11 +200,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return 1;
 			}
 
-			if (householdMembers.Count > newHousehold.GetMembersCount ())
+			if (aiderHouseholdMembers.Count > newEChHousehold.GetMembersCount ())
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient moins de membres : "));
 
-				var missing = householdMembers.Where(p => !newHouseholdIds.Contains(p.eCH_Person.PersonId) && p.eCH_Person.IsNotNull());
+				var missing = aiderHouseholdMembers.Where(p => !newHouseholdIds.Contains(p.eCH_Person.PersonId) && p.eCH_Person.IsNotNull());
 				foreach (var miss in missing)
 				{
 					this.analyse = this.analyse.AppendLine (TextFormatter.FormatText (miss.DisplayName));
@@ -214,10 +214,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return -1;
 			}
 
-            if (householdMembers.Count == newHousehold.GetMembersCount())
+            if (aiderHouseholdMembers.Count == newEChHousehold.GetMembersCount())
             {
                 var mismatch = false;
-                foreach (var member in householdMembers)
+                foreach (var member in aiderHouseholdMembers)
                 {
                     if (!newHouseholdIds.Contains(member.eCH_Person.PersonId))
                     {
