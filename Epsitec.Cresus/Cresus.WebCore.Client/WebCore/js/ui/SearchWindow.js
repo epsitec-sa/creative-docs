@@ -26,10 +26,10 @@ function() {
         layout: 'form',
         url: '',
         bodyPadding: '5 5 0',
-        width: 350,
+        width: 400,
         fieldDefaults: {
           msgTarget: 'side',
-          labelWidth: 75
+          labelWidth: 175
         },
         plugins: {
           ptype: 'datatip'
@@ -46,24 +46,19 @@ function() {
           scope: this
         }]
       });
-      this.panel = Ext.widget({
-        xtype: 'panel',
-        autoHeight: true,
-        items: this.form
-      });
       tabManager = Epsitec.Cresus.Core.getApplication().tabManager;
       this.parent = Ext.get(tabManager.getLayout().getActiveItem().el);
       config = {
         title: 'Recherche',
-        width: 500,
-        height: 600,
+        width: 450,
+        height: 400,
         header: 'true',
         autoScroll: true,
         constrain: true,
         renderTo: this.parent,
         closable: true,
         closeAction: 'hide',
-        items: this.panel
+        items: this.form
       };
 
       this.callParent([config]);

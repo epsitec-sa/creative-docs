@@ -19,7 +19,6 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.querybuilder.QueryWindow',
   'Ext.ux.grid.FiltersFeature',
   'Ext.ux.DataTip',
-  'Ext.grid.plugin.BufferedRenderer',
   'Ext.Action'
 ],
 function() {
@@ -554,7 +553,7 @@ function() {
 
     createSecondaryButtons: function() {
       var buttons = [];
-      if (epsitecConfig.featureSearch) {
+      if (epsitecConfig.featureQuickSearch) {
         buttons.push({
           xtype: 'textfield',
           width: 150,
@@ -565,6 +564,8 @@ function() {
             scope: this
           }
         });
+      }
+      if (epsitecConfig.featureSearch) {
         buttons.push(Ext.create('Ext.Button', {
           text: '',
           iconCls: 'icon-search',
@@ -573,6 +574,8 @@ function() {
             scope: this
           }
         }));
+      }
+      if (epsitecConfig.featureQueryBuilder) {
         buttons.push(Ext.create('Ext.Button', {
           text: '',
           iconCls: 'icon-filter',
