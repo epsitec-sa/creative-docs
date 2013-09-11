@@ -945,7 +945,40 @@ AiderPersonWarning = [LVALB]
       </col>
     </t>
 
-
+	<t eid="@AiderPerson" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA2]" title="Nom de famille" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA3]" title="Prénom (complet)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA8B]" title="Date de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA9B]" title="Date de décès" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA9]" title="Etat civil" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAU1].[LVA6]" title="Sexe" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAVE]" title="Visibilité" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPerson:[LVAMG]" title="Parish Group Path" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>	  
+    </t>
   </T>
   <D>
     <d cid="[LVAFE]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
@@ -995,6 +1028,12 @@ AiderPersonWarning = [LVALB]
     </d>
 
     <d cid="[LVAHD]" teid="@AiderUser" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuDefs">
+      <R><r>@user</r></R>
+    </d>
+
+	<!-- AiderPerson
+	-->
+	<d cid="[LVO003]" teid="@AiderPerson" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="@submenuDefs">
       <R><r>@user</r></R>
     </d>
 

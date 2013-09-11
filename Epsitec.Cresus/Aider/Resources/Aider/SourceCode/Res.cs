@@ -37,6 +37,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 528));
 				//	designer:cap/LVG832
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderLegalPersonContact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 104));
+				//	designer:cap/LVO003
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 0));
 				//	designer:cap/LVGK32
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonWarning = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 116));
 				//	designer:cap/LVG232
@@ -76,6 +78,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderLegalPerson = 0x3F50000A000210L;
 				//	designer:cap/LVG832
 				public const long ShowAiderLegalPersonContact = 0x3F500050000068L;
+				//	designer:cap/LVO003
+				public const long ShowAiderPerson = 0x3F500078000000L;
 				//	designer:cap/LVGK32
 				public const long ShowAiderPersonWarning = 0x3F500050000074L;
 				//	designer:cap/LVG232
