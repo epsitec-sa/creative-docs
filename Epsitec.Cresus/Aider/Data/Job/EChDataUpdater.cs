@@ -155,16 +155,16 @@ namespace Epsitec.Aider.Data.Job
 							var changes = new List<FormattedText> ();
 							changes.Add (aiderPerson.GetFullName ());
 
-							if (eChPerson.PersonOfficialName != eChPersonNew.PersonOfficialName)
+							if (StringUtils.NotEqualOrEmpty (eChPerson.PersonOfficialName, eChPersonNew.PersonOfficialName))
 							{
 								changes.Add (TextFormatter.FormatText ("Nom:", eChPerson.PersonOfficialName, "->", eChPersonNew.PersonOfficialName));
-								eChPerson.PersonOfficialName = eChPersonNew.PersonOfficialName;
+								eChPerson.PersonOfficialName = eChPersonNew.PersonOfficialName ?? "";
 							}
 
-							if (eChPerson.PersonFirstNames != eChPersonNew.PersonFirstNames)
+							if (StringUtils.NotEqualOrEmpty (eChPerson.PersonFirstNames, eChPersonNew.PersonFirstNames))
 							{
 								changes.Add (TextFormatter.FormatText ("Prénom:", eChPerson.PersonFirstNames, "->", eChPersonNew.PersonFirstNames));
-								eChPerson.PersonFirstNames = eChPersonNew.PersonFirstNames;
+								eChPerson.PersonFirstNames = eChPersonNew.PersonFirstNames ?? "";
 							}
 
 							if (eChPerson.PersonDateOfBirth != eChPersonNew.PersonDateOfBirth)
@@ -242,55 +242,56 @@ namespace Epsitec.Aider.Data.Job
 
 							changes.Add (TextFormatter.FormatText ("Changement dans l'adresse:"));
 
-							if (family.Address.AddressLine1 != item.NewValue.Address.AddressLine1)
+							if (StringUtils.NotEqualOrEmpty (family.Address.AddressLine1, item.NewValue.Address.AddressLine1))
 							{
 								changes.Add (TextFormatter.FormatText ("Ligne adresse:", family.Address.AddressLine1, "->", item.NewValue.Address.AddressLine1));
 								
-								family.Address.AddressLine1 = item.NewValue.Address.AddressLine1;
+								family.Address.AddressLine1 = item.NewValue.Address.AddressLine1 ?? "";
 							}
 
-							if (family.Address.HouseNumber != item.NewValue.Address.HouseNumber)
+							if (StringUtils.NotEqualOrEmpty (family.Address.HouseNumber, item.NewValue.Address.HouseNumber))
 							{
 								changes.Add (TextFormatter.FormatText ("N° de maison:", family.Address.HouseNumber, "->", item.NewValue.Address.HouseNumber));
 								
-								family.Address.HouseNumber = item.NewValue.Address.HouseNumber;
+								family.Address.HouseNumber = item.NewValue.Address.HouseNumber ?? "";
 							}
 							
-							if (family.Address.Street != item.NewValue.Address.Street)
+							if (StringUtils.NotEqualOrEmpty (family.Address.Street, item.NewValue.Address.Street))
 							{
 								changes.Add (TextFormatter.FormatText ("Rue:", family.Address.Street, "->", item.NewValue.Address.Street));
 								
-								family.Address.Street = item.NewValue.Address.Street;
+								family.Address.Street = item.NewValue.Address.Street ?? "";
 							}
 
 							if ((family.Address.SwissZipCode != item.NewValue.Address.SwissZipCode) ||
-								(family.Address.SwissZipCodeAddOn != item.NewValue.Address.SwissZipCodeAddOn))
+								(family.Address.SwissZipCodeAddOn != item.NewValue.Address.SwissZipCodeAddOn) ||
+								(family.Address.SwissZipCodeId != item.NewValue.Address.SwissZipCodeId))
 							{
-								changes.Add (TextFormatter.FormatText ("NPA:", family.Address.SwissZipCode, family.Address.SwissZipCodeAddOn, "->", item.NewValue.Address.SwissZipCode, item.NewValue.Address.SwissZipCodeAddOn));
+								changes.Add (TextFormatter.FormatText ("NPA:", family.Address.SwissZipCode, family.Address.SwissZipCodeAddOn, "(", family.Address.SwissZipCodeId, ")", "->",
+																	   item.NewValue.Address.SwissZipCode, item.NewValue.Address.SwissZipCodeAddOn, "(", item.NewValue.Address.SwissZipCodeId, ")"));
 								
 								family.Address.SwissZipCode      = item.NewValue.Address.SwissZipCode;
 								family.Address.SwissZipCodeAddOn = item.NewValue.Address.SwissZipCodeAddOn;
+								family.Address.SwissZipCodeId    = item.NewValue.Address.SwissZipCodeId;
 							}
 
-							if (family.Address.SwissZipCodeId != item.NewValue.Address.SwissZipCodeId)
-							{
-								changes.Add (TextFormatter.FormatText ("NPA ID:", family.Address.SwissZipCodeId, "->", item.NewValue.Address.SwissZipCodeId));
-								
-								family.Address.SwissZipCodeId = item.NewValue.Address.SwissZipCodeId;
-							}
-
-							if (family.Address.Town != item.NewValue.Address.Town)
+							if (StringUtils.NotEqualOrEmpty (family.Address.Town, item.NewValue.Address.Town))
 							{
 								changes.Add (TextFormatter.FormatText ("Localité:", family.Address.Town, "->", item.NewValue.Address.Town));
 
-								family.Address.Town = item.NewValue.Address.Town;
+								family.Address.Town = item.NewValue.Address.Town ?? "";
 							}
 
-							if (family.Address.Country != item.NewValue.Address.CountryCode)
+							if (StringUtils.NotEqualOrEmpty (family.Address.Country, item.NewValue.Address.CountryCode))
 							{
 								changes.Add (TextFormatter.FormatText ("Pays:", family.Address.Country, "->", item.NewValue.Address.CountryCode));
 								
-								family.Address.Country = item.NewValue.Address.CountryCode;
+								family.Address.Country = item.NewValue.Address.CountryCode ?? "";
+							}
+
+							if (changes.Count == 1)
+							{
+								continue;
 							}
 
 							var refPerson      = this.GetAiderPersonEntity (businessContext,family.Adult1);

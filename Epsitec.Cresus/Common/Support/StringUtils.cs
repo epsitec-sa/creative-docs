@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Types;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System;
 
@@ -13,17 +16,12 @@ using System.Text;
 
 namespace Epsitec.Common.Support
 {
-
-
 	public static class StringUtils
 	{
-
-
 		public static string Join(string separator, params string[] strings)
 		{
 			return StringUtils.Join (separator, (IEnumerable<string>) strings);
 		}
-
 
 		public static string Join(string separator, params object[] objects)
 		{
@@ -33,7 +31,6 @@ namespace Epsitec.Common.Support
 
 			return StringUtils.Join (separator, strings);
 		}
-
 
 		public static string Join(string separator, IEnumerable<string> strings)
 		{
@@ -55,7 +52,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-
 		public static DateTime? ParseNullableDateTime(string text)
 		{
 			DateTime value;
@@ -69,7 +65,6 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 		}
-
 
 		public static Date? ParseNullableDate(string text)
 		{
@@ -85,7 +80,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-
+		
 		public static string RemoveDiacritics(string text)
 		{
 			// NOTE This code is strongly inspired by the code found at these two places :
@@ -123,7 +118,6 @@ namespace Epsitec.Common.Support
 			return formC;
 		}
 
-
 		public static string GetDigits(string text)
 		{
 			var stringBuilder = new StringBuilder ();
@@ -140,7 +134,28 @@ namespace Epsitec.Common.Support
 		}
 
 
+		public static bool EqualOrEmpty(string a, string b)
+		{
+			if (string.IsNullOrEmpty (a) && string.IsNullOrEmpty (b))
+			{
+				return true;
+			}
+			else
+			{
+				return a == b;
+			}
+		}
+		
+		public static bool NotEqualOrEmpty(string a, string b)
+		{
+			if (string.IsNullOrEmpty (a) && string.IsNullOrEmpty (b))
+			{
+				return false;
+			}
+			else
+			{
+				return a != b;
+			}
+		}
 	}
-
-
 }
