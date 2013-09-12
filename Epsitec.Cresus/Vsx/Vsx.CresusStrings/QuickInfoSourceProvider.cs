@@ -22,20 +22,15 @@ namespace Epsitec.Cresus.Strings
 	{
 		public QuickInfoSourceProvider()
 		{
-			using (new TimeTrace ("QuickInfoSourceProvider"))
-			{
-				var solution = Roslyn.Services.Workspace.PrimaryWorkspace.CurrentSolution;
-				var workspace = Roslyn.Services.Workspace.LoadSolution (solution.FilePath, enableFileTracking: true);
-				this.Solution = workspace.CurrentSolution;
-			}
+			Trace.WriteLine ("QuickInfoSourceProvider()");
 		}
 
-		public Roslyn.Services.ISolution Solution
+		[Import]
+		internal Epsitec.Controllers.WorkspaceController Workspace
 		{
 			get;
 			set;
 		}
-
 
 		[Import]
 		internal ITextStructureNavigatorSelectorService NavigatorService

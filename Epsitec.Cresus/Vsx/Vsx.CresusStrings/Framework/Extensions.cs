@@ -67,6 +67,7 @@ namespace Epsitec
 
 		public static void ForgetSafely(this Task task)
 		{
+			// observe exceptions
 			task.ContinueWith (t => Extensions.HandleException (t));
 		} 
 
@@ -88,24 +89,24 @@ namespace Epsitec
 			}
 		}
 
-		public static IDocument ActiveDocument(this ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			cancellationToken.ThrowIfCancellationRequested ();
-			var dte2 = DTE2Provider.GetDTE2 (System.Diagnostics.Process.GetCurrentProcess ().Id);
-			cancellationToken.ThrowIfCancellationRequested ();
-			var dteActiveDocumentPath = dte2.ActiveDocument.FullName;
-			for (int retryCount = 0; retryCount < 3; ++retryCount)
-			{
-				try
-				{
-					return solution.Documents (cancellationToken).Where (d => string.Compare (d.FilePath, dteActiveDocumentPath, true) == 0).Single ();
-				}
-				catch (InvalidOperationException)
-				{
-				}
-			}
-			return null;
-		}
+		//public static IDocument ActiveDocument(this ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
+		//{
+		//	cancellationToken.ThrowIfCancellationRequested ();
+		//	var dte2 = DTE2Provider.GetDTE2 (System.Diagnostics.Process.GetCurrentProcess ().Id);
+		//	cancellationToken.ThrowIfCancellationRequested ();
+		//	var dteActiveDocumentPath = dte2.ActiveDocument.FullName;
+		//	for (int retryCount = 0; retryCount < 3; ++retryCount)
+		//	{
+		//		try
+		//		{
+		//			return solution.Documents (cancellationToken).Where (d => string.Compare (d.FilePath, dteActiveDocumentPath, true) == 0).Single ();
+		//		}
+		//		catch (InvalidOperationException)
+		//		{
+		//		}
+		//	}
+		//	return null;
+		//}
 
 		public static SyntaxNode RemoveTrivias(this SyntaxNode node)
 		{

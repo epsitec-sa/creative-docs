@@ -29,7 +29,10 @@ namespace Epsitec.Cresus.Strings
 			mapper.VisitBundle (bundle);
 
 			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo");
-			var view = new MultiCultureResourceItemView (resources.Single ());
+			var view = new MultiCultureResourceItemView (resources.Single ())
+			{
+				Margin = new Thickness(12)
+			};
 
 			var window = WpfHelper.CreateWindow ();
 			window.Content = view;

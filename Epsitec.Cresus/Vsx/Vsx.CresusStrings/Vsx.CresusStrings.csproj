@@ -91,12 +91,16 @@
     <Compile Include="CresusStrings.xaml.cs">
       <DependentUpon>CresusStrings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\DocumentController.cs" />
+    <Compile Include="Controllers\ResourceController.cs" />
+    <Compile Include="VisualStudio\DTE.cs" />
     <Compile Include="Framework\CompositeDictionary.cs" />
     <Compile Include="Framework\CompositeKey.cs" />
     <Compile Include="Framework\Key.cs" />
     <Compile Include="ResourceManagement\IResourceTable.cs" />
     <Compile Include="ResourceManagement\ResourceElement.cs" />
     <Compile Include="ResourceManagement\ResourceItemError.cs" />
+    <Compile Include="Controllers\WorkspaceController.cs" />
     <None Include="ResourceManagement\ResourceField.cs" />
     <Compile Include="ResourceManagement\ResourceModuleInfo.cs" />
     <Compile Include="ResourceManagement\ResourceNode.cs" />

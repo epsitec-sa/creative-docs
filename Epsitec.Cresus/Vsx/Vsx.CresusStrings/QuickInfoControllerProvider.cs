@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -15,6 +16,11 @@ namespace Epsitec.Cresus.Strings
 	[ContentType ("CSharp")]
 	internal class QuickInfoControllerProvider : IIntellisenseControllerProvider
 	{
+		public QuickInfoControllerProvider()
+		{
+			Trace.WriteLine ("QuickInfoControllerProvider()");
+		}
+
 		[Import]
 		internal IQuickInfoBroker QuickInfoBroker
 		{

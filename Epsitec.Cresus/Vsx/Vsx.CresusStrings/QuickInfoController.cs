@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +11,14 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace Epsitec.Cresus.Strings
 {
+	/// <summary>
+	/// One QuickInfoController per document
+	/// </summary>
 	internal class QuickInfoController : IIntellisenseController
 	{
 		internal QuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, QuickInfoControllerProvider provider)
 		{
+			Trace.WriteLine ("QuickInfoController()");
 			this.textView = textView;
 			this.subjectBuffers = subjectBuffers;
 			this.provider = provider;
@@ -20,6 +26,9 @@ namespace Epsitec.Cresus.Strings
 			this.textView.MouseHover += this.OnTextViewMouseHover;
 		}
 
+
+		#region IIntellisenseController Members
+		
 		public void Detach(ITextView textView)
 		{
 			if (this.textView == textView)
@@ -36,6 +45,8 @@ namespace Epsitec.Cresus.Strings
 		public void DisconnectSubjectBuffer(ITextBuffer subjectBuffer)
 		{
 		}
+
+		#endregion
 
 		private void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
 		{

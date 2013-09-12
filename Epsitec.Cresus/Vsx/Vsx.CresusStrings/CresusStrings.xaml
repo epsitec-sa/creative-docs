@@ -45,7 +45,7 @@
 	<DataTemplate x:Key="SymbolNameTemplate" DataType="{x:Type rm:ResourceItem}" >
 		<TextBlock Text="{Binding SymbolName}" FontStyle="Italic" VerticalAlignment="Center" />
 	</DataTemplate>
-	
+
 	<DataTemplate x:Key="CultureNameTemplate" DataType="{x:Type rm:ResourceItem}" >
 		<TextBlock Text="{Binding CultureName}" FontStyle="Italic" VerticalAlignment="Center">
 			<TextBlock.Style>
@@ -74,8 +74,8 @@
 	<DataTemplate x:Key="CompactTemplate">
 		<DockPanel>
 			<!-- Symbol Name -->
-			<Border DockPanel.Dock="Top" BorderBrush="Black" BorderThickness="0.5" Background="{StaticResource SymbolBackgroundColor}" >
-				<TextBlock Margin="3" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="SemiBold" />
+			<Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="1" Background="{StaticResource SymbolBackgroundColor}" Margin="0,0,1,-1">
+				<TextBlock Margin="3" Text="{Binding SymbolName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold" />
 			</Border>
 			<!-- Item Type = rm:ResourceItem -->
 			<Border BorderBrush="Black" BorderThickness="0.5" >
