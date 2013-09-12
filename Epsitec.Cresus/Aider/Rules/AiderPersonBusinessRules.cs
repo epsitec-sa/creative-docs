@@ -170,47 +170,61 @@ namespace Epsitec.Aider.Rules
 			{
 				AiderPersonBusinessRules.AssignParish (context, person);
 			}
+			if (person.ParishGroup.IsParish () == false)
+			{
+				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
+			}
 			else
 			{
-				AiderPersonBusinessRules.CheckCurrentParish (context, person);
+				if (AiderPersonBusinessRules.IsReassignNeeded (context, person))
+				{
+					AiderPersonBusinessRules.ReassignParish (context, person);
+				}
 			}
 		}
 
-		private static void CheckCurrentParish(BusinessContext context, AiderPersonEntity person)
+		private static bool IsReassignNeeded(BusinessContext context, AiderPersonEntity person)
 		{
-			if (!person.ParishGroup.IsParish ())
-			{
-				Logic.BusinessRuleException (person, Resources.Text ("Vous devez sélectionner un groupe 'paroisse' pour la paroisse."));
-
-				return;
-			}
-
 			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person))
 			{
-				return;
+				return false;
 			}
+			else if (person.Warnings.Any (x => x.WarningType == WarningType.ParishMismatch))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
 
-			if (person.Warnings.Any (x => x.WarningType == WarningType.ParishMismatch))
+		private static void ReassignParish(BusinessContext context, AiderPersonEntity person)
+		{
+			var oldParishName      = ParishAssigner.FindParishName (ParishAddressRepository.Current, person.Address);
+			var oldParishGroupPath = person.ParishGroupPathCache;
+
+			AiderPersonBusinessRules.AssignParish (context, person);
+
+			var newParishName      = ParishAssigner.FindParishName (ParishAddressRepository.Current, person.Address);
+			var newParishGroupPath = person.ParishGroupPathCache;
+
+			if (oldParishGroupPath == newParishGroupPath)
 			{
 				return;
 			}
 
-			var title = Resources.Text ("La paroisse ne correspond pas à l'adresse principale");
-			var type = WarningType.ParishMismatch;
+			var title       = Resources.Text ("Assignation de paroisse modifiée");
+			var description = TextFormatter.FormatText ("La paroisse ne correspondait pas à l'adresse\nprincipale du ménage.\n\nLa correction suivante a été appliquée:", "\n", oldParishName, "->", newParishName);
+			var warningType = WarningType.ParishMismatch;
 
-			AiderPersonWarningEntity.Create (context, person, person.ParishGroupPathCache, type, title);
+			AiderPersonWarningEntity.Create (context, person, oldParishGroupPath, warningType, title, description);
+			AiderPersonWarningEntity.Create (context, person, newParishGroupPath, warningType, title, description);
 		}
 
 		private static void AssignParish(BusinessContext context, AiderPersonEntity person)
 		{
-			if (ParishAssigner.IsInNoParishGroup (person))
-			{
-				return;
-			}
-
-			var parishRepository = ParishAddressRepository.Current;
-
-			ParishAssigner.AssignToParish (parishRepository, context, person);
+			ParishAssigner.AssignToParish (ParishAddressRepository.Current, context, person);
 		}
 	}
 }

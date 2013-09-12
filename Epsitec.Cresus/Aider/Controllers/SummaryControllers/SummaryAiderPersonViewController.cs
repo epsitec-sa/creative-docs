@@ -47,7 +47,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonViewController1Groups));
 
-			if (CoreContext.HasExperimentalFeature ("Warnings"))
+			if ((CoreContext.HasExperimentalFeature ("Warnings")) &&
+				(this.Entity.Warnings.Any ()))
 			{
 				wall.AddBrick ()
 					.Icon ("Data.AiderPersonWarning")

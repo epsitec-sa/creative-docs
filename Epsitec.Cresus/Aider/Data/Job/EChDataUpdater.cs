@@ -865,7 +865,8 @@ namespace Epsitec.Aider.Data.Job
 			}
 			else
 			{
-				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.Mismatch, this.warningTitleMessage, FormattedText.FromSimpleText (person.GetDisplayName () + " n'a pas de ménage dans Aider"));
+				this.CreateWarning (businessContext, person, person.ParishGroupPathCache, WarningType.MissingHousehold, this.warningTitleMessage,
+					/**/			FormattedText.FromSimpleText (person.GetDisplayName () + " n'a pas de ménage dans Aider"));
 			}
 
 			person.Contacts.ForEach (x => x.RefreshCache ());

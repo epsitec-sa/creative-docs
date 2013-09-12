@@ -4,6 +4,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -210,11 +211,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static AiderSubscriptionEntity FindSubscription
-		(
-			BusinessContext businessContext,
-			AiderHouseholdEntity household
-		)
+		public static AiderSubscriptionEntity FindSubscription(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
 			var example = new AiderSubscriptionEntity ()
 			{
@@ -270,11 +267,20 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static IList<AiderSubscriptionEntity> FindSubscriptions
-		(
-			BusinessContext businessContext,
-			AiderLegalPersonEntity legalPerson
-		)
+		public static IEnumerable<AiderSubscriptionEntity> FindSubscriptions(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			foreach (var household in person.Households)
+			{
+				var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+
+				if (subscription.IsNotNull ())
+				{
+					yield return subscription;
+				}
+			}
+		}
+
+		public static IList<AiderSubscriptionEntity> FindSubscriptions(BusinessContext businessContext, AiderLegalPersonEntity legalPerson)
 		{
 			var dataContext = businessContext.DataContext;
 
@@ -285,7 +291,7 @@ namespace Epsitec.Aider.Entities
 
 			var example = new AiderSubscriptionEntity ()
 			{
-				SubscriptionType = SubscriptionType.LegalPerson,
+				SubscriptionType   = SubscriptionType.LegalPerson,
 				LegalPersonContact = new AiderContactEntity ()
 				{
 					ContactType = ContactType.Legal,

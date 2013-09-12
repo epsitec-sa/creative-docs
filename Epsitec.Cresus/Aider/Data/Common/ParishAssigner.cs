@@ -22,12 +22,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data.Common
 {
-
-
 	internal sealed class ParishAssigner
 	{
-
-
 		private ParishAssigner(ParishAddressRepository parishRepository, BusinessContext businessContext)
 		{
 			this.parishRepository = parishRepository;
@@ -53,7 +49,10 @@ namespace Epsitec.Aider.Data.Common
 					var participationData = new ParticipationData (person);
 					AiderGroupParticipantEntity.StartParticipation (businessContext, parishGroup, participationData);
 
-					person.ParishGroup = parishGroup;
+					person.ParishGroup          = parishGroup;
+					person.ParishGroupPathCache = parishGroup.Path;
+					
+					this.UpdateSubscription (person);
 				}
 				else
 				{
@@ -66,22 +65,47 @@ namespace Epsitec.Aider.Data.Common
 			}
 		}
 
+		private void UpdateSubscription(AiderPersonEntity person)
+		{
+			if ((person.ParishGroup.IsNull ()) ||
+				(person.ParishGroup.Parent.IsNull ()))
+			{
+				//	No parish...
+			}
+			else
+			{
+				var parishGroup = person.ParishGroup;
+				var regionGroup = parishGroup.Parent;
+
+				var subscriptions = AiderSubscriptionEntity.FindSubscriptions (this.businessContext, person);
+
+				foreach (var subscription in subscriptions)
+				{
+					subscription.RegionalEdition = regionGroup;
+				}
+			}
+		}
 
 		private void AssignToParish(AiderLegalPersonEntity legalPerson)
 		{
-			var address = legalPerson.Address;
-			var parishName = ParishAssigner.FindParishName (this.parishRepository, address);
+			var address     = legalPerson.Address;
+			var parishName  = ParishAssigner.FindParishName (this.parishRepository, address);
+			var parishGroup = this.FindParishGroup (parishName);
 
 			if (string.IsNullOrEmpty (parishName))
 			{
 				legalPerson.ParishGroup = null;
+				legalPerson.ParishGroupPathCache = null;
 			}
 			else
 			{
-				legalPerson.ParishGroup = this.FindParishGroup (parishName);
+				legalPerson.ParishGroup = parishGroup;
+				legalPerson.ParishGroupPathCache = legalPerson.ParishGroup.Path;
+
+				//	We should maybe update the subscription; but for legal persons, this might not be
+				//	the right choice; don't do anything.
 			}
 		}
-
 
 		private AiderGroupEntity FindParishGroup(AiderPersonEntity person)
 		{
@@ -106,7 +130,6 @@ namespace Epsitec.Aider.Data.Common
 			return group;
 		}
 
-
 		private void AssignToNoParishGroup(AiderPersonEntity person)
 		{
 			var participationData = new ParticipationData (person);
@@ -114,7 +137,6 @@ namespace Epsitec.Aider.Data.Common
 
 			AiderGroupParticipantEntity.StartParticipation (businessContext, group, participationData);
 		}
-
 
 		private AiderGroupEntity FindParishGroup(AiderAddressEntity address)
 		{
@@ -132,11 +154,12 @@ namespace Epsitec.Aider.Data.Common
 
 		private AiderGroupEntity FindParishGroup(string parishName)
 		{
-			return this.FindGroup
-			(
-				parishName,
-				() => ParishAssigner.FindParishGroup (this.businessContext, this.parishRepository, parishName)
-			);
+			if (string.IsNullOrEmpty (parishName))
+			{
+				return null;
+			}
+
+			return this.FindGroup (parishName, () => ParishAssigner.FindParishGroup (this.businessContext, this.parishRepository, parishName));
 		}
 
 
@@ -276,38 +299,35 @@ namespace Epsitec.Aider.Data.Common
 		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderPersonEntity person)
 		{
 			var contact = person.GetMainContact ();
-			var address = contact.IsNull ()
-				? null
-				: contact.Address;
+			var address = contact.IsNull () ? null : contact.Address;
 
 			var parishGroup = person.ParishGroup;
 
 			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);
 		}
 
-
 		public static bool IsInValidParish(ParishAddressRepository parishRepository, AiderLegalPersonEntity legalPerson)
 		{
-			var address = legalPerson.Address;
+			var address     = legalPerson.Address;
 			var parishGroup = legalPerson.ParishGroup;
 
 			return ParishAssigner.IsInValidParish (parishRepository, address, parishGroup);
 		}
 
-
+		
 		private static bool IsInValidParish(ParishAddressRepository parishRepository, AiderAddressEntity address, AiderGroupEntity parishGroup)
 		{
 			var canHaveParish = address.IsNotNull ()
-				&& address.Town.IsNotNull ()
-				&& address.Town.Country.IsSwitzerland ();
+							 && address.Town.IsNotNull ()
+							 && address.Town.Country.IsSwitzerland ();
 
 			if (parishGroup.IsNull ())
 			{
-				return !canHaveParish
-					|| ParishAssigner.FindParishName (parishRepository, address) == null;
+				return (canHaveParish == false)
+					|| (ParishAssigner.FindParishName (parishRepository, address) == null);
 			}
 
-			if (!canHaveParish)
+			if (canHaveParish == false)
 			{
 				return false;
 			}
@@ -332,7 +352,6 @@ namespace Epsitec.Aider.Data.Common
 			return ParishAssigner.FindGroup (businessContext, groupName, GroupClassification.Region);
 		}
 
-
 		public static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, string parishName)
 		{
 			var groupName = ParishAssigner.GetParishGroupName (parishRepository, parishName);
@@ -340,7 +359,7 @@ namespace Epsitec.Aider.Data.Common
 			return ParishAssigner.FindGroup (businessContext, groupName, GroupClassification.Parish);
 		}
 
-
+		
 		private static AiderGroupEntity FindGroup(BusinessContext businessContext, string name, GroupClassification classification)
 		{
 			var dataContext = businessContext.DataContext;
@@ -356,7 +375,6 @@ namespace Epsitec.Aider.Data.Common
 
 			return dataContext.GetByExample (example).Single ();
 		}
-
 
 		private static AiderGroupEntity FindNoParishGroup(BusinessContext businessContext)
 		{
@@ -386,12 +404,10 @@ namespace Epsitec.Aider.Data.Common
 			return repository.FindParishName (zipCode, townName, normalizedStreetName, normalizedHouseNumber);
 		}
 
-
 		public static string GetRegionGroupName(int regionNumber)
 		{
 			return string.Format ("Région {0:00}", regionNumber);
 		}
-
 
 		public static string GetParishGroupName(ParishAddressRepository parishRepository, string parishName)
 		{
@@ -409,15 +425,7 @@ namespace Epsitec.Aider.Data.Common
 
 
 		private readonly ParishAddressRepository parishRepository;
-
-
-		private readonly BusinessContext businessContext;
-
-
+		private readonly BusinessContext		businessContext;
 		private readonly Dictionary<string, AiderGroupEntity> cache;
-
-
 	}
-
-
 }

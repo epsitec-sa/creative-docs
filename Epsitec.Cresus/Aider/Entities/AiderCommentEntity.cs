@@ -13,12 +13,12 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Text, "~\n~", this.SystemText);
+			return TextFormatter.FormatText (this.Text);
 		}
 		
 		public override FormattedText GetCompactSummary()
 		{
-			return this.GetSummary ();
+			return TextFormatter.FormatText (this.Text);
 		}
 		
 		public override EntityStatus GetEntityStatus()
