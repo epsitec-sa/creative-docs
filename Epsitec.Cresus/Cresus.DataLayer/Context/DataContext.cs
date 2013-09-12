@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-		private DbInfrastructure				DbInfrastructure
+		public DbInfrastructure					DbInfrastructure
 		{
 			get
 			{

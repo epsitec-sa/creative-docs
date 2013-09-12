@@ -19,6 +19,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.LoginPanel',
   'Epsitec.cresus.webcore.ui.Menu',
   'Epsitec.cresus.webcore.ui.TabManager',
+  'Epsitec.cresus.webcore.ui.EntityBag',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.ViewMode',
   'Epsitec.cresus.webcore.hub.Notifications'
@@ -33,6 +34,7 @@ function() {
     menu: null,
     loginPanel: null,
     tabManager: null,
+    entityBag: null,
 
     /* Application entry point */
 
@@ -194,8 +196,14 @@ function() {
         application: this,
         region: 'center',
         border: false,
-        margin: '1 0 0 0'
+        margin: '0 0 0 1'
       });
+
+      if(epsitecConfig.featureEntityBag) {
+        this.entityBag = Ext.create('Epsitec.EntityBag', {
+          application: this
+        }).show();
+      }
 
       if (epsitecConfig.displayBannerMessage) {
         items = [
@@ -237,6 +245,10 @@ function() {
         
       }
       
+    },
+
+    addEntityToBag: function(entity) {
+      this.entityBag.addEntityToBag(entity);
     },
 
     showEntity: function(path, callback) {

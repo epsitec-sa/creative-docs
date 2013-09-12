@@ -1,0 +1,34 @@
+﻿td.entitybag-label {
+            background-color: #ddd;
+            border: 1px solid #bbb;
+            font-weight: bold;
+            text-align: right;
+            width: 100px;
+            padding: 0px 3px 0px 0px;
+        }
+.entitybag-view table {
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+
+.entitybag-source {
+    cursor: pointer;
+}
+
+.entitybag-over {
+    background-color: #EFEFEF;
+    cursor: pointer;
+}
+
+.entitybag-target {
+    border: 1px solid red;
+    margin: 5px;
+    padding: 5px;
+    font-size: small;
+    cursor: default;
+}
+
+.entitybag-target-over {
+    background-color: #EFEFEF;
+    cursor: pointer;
+}

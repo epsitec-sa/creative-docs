@@ -1073,7 +1073,9 @@ AiderPersonWarning = [LVALB]
         <l t="Adresse normale" f="0"/>
         <l t="Adresse aux parents de..." f="1"/>
       </L>
+      <!-- Filter -->
       <f id="@AiderContact">
+	<!-- Column id=ContactType (Valeur) (Comparaison) c=Equals(1) v="(e)num ContactType/n°3" -->
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
       </f>
     </d>

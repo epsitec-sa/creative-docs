@@ -33,7 +33,7 @@ function() {
     constructor: function(options) {
       var newOptions = {
         tools: this.createEntityTileTools(options),
-        dockedItems: this.createEntityTileDockTools(options)
+        dockedItems: this.createEntityTileDockTools(options),   
       };
       Ext.applyIf(newOptions, options);
 
@@ -87,7 +87,49 @@ function() {
           toolsbars.unshift(toolbar);
         }        
       });
+
+      //to add if displayMode dropZone when implemented
+      var toolbar = Ext.create('Ext.Toolbar', {
+            dock: 'bottom',
+            width: 400,
+            height: 40,
+            items: this.createDropZone()
+          });
+
+      toolsbars.unshift(toolbar);
+
       return toolsbars;        
+    },
+
+    //TODO: REFACTOR AS EPSITEC DROPZONE
+    createDropZone: function () {
+
+      var dropZoneStore = Ext.create('Ext.data.Store', {
+        model: 'Bag',
+        data: [{
+          id: 1,
+          summary: "Vide",
+          entityType: "DropZone",
+          data: "---"
+        }]
+      });
+      var dropZone = Ext.create('Ext.view.View', {
+          dock: 'bottom',
+          cls: 'entity-view',
+          tpl: '<tpl for=".">' +
+                  '<div class="entitybag-target">Drop Zone</div>' +
+               '</tpl>',
+          itemSelector: 'div.entitybag-source',
+          overItemCls: 'entitybag-over',
+          selectedItemClass: 'entitybag-selected',
+          singleSelect: true,
+          store: dropZoneStore,
+          listeners: {
+              render: Epsitec.Cresus.Core.app.entityBag.initializeEntityDropZone
+          }
+      });
+
+      return dropZone;
     },
 
     createEntityTileTools: function(options)  {
