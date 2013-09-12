@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Text;
 using Roslyn.Compilers;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
@@ -17,7 +18,7 @@ namespace Epsitec.Controllers
 			this.parent = parent;
 			this.dteDocument = dteDocument;
 			var task1 = this.StartActiveDocumentIdAsync (dteDocument);
-			var task2 = this.StartRoslynAsync ();
+			var task2 = this.StartSyntaxAndSemanticAsync ();
 		}
 
 		public CancellationToken CancellationToken
@@ -28,11 +29,11 @@ namespace Epsitec.Controllers
 			}
 		}
 
-		public CancellationToken RoslynCancellationToken
+		public CancellationToken SyntaxAndSemanticCancellationToken
 		{
 			get
 			{
-				return this.ctsRoslyn.Token;
+				return this.ctsSyntaxAndSemantic.Token;
 			}
 		}
 
@@ -44,6 +45,29 @@ namespace Epsitec.Controllers
 			}
 		}
 
+		public ITextBuffer TextBuffer
+		{
+			get
+			{
+				return this.textBuffer;
+			}
+			set
+			{
+				if (this.textBuffer != value)
+				{
+					if (this.textBuffer != null)
+					{
+						this.textBuffer.Changed -= this.HandleTextBufferChanged;
+					}
+					this.textBuffer = value;
+					if (this.textBuffer != null)
+					{
+						this.textBuffer.Changed += this.HandleTextBufferChanged;
+					}
+				}
+			}
+		}
+
 		public async Task<IDocument> DocumentAsync()
 		{
 			this.ctsId.Token.ThrowIfCancellationRequested ();
@@ -52,20 +76,14 @@ namespace Epsitec.Controllers
 
 		public async Task<CommonSyntaxNode> SyntaxRootAsync()
 		{
-			this.ctsRoslyn.Token.ThrowIfCancellationRequested ();
+			this.ctsSyntaxAndSemantic.Token.ThrowIfCancellationRequested ();
 			return await this.syntaxRootTask;
 		}
 
 		public async Task<ISemanticModel> SemanticModelAsync()
 		{
-			this.ctsRoslyn.Token.ThrowIfCancellationRequested ();
+			this.ctsSyntaxAndSemantic.Token.ThrowIfCancellationRequested ();
 			return await this.semanticModelTask;
-		}
-
-
-		internal void OnTextChanged(IText text)
-		{
-			var task = this.RestartRoslynAsync ();
 		}
 
 
@@ -73,8 +91,13 @@ namespace Epsitec.Controllers
 
 		public void Dispose()
 		{
+			if (this.textBuffer != null)
+			{
+				this.textBuffer.Changed -= this.HandleTextBufferChanged;
+			}
+
 			this.CancelDocumentId ();
-			this.CancelRoslyn ();
+			this.CancelSyntaxAndSemantic ();
 		}
 
 		#endregion
@@ -105,7 +128,7 @@ namespace Epsitec.Controllers
 					}
 					return null;
 				}
-			}, cancellationToken);
+			}, cancellationToken).ConfigureAwait(false);
 		}
 
 		private static async Task<CommonSyntaxNode> GetSyntaxRootAsync(IDocument document, CancellationToken cancellationToken)
@@ -116,7 +139,7 @@ namespace Epsitec.Controllers
 				{
 					return document.GetSyntaxRoot (cancellationToken);
 				}
-			}, cancellationToken);
+			}, cancellationToken).ConfigureAwait (false);
 		}
 
 		private static async Task<ISemanticModel> GetSemanticModelAsync(IDocument document, CancellationToken cancellationToken)
@@ -127,7 +150,7 @@ namespace Epsitec.Controllers
 				{
 					return document.GetSemanticModel (cancellationToken);
 				}
-			}, cancellationToken);
+			}, cancellationToken).ConfigureAwait (false);
 		}
 
 
@@ -149,25 +172,40 @@ namespace Epsitec.Controllers
 			this.idTask.ForgetSafely ();
 		}
 
-		private async Task StartRoslynAsync()
+		private async Task StartSyntaxAndSemanticAsync()
 		{
-			this.ctsRoslyn = new CancellationTokenSource ();
+			this.ctsSyntaxAndSemantic = new CancellationTokenSource ();
 			var document = await this.DocumentAsync ();
-			this.syntaxRootTask = DocumentController.GetSyntaxRootAsync (document, this.ctsRoslyn.Token);
-			this.semanticModelTask = DocumentController.GetSemanticModelAsync (document, this.ctsRoslyn.Token);
+			this.syntaxRootTask = DocumentController.GetSyntaxRootAsync (document, this.ctsSyntaxAndSemantic.Token);
+			this.semanticModelTask = DocumentController.GetSemanticModelAsync (document, this.ctsSyntaxAndSemantic.Token);
 		}
 
-		private async Task RestartRoslynAsync()
+		private async Task RestartSyntaxAndSemanticAsync()
 		{
-			this.CancelRoslyn ();
-			await this.StartRoslynAsync ();
+			this.CancelSyntaxAndSemantic ();
+			await this.StartSyntaxAndSemanticAsync ();
 		}
 
-		private void CancelRoslyn()
+		private void CancelSyntaxAndSemantic()
 		{
-			this.ctsRoslyn.Cancel ();
+			this.ctsSyntaxAndSemantic.Cancel ();
 			this.syntaxRootTask.ForgetSafely ();
 			this.semanticModelTask.ForgetSafely ();
+		}
+
+
+		private void HandleTextBufferChanged(object sender, TextContentChangedEventArgs e)
+		{
+			var task = this.UpdateActiveDocumentAsync (e.Changes.ToRoslynTextChanges ());
+		}
+
+		private async Task<ISolution> UpdateActiveDocumentAsync(IEnumerable<Roslyn.Compilers.TextChange> changes)
+		{
+			var document = await this.DocumentAsync ();
+			var text = document.GetText ().WithChanges (changes);
+			var solution = this.parent.UpdateSolution (document.Id, text);
+			await this.RestartSyntaxAndSemanticAsync ();
+			return solution;
 		}
 
 
@@ -177,8 +215,10 @@ namespace Epsitec.Controllers
 		private CancellationTokenSource ctsId;
 		private Task<DocumentId> idTask;
 
-		private CancellationTokenSource ctsRoslyn;
+		private CancellationTokenSource ctsSyntaxAndSemantic;
 		private Task<CommonSyntaxNode> syntaxRootTask;
 		private Task<ISemanticModel> semanticModelTask;
+
+		private ITextBuffer textBuffer;
 	}
 }

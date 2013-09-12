@@ -120,7 +120,7 @@ namespace Epsitec
 
 		public static bool IsMemberAccess(this CommonSyntaxNode node)
 		{
-			return node is MemberAccessExpressionSyntax || node is IdentifierNameSyntax;
+			return node is MemberAccessExpressionSyntax || node is IdentifierNameSyntax || node is AliasQualifiedNameSyntax;
 		}
 
 		public static bool IsPropertyOrField(this CommonSyntaxNode node)
@@ -128,12 +128,12 @@ namespace Epsitec
 			if (node is IdentifierNameSyntax)
 			{
 				node = node.Parent;
-				if (node == null || node is MemberAccessExpressionSyntax && !node.IsInvocation ())
+				if (node == null || node.IsMemberAccess() && !node.IsInvocation ())
 				{
 					return true;
 				}
 			}
-			return node is MemberAccessExpressionSyntax && !node.IsInvocation ();
+			return node.IsMemberAccess() && !node.IsInvocation ();
 		}
 
 		public static bool IsInvocation(this CommonSyntaxNode node)

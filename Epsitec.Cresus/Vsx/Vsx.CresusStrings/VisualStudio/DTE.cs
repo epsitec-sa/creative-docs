@@ -90,5 +90,6 @@ namespace Epsitec.VisualStudio
 		private readonly EnvDTE.SolutionEvents solutionEvents;
 		private readonly EnvDTE.DocumentEvents documentEvents;
 		private readonly EnvDTE.WindowEvents windowEvents;
+		private readonly EnvDTE.TextEditorEvents editorEvents;
 	}
 }

@@ -50,7 +50,7 @@ namespace Epsitec.Controllers
 					mapper.VisitSolution (solutionResource);
 					return mapper;
 				}
-			}, cancellationToken);
+			}, cancellationToken).ConfigureAwait(false);
 		}
 
 

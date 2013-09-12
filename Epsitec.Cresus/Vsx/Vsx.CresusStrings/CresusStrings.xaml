@@ -9,9 +9,11 @@
 	xmlns:w="clr-namespace:Epsitec.Windows">
 
 	<w:DummyConverter x:Key="DummyConverter" />
-	
+
 	<SolidColorBrush x:Key="SymbolBackgroundColor" Color="#FFD8DFE6"/>
+	<SolidColorBrush x:Key="SymbolForegroundColor" Color="#FFB83E15"/>
 	<SolidColorBrush x:Key="CultureBackgroundColor" Color="#FFF0F8FF"/>
+	<SolidColorBrush x:Key="CultureForegroundColor" Color="#FFCEA051"/>
 	<SolidColorBrush x:Key="ValueBackgroundColor" Color="#FFFEFEFF"/>
 	
 	<Style x:Key="HideColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
@@ -37,17 +39,17 @@
 				<Setter Property="Background" Value="Transparent"></Setter>
 			</Trigger>
 			<Trigger Property="ItemsControl.AlternationIndex" Value="1">
-				<Setter Property="Background" Value="#40A8AEB2"></Setter>
+				<Setter Property="Background" Value="#30A8AEB2"></Setter>
 			</Trigger>
 		</Style.Triggers>
 	</Style>
 
 	<DataTemplate x:Key="SymbolNameTemplate" DataType="{x:Type rm:ResourceItem}" >
-		<TextBlock Text="{Binding SymbolName}" FontStyle="Italic" VerticalAlignment="Center" />
+		<TextBlock Text="{Binding SymbolName}" VerticalAlignment="Center" Foreground="{StaticResource SymbolForegroundColor}" />
 	</DataTemplate>
 
 	<DataTemplate x:Key="CultureNameTemplate" DataType="{x:Type rm:ResourceItem}" >
-		<TextBlock Text="{Binding CultureName}" FontStyle="Italic" VerticalAlignment="Center">
+		<TextBlock Text="{Binding CultureName}" FontStyle="Italic" VerticalAlignment="Center" Foreground="{StaticResource CultureForegroundColor}">
 			<TextBlock.Style>
 				<Style TargetType="TextBlock">
 					<Style.Triggers>
@@ -75,7 +77,7 @@
 		<DockPanel>
 			<!-- Symbol Name -->
 			<Border DockPanel.Dock="Top" BorderBrush="Gray" BorderThickness="1" Background="{StaticResource SymbolBackgroundColor}" Margin="0,0,1,-1">
-				<TextBlock Margin="3" Text="{Binding SymbolName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold" />
+				<TextBlock Margin="3" Text="{Binding SymbolName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="Bold" Foreground="{StaticResource SymbolForegroundColor}" />
 			</Border>
 			<!-- Item Type = rm:ResourceItem -->
 			<Border BorderBrush="Black" BorderThickness="0.5" >

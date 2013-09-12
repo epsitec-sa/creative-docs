@@ -32,8 +32,6 @@ namespace Epsitec.Cresus.Strings
 			{
 				this.provider = provider;
 				this.subjectBuffer = subjectBuffer;
-
-				this.subjectBuffer.Changed += this.HandleSubjectBufferChanged;
 			}
 		}
 
@@ -43,7 +41,6 @@ namespace Epsitec.Cresus.Strings
 			{
 				Trace.WriteLine ("### DISPOSE");
 				this.isDisposed = true;
-				this.subjectBuffer.Changed -= this.HandleSubjectBufferChanged;
 			}
 		}
 
@@ -72,15 +69,17 @@ namespace Epsitec.Cresus.Strings
 							//QuickInfoSource.AddQiContent (qiContent, this.GetQiPathsContent());
 
 							var syntaxRootTask = activeDocumentController.SyntaxRootAsync ();
-							if (syntaxRootTask.Wait (QuickInfoSource.Timeout (100), activeDocumentController.RoslynCancellationToken))
+							if (syntaxRootTask.Wait (QuickInfoSource.Timeout (100), activeDocumentController.SyntaxAndSemanticCancellationToken))
 							{
 								var token = syntaxRootTask.Result.FindToken (point);
-								var node = QuickInfoSource.LookAheadSyntaxNode (token, point, ref applicableToSpan);
+								var node = QuickInfoSource.GetLeftSyntaxNode (token, point);
 								if (node != null)
 								{
 									// syntax and resources available
-									var symbol = node.RemoveTrivias ().ToString ();
-									var resources = resourceSymbolMapperTask.Result.FindPartial (symbol).ToList();
+									applicableToSpan = QuickInfoSource.GetTrackingSpan (point, token.Span);
+									var symbolName = node.RemoveTrivias ().ToString ();
+									symbolName = Regex.Replace (symbolName, @"^global::", string.Empty);
+									var resources = resourceSymbolMapperTask.Result.FindPartial (symbolName).ToList();
 									if (resources.Count > 0)
 									{
 										object content = null;
@@ -172,7 +171,7 @@ namespace Epsitec.Cresus.Strings
 			return token.Parent as SyntaxNode;
 		}
 
-		private static SyntaxNode LookAroundSyntaxNode(CommonSyntaxToken token, SnapshotPoint point, ref ITrackingSpan applicableToSpan)
+		private static SyntaxNode GetFullSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
 		{
 			if (token != default (CommonSyntaxToken))
 			{
@@ -182,17 +181,13 @@ namespace Epsitec.Cresus.Strings
 					var properties = ancestors
 						.TakeWhile (a => a.IsPropertyOrField ());
 					var node = properties.LastOrDefault ();
-					if (node != null)
-					{
-						applicableToSpan = QuickInfoSource.GetTrackingSpan (point, node.Span);
-					}
 					return node as SyntaxNode;
 				}
 			}
 			return null;
 		}
 
-		private static SyntaxNode LookAheadSyntaxNode(CommonSyntaxToken token, SnapshotPoint point, ref ITrackingSpan applicableToSpan)
+		private static SyntaxNode GetLeftSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
 		{
 			if (token != default (CommonSyntaxToken))
 			{
@@ -202,10 +197,6 @@ namespace Epsitec.Cresus.Strings
 					var properties = ancestors
 						.TakeWhile (a => a.Span.End <= token.Span.End && a.IsPropertyOrField ());
 					var node = properties.LastOrDefault ();
-					if (node != null)
-					{
-						applicableToSpan = QuickInfoSource.GetTrackingSpan (point, token.Span);
-					}
 					return node as SyntaxNode;
 				}
 			}
@@ -294,11 +285,6 @@ namespace Epsitec.Cresus.Strings
 					yield return string.Format ("PATH : {0}", path);
 				}
 			}
-		}
-
-		private void HandleSubjectBufferChanged(object sender, TextContentChangedEventArgs e)
-		{
-			var task = this.Workspace.UpdateActiveDocumentAsync (e.Changes.ToRoslynTextChanges ());
 		}
 
 		private readonly QuickInfoSourceProvider provider;

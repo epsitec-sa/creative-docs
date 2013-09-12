@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Strings.Views
 		{
 			if (item is MultiCultureResourceItemViewModel)
 			{
-				var viewModel = item as MultiCultureResourceItemViewModel;
-				if (viewModel.Count == 1)
-				{
+				//var viewModel = item as MultiCultureResourceItemViewModel;
+				//if (viewModel.Count == 1)
+				//{
 					return this.Compact;
-				}
+				//}
 			}
 			return Default;
 		}

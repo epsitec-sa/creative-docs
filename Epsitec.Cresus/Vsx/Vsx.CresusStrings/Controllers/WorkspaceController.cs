@@ -27,7 +27,7 @@ namespace Epsitec.Controllers
 					this.solution = this.workspace.CurrentSolution;
 				}
 				this.resourceController = new ResourceController (this);
-				this.workspace.WorkspaceChanged += this.OnWorkspaceChanged;
+				this.workspace.WorkspaceChanged += this.HandleWorkspaceChanged;
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace Epsitec.Controllers
 				this.activeDocumentController = new DocumentController (this, this.dte.Application.ActiveDocument);
 				this.documentControllers[this.activeDocumentController.Id] = this.activeDocumentController;
 
-				this.dte.WindowActivated += this.OnDTEWindowActivated;
+				this.dte.WindowActivated += this.HandleDTEWindowActivated;
 			}
 		}
 
@@ -98,14 +98,9 @@ namespace Epsitec.Controllers
 			}
 		}
 
-
-		public async Task<ISolution> UpdateActiveDocumentAsync(IEnumerable<Roslyn.Compilers.TextChange> changes)
+		internal ISolution UpdateSolution(DocumentId documentId, IText text)
 		{
-			var document = await this.activeDocumentController.DocumentAsync ();
-			var text = document.GetText ().WithChanges (changes);
-			this.solution = this.Solution.UpdateDocument (document.Id, text);
-			this.activeDocumentController.OnTextChanged (text);
-			return this.solution;
+			return this.solution = this.solution.UpdateDocument (documentId, text);
 		}
 
 
@@ -119,28 +114,28 @@ namespace Epsitec.Controllers
 				documentController.Dispose ();
 			}
 
-			this.workspace.WorkspaceChanged -= this.OnWorkspaceChanged;
-			this.dte.SolutionOpened -= this.OnDTESolutionOpened;
-			this.dte.DocumentOpened -= this.OnDTEDocumentOpened;
-			this.dte.WindowActivated -= this.OnDTEWindowActivated;
+			this.workspace.WorkspaceChanged -= this.HandleWorkspaceChanged;
+			this.dte.SolutionOpened -= this.HandleDTESolutionOpened;
+			this.dte.DocumentOpened -= this.HandleDTEDocumentOpened;
+			this.dte.WindowActivated -= this.HandleDTEWindowActivated;
 		}
 
 		#endregion
 
 
-		private void OnWorkspaceChanged(object sender, WorkspaceEventArgs e)
+		private void HandleWorkspaceChanged(object sender, WorkspaceEventArgs e)
 		{
 		}
 
-		private void OnDTESolutionOpened()
+		private void HandleDTESolutionOpened()
 		{
 		}
 		
-		private void OnDTEDocumentOpened(EnvDTE.Document Document)
+		private void HandleDTEDocumentOpened(EnvDTE.Document Document)
 		{
 		}
 
-		private void OnDTEWindowActivated(EnvDTE.Window GotFocus, EnvDTE.Window LostFocus)
+		private void HandleDTEWindowActivated(EnvDTE.Window GotFocus, EnvDTE.Window LostFocus)
 		{
 			var dteActiveDocument = GotFocus.Document;
 			if (dteActiveDocument != null)
@@ -162,7 +157,5 @@ namespace Epsitec.Controllers
 		// Roslyn DOM
 		private IWorkspace workspace;
 		private ISolution solution;
-	
-
 	}
 }

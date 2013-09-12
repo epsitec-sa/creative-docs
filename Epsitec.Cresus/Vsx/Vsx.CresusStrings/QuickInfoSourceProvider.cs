@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Strings
 			//Trace.WriteLine (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 			using (new TimeTrace ("TryCreateQuickInfoSource"))
 			{
+				this.Workspace.ActiveDocumentController.TextBuffer = textBuffer;
 				return new QuickInfoSource (this, textBuffer);
 			}
 		}
