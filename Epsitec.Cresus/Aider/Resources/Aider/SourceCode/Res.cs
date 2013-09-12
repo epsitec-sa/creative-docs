@@ -1274,7 +1274,7 @@ namespace Epsitec.Aider
 						}
 					}
 					//	designer:cap/LVA5C
-					public static global::Epsitec.Common.Types.Caption Mismatch
+					public static global::Epsitec.Common.Types.Caption MissingHousehold
 					{
 						get
 						{
@@ -2077,6 +2077,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Adult2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
 				//	designer:cap/LVAJ
 				public static readonly global::Epsitec.Common.Support.Druid Children = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
+				//	designer:cap/LVO103
+				public static readonly global::Epsitec.Common.Support.Druid Members = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 1);
 			}
 			
 			public static class IAddress

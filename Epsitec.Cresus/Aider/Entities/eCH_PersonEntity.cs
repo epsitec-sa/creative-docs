@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Entities
 {
@@ -46,6 +47,26 @@ namespace Epsitec.Aider.Entities
 				string[] names = person.PersonFirstNames.Split (' ');
 				return names[0];
 			}
+		}
+
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.GetDisplayName (), "(~", this.PersonDateOfBirth.Value.ComputeAge (), "~)");
+		}
+
+		public string GetDisplayName()
+		{
+			var lastname = this.PersonOfficialName;
+			var firstname = this.PersonFirstNames;
+
+			var name = TextFormatter.FormatText (lastname, ",", firstname).ToSimpleText ();
+
+			if (this.IsDeceased)
+			{
+				name += " †";
+			}
+
+			return name;
 		}
 
 		public IEnumerable<eCH_ReportedPersonEntity> ReportedPersons

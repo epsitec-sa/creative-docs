@@ -11,6 +11,10 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Aider.Override;
+using Epsitec.Cresus.Core.Business.UserManagement;
+using System.Linq;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -18,6 +22,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
+
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
+
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ();
@@ -40,6 +48,26 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Membres du ménage")
 					.Text (p => p.GetCompactSummary (this.Entity))
 				.End ();
+
+			if (user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				if (this.Entity.Contacts.Where (c => c.HouseholdRole.Equals (HouseholdRole.Head)).Any ())
+				{
+					if (this.Entity.Contacts.Where (c => c.HouseholdRole.Equals (HouseholdRole.Head)).First ().Person.IsGovernmentDefined)
+					{
+						wall.AddBrick (x => x.Contacts.Where (c => c.HouseholdRole.Equals (HouseholdRole.Head)).First ().Person.eCH_Person.ReportedPersons.First ().Members)
+						.Attribute (BrickMode.HideAddButton)
+						.Attribute (BrickMode.HideRemoveButton)
+						.Attribute (BrickMode.DefaultToSummarySubView)
+						.Attribute (BrickMode.AutoGroup)
+						.Template ()
+							.Icon ("Data.AiderPersons")
+							.Title ("Membres ECh")
+							.Text (p => p.GetCompactSummary ())
+						.End ();
+					}					
+				}		
+			}
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);

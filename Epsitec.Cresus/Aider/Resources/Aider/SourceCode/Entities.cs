@@ -1192,6 +1192,20 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Members</c> field.
+		///	designer:fld/LVAG/LVO103
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO103]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.eCH_PersonEntity> Members
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.eCH_PersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.eCH_PersonEntity>);
+				this.GetMembers (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnAdult1Changing(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OnAdult1Changed(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1200,6 +1214,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		
+		partial void GetMembers(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.eCH_PersonEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

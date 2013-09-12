@@ -27,5 +27,31 @@ namespace Epsitec.Aider.Entities
 
             return count;
 		}
+
+		partial void GetMembers(ref IList<eCH_PersonEntity> value)
+		{
+			value = this.GetEChMembers ().AsReadOnlyCollection ();
+		}
+
+		private IList<eCH_PersonEntity> GetEChMembers()
+		{
+			if (this.membersCache == null)
+			{
+				var heads = new List<eCH_PersonEntity> ();
+
+				heads.Add (this.Adult1);
+				if (this.Adult2.IsNotNull ())
+				{
+					heads.Add (this.Adult2);
+				}			
+				var children = this.Children.OrderBy (x => x.PersonDateOfBirth);
+
+				this.membersCache = heads.Concat (children).ToList ();
+			}
+
+			return this.membersCache;
+		}
+
+		private IList<eCH_PersonEntity>		membersCache;
 	}
 }
