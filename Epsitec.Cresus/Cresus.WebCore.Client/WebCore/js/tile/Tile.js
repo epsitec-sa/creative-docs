@@ -93,7 +93,7 @@ function() {
             dock: 'bottom',
             width: 400,
             height: 40,
-            items: this.createDropZone(a.title)
+            items: tile.createDropZone(a.title)
           });
 
           toolsbars.unshift(toolbar);  
