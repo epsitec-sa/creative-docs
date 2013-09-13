@@ -210,7 +210,6 @@ namespace Epsitec.VisualStudio
 
 		private void StartDocumentId(EnvDTE.Document dteDocument)
 		{
-			this.ctsDocumentId.Dispose ();
 			this.ctsDocumentId = new CancellationTokenSource ();
 			this.documentIdTask = this.CreateDocumentIdTask (dteDocument);
 		}
@@ -225,11 +224,11 @@ namespace Epsitec.VisualStudio
 		{
 			this.ctsDocumentId.Cancel ();
 			this.documentIdTask.ForgetSafely ();
+			this.ctsDocumentId.Dispose ();
 		}
 
 		private void StartSyntaxAndSemantic()
 		{
-			this.ctsSyntaxAndSemantic.Dispose ();
 			this.ctsSyntaxAndSemantic = new CancellationTokenSource ();
 			this.syntaxRootTask = this.CreateSyntaxRootTask ();
 			this.semanticModelTask = this.CreateSemanticModelTask ();
@@ -246,6 +245,7 @@ namespace Epsitec.VisualStudio
 			this.ctsSyntaxAndSemantic.Cancel ();
 			this.syntaxRootTask.ForgetSafely ();
 			this.semanticModelTask.ForgetSafely ();
+			this.ctsSyntaxAndSemantic.Dispose ();
 		}
 
 

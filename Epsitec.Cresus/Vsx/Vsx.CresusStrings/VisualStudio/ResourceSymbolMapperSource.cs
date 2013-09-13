@@ -55,7 +55,6 @@ namespace Epsitec.VisualStudio
 
 		private void Start()
 		{
-			this.cts.Dispose ();
 			this.cts = new CancellationTokenSource ();
 			this.symbolMapperTask = this.CreateSymbolMapperTask ();
 		}
@@ -70,6 +69,7 @@ namespace Epsitec.VisualStudio
 		{
 			this.cts.Cancel ();
 			this.symbolMapperTask.ForgetSafely ();
+			this.cts.Dispose ();
 		}
 
 
