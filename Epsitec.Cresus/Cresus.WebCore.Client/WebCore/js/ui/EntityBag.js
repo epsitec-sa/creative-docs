@@ -19,12 +19,29 @@ function() {
 
     /* Properties */
     bagStore: null,
+    removedStore: null,
     /* Constructor */
 
     constructor: function(menu) {
       var config;
 
-      this.initBagStore();
+      this.initStores();
+
+      var removeFromBagDropZone = Ext.create('Ext.view.View', {
+          dock: 'bottom',
+          cls: 'entity-view',
+          tpl: '<tpl for=".">' +
+                  '<div class="entitybag-target">enlever du panier</div>' +
+               '</tpl>',
+          itemSelector: 'div.entitybag-target',
+          overItemCls: 'entitybag-target-over',
+          selectedItemClass: 'entitybag-selected',
+          singleSelect: true,
+          store: this.removedStore, 
+          listeners: {
+              render: this.initializeEntityDropZone
+          }
+      });
 
       config = {
         headerPosition: 'left',
@@ -38,7 +55,7 @@ function() {
             align: 'stretch',    
             padding: 5
         },
-        items: [this.createEntityView()],
+        items: [removeFromBagDropZone,this.createEntityView()],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -47,14 +64,6 @@ function() {
       menu.on("resize", this.resizeEntityBagHandler, this);
       this.callParent([config]);
 
-
-      var demoEntity = {
-        id: 1,
-        summary: "demo",
-        entityType: "Test Entity",
-        data: "some data"
-      };
-      this.addEntityToBag(demoEntity);
       return this;
     },
 
@@ -79,10 +88,19 @@ function() {
       } 
     },
 
-    initBagStore: function(){
+    initStores: function(){
       this.bagStore = Ext.create('Ext.data.Store', {
           model: 'Bag',
           data: []
+      });
+      this.removedStore = Ext.create('Ext.data.Store', {
+          model: 'Bag',
+          data: [{
+          id: 1,
+          summary: "---",
+          entityType: "---",
+          data: "---"
+        }]
       });
     },
 
@@ -94,11 +112,9 @@ function() {
       return Ext.create('Ext.view.View', {
         cls: 'entity-view',
         tpl: '<tpl for=".">' +
-                '<div class="entitybag-source"><table><tbody>' +
-                    '<tr><td class="entitybag-label">Type</td><td class="">{entityType}</td></tr>' +
-                    '<tr><td class="entitybag-label">Summary</td><td class="">{summary}</td></tr>' +
-                    '<tr><td class="entitybag-label">Data</td><td class="">{data}</td></tr>' +
-                '</tbody></table></div>' +
+                '<div class="entitybag-source">' +
+                    '<tr><span class="entitybag-label">{entityType}</span>{summary}' +
+                '</div>' +
              '</tpl>',
         itemSelector: 'div.entitybag-source',
         overItemCls: 'entitybag-over',

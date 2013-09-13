@@ -80,7 +80,7 @@ function() {
         if (!Ext.isEmpty(options.menuItems))
         {
           contextMenu = this.createContextMenu(options);
-
+          contextMenu.add(this.createContextMenuDefaultItems())
           newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
             e.stopEvent();
             contextMenu.showAt(e.getXY());
@@ -114,7 +114,7 @@ function() {
 
     createContextMenu: function(options) {
       return Ext.create('Ext.menu.Menu', {
-        items: [this.createContextMenuItems(options.menuItems),this.createContextMenuDefaultItems()]
+        items: this.createContextMenuItems(options.menuItems)
       });
     },
     
