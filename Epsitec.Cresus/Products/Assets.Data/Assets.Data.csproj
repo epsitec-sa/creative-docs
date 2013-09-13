@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3E4F5E64-20FC-49FB-98E3-E30F5AE81877}</ProjectGuid>
+    <ProjectGuid>{873E478A-D8A9-40AF-ABF9-96AF6AEDA126}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.Assets.Server</RootNamespace>
-    <AssemblyName>Assets.Server</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>Epsitec.Cresus.Assets.Data</RootNamespace>
+    <AssemblyName>Assets.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -35,6 +35,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,13 +57,13 @@
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
-    <Content Include="Resources\Assets.Server\Captions.00.resource">
+    <Content Include="Resources\Assets.Data\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Assets.Server\module.info">
+    <Content Include="Resources\Assets.Data\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Assets.Server\Strings.00.resource">
+    <Content Include="Resources\Assets.Data\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -69,13 +72,29 @@
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Assets.Core\Assets.Core.csproj">
-      <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
-      <Name>Assets.Core</Name>
+    <ProjectReference Include="..\..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
+      <Project>{e70c6f16-a0bf-439b-845d-87b164510aa0}</Project>
+      <Name>Cresus.Core.Library.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
+      <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
+      <Project>{543293d0-cafb-4431-8202-6c6d5ff5403a}</Project>
+      <Name>Cresus.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{bbbfcdff-5a53-4b82-80cb-b98b2ec1b349}</Project>
+      <Name>Cresus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{ba604f89-53c1-4228-ac76-5d5e68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Resources\Assets.Server\SourceCode\" />
+    <Folder Include="Resources\Assets.Data\SourceCode\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
