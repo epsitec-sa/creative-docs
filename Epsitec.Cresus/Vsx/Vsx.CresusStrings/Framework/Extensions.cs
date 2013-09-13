@@ -65,11 +65,95 @@ namespace Epsitec
 
 		#region Task
 
-		public static void ForgetSafely(this Task task)
+		//public static Task<T> WithTimeout<T>(this Task<T> task, int millisecondsTimeout)
+		//{
+		//	return task.WithTimeout (TimeSpan.FromMilliseconds (millisecondsTimeout));
+		//}
+
+		//public static Task<TResult> WithTimeout<TResult>(this Task<TResult> task, TimeSpan timeout)
+		//{
+		//	var result = new TaskCompletionSource<TResult> (task.AsyncState);
+		//	var timer = new Timer (_ => result.TrySetException (new TimeoutException()),
+		//		null, timeout, TimeSpan.FromMilliseconds (-1));
+		//	task.ContinueWith (t =>
+		//	{
+		//		timer.Dispose ();
+		//		result.TrySetFromTask (t);
+		//	});
+		//	return result.Task;
+		//}
+
+		//public static bool TrySetFromTask<TResult>(this TaskCompletionSource<TResult> resultSetter, Task<TResult> task)
+		//{
+		//	switch (task.Status)
+		//	{
+		//		case TaskStatus.RanToCompletion:
+		//			return resultSetter.TrySetResult (task.Result);
+		//		case TaskStatus.Faulted:
+		//			return resultSetter.TrySetException (
+		//				task.Exception.InnerExceptions);
+		//		case TaskStatus.Canceled:
+		//			return resultSetter.TrySetCanceled ();
+		//		default:
+		//			throw new InvalidOperationException ("The task was not completed.");
+		//	}
+		//}
+
+		public async static Task WithTimeout(this Task task, int millisecondsTimeout)
+		{
+			await task.WithTimeout (TimeSpan.FromMilliseconds (millisecondsTimeout));
+		}
+
+		public async static Task WithTimeout(this Task task, TimeSpan timeout)
+		{
+			var cts = new CancellationTokenSource ();
+			var delay = Task.Delay (timeout, cts.Token).ForgetSafely ();
+			await Task.WhenAny (task, delay);
+			if (task.IsCompleted)
+			{
+				cts.Cancel ();
+			}
+			else
+			{
+				throw new TimeoutException ();
+			}
+		}
+
+		public async static Task<T> WithTimeout<T>(this Task<T> task, int millisecondsTimeout)
+		{
+			return await task.WithTimeout (TimeSpan.FromMilliseconds (millisecondsTimeout));
+		}
+
+		public async static Task<T> WithTimeout<T>(this Task<T> task, TimeSpan timeout)
+		{
+			await ((Task) task).WithTimeout (timeout);
+			return await task;
+		}
+
+		public static Task ForgetSafely(this Task task)
 		{
 			// observe exceptions
 			task.ContinueWith (t => Extensions.HandleException (t));
+			return task;
 		} 
+
+		#endregion
+
+		#region Visual Studio
+
+		public static ITrackingSpan GetNullTrackingSpan(this SnapshotPoint source)
+		{
+			ITextSnapshot currentSnapshot = source.Snapshot;
+			var span = new Span (source.Position, 0);
+			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
+		}
+
+		public static ITrackingSpan GetTextTrackingSpan(this SnapshotPoint source, TextSpan textSpan)
+		{
+			ITextSnapshot currentSnapshot = source.Snapshot;
+			var span = Span.FromBounds (textSpan.Start, textSpan.End);
+			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
+		}
 
 		#endregion
 
@@ -88,25 +172,6 @@ namespace Epsitec
 				}
 			}
 		}
-
-		//public static IDocument ActiveDocument(this ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
-		//{
-		//	cancellationToken.ThrowIfCancellationRequested ();
-		//	var dte2 = DTE2Provider.GetDTE2 (System.Diagnostics.Process.GetCurrentProcess ().Id);
-		//	cancellationToken.ThrowIfCancellationRequested ();
-		//	var dteActiveDocumentPath = dte2.ActiveDocument.FullName;
-		//	for (int retryCount = 0; retryCount < 3; ++retryCount)
-		//	{
-		//		try
-		//		{
-		//			return solution.Documents (cancellationToken).Where (d => string.Compare (d.FilePath, dteActiveDocumentPath, true) == 0).Single ();
-		//		}
-		//		catch (InvalidOperationException)
-		//		{
-		//		}
-		//	}
-		//	return null;
-		//}
 
 		public static SyntaxNode RemoveTrivias(this SyntaxNode node)
 		{

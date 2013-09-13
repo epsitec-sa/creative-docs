@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Strings
 		}
 
 		[Import]
-		internal Epsitec.Controllers.WorkspaceController Workspace
+		internal Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
 		{
 			get;
 			set;
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Strings
 			//Trace.WriteLine (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 			using (new TimeTrace ("TryCreateQuickInfoSource"))
 			{
-				this.Workspace.ActiveDocumentController.TextBuffer = textBuffer;
+				this.ResourceSymbolInfoProvider.DocumentSource.TextBuffer = textBuffer;
 				return new QuickInfoSource (this, textBuffer);
 			}
 		}

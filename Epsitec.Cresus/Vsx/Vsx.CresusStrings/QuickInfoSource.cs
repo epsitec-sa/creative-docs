@@ -7,9 +7,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using Epsitec.Cresus.ResourceManagement;
 using Epsitec.Cresus.Strings.ViewModels;
 using Epsitec.Cresus.Strings.Views;
+using Epsitec.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
@@ -52,87 +54,23 @@ namespace Epsitec.Cresus.Strings
 			{
 				// Map the trigger point down to our buffer.
 				SnapshotPoint? subjectTriggerPoint = session.GetTriggerPoint (this.subjectBuffer.CurrentSnapshot);
+
 				if (subjectTriggerPoint.HasValue)
 				{
-					var point = subjectTriggerPoint.Value;
-					applicableToSpan = QuickInfoSource.GetTrackingSpan (point);
-
-					// get project resources
-					var resourceController = this.Workspace.ResourceController;
-					var resourceSymbolMapperTask = resourceController.SymbolMapperAsync ();
-					if (resourceSymbolMapperTask.Wait (QuickInfoSource.Timeout (100), resourceController.CancellationToken))
+					var symbolInfoTask = this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (subjectTriggerPoint.Value);
+					if (symbolInfoTask.Wait(QuickInfoSource.Timeout (100)))
 					{
-						var activeDocumentController = this.Workspace.ActiveDocumentController;
-						var activeDocumentTask = activeDocumentController.DocumentAsync ();
-						if (activeDocumentTask.Wait (QuickInfoSource.Timeout (100), activeDocumentController.CancellationToken))
+						var symbolInfo = symbolInfoTask.Result;
+						var content = QuickInfoSource.CreateQiView (symbolInfo);
+						if (content != null)
 						{
-							//QuickInfoSource.AddQiContent (qiContent, this.GetQiPathsContent());
-
-							var syntaxRootTask = activeDocumentController.SyntaxRootAsync ();
-							if (syntaxRootTask.Wait (QuickInfoSource.Timeout (100), activeDocumentController.SyntaxAndSemanticCancellationToken))
-							{
-								var token = syntaxRootTask.Result.FindToken (point);
-								var node = QuickInfoSource.GetLeftSyntaxNode (token, point);
-								if (node != null)
-								{
-									// syntax and resources available
-									applicableToSpan = QuickInfoSource.GetTrackingSpan (point, token.Span);
-									var symbolName = node.RemoveTrivias ().ToString ();
-									symbolName = Regex.Replace (symbolName, @"^global::", string.Empty);
-									var resources = resourceSymbolMapperTask.Result.FindPartial (symbolName).ToList();
-									if (resources.Count > 0)
-									{
-										object content = null;
-
-										// TODO: check for multiple namespaces
-										// if (HasSingleNamespace(resources))
-										// {
-										if (resources.Count == 1)
-										{
-											content = new MultiCultureResourceItemView (resources.First ());
-										}
-										else
-										{
-											content = new MultiCultureResourceItemCollectionView (resources)
-											{
-												MaxHeight = 600
-											};
-										}
-										// }
-										// else
-										// {
-
-										//var semanticTask = activeDocumentController.SemanticModelAsync ();
-										//if (semanticTask.Wait (QuickInfoSource.Timeout (100), activeDocumentController.RoslynCancellationToken))
-										//{
-										//	content = this.GetQiSemanticContent (node, semanticTask.Result);
-										//}
-										//else
-										//{
-										//	QuickInfoSource.SetQiPending ("Semantic", qiContent);
-										//}
-
-										// }
-										if (content != null)
-										{
-											qiContent.Add (content);
-										}
-									}
-								}
-							}
-							else
-							{
-								QuickInfoSource.SetQiPending ("Syntax", qiContent);
-							}
-						}
-						else
-						{
-							QuickInfoSource.SetQiPending ("Document", qiContent);
+							applicableToSpan = symbolInfo.ApplicableToSpan;
+							qiContent.Add (content);
 						}
 					}
 					else
 					{
-						QuickInfoSource.SetQiPending ("Resources", qiContent);
+						QuickInfoSource.SetQiPending ("Cresus Strings", qiContent);
 					}
 				}
 			}
@@ -148,6 +86,27 @@ namespace Epsitec.Cresus.Strings
 			{
 				QuickInfoSource.AddQiException (qiContent, e);
 			}
+		}
+
+		private static UserControl CreateQiView(ResourceSymbolInfo info)
+		{
+			var resources = info.Resources;
+			var count = resources.Count;
+			if (count > 0)
+			{
+				if (count == 1)
+				{
+					return new MultiCultureResourceItemView (resources.First ());
+				}
+				else
+				{
+					return new MultiCultureResourceItemCollectionView (resources)
+					{
+						MaxHeight = 600
+					};
+				}
+			}
+			return null;
 		}
 
 		private static void SetQiPending(string subject, IList<object> qiContent)
@@ -237,19 +196,19 @@ namespace Epsitec.Cresus.Strings
 			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 		}
 
-		private Epsitec.Controllers.WorkspaceController Workspace
+		private Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
 		{
 			get
 			{
-				return this.provider.Workspace;
+				return this.provider.ResourceSymbolInfoProvider;
 			}
 		}
 
 		private IEnumerable<string> GetQiPathsContent()
 		{
-			yield return string.Format ("DOC : {0}", this.Workspace.ActiveDocumentController.DocumentAsync ().Result.FilePath);
-			yield return string.Format ("PRJ : {0}", this.Workspace.ActiveDocumentController.DocumentAsync ().Result.Project.FilePath);
-			yield return string.Format ("SLN : {0}", this.Workspace.Solution.FilePath);
+			yield return string.Format ("DOC : {0}", this.ResourceSymbolInfoProvider.DocumentSource.DocumentAsync ().Result.FilePath);
+			yield return string.Format ("PRJ : {0}", this.ResourceSymbolInfoProvider.DocumentSource.DocumentAsync ().Result.Project.FilePath);
+			yield return string.Format ("SLN : {0}", this.ResourceSymbolInfoProvider.Solution.FilePath);
 		}
 
 		private IEnumerable<string> GetQiSemanticContent(SyntaxNode node, ISemanticModel semanticModel)
