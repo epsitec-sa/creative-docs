@@ -85,31 +85,32 @@ function() {
             items: button
           });
           toolsbars.unshift(toolbar);
-        }        
-      });
+        }
 
-      //to add if displayMode dropZone when implemented
-      var toolbar = Ext.create('Ext.Toolbar', {
+        if(a.displayMode == "OnDrop")
+        {
+          var toolbar = Ext.create('Ext.Toolbar', {
             dock: 'bottom',
             width: 400,
             height: 40,
-            items: this.createDropZone()
+            items: this.createDropZone(a.title)
           });
 
-      toolsbars.unshift(toolbar);
-
+          toolsbars.unshift(toolbar);  
+        }        
+      });
       return toolsbars;        
     },
 
-    //TODO: REFACTOR AS EPSITEC DROPZONE
-    createDropZone: function () {
+    //TODO: REFACTOR AS TILE DROPZONE
+    createDropZone: function (title) {
 
       var dropZoneStore = Ext.create('Ext.data.Store', {
         model: 'Bag',
         data: [{
           id: 1,
-          summary: "Vide",
-          entityType: "DropZone",
+          summary: "---",
+          entityType: "---",
           data: "---"
         }]
       });
@@ -117,7 +118,7 @@ function() {
           dock: 'bottom',
           cls: 'entity-view',
           tpl: '<tpl for=".">' +
-                  '<div class="entitybag-target">Drop Zone</div>' +
+                  '<div class="entitybag-target">' + title + '</div>' +
                '</tpl>',
           itemSelector: 'div.entitybag-source',
           overItemCls: 'entitybag-over',
