@@ -69,7 +69,8 @@ function() {
           var button = {};
           button.xtype = 'button';
           button.text = text;
-          button.width = 350;
+          button.cls = 'tile-button';
+          overItemCls = 'tile-button-over';
           button.textAlign = 'left';
           if(isLarge)
           {
@@ -82,21 +83,14 @@ function() {
           var toolbar = Ext.create('Ext.Toolbar', {
             dock: 'bottom',
             width: 400,
-            items: button
+            items: ['->',button]
           });
           toolsbars.unshift(toolbar);
         }
 
         if(a.displayMode == "OnDrop")
         {
-          var toolbar = Ext.create('Ext.Toolbar', {
-            dock: 'bottom',
-            width: 400,
-            height: 40,
-            items: tile.createDropZone(a.title)
-          });
-
-          toolsbars.unshift(toolbar);  
+          toolsbars.unshift(tile.createDropZone(a.title));  
         }        
       });
       return toolsbars;        
@@ -118,13 +112,13 @@ function() {
           dock: 'bottom',
           cls: 'entity-view',
           tpl: '<tpl for=".">' +
-                  '<div class="entitybag-target">' + title + '</div>' +
+                  '<div class="entitybag-target">'+ title + '</div>' +
                '</tpl>',
-          itemSelector: 'div.entitybag-source',
-          overItemCls: 'entitybag-over',
+          itemSelector: 'div.entitybag-target',
+          overItemCls: 'entitybag-target-over',
           selectedItemClass: 'entitybag-selected',
           singleSelect: true,
-          store: dropZoneStore,
+          store: dropZoneStore, 
           listeners: {
               render: Epsitec.Cresus.Core.app.entityBag.initializeEntityDropZone
           }

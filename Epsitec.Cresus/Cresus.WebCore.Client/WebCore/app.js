@@ -30,7 +30,7 @@ function() {
     appFolder: 'js',
 
     /* Properties */
-
+    viewport: null,
     menu: null,
     loginPanel: null,
     tabManager: null,
@@ -199,12 +199,6 @@ function() {
         margin: '0 0 0 1'
       });
 
-      if(epsitecConfig.featureEntityBag) {
-        this.entityBag = Ext.create('Epsitec.EntityBag', {
-          application: this
-        }).show();
-      }
-
       if (epsitecConfig.displayBannerMessage) {
         items = [
           this.menu,
@@ -223,13 +217,17 @@ function() {
         Ext.create('Epsitec.Notifications', NotificationsToastr, username);
       }
 
-      Ext.create('Ext.container.Viewport', {
+      this.viewport = Ext.create('Ext.container.Viewport', {
         layout: 'border',
         style: {
           background: '#FFFFFF'
         },
         items: items
       });
+
+      if(epsitecConfig.featureEntityBag) {
+        this.entityBag = Ext.create('Epsitec.EntityBag',this.menu);
+      }
     },
 
     reloadCurrentDatabase: function() {

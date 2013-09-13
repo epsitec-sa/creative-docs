@@ -18,31 +18,33 @@ function() {
     alternateClassName: ['Epsitec.EntityBag'],
 
     /* Properties */
-    application: null,
     bagStore: null,
     /* Constructor */
 
-    constructor: function() {
+    constructor: function(menu) {
       var config;
 
       this.initBagStore();
 
       config = {
+        headerPosition: 'left',
         title: 'Panier',
-        fixed: true,
         draggable: false,
+        resizable: false,
         closable: false,
         margins: '0 5 5 5',
-        height: 500,
-        width: 300,
         layout: {
             type: 'vbox',       
             align: 'stretch',    
             padding: 5
         },
-        items: [this.createEntityView()]
+        items: [this.createEntityView()],
+        listeners: {
+          beforerender: this.setSizeAndPosition,
+          score: this
+        } 
       };
-
+      menu.on("resize", this.resizeEntityBagHandler, this);
       this.callParent([config]);
 
 
@@ -57,6 +59,26 @@ function() {
     },
 
     /* Methods */
+    resizeEntityBagHandler: function () {
+        this.setSizeAndPosition();   
+    },
+
+    setSizeAndPosition: function() {
+      var viewport = Epsitec.Cresus.Core.app.viewport, 
+          menu = Epsitec.Cresus.Core.app.menu;
+      if(Ext.isDefined(viewport))
+      {
+        this.width = 200;
+        this.height = viewport.height;
+        this.x = viewport.width - this.width;
+        this.y = menu.el.lastBox.height;
+        if(this.isVisible())
+        {
+          this.setPosition(this.x,this.y);
+        }
+      } 
+    },
+
     initBagStore: function(){
       this.bagStore = Ext.create('Ext.data.Store', {
           model: 'Bag',

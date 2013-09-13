@@ -37,6 +37,8 @@ function() {
           this.createScopeSelector(),
           this.createToolsGroup()
       );
+
+
       return this;
     },
 
@@ -153,6 +155,13 @@ function() {
       //  handler: this.aboutButtonHandler,
       //  iconCls: 'epsitec-cresus-core-images-data-feedback-icon32'
       //}));
+      if(epsitecConfig.featureEntityBag) {
+        buttons.push(this.createButton({
+          text: 'Panier',
+          handler: this.entityBagHandler,
+          iconCls: 'epsitec-cresus-core-images-workflowtransition-icon32'
+        }));
+      }
 
       buttons.push(this.createButton({
         text: Epsitec.Texts.getLogoutLabel(),
@@ -174,6 +183,19 @@ function() {
       url = 'proxy/page/about';
 
       this.application.tabManager.showPageTab(title, url);
+    },
+
+    entityBagHandler: function() {
+
+      if(this.application.entityBag.isVisible())
+      {
+        this.application.entityBag.hide();
+      }
+      else
+      {
+        this.application.entityBag.show();
+      }
+      
     },
 
     logoutButtonHandler: function() {

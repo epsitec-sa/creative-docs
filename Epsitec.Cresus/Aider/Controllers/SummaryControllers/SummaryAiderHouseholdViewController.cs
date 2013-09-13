@@ -26,9 +26,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
 
-			wall.AddBrick ()
-				.EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
-				.EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ();
+            wall.AddBrick()
+                .EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
+                .EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ()
+                .EnableActionOnDrop<ActionAiderHouseholdViewController1AddHouseholdMember> ();
 
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse"))

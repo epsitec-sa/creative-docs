@@ -87,6 +87,15 @@ function() {
             return false;
           };
         }
+        else
+        {          
+          contextMenu = this.createDefaultContextMenu();
+          newOptions.listeners.itemcontextmenu = function(v, r, n, i, e) {
+            e.stopEvent();
+            contextMenu.showAt(e.getXY());
+            return false;
+          };
+        }
       }
 
       Ext.applyIf(newOptions, options);
@@ -97,12 +106,18 @@ function() {
 
     /* Methods */
 
-    createContextMenu: function(options) {
+    createDefaultContextMenu: function(options) {
       return Ext.create('Ext.menu.Menu', {
-        items: this.createContextMenuItems(options.menuItems)
+        items: this.createContextMenuDefaultItems()
       });
     },
 
+    createContextMenu: function(options) {
+      return Ext.create('Ext.menu.Menu', {
+        items: [this.createContextMenuItems(options.menuItems),this.createContextMenuDefaultItems()]
+      });
+    },
+    
     createContextMenuItems: function(menuItems) {
       return menuItems.map(this.createContextMenuItem, this);
     },
@@ -129,6 +144,20 @@ function() {
       });
     },
 
+    createContextMenuDefaultItems: function() {
+      if(epsitecConfig.featureEntityBag)
+      {
+        return Ext.create('Ext.Action', {
+          icon: '/images/Epsitec/Cresus/Core/Images/WorkflowTransition' +
+              '/icon16.png',
+          text: 'Ajouter au panier',
+          disabled: false,
+          handler: this.onEntityBagAddHandler,
+          scope: this
+        });
+      }
+    },
+
     summaryNavigationMenuHandler: function(widget, event) {
       var rec, path, app;
 
@@ -140,6 +169,22 @@ function() {
         };
         app = Epsitec.Cresus.Core.getApplication();
         app.showEntity(path, null);
+      }
+    },
+
+    //AJOUTER AU PANIER
+    onEntityBagAddHandler: function(widget, event) {
+      var rec,entity,app;
+
+      rec = this.getSelectionModel().getSelection()[0];
+      if (rec) {
+        entity = {
+          summary: rec.raw.summary,
+          entityType: this.databaseName,
+          id: rec.raw.id
+        };
+        app = Epsitec.Cresus.Core.getApplication();
+        app.addEntityToBag(entity);
       }
     },
 
