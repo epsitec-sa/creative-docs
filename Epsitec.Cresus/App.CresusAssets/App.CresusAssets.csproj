@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -61,6 +61,39 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
+    <Content Include="Cresus.Core.Library.crconfig">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
+      <Project>{543293d0-cafb-4431-8202-6c6d5ff5403a}</Project>
+      <Name>Cresus.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+      <Project>{c757ad58-605d-4480-bc2e-03e8076368b2}</Project>
+      <Name>Cresus.Database.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{bbbfcdff-5a53-4b82-80cb-b98b2ec1b349}</Project>
+      <Name>Cresus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Products\Assets.App\Assets.App.csproj">
+      <Project>{9de5bb31-c4b5-4a81-a02d-cd2b9aaf89ea}</Project>
+      <Name>Assets.App</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Products\Assets.Core\Assets.Core.csproj">
+      <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
+      <Name>Assets.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Products\Assets.Server\Assets.Server.csproj">
+      <Project>{3e4f5e64-20fc-49fb-98e3-e30f5ae81877}</Project>
+      <Name>Assets.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

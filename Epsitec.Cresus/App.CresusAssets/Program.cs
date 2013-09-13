@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace Epsitec.Cresus.Assets
 {
@@ -13,10 +12,9 @@ namespace Epsitec.Cresus.Assets
 		/// The main entry point for the application.
 		/// </summary>
 		[System.STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
-			Application.EnableVisualStyles ();
-			Application.SetCompatibleTextRenderingDefault (false);
+			Epsitec.Cresus.Core.CoreProgram.Main (args);
 		}
 	}
 }

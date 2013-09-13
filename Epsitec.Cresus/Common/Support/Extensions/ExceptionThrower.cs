@@ -19,11 +19,12 @@ namespace Epsitec.Common.Support.Extensions
 		/// <param name="element">The element to ensure that it is not null.</param>
 		/// <param name="elementName">The name of <paramref name="element"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="element"/> is null.</exception>
-		public static void ThrowIfNull<T>(this T element, string elementName) where T : class
+		public static void ThrowIfNull<T>(this T element, string elementName)
+			where T : class
 		{
 			if (element == null)
 			{
-				throw new System.ArgumentNullException (elementName);
+				throw new System.ArgumentNullException (elementName, string.Format ("Element of type {0} is null", typeof (T).FullName));
 			}
 		}
 
@@ -35,7 +36,8 @@ namespace Epsitec.Common.Support.Extensions
 		/// <param name="elementName">The name of <paramref name="element"/>.</param>
 		/// <param name="message">The message.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="element"/> is null.</exception>
-		public static void ThrowIfNull<T>(this T element, string elementName, string message) where T : class
+		public static void ThrowIfNull<T>(this T element, string elementName, string message)
+			where T : class
 		{
 			if (element == null)
 			{
@@ -55,7 +57,7 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			if (!element.HasValue)
 			{
-				throw new System.ArgumentException (elementName);
+				throw new System.ArgumentException ("Argument has no value", elementName);
 			}
 		}
 
@@ -71,7 +73,7 @@ namespace Epsitec.Common.Support.Extensions
 		{
 			if (string.IsNullOrEmpty (element))
 			{
-				throw new System.ArgumentException (elementName);
+				throw new System.ArgumentException ("Argument is null or empty", elementName);
 			}
 		}
 

@@ -516,7 +516,7 @@ namespace Epsitec.Cresus.Core.Library
 				return metadata as T;
 			}
 
-			throw new System.ArgumentException ("Cannot find metadata of type " + typeof (T).FullName);
+			throw new System.ArgumentException (string.Format ("Cannot find metadata of type {0}. Check the core .crconfig file.", typeof (T).FullName));
 		}
 
 		public static bool ContainsMetadata<T>()

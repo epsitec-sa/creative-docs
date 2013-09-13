@@ -48,6 +48,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="AssetsApplication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +60,14 @@
     <ProjectReference Include="..\..\Common\Common.csproj">
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
+      <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Cresus.Core\Cresus.Core.csproj">
+      <Project>{543293d0-cafb-4431-8202-6c6d5ff5403a}</Project>
+      <Name>Cresus.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Assets.Core\Assets.Core.csproj">
       <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
