@@ -115,7 +115,7 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			foreach (var subscription in subscriptions)
 			{
-				if (subscription.Id != "1149448")
+				if (subscription.SusbscriptionFlag == SubscriptionFlag.VerificationRequired)
 				{
 					continue;
 				}
