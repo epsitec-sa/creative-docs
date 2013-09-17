@@ -20,7 +20,7 @@ function() {
 
     /* Properties */
     bagStore: null,
-    removedStore: null,
+    removeFromBagDropZone: null,
     /* Constructor */
 
     constructor: function(menu) {
@@ -28,8 +28,8 @@ function() {
 
       this.initStores();
 
-      var removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'enlever du panier', this.removeEntityFromBag);
-
+      this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'Enlever du panier', this.removeEntityFromBag,this);
+      this.removeFromBagDropZone.hide();
       config = {
         headerPosition: 'left',
         title: 'Panier',
@@ -42,7 +42,7 @@ function() {
             align: 'stretch',    
             padding: 5
         },
-        items: [removeFromBagDropZone,this.createEntityView()],
+        items: [this.createEntityView(),this.removeFromBagDropZone],
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
@@ -50,6 +50,7 @@ function() {
       };
       menu.on("resize", this.resizeEntityBagHandler, this);
       this.callParent([config]);
+
 
       return this;
     },
@@ -65,7 +66,7 @@ function() {
       if(Ext.isDefined(viewport))
       {
         this.width = 200;
-        this.height = viewport.height;
+        this.height = 150;
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -80,23 +81,19 @@ function() {
           model: 'Bag',
           data: []
       });
-      this.removedStore = Ext.create('Ext.data.Store', {
-          model: 'Bag',
-          data: [{
-          id: 1,
-          summary: "---",
-          entityType: "---",
-          data: "---"
-        }]
-      });
     },
 
     addEntityToBag: function(entity) {
       this.bagStore.add(entity);
+      if(!this.isVisible())
+      {
+        this.show();
+      }
     },
 
     removeEntityFromBag: function(entity) {
-      this.store.remove(entity);
+      var record = this.bagStore.getById(entity.id);
+      this.bagStore.remove(record);
     },
 
     createEntityView: function() {
@@ -113,7 +110,10 @@ function() {
         singleSelect: true,
         store: this.bagStore,
         listeners: {
-            render: this.initializeEntityDragZone
+            render: this.initializeEntityDragZone,
+            itemmouseenter: this.removeFromBagDropZone.show,
+            itemmouseleave: this.removeFromBagDropZone.hide,
+            scope: this.removeFromBagDropZone
         }
     });      
     },
@@ -127,6 +127,7 @@ function() {
 //      a proxy to drag.
           getDragData: function(e) {
               var sourceEl = e.getTarget(v.itemSelector, 10), d;
+
               if (sourceEl) {
                   d = sourceEl.cloneNode(true);
                   d.id = Ext.id();
@@ -144,50 +145,6 @@ function() {
           getRepairXY: function() {
               return this.dragData.repairXY;
           }
-      });
-    },
-
-    initializeEntityDropZone: function(v) {
-      
-
-        v.dropZone = Ext.create('Ext.dd.DropZone', v.el, {
-
-//      If the mouse is over a target node, return that node. This is
-//      provided as the "target" parameter in all "onNodeXXXX" node event handling functions
-        getTargetFromEvent: function(e) {
-            return e.getTarget('.entitybag-target');
-        },
-
-//      On entry into a target node, highlight that node.
-        onNodeEnter : function(target, dd, e, data){
-            Ext.fly(target).addCls('entitybag-target-hover');
-        },
-
-//      On exit from a target node, unhighlight that node.
-        onNodeOut : function(target, dd, e, data){
-            Ext.fly(target).removeCls('entitybag-target-hover');
-        },
-
-//      While over a target node, return the default drop allowed class which
-//      places a "tick" icon into the drag proxy.
-        onNodeOver : function(target, dd, e, data){
-            return Ext.dd.DropZone.prototype.dropAllowed;
-        },
-
-        onNodeDrop : function(target, dd, e, data){  
-          var targetEl = Ext.get(target),
-              html = targetEl.dom.innerHTML;
-
-            if (html == 'Drop Entity Here') {
-                html = data.entityData.summary
-            } else {
-                html = data.entityData.summary + ', ' + targetEl.dom.innerHTML;
-            }
-
-            targetEl.update(html);
-            Ext.Msg.alert('Drop gesture', 'Dropped entity ' + data.entityData.summary);
-            return true;
-        }
       });
     }
   });

@@ -105,6 +105,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController8ProcessNewPerson.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController9ProcessAddressChange.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController10ProcessPersonChanges.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderHouseholdViewController4AddHouseholdMemberOnDrag.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderSubscriptionViewController0FlagVerificationRequired.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />

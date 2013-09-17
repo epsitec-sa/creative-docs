@@ -153,7 +153,7 @@ function() {
     // Overrides the method defined in Tile.
     getState: function() {
       return {
-        type: 'edidionTile',
+        type: 'editionTile',
         entityId: this.entityId
       };
     },

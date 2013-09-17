@@ -22,6 +22,10 @@ function() {
       this.column.showAction(viewId, this.entityId, callback);
     },
 
+    showTemplateAction: function(viewId, aEntityId,callback) {
+      this.column.showTemplateAction(viewId, aEntityId, callback);
+    },
+
     select: function(selected) {
       if (this.isSelected() !== selected) {
         this.setSelected(selected);

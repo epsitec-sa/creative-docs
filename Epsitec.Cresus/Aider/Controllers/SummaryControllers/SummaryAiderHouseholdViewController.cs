@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
             wall.AddBrick()
                 .EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
                 .EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ()
-                .EnableActionOnDrop<ActionAiderHouseholdViewController1AddHouseholdMember> ();
+				.EnableActionOnDrop<ActionAiderHouseholdViewController4AddHouseholdMemberOnDrag> ();
 
 			wall.AddBrick ()
 				.Title (Resources.Text ("Adresse"))

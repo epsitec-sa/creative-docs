@@ -642,7 +642,7 @@ function() {
       }
       if(this.isReloading) {
         this.isReloading = false;
-        this.selModel.selectPrevious();
+        this.selModel.selectNext();
       }
     },
 

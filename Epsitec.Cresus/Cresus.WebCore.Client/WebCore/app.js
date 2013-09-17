@@ -244,9 +244,7 @@ function() {
         columnManager.leftList.entityList.isReloading = true;
         columnManager.leftList.entityList.store.load(function(records, operation, success) {
           console.log('reloaded');
-        });
-
-        
+        });      
       }
       
     },
@@ -263,7 +261,7 @@ function() {
     },
 
     addEntityToBag: function(entity) {
-      this.entityBag.addEntityToBag(entity);
+      this.entityBag.addEntityToBag(entity);      
     },
 
     showEntity: function(path, callback) {

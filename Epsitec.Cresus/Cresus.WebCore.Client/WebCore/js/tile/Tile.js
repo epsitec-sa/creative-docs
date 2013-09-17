@@ -2,7 +2,8 @@
 // compose tile columns.
 
 Ext.require([
-  'Epsitec.cresus.webcore.tools.Tools'
+  'Epsitec.cresus.webcore.tools.Tools',
+  'Epsitec.cresus.webcore.ui.DropZone'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.tile.Tile', {
@@ -27,7 +28,7 @@ function() {
     column: null,
     selected: false,
     actionMenu: null,
-    maxCharForButtons: 20,
+    maxCharForButtons: 30,
     /* Constructor */
 
     constructor: function(options) {
@@ -60,7 +61,7 @@ function() {
               var sepPos = end.indexOf(' ') + tile.maxCharForButtons;
               var start = a.title.substring(0,sepPos);
               end = a.title.substring(sepPos,textLength);
-              text = start + '<br>' + end;
+              text = start + '<br/>' + end;
           }
           else
           {
@@ -69,8 +70,9 @@ function() {
           var button = {};
           button.xtype = 'button';
           button.text = text;
+          button.width = 194;
           button.cls = 'tile-button';
-          overItemCls = 'tile-button-over';
+          button.overCls = 'tile-button-over';
           button.textAlign = 'left';
 
           if(isLarge)
@@ -85,48 +87,20 @@ function() {
           var toolbar = Ext.create('Ext.Toolbar', {
             dock: 'bottom',
             width: 400,
-            items: ['->',button]
+            items: [button]
           });
+
           toolsbars.unshift(toolbar);
         }
 
         if(a.displayMode == "OnDrop")
         {
-          toolsbars.unshift(tile.createDropZone(a.title));  
+          var dropZone = Ext.create('Epsitec.DropZone', a.title, function(data) { this.handleTemplateAction(a.viewId,data.id) },tile);
+          dropZone.requiresAdditionalEntity = a.requiresAdditionalEntity;
+          toolsbars.unshift(dropZone);  
         }        
       });
       return toolsbars;        
-    },
-
-    //TODO: REFACTOR AS TILE DROPZONE
-    createDropZone: function (title) {
-
-      var dropZoneStore = Ext.create('Ext.data.Store', {
-        model: 'Bag',
-        data: [{
-          id: 1,
-          summary: "---",
-          entityType: "---",
-          data: "---"
-        }]
-      });
-      var dropZone = Ext.create('Ext.view.View', {
-          dock: 'bottom',
-          cls: 'entity-view',
-          tpl: '<tpl for=".">' +
-                  '<div class="entitybag-target">'+ title + '</div>' +
-               '</tpl>',
-          itemSelector: 'div.entitybag-target',
-          overItemCls: 'entitybag-target-over',
-          selectedItemClass: 'entitybag-selected',
-          singleSelect: true,
-          store: dropZoneStore, 
-          listeners: {
-              render: Epsitec.Cresus.Core.app.entityBag.initializeEntityDropZone
-          }
-      });
-
-      return dropZone;
     },
 
     createEntityTileTools: function(options)  {
@@ -184,7 +158,16 @@ function() {
       this.showAction(viewId, callback);
     },
 
+    handleTemplateAction: function(viewId, aEntityId) {
+      var callback = Epsitec.Callback.create(this.handleActionCallback, this);
+      this.showTemplateAction(viewId, aEntityId, callback);
+    },
+
     showAction: function(viewId, callback) {
+      // This method is supposed to be overriden in derived classes.
+    },
+
+    showTemplateAction: function(viewId, aEntityId, callback) {
       // This method is supposed to be overriden in derived classes.
     },
 

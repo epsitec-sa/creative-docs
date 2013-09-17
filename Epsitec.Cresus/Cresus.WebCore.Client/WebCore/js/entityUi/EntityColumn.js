@@ -79,9 +79,9 @@ function() {
       );
     },
 
-    showTemplateAction: function(viewId, entityId, callback) {
+    showTemplateAction: function(viewId, aEntityId, callback) {
       this.columnManager.showAction(
-          Epsitec.ViewMode.action, viewId, this.entityId, entityId, callback
+          Epsitec.ViewMode.action, viewId, this.entityId, aEntityId, callback
       );
     }
   });

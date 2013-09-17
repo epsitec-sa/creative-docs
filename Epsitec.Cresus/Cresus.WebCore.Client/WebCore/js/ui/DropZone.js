@@ -9,20 +9,17 @@ function() {
     dropZoneStore: null,
     label: null,
     onDropFunction: null,
+    scope: null,
     /* Constructor */
 
-    constructor: function(label,onDropFunction) {
+    constructor: function(label,onDropFunction,scope) {
       var config;
       this.onDropFunction = onDropFunction;
-      this.label = label
+      this.scope = scope;
+      this.label = label;
       this.dropZoneStore = Ext.create('Ext.data.Store', {
           model: 'Bag',
-          data: [{
-          id: 1,
-          summary: "---",
-          entityType: "---",
-          data: "---"
-        }]
+          data: {}
       });
 
       config = {
@@ -49,7 +46,8 @@ function() {
     /* Methods */
 
     executeOnDrop: function (data) {
-      this.onDropFunction(data.entityData);
+      this.onDropFunction.apply(this.scope,[data.entityData]);
+      this.hide();
     },
 
     initializeEntityDropZone: function(v) {

@@ -198,14 +198,17 @@ function() {
 
     faqButtonHandler: function () {
       
-      if(this.application.faqWindow.isVisible())
+      /*if(this.application.faqWindow.isVisible())
       {
         this.application.faqWindow.hide();
       }
       else
       {
         this.application.faqWindow.show();
-      }         
+      }  */
+      var win=window.open('http://faq-aider.eerv.ch/', '_blank');
+      win.focus();
+             
     },
 
     entityBagHandler: function() {
