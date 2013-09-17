@@ -19,7 +19,7 @@ namespace Epsitec.VisualStudio
 	{
 		public ResourceSymbolInfoProvider()
 		{
-			using (new TimeTrace ("WorkspaceController"))
+			using (new TimeTrace ("ResourceSymbolInfoProvider"))
 			{
 				this.workspace = Workspace.PrimaryWorkspace;
 				this.solution = Workspace.PrimaryWorkspace.CurrentSolution;
@@ -83,9 +83,9 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point)
+		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point, bool leftExtent)
 		{
-			return await this.DocumentSource.GetResourceSymbolInfoAsync (point, this.resourceProvider).ConfigureAwait (false);
+			return await this.DocumentSource.GetResourceSymbolInfoAsync (point, this.resourceProvider, leftExtent).ConfigureAwait (false);
 		}
 
 		#region ISolutionProvider Members

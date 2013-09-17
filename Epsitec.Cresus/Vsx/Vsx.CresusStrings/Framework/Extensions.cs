@@ -139,24 +139,6 @@ namespace Epsitec
 
 		#endregion
 
-		#region Visual Studio
-
-		public static ITrackingSpan GetNullTrackingSpan(this SnapshotPoint source)
-		{
-			ITextSnapshot currentSnapshot = source.Snapshot;
-			var span = new Span (source.Position, 0);
-			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
-		}
-
-		public static ITrackingSpan GetTextTrackingSpan(this SnapshotPoint source, TextSpan textSpan)
-		{
-			ITextSnapshot currentSnapshot = source.Snapshot;
-			var span = Span.FromBounds (textSpan.Start, textSpan.End);
-			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
-		}
-
-		#endregion
-
 		#region Roslyn
 
 		public static IEnumerable<IDocument> Documents(this ISolution solution, CancellationToken cancellationToken = default(CancellationToken))
@@ -185,7 +167,7 @@ namespace Epsitec
 
 		public static bool IsMemberAccess(this CommonSyntaxNode node)
 		{
-			return node is MemberAccessExpressionSyntax || node is IdentifierNameSyntax || node is AliasQualifiedNameSyntax;
+			return node != null && (node is MemberAccessExpressionSyntax || node is IdentifierNameSyntax || node is AliasQualifiedNameSyntax);
 		}
 
 		public static bool IsPropertyOrField(this CommonSyntaxNode node)
@@ -203,8 +185,22 @@ namespace Epsitec
 
 		public static bool IsInvocation(this CommonSyntaxNode node)
 		{
-			return node is InvocationExpressionSyntax || (node.Parent != null && node.Parent is InvocationExpressionSyntax);
+			return node != null && (node is InvocationExpressionSyntax || (node.Parent != null && node.Parent is InvocationExpressionSyntax));
 		} 
+
+		#endregion
+
+		#region VisualStudio
+
+		public static bool ContiguousWith(this TextSpan source, TextSpan other)
+		{
+			return source.End == other.Start || other.End == source.Start;
+		}
+
+		public static bool ContiguousWith(this Span source, Span other)
+		{
+			return source.End == other.Start || other.End == source.Start;
+		}
 
 		#endregion
 

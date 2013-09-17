@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -26,7 +27,8 @@ namespace Epsitec.VisualStudio
 			this.StartSyntaxAndSemantic ();
 		}
 
-		public string Id
+
+		public string							Id
 		{
 			get
 			{
@@ -34,7 +36,7 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		public ITextBuffer TextBuffer
+		public ITextBuffer						TextBuffer
 		{
 			get
 			{
@@ -46,51 +48,57 @@ namespace Epsitec.VisualStudio
 				{
 					if (this.textBuffer != null)
 					{
-						this.textBuffer.Changed -= this.HandleTextBufferChanged;
+						this.textBuffer.Changed -= this.OnTextBufferChanged;
 					}
 					this.textBuffer = value;
 					if (this.textBuffer != null)
 					{
-						this.textBuffer.Changed += this.HandleTextBufferChanged;
+						this.textBuffer.Changed += this.OnTextBufferChanged;
 					}
 				}
 			}
 		}
 
-		public async Task<IDocument> DocumentAsync()
+		public async Task<IDocument>			DocumentAsync()
 		{
 			return this.Solution.GetDocument (await this.DocumentIdAsync());
 		}
 
-		public async Task<CommonSyntaxNode> SyntaxRootAsync()
+		public async Task<CommonSyntaxNode>		SyntaxRootAsync()
 		{
 			this.ctsSyntaxAndSemantic.Token.ThrowIfCancellationRequested ();
 			return await this.syntaxRootTask.ConfigureAwait(false);
 		}
 
-		public async Task<ISemanticModel> SemanticModelAsync()
+		public async Task<ISemanticModel>		SemanticModelAsync()
 		{
 			this.ctsSyntaxAndSemantic.Token.ThrowIfCancellationRequested ();
 			return await this.semanticModelTask.ConfigureAwait (false);
 		}
 
-		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point, ResourceSymbolMapperSource resourceProvider)
+
+		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point, ResourceSymbolMapperSource resourceProvider, bool leftExtent)
 		{
-			var applicableToSpan = point.GetNullTrackingSpan ();
+			//var applicableToSpan = point.GetNullTrackingSpan ();
 			var syntaxRoot = await this.SyntaxRootAsync ().ConfigureAwait (false);
 			var token = syntaxRoot.FindToken (point);
-			var node = DocumentSource.GetLeftSyntaxNode (token, point);
+			var node = leftExtent
+				? DocumentSource.GetLeftSyntaxNode (token, point)
+				: DocumentSource.GetFullSyntaxNode (token, point);
 			if (node != null)
 			{
-				applicableToSpan = point.GetTextTrackingSpan (token.Span);
 				var symbolName = node.RemoveTrivias ().ToString ();
 				symbolName = Regex.Replace (symbolName, @"^global::", string.Empty);
 				var resourceSymbolMapper = await resourceProvider.SymbolMapperAsync ();
 				var resources = resourceSymbolMapper.FindPartial (symbolName).ToList ();
-				return new ResourceSymbolInfo (resources, symbolName, node, token, applicableToSpan);
+				if (resources.Count > 0)
+				{
+					return new ResourceSymbolInfo (resources, symbolName, node, token);
+				}
 			}
 			return null;
 		}
+
 
 		#region IDisposable Members
 
@@ -98,7 +106,7 @@ namespace Epsitec.VisualStudio
 		{
 			if (this.textBuffer != null)
 			{
-				this.textBuffer.Changed -= this.HandleTextBufferChanged;
+				this.textBuffer.Changed -= this.OnTextBufferChanged;
 			}
 
 			this.CancelDocumentId ();
@@ -109,12 +117,118 @@ namespace Epsitec.VisualStudio
 
 		#endregion
 
+
+		private static SyntaxNode GetFullSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
+		{
+			if (token != default (CommonSyntaxToken))
+			{
+				var phase1 = token.Parent.AncestorsAndSelf ().SkipWhile (n => n is MemberAccessExpressionSyntax || n is IdentifierNameSyntax || n is AliasQualifiedNameSyntax);
+				var node1 = phase1.FirstOrDefault ();
+				if (node1 != null)
+				{
+					var phase2 = node1.DescendantNodesAndSelf ().SkipWhile (n => !(n is MemberAccessExpressionSyntax));
+					var node2 = phase2.FirstOrDefault ();
+					if (node2 != null)
+					{
+						if (node2.Parent is InvocationExpressionSyntax)
+						{
+							node2 = phase2.Skip (1).FirstOrDefault ();
+						}
+						if (node2.Span.OverlapsWith (token.Span) || node2.Span.ContiguousWith(token.Span))
+						{
+							return node2 as SyntaxNode;
+						}
+					}
+				}
+			}
+			return null;
+		}
+
+		private static SyntaxNode GetFullSyntaxNode0(CommonSyntaxToken token, SnapshotPoint point)
+		{
+			SyntaxNode node = null;
+			if (token != default (CommonSyntaxToken))
+			{
+				var startNode = token.Parent;
+				if (startNode.IsMemberAccess ())
+				{
+					var ancestors = startNode.AncestorsAndSelf ();
+					node = GetFullSyntaxNodeUpTheTree (ancestors);
+					if (node == null)
+					{
+						node = DocumentSource.GetFullSyntaxNodeDownTheTree (startNode.DescendantNodes ());
+					}
+				}
+				else
+				{
+					node = DocumentSource.GetFullSyntaxNodeDownTheTree (startNode.DescendantNodesAndSelf ());
+				}
+			}
+			return node;
+		}
+
+		private static SyntaxNode GetFullSyntaxNodeUpTheTree(IEnumerable<CommonSyntaxNode> ancestors)
+		{
+			var properties = ancestors.TakeWhile (a => a.IsPropertyOrField ());
+			return properties.LastOrDefault () as SyntaxNode;
+		}
+
+		private static SyntaxNode GetFullSyntaxNodeDownTheTree(IEnumerable<CommonSyntaxNode> descendants)
+		{
+			var properties = descendants.SkipWhile (a => a is InvocationExpressionSyntax || a.IsPropertyOrField ());
+			var node = properties.FirstOrDefault ();
+			if (node.IsInvocation ())
+			{
+				return null;
+			}
+			return node as SyntaxNode;
+		}
+
+		private static SyntaxNode GetLeftSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
+		{
+			if (token != default (CommonSyntaxToken))
+			{
+				var startNode = token.Parent;
+				if (startNode.IsMemberAccess ())
+				{
+					var ancestors = startNode.AncestorsAndSelf ();
+					var properties = ancestors.TakeWhile (a => a.Span.End <= token.Span.End && a.IsPropertyOrField ());
+					var node = properties.LastOrDefault ();
+					return node as SyntaxNode;
+				}
+				else
+				{
+					var descendants = startNode.DescendantNodesAndSelf ();
+					var properties = descendants.SkipWhile (a => !(a.Span.End <= token.Span.End && a.IsPropertyOrField ()));
+					var node = properties.FirstOrDefault ();
+					return node as SyntaxNode;
+				}
+			}
+			return null;
+		}
+
+
+		private ISolution						Solution
+		{
+			get
+			{
+				return this.solutionProvider.Solution;
+			}
+		}
+
+		public async Task<DocumentId>			DocumentIdAsync()
+		{
+			this.ctsDocumentId.Token.ThrowIfCancellationRequested ();
+			return await this.documentIdTask.ConfigureAwait (false);
+		}
+
+
 		private Task<DocumentId> CreateDocumentIdTask(EnvDTE.Document dteDocument)
 		{
 			var cancellationToken = this.ctsDocumentId.Token;
 			return Task.Run (() =>
 			{
-				using (new TimeTrace ("CreateDocumentIdTask"))
+				using (new TimeTrace ("DocumentSource.CreateDocumentIdTask"))
 				{
 					cancellationToken.ThrowIfCancellationRequested ();
 					var dteActiveDocumentPath = dteDocument.FullName;
@@ -138,39 +252,11 @@ namespace Epsitec.VisualStudio
 			}, cancellationToken);
 		}
 
-		//private static Task<CommonSyntaxNode> CreateSyntaxRootTask(Task<IDocument> documentTask, CancellationToken cancellationToken)
-		//{
-		//	return documentTask.ContinueWith (t =>
-		//	{
-		//		using (new TimeTrace ("CreateSyntaxRootTask"))
-		//		{
-		//			return t.Result.GetSyntaxRoot (cancellationToken);
-		//		}
-		//	},
-		//		cancellationToken,
-		//		TaskContinuationOptions.None,
-		//		TaskScheduler.Default);
-		//}
-
-		//private static Task<ISemanticModel> CreateSemanticModelTask(Task<IDocument> documentTask, CancellationToken cancellationToken)
-		//{
-		//	return documentTask.ContinueWith (t =>
-		//	{
-		//		using (new TimeTrace ("CreateSemanticModelTask"))
-		//		{
-		//			return t.Result.GetSemanticModel (cancellationToken);
-		//		}
-		//	},
-		//		cancellationToken,
-		//		TaskContinuationOptions.None,
-		//		TaskScheduler.Default);
-		//}
-
 		private Task<CommonSyntaxNode> CreateSyntaxRootTask()
 		{
 			return Task.Run (() =>
 			{
-				using (new TimeTrace ("CreateSyntaxRootTask"))
+				using (new TimeTrace ("DocumentSource.CreateSyntaxRootTask"))
 				{
 					var documentId = this.documentIdTask.Result;
 					var document = this.Solution.GetDocument (documentId);
@@ -183,28 +269,13 @@ namespace Epsitec.VisualStudio
 		{
 			return Task.Run (() =>
 			{
-				using (new TimeTrace ("CreateSemanticModelTask"))
+				using (new TimeTrace ("DocumentSource.CreateSemanticModelTask"))
 				{
 					var documentId = this.documentIdTask.Result;
 					var document = this.Solution.GetDocument (documentId);
 					return document.GetSemanticModel (this.ctsSyntaxAndSemantic.Token);
 				}
 			}, this.ctsSyntaxAndSemantic.Token);
-		}
-
-
-		private ISolution Solution
-		{
-			get
-			{
-				return this.solutionProvider.Solution;
-			}
-		}
-
-		public async Task<DocumentId> DocumentIdAsync()
-		{
-			this.ctsDocumentId.Token.ThrowIfCancellationRequested ();
-			return await this.documentIdTask.ConfigureAwait (false);
 		}
 
 
@@ -226,6 +297,7 @@ namespace Epsitec.VisualStudio
 			this.documentIdTask.ForgetSafely ();
 			this.ctsDocumentId.Dispose ();
 		}
+
 
 		private void StartSyntaxAndSemantic()
 		{
@@ -249,11 +321,6 @@ namespace Epsitec.VisualStudio
 		}
 
 
-		private void HandleTextBufferChanged(object sender, TextContentChangedEventArgs e)
-		{
-			var task = this.UpdateActiveDocumentAsync (e.Changes.ToRoslynTextChanges ());
-		}
-
 		private async Task<ISolution> UpdateActiveDocumentAsync(IEnumerable<Roslyn.Compilers.TextChange> changes)
 		{
 			var document = await this.DocumentAsync ();
@@ -263,115 +330,11 @@ namespace Epsitec.VisualStudio
 			return solution;
 		}
 
-		//public async Task<object> GetQuickInfoContent(ResourceController resourceProvider, int timeout, SnapshotPoint point, out ITrackingSpan applicableToSpan)
-		//{
-		//	applicableToSpan = point.GetNullTrackingSpan ();
-		//	// get project resources
-		//	try
-		//	{
-		//		var resourceSymbolMapper = await resourceProvider.SymbolMapperAsync ().WithTimeout (timeout);
-		//		try
-		//		{
-		//			var document = await this.DocumentAsync ().WithTimeout (timeout);
-		//			try
-		//			{
-		//				var syntaxRoot = await this.SyntaxRootAsync ().WithTimeout (timeout);
-		//				var token = syntaxRoot.FindToken (point);
-		//				var node = DocumentController.GetLeftSyntaxNode (token, point);
-		//				if (node != null)
-		//				{
-		//					// syntax and resources available
-		//					applicableToSpan = point.GetTextTrackingSpan (token.Span);
-		//					var symbolName = node.RemoveTrivias ().ToString ();
-		//					symbolName = Regex.Replace (symbolName, @"^global::", string.Empty);
-		//					var resources = resourceSymbolMapper.FindPartial (symbolName).ToList ();
-		//					if (resources.Count > 0)
-		//					{
-		//						// TODO: check for multiple namespaces
-		//						// if (HasSingleNamespace(resources))
-		//						// {
-		//						if (resources.Count == 1)
-		//						{
-		//							return new MultiCultureResourceItemView (resources.First ());
-		//						}
-		//						else
-		//						{
-		//							return new MultiCultureResourceItemCollectionView (resources)
-		//							{
-		//								MaxHeight = 600
-		//							};
-		//						}
-		//						// }
-		//						// else
-		//						// {
-
-		//						//var semanticTask = activeDocumentController.SemanticModelAsync ();
-		//						//if (semanticTask.Wait (QuickInfoSource.Timeout (100), activeDocumentController.RoslynCancellationToken))
-		//						//{
-		//						//	content = this.GetQiSemanticContent (node, semanticTask.Result);
-		//						//}
-		//						//else
-		//						//{
-		//						//	QuickInfoSource.SetQiPending ("Semantic", qiContent);
-		//						//}
-
-		//						// }
-		//					}
-		//				}
-		//				return null;
-		//			}
-		//			catch (TimeoutException)
-		//			{
-		//				return DocumentController.GetPendingMessage ("Syntax");
-		//			}
-		//		}
-		//		catch (TimeoutException)
-		//		{
-		//			return DocumentController.GetPendingMessage ("Document");
-		//		}
-		//	}
-		//	catch (TimeoutException)
-		//	{
-		//		return DocumentController.GetPendingMessage ("Resources");
-		//	}
-		//}
-
-		private static SyntaxNode GetFullSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
+		private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e)
 		{
-			if (token != default (CommonSyntaxToken))
-			{
-				if (token.Parent.IsMemberAccess ())
-				{
-					var ancestors = token.Parent.AncestorsAndSelf ();
-					var properties = ancestors
-						.TakeWhile (a => a.IsPropertyOrField ());
-					var node = properties.LastOrDefault ();
-					return node as SyntaxNode;
-				}
-			}
-			return null;
+			var task = this.UpdateActiveDocumentAsync (e.Changes.ToRoslynTextChanges ());
 		}
 
-		private static SyntaxNode GetLeftSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
-		{
-			if (token != default (CommonSyntaxToken))
-			{
-				if (token.Parent.IsMemberAccess ())
-				{
-					var ancestors = token.Parent.AncestorsAndSelf ();
-					var properties = ancestors
-						.TakeWhile (a => a.Span.End <= token.Span.End && a.IsPropertyOrField ());
-					var node = properties.LastOrDefault ();
-					return node as SyntaxNode;
-				}
-			}
-			return null;
-		}
-
-		//private static string GetPendingMessage(string subject)
-		//{
-		//	return string.Format ("({0} cache is still being constructed. Please try again in a few seconds...)", subject);
-		//}
 
 		private readonly ISolutionProvider solutionProvider;
 		private readonly EnvDTE.Document dteDocument;

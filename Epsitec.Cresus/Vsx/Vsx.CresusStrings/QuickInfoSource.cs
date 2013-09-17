@@ -57,19 +57,28 @@ namespace Epsitec.Cresus.Strings
 
 				if (subjectTriggerPoint.HasValue)
 				{
-					var symbolInfoTask = this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (subjectTriggerPoint.Value);
+					var point = subjectTriggerPoint.Value;
+					var symbolInfoTask = this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (point, false);
 					if (symbolInfoTask.Wait(QuickInfoSource.Timeout (100)))
 					{
 						var symbolInfo = symbolInfoTask.Result;
-						var content = QuickInfoSource.CreateQiView (symbolInfo);
-						if (content != null)
+						if (symbolInfo != null)
 						{
-							applicableToSpan = symbolInfo.ApplicableToSpan;
-							qiContent.Add (content);
+							var content = QuickInfoSource.CreateQiView (symbolInfo);
+							if (content != null)
+							{
+								var textSpan = symbolInfo.SyntaxToken.Span;
+								var span = Span.FromBounds (textSpan.Start, textSpan.End);
+								applicableToSpan = point.Snapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
+
+								qiContent.Add (content);
+							}
 						}
 					}
 					else
 					{
+						var span = Span.FromBounds (point.Position, 0);
+						applicableToSpan = point.Snapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 						QuickInfoSource.SetQiPending ("Cresus Strings", qiContent);
 					}
 				}
@@ -180,20 +189,6 @@ namespace Epsitec.Cresus.Strings
 		{
 			Trace.WriteLine (message);
 			qiContent.Add (message);
-		}
-
-		private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint)
-		{
-			ITextSnapshot currentSnapshot = snapshotPoint.Snapshot;
-			var span = new Span (snapshotPoint.Position, 0);
-			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeExclusive);
-		}
-
-		private static ITrackingSpan GetTrackingSpan(SnapshotPoint snapshotPoint, TextSpan textSpan)
-		{
-			ITextSnapshot currentSnapshot = snapshotPoint.Snapshot;
-			var span = Span.FromBounds (textSpan.Start, textSpan.End);
-			return currentSnapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
 		}
 
 		private Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider

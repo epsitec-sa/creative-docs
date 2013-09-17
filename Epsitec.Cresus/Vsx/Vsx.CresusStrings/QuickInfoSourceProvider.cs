@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Strings
 {
 	[Export (typeof (IQuickInfoSourceProvider))]
 	[Name ("Cresus Strings Source")]
-	[Order (Before = "Default Quick Info Presenter")]
+	[Order (Before = "default")]
 	[ContentType ("CSharp")]
 	internal class QuickInfoSourceProvider : IQuickInfoSourceProvider
 	{
@@ -32,23 +32,8 @@ namespace Epsitec.Cresus.Strings
 			set;
 		}
 
-		[Import]
-		internal ITextStructureNavigatorSelectorService NavigatorService
-		{
-			get;
-			set;
-		}
-
-		[Import]
-		internal ITextBufferFactoryService TextBufferFactoryService
-		{
-			get;
-			set;
-		}
-
 		public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
 		{
-			//Trace.WriteLine (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 			using (new TimeTrace ("TryCreateQuickInfoSource"))
 			{
 				this.ResourceSymbolInfoProvider.DocumentSource.TextBuffer = textBuffer;

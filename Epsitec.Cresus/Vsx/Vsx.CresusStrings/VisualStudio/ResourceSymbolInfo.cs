@@ -12,13 +12,13 @@ namespace Epsitec.VisualStudio
 {
 	public class ResourceSymbolInfo
 	{
-		public ResourceSymbolInfo(List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources, string symbolName, SyntaxNode node, CommonSyntaxToken token, ITrackingSpan applicableToSpan)
+		//public ResourceSymbolInfo(List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources, string symbolName, SyntaxNode node, CommonSyntaxToken token, ITrackingSpan applicableToSpan)
+		public ResourceSymbolInfo(List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources, string symbolName, SyntaxNode node, CommonSyntaxToken token)
 		{
 			this.resources = resources;
 			this.symbolName = symbolName;
-			this.node = node;
-			this.token = token;
-			this.applicableToSpan = applicableToSpan;
+			this.syntaxNode = node;
+			this.syntaxToken = token;
 		}
 
 		public List<IReadOnlyDictionary<CultureInfo, ResourceItem>> Resources
@@ -37,34 +37,25 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		public SyntaxNode Node
+		public SyntaxNode SyntaxNode
 		{
 			get
 			{
-				return this.node;
+				return this.syntaxNode;
 			}
 		}
 
-		public CommonSyntaxToken Token
+		public CommonSyntaxToken SyntaxToken
 		{
 			get
 			{
-				return this.token;
-			}
-		}
-
-		public ITrackingSpan ApplicableToSpan
-		{
-			get
-			{
-				return this.applicableToSpan;
+				return this.syntaxToken;
 			}
 		}
 
 		private readonly List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources;
 		private readonly string symbolName;
-		private readonly SyntaxNode node;
-		private readonly CommonSyntaxToken token;
-		private readonly ITrackingSpan applicableToSpan;
+		private readonly SyntaxNode syntaxNode;
+		private readonly CommonSyntaxToken syntaxToken;
 	}
 }

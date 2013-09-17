@@ -43,7 +43,7 @@ namespace Epsitec.VisualStudio
 		{
 			return Task.Run (() =>
 			{
-				using (new TimeTrace ("ResourceController.CreateMapperTask"))
+				using (new TimeTrace ("ResourceSymbolMapperSource.CreateSymbolMapperTask"))
 				{
 					var solutionResource = new SolutionResource (this.Solution, this.cts.Token);
 					var mapper = new ResourceSymbolMapper ();
