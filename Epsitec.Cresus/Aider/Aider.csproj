@@ -105,6 +105,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController8ProcessNewPerson.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController9ProcessAddressChange.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController10ProcessPersonChanges.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderSubscriptionViewController0FlagVerificationRequired.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="Enumerations\EnumUtils.cs" />
     <Compile Include="Enumerations\HouseholdRole.cs" />
     <Compile Include="Enumerations\PersonVisibilityStatus.cs" />
+    <Compile Include="Enumerations\SubscriptionFlag.cs" />
     <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\TextParser.cs" />
     <Compile Include="Enumerations\WarningTarget.cs" />
@@ -406,6 +408,7 @@
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Aider\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -1,3 +1,7 @@
+//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -7,8 +11,6 @@ using Epsitec.Cresus.Core.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
-using System;
-
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -16,8 +18,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderSubscriptionEntity> wall)
 		{
-			wall.AddBrick ();
-
+			wall.AddBrick ()
+				.EnableActionButton<ActionAiderSubscriptionViewController0FlagVerificationRequired> ();
+			
 			switch (this.Entity.SubscriptionType)
 			{
 				case SubscriptionType.Household:
@@ -31,7 +34,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 
 				default:
-					throw new NotImplementedException ();
+					throw new System.NotImplementedException ();
 			}
 		}
 	}

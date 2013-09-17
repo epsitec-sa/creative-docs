@@ -22,6 +22,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Count)
 					.Field (x => x.RegionalEdition)
 						.WithFavorites (favorites, favoritesOnly: true)
+					.Field (x => x.SusbscriptionFlag)
 				.End ();
 		}
 	}

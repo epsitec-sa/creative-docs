@@ -6230,6 +6230,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>LastSoftwareReleaseDate</c> field.
+		///	designer:fld/LVAHC/LVACH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVACH]")]
+		public global::System.DateTime? LastSoftwareReleaseDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime?> ("[LVACH]");
+			}
+			set
+			{
+				global::System.DateTime? oldValue = this.LastSoftwareReleaseDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVACH]"))
+				{
+					this.OnLastSoftwareReleaseDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime?> ("[LVACH]", oldValue, value);
+					this.OnLastSoftwareReleaseDateChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Entities.AiderUserRoleEntity oldValue, global::Epsitec.Aider.Entities.AiderUserRoleEntity newValue);
@@ -6253,6 +6275,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLastLoginDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnLastActivityDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnLastActivityDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnLastSoftwareReleaseDateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
+		partial void OnLastSoftwareReleaseDateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -7142,6 +7166,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>SusbscriptionFlag</c> field.
+		///	designer:fld/LVGP22/LVABH
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVABH]")]
+		public global::Epsitec.Aider.Enumerations.SubscriptionFlag SusbscriptionFlag
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.SubscriptionFlag> ("[LVABH]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue = this.SusbscriptionFlag;
+				if (oldValue != value || !this.IsFieldDefined("[LVABH]"))
+				{
+					this.OnSusbscriptionFlagChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.SubscriptionFlag> ("[LVABH]", oldValue, value);
+					this.OnSusbscriptionFlagChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DisplayName</c> field.
 		///	designer:fld/LVGP22/LVG932
 		///	</summary>
@@ -7268,6 +7314,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLegalPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnSubscriptionTypeChanging(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
 		partial void OnSubscriptionTypeChanged(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
+		partial void OnSusbscriptionFlagChanging(global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue, global::Epsitec.Aider.Enumerations.SubscriptionFlag newValue);
+		partial void OnSusbscriptionFlagChanged(global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue, global::Epsitec.Aider.Enumerations.SubscriptionFlag newValue);
 		partial void OnDisplayNameChanging(string oldValue, string newValue);
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnDisplayAddressChanging(string oldValue, string newValue);

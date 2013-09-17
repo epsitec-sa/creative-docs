@@ -1031,9 +1031,8 @@ AiderPersonWarning = [LVALB]
       <R><r>@user</r></R>
     </d>
 
-        <!-- AiderPerson
-        -->
-        <d cid="[LVO003]" teid="@AiderPerson" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="@submenuDefs">
+    <!-- AiderPerson -->
+    <d cid="[LVO003]" teid="@AiderPerson" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="@submenuDefs">
       <R><r>@user</r></R>
     </d>
 
@@ -1077,6 +1076,16 @@ AiderPersonWarning = [LVALB]
       <f id="@AiderContact">
 	<!-- Column id=ContactType (Valeur) (Comparaison) c=Equals(1) v="(e)num ContactType/n°3" -->
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
+      </f>
+    </d>
+
+    <d cid="[LVADH]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuBonneNouvelle">
+      <R><r>@user</r></R>
+      <L/>
+      <!-- Filter -->
+      <f id="@AiderSubscription">
+	<!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°1" -->
+        <C><c id="[LVABH]"><v><comp c="1" v="e[LVA8H]/1" /></v></c></C>
       </f>
     </d>
 

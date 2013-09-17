@@ -45,6 +45,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscription = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 98));
 				//	designer:cap/LVGJ32
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscriptionRefusal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 115));
+				//	designer:cap/LVADH
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderSubscriptionVerificationRequested = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 557));
 				//	designer:cap/LVG302
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderTown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3));
 				//	designer:cap/LVAHD
@@ -86,6 +88,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderSubscription = 0x3F500050000062L;
 				//	designer:cap/LVGJ32
 				public const long ShowAiderSubscriptionRefusal = 0x3F500050000073L;
+				//	designer:cap/LVADH
+				public const long ShowAiderSubscriptionVerificationRequested = 0x3F50000A00022DL;
 				//	designer:cap/LVG302
 				public const long ShowAiderTown = 0x3F500050000003L;
 				//	designer:cap/LVAHD
@@ -200,6 +204,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PesonNationalityStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 58));
 				//	designer:cap/LVAK6
 				public static readonly Epsitec.Common.Types.EnumType RemovalReason = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 212));
+				//	designer:cap/LVA8H
+				public static readonly Epsitec.Common.Types.EnumType SubscriptionFlag = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 552));
 				//	designer:cap/LVGU22
 				public static readonly Epsitec.Common.Types.EnumType SubscriptionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 94));
 				//	designer:cap/LVAIF
@@ -1075,6 +1081,26 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class SubscriptionFlag
+				{
+					//	designer:cap/LVA9H
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 553));
+						}
+					}
+					//	designer:cap/LVAAH
+					public static global::Epsitec.Common.Types.Caption VerificationRequired
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 554));
+						}
+					}
+				}
+				
 				public static class SubscriptionType
 				{
 					//	designer:cap/LVGV22
@@ -1856,6 +1882,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RegionalEdition = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 101);
 				//	designer:cap/LVG132
 				public static readonly global::Epsitec.Common.Support.Druid SubscriptionType = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 97);
+				//	designer:cap/LVABH
+				public static readonly global::Epsitec.Common.Support.Druid SusbscriptionFlag = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 555);
 			}
 			
 			public static class AiderSubscriptionRefusal
@@ -1929,6 +1957,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid LastActivityDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 537);
 				//	designer:cap/LVAOG
 				public static readonly global::Epsitec.Common.Support.Druid LastLoginDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 536);
+				//	designer:cap/LVACH
+				public static readonly global::Epsitec.Common.Support.Druid LastSoftwareReleaseDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 556);
 				//	designer:cap/LVGH22
 				public static readonly global::Epsitec.Common.Support.Druid Mutability = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 81);
 				//	designer:cap/LVGD22

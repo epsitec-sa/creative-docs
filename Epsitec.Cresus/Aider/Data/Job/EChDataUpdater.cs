@@ -83,8 +83,8 @@ namespace Epsitec.Aider.Data.Job
 			//	the corresponding AiderPersons.
 			var time = this.LogToConsole ("starting main job");
 
-			this.UpdateEChPersonEntities ();
-			this.UpdateHouseholdsAndPropagate ();
+//-			this.UpdateEChPersonEntities ();
+//-			this.UpdateHouseholdsAndPropagate ();
 
 			this.TagEChPersonsForDeletion ();
 			this.TagAiderPersonsForDeletion ();
