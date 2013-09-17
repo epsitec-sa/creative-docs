@@ -421,7 +421,7 @@
   <data name="Fld.AiderSubscription.FullAddressTextMultiLine" id="GL32">&lt;s:data id="_0" f:Name="FullAddressTextMultiLine" f:Labels="{Collection {Text 'Adresse complète'}}" /&gt;</data>
   <data name="Fld.AiderSubscriptionRefusal.FullAddressTextMultiLine" id="GM32">&lt;s:data id="_0" f:Name="FullAddressTextMultiLine" f:Labels="{Collection {Text 'Adresse complète'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.EChPersonDuplicated" id="GN32">&lt;s:data id="_0" f:Name="EChPersonDuplicated" f:Labels="{Collection {Text 'Doublon'}}" /&gt;</data>
-  <data name="Val.Enum.WarningType.EChPersonMissing" id="GO32">&lt;s:data id="_0" f:Name="EChPersonMissing" f:Labels="{Collection {Text 'Sortie du RCH'}}" /&gt;</data>
+  <data name="Val.Enum.WarningType.EChPersonMissing" id="GO32">&lt;s:data id="_0" f:Name="EChPersonMissing" f:Labels="{Collection {Text 'Personne sortie du RCH'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.EChHouseholdMissing" id="GP32">&lt;s:data id="_0" f:Name="EChHouseholdMissing" f:Labels="{Collection {Text 'Personne sans ménage'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.EChPersonDataChanged" id="GQ32">&lt;s:data id="_0" f:Name="EChPersonDataChanged" f:Labels="{Collection {Text 'Personne modifiée'}}" /&gt;</data>
   <data name="Val.Enum.WarningType.EChAddressChanged" id="GR32">&lt;s:data id="_0" f:Name="EChAddressChanged" f:Labels="{Collection {Text 'Changement d&amp;amp;apos;adresse'}}" /&gt;</data>
