@@ -162,22 +162,22 @@ function() {
         buttons.push(this.createButton({
           text: 'Panier',
           handler: this.entityBagHandler,
-          iconCls: 'epsitec-cresus-core-images-workflowtransition-icon32'
+          iconCls: 'epsitec-aider-images-general-bag-icon32'
         }));
       }
 
       if(epsitecConfig.featureFaq) {
         buttons.push(this.createButton({
-          text: 'FAQ',
+          text: 'F.A.Q.',
           handler: this.faqButtonHandler,
-          iconCls: 'epsitec-cresus-core-images-feedback-icon32'
+          iconCls: 'epsitec-aider-images-general-faq-icon32'
         }));
       }
 
       buttons.push(this.createButton({
         text: Epsitec.Texts.getLogoutLabel(),
         handler: this.logoutButtonHandler,
-        iconCls: 'epsitec-cresus-core-images-action-logout-icon32'
+        iconCls: 'epsitec-aider-images-general-logout-icon32'
       }));
 
       return Ext.create('Ext.container.ButtonGroup', {

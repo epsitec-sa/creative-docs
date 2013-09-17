@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		private void AssignToParish(AiderPersonEntity person)
+		private void AssignToParish(AiderPersonEntity person, Date? startDate = null)
 		{
 			var parishGroup = this.FindParishGroup (person);
 
@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Data.Common
 				if (noParishGroupParticipation.IsNull ())
 				{
 					var participationData = new ParticipationData (person);
-					AiderGroupParticipantEntity.StartParticipation (businessContext, parishGroup, participationData);
+					AiderGroupParticipantEntity.StartParticipation (businessContext, parishGroup, participationData, startDate);
 
 					person.ParishGroup          = parishGroup;
 					person.ParishGroupPathCache = parishGroup.Path;
@@ -188,11 +188,11 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderPersonEntity person)
+		public static void AssignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderPersonEntity person, Date? startDate = null)
 		{
 			var assigner = new ParishAssigner (parishRepository, businessContext);
 
-			assigner.AssignToParish (person);
+			assigner.AssignToParish (person, startDate);
 		}
 
 
@@ -207,11 +207,11 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		public static void ReassignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderPersonEntity person)
+		public static void ReassignToParish(ParishAddressRepository parishRepository, BusinessContext businessContext, AiderPersonEntity person, Date? startDate = null)
 		{
 			ParishAssigner.UnassignFromParish (businessContext, person);
 
-			ParishAssigner.AssignToParish (parishRepository, businessContext, person);
+			ParishAssigner.AssignToParish (parishRepository, businessContext, person, startDate);
 		}
 
 

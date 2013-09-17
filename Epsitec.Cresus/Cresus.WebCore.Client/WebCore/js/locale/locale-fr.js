@@ -55,7 +55,7 @@ Ext.define('Epsitec.cresus.webcore.locale.Locale', {
         databasesTitle: 'Bases de donn\u00E9es',
         toolsTitle: 'Outils',
         aboutLabel: 'A propos',
-        logoutLabel: 'D\u00E9connexion',
+        logoutLabel: 'Termin\u00E9',
         sortTitle: 'Configuration du tri',
         scopeTitle: 'Cercles',
         windowTitle: 'AIDER',
