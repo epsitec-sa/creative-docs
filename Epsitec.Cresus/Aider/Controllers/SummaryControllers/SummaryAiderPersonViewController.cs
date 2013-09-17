@@ -7,9 +7,11 @@ using Epsitec.Common.Types;
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
+using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Library;
@@ -27,12 +29,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
 				.Text (x => x.GetPersonalDataSummary ());
+
+			if (user.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				wall.AddBrick ()
+					.Icon (this.Entity.GetIconName ("Data"))
+					.Title (x => TextFormatter.FormatText ("Détails techniques"))
+					.Text (x => x.eCH_Person.GetSummary ());
+			}
 
 			wall.AddBrick (x => x.ParishGroup)
 				.Icon ("Data.AiderGroup.Parish")

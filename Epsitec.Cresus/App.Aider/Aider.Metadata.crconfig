@@ -1009,6 +1009,11 @@ AiderPersonWarning = [LVALB]
       <L>
         <l t="Adresse" f="0"/>
       </L>
+      <!-- Filter -->
+      <f id="@AiderSubscription">
+	<!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°0" -->
+        <C><c id="[LVABH]"><v><comp c="1" v="e[LVA8H]/0" /></v></c></C>
+      </f>
     </d>
 
     <d cid="[LVGJ32]" teid="@AiderSubscriptionRefusal" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuBonneNouvelle">

@@ -83,8 +83,8 @@ namespace Epsitec.Aider.Data.Job
 			//	the corresponding AiderPersons.
 			var time = this.LogToConsole ("starting main job");
 
-//-			this.UpdateEChPersonEntities ();
-//-			this.UpdateHouseholdsAndPropagate ();
+			this.UpdateEChPersonEntities ();
+			this.UpdateHouseholdsAndPropagate ();
 
 			this.TagEChPersonsForDeletion ();
 			this.TagAiderPersonsForDeletion ();
@@ -168,37 +168,40 @@ namespace Epsitec.Aider.Data.Job
 
 							if (eChPerson.PersonDateOfBirth != eChPersonNew.PersonDateOfBirth)
 							{
-								changes.Add (TextFormatter.FormatText ("Date de naissance:", eChPerson.PersonDateOfBirth, "->", eChPersonNew.PersonDateOfBirth));
+//-								changes.Add (TextFormatter.FormatText ("Date de naissance:", eChPerson.PersonDateOfBirth, "->", eChPersonNew.PersonDateOfBirth));
 								eChPerson.PersonDateOfBirth = eChPersonNew.PersonDateOfBirth;
 							}
 
 							if (eChPerson.AdultMaritalStatus != eChPersonNew.AdultMaritalStatus)
 							{
-								changes.Add (TextFormatter.FormatText ("État civil:", eChPerson.AdultMaritalStatus, "->", eChPersonNew.AdultMaritalStatus));
+								if (eChPerson.AdultMaritalStatus != PersonMaritalStatus.None)
+								{
+									changes.Add (TextFormatter.FormatText ("État civil:", eChPerson.AdultMaritalStatus, "->", eChPersonNew.AdultMaritalStatus));
+								}
 								eChPerson.AdultMaritalStatus = eChPersonNew.AdultMaritalStatus;
 							}
 
 							if (eChPerson.PersonSex != eChPersonNew.PersonSex)
 							{
-								changes.Add (TextFormatter.FormatText ("Sexe:", eChPerson.PersonSex, "->", eChPersonNew.PersonSex));
+//-								changes.Add (TextFormatter.FormatText ("Sexe:", eChPerson.PersonSex, "->", eChPersonNew.PersonSex));
 								eChPerson.PersonSex = eChPersonNew.PersonSex;
 							}
 
 							if (eChPerson.NationalityCountryCode != eChPersonNew.NationalityCountryCode)
 							{
-								changes.Add (TextFormatter.FormatText ("Nationalité:", eChPerson.NationalityCountryCode, "->", eChPersonNew.NationalityCountryCode));
+//-								changes.Add (TextFormatter.FormatText ("Nationalité:", eChPerson.NationalityCountryCode, "->", eChPersonNew.NationalityCountryCode));
 								eChPerson.NationalityCountryCode = eChPersonNew.NationalityCountryCode;
 							}
 
 							if (eChPerson.NationalityStatus != eChPersonNew.NationalityStatus)
 							{
-								changes.Add (TextFormatter.FormatText ("Statut nationalité:", eChPerson.NationalityStatus, "->", eChPersonNew.NationalityStatus));
+//-								changes.Add (TextFormatter.FormatText ("Statut nationalité:", eChPerson.NationalityStatus, "->", eChPersonNew.NationalityStatus));
 								eChPerson.NationalityStatus = eChPersonNew.NationalityStatus;
 							}
 
 							if (eChPerson.Origins != eChPersonNew.Origins)
 							{
-								changes.Add (TextFormatter.FormatText ("Origines:", eChPerson.Origins, "->", eChPersonNew.Origins));
+//-								changes.Add (TextFormatter.FormatText ("Origines:", eChPerson.Origins, "->", eChPersonNew.Origins));
 								eChPerson.Origins = eChPersonNew.Origins;
 							}
 
@@ -238,60 +241,60 @@ namespace Epsitec.Aider.Data.Job
 						{
 							var family  = this.GetEchReportedPersonEntity (businessContext, item.NewValue);
 							var changes = new List<FormattedText> ();
+							var changed = false;
 
 							changes.Add (TextFormatter.FormatText ("Changement dans l'adresse:"));
 
+							var oldAddress = family.Address.GetSummary ();
+
 							if (StringUtils.NotEqualOrEmpty (family.Address.AddressLine1, item.NewValue.Address.AddressLine1))
 							{
-								changes.Add (TextFormatter.FormatText ("Ligne adresse:", family.Address.AddressLine1, "->", item.NewValue.Address.AddressLine1));
-								
 								family.Address.AddressLine1 = item.NewValue.Address.AddressLine1 ?? "";
+								changed = true;
 							}
 
 							if (StringUtils.NotEqualOrEmpty (family.Address.HouseNumber, item.NewValue.Address.HouseNumber))
 							{
-								changes.Add (TextFormatter.FormatText ("N° de maison:", family.Address.HouseNumber, "->", item.NewValue.Address.HouseNumber));
-								
 								family.Address.HouseNumber = item.NewValue.Address.HouseNumber ?? "";
+								changed = true;
 							}
 							
 							if (StringUtils.NotEqualOrEmpty (family.Address.Street, item.NewValue.Address.Street))
 							{
-								changes.Add (TextFormatter.FormatText ("Rue:", family.Address.Street, "->", item.NewValue.Address.Street));
-								
 								family.Address.Street = item.NewValue.Address.Street ?? "";
+								changed = true;
 							}
 
 							if ((family.Address.SwissZipCode != item.NewValue.Address.SwissZipCode) ||
 								(family.Address.SwissZipCodeAddOn != item.NewValue.Address.SwissZipCodeAddOn) ||
 								(family.Address.SwissZipCodeId != item.NewValue.Address.SwissZipCodeId))
 							{
-								changes.Add (TextFormatter.FormatText ("NPA:", family.Address.SwissZipCode, family.Address.SwissZipCodeAddOn, "(", family.Address.SwissZipCodeId, ")", "->",
-																	   item.NewValue.Address.SwissZipCode, item.NewValue.Address.SwissZipCodeAddOn, "(", item.NewValue.Address.SwissZipCodeId, ")"));
-								
 								family.Address.SwissZipCode      = item.NewValue.Address.SwissZipCode;
 								family.Address.SwissZipCodeAddOn = item.NewValue.Address.SwissZipCodeAddOn;
 								family.Address.SwissZipCodeId    = item.NewValue.Address.SwissZipCodeId;
+								changed = true;
 							}
 
 							if (StringUtils.NotEqualOrEmpty (family.Address.Town, item.NewValue.Address.Town))
 							{
-								changes.Add (TextFormatter.FormatText ("Localité:", family.Address.Town, "->", item.NewValue.Address.Town));
-
 								family.Address.Town = item.NewValue.Address.Town ?? "";
+								changed = true;
 							}
 
 							if (StringUtils.NotEqualOrEmpty (family.Address.Country, item.NewValue.Address.CountryCode))
 							{
-								changes.Add (TextFormatter.FormatText ("Pays:", family.Address.Country, "->", item.NewValue.Address.CountryCode));
-								
 								family.Address.Country = item.NewValue.Address.CountryCode ?? "";
+								changed = true;
 							}
 
-							if (changes.Count == 1)
+							if (changed == false)
 							{
 								continue;
 							}
+
+							var newAddress = family.Address.GetSummary ();
+
+							changes.Add (TextFormatter.FormatText (oldAddress, "\n->\n", newAddress));
 
 							var refPerson      = this.GetAiderPersonEntity (businessContext,family.Adult1);
 							var aiderHousehold = this.GetAiderHousehold (businessContext, refPerson);
@@ -609,7 +612,7 @@ namespace Epsitec.Aider.Data.Job
 							eChPersonC.ReportedPerson1 = eChReportedPersonEntity;
 							eChReportedPersonEntity.Children.Add (eChPersonC);
 
-							//autoassign person to AiderHousehold if needed
+							//	Autoassign person to AiderHousehold if needed
 							var aiderPersonC = this.GetAiderPersonEntity (businessContext, eChPersonC);
 							if (aiderPersonC.Households.IsEmpty ())
 							{
@@ -634,7 +637,7 @@ namespace Epsitec.Aider.Data.Job
 
 						//	Create warnings for the AiderPerson entity:
 
-						var referenceAdult    = eChReportedPersonEntity.Adult1;
+						var referenceAdult = eChReportedPersonEntity.Adult1;
 						if (aiderPersonA1.IsNotNull ())
 						{
 							AiderHouseholdEntity oldHousehold;

@@ -36,7 +36,7 @@ namespace Epsitec.Aider
 
 			try
 			{
-				CoreData.ForceDatabaseCreationRequest = true;
+//				CoreData.ForceDatabaseCreationRequest = true;
 				AiderProgram.TestFullImportJob (importMode);
 			}
 			finally
@@ -55,36 +55,56 @@ namespace Epsitec.Aider
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tSTART");
 
-				var eervGroupDefinitionFile = new FileInfo ("..\\..\\Samples\\EERV Main\\groupdefinition.xlsx");
-				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
-				var parishRepository = ParishAddressRepository.Current;
-				EervMainDataImporter.Import (coreData, eervMainData, parishRepository);
+				//var eervGroupDefinitionFile = new FileInfo ("..\\..\\Samples\\EERV Main\\groupdefinition.xlsx");
+				//var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
+				//var parishRepository = ParishAddressRepository.Current;
+				//EervMainDataImporter.Import (coreData, eervMainData, parishRepository);
 
-				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
+				//System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV MAIN");
 
-				AiderProgram.CreateUsers (coreData);
+				//AiderProgram.CreateUsers (coreData);
 
-				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE USER CREATION");
+				//System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE USER CREATION");
 
-				var eChDataFile = new FileInfo ("..\\..\\Samples\\eerv.xml");
-				var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
-				EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
+				//var eChDataFile = new FileInfo ("..\\..\\Samples\\eerv.xml");
+				//var eChReportedPersons = EChDataLoader.Load (eChDataFile, importMode.HasFlag (AiderProgramTestImportMode.Subset) ? 2000 : int.MaxValue);
+				//EChDataImporter.Import (coreData, parishRepository, eChReportedPersons);
 
-				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
+				//System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE ECH");
 
-				if (importMode.HasFlag (AiderProgramTestImportMode.EchOnly))
-				{
-					return;
-				}
+				//if (importMode.HasFlag (AiderProgramTestImportMode.EchOnly))
+				//{
+				//	return;
+				//}
 
 				AiderProgram.Test
 				(
 					coreData: coreData,
-					person: "..\\..\\Samples\\EERV Région 9\\9010\\person.xlsx",
-					activity: "..\\..\\Samples\\EERV Région 9\\9010\\activity.xlsx",
-					group: "..\\..\\Samples\\EERV Région 9\\9010\\group.xlsx",
-					supergroup: "..\\..\\Samples\\EERV Région 9\\9010\\supergroup.xlsx",
-					id: "..\\..\\Samples\\EERV Région 9\\id.xlsx"
+					person: "..\\..\\Samples\\EERV Région 8\\8040\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 8\\8040\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 8\\8040\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 8\\8040\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 8\\id.xlsx"
+				);
+
+				AiderProgram.Test
+				(
+					coreData: coreData,
+					person: "..\\..\\Samples\\EERV Région 11\\11010\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 11\\11010\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 11\\11010\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 11\\11010\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 11\\id.xlsx"
+				);
+
+				AiderProgram.Test
+				(
+					coreData: coreData,
+					person: "..\\..\\Samples\\EERV Région 5\\5070\\person.xlsx",
+					activity: "..\\..\\Samples\\EERV Région 5\\5070\\activity.xlsx",
+					group: "..\\..\\Samples\\EERV Région 5\\5070\\group.xlsx",
+					supergroup: "..\\..\\Samples\\EERV Région 5\\5070\\supergroup.xlsx",
+					id: "..\\..\\Samples\\EERV Région 5\\id.xlsx"
 				);
 
 				System.Diagnostics.Trace.WriteLine ("[" + System.DateTime.Now + "]\tDONE EERV PARISH 1");
@@ -179,7 +199,7 @@ namespace Epsitec.Aider
 
 			foreach (var eervParishDatum in eervParishData)
 			{
-				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
+//				EervParishDataImporter.Import (coreData, parishRepository, eervParishDatum, considerDateOfBirth, considerSex);
 			}
 		}
 

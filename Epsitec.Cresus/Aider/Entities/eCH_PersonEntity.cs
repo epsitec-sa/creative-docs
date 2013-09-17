@@ -54,6 +54,11 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.GetDisplayName (), "(~", this.PersonDateOfBirth.Value.ComputeAge (), "~)");
 		}
 
+		public override FormattedText GetSummary()
+		{
+			return TextFormatter.FormatText ("ID eCH:", this.PersonId, "\n", this.DeclarationStatus);
+		}
+
 		public string GetDisplayName()
 		{
 			var lastname = this.PersonOfficialName;
