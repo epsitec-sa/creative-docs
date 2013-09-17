@@ -175,15 +175,15 @@ function() {
     //AJOUTER AU PANIER
     onEntityBagAddHandler: function(widget, event) {
       var rec,entity,app;
-
+      app = Epsitec.Cresus.Core.getApplication();
       rec = this.getSelectionModel().getSelection()[0];
       if (rec) {
         entity = {
           summary: rec.raw.summary,
-          entityType: this.databaseName,
+          entityType: Epsitec.Cresus.Core.app.getCurrentDatabaseEntityType(),
           id: rec.raw.id
         };
-        app = Epsitec.Cresus.Core.getApplication();
+        
         app.addEntityToBag(entity);
       }
     },

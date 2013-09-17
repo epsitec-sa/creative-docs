@@ -11,6 +11,7 @@ Ext.define('Bag', {
     });
 
 Ext.require([
+  'Epsitec.cresus.webcore.ui.DropZone'
 ],
 function() {
   Ext.define('Epsitec.cresus.webcore.ui.EntityBag', {
@@ -27,21 +28,7 @@ function() {
 
       this.initStores();
 
-      var removeFromBagDropZone = Ext.create('Ext.view.View', {
-          dock: 'bottom',
-          cls: 'entity-view',
-          tpl: '<tpl for=".">' +
-                  '<div class="entitybag-target">enlever du panier</div>' +
-               '</tpl>',
-          itemSelector: 'div.entitybag-target',
-          overItemCls: 'entitybag-target-over',
-          selectedItemClass: 'entitybag-selected',
-          singleSelect: true,
-          store: this.removedStore, 
-          listeners: {
-              render: this.initializeEntityDropZone
-          }
-      });
+      var removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'enlever du panier', this.removeEntityFromBag);
 
       config = {
         headerPosition: 'left',
@@ -106,6 +93,10 @@ function() {
 
     addEntityToBag: function(entity) {
       this.bagStore.add(entity);
+    },
+
+    removeEntityFromBag: function(entity) {
+      this.store.remove(entity);
     },
 
     createEntityView: function() {
@@ -183,11 +174,6 @@ function() {
             return Ext.dd.DropZone.prototype.dropAllowed;
         },
 
-//      On node drop, we can interrogate the target node to find the underlying
-//      application object that is the real target of the dragged data.
-//      In this case, it is a Record in the GridPanel's Store.
-//      We can use the data set up by the DragZone's getDragData method to read
-//      any data we decided to attach.
         onNodeDrop : function(target, dd, e, data){  
           var targetEl = Ext.get(target),
               html = targetEl.dom.innerHTML;

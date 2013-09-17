@@ -155,11 +155,22 @@ function() {
       //  handler: this.aboutButtonHandler,
       //  iconCls: 'epsitec-cresus-core-images-data-feedback-icon32'
       //}));
+
+
+
       if(epsitecConfig.featureEntityBag) {
         buttons.push(this.createButton({
           text: 'Panier',
           handler: this.entityBagHandler,
           iconCls: 'epsitec-cresus-core-images-workflowtransition-icon32'
+        }));
+      }
+
+      if(epsitecConfig.featureFaq) {
+        buttons.push(this.createButton({
+          text: 'FAQ',
+          handler: this.faqButtonHandler,
+          iconCls: 'epsitec-cresus-core-images-feedback-icon32'
         }));
       }
 
@@ -183,6 +194,18 @@ function() {
       url = 'proxy/page/about';
 
       this.application.tabManager.showPageTab(title, url);
+    },
+
+    faqButtonHandler: function () {
+      
+      if(this.application.faqWindow.isVisible())
+      {
+        this.application.faqWindow.hide();
+      }
+      else
+      {
+        this.application.faqWindow.show();
+      }         
     },
 
     entityBagHandler: function() {

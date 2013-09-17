@@ -20,6 +20,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.Menu',
   'Epsitec.cresus.webcore.ui.TabManager',
   'Epsitec.cresus.webcore.ui.EntityBag',
+  'Epsitec.cresus.webcore.ui.FaqWindow',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.ViewMode',
   'Epsitec.cresus.webcore.hub.Notifications'
@@ -35,6 +36,7 @@ function() {
     loginPanel: null,
     tabManager: null,
     entityBag: null,
+    faqWindow: null,
 
     /* Application entry point */
 
@@ -228,6 +230,10 @@ function() {
       if(epsitecConfig.featureEntityBag) {
         this.entityBag = Ext.create('Epsitec.EntityBag',this.menu);
       }
+
+      if(epsitecConfig.featureFaq) {
+        this.faqWindow = Ext.create('Epsitec.FaqWindow');
+      }
     },
 
     reloadCurrentDatabase: function() {
@@ -243,6 +249,17 @@ function() {
         
       }
       
+    },
+
+    getCurrentDatabaseEntityType: function() {
+      var key = this.tabManager.currentTab;
+      var columnManager = this.tabManager.entityTabs[key];
+      if(Ext.isDefined(columnManager))
+      {
+        return columnManager.leftList.title;
+      }
+      else
+        return "type inconnu";
     },
 
     addEntityToBag: function(entity) {

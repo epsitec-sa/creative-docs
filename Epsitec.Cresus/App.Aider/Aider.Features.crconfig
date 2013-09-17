@@ -10,3 +10,4 @@ ConfigureExperimentalFeature ("QuickSearch");
 ConfigureExperimentalFeature ("Search");
 ConfigureExperimentalFeature ("Warnings");
 ConfigureExperimentalFeature ("EntityBag");
+ConfigureExperimentalFeature ("Faq");

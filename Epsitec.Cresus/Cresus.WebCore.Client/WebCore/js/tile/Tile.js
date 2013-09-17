@@ -72,10 +72,12 @@ function() {
           button.cls = 'tile-button';
           overItemCls = 'tile-button-over';
           button.textAlign = 'left';
+
           if(isLarge)
           {
             button.scale = 'large';
           }
+          
           button.requiresAdditionalEntity = a.requiresAdditionalEntity;
           button.handler = function() { this.handleAction(a.viewId); };
           button.scope = tile;

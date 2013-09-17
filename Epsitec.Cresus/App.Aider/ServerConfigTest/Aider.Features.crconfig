@@ -10,3 +10,4 @@ ConfigureExperimentalFeature ("Notifications");
 # ConfigureExperimentalFeature ("Search");
 # ConfigureExperimentalFeature ("Warnings");
 # ConfigureExperimentalFeature ("EntityBag");
+# ConfigureExperimentalFeature ("Faq");

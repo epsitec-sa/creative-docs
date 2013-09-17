@@ -62,6 +62,8 @@ function() {
       };
 
       this.callParent([config]);
+
+      return this;
     },
 
     /* Methods */
