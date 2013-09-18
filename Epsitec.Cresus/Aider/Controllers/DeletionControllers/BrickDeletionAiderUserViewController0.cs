@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
@@ -41,20 +44,20 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 
 		private void Execute(string _1, string _2)
 		{
-			var currentUser = UserManager.Current.AuthenticatedUser;
-
-			if (!currentUser.HasPowerLevel (UserPowerLevel.Administrator))
+			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 			{
 				var message = "Seul un administrateur a le droit de détruire des utilisateurs.";
 
 				throw new BusinessRuleException (this.Entity, message);
 			}
 
-			var key1 = UserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey(currentUser);
-			var key2 = this.BusinessContext.DataContext.GetNormalizedEntityKey(this.Entity);
+			var user = UserManager.Current.AuthenticatedUser;
+			var key1 = UserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (user);
+			var key2 = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity);
 			
 			// We check the value of the keys, because the two entities belong to two diffent
 			// DataContext and checking them directly for equality would always return false.
+			
 			if (key1 == key2)
 			{
 				var message = "Vous ne pouvez pas vous détruire vous-même.";

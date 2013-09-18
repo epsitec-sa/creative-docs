@@ -10,4 +10,5 @@ ConfigureExperimentalFeature ("Notifications");
 # ConfigureExperimentalFeature ("Search");
 # ConfigureExperimentalFeature ("Warnings");
 # ConfigureExperimentalFeature ("EntityBag");
+# ConfigureExperimentalFeature ("DropZones");
 # ConfigureExperimentalFeature ("Faq");

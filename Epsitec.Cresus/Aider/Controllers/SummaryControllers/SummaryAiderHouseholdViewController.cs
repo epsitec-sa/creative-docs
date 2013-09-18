@@ -22,13 +22,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
-
-			var user = AiderUserManager.Current.AuthenticatedUser;
-
-
-            wall.AddBrick()
-                .EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
-                .EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ()
+			wall.AddBrick()
+				.EnableActionMenu<ActionAiderHouseholdViewController0NewHouseholdMember> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController1AddHouseholdMember> ()
 				.EnableActionOnDrop<ActionAiderHouseholdViewController4AddHouseholdMemberOnDrag> ();
 
 			wall.AddBrick ()
@@ -50,23 +46,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetCompactSummary (this.Entity))
 				.End ();
 
-			if (user.HasPowerLevel (UserPowerLevel.Administrator))
+			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 			{
-				if (this.Entity.Contacts.Where (c => c.HouseholdRole.Equals (HouseholdRole.Head)).Any ())
+				var head = this.Entity.Contacts.FirstOrDefault (c => (c.HouseholdRole == HouseholdRole.Head) && (c.Person.IsGovernmentDefined));
+
+				if (head != null)
 				{
-					if (this.Entity.Contacts.Where (c => c.HouseholdRole.Equals (HouseholdRole.Head)).First ().Person.IsGovernmentDefined)
+					var list = head.Person.eCH_Person.ReportedPersons;
+
+					foreach (var item in list.SelectMany (x => x.Members))
 					{
-						wall.AddBrick (x => x.Contacts.Where (c => c.HouseholdRole.Equals (HouseholdRole.Head)).First ().Person.eCH_Person.ReportedPersons.First ().Members)
-						.Attribute (BrickMode.HideAddButton)
-						.Attribute (BrickMode.HideRemoveButton)
-						.Attribute (BrickMode.DefaultToSummarySubView)
-						.Attribute (BrickMode.AutoGroup)
-						.Template ()
+						wall.AddBrick ()
+							.Attribute (BrickMode.DefaultToSummarySubView)
 							.Icon ("Data.AiderPersons")
-							.Title ("Membres ECh")
-							.Text (p => p.GetCompactSummary ())
-						.End ();
-					}					
+							.Title ("Membre ECh")
+							.Text (item.GetSummary ());
+					}
 				}		
 			}
 

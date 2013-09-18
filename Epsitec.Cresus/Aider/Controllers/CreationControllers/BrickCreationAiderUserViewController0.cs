@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderUserEntity Execute(string username, string displayname, string email, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
 		{
-			if (!UserManager.Current.AuthenticatedUser.HasPowerLevel (UserPowerLevel.Administrator))
+			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 			{
 				var message = "Seul un administrateur a le droit de créer des utilisateurs.";
 

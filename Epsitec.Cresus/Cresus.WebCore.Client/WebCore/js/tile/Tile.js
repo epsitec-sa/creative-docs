@@ -44,9 +44,9 @@ function() {
 
     /* Methods */
     createEntityTileDockTools: function(options) {
-      var actions, toolsbars;
+      var actions, toolbars;
       actions = options.actions;
-      toolsbars = [];
+      toolbars = [];
       var tile = this;
       Ext.Array.each(actions, function(a) {   
         if(a.displayMode == "Button")
@@ -90,17 +90,23 @@ function() {
             items: [button]
           });
 
-          toolsbars.unshift(toolbar);
+          toolbars.unshift(toolbar);
         }
 
         if(a.displayMode == "OnDrop")
         {
-          var dropZone = Ext.create('Epsitec.DropZone', a.title, function(data) { this.handleTemplateAction(a.viewId,data.id) },tile);
-          dropZone.requiresAdditionalEntity = a.requiresAdditionalEntity;
-          toolsbars.unshift(dropZone);  
+          if(epsitecConfig.featureDropZones) {
+            var dropZone = Ext.create('Epsitec.DropZone', a.title,
+              function (data) {
+                this.handleTemplateAction(a.viewId, data.id);
+              }, tile);
+
+            dropZone.requiresAdditionalEntity = a.requiresAdditionalEntity;
+            toolbars.unshift(dropZone);
+          }
         }        
       });
-      return toolsbars;        
+      return toolbars;
     },
 
     createEntityTileTools: function(options)  {

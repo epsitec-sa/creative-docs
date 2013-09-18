@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -10,6 +10,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Factories;
@@ -60,6 +61,29 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		
+		public bool HasUserPowerLevel(UserPowerLevel level)
+		{
+			var manager = UserManager.Current;
+
+			if (manager == null)
+			{
+				return false;
+			}
+
+			var user = manager.AuthenticatedUser;
+
+			if (user == null)
+			{
+				return false;
+			}
+
+			return user.HasPowerLevel (level);
+		}
+		
+		
+		
+		
 		private bool CheckDummyEntity()
 		{
 			// Here we check that the entity is not a dummy entity, i.e. that it comes from our
