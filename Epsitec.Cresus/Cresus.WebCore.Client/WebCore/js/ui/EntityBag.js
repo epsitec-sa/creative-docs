@@ -20,6 +20,7 @@ function() {
 
     /* Properties */
     bagStore: null,
+    dropZones: null,
     removeFromBagDropZone: null,
     /* Constructor */
 
@@ -27,12 +28,14 @@ function() {
       var config;
 
       this.initStores();
+      this.dropZones = [];
+      this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'removezoneid','Enlever du panier', this.removeEntityFromBag, this);
+      this.registerDropZone(this.removeFromBagDropZone);
 
-      this.removeFromBagDropZone = Ext.create('Epsitec.DropZone', 'Enlever du panier', this.removeEntityFromBag,this);
-      this.removeFromBagDropZone.hide();
       config = {
         headerPosition: 'left',
         title: 'Panier',
+        autoHeight: true,
         draggable: false,
         resizable: false,
         closable: false,
@@ -48,6 +51,7 @@ function() {
           score: this
         } 
       };
+
       menu.on("resize", this.resizeEntityBagHandler, this);
       this.callParent([config]);
 
@@ -56,6 +60,24 @@ function() {
     },
 
     /* Methods */
+    registerDropZone: function (dropzone) {
+      this.dropZones[dropzone.dropZoneId] = dropzone;
+    },
+
+    showRegistredDropZone: function (){
+      for(d in this.dropZones)
+      {
+        this.dropZones[d].show();
+      }       
+    },
+
+    hideRegistredDropZone: function (){
+      for(d in this.dropZones)
+      {
+        this.dropZones[d].hide();
+      }  
+    },
+
     resizeEntityBagHandler: function () {
         this.setSizeAndPosition();   
     },
@@ -66,7 +88,7 @@ function() {
       if(Ext.isDefined(viewport))
       {
         this.width = 200;
-        this.height = 150;
+        this.height = (this.bagStore.count() * 50) + 150;
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -89,6 +111,7 @@ function() {
       {
         this.show();
       }
+      this.setSizeAndPosition();
     },
 
     removeEntityFromBag: function(entity) {
@@ -108,18 +131,17 @@ function() {
         overItemCls: 'entitybag-over',
         selectedItemClass: 'entitybag-selected',
         singleSelect: true,
+        entityBag: this,
         store: this.bagStore,
         listeners: {
             render: this.initializeEntityDragZone,
-            itemmouseenter: this.removeFromBagDropZone.show,
-            itemmouseleave: this.removeFromBagDropZone.hide,
-            scope: this.removeFromBagDropZone
+            scope: this
         }
     });      
     },
 
     initializeEntityDragZone: function (v) {
-      v.dragZone = Ext.create('Ext.dd.DragZone', v.getEl(), {
+        v.dragZone = Ext.create('Ext.dd.DragZone', v.getEl(), {
 
 //      On receipt of a mousedown event, see if it is within a draggable element.
 //      Return a drag data object if so. The data object can contain arbitrary application
@@ -144,6 +166,18 @@ function() {
 //      This is the original XY coordinates of the draggable element.
           getRepairXY: function() {
               return this.dragData.repairXY;
+          },
+
+          onBeforeDrag: function () {
+            v.entityBag.showRegistredDropZone();
+          },
+
+          afterInvalidDrop: function () {
+            v.entityBag.hideRegistredDropZone();
+          },
+
+          afterDragDrop: function () {
+            v.entityBag.hideRegistredDropZone();
           }
       });
     }

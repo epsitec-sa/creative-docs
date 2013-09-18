@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 			set;
 		}
 
-
 		public override string GetColumnType()
 		{
 			return "entityaction";

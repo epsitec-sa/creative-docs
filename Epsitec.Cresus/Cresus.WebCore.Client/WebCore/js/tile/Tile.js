@@ -95,13 +95,14 @@ function() {
 
         if(a.displayMode == "OnDrop")
         {
-          if(epsitecConfig.featureDropZones) {
-            var dropZone = Ext.create('Epsitec.DropZone', a.title,
+          if(epsitecConfig.featureEntityBag) {
+            var dropZone = Ext.create('Epsitec.DropZone',a.title, a.title,
               function (data) {
                 this.handleTemplateAction(a.viewId, data.id);
               }, tile);
 
             dropZone.requiresAdditionalEntity = a.requiresAdditionalEntity;
+            Epsitec.Cresus.Core.app.entityBag.registerDropZone(dropZone);
             toolbars.unshift(dropZone);
           }
         }        
@@ -167,6 +168,10 @@ function() {
     handleTemplateAction: function(viewId, aEntityId) {
       var callback = Epsitec.Callback.create(this.handleActionCallback, this);
       this.showTemplateAction(viewId, aEntityId, callback);
+    },
+
+    getEntityId: function() {
+      // This method is supposed to be overriden in derived classes.
     },
 
     showAction: function(viewId, callback) {

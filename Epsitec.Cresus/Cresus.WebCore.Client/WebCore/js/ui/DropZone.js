@@ -6,14 +6,16 @@ function() {
     alternateClassName: ['Epsitec.DropZone'],
 
     /* Properties */
+    dropZoneId: null,
     dropZoneStore: null,
     label: null,
     onDropFunction: null,
     scope: null,
     /* Constructor */
 
-    constructor: function(label,onDropFunction,scope) {
+    constructor: function(dropZoneId,label,onDropFunction,scope) {
       var config;
+      this.dropZoneId = dropZoneId;
       this.onDropFunction = onDropFunction;
       this.scope = scope;
       this.label = label;
@@ -32,6 +34,7 @@ function() {
           overItemCls: 'entitybag-target-over',
           selectedItemClass: 'entitybag-selected',
           singleSelect: true,
+          executer: this,
           store: this.dropZoneStore, 
           listeners: {
               render: this.initializeEntityDropZone
@@ -39,7 +42,7 @@ function() {
         };
 
       this.callParent([config]);
-
+      this.hide();
       return this;
     },
 
@@ -51,7 +54,6 @@ function() {
     },
 
     initializeEntityDropZone: function(v) {
-      var dropzone = this;
         v.dropZone = Ext.create('Ext.dd.DropZone', v.el, {
 
 //      If the mouse is over a target node, return that node. This is
@@ -77,7 +79,7 @@ function() {
         },
 
         onNodeDrop : function(target, dd, e, data){  
-            dropzone.executeOnDrop(data);
+            v.executer.executeOnDrop(data);
             return true;
         }
       });

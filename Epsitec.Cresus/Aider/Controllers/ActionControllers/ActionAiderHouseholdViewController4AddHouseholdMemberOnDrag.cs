@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un membre au ménage");
+			return Resources.FormattedText ("Ajouter un contact au ménage");
 		}
 
 		public override ActionExecutor GetExecutor()

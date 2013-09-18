@@ -84,6 +84,7 @@ function() {
 
     showTab: function(tab) {
       this.getLayout().setActiveItem(tab);
+      this.currentTab = tab.database.name;
     }
   });
 });

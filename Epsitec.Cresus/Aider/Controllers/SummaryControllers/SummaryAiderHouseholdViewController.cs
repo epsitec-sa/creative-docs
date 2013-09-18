@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						wall.AddBrick ()
 							.Attribute (BrickMode.DefaultToSummarySubView)
 							.Icon ("Data.AiderPersons")
-							.Title ("Membre ECh")
+							.Title ("Données ECh")
 							.Text (item.GetSummary ());
 					}
 				}		
