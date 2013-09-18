@@ -92,7 +92,7 @@ namespace Epsitec.Aider.Rules
 
 		private void CheckDisplayNameIsNotEmpty(AiderUserEntity user)
 		{
-			if (user.DisplayName.IsNullOrEmpty ())
+			if (string.IsNullOrWhiteSpace (user.DisplayName))
 			{
 				var message = "Le nom pour l'affichage de l'utilisateur ne peut pas être vide.";
 

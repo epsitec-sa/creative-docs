@@ -78,6 +78,8 @@ namespace Epsitec.Common.Types
 				public static readonly Epsitec.Common.Types.OtherType Object = (global::Epsitec.Common.Types.OtherType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 5));
 				//	designer:cap/1008
 				public static readonly Epsitec.Common.Types.StringType String = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 8));
+				//	designer:cap/10AR
+				public static readonly Epsitec.Common.Types.StringType String64 = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 				//	designer:cap/1016
 				public static readonly Epsitec.Common.Types.StringType StringMultiline = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 6));
 				//	designer:cap/10AJ
@@ -86,6 +88,8 @@ namespace Epsitec.Common.Types
 				public static readonly Epsitec.Common.Types.OtherType SystemType = (global::Epsitec.Common.Types.OtherType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 64));
 				//	designer:cap/10AG
 				public static readonly Epsitec.Common.Types.StringType Text = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16));
+				//	designer:cap/10AS
+				public static readonly Epsitec.Common.Types.StringType Text64 = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
 				//	designer:cap/10AH
 				public static readonly Epsitec.Common.Types.StringType TextMultiline = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17));
 				//	designer:cap/100I

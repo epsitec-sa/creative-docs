@@ -116,19 +116,19 @@ namespace Epsitec.Cresus.Core.Entities
 		///	designer:fld/AVA/AVA7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[AVA7]")]
-		public global::Epsitec.Common.Types.FormattedText DisplayName
+		public string DisplayName
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[AVA7]");
+				return this.GetField<string> ("[AVA7]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.DisplayName;
+				string oldValue = this.DisplayName;
 				if (oldValue != value || !this.IsFieldDefined("[AVA7]"))
 				{
 					this.OnDisplayNameChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[AVA7]", oldValue, value);
+					this.SetField<string> ("[AVA7]", oldValue, value);
 					this.OnDisplayNameChanged (oldValue, value);
 				}
 			}
@@ -280,8 +280,8 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnPeopleChanging(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
 		partial void OnPeopleChanged(global::Epsitec.Cresus.Core.Entities.PeopleEntity oldValue, global::Epsitec.Cresus.Core.Entities.PeopleEntity newValue);
-		partial void OnDisplayNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDisplayNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDisplayNameChanging(string oldValue, string newValue);
+		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnLoginPictureChanging(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		partial void OnLoginPictureChanged(global::Epsitec.Cresus.Core.Entities.ImageEntity oldValue, global::Epsitec.Cresus.Core.Entities.ImageEntity newValue);
 		partial void OnLoginNameChanging(string oldValue, string newValue);

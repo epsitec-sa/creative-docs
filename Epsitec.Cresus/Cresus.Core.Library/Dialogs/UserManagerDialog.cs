@@ -879,7 +879,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.userBox.Enable = true;
 
 				this.loginNameField.Text = user.LoginName;
-				this.displayNameField.FormattedText = user.DisplayName;
+				this.displayNameField.Text = user.DisplayName;
 				this.peopleField.FormattedText = this.GetPeopleDescription (user);
 				this.newPasswordField1.Text = null;
 				this.newPasswordField2.Text = null;
@@ -1027,7 +1027,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var user = this.SelectedUser;
 			System.Diagnostics.Debug.Assert (user != null);
 
-			user.DisplayName = this.displayNameField.FormattedText;
+			user.DisplayName = this.displayNameField.Text;
 
 			this.UpdateTable ();
 			this.UpdateWidgets ();
@@ -1276,7 +1276,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				var sel = this.table.SelectedRow;
 				var loginName = this.loginNameField.Text.Trim ();
-				var displayName = this.displayNameField.FormattedText;
+				var displayName = this.displayNameField.Text;
 
 				int count = 0;
 

@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core.Library
 			);
 		}
 
-		protected SoftwareUserEntity CreateUser(FormattedText displayName, string userLogin, string userPassword, UserAuthenticationMethod authentificationMethod, params SoftwareUserGroupEntity[] groups)
+		protected SoftwareUserEntity CreateUser(string displayName, string userLogin, string userPassword, UserAuthenticationMethod authentificationMethod, params SoftwareUserGroupEntity[] groups)
 		{
 			var userType = CoreContext.ResolveType (typeof (SoftwareUserEntity));
 			var userDruid = EntityInfo.GetTypeId (userType);

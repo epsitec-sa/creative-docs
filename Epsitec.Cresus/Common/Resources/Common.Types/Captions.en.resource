@@ -94,4 +94,6 @@
   <data id="G102">&lt;s:data id="_0" f:Labels="{Collection {Text 'Boolean type yes/no'}}" /&gt;</data>
   <data id="G302">&lt;s:data id="_0" f:Labels="{Collection {Text 'No'}}" /&gt;</data>
   <data id="G202">&lt;s:data id="_0" f:Labels="{Collection {Text 'Yes'}}" /&gt;</data>
+  <data id="AR">&lt;s:data id="_0" f:Labels="{Collection {Text 'String Type (.NET, short)'}}" /&gt;</data>
+  <data id="AS">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text (short)'}}" /&gt;</data>
 </bundle>
