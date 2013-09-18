@@ -366,6 +366,7 @@ function() {
         pageSize: 100,
         buffered: true,
         remoteSort: true,
+        remoteFilter: true,
         proxy: {
           type: 'ajax',
           url: url,
@@ -642,7 +643,6 @@ function() {
       }
       if(this.isReloading) {
         this.isReloading = false;
-        this.selModel.selectNext();
       }
     },
 
@@ -954,7 +954,6 @@ function() {
 
       return Epsitec.Tools.createUrl(base, parameters);
     },
-
     /* Static methods */
 
     statics: {

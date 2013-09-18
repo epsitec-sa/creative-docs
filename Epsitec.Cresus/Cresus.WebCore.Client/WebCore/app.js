@@ -242,8 +242,14 @@ function() {
       if(Ext.isDefined(columnManager))
       {
         columnManager.leftList.entityList.isReloading = true;
-        columnManager.leftList.entityList.store.load(function(records, operation, success) {
-          console.log('reloaded');
+        var currentElement = columnManager.leftList.entityList.getSelectionModel().getSelection();
+        var grid = columnManager.leftList.entityList;
+        columnManager.leftList.entityList.store.load({
+            scope: this,
+            callback: function(records, operation, success) {
+                grid.getView().focus();
+                grid.getSelectionModel().select(currentElement);
+            }
         });      
       }
       
