@@ -244,6 +244,7 @@ function() {
         columnManager.leftList.entityList.isReloading = true;
         var currentElement = columnManager.leftList.entityList.getSelectionModel().getSelection();
         var grid = columnManager.leftList.entityList;
+        columnManager.removeAllColumns();
         columnManager.leftList.entityList.store.load({
             scope: this,
             callback: function(records, operation, success) {
