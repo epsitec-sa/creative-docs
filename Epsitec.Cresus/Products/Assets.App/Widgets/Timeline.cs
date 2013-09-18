@@ -98,7 +98,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					var rect = this.GetCellRect (rank, 0);
 					var cell = this.GetCell (rank);
-					this.PaintCellBullet (graphics, rect, cell);
+
+					if (cell.IsValid)
+					{
+						this.PaintCellBullet (graphics, rect, cell);
+					}
 				}
 			}
 		}
