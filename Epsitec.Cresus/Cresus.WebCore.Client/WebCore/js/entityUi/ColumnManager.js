@@ -321,7 +321,7 @@ function() {
     removeAllColumns: function() {
       this.removeColumns(0, this.columns.length - 1, true);
     },
-
+    
     removeRightColumns: function(column) {
       this.removeColumns(column.columnId + 1, this.columns.length - 1, true);
     },
@@ -359,7 +359,6 @@ function() {
 
     showFirstEntityColumn: function(entityId, callback) {
       this.removeAllColumns();
-
       if (entityId !== null) {
         this.addEntityColumnWithCallback(
             Epsitec.ViewMode.summary, 'null', entityId, null, callback

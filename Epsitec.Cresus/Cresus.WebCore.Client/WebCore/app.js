@@ -285,7 +285,10 @@ function() {
       };
 
       columnManager = this.tabManager.showEntityTab(database);
-
+      if(columnManager.leftList!==null)
+      {
+        columnManager.leftList.removeAllFilters();
+      }
       entityId = path.entityId;
       columnManager.selectEntity(entityId, callback);
     },

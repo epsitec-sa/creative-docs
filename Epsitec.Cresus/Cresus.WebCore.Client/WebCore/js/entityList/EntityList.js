@@ -363,7 +363,7 @@ function() {
         fields: this.createFields(columnDefinitions),
         sorters: this.createSorters(sorterDefinitions),
         autoLoad: autoLoad,
-        pageSize: 100,
+        pageSize: 500,
         buffered: true,
         remoteSort: true,
         remoteFilter: true,

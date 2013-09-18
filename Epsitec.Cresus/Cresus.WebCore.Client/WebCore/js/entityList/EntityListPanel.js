@@ -148,6 +148,12 @@ function() {
           this.entityList.selectEntity(entityId, suppressEvent);
         };
       }
+    },
+    
+    removeAllFilters: function() {
+      if (this.entityList !== null) {
+        this.entityList.filters.clearFilters();
+      }
     }
   });
 });
