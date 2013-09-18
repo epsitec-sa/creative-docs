@@ -8,6 +8,9 @@ using Epsitec.Cresus.Core.Library;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App
 {
@@ -80,10 +83,56 @@ namespace Epsitec.Cresus.Assets.App
 			var window = this.Window;
 			
 			window.Root.BackColor = Common.Drawing.Color.FromName ("White");
-			
+			this.CreateUI (window);	
 
 			window.Show ();
 			window.MakeActive ();
+		}
+
+
+		private void CreateUI(Window window)
+		{
+			var frame = new FrameBox
+			{
+				Parent    = window.Root,
+				Dock      = DockStyle.Fill,
+				BackColor = Color.FromName ("LightBlue"),
+			};
+
+			this.CreateTestTimeLine (frame);
+		}
+
+		private void CreateTestTimeLine(Widget parent)
+		{
+			var tl = new Timeline ()
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (10, 10, 320, 10),
+				Pivot   = 0.0,
+			};
+
+			var list = new List<TimelineCell> ();
+			var start = new Date (2013, 3, 20);  // 20 mars 2013
+
+			for (int i = 0; i < 100; i++)
+			{
+				var cell = new TimelineCell ()
+				{
+					Date       = AssetsApplication.AddDays (start, i),
+					Type       = (i % 3 == 0) ? TimelineCellType.FilledCircle : TimelineCellType.None,
+					IsSelected = (i == 2),
+				};
+
+				list.Add (cell);
+			}
+
+			tl.SetCells (list.ToArray ());
+		}
+
+		private static Date AddDays(Date date, int numberOfDays)
+		{
+			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays);
 		}
 
 
