@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App
 				var cell = new TimelineCell ()
 				{
 					Date       = AssetsApplication.AddDays (start, i),
-					Type       = (i % 3 == 0) ? TimelineCellType.FilledCircle : TimelineCellType.None,
+					Type       = (i % 3 == 0) ? TimelineCellType.BlackCircle : TimelineCellType.Empty,
 					IsSelected = (i == 2),
 				};
 

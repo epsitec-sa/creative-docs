@@ -1,24 +1,23 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public class Timeline : Widget
+	public sealed class Timeline : Widget
 	{
 		public Timeline()
 		{
 		}
 
-		public double Pivot
+		public double							Pivot
 		{
 			get
 			{
@@ -34,17 +33,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public void SetCells(TimelineCell[] cells)
-		{
-			this.cells = cells;
-		}
-
-		public int VisibleCellCount
+		public int								VisibleCellCount
 		{
 			get
 			{
 				return (int) (this.ActualBounds.Width / this.CellDim);
 			}
+		}
+
+		private int								CellDim
+		{
+			//	Ligne 1 -> Noms des mois
+			//	Ligne 2 -> Numéros de jours
+			//	Ligne 3 -> Pastilles des événements
+			get
+			{
+				return (int) (this.ActualBounds.Height / 3);
+			}
+		}
+
+		
+		public void SetCells(TimelineCell[] cells)
+		{
+			this.cells = cells;
 		}
 
 
@@ -196,23 +207,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			switch (type)
 			{
-				case TimelineCellType.FilledCircle:
+				case TimelineCellType.BlackCircle:
 					graphics.AddFilledCircle (rect.Center, rect.Height*0.35);
 					graphics.RenderSolid (color);
 					break;
 
-				case TimelineCellType.OutlinedCircle:
+				case TimelineCellType.WhiteCircle:
 					graphics.AddCircle (rect.Center, rect.Height*0.35);
 					graphics.RenderSolid (color);
 					break;
 
-				case TimelineCellType.FilledSquare:
+				case TimelineCellType.BlackSquare:
 					rect.Deflate (rect.Height * 0.3);
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (color);
 					break;
 
-				case TimelineCellType.OutlinedSquare:
+				case TimelineCellType.WhiteSquare:
 					rect.Deflate (rect.Height * 0.3);
 					graphics.AddRectangle (rect);
 					graphics.RenderSolid (color);
@@ -241,8 +252,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (cell.Date.DayOfWeek == DayOfWeek.Saturday ||
-					cell.Date.DayOfWeek == DayOfWeek.Sunday)
+				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
+					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
 				{
 					return Color.FromName ("LightGray");
 				}
@@ -329,18 +340,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int CellDim
-		{
-			//	Ligne 1 -> Noms des mois
-			//	Ligne 2 -> Numéros de jours
-			//	Ligne 3 -> Pastilles des événements
-			get
-			{
-				return (int) (this.ActualBounds.Height / 3);
-			}
-		}
-
-		private double pivot;
-		private TimelineCell[] cells;
+		private double							pivot;
+		private TimelineCell[]					cells;
 	}
 }
