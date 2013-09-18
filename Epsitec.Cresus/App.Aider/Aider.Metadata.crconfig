@@ -1011,7 +1011,7 @@ AiderPersonWarning = [LVALB]
       </L>
       <!-- Filter -->
       <f id="@AiderSubscription">
-	<!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°0" -->
+        <!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°0" -->
         <C><c id="[LVABH]"><v><comp c="1" v="e[LVA8H]/0" /></v></c></C>
       </f>
     </d>
@@ -1079,7 +1079,7 @@ AiderPersonWarning = [LVALB]
       </L>
       <!-- Filter -->
       <f id="@AiderContact">
-	<!-- Column id=ContactType (Valeur) (Comparaison) c=Equals(1) v="(e)num ContactType/n°3" -->
+        <!-- Column id=ContactType (Valeur) (Comparaison) c=Equals(1) v="(e)num ContactType/n°3" -->
         <C><c id="[LVA4E]"><v><comp c="1" v="e[LVASD]/3" /></v></c></C>
       </f>
     </d>
@@ -1089,7 +1089,7 @@ AiderPersonWarning = [LVALB]
       <L/>
       <!-- Filter -->
       <f id="@AiderSubscription">
-	<!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°1" -->
+        <!-- Column id=SubscriptionFlag (Valeur) (Comparaison) c=Equals(1) v="(e)num SubscriptionFlag/n°1" -->
         <C><c id="[LVABH]"><v><comp c="1" v="e[LVA8H]/1" /></v></c></C>
       </f>
     </d>
