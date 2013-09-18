@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Controllers.SpecialFieldControllers;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
@@ -55,7 +58,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private AiderUserEntity Execute(string username, string displayname, string email, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
 		{
-			if (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
 			{
 				var message = "Seul un administrateur a le droit de créer des utilisateurs.";
 

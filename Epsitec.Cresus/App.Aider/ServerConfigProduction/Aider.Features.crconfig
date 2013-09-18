@@ -11,4 +11,4 @@ ConfigureExperimentalFeature ("Notifications");
 # ConfigureExperimentalFeature ("Warnings");
 # ConfigureExperimentalFeature ("EntityBag");
 # ConfigureExperimentalFeature ("DropZones");
-# ConfigureExperimentalFeature ("Faq");
+ConfigureExperimentalFeature ("Faq");
