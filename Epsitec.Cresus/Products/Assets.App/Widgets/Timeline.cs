@@ -259,6 +259,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCellGlyph type)
 		{
+			Rectangle r;
+
 			switch (type)
 			{
 				case TimelineCellGlyph.FilledCircle:
@@ -275,23 +277,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TimelineCellGlyph.FilledSquare:
-					rect.Deflate (rect.Height * 0.25);
-					rect.Inflate (0.5);
+					r = Timeline.GetGlyphSquare (rect, 0.25);
 
-					graphics.AddFilledRectangle (rect);
+					graphics.AddFilledRectangle (r);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineCellGlyph.OutlinedSquare:
-					rect.Deflate (rect.Height * 0.25);
+					r = Timeline.GetGlyphSquare (rect, 0.25);
+					r.Deflate (0.5);
 
-					graphics.AddFilledRectangle (rect);
+					graphics.AddFilledRectangle (r);
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 					
-					graphics.AddRectangle (rect);
+					graphics.AddRectangle (r);
 					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 			}
+		}
+
+		private static Rectangle GetGlyphSquare(Rectangle rect, double factor)
+		{
+			int d = (int) (rect.Height * factor);
+			int x = (int) (rect.Center.X - d);
+			int y = (int) (rect.Center.Y - d);
+
+			return new Rectangle (x, y, d*2, d*2);
 		}
 
 
