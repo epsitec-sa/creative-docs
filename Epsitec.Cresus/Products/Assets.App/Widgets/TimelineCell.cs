@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public bool								IsSelected;
 		public bool								IsError;
 
-		public bool IsInvalid
+		public bool	IsInvalid
 		{
 			get
 			{

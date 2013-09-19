@@ -76,6 +76,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected override void OnClicked(MessageEventArgs e)
+		{
+			base.OnClicked (e);
+		}
+
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
 			this.HoverRank = (int) (e.Point.X / this.CellDim);
@@ -107,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						var rect = this.GetCellsRect (x, rank, 2);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
-						this.PaintCellMonth (graphics, rect, lastCell, isHover, index++);
+						Timeline.PaintCellMonth (graphics, rect, lastCell, isHover, index++);
 						x = rank;
 					}
 
@@ -127,7 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						var rect = this.GetCellsRect (x, rank, 1);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
-						this.PaintCellDay (graphics, rect, lastCell, isHover);
+						Timeline.PaintCellDay (graphics, rect, lastCell, isHover);
 						x = rank;
 					}
 
@@ -145,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (cell.IsValid)
 					{
 						bool isHover = (this.hoverRank == rank);
-						this.PaintCellGlyph (graphics, rect, cell, isHover);
+						Timeline.PaintCellGlyph (graphics, rect, cell, isHover);
 					}
 				}
 			}
@@ -164,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
+		private static void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
 			var color = Timeline.GetCellMonthColor (cell, isHover, index);
@@ -183,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
+		private static void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
 			var color = Timeline.GetCellDayColor (cell, isHover);
@@ -197,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 		}
 
-		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
+		private static void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
 			var color = Timeline.GetCellBulletColor (cell, isHover);
@@ -205,10 +210,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
-			this.PaintCellGlyph (graphics, rect, cell.Glyph);
+			Timeline.PaintCellGlyph (graphics, rect, cell.Glyph);
 		}
 
-		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCellGlyph type)
+		private static void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCellGlyph type)
 		{
 			var color = ColorManager.TextColor;
 
