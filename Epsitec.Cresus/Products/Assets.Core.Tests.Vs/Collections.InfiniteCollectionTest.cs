@@ -1,26 +1,18 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Cresus.Assets.Core.Collections;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.Assets.Core.Tests
 {
 	[TestClass]
 	public class InfiniteCollectionTest
 	{
-		[TestInitialize]
-		public void Setup()
-		{
-			System.Threading.Tasks.TaskScheduler.UnobservedTaskException += this.HandleTaskSchedulerUnobservedTaskException;
-		}
-
-		void HandleTaskSchedulerUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine ("UnobservedTaskException: " + e.Exception.Message);
-			System.Diagnostics.Debug.WriteLine (e.Exception.StackTrace);
-		}
-
-
 		[TestMethod]
 		public void CheckBasicBehavior()
 		{
@@ -43,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			collection.Clear ();
 
 			System.Threading.Thread.Sleep (100);
-			System.GC.Collect ();
+			Assert.IsNull (collection[2]);
 		}
 
 
