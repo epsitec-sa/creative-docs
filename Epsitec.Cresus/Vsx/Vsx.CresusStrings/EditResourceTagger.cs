@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Epsitec.Tools;
 using Epsitec.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -77,11 +78,11 @@ namespace Epsitec.Cresus.Strings
 			return null;
 		}
 
-		private Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
+		private Epsitec.VisualStudio.Engine Engine
 		{
 			get
 			{
-				return this.provider.ResourceSymbolInfoProvider;
+				return this.provider.Engine;
 			}
 		}
 
@@ -93,6 +94,12 @@ namespace Epsitec.Cresus.Strings
 
 		private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
 		{
+			if (this.symbolInfo != null)
+			{
+				var removeSpan = this.symbolInfo.SnapshotSpan;
+				this.symbolInfo = null;
+				this.RaiseTagsChanged (removeSpan);
+			}
 			this.ProcessTag (this.textView.Caret.Position.BufferPosition);
 		}
 
@@ -125,7 +132,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			if (this.symbolInfo != null)
 			{
-				Debug.Assert(snapshot == this.symbolInfo.Snapshot);
+				Debug.Assert (snapshot == this.symbolInfo.Snapshot);
 				var removeSpan = this.symbolInfo.SnapshotSpan;
 				this.symbolInfo = null;
 				this.RaiseTagsChanged (removeSpan);
@@ -145,23 +152,23 @@ namespace Epsitec.Cresus.Strings
 
 		private async Task<ResourceSymbolInfo> CreateSymbolInfoAsync(SnapshotPoint point, CancellationToken cancellationToken)
 		{
-			this.ResourceSymbolInfoProvider.ActiveDocumentSource.TextBuffer = this.textBuffer;
-			return await this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (point, cancellationToken).ConfigureAwait (false);
+			this.Engine.ActiveDocumentSource.TextBuffer = this.textBuffer;
+			return await this.Engine.GetResourceSymbolInfoAsync (point, cancellationToken).ConfigureAwait (false);
 		}
 
 		private TagSpan<SmartTag> CreateTagSpan(ResourceSymbolInfo symbolInfo)
 		{
 			SnapshotSpan span = symbolInfo.SnapshotSpan;
-			return new TagSpan<SmartTag> (span, new SmartTag (SmartTagType.Factoid, EditResourceTagger.GetSmartTagActions (symbolInfo)));
+			return new TagSpan<SmartTag> (span, new SmartTag (SmartTagType.Factoid, EditResourceTagger.GetSmartTagActions (this.Engine.CresusDesigner, symbolInfo)));
 		}
 
-		private static ReadOnlyCollection<SmartTagActionSet> GetSmartTagActions(ResourceSymbolInfo symbolInfo)
+		private static ReadOnlyCollection<SmartTagActionSet> GetSmartTagActions(CresusDesigner cresusDesigner, ResourceSymbolInfo symbolInfo)
 		{
-			var actions = new ReadOnlyCollection<ISmartTagAction> (EditResourceTagger.EnumerateSmartTagActions (symbolInfo).ToList ());
+			var actions = new ReadOnlyCollection<ISmartTagAction> (EditResourceTagger.EnumerateSmartTagActions (cresusDesigner, symbolInfo).ToList ());
 			return new ReadOnlyCollection<SmartTagActionSet> (new SmartTagActionSet[] { new SmartTagActionSet (actions) });
 		}
 
-		private static IEnumerable<ISmartTagAction> EnumerateSmartTagActions(ResourceSymbolInfo symbolInfo)
+		private static IEnumerable<ISmartTagAction> EnumerateSmartTagActions(CresusDesigner cresusDesigner, ResourceSymbolInfo symbolInfo)
 		{
 			var resources = symbolInfo.Resources;
 			var count = resources.Count;
@@ -169,13 +176,13 @@ namespace Epsitec.Cresus.Strings
 			{
 				if (count == 1)
 				{
-					yield return new EditResourceSmartTagAction (resources.First(), Config.EditResourceSmartTagMenu);
+					yield return new EditResourceSmartTagAction (cresusDesigner, resources.First(), Config.EditResourceSmartTagMenu);
 				}
 				else
 				{
 					foreach (var item in resources.OrderBy (map => map.SymbolName()))
 					{
-						yield return new EditResourceSmartTagAction (item, Config.GetEditResourceSmartTagMenu(item.SymbolName()));
+						yield return new EditResourceSmartTagAction (cresusDesigner, item, Config.GetEditResourceSmartTagMenu (item.SymbolName ()));
 					}
 				}
 			}

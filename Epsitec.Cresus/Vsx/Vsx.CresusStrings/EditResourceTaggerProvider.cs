@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Strings
 		}
 
 		[Import]
-		internal Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
+		internal Epsitec.VisualStudio.Engine Engine
 		{
 			get;
 			set;
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Strings
 			// make sure we are tagging only the top buffer
 			if (textView != null && textBuffer == textView.TextBuffer)
 			{
-				this.ResourceSymbolInfoProvider.ActiveTextBuffer = textBuffer;
+				this.Engine.ActiveTextBuffer = textBuffer;
 				return new EditResourceTagger (textBuffer, textView, this) as ITagger<T>;
 			}
 			return null;

@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Strings
 					var cts = new CancellationTokenSource (QuickInfoSource.Timeout(Config.MaxQuickInfoDelay));
 					try
 					{
-						var symbolInfoTask = this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (point, cts.Token);
+						var symbolInfoTask = this.Engine.GetResourceSymbolInfoAsync (point, cts.Token);
 						symbolInfoTask.Wait (cts.Token);
 						var symbolInfo = symbolInfoTask.Result;
 						if (symbolInfo != null)
@@ -143,11 +143,11 @@ namespace Epsitec.Cresus.Strings
 			qiContent.Add (message);
 		}
 
-		private Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
+		private Epsitec.VisualStudio.Engine Engine
 		{
 			get
 			{
-				return this.provider.ResourceSymbolInfoProvider;
+				return this.provider.Engine;
 			}
 		}
 

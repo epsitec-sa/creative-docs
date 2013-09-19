@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Strings
 		}
 
 		[Import]
-		internal Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
+		internal Epsitec.VisualStudio.Engine Engine
 		{
 			get;
 			set;
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			using (new TimeTrace ())
 			{
-				this.ResourceSymbolInfoProvider.ActiveTextBuffer = textBuffer;
+				this.Engine.ActiveTextBuffer = textBuffer;
 				return new QuickInfoSource (this, textBuffer);
 			}
 		}

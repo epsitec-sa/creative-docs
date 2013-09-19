@@ -19,11 +19,10 @@ namespace Epsitec.VisualStudio
 {
 	public class DocumentSource : IDisposable
 	{
-		public DocumentSource(ISolutionProvider solutionProvider, EnvDTE.Document dteDocument, ITextBuffer textBuffer)
+		public DocumentSource(ISolutionProvider solutionProvider, EnvDTE.Document dteDocument)
 		{
 			this.solutionProvider = solutionProvider;
 			this.dteDocument = dteDocument;
-			this.textBuffer = textBuffer;
 			this.StartDocumentId (dteDocument);
 			this.StartSyntaxAndSemantic ();
 		}
@@ -103,37 +102,14 @@ namespace Epsitec.VisualStudio
 			return null;
 		}
 
-		/// <summary>
-		/// Try to associate a text buffer with document (<see cref="DocumentSourceManager.ActiveDocument"/> and <see cref="DocumentSourceManager.ActiveTextBuffer"/> for more information
-		/// </summary>
-		/// <param name="pendingTextBuffer"></param>
-		/// <returns>true if this document source takes ownership of the text buffer</returns>
-		internal bool TrySetPendingTextBuffer(ITextBuffer pendingTextBuffer)
-		{
-			pendingTextBuffer.ThrowIfNull();
+		#region Object Overrides
 
-			if (this.textBuffer == pendingTextBuffer)
-			{
-				// already owned
-				return true;
-			}
-			else if (this.textBuffer == null)
-			{
-				// still not initialized : takes ownership
-				this.textBuffer = pendingTextBuffer;
-				if (this.textBuffer != null)
-				{
-					this.textBuffer.Changed += this.OnTextBufferChanged;
-				}
-				return true;
-			}
-			else
-			{
-				// already initialized : declines ownership
-				return false;
-			}
+		public override string ToString()
+		{
+			return this.dteDocument.Name;
 		}
 
+		#endregion
 
 		#region IDisposable Members
 
@@ -155,46 +131,55 @@ namespace Epsitec.VisualStudio
 
 		private static SyntaxNode FindSymbolSyntaxNode(CommonSyntaxToken token, SnapshotPoint point)
 		{
-			if (token != default (CommonSyntaxToken))
+			token.ThrowIfNull ();
+			var node = token.Parent.AncestorsAndSelf ().SkipWhile (n => n is MemberAccessExpressionSyntax || n is IdentifierNameSyntax).FirstOrDefault ();
+			if (node != null)
 			{
-				var node = token.Parent.AncestorsAndSelf ().SkipWhile (n => n is MemberAccessExpressionSyntax || n is IdentifierNameSyntax).FirstOrDefault ();
+				var descendants = DocumentSource.SpanRelatedDescendantNodesAndSelf (node, token.Span).SkipWhile (n => !(n is MemberAccessExpressionSyntax)).ToList ();
+				node = descendants.FirstOrDefault ();
 				if (node != null)
 				{
-					//var descendants = node.DescendantNodesAndSelf ().SkipWhile (n => !(n is MemberAccessExpressionSyntax));
-					var x1 = DocumentSource.DescendantNodesAndSelf (node, token.Span).ToList ();
-					var descendants = x1.SkipWhile (n => !(n is MemberAccessExpressionSyntax));
-					node = descendants.FirstOrDefault ();
-					if (node != null)
+					if (node.Parent is InvocationExpressionSyntax)
 					{
-						if (node.Parent is InvocationExpressionSyntax)
-						{
-							node = descendants.Skip (1).FirstOrDefault ();
-						}
-						return node as SyntaxNode;
+						node = descendants.Skip (1).FirstOrDefault ();
 					}
+					return node as SyntaxNode;
 				}
 			}
 			return null;
 		}
 
-		private static IEnumerable<CommonSyntaxNode> DescendantNodesAndSelf(CommonSyntaxNode node, TextSpan span)
+		private static IEnumerable<CommonSyntaxNode> SpanRelatedDescendantNodesAndSelf(CommonSyntaxNode node, TextSpan span)
 		{
 			if (node != null)
 			{
 				yield return node;
-				foreach (var n in DocumentSource.DescendantNodesAndSelf (DocumentSource.ChildNode (node, span), span))
+				foreach (var n in DocumentSource.SpanRelatedDescendantNodesAndSelf (DocumentSource.SpanRelatedChildNode (node, span), span))
 				{
 					yield return n;
 				}
 			}
 		}
 
-		private static CommonSyntaxNode ChildNode(CommonSyntaxNode node, TextSpan span)
+		private static CommonSyntaxNode SpanRelatedChildNode(CommonSyntaxNode node, TextSpan span)
 		{
-			return node.ChildNodes ().Where (n => n.Span.OverlapsWith (span) || n.Span.ContiguousWith (span)).FirstOrDefault();
+			return DocumentSource.CandidateChildNodes (node).Where (n => n.Span.OverlapsWith (span) || n.Span.ContiguousWith (span)).SingleOrDefault ();
 		}
 
-		private ISolution Solution
+		private static IEnumerable<CommonSyntaxNode> CandidateChildNodes(CommonSyntaxNode node)
+		{
+			if (node is MemberAccessExpressionSyntax || node.Parent is InvocationExpressionSyntax)
+			{
+				return node.ChildNodes ().OfType<MemberAccessExpressionSyntax> ();
+			}
+			else
+			{
+				return node.ChildNodes ();
+			}
+		}
+
+
+		private ISolution						Solution
 		{
 			get
 			{

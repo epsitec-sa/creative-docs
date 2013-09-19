@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="Tools\CresusDesigner.cs" />
     <Compile Include="EditResourceTaggerProvider.cs" />
     <Compile Include="EditResourceTagger.cs" />
     <Compile Include="EditResourceSmartTag.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="ResourceManagement\IResourceTable.cs" />
     <Compile Include="ResourceManagement\ResourceElement.cs" />
     <Compile Include="ResourceManagement\ResourceItemError.cs" />
-    <Compile Include="VisualStudio\ResourceSymbolInfoProvider.cs" />
+    <Compile Include="VisualStudio\Engine.cs" />
     <None Include="ResourceManagement\ResourceField.cs" />
     <Compile Include="ResourceManagement\ResourceModuleInfo.cs" />
     <Compile Include="ResourceManagement\ResourceNode.cs" />

@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
-		public Epsitec.Common.Support.Druid Druid
+		public Epsitec.Common.Support.Druid		Druid
 		{
 			get
 			{

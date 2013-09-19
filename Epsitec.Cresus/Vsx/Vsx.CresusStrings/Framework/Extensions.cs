@@ -19,9 +19,9 @@ namespace Epsitec
 	{
 		#region Object
 
-		public static void ThrowIfNull(this object source)
+		public static void ThrowIfNull<T>(this T source)
 		{
-			if (source == null)
+			if (object.Equals(source, default(T)))
 			{
 				throw new NullReferenceException ("source");
 			}
@@ -135,7 +135,23 @@ namespace Epsitec
 			// observe exceptions
 			task.ContinueWith (t => Extensions.HandleException (t), TaskContinuationOptions.ExecuteSynchronously);
 			return task;
-		} 
+		}
+
+		public static Task DisposeResult<T>(this Task<T> task)
+		{
+			if (task != null)
+			{
+				return task.ContinueWith (t =>
+				{
+					var disposable = t.Result as IDisposable;
+					if (disposable != null)
+					{
+						disposable.Dispose ();
+					}
+				}, TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
+			}
+			return task;
+		}
 
 		#endregion
 
@@ -186,7 +202,7 @@ namespace Epsitec
 		public static bool IsInvocation(this CommonSyntaxNode node)
 		{
 			return node != null && (node is InvocationExpressionSyntax || (node.Parent != null && node.Parent is InvocationExpressionSyntax));
-		} 
+		}
 
 		#endregion
 
@@ -259,7 +275,7 @@ namespace Epsitec
 			if (task.Exception != null)
 			{
 				var ex = (task.Exception is AggregateException) ? (task.Exception as AggregateException).Flatten ().InnerException : task.Exception;
-				System.Diagnostics.Trace.WriteLine (string.Format ("Asynchronous exception swallowed: {0} - {1}" + ex.GetType ().Name, ex.Message));
+				System.Diagnostics.Trace.WriteLine (string.Format ("Asynchronous exception swallowed: {0} - {1}", ex.GetType ().Name, ex.Message));
 			}
 		}
 

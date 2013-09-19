@@ -35,6 +35,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Roslyn.Compilers, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -72,6 +78,7 @@
     <Compile Include="ResourceSymbolMapperTest.cs" />
     <Compile Include="MultiCultureResourceItemCollectionViewTest.cs" />
     <Compile Include="DruidTest.cs" />
+    <Compile Include="DTETest.cs" />
     <Compile Include="WpfHelper.cs" />
     <Compile Include="XmlAccessTest.cs" />
   </ItemGroup>
