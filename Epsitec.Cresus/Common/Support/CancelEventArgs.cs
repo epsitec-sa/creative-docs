@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -26,10 +26,10 @@ namespace Epsitec.Common.Support
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the action associated with the event
-		/// should be cancelled.
+		/// should be canceled.
 		/// </summary>
 		/// <value>
-		///   <c>true</c> if the event should be cancelled; otherwise, <c>false</c>.
+		///   <c>true</c> if the event should be canceled; otherwise, <c>false</c>.
 		/// </value>
 		public bool Cancel
 		{

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -66,10 +66,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 				navigationOrchestrator.NodeRemoved += this.HandleNavigationOrchestratorNodeChanged;
 			}
 
-			CommandDispatcher.CommandDispatching       += this.HandleCommandDispatcherCommandDispatching;
-			CommandDispatcher.CommandDispatched        += this.HandleCommandDispatcherCommandDispatchFinished;
-			CommandDispatcher.CommandDispatchCancelled += this.HandleCommandDispatcherCommandDispatchFinished;
-			CommandDispatcher.CommandDispatchFailed    += this.HandleCommandDispatcherCommandDispatchFinished;
+			CommandDispatcher.CommandDispatching      += this.HandleCommandDispatcherCommandDispatching;
+			CommandDispatcher.CommandDispatched       += this.HandleCommandDispatcherCommandDispatchFinished;
+			CommandDispatcher.CommandDispatchCanceled += this.HandleCommandDispatcherCommandDispatchFinished;
+			CommandDispatcher.CommandDispatchFailed   += this.HandleCommandDispatcherCommandDispatchFinished;
 
 			BridgeSpy.ExecutingSetter += this.HandleBridgeSpyExecutingSetter;
 		}

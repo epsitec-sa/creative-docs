@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Widgets
 
 				if (e.Cancel)
 				{
-					this.OnCommandDispatchCancelled (e);
+					this.OnCommandDispatchCanceled (e);
 					return true;
 				}
 				
@@ -711,9 +711,9 @@ namespace Epsitec.Common.Widgets
 			CommandDispatcher.CommandDispatched.Raise (this, e);
 		}
 
-		protected void OnCommandDispatchCancelled(CommandEventArgs e)
+		protected void OnCommandDispatchCanceled(CommandEventArgs e)
 		{
-			CommandDispatcher.CommandDispatchCancelled.Raise (this, e);
+			CommandDispatcher.CommandDispatchCanceled.Raise (this, e);
 		}
 
 		protected void OnCommandDispatchFailed(CommandEventArgs e)
@@ -757,7 +757,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static event EventHandler<CommandEventArgs>	CommandDispatching;
 		public static event EventHandler<CommandEventArgs>	CommandDispatched;
-		public static event EventHandler<CommandEventArgs>	CommandDispatchCancelled;
+		public static event EventHandler<CommandEventArgs>	CommandDispatchCanceled;
 		public static event EventHandler<CommandEventArgs>	CommandDispatchFailed;
 		
 
