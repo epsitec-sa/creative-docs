@@ -104,6 +104,8 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 		}
 
 
+		#region AsyncEnumerable Class
+
 		private class AsyncEnumerable : IAsyncEnumerable<string>
 		{
 			#region IAsyncValueProvider<string> Members
@@ -116,6 +118,10 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			#endregion
 		}
 
+		#endregion
+
+		#region AsyncEnumerator Class
+
 		private class AsyncEnumerator : IAsyncEnumerator<string>
 		{
 			public AsyncEnumerator(int start, int count, CancellationToken token)
@@ -126,6 +132,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 				this.step  = count < 0 ? -1 : 1;
 				this.Reset ();
 			}
+
 			#region IAsyncEnumerator<string> Members
 
 			public string Current
@@ -171,7 +178,6 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 
 			#endregion
 
-
 			private readonly CancellationToken	token;
 			private readonly int				start;
 			private readonly int				count;
@@ -179,8 +185,9 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			
 			private int							index;
 			private int							more;
-
-			private string value;
+			private string						value;
 		}
+
+		#endregion
 	}
 }
