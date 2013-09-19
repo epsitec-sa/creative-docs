@@ -56,6 +56,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ChatJs.Net">
+      <HintPath>..\External\ChatJS\ChatJs.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Client">
       <HintPath>..\External\SignalR\Microsoft.AspNet.SignalR.Client.dll</HintPath>
     </Reference>
@@ -160,6 +163,7 @@
     <Compile Include="Core\Extraction\EntityExtractor.cs" />
     <Compile Include="Core\Extraction\EntityWriter.cs" />
     <Compile Include="Core\Extraction\ArrayWriter.cs" />
+    <Compile Include="Owin\Hubs\ChatJSHub.cs" />
     <Compile Include="Owin\Hubs\NotificationHub.cs" />
     <Compile Include="Owin\Hubs\NotificationClient.cs" />
     <Compile Include="Owin\OwinServer.cs" />

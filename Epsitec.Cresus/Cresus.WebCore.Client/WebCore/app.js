@@ -37,6 +37,7 @@ function() {
     tabManager: null,
     entityBag: null,
     faqWindow: null,
+    chat: null,
 
     /* Application entry point */
 
@@ -234,6 +235,7 @@ function() {
       if(epsitecConfig.featureFaq) {
         this.faqWindow = Ext.create('Epsitec.FaqWindow');
       }
+
     },
 
     reloadCurrentDatabase: function() {
