@@ -142,8 +142,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine le contenu.
 			var text = Timeline.GetCellMonth (cell);
 			var font = Font.DefaultFont;
-			graphics.Color = Color.FromBrightness (0.2);
-			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+
+			var width = new TextGeometry (0, 0, 1000, 100, text, font, rect.Height*0.6, ContentAlignment.MiddleLeft).Width;
+			if (width < rect.Width)
+			{
+				graphics.Color = Color.FromBrightness (0.2);
+				graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+			}
 		}
 
 		private void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell)
