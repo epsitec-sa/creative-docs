@@ -1,6 +1,8 @@
 //	Copyright © 2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,11 +19,11 @@ namespace Epsitec.Common.Support
 		{
 			if (task.IsCanceled)
 			{
-				System.Diagnostics.Trace.WriteLine ("Task was properly canceled");
+				System.Diagnostics.Debug.WriteLine ("Task was properly canceled");
 			}
 			if (task.Exception != null)
 			{
-				System.Diagnostics.Trace.WriteLine ("Asynchronous exception swallowed: " + task.Exception.Message);
+				System.Diagnostics.Trace.WriteLine ("Asynchronous exception swallowed:\n" + task.Exception.GetFullText ());
 			}
 		}
 	}

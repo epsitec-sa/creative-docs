@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support.Extensions
 			var type    = exception.GetType ();
 			var message = exception.Message;
 			var source  = exception.Source;
-			var trace   = exception.StackTrace.Replace ("\n", "\n    ");
+			var trace   = exception.StackTrace == null ? "<none>" : exception.StackTrace.Replace ("\n", "\n    ");
 
 			var exceptionText = prefix + string.Format (format, title, type, message, source, trace).Replace ("\n", "\n" + prefix);
 
