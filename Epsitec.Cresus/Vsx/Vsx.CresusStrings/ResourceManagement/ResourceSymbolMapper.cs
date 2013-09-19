@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.ResourceManagement
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		/// </code>
 		/// </example>
 		/// </summary>
-		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindPartial(string symbolPart)
+		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindPartial(string symbolPart, CancellationToken cancellationToken)
 		{
 			// Prefix pattern
 			// (?<=			: match prefix but exclude it (throws away backtracking references)
@@ -77,8 +78,10 @@ namespace Epsitec.Cresus.ResourceManagement
 			var pattern = @"(?<=\.|^)" + Regex.Escape (symbolPart) + @"(?=\.|$)";
 			foreach (var kv in this.symbolTable)
 			{
+				cancellationToken.ThrowIfCancellationRequested ();
 				if (Regex.IsMatch (kv.Key, pattern))
 				{
+					cancellationToken.ThrowIfCancellationRequested ();
 					yield return kv.Value;
 				}
 			}
@@ -94,7 +97,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		/// </code>
 		/// </example>
 		/// </summary>
-		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindTail(string symbolTail)
+		public IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> FindTail(string symbolTail, CancellationToken cancellationToken)
 		{
 			// Prefix pattern
 			// (?<=			: match prefix but exclude it (throws away backtracking references)
@@ -107,8 +110,10 @@ namespace Epsitec.Cresus.ResourceManagement
 			var pattern = @"(?<=\.|^)" + Regex.Escape (symbolTail) + @"(?=$)";
 			foreach (var kv in this.symbolTable)
 			{
+				cancellationToken.ThrowIfCancellationRequested ();
 				if (Regex.IsMatch (kv.Key, pattern))
 				{
+					cancellationToken.ThrowIfCancellationRequested ();
 					yield return kv.Value;
 				}
 			}

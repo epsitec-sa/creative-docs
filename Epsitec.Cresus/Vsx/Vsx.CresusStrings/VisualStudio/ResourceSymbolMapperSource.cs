@@ -16,8 +16,9 @@ namespace Epsitec.VisualStudio
 			this.Start ();
 		}
 
-		public async Task<ResourceSymbolMapper> SymbolMapperAsync()
+		public async Task<ResourceSymbolMapper> SymbolMapperAsync(CancellationToken cancellationToken)
 		{
+			cancellationToken.ThrowIfCancellationRequested ();
 			return await this.symbolMapperTask.ConfigureAwait(false);
 		}
 
@@ -43,7 +44,7 @@ namespace Epsitec.VisualStudio
 		{
 			return Task.Run (() =>
 			{
-				using (new TimeTrace ("ResourceSymbolMapperSource.CreateSymbolMapperTask"))
+				using (new TimeTrace ())
 				{
 					var solutionResource = new SolutionResource (this.Solution, this.cts.Token);
 					var mapper = new ResourceSymbolMapper ();

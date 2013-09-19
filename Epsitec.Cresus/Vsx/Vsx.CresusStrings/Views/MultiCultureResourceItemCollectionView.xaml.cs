@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Strings.Views
 		public MultiCultureResourceItemCollectionView (IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
 			: this ()
 		{
-			this.DataContext = new MultiCultureResourceItemCollectionViewModel (resources.OrderBy (map => map.First ().Value.SymbolName));
+			this.DataContext = new MultiCultureResourceItemCollectionViewModel (resources.OrderBy (map => map.SymbolName()));
 		}
 
 		public MultiCultureResourceItemCollectionView()

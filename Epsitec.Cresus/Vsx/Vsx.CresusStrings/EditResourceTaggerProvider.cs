@@ -21,7 +21,9 @@ namespace Epsitec.Cresus.Strings
 	{
 		public EditResourceTaggerProvider()
 		{
-			Trace.WriteLine ("EditResourceTaggerProvider()");
+			using (new TimeTrace ())
+			{
+			}
 		}
 
 		[Import]
@@ -33,12 +35,13 @@ namespace Epsitec.Cresus.Strings
 
 		#region IViewTaggerProvider Members
 
-		public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
+		public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer textBuffer) where T : ITag
 		{
 			// make sure we are tagging only the top buffer
-			if (textView != null && buffer == textView.TextBuffer)
+			if (textView != null && textBuffer == textView.TextBuffer)
 			{
-				return new EditResourceTagger (buffer, textView, this) as ITagger<T>;
+				this.ResourceSymbolInfoProvider.ActiveTextBuffer = textBuffer;
+				return new EditResourceTagger (textBuffer, textView, this) as ITagger<T>;
 			}
 			return null;
 		}

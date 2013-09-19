@@ -20,5 +20,6 @@ namespace Epsitec.Cresus.Strings
 		public static readonly string ModuleInfoPath = TestData.Directory + TestData.ModuleInfoFileName;
 
 		public static readonly string CresusGraphSolutionPath = @"..\..\..\..\App.CresusGraph\App.CresusGraph.sln";
+		public static readonly string CommonDialogsModuleInfoPath = @"..\..\..\..\Common\Resources\Common.Dialogs\module.info";
 	}
 }

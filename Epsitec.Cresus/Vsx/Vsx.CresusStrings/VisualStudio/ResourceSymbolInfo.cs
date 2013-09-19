@@ -5,20 +5,86 @@ using System.Linq;
 using System.Text;
 using Epsitec.Cresus.ResourceManagement;
 using Microsoft.VisualStudio.Text;
+using Roslyn.Compilers;
 using Roslyn.Compilers.Common;
 using Roslyn.Compilers.CSharp;
 
 namespace Epsitec.VisualStudio
 {
-	public class ResourceSymbolInfo
+	public sealed class ResourceSymbolInfo : IEquatable<ResourceSymbolInfo>
 	{
-		//public ResourceSymbolInfo(List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources, string symbolName, SyntaxNode node, CommonSyntaxToken token, ITrackingSpan applicableToSpan)
-		public ResourceSymbolInfo(List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources, string symbolName, SyntaxNode node, CommonSyntaxToken token)
+		public ResourceSymbolInfo(ITextBuffer textBuffer, CommonSyntaxToken syntaxToken, SyntaxNode syntaxNode, string symbolName, List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
 		{
-			this.resources = resources;
+			this.textBuffer = textBuffer;
+			this.syntaxToken = syntaxToken;
+			this.syntaxNode = syntaxNode;
 			this.symbolName = symbolName;
-			this.syntaxNode = node;
-			this.syntaxToken = token;
+			this.resources = resources;
+		}
+
+		public ITextBuffer						TextBuffer
+		{
+			get
+			{
+				return this.textBuffer;
+			}
+		}
+
+		public ITextSnapshot					Snapshot
+		{
+			get
+			{
+				return this.textBuffer.CurrentSnapshot;
+			}
+		}
+
+		public CommonSyntaxToken				SyntaxToken
+		{
+			get
+			{
+				return this.syntaxToken;
+			}
+		}
+
+		public SyntaxNode						SyntaxNode
+		{
+			get
+			{
+				return this.syntaxNode;
+			}
+		}
+
+		public string							SymbolName
+		{
+			get
+			{
+				return this.symbolName;
+			}
+		}
+
+		public TextSpan							TextSpan
+		{
+			get
+			{
+				return this.SyntaxNode.Span;
+			}
+		}
+
+		public Span								Span
+		{
+			get
+			{
+				var textSpan = this.TextSpan;
+				return Span.FromBounds (textSpan.Start, textSpan.End);
+			}
+		}
+
+		public SnapshotSpan						SnapshotSpan
+		{
+			get
+			{
+				return new SnapshotSpan (this.Snapshot, this.Span);
+			}
 		}
 
 		public List<IReadOnlyDictionary<CultureInfo, ResourceItem>> Resources
@@ -29,33 +95,57 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		public string SymbolName
+		public static bool operator ==(ResourceSymbolInfo left, ResourceSymbolInfo right)
 		{
-			get
-			{
-				return this.symbolName;
-			}
+			return object.Equals (left, right);
 		}
 
-		public SyntaxNode SyntaxNode
+		public static bool operator !=(ResourceSymbolInfo left, ResourceSymbolInfo right)
 		{
-			get
-			{
-				return this.syntaxNode;
-			}
+			return !object.Equals (left, right);
 		}
 
-		public CommonSyntaxToken SyntaxToken
+		#region Object Overrides
+
+		public override int GetHashCode()
 		{
-			get
-			{
-				return this.syntaxToken;
-			}
+			return this.TextSpan.GetHashCode ();
 		}
 
-		private readonly List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources;
-		private readonly string symbolName;
-		private readonly SyntaxNode syntaxNode;
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as ResourceSymbolInfo);
+		}
+
+		public override string ToString()
+		{
+			return symbolName;
+		}
+
+		#endregion
+
+		#region IEquatable<ResourceSymbolInfo> Members
+
+		public bool Equals(ResourceSymbolInfo other)
+		{
+			if (object.ReferenceEquals (this, other))
+			{
+				return true;
+			}
+			if (object.ReferenceEquals (other, null))
+			{
+				return false;
+			}
+			return this.TextSpan == other.TextSpan;
+		}
+
+		#endregion
+
+
+		private readonly ITextBuffer textBuffer;
 		private readonly CommonSyntaxToken syntaxToken;
+		private readonly SyntaxNode syntaxNode;
+		private readonly string symbolName;
+		private readonly List<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources;
 	}
 }

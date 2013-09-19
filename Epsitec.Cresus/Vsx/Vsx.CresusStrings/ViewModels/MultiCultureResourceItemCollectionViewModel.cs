@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Strings.ViewModels
 	{
 		public MultiCultureResourceItemCollectionViewModel (IEnumerable<IReadOnlyDictionary<CultureInfo, ResourceItem>> resources)
 		{
-			foreach (var cultureMaps in resources)
+			foreach (var cultureMap in resources)
 			{
-				this.Add (new MultiCultureResourceItemViewModel (cultureMaps));
+				this.Add (new MultiCultureResourceItemViewModel (cultureMap));
 			}
 		}
 	}

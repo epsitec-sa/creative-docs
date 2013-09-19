@@ -15,7 +15,7 @@ using Roslyn.Services;
 
 namespace Epsitec
 {
-	public static class Extensions
+	public static partial class Extensions
 	{
 		#region Object
 
@@ -133,7 +133,7 @@ namespace Epsitec
 		public static Task ForgetSafely(this Task task)
 		{
 			// observe exceptions
-			task.ContinueWith (t => Extensions.HandleException (t));
+			task.ContinueWith (t => Extensions.HandleException (t), TaskContinuationOptions.ExecuteSynchronously);
 			return task;
 		} 
 
@@ -229,6 +229,19 @@ namespace Epsitec
 			}
 			return source[key] = valueFactory (key);
 		}
+
+		public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> source, TKey key, Func<TKey, TValue> valueFactory, out bool created)
+		{
+			TValue value;
+			if (source.TryGetValue (key, out value))
+			{
+				created = false;
+				return value;
+			}
+			created = true;
+			return source[key] = valueFactory (key);
+		}
+
 		#endregion
 		
 		#region Helpers

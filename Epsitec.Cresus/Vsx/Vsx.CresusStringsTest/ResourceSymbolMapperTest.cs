@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Roslyn.Services;
 using System.Diagnostics;
 using Epsitec.Cresus.Strings.Views;
+using System.Threading;
 
 namespace Epsitec.Cresus.ResourceManagement
 {
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		public void FindTail()
 		{
 			var mapper = ResourceSymbolMapperTest.CreateSolutionMapper (TestData.CresusGraphSolutionPath);
-			var result = mapper.FindTail ("Dialog.Tooltip.Close");
+			var result = mapper.FindTail ("Dialog.Tooltip.Close", CancellationToken.None);
 			foreach (var resourceItem in result.SelectMany (kv => kv.Values))
 			{
 				Trace.WriteLine (resourceItem);
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		public void FindPartial()
 		{
 			var mapper = ResourceSymbolMapperTest.CreateSolutionMapper (TestData.CresusGraphSolutionPath);
-			var result = mapper.FindPartial ("Dialog.Tooltip");
+			var result = mapper.FindPartial ("Dialog.Tooltip", CancellationToken.None);
 			foreach (var resourceItem in result.SelectMany (kv => kv.Values))
 			{
 				Trace.WriteLine (resourceItem);
@@ -51,7 +52,7 @@ namespace Epsitec.Cresus.ResourceManagement
 		public void OrderBySymbol()
 		{
 			var mapper = ResourceSymbolMapperTest.CreateSolutionMapper (TestData.CresusGraphSolutionPath);
-			var result = mapper.FindPartial ("Dialog.Tooltip");
+			var result = mapper.FindPartial ("Dialog.Tooltip", CancellationToken.None);
 		}
 
 		[TestMethod]

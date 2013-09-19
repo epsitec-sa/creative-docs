@@ -18,7 +18,9 @@ namespace Epsitec.Cresus.Strings
 	{
 		public QuickInfoControllerProvider()
 		{
-			Trace.WriteLine ("QuickInfoControllerProvider()");
+			using (new TimeTrace ())
+			{
+			}
 		}
 
 		[Import]

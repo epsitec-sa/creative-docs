@@ -139,6 +139,14 @@ namespace Epsitec.Cresus.ResourceManagement
 			}
 		}
 
+		public Epsitec.Common.Support.Druid Druid
+		{
+			get
+			{
+				return Epsitec.Common.Support.Druid.FromModuleString (this.Id, int.Parse (this.Module.Info.Id));
+			}
+		}
+
 		#region Object Overrides
 
 		public override string ToString()

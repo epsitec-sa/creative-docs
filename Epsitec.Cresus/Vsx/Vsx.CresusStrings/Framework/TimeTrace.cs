@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Epsitec
 {
 	public class TimeTrace : IDisposable
 	{
-		public TimeTrace(string prefix = null)
+		public TimeTrace()
 		{
-			if (!string.IsNullOrWhiteSpace (prefix))
-			{
-				Trace.WriteLine (">> " + prefix);
-			}
-			this.prefix = prefix;
+			var methodInfo = new StackFrame(1).GetMethod ();
+			this.methodName = string.Format("{0}.{1}", methodInfo.DeclaringType.Name, methodInfo.Name);
+			Trace.WriteLine (string.Format("[{0}] .. {1} ...", Thread.CurrentThread.ManagedThreadId, this.methodName));
 			this.stopwatch = Stopwatch.StartNew ();
 		}
 
@@ -23,24 +22,12 @@ namespace Epsitec
 
 		public void Dispose()
 		{
-			Trace.WriteLine (string.Join(" ", this.TracedAtoms));
+			Trace.WriteLine (string.Format ("[{0}] >> {1}: {2} [ms]", Thread.CurrentThread.ManagedThreadId, this.methodName, this.stopwatch.Elapsed.TotalMilliseconds.ToString ()));
 		}
 
 		#endregion
 
-		private IEnumerable<string> TracedAtoms
-		{
-			get
-			{
-				if (!string.IsNullOrWhiteSpace (this.prefix))
-				{
-					yield return "<< " + this.prefix + ':';
-				}
-				yield return this.stopwatch.Elapsed.TotalMilliseconds.ToString () + " [ms]";
-			}
-		}
-
 		private Stopwatch stopwatch;
-		private string prefix;
+		private string methodName;
 	}
 }

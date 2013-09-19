@@ -19,7 +19,7 @@ namespace Epsitec.VisualStudio
 	{
 		public ResourceSymbolInfoProvider()
 		{
-			using (new TimeTrace ("ResourceSymbolInfoProvider"))
+			using (new TimeTrace ())
 			{
 				this.workspace = Workspace.PrimaryWorkspace;
 				this.solution = Workspace.PrimaryWorkspace.CurrentSolution;
@@ -70,12 +70,12 @@ namespace Epsitec.VisualStudio
 				//this.dte.SolutionOpened += this.OnDTESolutionOpened;
 				//this.dte.DocumentOpened += this.OnDTEDocumentOpened;
 
-				this.documentSourceManager.SetActiveDocument (this.dte.Application.ActiveDocument);
+				this.ActiveDteDocument = this.dte.Application.ActiveDocument;
 				this.dte.WindowActivated += this.HandleDTEWindowActivated;
 			}
 		}
 
-		public DocumentSource DocumentSource
+		public DocumentSource ActiveDocumentSource
 		{
 			get
 			{
@@ -83,10 +83,19 @@ namespace Epsitec.VisualStudio
 			}
 		}
 
-		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point, bool leftExtent)
+		public async Task<ResourceSymbolInfo> GetResourceSymbolInfoAsync(SnapshotPoint point, CancellationToken cancellationToken)
 		{
-			return await this.DocumentSource.GetResourceSymbolInfoAsync (point, this.resourceProvider, leftExtent).ConfigureAwait (false);
+			return await this.ActiveDocumentSource.GetResourceSymbolInfoAsync (point, this.resourceProvider, cancellationToken).ConfigureAwait (false);
 		}
+
+		internal ITextBuffer ActiveTextBuffer
+		{
+			set
+			{
+				this.documentSourceManager.ActiveTextBuffer = value;
+			}
+		}
+
 
 		#region ISolutionProvider Members
 
@@ -105,7 +114,6 @@ namespace Epsitec.VisualStudio
 
 		#endregion
 
-
 		#region IDisposable Members
 
 		public void Dispose()
@@ -122,6 +130,14 @@ namespace Epsitec.VisualStudio
 		#endregion
 
 
+		private EnvDTE.Document ActiveDteDocument	
+		{
+			set
+			{
+				this.documentSourceManager.ActiveDteDocument = value;
+			}
+		}
+
 		private void HandleWorkspaceChanged(object sender, WorkspaceEventArgs e)
 		{
 		}
@@ -136,10 +152,10 @@ namespace Epsitec.VisualStudio
 
 		private void HandleDTEWindowActivated(EnvDTE.Window GotFocus, EnvDTE.Window LostFocus)
 		{
-			var dteActiveDocument = GotFocus.Document;
-			if (dteActiveDocument != null)
+			var focusedDocument = GotFocus.Document;
+			if (focusedDocument != null)
 			{
-				this.documentSourceManager.SetActiveDocument (dteActiveDocument);
+				this.documentSourceManager.ActiveDteDocument = focusedDocument;
 			}
 		}
 

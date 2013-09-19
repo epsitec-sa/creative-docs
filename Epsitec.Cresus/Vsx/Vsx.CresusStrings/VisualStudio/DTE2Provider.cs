@@ -48,7 +48,7 @@ namespace Epsitec.VisualStudio
 
 		public static DTE2 GetDTE2(int processId)
 		{
-			using (new TimeTrace ("GetDTE2"))
+			using (new TimeTrace ())
 			{
 				string progId = "!VisualStudio.DTE.11.0:" + processId.ToString ();
 

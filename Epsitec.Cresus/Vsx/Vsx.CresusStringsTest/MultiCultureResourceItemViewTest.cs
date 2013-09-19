@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitBundle (bundle);
 
-			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo");
+			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo", CancellationToken.None);
 			var view = new MultiCultureResourceItemView (resources.Single ())
 			{
 				Margin = new Thickness(12)
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitModule (module);
 
-			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo");
+			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo", CancellationToken.None);
 			var view = new MultiCultureResourceItemView (resources.Single ());
 
 			var window = WpfHelper.CreateWindow ();

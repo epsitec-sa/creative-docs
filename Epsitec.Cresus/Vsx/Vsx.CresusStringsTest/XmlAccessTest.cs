@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			var doc = XDocument.Load (TestData.Strings00Path);
 			var bundle = doc.Root;
-			using (new TimeTrace ("XAttributeAccessTime"))
+			using (new TimeTrace ())
 			{
 				foreach (var _ in Enumerable.Repeat (bundle.Attribute ("name"), 1000))
 				{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Strings
 			{
 				{ "name", "Value" }
 			};
-			using (new TimeTrace ("DictionaryAccessTime"))
+			using (new TimeTrace ())
 			{
 				foreach (var _ in Enumerable.Repeat (bundle["name"], 1000))
 				{

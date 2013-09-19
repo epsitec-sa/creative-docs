@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Epsitec.Cresus.ResourceManagement;
 using Epsitec.Cresus.Strings.Views;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitModule (module);
 
-			var resources = mapper.FindTail ("Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File");
+			var resources = mapper.FindTail ("Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File", CancellationToken.None);
 			var view = new MultiCultureResourceItemCollectionView (resources);
 
 			var window = WpfHelper.CreateWindow ();
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitModule (module);
 
-			var resources = mapper.FindTail ("Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File");
+			var resources = mapper.FindTail ("Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File", CancellationToken.None);
 			var view = new MultiCultureResourceItemCollectionView (resources);
 
 			var window = WpfHelper.CreateWindow ();
@@ -49,7 +50,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitModule (module);
 
-			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo");
+			var resources = mapper.FindTail ("Res.Strings.Message.MoreThanPiccolo", CancellationToken.None);
 			var view = new MultiCultureResourceItemCollectionView (resources);
 
 			var window = WpfHelper.CreateWindow ();
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitModule (module);
 
-			var resources = mapper.FindPartial ("Res.Strings.Message");
+			var resources = mapper.FindPartial ("Res.Strings.Message", CancellationToken.None);
 			var view = new MultiCultureResourceItemCollectionView (resources);
 
 			var window = WpfHelper.CreateWindow ();
@@ -81,7 +82,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitModule (module);
 
-			var resources = mapper.FindPartial ("Res.Strings");
+			var resources = mapper.FindPartial ("Res.Strings", CancellationToken.None);
 			var view = new MultiCultureResourceItemCollectionView (resources);
 
 			var window = WpfHelper.CreateWindow ();
@@ -98,7 +99,7 @@ namespace Epsitec.Cresus.Strings
 			var mapper = new ResourceSymbolMapper ();
 			mapper.VisitSolution (solution);
 
-			var resources = mapper.FindPartial ("Res.Strings");
+			var resources = mapper.FindPartial ("Res.Strings", CancellationToken.None);
 			var view = new MultiCultureResourceItemCollectionView (resources);
 
 			var window = WpfHelper.CreateWindow ();

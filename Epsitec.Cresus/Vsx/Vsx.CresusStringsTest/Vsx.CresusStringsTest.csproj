@@ -71,10 +71,15 @@
     <Compile Include="CompositeKeyTest.cs" />
     <Compile Include="ResourceSymbolMapperTest.cs" />
     <Compile Include="MultiCultureResourceItemCollectionViewTest.cs" />
+    <Compile Include="DruidTest.cs" />
     <Compile Include="WpfHelper.cs" />
     <Compile Include="XmlAccessTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Vsx.CresusStrings\Vsx.CresusStrings.csproj">
       <Project>{09561271-a15a-47e4-9eb8-752639eb8ec8}</Project>
       <Name>Vsx.CresusStrings</Name>

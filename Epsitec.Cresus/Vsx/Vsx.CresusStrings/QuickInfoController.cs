@@ -18,12 +18,14 @@ namespace Epsitec.Cresus.Strings
 	{
 		internal QuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, QuickInfoControllerProvider provider)
 		{
-			Trace.WriteLine ("QuickInfoController()");
-			this.textView = textView;
-			this.subjectBuffers = subjectBuffers;
-			this.provider = provider;
+			using (new TimeTrace ())
+			{
+				this.textView = textView;
+				this.subjectBuffers = subjectBuffers;
+				this.provider = provider;
 
-			this.textView.MouseHover += this.OnTextViewMouseHover;
+				this.textView.MouseHover += this.OnTextViewMouseHover;
+			}
 		}
 
 

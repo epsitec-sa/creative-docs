@@ -4,7 +4,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Epsitec.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -13,33 +15,35 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace Epsitec.Cresus.Strings
 {
-	internal class EditResourceTagger : ITagger<EditResourceSmartTag>, IDisposable
+	internal class EditResourceTagger : ITagger<SmartTag>, IDisposable
 	{
 		public EditResourceTagger(ITextBuffer textBuffer, ITextView textView, EditResourceTaggerProvider provider)
 		{
-			Trace.WriteLine ("EditResourceTagger()");
-			this.subjectBuffer = textBuffer;
-			this.textView = textView;
-			this.provider = provider;
+			using (new TimeTrace ())
+			{
+				this.textBuffer = textBuffer;
+				this.textView = textView;
+				this.provider = provider;
 
-			//this.textView.MouseHover += this.OnTextViewMouseHover;
-			this.textView.LayoutChanged += this.OnLayoutChanged;
-			this.textView.Caret.PositionChanged += this.OnCaretPositionChanged;
+				this.textView.LayoutChanged += this.OnLayoutChanged;
+				this.textView.Caret.PositionChanged += this.OnCaretPositionChanged;
+			}
 		}
+
 
 		#region ITagger<EditResourceSmartTag> Members
 
 		public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
-		public IEnumerable<ITagSpan<EditResourceSmartTag>> GetTags(NormalizedSnapshotSpanCollection spans)
+		public IEnumerable<ITagSpan<SmartTag>> GetTags(NormalizedSnapshotSpanCollection spans)
 		{
-			if (this.symbolSpan.HasValue)
+			if (this.symbolInfo != null)
 			{
 				foreach (var span in spans)
 				{
-					if (span == this.symbolSpan.Value)
+					if (span.Span == this.symbolInfo.Span)
 					{
-						yield return this.CreateTagSpan (span);
+						yield return this.CreateTagSpan (this.symbolInfo);
 					}
 				}
 			}
@@ -47,64 +51,40 @@ namespace Epsitec.Cresus.Strings
 			{
 				yield break;
 			}
-			//ITextSnapshot snapshot = this.subjectBuffer.CurrentSnapshot;
-			//if (snapshot.Length == 0)
-			//	yield break; //don't do anything if the buffer is empty 
-
-			////set up the navigator
-			//ITextStructureNavigator navigator = this.provider.NavigatorService.GetTextStructureNavigator (this.subjectBuffer);
-
-			//foreach (var span in spans)
-			//{
-			//	ITextCaret caret = this.textView.Caret;
-			//	SnapshotPoint point;
-
-			//	if (caret.Position.BufferPosition > 0)
-			//		point = caret.Position.BufferPosition - 1;
-			//	else
-			//		yield break;
-
-			//	TextExtent extent = navigator.GetExtentOfWord (point);
-			//	//don't display the tag if the extent has whitespace 
-			//	if (extent.IsSignificant)
-			//		yield return new TagSpan<EditResourceSmartTag> (extent.Span, new EditResourceSmartTag (GetSmartTagActions (extent.Span)));
-			//	else
-			//		yield break;
-			//}
-
-
-			//if (this.tagSpan != null)
-			//{
-			//	yield return this.tagSpan;
-			//}
 		}
 
 		#endregion
-
 
 		#region IDisposable Members
 
 		public void Dispose()
 		{
-			//this.textView.MouseHover -= this.OnTextViewMouseHover;
 			this.textView.LayoutChanged -= this.OnLayoutChanged;
 			this.textView.Caret.PositionChanged -= this.OnCaretPositionChanged;
-			this.textView = null;
 		}
 
 		#endregion
 
-		private ReadOnlyCollection<SmartTagActionSet> GetSmartTagActions(SnapshotSpan span)
-		{
-			List<SmartTagActionSet> actionSetList = new List<SmartTagActionSet> ();
-			List<ISmartTagAction> actionList = new List<ISmartTagAction> ();
 
-			ITrackingSpan trackingSpan = span.Snapshot.CreateTrackingSpan (span, SpanTrackingMode.EdgeInclusive);
-			actionList.Add (new EditResourceSmartTagAction (trackingSpan));
-			SmartTagActionSet actionSet = new SmartTagActionSet (actionList.AsReadOnly ());
-			actionSetList.Add (actionSet);
-			return actionSetList.AsReadOnly ();
+		private static SnapshotSpan? CreateSymbolSpan(ResourceSymbolInfo symbolInfo, ITextSnapshot snapshot)
+		{
+			if (symbolInfo != null)
+			{
+				var textSpan = symbolInfo.SyntaxNode.Span;
+				var span = Span.FromBounds (textSpan.Start, textSpan.End);
+				return new SnapshotSpan (snapshot, span);
+			}
+			return null;
 		}
+
+		private Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
+		{
+			get
+			{
+				return this.provider.ResourceSymbolInfoProvider;
+			}
+		}
+
 
 		private void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
 		{
@@ -118,123 +98,87 @@ namespace Epsitec.Cresus.Strings
 
 		private void ProcessTag(SnapshotPoint point)
 		{
-			var newSymbolSpan = this.CreateSymbolSpan (point);
-			if (newSymbolSpan.HasValue)
+			using (new TimeTrace ())
 			{
-				if (this.symbolSpan.HasValue && this.symbolSpan == newSymbolSpan)
+				var cts = new CancellationTokenSource (Config.MaxSmartTagDelay);
+				try
 				{
-					return;
+					this.ProcessTagAsync (point, cts.Token).Wait (cts.Token);
+				}
+				catch (OperationCanceledException)
+				{
 				}
 			}
+		}
 
-			this.oldSymbolSpan = this.symbolSpan;
-			if (this.oldSymbolSpan.HasValue)
+		private async Task ProcessTagAsync(SnapshotPoint point, CancellationToken cancellationToken)
+		{
+			var newSymbolInfo = await this.CreateSymbolInfoAsync (point, cancellationToken);
+			if (newSymbolInfo != this.symbolInfo)
 			{
-				this.symbolSpan = null;
-				this.RaiseTagsChanged (this.oldSymbolSpan.Value);
-			}
-
-			this.symbolSpan = newSymbolSpan;
-			if (this.symbolSpan.HasValue)
-			{
-				this.RaiseTagsChanged (this.symbolSpan.Value);
+				this.RemoveCurrentTag (point.Snapshot);
+				this.SetCurrentTag (newSymbolInfo, point.Snapshot);
 			}
 		}
 
-		//private void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
-		//{
-		//	//find the mouse position by mapping down to the subject buffer
-		//	SnapshotPoint? point = this.textView.BufferGraph.MapDownToFirstMatch
-		//	(
-		//		new SnapshotPoint (this.textView.TextSnapshot, e.Position),
-		//		PointTrackingMode.Positive,
-		//		snapshot => this.subjectBuffer == snapshot.TextBuffer,
-		//		PositionAffinity.Predecessor
-		//	);
-
-		//	if (point != null)
-		//	{
-		//		if (this.tagSpan == null)
-		//		{
-		//			this.tagSpan = this.CreateTagSpan (point.Value);
-		//			if (this.tagSpan != null)
-		//			{
-		//				this.RaiseTagsChanged (this.tagSpan.Span);
-		//			}
-		//		}
-		//		else if (!this.tagSpan.Span.Contains (point.Value))
-		//		{
-		//			var span = this.tagSpan.Span;
-		//			this.tagSpan = null;
-		//			this.RaiseTagsChanged (span);
-
-		//			this.tagSpan = this.CreateTagSpan (point.Value);
-		//			if (this.tagSpan != null)
-		//			{
-		//				this.RaiseTagsChanged (this.tagSpan.Span);
-		//			}
-		//		}
-		//	}
-		//}
-
-		//private SnapshotPoint? GetTriggerPoint(ITextSnapshot textSnapshot, ITrackingPoint triggerPoint)
-		//{
-		//	return this.textView.BufferGraph.MapDownToSnapshot (triggerPoint.GetPoint (this.textView.TextBuffer.CurrentSnapshot), PointTrackingMode.Negative, textSnapshot, PositionAffinity.Successor);
-		//}
-
-		private Epsitec.VisualStudio.ResourceSymbolInfoProvider ResourceSymbolInfoProvider
+		private void RemoveCurrentTag(ITextSnapshot snapshot)
 		{
-			get
+			if (this.symbolInfo != null)
 			{
-				return this.provider.ResourceSymbolInfoProvider;
+				Debug.Assert(snapshot == this.symbolInfo.Snapshot);
+				var removeSpan = this.symbolInfo.SnapshotSpan;
+				this.symbolInfo = null;
+				this.RaiseTagsChanged (removeSpan);
 			}
 		}
 
-		private async Task<SnapshotSpan?> CreateSymbolSpanAsync(SnapshotPoint point)
+		private void SetCurrentTag(ResourceSymbolInfo newSymbolInfo, ITextSnapshot snapshot)
 		{
-			var symbolInfo = await this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (point, false).ConfigureAwait (false);
-			if (symbolInfo != null)
+			this.symbolInfo = newSymbolInfo;
+			if (this.symbolInfo != null)
 			{
-				var textSpan = symbolInfo.SyntaxNode.Span;
-				var span = Span.FromBounds (textSpan.Start, textSpan.End);
-				return new SnapshotSpan (point.Snapshot, span);
+				Debug.Assert (snapshot == this.symbolInfo.Snapshot);
+				var addSpan = this.symbolInfo.SnapshotSpan;
+				this.RaiseTagsChanged (addSpan);
 			}
-			return null;
 		}
 
-		private SnapshotSpan? CreateSymbolSpan(SnapshotPoint point)
+		private async Task<ResourceSymbolInfo> CreateSymbolInfoAsync(SnapshotPoint point, CancellationToken cancellationToken)
 		{
-			var symbolSpanTask = this.CreateSymbolSpanAsync (point);
-			if (symbolSpanTask.Wait (100))
-			{
-				return symbolSpanTask.Result;
-			}
-			return null;
+			this.ResourceSymbolInfoProvider.ActiveDocumentSource.TextBuffer = this.textBuffer;
+			return await this.ResourceSymbolInfoProvider.GetResourceSymbolInfoAsync (point, cancellationToken).ConfigureAwait (false);
 		}
 
-		private async Task<TagSpan<EditResourceSmartTag>> CreateTagSpanAsync(SnapshotPoint point)
+		private TagSpan<SmartTag> CreateTagSpan(ResourceSymbolInfo symbolInfo)
 		{
-			var symbolSpan = await this.CreateSymbolSpanAsync (point).ConfigureAwait (false);
-			if (symbolSpan.HasValue)
-			{
-				return this.CreateTagSpan (symbolSpan.Value);
-			}
-			return null;
+			SnapshotSpan span = symbolInfo.SnapshotSpan;
+			return new TagSpan<SmartTag> (span, new SmartTag (SmartTagType.Factoid, EditResourceTagger.GetSmartTagActions (symbolInfo)));
 		}
 
-		private TagSpan<EditResourceSmartTag> CreateTagSpan(SnapshotSpan symbolSpan)
+		private static ReadOnlyCollection<SmartTagActionSet> GetSmartTagActions(ResourceSymbolInfo symbolInfo)
 		{
-			return new TagSpan<EditResourceSmartTag> (symbolSpan, new EditResourceSmartTag (this.GetSmartTagActions (symbolSpan)));
+			var actions = new ReadOnlyCollection<ISmartTagAction> (EditResourceTagger.EnumerateSmartTagActions (symbolInfo).ToList ());
+			return new ReadOnlyCollection<SmartTagActionSet> (new SmartTagActionSet[] { new SmartTagActionSet (actions) });
 		}
 
-		private TagSpan<EditResourceSmartTag> CreateTagSpan(SnapshotPoint point)
+		private static IEnumerable<ISmartTagAction> EnumerateSmartTagActions(ResourceSymbolInfo symbolInfo)
 		{
-			var tagSpanTask = this.CreateTagSpanAsync (point);
-			if (tagSpanTask.Wait (100))
+			var resources = symbolInfo.Resources;
+			var count = resources.Count;
+			if (count > 0)
 			{
-				return tagSpanTask.Result;
+				if (count == 1)
+				{
+					yield return new EditResourceSmartTagAction (resources.First(), Config.EditResourceSmartTagMenu);
+				}
+				else
+				{
+					foreach (var item in resources.OrderBy (map => map.SymbolName()))
+					{
+						yield return new EditResourceSmartTagAction (item, Config.GetEditResourceSmartTagMenu(item.SymbolName()));
+					}
+				}
 			}
-			return null;
 		}
 
 		private void RaiseTagsChanged(SnapshotSpan span)
@@ -247,11 +191,10 @@ namespace Epsitec.Cresus.Strings
 		}
 
 
-		private ITextBuffer subjectBuffer;
-		private ITextView textView;
-		private EditResourceTaggerProvider provider;
+		private readonly EditResourceTaggerProvider provider;
+		private readonly ITextView textView;
+		private readonly ITextBuffer textBuffer;
 
-		private SnapshotSpan? symbolSpan;
-		private SnapshotSpan? oldSymbolSpan;
+		private ResourceSymbolInfo symbolInfo;
 	}
 }

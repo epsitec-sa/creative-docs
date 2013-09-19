@@ -1,9 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
+using Epsitec.Common.Support;
+using Epsitec.Cresus.ResourceManagement;
+using Epsitec.Designer.Protocol;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
@@ -11,19 +18,12 @@ namespace Epsitec.Cresus.Strings
 {
 	internal class EditResourceSmartTagAction : ISmartTagAction
 	{
-		public EditResourceSmartTagAction(ITrackingSpan span)
+		public EditResourceSmartTagAction(IReadOnlyDictionary<CultureInfo, ResourceItem> multiCultureResourceItem, string displayText)
 		{
-			m_span = span;
-			m_snapshot = span.TextBuffer.CurrentSnapshot;
-			m_upper = span.GetText (m_snapshot).ToUpper ();
-			m_display = "Convert to upper case";
+			this.multiCultureResourceItem = multiCultureResourceItem;
+			this.displayText = displayText;
 		}
 
-		//public ISmartTagSource Source
-		//{
-		//	get;
-		//	private set;
-		//}
 
 		#region ISmartTagAction Members
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Strings
 		{
 			get
 			{
-				return m_display;
+				return this.displayText;
 			}
 		}
 
@@ -61,14 +61,47 @@ namespace Epsitec.Cresus.Strings
 
 		public void Invoke()
 		{
-			m_span.TextBuffer.Replace (m_span.GetSpan (m_snapshot), m_upper);
+			this.InvokeAsync (CancellationToken.None).ConfigureAwait(true);
 		}
 
 		#endregion
+
+		private async Task InvokeAsync(CancellationToken cancellationToken)
+		{
+			await this.CreateInvokeTask (cancellationToken);
+		}
+		private Task CreateInvokeTask(CancellationToken cancellationToken)
+		{
+			return Task.Run (() =>
+			{
+				var binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
+				cancellationToken.ThrowIfCancellationRequested ();
+				var address = new EndpointAddress (Addresses.DesignerAddress);
+				cancellationToken.ThrowIfCancellationRequested ();
+				using (var factory = new ChannelFactory<INavigator> (binding, address))
+				{
+					cancellationToken.ThrowIfCancellationRequested ();
+					INavigator proxy = factory.CreateChannel ();
+					cancellationToken.ThrowIfCancellationRequested ();
+					using (IClientChannel channel = proxy as IClientChannel)
+					{
+						cancellationToken.ThrowIfCancellationRequested ();
+						proxy.NavigateToString (this.ResourceItem.Druid.ToString ());
+					}
+				}
+			}, cancellationToken);
+		}
+
+		private ResourceItem ResourceItem
+		{
+			get
+			{
+				return this.multiCultureResourceItem.First ().Value;
+			}
+		}
 	
-		private ITrackingSpan m_span;
-		private string m_upper;
-		private string m_display;
-		private ITextSnapshot m_snapshot;
+
+		private readonly string displayText;
+		private readonly IReadOnlyDictionary<CultureInfo, ResourceItem> multiCultureResourceItem;
 	}
 }

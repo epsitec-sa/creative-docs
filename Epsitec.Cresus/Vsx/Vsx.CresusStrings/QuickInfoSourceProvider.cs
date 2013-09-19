@@ -22,7 +22,9 @@ namespace Epsitec.Cresus.Strings
 	{
 		public QuickInfoSourceProvider()
 		{
-			Trace.WriteLine ("QuickInfoSourceProvider()");
+			using (new TimeTrace ())
+			{
+			}
 		}
 
 		[Import]
@@ -34,9 +36,9 @@ namespace Epsitec.Cresus.Strings
 
 		public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
 		{
-			using (new TimeTrace ("TryCreateQuickInfoSource"))
+			using (new TimeTrace ())
 			{
-				this.ResourceSymbolInfoProvider.DocumentSource.TextBuffer = textBuffer;
+				this.ResourceSymbolInfoProvider.ActiveTextBuffer = textBuffer;
 				return new QuickInfoSource (this, textBuffer);
 			}
 		}
