@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color GetEvenMonthColor(bool isHover = false)
+		public static Color GetCheckerboardColor(bool even, bool isHover = false)
 		{
 			if (isHover)
 			{
@@ -44,19 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 			else
 			{
-				return Color.FromBrightness (0.90);
-			}
-		}
-
-		public static Color GetOddMonthColor(bool isHover = false)
-		{
-			if (isHover)
-			{
-				return Color.FromHexa ("ebe8d6");  // gris-jaune
-			}
-			else
-			{
-				return Color.FromBrightness (0.95);
+				return Color.FromBrightness (even ? 0.95 : 0.90);
 			}
 		}
 

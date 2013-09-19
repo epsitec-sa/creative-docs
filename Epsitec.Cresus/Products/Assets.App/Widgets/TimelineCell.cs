@@ -63,5 +63,30 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			return buffer.ToString ();
 		}
+
+
+		public static bool IsSameWeeksOfYear(TimelineCell c1, TimelineCell c2)
+		{
+			int w1 = (c1.IsValid) ? c1.Date.WeekOfYear : -1;
+			int w2 = (c2.IsValid) ? c2.Date.WeekOfYear : -1;
+
+			return w1 == w2;
+		}
+
+		public static bool IsSameMonths(TimelineCell c1, TimelineCell c2)
+		{
+			int m1 = (c1.IsValid) ? c1.Date.Month : -1;
+			int m2 = (c2.IsValid) ? c2.Date.Month : -1;
+
+			return m1 == m2;
+		}
+
+		public static bool IsSameDays(TimelineCell c1, TimelineCell c2)
+		{
+			int d1 = (c1.IsValid) ? c1.Date.Day : -1;
+			int d2 = (c2.IsValid) ? c2.Date.Day : -1;
+
+			return d1 == d2;
+		}
 	}
 }

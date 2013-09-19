@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
-					if (!Timeline.IsSameMonths (lastCell, cell) && x != rank)
+					if (!TimelineCell.IsSameMonths (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
-					if (!Timeline.IsSameWeeksOfYear (lastCell, cell) && x != rank)
+					if (!TimelineCell.IsSameWeeksOfYear (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
-					if (!Timeline.IsSameDays (lastCell, cell) && x != rank)
+					if (!TimelineCell.IsSameDays (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
-					if (!Timeline.IsSameDays (lastCell, cell) && x != rank)
+					if (!TimelineCell.IsSameDays (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetMonthBackgroundColor (cell, isHover, index);
+			var color = Timeline.GetCheckerboardBackgroundColor (cell, isHover, index);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static void PaintCellWeekOfYear(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetMonthBackgroundColor (cell, isHover, index);
+			var color = Timeline.GetCheckerboardBackgroundColor (cell, isHover, index);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -447,37 +447,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static bool IsSameWeeksOfYear(TimelineCell c1, TimelineCell c2)
-		{
-			int w1 = (c1.IsValid) ? c1.Date.WeekOfYear : -1;
-			int w2 = (c2.IsValid) ? c2.Date.WeekOfYear : -1;
-
-			return w1 == w2;
-		}
-
-		private static bool IsSameMonths(TimelineCell c1, TimelineCell c2)
-		{
-			int m1 = (c1.IsValid) ? c1.Date.Month : -1;
-			int m2 = (c2.IsValid) ? c2.Date.Month : -1;
-
-			return m1 == m2;
-		}
-
-		private static bool IsSameDays(TimelineCell c1, TimelineCell c2)
-		{
-			int d1 = (c1.IsValid) ? c1.Date.Day : -1;
-			int d2 = (c2.IsValid) ? c2.Date.Day : -1;
-
-			return d1 == d2;
-		}
-
-
-		private static Color GetMonthBackgroundColor(TimelineCell cell, bool isHover, int index)
+		private static Color GetCheckerboardBackgroundColor(TimelineCell cell, bool isHover, int index)
 		{
 			if (cell.IsValid)
 			{
-				return (index%2 == 0) ? ColorManager.GetEvenMonthColor (isHover)
-					                  : ColorManager.GetOddMonthColor (isHover);
+				return ColorManager.GetCheckerboardColor (index%2 == 0, isHover);
 			}
 			else
 			{
