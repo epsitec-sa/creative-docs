@@ -172,12 +172,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetCellMonthColor (cell, isHover, index);
+			var color = Timeline.GetMonthBackgroundColor (cell, isHover, index);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
-			var text = Timeline.GetCellMonth (cell);
+			var text = Timeline.GetMonthText (cell);
 			var font = Font.DefaultFont;
 
 			var width = new TextGeometry (0, 0, 1000, 100, text, font, rect.Height*0.6, ContentAlignment.MiddleLeft).Width;
@@ -191,12 +191,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetCellDayColor (cell, isHover);
+			var color = Timeline.GetDayBackgroundColor (cell, isHover);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
-			var text = Timeline.GetCellDay (cell);
+			var text = Timeline.GetDayText (cell);
 			var font = Font.DefaultFont;
 			graphics.Color = ColorManager.TextColor;
 			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetCellBulletColor (cell, isHover);
+			var color = Timeline.GetGlyphBackgroundColor (cell, isHover);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static Color GetCellMonthColor(TimelineCell cell, bool isHover, int index)
+		private static Color GetMonthBackgroundColor(TimelineCell cell, bool isHover, int index)
 		{
 			if (cell.IsValid)
 			{
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static Color GetCellDayColor(TimelineCell cell, bool isHover)
+		private static Color GetDayBackgroundColor(TimelineCell cell, bool isHover)
 		{
 			if (cell.IsValid)
 			{
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static Color GetCellBulletColor(TimelineCell cell, bool isHover)
+		private static Color GetGlyphBackgroundColor(TimelineCell cell, bool isHover)
 		{
 			if (cell.IsValid)
 			{
@@ -322,8 +322,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static string GetCellMonth(TimelineCell cell)
+		private static string GetMonthText(TimelineCell cell)
 		{
+			//	Retourne le mois sous la forme "Sept. 2013".
 			if (cell.IsValid)
 			{
 				return cell.Date.ToString ("MMM yyyy", DateTimeFormatInfo.CurrentInfo);
@@ -334,8 +335,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static string GetCellDay(TimelineCell cell)
+		private static string GetDayText(TimelineCell cell)
 		{
+			//	Retourne le jour sous la forme "1" ou "31".
 			if (cell.IsValid)
 			{
 				return cell.Date.ToString ("dd", DateTimeFormatInfo.CurrentInfo);
