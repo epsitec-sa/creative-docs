@@ -1,13 +1,14 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -73,11 +74,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetCells(TimelineCell[] cells)
 		{
 			this.cells = cells;
+			this.Invalidate ();
 		}
 
 
 		protected override void OnClicked(MessageEventArgs e)
 		{
+			this.OnCellClicked (this.hoverRank);
 			base.OnClicked (e);
 		}
 
@@ -299,20 +302,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (isHover)
+				if (cell.IsSelected)
+				{
+					return ColorManager.SelectionColor;
+				}
+				else if (isHover)
 				{
 					return ColorManager.HoverColor;
 				}
 				else
 				{
-					if (cell.IsSelected)
-					{
-						return ColorManager.SelectionColor;
-					}
-					else
-					{
-						return ColorManager.GetBackgroundColor (isHover);
-					}
+					return ColorManager.GetBackgroundColor (isHover);
 				}
 			}
 			else
@@ -376,6 +376,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return -1;
 			}
 		}
+
+
+		#region Events handler
+		private void OnCellClicked(int rank)
+		{
+			if (this.CellClicked != null)
+			{
+				this.CellClicked (this, rank);
+			}
+		}
+
+		public delegate void CellClickedEventHandler(object sender, int rank);
+		public event CellClickedEventHandler CellClicked;
+		#endregion
+
 
 		private double							pivot;
 		private TimelineCell[]					cells;

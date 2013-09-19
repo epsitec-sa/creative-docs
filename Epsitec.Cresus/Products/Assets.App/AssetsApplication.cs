@@ -112,6 +112,16 @@ namespace Epsitec.Cresus.Assets.App
 				Pivot   = 0.0,
 			};
 
+			AssetsApplication.InitialiseTimeline (timeline, -1);
+
+			timeline.CellClicked += delegate (object sender, int rank)
+			{
+				AssetsApplication.InitialiseTimeline (timeline, rank);
+			};
+		}
+
+		private static void InitialiseTimeline(Timeline timeline, int selection)
+		{
 			var list = new List<TimelineCell> ();
 			var start = new Date (2013, 3, 20);  // 20 mars 2013
 
@@ -140,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					Date       = AssetsApplication.AddDays (start, i),
 					Glyph      = glyph,
-					IsSelected = (i == 3),
+					IsSelected = (i == selection),
 				};
 
 				list.Add (cell);
