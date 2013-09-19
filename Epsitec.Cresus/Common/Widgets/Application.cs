@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Common.Support;
+using System.Threading;
 
 namespace Epsitec.Common.Widgets
 {
@@ -17,11 +18,13 @@ namespace Epsitec.Common.Widgets
 	{
 		protected Application()
 		{
-			this.applicationThread = System.Threading.Thread.CurrentThread;
+			this.applicationThread      = System.Threading.Thread.CurrentThread;
 			this.applicationStartStatus = Platform.AppSupport.CreateSemaphore (this.ApplicationIdentifier);
+
 			this.commandDispatcher = CommandDispatcher.DefaultDispatcher;
-			this.commandContext = new CommandContext ();
-			this.resourceManager = Support.Resources.DefaultManager;
+			this.commandContext    = new CommandContext ();
+	
+			this.resourceManager     = Support.Resources.DefaultManager;
 			this.resourceManagerPool = this.resourceManager.Pool;
 		}
 
@@ -110,6 +113,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		/// <summary>
 		/// Gets the global application thread (i.e. the one which first accessed the
 		/// <see cref="Application"/> class). This is the main UI thread for the process.
@@ -118,9 +122,22 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Application.thread;
+				return Application.mainApplicationThread;
 			}
 		}
+
+		/// <summary>
+		/// Gets the synchronization context used for the application UI.
+		/// </summary>
+		/// <value>The synchronization context.</value>
+		public static SynchronizationContext	SynchronizationContext
+		{
+			get
+			{
+				return Application.synchronizationContext;
+			}
+		}
+
 		
 		public static bool						IsRunningOnMainUIThread
 		{
@@ -292,7 +309,10 @@ namespace Epsitec.Common.Widgets
 		
 		static Application()
 		{
-			Application.thread = System.Threading.Thread.CurrentThread;
+			Application.mainApplicationThread  = System.Threading.Thread.CurrentThread;
+			Application.synchronizationContext = SynchronizationContext.Current;
+
+			System.Diagnostics.Debug.Assert (Application.SynchronizationContext is System.Windows.Forms.WindowsFormsSynchronizationContext);
 		}
 
 		public static void QueueTasklets(string name, params TaskletJob[] jobs)
@@ -381,7 +401,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Application.pendingCallbacks.Enqueue (callback);
 
-					if (Application.thread != System.Threading.Thread.CurrentThread)
+					if (Application.mainApplicationThread != System.Threading.Thread.CurrentThread)
 					{
 						Platform.Window.SendAwakeEvent ();
 					}
@@ -401,7 +421,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			System.Diagnostics.Debug.Assert (Application.thread == System.Threading.Thread.CurrentThread);
+			System.Diagnostics.Debug.Assert (Application.mainApplicationThread == System.Threading.Thread.CurrentThread);
 			System.Diagnostics.Debug.Assert (Application.runningCallbacks.Count == 0);
 
 			if (Application.pendingCallbacks.Count > 0)
@@ -473,7 +493,8 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty ApplicationProperty = DependencyProperty.RegisterAttached ("Application", typeof (Application), typeof (Application));
 
-		private static readonly System.Threading.Thread thread;
+		private static readonly System.Threading.Thread mainApplicationThread;
+		private static readonly SynchronizationContext synchronizationContext;
 		private static readonly object queueExclusion = new object ();
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
