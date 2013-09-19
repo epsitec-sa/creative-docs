@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Assets.Core.Business
 {
 	public class TimelineEventCell
 	{
-		public TimelineEventCell()
+		public TimelineEventCell(Date date)
 		{
-
+			this.Date = date;
 		}
 
 

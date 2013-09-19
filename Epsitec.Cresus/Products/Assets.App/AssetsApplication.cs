@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (10, 10, 335, 10),
-				Pivot   = 0.0,
+				Pivot   = 0.25,
 			};
 #else
 			var timeline = new Timeline ()
@@ -119,15 +119,32 @@ namespace Epsitec.Cresus.Assets.App
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (10, 10, 310, 10),
 				Display = TimelineDisplay.All,
-				Pivot   = 0.0,
+				Pivot   = 0.25,
 			};
 #endif
 
-			AssetsApplication.InitialiseTimeline (timeline, -1);
+			var button = new Button ()
+			{
+				Parent = parent,
+				Anchor = AnchorStyles.TopLeft,
+				Margins = new Margins (10, 0, 280, 0),
+				Text = "Coup de sac",
+				PreferredWidth = 120,
+				PreferredHeight = 25,
+			};
+
+			var provider   = new Client.MockTimelineEventClient (Date.Today);
+			var controller = new Controllers.TimelineCellController (timeline, provider);
+
+			button.Clicked += (o, e) => { provider.ChangeRandomSeed (); controller.ClearCache (); };
+
+			controller.Refresh ();
+
+//			AssetsApplication.InitialiseTimeline (timeline, -1);
 
 			timeline.CellClicked += delegate (object sender, int rank)
 			{
-				AssetsApplication.InitialiseTimeline (timeline, rank);
+//				AssetsApplication.InitialiseTimeline (timeline, rank);
 			};
 		}
 

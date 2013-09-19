@@ -58,6 +58,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								BeforePivotCount
+		{
+			get
+			{
+				var num   = this.VisibleCellCount;
+				var pivot = this.Pivot;
+
+				return (int) (num * pivot);
+			}
+		}
+		
+		public int								AfterPivotCount
+		{
+			get
+			{
+				return this.VisibleCellCount - this.BeforePivotCount;
+			}
+		}
+
 		private int								CellDim
 		{
 			get
@@ -111,6 +130,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			if (this.cells == null)
+			{
+				return;
+			}
+
 
 			int count = this.VisibleCellCount;
 			if (count == 0)
