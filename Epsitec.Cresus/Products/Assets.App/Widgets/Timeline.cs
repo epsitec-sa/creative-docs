@@ -142,9 +142,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 
 			//	Dessine la ligne des semaines.
-			if ((this.display & TimelineDisplay.Weeks) != 0)
+			if ((this.display & TimelineDisplay.WeeksOfYear) != 0)
 			{
-				int line = this.GetLineRank (TimelineDisplay.Weeks);
+				int line = this.GetLineRank (TimelineDisplay.WeeksOfYear);
 				int x = 0;
 				int index = 0;
 				var lastCell = new TimelineCell ();  // cellule invalide
@@ -152,11 +152,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
-					if (!Timeline.IsSameWeeks (lastCell, cell) && x != rank)
+					if (!Timeline.IsSameWeeksOfYear (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
-						Timeline.PaintCellWeek (graphics, rect, lastCell, isHover, index++);
+						Timeline.PaintCellWeekOfYear (graphics, rect, lastCell, isHover, index++);
 						x = rank;
 					}
 
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
-						Timeline.PaintCellDaysOfWeek (graphics, rect, lastCell, isHover);
+						Timeline.PaintCellDayOfWeek (graphics, rect, lastCell, isHover);
 						x = rank;
 					}
 
@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static void PaintCellWeek(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
+		private static void PaintCellWeekOfYear(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
 			var color = Timeline.GetMonthBackgroundColor (cell, isHover, index);
@@ -304,13 +304,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
-			var text = Timeline.GetWeekText (cell);
+			var text = Timeline.GetWeekOfYearText (cell);
 			var font = Font.DefaultFont;
 			graphics.Color = ColorManager.TextColor;
 			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 		}
 
-		private static void PaintCellDaysOfWeek(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
+		private static void PaintCellDayOfWeek(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
 			var color = Timeline.GetDayBackgroundColor (cell, isHover);
@@ -398,7 +398,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static bool IsSameWeeks(TimelineCell c1, TimelineCell c2)
+		private static bool IsSameWeeksOfYear(TimelineCell c1, TimelineCell c2)
 		{
 			int w1 = (c1.IsValid) ? c1.Date.WeekOfYear : -1;
 			int w2 = (c2.IsValid) ? c2.Date.WeekOfYear : -1;
@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return null;
 		}
 
-		private static string GetWeekText(TimelineCell cell)
+		private static string GetWeekOfYearText(TimelineCell cell)
 		{
 			//	Retourne le numéro de semaine sous la forme "1" ou "52".
 			if (cell.IsValid)
@@ -606,11 +606,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				case TimelineDisplay.DaysOfWeek:
 					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days));
 
-				case TimelineDisplay.Weeks:
+				case TimelineDisplay.WeeksOfYear:
 					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days | TimelineDisplay.DaysOfWeek));
 
 				case TimelineDisplay.Month:
-					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days | TimelineDisplay.DaysOfWeek | TimelineDisplay.Weeks));
+					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days | TimelineDisplay.DaysOfWeek | TimelineDisplay.WeeksOfYear));
 			}
 
 			return -1;
@@ -625,7 +625,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				count++;
 			}
 
-			if ((display & TimelineDisplay.Weeks) != 0)
+			if ((display & TimelineDisplay.WeeksOfYear) != 0)
 			{
 				count++;
 			}
