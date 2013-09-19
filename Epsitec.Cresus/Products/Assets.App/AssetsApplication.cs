@@ -104,11 +104,11 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateTestTimeLine(Widget parent)
 		{
-			var tl = new Timeline ()
+			var timeline = new Timeline ()
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 320, 10),
+				Margins = new Margins (10, 10, 335, 10),
 				Pivot   = 0.0,
 			};
 
@@ -120,14 +120,14 @@ namespace Epsitec.Cresus.Assets.App
 				var cell = new TimelineCell ()
 				{
 					Date       = AssetsApplication.AddDays (start, i),
-					Type       = (i % 3 == 0) ? TimelineCellType.BlackCircle : TimelineCellType.Empty,
+					Glyph      = (i % 3 == 0) ? TimelineCellGlyph.FilledCircle : TimelineCellGlyph.Empty,
 					IsSelected = (i == 2),
 				};
 
 				list.Add (cell);
 			}
 
-			tl.SetCells (list.ToArray ());
+			timeline.SetCells (list.ToArray ());
 		}
 
 		private static Date AddDays(Date date, int numberOfDays)

@@ -72,7 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Widgets\Timeline.cs" />
     <Compile Include="Widgets\TimelineCell.cs" />
-    <Compile Include="Widgets\TimelineCellType.cs" />
+    <Compile Include="Widgets\TimelineCellGlyph.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">

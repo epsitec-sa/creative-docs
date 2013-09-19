@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine la ligne 1 (les mois).
 			{
 				int x = 0;
+				int index = 0;
 				var lastCell = new TimelineCell ();
 
 				for (int rank = 0; rank <= count; rank++)
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (!Timeline.IsSameMonths (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, 2);
-						this.PaintCellMonth (graphics, rect, lastCell);
+						this.PaintCellMonth (graphics, rect, lastCell, index++);
 						x = rank;
 					}
 
@@ -112,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					if (cell.IsValid)
 					{
-						this.PaintCellBullet (graphics, rect, cell);
+						this.PaintCellGlyph (graphics, rect, cell);
 					}
 				}
 			}
@@ -131,100 +132,69 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell)
+		private void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, int index)
 		{
 			//	Dessine le fond.
-			{
-				var color = Color.FromName ("White");
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (color);
-			}
-
-			//	Dessine le cadre.
-			{
-				var color = Color.FromName ("Black");
-				var r = rect;
-				r.Inflate (0.5);
-				graphics.AddRectangle (r);
-				graphics.RenderSolid (color);
-			}
+			var color = Color.FromBrightness (index%2 == 0 ? 0.95 : 0.90);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
 			var text = Timeline.GetCellMonth (cell);
 			var font = Font.DefaultFont;
-			graphics.PaintText (rect, text, font, rect.Height*0.5, Common.Drawing.ContentAlignment.MiddleCenter);
+			graphics.Color = Color.FromBrightness (0.2);
+			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 		}
 
 		private void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell)
 		{
 			//	Dessine le fond.
-			{
-				var color = Timeline.GetCellDayColor (cell);
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (color);
-			}
-
-			//	Dessine le cadre.
-			{
-				var color = Color.FromName ("Black");
-				var r = rect;
-				r.Inflate (0.5);
-				graphics.AddRectangle (r);
-				graphics.RenderSolid (color);
-			}
+			var color = Timeline.GetCellDayColor (cell);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
 			var text = Timeline.GetCellDay (cell);
 			var font = Font.DefaultFont;
-			graphics.PaintText (rect, text, font, rect.Height*0.5, Common.Drawing.ContentAlignment.MiddleCenter);
+			graphics.Color = Color.FromBrightness (0.2);
+			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 		}
 
-		private void PaintCellBullet(Graphics graphics, Rectangle rect, TimelineCell cell)
+		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCell cell)
 		{
 			//	Dessine le fond.
-			{
-				var color = Timeline.GetCellBulletColor (cell);
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (color);
-			}
-
-			//	Dessine le cadre.
-			{
-				var color = Color.FromName ("Black");
-				var r = rect;
-				r.Inflate (0.5);
-				graphics.AddRectangle (r);
-				graphics.RenderSolid (color);
-			}
+			var color = Timeline.GetCellBulletColor (cell);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
-			this.PaintCellBullet (graphics, rect, cell.Type);
+			this.PaintCellGlyph (graphics, rect, cell.Glyph);
 		}
 
-		private void PaintCellBullet(Graphics graphics, Rectangle rect, TimelineCellType type)
+		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCellGlyph type)
 		{
-			var color = Color.FromName ("Black");
+			var color = Color.FromBrightness (0.2);
 
 			switch (type)
 			{
-				case TimelineCellType.BlackCircle:
-					graphics.AddFilledCircle (rect.Center, rect.Height*0.35);
+				case TimelineCellGlyph.FilledCircle:
+					graphics.AddFilledCircle (rect.Center, rect.Height*0.25);
 					graphics.RenderSolid (color);
 					break;
 
-				case TimelineCellType.WhiteCircle:
-					graphics.AddCircle (rect.Center, rect.Height*0.35);
+				case TimelineCellGlyph.OutlinedCircle:
+					graphics.AddCircle (rect.Center, rect.Height*0.25);
 					graphics.RenderSolid (color);
 					break;
 
-				case TimelineCellType.BlackSquare:
-					rect.Deflate (rect.Height * 0.3);
+				case TimelineCellGlyph.FilledSquare:
+					rect.Deflate (rect.Height * 0.25);
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (color);
 					break;
 
-				case TimelineCellType.WhiteSquare:
-					rect.Deflate (rect.Height * 0.3);
+				case TimelineCellGlyph.OutlinedSquare:
+					rect.Deflate (rect.Height * 0.25);
 					graphics.AddRectangle (rect);
 					graphics.RenderSolid (color);
 					break;
@@ -255,11 +225,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
 					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
 				{
-					return Color.FromName ("LightGray");
+					return Color.FromBrightness (0.95);
 				}
 				else
 				{
-					return Color.FromName ("White");
+					return Color.FromBrightness  (1.0);
 				}
 			}
 			else
@@ -278,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 				else
 				{
-					return Color.FromName ("White");
+					return Color.FromBrightness (1.0);
 				}
 			}
 			else

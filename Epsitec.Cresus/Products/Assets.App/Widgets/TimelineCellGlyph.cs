@@ -3,14 +3,14 @@
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public enum TimelineCellType
+	public enum TimelineCellGlyph
 	{
 		Empty,
 		
-		BlackCircle,
-		WhiteCircle,
+		FilledCircle,
+		OutlinedCircle,
 
-		BlackSquare,
-		WhiteSquare,
+		FilledSquare,
+		OutlinedSquare,
 	};
 }

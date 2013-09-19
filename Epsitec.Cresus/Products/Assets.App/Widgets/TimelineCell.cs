@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	public struct TimelineCell
 	{
 		public Date								Date;
-		public TimelineCellType					Type;
+		public TimelineCellGlyph				Glyph;
 		public bool								IsSelected;
 		public bool								IsError;
 
