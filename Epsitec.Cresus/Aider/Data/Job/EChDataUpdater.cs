@@ -21,6 +21,8 @@ using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
+using Epsitec.Cresus.Database;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -78,7 +80,7 @@ namespace Epsitec.Aider.Data.Job
 		public void ProcessJob()
 		{
 			//	Try to repair broken things, and warn as Ech for corrections if needed
-			//this.PerformDataQuality ();
+			this.PerformDataQuality ();
 			
 			//	Update the EChPerson entities and add all required DataChangedECh warnings on
 			//	the corresponding AiderPersons.
@@ -107,16 +109,79 @@ namespace Epsitec.Aider.Data.Job
 			this.ExecuteWithBusinessContext (
 				businessContext =>
 				{
-					var personExample = new AiderPersonEntity ();
-					var request = new Request ();
-					
-					request.AddCondition (businessContext.DataContext, personExample, p => p.Contacts.Any( c => c.IsNull()));
-					this.LogToConsole ("Perform DataQuality on Contacts");
-					var personsWithoutContact = businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).ToList ();
+                    this.LogToConsole("Perform DataQuality on Contacts");
+                    var db = businessContext.DataContext.DbInfrastructure;
+                    var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
+                    var sqlEngine = dbAbstraction.SqlEngine;
+                    var sqlSelect = new SqlSelect ();
 
-					this.LogToConsole (personsWithoutContact.Count + " persons without contacts detected");
-					foreach (var person in personsWithoutContact)
+                    //FROM mud_lvaf
+                    SqlField table1 = SqlField.CreateName("mud_lvaf");
+                    table1.Alias = "T1";
+                    sqlSelect.Tables.Add(table1);
+
+                    //INNER JOIN mud_lva
+                    SqlField table2 = SqlField.CreateName("mud_lva");
+                    table2.Alias = "T2";
+                    //ON mud_lvaf.u_lvau1 = mud_lva.cr_id
+                    SqlJoin sqlJoin1 = SqlJoin.Create
+                    (
+                        SqlJoinCode.Inner,
+                        table2,
+                        SqlField.CreateName("T1", "u_lvau1"),
+                        SqlField.CreateName("T2", "cr_id")
+                    );
+                    sqlSelect.Joins.Add(SqlField.CreateJoin(sqlJoin1));
+
+                    //SELECT mud_lva.lva1
+                    sqlSelect.Fields.Add(SqlField.CreateName("T2", "u_lva1"));
+
+                    //LEFT OUTER JOIN mud_lvard
+                    SqlField table3 = SqlField.CreateName("mud_lvard");
+                    table3.Alias = "T3";
+                    //ON mud_lvaf.cr_id = mud_lvard.u_lva5e
+                    SqlJoin sqlJoin2 = SqlJoin.Create
+                    (
+                        SqlJoinCode.OuterLeft,
+                        table3,
+                        SqlField.CreateName("T1", "cr_id"),
+                        SqlField.CreateName("T3", "u_lva5e")
+                    );
+                    sqlSelect.Joins.Add(SqlField.CreateJoin(sqlJoin2));
+                    //WHERE mud_lvard.cr_id IS NULL
+                    SqlFunction condition1 = new SqlFunction
+                    (
+                        SqlFunctionCode.CompareIsNull,
+                        SqlField.CreateName("T3","cr_id")
+                    );
+                    sqlSelect.Conditions.Add(SqlField.CreateFunction(condition1));
+
+                    
+				    var sqlBuilder = dbAbstraction.SqlBuilder;
+                    sqlBuilder.SelectData(sqlSelect);
+                    var command = sqlBuilder.Command;
+                    command.Transaction = dbAbstraction.BeginReadOnlyTransaction();
+
+				    DataSet dataSet;
+                    sqlEngine.Execute(command, sqlBuilder.CommandType, sqlBuilder.CommandCount,out dataSet);
+
+                    this.LogToConsole("DataQuality SQL Results:");
+                    var personIdsToCorrect = new List<string>();
+                    foreach (DataRow row in dataSet.Tables[0].Rows)
+                    {
+                        if (!row[0].ToString ().IsNullOrWhiteSpace())
+                        {
+                            personIdsToCorrect.Add(row[0].ToString ());
+                            this.LogToConsole(row[0] + " added");
+                        }                      
+                    }
+
+
+                    this.LogToConsole(personIdsToCorrect.Count + " persons without contacts detected");
+                    foreach (var eChPersonId in personIdsToCorrect)
 					{
+                        //retreive AiderPerson
+                        var person = this.GetAiderPersonEntity(businessContext, eChPersonId);
 						//Retreive person aider household
 						var household = this.GetAiderHousehold (businessContext, person.eCH_Person.ReportedPerson1.Adult1);
 						if (household.IsNotNull ())
@@ -1004,6 +1069,18 @@ namespace Epsitec.Aider.Data.Job
 
 			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
 		}
+
+        private AiderPersonEntity GetAiderPersonEntity(BusinessContext businessContext, string eChPersonId)
+        {
+            var personExample = new AiderPersonEntity();
+
+            personExample.eCH_Person = new eCH_PersonEntity()
+            {
+                PersonId = eChPersonId
+            };
+
+            return businessContext.DataContext.GetByExample<AiderPersonEntity>(personExample).FirstOrDefault();
+        }
 
 		private eCH_ReportedPersonEntity GetEchReportedPersonEntity(BusinessContext businessContext, EChReportedPerson reportedPerson)
 		{

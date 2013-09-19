@@ -35,6 +35,8 @@ function() {
       config = {
         headerPosition: 'left',
         title: 'Panier',
+        cls: 'entitybag-window',
+        iconCls: 'epsitec-aider-images-general-bag-icon16',
         autoHeight: true,
         draggable: false,
         resizable: false,
@@ -87,8 +89,8 @@ function() {
           menu = Epsitec.Cresus.Core.app.menu;
       if(Ext.isDefined(viewport))
       {
-        this.width = 200;
-        this.height = (this.bagStore.count() * 50) + 150;
+        this.width = 280;
+        this.height = (this.bagStore.count() * 35) + 70;
         this.x = viewport.width - this.width;
         this.y = menu.el.lastBox.height;
         if(this.isVisible())
@@ -117,11 +119,16 @@ function() {
     removeEntityFromBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
       this.bagStore.remove(record);
+      this.setSizeAndPosition();
+      if(this.bagStore.count()==0)
+      {
+        this.hide();
+      }
     },
 
     createEntityView: function() {
       return Ext.create('Ext.view.View', {
-        cls: 'entity-view',
+        cls: 'entitybag-view',
         tpl: '<tpl for=".">' +
                 '<div class="entitybag-source">' +
                     '<tr><span class="entitybag-label">{entityType}</span>{summary}' +

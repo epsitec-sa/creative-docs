@@ -148,8 +148,7 @@ function() {
       if(epsitecConfig.featureEntityBag)
       {
         return Ext.create('Ext.Action', {
-          icon: '/images/Epsitec/Cresus/Core/Images/WorkflowTransition' +
-              '/icon16.png',
+          icon: '/images/Epsitec/Aider/Images/General/Bag/icon16.png',
           text: 'Ajouter au panier',
           disabled: false,
           handler: this.onEntityBagAddHandler,
