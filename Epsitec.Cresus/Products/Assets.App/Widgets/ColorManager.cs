@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public static class ColorManager
 	{
-		public static Color GetBackgroundColor(bool isHover)
+		public static Color GetBackgroundColor(bool isHover = false)
 		{
 			if (isHover)
 			{
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color GetHolidayColor(bool isHover)
+		public static Color GetHolidayColor(bool isHover = false)
 		{
 			if (isHover)
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color GetEvenMonthColor(bool isHover)
+		public static Color GetEvenMonthColor(bool isHover = false)
 		{
 			if (isHover)
 			{
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color GetOddMonthColor(bool isHover)
+		public static Color GetOddMonthColor(bool isHover = false)
 		{
 			if (isHover)
 			{

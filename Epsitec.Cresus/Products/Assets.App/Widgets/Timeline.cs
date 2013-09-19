@@ -218,31 +218,37 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCellGlyph type)
 		{
-			var color = ColorManager.TextColor;
-
 			switch (type)
 			{
 				case TimelineCellGlyph.FilledCircle:
 					graphics.AddFilledCircle (rect.Center, rect.Height*0.28);
-					graphics.RenderSolid (color);
+					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineCellGlyph.OutlinedCircle:
+					graphics.AddFilledCircle (rect.Center, rect.Height*0.25);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
 					graphics.AddCircle (rect.Center, rect.Height*0.25);
-					graphics.RenderSolid (color);
+					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineCellGlyph.FilledSquare:
 					rect.Deflate (rect.Height * 0.25);
 					rect.Inflate (0.5);
+
 					graphics.AddFilledRectangle (rect);
-					graphics.RenderSolid (color);
+					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 
 				case TimelineCellGlyph.OutlinedSquare:
 					rect.Deflate (rect.Height * 0.25);
+
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+					
 					graphics.AddRectangle (rect);
-					graphics.RenderSolid (color);
+					graphics.RenderSolid (ColorManager.TextColor);
 					break;
 			}
 		}
