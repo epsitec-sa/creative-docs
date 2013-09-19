@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Types
 		/// <param name="action">The action.</param>
 		/// <param name="newIndex">The index of the new items.</param>
 		/// <param name="newItems">The new items.</param>
-		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object[] newItems)
+		public CollectionChangedEventArgs(CollectionChangedAction action, int newIndex, object[] newItems = null)
 		{
 			this.action = action;
 			this.newItems = newItems;
@@ -53,6 +53,7 @@ namespace Epsitec.Common.Types
 			this.newStartingIndex = newIndex+1;
 			this.oldStartingIndex = oldIndex+1;
 		}
+
 
 		/// <summary>
 		/// Gets the action that caused the event.
@@ -118,6 +119,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+		public override string ToString()
+		{
+			switch (this.action)
+			{
+				case CollectionChangedAction.Reset:
+					return string.Format ("{0}", this.action);
+
+				case CollectionChangedAction.Add:
+				case CollectionChangedAction.Replace:
+					return string.Format ("{0} at {1}, count={2}", this.action, this.NewStartingIndex, this.GetCount (this.NewItems));
+				
+				case CollectionChangedAction.Remove:
+					return string.Format ("{0} at {1}, count={2}", this.action, this.OldStartingIndex, this.GetCount (this.OldItems));
+
+				case CollectionChangedAction.Move:
+					return string.Format ("{0} from {1} to {2}, count={3}", this.action, this.OldStartingIndex, this.NewStartingIndex, this.GetCount (this.NewItems));
+
+				default:
+					throw new System.NotSupportedException ();
+			}
+		}
+
+
 		/// <summary>
 		/// Merges the specified change event data into a single one.
 		/// </summary>
@@ -128,12 +153,25 @@ namespace Epsitec.Common.Types
 		{
 			return new CollectionChangedEventArgs (CollectionChangedAction.Reset);
 		}
+
+
+		private string GetCount(System.Collections.IList list)
+		{
+			if (list == null)
+			{
+				return "unknown";
+			}
+			else
+			{
+				return list.Count.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
+		}
 		
 		
-		private CollectionChangedAction			action;
-		private object[]						newItems;
-		private object[]						oldItems;
-		private int								newStartingIndex;
-		private int								oldStartingIndex;
+		private readonly CollectionChangedAction action;
+		private readonly object[]				newItems;
+		private readonly object[]				oldItems;
+		private readonly int					newStartingIndex;
+		private readonly int					oldStartingIndex;
 	}
 }
