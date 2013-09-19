@@ -261,14 +261,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (isHover)
-				{
-					return ColorManager.HoverColor;
-				}
-				else
-				{
-					return (index%2 == 0) ? ColorManager.EvenMonthColor : ColorManager.OddMonthColor;
-				}
+				return (index%2 == 0) ? ColorManager.GetEvenMonthColor (isHover)
+					                  : ColorManager.GetOddMonthColor (isHover);
 			}
 			else
 			{
@@ -280,21 +274,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (isHover)
+				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
+					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
 				{
-					return ColorManager.HoverColor;
+					return ColorManager.GetHolidayColor (isHover);
 				}
 				else
 				{
-					if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
-						cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
-					{
-						return ColorManager.HolidayColor;
-					}
-					else
-					{
-						return ColorManager.BackgroundColor;
-					}
+					return ColorManager.GetBackgroundColor (isHover);
 				}
 			}
 			else
@@ -319,7 +306,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 					else
 					{
-						return ColorManager.BackgroundColor;
+						return ColorManager.GetBackgroundColor (isHover);
 					}
 				}
 			}

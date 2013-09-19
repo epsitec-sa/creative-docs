@@ -12,33 +12,49 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public static class ColorManager
 	{
-		public static Color BackgroundColor
+		public static Color GetBackgroundColor(bool isHover)
 		{
-			get
+			if (isHover)
+			{
+				return Color.FromHexa ("ebe8d6");  // gris-jaune
+			}
+			else
 			{
 				return Color.FromBrightness (1.0);
 			}
 		}
 
-		public static Color HolidayColor
+		public static Color GetHolidayColor(bool isHover)
 		{
-			get
+			if (isHover)
+			{
+				return Color.FromHexa ("ebe8d6");  // gris-jaune
+			}
+			else
 			{
 				return Color.FromBrightness (0.95);
 			}
 		}
 
-		public static Color EvenMonthColor
+		public static Color GetEvenMonthColor(bool isHover)
 		{
-			get
+			if (isHover)
+			{
+				return Color.FromHexa ("ebe8d6");  // gris-jaune
+			}
+			else
 			{
 				return Color.FromBrightness (0.90);
 			}
 		}
 
-		public static Color OddMonthColor
+		public static Color GetOddMonthColor(bool isHover)
 		{
-			get
+			if (isHover)
+			{
+				return Color.FromHexa ("ebe8d6");  // gris-jaune
+			}
+			else
 			{
 				return Color.FromBrightness (0.95);
 			}
