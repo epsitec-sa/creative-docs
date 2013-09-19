@@ -146,12 +146,7 @@ namespace Epsitec.Cresus.Assets.App
 					glyph = TimelineCellGlyph.OutlinedSquare;
 				}
 
-				var cell = new TimelineCell ()
-				{
-					Date       = AssetsApplication.AddDays (start, i),
-					Glyph      = glyph,
-					IsSelected = (i == selection),
-				};
+				var cell = new TimelineCell (AssetsApplication.AddDays (start, i), glyph, isSelected: (i == selection));
 
 				list.Add (cell);
 			}
