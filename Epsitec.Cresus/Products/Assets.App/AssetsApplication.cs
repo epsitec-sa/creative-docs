@@ -117,11 +117,30 @@ namespace Epsitec.Cresus.Assets.App
 
 			for (int i = 0; i < 100; i++)
 			{
+				var glyph = TimelineCellGlyph.Empty;
+
+				if (i%12 == 0)
+				{
+					glyph = TimelineCellGlyph.FilledCircle;
+				}
+				else if (i%12 == 1)
+				{
+					glyph = TimelineCellGlyph.OutlinedCircle;
+				}
+				else if (i%12 == 6)
+				{
+					glyph = TimelineCellGlyph.FilledSquare;
+				}
+				else if (i%12 == 7)
+				{
+					glyph = TimelineCellGlyph.OutlinedSquare;
+				}
+
 				var cell = new TimelineCell ()
 				{
 					Date       = AssetsApplication.AddDays (start, i),
-					Glyph      = (i % 3 == 0) ? TimelineCellGlyph.FilledCircle : TimelineCellGlyph.Empty,
-					IsSelected = (i == 2),
+					Glyph      = glyph,
+					IsSelected = (i == 3),
 				};
 
 				list.Add (cell);

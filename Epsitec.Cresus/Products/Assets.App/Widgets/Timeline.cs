@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var width = new TextGeometry (0, 0, 1000, 100, text, font, rect.Height*0.6, ContentAlignment.MiddleLeft).Width;
 			if (width < rect.Width)
 			{
-				graphics.Color = Color.FromBrightness (0.2);
+				graphics.Color = ColorManager.TextColor;
 				graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 			}
 		}
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Dessine le contenu.
 			var text = Timeline.GetCellDay (cell);
 			var font = Font.DefaultFont;
-			graphics.Color = Color.FromBrightness (0.2);
+			graphics.Color = ColorManager.TextColor;
 			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 		}
 
@@ -210,12 +210,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCellGlyph type)
 		{
-			var color = Color.FromBrightness (0.2);
+			var color = ColorManager.TextColor;
 
 			switch (type)
 			{
 				case TimelineCellGlyph.FilledCircle:
-					graphics.AddFilledCircle (rect.Center, rect.Height*0.25);
+					graphics.AddFilledCircle (rect.Center, rect.Height*0.28);
 					graphics.RenderSolid (color);
 					break;
 
@@ -226,6 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				case TimelineCellGlyph.FilledSquare:
 					rect.Deflate (rect.Height * 0.25);
+					rect.Inflate (0.5);
 					graphics.AddFilledRectangle (rect);
 					graphics.RenderSolid (color);
 					break;
@@ -262,11 +263,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (isHover)
 				{
-					return Color.FromName ("LightBlue");
+					return ColorManager.HoverColor;
 				}
 				else
 				{
-					return Color.FromBrightness (index%2 == 0 ? 0.95 : 0.90);
+					return (index%2 == 0) ? ColorManager.EvenMonthColor : ColorManager.OddMonthColor;
 				}
 			}
 			else
@@ -281,18 +282,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (isHover)
 				{
-					return Color.FromName ("LightBlue");
+					return ColorManager.HoverColor;
 				}
 				else
 				{
 					if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
-					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
+						cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
 					{
-						return Color.FromBrightness (0.95);
+						return ColorManager.HolidayColor;
 					}
 					else
 					{
-						return Color.FromBrightness (1.0);
+						return ColorManager.BackgroundColor;
 					}
 				}
 			}
@@ -308,17 +309,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				if (isHover)
 				{
-					return Color.FromName ("LightBlue");
+					return ColorManager.HoverColor;
 				}
 				else
 				{
 					if (cell.IsSelected)
 					{
-						return Color.FromName ("Gold");
+						return ColorManager.SelectionColor;
 					}
 					else
 					{
-						return Color.FromBrightness (1.0);
+						return ColorManager.BackgroundColor;
 					}
 				}
 			}
