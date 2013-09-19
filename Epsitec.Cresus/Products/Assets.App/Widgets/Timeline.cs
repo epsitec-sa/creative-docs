@@ -101,6 +101,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
 			int count = this.VisibleCellCount;
+			if (count == 0)
+			{
+				return;
+			}
 
 			//	Dessine la ligne 1 (les mois).
 			{
@@ -191,9 +195,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return new Rectangle (p1, y*dim, p2-p1, dim);
 		}
 
-		private int GetHorizontalPosition(int x)
+		private int GetHorizontalPosition(int rank)
 		{
-			return x * this.CellDim;
+			//	Retourne la position horizontale, avec une subile répartition du reste
+			//	pour que la cellule de droite touche toujours le bord droite.
+			double dim = this.ActualBounds.Width / this.VisibleCellCount;
+			return (int) (rank * dim);
 		}
 
 
@@ -204,8 +211,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
-			//	Dessine le contenu.
-			//	Affiche "Septembre 2013", "Sept. 2013", "Septembre" ou "Sept." selon la place disponible.
+			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
 			var font = Font.DefaultFont;
 
 			for (int detailLevel = 3; detailLevel >= 0; detailLevel--)
