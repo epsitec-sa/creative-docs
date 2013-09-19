@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 	{
 		public static async Task<T> FirstOrDefaultAsync<T>(this IAsyncEnumerable<T> enumerable, int index, CancellationToken token)
 		{
-			var enumerator = enumerable.GetAsyncEnumerator (index, 1, token);
+			var enumerator = enumerable.GetAsyncEnumerator (index, index < 0 ? -1 : 1, token);
 
 			if (await enumerator.MoveNext ())
 			{
