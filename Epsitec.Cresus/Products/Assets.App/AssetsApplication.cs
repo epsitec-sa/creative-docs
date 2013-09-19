@@ -104,6 +104,7 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateTestTimeLine(Widget parent)
 		{
+#if false
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
@@ -111,6 +112,16 @@ namespace Epsitec.Cresus.Assets.App
 				Margins = new Margins (10, 10, 335, 10),
 				Pivot   = 0.0,
 			};
+#else
+			var timeline = new Timeline ()
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (10, 10, 310, 10),
+				Display = TimelineDisplay.All,
+				Pivot   = 0.0,
+			};
+#endif
 
 			AssetsApplication.InitialiseTimeline (timeline, -1);
 

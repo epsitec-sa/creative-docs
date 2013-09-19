@@ -104,6 +104,15 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public int								WeekOfYear
+		{
+			get
+			{
+				var ci = new System.Globalization.CultureInfo ("fr-CH");  // French (Switzerland)
+				return ci.Calendar.GetWeekOfYear (this.InternalDate, System.Globalization.CalendarWeekRule.FirstFourDayWeek, System.DayOfWeek.Monday);
+			}
+		}
+
 		public int								Month
 		{
 			get

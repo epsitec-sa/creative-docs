@@ -4,11 +4,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -16,7 +14,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public Timeline()
 		{
+			this.display = TimelineDisplay.Month | TimelineDisplay.Days | TimelineDisplay.Glyphs;
 			this.hoverRank = -1;
+		}
+
+		public TimelineDisplay					Display
+		{
+			get
+			{
+				return this.display;
+			}
+			set
+			{
+				if (this.display != value)
+				{
+					this.display = value;
+					this.Invalidate ();
+				}
+			}
 		}
 
 		public double							Pivot
@@ -45,12 +60,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private int								CellDim
 		{
-			//	Ligne 1 -> Noms des mois
-			//	Ligne 2 -> Numéros de jours
-			//	Ligne 3 -> Pastilles des événements
 			get
 			{
-				return (int) (this.ActualBounds.Height / 3);
+				return (int) (this.ActualBounds.Height / this.LineCount);
 			}
 		}
 
@@ -106,18 +118,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-			//	Dessine la ligne 1 (les mois).
+			//	Dessine la ligne des mois.
+			if ((this.display & TimelineDisplay.Month) != 0)
 			{
+				int line = this.GetLineRank (TimelineDisplay.Month);
 				int x = 0;
 				int index = 0;
-				var lastCell = new TimelineCell ();
+				var lastCell = new TimelineCell ();  // cellule invalide
 
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
 					if (!Timeline.IsSameMonths (lastCell, cell) && x != rank)
 					{
-						var rect = this.GetCellsRect (x, rank, 2);
+						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
 						Timeline.PaintCellMonth (graphics, rect, lastCell, isHover, index++);
 						x = rank;
@@ -127,17 +141,64 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			//	Dessine la ligne 2 (les jours).
+			//	Dessine la ligne des semaines.
+			if ((this.display & TimelineDisplay.Weeks) != 0)
 			{
+				int line = this.GetLineRank (TimelineDisplay.Weeks);
 				int x = 0;
-				var lastCell = new TimelineCell ();
+				int index = 0;
+				var lastCell = new TimelineCell ();  // cellule invalide
+
+				for (int rank = 0; rank <= count; rank++)
+				{
+					var cell = this.GetCell (rank);
+					if (!Timeline.IsSameWeeks (lastCell, cell) && x != rank)
+					{
+						var rect = this.GetCellsRect (x, rank, line);
+						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+						Timeline.PaintCellWeek (graphics, rect, lastCell, isHover, index++);
+						x = rank;
+					}
+
+					lastCell = cell;
+				}
+			}
+
+			//	Dessine la ligne des jours de la semaine.
+			if ((this.display & TimelineDisplay.DaysOfWeek) != 0)
+			{
+				int line = this.GetLineRank (TimelineDisplay.DaysOfWeek);
+				int x = 0;
+				var lastCell = new TimelineCell ();  // cellule invalide
 
 				for (int rank = 0; rank <= count; rank++)
 				{
 					var cell = this.GetCell (rank);
 					if (!Timeline.IsSameDays (lastCell, cell) && x != rank)
 					{
-						var rect = this.GetCellsRect (x, rank, 1);
+						var rect = this.GetCellsRect (x, rank, line);
+						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+						Timeline.PaintCellDaysOfWeek (graphics, rect, lastCell, isHover);
+						x = rank;
+					}
+
+					lastCell = cell;
+				}
+			}
+
+			//	Dessine la ligne des jours.
+			if ((this.display & TimelineDisplay.Days) != 0)
+			{
+				int line = this.GetLineRank (TimelineDisplay.Days);
+				int x = 0;
+				var lastCell = new TimelineCell ();  // cellule invalide
+
+				for (int rank = 0; rank <= count; rank++)
+				{
+					var cell = this.GetCell (rank);
+					if (!Timeline.IsSameDays (lastCell, cell) && x != rank)
+					{
+						var rect = this.GetCellsRect (x, rank, line);
 						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
 						Timeline.PaintCellDay (graphics, rect, lastCell, isHover);
 						x = rank;
@@ -147,11 +208,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			//	Dessine la ligne 3 (les pastilles).
+			//	Dessine la ligne des pastilles.
+			if ((this.display & TimelineDisplay.Glyphs) != 0)
 			{
+				int line = this.GetLineRank (TimelineDisplay.Glyphs);
+
 				for (int rank = 0; rank < count; rank++)
 				{
-					var rect = this.GetCellRect (rank, 0);
+					var rect = this.GetCellRect (rank, line);
 					var cell = this.GetCell (rank);
 
 					if (cell.IsValid)
@@ -232,6 +296,34 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private static void PaintCellWeek(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
+		{
+			//	Dessine le fond.
+			var color = Timeline.GetMonthBackgroundColor (cell, isHover, index);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
+
+			//	Dessine le contenu.
+			var text = Timeline.GetWeekText (cell);
+			var font = Font.DefaultFont;
+			graphics.Color = ColorManager.TextColor;
+			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+		}
+
+		private static void PaintCellDaysOfWeek(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
+		{
+			//	Dessine le fond.
+			var color = Timeline.GetDayBackgroundColor (cell, isHover);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
+
+			//	Dessine le contenu.
+			var text = Timeline.GetDaysOfWeekText (cell);
+			var font = Font.DefaultFont;
+			graphics.Color = ColorManager.TextColor;
+			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+		}
+
 		private static void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
@@ -305,6 +397,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return new Rectangle (x, y, d*2, d*2);
 		}
 
+
+		private static bool IsSameWeeks(TimelineCell c1, TimelineCell c2)
+		{
+			int w1 = (c1.IsValid) ? c1.Date.WeekOfYear : -1;
+			int w2 = (c2.IsValid) ? c2.Date.WeekOfYear : -1;
+
+			return w1 == w2;
+		}
 
 		private static bool IsSameMonths(TimelineCell c1, TimelineCell c2)
 		{
@@ -409,6 +509,39 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return null;
 		}
 
+		private static string GetWeekText(TimelineCell cell)
+		{
+			//	Retourne le numéro de semaine sous la forme "1" ou "52".
+			if (cell.IsValid)
+			{
+				return cell.Date.WeekOfYear.ToString ();
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private static string GetDaysOfWeekText(TimelineCell cell)
+		{
+			//	Retourne le jour sous la forme "Lu" ou "Ma".
+			if (cell.IsValid)
+			{
+				var text = cell.Date.ToString ("ddd", DateTimeFormatInfo.CurrentInfo);
+
+				if (text.Length > 2)
+				{
+					text = text.Substring (0, 2);
+				}
+
+				return text;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		private static string GetDayText(TimelineCell cell)
 		{
 			//	Retourne le jour sous la forme "1" ou "31".
@@ -435,7 +568,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
-			return new TimelineCell ();
+			return new TimelineCell ();  // retourne une cellule invalide
 		}
 
 		private int GetListIndex(int rank)
@@ -449,6 +582,70 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return -1;
 			}
+		}
+
+
+		private int LineCount
+		{
+			get
+			{
+				return Timeline.GetLineCount (this.display);
+			}
+		}
+
+		private int GetLineRank(TimelineDisplay display)
+		{
+			switch (display)
+			{
+				case TimelineDisplay.Glyphs:
+					return 0;
+
+				case TimelineDisplay.Days:
+					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs));
+
+				case TimelineDisplay.DaysOfWeek:
+					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days));
+
+				case TimelineDisplay.Weeks:
+					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days | TimelineDisplay.DaysOfWeek));
+
+				case TimelineDisplay.Month:
+					return Timeline.GetLineCount (this.display & (TimelineDisplay.Glyphs | TimelineDisplay.Days | TimelineDisplay.DaysOfWeek | TimelineDisplay.Weeks));
+			}
+
+			return -1;
+		}
+
+		private static int GetLineCount(TimelineDisplay display)
+		{
+			int count = 0;
+
+			if ((display & TimelineDisplay.Month) != 0)
+			{
+				count++;
+			}
+
+			if ((display & TimelineDisplay.Weeks) != 0)
+			{
+				count++;
+			}
+
+			if ((display & TimelineDisplay.DaysOfWeek) != 0)
+			{
+				count++;
+			}
+
+			if ((display & TimelineDisplay.Days) != 0)
+			{
+				count++;
+			}
+
+			if ((display & TimelineDisplay.Glyphs) != 0)
+			{
+				count++;
+			}
+
+			return count;
 		}
 
 
@@ -466,6 +663,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
+		private TimelineDisplay					display;
 		private double							pivot;
 		private TimelineCell[]					cells;
 		private int								hoverRank;
