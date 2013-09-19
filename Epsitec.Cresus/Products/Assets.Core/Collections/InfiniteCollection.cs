@@ -13,10 +13,10 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 {
 	public class InfiniteCollection<T> : INotifyCollectionChanged
 	{
-		public InfiniteCollection(IAsyncValueProvider<T> provider)
+		public InfiniteCollection(IAsyncEnumerable<T> enumerable)
 		{
 			this.cache = new Dictionary<int, CacheItem> ();
-			this.provider = provider;
+			this.enumerable = enumerable;
 			this.cancellation = new CancellationTokenSource ();
 		}
 
@@ -52,15 +52,24 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 						value = item.Value;
 						return true;
 					}
+					else
+					{
+						item = null;
+					}
 				}
 				else
 				{
 					item = new CacheItem ();
 					this.cache[index] = item;
-					this.FetchData (item, this.FetchDataAsync (index)).ForgetSafely ();
 				}
 			}
 
+			if (item != null)
+			{
+				this.FillCacheItemAsync (item, index)
+					.ForgetSafely ();
+			}
+			
 			value = default (T);
 			return false;
 		}
@@ -70,31 +79,20 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			this.cancellation.Cancel ();
 			this.cancellation = new CancellationTokenSource ();
 
+			bool changed = false;
+
 			lock (this.cache)
 			{
-				this.cache.Clear ();
+				if (this.cache.Count > 0)
+				{
+					this.cache.Clear ();
+					changed = true;
+				}
 			}
-		}
 
-
-		private async Task FetchData(CacheItem item, Task<T> valueTask)
-		{
-			var value = await valueTask;
-
-			item.SetValue (value);
-		}
-
-		private async Task<T> FetchDataAsync(int index)
-		{
-			var enumerator = this.provider.GetValuesAsync (index, 1, this.cancellation.Token);
-
-			if (await enumerator.MoveNext ())
+			if (changed)
 			{
-				return enumerator.Current;
-			}
-			else
-			{
-				return default (T);
+				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Reset));
 			}
 		}
 
@@ -105,11 +103,40 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 		}
 
 
-		#region INotifyCollectionChanged Members
+		private async Task FillCacheItemAsync(CacheItem item, int index)
+		{
+			try
+			{
+				var value = await this.RetrieveDataAsync (index);
+				
+				item.SetValue (value);
 
-		public event EventHandler<CollectionChangedEventArgs> CollectionChanged;
+				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
+			}
+			catch (System.AggregateException ex)
+			{
+				ex.Handle (e => e is TaskCanceledException);
+			}
+			catch (TaskCanceledException)
+			{
+				throw;
+			}
+			catch (System.Exception ex)
+			{
+				lock (this.cache)
+				{
+					this.cache[index] = new CacheItemWithException (ex);
+				}
+			}
+		}
 
-		#endregion
+		private Task<T> RetrieveDataAsync(int index)
+		{
+			return this.enumerable.FirstOrDefaultAsync (index, this.cancellation.Token);
+		}
+
+
+		#region CacheItem Class
 
 		private class CacheItem
 		{
@@ -119,8 +146,14 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 				this.ready = 0;
 			}
 
+			public CacheItem(T value)
+			{
+				this.value = value;
+				this.ready = 1;
+			}
 
-			public T Value
+
+			public virtual T Value
 			{
 				get
 				{
@@ -153,13 +186,45 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 				}
 			}
 
+			
 			private T							value;
 			private int							ready;
 		}
 
+		#endregion
+
+		#region CacheItemWithException Class
+
+		private class CacheItemWithException : CacheItem
+		{
+			public CacheItemWithException(System.Exception ex)
+				: base (default (T))
+			{
+				this.exception = ex;
+			}
+
+
+			public override T					Value
+			{
+				get
+				{
+					throw new System.Exception ("Value is not available", this.exception);
+				}
+			}
+
+			private readonly System.Exception	exception;
+		}
+
+		#endregion
+
+		#region INotifyCollectionChanged Members
+
+		public event EventHandler<CollectionChangedEventArgs> CollectionChanged;
+
+		#endregion
 
 		private readonly Dictionary<int, CacheItem> cache;
-		private readonly IAsyncValueProvider<T>	provider;
-		private CancellationTokenSource cancellation;
+		private readonly IAsyncEnumerable<T>	enumerable;
+		private CancellationTokenSource			cancellation;
 	}
 }

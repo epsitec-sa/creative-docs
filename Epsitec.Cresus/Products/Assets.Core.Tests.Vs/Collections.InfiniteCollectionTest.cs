@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Assets.Core.Tests
 {
@@ -14,36 +15,100 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 	public class InfiniteCollectionTest
 	{
 		[TestMethod]
-		public void CheckBasicBehavior()
+		public void Check_Access_ImplementsAsyncRetrieval()
 		{
-			var collection = new InfiniteCollection<string> (new AsyncValueProvider ());
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
 
 			Assert.IsNull (collection[0]);
 			Assert.IsNull (collection[1]);
 			Assert.IsNull (collection[-2]);
 
-			System.Threading.Thread.Sleep (2*100);
+			System.Threading.Thread.Sleep (150);
 
 			Assert.AreEqual ("0",  collection[0]);
 			Assert.AreEqual ("1",  collection[1]);
 			Assert.AreEqual ("-2", collection[-2]);
+		}
+
+		[TestMethod]
+		public void Check_Clear_CancelsAsyncRetrieval()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
 
 			Assert.IsNull (collection[2]);
 
-			System.Threading.Thread.Sleep (10);
+			System.Threading.Thread.Sleep (50);
+
+			Assert.IsNull (collection[2]);
 
 			collection.Clear ();
 
+			//	The retrieval of collection[2] has been canceled. We won't get any result
+			//	back.
+
 			System.Threading.Thread.Sleep (100);
+
 			Assert.IsNull (collection[2]);
 		}
 
+		[TestMethod]
+		[ExpectedException (typeof (System.Exception), AllowDerivedTypes=false)]
+		public void Check_Access_ImplementsAsyncException()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
 
-		private class AsyncValueProvider : IAsyncValueProvider<string>
+			Assert.IsNull (collection[100]);
+
+			System.Threading.Thread.Sleep (50);
+			
+			Assert.IsNull (collection[100]);
+
+			System.Threading.Thread.Sleep (100);
+
+			//	The retrieval of collection[100] has now produced an error. If we
+			//	try to retrieve the value, we will get an exception.
+			
+			var data = collection[100];
+
+			Assert.Fail ("Access to collection should have thrown an exception");
+		}
+
+		[TestMethod]
+		public void Check_Access_RaisesCollectionChangedEvents()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
+			var list = new List<string> ();
+
+			collection.CollectionChanged += (o, e) => list.Add (e.ToString ());
+
+			Assert.IsNull (collection[0]);
+			System.Threading.Thread.Sleep (10);
+			Assert.IsNull (collection[1]);
+
+			System.Threading.Thread.Sleep (150);
+
+			Assert.IsNull (collection[2]);
+
+			collection.Clear ();
+
+			System.Threading.Thread.Sleep (150);
+
+			Assert.IsNull (collection[100]);
+
+			System.Threading.Thread.Sleep (150);
+
+			Assert.AreEqual (3, list.Count);
+			Assert.AreEqual ("Add at 0, count=unknown", list[0]);
+			Assert.AreEqual ("Add at 1, count=unknown", list[1]);
+			Assert.AreEqual ("Reset", list[2]);
+		}
+
+
+		private class AsyncEnumerable : IAsyncEnumerable<string>
 		{
 			#region IAsyncValueProvider<string> Members
 
-			public IAsyncEnumerator<string> GetValuesAsync(int index, int count, CancellationToken token)
+			public IAsyncEnumerator<string> GetAsyncEnumerator(int index, int count, CancellationToken token)
 			{
 				return new AsyncEnumerator (index, count, token);
 			}
@@ -81,6 +146,11 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 				this.token.ThrowIfCancellationRequested ();
 
 				await TaskEx.Delay (100, this.token);
+
+				if (this.index == 100)
+				{
+					throw new System.InvalidOperationException ("Invalid index");
+				}
 
 				this.value = this.index.ToString ();
 

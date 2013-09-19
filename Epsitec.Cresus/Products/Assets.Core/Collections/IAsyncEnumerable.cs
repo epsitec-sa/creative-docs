@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Epsitec.Cresus.Assets.Core.Collections
 {
-	public interface IAsyncValueProvider<T>
+	public interface IAsyncEnumerable<T>
 	{
-		IAsyncEnumerator<T> GetValuesAsync(int index, int count, CancellationToken token);
+		IAsyncEnumerator<T> GetAsyncEnumerator(int index, int count, CancellationToken token);
 	}
 }
 
