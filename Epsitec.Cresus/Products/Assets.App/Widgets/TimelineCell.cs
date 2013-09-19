@@ -12,10 +12,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public TimelineCell(Date date, TimelineCellGlyph glyph, bool isSelected = false, bool isError = false)
 		{
-			this.Date = date;
-			this.Glyph = glyph;
+			this.Date       = date;
+			this.Glyph      = glyph;
 			this.IsSelected = isSelected;
-			this.IsError = isError;
+			this.IsError    = isError;
 		}
 
 		

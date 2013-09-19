@@ -136,13 +136,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-
-			int count = this.VisibleCellCount;
-			if (count == 0)
+			if (this.VisibleCellCount == 0)
 			{
 				return;
 			}
 
+			this.PaintMonths (graphics);
+			this.PaintWeeksOfYear (graphics);
+			this.PaintDaysOfWeek (graphics);
+			this.PaintDays (graphics);
+			this.PaintGlyphs (graphics);
+		}
+
+		private void PaintMonths(Graphics graphics)
+		{
 			//	Dessine la ligne des mois.
 			if ((this.display & TimelineDisplay.Month) != 0)
 			{
@@ -150,6 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				int x = 0;
 				int index = 0;
 				var lastCell = new TimelineCell ();  // cellule invalide
+				int count = this.VisibleCellCount;
 
 				for (int rank = 0; rank <= count; rank++)
 				{
@@ -165,7 +173,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					lastCell = cell;
 				}
 			}
+		}
 
+		private void PaintWeeksOfYear(Graphics graphics)
+		{
 			//	Dessine la ligne des semaines.
 			if ((this.display & TimelineDisplay.WeeksOfYear) != 0)
 			{
@@ -173,6 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				int x = 0;
 				int index = 0;
 				var lastCell = new TimelineCell ();  // cellule invalide
+				int count = this.VisibleCellCount;
 
 				for (int rank = 0; rank <= count; rank++)
 				{
@@ -188,13 +200,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					lastCell = cell;
 				}
 			}
+		}
 
+		private void PaintDaysOfWeek(Graphics graphics)
+		{
 			//	Dessine la ligne des jours de la semaine.
 			if ((this.display & TimelineDisplay.DaysOfWeek) != 0)
 			{
 				int line = this.GetLineRank (TimelineDisplay.DaysOfWeek);
 				int x = 0;
 				var lastCell = new TimelineCell ();  // cellule invalide
+				int count = this.VisibleCellCount;
 
 				for (int rank = 0; rank <= count; rank++)
 				{
@@ -210,13 +226,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					lastCell = cell;
 				}
 			}
+		}
 
+		private void PaintDays(Graphics graphics)
+		{
 			//	Dessine la ligne des jours.
 			if ((this.display & TimelineDisplay.Days) != 0)
 			{
 				int line = this.GetLineRank (TimelineDisplay.Days);
 				int x = 0;
 				var lastCell = new TimelineCell ();  // cellule invalide
+				int count = this.VisibleCellCount;
 
 				for (int rank = 0; rank <= count; rank++)
 				{
@@ -232,11 +252,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					lastCell = cell;
 				}
 			}
+		}
 
+		private void PaintGlyphs(Graphics graphics)
+		{
 			//	Dessine la ligne des pastilles.
 			if ((this.display & TimelineDisplay.Glyphs) != 0)
 			{
 				int line = this.GetLineRank (TimelineDisplay.Glyphs);
+				int count = this.VisibleCellCount;
 
 				for (int rank = 0; rank < count; rank++)
 				{

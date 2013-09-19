@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateTestTimeLine(Widget parent)
 		{
-#if false
+#if true
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
