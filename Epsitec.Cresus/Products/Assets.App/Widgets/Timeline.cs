@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public Timeline()
 		{
+			this.hoverRank = -1;
 		}
 
 		public double							Pivot
@@ -52,12 +53,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private int								HoverRank
+		{
+			get
+			{
+				return this.hoverRank;
+			}
+			set
+			{
+				if (this.hoverRank != value)
+				{
+					this.hoverRank = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		
 		public void SetCells(TimelineCell[] cells)
 		{
 			this.cells = cells;
 		}
 
+
+		protected override void OnMouseMove(MessageEventArgs e)
+		{
+			this.HoverRank = (int) (e.Point.X / this.CellDim);
+			base.OnMouseMove (e);
+		}
+
+		protected override void OnExited(MessageEventArgs e)
+		{
+			this.HoverRank = -1;
+			base.OnExited (e);
+		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -77,7 +106,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (!Timeline.IsSameMonths (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, 2);
-						this.PaintCellMonth (graphics, rect, lastCell, index++);
+						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+						this.PaintCellMonth (graphics, rect, lastCell, isHover, index++);
 						x = rank;
 					}
 
@@ -96,7 +126,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (!Timeline.IsSameDays (lastCell, cell) && x != rank)
 					{
 						var rect = this.GetCellsRect (x, rank, 1);
-						this.PaintCellDay (graphics, rect, lastCell);
+						bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+						this.PaintCellDay (graphics, rect, lastCell, isHover);
 						x = rank;
 					}
 
@@ -113,7 +144,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					if (cell.IsValid)
 					{
-						this.PaintCellGlyph (graphics, rect, cell);
+						bool isHover = (this.hoverRank == rank);
+						this.PaintCellGlyph (graphics, rect, cell, isHover);
 					}
 				}
 			}
@@ -132,10 +164,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, int index)
+		private void PaintCellMonth(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
-			var color = Color.FromBrightness (index%2 == 0 ? 0.95 : 0.90);
+			var color = Timeline.GetCellMonthColor (cell, isHover, index);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -151,10 +183,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell)
+		private void PaintCellDay(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetCellDayColor (cell);
+			var color = Timeline.GetCellDayColor (cell, isHover);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -165,10 +197,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
 		}
 
-		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCell cell)
+		private void PaintCellGlyph(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover)
 		{
 			//	Dessine le fond.
-			var color = Timeline.GetCellBulletColor (cell);
+			var color = Timeline.GetCellBulletColor (cell, isHover);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
@@ -223,18 +255,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return d1 == d2;
 		}
 
-		private static Color GetCellDayColor(TimelineCell cell)
+
+		private static Color GetCellMonthColor(TimelineCell cell, bool isHover, int index)
 		{
 			if (cell.IsValid)
 			{
-				if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
-					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
+				if (isHover)
 				{
-					return Color.FromBrightness (0.95);
+					return Color.FromName ("LightBlue");
 				}
 				else
 				{
-					return Color.FromBrightness  (1.0);
+					return Color.FromBrightness (index%2 == 0 ? 0.95 : 0.90);
 				}
 			}
 			else
@@ -243,17 +275,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static Color GetCellBulletColor(TimelineCell cell)
+		private static Color GetCellDayColor(TimelineCell cell, bool isHover)
 		{
 			if (cell.IsValid)
 			{
-				if (cell.IsSelected)
+				if (isHover)
 				{
-					return Color.FromName ("Gold");
+					return Color.FromName ("LightBlue");
 				}
 				else
 				{
-					return Color.FromBrightness (1.0);
+					if (cell.Date.DayOfWeek == System.DayOfWeek.Saturday ||
+					cell.Date.DayOfWeek == System.DayOfWeek.Sunday)
+					{
+						return Color.FromBrightness (0.95);
+					}
+					else
+					{
+						return Color.FromBrightness (1.0);
+					}
 				}
 			}
 			else
@@ -261,6 +301,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return Color.Empty;
 			}
 		}
+
+		private static Color GetCellBulletColor(TimelineCell cell, bool isHover)
+		{
+			if (cell.IsValid)
+			{
+				if (isHover)
+				{
+					return Color.FromName ("LightBlue");
+				}
+				else
+				{
+					if (cell.IsSelected)
+					{
+						return Color.FromName ("Gold");
+					}
+					else
+					{
+						return Color.FromBrightness (1.0);
+					}
+				}
+			}
+			else
+			{
+				return Color.Empty;
+			}
+		}
+
 
 		private static string GetCellMonth(TimelineCell cell)
 		{
@@ -317,5 +384,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private double							pivot;
 		private TimelineCell[]					cells;
+		private int								hoverRank;
 	}
 }

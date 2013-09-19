@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				Parent    = window.Root,
 				Dock      = DockStyle.Fill,
-				BackColor = Color.FromName ("LightBlue"),
+				BackColor = Color.FromBrightness (0.8),
 			};
 
 			this.CreateTestTimeLine (frame);
