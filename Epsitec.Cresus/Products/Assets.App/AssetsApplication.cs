@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App
 		private static void InitialiseTimeline(Timeline timeline, int selection)
 		{
 			var list = new List<TimelineCell> ();
-			var start = new Date (2013, 3, 20);  // 20 mars 2013
+			var start = new Date (2013, 11, 20);  // 20 novembre 2013
 
 			for (int i = 0; i < 100; i++)
 			{

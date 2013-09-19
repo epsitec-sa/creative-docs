@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnMouseMove(MessageEventArgs e)
 		{
-			this.HoverRank = (int) (e.Point.X / this.CellDim);
+			this.HoverRank = this.Detect ((int) e.Point.X);
 			base.OnMouseMove (e);
 		}
 
@@ -160,6 +160,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private int Detect(int x)
+		{
+			int count = this.VisibleCellCount;
+			for (int rank = 0; rank < count; rank++)
+			{
+				int p1 = this.GetHorizontalPosition (rank);
+				int p2 = this.GetHorizontalPosition (rank+1);
+
+				if (x >= p1 && x < p2)
+				{
+					return rank;
+				}
+			}
+
+			return -1;
+		}
+
 		private Rectangle GetCellRect(int x, int y)
 		{
 			return this.GetCellsRect (x, x+1, y);
@@ -167,8 +184,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private Rectangle GetCellsRect(int x1, int x2, int y)
 		{
+			int p1 = this.GetHorizontalPosition (x1);
+			int p2 = this.GetHorizontalPosition (x2);
+
 			int dim = this.CellDim;
-			return new Rectangle (x1*dim, y*dim, (x2-x1)*dim, dim);
+			return new Rectangle (p1, y*dim, p2-p1, dim);
+		}
+
+		private int GetHorizontalPosition(int x)
+		{
+			return x * this.CellDim;
 		}
 
 
@@ -180,14 +205,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			graphics.RenderSolid (color);
 
 			//	Dessine le contenu.
-			var text = Timeline.GetMonthText (cell);
+			//	Affiche "Septembre 2013", "Sept. 2013", "Septembre" ou "Sept." selon la place disponible.
 			var font = Font.DefaultFont;
 
-			var width = new TextGeometry (0, 0, 1000, 100, text, font, rect.Height*0.6, ContentAlignment.MiddleLeft).Width;
-			if (width < rect.Width)
+			for (int detailLevel = 3; detailLevel >= 0; detailLevel--)
 			{
-				graphics.Color = ColorManager.TextColor;
-				graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+				var text = Timeline.GetMonthText (cell, detailLevel);
+				if (string.IsNullOrEmpty (text))
+				{
+					break;
+				}
+
+				var width = new TextGeometry (0, 0, 1000, 100, text, font, rect.Height*0.6, ContentAlignment.MiddleLeft).Width;
+				if (width <= rect.Width)
+				{
+					graphics.Color = ColorManager.TextColor;
+					graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+					break;
+				}
 			}
 		}
 
@@ -328,17 +363,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private static string GetMonthText(TimelineCell cell)
+		private static string GetMonthText(TimelineCell cell, int detailLevel)
 		{
-			//	Retourne le mois sous la forme "Sept. 2013".
+			//	Retourne le mois sous une forme plus ou moins détaillée.
+			//	detailLevel = 3 retourne "Septembre 2013"
+			//	detailLevel = 2 retourne "Sept. 2013"
+			//	detailLevel = 1 retourne "Septembre"
+			//	detailLevel = 0 retourne "Sept."
+			//	Voir http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
 			if (cell.IsValid)
 			{
-				return cell.Date.ToString ("MMM yyyy", DateTimeFormatInfo.CurrentInfo);
+				switch (detailLevel)
+				{
+					case 3:
+						return cell.Date.ToString ("MMMM yyyy", DateTimeFormatInfo.CurrentInfo);
+
+					case 2:
+						return cell.Date.ToString ("MMM yyyy", DateTimeFormatInfo.CurrentInfo);
+
+					case 1:
+						return cell.Date.ToString ("MMMM", DateTimeFormatInfo.CurrentInfo);
+
+					case 0:
+						return cell.Date.ToString ("MMM", DateTimeFormatInfo.CurrentInfo);
+				}
 			}
-			else
-			{
-				return null;
-			}
+
+			return null;
 		}
 
 		private static string GetDayText(TimelineCell cell)
