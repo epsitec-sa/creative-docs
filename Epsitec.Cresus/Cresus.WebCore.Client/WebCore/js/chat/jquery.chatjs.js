@@ -9,6 +9,7 @@
 
 // CHAT CONTAINER
 (function ($) {
+
     function ChatContainer(options) {
         /// <summary>This is a window container, responsible for hosting both the users list and the chat window </summary>
         /// <param name="options" type=""></param>
@@ -463,33 +464,6 @@
         _this.lastMessageCheckTimeStamp = null;
         _this.chatContainer = null;
 
-        _this.createCookie = function (name, value, days) {
-            var expires;
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toGMTString();
-            } else {
-                expires = "";
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        };
-
-        _this.readCookie = function (name) {
-            var nameEq = name + "=";
-            var ca = document.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                if (c.indexOf(nameEq) == 0) return c.substring(nameEq.length, c.length);
-            }
-            return null;
-        };
-
-        _this.eraseCookie = function (name) {
-            _this.createCookie(name, "", -1);
-        };
-
         _this.createNewChatWindow = function (otherUser, initialToggleState, initialFocusState) {
 
             if (!initialToggleState)
@@ -536,7 +510,7 @@
             else {
                 var indexedData = new Object();
                 for (var i = 0; i < data.length; i++) {
-                    if (data[i].Id != _this.opts.user.Id) {
+                    if (data[i].Id != _this.opts.user.Id && _this.opts.user.Id != "tempid") {
                         indexedData[data[i].Id] = data[i];
                         var $userListItem = $("<div/>")
                             .addClass("user-list-item")
@@ -593,29 +567,10 @@
                     toggleState: _this.chatWindows[otherUserId].getToggleState()
                 });
             }
-            _this.createCookie("chat_state", JSON.stringify(openedChatWindows), 365);
         };
 
         _this.loadWindows = function () {
             var _this = this;
-            var cookie = _this.readCookie("chat_state");
-            if (cookie) {
-                var openedChatWindows = JSON.parse(cookie);
-                for (var i = 0; i < openedChatWindows.length; i++) {
-                    var otherUserId = openedChatWindows[i].userId;
-                    _this.opts.adapter.server.getUserInfo(otherUserId, function (user) {
-                        if (user) {
-                            if (!_this.chatWindows[otherUserId])
-                                _this.createNewChatWindow(user, null, "blured");
-                        } else {
-                            // when an error occur, the state of this cookie invalid
-                            // it must be destroyed
-                            _this.eraseCookie("chat_state");
-                        }
-                    });
-                }
-            }
-            
         };
 
         _this.playSound = function (filename) {
@@ -636,9 +591,8 @@
         init: function () {
             var _this = this;
 
-            var mainChatWindowChatState = _this.readCookie("main_window_chat_state");
-            if (!mainChatWindowChatState)
-                mainChatWindowChatState = "maximized";
+
+            mainChatWindowChatState = "maximized";
 
             // will create user list chat container
             _this.chatContainer = $.chatContainer({
@@ -649,11 +603,9 @@
                 onCreated: function (container) {
                     if (!container.$windowInnerContent.html()) {
                         var $loadingBox = $("<div/>").addClass("loading-box").appendTo(container.$windowInnerContent);
-                        //...no activity indicator usage
                     }
                 },
                 onToggleStateChanged: function (toggleState) {
-                    _this.createCookie("main_window_chat_state", toggleState);
                 }
             });
 

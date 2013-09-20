@@ -24,6 +24,8 @@ SignalRAdapter.prototype = {
         // These are the methods that ARE CALLED BY THE SERVER.
         // Client functions should not call these functions.
         _this.hub = $.connection.chatJSHub;
+
+
         _this.hub.client.sendMessage = function (message) {
             chat.client.sendMessage(message);
         };
@@ -33,9 +35,9 @@ SignalRAdapter.prototype = {
         };
 
         _this.hub.client.usersListChanged = function (usersList) {
+            chat.opts.user.Id = _this.hub.connection.id;
             chat.client.usersListChanged(usersList);
         };
-
 
         // These are the methods that ARE CALLED BY THE CLIENT
         // Client functions should call these functions
