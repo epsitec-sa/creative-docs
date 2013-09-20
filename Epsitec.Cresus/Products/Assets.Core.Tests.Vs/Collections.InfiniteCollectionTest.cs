@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 	public class InfiniteCollectionTest
 	{
 		[TestMethod]
-		public void Check_Access_ImplementsAsyncRetrieval()
+		public void Check_GetAccess_ImplementsAsyncRetrieval()
 		{
 			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
 
@@ -23,11 +23,48 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			Assert.IsNull (collection[1]);
 			Assert.IsNull (collection[-2]);
 
-			System.Threading.Thread.Sleep (150);
+			Thread.Sleep (150);
 
-			Assert.AreEqual ("0",  collection[0]);
-			Assert.AreEqual ("1",  collection[1]);
+			Assert.AreEqual ("0", collection[0]);
+			Assert.AreEqual ("1", collection[1]);
 			Assert.AreEqual ("-2", collection[-2]);
+		}
+
+		[TestMethod]
+		public void Check_SetAccess_ImplementsAsyncRetrieval()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
+			var list = new List<string> ();
+
+			collection.CollectionChanged += (o, e) => list.Add (e.ToString ());
+
+
+			Assert.IsNull (collection[0]);
+			Assert.IsNull (collection[2]);
+
+			collection[0] = "A";
+			collection[1] = "B";
+
+			Assert.AreEqual ("A", collection[0]);
+			Assert.AreEqual ("B", collection[1]);
+			Assert.AreEqual (2, list.Count);
+			Assert.AreEqual ("Add at 0, count=unknown", list[0]);
+			Assert.AreEqual ("Add at 1, count=unknown", list[1]);
+
+			Thread.Sleep (150);
+
+			Assert.AreEqual ("A", collection[0]);
+			Assert.AreEqual ("B", collection[1]);
+			Assert.AreEqual ("2", collection[2]);
+			Assert.AreEqual (3, list.Count);
+			Assert.AreEqual ("Add at 0, count=unknown", list[0]);
+			Assert.AreEqual ("Add at 1, count=unknown", list[1]);
+			Assert.AreEqual ("Add at 2, count=unknown", list[2]);
+
+			collection[2] = "C";
+
+			Assert.AreEqual (4, list.Count);
+			Assert.AreEqual ("Replace at 2, count=unknown", list[3]);
 		}
 
 		[TestMethod]
@@ -37,7 +74,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 
 			Assert.IsNull (collection[2]);
 
-			System.Threading.Thread.Sleep (50);
+			Thread.Sleep (50);
 
 			Assert.IsNull (collection[2]);
 
@@ -46,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			//	The retrieval of collection[2] has been canceled. We won't get any result
 			//	back.
 
-			System.Threading.Thread.Sleep (100);
+			Thread.Sleep (100);
 
 			Assert.IsNull (collection[2]);
 		}
@@ -59,11 +96,11 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 
 			Assert.IsNull (collection[100]);
 
-			System.Threading.Thread.Sleep (50);
+			Thread.Sleep (50);
 			
 			Assert.IsNull (collection[100]);
 
-			System.Threading.Thread.Sleep (100);
+			Thread.Sleep (100);
 
 			//	The retrieval of collection[100] has now produced an error. If we
 			//	try to retrieve the value, we will get an exception.
@@ -82,20 +119,20 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			collection.CollectionChanged += (o, e) => list.Add (e.ToString ());
 
 			Assert.IsNull (collection[0]);
-			System.Threading.Thread.Sleep (10);
+			Thread.Sleep (10);
 			Assert.IsNull (collection[1]);
 
-			System.Threading.Thread.Sleep (150);
+			Thread.Sleep (150);
 
 			Assert.IsNull (collection[2]);
 
 			collection.Clear ();
 
-			System.Threading.Thread.Sleep (150);
+			Thread.Sleep (150);
 
 			Assert.IsNull (collection[100]);
 
-			System.Threading.Thread.Sleep (150);
+			Thread.Sleep (150);
 
 			Assert.AreEqual (3, list.Count);
 			Assert.AreEqual ("Add at 0, count=unknown", list[0]);

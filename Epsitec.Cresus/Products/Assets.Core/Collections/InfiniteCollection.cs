@@ -16,7 +16,8 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 		public InfiniteCollection(IAsyncEnumerable<T> enumerable)
 		{
 			this.cache = new Dictionary<int, CacheItem> ();
-			this.enumerable = enumerable;
+			
+			this.enumerable   = enumerable;
 			this.cancellation = new CancellationTokenSource ();
 		}
 
@@ -35,6 +36,10 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 				{
 					return default (T);
 				}
+			}
+			set
+			{
+				this.TrySetValue (index, value);
 			}
 		}
 
@@ -66,12 +71,52 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 
 			if (item != null)
 			{
-				this.FillCacheItemAsync (item, index)
-					.ForgetSafely ();
+				if (this.enumerable != null)
+				{
+					this.FillCacheItemAsync (item, index)
+						.ForgetSafely ();
+				}
 			}
 			
 			value = default (T);
 			return false;
+		}
+
+		public bool TrySetValue(int index, T value)
+		{
+			CacheItem item = null;
+
+			lock (this.cache)
+			{
+				if ((this.cache.TryGetValue (index, out item)) &&
+					(item.IsReady) &&
+					(item.Equals (value)))
+				{
+					return false;
+				}
+
+				this.cache[index] = new CacheItem (value);
+			}
+
+			if (item == null)
+			{
+				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
+				return true;
+			}
+			else
+			{
+				if (item.IsReady)
+				{
+					item.Dispose ();
+					this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Replace, index));
+				}
+				else
+				{
+					item.Dispose ();
+					this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
+				}
+				return false;
+			}
 		}
 
 		public void Clear()
@@ -108,10 +153,11 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			try
 			{
 				var value = await this.RetrieveDataAsync (index);
-				
-				item.SetValue (value);
 
-				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
+				if (item.TrySetValue (value))
+				{
+					this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
+				}
 			}
 			catch (System.AggregateException ex)
 			{
@@ -125,6 +171,17 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			{
 				lock (this.cache)
 				{
+					//	Did someone already put a value into the collection? If so, we won't
+					//	overwrite it with the exception information:
+
+					if ((this.cache.TryGetValue (index, out item)) &&
+						(item.IsReady))
+					{
+						//	TODO: notify someone about the exception?
+
+						return;
+					}
+
 					this.cache[index] = new CacheItemWithException (ex);
 				}
 			}
@@ -136,24 +193,36 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 		}
 
 
+		#region CacheItemState Enumeration
+
+		enum CacheItemState
+		{
+			Uninitialized,
+			Transitioning,
+			Ready,
+			Disposed,
+		}
+
+		#endregion
+
 		#region CacheItem Class
 
-		private class CacheItem
+		private class CacheItem : System.IDisposable
 		{
 			public CacheItem()
 			{
 				this.value = default (T);
-				this.ready = 0;
+				this.state = (int) CacheItemState.Uninitialized;
 			}
 
 			public CacheItem(T value)
 			{
 				this.value = value;
-				this.ready = 1;
+				this.state = (int) CacheItemState.Ready;
 			}
 
 
-			public virtual T Value
+			public virtual T					Value
 			{
 				get
 				{
@@ -161,34 +230,119 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 					//	on that result, that the CPU won't execute the read of IsReady after the
 					//	read of the value:
 
-					System.Threading.Thread.MemoryBarrier ();
+					Thread.MemoryBarrier ();
 					
 					return this.value;
 				}
 			}
 
-			public bool IsReady
+			public bool							IsReady
 			{
 				get
 				{
-					return this.ready > 0;
+					return this.state == (int) CacheItemState.Ready;
 				}
 			}
 
+			public CacheItemState				State
+			{
+				get
+				{
+					return (CacheItemState) this.state;
+				}
+			}
+
+
+			public bool TrySetValue(T value)
+			{
+				var oldState = this.SetState (CacheItemState.Transitioning, CacheItemState.Uninitialized);
+
+				if (oldState == CacheItemState.Uninitialized)
+				{
+					//	We successfully started the 'set state' operation. Write the new value and
+					//	mark the state as ready.
+
+					this.value = value;
+
+					switch (this.SetState (CacheItemState.Ready, CacheItemState.Transitioning))
+					{
+						case CacheItemState.Transitioning:
+							break;
+
+						case CacheItemState.Disposed:
+							//	Dispose was called just after we started setting the value; let
+							//	the dispose win:
+							
+							this.value = default (T);
+							break;
+
+						default:
+							throw new System.NotSupportedException ("Invalid transition");
+					}
+
+					return true;
+				}
+
+				return false;
+			}
 
 			public void SetValue(T value)
 			{
-				this.value = value;
-
-				if (System.Threading.Interlocked.Increment (ref this.ready) > 1)
+				while (true)
 				{
-					throw new System.InvalidOperationException ("SetValue called several times on the same cache item");
+					switch (this.State)
+					{
+						case CacheItemState.Ready:
+						case CacheItemState.Transitioning:
+							throw new System.InvalidOperationException ("SetValue called several times on the same cache item");
+
+						case CacheItemState.Disposed:
+							throw new System.ObjectDisposedException ("Cache item");
+
+						case CacheItemState.Uninitialized:
+							break;
+
+						default:
+							throw new System.NotSupportedException ();
+					}
+
+					if (this.TrySetValue (value))
+					{
+						return;
+					}
 				}
 			}
 
+			private CacheItemState SetState(CacheItemState newState)
+			{
+				return (CacheItemState) Interlocked.Exchange (ref this.state, (int) newState);
+			}
+
+			private CacheItemState SetState(CacheItemState newState, CacheItemState oldState)
+			{
+				return (CacheItemState) Interlocked.CompareExchange (ref this.state, (int) newState, (int) oldState);
+			}
+
+			public bool Equals(T value)
+			{
+				return EqualityComparer<T>.Default.Equals (value, this.Value);
+			}
 			
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.value = default (T);
+
+				//	No need to check previous state: disposing wins. Always.
+
+				this.SetState (CacheItemState.Disposed);
+			}
+
+			#endregion
+
 			private T							value;
-			private int							ready;
+			private int							state;
 		}
 
 		#endregion
@@ -222,6 +376,7 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 		public event EventHandler<CollectionChangedEventArgs> CollectionChanged;
 
 		#endregion
+
 
 		private readonly Dictionary<int, CacheItem> cache;
 		private readonly IAsyncEnumerable<T>	enumerable;
