@@ -1,16 +1,19 @@
 Ext.require([
 ],
 function() {
-  Ext.define('Epsitec.cresus.webcore.hub.Notifications', {
-    alternateClassName: ['Epsitec.Notifications'],
+  Ext.define('Epsitec.cresus.webcore.hub.Hubs', {
+    alternateClassName: ['Epsitec.Hubs'],
 
     hub: null,
 
     constructor: function(ToastrFunc, username) {
       var me = this;
       $.getScript('signalr/hubs', function() {
+
         $.connection.hub.logging = true;
-        $.chat({
+        if(epsitecConfig.featureChat)
+        {
+          $.chat({
             user: {
                         Id: 'tempid',
                         Name: username,
@@ -24,7 +27,8 @@ function() {
             emptyRoomText: "Vous êtes actuellement seul :)",
             // the adapter you are using
             adapter: new SignalRAdapter()
-        });
+          });
+        }
         // Start the connection
         var toastrInstance = new ToastrFunc();
         $.connection.hub.start(function() {

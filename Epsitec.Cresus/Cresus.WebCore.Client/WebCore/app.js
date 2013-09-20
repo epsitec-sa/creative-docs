@@ -23,7 +23,7 @@ Ext.require([
   'Epsitec.cresus.webcore.ui.FaqWindow',
   'Epsitec.cresus.webcore.tools.Texts',
   'Epsitec.cresus.webcore.tools.ViewMode',
-  'Epsitec.cresus.webcore.hub.Notifications'
+  'Epsitec.cresus.webcore.hub.Hubs'
 ],
 function() {
   Ext.application({
@@ -37,7 +37,6 @@ function() {
     tabManager: null,
     entityBag: null,
     faqWindow: null,
-    chat: null,
 
     /* Application entry point */
 
@@ -217,7 +216,7 @@ function() {
       }
 
       if (epsitecConfig.featureNotifications) {
-        Ext.create('Epsitec.Notifications', NotificationsToastr, username);
+        Ext.create('Epsitec.Hubs', NotificationsToastr, username);
       }
 
       this.viewport = Ext.create('Ext.container.Viewport', {
