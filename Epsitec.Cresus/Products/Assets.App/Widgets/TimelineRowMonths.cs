@@ -9,6 +9,12 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ligne de Timeline affichant les noms des mois et années.
+	/// Par exemple "Septembre 2013", "Octobre 2013".
+	/// Si la place manque, le nom du mois est compacté et l'année
+	/// éventuellement supprimée.
+	/// </summary>
 	public class TimelineRowMonths : AbstractTimelineRow
 	{
 		public TimelineRowMonths(TimelineDisplay display)

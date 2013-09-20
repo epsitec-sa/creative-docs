@@ -10,6 +10,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Classe générique qui représente une ligne de Timeline.
+	/// </summary>
 	public abstract class AbstractTimelineRow : Widget
 	{
 		public AbstractTimelineRow(TimelineDisplay display)

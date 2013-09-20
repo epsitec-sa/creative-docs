@@ -9,6 +9,10 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ligne de Timeline affichant les numéros des semaines.
+	/// Par exemple "50", "51", "52".
+	/// </summary>
 	public class TimelineRowWeeksOfYear : AbstractTimelineRow
 	{
 		public TimelineRowWeeksOfYear(TimelineDisplay display)

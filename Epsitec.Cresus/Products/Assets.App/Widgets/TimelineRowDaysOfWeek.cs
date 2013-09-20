@@ -9,6 +9,11 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ligne de Timeline affichant les noms des jours de la semaine.
+	/// Par exemple "Lu", "Ma", "Me", "Je".
+	/// Les samedis et dimanches ont une couleur de fond légèrement différente.
+	/// </summary>
 	public class TimelineRowDaysOfWeek : AbstractTimelineRow
 	{
 		public TimelineRowDaysOfWeek(TimelineDisplay display)

@@ -9,6 +9,11 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ligne de Timeline affichant les numéros des jours.
+	/// Par exemple "28", "29", "30", "31".
+	/// Les samedis et dimanches ont une couleur de fond légèrement différente.
+	/// </summary>
 	public class TimelineRowDays : AbstractTimelineRow
 	{
 		public TimelineRowDays(TimelineDisplay display)

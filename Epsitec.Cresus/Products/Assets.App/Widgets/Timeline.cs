@@ -8,6 +8,12 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Timeline de base, constituée de lignes AbstractTimelineRow créées en fonction
+	/// du mode Display. On ne gère ici aucun déplacement dans le temps. On se contente
+	/// d'afficher les TimelineCell passées avec SetCells.
+	/// Un seul événement CellClicked permet de connaître la ligne et la cellule cliquée.
+	/// </summary>
 	public class Timeline : Widget
 	{
 		public Timeline()

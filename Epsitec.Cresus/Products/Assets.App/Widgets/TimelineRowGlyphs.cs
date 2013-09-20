@@ -9,6 +9,9 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Ligne de Timeline affichant les éventuelles pastilles (glyphs).
+	/// </summary>
 	public class TimelineRowGlyphs : AbstractTimelineRow
 	{
 		public TimelineRowGlyphs(TimelineDisplay display)
