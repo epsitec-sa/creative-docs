@@ -89,7 +89,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 foreach (var child in newHousehold.Children)
                 {
 					var aiderPerson = this.GetAiderPersonEntity (this.BusinessContext, child);
-                    EChDataImporter.SetupHousehold (this.BusinessContext, aiderPerson, aiderHousehold, newHousehold, isChild: true);
+                    EChDataImporter.SetupHousehold (this.BusinessContext, aiderPerson, aiderHousehold, newHousehold);
                 }
                 
             }

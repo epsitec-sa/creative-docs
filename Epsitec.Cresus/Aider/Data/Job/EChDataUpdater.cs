@@ -702,7 +702,7 @@ namespace Epsitec.Aider.Data.Job
 								}
 								if (aiderHousehold.IsNotNull ())
 								{
-									EChDataImporter.SetupHousehold (businessContext, aiderPersonC, aiderHousehold, eChReportedPersonEntity, isChild: true);
+									EChDataImporter.SetupHousehold (businessContext, aiderPersonC, aiderHousehold, eChReportedPersonEntity);
 									this.eChPersonIdWithHouseholdSetupDone.Add (aiderPersonC.eCH_Person.PersonId);
 									ParishAssigner.AssignToParish (parishAddressRepository, businessContext, aiderPersonC, this.startDate);
 								}
@@ -876,7 +876,7 @@ namespace Epsitec.Aider.Data.Job
 							}
 							if (!this.eChPersonIdWithHouseholdSetupDone.Contains (aiderPerson.eCH_Person.PersonId))
 							{
-								EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
+								EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity);
 							}
 
 						}

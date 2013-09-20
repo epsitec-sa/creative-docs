@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -27,12 +30,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data.ECh
 {
-
-
 	internal static class EChDataImporter
 	{
-
-
 		public static void Import(CoreData coreData, ParishAddressRepository parishRepository, IList<EChReportedPerson> eChReportedPersons)
 		{
 			EChDataImporter.ImportCountries (coreData);
@@ -220,7 +219,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				var aiderPerson = EChDataImporter.ImportPerson (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild);
 
-				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity, isChild: true);
+				EChDataImporter.SetupHousehold (businessContext, aiderPerson, aiderHousehold, eChReportedPersonEntity);
 			}
 
 			return eChReportedPersonEntity;
@@ -333,7 +332,8 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		public static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold, eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool isChild = false)
+		public static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold,
+			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false)
 		{
 			var isHead = isHead1 || isHead2;
 
@@ -363,6 +363,7 @@ namespace Epsitec.Aider.Data.ECh
 			else
 			{
 				eChReportedPerson.Children.Add (eChPerson);
+				eChReportedPerson.RemoveDuplicates ();
 			}
 		}
 
@@ -394,10 +395,5 @@ namespace Epsitec.Aider.Data.ECh
 
 			throw new System.NotSupportedException ();
 		}
-
-
-
 	}
-
-
 }
