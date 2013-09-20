@@ -52,11 +52,21 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 
 		private Widgets.TimelineCell[] GetTimelineCells()
 		{
-			var count = this.widget.VisibleCellCount;
-			var cells = new Widgets.TimelineCell[count];
 			var pivot = this.widget.BeforePivotCount;
+			var count = this.widget.VisibleCellCount;
+			
+			var cells = new Widgets.TimelineCell[count];
 
-			var cacheIndex = 0;
+			this.GeneratePastCells (cells, pivot);
+			this.GenerateFutureCells (cells, pivot);
+
+			return cells;
+		}
+
+
+		private void GeneratePastCells(Widgets.TimelineCell[] cells, int pivot)
+		{
+			int cacheIndex = 0;
 			var nextEvent  = this.cache[--cacheIndex];
 			var nextDate   = this.source.Date.AddDays (-1);
 
@@ -64,71 +74,67 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 			{
 				int index = pivot - i - 1;
 
-				if (nextEvent == null)
+				if ((nextEvent != null) &&
+					(nextEvent.Date == nextDate))
 				{
-					cells[index] = new Widgets.TimelineCell (nextDate, Widgets.TimelineCellGlyph.Empty);
-					nextDate = nextDate.AddDays (-1);
+					cells[index] = this.CreateEventTimelineCell (nextEvent);
+
+					nextEvent = this.cache[--cacheIndex];
+
+					if ((nextEvent != null) &&
+						(nextEvent.Date == nextDate))
+					{
+						continue;
+					}
 				}
 				else
 				{
-					if (nextEvent.Date == nextDate)
-					{
-						cells[index] = this.converter.Convert (nextEvent);
-
-						nextEvent = this.cache[--cacheIndex];
-
-						if ((nextEvent == null) ||
-							(nextEvent.Date != nextDate))
-						{
-							nextDate = nextDate.AddDays (-1);
-						}
-					}
-					else
-					{
-						cells[index] = new Widgets.TimelineCell (nextDate, Widgets.TimelineCellGlyph.Empty);
-						nextDate = nextDate.AddDays (-1);
-					}
+					cells[index] = this.CreateEmptyTimelineCell (nextDate);
 				}
+				
+				nextDate = nextDate.AddDays (-1);
 			}
+		}
+		
+		private void GenerateFutureCells(Widgets.TimelineCell[] cells, int pivot)
+		{
+			int cacheIndex = 0;
+			var nextEvent  = this.cache[cacheIndex++];
+			var nextDate   = this.source.Date;
 
-			cacheIndex = 0;
-			nextEvent  = this.cache[cacheIndex++];
-			nextDate   = this.source.Date;
-
-			for (int i = pivot; i < count; i++)
+			for (int index = pivot; index < cells.Length; index++)
 			{
-				int index = i;
-
-				if (nextEvent == null)
+				if ((nextEvent != null) &&
+					(nextEvent.Date == nextDate))
 				{
-					cells[index] = new Widgets.TimelineCell (nextDate, Widgets.TimelineCellGlyph.Empty);
-					nextDate = nextDate.AddDays (1);
+					cells[index] = this.CreateEventTimelineCell (nextEvent);
+
+					nextEvent = this.cache[cacheIndex++];
+
+					if ((nextEvent != null) &&
+						(nextEvent.Date == nextDate))
+					{
+						continue;
+					}
 				}
 				else
 				{
-					if (nextEvent.Date == nextDate)
-					{
-						cells[index] = this.converter.Convert (nextEvent);
-
-						nextEvent = this.cache[cacheIndex++];
-
-						if ((nextEvent == null) ||
-							(nextEvent.Date != nextDate))
-						{
-							nextDate = nextDate.AddDays (1);
-						}
-					}
-					else
-					{
-						cells[index] = new Widgets.TimelineCell (nextDate, Widgets.TimelineCellGlyph.Empty);
-						nextDate = nextDate.AddDays (1);
-					}
+					cells[index] = this.CreateEmptyTimelineCell (nextDate);
 				}
+				
+				nextDate = nextDate.AddDays (1);
 			}
-
-			return cells;
 		}
 
+		private Epsitec.Cresus.Assets.App.Widgets.TimelineCell CreateEventTimelineCell(TimelineEventCell ev)
+		{
+			return this.converter.Convert (ev);
+		}
+
+		private Epsitec.Cresus.Assets.App.Widgets.TimelineCell CreateEmptyTimelineCell(Date date)
+		{
+			return new Widgets.TimelineCell (date, Widgets.TimelineCellGlyph.Empty);
+		}
 
 		private void HandleSourceCollectionChanged(object o, CollectionChangedEventArgs e)
 		{
@@ -137,13 +143,13 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 
 		private void SetWidgetCells(Widgets.TimelineCell[] cells)
 		{
-			SendOrPostCallback callback =
-				state =>
-				{
-					this.widget.SetCells (cells);
-				};
+			this.SynchronizationContext.Post (this.SetWidgetCellsCallback, cells);
+		}
 
-			this.SynchronizationContext.Post (callback, null);
+		private void SetWidgetCellsCallback(object state)
+		{
+			Widgets.TimelineCell[] cells = (Widgets.TimelineCell[]) state;
+			this.widget.SetCells (cells);
 		}
 		
 		
