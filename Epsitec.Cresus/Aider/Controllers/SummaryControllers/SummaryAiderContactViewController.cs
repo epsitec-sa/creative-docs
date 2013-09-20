@@ -25,6 +25,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var contact = this.Entity;
 			var household = this.Entity.Household;
 
+
+			wall.AddBrick ()
+					.EnableActionOnDrop<ActionAiderContactViewController1FusionOnDrag> ();
+
 			if ((contact.Person.IsNull ()) &&
 				(contact.LegalPerson.IsNull ()))
 			{

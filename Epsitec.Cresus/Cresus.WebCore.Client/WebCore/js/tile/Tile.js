@@ -99,6 +99,7 @@ function() {
             var dropZone = Ext.create('Epsitec.DropZone',a.title, a.title,
               function (data) {
                 this.handleTemplateAction(a.viewId, data.id);
+                Epsitec.Cresus.Core.app.entityBag.removeEntityFromBag(data);
               }, tile);
 
             dropZone.requiresAdditionalEntity = a.requiresAdditionalEntity;
