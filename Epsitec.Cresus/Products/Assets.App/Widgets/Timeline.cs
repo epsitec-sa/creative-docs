@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					{
 						this.Children.Add (row);
 
-						row.Dock = DockStyle.Bottom;
+						row.Anchor = AnchorStyles.All;
 
 						row.CellClicked += delegate (object sender, int rank)
 						{
@@ -144,21 +144,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			//	Met à jour la géométrie de toutes les lignes-enfant.
 			int dim = this.CellDim;
+			int bottom = 0;
 
 			foreach (var children in this.Children)
 			{
 				var row = children as AbstractTimelineRow;
 				System.Diagnostics.Debug.Assert (row != null);
 
+				var top = this.ActualHeight-bottom-dim;
+
+				row.Margins = new Margins (0, 0, top, bottom);
 				row.PreferredHeight = dim;
+
+				bottom += dim;
 			}
 		}
 
 		private void UpdateChildrensPivot()
 		{
 			//	Met à jour le pivot de toutes les lignes-enfant.
-			int dim = this.CellDim;
-
 			foreach (var children in this.Children)
 			{
 				var row = children as AbstractTimelineRow;
