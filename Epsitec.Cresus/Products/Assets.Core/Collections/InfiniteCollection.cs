@@ -27,19 +27,14 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			get
 			{
 				T value;
-
-				if (this.TryGetValue (index, out value))
-				{
-					return value;
-				}
-				else
-				{
-					return default (T);
-				}
+				
+				this.TryGetValue (index, out value);
+				
+				return value;
 			}
 			set
 			{
-				this.TrySetValue (index, value);
+				this.SetValue (index, value);
 			}
 		}
 
@@ -82,7 +77,7 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			return false;
 		}
 
-		public bool TrySetValue(int index, T value)
+		public bool SetValue(int index, T value)
 		{
 			CacheItem item = null;
 
@@ -101,6 +96,7 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			if (item == null)
 			{
 				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
+				
 				return true;
 			}
 			else
@@ -115,6 +111,7 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 					item.Dispose ();
 					this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index));
 				}
+				
 				return false;
 			}
 		}
@@ -144,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			return true;
 		}
 		
-		public void Clear()
+		public bool Clear()
 		{
 			this.cancellation.Cancel ();
 			this.cancellation = new CancellationTokenSource ();
@@ -164,6 +161,8 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			{
 				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Reset));
 			}
+
+			return changed;
 		}
 
 
