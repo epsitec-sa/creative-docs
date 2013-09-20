@@ -174,7 +174,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
                 }          
             }
           
-			if (aiderHouseholdMembers.Count < newEChHousehold.GetMembersCount ())
+			if (aiderHouseholdMembers.Count < newEChHousehold.MembersCount)
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient plus de membres : "));
 
@@ -200,7 +200,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return 1;
 			}
 
-			if (aiderHouseholdMembers.Count > newEChHousehold.GetMembersCount ())
+			if (aiderHouseholdMembers.Count > newEChHousehold.MembersCount)
 			{
 				this.analyse = this.analyse.AppendLine (TextFormatter.FormatText ("Le ménage ECh contient moins de membres : "));
 
@@ -214,7 +214,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				return -1;
 			}
 
-            if (aiderHouseholdMembers.Count == newEChHousehold.GetMembersCount())
+            if (aiderHouseholdMembers.Count == newEChHousehold.MembersCount)
             {
                 var mismatch = false;
                 foreach (var member in aiderHouseholdMembers)

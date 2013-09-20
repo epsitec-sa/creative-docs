@@ -14,25 +14,63 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class eCH_ReportedPersonEntity
 	{
-		public int GetMembersCount()
+		public int								MembersCount
 		{
-            var count = 1;
+			get
+			{
+				var count = 1;
 
-            if (this.Adult2.IsNotNull())
-            {
-                count++;
-            }
+				if (this.Adult2.IsNotNull ())
+				{
+					count++;
+				}
 
-            count += this.Children.Count;
+				count += this.Children.Count;
 
-            return count;
+				return count;
+			}
 		}
 
+
+		public void RemoveDuplicates(BusinessContext context)
+		{
+			if (this.Adult1 == this.Adult2)
+			{
+				this.Adult2 = null;
+				this.ClearCache ();
+			}
+
+			var ids  = new HashSet<string> ();
+			var keep = new List<eCH_PersonEntity> ();
+
+			foreach (var child in this.Children)
+			{
+				if (ids.Add (child.PersonId))
+				{
+					keep.Add (child);
+				}
+			}
+
+			if (keep.Count < this.Children.Count)
+			{
+				this.Children.Clear ();
+				this.Children.AddRange (keep);
+				this.ClearCache ();
+			}
+		}
+
+		private void ClearCache()
+		{
+			this.membersCache = null;
+		}
+		
+		
 		partial void GetMembers(ref IList<eCH_PersonEntity> value)
 		{
 			value = this.GetEChMembers ().AsReadOnlyCollection ();
 		}
 
+		
 		private IList<eCH_PersonEntity> GetEChMembers()
 		{
 			if (this.membersCache == null)
@@ -52,6 +90,6 @@ namespace Epsitec.Aider.Entities
 			return this.membersCache;
 		}
 
-		private IList<eCH_PersonEntity>		membersCache;
+		private IList<eCH_PersonEntity>			membersCache;
 	}
 }
