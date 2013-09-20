@@ -129,13 +129,13 @@ namespace Epsitec.Common.Types
 
 				case CollectionChangedAction.Add:
 				case CollectionChangedAction.Replace:
-					return string.Format ("{0} at {1}, count={2}", this.action, this.NewStartingIndex, this.GetCount (this.NewItems));
+					return string.Format ("{0} at {1}{2}", this.action, this.NewStartingIndex, this.GetCountSuffix (this.NewItems));
 				
 				case CollectionChangedAction.Remove:
-					return string.Format ("{0} at {1}, count={2}", this.action, this.OldStartingIndex, this.GetCount (this.OldItems));
+					return string.Format ("{0} at {1}{2}", this.action, this.OldStartingIndex, this.GetCountSuffix (this.OldItems));
 
 				case CollectionChangedAction.Move:
-					return string.Format ("{0} from {1} to {2}, count={3}", this.action, this.OldStartingIndex, this.NewStartingIndex, this.GetCount (this.NewItems));
+					return string.Format ("{0} from {1} to {2}{3}", this.action, this.OldStartingIndex, this.NewStartingIndex, this.GetCountSuffix (this.NewItems));
 
 				default:
 					throw new System.NotSupportedException ();
@@ -155,15 +155,15 @@ namespace Epsitec.Common.Types
 		}
 
 
-		private string GetCount(System.Collections.IList list)
+		private string GetCountSuffix(System.Collections.IList list)
 		{
 			if (list == null)
 			{
-				return "unknown";
+				return "";
 			}
 			else
 			{
-				return list.Count.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, ", count={0}", list.Count);
 			}
 		}
 		
