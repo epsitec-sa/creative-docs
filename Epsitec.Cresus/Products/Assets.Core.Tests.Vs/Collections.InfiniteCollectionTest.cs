@@ -31,7 +31,30 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 		}
 
 		[TestMethod]
-		public void Check_SetAccess_ImplementsAsyncRetrieval()
+		public void Check_ClearValue_Sync()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
+			var list = new List<string> ();
+
+			collection.CollectionChanged += (o, e) => list.Add (e.ToString ());
+
+			collection[0] = "A";
+
+			Assert.AreEqual ("A", collection[0]);
+
+			Assert.IsTrue (collection.ClearValue (0));
+			Assert.IsFalse (collection.ClearValue (0));
+			Assert.IsFalse (collection.ClearValue (1));
+
+			Assert.AreEqual (2, list.Count);
+			Assert.AreEqual ("Add at 0", list[0]);
+			Assert.AreEqual ("Remove at 0", list[1]);
+
+			Assert.IsNull (collection[0]);
+		}
+
+		[TestMethod]
+		public void Check_SetAccess_OverridesAsyncRetrieval()
 		{
 			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
 			var list = new List<string> ();
@@ -48,8 +71,8 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			Assert.AreEqual ("A", collection[0]);
 			Assert.AreEqual ("B", collection[1]);
 			Assert.AreEqual (2, list.Count);
-			Assert.AreEqual ("Add at 0, count=unknown", list[0]);
-			Assert.AreEqual ("Add at 1, count=unknown", list[1]);
+			Assert.AreEqual ("Add at 0", list[0]);
+			Assert.AreEqual ("Add at 1", list[1]);
 
 			Thread.Sleep (150);
 
@@ -57,14 +80,14 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			Assert.AreEqual ("B", collection[1]);
 			Assert.AreEqual ("2", collection[2]);
 			Assert.AreEqual (3, list.Count);
-			Assert.AreEqual ("Add at 0, count=unknown", list[0]);
-			Assert.AreEqual ("Add at 1, count=unknown", list[1]);
-			Assert.AreEqual ("Add at 2, count=unknown", list[2]);
+			Assert.AreEqual ("Add at 0", list[0]);
+			Assert.AreEqual ("Add at 1", list[1]);
+			Assert.AreEqual ("Add at 2", list[2]);
 
 			collection[2] = "C";
 
 			Assert.AreEqual (4, list.Count);
-			Assert.AreEqual ("Replace at 2, count=unknown", list[3]);
+			Assert.AreEqual ("Replace at 2", list[3]);
 		}
 
 		[TestMethod]
@@ -97,17 +120,55 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			Assert.IsNull (collection[100]);
 
 			Thread.Sleep (50);
-			
+
 			Assert.IsNull (collection[100]);
 
 			Thread.Sleep (100);
 
 			//	The retrieval of collection[100] has now produced an error. If we
 			//	try to retrieve the value, we will get an exception.
-			
+
 			var data = collection[100];
 
 			Assert.Fail ("Access to collection should have thrown an exception");
+		}
+
+		[TestMethod]
+		public void Check_SetAccess_OverridesAsyncException()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
+
+			Assert.IsNull (collection[100]);
+
+			collection[100] = "X";
+
+			Thread.Sleep (150);
+
+			//	The async retrieval of collection[100] has now produced an error;
+			//	the exception will be dropped silently.
+
+			Assert.AreEqual ("X", collection[100]);
+		}
+
+		[TestMethod]
+		public void Check_ClearValue_OverridesAsyncException()
+		{
+			var collection = new InfiniteCollection<string> (new AsyncEnumerable ());
+
+			Assert.IsNull (collection[100]);
+
+			collection.ClearValue (100);
+
+			Thread.Sleep (150);
+
+			//	The async retrieval of collection[100] has now produced an error;
+			//	the exception will not be dropped, as the collection item was cleared.
+
+			Assert.IsNull (collection[100]);
+			
+			collection.Clear ();
+
+			Thread.Sleep (150);
 		}
 
 		[TestMethod]
@@ -119,7 +180,7 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			collection.CollectionChanged += (o, e) => list.Add (e.ToString ());
 
 			Assert.IsNull (collection[0]);
-			Thread.Sleep (10);
+			Thread.Sleep (50);
 			Assert.IsNull (collection[1]);
 
 			Thread.Sleep (150);
@@ -135,8 +196,8 @@ namespace Epsitec.Cresus.Assets.Core.Tests
 			Thread.Sleep (150);
 
 			Assert.AreEqual (3, list.Count);
-			Assert.AreEqual ("Add at 0, count=unknown", list[0]);
-			Assert.AreEqual ("Add at 1, count=unknown", list[1]);
+			Assert.AreEqual ("Add at 0", list[0]);
+			Assert.AreEqual ("Add at 1", list[1]);
 			Assert.AreEqual ("Reset", list[2]);
 		}
 

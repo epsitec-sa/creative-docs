@@ -119,6 +119,31 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 			}
 		}
 
+		public bool ClearValue(int index)
+		{
+			CacheItem item = null;
+
+			lock (this.cache)
+			{
+				this.cache.TryGetValue (index, out item);
+				this.cache.Remove (index);
+			}
+
+			if (item == null)
+			{
+				return false;
+			}
+
+			if (item.IsReady)
+			{
+				this.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, null));
+			}
+			
+			item.Dispose ();
+
+			return true;
+		}
+		
 		public void Clear()
 		{
 			this.cancellation.Cancel ();
@@ -174,8 +199,17 @@ namespace Epsitec.Cresus.Assets.Core.Collections
 					//	Did someone already put a value into the collection? If so, we won't
 					//	overwrite it with the exception information:
 
-					if ((this.cache.TryGetValue (index, out item)) &&
-						(item.IsReady))
+					if (item.State != CacheItemState.Uninitialized)
+					{
+						//	TODO: notify someone about the exception?
+
+						return;
+					}
+
+					CacheItem currentItem;
+					
+					if ((this.cache.TryGetValue (index, out currentItem)) &&
+						(currentItem != item))
 					{
 						//	TODO: notify someone about the exception?
 
