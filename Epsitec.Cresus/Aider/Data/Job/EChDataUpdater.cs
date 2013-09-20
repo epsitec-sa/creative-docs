@@ -688,6 +688,7 @@ namespace Epsitec.Aider.Data.Job
 							var eChPersonC = this.GetEchPersonEntity (businessContext, eChChild);
 							eChPersonC.ReportedPerson1 = eChReportedPersonEntity;
 							eChReportedPersonEntity.Children.Add (eChPersonC);
+							eChReportedPersonEntity.RemoveDuplicates ();
 
 							//	Autoassign person to AiderHousehold if needed
 							var aiderPersonC = this.GetAiderPersonEntity (businessContext, eChPersonC);

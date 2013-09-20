@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public void RemoveDuplicates(BusinessContext context)
+		public void RemoveDuplicates()
 		{
 			if (this.Adult1 == this.Adult2)
 			{

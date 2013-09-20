@@ -25,16 +25,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			person.RemoveWarningInternal (warning);
 			context.DeleteEntity (warning);
 
-			ActionAiderPersonWarningViewController.CleanUpEchPerson (context, person);
+			ActionAiderPersonWarningViewController.CleanUpEchPerson (person);
 		}
 
-		private static void CleanUpEchPerson(BusinessContext context, AiderPersonEntity person)
+		private static void CleanUpEchPerson(AiderPersonEntity person)
 		{
 			var reportedPersons = person.eCH_Person.ReportedPersons.ToArray ();
 
 			foreach (var reportedPerson in reportedPersons)
 			{
-				reportedPerson.RemoveDuplicates (context);
+				reportedPerson.RemoveDuplicates ();
 			}
 		}
 	}
