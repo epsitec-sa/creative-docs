@@ -105,6 +105,36 @@ namespace Epsitec.Cresus.Assets.App
 		private void CreateTestTimeLine(Widget parent)
 		{
 #if true
+			//	Test pour DR.
+	#if true
+			var timeline = new Timeline ()
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (10, 10, 335, 10),
+				Pivot   = 0.0,
+			};
+	#else
+			var timeline = new Timeline ()
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (10, 10, 310, 10),
+				Display = TimelineDisplay.All,
+				Pivot   = 0.0,
+			};
+	#endif
+			AssetsApplication.InitialiseTimeline (timeline, -1);
+
+			timeline.CellClicked += delegate (object sender, TimelineDisplay display, int rank)
+			{
+				if (display == TimelineDisplay.Glyphs)
+				{
+					AssetsApplication.InitialiseTimeline (timeline, rank);
+				}
+			};
+#else
+			//	Test pour PA.
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
@@ -112,16 +142,6 @@ namespace Epsitec.Cresus.Assets.App
 				Margins = new Margins (10, 10, 335, 10),
 				Pivot   = 0.25,
 			};
-#else
-			var timeline = new Timeline ()
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 310, 10),
-				Display = TimelineDisplay.All,
-				Pivot   = 0.25,
-			};
-#endif
 
 			var button = new Button ()
 			{
@@ -139,13 +159,7 @@ namespace Epsitec.Cresus.Assets.App
 			button.Clicked += (o, e) => { provider.ChangeRandomSeed (); controller.ClearCache (); };
 
 			controller.Refresh ();
-
-//			AssetsApplication.InitialiseTimeline (timeline, -1);
-
-			timeline.CellClicked += delegate (object sender, int rank)
-			{
-//				AssetsApplication.InitialiseTimeline (timeline, rank);
-			};
+#endif
 		}
 
 		private static void InitialiseTimeline(Timeline timeline, int selection)
