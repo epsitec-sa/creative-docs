@@ -22,15 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void Paint(Graphics graphics)
 		{
-			for (int rank = 0; rank <= this.VisibleCellCount; rank++)
-			{
-				var cell = this.GetCell (rank);
-				if (cell.IsValid)
-				{
-					var rect = this.GetCellsRect (rank, rank+1);
-					this.PaintCellBackground (graphics, rect, cell, false, rank);
-				}
-			}
+			graphics.AddFilledRectangle (this.ActualBounds);
+			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 			if (this.HasMinMax)
 			{
