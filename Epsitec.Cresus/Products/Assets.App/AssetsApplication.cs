@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Values, "Valeur comptable", 2.0);
+				var row = new TimelineRowDescription (TimelineRowType.Values, "Valeur comptable", 2.0, TimelineValueDisplayMode.All);
 				list.Add (row);
 			}
 

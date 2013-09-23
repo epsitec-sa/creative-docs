@@ -76,15 +76,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				path.LineTo (this.ActualWidth+0.5, -0.5);
 				path.Close ();
 
-				graphics.AddFilledPath (path);
-				graphics.RenderSolid (ColorManager.ValueSurfaceColor);
-
-				graphics.AddPath (path);
-				graphics.RenderSolid (ColorManager.ValueDotColor);
-
-				foreach (var dot in dots)
+				if ((this.Row.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
 				{
-					this.PaintDot (graphics, dot);
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.ValueSurfaceColor);
+				}
+
+				if ((this.Row.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
+				{
+					graphics.AddPath (path);
+					graphics.RenderSolid (ColorManager.ValueDotColor);
+				}
+
+				if ((this.Row.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
+				{
+					foreach (var dot in dots)
+					{
+						this.PaintDot (graphics, dot);
+					}
 				}
 			}
 		}

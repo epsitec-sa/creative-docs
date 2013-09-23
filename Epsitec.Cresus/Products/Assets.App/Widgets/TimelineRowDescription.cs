@@ -10,17 +10,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineRowDescription
 	{
-		public TimelineRowDescription(TimelineRowType type, string description, double relativeHeight = 1.0)
+		public TimelineRowDescription(TimelineRowType type, string description, double relativeHeight = 1.0, TimelineValueDisplayMode valueDisplayMode = TimelineValueDisplayMode.All)
 		{
-			this.Type           = type;
-			this.Description    = description;
-			this.RelativeHeight = relativeHeight;
+			this.Type             = type;
+			this.Description      = description;
+			this.RelativeHeight   = relativeHeight;
+			this.ValueDisplayMode = valueDisplayMode;
 		}
 
 
-		public readonly TimelineRowType			Type;
-		public readonly string					Description;
-		public readonly double					RelativeHeight;
+		public readonly TimelineRowType				Type;
+		public readonly string						Description;
+		public readonly double						RelativeHeight;
+		public readonly TimelineValueDisplayMode	ValueDisplayMode;
 		
 		
 		public override string ToString()
