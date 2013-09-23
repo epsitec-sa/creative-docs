@@ -175,7 +175,10 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					Description = "Valeur comptable",
 					RelativeHeight = 2.0,
+//					ValueDisplayMode = TimelineValueDisplayMode.Dots | TimelineValueDisplayMode.Lines,
 					ValueDisplayMode = TimelineValueDisplayMode.All,
+					Color1 = Color.FromName ("Green"),
+					Color2 = Color.FromName ("Red"), 
 				};
 
 				list.Add (row);
@@ -239,6 +242,7 @@ namespace Epsitec.Cresus.Assets.App
 			var start = new Date (2013, 11, 20);  // 20 novembre 2013
 			decimal? value1 = 10000.0m;
 			decimal? value2 = 15000.0m;
+			decimal? value3 = 25000.0m;
 
 			for (int i = 0; i < 100; i++)
 			{
@@ -273,15 +277,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 
 					value2 -= value2 * 0.25m;
+					value3 -= value3 * 0.50m;
 				}
 
 				var v1 = value1;
 				var v2 = value2;
+				var v3 = value3;
 
 				if (glyph == TimelineGlyph.Empty)
 				{
 					v1 = null;
 					v2 = null;
+					v3 = null;
 				}
 
 				if (v1.HasValue && v1.Value < 2000.0m)
@@ -294,10 +301,15 @@ namespace Epsitec.Cresus.Assets.App
 					v2 = null;
 				}
 
+				if (v3.HasValue && v3.Value < 2000.0m)
+				{
+					v3 = null;
+				}
+
 				var d = new TimelineCellDate (AssetsApplication.AddDays (start, i), isSelected: (i == selection));
 				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
 				var x1 = new TimelineCellValue (v1, isSelected: (i == selection));
-				var x2 = new TimelineCellValue (v2, isSelected: (i == selection));
+				var x2 = new TimelineCellValue (v2, v3, isSelected: (i == selection));
 
 				dates.Add (d);
 				glyphs.Add (g);

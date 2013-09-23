@@ -1,18 +1,19 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Types;
-
 using System.Collections.Generic;
 using System.Linq;
+
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellValue
 	{
-		public TimelineCellValue(decimal? value = null, bool isSelected = false, bool isError = false)
+		public TimelineCellValue(decimal? value1 = null, decimal? value2 = null, bool isSelected = false, bool isError = false)
 		{
-			this.Value      = value;
+			this.Value1     = value1;
+			this.Value2     = value2;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -22,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return !this.Value.HasValue;
+				return !this.Value1.HasValue && !this.Value2.HasValue;
 			}
 		}
 
@@ -30,11 +31,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Value.HasValue;
+				return this.Value1.HasValue || this.Value2.HasValue;
 			}
 		}
 
-		public readonly decimal?				Value;
+		public decimal? GetValue(int rank)
+		{
+			return (rank == 0) ? this.Value1 : this.Value2;
+		}
+
+		public readonly decimal?				Value1;
+		public readonly decimal?				Value2;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 
@@ -43,7 +50,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			buffer.Append (this.Value.ToString ());
+			buffer.Append (this.Value1.ToString ());
+			buffer.Append (" ");
+			buffer.Append (this.Value2.ToString ());
 
 			if (this.IsSelected)
 			{

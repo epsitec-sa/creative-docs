@@ -16,11 +16,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class Timeline : Widget
 	{
-		public Timeline()
-		{
-		}
-
-
 		public IEnumerable<AbstractTimelineRow>	Rows
 		{
 			get
@@ -93,6 +88,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetRows(List<AbstractTimelineRow> rows)
 		{
+			//	Spécifie toutes les lignes-enfant contenues dans la timeline.
 			this.Children.Clear ();
 
 			int index = 0;
@@ -115,32 +111,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			base.UpdateClientGeometry ();
 			this.UpdateChildrensGeometry ();
 		}
-
-
-#if false
-		private void CreateChildrens()
-		{
-			//	Crée toutes les lignes-enfant en fonction du tableau de TimelineRowDescription.
-			this.Children.Clear ();
-
-			foreach (var desc in this.rows.Reverse ())
-			{
-				var row = this.CreateRow (desc);
-
-				if (row != null)
-				{
-					this.Children.Add (row);
-
-					row.Anchor = AnchorStyles.All;
-
-					row.CellClicked += delegate (object sender, int rank)
-					{
-						this.OnCellClicked (desc, rank);
-					};
-				}
-			}
-		}
-#endif
 
 		private void UpdateChildrensGeometry()
 		{

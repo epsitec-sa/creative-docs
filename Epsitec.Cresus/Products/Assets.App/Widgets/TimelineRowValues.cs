@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		public TimelineValueDisplayMode ValueDisplayMode;
+		public Color? Color1;
+		public Color? Color2;
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -51,71 +53,79 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if (this.HasMinMax)
 			{
-				var path = new Path ();
-				var dots = new List<Point> ();
-				int? lastX = null;
-				int? lastY = null;
-
-				for (int rank = 0; rank <= this.VisibleCellCount; rank++)
+				for (int i=0; i<2; i++)
 				{
-					var cell = this.GetCell (rank);
+					var path = new Path ();
+					var dots = new List<Point> ();
+					int? lastX = null;
+					int? lastY = null;
+					var surfaceColor = this.GetSurfaceColor (i);
+					var dotColor = this.GetDotColor (i);
 
-					if (cell.IsValid)
+					for (int rank = 0; rank <= this.VisibleCellCount; rank++)
 					{
-						var y = this.GetVerticalPosition (cell);
+						var cell = this.GetCell (rank);
 
-						if (y.HasValue)
+						if (cell.IsValid)
 						{
-							var rect = this.GetCellsRect (rank, rank+1);
-							int x = (int) rect.Center.X - 1;
+							var y = this.GetVerticalPosition (cell, i);
 
-							if (lastX.HasValue && lastY.HasValue)
+							if (y.HasValue)
 							{
-								if (path.IsEmpty)
+								var rect = this.GetCellsRect (rank, rank+1);
+								int x = (int) rect.Center.X - 1;
+
+								if (lastX.HasValue && lastY.HasValue)
 								{
-									path.MoveTo (lastX.Value+0.5, -0.5);
-									path.LineTo (lastX.Value+0.5, lastY.Value+0.5);
+									if (path.IsEmpty)
+									{
+										path.MoveTo (lastX.Value+0.5, -0.5);
+										path.LineTo (lastX.Value+0.5, lastY.Value+0.5);
+									}
+
+									path.LineTo (x+0.5, lastY.Value+0.5);
+									path.LineTo (x+0.5, y.Value+0.5);
 								}
 
-								path.LineTo (x+0.5, lastY.Value+0.5);
-								path.LineTo (x+0.5, y.Value+0.5);
+								dots.Add (new Point (x, y.Value));
+
+								lastX = x;
+								lastY = y;
 							}
-
-							dots.Add (new Point (x, y.Value));
-
-							lastX = x;
-							lastY = y;
 						}
 					}
-				}
 
-				path.LineTo (this.ActualWidth+0.5, lastY.Value+0.5);
-				path.LineTo (this.ActualWidth+0.5, -0.5);
-				path.Close ();
-
-				if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
-				{
-					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.ValueSurfaceColor);
-				}
-
-				if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
-				{
-					graphics.AddPath (path);
-					graphics.RenderSolid (ColorManager.ValueDotColor);
-				}
-
-				if ((this.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
-				{
-					foreach (var dot in dots)
+					if (dots.Any ())
 					{
-						this.PaintDot (graphics, dot);
+						path.LineTo (this.ActualWidth+0.5, lastY.Value+0.5);
+						path.LineTo (this.ActualWidth+0.5, -0.5);
+						path.Close ();
+
+						if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
+						{
+							graphics.AddFilledPath (path);
+							graphics.RenderSolid (surfaceColor);
+						}
+
+						if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
+						{
+							graphics.AddPath (path);
+							graphics.RenderSolid (dotColor);
+						}
+
+						if ((this.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
+						{
+							foreach (var dot in dots)
+							{
+								this.PaintDot (graphics, dot, dotColor);
+							}
+						}
 					}
 				}
 			}
 		}
 
-		private void PaintDot(Graphics graphics, Point dot)
+		private void PaintDot(Graphics graphics, Point dot, Color color)
 		{
 			int x = (int) dot.X;
 			int y = (int) dot.Y;
@@ -127,7 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
-				graphics.RenderSolid (ColorManager.ValueDotColor);
+				graphics.RenderSolid (color);
 			}
 			else  // points ronds ?
 			{
@@ -135,22 +145,49 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
-				graphics.RenderSolid (ColorManager.ValueDotColor);
+				graphics.RenderSolid (color);
+			}
+		}
+
+		private Color GetSurfaceColor(int rank)
+		{
+			return this.GetColor (rank).Alpha (0.15);
+		}
+
+		private Color GetDotColor(int rank)
+		{
+			return this.GetColor (rank);
+		}
+
+		private Color GetColor(int rank)
+		{
+			var color = (rank == 0) ? this.Color1 : this.Color2;
+
+			if (color.HasValue)
+			{
+				return color.Value;
+			}
+			else
+			{
+				return ColorManager.ValueDotColor;
 			}
 		}
 		
 		
-		private int? GetVerticalPosition(TimelineCellValue cell)
+		private int? GetVerticalPosition(TimelineCellValue cell, int rank)
 		{
-			if (cell.IsValid && this.HasMinMax)
+			if (this.HasMinMax)
 			{
-				var factor = (double) ((cell.Value.Value - this.min) / (this.max - this.min));
-				return this.DotSize + (int) (factor * (this.ActualHeight - this.DotSize*2));
+				var value = cell.GetValue (rank);
+
+				if (value.HasValue)
+				{
+					var factor = (double) ((value.Value - this.min) / (this.max - this.min));
+					return this.DotSize + (int) (factor * (this.ActualHeight - this.DotSize*2));
+				}
 			}
-			else
-			{
-				return null;
-			}
+
+			return null;
 		}
 
 		private bool HasMinMax
@@ -178,10 +215,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var cell = this.GetCell (rank);
 
-				if (cell.IsValid)
+				if (cell.Value1.HasValue)
 				{
-					this.min = System.Math.Min (this.min, cell.Value.Value);
-					this.max = System.Math.Max (this.max, cell.Value.Value);
+					this.min = System.Math.Min (this.min, cell.Value1.Value);
+					this.max = System.Math.Max (this.max, cell.Value1.Value);
+				}
+
+				if (cell.Value2.HasValue)
+				{
+					this.min = System.Math.Min (this.min, cell.Value2.Value);
+					this.max = System.Math.Max (this.max, cell.Value2.Value);
 				}
 			}
 		}
