@@ -28,8 +28,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Fusionner avec un autre contact");
+			return Resources.Text ("Fusionner avec un contact non-ECh");
 		}
+
+        private string GetText()
+        {
+            return "Cette action va supprimer le contact non-ECh a ajouter les données sur le contact ECh";
+        }
 
 		public override ActionExecutor GetExecutor()
 		{
@@ -38,26 +43,45 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool doFusion)
 		{
-			
+            if (doFusion)
+            {
+                //group fusion
+                var groupToAdd = this.AdditionalEntity.Person.Groups.Where(g => !this.Entity.Person.Groups.Select(gs => gs.Group).Contains(g.Group));
+                foreach (var group in groupToAdd)
+                {
+                    this.Entity.Person.AddParticipationInternal(group);
+                    var participationData = new ParticipationData(this.Entity.Person);
+                    AiderGroupParticipantEntity.StartParticipation(this.BusinessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText("Fusion"));
+                }
+
+                //household fusion
+                var householdMemberToAdd = this.AdditionalEntity.Household.Members.Where(m => !this.Entity.Household.Members.Contains(m));
+                foreach (var member in householdMemberToAdd)
+                {
+                    //Remap contact
+                    var contact = member.Contacts.FirstOrDefault(c => c.Household == this.AdditionalEntity.Household);
+                    contact.Household = this.Entity.Household;
+                }
+
+                this.BusinessContext.DeleteEntity(this.AdditionalEntity);
+            }
 		}
 
 		protected override void GetForm(ActionBrick<AiderContactEntity, SimpleBrick<AiderContactEntity>> form)
 		{
-			if (this.Entity.Person.IsGovernmentDefined)
-			{
-				if (this.AdditionalEntity.Person.IsGovernmentDefined)
-				{
-
-				}
-			}
-
-			form
-				.Title ("Options de Fusion")
-				.Text("Analyse...")
-				.Field<bool> ()
-					.Title ("Fusionner")
-				.End ()
-				.End ();
+            if (this.Entity.Person.IsGovernmentDefined)
+            {
+                if (!this.AdditionalEntity.Person.IsGovernmentDefined)
+                {
+                    form
+                    .Title("Fusion de données")
+                    .Text(this.GetText())
+                    .Field<bool>()
+                        .Title("Fusionner")
+                    .End()
+                    .End();
+                }
+            }
 		}
 	}
 }
