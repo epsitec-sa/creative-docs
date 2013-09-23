@@ -16,18 +16,73 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TimelineRowDaysOfWeek : AbstractTimelineRow
 	{
-		public TimelineRowDaysOfWeek(TimelineRowDescription row)
-			: base (row)
+		public void SetCells(TimelineCellDate[] cells)
 		{
+			this.cells = cells;
+			this.Invalidate ();
 		}
 
 
-		protected override bool IsSame(TimelineCell c1, TimelineCell c2)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			return TimelineCell.IsSameDays (c1, c2);
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			if (this.cells == null || this.VisibleCellCount == 0)
+			{
+				return;
+			}
+
+			this.Paint (graphics);
 		}
 
-		protected override Color GetCellColor(TimelineCell cell, bool isHover, int index)
+		private void Paint(Graphics graphics)
+		{
+			int x = 0;
+			int index = 0;
+			var lastCell = new TimelineCellDate ();  // cellule invalide
+
+			for (int rank = 0; rank <= this.VisibleCellCount; rank++)
+			{
+				var cell = this.GetCell (rank);
+				if (!TimelineRowDaysOfWeek.IsSame (lastCell, cell) && x != rank)
+				{
+					var rect = this.GetCellsRect (x, rank);
+					bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+
+					TimelineRowDaysOfWeek.PaintCellBackground (graphics, rect, lastCell, isHover, index);
+					TimelineRowDaysOfWeek.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+
+					index++;
+					x = rank;
+				}
+
+				lastCell = cell;
+			}
+		}
+
+		private static void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		{
+			//	Dessine le fond.
+			var color = TimelineRowDaysOfWeek.GetCellColor (cell, isHover, index);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
+		}
+
+		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		{
+			//	Dessine le contenu.
+			var text = TimelineRowDaysOfWeek.GetCellText (cell);
+			var font = Font.DefaultFont;
+			graphics.Color = ColorManager.TextColor;
+			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+		}
+
+		private static bool IsSame(TimelineCellDate c1, TimelineCellDate c2)
+		{
+			return TimelineCellDate.IsSameDays (c1, c2);
+		}
+
+		private static Color GetCellColor(TimelineCellDate cell, bool isHover, int index)
 		{
 			if (cell.IsValid)
 			{
@@ -47,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		protected override string GetCellText(TimelineCell cell)
+		private static string GetCellText(TimelineCellDate cell)
 		{
 			//	Retourne le jour sous la forme "Lu" ou "Ma".
 			if (cell.IsValid)
@@ -66,5 +121,37 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return null;
 			}
 		}
+
+
+		private TimelineCellDate GetCell(int rank)
+		{
+			if (rank < this.VisibleCellCount)
+			{
+				int index = this.GetListIndex (rank);
+
+				if (index >= 0 && index < this.cells.Length)
+				{
+					return this.cells[index];
+				}
+			}
+
+			return new TimelineCellDate ();  // retourne une cellule invalide
+		}
+
+		private int GetListIndex(int rank)
+		{
+			if (rank >= 0 && rank < this.cells.Length)
+			{
+				int offset = (int) ((double) (this.cells.Length - this.VisibleCellCount) * this.pivot);
+				return rank + offset;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
+
+		private TimelineCellDate[] cells;
 	}
 }

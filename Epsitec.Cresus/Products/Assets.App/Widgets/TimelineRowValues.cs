@@ -14,13 +14,37 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TimelineRowValues : AbstractTimelineRow
 	{
-		public TimelineRowValues(TimelineRowDescription row)
-			: base (row)
+		public TimelineRowValues()
 		{
+			this.min = decimal.MaxValue;
+			this.max = decimal.MinValue;
 		}
 
 
-		protected override void Paint(Graphics graphics)
+		public void SetCells(TimelineCellValue[] cells)
+		{
+			this.cells = cells;
+			this.InitializeAfterCellsChanged ();
+			this.Invalidate ();
+		}
+
+
+		public TimelineValueDisplayMode ValueDisplayMode;
+
+
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			if (this.cells == null || this.VisibleCellCount == 0)
+			{
+				return;
+			}
+
+			this.Paint (graphics);
+		}
+
+		private void Paint(Graphics graphics)
 		{
 			graphics.AddFilledRectangle (this.ActualBounds);
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
@@ -69,19 +93,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				path.LineTo (this.ActualWidth+0.5, -0.5);
 				path.Close ();
 
-				if ((this.Row.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
+				if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
 				{
 					graphics.AddFilledPath (path);
 					graphics.RenderSolid (ColorManager.ValueSurfaceColor);
 				}
 
-				if ((this.Row.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
+				if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
 				{
 					graphics.AddPath (path);
 					graphics.RenderSolid (ColorManager.ValueDotColor);
 				}
 
-				if ((this.Row.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
+				if ((this.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
 				{
 					foreach (var dot in dots)
 					{
@@ -97,37 +121,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int y = (int) dot.Y;
 			int s = this.DotSize;
 
-			graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
-			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
-
-			graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
-			graphics.RenderSolid (ColorManager.ValueDotColor);
-		}
-
-		protected override Color GetCellColor(TimelineCell cell, bool isHover, int index)
-		{
-			if (cell.IsValid)
+			if (false)  // points carrée ?
 			{
-				return ColorManager.GetBackgroundColor (isHover);
+				graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
+				graphics.RenderSolid (ColorManager.ValueDotColor);
 			}
-			else
+			else  // points ronds ?
 			{
-				return Color.Empty;
-			}
-		}
+				graphics.AddFilledCircle (x+0.5, y+0.5, s-1.0);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
-
-		private bool HasMinMax
-		{
-			get
-			{
-				return this.min <= this.max;
+				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
+				graphics.RenderSolid (ColorManager.ValueDotColor);
 			}
 		}
-
-		private int? GetVerticalPosition(TimelineCell cell)
+		
+		
+		private int? GetVerticalPosition(TimelineCellValue cell)
 		{
-			if (cell.IsValid && cell.Value.HasValue)
+			if (cell.IsValid && this.HasMinMax)
 			{
 				var factor = (double) ((cell.Value.Value - this.min) / (this.max - this.min));
 				return this.DotSize + (int) (factor * (this.ActualHeight - this.DotSize*2));
@@ -135,6 +150,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			else
 			{
 				return null;
+			}
+		}
+
+		private bool HasMinMax
+		{
+			get
+			{
+				return this.min <= this.max;
 			}
 		}
 
@@ -155,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var cell = this.GetCell (rank);
 
-				if (cell.IsValid && cell.Value.HasValue)
+				if (cell.IsValid)
 				{
 					this.min = System.Math.Min (this.min, cell.Value.Value);
 					this.max = System.Math.Max (this.max, cell.Value.Value);
@@ -164,6 +187,36 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private TimelineCellValue GetCell(int rank)
+		{
+			if (rank < this.VisibleCellCount)
+			{
+				int index = this.GetListIndex (rank);
+
+				if (index >= 0 && index < this.cells.Length)
+				{
+					return this.cells[index];
+				}
+			}
+
+			return new TimelineCellValue ();  // retourne une cellule invalide
+		}
+
+		private int GetListIndex(int rank)
+		{
+			if (rank >= 0 && rank < this.cells.Length)
+			{
+				int offset = (int) ((double) (this.cells.Length - this.VisibleCellCount) * this.pivot);
+				return rank + offset;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+
+
+		private TimelineCellValue[] cells;
 		private decimal min;
 		private decimal max;
 	}

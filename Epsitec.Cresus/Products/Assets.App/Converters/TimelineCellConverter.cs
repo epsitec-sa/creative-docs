@@ -10,30 +10,32 @@ namespace Epsitec.Cresus.Assets.App.Converters
 {
 	public sealed class TimelineCellConverter
 	{
+#if false
 		public Widgets.TimelineCell Convert(TimelineEventCell item)
 		{
-			Widgets.TimelineCellGlyph glyph = Widgets.TimelineCellGlyph.FilledCircle;
+			Widgets.TimelineGlyph glyph = Widgets.TimelineGlyph.FilledCircle;
 
 			switch (item.Date.DayOfWeek)
 			{
 				case System.DayOfWeek.Monday:
-					glyph = Widgets.TimelineCellGlyph.FilledCircle;
+					glyph = Widgets.TimelineGlyph.FilledCircle;
 					break;
 				case System.DayOfWeek.Tuesday:
 				case System.DayOfWeek.Wednesday:
-					glyph = Widgets.TimelineCellGlyph.FilledSquare;
+					glyph = Widgets.TimelineGlyph.FilledSquare;
 					break;
 				case System.DayOfWeek.Thursday:
 				case System.DayOfWeek.Friday:
-					glyph = Widgets.TimelineCellGlyph.OutlinedCircle;
+					glyph = Widgets.TimelineGlyph.OutlinedCircle;
 					break;
 				case System.DayOfWeek.Saturday:
 				case System.DayOfWeek.Sunday:
-					glyph = Widgets.TimelineCellGlyph.OutlinedSquare;
+					glyph = Widgets.TimelineGlyph.OutlinedSquare;
 					break;
 			}
 
 			return new Widgets.TimelineCell (item.Date, glyph);
 		}
+#endif
 	}
 }

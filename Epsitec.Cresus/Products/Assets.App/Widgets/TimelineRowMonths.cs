@@ -17,19 +17,61 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TimelineRowMonths : AbstractTimelineRow
 	{
-		public TimelineRowMonths(TimelineRowDescription row)
-			: base (row)
+		public void SetCells(TimelineCellDate[] cells)
 		{
+			this.cells = cells;
+			this.Invalidate ();
 		}
 
 
-		protected override bool IsSame(TimelineCell c1, TimelineCell c2)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			return TimelineCell.IsSameMonths (c1, c2);
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			if (this.cells == null || this.VisibleCellCount == 0)
+			{
+				return;
+			}
+
+			this.Paint (graphics);
 		}
 
-		protected override void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
+		private void Paint(Graphics graphics)
 		{
+			int x = 0;
+			int index = 0;
+			var lastCell = new TimelineCellDate ();  // cellule invalide
+
+			for (int rank = 0; rank <= this.VisibleCellCount; rank++)
+			{
+				var cell = this.GetCell (rank);
+				if (!TimelineRowMonths.IsSame (lastCell, cell) && x != rank)
+				{
+					var rect = this.GetCellsRect (x, rank);
+					bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
+
+					TimelineRowMonths.PaintCellBackground (graphics, rect, lastCell, isHover, index);
+					TimelineRowMonths.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+
+					index++;
+					x = rank;
+				}
+
+				lastCell = cell;
+			}
+		}
+
+		private static void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		{
+			//	Dessine le fond.
+			var color = TimelineRowMonths.GetCellColor (cell, isHover, index);
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (color);
+		}
+
+		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		{
+			//	Dessine le contenu.
 			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
 			var font = Font.DefaultFont;
 
@@ -51,7 +93,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		protected override Color GetCellColor(TimelineCell cell, bool isHover, int index)
+		private static bool IsSame(TimelineCellDate c1, TimelineCellDate c2)
+		{
+			return TimelineCellDate.IsSameMonths (c1, c2);
+		}
+
+		private static Color GetCellColor(TimelineCellDate cell, bool isHover, int index)
 		{
 			if (cell.IsValid)
 			{
@@ -63,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static string GetMonthText(TimelineCell cell, int detailLevel)
+		private static string GetMonthText(TimelineCellDate cell, int detailLevel)
 		{
 			//	Retourne le mois sous une forme plus ou moins détaillée.
 			//	detailLevel = 3 retourne "Septembre 2013"
@@ -92,5 +139,36 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return null;
 		}
 
+
+		private TimelineCellDate GetCell(int rank)
+		{
+			if (rank < this.VisibleCellCount)
+			{
+				int index = this.GetListIndex (rank);
+
+				if (index >= 0 && index < this.cells.Length)
+				{
+					return this.cells[index];
+				}
+			}
+
+			return new TimelineCellDate ();  // retourne une cellule invalide
+		}
+
+		private int GetListIndex(int rank)
+		{
+			if (rank >= 0 && rank < this.cells.Length)
+			{
+				int offset = (int) ((double) (this.cells.Length - this.VisibleCellCount) * this.pivot);
+				return rank + offset;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		
+		
+		private TimelineCellDate[] cells;
 	}
 }

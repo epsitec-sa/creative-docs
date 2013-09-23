@@ -20,6 +20,16 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 		}
 
+
+		public IEnumerable<AbstractTimelineRow>	Rows
+		{
+			get
+			{
+				return this.Children.Cast<AbstractTimelineRow> ();
+			}
+		}
+
+
 		public double							Pivot
 		{
 			get
@@ -76,31 +86,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.rows.Sum (x => x.RelativeHeight);
+				return this.Children.Cast<AbstractTimelineRow> ().Sum (x => x.RelativeHeight);
 			}
 		}
 
 
-		public void SetRows(TimelineRowDescription[] rows)
+		public void SetRows(List<AbstractTimelineRow> rows)
 		{
-			//	Descriptions des lignes à afficher, de haut en bas.
-			this.rows = rows;
+			this.Children.Clear ();
 
-			this.CreateChildrens ();
-			this.Invalidate ();
-		}
-
-		public void SetCells(TimelineCell[] cells)
-		{
-			//	Descriptions des cellules à afficher, de gauche à droite.
-			this.cells = cells;
-
-			foreach (var children in this.Children)
+			foreach (var row in rows)
 			{
-				var row = children as AbstractTimelineRow;
-				System.Diagnostics.Debug.Assert (row != null);
-
-				row.SetCells (this.cells);
+				this.Children.Add (row);
 			}
 		}
 
@@ -112,6 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+#if false
 		private void CreateChildrens()
 		{
 			//	Crée toutes les lignes-enfant en fonction du tableau de TimelineRowDescription.
@@ -134,6 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 		}
+#endif
 
 		private void UpdateChildrensGeometry()
 		{
@@ -146,9 +145,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var row = children as AbstractTimelineRow;
 				System.Diagnostics.Debug.Assert (row != null);
 
-				var h = (int) (w * row.Row.RelativeHeight);
+				var h = (int) (w * row.RelativeHeight);
 				var top = this.ActualHeight-bottom-h;
 
+				row.Anchor = AnchorStyles.All;
 				row.CellWidth = w;
 				row.Margins = new Margins (0, 0, top, bottom);
 				row.PreferredHeight = h;
@@ -169,37 +169,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private AbstractTimelineRow CreateRow(TimelineRowDescription row)
-		{
-			//	Crée une ligne-enfant.
-			switch (row.Type)
-			{
-				case TimelineRowType.Month:
-					return new TimelineRowMonths (row);
-
-				case TimelineRowType.WeeksOfYear:
-					return new TimelineRowWeeksOfYear (row);
-
-				case TimelineRowType.DaysOfWeek:
-					return new TimelineRowDaysOfWeek (row);
-
-				case TimelineRowType.Days:
-					return new TimelineRowDays (row);
-
-				case TimelineRowType.Glyphs:
-					return new TimelineRowGlyphs (row);
-
-				case TimelineRowType.Values:
-					return new TimelineRowValues (row);
-
-				default:
-					return null;
-			}
-		}
-
 
 		#region Events handler
-		private void OnCellClicked(TimelineRowDescription row, int rank)
+		private void OnCellClicked(int row, int rank)
 		{
 			if (this.CellClicked != null)
 			{
@@ -207,13 +179,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public delegate void CellClickedEventHandler(object sender, TimelineRowDescription row, int rank);
+		public delegate void CellClickedEventHandler(object sender, int row, int rank);
 		public event CellClickedEventHandler CellClicked;
 		#endregion
 
 
-		private TimelineCell[]					cells;
-		private TimelineRowDescription[]		rows;
 		private double							pivot;
 	}
 }

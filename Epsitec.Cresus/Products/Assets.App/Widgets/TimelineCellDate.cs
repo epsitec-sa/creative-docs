@@ -8,13 +8,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TimelineCell
+	public struct TimelineCellDate
 	{
-		public TimelineCell(Date date, TimelineCellGlyph glyph, decimal? value = null, bool isSelected = false, bool isError = false)
+		public TimelineCellDate(Date date, bool isSelected = false, bool isError = false)
 		{
 			this.Date       = date;
-			this.Glyph      = glyph;
-			this.Value      = value;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -37,13 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public readonly Date					Date;
-		
-		public readonly TimelineCellGlyph		Glyph;
-
-		public readonly decimal?				Value;
-		
 		public readonly bool					IsSelected;
-		
 		public readonly bool					IsError;
 
 		
@@ -52,8 +44,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var buffer = new System.Text.StringBuilder ();
 
 			buffer.Append (this.Date.ToString ());
-			buffer.Append (" ");
-			buffer.Append (this.Glyph);
 
 			if (this.IsSelected)
 			{
@@ -68,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public static bool IsSameWeeksOfYear(TimelineCell c1, TimelineCell c2)
+		public static bool IsSameWeeksOfYear(TimelineCellDate c1, TimelineCellDate c2)
 		{
 			int w1 = (c1.IsValid) ? c1.Date.WeekOfYear : -1;
 			int w2 = (c2.IsValid) ? c2.Date.WeekOfYear : -1;
@@ -76,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return w1 == w2;
 		}
 
-		public static bool IsSameMonths(TimelineCell c1, TimelineCell c2)
+		public static bool IsSameMonths(TimelineCellDate c1, TimelineCellDate c2)
 		{
 			int m1 = (c1.IsValid) ? c1.Date.Month : -1;
 			int m2 = (c2.IsValid) ? c2.Date.Month : -1;
@@ -84,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return m1 == m2;
 		}
 
-		public static bool IsSameDays(TimelineCell c1, TimelineCell c2)
+		public static bool IsSameDays(TimelineCellDate c1, TimelineCellDate c2)
 		{
 			int d1 = (c1.IsValid) ? c1.Date.Day : -1;
 			int d2 = (c2.IsValid) ? c2.Date.Day : -1;

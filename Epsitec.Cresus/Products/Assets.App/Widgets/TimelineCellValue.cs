@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public struct TimelineCellGlyph
+	public struct TimelineCellValue
 	{
-		public TimelineCellGlyph(TimelineGlyph glyph, bool isSelected = false, bool isError = false)
+		public TimelineCellValue(decimal? value = null, bool isSelected = false, bool isError = false)
 		{
-			this.Glyph      = glyph;
+			this.Value      = value;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Glyph == TimelineGlyph.Undefined;
+				return !this.Value.HasValue;
 			}
 		}
 
@@ -30,11 +30,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Glyph != TimelineGlyph.Undefined;
+				return this.Value.HasValue;
 			}
 		}
 
-		public readonly TimelineGlyph			Glyph;
+		public readonly decimal?				Value;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			buffer.Append (this.Glyph);
+			buffer.Append (this.Value.ToString ());
 
 			if (this.IsSelected)
 			{

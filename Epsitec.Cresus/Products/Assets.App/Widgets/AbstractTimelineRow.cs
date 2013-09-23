@@ -15,19 +15,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public abstract class AbstractTimelineRow : Widget
 	{
-		public AbstractTimelineRow(TimelineRowDescription row)
+		public AbstractTimelineRow()
 		{
-			this.row = row;
+			this.RelativeHeight = 1.0;
 			this.hoverRank = -1;
 		}
 
 
-		public TimelineRowDescription			Row
+		public double							RelativeHeight
 		{
-			get
-			{
-				return this.row;
-			}
+			get;
+			set;
+		}
+
+		public string							Description
+		{
+			get;
+			set;
 		}
 
 		public double							Pivot
@@ -78,18 +82,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 	
-		public void SetCells(TimelineCell[] cells)
-		{
-			this.cells = cells;
-			this.InitializeAfterCellsChanged ();
-			this.Invalidate ();
-		}
-
-		protected virtual void InitializeAfterCellsChanged()
-		{
-		}
-
-
 		protected override void OnClicked(MessageEventArgs e)
 		{
 			this.OnCellClicked (this.hoverRank);
@@ -114,19 +106,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.InitializeAfterCellsChanged ();
 		}
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			base.PaintBackgroundImplementation (graphics, clipRect);
-
-			if (this.cells == null || this.VisibleCellCount == 0)
-			{
-				return;
-			}
-
-			this.Paint (graphics);
-		}
-
-
 
 		private int Detect(Point pos)
 		{
@@ -147,29 +126,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return -1;
 		}
 
-		protected virtual void Paint(Graphics graphics)
+		protected virtual void InitializeAfterCellsChanged()
 		{
-			int x = 0;
-			int index = 0;
-			var lastCell = new TimelineCell ();  // cellule invalide
-
-			for (int rank = 0; rank <= this.VisibleCellCount; rank++)
-			{
-				var cell = this.GetCell (rank);
-				if (!this.IsSame (lastCell, cell) && x != rank)
-				{
-					var rect = this.GetCellsRect (x, rank);
-					bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
-
-					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
-					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
-
-					index++;
-					x = rank;
-				}
-
-				lastCell = cell;
-			}
 		}
 
 
@@ -190,68 +148,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected virtual bool IsSame(TimelineCell c1, TimelineCell c2)
-		{
-			return false;
-		}
-
-		protected virtual void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
-		{
-			//	Dessine le fond.
-			var color = this.GetCellColor (cell, isHover, index);
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (color);
-		}
-
-		protected virtual void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCell cell, bool isHover, int index)
-		{
-			//	Dessine le contenu.
-			var text = this.GetCellText (cell);
-			var font = Font.DefaultFont;
-			graphics.Color = ColorManager.TextColor;
-			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
-		}
-
-		protected virtual Color GetCellColor(TimelineCell cell, bool isHover, int index)
-		{
-			return ColorManager.GetBackgroundColor ();
-		}
-
-		protected virtual string GetCellText(TimelineCell cell)
-		{
-			return null;
-		}
-
-
-		protected TimelineCell GetCell(int rank)
-		{
-			if (rank < this.VisibleCellCount)
-			{
-				int index = this.GetListIndex (rank);
-
-				if (index >= 0 && index < this.cells.Length)
-				{
-					return this.cells[index];
-				}
-			}
-
-			return new TimelineCell ();  // retourne une cellule invalide
-		}
-
-		private int GetListIndex(int rank)
-		{
-			if (rank >= 0 && rank < this.cells.Length)
-			{
-				int offset = (int) ((double) (this.cells.Length - this.VisibleCellCount) * this.pivot);
-				return rank + offset;
-			}
-			else
-			{
-				return -1;
-			}
-		}
-
-
 		#region Events handler
 		private void OnCellClicked(int rank)
 		{
@@ -266,9 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly TimelineRowDescription	row;
-		protected TimelineCell[]				cells;
-		private double							pivot;
+		protected double						pivot;
 		protected int							hoverRank;
 	}
 }

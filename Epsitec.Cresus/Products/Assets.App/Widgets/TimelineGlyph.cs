@@ -3,13 +3,16 @@
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public enum TimelineRowType
+	public enum TimelineGlyph
 	{
-		Month,
-		WeeksOfYear,
-		DaysOfWeek,
-		Days,
-		Glyphs,
-		Values,
+		Undefined,
+
+		Empty,
+		
+		FilledCircle,
+		OutlinedCircle,
+
+		FilledSquare,
+		OutlinedSquare,
 	};
 }

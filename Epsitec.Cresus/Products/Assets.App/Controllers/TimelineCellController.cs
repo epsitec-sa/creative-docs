@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 
 			this.converter = new TimelineCellConverter ();
 			
-			this.cache.CollectionChanged += this.HandleSourceCollectionChanged;
+			//?this.cache.CollectionChanged += this.HandleSourceCollectionChanged;
 		}
 
 		
@@ -45,11 +45,12 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 		
 		public void Refresh()
 		{
-			var cells = this.GetTimelineCells ();
-			this.SetWidgetCells (cells);
+			//?var cells = this.GetTimelineCells ();
+			//?this.SetWidgetCells (cells);
 		}
 
 
+#if false
 		private Widgets.TimelineCell[] GetTimelineCells()
 		{
 			var pivot = this.widget.BeforePivotCount;
@@ -133,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 
 		private Epsitec.Cresus.Assets.App.Widgets.TimelineCell CreateEmptyTimelineCell(Date date)
 		{
-			return new Widgets.TimelineCell (date, Widgets.TimelineCellGlyph.Empty);
+			return new Widgets.TimelineCell (date, Widgets.TimelineGlyph.Empty);
 		}
 
 		private void HandleSourceCollectionChanged(object o, CollectionChangedEventArgs e)
@@ -151,6 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Controllers
 			Widgets.TimelineCell[] cells = (Widgets.TimelineCell[]) state;
 			this.widget.SetCells (cells);
 		}
+#endif
 		
 		
 		private readonly Widgets.Timeline		widget;

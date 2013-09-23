@@ -129,9 +129,9 @@ namespace Epsitec.Cresus.Assets.App
 	#endif
 			AssetsApplication.InitialiseTimeline (timeline, -1);
 
-			timeline.CellClicked += delegate (object sender, TimelineRowDescription desc, int rank)
+			timeline.CellClicked += delegate (object sender, int row, int rank)
 			{
-				if (desc.Type == TimelineRowType.Glyphs)
+				if (row == 2)
 				{
 					AssetsApplication.InitialiseTimeline (timeline, rank);
 				}
@@ -167,76 +167,105 @@ namespace Epsitec.Cresus.Assets.App
 #endif
 		}
 
-		private static TimelineRowDescription[] GetRows(bool all = false)
+		private static List<AbstractTimelineRow> GetRows(bool all = false)
 		{
-			var list = new List<TimelineRowDescription> ();
+			var list = new List<AbstractTimelineRow> ();
+
+			if (all)
+			{
+				var row = new TimelineRowValues ()
+				{
+					Description = "Valeur comptable",
+					RelativeHeight = 2.0,
+					ValueDisplayMode = TimelineValueDisplayMode.All,
+				};
+
+				list.Add (row);
+			}
 
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Month, "Mois");
+				var row = new TimelineRowGlyphs ()
+				{
+					Description = "Evénements",
+				};
+
+				list.Add (row);
+			}
+
+			{
+				var row = new TimelineRowDays ()
+				{
+					Description = "Jours",
+				};
+
 				list.Add (row);
 			}
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.WeeksOfYear, "Semaines");
+				var row = new TimelineRowDaysOfWeek ()
+				{
+					Description = "",
+				};
+
 				list.Add (row);
 			}
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.DaysOfWeek, "");
+				var row = new TimelineRowWeeksOfYear ()
+				{
+					Description = "Semaines",
+				};
+
 				list.Add (row);
 			}
-
+			
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Days, "Jours");
+				var row = new TimelineRowMonths ()
+				{
+					Description = "Mois",
+				};
+
 				list.Add (row);
 			}
 
-			{
-				var row = new TimelineRowDescription (TimelineRowType.Glyphs, "Evénements");
-				list.Add (row);
-			}
-
-			if (all)
-			{
-				var row = new TimelineRowDescription (TimelineRowType.Values, "Valeur comptable", 2.0, TimelineValueDisplayMode.All);
-				list.Add (row);
-			}
-
-			return list.ToArray ();
+			return list;
 		}
 
 		private static void InitialiseTimeline(Timeline timeline, int selection)
 		{
-			var list = new List<TimelineCell> ();
+			var dates  = new List<TimelineCellDate> ();
+			var glyphs = new List<TimelineCellGlyph> ();
+			var values = new List<TimelineCellValue> ();
+
 			var start = new Date (2013, 11, 20);  // 20 novembre 2013
 			decimal? value = 10000.0m;
 
 			for (int i = 0; i < 100; i++)
 			{
-				var glyph = TimelineCellGlyph.Empty;
+				var glyph = TimelineGlyph.Empty;
 
 				if (i%12 == 0)
 				{
-					glyph = TimelineCellGlyph.FilledCircle;
+					glyph = TimelineGlyph.FilledCircle;
 				}
 				else if (i%12 == 1)
 				{
-					glyph = TimelineCellGlyph.OutlinedCircle;
+					glyph = TimelineGlyph.OutlinedCircle;
 				}
 				else if (i%12 == 6)
 				{
-					glyph = TimelineCellGlyph.FilledSquare;
+					glyph = TimelineGlyph.FilledSquare;
 				}
 				else if (i%12 == 7)
 				{
-					glyph = TimelineCellGlyph.OutlinedSquare;
+					glyph = TimelineGlyph.OutlinedSquare;
 				}
 
-				if (glyph != TimelineCellGlyph.Empty)
+				if (glyph != TimelineGlyph.Empty)
 				{
-					if (glyph == TimelineCellGlyph.OutlinedSquare)
+					if (glyph == TimelineGlyph.OutlinedSquare)
 					{
 						value += 2000.0m;
 					}
@@ -248,17 +277,53 @@ namespace Epsitec.Cresus.Assets.App
 
 				var v = value;
 
-				if (glyph == TimelineCellGlyph.Empty)
+				if (glyph == TimelineGlyph.Empty)
 				{
 					v = null;
 				}
 
-				var cell = new TimelineCell (AssetsApplication.AddDays (start, i), glyph, v, isSelected: (i == selection));
+				var d = new TimelineCellDate (AssetsApplication.AddDays (start, i), isSelected: (i == selection));
+				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
+				var x = new TimelineCellValue (v, isSelected: (i == selection));
 
-				list.Add (cell);
+				dates.Add (d);
+				glyphs.Add (g);
+				values.Add (x);
 			}
 
-			timeline.SetCells (list.ToArray ());
+			foreach (var r in timeline.Rows)
+			{
+				if (r is TimelineRowGlyphs)
+				{
+					var row = r as TimelineRowGlyphs;
+					row.SetCells (glyphs.ToArray ());
+				}
+				else if (r is TimelineRowValues)
+				{
+					var row = r as TimelineRowValues;
+					row.SetCells (values.ToArray ());
+				}
+				else if (r is TimelineRowDays)
+				{
+					var row = r as TimelineRowDays;
+					row.SetCells (dates.ToArray ());
+				}
+				else if (r is TimelineRowDaysOfWeek)
+				{
+					var row = r as TimelineRowDaysOfWeek;
+					row.SetCells (dates.ToArray ());
+				}
+				else if (r is TimelineRowMonths)
+				{
+					var row = r as TimelineRowMonths;
+					row.SetCells (dates.ToArray ());
+				}
+				else if (r is TimelineRowWeeksOfYear)
+				{
+					var row = r as TimelineRowWeeksOfYear;
+					row.SetCells (dates.ToArray ());
+				}
+			}
 		}
 
 		private static Date AddDays(Date date, int numberOfDays)
