@@ -10,10 +10,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCell
 	{
-		public TimelineCell(Date date, TimelineCellGlyph glyph, bool isSelected = false, bool isError = false)
+		public TimelineCell(Date date, TimelineCellGlyph glyph, decimal? value = null, bool isSelected = false, bool isError = false)
 		{
 			this.Date       = date;
 			this.Glyph      = glyph;
+			this.Value      = value;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -38,6 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public readonly Date					Date;
 		
 		public readonly TimelineCellGlyph		Glyph;
+
+		public readonly decimal?				Value;
 		
 		public readonly bool					IsSelected;
 		

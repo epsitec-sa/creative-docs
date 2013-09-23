@@ -198,6 +198,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				case TimelineDisplay.Glyphs:
 					return new TimelineRowGlyphs (display);
 
+				case TimelineDisplay.Values:
+					return new TimelineRowValues (display);
+
 				default:
 					return null;
 			}
@@ -206,6 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private static TimelineDisplay[] displayLines =
 		{
 			//	Détermine l'ordre des lignes-enfant à afficher, de bas en haut.
+			TimelineDisplay.Values,
 			TimelineDisplay.Glyphs,
 			TimelineDisplay.Days,
 			TimelineDisplay.DaysOfWeek,

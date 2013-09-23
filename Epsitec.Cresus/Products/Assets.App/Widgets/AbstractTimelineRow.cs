@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (this.pivot != value)
 				{
 					this.pivot = value;
+					this.InitializeAfterCellsChanged ();
 					this.Invalidate ();
 				}
 			}
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								CellDim
+		protected int							CellDim
 		{
 			get
 			{
@@ -82,7 +83,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public void SetCells(TimelineCell[] cells)
 		{
 			this.cells = cells;
+			this.InitializeAfterCellsChanged ();
 			this.Invalidate ();
+		}
+
+		protected virtual void InitializeAfterCellsChanged()
+		{
 		}
 
 
@@ -102,6 +108,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.HoverRank = -1;
 			base.OnExited (e);
+		}
+
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+			this.InitializeAfterCellsChanged ();
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -137,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return -1;
 		}
 
-		private void Paint(Graphics graphics)
+		protected virtual void Paint(Graphics graphics)
 		{
 			int x = 0;
 			int index = 0;
@@ -214,7 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private TimelineCell GetCell(int rank)
+		protected TimelineCell GetCell(int rank)
 		{
 			if (rank < this.VisibleCellCount)
 			{
@@ -258,8 +270,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private readonly TimelineDisplay		display;
-		private TimelineCell[]					cells;
+		protected TimelineCell[]				cells;
 		private double							pivot;
-		private int								hoverRank;
+		protected int							hoverRank;
 	}
 }
