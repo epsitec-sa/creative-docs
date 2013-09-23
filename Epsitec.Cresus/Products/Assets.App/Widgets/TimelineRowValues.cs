@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TimelineRowValues : AbstractTimelineRow
 	{
-		public TimelineRowValues(TimelineRowType display)
-			: base (display)
+		public TimelineRowValues(TimelineRowDescription row)
+			: base (row)
 		{
 		}
 
@@ -121,8 +121,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid && cell.Value.HasValue)
 			{
-				var factor = (cell.Value.Value - this.min) / (this.max - this.min);
-				return this.DotSize + (int) (factor * (this.CellDim - this.DotSize*2));
+				var factor = (double) ((cell.Value.Value - this.min) / (this.max - this.min));
+				return this.DotSize + (int) (factor * (this.ActualHeight - this.DotSize*2));
 			}
 			else
 			{
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return System.Math.Max ((int) (this.CellDim * 0.1), 2);
+				return System.Math.Max ((int) (this.ActualHeight * 0.1), 2);
 			}
 		}
 

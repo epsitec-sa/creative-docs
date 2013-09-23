@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.ActualBounds.Width / this.CellDim);
+				return (int) (this.ActualBounds.Width / this.CellWidth);
 			}
 		}
 
@@ -64,19 +64,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private int								CellDim
+		private int								CellWidth
 		{
 			get
 			{
-				return (int) (this.ActualBounds.Height / this.LineCount);
+				return (int) (this.ActualBounds.Height / this.RelativeHeights);
 			}
 		}
 
-		private int								LineCount
+		private double							RelativeHeights
 		{
 			get
 			{
-				return rows.Length;
+				return this.rows.Sum (x => x.RelativeHeight);
 			}
 		}
 
@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void SetCells(TimelineCell[] cells)
 		{
+			//	Descriptions des cellules à afficher, de gauche à droite.
 			this.cells = cells;
 
 			foreach (var children in this.Children)
@@ -118,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			foreach (var desc in this.rows.Reverse ())
 			{
-				var row = this.CreateRow (desc.Type);
+				var row = this.CreateRow (desc);
 
 				if (row != null)
 				{
@@ -137,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private void UpdateChildrensGeometry()
 		{
 			//	Met à jour la géométrie de toutes les lignes-enfant.
-			int dim = this.CellDim;
+			int w = this.CellWidth;
 			int bottom = 0;
 
 			foreach (var children in this.Children)
@@ -145,12 +146,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var row = children as AbstractTimelineRow;
 				System.Diagnostics.Debug.Assert (row != null);
 
-				var top = this.ActualHeight-bottom-dim;
+				var h = (int) (w * row.Row.RelativeHeight);
+				var top = this.ActualHeight-bottom-h;
 
+				row.CellWidth = w;
 				row.Margins = new Margins (0, 0, top, bottom);
-				row.PreferredHeight = dim;
+				row.PreferredHeight = h;
 
-				bottom += dim;
+				bottom += h;
 			}
 		}
 
@@ -166,28 +169,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private AbstractTimelineRow CreateRow(TimelineRowType type)
+		private AbstractTimelineRow CreateRow(TimelineRowDescription row)
 		{
 			//	Crée une ligne-enfant.
-			switch (type)
+			switch (row.Type)
 			{
 				case TimelineRowType.Month:
-					return new TimelineRowMonths (type);
+					return new TimelineRowMonths (row);
 
 				case TimelineRowType.WeeksOfYear:
-					return new TimelineRowWeeksOfYear (type);
+					return new TimelineRowWeeksOfYear (row);
 
 				case TimelineRowType.DaysOfWeek:
-					return new TimelineRowDaysOfWeek (type);
+					return new TimelineRowDaysOfWeek (row);
 
 				case TimelineRowType.Days:
-					return new TimelineRowDays (type);
+					return new TimelineRowDays (row);
 
 				case TimelineRowType.Glyphs:
-					return new TimelineRowGlyphs (type);
+					return new TimelineRowGlyphs (row);
 
 				case TimelineRowType.Values:
-					return new TimelineRowValues (type);
+					return new TimelineRowValues (row);
 
 				default:
 					return null;

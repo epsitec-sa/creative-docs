@@ -15,18 +15,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public abstract class AbstractTimelineRow : Widget
 	{
-		public AbstractTimelineRow(TimelineRowType rowType)
+		public AbstractTimelineRow(TimelineRowDescription row)
 		{
-			this.rowType = rowType;
+			this.row = row;
 			this.hoverRank = -1;
 		}
 
 
-		public TimelineRowType					RowType
+		public TimelineRowDescription			Row
 		{
 			get
 			{
-				return this.rowType;
+				return this.row;
 			}
 		}
 
@@ -47,19 +47,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								CellWidth
+		{
+			get;
+			set;
+		}
+
 		public int								VisibleCellCount
 		{
 			get
 			{
-				return (int) (this.ActualBounds.Width / this.CellDim);
-			}
-		}
-
-		protected int							CellDim
-		{
-			get
-			{
-				return (int) this.ActualBounds.Height;
+				return (int) (this.ActualBounds.Width / this.CellWidth);
 			}
 		}
 
@@ -180,7 +178,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			int p1 = this.GetHorizontalPosition (x1);
 			int p2 = this.GetHorizontalPosition (x2);
 
-			var dim = this.CellDim;
 			return new Rectangle (p1, 0, p2-p1, this.ActualHeight);
 		}
 
@@ -269,7 +266,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly TimelineRowType		rowType;
+		private readonly TimelineRowDescription	row;
 		protected TimelineCell[]				cells;
 		private double							pivot;
 		protected int							hoverRank;

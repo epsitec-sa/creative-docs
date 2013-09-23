@@ -10,13 +10,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineRowDescription
 	{
-		public TimelineRowDescription(TimelineRowType type)
+		public TimelineRowDescription(TimelineRowType type, double relativeHeight = 1.0)
 		{
 			this.Type = type;
+			this.RelativeHeight = relativeHeight;
 		}
 
-		
+
 		public readonly TimelineRowType			Type;
+		public readonly double					RelativeHeight;
 		
 		
 		public override string ToString()
@@ -24,6 +26,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var buffer = new System.Text.StringBuilder ();
 
 			buffer.Append (this.Type);
+			buffer.Append (" ");
+			buffer.Append (this.RelativeHeight.ToString ());
 
 			return buffer.ToString ();
 		}

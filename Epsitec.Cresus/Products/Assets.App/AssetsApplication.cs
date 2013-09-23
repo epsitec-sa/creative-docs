@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 290, 10),
+				Margins = new Margins (10, 10, 270, 10),
 				Pivot   = 0.0,
 			};
 
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Assets.App
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Values);
+				var row = new TimelineRowDescription (TimelineRowType.Values, 2.0);
 				list.Add (row);
 			}
 
