@@ -90,6 +90,10 @@
       <Project>{2478a0bb-db2e-4272-b7d9-cff51a5a0cc9}</Project>
       <Name>Assets.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Products\Assets.Data\Assets.Data.csproj">
+      <Project>{873e478a-d8a9-40af-abf9-96af6aeda126}</Project>
+      <Name>Assets.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Products\Assets.Server\Assets.Server.csproj">
       <Project>{3e4f5e64-20fc-49fb-98e3-e30f5ae81877}</Project>
       <Name>Assets.Server</Name>
