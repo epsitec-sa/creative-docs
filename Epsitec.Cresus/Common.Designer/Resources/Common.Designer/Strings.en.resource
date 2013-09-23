@@ -233,7 +233,7 @@
   <data id="0C6" mod="1">Do you want to save changes?</data>
   <data id="025">The name contains some invalid characters!</data>
   <data id="035">Duplicate name!</data>
-  <data id="077" mod="1">Two successive name parts delimited by dots (&amp;quot;.&amp;quot;)&lt;br/&gt;may not be identical!</data>
+  <data id="077" mod="1">Two successive name parts delimited by dots (".")&lt;br/&gt;may not be identical!</data>
   <data id="087" mod="1">Duplicate root!</data>
   <data id="0V5" mod="1">Shortcut &lt;i&gt;{0}&lt;/i&gt; used multiple times:</data>
   <data id="006" mod="1">No error found.</data>

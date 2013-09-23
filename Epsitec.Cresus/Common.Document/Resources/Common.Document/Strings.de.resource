@@ -34,7 +34,7 @@
   <data id="0PU">Eigenschaft zu aktuellen Style hinzufügen</data>
   <data id="0MU">Styles tauschen</data>
   <data id="0JU">Style nach oben verschieben</data>
-  <data id="0CU">Style &amp;quot;{0}&amp;quot; verwenden</data>
+  <data id="0CU">Style "{0}" verwenden</data>
   <data id="04R">Ausrichten</data>
   <data id="0BR">Unten ausrichten</data>
   <data id="03R">Ausrichten</data>
@@ -53,7 +53,7 @@
   <data id="0IS">Boole</data>
   <data id="0JS">Vereinigung</data>
   <data id="0LS">Differenz</data>
-  <data id="0IP">Werkzeug &amp;quot;{0}&amp;quot; wählen</data>
+  <data id="0IP">Werkzeug "{0}" wählen</data>
   <data id="01S">Dunklere Füllung</data>
   <data id="02S">Hellere Füllung</data>
   <data id="0PR">Farbe</data>
@@ -77,15 +77,15 @@
   <data id="05S">Aus Gruppe extrahieren</data>
   <data id="04101">Fett</data>
   <data id="0J101">Alle Zeicheneigenschaften zurücksetzen</data>
-  <data id="08G">&lt;font face=&amp;quot;Arial&amp;quot;&gt;●&lt;/font&gt;</data>
+  <data id="08G">&lt;font face="Arial"&gt;●&lt;/font&gt;</data>
   <data id="09G">○</data>
-  <data id="0AG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;■&lt;/font&gt;</data>
-  <data id="0BG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;□&lt;/font&gt;</data>
-  <data id="0CG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;♦&lt;/font&gt;</data>
-  <data id="0DG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;◊&lt;/font&gt;</data>
-  <data id="0EG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;►&lt;/font&gt;</data>
-  <data id="0FG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;→&lt;/font&gt;</data>
-  <data id="0GG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;―&lt;/font&gt;</data>
+  <data id="0AG">&lt;font face="Arial"&gt;■&lt;/font&gt;</data>
+  <data id="0BG">&lt;font face="Arial"&gt;□&lt;/font&gt;</data>
+  <data id="0CG">&lt;font face="Arial"&gt;♦&lt;/font&gt;</data>
+  <data id="0DG">&lt;font face="Arial"&gt;◊&lt;/font&gt;</data>
+  <data id="0EG">&lt;font face="Arial"&gt;►&lt;/font&gt;</data>
+  <data id="0FG">&lt;font face="Arial"&gt;→&lt;/font&gt;</data>
+  <data id="0GG">&lt;font face="Arial"&gt;―&lt;/font&gt;</data>
   <data id="0TF">.</data>
   <data id="06G">]</data>
   <data id="07G">#</data>
@@ -233,7 +233,7 @@
   <data id="08V">Style von Pipette</data>
   <data id="0J001">Druckvorschau</data>
   <data id="0SO">Drucken...</data>
-  <data id="07V">Ändere Eigenschaft &amp;quot;{0}&amp;quot;</data>
+  <data id="07V">Ändere Eigenschaft "{0}"</data>
   <data id="0VO">Beenden</data>
   <data id="00Q">dx={0} dy={1}</data>
   <data id="0UP">dx={0} dy={1}</data>
@@ -310,10 +310,10 @@
   <data id="0MP">Alles auswählen</data>
   <data id="0BV">Knoten-Werkzeug</data>
   <data id="04P">Rückgängig</data>
-  <data id="0FP">suche &amp;quot;{0}&amp;quot;</data>
+  <data id="0FP">suche "{0}"</data>
   <data id="03P">Rückgängig</data>
   <data id="05P">Mehrere Aktionen rückgängig machen</data>
-  <data id="0GP">ersetze &amp;quot;{0}&amp;quot; durch &amp;quot;{1}&amp;quot;</data>
+  <data id="0GP">ersetze "{0}" durch "{1}"</data>
   <data id="07S">Gruppierung aufheben</data>
   <data id="01P">Nach Updates suchen...</data>
   <data id="0CS">Aufteilen</data>
@@ -378,7 +378,7 @@
   <data id="0NV">Objekt aus der Auswahl entfernt</data>
   <data id="0MV">Objekt zur Auswahl hinzugefügt</data>
   <data id="0GV">Objekt auswählen</data>
-  <data id="0OP">Auswahl nach Name &amp;quot;{0}&amp;quot;</data>
+  <data id="0OP">Auswahl nach Name "{0}"</data>
   <data id="0SV">Auswahlmodus</data>
   <data id="0KP">Auswahl</data>
   <data id="0NP">Auswahl umkehren</data>
@@ -492,7 +492,7 @@
   <data id="08701">Proportional Alternate Vertical Metrics</data>
   <data id="09701">Vertical Rotation</data>
   <data id="0A701">Slashed Zero</data>
-  <data id="0B701">Variante &amp;quot;{0}&amp;quot;</data>
+  <data id="0B701">Variante "{0}"</data>
   <data id="09J">Rahmen</data>
   <data id="0GJ">Attribut entfernen</data>
   <data id="0UD">Sichtbare Eigenschaften</data>
@@ -610,7 +610,7 @@
   <data id="0MO">Vorlage öffnen...</data>
   <data id="0LO">Öffnen...</data>
   <data id="07Q">Operation</data>
-  <data id="09V">Erstelle Objekt &amp;quot;{0}&amp;quot;</data>
+  <data id="09V">Erstelle Objekt "{0}"</data>
   <data id="0KO">Neu...</data>
   <data id="0AQ">Vertikaler Versatz</data>
   <data id="09Q">Horizontaler Versatz</data>
@@ -742,8 +742,8 @@
   <data id="0A201">Zeichen ändern</data>
   <data id="0D201">Zeichenauswahl aufheben</data>
   <data id="0C201">Zeichen auswählen</data>
-  <data id="09201">Lösche &amp;quot;{0}&amp;quot;</data>
-  <data id="08201">Füge &amp;quot;{0}&amp;quot; ein</data>
+  <data id="09201">Lösche "{0}"</data>
+  <data id="08201">Füge "{0}" ein</data>
   <data id="0B201">Cursor verschieben</data>
   <data id="0E201">Textfluss ändern</data>
   <data id="04301">Alternatives Zeichen</data>
@@ -947,7 +947,7 @@
   <data id="052">Duplikation mit letztem Versatz wiederholen</data>
   <data id="0M1">Lineale anzeigen</data>
   <data id="0G1">Nur bevorzugete Schriftarten anzeigen</data>
-  <data id="0H1">&amp;apos;Abc&amp;apos; statt &amp;apos;AaBbYyZy&amp;apos; anzeigen</data>
+  <data id="0H1">'Abc' statt 'AaBbYyZz' anzeigen</data>
   <data id="0E1">Magnetische Textzeilen anzeigen</data>
   <data id="0F1">Sonderzeichen anzeigen</data>
   <data id="01">Durchsuchen...</data>
@@ -1037,8 +1037,8 @@
   <data id="0P3">Mit Transparenz (32 Bit)</data>
   <data id="0M3">256 (8 Bit)</data>
   <data id="0K3">Farben</data>
-  <data id="07A01" mod="1">&amp;quot;A&amp;quot; Filter</data>
-  <data id="08A01" mod="1">&amp;quot;B&amp;quot; Filter</data>
+  <data id="07A01" mod="1">"A" Filter</data>
+  <data id="08A01" mod="1">"B" Filter</data>
   <data id="073">Alle Seiten</data>
   <data id="083">Geradzahlige Seiten</data>
   <data id="093">Ungeradzahlige Seiten</data>
@@ -1402,8 +1402,8 @@
   <data id="0O901" mod="1">Bildzoom</data>
   <data id="0K901" mod="1">Bild einpassen</data>
   <data id="0M901" mod="1">Rahmen füllen</data>
-  <data id="0AA01" mod="1">&amp;quot;A&amp;quot; Filter</data>
-  <data id="0BA01" mod="1">&amp;quot;B&amp;quot; Filter</data>
+  <data id="0AA01" mod="1">"A" Filter</data>
+  <data id="0BA01" mod="1">"B" Filter</data>
   <data id="0SA">Proportionen beibehalten</data>
   <data id="02901" mod="1">Eingebettetetes Bild</data>
   <data id="0QA">Horizontal spiegeln</data>

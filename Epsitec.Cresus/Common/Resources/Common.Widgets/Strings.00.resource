@@ -62,8 +62,8 @@
   <data name="TextNavigator.Action.Modify" id="0R1">Modification du texte</data>
   <data name="TextNavigator.Action.Insert" id="0S1">Insertion de caractères</data>
   <data name="TextNavigator.Action.Delete" id="0T1">Suppression de caractères</data>
-  <data name="TextNavigator.Action.Style" id="0U1">Changement de l&amp;apos;aspect du texte</data>
-  <data name="TextNavigator.Action.Tab" id="0V1">Modification d&amp;apos;un tabulateur</data>
+  <data name="TextNavigator.Action.Style" id="0U1">Changement de l'aspect du texte</data>
+  <data name="TextNavigator.Action.Tab" id="0V1">Modification d'un tabulateur</data>
   <data name="TextRuler.Tab" id="002">Choix du type de tabulateur</data>
   <data name="TextRuler.FontName" id="012">Police de caractères</data>
   <data name="TextRuler.FontSize" id="022">Taille en pourcents</data>

@@ -49,7 +49,7 @@
   <data id="0E1">Show magnetic text lines</data>
   <data id="0F1">Display control characters</data>
   <data id="0G1">Show only Preferred Fonts</data>
-  <data id="0H1">Show &amp;apos;Abc&amp;apos; instead of &amp;apos;AaBbYyZz&amp;apos;</data>
+  <data id="0H1">Show 'Abc' instead of 'AaBbYyZz'</data>
   <data id="0I1">Enable guides</data>
   <data id="0J1">Show guides</data>
   <data id="0K1">Allow guides to be dragged</data>
@@ -510,15 +510,15 @@
   <data id="05G">[</data>
   <data id="06G">]</data>
   <data id="07G">#</data>
-  <data id="08G">&lt;font face=&amp;quot;Arial&amp;quot;&gt;●&lt;/font&gt;</data>
-  <data id="09G">&lt;font face=&amp;quot;Arial&amp;quot;&gt;○&lt;/font&gt;</data>
-  <data id="0AG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;■&lt;/font&gt;</data>
-  <data id="0BG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;□&lt;/font&gt;</data>
-  <data id="0CG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;♦&lt;/font&gt;</data>
-  <data id="0DG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;◊&lt;/font&gt;</data>
-  <data id="0EG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;►&lt;/font&gt;</data>
-  <data id="0FG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;→&lt;/font&gt;</data>
-  <data id="0GG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;―&lt;/font&gt;</data>
+  <data id="08G">&lt;font face="Arial"&gt;●&lt;/font&gt;</data>
+  <data id="09G">&lt;font face="Arial"&gt;○&lt;/font&gt;</data>
+  <data id="0AG">&lt;font face="Arial"&gt;■&lt;/font&gt;</data>
+  <data id="0BG">&lt;font face="Arial"&gt;□&lt;/font&gt;</data>
+  <data id="0CG">&lt;font face="Arial"&gt;♦&lt;/font&gt;</data>
+  <data id="0DG">&lt;font face="Arial"&gt;◊&lt;/font&gt;</data>
+  <data id="0EG">&lt;font face="Arial"&gt;►&lt;/font&gt;</data>
+  <data id="0FG">&lt;font face="Arial"&gt;→&lt;/font&gt;</data>
+  <data id="0GG">&lt;font face="Arial"&gt;―&lt;/font&gt;</data>
   <data id="0HG">Layout</data>
   <data id="0IG">Keep Options</data>
   <data id="0JG">Keep with next paragraph</data>
@@ -805,16 +805,16 @@
   <data id="0CP">Duplicate</data>
   <data id="0DP">Find</data>
   <data id="0EP">Find and Replace...</data>
-  <data id="0FP">Find &amp;quot;{0}&amp;quot;</data>
-  <data id="0GP">Replace &amp;quot;{0}&amp;quot; with &amp;quot;{1}&amp;quot;</data>
+  <data id="0FP">Find "{0}"</data>
+  <data id="0GP">Replace "{0}" with "{1}"</data>
   <data id="0HP">Document size</data>
-  <data id="0IP">Select tool &amp;quot;{0}&amp;quot;</data>
+  <data id="0IP">Select tool "{0}"</data>
   <data id="0JP">Area outside of page</data>
   <data id="0KP">Select</data>
   <data id="0LP">Deselect all</data>
   <data id="0MP">Select all</data>
   <data id="0NP">Invert selection</data>
-  <data id="0OP">Select by name &amp;quot;{0}&amp;quot;</data>
+  <data id="0OP">Select by name "{0}"</data>
   <data id="0PP">Move selection</data>
   <data id="0QP">Move center of rotation</data>
   <data id="0RP">Rotate selection</data>
@@ -962,7 +962,7 @@
   <data id="09U">Change visibility of all layers</data>
   <data id="0AU">Change layer printing mode</data>
   <data id="0BU">Change layer state</data>
-  <data id="0CU">Use style &amp;quot;{0}&amp;quot;</data>
+  <data id="0CU">Use style "{0}"</data>
   <data id="0DU">New style (empty)</data>
   <data id="0EU">New Style (based on line width and colors)</data>
   <data id="0FU">New style (based on all properties)</data>
@@ -989,9 +989,9 @@
   <data id="04V">Select guide</data>
   <data id="05V">Change guide type</data>
   <data id="06V">Change guide position</data>
-  <data id="07V">Change property &amp;quot;{0}&amp;quot;</data>
+  <data id="07V">Change property "{0}"</data>
   <data id="08V">Style from pipette</data>
-  <data id="09V">Create object &amp;quot;{0}&amp;quot;</data>
+  <data id="09V">Create object "{0}"</data>
   <data id="0AV">Select</data>
   <data id="0BV">Shaper</data>
   <data id="0CV">Move handle</data>
@@ -1086,8 +1086,8 @@
   <data id="05201">Change bullet/numbering</data>
   <data id="06201">Clear all Paragraph Properties</data>
   <data id="07201">Insert</data>
-  <data id="08201">Insert &amp;quot;{0}&amp;quot;</data>
-  <data id="09201">Delete &amp;quot;{0}&amp;quot;</data>
+  <data id="08201">Insert "{0}"</data>
+  <data id="09201">Delete "{0}"</data>
   <data id="0A201">Change characters</data>
   <data id="0B201">Move cursor</data>
   <data id="0C201">Select characters</data>
@@ -1249,7 +1249,7 @@
   <data id="08701">Proportional Alternate Vertical Metrics</data>
   <data id="09701">Vertical Rotation</data>
   <data id="0A701">Slashed Zero</data>
-  <data id="0B701">Feature &amp;quot;{0}&amp;quot;</data>
+  <data id="0B701">Feature "{0}"</data>
   <data id="0C701">{0}Summary{1}</data>
   <data id="0D701">{0}File name: {1}</data>
   <data id="0E701">{0}Size: {1}x{2}</data>
@@ -1330,13 +1330,13 @@
   <data id="02A01" mod="2" about="NE PAS MODIFIER (nom de dossier)">Working Samples</data>
   <data id="0FA01" about="NE PAS MODIFIER (nom de dossier)">Creative Docs .NET</data>
   <data id="0CA01" mod="1">Bitmap images</data>
-  <data id="07A01" mod="1">&amp;quot;A&amp;quot; Filter</data>
-  <data id="08A01" mod="1">&amp;quot;B&amp;quot; Filter</data>
+  <data id="07A01" mod="1">"A" Filter</data>
+  <data id="08A01" mod="1">"B" Filter</data>
   <data id="0HA01">Reset shape</data>
   <data id="0GA01">Close and Validate</data>
   <data id="09A01" mod="1">No Filter</data>
-  <data id="0AA01" mod="1">&amp;quot;A&amp;quot; Filter</data>
-  <data id="0BA01" mod="1">&amp;quot;B&amp;quot; Filter</data>
+  <data id="0AA01" mod="1">"A" Filter</data>
+  <data id="0BA01" mod="1">"B" Filter</data>
   <data id="03A01" mod="1">None</data>
   <data id="04A01" mod="1">Fast (bilinear)</data>
   <data id="05A01" mod="1">Smooth (bicubic)</data>

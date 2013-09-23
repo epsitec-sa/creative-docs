@@ -4,5 +4,5 @@
   <data name="Author" id="01" about="Cf. Common.Support.Tests">Pierre Arnaud</data>
   <data name="Null" id="02" about="Always NULL string">&lt;null/&gt;</data>
   <data name="CopyrightHolder" id="03">Pierre Arnaud &amp;amp; EPSITEC SA</data>
-  <data name="CodeGenerator.SourceFileHeader" id="1">//  --------------------------------------------------------------------------- &lt;br/&gt;//  ATTENTION !&lt;br/&gt;//  Ce fichier a été généré automatiquement. Ne pas l&amp;apos;éditer manuellement, car &lt;br/&gt;//  toute modification sera perdue. &lt;br/&gt;//  --------------------------------------------------------------------------- &lt;br/&gt;</data>
+  <data name="CodeGenerator.SourceFileHeader" id="1">//  --------------------------------------------------------------------------- &lt;br/&gt;//  ATTENTION !&lt;br/&gt;//  Ce fichier a été généré automatiquement. Ne pas l'éditer manuellement, car &lt;br/&gt;//  toute modification sera perdue. &lt;br/&gt;//  --------------------------------------------------------------------------- &lt;br/&gt;</data>
 </bundle>

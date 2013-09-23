@@ -8,12 +8,12 @@
   <data name="Dialog.Button.Properties" id="02">Attributs...</data>
   <data name="Dialog.Button.More" id="03">Etend ou réduit le panneau</data>
   <data name="Dialog.Point.Link" id="04">Liés</data>
-  <data name="Dialog.Settings.SizeDoc" id="05">Dimensions d&amp;apos;une page</data>
-  <data name="Dialog.Settings.SizePic" id="06">Dimensions d&amp;apos;un pictogramme</data>
+  <data name="Dialog.Settings.SizeDoc" id="05">Dimensions d'une page</data>
+  <data name="Dialog.Settings.SizePic" id="06">Dimensions d'un pictogramme</data>
   <data name="Dialog.Settings.Grid" id="07">Grille magnétique</data>
   <data name="Dialog.Settings.TextGrid" id="08">Lignes magnétiques pour le texte</data>
   <data name="Dialog.Settings.Magnet" id="09">Repères magnétiques</data>
-  <data name="Dialog.Settings.DuplicateMove" id="0A">Déplacement lorsqu&amp;apos;un objet est dupliqué</data>
+  <data name="Dialog.Settings.DuplicateMove" id="0A">Déplacement lorsqu'un objet est dupliqué</data>
   <data name="Dialog.Settings.ArrowMove" id="0B">Déplacement avec les touches flèches</data>
   <data name="Dialog.Settings.Dimension" id="0C">Valeurs des cotes</data>
   <data name="Dialog.Settings.ToLinePrecision" id="0D">Convertir en droites et opérations booléennes</data>
@@ -29,16 +29,16 @@
   <data name="Dialog.Settings.Fonts.Title" id="0K">Polices fréquemment utilisées, en tête de liste</data>
   <data name="Dialog.Settings.Fonts.Default" id="0L">Polices les plus courantes</data>
   <data name="Dialog.Settings.Fonts.Clear" id="0M">Aucune police fréquement utilisée</data>
-  <data name="Dialog.Print.Printer" id="0N">Choix de l&amp;apos;imprimante</data>
+  <data name="Dialog.Print.Printer" id="0N">Choix de l'imprimante</data>
   <data name="Dialog.Print.Properties" id="0O">Propriétés</data>
   <data name="Dialog.Print.Area" id="0P">Etendue</data>
   <data name="Dialog.Print.Copies" id="0Q">Tirage</data>
-  <data name="Dialog.Print.Param" id="0R">Paramètres pour l&amp;apos;impression</data>
+  <data name="Dialog.Print.Param" id="0R">Paramètres pour l'impression</data>
   <data name="Dialog.Print.File" id="0S">Fichier</data>
   <data name="Dialog.Print.Image" id="0CA01" mod="1">Images bitmap</data>
   <data name="Dialog.Print.Publisher" id="0T">Réglages pré-presse</data>
   <data name="Dialog.Print.ToFile.Title" id="0U">Impression dans un fichier</data>
-  <data name="Dialog.Print.ToFile.Type" id="0V">Fichier d&amp;apos;impression</data>
+  <data name="Dialog.Print.ToFile.Type" id="0V">Fichier d'impression</data>
   <data name="Dialog.Print.Paper.Direction" id="001">Orientation</data>
   <data name="Dialog.Print.Paper.Portrait" id="011">Portrait</data>
   <data name="Dialog.Print.Paper.Landscape" id="021">Paysage</data>
@@ -48,11 +48,11 @@
   <data name="Dialog.Print.Range.To" id="061">à</data>
   <data name="Dialog.Print.Range.Current" id="071">Page courante</data>
   <data name="Dialog.Print.Format.User" id="081">Personnalisé</data>
-  <data name="Dialog.Export.Generic" id="091">Géométrie de l&amp;apos;image exportée</data>
-  <data name="Dialog.Export.Format" id="0SB01">Format de l&amp;apos;image exportée</data>
+  <data name="Dialog.Export.Generic" id="091">Géométrie de l'image exportée</data>
+  <data name="Dialog.Export.Format" id="0SB01">Format de l'image exportée</data>
   <data name="Dialog.Export.Filter" id="0TB01">Filtrage des images contenues</data>
   <data name="Dialog.ExportPDF.Param" id="0A1">Paramètres pour le document à exporter en PDF</data>
-  <data name="Dialog.ExportICO.Param" id="0LA01">Choix pour l&amp;apos;exportation de l&amp;apos;icône</data>
+  <data name="Dialog.ExportICO.Param" id="0LA01">Choix pour l'exportation de l'icône</data>
   <data name="Dialog.ExportPDF.Publisher" id="0B1">Réglages pré-presse</data>
   <data name="Dialog.ExportPDF.BleedEven" id="0KB01">Débords additionnels (page paire)</data>
   <data name="Dialog.ExportPDF.BleedOdd" id="0LB01">Débords additionnels (page impaire)</data>
@@ -62,7 +62,7 @@
   <data name="Dialog.Bool.TextGridShow" id="0E1">Lignes visibles</data>
   <data name="Dialog.Bool.TextShowControlCharacters" id="0F1">Afficher les caractères spéciaux</data>
   <data name="Dialog.Bool.TextFontFilter" id="0G1">Seulement les caractères fréquement utilisés</data>
-  <data name="Dialog.Bool.TextFontSampleAbc" id="0H1">Afficher &amp;apos;Abc&amp;apos; au lieu de &amp;apos;AaBbYyZz&amp;apos;</data>
+  <data name="Dialog.Bool.TextFontSampleAbc" id="0H1">Afficher 'Abc' au lieu de 'AaBbYyZz'</data>
   <data name="Dialog.Bool.GuidesActive" id="0I1">Repères actifs</data>
   <data name="Dialog.Bool.GuidesShow" id="0J1">Repères visibles</data>
   <data name="Dialog.Bool.GuidesMouse" id="0K1">Déplacements avec la souris</data>
@@ -75,9 +75,9 @@
   <data name="Dialog.Bool.PrintToFile" id="0R1">Imprimer dans un fichier</data>
   <data name="Dialog.Bool.PrintDraft" id="0S1">Brouillon (pas de dégradé ni de transparence)</data>
   <data name="Dialog.Bool.PrintAutoLandscape" id="0T1">Portrait/paysage automatique</data>
-  <data name="Dialog.Bool.PrintAutoZoom" id="0U1">Adapter l&amp;apos;impression à la taille de la page</data>
+  <data name="Dialog.Bool.PrintAutoZoom" id="0U1">Adapter l'impression à la taille de la page</data>
   <data name="Dialog.Bool.PrintAA" id="0V1">Anti-crénelage (pour imprimante couleur)</data>
-  <data name="Dialog.Bool.PrintPerfectJoin" id="002">Jointures parfaites (entre les zones d&amp;apos;une page)</data>
+  <data name="Dialog.Bool.PrintPerfectJoin" id="002">Jointures parfaites (entre les zones d'une page)</data>
   <data name="Dialog.Bool.PrintTarget" id="012">Traits de coupe (hors de la page)</data>
   <data name="Dialog.Bool.PrintDebugArea" id="022">Imprime les zones détectées (debug)</data>
   <data name="Dialog.Bool.ExportPDFTarget" id="032">Traits de coupe (hors de la page)</data>
@@ -109,7 +109,7 @@
   <data name="Dialog.Double.ImageDpi" id="0F2">Résolution (dpi)</data>
   <data name="Dialog.Double.ImageDpiWidth" id="01C01">Largeur en pixels</data>
   <data name="Dialog.Double.ImageDpiHeight" id="02C01">Hauteur en pixels</data>
-  <data name="Dialog.Double.ImageQuality" id="0G2">Qualité de l&amp;apos;image</data>
+  <data name="Dialog.Double.ImageQuality" id="0G2">Qualité de l'image</data>
   <data name="Dialog.Double.ImageQuality1" id="0H2">Qualité minimale, taille faible</data>
   <data name="Dialog.Double.ImageQuality2" id="0I2">Basse qualité, taille faible</data>
   <data name="Dialog.Double.ImageQuality3" id="0J2">Qualité moyenne, taille standard</data>
@@ -151,11 +151,11 @@
   <data name="Dialog.Integer.ImageDepth.Text" id="0K3">Nombre de couleurs</data>
   <data name="Dialog.Integer.ImageDepth.Bit2" id="0L3">Noir et blanc (1 bit)</data>
   <data name="Dialog.Integer.ImageDepth.Bit8" id="0M3">256 (8 bits)</data>
-  <data name="Dialog.Integer.ImageDepth.Bit16" id="0N3">65&amp;apos;000 (16 bits)</data>
+  <data name="Dialog.Integer.ImageDepth.Bit16" id="0N3">65'000 (16 bits)</data>
   <data name="Dialog.Integer.ImageDepth.Bit24" id="0O3">16 millions (24 bits)</data>
   <data name="Dialog.Integer.ImageDepth.Bit32" id="0P3">Avec transparence (32 bits)</data>
   <data name="Dialog.Integer.ImageCompression.Text" id="0Q3">Type de compression</data>
-  <data name="Dialog.Integer.ImageCrop.Text" id="03C01">Cadrage de l&amp;apos;image</data>
+  <data name="Dialog.Integer.ImageCrop.Text" id="03C01">Cadrage de l'image</data>
   <data name="Dialog.Integer.ConstrainAngle.Text" id="04C01">Angles supplémentaires</data>
   <data name="Dialog.Integer.ConstrainAngle.None" id="05C01">Aucun</data>
   <data name="Dialog.Integer.ConstrainAngle.Quarter" id="06C01">45°</data>
@@ -262,9 +262,9 @@
   <data name="Container.Principal.Button.Partial" id="0O6">Sélection partielle autorisée</data>
   <data name="Container.Principal.Button.AdaptLine" id="0P6">Adapte les traits</data>
   <data name="Container.Principal.Button.AdaptText" id="0Q6">Adapte les textes</data>
-  <data name="Container.Principal.Button.SelName" id="0R6">Nom de l&amp;apos;objet à sélectionner</data>
+  <data name="Container.Principal.Button.SelName" id="0R6">Nom de l'objet à sélectionner</data>
   <data name="Container.Principal.Button.SelGo" id="0S6">Sélectionner</data>
-  <data name="Container.Principal.Button.SelGoHelp" id="0T6">Sélectionne l&amp;apos;objet selon le nom</data>
+  <data name="Container.Principal.Button.SelGoHelp" id="0T6">Sélectionne l'objet selon le nom</data>
   <data name="Container.Principal.Menu.Stretch.Free" id="0U6">Déformation libre</data>
   <data name="Container.Principal.Menu.Stretch.TrapezeH" id="0V6">Déformation en trapèze horizontal</data>
   <data name="Container.Principal.Menu.Stretch.TrapezeV" id="007">Déformation en trapèze vertical</data>
@@ -293,12 +293,12 @@
   <data name="Object.Poly.Menu.HandleDelete" id="0N7">Enlever le point</data>
   <data name="Object.Poly.Info1" id="0O7">lg={0} α={1}</data>
   <data name="Object.Poly.Info2" id="0P7">lg={0} α={2}  |  lg={1} α={3}</data>
-  <data name="Object.Button.CreateEndingOpen" id="0Q7">Terminer en l&amp;apos;état</data>
+  <data name="Object.Button.CreateEndingOpen" id="0Q7">Terminer en l'état</data>
   <data name="Object.Button.CreateEndingClose" id="0GA01">Terminer et fermer</data>
   <data name="Object.Button.CreateAndSelect" id="0R7">Terminer et sélectionner</data>
   <data name="Object.Button.CreateAndShaper" id="0S7">Terminer et modeler</data>
-  <data name="Object.Text.Error" id="0T7">La police &lt;b&gt;{0}&lt;/b&gt; n&amp;apos;existe pas.</data>
-  <data name="Object.Image.Error" id="0U7">Le fichier &lt;b&gt;{0}&lt;/b&gt; n&amp;apos;existe pas.</data>
+  <data name="Object.Text.Error" id="0T7">La police &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
+  <data name="Object.Image.Error" id="0U7">Le fichier &lt;b&gt;{0}&lt;/b&gt; n'existe pas.</data>
   <data name="Panel.Abstract.Extend" id="0V7">Etend ou réduit le panneau</data>
   <data name="Panel.Style.ParagraphDefinition" id="008">Choix des styles de paragraphe</data>
   <data name="Panel.Style.CharacterDefinition" id="018">Choix des styles de caractère</data>
@@ -322,9 +322,9 @@
   <data name="Panel.Arrow.Long.Length" id="0J8">Longueur</data>
   <data name="Panel.Arrow.Long.Effect1" id="0K8">Variante A</data>
   <data name="Panel.Arrow.Long.Effect2" id="0L8">Variante B</data>
-  <data name="Panel.Arrow.Tooltip.Length" id="0M8">Longueur de l&amp;apos;extrémité</data>
-  <data name="Panel.Arrow.Tooltip.Effect1" id="0N8">Variante A de l&amp;apos;extrémité</data>
-  <data name="Panel.Arrow.Tooltip.Effect2" id="0O8">Variante B de l&amp;apos;extrémité</data>
+  <data name="Panel.Arrow.Tooltip.Length" id="0M8">Longueur de l'extrémité</data>
+  <data name="Panel.Arrow.Tooltip.Effect1" id="0N8">Variante A de l'extrémité</data>
+  <data name="Panel.Arrow.Tooltip.Effect2" id="0O8">Variante B de l'extrémité</data>
   <data name="Panel.Arrow.Tooltip.Swap" id="0P8">Permute les extrémités</data>
   <data name="Panel.Color.Tooltip.Main" id="0Q8">Couleur</data>
   <data name="Panel.Corner.Short.Radius" id="0R8">R</data>
@@ -384,7 +384,7 @@
   <data name="Panel.Gradient.Tooltip.Hatch2" id="0HA">2ème trait</data>
   <data name="Panel.Gradient.Tooltip.Repeat" id="0IA">Nombre de répétitions des couleurs</data>
   <data name="Panel.Gradient.Tooltip.Middle" id="0JA">Position de la couleur médiane</data>
-  <data name="Panel.Gradient.Tooltip.Smooth" id="0KA">Distance floue vers l&amp;apos;extérieur</data>
+  <data name="Panel.Gradient.Tooltip.Smooth" id="0KA">Distance floue vers l'extérieur</data>
   <data name="Panel.Gradient.Tooltip.HatchAngle" id="0LA">Direction en degrés</data>
   <data name="Panel.Gradient.Tooltip.HatchWidth" id="0MA">Epaisseur (zéro si inutilisé)</data>
   <data name="Panel.Gradient.Tooltip.HatchDistance" id="0NA">Espacement</data>
@@ -403,10 +403,10 @@
   <data name="Panel.Image.Combo.Filter.None" id="09A01" mod="1">Pas de filtrage</data>
   <data name="Panel.Image.Combo.Filter.FilterA" id="0AA01" mod="1">Filtrage A</data>
   <data name="Panel.Image.Combo.Filter.FilterB" id="0BA01" mod="1">Filtrage B</data>
-  <data name="Panel.Image.Tooltip.Filename" id="0UA">Nom du fichier de l&amp;apos;image</data>
-  <data name="Panel.Image.Tooltip.Open" id="0VA">Choix du nom de fichier de l&amp;apos;image à importer</data>
-  <data name="Panel.Image.Tooltip.Save" id="06901" mod="1">Exporte l&amp;apos;image dans un fichier sur disque</data>
-  <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l&amp;apos;image d&amp;apos;après le fichier sur disque</data>
+  <data name="Panel.Image.Tooltip.Filename" id="0UA">Nom du fichier de l'image</data>
+  <data name="Panel.Image.Tooltip.Open" id="0VA">Choix du nom de fichier de l'image à importer</data>
+  <data name="Panel.Image.Tooltip.Save" id="06901" mod="1">Exporte l'image dans un fichier sur disque</data>
+  <data name="Panel.Image.Tooltip.Update" id="00B">Actualise l'image d'après le fichier sur disque</data>
   <data name="Panel.Image.Dialog.Open.Title" id="01B">Importer une image</data>
   <data name="Panel.Image.Dialog.Save.Title" id="07901" mod="1">Exporter une image</data>
   <data name="Panel.Image.Crop.Title" id="0P901" mod="1">Cadrage</data>
@@ -414,9 +414,9 @@
   <data name="Panel.Image.Crop.Tooltip.CropRight" id="0H901" mod="1">Marge droite de cadrage en pixels</data>
   <data name="Panel.Image.Crop.Tooltip.CropBottom" id="0I901" mod="1">Marge inférieure de cadrage en pixels</data>
   <data name="Panel.Image.Crop.Tooltip.CropTop" id="0J901" mod="1">Marge supérieure de cadrage en pixels</data>
-  <data name="Panel.Image.Crop.Tooltip.Zoom" id="0O901" mod="1">Zoom de l&amp;apos;image</data>
+  <data name="Panel.Image.Crop.Tooltip.Zoom" id="0O901" mod="1">Zoom de l'image</data>
   <data name="Panel.Image.Crop.Tooltip.Fill" id="0M901" mod="1">Rempli tout le cadre</data>
-  <data name="Panel.Image.Crop.Tooltip.Reset" id="0K901" mod="1">Montre toute l&amp;apos;image</data>
+  <data name="Panel.Image.Crop.Tooltip.Reset" id="0K901" mod="1">Montre toute l'image</data>
   <data name="Panel.Image.Crop.Button.Fill" id="0L901" mod="1">Remplir</data>
   <data name="Panel.Image.Crop.Button.Reset" id="0N901" mod="1">Tout</data>
   <data name="Panel.Image.Filter.None" id="03A01" mod="1">Mosaïque (pas de filtrage)</data>
@@ -477,7 +477,7 @@
   <data name="Panel.ModColor.Tooltip.Negativ" id="0RC">Couleurs inversées</data>
   <data name="Panel.ModColor.Tooltip.Draft" id="0SC">Traits de construction</data>
   <data name="Panel.ModColor.Tooltip.Reset" id="0TC">Reset (valeurs standards)</data>
-  <data name="Panel.Name.Tooltip.Title" id="0UC">Nom de l&amp;apos;objet</data>
+  <data name="Panel.Name.Tooltip.Title" id="0UC">Nom de l'objet</data>
   <data name="Panel.Regular.Short.Faces" id="0VC">N</data>
   <data name="Panel.Regular.Long.Faces" id="01D">Nombre de côtés</data>
   <data name="Panel.Regular.Label.Deep" id="02D">Renfoncement</data>
@@ -498,7 +498,7 @@
   <data name="Panel.Regular.Sample16" id="03D01">Marguerite</data>
   <data name="Panel.Regular.Sample17" id="04D01">Tournesol</data>
   <data name="Panel.Regular.Sample18" id="05D01">Hélice de bateau</data>
-  <data name="Panel.Regular.Sample19" id="06D01">Hélice d&amp;apos;avion</data>
+  <data name="Panel.Regular.Sample19" id="06D01">Hélice d'avion</data>
   <data name="Panel.Regular.Sample20" id="07D01">Hélice fantaisie</data>
   <data name="Panel.Regular.Sample21" id="08D01">Forme ajourée</data>
   <data name="Panel.Regular.Custom" id="09D01">Personnalisé</data>
@@ -616,15 +616,15 @@
   <data name="TextPanel.Generator.Text.Fix9" id="05G">[</data>
   <data name="TextPanel.Generator.Text.Fix10" id="06G">]</data>
   <data name="TextPanel.Generator.Text.Fix11" id="07G">#</data>
-  <data name="TextPanel.Generator.Text.Arial1" id="08G">&lt;font face=&amp;quot;Arial&amp;quot;&gt;●&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial2" id="09G">&lt;font face=&amp;quot;Arial&amp;quot;&gt;○&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial3" id="0AG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;■&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial4" id="0BG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;□&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial5" id="0CG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;♦&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial6" id="0DG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;◊&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial7" id="0EG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;►&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial8" id="0FG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;→&lt;/font&gt;</data>
-  <data name="TextPanel.Generator.Text.Arial9" id="0GG">&lt;font face=&amp;quot;Arial&amp;quot;&gt;―&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial1" id="08G">&lt;font face="Arial"&gt;●&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial2" id="09G">&lt;font face="Arial"&gt;○&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial3" id="0AG">&lt;font face="Arial"&gt;■&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial4" id="0BG">&lt;font face="Arial"&gt;□&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial5" id="0CG">&lt;font face="Arial"&gt;♦&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial6" id="0DG">&lt;font face="Arial"&gt;◊&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial7" id="0EG">&lt;font face="Arial"&gt;►&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial8" id="0FG">&lt;font face="Arial"&gt;→&lt;/font&gt;</data>
+  <data name="TextPanel.Generator.Text.Arial9" id="0GG">&lt;font face="Arial"&gt;―&lt;/font&gt;</data>
   <data name="TextPanel.Justif.Title" id="0HG">Mise en page</data>
   <data name="TextPanel.Keep.Title" id="0IG">Enchaînements</data>
   <data name="TextPanel.Keep.Tooltip.KeepNext" id="0JG">Lié au paragraphe suivant</data>
@@ -639,11 +639,11 @@
   <data name="TextPanel.Keep.Tooltip.KeepEnd" id="0SG">Nombre de lignes solidaires à la fin du paragraphe</data>
   <data name="TextPanel.Keep.Tooltip.StartMode" id="0TG">Emplacement du début du paragraphe</data>
   <data name="TextPanel.Keep.StartMode.Undefined" id="0UG">&lt;i&gt;Selon le style sous-jacent&lt;/i&gt;</data>
-  <data name="TextPanel.Keep.StartMode.Anywhere" id="0VG">N&amp;apos;importe où</data>
-  <data name="TextPanel.Keep.StartMode.NewFrame" id="00H">Au début d&amp;apos;un pavé</data>
-  <data name="TextPanel.Keep.StartMode.NewPage" id="01H">Au début d&amp;apos;une page</data>
-  <data name="TextPanel.Keep.StartMode.NewOddPage" id="02H">Au début d&amp;apos;une page impaire</data>
-  <data name="TextPanel.Keep.StartMode.NewEvenPage" id="03H">Au début d&amp;apos;une page paire</data>
+  <data name="TextPanel.Keep.StartMode.Anywhere" id="0VG">N'importe où</data>
+  <data name="TextPanel.Keep.StartMode.NewFrame" id="00H">Au début d'un pavé</data>
+  <data name="TextPanel.Keep.StartMode.NewPage" id="01H">Au début d'une page</data>
+  <data name="TextPanel.Keep.StartMode.NewOddPage" id="02H">Au début d'une page impaire</data>
+  <data name="TextPanel.Keep.StartMode.NewEvenPage" id="03H">Au début d'une page paire</data>
   <data name="TextPanel.Leading.Title" id="04H">Interligne</data>
   <data name="TextPanel.Leading.Short.Leading" id="05H">d</data>
   <data name="TextPanel.Leading.Short.GridStep" id="06H">G</data>
@@ -666,8 +666,8 @@
   <data name="TextPanel.Margins.Long.LeftFirst" id="0NH">Marge première ligne</data>
   <data name="TextPanel.Margins.Long.LeftBody" id="0OH">Marge gauche</data>
   <data name="TextPanel.Margins.Long.Right" id="0PH">Marge droite</data>
-  <data name="TextPanel.Margins.Long.Level" id="0QH">Niveau d&amp;apos;indentation</data>
-  <data name="TextPanel.Margins.Tooltip.Level" id="0RH">Niveau d&amp;apos;indentation (1..9)</data>
+  <data name="TextPanel.Margins.Long.Level" id="0QH">Niveau d'indentation</data>
+  <data name="TextPanel.Margins.Tooltip.Level" id="0RH">Niveau d'indentation (1..9)</data>
   <data name="TextPanel.Numerator.Title" id="0SH">Numérotation</data>
   <data name="TextPanel.Numerator.Label.Start" id="0TH">Numéro initial</data>
   <data name="TextPanel.Numerator.Tooltip.Start" id="0UH">Exemples: 12 ou 15.A.i (laisser vide pour continuer la numérotation)</data>
@@ -711,7 +711,7 @@
   <data name="TextPanel.Xscript.Short.Offset" id="04J">D</data>
   <data name="TextPanel.Xscript.Long.Scale" id="05J">Echelle</data>
   <data name="TextPanel.Xscript.Long.Offset" id="06J">Décalage</data>
-  <data name="TextPanel.Xscript.Tooltip.Scale" id="07J">Réduction d&amp;apos;échelle</data>
+  <data name="TextPanel.Xscript.Tooltip.Scale" id="07J">Réduction d'échelle</data>
   <data name="TextPanel.Xscript.Tooltip.Offset" id="08J">Décalage vertical</data>
   <data name="TextPanel.Box.Title" id="09J">Cadres</data>
   <data name="TextPanel.Language.Title" id="0AJ">Langue</data>
@@ -720,8 +720,8 @@
   <data name="TextPanel.Language.List.fr" id="0DJ">Français</data>
   <data name="TextPanel.Language.List.de" id="0EJ">Allemand</data>
   <data name="TextPanel.Language.List.en" id="0FJ">Anglais</data>
-  <data name="TextPanel.Clear" id="0GJ">Effacer l&amp;apos;attribut</data>
-  <data name="TextPanel.Units" id="0HJ">Choix de l&amp;apos;unité</data>
+  <data name="TextPanel.Clear" id="0GJ">Effacer l'attribut</data>
+  <data name="TextPanel.Units" id="0HJ">Choix de l'unité</data>
   <data name="Property.Abstract.Name" id="0IJ">Nom</data>
   <data name="Property.Abstract.LineColor" id="0JJ">Couleur trait</data>
   <data name="Property.Abstract.LineMode" id="0KJ">Epaisseur trait</data>
@@ -924,20 +924,20 @@
   <data name="Action.Duplicate" id="0CP">Dupliquer</data>
   <data name="Action.ReplaceMain" id="0DP">Remplacer</data>
   <data name="Action.Replace" id="0EP">Chercher et remplacer...</data>
-  <data name="Action.UndoFind" id="0FP">Chercher &amp;quot;{0}&amp;quot;</data>
-  <data name="Action.UndoReplace" id="0GP">Remplacer &amp;quot;{0}&amp;quot; par &amp;quot;{1}&amp;quot;</data>
+  <data name="Action.UndoFind" id="0FP">Chercher "{0}"</data>
+  <data name="Action.UndoReplace" id="0GP">Remplacer "{0}" par "{1}"</data>
   <data name="Action.DocumentSize" id="0HP">Taille du document</data>
-  <data name="Action.ChangeTool" id="0IP">Choix de l&amp;apos;outil &amp;quot;{0}&amp;quot;</data>
+  <data name="Action.ChangeTool" id="0IP">Choix de l'outil "{0}"</data>
   <data name="Action.OutsideArea" id="0JP">Zone hors page</data>
   <data name="Action.SelectMain" id="0KP">Sélection</data>
   <data name="Action.DeselectAll" id="0LP">Tout désélectionner</data>
   <data name="Action.SelectAll" id="0MP">Tout sélectionner</data>
   <data name="Action.SelectInvert" id="0NP">Inverser la sélection</data>
-  <data name="Action.SelectName" id="0OP">Sélection par nom &amp;quot;{0}&amp;quot;</data>
+  <data name="Action.SelectName" id="0OP">Sélection par nom "{0}"</data>
   <data name="Action.Selector.Move" id="0PP">Déplacement global</data>
   <data name="Action.Selector.Center" id="0QP">Déplacement du centre de rotation global</data>
   <data name="Action.Selector.Rotate" id="0RP">Rotation globale</data>
-  <data name="Action.Selector.Scaler" id="0SP">Mise à l&amp;apos;échelle globale</data>
+  <data name="Action.Selector.Scaler" id="0SP">Mise à l'échelle globale</data>
   <data name="Action.Selector.Stretcher" id="0TP">Déformation globale</data>
   <data name="Action.Selector.Info.Move" id="0UP">dx={0} dy={1}</data>
   <data name="Action.Selector.Info.Scale" id="0VP">échelle x={0}% échelle y={1}%</data>
@@ -971,7 +971,7 @@
   <data name="Action.ScaleMain" id="0RQ">Echelle</data>
   <data name="Action.ScaleMul2" id="0SQ">Agrandissement ×2</data>
   <data name="Action.ScaleDiv2" id="0TQ">Réduction ÷2</data>
-  <data name="Action.ScaleValue" id="0UQ">Facteur d&amp;apos;agrandissement/réduction</data>
+  <data name="Action.ScaleValue" id="0UQ">Facteur d'agrandissement/réduction</data>
   <data name="Action.ScaleMulFree" id="0VQ">Agrandissement</data>
   <data name="Action.ScaleDivFree" id="00R">Réduction</data>
   <data name="Action.ScaleMul" id="01R">Agrandissement {0}%</data>
@@ -1061,9 +1061,9 @@
   <data name="Action.PageUp" id="0IT">Reculer la page</data>
   <data name="Action.PageDown" id="0JT">Avancer la page</data>
   <data name="Action.PagePrev" id="0KT">Page précédente</data>
-  <data name="Action.PageMenu" id="0LT">Choix d&amp;apos;une page</data>
+  <data name="Action.PageMenu" id="0LT">Choix d'une page</data>
   <data name="Action.PageNext" id="0MT">Page suivante</data>
-  <data name="Action.PageChangeStatus" id="0NT">Changer l&amp;apos;état de la page</data>
+  <data name="Action.PageChangeStatus" id="0NT">Changer l'état de la page</data>
   <data name="Action.LayerChange" id="0OT">Changer de calque</data>
   <data name="Action.LayerNew" id="0PT">Nouveau calque</data>
   <data name="Action.LayerNewLong" id="0QT">Nouveau calque &lt;b&gt;dessus&lt;/b&gt; le calque courant</data>
@@ -1078,13 +1078,13 @@
   <data name="Action.LayerUp" id="03U">Monter le calque</data>
   <data name="Action.LayerDown" id="04U">Descendre le calque</data>
   <data name="Action.LayerNext" id="05U">Calque suivant</data>
-  <data name="Action.LayerMenu" id="06U">Choix d&amp;apos;un calque</data>
+  <data name="Action.LayerMenu" id="06U">Choix d'un calque</data>
   <data name="Action.LayerPrev" id="07U">Calque précédent</data>
   <data name="Action.LayerChangeShowOne" id="08U">Changer la visibilité du calque</data>
   <data name="Action.LayerChangeShowAll" id="09U">Changer la visibilité des calques</data>
-  <data name="Action.LayerChangePrint" id="0AU">Changer le mode d&amp;apos;impression du calque</data>
-  <data name="Action.LayerChangeMagnet" id="0BU">Changer l&amp;apos;état du calque</data>
-  <data name="Action.AggregateUse" id="0CU">Utiliser le style &amp;quot;{0}&amp;quot;</data>
+  <data name="Action.LayerChangePrint" id="0AU">Changer le mode d'impression du calque</data>
+  <data name="Action.LayerChangeMagnet" id="0BU">Changer l'état du calque</data>
+  <data name="Action.AggregateUse" id="0CU">Utiliser le style "{0}"</data>
   <data name="Action.AggregateNewEmpty" id="0DU">Nouveau style vide</data>
   <data name="Action.AggregateNew3" id="0EU">Nouveau style pour trait et couleurs</data>
   <data name="Action.AggregateNewAll" id="0FU">Nouveau style pour tout</data>
@@ -1109,23 +1109,23 @@
   <data name="Action.GuideDown" id="02V">Repère après</data>
   <data name="Action.GuideDelete" id="03V">Supprimer le repère</data>
   <data name="Action.GuideSelect" id="04V">Sélectionner un repère</data>
-  <data name="Action.GuideChangeType" id="05V">Changer le type d&amp;apos;un repère</data>
-  <data name="Action.GuideChangePosition" id="06V">Changer la position d&amp;apos;un repère</data>
-  <data name="Action.PropertyChange" id="07V">Changement de l&amp;apos;attribut &amp;quot;{0}&amp;quot;</data>
+  <data name="Action.GuideChangeType" id="05V">Changer le type d'un repère</data>
+  <data name="Action.GuideChangePosition" id="06V">Changer la position d'un repère</data>
+  <data name="Action.PropertyChange" id="07V">Changement de l'attribut "{0}"</data>
   <data name="Action.PickerProperty" id="08V">Style selon la pipette</data>
-  <data name="Action.ObjectCreate" id="09V">Création d&amp;apos;un objet &amp;quot;{0}&amp;quot;</data>
+  <data name="Action.ObjectCreate" id="09V">Création d'un objet "{0}"</data>
   <data name="Action.Select" id="0AV">Sélection</data>
   <data name="Action.Shaper" id="0BV">Modeler</data>
-  <data name="Action.HandleMove" id="0CV">Déplacement d&amp;apos;un sommet</data>
-  <data name="Action.GuideMove" id="0DV">Déplacement d&amp;apos;un repère</data>
-  <data name="Action.GuideCreateAndMove" id="0EV">Création puis déplacement d&amp;apos;un repère</data>
+  <data name="Action.HandleMove" id="0CV">Déplacement d'un sommet</data>
+  <data name="Action.GuideMove" id="0DV">Déplacement d'un repère</data>
+  <data name="Action.GuideCreateAndMove" id="0EV">Création puis déplacement d'un repère</data>
   <data name="Action.SelectGlobal" id="0FV">Sélection rectangulaire</data>
-  <data name="Action.SelectObject" id="0GV">Sélection d&amp;apos;un objet</data>
-  <data name="Action.SelectHandle" id="0HV">Sélection d&amp;apos;un sommet</data>
-  <data name="Action.MoveObject" id="0IV">Déplacement d&amp;apos;un objet</data>
+  <data name="Action.SelectObject" id="0GV">Sélection d'un objet</data>
+  <data name="Action.SelectHandle" id="0HV">Sélection d'un sommet</data>
+  <data name="Action.MoveObject" id="0IV">Déplacement d'un objet</data>
   <data name="Action.DuplicateAndMove" id="0JV">Dupliquer puis déplacer</data>
-  <data name="Action.SelectAndMove" id="0KV">Sélection puis déplacement d&amp;apos;un objet</data>
-  <data name="Action.SelectGlobalAdd" id="0LV">Ajout d&amp;apos;une sélection rectangulaire</data>
+  <data name="Action.SelectAndMove" id="0KV">Sélection puis déplacement d'un objet</data>
+  <data name="Action.SelectGlobalAdd" id="0LV">Ajout d'une sélection rectangulaire</data>
   <data name="Action.SelectObjectAdd" id="0MV">Objet ajouté à la sélection</data>
   <data name="Action.SelectObjectSub" id="0NV">Objet enlevé à la sélection</data>
   <data name="Action.SelectHandleAdd" id="0OV">Sommet ajouté à la sélection</data>
@@ -1153,10 +1153,10 @@
   <data name="Action.TextShowControlCharacters" id="0E001">Afficher les caractères spéciaux</data>
   <data name="Action.TextFontFilter" id="0F001">Seulement les caractères fréquement utilisés</data>
   <data name="Action.TextInsertQuad" id="0G001">Insérer un espace insécable</data>
-  <data name="Action.TextInsertNewFrame" id="0H001">Insérer un saut d&amp;apos;objet</data>
+  <data name="Action.TextInsertNewFrame" id="0H001">Insérer un saut d'objet</data>
   <data name="Action.TextInsertNewPage" id="0I001">Insérer un saut de page</data>
   <data name="Action.Preview" id="0J001">Comme imprimé</data>
-  <data name="Action.Magnet" id="0K001" mod="1">Objets magnétiques (la touche Tab change le point&lt;br/&gt;d&amp;apos;accroche lors d&amp;apos;un déplacement global)</data>
+  <data name="Action.Magnet" id="0K001" mod="1">Objets magnétiques (la touche Tab change le point&lt;br/&gt;d'accroche lors d'un déplacement global)</data>
   <data name="Action.MagnetLayer" id="0L001">Les objets du calque sont magnétiques</data>
   <data name="Action.Rulers" id="0M001">Règles graduées</data>
   <data name="Action.Labels" id="0N001">Affiche les noms des objets</data>
@@ -1175,7 +1175,7 @@
   <data name="Action.FontBold" id="04101">Gras</data>
   <data name="Action.FontItalic" id="05101">Italique</data>
   <data name="Action.FontInvertBold" id="06101">Inverser le gras</data>
-  <data name="Action.FontInvertItalic" id="07101">Inverser l&amp;apos;italique</data>
+  <data name="Action.FontInvertItalic" id="07101">Inverser l'italique</data>
   <data name="Action.FontUnderline" id="08101">Souligné</data>
   <data name="Action.FontOverline" id="09101">Surligné</data>
   <data name="Action.FontStrikeout" id="0A101">Biffé</data>
@@ -1202,14 +1202,14 @@
   <data name="Action.ParagraphAlignJustif" id="0V101">Justifié (sans la dernière ligne)</data>
   <data name="Action.ParagraphAlignAll" id="00201">Justifié (avec la dernière ligne)</data>
   <data name="Action.ParagraphHyphen" id="01201">Césures dans les mots</data>
-  <data name="Action.ParagraphLeading" id="02201">Modifier l&amp;apos;interligne</data>
-  <data name="Action.ParagraphLeadingMinus" id="03201">Diminuer l&amp;apos;interligne</data>
-  <data name="Action.ParagraphLeadingPlus" id="04201">Augmenter l&amp;apos;interligne</data>
+  <data name="Action.ParagraphLeading" id="02201">Modifier l'interligne</data>
+  <data name="Action.ParagraphLeadingMinus" id="03201">Diminuer l'interligne</data>
+  <data name="Action.ParagraphLeadingPlus" id="04201">Augmenter l'interligne</data>
   <data name="Action.ParagraphGenerator" id="05201">Modifier les puces/numérotations</data>
   <data name="Action.ParagraphClear" id="06201">Effacer tous les attributs de paragraphe</data>
   <data name="Action.Text.Insert" id="07201">Insertion</data>
-  <data name="Action.Text.Edit.InsertText" id="08201">Insertion de &amp;quot;{0}&amp;quot;</data>
-  <data name="Action.Text.Edit.DeleteText" id="09201">Suppression de &amp;quot;{0}&amp;quot;</data>
+  <data name="Action.Text.Edit.InsertText" id="08201">Insertion de "{0}"</data>
+  <data name="Action.Text.Edit.DeleteText" id="09201">Suppression de "{0}"</data>
   <data name="Action.Text.Edit.ChangeText" id="0A201">Modification de caractères</data>
   <data name="Action.Text.Edit.MoveCursor" id="0B201">Déplacement du curseur</data>
   <data name="Action.Text.Edit.DefineSelection" id="0C201">Sélection de caractères</data>
@@ -1371,13 +1371,13 @@
   <data name="Text.Features_vpal" id="08701">Proportional Alternate Vertical Metrics</data>
   <data name="Text.Features_vrt2" id="09701">Vertical Rotation</data>
   <data name="Text.Features_zero" id="0A701">Slashed Zero</data>
-  <data name="Text.FeaturesUnknow" id="0B701">Variante &amp;quot;{0}&amp;quot;</data>
+  <data name="Text.FeaturesUnknow" id="0B701">Variante "{0}"</data>
   <data name="Statistic.Summary" id="0C701">{0}Résumé{1}</data>
   <data name="Statistic.Filename" id="0D701">{0}Nom complet: {1}</data>
   <data name="Statistic.Size" id="0E701">{0}Dimensions: {1}x{2}</data>
   <data name="Statistic.Pages" id="0F701">{0}Nombre de pages: {1}</data>
   <data name="Statistic.Layers" id="0G701">{0}Nombre de calques: {1}</data>
-  <data name="Statistic.Objects" id="0H701">{0}Nombre d&amp;apos;objets: {1}</data>
+  <data name="Statistic.Objects" id="0H701">{0}Nombre d'objets: {1}</data>
   <data name="Statistic.Gradients" id="0I701">{0}Objets dégradés ou transparents: {1}</data>
   <data name="Statistic.Fonts" id="0J701">{0}Polices utilisées{1}</data>
   <data name="Statistic.Images" id="0K701">{0}Images utilisées{1}</data>
@@ -1416,19 +1416,19 @@
   <data name="File.Model.Empty" id="00A01" mod="1">Document vide</data>
   <data name="Question.ManyObjects" id="0L801">Voulez-vous vraiment transformer {0} objets ?</data>
   <data name="Error.BadFile" id="0M801">Type de fichier incorrect.</data>
-  <data name="Error.BadImage" id="0N801">Format d&amp;apos;image inconnu.</data>
+  <data name="Error.BadImage" id="0N801">Format d'image inconnu.</data>
   <data name="Error.NoBitmap" id="0O801">Aucune image à exporter.</data>
   <data name="Error.Share" id="0P801">Impossible de distribuer les objets,&lt;br/&gt;car ils sont trop serrés.</data>
-  <data name="Error.Combine" id="0Q801">Un ou plusieurs objets n&amp;apos;ont pas pu être combinés.</data>
-  <data name="Error.Uncombine" id="0R801">Un ou plusieurs objets n&amp;apos;ont pas pu être scindés.</data>
-  <data name="Error.ExistingText" id="0OB01">La présence de textes empêche l&amp;apos;enregistrement de l&amp;apos;icône.&lt;br/&gt;Il faut convertir ces objets en courbes avant l&amp;apos;enregistrement.</data>
-  <data name="Error.ToBezier" id="0S801">Un ou plusieurs objets n&amp;apos;ont pas pu être convertis en courbes.</data>
-  <data name="Error.ToPoly" id="0T801">Un ou plusieurs objets n&amp;apos;ont pas pu être convertis en droites.</data>
-  <data name="Error.Fragment" id="0U801">Un ou plusieurs objets n&amp;apos;ont pas pu être fragmentés.</data>
+  <data name="Error.Combine" id="0Q801">Un ou plusieurs objets n'ont pas pu être combinés.</data>
+  <data name="Error.Uncombine" id="0R801">Un ou plusieurs objets n'ont pas pu être scindés.</data>
+  <data name="Error.ExistingText" id="0OB01">La présence de textes empêche l'enregistrement de l'icône.&lt;br/&gt;Il faut convertir ces objets en courbes avant l'enregistrement.</data>
+  <data name="Error.ToBezier" id="0S801">Un ou plusieurs objets n'ont pas pu être convertis en courbes.</data>
+  <data name="Error.ToPoly" id="0T801">Un ou plusieurs objets n'ont pas pu être convertis en droites.</data>
+  <data name="Error.Fragment" id="0U801">Un ou plusieurs objets n'ont pas pu être fragmentés.</data>
   <data name="Error.Boolean" id="0V801">Opération impossible.</data>
   <data name="Error.NoText" id="00901">Le document ne contient aucun texte.</data>
-  <data name="Error.NotFound" id="01901">Le texte recherché n&amp;apos;existe pas dans ce document.</data>
-  <data name="Error.FileDoesNoetExist" id="03901" mod="1">Le fichier n&amp;apos;existe pas.</data>
+  <data name="Error.NotFound" id="01901">Le texte recherché n'existe pas dans ce document.</data>
+  <data name="Error.FileDoesNoetExist" id="03901" mod="1">Le fichier n'existe pas.</data>
   <data name="Panel.Image.FromClipboard" id="K">&lt;i&gt;En provenance du bloc-notes&lt;/i&gt;</data>
   <data name="Action.PasteText" id="K1">Coller un texte</data>
   <data name="Action.PasteImage" id="K2">Coller une image</data>
@@ -1449,7 +1449,7 @@
   <data name="Panel.Frame.Long.ShadowSize" id="KM">Portée ombre</data>
   <data name="Panel.Frame.Tooltip.FrameWidth" id="KN">Epaisseur du trait</data>
   <data name="Panel.Frame.Tooltip.MarginWidth" id="KO">Epaisseur de la bordure</data>
-  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Portée de l&amp;apos;ombre, qui va en décrescendo</data>
+  <data name="Panel.Frame.Tooltip.ShadowSize" id="KP">Portée de l'ombre, qui va en décrescendo</data>
   <data name="Property.Abstract.Frame" id="KQ">Cadre</data>
   <data name="Panel.Frame.Long.FrameColor" id="KR">Couleur trait</data>
   <data name="Panel.Frame.Short.ShadowColor" id="KS">CO</data>
@@ -1464,12 +1464,12 @@
   <data name="Panel.Frame.Long.ShadowOffsetY" id="K51">Décalage</data>
   <data name="Panel.Frame.Short.ShadowOffsetX" id="K61">X</data>
   <data name="Panel.Frame.Short.ShadowOffsetY" id="K71">Y</data>
-  <data name="Panel.Frame.Tooltip.ShadowOffsetX" id="K81">Décalage horizontal de l&amp;apos;ombre (à droite si positif)</data>
-  <data name="Panel.Frame.Tooltip.ShadowOffsetY" id="K91">Décalage vertical de l&amp;apos;ombre (en haut si positif)</data>
+  <data name="Panel.Frame.Tooltip.ShadowOffsetX" id="K81">Décalage horizontal de l'ombre (à droite si positif)</data>
+  <data name="Panel.Frame.Tooltip.ShadowOffsetY" id="K91">Décalage vertical de l'ombre (en haut si positif)</data>
   <data name="Property.Frame.FrameAndShadow" id="KA1">Cadre et ombre</data>
   <data name="Panel.Frame.Long.ShadowInflate" id="KB1">Gross. ombre</data>
   <data name="Panel.Frame.Short.ShadowInflate" id="KC1">G</data>
-  <data name="Panel.Frame.Tooltip.ShadowInflate" id="KD1">Grossissement ou réduction de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Tooltip.ShadowInflate" id="KD1">Grossissement ou réduction de l'ombre</data>
   <data name="Panel.Frame.Sample01" id="KE1">Pas de cadre</data>
   <data name="Panel.Frame.Sample02" id="KF1">Cadre fin sans bordure</data>
   <data name="Panel.Frame.Sample03" id="KG1">Cadre fin sans bordure avec halo</data>
@@ -1479,14 +1479,14 @@
   <data name="Panel.Frame.Sample07" id="KL1">Petite ombre</data>
   <data name="Panel.Frame.Sample08" id="KM1">Grande ombre</data>
   <data name="Panel.Frame.Custom" id="KS1">Personnalisé</data>
-  <data name="Action.ImageZoom" id="KU1">Zoom de l&amp;apos;image</data>
-  <data name="Action.ImageFillMode" id="KV1">Recadre l&amp;apos;image pour qu&amp;apos;elle remplisse toute la surface</data>
+  <data name="Action.ImageZoom" id="KU1">Zoom de l'image</data>
+  <data name="Action.ImageFillMode" id="KV1">Recadre l'image pour qu'elle remplisse toute la surface</data>
   <data name="Action.ImageImport" id="K02">Importe un fichier image</data>
-  <data name="Action.ImageShowAll" id="K12">Recadre l&amp;apos;image pour qu&amp;apos;elle soit entièrement visible</data>
-  <data name="Action.ImageRotateLeft" id="K22">Tourne l&amp;apos;image d&amp;apos;un quart de tour à gauche</data>
+  <data name="Action.ImageShowAll" id="K12">Recadre l'image pour qu'elle soit entièrement visible</data>
+  <data name="Action.ImageRotateLeft" id="K22">Tourne l'image d'un quart de tour à gauche</data>
   <data name="Panel.Frame.Long.ShadowConvexity" id="K32">Convexité</data>
   <data name="Panel.Frame.Short.MarginConvexity" id="K42">X</data>
-  <data name="Panel.Frame.Tooltip.ShadowConvexity" id="K52">Convexité ou concavité de l&amp;apos;ombre</data>
+  <data name="Panel.Frame.Tooltip.ShadowConvexity" id="K52">Convexité ou concavité de l'ombre</data>
   <data name="Panel.Frame.Long.MarginConvexity" id="K62">Convexité</data>
   <data name="Panel.Frame.Short.ShadowConvexity" id="K72">X</data>
   <data name="Panel.Frame.Tooltip.MarginConvexity" id="K82">Convexité ou concavité de la bordure</data>

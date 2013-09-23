@@ -50,10 +50,10 @@
   <data name="Viewers.Panels.StatusBar.Parent" id="0G9">Sélectionner ce parent</data>
   <data name="Viewers.Panels.StatusBar.This" id="0H9">Sélectionner cet objet</data>
   <data name="Viewers.Panels.StatusBar.Children" id="0I9">Sélectionner cet enfant</data>
-  <data name="Viewers.Panels.StatusBar.Next" id="0J9">Sélectionner l&amp;apos;objet suivant</data>
+  <data name="Viewers.Panels.StatusBar.Next" id="0J9">Sélectionner l'objet suivant</data>
   <data name="Viewers.Panels.StatusBar.All" id="0K9">Sélectionner tous les enfants</data>
   <data name="Viewers.Captions.Labels.Title" id="0A5" mod="1">Textes</data>
-  <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Bulle d&amp;apos;aide</data>
+  <data name="Viewers.Captions.Description.Title" id="0C5" mod="1">Bulle d'aide</data>
   <data name="Viewers.Captions.Description.Short" id="0J5" mod="1">Description</data>
   <data name="Viewers.Captions.Icon.Title" id="0D5" mod="1">Icône</data>
   <data name="Viewers.Captions.About.Title" id="0B5" mod="1">Commentaires</data>
@@ -99,10 +99,10 @@
   <data name="Viewers.Types.DateTime.DateStep" id="0V8">Pas pour la date</data>
   <data name="Viewers.Types.DateTime.TimeMin" id="009">Heure minimale</data>
   <data name="Viewers.Types.DateTime.TimeMax" id="019">Heure maximale</data>
-  <data name="Viewers.Types.DateTime.TimeStep" id="029">Pas pour l&amp;apos;heure</data>
+  <data name="Viewers.Types.DateTime.TimeStep" id="029">Pas pour l'heure</data>
   <data name="Viewers.Types.DateTime.Sample" id="049">Exemple de valeur</data>
   <data name="Viewers.Types.Nullable.Title" id="0F7">États</data>
-  <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d&amp;apos;être nul</data>
+  <data name="Viewers.Types.Nullable.CheckButton" id="0G7">Accepte d'être nul</data>
   <data name="Viewers.Types.Enum.RowName" id="0Q7">Nom</data>
   <data name="Viewers.Types.Enum.RowDescription" id="0R7">Textes et description</data>
   <data name="Viewers.Types.Enum.RowIcon" id="0S7">Icône</data>
@@ -173,15 +173,15 @@
   <data name="Action.PanelDeselectAll" id="022">Désélectionner tous les objets</data>
   <data name="Action.PanelSelectAll" id="032">Sélectionner tous les objets</data>
   <data name="Action.PanelSelectInvert" id="042">Inverser les objets sélectionnés</data>
-  <data name="Action.PanelSelectParent" id="0L9">Sélectionner l&amp;apos;objet parent</data>
+  <data name="Action.PanelSelectParent" id="0L9">Sélectionner l'objet parent</data>
   <data name="Action.PanelSelectRoot" id="0M9">Sélectionner le panneau de base</data>
   <data name="Action.PanelShowGrid" id="052">Activer la grille magnétique</data>
-  <data name="Action.PanelShowZOrder" id="062">Afficher l&amp;apos;ordre des objets</data>
-  <data name="Action.PanelShowTabIndex" id="072">Afficher l&amp;apos;ordre pour la touche Tab</data>
+  <data name="Action.PanelShowZOrder" id="062">Afficher l'ordre des objets</data>
+  <data name="Action.PanelShowTabIndex" id="072">Afficher l'ordre pour la touche Tab</data>
   <data name="Action.PanelShowExpand" id="082">Espacer les groupes</data>
   <data name="Action.PanelShowConstrain" id="092">Activer les contraintes</data>
   <data name="Action.PanelShowAttachment" id="0A2">Afficher les ancrages</data>
-  <data name="Action.PanelRun" id="045" mod="1">Tester l&amp;apos;interface</data>
+  <data name="Action.PanelRun" id="045" mod="1">Tester l'interface</data>
   <data name="Action.MoveLeft" id="0B2">Déplacement à gauche</data>
   <data name="Action.MoveRight" id="0C2">Déplacement à droite</data>
   <data name="Action.MoveDown" id="0D2">Déplacement en bas</data>
@@ -230,9 +230,9 @@
   <data name="StringCollection.Next" id="0I5" mod="1">Descendre le texte</data>
   <data name="Panel.Content.Tooltip.ChangeDruid" id="0B9">Choix de la ressource associée</data>
   <data name="Panel.Content.Tooltip.ChangeBinding" id="0C9">Choix du champ à éditer</data>
-  <data name="Panel.Content.Tooltip.ChangeStructured" id="0D9">Choix de l&amp;apos;entité liée</data>
+  <data name="Panel.Content.Tooltip.ChangeStructured" id="0D9">Choix de l'entité liée</data>
   <data name="Dialog.Button.Close" id="0E3">Fermer</data>
-  <data name="Dialog.Button.OK" id="0F3">D&amp;apos;accord</data>
+  <data name="Dialog.Button.OK" id="0F3">D'accord</data>
   <data name="Dialog.Button.Cancel" id="0G3">Annuler</data>
   <data name="Dialog.Button.Help" id="0H3">Aide</data>
   <data name="Dialog.Tooltip.Close" id="0I3">Fermer ce dialogue</data>
@@ -240,11 +240,11 @@
   <data name="Dialog.Tooltip.Resize" id="0K3">Redimensionner la fenêtre</data>
   <data name="Dialog.Glyphs.Title" id="0L3">Caractères spéciaux</data>
   <data name="Dialog.Glyphs.Button.Insert" id="0M3">Insérer</data>
-  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="0N3">Taille de l&amp;apos;aperçu</data>
+  <data name="Dialog.Glyphs.Tooltip.ArraySize" id="0N3">Taille de l'aperçu</data>
   <data name="Dialog.Filter.Title" id="0O3">Filtre pour les noms des ressources</data>
   <data name="Dialog.Filter.Label" id="0P3">Critère</data>
   <data name="Dialog.Filter.Radio.Begin" id="0Q3">Au début</data>
-  <data name="Dialog.Filter.Radio.Any" id="0R3">N&amp;apos;importe où</data>
+  <data name="Dialog.Filter.Radio.Any" id="0R3">N'importe où</data>
   <data name="Dialog.Filter.Radio.Joker" id="0S3">Avec des jokers (*?)</data>
   <data name="Dialog.Filter.Check.Case" id="0T3">Respecter la casse</data>
   <data name="Dialog.Filter.Check.Word" id="0U3">Mots entiers</data>
@@ -279,23 +279,23 @@
   <data name="Dialog.NewCulture.Button.Create" id="0L4">Créer</data>
   <data name="Dialog.DeleteCulture.Question" id="0M4">Voulez-vous supprimer la culture {0} ?</data>
   <data name="Dialog.Delete.Question" id="0U9">Voulez-vous supprimer la ressource {0} ?</data>
-  <data name="Dialog.Icon.Title" id="016" mod="1">Choix d&amp;apos;une icône</data>
+  <data name="Dialog.Icon.Title" id="016" mod="1">Choix d'une icône</data>
   <data name="Dialog.Icon.Label.Search" id="096" mod="1">Rechercher</data>
   <data name="Dialog.Icon.Label.Filter" id="0A6" mod="1">Modules</data>
-  <data name="Dialog.Icon.None" id="046" mod="1">&lt;i&gt;Pas d&amp;apos;icône&lt;/i&gt;</data>
-  <data name="Dialog.Icon.Button.OK" id="026" mod="1">D&amp;apos;accord</data>
+  <data name="Dialog.Icon.None" id="046" mod="1">&lt;i&gt;Pas d'icône&lt;/i&gt;</data>
+  <data name="Dialog.Icon.Button.OK" id="026" mod="1">D'accord</data>
   <data name="Dialog.Icon.Button.Cancel" id="036" mod="1">Annuler</data>
   <data name="Dialog.Icon.Filter.All" id="056" mod="1">Tout montrer</data>
   <data name="Dialog.Icon.Filter.One" id="066" mod="1">Seulement {0}</data>
   <data name="Dialog.Icon.Tooltip.Mode" id="076" mod="1">Mode compact ou étendu</data>
   <data name="Dialog.Icon.Tooltip.Size" id="086" mod="1">Taille des icônes</data>
-  <data name="Dialog.ResourceSelector.Title" id="0N4">Choix d&amp;apos;une ressource</data>
+  <data name="Dialog.ResourceSelector.Title" id="0N4">Choix d'une ressource</data>
   <data name="Dialog.ResourceSelector.Label" id="0O4">Identificateur :</data>
   <data name="Dialog.ResourceSelector.Text" id="0P4">Texte {0} :</data>
   <data name="Dialog.ResourceSelector.Button.Clear" id="0Q4">R</data>
   <data name="Dialog.ResourceSelector.Button.Use" id="0R4">Utiliser</data>
   <data name="Dialog.ResourceSelector.Button.Create" id="0S4">Créer</data>
-  <data name="Dialog.BindingSelector.Title" id="099">Choix d&amp;apos;un champ dans une entité</data>
+  <data name="Dialog.BindingSelector.Title" id="099">Choix d'un champ dans une entité</data>
   <data name="Dialog.BindingSelector.Button.Readonly" id="0S9">Lecture seule</data>
   <data name="Dialog.BindingSelector.Button.Inherit" id="0T9">Hérité</data>
   <data name="Dialog.BindingSelector.Button.Use" id="0A9">Utiliser</data>
@@ -320,15 +320,15 @@
   <data name="Misc.Extract" id="005">Extrait</data>
   <data name="Misc.ExtractOf" id="015">de</data>
   <data name="Error.Name.Invalid" id="025">Le nom contient un ou plusieurs caractères invalides !</data>
-  <data name="Error.Name.AlreadyExist" id="035">Impossible d&amp;apos;utiliser ce nom, car il existe déjà !</data>
+  <data name="Error.Name.AlreadyExist" id="035">Impossible d'utiliser ce nom, car il existe déjà !</data>
   <data name="Error.Name.Twofold" id="077" mod="1">Deux parties successives séparées par des&lt;br/&gt;points ne peuvent pas être identiques !</data>
   <data name="Error.Name.SamePrefix" id="087" mod="1">Racine utilisée à double !</data>
   <data name="Error.ShortcutMany" id="0V5" mod="1">Raccourci clavier &lt;i&gt;{0}&lt;/i&gt; utilisé plusieurs fois :</data>
   <data name="Error.CheckOK" id="006" mod="1">Aucune anomalie détectée.</data>
   <data name="Action.DisplayFullScreen" id="2">Plein écran</data>
   <data name="Action.EditLocked" id="21">Mode bloqué ou débloqué</data>
-  <data name="Action.EditCancel" id="22">Annuler l&amp;apos;édition de la ressource en cours</data>
-  <data name="Action.EditOk" id="23">Valider l&amp;apos;édition de la ressource en cours</data>
+  <data name="Action.EditCancel" id="22">Annuler l'édition de la ressource en cours</data>
+  <data name="Action.EditOk" id="23">Valider l'édition de la ressource en cours</data>
   <data name="BundleType.Entities" id="24">Entités</data>
   <data name="BundleType.Entity" id="25">Entité</data>
   <data name="Viewers.Types.Native.Type" id="26">Type système natif</data>
@@ -350,12 +350,12 @@
   <data name="Entities.Action.ZoomMax" id="2N">Zoom maximal</data>
   <data name="Entities.Action.ZoomMenu" id="2O">Cliquez pour choisir le zoom dans un menu</data>
   <data name="Entities.Action.ZoomSlider" id="2P">Choix du zoom</data>
-  <data name="Entities.Question.SubView.Base" id="2Q">Quelle opération voulez-vous effectuer sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Entities.Question.SubView.Base" id="2Q">Quelle opération voulez-vous effectuer sur l'entité &lt;b&gt;{0}&lt;/b&gt; ?</data>
   <data name="Entities.Question.SubView.Quick.Copy" id="2R">Copier</data>
   <data name="Entities.Question.SubView.Quick.Swap" id="2S">Permuter</data>
   <data name="Entities.Question.SubView.Long.Copy" id="2T">La vue &lt;b&gt;{0}&lt;/b&gt; est copiée dans la vue &lt;b&gt;{1}&lt;/b&gt;.</data>
   <data name="Entities.Question.SubView.Long.Swap" id="2U">Les vues &lt;b&gt;{0}&lt;/b&gt; et &lt;b&gt;{1}&lt;/b&gt; sont permutées.</data>
-  <data name="Entities.Action.BoxHeader" id="2V">Déplace l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxHeader" id="2V">Déplace l'entité</data>
   <data name="Entities.Action.BoxSources" id="201">Ouvre une entité source</data>
   <data name="Entities.Action.BoxComment" id="211">Crée un nouveau commentaire associé</data>
   <data name="Entities.Action.BoxInfo" id="221">Montre ou cache les informations associées</data>
@@ -363,8 +363,8 @@
   <data name="Entities.Action.BoxColor4" id="241">Entité grise</data>
   <data name="Entities.Action.BoxColor2" id="251">Entité verte</data>
   <data name="Entities.Action.BoxColor3" id="261">Entité rouge</data>
-  <data name="Entities.Action.BoxExtend" id="271">Compacte ou étend l&amp;apos;entité</data>
-  <data name="Entities.Action.BoxClose" id="281">Ferme l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxExtend" id="271">Compacte ou étend l'entité</data>
+  <data name="Entities.Action.BoxClose" id="281">Ferme l'entité</data>
   <data name="Entities.Action.BoxFieldName1" id="291">Aller sur la définition du champ</data>
   <data name="Entities.Action.BoxFieldName2" id="2A1">Ctrl+clic: aller sur la définition du champ</data>
   <data name="Entities.Action.BoxFieldName3" id="2B1">Change les paramètres du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du champ</data>
@@ -374,16 +374,16 @@
   <data name="Entities.Action.BoxFieldExpression" id="2F1">Expression du champ</data>
   <data name="Entities.Action.BoxFieldAdd" id="2G1">Ajoute un nouveau champ</data>
   <data name="Entities.Action.BoxFieldRemove" id="2H1">Supprime le champ</data>
-  <data name="Entities.Action.BoxFieldMovable" id="2I1">Change l&amp;apos;ordre du champ dans la liste</data>
+  <data name="Entities.Action.BoxFieldMovable" id="2I1">Change l'ordre du champ dans la liste</data>
   <data name="Entities.Action.BoxFieldTitle1" id="2J1">Aller sur la définition</data>
   <data name="Entities.Action.BoxFieldTitle2" id="2K1">Ctrl+clic: aller sur la définition</data>
   <data name="Entities.Action.BoxFieldAddInterface" id="2L1">Ajoute une interface</data>
-  <data name="Entities.Action.BoxFieldRemoveInterface" id="2M1">Supprime l&amp;apos;interface</data>
-  <data name="Entities.Action.BoxChangeWidth" id="2N1">Modifie la largeur de l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxFieldRemoveInterface" id="2M1">Supprime l'interface</data>
+  <data name="Entities.Action.BoxChangeWidth" id="2N1">Modifie la largeur de l'entité</data>
   <data name="Entities.Action.BoxMoveColumnsSeparator" id="2O1">Déplace le séparateur des colonnes</data>
-  <data name="Entities.Action.ConnectionOpenLeft" id="2P1">Ouvre l&amp;apos;entité liée sur la gauche</data>
-  <data name="Entities.Action.ConnectionOpenRight" id="2Q1">Ouvre l&amp;apos;entité liée sur la droite</data>
-  <data name="Entities.Action.ConnectionClose" id="2R1">Ferme l&amp;apos;entité</data>
+  <data name="Entities.Action.ConnectionOpenLeft" id="2P1">Ouvre l'entité liée sur la gauche</data>
+  <data name="Entities.Action.ConnectionOpenRight" id="2Q1">Ouvre l'entité liée sur la droite</data>
+  <data name="Entities.Action.ConnectionClose" id="2R1">Ferme l'entité</data>
   <data name="Entities.Action.ConnectionMove" id="2T1">Modifie le routage de la relation</data>
   <data name="Entities.Action.ConnectionComment" id="2U1">Montre ou cache le commentaire associé</data>
   <data name="Entities.Action.CommentEdit" id="2V1">Modifie le texte du commentaire</data>
@@ -398,20 +398,20 @@
   <data name="Entities.Action.CommentColor5" id="282">Commentaire violet</data>
   <data name="Entities.Action.CommentColor6" id="292">Commentaire bleu</data>
   <data name="Entities.Action.CommentColor7" id="2A2">Commentaire vert</data>
-  <data name="Entities.Action.CommentAttachToConnection" id="2B2">Déplace le point d&amp;apos;attache du commentaire</data>
+  <data name="Entities.Action.CommentAttachToConnection" id="2B2">Déplace le point d'attache du commentaire</data>
   <data name="Entities.Action.InfoMove" id="2C2">Déplace les informations</data>
   <data name="Entities.Action.InfoWidth" id="2D2">Modifie la largeur des informations</data>
   <data name="Entities.Action.InfoClose" id="2E2">Cache les informations</data>
-  <data name="Entities.Action.BoxHeader1" id="2F2">Aller sur la définition de l&amp;apos;entité</data>
-  <data name="Entities.Action.BoxHeader2" id="2G2">Déplace l&amp;apos;entité&lt;br/&gt;Ctrl+clic: aller sur la définition de l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxHeader1" id="2F2">Aller sur la définition de l'entité</data>
+  <data name="Entities.Action.BoxHeader2" id="2G2">Déplace l'entité&lt;br/&gt;Ctrl+clic: aller sur la définition de l'entité</data>
   <data name="Entities.Action.BoxSources1" id="2H2">Ouvre une entité source à choix</data>
-  <data name="Entities.Action.BoxExtend1" id="2I2">Compacte l&amp;apos;entité</data>
-  <data name="Entities.Action.BoxExtend2" id="2J2">Etend l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxExtend1" id="2I2">Compacte l'entité</data>
+  <data name="Entities.Action.BoxExtend2" id="2J2">Etend l'entité</data>
   <data name="Entities.Action.BoxInfo1" id="2N2">Montre les informations associées&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Entities.Action.BoxInfo2" id="2O2">Cache les informations associées</data>
   <data name="Entities.Action.BoxFieldExpression1" id="2P2">Expression du champ&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Entities.Question.RemoveField.Base" id="2Q2">Voulez-vous supprimer le champ &lt;b&gt;{0}&lt;/b&gt; ?</data>
-  <data name="Entities.Question.RemoveInterface.Base" id="2R2">Voulez-vous supprimer l&amp;apos;interface &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Entities.Question.RemoveInterface.Base" id="2R2">Voulez-vous supprimer l'interface &lt;b&gt;{0}&lt;/b&gt; ?</data>
   <data name="Entities.Info.InheritNull" id="2S2">Aucun héritage</data>
   <data name="Entities.Info.InheritFromOne" id="2T2">Hérite de </data>
   <data name="Entities.Info.InheritAnd" id="2U2"> et </data>
@@ -424,8 +424,8 @@
   <data name="Entities.Button.BoxFieldAddInterface" id="253">+i</data>
   <data name="Entities.Button.BoxFieldRemoveInterface" id="263">-i</data>
   <data name="Entities.Menu.Sources.Title" id="273">Entités sources</data>
-  <data name="Entities.Action.BoxGroup.Interface" id="283">Provient de l&amp;apos;interface &lt;b&gt;{0}&lt;/b&gt;</data>
-  <data name="Entities.Action.BoxGroup.Inherit" id="293">Hérité de l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Action.BoxGroup.Interface" id="283">Provient de l'interface &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Entities.Action.BoxGroup.Inherit" id="293">Hérité de l'entité &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Entities.Comment.Title" id="2A3">&lt;b&gt;Commentaire&lt;/b&gt;</data>
   <data name="Entities.Comment.DefaultText" id="2B3">Commentaire libre, que vous pouvez modifier à volonté.</data>
   <data name="Entities.Button.ChangeRelation" id="2C3">R</data>
@@ -461,7 +461,7 @@
   <data name="Viewers.Types.DateTime.Res.Months" id="2A4">Mois</data>
   <data name="Viewers.Types.DateTime.Res.Milliseconds" id="2B4">Millisecondes</data>
   <data name="Viewers.Types.DateTime.Res.Years" id="2C4">Années</data>
-  <data name="Viewers.Types.Enum.Question.Delete" id="2D4">Voulez-vous supprimer la valeur &lt;b&gt;{0}&lt;/b&gt; de l&amp;apos;énumération ?</data>
+  <data name="Viewers.Types.Enum.Question.Delete" id="2D4">Voulez-vous supprimer la valeur &lt;b&gt;{0}&lt;/b&gt; de l'énumération ?</data>
   <data name="Viewers.Types.DateTime.Default" id="2E4">Valeur par défaut</data>
   <data name="Viewers.Types.Numeric.Default" id="2F4">Valeur par défaut</data>
   <data name="Viewers.Types.String.Default" id="2G4">Texte par défaut</data>
@@ -478,12 +478,12 @@
   <data name="Forms.Question.Create.Long.Delta" id="2R4">Masque dérivé, basé sur un masque existant.</data>
   <data name="Forms.Question.Create.Quick.Normal" id="2S4">Normal</data>
   <data name="Forms.Question.Create.Quick.Delta" id="2T4">Dérivé</data>
-  <data name="Viewers.Forms.Title.Normal" id="2U4"> ― basé sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Title.Normal" id="2U4"> ― basé sur l'entité &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Title.Delta" id="2V4"> ― dérivé du masque &lt;b&gt;{0}&lt;/b&gt;</data>
-  <data name="Viewers.Forms.Title.DeltaNormal" id="205"> ― dérivé du masque &lt;b&gt;{0}&lt;/b&gt; et de l&amp;apos;entité &lt;b&gt;{1}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Title.DeltaNormal" id="205"> ― dérivé du masque &lt;b&gt;{0}&lt;/b&gt; et de l'entité &lt;b&gt;{1}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Menu.ShowPrefix" id="215">Afficher les préfixes</data>
   <data name="Entities.Info.InheritFromMany" id="225">Hérite de </data>
-  <data name="Entities.Info.InterfaceFromOne" id="235">Comprend l&amp;apos;interface </data>
+  <data name="Entities.Info.InterfaceFromOne" id="235">Comprend l'interface </data>
   <data name="Action.Undo" id="K">Annuler</data>
   <data name="Action.Redo" id="K1">Refaire</data>
   <data name="Action.UndoRedoList" id="K2">Annuler ou refaire plusieurs actions</data>
@@ -512,13 +512,13 @@
   <data name="Undo.Action.SeparatorBottom" id="KP">Type de séparateur</data>
   <data name="Undo.Action.BoxPadding" id="KQ">Marges</data>
   <data name="Undo.Action.BackColor" id="KR">Couleur de fond</data>
-  <data name="Undo.Action.LabelFontColor" id="KS">Couleur de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.LabelFontColor" id="KS">Couleur de la police de l'étiquette</data>
   <data name="Undo.Action.FieldFontColor" id="KT">Couleur de la police du champ</data>
-  <data name="Undo.Action.LabelFontFace" id="KU">Nom de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.LabelFontFace" id="KU">Nom de la police de l'étiquette</data>
   <data name="Undo.Action.FieldFontFace" id="KV">Nom de la police du champ</data>
-  <data name="Undo.Action.LabelFontStyle" id="K01">Style de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.LabelFontStyle" id="K01">Style de la police de l'étiquette</data>
   <data name="Undo.Action.FieldFontStyle" id="K11">Style de la police du champ</data>
-  <data name="Undo.Action.LabelFontSize" id="K21">Taille de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.LabelFontSize" id="K21">Taille de la police de l'étiquette</data>
   <data name="Undo.Action.FieldFontSize" id="K31">Taille de la police du champ</data>
   <data name="Undo.Action.BoxFrameEdges" id="K41">Type du cadre</data>
   <data name="Undo.Action.BoxFrameWidth" id="K51">Epaisseur du cadre</data>
@@ -529,14 +529,14 @@
   <data name="Undo.Action.FieldGlue" id="KA1">Coller les éléments</data>
   <data name="Undo.Action.FieldLine" id="KB1">Insérer un séparateur</data>
   <data name="Undo.Action.FieldTitle" id="KC1">Insérer un titre</data>
-  <data name="Undo.Action.FieldForm" id="KD1">Choix d&amp;apos;un sous-masque</data>
+  <data name="Undo.Action.FieldForm" id="KD1">Choix d'un sous-masque</data>
   <data name="Undo.Action.FieldBoxUnlink" id="KE1">Séparer</data>
   <data name="Undo.Action.FieldBoxLink" id="KF1">Grouper</data>
   <data name="Undo.Action.FieldMove" id="KG1">Déplacer</data>
   <data name="Undo.Action.RelationUse" id="KH1">Ajouter</data>
   <data name="Viewers.Forms.MiscPage.Width" id="KI1">Largeur préférentielle</data>
   <data name="Viewers.Forms.MiscPage.Height" id="KJ1">Hauteur préférentielle</data>
-  <data name="Viewers.Forms.Error.RelationUse" id="KK1">Il n&amp;apos;existe aucun masque pour cette relation.</data>
+  <data name="Viewers.Forms.Error.RelationUse" id="KK1">Il n'existe aucun masque pour cette relation.</data>
   <data name="Viewers.Forms.Menu.ShowGuid" id="KL1">Afficher les Guids (debug)</data>
   <data name="Viewers.Forms.Menu.ShowColumn1" id="KM1">Afficher la deuxième colonne</data>
   <data name="Viewers.Forms.Menu.ShowColumn2" id="KN1">Afficher la troisième colonne</data>
@@ -549,7 +549,7 @@
   <data name="Undo.Action.CommandButtonClass" id="KU1">Type de la commande</data>
   <data name="Entities.Icon.DeepExpression" id="KV1">(e)</data>
   <data name="Action.DisplayWindow" id="K02">Fenêtre supplémentaire</data>
-  <data name="Error.Entities.ReplaceExpression" id="K12">Il n&amp;apos;est pas possible de remplacer l&amp;apos;expression par une valeur pour ce champ !</data>
+  <data name="Error.Entities.ReplaceExpression" id="K12">Il n'est pas possible de remplacer l'expression par une valeur pour ce champ !</data>
   <data name="Undo.Action.BoxLayout" id="K22">Contenu</data>
   <data name="Undo.Action.PreferredWidth" id="K32">Largeur préférentielle</data>
   <data name="Error.CreateMissingValueItems.Title" id="K52">Les énumérations suivantes doivent être complétées :</data>
@@ -573,16 +573,16 @@
   <data name="Viewers.Types.String.Formatted" id="KS2">Texte formaté</data>
   <data name="Viewers.Types.Summary.Formatted" id="KT2">Formaté</data>
   <data name="Undo.Action.LabelReplacement" id="KU2">Texte de remplacement</data>
-  <data name="Undo.Action.Verbosity" id="KV2">Mode de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.Verbosity" id="KV2">Mode de l'étiquette</data>
   <data name="Entities.Action.SaveBitmap" id="K03">Exporter la vue dans un fichier image bitmap</data>
   <data name="Entities.Action.BoxColor8" id="K13">Entité violette</data>
   <data name="Entities.Action.BoxColor5" id="K23">Entité jaune</data>
   <data name="Entities.Action.BoxColor6" id="K33">Entité orange</data>
   <data name="Entities.Action.BoxColor7" id="K43">Entité lilas</data>
-  <data name="Entities.Action.BoxParameters" id="K53">Modifie les paramètres de l&amp;apos;entité</data>
+  <data name="Entities.Action.BoxParameters" id="K53">Modifie les paramètres de l'entité</data>
   <data name="Entities.Button.BoxParameters" id="K63">P</data>
   <data name="Dialog.EntityComment.Title" id="K73">Commentaire</data>
-  <data name="Dialog.EntityParameters.Title" id="K83">Paramètres de l&amp;apos;entité</data>
+  <data name="Dialog.EntityParameters.Title" id="K83">Paramètres de l'entité</data>
   <data name="Entities.Action.SaveAllBitmaps" id="K93">Exporter plusieurs vues dans des fichiers image bitmap</data>
   <data name="Dialog.Filter.Radio.End" id="KA3">A la fin</data>
   <data name="Dialog.ModuleInfo.Title" id="KB3">Informations du module</data>
