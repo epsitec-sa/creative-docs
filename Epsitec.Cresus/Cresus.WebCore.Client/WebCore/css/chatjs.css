@@ -1,5 +1,5 @@
 ﻿.chat-window {
-    background-color: White;
+    background-color: #EBF4FF;
     border-color: #A7A7A7;
     border-image: none;
     border-style: solid;
@@ -19,10 +19,16 @@
     }
 
 .chat-window-title {
-    background: none repeat scroll 0 0 #EEEEEE;
+    background-color: #cbddf3;
+    background-image: -webkit-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
     border-bottom: 1px solid #D7D7D7;
     cursor: pointer;
+    color: #04408c;
+    font-size: 11px;
     font-weight: bold;
+    font-family: tahoma,arial,verdana,sans-serif;
+    line-height: 15px;
+    text-transform: none;
     padding: 6px;
     overflow: hidden;
 }
@@ -43,16 +49,12 @@
     }
 
     .chat-window-title.online {
-        background-image: url("../images/Chat/chat-online.png");
-        background-position: 8px 10px;
-        background-repeat: no-repeat;
+        background-image: -webkit-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
         padding-left: 22px;
     }
 
     .chat-window-title.offline {
-        background-image: url("../images/Chat/chat-offline.png");
-        background-position: 8px 10px;
-        background-repeat: no-repeat;
+        background-image: -webkit-linear-gradient(top,#dae7f6,#cddef3 45%,#abc7ec 46%,#abc7ec 50%,#b8cfee 51%,#cbddf3);
         padding-left: 22px;
     }
 

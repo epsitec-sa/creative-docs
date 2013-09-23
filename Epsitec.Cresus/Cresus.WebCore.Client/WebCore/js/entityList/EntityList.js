@@ -45,6 +45,7 @@ function() {
     queryBuilder: null,
     isSearching: false,
     isReloading: false,
+    beforeReloadEntityId: null,
 
     /* Constructor */
 

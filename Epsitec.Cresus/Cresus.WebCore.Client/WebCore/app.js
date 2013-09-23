@@ -241,18 +241,18 @@ function() {
       var key = this.tabManager.currentTab;
       var columnManager = this.tabManager.entityTabs[key];
       if(Ext.isDefined(columnManager))
-      {
-        columnManager.leftList.entityList.isReloading = true;
-        var currentElement = columnManager.leftList.entityList.getSelectionModel().getSelection();
+      {   
         var grid = columnManager.leftList.entityList;
-        columnManager.removeAllColumns();
-        columnManager.leftList.entityList.store.load({
-            scope: this,
-            callback: function(records, operation, success) {
-                grid.getView().focus();
-                grid.getSelectionModel().select(currentElement);
-            }
-        });      
+        if(columnManager.leftList.entityList.getSelectionModel().selectNext(false,false))
+        {
+          var currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection()
+          columnManager.leftList.entityList.reloadAndScrollToEntity(columnManager,currentSelection[0].internalId);
+        }
+        else
+        {
+          columnManager.leftList.entityList.resetStore(true);
+        }
+        
       }
       
     },

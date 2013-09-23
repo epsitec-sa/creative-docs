@@ -173,6 +173,49 @@ function() {
       this.resetStore(true);
     },
 
+
+    reloadAndScrollToEntity: function(columnManager,entityId) {
+      this.resetStore(false);
+      this.setLoading();
+
+      Ext.Ajax.request({
+        url: this.buildGetIndexUrl(entityId),
+        method: 'GET',
+        callback: function(options, success, response) {
+          this.executeReloadAndScroll(success, response, entityId, true);
+          columnManager.removeAllColumns();
+        },
+        scope: this
+      });
+    },
+
+    executeReloadAndScroll: function(success, response, entityId, suppressEvent) {
+      var json, index;
+
+      this.setLoading(false);
+
+      json = Epsitec.Tools.processResponse(success, response);
+      if (json === null) {
+        return;
+      }
+
+      index = json.content.index;
+
+      this.store.load({
+        callback: function() {
+          this.view.bufferedRenderer.scrollTo(
+              index,
+              false,
+              function() {
+                this.getSelectionModel().deselect(index);
+              },
+              this
+          );
+        },
+        scope: this
+      });
+    },
+
     selectEntity: function(entityId, suppressEvent) {
       this.resetStore(false);
       this.setLoading();

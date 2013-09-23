@@ -285,34 +285,36 @@ function() {
 
       // Save the column state.
       columnStates = [];
-      for (i = firstColumnId; i <= lastColumnId; i += 1) {
-        columnStates.push(this.columns[i].getState());
+      if(this.columns.length > 0)
+      {
+        for (i = firstColumnId; i <= lastColumnId; i += 1) {
+          columnStates.push(this.columns[i].getState());
+        }
+        // Remove the columns at the right ot the ones that we want to replace,
+        // but don't delete them as we need them later.
+        this.removeColumns(lastColumnId + 1, this.columns.length - 1, false);
+
+        // Removes the columns that we will replace and deletes them.
+        this.removeColumns(firstColumnId, lastColumnId, true);
+
+        // Replace the columns with their new version.
+        for (i = firstColumnId; i <= lastColumnId; i += 1) {
+          config = configs[i - firstColumnId];
+          column = this.createColumn(config, i);
+          this.addExistingColumn(column);
+        }
+
+        // Add the column that we removed before so that they are displayed again.
+        for (i = 0; i < savedColumns.length; i += 1) {
+          this.addExistingColumn(savedColumns[i]);
+        }
+
+        // Re-apply the state on the columns that we have just added.
+        for (i = firstColumnId; i <= lastColumnId; i += 1) {
+          this.columns[i].setState(columnStates[i - firstColumnId]);
+        }
+      
       }
-
-      // Remove the columns at the right ot the ones that we want to replace,
-      // but don't delete them as we need them later.
-      this.removeColumns(lastColumnId + 1, this.columns.length - 1, false);
-
-      // Removes the columns that we will replace and deletes them.
-      this.removeColumns(firstColumnId, lastColumnId, true);
-
-      // Replace the columns with their new version.
-      for (i = firstColumnId; i <= lastColumnId; i += 1) {
-        config = configs[i - firstColumnId];
-        column = this.createColumn(config, i);
-        this.addExistingColumn(column);
-      }
-
-      // Add the column that we removed before so that they are displayed again.
-      for (i = 0; i < savedColumns.length; i += 1) {
-        this.addExistingColumn(savedColumns[i]);
-      }
-
-      // Re-apply the state on the columns that we have just added.
-      for (i = firstColumnId; i <= lastColumnId; i += 1) {
-        this.columns[i].setState(columnStates[i - firstColumnId]);
-      }
-
       // Re-apply the scroll position.
       dom.scrollLeft = scrollLeft;
       dom.scrollTop = scrollTop;

@@ -10,7 +10,7 @@ function() {
       var me = this;
       $.getScript('signalr/hubs', function() {
 
-        $.connection.hub.logging = true;
+        $.connection.hub.logging = false;
         if(epsitecConfig.featureChat)
         {
           $.chat({
@@ -22,7 +22,7 @@ function() {
             // text displayed when the other user is typing
             typingText: ' tappe...',
             // the title for the user's list window
-            titleText: 'Chat AIDER',
+            titleText: 'Messagerie instantanée',
             // text displayed when there's no other users in the room
             emptyRoomText: "Vous êtes actuellement seul :)",
             // the adapter you are using
