@@ -106,27 +106,15 @@ namespace Epsitec.Cresus.Assets.App
 		{
 #if true
 			//	Test pour DR.
-	#if false
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 335, 10),
+				Margins = new Margins (10, 10, 220, 10),
 				Pivot   = 0.0,
 			};
 
 			timeline.SetRows (AssetsApplication.GetRows ());
-#else
-			var timeline = new Timeline ()
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (10, 10, 270, 10),
-				Pivot   = 0.0,
-			};
-
-			timeline.SetRows (AssetsApplication.GetRows (true));
-	#endif
 			AssetsApplication.InitialiseTimeline (timeline, -1);
 
 			timeline.CellClicked += delegate (object sender, int row, int rank)
@@ -167,11 +155,21 @@ namespace Epsitec.Cresus.Assets.App
 #endif
 		}
 
-		private static List<AbstractTimelineRow> GetRows(bool all = false)
+		private static List<AbstractTimelineRow> GetRows()
 		{
 			var list = new List<AbstractTimelineRow> ();
 
-			if (all)
+			{
+				var row = new TimelineRowValues ()
+				{
+					Description = "Valeur assurance",
+					RelativeHeight = 2.0,
+					ValueDisplayMode = TimelineValueDisplayMode.All,
+				};
+
+				list.Add (row);
+			}
+
 			{
 				var row = new TimelineRowValues ()
 				{
@@ -201,7 +199,6 @@ namespace Epsitec.Cresus.Assets.App
 				list.Add (row);
 			}
 
-			if (all)
 			{
 				var row = new TimelineRowDaysOfWeek ()
 				{
@@ -211,7 +208,6 @@ namespace Epsitec.Cresus.Assets.App
 				list.Add (row);
 			}
 
-			if (all)
 			{
 				var row = new TimelineRowWeeksOfYear ()
 				{
@@ -235,12 +231,14 @@ namespace Epsitec.Cresus.Assets.App
 
 		private static void InitialiseTimeline(Timeline timeline, int selection)
 		{
-			var dates  = new List<TimelineCellDate> ();
+			var dates = new List<TimelineCellDate> ();
 			var glyphs = new List<TimelineCellGlyph> ();
-			var values = new List<TimelineCellValue> ();
+			var values1 = new List<TimelineCellValue> ();
+			var values2 = new List<TimelineCellValue> ();
 
 			var start = new Date (2013, 11, 20);  // 20 novembre 2013
-			decimal? value = 10000.0m;
+			decimal? value1 = 10000.0m;
+			decimal? value2 = 15000.0m;
 
 			for (int i = 0; i < 100; i++)
 			{
@@ -267,28 +265,44 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					if (glyph == TimelineGlyph.OutlinedSquare)
 					{
-						value += 2000.0m;
+						value1 += 2000.0m;
 					}
 					else
 					{
-						value -= value * 0.10m;
+						value1 -= value1 * 0.10m;
 					}
+
+					value2 -= value2 * 0.25m;
 				}
 
-				var v = value;
+				var v1 = value1;
+				var v2 = value2;
 
 				if (glyph == TimelineGlyph.Empty)
 				{
-					v = null;
+					v1 = null;
+					v2 = null;
+				}
+
+				if (v1.HasValue && v1.Value < 2000.0m)
+				{
+					v1 = null;
+				}
+
+				if (v2.HasValue && v2.Value < 2000.0m)
+				{
+					v2 = null;
 				}
 
 				var d = new TimelineCellDate (AssetsApplication.AddDays (start, i), isSelected: (i == selection));
 				var g = new TimelineCellGlyph (glyph, isSelected: (i == selection));
-				var x = new TimelineCellValue (v, isSelected: (i == selection));
+				var x1 = new TimelineCellValue (v1, isSelected: (i == selection));
+				var x2 = new TimelineCellValue (v2, isSelected: (i == selection));
 
 				dates.Add (d);
 				glyphs.Add (g);
-				values.Add (x);
+				values1.Add (x1);
+				values2.Add (x2);
 			}
 
 			foreach (var r in timeline.Rows)
@@ -301,7 +315,7 @@ namespace Epsitec.Cresus.Assets.App
 				else if (r is TimelineRowValues)
 				{
 					var row = r as TimelineRowValues;
-					row.SetCells (values.ToArray ());
+					row.SetCells (row.RowIndex == 0 ? values1.ToArray () : values2.ToArray ());
 				}
 				else if (r is TimelineRowDays)
 				{

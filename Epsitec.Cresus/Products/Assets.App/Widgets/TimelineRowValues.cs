@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void Paint(Graphics graphics)
 		{
-			graphics.AddFilledRectangle (this.ActualBounds);
+			graphics.AddFilledRectangle (new Rectangle (Point.Zero, this.ActualSize));
 			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 			if (this.HasMinMax)

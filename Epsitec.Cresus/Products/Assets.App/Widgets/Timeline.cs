@@ -95,9 +95,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			this.Children.Clear ();
 
+			int index = 0;
+
 			foreach (var row in rows)
 			{
+				row.RowIndex = index;
 				this.Children.Add (row);
+				index++;
 			}
 		}
 
