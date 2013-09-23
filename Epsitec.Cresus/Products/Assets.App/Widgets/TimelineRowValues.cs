@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						if (y.HasValue)
 						{
 							var rect = this.GetCellsRect (rank, rank+1);
-							int x = (int) rect.Center.X;
+							int x = (int) rect.Center.X - 1;
 
 							if (lastX.HasValue && lastY.HasValue)
 							{

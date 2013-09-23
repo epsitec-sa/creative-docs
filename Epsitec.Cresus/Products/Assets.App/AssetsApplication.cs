@@ -172,35 +172,35 @@ namespace Epsitec.Cresus.Assets.App
 			var list = new List<TimelineRowDescription> ();
 
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Month);
+				var row = new TimelineRowDescription (TimelineRowType.Month, "Mois");
 				list.Add (row);
 			}
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.WeeksOfYear);
+				var row = new TimelineRowDescription (TimelineRowType.WeeksOfYear, "Semaines");
 				list.Add (row);
 			}
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.DaysOfWeek);
+				var row = new TimelineRowDescription (TimelineRowType.DaysOfWeek, "");
 				list.Add (row);
 			}
 
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Days);
+				var row = new TimelineRowDescription (TimelineRowType.Days, "Jours");
 				list.Add (row);
 			}
 
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Glyphs);
+				var row = new TimelineRowDescription (TimelineRowType.Glyphs, "Evénements");
 				list.Add (row);
 			}
 
 			if (all)
 			{
-				var row = new TimelineRowDescription (TimelineRowType.Values, 2.0);
+				var row = new TimelineRowDescription (TimelineRowType.Values, "Valeur comptable", 2.0);
 				list.Add (row);
 			}
 
