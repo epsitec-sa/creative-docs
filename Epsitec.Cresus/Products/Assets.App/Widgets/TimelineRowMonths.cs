@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TimelineRowMonths : AbstractTimelineRow
 	{
-		public TimelineRowMonths(TimelineDisplay display)
+		public TimelineRowMonths(TimelineRowType display)
 			: base (display)
 		{
 		}

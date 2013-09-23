@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TimelineRowGlyphs : AbstractTimelineRow
 	{
-		public TimelineRowGlyphs(TimelineDisplay display)
+		public TimelineRowGlyphs(TimelineRowType display)
 			: base (display)
 		{
 		}

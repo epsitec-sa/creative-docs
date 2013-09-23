@@ -75,13 +75,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Widgets\AbstractTimelineRow.cs" />
     <Compile Include="Widgets\ColorManager.cs" />
+    <Compile Include="Widgets\TimelineRowDescription.cs" />
     <Compile Include="Widgets\TimelineRowValues.cs" />
     <Compile Include="Widgets\TimelineRowGlyphs.cs" />
     <Compile Include="Widgets\TimelineRowDays.cs" />
     <Compile Include="Widgets\TimelineRowDaysOfWeek.cs" />
     <Compile Include="Widgets\TimelineRowWeeksOfYear.cs" />
     <Compile Include="Widgets\TimelineRowMonths.cs" />
-    <Compile Include="Widgets\TimelineDisplay.cs" />
+    <Compile Include="Widgets\TimelineRowType.cs" />
     <Compile Include="Widgets\Timeline.cs" />
     <Compile Include="Widgets\TimelineCell.cs" />
     <Compile Include="Widgets\TimelineCellGlyph.cs" />

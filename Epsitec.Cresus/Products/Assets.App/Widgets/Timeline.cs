@@ -9,33 +9,15 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Timeline de base, constituée de lignes AbstractTimelineRow créées en fonction
-	/// du mode Display. On ne gère ici aucun déplacement dans le temps. On se contente
-	/// d'afficher les TimelineCell passées avec SetCells.
+	/// Timeline de base, constituée de lignes AbstractTimelineRow créées en fonction du
+	/// tableau de TimelineRowDescription. On ne gère ici aucun déplacement dans le temps.
+	/// On se contente d'afficher les TimelineCell passées avec SetCells.
 	/// Un seul événement CellClicked permet de connaître la ligne et la cellule cliquée.
 	/// </summary>
 	public class Timeline : Widget
 	{
 		public Timeline()
 		{
-			this.Display = TimelineDisplay.Month | TimelineDisplay.Days | TimelineDisplay.Glyphs;
-		}
-
-		public TimelineDisplay					Display
-		{
-			get
-			{
-				return this.display;
-			}
-			set
-			{
-				if (this.display != value)
-				{
-					this.display = value;
-					this.CreateChildrens ();
-					this.Invalidate ();
-				}
-			}
 		}
 
 		public double							Pivot
@@ -94,11 +76,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return Timeline.displayLines.Where (x => (x & this.display) != 0).Count ();
+				return rows.Length;
 			}
 		}
 
-		
+
+		public void SetRows(TimelineRowDescription[] rows)
+		{
+			//	Descriptions des lignes à afficher, de haut en bas.
+			this.rows = rows;
+
+			this.CreateChildrens ();
+			this.Invalidate ();
+		}
+
 		public void SetCells(TimelineCell[] cells)
 		{
 			this.cells = cells;
@@ -122,26 +113,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void CreateChildrens()
 		{
-			//	Crée toutes les lignes-enfant en fonction du mode this.Display.
+			//	Crée toutes les lignes-enfant en fonction du tableau de TimelineRowDescription.
 			this.Children.Clear ();
 
-			foreach (var displayLine in Timeline.displayLines)
+			foreach (var desc in this.rows.Reverse ())
 			{
-				if ((displayLine & this.display) != 0)
+				var row = this.CreateRow (desc.Type);
+
+				if (row != null)
 				{
-					var row = this.CreateRow (displayLine);
+					this.Children.Add (row);
 
-					if (row != null)
+					row.Anchor = AnchorStyles.All;
+
+					row.CellClicked += delegate (object sender, int rank)
 					{
-						this.Children.Add (row);
-
-						row.Anchor = AnchorStyles.All;
-
-						row.CellClicked += delegate (object sender, int rank)
-						{
-							this.OnCellClicked (row.Display, rank);
-						};
-					}
+						this.OnCellClicked (desc, rank);
+					};
 				}
 			}
 		}
@@ -178,62 +166,51 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private AbstractTimelineRow CreateRow(TimelineDisplay display)
+		private AbstractTimelineRow CreateRow(TimelineRowType type)
 		{
 			//	Crée une ligne-enfant.
-			switch (display)
+			switch (type)
 			{
-				case TimelineDisplay.Month:
-					return new TimelineRowMonths (display);
+				case TimelineRowType.Month:
+					return new TimelineRowMonths (type);
 
-				case TimelineDisplay.WeeksOfYear:
-					return new TimelineRowWeeksOfYear (display);
+				case TimelineRowType.WeeksOfYear:
+					return new TimelineRowWeeksOfYear (type);
 
-				case TimelineDisplay.DaysOfWeek:
-					return new TimelineRowDaysOfWeek (display);
+				case TimelineRowType.DaysOfWeek:
+					return new TimelineRowDaysOfWeek (type);
 
-				case TimelineDisplay.Days:
-					return new TimelineRowDays (display);
+				case TimelineRowType.Days:
+					return new TimelineRowDays (type);
 
-				case TimelineDisplay.Glyphs:
-					return new TimelineRowGlyphs (display);
+				case TimelineRowType.Glyphs:
+					return new TimelineRowGlyphs (type);
 
-				case TimelineDisplay.Values:
-					return new TimelineRowValues (display);
+				case TimelineRowType.Values:
+					return new TimelineRowValues (type);
 
 				default:
 					return null;
 			}
 		}
 
-		private static TimelineDisplay[] displayLines =
-		{
-			//	Détermine l'ordre des lignes-enfant à afficher, de bas en haut.
-			TimelineDisplay.Values,
-			TimelineDisplay.Glyphs,
-			TimelineDisplay.Days,
-			TimelineDisplay.DaysOfWeek,
-			TimelineDisplay.WeeksOfYear,
-			TimelineDisplay.Month,
-		};
-
 
 		#region Events handler
-		private void OnCellClicked(TimelineDisplay display, int rank)
+		private void OnCellClicked(TimelineRowDescription row, int rank)
 		{
 			if (this.CellClicked != null)
 			{
-				this.CellClicked (this, display, rank);
+				this.CellClicked (this, row, rank);
 			}
 		}
 
-		public delegate void CellClickedEventHandler(object sender, TimelineDisplay display, int rank);
+		public delegate void CellClickedEventHandler(object sender, TimelineRowDescription row, int rank);
 		public event CellClickedEventHandler CellClicked;
 		#endregion
 
 
-		private TimelineDisplay					display;
-		private double							pivot;
 		private TimelineCell[]					cells;
+		private TimelineRowDescription[]		rows;
+		private double							pivot;
 	}
 }

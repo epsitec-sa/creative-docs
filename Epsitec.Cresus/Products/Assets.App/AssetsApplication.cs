@@ -114,21 +114,24 @@ namespace Epsitec.Cresus.Assets.App
 				Margins = new Margins (10, 10, 335, 10),
 				Pivot   = 0.0,
 			};
-	#else
+
+			timeline.SetRows (AssetsApplication.GetRows ());
+#else
 			var timeline = new Timeline ()
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (10, 10, 290, 10),
-				Display = TimelineDisplay.All,
 				Pivot   = 0.0,
 			};
+
+			timeline.SetRows (AssetsApplication.GetRows (true));
 	#endif
 			AssetsApplication.InitialiseTimeline (timeline, -1);
 
-			timeline.CellClicked += delegate (object sender, TimelineDisplay display, int rank)
+			timeline.CellClicked += delegate (object sender, TimelineRowDescription desc, int rank)
 			{
-				if (display == TimelineDisplay.Glyphs)
+				if (desc.Type == TimelineRowType.Glyphs)
 				{
 					AssetsApplication.InitialiseTimeline (timeline, rank);
 				}
@@ -142,6 +145,8 @@ namespace Epsitec.Cresus.Assets.App
 				Margins = new Margins (10, 10, 335, 10),
 				Pivot   = 0.25,
 			};
+
+			timeline.SetRows (AssetsApplication.GetRows ());
 
 			var button = new Button ()
 			{
@@ -160,6 +165,46 @@ namespace Epsitec.Cresus.Assets.App
 
 			controller.Refresh ();
 #endif
+		}
+
+		private static TimelineRowDescription[] GetRows(bool all = false)
+		{
+			var list = new List<TimelineRowDescription> ();
+
+			{
+				var row = new TimelineRowDescription (TimelineRowType.Month);
+				list.Add (row);
+			}
+
+			if (all)
+			{
+				var row = new TimelineRowDescription (TimelineRowType.WeeksOfYear);
+				list.Add (row);
+			}
+
+			if (all)
+			{
+				var row = new TimelineRowDescription (TimelineRowType.DaysOfWeek);
+				list.Add (row);
+			}
+
+			{
+				var row = new TimelineRowDescription (TimelineRowType.Days);
+				list.Add (row);
+			}
+
+			{
+				var row = new TimelineRowDescription (TimelineRowType.Glyphs);
+				list.Add (row);
+			}
+
+			if (all)
+			{
+				var row = new TimelineRowDescription (TimelineRowType.Values);
+				list.Add (row);
+			}
+
+			return list.ToArray ();
 		}
 
 		private static void InitialiseTimeline(Timeline timeline, int selection)

@@ -15,18 +15,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public abstract class AbstractTimelineRow : Widget
 	{
-		public AbstractTimelineRow(TimelineDisplay display)
+		public AbstractTimelineRow(TimelineRowType rowType)
 		{
-			this.display = display;
+			this.rowType = rowType;
 			this.hoverRank = -1;
 		}
 
 
-		public TimelineDisplay					Display
+		public TimelineRowType					RowType
 		{
 			get
 			{
-				return this.display;
+				return this.rowType;
 			}
 		}
 
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
-		private readonly TimelineDisplay		display;
+		private readonly TimelineRowType		rowType;
 		protected TimelineCell[]				cells;
 		private double							pivot;
 		protected int							hoverRank;
