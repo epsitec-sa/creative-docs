@@ -175,6 +175,11 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.applicationType = assembly.GetType (typeName);
 		}
 
+		public static void DefineAssemblyDependency(string assemblyName)
+		{
+			var assembly = System.Reflection.Assembly.LoadFrom (assemblyName);
+		}
+
 		public static void DefineMetadata(string className, string xmlSource)
 		{
 			var types = from type in TypeEnumerator.Instance.GetAllClassTypes ()

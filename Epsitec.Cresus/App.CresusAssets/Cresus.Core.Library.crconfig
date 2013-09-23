@@ -7,7 +7,9 @@
 
 DefineDatabase ("assets", "localhost");
 DefineApplicationClass ("Assets.App.dll", "Epsitec.Cresus.Assets.App.AssetsApplication");
-# DefineTypeSubstitution ("DatabaseInitializer", "ComptaDatabaseInitializer")
+DefineAssemblyDependency ("Assets.Data.dll");
+
+# DefineTypeSubstitution ("DatabaseInitializer", "AssetsDatabaseInitializer")
 
 # DefineTypeSubstitution ("UserManager", "AiderUserManager");
 # DefineTypeSubstitution ("UserSession", "AiderUserSession");
