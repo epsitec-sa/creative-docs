@@ -99,9 +99,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			foreach (var row in rows)
 			{
-				row.RowIndex = index;
+				row.RowIndex = index++;
 				this.Children.Add (row);
-				index++;
+
+				row.CellClicked += delegate (object sender, int rank)
+				{
+					this.OnCellClicked (row.RowIndex, rank);
+				};
 			}
 		}
 
