@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2013, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -159,8 +159,8 @@ namespace Epsitec.Common.Types.Converters
 				case '&':	return "&amp;";
 				case '<':	return "&lt;";
 				case '>':	return "&gt;";
-				case '\"':	return "&quot;";
-				case '\'':	return "&apos;";
+//-				case '\"':	return "&quot;";		-- no need to escape these, unless they are used inside an attribute
+//-				case '\'':	return "&apos;";
 				case '\n':	return "<br/>";
 				case '\t':	return "<tab/>";
 				case '\r':	return "";
