@@ -28,9 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (cell.IsValid)
 				{
 					var rect = this.GetCellsRect (rank, rank+1);
-					bool isHover = (this.hoverRank == rank);
-
-					this.PaintCellBackground (graphics, rect, cell, isHover, rank);
+					this.PaintCellBackground (graphics, rect, cell, false, rank);
 				}
 			}
 
@@ -58,7 +56,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 							{
 								if (path.IsEmpty)
 								{
-									path.MoveTo (lastX.Value+0.5, lastY.Value+0.5);
+									path.MoveTo (lastX.Value+0.5, -0.5);
+									path.LineTo (lastX.Value+0.5, lastY.Value+0.5);
 								}
 
 								path.LineTo (x+0.5, lastY.Value+0.5);
@@ -73,8 +72,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 				}
 
+				path.LineTo (this.ActualWidth+0.5, lastY.Value+0.5);
+				path.LineTo (this.ActualWidth+0.5, -0.5);
+				path.Close ();
+
+				graphics.AddFilledPath (path);
+				graphics.RenderSolid (ColorManager.ValueSurfaceColor);
+
 				graphics.AddPath (path);
-				graphics.RenderSolid (ColorManager.ValueLineColor);
+				graphics.RenderSolid (ColorManager.ValueDotColor);
 
 				foreach (var dot in dots)
 				{

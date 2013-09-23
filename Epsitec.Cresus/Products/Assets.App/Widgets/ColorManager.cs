@@ -72,11 +72,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color ValueLineColor
+		public static Color ValueSurfaceColor
 		{
 			get
 			{
-				return Color.FromBrightness (0.8);
+				return Color.FromBrightness (0.9);
 			}
 		}
 
