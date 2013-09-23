@@ -121,8 +121,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				foreach (var dot in dots)
 				{
-					this.PaintDot (graphics, dot.Point, dot.Color);
+					this.PaintDot (graphics, dot);
 				}
+			}
+		}
+
+		private void PaintDot(Graphics graphics, ColoredDot dot)
+		{
+			int x = (int) dot.Point.X;
+			int y = (int) dot.Point.Y;
+			int s = this.DotSize;
+
+			if (false)  // points carrée ?
+			{
+				graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
+				graphics.RenderSolid (dot.Color);
+			}
+			else  // points ronds ?
+			{
+				graphics.AddFilledCircle (x+0.5, y+0.5, s-1.0);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
+				graphics.RenderSolid (dot.Color);
 			}
 		}
 
@@ -136,30 +160,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			public readonly Point Point;
 			public readonly Color Color;
-		}
-
-		private void PaintDot(Graphics graphics, Point dot, Color color)
-		{
-			int x = (int) dot.X;
-			int y = (int) dot.Y;
-			int s = this.DotSize;
-
-			if (false)  // points carrée ?
-			{
-				graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
-				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
-
-				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
-				graphics.RenderSolid (color);
-			}
-			else  // points ronds ?
-			{
-				graphics.AddFilledCircle (x+0.5, y+0.5, s-1.0);
-				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
-
-				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
-				graphics.RenderSolid (color);
-			}
 		}
 
 		private Color GetSurfaceColor(int rank)
