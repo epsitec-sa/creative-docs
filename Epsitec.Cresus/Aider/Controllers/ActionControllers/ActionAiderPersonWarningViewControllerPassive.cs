@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return Resources.FormattedText ("Marquer comme lu");
 		}
 
-		public override ActionExecutor GetExecutor()
+		public sealed override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create (this.Execute);
 		}

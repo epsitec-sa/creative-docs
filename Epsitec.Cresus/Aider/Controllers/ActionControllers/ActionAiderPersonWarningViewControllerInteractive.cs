@@ -16,7 +16,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	public abstract class ActionAiderPersonWarningViewControllerInteractive : ActionAiderPersonWarningViewController
 	{
-		public override FormattedText GetTitle()
+		public sealed override FormattedText GetTitle()
 		{
 			return Resources.FormattedText ("Traiter");
 		}

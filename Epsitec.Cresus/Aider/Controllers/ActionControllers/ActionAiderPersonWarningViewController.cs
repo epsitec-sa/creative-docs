@@ -2,13 +2,12 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+
 using Epsitec.Common.Support;
-using Epsitec.Common.Types;
-using Epsitec.Cresus.Bricks;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
-using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,11 +15,19 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	public abstract class ActionAiderPersonWarningViewController : ActionViewController<AiderPersonWarningEntity>
 	{
-		protected void ClearWarning()
+		protected void ClearWarningAndRefreshCaches()
 		{
 			var warning = this.Entity;
+			this.ClearWarningAndRefreshCaches (warning);
+		}
+
+		protected void ClearWarningAndRefreshCaches(AiderPersonWarningEntity warning)
+		{
 			var person  = warning.Person;
 			var context = this.BusinessContext;
+
+			person.Contacts.ForEach (x => x.RefreshCache ());
+			person.Households.ForEach (x => x.RefreshCache ());
 
 			person.RemoveWarningInternal (warning);
 			context.DeleteEntity (warning);
