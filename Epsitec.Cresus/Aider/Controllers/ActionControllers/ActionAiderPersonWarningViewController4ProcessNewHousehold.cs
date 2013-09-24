@@ -43,13 +43,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (createNewHousehold)
 			{
-
-				var oldHousehold = this.Entity.Person.Contacts.Where(c => c.Household.Address.IsNotNull()).First().Household;
-				var contacts = this.Entity.Person.Contacts;
-				var contact = contacts.FirstOrDefault(x => x.Household == oldHousehold);
-				if (contact.IsNotNull())
+				if (this.Entity.Person.MainContact.IsNotNull ())
 				{
-					AiderContactEntity.Delete(this.BusinessContext, contact);
+					var oldHousehold = this.Entity.Person.MainContact.Household;
+					var contacts = this.Entity.Person.Contacts;
+					var contact = contacts.FirstOrDefault (x => x.Household == oldHousehold);
+					if (contact.IsNotNull ())
+					{
+						AiderContactEntity.Delete (this.BusinessContext, contact);
+					}
 				}
 
 				var newHousehold = this.GetNewHousehold();
@@ -158,27 +160,47 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
 		{
-			var householdAddress = this.Entity.Person.Contacts.Where(c => c.Household.IsNotNull()).First().Household.Address;
-			var newHousehold = this.GetNewHousehold ();
 			var analyse = TextFormatter.FormatText ("Résultat de l'analyse:\n");
-			if (newHousehold.Address.StreetUserFriendly.Equals (householdAddress.StreetUserFriendly))
+			if (this.Entity.Person.MainContact.IsNotNull ())
 			{
-				analyse = analyse.AppendLine(TextFormatter.FormatText("Ménage identique que le précédent!\n",newHousehold.Address.GetCompactSummary()));
-				form
-				.Title(this.GetTitle())
-				.Text(analyse)
-				.Field<bool>()
-					.Title("Créer le nouveau ménage")
-					.InitialValue(false)
-				.End()
-				.Field<bool>()
-					.Title("Souscrire à un abonnement BN")
-					.InitialValue(false)
-				.End();
+				var householdAddress = this.Entity.Person.MainContact.Household.Address;
+				var newHousehold = this.GetNewHousehold ();
+				
+				if (newHousehold.Address.StreetUserFriendly.Equals (householdAddress.StreetUserFriendly))
+				{
+					analyse = analyse.AppendLine (TextFormatter.FormatText ("Ménage identique que le précédent!\n", newHousehold.Address.GetCompactSummary ()));
+					form
+					.Title (this.GetTitle ())
+					.Text (analyse)
+					.Field<bool> ()
+						.Title ("Créer le nouveau ménage")
+						.InitialValue (false)
+					.End ()
+					.Field<bool> ()
+						.Title ("Souscrire à un abonnement BN")
+						.InitialValue (false)
+					.End ();
+				}
+				else
+				{
+					analyse = analyse.AppendLine (TextFormatter.FormatText ("Nouveau ménage:\n", newHousehold.Address.GetCompactSummary ()));
+					form
+						.Title (this.GetTitle ())
+						.Text (analyse)
+						.Field<bool> ()
+							.Title ("Créer le nouveau ménage")
+							.InitialValue (true)
+						.End ()
+						.Field<bool> ()
+							.Title ("Souscrire à un abonnement BN")
+							.InitialValue (true)
+						.End ()
+					.End ();
+				}
 			}
 			else
 			{
-				analyse = analyse.AppendLine(TextFormatter.FormatText("Nouveau ménage:\n",newHousehold.Address.GetCompactSummary()));
+				analyse = analyse.AppendLine (TextFormatter.FormatText ("Traitement de qualité de données"));
 				form
 					.Title (this.GetTitle ())
 					.Text (analyse)
@@ -191,7 +213,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 						.InitialValue (true)
 					.End ()
 				.End ();
-			} 
+			}
 		}
 	}
 }
