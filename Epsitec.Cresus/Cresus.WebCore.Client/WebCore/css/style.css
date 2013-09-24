@@ -6,6 +6,12 @@ html, body {
   height: 100%;
 }
 
+#tile-text:hover,#tile-text:active,#tile-text:focus{
+  font-style: italic;
+  cursor: pointer;
+}
+
+
 .tile-button {
   display: inline-block;
   *display: inline;
@@ -60,7 +66,7 @@ html, body {
 }
 
 .tile-over .tile {
-  background: #FFCC00;
+  font-style: italic;
   cursor: pointer;
 }
 

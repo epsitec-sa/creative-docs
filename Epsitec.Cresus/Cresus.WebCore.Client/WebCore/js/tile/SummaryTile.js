@@ -17,7 +17,7 @@ function() {
 
     /* Configuration */
 
-    overCls: 'tile-over',
+    //overCls: 'tile-over',
 
     /* Properties */
 

@@ -120,7 +120,7 @@ function() {
       parseSummaryTile: function(tile) {
         var t = this.parseBaseActionTile(tile);
         t.xtype = 'epsitec.summarytile';
-        t.html = tile.text;
+        t.html = '<div id="tile-text">' + tile.text + "</div>";
         t.isRoot = tile.isRoot;
         t.subViewMode = tile.subViewMode;
         t.subViewId = tile.subViewId;
@@ -420,7 +420,6 @@ function() {
       parseTextField: function(brick) {
         var field = this.parseField(brick);
         field.xtype = 'textfield';
-
         if (brick.isPassword === true) {
           field.inputType = 'password';
         }
