@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			protected set;
 		}
 
+		
 		public override void Focus()
 		{
 			Epsitec.Cresus.Core.Library.UI.Services.SetInitialFocus (this.TileContainer);
@@ -43,6 +44,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public abstract AbstractEntity GetEntity();
 
+		public virtual EntityViewController GetController()
+		{
+			return this;
+		}
+
+		
 		protected virtual EntityStatus GetEditionStatus()
 		{
 			return EntityStatus.None;
@@ -50,6 +57,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected abstract void CreateUI();
 
+		
 		internal EntityViewController NotifyAboutToCreateUI()
 		{
 			this.AboutToCreateUI ();
@@ -58,6 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		internal abstract Bridge CreateBridgeAndBuildBricks();
 
+		
 		public abstract BrickWall BuildBrickWall();
 
 		public abstract void BuildBricks(BrickWall wall);

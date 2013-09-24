@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return CollectionAccessor.Create (this.EntityGetter, template);
 		}
 
-		protected override sealed void AboutToCreateUI()
+		protected sealed override void AboutToCreateUI()
 		{
 			//	This method might be called more than once. Don't do anything if it has already
 			//	been called :
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		protected override sealed EntityStatus GetEditionStatus()
+		protected sealed override EntityStatus GetEditionStatus()
 		{
 			return this.Entity.GetEntityStatus ();
 		}

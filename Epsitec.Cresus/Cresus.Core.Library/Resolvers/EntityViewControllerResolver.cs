@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 				if (mode == ViewControllerMode.Creation)
 				{
 					controllerType = EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Summary, controllerSubTypeId)
-						?? EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Edition, controllerSubTypeId);
+								  ?? EntityViewControllerResolver.ResolveEntityViewController (entityType, ViewControllerMode.Edition, controllerSubTypeId);
 				}
 			}
 
@@ -48,9 +48,14 @@ namespace Epsitec.Cresus.Core.Resolvers
 				}
 			}
 
-			object controllerInstance = System.Activator.CreateInstance (controllerType, true);
-			
-			return controllerInstance as EntityViewController;
+			var controllerInstance = System.Activator.CreateInstance (controllerType, true) as EntityViewController;
+
+			if (controllerInstance != null)
+			{
+				controllerInstance = controllerInstance.GetController ();
+			}
+
+			return controllerInstance;
 		}
 
 
@@ -101,6 +106,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			// Find all classes that :
 			// - are concrete
 			// - are a subtype of EntityViewController
+			// - have a name which does not start with "Special"
 			// - have a super type with a name like "SummaryViewController,", "SetViewController",
 			// - "EditionViewController", ... and is a generic type
 			// - where the first generic type parameter of the direct super class is entityType
@@ -108,7 +114,7 @@ namespace Epsitec.Cresus.Core.Resolvers
 			var controllerTypes =
 			(
 				from type in TypeEnumerator.Instance.GetAllClassTypes ()
-				where type.IsAbstract == false && entityViewControllerType.IsAssignableFrom (type)
+				where type.IsAbstract == false && entityViewControllerType.IsAssignableFrom (type) && !type.Name.StartsWith ("Special")
 				let baseType = type
 					.GetBaseTypes ()
 					.FirstOrDefault (bt => bt.IsGenericType && bt.Name.StartsWith (baseTypeName))
