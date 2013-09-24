@@ -41,23 +41,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				case Enumerations.ContactType.PersonHousehold:
 					if (contact.Person.IsNotNull ())
-					{
-						if (contact.Person.IsGovernmentDefined)
-						{
-							wall.AddBrick (x => x.Person)
-								.Icon (contact.Person.GetIconName ("Data"))
-								.Text (contactSummary)
-								.Attribute (BrickMode.DefaultToSummarySubView)
-								.EnableActionOnDrop<ActionAiderPersonViewController1FusionOnDrag> ();
-						}
-						else
-						{
-							wall.AddBrick (x => x.Person)
-								.Icon (contact.Person.GetIconName ("Data"))
-								.Text (contactSummary)
-								.Attribute (BrickMode.DefaultToSummarySubView);
-						}
-						
+					{						
+						wall.AddBrick (x => x.Person)
+							.Icon (contact.Person.GetIconName ("Data"))
+							.Text (contactSummary)
+							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
 					
 					if (household.IsNotNull ())

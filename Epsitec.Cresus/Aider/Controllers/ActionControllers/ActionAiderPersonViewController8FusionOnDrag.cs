@@ -16,8 +16,8 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (1)]
-	public sealed class ActionAiderPersonViewController1FusionOnDrag : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
+	[ControllerSubType (8)]
+	public sealed class ActionAiderPersonViewController8FusionOnDrag : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
 	{
 		public override bool RequiresAdditionalEntity
 		{
