@@ -14,7 +14,7 @@ function() {
 
     entityId: null,
     selectedClass: 'tile-selected',
-
+    overCls: 'tile',
     /* Methods */
 
     // Overrides the method defined in Tile.

@@ -28,7 +28,7 @@ function() {
     column: null,
     selected: false,
     actionMenu: null,
-    maxCharForButtons: 30,
+    maxCharForButtons: null,
     /* Constructor */
 
     constructor: function(options) {
@@ -54,6 +54,7 @@ function() {
           var text;
           var textLength = a.title.length;
           var isLarge = false;
+          tile.maxCharForButtons = 40;
           if(textLength>tile.maxCharForButtons)
           {
               isLarge = true;
@@ -70,9 +71,9 @@ function() {
           var button = {};
           button.xtype = 'button';
           button.text = text;
-          button.width = 194;
+          button.width = 400;
           button.cls = 'tile-button';
-          button.overCls = 'tile-button-over';
+          button.overCls = 'tile-button';
           button.textAlign = 'left';
 
           if(isLarge)

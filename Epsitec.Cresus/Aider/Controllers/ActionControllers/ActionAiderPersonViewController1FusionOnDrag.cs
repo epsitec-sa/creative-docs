@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (1)]
-	public sealed class ActionAiderContactViewController1FusionOnDrag : TemplateActionViewController<AiderContactEntity, AiderContactEntity>
+	public sealed class ActionAiderPersonViewController1FusionOnDrag : TemplateActionViewController<AiderPersonEntity, AiderContactEntity>
 	{
 		public override bool RequiresAdditionalEntity
 		{
@@ -46,41 +47,39 @@ namespace Epsitec.Aider.Controllers.ActionControllers
             if (doFusion)
             {
                 //group fusion
-                var groupToAdd = this.AdditionalEntity.Person.Groups.Where(g => !this.Entity.Person.Groups.Select(gs => gs.Group).Contains(g.Group));
+                var groupToAdd = this.AdditionalEntity.Person.Groups.Where(g => !this.Entity.Groups.Select(gs => gs.Group).Contains(g.Group));
                 foreach (var group in groupToAdd)
                 {
-                    this.Entity.Person.AddParticipationInternal(group);
-                    var participationData = new ParticipationData(this.Entity.Person);
+                    this.Entity.AddParticipationInternal(group);
+                    var participationData = new ParticipationData(this.Entity);
                     AiderGroupParticipantEntity.StartParticipation(this.BusinessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText("Fusion"));
                 }
 
                 //household fusion
-                var householdMemberToAdd = this.AdditionalEntity.Household.Members.Where(m => !this.Entity.Household.Members.Contains(m));
+				var defaultHousehold = this.Entity.MainContact.Household;
+				var householdMemberToAdd = this.AdditionalEntity.Household.Members.Where (m => !defaultHousehold.Members.Contains (m));
                 foreach (var member in householdMemberToAdd)
                 {
                     //Remap contact
                     var contact = member.Contacts.FirstOrDefault(c => c.Household == this.AdditionalEntity.Household);
-                    contact.Household = this.Entity.Household;
+					contact.Household = defaultHousehold;
                 }
 
                 this.BusinessContext.DeleteEntity(this.AdditionalEntity);
             }
 		}
 
-		protected override void GetForm(ActionBrick<AiderContactEntity, SimpleBrick<AiderContactEntity>> form)
+		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
-            if (this.Entity.Person.IsGovernmentDefined)
+            if (!this.AdditionalEntity.Person.IsGovernmentDefined)
             {
-                if (!this.AdditionalEntity.Person.IsGovernmentDefined)
-                {
-                    form
-                    .Title("Fusion de données")
-                    .Text(this.GetText())
-                    .Field<bool>()
-                        .Title("Fusionner")
-                    .End()
-                    .End();
-                }
+                form
+                .Title("Fusion de données")
+                .Text(this.GetText())
+                .Field<bool>()
+                    .Title("Fusionner")
+                .End()
+                .End();
             }
 		}
 	}

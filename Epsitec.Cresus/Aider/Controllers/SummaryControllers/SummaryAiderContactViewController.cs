@@ -26,9 +26,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var household = this.Entity.Household;
 
 
-//			wall.AddBrick ()
-//				.EnableActionOnDrop<ActionAiderContactViewController1FusionOnDrag> ();
-
 			if ((contact.Person.IsNull ()) &&
 				(contact.LegalPerson.IsNull ()))
 			{
@@ -45,10 +42,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				case Enumerations.ContactType.PersonHousehold:
 					if (contact.Person.IsNotNull ())
 					{
-						wall.AddBrick (x => x.Person)
-							.Icon (contact.Person.GetIconName ("Data"))
-							.Text (contactSummary)
-							.Attribute (BrickMode.DefaultToSummarySubView);
+						if (contact.Person.IsGovernmentDefined)
+						{
+							wall.AddBrick (x => x.Person)
+								.Icon (contact.Person.GetIconName ("Data"))
+								.Text (contactSummary)
+								.Attribute (BrickMode.DefaultToSummarySubView)
+								.EnableActionOnDrop<ActionAiderPersonViewController1FusionOnDrag> ();
+						}
+						else
+						{
+							wall.AddBrick (x => x.Person)
+								.Icon (contact.Person.GetIconName ("Data"))
+								.Text (contactSummary)
+								.Attribute (BrickMode.DefaultToSummarySubView);
+						}
+						
 					}
 					
 					if (household.IsNotNull ())
