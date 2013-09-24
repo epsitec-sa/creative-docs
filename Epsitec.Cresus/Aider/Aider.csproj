@@ -97,6 +97,7 @@
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController1ProcessPersonMissing.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController0DiscardWarning.cs" />
+    <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController21ProcessParishArrival.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController2ProcessParishArrival.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController4ProcessNewHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\ActionAiderPersonWarningViewController3ProcessParishDeparture.cs" />
@@ -132,8 +133,11 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderLegalPersonViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_EChPersonDataChanged.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2Warnings.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningSourceViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController1Details.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionRefusalViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderContactViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />

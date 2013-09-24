@@ -1,5 +1,5 @@
 //	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Cresus.Core.Controllers;
 
@@ -13,7 +13,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		protected override void Execute()
 		{
-			this.ClearWarning ();
+			this.ClearWarningAndRefreshCaches ();
 		}
 	}
 }

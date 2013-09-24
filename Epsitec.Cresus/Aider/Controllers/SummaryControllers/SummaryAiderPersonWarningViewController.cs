@@ -1,6 +1,11 @@
 //	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
@@ -9,6 +14,7 @@ using Epsitec.Aider.Enumerations;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
 
@@ -19,6 +25,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	public sealed class SummaryAiderPersonWarningViewController : SummaryViewController<AiderPersonWarningEntity>
 	{
+		public override EntityViewController GetController()
+		{
+			switch (this.Entity.WarningType)
+			{
+				case WarningType.EChPersonDataChanged:
+					return new SpecializedSummaryAiderPersonWarningViewController_EChPersonDataChanged ();
+			}
+			
+			return base.GetController ();
+		}
+
+
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
 			var hasDisplayableHousehold = this.Entity.Person.Contacts.Where (c => c.Household.Address.IsNotNull ()).Any ();
@@ -72,11 +90,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ();
 					break;
 				
-				case WarningType.EChPersonDataChanged:
-					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController10ProcessPersonChanges> ();
-					break;
-
 				case WarningType.EChHouseholdAdded:
 					this.AddDefaultBrick(wall)
 						.EnableActionButton<ActionAiderPersonWarningViewController4ProcessNewHousehold> ();
@@ -94,7 +107,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				
 				case WarningType.ParishArrival:
 					this.AddDefaultBrick (wall)
-						.EnableActionButton<ActionAiderPersonWarningViewController2ProcessParishArrival> ();
+						.EnableActionButton<ActionAiderPersonWarningViewController2ProcessParishArrival> ()
+						.EnableActionButton<ActionAiderPersonWarningViewController21ProcessParishArrival> ();
 					break;
 				
 				case WarningType.ParishDeparture:
@@ -103,6 +117,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					break;
 				
 				default:
+					System.Diagnostics.Trace.WriteLine ("Unhandled warning: " + this.Entity.WarningType.GetQualifiedName ());
 					this.AddDefaultBrick (wall)
 					.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
 					break;
@@ -127,6 +142,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (p => p.GetCompactSummary (p.Households[0]))
 				.End ();
 		}
+		
 		private SimpleBrick<AiderPersonWarningEntity> AddDefaultBrick(BrickWall<AiderPersonWarningEntity> wall)
 		{
 			var brick = wall.AddBrick ()

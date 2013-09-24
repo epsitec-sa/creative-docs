@@ -1,5 +1,5 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
 
@@ -24,31 +24,11 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (7)]
-	public sealed class ActionAiderPersonWarningViewController7ProcessArrival : ActionViewController<AiderPersonWarningEntity>
+	public sealed class ActionAiderPersonWarningViewController7ProcessArrival : ActionAiderPersonWarningViewControllerPassive
 	{
-		public override FormattedText GetTitle()
+		protected override void Execute()
 		{
-            return Resources.FormattedText("Marquer comme lu");
+			this.ClearWarningAndRefreshCaches ();
 		}
-
-		public override ActionExecutor GetExecutor()
-		{
-            return ActionExecutor.Create(this.Execute);
-		}
-
-		private void Execute()
-		{
-            this.Entity.Person.RemoveWarningInternal(this.Entity);
-            this.BusinessContext.DeleteEntity(this.Entity);
-		}
-
-        protected override bool NeedsInteraction
-        {
-            get
-            {
-                return false;
-            }
-        }
-
 	}
 }
