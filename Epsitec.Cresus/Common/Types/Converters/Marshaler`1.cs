@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Types.Converters
 			internal set;
 		}
 
-		public override sealed System.Type		MarshaledType
+		public sealed override System.Type		MarshaledType
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Types.Converters
 		public abstract T GetValue();
 
 		
-		protected override sealed object GetObjectValue()
+		protected sealed override object GetObjectValue()
 		{
 			return this.GetValue ();
 		}

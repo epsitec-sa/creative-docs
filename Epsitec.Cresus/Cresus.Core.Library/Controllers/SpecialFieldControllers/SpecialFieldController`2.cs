@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Business;
@@ -28,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialFieldControllers
 			return this.lambda.Compile ().Invoke (this.entity);
 		}
 
-		public override sealed Widget GetDesktopField()
+		public sealed override Widget GetDesktopField()
 		{
 			// This override is temporary until the management of special fields controllers is
 			// implemented in the desktop version of Cresus.Core.

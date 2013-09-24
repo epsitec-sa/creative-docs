@@ -1,4 +1,7 @@
-﻿using System;
+﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System;
 
 namespace Epsitec.Cresus.Core.Controllers.SpecialFieldControllers
 {
