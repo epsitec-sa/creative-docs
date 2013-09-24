@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var rect = this.GetCellsRect (x, rank);
 					bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
 
-					TimelineRowMonths.PaintCellBackground (graphics, rect, lastCell, isHover, index);
-					TimelineRowMonths.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
+					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
 
 					index++;
 					x = rank;
@@ -61,15 +61,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		private void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
 			var color = TimelineRowMonths.GetCellColor (cell, isHover, index);
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (color);
+
+			if (!color.IsBackground ())
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (color);
+			}
 		}
 
-		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
 		{
 			//	Dessine le contenu.
 			//	Dessine le contenu, plus ou moins détaillé selon la place disponible.
@@ -83,11 +87,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 				}
 
-				var width = new TextGeometry (0, 0, 1000, 100, text, font, rect.Height*0.6, ContentAlignment.MiddleLeft).Width;
+				var width = new TextGeometry (0, 0, 1000, 100, text, font, this.FontSize, ContentAlignment.MiddleLeft).Width;
 				if (width <= rect.Width)
 				{
 					graphics.Color = ColorManager.TextColor;
-					graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+					graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleCenter);
 					break;
 				}
 			}

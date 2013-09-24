@@ -63,6 +63,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set;
 		}
 
+		public int								LabelWidth
+		{
+			get;
+			set;
+		}
+
 		public int								VisibleCellCount
 		{
 			get
@@ -112,6 +118,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.InitializeAfterCellsChanged ();
 		}
 
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			graphics.AddFilledRectangle (new Rectangle (Point.Zero, this.ActualSize));
+			graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+			this.PaintLabel (graphics);
+		}
+		
 
 		private int Detect(Point pos)
 		{
@@ -137,6 +151,40 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		protected void PaintLabel(Graphics graphics)
+		{
+			if (!string.IsNullOrEmpty (this.Description))
+			{
+				var font = Font.DefaultFont;
+				graphics.Color = ColorManager.TextColor;
+				graphics.PaintText (this.LabelRect, this.Description, font, this.FontSize, ContentAlignment.MiddleLeft);
+			}
+		}
+
+		private Rectangle LabelRect
+		{
+			get
+			{
+				return new Rectangle (this.LabelMargin, 0, this.LabelWidth, this.ActualHeight);
+			}
+		}
+
+		private int LabelMargin
+		{
+			get
+			{
+				return (int) (this.CellWidth * 0.5);
+			}
+		}
+
+		protected double FontSize
+		{
+			get
+			{
+				return this.CellWidth * 0.6;
+			}
+		}
+
 		protected Rectangle GetCellsRect(int x1, int x2)
 		{
 			int p1 = this.GetHorizontalPosition (x1);
@@ -150,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Retourne la position horizontale, avec une subile répartition du reste
 			//	pour que la cellule de droite touche toujours le bord droite.
 			double dim = this.ActualWidth / this.VisibleCellCount;
-			return (int) (rank * dim);
+			return this.LabelWidth + (int) (rank * dim);
 		}
 
 

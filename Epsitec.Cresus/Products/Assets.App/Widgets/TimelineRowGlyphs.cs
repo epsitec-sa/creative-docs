@@ -62,8 +62,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			//	Dessine le fond.
 			var color = TimelineRowGlyphs.GetCellColor (cell, isHover, index);
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (color);
+
+			if (!color.IsBackground ())
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (color);
+			}
 		}
 
 		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index)

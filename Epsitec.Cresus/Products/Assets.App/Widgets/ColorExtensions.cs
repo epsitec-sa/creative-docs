@@ -10,6 +10,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public static class ColorExtensions
 	{
+		public static bool IsBackground(this Color color)
+		{
+			//	Indique s'il s'agit de la couleur de fond.
+			return color == ColorManager.GetBackgroundColor ();
+		}
+
 		public static bool IsGray(this Color color)
 		{
 			//	Indique s'il s'agit d'une nuance de gris.

@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return (int) (this.ActualBounds.Width / this.CellWidth);
+				return (int) ((this.ActualBounds.Width - this.labelsWidth) / this.CellWidth);
 			}
 		}
 
@@ -103,6 +103,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					this.OnCellClicked (row.RowIndex, rank);
 				};
 			}
+
+			this.UpdateLabelsWidth ();
 		}
 
 
@@ -115,6 +117,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private void UpdateChildrensGeometry()
 		{
 			//	Met à jour la géométrie de toutes les lignes-enfant.
+			this.UpdateLabelsWidth ();
+
 			int w = this.CellWidth;
 			int bottom = 0;
 
@@ -147,6 +151,65 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		private void UpdateLabelsWidth()
+		{
+			//	Met à jour la largeur nécessaire pour les labels de gauche.
+			this.labelsWidth = 0;
+
+			foreach (var children in this.Children)
+			{
+				var row = children as AbstractTimelineRow;
+				System.Diagnostics.Debug.Assert (row != null);
+
+				if (!string.IsNullOrEmpty (row.Description))
+				{
+					this.labelsWidth = System.Math.Max (this.labelsWidth, this.GetTextWidth (row.Description));
+				}
+			}
+
+			if (this.labelsWidth > 0)
+			{
+				this.labelsWidth += this.LabelMargin * 2;
+			}
+
+			foreach (var children in this.Children)
+			{
+				var row = children as AbstractTimelineRow;
+				System.Diagnostics.Debug.Assert (row != null);
+
+				row.LabelWidth = this.labelsWidth;
+			}
+		}
+
+		private int GetTextWidth(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+			else
+			{
+				var font = Font.DefaultFont;
+				return (int) new TextGeometry (0, 0, 1000, 100, text, font, this.FontSize, ContentAlignment.MiddleLeft).Width + 1;
+			}
+		}
+
+		private int LabelMargin
+		{
+			get
+			{
+				return (int) (this.CellWidth * 0.5);
+			}
+		}
+
+		private double FontSize
+		{
+			get
+			{
+				return this.CellWidth * 0.6;
+			}
+		}
+
 
 		#region Events handler
 		private void OnCellClicked(int row, int rank)
@@ -163,5 +226,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		private double							pivot;
+		private int								labelsWidth;
 	}
 }

@@ -48,8 +48,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					var rect = this.GetCellsRect (x, rank);
 					bool isHover = (this.hoverRank >= x && this.hoverRank < rank);
 
-					TimelineRowWeeksOfYear.PaintCellBackground (graphics, rect, lastCell, isHover, index);
-					TimelineRowWeeksOfYear.PaintCellForeground (graphics, rect, lastCell, isHover, index);
+					this.PaintCellBackground (graphics, rect, lastCell, isHover, index);
+					this.PaintCellForeground (graphics, rect, lastCell, isHover, index);
 
 					index++;
 					x = rank;
@@ -59,21 +59,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private static void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		private void PaintCellBackground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
 		{
 			//	Dessine le fond.
 			var color = TimelineRowWeeksOfYear.GetCellColor (cell, isHover, index);
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (color);
+
+			if (!color.IsBackground ())
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (color);
+			}
 		}
 
-		private static void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
+		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellDate cell, bool isHover, int index)
 		{
 			//	Dessine le contenu.
 			var text = TimelineRowWeeksOfYear.GetCellText (cell);
 			var font = Font.DefaultFont;
 			graphics.Color = ColorManager.TextColor;
-			graphics.PaintText (rect, text, font, rect.Height*0.6, ContentAlignment.MiddleCenter);
+			graphics.PaintText (rect, text, font, this.FontSize, ContentAlignment.MiddleCenter);
 		}
 
 		private static bool IsSame(TimelineCellDate c1, TimelineCellDate c2)
